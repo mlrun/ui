@@ -18,6 +18,12 @@
     text-transform: uppercase;
   }
 
+  .table {
+    &__body {
+      align-items: center;
+    }
+  }
+
   .edit-row {
     .table__cell {
       padding: 0;

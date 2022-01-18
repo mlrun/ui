@@ -6,6 +6,7 @@ import classnames from 'classnames'
 import Tooltip from '../../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
 import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
+import { ACTIONS_MENU } from '../../../types'
 
 const FeatureSetsPanelTableRow = ({
   actionButton,
@@ -61,7 +62,7 @@ FeatureSetsPanelTableRow.propTypes = {
     label: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired
   }),
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape({})),
+  actionsMenu: ACTIONS_MENU,
   className: PropTypes.string,
   contentItem: PropTypes.shape({}).isRequired
 }

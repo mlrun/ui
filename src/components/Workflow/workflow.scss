@@ -1,12 +1,14 @@
 @import '../../scss/borders';
 
 .workflow-container {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
   width: 100%;
 
   .workflow-header {
     display: flex;
     justify-content: space-between;
-    width: 100%;
     height: 50px;
     padding: 5px 10px;
     border-bottom: $secondaryBorder;
@@ -30,49 +32,17 @@
   }
 
   .workflow-content {
-    display: flex;
-    flex: 1 1;
-    height: 100%;
-    background-color: $gallery;
+    position: relative;
+    flex-direction: column;
 
     .graph-view {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
-
-    .list-view {
-      width: 100%;
-
-      &__row {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        width: 100%;
-        height: 50px;
-        padding: 10px;
-        overflow: hidden;
-        background-color: $white;
-        border-bottom: $secondaryBorder;
-
-        &_selected,
-        &_selectable:hover {
-          background-color: $alabaster;
-          cursor: pointer;
-        }
+      &.with-selected-job {
+        width: 35%;
       }
-    }
 
-    .table__item {
-      width: 65%;
-    }
-  }
-
-  &.with-selected-job {
-    .workflow-header,
-    .workflow-content {
-      width: 35%;
+      .table__item {
+        width: 65%;
+      }
     }
   }
 }
-

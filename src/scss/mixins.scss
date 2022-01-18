@@ -661,6 +661,7 @@
       height: 32px;
       background: $malibu;
       border-radius: 50%;
+      margin: 0;
 
       &:hover {
         background-color: $cornflowerBlue;
@@ -669,12 +670,6 @@
       svg {
         path {
           fill: $white;
-        }
-      }
-
-      &.open {
-        svg {
-          margin-bottom: -3px;
         }
       }
     }
@@ -972,5 +967,29 @@
         }
       }
     }
+  }
+}
+
+@mixin gradient($type) {
+  @if $type == 'card' {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px;
+    padding: 4px 0 0 0;
+    background: linear-gradient(90deg, #16bc9e, #1fcc9e);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  } @else {
+    background: linear-gradient(
+      88.84deg,
+      #d873e1 5.49%,
+      #fc658f 57.67%,
+      #ffb971 107.73%
+    );
   }
 }

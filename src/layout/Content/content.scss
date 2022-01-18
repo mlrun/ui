@@ -18,7 +18,7 @@
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
-    min-height: 65px;
+    min-height: 70px;
     padding: 14px 24px;
     background-color: $white;
     box-shadow: $headerShadow;
@@ -57,5 +57,9 @@
     display: flex;
     align-items: center;
     padding: 4px 24px;
+
+    &_hidden {
+      display: none;
+    }
   }
 }

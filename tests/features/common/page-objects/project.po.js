@@ -1,17 +1,18 @@
 import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
+import { generateDropdownGroup } from '../../common-tools/common-tools'
 
-const createNewObject = {
-  root: 'div.main-info__toolbar div.create-new-menu',
-  dropdownElements: {
-    open_button: 'div.select__header div.select__label',
-    options: 'div.select__body div.select__item',
-    option_name: 'div.data-ellipsis > div.data-ellipsis'
-  }
-}
+const createNewObject = dropdownComponent(
+  generateDropdownGroup(
+    'div.main-info__toolbar div.create-new-menu',
+    'div.select__header',
+    false,
+    false
+  )
+)
 
-const projectDashbordRealtimeFunctionsTable = {
+const projectDashboardRealtimeFunctionsTable = {
   root: 'div.project-data-card:nth-of-type(2) div.project-data-card__table',
   header: {
     root: 'div.project-data-card__table-header',
@@ -126,12 +127,15 @@ const generalInfoQuickLinks = {
 }
 
 module.exports = {
-  Create_New: dropdownComponent(createNewObject),
+  Project_Settings_Button: By.css(
+    '.project__content .general-info .general-info__main-data-wrapper .general-info__settings'
+  ),
+  Create_New: createNewObject,
   Refresh_Button: By.css(
     'div.main-info__toolbar div.refresh button[id=refresh]'
   ),
-  Dashbord_Realtime_Functions_Table: commonTable(
-    projectDashbordRealtimeFunctionsTable
+  Dashboard_Realtime_Functions_Table: commonTable(
+    projectDashboardRealtimeFunctionsTable
   ),
   Jobs_And_Workflows: commonTable(projectJobsAndWorkflows),
   Mono_Values_Cards: commonTable(generalInfoMonoValueCards),
@@ -139,5 +143,8 @@ module.exports = {
   Real_Time_Functions_Card_Statistics: commonTable(
     generalInfoRealTimeFunctionsCardStat
   ),
-  General_Info_Quick_Links: commonTable(generalInfoQuickLinks)
+  Add_Source_URL_Label: By.css('.general-info .general-info__source'),
+  General_Info_Quick_Links: commonTable(generalInfoQuickLinks),
+  Owner_Link: By.css('.project__content .general-info .owner-row .link'),
+  Members_Link: By.css('.project__content .general-info .members-row .link')
 }

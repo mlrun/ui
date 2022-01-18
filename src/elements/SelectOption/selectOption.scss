@@ -10,6 +10,7 @@
   &__item {
     display: flex;
     align-items: center;
+    width: 100%;
     height: 49px;
     padding: 0 15px;
 
@@ -39,6 +40,22 @@
       margin: 0;
 
       @include statusState(none);
+    }
+
+    .label-row {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .checkmark {
+      margin: 0 0 0 10px;
+
+      path {
+        fill: $chateauGreen;
+      }
     }
   }
 }

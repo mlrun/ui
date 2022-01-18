@@ -22,8 +22,10 @@ const PartitionFields = ({
   partitionRadioButtonsState,
   rangeOnChange,
   selectedPartitionKind,
+  setValidation,
   timePartitioningGranularityChange,
-  triggerPartitionAdvancedCheckboxes
+  triggerPartitionAdvancedCheckboxes,
+  validation
 }) => {
   return (
     <>
@@ -84,10 +86,12 @@ const PartitionFields = ({
           <Input
             density="normal"
             floatingLabel
+            invalid={!validation}
             onBlur={partitionColsOnBlur}
             onChange={partitionColsOnChange}
             label="Partition Columns"
             placeholder="col1,col2,col3"
+            setInvalid={setValidation}
             type="text"
             value={data.partition_cols}
             wrapperClassName="partition-cols"
@@ -116,8 +120,10 @@ PartitionFields.propTypes = {
   partitionRadioButtonsState: PropTypes.string.isRequired,
   rangeOnChange: PropTypes.func.isRequired,
   selectedPartitionKind: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setValidation: PropTypes.func.isRequired,
   timePartitioningGranularityChange: PropTypes.func.isRequired,
-  triggerPartitionAdvancedCheckboxes: PropTypes.func.isRequired
+  triggerPartitionAdvancedCheckboxes: PropTypes.func.isRequired,
+  validation: PropTypes.bool.isRequired
 }
 
 export default PartitionFields

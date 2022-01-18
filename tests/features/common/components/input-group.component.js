@@ -26,7 +26,8 @@ module.exports = function(inputStructure) {
       `${inputStructure.root} ${inputStructure.elements.warningHint}`
     )
     element.warningText = By.css(
-      `${inputStructure.root} ${inputStructure.elements.warningText}`
+      // `${inputStructure.root} ${inputStructure.elements.warningText}`
+      `${inputStructure.elements.warningText}`
     )
   }
   return element

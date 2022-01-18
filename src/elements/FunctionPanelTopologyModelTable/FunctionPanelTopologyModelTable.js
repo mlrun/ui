@@ -5,6 +5,11 @@ import FunctionPanelTopologyModelTableView from './FunctionPanelTopologyModelTab
 
 import functionsActions from '../../actions/functions'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import {
+  isRouteValid,
+  newRouteInitialState,
+  validationInitialState
+} from './functionPanelTopologyModelTable.util'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -15,13 +20,10 @@ const FunctionPanelTopologyModelTable = ({
   setNewFunctionGraph
 }) => {
   const [data, setData] = useState([])
-  const [newRoute, setNewRoute] = useState({
-    name: '',
-    class_name: '',
-    model_path: ''
-  })
+  const [newRoute, setNewRoute] = useState(newRouteInitialState)
   const [showAddNewRouteRow, setShowAddNewRouteRow] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(null)
+  const [validation, setValidation] = useState(validationInitialState)
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(defaultData.graph?.routes ?? {})) {
@@ -40,6 +42,19 @@ const FunctionPanelTopologyModelTable = ({
 
   const addRoute = () => {
     const generatedRoutes = { ...functionsStore.newFunction.spec.graph?.routes }
+    if (
+      !isRouteValid(newRoute) ||
+      !validation.isNameValid ||
+      !validation.isClassNameValid ||
+      !validation.isModelPathValid
+    ) {
+      return setValidation(state => ({
+        ...state,
+        isNameValid: newRoute.name.length > 0,
+        isClassNameValid: newRoute.class_name.length > 0,
+        isModelPathValid: newRoute.model_path.length > 0
+      }))
+    }
 
     generatedRoutes[newRoute.name] = {
       kind: 'task',
@@ -64,11 +79,7 @@ const FunctionPanelTopologyModelTable = ({
       ...functionsStore.newFunction.spec.graph,
       routes: generatedRoutes
     })
-    setNewRoute({
-      name: '',
-      class_name: '',
-      model_path: ''
-    })
+    setNewRoute(newRouteInitialState)
     setShowAddNewRouteRow(false)
   }
 
@@ -98,6 +109,19 @@ const FunctionPanelTopologyModelTable = ({
     if (selectedRoute.newName) {
       delete generatedRoutes[selectedRoute.data.name]
     }
+    if (
+      !isRouteValid(selectedRoute.data) ||
+      !validation.isEditNameValid ||
+      !validation.isEditClassNameValid ||
+      !validation.isEditModelPathValid
+    ) {
+      return setValidation(state => ({
+        ...state,
+        isEditNameValid: selectedRoute.data.name.length > 0,
+        isEditClassNameValid: selectedRoute.data.class_name.length > 0,
+        isEditModelPathValid: selectedRoute.data.model_path.length > 0
+      }))
+    }
 
     generatedRoutes[key] = {
       kind: 'task',
@@ -113,8 +137,8 @@ const FunctionPanelTopologyModelTable = ({
         if (route.data.name === selectedRoute.data.name) {
           route.data = {
             name: selectedRoute.newName || selectedRoute.data.name,
-            model_path: selectedRoute.data.model_path,
-            class_name: selectedRoute.data.class_name
+            class_name: selectedRoute.data.class_name,
+            model_path: selectedRoute.data.model_path
           }
         }
 
@@ -127,12 +151,21 @@ const FunctionPanelTopologyModelTable = ({
     })
   }
 
+  const discardChanges = () => {
+    setNewRoute(newRouteInitialState)
+    setShowAddNewRouteRow(false)
+    setValidation(validationInitialState)
+  }
+
   const generateActionsMenu = useCallback(
     rowItem => [
       {
         label: 'Edit',
         icon: <Edit />,
-        onClick: route => setSelectedRoute(route)
+        onClick: route => {
+          setSelectedRoute(route)
+          setValidation(validationInitialState)
+        }
       },
       {
         label: 'Remove',
@@ -150,6 +183,7 @@ const FunctionPanelTopologyModelTable = ({
       addRoute={addRoute}
       data={data}
       deleteRoute={deleteRoute}
+      discardChanges={discardChanges}
       editRoute={editRoute}
       generateActionsMenu={generateActionsMenu}
       newRoute={newRoute}
@@ -157,7 +191,9 @@ const FunctionPanelTopologyModelTable = ({
       setNewRoute={setNewRoute}
       setSelectedRoute={setSelectedRoute}
       setShowAddNewRouteRow={setShowAddNewRouteRow}
+      setValidation={setValidation}
       showAddNewRouteRow={showAddNewRouteRow}
+      validation={validation}
     />
   )
 }

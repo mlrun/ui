@@ -45,7 +45,17 @@ import {
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_ERROR_STREAM,
-  SET_NEW_FUNCTION_DEFAULT_CLASS
+  SET_NEW_FUNCTION_DEFAULT_CLASS,
+  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+  GET_FUNCTION_SUCCESS,
+  GET_FUNCTION_FAILURE,
+  GET_FUNCTION_BEGIN,
+  GET_FUNCTION_WITH_HASH_BEGIN,
+  GET_FUNCTION_WITH_HASH_FAILURE,
+  GET_FUNCTION_WITH_HASH_SUCCESS,
+  REMOVE_FUNCTION,
+  SET_NEW_FUNCTION_FORCE_BUILD
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -133,7 +143,7 @@ const functionsActions = {
     dispatch(functionsActions.fetchFunctionsBegin())
 
     return functionsApi
-      .getAll(project, name)
+      .getFunctions(project, name)
       .then(({ data }) => {
         dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
@@ -211,8 +221,60 @@ const functionsActions = {
     payload: err
   }),
   getFunction: (project, name) => dispatch => {
-    return functionsApi.getFunction(project, name)
+    dispatch(functionsActions.getFunctionBegin())
+
+    return functionsApi
+      .getFunction(project, name)
+      .then(result => {
+        dispatch(functionsActions.getFunctionSuccess(result.data.func))
+
+        return result.data.func
+      })
+      .catch(error => {
+        dispatch(functionsActions.getFunctionFailure(error.message))
+        throw error
+      })
   },
+  getFunctionBegin: () => ({
+    type: GET_FUNCTION_BEGIN
+  }),
+  getFunctionFailure: error => ({
+    type: GET_FUNCTION_FAILURE,
+    payload: error
+  }),
+  getFunctionSuccess: func => ({
+    type: GET_FUNCTION_SUCCESS,
+    payload: func
+  }),
+  getFunctionWithHash: (project, name, hash) => dispatch => {
+    dispatch(functionsActions.getFunctionWithHashBegin())
+
+    return functionsApi
+      .getFunctionWithHash(project, name, hash)
+      .then(result => {
+        dispatch(functionsActions.getFunctionWithHashSuccess(result.data.func))
+
+        return result.data.func
+      })
+      .catch(error => {
+        dispatch(functionsActions.getFunctionWithHashFailure(error.message))
+        throw error
+      })
+  },
+  getFunctionWithHashBegin: () => ({
+    type: GET_FUNCTION_WITH_HASH_BEGIN
+  }),
+  getFunctionWithHashFailure: error => ({
+    type: GET_FUNCTION_WITH_HASH_FAILURE,
+    payload: error
+  }),
+  getFunctionWithHashSuccess: func => ({
+    type: GET_FUNCTION_WITH_HASH_SUCCESS,
+    payload: func
+  }),
+  removeFunction: () => ({
+    type: REMOVE_FUNCTION
+  }),
   removeFunctionLogs: () => ({
     type: REMOVE_FUNCTION_LOGS
   }),
@@ -260,6 +322,10 @@ const functionsActions = {
     type: SET_NEW_FUNCTION_DESCRIPTION,
     payload: description
   }),
+  setNewFunctionDisableAutoMount: value => ({
+    type: SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+    payload: value
+  }),
   setNewFunctionEnv: env => ({
     type: SET_NEW_FUNCTION_ENV,
     payload: env
@@ -267,6 +333,10 @@ const functionsActions = {
   setNewFunctionErrorStream: error_stream => ({
     type: SET_NEW_FUNCTION_ERROR_STREAM,
     payload: error_stream
+  }),
+  setNewFunctionForceBuild: forceBuild => ({
+    type: SET_NEW_FUNCTION_FORCE_BUILD,
+    payload: forceBuild
   }),
   setNewFunctionGraph: graph => ({
     type: SET_NEW_FUNCTION_GRAPH,
@@ -287,6 +357,10 @@ const functionsActions = {
   setNewFunctionLabels: labels => ({
     type: SET_NEW_FUNCTION_LABELS,
     payload: labels
+  }),
+  setNewFunctionCredentialsAccessKey: accessKey => ({
+    type: SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+    payload: accessKey
   }),
   setNewFunctionName: name => ({
     type: SET_NEW_FUNCTION_NAME,

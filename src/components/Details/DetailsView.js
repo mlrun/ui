@@ -10,11 +10,11 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Select from '../../common/Select/Select'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Button from '../../common/Button/Button'
 import LoadButton from '../../common/LoadButton/LoadButton'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { formatDatetime } from '../../utils'
 import {
@@ -29,8 +29,11 @@ import {
   PRIMARY_BUTTON,
   LABEL_BUTTON
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Back } from '../../images/back-arrow.svg'
+import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
 const DetailsView = React.forwardRef(
   (
@@ -39,11 +42,14 @@ const DetailsView = React.forwardRef(
       applyChanges,
       applyChangesRef,
       cancelChanges,
+      getCloseDetailsLink,
       detailsMenu,
       detailsMenuClick,
       detailsStore,
       handleCancel,
+      handleRefresh,
       handleShowWarning,
+      isDetailsScreen,
       leavePage,
       match,
       pageData,
@@ -56,7 +62,8 @@ const DetailsView = React.forwardRef(
   ) => {
     const detailsPanelClassNames = classnames(
       'table__item',
-      detailsStore.showWarning && 'pop-up-dialog-opened'
+      detailsStore.showWarning && 'pop-up-dialog-opened',
+      isDetailsScreen && 'table__item_big'
     )
     const { value: stateValue, label: stateLabel, className: stateClassName } =
       selectedItem.state || {}
@@ -69,6 +76,27 @@ const DetailsView = React.forwardRef(
         )}
         <div className="item-header__data">
           <h3 className="item-header__title">
+            {isDetailsScreen && (
+              <Link
+                className="item-header__back-btn"
+                to={location => {
+                  const urlArray = location.pathname.split('/')
+
+                  return urlArray.slice(0, -2).join('/')
+                }}
+                onClick={() => {
+                  if (detailsStore.changes.counter > 0) {
+                    handleShowWarning(true)
+                  } else {
+                    handleCancel()
+                  }
+                }}
+              >
+                <Tooltip template={<TextTooltipTemplate text="Go to list" />}>
+                  <Back />
+                </Tooltip>
+              </Link>
+            )}
             <Tooltip
               template={
                 <TextTooltipTemplate
@@ -87,7 +115,11 @@ const DetailsView = React.forwardRef(
             </Tooltip>
           </h3>
           <span className="left-margin">
-            {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
+            {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
+            The job contains startTime property.*/}
+            {Object.keys(selectedItem).length > 0 &&
+            pageData.page === JOBS_PAGE &&
+            !selectedItem?.updated
               ? formatDatetime(
                   selectedItem?.startTime,
                   stateValue === 'aborted' ? 'N/A' : 'Not yet started'
@@ -171,13 +203,24 @@ const DetailsView = React.forwardRef(
                 />
               </Tooltip>
             )}
+          {isDetailsScreen && (
+            <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
+              <button onClick={handleRefresh} id="refresh">
+                <Refresh />
+              </button>
+            </Tooltip>
+          )}
           <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
           <Link
             data-testid="details-close-btn"
-            to={location => {
-              const urlArray = location.pathname.split('/')
-              return urlArray.slice(0, urlArray.length - 2).join('/')
-            }}
+            to={
+              getCloseDetailsLink ??
+              `/projects/${
+                match.params.projectName
+              }/${pageData.page.toLowerCase()}${
+                match.params.pageTab ? `/${match.params.pageTab}` : ''
+              }`
+            }
             onClick={() => {
               if (detailsStore.changes.counter > 0) {
                 handleShowWarning(true)
@@ -198,38 +241,33 @@ const DetailsView = React.forwardRef(
         />
         {tabsContent}
         {detailsStore.showWarning && (
-          <PopUpDialog
-            headerText={`You have unsaved changes. ${
-              detailsStore.refreshWasHandled
-                ? 'Refreshing the list'
-                : 'Leaving this page'
-            } will discard your changes.`}
+          <ConfirmDialog
+            cancelButton={{
+              handler: () => {
+                handleShowWarning(false)
+                setRefreshWasHandled(false)
+              },
+              label: detailsStore.refreshWasHandled
+                ? "Don't refresh"
+                : "Don't Leave",
+              variant: TERTIARY_BUTTON
+            }}
             closePopUp={() => {
               handleShowWarning(false)
               setRefreshWasHandled(false)
             }}
-          >
-            <div className="pop-up-dialog__footer-container">
-              <Button
-                variant={TERTIARY_BUTTON}
-                label={
-                  detailsStore.refreshWasHandled
-                    ? "Don't refresh"
-                    : "Don't Leave"
-                }
-                onClick={() => {
-                  handleShowWarning(false)
-                  setRefreshWasHandled(false)
-                }}
-              />
-              <Button
-                variant={PRIMARY_BUTTON}
-                label={detailsStore.refreshWasHandled ? 'Refresh' : 'Leave'}
-                className="pop-up-dialog__btn_cancel"
-                onClick={leavePage}
-              />
-            </div>
-          </PopUpDialog>
+            confirmButton={{
+              handler: leavePage,
+              label: detailsStore.refreshWasHandled ? 'Refresh' : 'Leave',
+              variant: PRIMARY_BUTTON
+            }}
+            header="You have unsaved changes."
+            message={`${
+              detailsStore.refreshWasHandled
+                ? 'Refreshing the list'
+                : 'Leaving this page'
+            } will discard your changes.`}
+          />
         )}
       </div>
     )
@@ -238,21 +276,23 @@ const DetailsView = React.forwardRef(
 
 DetailsView.defaultProps = {
   detailsMenuClick: () => {},
+  getCloseDetailsLink: null,
+  handleRefresh: () => {},
   tabsContent: null
 }
 
 DetailsView.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyChanges: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
   detailsMenu: PropTypes.array.isRequired,
   detailsMenuClick: PropTypes.func,
   detailsStore: PropTypes.shape({}).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func,
   handleShowWarning: PropTypes.func.isRequired,
+  isDetailsScreen: PropTypes.bool.isRequired,
   leavePage: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

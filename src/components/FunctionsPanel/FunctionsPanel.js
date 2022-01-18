@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import { chain } from 'lodash'
 
 import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
-import { FUNCTION_TYPE_SERVING } from '../../constants'
+import {
+  FUNCTION_TYPE_SERVING,
+  PANEL_DEFAULT_ACCESS_KEY
+} from '../../constants'
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
@@ -35,19 +39,24 @@ const FunctionsPanel = ({
   removeFunctionsError,
   createNewFunction,
   setNewFunction,
+  setNewFunctionCredentialsAccessKey,
   setNewFunctionProject
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
     isHandlerValid: true,
+    isDefaultCLassValid: true,
     isCodeImageValid: true,
     isBaseImageValid: true,
     isBuildCommandsValid: true,
+    isBuildImageValid: true,
     isMemoryRequestValid: true,
     isMemoryLimitValid: true,
     isCpuRequestValid: true,
     isCpuLimitValid: true,
-    isGpuLimitValid: true
+    isGpuLimitValid: true,
+    isAccessKeyValid: true,
+    isErrorStreamPathValid: true
   })
   const [imageType, setImageType] = useState(
     (defaultData?.build?.image ||
@@ -64,6 +73,9 @@ const FunctionsPanel = ({
       let data = {
         kind: defaultData.type,
         metadata: {
+          credentials: {
+            access_key: defaultData.access_key || PANEL_DEFAULT_ACCESS_KEY
+          },
           labels: defaultData.labels,
           name: defaultData.name,
           project: defaultData.project,
@@ -184,6 +196,15 @@ const FunctionsPanel = ({
         }))
       }
 
+      if (
+        functionsStore.newFunction.metadata.credentials.access_key.length === 0
+      ) {
+        return setValidation(state => ({
+          ...state,
+          isAccessKeyValid: false
+        }))
+      }
+
       if (functionsStore.error) {
         removeFunctionsError()
       }
@@ -192,9 +213,8 @@ const FunctionsPanel = ({
         getFunction(project, functionsStore.newFunction.metadata.name)
           .then(() => {
             setConfirmData({
-              title: `Overwrite function "${functionsStore.newFunction.metadata.name}"?`,
-              description:
-                'The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?',
+              header: 'Overwrite function?',
+              message: `You try to overwrite function "${functionsStore.newFunction.metadata.name}". The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?`,
               btnCancelLabel: 'Cancel',
               btnCancelVariant: LABEL_BUTTON,
               btnConfirmLabel: 'Overwrite',
@@ -226,16 +246,17 @@ const FunctionsPanel = ({
   }
 
   const checkValidation = () => {
-    return Object.values(validation).find(value => value === false) ?? true
+    return Object.values(validation).every(value => value)
   }
 
-  return (
+  return createPortal(
     <FunctionsPanelView
       checkValidation={checkValidation}
       closePanel={closePanel}
       confirmData={confirmData}
       defaultData={defaultData ?? {}}
       error={functionsStore.error}
+      functionsStore={functionsStore}
       handleSave={handleSave}
       imageType={imageType}
       loading={functionsStore.loading}
@@ -244,9 +265,11 @@ const FunctionsPanel = ({
       newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}
       setImageType={setImageType}
+      setNewFunctionCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
       setValidation={setValidation}
       validation={validation}
-    />
+    />,
+    document.getElementById('overlay_container')
   )
 }
 

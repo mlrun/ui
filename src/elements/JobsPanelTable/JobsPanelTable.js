@@ -32,18 +32,18 @@ const JobsPanelTable = ({
     (item, index) => {
       if (editItem) {
         setEditItem(false)
-        handleEditItems(section.includes('env'), index)
+        handleEditItems(index)
       } else {
         setSelectedItem({ ...item, index })
         setEditItem(true)
       }
     },
-    [editItem, handleEditItems, section, setSelectedItem]
+    [editItem, handleEditItems, setSelectedItem]
   )
 
   const handleDelete = useCallback(
-    (item, section, index) => {
-      handleDeleteItems(item, section, index)
+    (item, index) => {
+      handleDeleteItems(item, index)
     },
     [handleDeleteItems]
   )
@@ -60,7 +60,7 @@ const JobsPanelTable = ({
         icon: <Delete />,
         hidden: rowItem.isDefault,
         onClick: selectedItem => {
-          handleDelete(selectedItem)
+          handleDelete(selectedItem, index)
         }
       }
     ],

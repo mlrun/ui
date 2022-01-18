@@ -138,8 +138,8 @@
   }
 
   .action_cell {
-    width: 20px;
-    max-width: 20px;
+    width: 40px;
+    max-width: 40px;
     padding: 0;
 
     &__run-icon {
@@ -150,6 +150,7 @@
 
   &-body {
     color: $mulledWine;
+    background-color: $white;
 
     &__cell {
       @include tableDet;
@@ -191,6 +192,7 @@
 
         span {
           display: block;
+          width: 100%;
         }
       }
 

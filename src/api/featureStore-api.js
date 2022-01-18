@@ -2,7 +2,9 @@ import { mainHttpClient } from '../httpClient'
 import {
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
-  FEATURES_TAB
+  FEATURES_TAB,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
 } from '../constants'
 
 const fetchFeatureStoreContent = (
@@ -17,7 +19,11 @@ const fetchFeatureStoreContent = (
     params.label = filters.labels?.split(',')
   }
 
-  if (filters?.tag && (withLatestTag || !/latest/i.test(filters.tag))) {
+  if (
+    filters?.tag &&
+    filters.tag !== TAG_FILTER_ALL_ITEMS &&
+    (withLatestTag || filters.tag !== TAG_FILTER_LATEST)
+  ) {
     params.tag = filters.tag
   }
 
@@ -39,6 +45,10 @@ export default {
       `/projects/${data.metadata.project}/feature-vectors`,
       data
     ),
+  deleteFeatureVector: (project, featureVector) =>
+    mainHttpClient.delete(
+      `/projects/${project}/feature-vectors/${featureVector}`
+    ),
   fetchFeatureSetsTags: project =>
     mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`),
   fetchFeatureVectorsTags: project =>
@@ -47,17 +57,26 @@ export default {
     mainHttpClient.get(`/projects/${project}/entities`, {
       params: { name: entity }
     }),
-  getEntities: (project, filters) =>
+  getEntities: (project, filters, config) =>
     fetchFeatureStoreContent(
       `/projects/${project}/entities`,
       filters,
-      {},
+      config ?? {},
       true
     ),
-  getFeatureSet: (project, featureSet) =>
-    mainHttpClient.get(`/projects/${project}/feature-sets`, {
-      params: { name: featureSet }
-    }),
+  getFeatureSet: (project, featureSet, tag) => {
+    const params = {
+      name: featureSet
+    }
+
+    if (tag !== TAG_FILTER_ALL_ITEMS) {
+      params.tag = tag
+    }
+
+    return mainHttpClient.get(`/projects/${project}/feature-sets`, {
+      params
+    })
+  },
   getFeatureSets: (project, filters, config) => {
     return fetchFeatureStoreContent(
       `/projects/${project}/${FEATURE_SETS_TAB}`,
@@ -66,10 +85,19 @@ export default {
       true
     )
   },
-  getFeatureVector: (project, featureVector) =>
-    mainHttpClient.get(`/projects/${project}/feature-vectors`, {
-      params: { name: featureVector }
-    }),
+  getFeatureVector: (project, featureVector, tag) => {
+    const params = {
+      name: featureVector
+    }
+
+    if (tag !== TAG_FILTER_ALL_ITEMS) {
+      params.tag = tag
+    }
+
+    return mainHttpClient.get(`/projects/${project}/feature-vectors`, {
+      params
+    })
+  },
   getFeatureVectors: (project, filters, config) => {
     return fetchFeatureStoreContent(
       `/projects/${project}/${FEATURE_VECTORS_TAB}`,
@@ -82,20 +110,17 @@ export default {
     mainHttpClient.get(`/projects/${project}/features`, {
       params: { name: feature }
     }),
-  getFeatures: (project, filters) =>
+  getFeatures: (project, filters, config) =>
     fetchFeatureStoreContent(
       `/projects/${project}/${FEATURES_TAB}`,
       filters,
-      {},
+      config ?? {},
       true
     ),
-  startIngest: (project, featureSet, reference, source, targets) =>
+  startIngest: (project, featureSet, reference, data) =>
     mainHttpClient.post(
       `/projects/${project}/feature-sets/${featureSet}/references/${reference}/ingest`,
-      {
-        source: { ...source, name: 'source' },
-        targets
-      }
+      data
     ),
   updateFeatureStoreData: (projectName, featureData, tag, data, pageTab) =>
     mainHttpClient.patch(

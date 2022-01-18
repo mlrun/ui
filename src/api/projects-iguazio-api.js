@@ -14,9 +14,31 @@ export default {
       }
     })
   },
+  getProjectMembersVisibility: project => {
+    return iguazioHttpClient.get(
+      `/projects/__name__/${project}/authorization`,
+      {
+        params: {
+          action: 'authorization/roles',
+          sub_resource: 'authorization/roles'
+        }
+      }
+    )
+  },
+  getProjectOwnerVisibility: project => {
+    return iguazioHttpClient.get(
+      `/projects/__name__/${project}/authorization`,
+      {
+        params: {
+          action: 'update',
+          sub_resource: 'authorization/owner'
+        }
+      }
+    )
+  },
   updateProjectMembers: data => {
     return iguazioHttpClient.post('/async_transactions', data)
   },
-  getScrubbedUsers: () => iguazioHttpClient.get('/scrubbed_users'),
+  getScrubbedUsers: config => iguazioHttpClient.get('/scrubbed_users', config),
   getScrubbedUserGroups: () => iguazioHttpClient.get('/scrubbed_user_groups')
 }

@@ -1,39 +1,110 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
 @import '../../scss/shadows';
+@import '../../scss/mixins';
 
 .project-card {
   position: relative;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-  width: 438px;
-  height: 166px;
+  flex: 0 0 23%;
+  min-height: 240px;
+  min-width: 400px;
   margin: 9px 12px;
-  padding: 25px 25px 20px;
+  color: $topaz;
   background-color: $white;
-  border: $secondaryBorder;
-  border-radius: 4px;
+  box-shadow: $previewBoxShadowInit;
+  border-radius: 8px;
   cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out;
 
-  &__statistic {
+  &::before {
+    content: '';
+    @include gradient('card');
+  }
+
+  &__general-info {
     display: flex;
-    flex-direction: row;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 25px 25px 15px;
   }
 
   &__header {
-    display: flex;
-    margin-bottom: 5px;
-    color: $primary;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 21px;
+    margin-bottom: 0.5rem;
+    padding-right: 1rem;
+
+    &-title {
+      display: flex;
+      align-items: stretch;
+      font-size: 1.25rem;
+      font-weight: normal;
+      margin-bottom: 5px;
+      color: $primary;
+
+      :not(:first-child) {
+        flex: 1 0 auto;
+      }
+    }
+
+    &-sub-title {
+      width: 100%;
+    }
   }
 
-  &_description {
-    color: $spunPearl;
-    font-size: 15px;
-    line-height: 18px;
+  &__description {
+    margin-bottom: 1.25rem;
+    min-height: 20px;
+  }
+
+  &__content {
+    width: 100%;
+    min-height: 72px;
+  }
+
+  &__statistic {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    width: 100%;
+  }
+
+  &__title {
+    flex: 0 1 100%;
+    margin-right: 1rem;
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+
+    & > *:first-child {
+      flex: 0 0 auto;
+      color: $spunPearl;
+      margin-right: 5px;
+    }
+
+    &-icon {
+      flex: 0 1 25px;
+
+      & * {
+        fill: $spunPearl;
+      }
+    }
+  }
+
+  &__labels {
+    .chips-cell {
+      .chip-block {
+        max-width: 250px;
+      }
+
+      .chip__value {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
   }
 
   &:hover {
@@ -42,7 +113,8 @@
 
   .project-data-card__statistics {
     &-item {
-      max-width: 80px;
+      margin: 0 27px;
+      flex: 0 0 auto;
 
       &::after {
         display: none;
@@ -51,6 +123,8 @@
 
     &-data {
       padding: 0;
+      margin: 0;
+      width: auto;
     }
 
     &-value {
@@ -59,30 +133,30 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 5px;
-      font-size: 32px;
-      line-height: 37px;
+      font-size: 22px;
+      width: 65px;
+      height: 65px;
+      background-color: $wildSand;
+      border-radius: 50%;
 
-      &::after {
-        position: absolute;
-        bottom: 0;
-        width: 28px;
-        height: 1px;
-        margin: auto 0;
-        border-bottom: $dividerBorder;
-        content: '';
+      &.statistics_failed {
+        background-color: inherit;
+        border: 1px solid $amaranth;
       }
     }
 
     &-label {
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: 500;
     }
   }
 
   &__actions-menu {
     position: absolute;
-    top: 10px;
+    top: 22px;
     right: 0;
     z-index: 4;
+    transition: opacity 0.3s ease-in-out;
 
     .actions-menu {
       &__container {

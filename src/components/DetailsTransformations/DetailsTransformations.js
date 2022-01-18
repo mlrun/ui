@@ -8,6 +8,15 @@ import ConfigSteps from './ConfigSteps/ConfigSteps'
 import ConfigTargets from './ConfigTargets/ConfigTargets'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
+import {
+  DEFAULT_EDGE,
+  ERROR_NODE,
+  INPUT_NODE,
+  ML_EDGE,
+  ML_NODE,
+  OUTPUT_NODE,
+  PRIMARY_NODE
+} from '../../constants'
 
 import './detailsTransformations.scss'
 
@@ -29,8 +38,9 @@ const DetailsTransformations = ({ selectedItem }) => {
     let stepsList = []
     let nodes = map(states, (stepItem, stepName) => {
       let nodeItem = {
+        type: ML_NODE,
+        data: { subType: PRIMARY_NODE, label: stepName },
         id: stepName,
-        data: { label: stepName },
         className: selectedStep === stepName ? 'selected' : '',
         position: { x: 0, y: 0 }
       }
@@ -54,51 +64,59 @@ const DetailsTransformations = ({ selectedItem }) => {
     })
 
     nodes.unshift({
+      type: ML_NODE,
+      data: { subType: INPUT_NODE, label: 'Source' },
       id: 'Source',
-      data: { label: 'Source' },
-      type: 'input',
       position: { x: 0, y: 0 }
     })
 
     let nodesEdges = map(edgesMap, (source, target) => {
       return {
+        type: ML_EDGE,
+        data: {
+          subType: DEFAULT_EDGE
+        },
         id: `e.${source}.${target}`,
         source: source,
-        target: target,
-        type: 'smoothstep',
-        animated: false,
-        arrowHeadType: 'arrowclosed'
+        target: target
       }
     })
 
     forEach(targets, target => {
       if (target.after_state) {
         nodes.push({
+          type: ML_NODE,
+          data: { subType: OUTPUT_NODE, label: target.name },
           id: target.name,
-          data: { label: target.name },
-          position: { x: 0, y: 0 },
-          type: 'output'
+          position: { x: 0, y: 0 }
         })
         nodesEdges.push({
+          type: ML_EDGE,
+          data: {
+            subType: DEFAULT_EDGE
+          },
           id: `e.${target.after_state}.${target.name}`,
           source: target.after_state,
-          target: target.name,
-          type: 'smoothstep',
-          arrowHeadType: 'arrowclosed'
+          target: target.name
         })
       }
     })
 
     let errorEdges = map(errorsMap, (target, source) => {
       let errorHandlerElement = find(nodes, ['id', target])
-      errorHandlerElement.className += ' error-handler'
+
+      if (errorHandlerElement) {
+        errorHandlerElement.data.subType = ERROR_NODE
+      }
 
       return {
+        type: ML_EDGE,
+        data: {
+          subType: DEFAULT_EDGE
+        },
         id: `e.${source}.${target}`,
         source: source,
         target: target,
-        type: 'smoothstep',
-        arrowHeadType: 'arrowclosed',
         animated: true
       }
     })
@@ -156,12 +174,12 @@ const DetailsTransformations = ({ selectedItem }) => {
   }, [selectedItem, selectedItemUid])
 
   return (
-    <div className="transformations-tab">
+    <div className="graph-container transformations-tab">
       <div className="graph-view">
         <MlReactFlow elements={elements} alignTriggerItem={selectedItemUid} />
       </div>
-      <div className="config-pane">
-        <div className="config-pane__title">Configuration</div>
+      <div className="graph-pane">
+        <div className="graph-pane__title">Configuration</div>
         <ConfigFunctionTemplate selectedItem={selectedItem} />
         <ConfigSource selectedItem={selectedItem} />
         <ConfigSteps

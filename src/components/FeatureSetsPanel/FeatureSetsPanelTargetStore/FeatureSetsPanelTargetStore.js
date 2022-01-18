@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { cloneDeep } from 'lodash'
 
 import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 
@@ -19,9 +20,9 @@ import {
 
 const FeatureSetsPanelTargetStore = ({
   featureStore,
-  isTargetsPathValid,
-  setTargetsPathValid,
-  setNewFeatureSetTarget
+  setNewFeatureSetTarget,
+  setValidation,
+  validation
 }) => {
   const [data, setData] = useState(dataInitialState)
   const [selectedTargetKind, setSelectedTargetKind] = useState(
@@ -36,44 +37,6 @@ const FeatureSetsPanelTargetStore = ({
   )
 
   const handleAdvancedLinkClick = kind => {
-    if (!showAdvanced[kind] && selectedPartitionKind[kind].includes('byTime')) {
-      setNewFeatureSetTarget(
-        featureStore.newFeatureSet.spec.targets.map(targetKind => {
-          if (targetKind.name === kind) {
-            targetKind.time_partitioning_granularity = 'hour'
-          }
-
-          return targetKind
-        })
-      )
-    } else {
-      setNewFeatureSetTarget(
-        featureStore.newFeatureSet.spec.targets.map(targetKind => {
-          if (targetKind.name === kind) {
-            delete targetKind.time_partitioning_granularity
-            delete targetKind.key_bucketing_number
-            delete targetKind.partition_cols
-          }
-
-          return targetKind
-        })
-      )
-      setData(state => ({
-        ...state,
-        [kind]: {
-          ...data[kind],
-          key_bucketing_number: '',
-          partition_cols: '',
-          time_partitioning_granularity: 'hour'
-        }
-      }))
-      setPartitionRadioButtonsState(state => ({
-        ...state,
-        [kind]: 'districtKeys'
-      }))
-      setSelectedPartitionKind(state => ({ ...state, [kind]: ['byTime'] }))
-    }
-
     setShowAdvanced(prev => ({
       ...prev,
       [kind]: !prev[kind]
@@ -154,20 +117,6 @@ const FeatureSetsPanelTargetStore = ({
     }
   }
 
-  const handleExternalOfflineKindPathOnChange = path => {
-    if (!isTargetsPathValid && path.length > 0) {
-      setTargetsPathValid(state => ({
-        ...state,
-        isTargetsPathValid: true
-      }))
-    }
-
-    setData(state => ({
-      ...state,
-      externalOffline: { ...state.externalOffline, path }
-    }))
-  }
-
   const handleExternalOfflineKindTypeChange = kind => {
     setData(state => ({
       ...state,
@@ -233,10 +182,13 @@ const FeatureSetsPanelTargetStore = ({
 
       setSelectedTargetKind(state => state.filter(kind => kind !== kindId))
 
-      if (kindId === checkboxModels.externalOffline.id && !isTargetsPathValid) {
-        setTargetsPathValid(state => ({
+      if (
+        kindId === checkboxModels.externalOffline.id &&
+        !validation.isExternalOfflineTargetPathValid
+      ) {
+        setValidation(state => ({
           ...state,
-          isTargetsPathValid: true
+          isExternalOfflineTargetPathValid: true
         }))
       }
 
@@ -398,6 +350,10 @@ const FeatureSetsPanelTargetStore = ({
         return targetKind
       })
     )
+    setValidation(state => ({
+      ...state,
+      isTimestampKeyValid: true
+    }))
   }
 
   const triggerPartitionCheckbox = (id, kind) => {
@@ -437,14 +393,15 @@ const FeatureSetsPanelTargetStore = ({
       }
     }
 
-    setNewFeatureSetTarget(
-      featureStore.newFeatureSet.spec.targets.map(targetKind => {
+    const targets = cloneDeep(featureStore.newFeatureSet.spec.targets).map(
+      targetKind => {
         if (targetKind.name === kind) {
           if (
             (kind === PARQUET || kind === EXTERNAL_OFFLINE) &&
             data[kind].partitioned !== id
           ) {
             targetKind.partitioned = true
+            targetKind.time_partitioning_granularity = 'hour'
           } else {
             setData(state => ({
               ...state,
@@ -464,8 +421,14 @@ const FeatureSetsPanelTargetStore = ({
         }
 
         return targetKind
-      })
+      }
     )
+
+    setNewFeatureSetTarget(targets)
+    setValidation(state => ({
+      ...state,
+      isTimestampKeyValid: true
+    }))
   }
 
   return (
@@ -473,9 +436,6 @@ const FeatureSetsPanelTargetStore = ({
       data={data}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
-      handleExternalOfflineKindPathOnChange={
-        handleExternalOfflineKindPathOnChange
-      }
       handleExternalOfflineKindTypeChange={handleExternalOfflineKindTypeChange}
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
       handleOfflineKindPathOnBlur={handleOfflineKindPathOnBlur}
@@ -487,22 +447,22 @@ const FeatureSetsPanelTargetStore = ({
       handleTimePartitioningGranularityChange={
         handleTimePartitioningGranularityChange
       }
-      isTargetsPathValid={isTargetsPathValid}
       partitionRadioButtonsState={partitionRadioButtonsState}
       selectedPartitionKind={selectedPartitionKind}
       selectedTargetKind={selectedTargetKind}
       setData={setData}
-      setTargetsPathValid={setTargetsPathValid}
+      setValidation={setValidation}
       showAdvanced={showAdvanced}
       triggerPartitionAdvancedCheckboxes={triggerPartitionAdvancedCheckboxes}
       triggerPartitionCheckbox={triggerPartitionCheckbox}
+      validation={validation}
     />
   )
 }
 
 FeatureSetsPanelTargetStore.propTypes = {
-  isTargetsPathValid: PropTypes.bool.isRequired,
-  setTargetsPathValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(featureStore => ({ ...featureStore }), {

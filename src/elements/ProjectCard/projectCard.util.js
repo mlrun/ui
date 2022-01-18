@@ -49,7 +49,7 @@ export const generateProjectStatistic = (
           ? 'failed'
           : 'default',
       counterTooltip: 'ML jobs and Nuclio functions',
-      label: 'Failed (24hrs)',
+      label: 'Failed',
       labelClassName: 'wrap',
       loading: projectsSummaryLoading || nuclioFunctionsLoading,
       value:
@@ -58,36 +58,36 @@ export const generateProjectStatistic = (
           : isEmpty(projectSummary)
           ? '-'
           : projectSummary.runs_failed_recent_count + failedNuclioFunctions
-    },
-    models: {
-      className: 'default',
-      label: 'Models',
-      loading: projectsSummaryLoading,
-      value: fetchProjectsSummaryFailure
-        ? 'N/A'
-        : isEmpty(projectSummary)
-        ? '-'
-        : projectSummary.models_count
-    },
-    featureSets: {
-      className: 'default',
-      label: 'Feature sets',
-      loading: projectsSummaryLoading,
-      value: fetchProjectsSummaryFailure
-        ? 'N/A'
-        : isEmpty(projectSummary)
-        ? '-'
-        : projectSummary.feature_sets_count
-    },
-    functions: {
-      className: 'default',
-      label: 'ML functions',
-      loading: projectsSummaryLoading,
-      value: fetchProjectsSummaryFailure
-        ? 'N/A'
-        : isEmpty(projectSummary)
-        ? '-'
-        : projectSummary.functions_count
     }
+    // models: {
+    //   className: 'default',
+    //   label: 'Models',
+    //   loading: projectsSummaryLoading,
+    //   value: fetchProjectsSummaryFailure
+    //     ? 'N/A'
+    //     : isEmpty(projectSummary)
+    //     ? '-'
+    //     : projectSummary.models_count
+    // },
+    // featureSets: {
+    //   className: 'default',
+    //   label: 'Feature sets',
+    //   loading: projectsSummaryLoading,
+    //   value: fetchProjectsSummaryFailure
+    //     ? 'N/A'
+    //     : isEmpty(projectSummary)
+    //     ? '-'
+    //     : projectSummary.feature_sets_count
+    // },
+    // files: {
+    //   className: 'default',
+    //   label: 'Files',
+    //   loading: projectsSummaryLoading,
+    //   value: fetchProjectsSummaryFailure
+    //     ? 'N/A'
+    //     : isEmpty(projectSummary)
+    //     ? '-'
+    //     : projectSummary.files_count
+    // }
   }
 }

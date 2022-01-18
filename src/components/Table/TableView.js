@@ -13,19 +13,24 @@ import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureSto
 
 import {
   ARTIFACTS_PAGE,
+  DATASETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   MODELS_PAGE,
-  DATASETS_TAB
+  REAL_TIME_PIPELINES_TAB
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 const TableView = ({
   actionsMenu,
   applyDetailsChanges,
   cancelRequest,
   content,
+  getCloseDetailsLink,
   groupFilter,
   groupLatestItem,
   groupedContent,
@@ -39,13 +44,14 @@ const TableView = ({
   retryRequest,
   selectedItem,
   tableContent,
+  tableContentRef,
   tableHeadRef,
   tablePanelRef,
   workflows
 }) => {
   return (
     <div className="table">
-      <div className="table__content">
+      <div className="table__content" ref={tableContentRef}>
         <div className="table-head" ref={tableHeadRef}>
           {pageData.tableHeaders.map(
             (item, index) =>
@@ -66,13 +72,13 @@ const TableView = ({
         <div className="table-body">
           {!groupFilter ||
           isEmpty(groupedContent) ||
-          (groupFilter === 'none' && isEmpty(groupLatestItem)) ? (
+          (groupFilter === GROUP_BY_NONE && isEmpty(groupLatestItem)) ? (
             tableContent.map((rowItem, i) => {
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
-                  return (
+                  return match.params.pageTab !== REAL_TIME_PIPELINES_TAB ? (
                     <ArtifactsTableRow
                       actionsMenu={actionsMenu}
                       content={content}
@@ -82,6 +88,16 @@ const TableView = ({
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
+                    />
+                  ) : (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      match={match}
+                      rowItem={rowItem}
+                      selectedItem={selectedItem}
+                      handleSelectItem={handleSelectItem}
                     />
                   )
                 case FEATURE_STORE_PAGE:
@@ -209,7 +225,7 @@ const TableView = ({
                       content={content}
                       handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
-                      isGroupedByWorkflow={groupFilter === 'workflow'}
+                      isGroupedByWorkflow={groupFilter === GROUP_BY_WORKFLOW}
                       match={match}
                       rowItem={groupLatestItem[i]}
                       selectedItem={selectedItem}
@@ -234,7 +250,8 @@ const TableView = ({
           actionsMenu={actionsMenu}
           applyDetailsChanges={applyDetailsChanges}
           cancelRequest={cancelRequest}
-          detailsMenu={pageData.detailsMenu}
+          getCloseDetailsLink={getCloseDetailsLink}
+          detailsMenu={pageData.details.menu}
           handleCancel={handleCancel}
           match={match}
           pageData={pageData}
@@ -248,16 +265,15 @@ const TableView = ({
 
 TableView.defaultProps = {
   applyDetailsChanges: () => {},
+  getCloseDetailsLink: null,
   groupLatestJob: {}
 }
 
 TableView.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   isTablePanelOpen: PropTypes.bool.isRequired,

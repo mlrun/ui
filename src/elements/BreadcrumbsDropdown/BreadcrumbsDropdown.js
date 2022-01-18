@@ -48,30 +48,33 @@ const BreadcrumbsDropdown = ({
                 'breadcrumbs__dropdown-item_selected'
             )
 
-            return listItem.link ? (
-              <a
-                href={listItem.link}
-                key={listItem.id}
-                className={dropdownItemClassNames}
-              >
-                {listItem.label}
-              </a>
-            ) : (
-              <Link
-                to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
-                  tab ? `/${tab}` : ''
-                }`}
-                data-testid="breadcrumbs-dropdown-item"
-                key={listItem.id}
-                className={dropdownItemClassNames}
-                onClick={onClick}
-              >
-                <Tooltip
-                  template={<TextTooltipTemplate text={listItem.label} />}
+            return (
+              !listItem.hidden &&
+              (listItem.link ? (
+                <a
+                  href={listItem.link}
+                  key={listItem.id}
+                  className={dropdownItemClassNames}
                 >
                   {listItem.label}
-                </Tooltip>
-              </Link>
+                </a>
+              ) : (
+                <Link
+                  to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
+                    tab ? `/${tab}` : ''
+                  }`}
+                  data-testid="breadcrumbs-dropdown-item"
+                  key={listItem.id}
+                  className={dropdownItemClassNames}
+                  onClick={onClick}
+                >
+                  <Tooltip
+                    template={<TextTooltipTemplate text={listItem.label} />}
+                  >
+                    {listItem.label}
+                  </Tooltip>
+                </Link>
+              ))
             )
           })}
       </div>

@@ -1,4 +1,9 @@
 import { mainHttpClient } from '../httpClient'
+import {
+  SHOW_ITERATIONS,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
+} from '../constants'
 
 const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
   const params = {}
@@ -7,11 +12,15 @@ const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
     params.label = filters.labels?.split(',')
   }
 
-  if (filters?.iter === 'iter') {
+  if (filters?.iter === SHOW_ITERATIONS) {
     params['best-iteration'] = true
   }
 
-  if (filters?.tag && (withLatestTag || !/latest/i.test(filters.tag))) {
+  if (
+    filters?.tag &&
+    (withLatestTag || filters.tag !== TAG_FILTER_LATEST) &&
+    filters.tag !== TAG_FILTER_ALL_ITEMS
+  ) {
     params.tag = filters.tag
   }
 
@@ -54,26 +63,38 @@ export default {
       params: { project }
     })
   },
-  getDataSet: (project, dataSet) => {
+  getDataSet: (project, dataSet, tag) => {
     return fetchArtifacts(
       '/artifacts',
       {},
-      { params: { project, name: dataSet, tag: '*' } }
+      {
+        params: {
+          project,
+          name: dataSet,
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+        }
+      }
     )
   },
-  getDataSets: (project, filters) => {
+  getDataSets: (project, filters, config) => {
     return fetchArtifacts(
       '/artifacts',
       filters,
-      { params: { project, category: 'dataset' } },
+      { ...config, params: { project, category: 'dataset' } },
       true
     )
   },
-  getFile: (project, file) => {
+  getFile: (project, file, tag) => {
     return fetchArtifacts(
       '/artifacts',
       {},
-      { params: { project, name: file, tag: '*' } }
+      {
+        params: {
+          project,
+          name: file,
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+        }
+      }
     )
   },
   getFiles: (project, filters) => {
@@ -84,11 +105,17 @@ export default {
       true
     )
   },
-  getModel: (project, model) => {
+  getModel: (project, model, tag) => {
     return fetchArtifacts(
       '/artifacts',
       {},
-      { params: { project, name: model, tag: '*' } }
+      {
+        params: {
+          project,
+          name: model,
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+        }
+      }
     )
   },
   getModelEndpoints: (project, filters, params = {}) => {

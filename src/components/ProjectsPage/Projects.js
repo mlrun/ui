@@ -24,6 +24,7 @@ const Projects = ({
   deleteProject,
   fetchNuclioFunctions,
   fetchProjects,
+  fetchProjectsNames,
   fetchProjectsSummary,
   match,
   projectStore,
@@ -31,6 +32,7 @@ const Projects = ({
   removeNewProjectError,
   removeProjects,
   setNewProjectDescription,
+  setNewProjectLabels,
   setNewProjectName,
   setNotification
 }) => {
@@ -43,16 +45,14 @@ const Projects = ({
   const [filterMatches, setFilterMatches] = useState([])
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
   const [isNameValid, setNameValid] = useState(true)
-  const [selectedProjectsState, setSelectedProjectsState] = useState(
-    'allProjects'
-  )
+  const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [source] = useState(axios.CancelToken.source())
 
   const isValidProjectState = useCallback(
     project => {
       return (
-        (selectedProjectsState === 'allProjects' &&
+        (selectedProjectsState === 'active' &&
           project.status.state !== 'archived') ||
         project.status.state === selectedProjectsState
       )
@@ -140,8 +140,8 @@ const Projects = ({
     project => {
       setConfirmData({
         item: project,
-        title: 'Archive project',
-        description:
+        header: 'Archive project',
+        message:
           "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
           "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
         btnConfirmLabel: 'Archive',
@@ -159,8 +159,8 @@ const Projects = ({
     project => {
       setConfirmData({
         item: project,
-        title: `Delete project "${project.metadata.name}"?`,
-        description: 'Deleted projects can not be restored.',
+        header: 'Delete project?',
+        message: `You try to delete project "${project.metadata.name}". Deleted projects can not be restored.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
@@ -192,9 +192,16 @@ const Projects = ({
 
   useEffect(() => {
     fetchProjects()
+    fetchProjectsNames()
     fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
-  }, [fetchNuclioFunctions, fetchProjects, fetchProjectsSummary, source.token])
+  }, [
+    fetchNuclioFunctions,
+    fetchProjects,
+    fetchProjectsNames,
+    fetchProjectsSummary,
+    source.token
+  ])
 
   useEffect(() => {
     return () => {
@@ -227,6 +234,7 @@ const Projects = ({
   const refreshProjects = () => {
     removeProjects()
     fetchProjects()
+    fetchProjectsNames()
     fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
   }
@@ -234,35 +242,30 @@ const Projects = ({
   const handleCreateProject = e => {
     e.preventDefault()
 
-    if (!e.currentTarget.checkValidity()) {
-      return false
-    }
-
-    if (projectStore.newProject.name.length === 0) {
-      setNameValid(false)
-      return false
-    } else if (isNameValid) {
-      setNameValid(true)
-    }
-
-    createNewProject({
-      metadata: {
-        name: projectStore.newProject.name
-      },
-      spec: {
-        description: projectStore.newProject.description
+    if (e.currentTarget.checkValidity()) {
+      if (projectStore.newProject.name.length === 0) {
+        setNameValid(false)
+        return false
+      } else if (isNameValid) {
+        setNameValid(true)
       }
-    }).then(result => {
-      if (result) {
-        setCreateProject(false)
-        removeNewProject()
-        refreshProjects()
-      }
-    })
-  }
 
-  const handleSearchOnChange = value => {
-    setFilterByName(value)
+      createNewProject({
+        metadata: {
+          name: projectStore.newProject.name,
+          labels: projectStore.newProject.labels
+        },
+        spec: {
+          description: projectStore.newProject.description
+        }
+      }).then(result => {
+        if (result) {
+          setCreateProject(false)
+          removeNewProject()
+          refreshProjects()
+        }
+      })
+    }
   }
 
   return (
@@ -277,7 +280,6 @@ const Projects = ({
       filteredProjects={filteredProjects}
       filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
-      handleSearchOnChange={handleSearchOnChange}
       isDescendingOrder={isDescendingOrder}
       isNameValid={isNameValid}
       match={match}
@@ -286,11 +288,13 @@ const Projects = ({
       removeNewProjectError={removeNewProjectError}
       selectedProjectsState={selectedProjectsState}
       setCreateProject={setCreateProject}
+      setFilterByName={setFilterByName}
       setFilterMatches={setFilterMatches}
       setIsDescendingOrder={setIsDescendingOrder}
       setNameValid={setNameValid}
       setNewProjectDescription={setNewProjectDescription}
       setNewProjectName={setNewProjectName}
+      setNewProjectLabels={setNewProjectLabels}
       setSelectedProjectsState={setSelectedProjectsState}
       setSortProjectId={setSortProjectId}
       sortProjectId={sortProjectId}

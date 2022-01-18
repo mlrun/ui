@@ -1,0 +1,116 @@
+@import '../../scss/variables.scss';
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+
+.navbar {
+  display: flex;
+  flex: 1 0 $navbarWidth;
+  height: 100%;
+  position: fixed;
+  border-right: $tertiaryBorder;
+  transform: translateX(-100%);
+  transition: transform 0.5s ease-in-out;
+  top: 0;
+  left: 0;
+  width: $navbarWidth;
+  z-index: 2;
+
+  &:hover {
+    transform: translateX(0);
+  }
+
+  &__toggler {
+    position: absolute;
+    width: $navbarTogglerWidth;
+    height: 100%;
+    top: 0;
+    right: -$navbarTogglerWidth + 1;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out, right 0.5s ease-in-out;
+    z-index: 1;
+
+    &-button {
+      position: relative;
+      background-color: $wildSand;
+      width: $navbarTogglerWidth;
+      height: $navbarTogglerWidth;
+      border: $tertiaryBorder;
+      border-left: 0;
+      border-radius: 0px 8px 8px 0px;
+      padding: 7px;
+      margin-top: 70px;
+      z-index: 2;
+    }
+
+    &-icon {
+      display: block;
+      background-color: $topaz;
+      border-radius: 5px;
+      width: 100%;
+      height: 3px;
+      position: relative;
+
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        background-color: $topaz;
+        border-radius: 5px;
+        width: 100%;
+        height: 3px;
+        position: absolute;
+        left: 0;
+        z-index: 1;
+      }
+
+      &::before {
+        top: calc(-100% - 3px);
+      }
+
+      &::after {
+        top: calc(100% + 3px);
+      }
+    }
+  }
+
+  &__body {
+    background-color: $wildSand;
+    padding: 0.5rem 1rem;
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    z-index: 2;
+  }
+
+  &__content {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 1 0 auto;
+    width: 100%;
+  }
+
+  &__additional {
+    display: flex;
+    flex: 0 1 auto;
+    border-top: $primaryBorder;
+  }
+
+  &-links {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+  }
+
+  &__pin {
+    &-icon {
+      align-self: flex-end;
+      padding: 0;
+      position: relative;
+      right: -10px;
+    }
+  }
+}

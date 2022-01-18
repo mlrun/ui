@@ -8,11 +8,16 @@ import React, {
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
 
-import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
+import {
+  MONITOR_JOBS_TAB,
+  PANEL_DEFAULT_ACCESS_KEY,
+  SCHEDULE_TAB
+} from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
 import {
@@ -49,7 +54,6 @@ const JobsPanel = ({
   removeNewJob,
   runNewJob,
   setNewJob,
-  setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
   setNotification,
@@ -71,7 +75,8 @@ const JobsPanel = ({
     isCpuRequestValid: true,
     isMemoryLimitValid: true,
     isCpuLimitValid: true,
-    isGpuLimitValid: true
+    isGpuLimitValid: true,
+    isAccessKeyValid: true
   })
   const history = useHistory()
 
@@ -213,6 +218,10 @@ const JobsPanel = ({
         type: panelActions.SET_PREVIOUS_PANEL_DATA_TABLE_DATA,
         payload: panelState.tableData
       })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_ACCESS_KEY,
+        payload: PANEL_DEFAULT_ACCESS_KEY
+      })
     }
 
     return () => {
@@ -226,15 +235,7 @@ const JobsPanel = ({
   ])
 
   const checkValidation = () => {
-    return (
-      validation.isNameValid &&
-      validation.isArtifactPathValid &&
-      validation.isMemoryRequestValid &&
-      validation.isMemoryLimitValid &&
-      validation.isCpuRequestValid &&
-      validation.isCpuLimitValid &&
-      validation.isGpuLimitValid
-    )
+    return Object.values(validation).every(value => value)
   }
 
   const functionData = useMemo(() => {
@@ -301,6 +302,16 @@ const JobsPanel = ({
   ])
 
   const handleRunJob = (event, cronString) => {
+    if (
+      validation.isAccessKeyValid &&
+      jobsStore.newJob.function.metadata.credentials.access_key.length === 0
+    ) {
+      return setValidation(state => ({
+        ...state,
+        isAccessKeyValid: false
+      }))
+    }
+
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
       : groupedFunctions.functions
@@ -324,7 +335,9 @@ const JobsPanel = ({
       match,
       selectedFunction,
       isFunctionTemplate,
-      defaultData?.task.spec.function
+      defaultData?.task.spec.function,
+      mode,
+      defaultData?.task.spec.handler
     )
 
     if (jobsStore.error) {
@@ -356,6 +369,16 @@ const JobsPanel = ({
   }
 
   const handleEditJob = (event, cronString) => {
+    if (
+      validation.isAccessKeyValid &&
+      jobsStore.newJob.function.metadata.credentials.access_key.length === 0
+    ) {
+      return setValidation(state => ({
+        ...state,
+        isAccessKeyValid: false
+      }))
+    }
+
     const postData = generateRequestData(
       jobsStore,
       cronString,
@@ -375,7 +398,7 @@ const JobsPanel = ({
     onEditJob(event, postData)
   }
 
-  return (
+  return createPortal(
     <JobsPanelView
       checkValidation={checkValidation()}
       closePanel={closePanel}
@@ -390,14 +413,14 @@ const JobsPanel = ({
       panelDispatch={panelDispatch}
       panelState={panelState}
       removeJobError={removeJobError}
-      setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobInputs={setNewJobInputs}
       setNewJobSecretSources={setNewJobSecretSources}
       setOpenScheduleJob={setOpenScheduleJob}
       setValidation={setValidation}
       validation={validation}
       withSaveChanges={withSaveChanges}
-    />
+    />,
+    document.getElementById('overlay_container')
   )
 }
 

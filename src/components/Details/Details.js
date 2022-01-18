@@ -3,17 +3,20 @@ import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { connect, useDispatch } from 'react-redux'
 
+import DetailsView from './DetailsView'
+
 import artifactActions from '../../actions/artifacts'
+import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
-  FEATURE_STORE_PAGE,
   DATASETS_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE,
+  MODEL_ENDPOINTS_TAB,
   MODELS_TAB
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 import {
   generateArtifactsContent,
   generateFeatureStoreContent,
@@ -21,9 +24,7 @@ import {
   generateJobsContent,
   renderContent
 } from './details.util'
-import detailsActions from '../../actions/details'
-
-import DetailsView from './DetailsView'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import './details.scss'
 
@@ -34,7 +35,10 @@ const Details = ({
   detailsMenu,
   detailsStore,
   filtersStore,
+  getCloseDetailsLink,
   handleCancel,
+  handleRefresh,
+  isDetailsScreen,
   match,
   pageData,
   removeInfoContent,
@@ -109,71 +113,69 @@ const Details = ({
   )
 
   useEffect(() => {
-    if (pageData.page === JOBS_PAGE) {
-      setIteration('0')
-    }
-
     return () => {
-      resetChanges()
-    }
-  }, [pageData.page, resetChanges, selectedItem.uid, setIteration])
-
-  useEffect(() => {
-    return () => {
-      setChangesData({})
-    }
-  }, [match.params.name, setChangesData])
-
-  useEffect(() => {
-    if (pageData.page === JOBS_PAGE) {
-      setInfoContent(generateJobsContent(selectedItem))
-    } else if (
-      pageData.page === ARTIFACTS_PAGE ||
-      pageData.page === FILES_PAGE ||
-      pageData.page === MODELS_PAGE ||
-      match.params.pageTab === DATASETS_TAB
-    ) {
-      setInfoContent(
-        generateArtifactsContent(
-          pageData.page,
-          match.params.pageTab,
-          selectedItem
-        )
-      )
-    } else if (pageData.page === FUNCTIONS_PAGE) {
-      setInfoContent(generateFunctionsContent(selectedItem))
-    } else if (pageData.page === FEATURE_STORE_PAGE) {
-      setInfoContent(
-        generateFeatureStoreContent(
-          handleAddChip,
-          handleDeleteChip,
-          handleEditChips,
-          handleEditInput,
-          match.params.pageTab,
-          selectedItem
-        )
-      )
-    }
-
-    return () => {
-      if (match.params.pageTab === MODELS_TAB) {
-        removeModelFeatureVector()
+      if (pageData.details.type === JOBS_PAGE) {
+        setIteration('0')
       }
 
-      removeInfoContent()
+      resetChanges()
+    }
+  }, [pageData.details.type, resetChanges, setIteration])
+
+  useEffect(() => {
+    if (!isEveryObjectValueEmpty(selectedItem)) {
+      if (pageData.details.type === JOBS_PAGE) {
+        setInfoContent(generateJobsContent(selectedItem))
+      } else if (
+        pageData.details.type === ARTIFACTS_PAGE ||
+        pageData.details.type === FILES_PAGE ||
+        pageData.details.type === MODELS_TAB ||
+        pageData.details.type === MODEL_ENDPOINTS_TAB ||
+        pageData.details.type === DATASETS_TAB
+      ) {
+        setInfoContent(
+          generateArtifactsContent(pageData.details.type, selectedItem)
+        )
+      } else if (pageData.details.type === FUNCTIONS_PAGE) {
+        setInfoContent(generateFunctionsContent(selectedItem))
+      } else {
+        setInfoContent(
+          generateFeatureStoreContent(
+            handleAddChip,
+            handleDeleteChip,
+            handleEditChips,
+            handleEditInput,
+            pageData.details.type,
+            selectedItem
+          )
+        )
+      }
     }
   }, [
-    detailsStore.changes.counter,
     handleAddChip,
     handleDeleteChip,
     handleEditChips,
     handleEditInput,
-    match.params.pageTab,
-    pageData.page,
+    pageData.details.type,
+    selectedItem,
+    setInfoContent
+  ])
+
+  useEffect(() => {
+    return () => {
+      if (pageData.details.type === MODELS_TAB) {
+        removeModelFeatureVector()
+      }
+
+      removeInfoContent()
+      setChangesData({})
+    }
+  }, [
+    pageData.details.type,
     removeInfoContent,
     removeModelFeatureVector,
     selectedItem,
-    setInfoContent
+    setChangesData
   ])
 
   const handleShowWarning = useCallback(
@@ -235,15 +237,23 @@ const Details = ({
   const detailsMenuClick = () => {
     let changesData = {}
 
-    Object.keys(detailsStore.changes.data).forEach(key => {
-      changesData[key] = {
-        initialFieldValue: detailsStore.changes.data[key].initialFieldValue,
-        previousFieldValue: detailsStore.changes.data[key].previousFieldValue,
-        currentFieldValue: detailsStore.changes.data[key].previousFieldValue
-      }
-    })
-
-    setChangesData({ ...changesData })
+    if (
+      Object.keys(detailsStore.changes.data).some(key => {
+        return (
+          detailsStore.changes.data[key].currentFieldValue !==
+          detailsStore.changes.data[key].previousFieldValue
+        )
+      })
+    ) {
+      Object.keys(detailsStore.changes.data).forEach(key => {
+        changesData[key] = {
+          initialFieldValue: detailsStore.changes.data[key].initialFieldValue,
+          previousFieldValue: detailsStore.changes.data[key].previousFieldValue,
+          currentFieldValue: detailsStore.changes.data[key].previousFieldValue
+        }
+      })
+      setChangesData({ ...changesData })
+    }
 
     if (unblockRootChange.current) {
       unblockRootChange.current()
@@ -293,7 +303,6 @@ const Details = ({
       selectedItem,
       pageData,
       handlePreview,
-      detailsStore,
       handleEditInput,
       setChanges,
       setChangesData,
@@ -322,8 +331,11 @@ const Details = ({
       detailsMenu={detailsMenu}
       detailsMenuClick={detailsMenuClick}
       detailsStore={detailsStore}
+      getCloseDetailsLink={getCloseDetailsLink}
       handleCancel={handleCancel}
+      handleRefresh={handleRefresh}
       handleShowWarning={handleShowWarning}
+      isDetailsScreen={isDetailsScreen}
       leavePage={leavePage}
       match={match}
       pageData={pageData}
@@ -339,16 +351,16 @@ const Details = ({
 Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
+  getCloseDetailsLink: null,
+  handleRefresh: () => {},
+  isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
   removeModelFeatureVector: () => {}
 }
 
 Details.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   cancelRequest: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(
@@ -358,7 +370,10 @@ Details.propTypes = {
       hidden: PropTypes.bool
     })
   ).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func,
+  isDetailsScreen: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   removeModelFeatureVector: PropTypes.func,

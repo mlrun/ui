@@ -1,0 +1,156 @@
+@import './variables';
+@import './colors';
+@import './borders';
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 36px;
+  padding: 0 16px;
+  color: $white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  font-style: normal;
+  line-height: 16px;
+  border: $transparentBorder;
+  border-radius: $mainBorderRadius;
+
+  svg {
+    & > * {
+      fill: currentColor;
+    }
+  }
+
+  &:focus {
+    border-color: rgba($black, 0.4);
+  }
+
+  &:active {
+    border-color: rgba($black, 0.4);
+  }
+
+  &:disabled {
+    color: $spunPearl;
+    background: $white;
+    cursor: not-allowed;
+
+    svg {
+      & > * {
+        fill: $alto;
+      }
+    }
+  }
+
+  :not(last-child) {
+    margin-right: 10px;
+  }
+
+  :last-child {
+    margin: 0;
+  }
+
+  &-primary {
+    background: $brightTurquoise;
+
+    &:hover:not(:disabled) {
+      background: $javaLight;
+    }
+
+    &:active:not(:disabled) {
+      background: $mountainMeadow;
+    }
+
+    &:disabled {
+      border: 1px solid $brightTurquoise;
+    }
+  }
+
+  &-tertiary {
+    color: $primary;
+    background: $white;
+    border: $primaryBorder;
+
+    svg {
+      & > * {
+        fill: $primary;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      background: $alabaster;
+    }
+
+    &:active:not(:disabled) {
+      background: $mercury;
+    }
+
+    &:disabled {
+      border: $primaryBorder;
+    }
+  }
+
+  &-secondary {
+    color: $white;
+    background: $malibu;
+
+    &:hover:not(:disabled) {
+      background: $cornflowerBlue;
+    }
+
+    &:active:not(:disabled) {
+      background: $indigo;
+    }
+
+    &:disabled {
+      border: 1px solid $malibu;
+    }
+  }
+
+  &-danger {
+    color: $white;
+    background: $amaranth;
+
+    &:hover:not(:disabled) {
+      background: $ceriseRed;
+    }
+
+    &:active:not(:disabled) {
+      background: $maroonFlash;
+    }
+
+    &:disabled {
+      border: 1px solid $amaranth;
+    }
+  }
+
+  &-label {
+    color: $primary;
+    background: transparent;
+    border: 0;
+
+    svg {
+      & > * {
+        fill: $primary;
+      }
+    }
+
+    &:focus:not(:disabled) {
+      border: $dividerBorder;
+    }
+
+    &:hover:not(:disabled) {
+      color: $topaz;
+    }
+
+    &:active:not(:disabled) {
+      color: $black;
+      border-color: transparent;
+    }
+
+    &:disabled {
+      border-color: transparent;
+    }
+  }
+}

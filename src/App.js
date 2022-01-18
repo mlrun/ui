@@ -13,6 +13,8 @@ import {
   FEATURE_SETS_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB,
+  PIPELINE_SUB_PAGE,
+  PROJECTS_SETTINGS_GENERAL_TAB,
   WORKFLOW_SUB_PAGE
 } from './constants'
 
@@ -30,10 +32,25 @@ const Functions = React.lazy(() =>
 )
 const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
-const Project = React.lazy(() => import('./components/Project/Project'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
+const ProjectMonitor = React.lazy(() =>
+  import('./components/Project/ProjectMonitor')
+)
+const ProjectOverview = React.lazy(() =>
+  import('./components/Project/ProjectOverview/ProjectOverview')
+)
+const ProjectSettings = React.lazy(() =>
+  import('./components/ProjectSettings/ProjectSettings')
+)
+const AddToFeatureVectorPage = React.lazy(() =>
+  import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
+)
 
 const App = () => {
+  // TODO: Remove after ProjectOverview is Done.
+  const search = window.location.search
+  const isDemo =
+    new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Page>
@@ -44,10 +61,37 @@ const App = () => {
               exact
               render={routeProps => <Projects {...routeProps} />}
             />
+            {!isDemo && (
+              <Redirect
+                exact
+                from="/projects/:projectName"
+                to="/projects/:projectName/monitor"
+              />
+            )}
             <Route
               path="/projects/:projectName"
               exact
-              render={routeProps => <Project {...routeProps} />}
+              render={routeProps => <ProjectOverview {...routeProps} />}
+            />
+            <Route
+              path="/projects/:projectName/monitor"
+              exact
+              render={routeProps => <ProjectMonitor {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/settings/:pageTab"
+              render={routeProps => <ProjectSettings {...routeProps} />}
+            />
+            <Redirect
+              exact
+              from="/projects/:projectName/settings"
+              to={`/projects/:projectName/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
+            />
+            {/* Adding the next redirect for backwards compatability */}
+            <Redirect
+              from="/projects/:projectName/jobs/monitor/*"
+              to={'/projects/:projectName/jobs/monitor-jobs/*'}
             />
             <Route
               path="/projects/:projectName/jobs/:pageTab/create-new-job"
@@ -55,6 +99,7 @@ const App = () => {
             />
             <Route
               path={[
+                `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:functionName/:functionHash/:tab`,
                 `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:jobId/:tab`,
                 `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId`
               ]}
@@ -86,6 +131,11 @@ const App = () => {
               path="/projects/:projectName/functions/:hash/:tab"
               render={routeProps => <Functions {...routeProps} />}
             />
+            <Route
+              exact
+              path="/projects/:projectName/feature-store/add-to-feature-vector"
+              render={routeProps => <AddToFeatureVectorPage {...routeProps} />}
+            />
             <Redirect
               exact
               from="/projects/:projectName/feature-store"
@@ -93,22 +143,12 @@ const App = () => {
             />
             <Route
               exact
-              path="/projects/:projectName/feature-store/:pageTab"
-              render={routeProps => <FeatureStore {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/feature-store/:pageTab/:name/:tab"
-              render={routeProps => <FeatureStore {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab"
-              render={routeProps => <FeatureStore {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:iter/:tab"
+              path={[
+                '/projects/:projectName/feature-store/:pageTab',
+                '/projects/:projectName/feature-store/:pageTab/:name/:tab',
+                '/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab',
+                '/projects/:projectName/feature-store/:pageTab/:name/:tag/:iter/:tab'
+              ]}
               render={routeProps => <FeatureStore {...routeProps} />}
             />
             <Redirect
@@ -118,17 +158,20 @@ const App = () => {
             />
             <Route
               exact
-              path="/projects/:projectName/models/:pageTab"
-              render={routeProps => <Models {...routeProps} />}
+              path={[
+                `/projects/:projectName/models/:pageTab/${PIPELINE_SUB_PAGE}/:pipelineId`
+              ]}
+              render={routeProps => (
+                <Models {...routeProps} subPage={PIPELINE_SUB_PAGE} />
+              )}
             />
             <Route
               exact
-              path="/projects/:projectName/models/:pageTab/:name/:tab"
-              render={routeProps => <Models {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/models/:pageTab/:name/:tag/:tab"
+              path={[
+                '/projects/:projectName/models/:pageTab',
+                '/projects/:projectName/models/:pageTab/:name/:tab',
+                '/projects/:projectName/models/:pageTab/:name/:tag/:tab'
+              ]}
               render={routeProps => <Models {...routeProps} />}
             />
             <Route

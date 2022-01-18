@@ -17,6 +17,7 @@ import { isNameNotUnique } from '../JobsPanel/jobsPanel.util'
 import { SELECT_OPTIONS } from '../../types'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 const JobsPanelParametersView = ({
   checkParameter,
@@ -33,9 +34,12 @@ const JobsPanelParametersView = ({
   setNewJobSelectorResult,
   setTuningStrategy,
   setUrl,
+  setValidation,
   tableContent,
   tuningStrategy,
-  url
+  undoParameterCreation,
+  url,
+  validation
 }) => {
   const urlTypeClassName = classnames(
     'parameters-additional-settings__input-wrapper',
@@ -44,6 +48,10 @@ const JobsPanelParametersView = ({
   const tuningStrategyClassName = classnames(
     'parameters-additional-settings__select-wrapper',
     !isHyperTypeExist && !url && 'disabled'
+  )
+  const nameIsNotUnique = isNameNotUnique(
+    parametersState.newParameter.name,
+    parameters
   )
 
   return (
@@ -73,11 +81,12 @@ const JobsPanelParametersView = ({
                   className="input-row__item"
                   density="chunky"
                   floatingLabel
-                  invalid={isNameNotUnique(
-                    parametersState.newParameter.name,
-                    parameters
-                  )}
-                  invalidText="Name already exists"
+                  invalid={nameIsNotUnique || !validation.isNameValid}
+                  invalidText={
+                    nameIsNotUnique
+                      ? 'Name already exists'
+                      : 'This field is invalid'
+                  }
                   label="Name"
                   onChange={value =>
                     parametersDispatch({
@@ -85,7 +94,14 @@ const JobsPanelParametersView = ({
                       payload: value
                     })
                   }
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isNameValid: value
+                    }))
+                  }
                   type="text"
+                  required
                 />
                 <Select
                   className="parameters-value-type"
@@ -115,6 +131,7 @@ const JobsPanelParametersView = ({
                   className="input-row__item parameter-value"
                   density="chunky"
                   floatingLabel
+                  invalid={!validation.isValueValid}
                   label="Value/s"
                   onChange={value =>
                     parametersDispatch({
@@ -122,21 +139,36 @@ const JobsPanelParametersView = ({
                       payload: value
                     })
                   }
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isValueValid: value
+                    }))
+                  }
                   type="text"
+                  required
                 />
               </div>
-              <button
-                className="add-input"
-                disabled={isNameNotUnique(
-                  parametersState.newParameter.name,
-                  parameters
-                )}
-                onClick={() => handleAddNewItem(true)}
-              >
-                <Tooltip template={<TextTooltipTemplate text="Add item" />}>
-                  <Plus />
-                </Tooltip>
-              </button>
+              <div className="table__cell-actions">
+                <button
+                  className="btn-add"
+                  disabled={
+                    nameIsNotUnique ||
+                    !validation.isNameValid ||
+                    !validation.isValueValid
+                  }
+                  onClick={() => handleAddNewItem()}
+                >
+                  <Tooltip template={<TextTooltipTemplate text="Add item" />}>
+                    <Plus />
+                  </Tooltip>
+                </button>
+                <button onClick={undoParameterCreation}>
+                  <Tooltip template={<TextTooltipTemplate text="Delete" />}>
+                    <Delete />
+                  </Tooltip>
+                </button>
+              </div>
             </div>
           ) : (
             <JobsPanelTableAddItemRow
@@ -159,7 +191,7 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className={urlTypeClassName}>
               <Input
-                className="default-input"
+                wrapperClassName="default-input-wrapper"
                 density="chunky"
                 floatingLabel
                 label="Read hyper params from a file"
@@ -181,7 +213,7 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className="parameters-additional-settings__input-wrapper">
               <Input
-                className="default-input"
+                wrapperClassName="default-input-wrapper"
                 density="chunky"
                 floatingLabel
                 label="Result"
@@ -222,6 +254,7 @@ JobsPanelParametersView.propTypes = {
   setUrl: PropTypes.func.isRequired,
   tableContent: PropTypes.shape({}).isRequired,
   tuningStrategy: PropTypes.string,
+  undoParameterCreation: PropTypes.func.isRequired,
   url: PropTypes.string
 }
 

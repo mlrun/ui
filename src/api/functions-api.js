@@ -11,19 +11,21 @@ export default {
   deleteSelectedFunction: (func, project) =>
     mainHttpClient.delete(`/projects/${project}/functions/${func}`),
   deployFunction: data => mainHttpClient.post('/build/function', data),
-  getAll: (project, name) => {
+  getFunctions: (project, filters) => {
     const params = {
       project
     }
 
-    if (name) {
-      params.name = `~${name}`
+    if (filters?.name) {
+      params.name = `~${filters.name}`
     }
 
     return mainHttpClient.get('/funcs', { params })
   },
   getFunction: (project, name) =>
     mainHttpClient.get(`/func/${project}/${name}`),
+  getFunctionWithHash: (project, name, hash) =>
+    mainHttpClient.get(`/func/${project}/${name}?hash_key=${hash}`),
   getFunctionLogs: (project, name, tag, offset) => {
     const params = {
       project,

@@ -284,37 +284,37 @@ export const comboboxSelectList = [
   {
     className: 'path-type-store',
     label: 'MLRun store',
-    id: 'store://'
+    id: MLRUN_STORAGE_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-v3io',
     label: 'V3IO',
-    id: 'v3io://'
+    id: V3IO_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-s3',
     label: 'S3',
-    id: 's3://'
+    id: S3_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-http',
     label: 'HTTP',
-    id: 'http://'
+    id: HTTP_STORAGE_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-https',
     label: 'HTTPS',
-    id: 'https://'
+    id: HTTPS_STORAGE_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-az',
     label: 'Azure storage',
-    id: 'az://'
+    id: AZURE_STORAGE_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-gs',
     label: 'Google storage',
-    id: 'gs://'
+    id: GOOGLE_STORAGE_INPUT_PATH_SCHEME
   }
 ]
 
@@ -481,16 +481,20 @@ export const handleStoreInputPathChange = (
 }
 
 export const isPathInputValid = (pathInputType, pathInputValue) => {
+  const valueIsNotEmpty = pathInputValue.trim().length > 0
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
-      return /^(artifacts|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
-        pathInputValue
+      return (
+        valueIsNotEmpty &&
+        /^(artifacts|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
+          pathInputValue
+        )
       )
     case HTTP_STORAGE_INPUT_PATH_SCHEME:
     case HTTPS_STORAGE_INPUT_PATH_SCHEME:
-      return pathInputValue.split('/')?.[1]?.length > 0
+      return valueIsNotEmpty && pathInputValue.split('/')?.[1]?.length > 0
     default:
-      return pathInputValue.length > 0
+      return valueIsNotEmpty
   }
 }
 
@@ -500,5 +504,5 @@ export const pathTips = {
   [S3_INPUT_PATH_SCHEME]: 'bucket/path',
   [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
   [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
-  [V3IO_INPUT_PATH_SCHEME]: '/container-name/file'
+  [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
 }

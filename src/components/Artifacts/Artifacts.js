@@ -25,11 +25,13 @@ const Artifacts = ({
   const [artifacts, setArtifacts] = useState([])
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
-    detailsMenu: artifactsData.detailsMenu,
+    details: {
+      menu: artifactsData.detailsMenu,
+      infoHeaders: artifactsData.infoHeaders
+    },
     filters: artifactsData.filters,
     page: artifactsData.page,
     tableHeaders: artifactsData.tableHeaders,
-    infoHeaders: artifactsData.infoHeaders,
     registerArtifactDialogTitle: artifactsData.registerArtifactDialogTitle
   })
   const [selectedArtifact, setSelectedArtifact] = useState({})
@@ -125,7 +127,10 @@ const Artifacts = ({
 
       return {
         ...state,
-        detailsMenu: [...newDetailsMenu]
+        details: {
+          ...state.details,
+          menu: [...newDetailsMenu]
+        }
       }
     })
   }, [
@@ -141,11 +146,11 @@ const Artifacts = ({
       {artifactsStore.loading && <Loader />}
       <Content
         content={artifacts}
+        handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
         handleCancel={() => setSelectedArtifact({})}
         handleSelectItem={item => setSelectedArtifact({ item })}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedArtifact.item}
@@ -157,7 +162,7 @@ const Artifacts = ({
           pageData={pageData}
           refresh={fetchData}
           setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.registerArtifactDialogTitle}
+          title={pageData.actionsMenuHeader}
         />
       )}
     </>

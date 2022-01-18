@@ -1,10 +1,13 @@
 @import './variables';
+@import './button';
 @import './colors';
 @import './mixins';
 @import './borders';
 @import './fonts';
 
-* {
+*,
+::after,
+::before {
   box-sizing: border-box;
 }
 
@@ -30,7 +33,6 @@
 
 .App {
   display: flex;
-  flex: 1;
   width: 100%;
 }
 
@@ -43,7 +45,6 @@ body {
   font-size: 15px;
   font-family: Roboto, sans-serif;
   font-style: normal;
-  line-height: 18px;
   background: $gallery;
 
   @include resetSpaces;
@@ -51,14 +52,54 @@ body {
 
 main {
   position: relative;
-  display: flex;
-  flex: 1;
-  flex-flow: column nowrap;
+  padding: 0;
   height: auto;
+  min-height: 100vh;
+  width: 100%;
   overflow: auto;
+  z-index: 1;
+  transition: padding 0.3s ease-in-out;
 
-  &:not(:first-child) {
-    margin-top: 64px;
+  &.has-header {
+    margin-top: $headerHeight;
+    min-height: calc(100vh - 64px);
+  }
+
+  &.pinned {
+    padding-left: $navbarWidth;
+  }
+
+  &.unpinned {
+    .create-container__header,
+    .create-container__data,
+    .content__header,
+    .project__header,
+    .settings__header {
+      padding-left: 40px;
+      transition: padding 0.3s ease-in-out;
+    }
+
+    .content,
+    .settings__content {
+      margin-left: 40px;
+      transition: margin 0.3s ease-in-out;
+    }
+  }
+}
+
+.navbar {
+  &.has-header {
+    margin-top: $headerHeight;
+    padding-bottom: $headerHeight;
+  }
+
+  &.pinned {
+    transform: translateX(0);
+
+    .navbar__toggler {
+      opacity: 0;
+      right: 0;
+    }
   }
 }
 
@@ -68,6 +109,7 @@ a {
 }
 
 button {
+  padding: 0;
   font-family: Roboto, sans-serif;
   background-color: transparent;
   border: none;
@@ -84,35 +126,36 @@ button {
   }
 }
 
-[class^=state-completed],
-[class^=state-ready],
-[class^=state-succeeded],
-[class^=state-active],
-[class^=state-created],
-[class^=state-info] {
+[class^='state-completed'],
+[class^='state-ready'],
+[class^='state-succeeded'],
+[class^='state-active'],
+[class^='state-created'],
+[class^='state-info'],
+[class^='state-online'] {
   @include statusState($brightTurquoise);
 }
 
-[class^=state-all] {
+[class^='state-all'] {
   @include statusState(transparent);
 }
 
-[class^=state-warn] {
+[class^='state-warn'] {
   @include statusState($grandis);
 }
 
-[class^=state-deploying],
-[class^=state-build],
-[class^=state-pending],
-[class^=state-running] {
+[class^='state-deploying'],
+[class^='state-build'],
+[class^='state-pending'],
+[class^='state-running'] {
   @include statusState($pictonBlue);
 }
 
-[class^=state-failed],
-[class^=state-fail],
-[class^=state-error],
-[class^=state-broken],
-[class^=state-aborted] {
+[class^='state-failed'],
+[class^='state-fail'],
+[class^='state-error'],
+[class^='state-broken'],
+[class^='state-aborted'] {
   @include statusState($burntSienna);
 }
 
@@ -183,7 +226,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
 
-  button {
+  button:not([class*='round-icon-cp__icon']) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -256,6 +299,46 @@ textarea {
     &-https,
     &-s3 {
       color: $sorbus;
+    }
+  }
+}
+
+.visiblity-hidden {
+  visibility: hidden;
+}
+
+.graph-container {
+  display: flex;
+  flex: 1 1;
+
+  .graph-view {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    background-color: $gallery;
+  }
+
+  .graph-pane {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    min-width: 350px;
+    overflow: hidden;
+    background: $white;
+    border: $secondaryBorder;
+    box-shadow: 0 0 30px rgba($black, 0.15);
+
+    &.scrollable {
+      overflow-y: auto;
+    }
+
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px;
+      font-weight: bold;
+      font-size: 20px;
     }
   }
 }

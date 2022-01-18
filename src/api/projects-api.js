@@ -15,6 +15,10 @@ export default {
         }
       }
     ),
+  deleteSecret: (project, key) =>
+    mainHttpClient.delete(
+      `/projects/${project}/secrets?provider=kubernetes&secret=${key}`
+    ),
   editProject: (project, data) =>
     mainHttpClient.put(`/projects/${project}`, data),
   getJobsAndWorkflows: project =>
@@ -51,6 +55,8 @@ export default {
     }),
   getProjectScheduledJobs: project =>
     mainHttpClient.get(`/projects/${project}/schedules`),
+  getProjectSecrets: project =>
+    mainHttpClient.get(`/projects/${project}/secret-keys?provider=kubernetes`),
   getProjects: () => mainHttpClient.get('/projects'),
   getProjectsNames: () =>
     mainHttpClient.get('/projects', {
@@ -58,15 +64,18 @@ export default {
         format: 'name_only'
       }
     }),
-  getProjectsSummary: cancelToken =>
-    mainHttpClient.get('/projects', {
-      cancelToken,
-      params: {
-        format: 'summary'
-      }
+  getProjectSummaries: cancelToken =>
+    mainHttpClient.get('/project-summaries', {
+      cancelToken
     }),
+  getProjectSummary: project => {
+    return mainHttpClient.get(`/project-summaries/${project}`)
+  },
   getProjectWorkflows: project => {
     return mainHttpClient.get(`/projects/${project}/pipelines`)
+  },
+  setProjectSecret: (project, secretData) => {
+    return mainHttpClient.post(`/projects/${project}/secrets`, secretData)
   },
   updateProject: (project, data) =>
     mainHttpClient.patch(`/projects/${project}`, data)

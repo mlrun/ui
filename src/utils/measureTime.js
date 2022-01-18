@@ -16,7 +16,11 @@ export default (startTime, endTime) => {
   m = (h - ~~h) * 60
   s = (m - ~~m) * 60
 
-  const hours = `${~~h}:${~~m}:${~~s}`
+  const hours = generateTime(~~h, ~~m, ~~s)
 
   return ~~d > 0 ? `${~~d} ${d > 1 ? 'days ' : 'day '}` + hours : hours
+}
+
+const generateTime = (...args) => {
+  return args.map(el => (el < 10 ? '0' + el : el)).join(':')
 }

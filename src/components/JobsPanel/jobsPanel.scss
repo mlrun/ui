@@ -7,11 +7,13 @@
 .job-panel {
   &__item {
     .panel-section__body {
-      .default-input {
-        width: 97%;
-        border: $primaryBorder;
-        border-radius: 4px;
+      .default-input-wrapper {
+        margin-right: 15px;
       }
+    }
+
+    .new-item-side-panel__item {
+      padding: 0;
     }
 
     &.resources {
@@ -25,6 +27,10 @@
 
         .panel-section__body {
           align-items: center;
+        }
+
+        .select__value {
+          min-width: 120px;
         }
       }
 

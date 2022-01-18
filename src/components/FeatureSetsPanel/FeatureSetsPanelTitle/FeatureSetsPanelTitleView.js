@@ -4,11 +4,10 @@ import { connect } from 'react-redux'
 
 import Input from '../../../common/Input/Input'
 import ChipCell from '../../../common/ChipCell/ChipCell'
-import Tooltip from '../../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
 import TextArea from '../../../common/TextArea/TextArea'
+import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
 
-import { ReactComponent as Close } from '../../../images/close.svg'
+import { ReactComponent as CloseIcon } from '../../../images/close.svg'
 
 import './featureSetsPanelTitle.scss'
 
@@ -19,11 +18,11 @@ const FeatureSetsPanelTitleView = ({
   handleAddLabel,
   handleChangeLabels,
   handleNameOnBlur,
-  isNameValid,
   setData,
-  setNameValid,
   setNewFeatureSetDescription,
-  setNewFeatureSetVersion
+  setNewFeatureSetVersion,
+  setValidation,
+  validation
 }) => {
   const titleValidationTip = (
     <>
@@ -42,7 +41,7 @@ const FeatureSetsPanelTitleView = ({
           <Input
             className="panel-title__input"
             floatingLabel
-            invalid={!isNameValid}
+            invalid={!validation.isNameValid}
             invalidText="This field is invalid"
             label="Feature Set Name"
             maxLength={56}
@@ -52,7 +51,7 @@ const FeatureSetsPanelTitleView = ({
             required
             requiredText="This field is required"
             setInvalid={value =>
-              setNameValid(state => ({ ...state, isNameValid: value }))
+              setValidation(state => ({ ...state, isNameValid: value }))
             }
             tip={titleValidationTip}
             type="text"
@@ -62,6 +61,7 @@ const FeatureSetsPanelTitleView = ({
           <Input
             className="panel-title__input"
             floatingLabel
+            invalid={!validation.isTagValid}
             label="Version"
             onChange={version =>
               setData(state => ({
@@ -77,6 +77,9 @@ const FeatureSetsPanelTitleView = ({
               }
             }}
             placeholder="latest"
+            setInvalid={value =>
+              setValidation(state => ({ ...state, isTagValid: value }))
+            }
             type="text"
             value={data.version}
             wrapperClassName="version"
@@ -110,17 +113,20 @@ const FeatureSetsPanelTitleView = ({
               className="panel-title__labels-item"
               editChip={handleChangeLabels}
               elements={data.labels}
-              isEditMode={true}
+              isEditMode
               removeChip={handleChangeLabels}
             />
           </div>
         </div>
       </div>
-      <button onClick={() => closePanel({})} className="panel-title__btn_close">
-        <Tooltip template={<TextTooltipTemplate text="Close" />}>
-          <Close />
-        </Tooltip>
-      </button>
+      <RoundedIcon
+        onClick={() => closePanel({})}
+        className="panel-title__btn_close"
+        tooltipText="Close"
+        data-testid="pop-up-close-btn"
+      >
+        <CloseIcon />
+      </RoundedIcon>
     </div>
   )
 }
@@ -132,11 +138,11 @@ FeatureSetsPanelTitleView.propTypes = {
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
   setNewFeatureSetDescription: PropTypes.func.isRequired,
-  setNewFeatureSetVersion: PropTypes.func.isRequired
+  setNewFeatureSetVersion: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(({ artifactsStore }) => ({

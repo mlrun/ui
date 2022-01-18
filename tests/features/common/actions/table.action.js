@@ -5,6 +5,7 @@ import {
   selectOptionInDropdownWithoutCheck,
   getOptionValues
 } from './dropdown.action'
+import { hoverComponent, getElementText } from './common.action'
 
 async function getColumnValues(driver, table, columnName) {
   return await driver
@@ -50,7 +51,7 @@ const action = {
     column,
     value
   ) {
-    const subStirng = value.replace('=', '\n:\n')
+    const subString = value.replace('=', '\n:\n')
     const rows = await getTableRows(driver, table)
     expect(rows).not.equal(0)
     let flag = true
@@ -60,7 +61,7 @@ const action = {
         driver,
         table.tableFields[column](i).options
       )
-      flag = flag && options.some(item => item.includes(subStirng))
+      flag = flag && options.some(item => item.includes(subString))
       // TODO: that is a workarround for collapsing labels dropdown
       await selectOptionInDropdownWithoutCheck(
         driver,
@@ -69,6 +70,25 @@ const action = {
       )
     }
     expect(flag).equal(true)
+  },
+  isContainsSubstringInColumnTooltipCells: async function(
+    driver,
+    table,
+    column,
+    value
+  ) {
+    const rows = await getTableRows(driver, table)
+    const arr = []
+    expect(rows).not.equal(0)
+    for (let i = rows; i >= 1; i--) {
+      await hoverComponent(driver, table.tableFields[column](i)['label'])
+      const text = await getElementText(
+        driver,
+        table.tableFields[column](i)['hint']
+      )
+      arr.push(text)
+    }
+    expect(arr.every(item => item.includes(value))).equal(true)
   },
   isDatetimeCelsValueInRange: async function(
     driver,
@@ -95,6 +115,39 @@ const action = {
       }
     }
     return indexes
+  },
+  findRowIndexesByColumnTooltipsValue: async function(
+    driver,
+    table,
+    columnName,
+    value
+  ) {
+    const indexes = []
+    const rowsNumber = await getTableRows(driver, table)
+    for (let row = rowsNumber; row >= 1; row--) {
+      const temp = await getElementText(
+        driver,
+        table.tableFields[columnName](row)['label']
+      )
+      if (temp) {
+        if (temp === value) {
+          indexes.push(row)
+        }
+      } else {
+        await hoverComponent(
+          driver,
+          table.tableFields[columnName](row)['label']
+        )
+        const text = await getElementText(
+          driver,
+          table.tableFields[columnName](row)['hint']
+        )
+        if (text === value) {
+          indexes.push(row)
+        }
+      }
+    }
+    return indexes.reverse()
   },
   openActionMenuByIndex: async function(driver, table, index) {
     const elements = await driver.findElements(

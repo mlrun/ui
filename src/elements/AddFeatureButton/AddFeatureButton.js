@@ -70,13 +70,15 @@ const AddFeatureButton = ({ feature, tableStore, updateGroupedFeatures }) => {
 
   return (
     <div className="add-feature-button">
-      <Tooltip template={<TextTooltipTemplate text={tooltip} />}>
-        {isFeatureInList ? null : isFeatureInvalid ? (
+      {isFeatureInList ? null : isFeatureInvalid ? (
+        <Tooltip template={<TextTooltipTemplate text={tooltip} />}>
           <AddCircleQuestion />
-        ) : (
+        </Tooltip>
+      ) : (
+        <Tooltip template={<TextTooltipTemplate text={tooltip} />}>
           <AddCircle onClick={addFeature} />
-        )}
-      </Tooltip>
+        </Tooltip>
+      )}
     </div>
   )
 }

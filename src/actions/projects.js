@@ -12,6 +12,9 @@ import {
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_SUCCESS,
   FETCH_PROJECT_BEGIN,
+  FETCH_PROJECT_SUMMARY_BEGIN,
+  FETCH_PROJECT_SUMMARY_FAILURE,
+  FETCH_PROJECT_SUMMARY_SUCCESS,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -52,15 +55,25 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
+  REMOVE_PROJECT_SUMMARY,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
+  SET_NEW_PROJECT_LABELS,
   SET_NEW_PROJECT_NAME,
   SET_PROJECT_DATA,
   SET_PROJECT_LABELS,
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
-  FETCH_PROJECTS_NAMES_SUCCESS
+  FETCH_PROJECTS_NAMES_SUCCESS,
+  SET_PROJECT_SETTINGS,
+  SET_PROJECT_PARAMS,
+  FETCH_PROJECT_SECRETS_BEGIN,
+  FETCH_PROJECT_SECRETS_FAILURE,
+  FETCH_PROJECT_SECRETS_SUCCESS,
+  SET_PROJECT_SECRETS,
+  CONFLICT_CODE,
+  AMOUNT_LIMIT_CODE
 } from '../constants'
 
 const projectsAction = {
@@ -90,7 +103,14 @@ const projectsAction = {
         return result
       })
       .catch(error => {
-        dispatch(projectsAction.createProjectFailure(error.message))
+        const message =
+          error.response.status === CONFLICT_CODE
+            ? `Project name "${postData.metadata.name}" already exists`
+            : error.response.status === AMOUNT_LIMIT_CODE
+            ? 'Resource limit reached. Cannot create more records'
+            : error.message
+
+        dispatch(projectsAction.createProjectFailure(message))
       })
   },
   createProjectBegin: () => ({ type: CREATE_PROJECT_BEGIN }),
@@ -129,16 +149,26 @@ const projectsAction = {
   fetchProject: project => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
-    projectsApi
+    return projectsApi
       .getProject(project)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
       })
       .catch(error => {
-        dispatch(projectsAction.fetchProjectFailure(error.message))
+        dispatch(projectsAction.fetchProjectFailure(error))
+
+        throw error
       })
   },
   fetchProjectBegin: () => ({ type: FETCH_PROJECT_BEGIN }),
+  fetchProjectFailure: error => ({
+    type: FETCH_PROJECT_FAILURE,
+    payload: error
+  }),
+  fetchProjectSuccess: project => ({
+    type: FETCH_PROJECT_SUCCESS,
+    payload: project
+  }),
   fetchProjectDataSets: project => dispatch => {
     dispatch(projectsAction.fetchProjectDataSetsBegin())
 
@@ -194,10 +224,6 @@ const projectsAction = {
   fetchProjectFailedJobsSuccess: jobs => ({
     type: FETCH_PROJECT_FAILED_JOBS_SUCCESS,
     payload: jobs
-  }),
-  fetchProjectFailure: error => ({
-    type: FETCH_PROJECT_FAILURE,
-    payload: error
   }),
   fetchProjectFiles: project => dispatch => {
     dispatch(projectsAction.fetchProjectFilesBegin())
@@ -394,9 +420,55 @@ const projectsAction = {
     type: FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
     payload: jobs
   }),
-  fetchProjectSuccess: project => ({
-    type: FETCH_PROJECT_SUCCESS,
-    payload: project
+  fetchProjectSecrets: project => dispatch => {
+    dispatch(projectsAction.fetchProjectSecretsBegin())
+
+    return projectsApi
+      .getProjectSecrets(project)
+      .then(response => {
+        dispatch(projectsAction.fetchProjectSecretsSuccess(response.data))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectSecretsFailure(error.message))
+
+        throw error.message
+      })
+  },
+  fetchProjectSecretsBegin: () => ({
+    type: FETCH_PROJECT_SECRETS_BEGIN
+  }),
+  fetchProjectSecretsFailure: error => ({
+    type: FETCH_PROJECT_SECRETS_FAILURE,
+    payload: error
+  }),
+  fetchProjectSecretsSuccess: secrets => ({
+    type: FETCH_PROJECT_SECRETS_SUCCESS,
+    payload: secrets
+  }),
+  fetchProjectSummary: project => dispatch => {
+    dispatch(projectsAction.fetchProjectSummaryBegin())
+
+    return projectsApi
+      .getProjectSummary(project)
+      .then(({ data }) => {
+        return dispatch(projectsAction.fetchProjectSummarySuccess(data))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectSummaryFailure(error.message))
+
+        throw error
+      })
+  },
+  fetchProjectSummaryBegin: () => ({
+    type: FETCH_PROJECT_SUMMARY_BEGIN
+  }),
+  fetchProjectSummaryFailure: error => ({
+    type: FETCH_PROJECT_SUMMARY_FAILURE,
+    payload: error
+  }),
+  fetchProjectSummarySuccess: summary => ({
+    type: FETCH_PROJECT_SUMMARY_SUCCESS,
+    payload: summary
   }),
   fetchProjects: () => dispatch => {
     dispatch(projectsAction.fetchProjectsBegin())
@@ -448,11 +520,11 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectsSummaryBegin())
 
     return projectsApi
-      .getProjectsSummary(cancelToken)
-      .then(({ data: { projects } }) => {
-        dispatch(projectsAction.fetchProjectsSummarySuccess(projects))
+      .getProjectSummaries(cancelToken)
+      .then(({ data: { project_summaries } }) => {
+        dispatch(projectsAction.fetchProjectsSummarySuccess(project_summaries))
 
-        return projects
+        return project_summaries
       })
       .catch(err => {
         dispatch(projectsAction.fetchProjectsSummaryFailure(err))
@@ -497,10 +569,15 @@ const projectsAction = {
   removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
+  removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
   setNewProjectDescription: description => ({
     type: SET_NEW_PROJECT_DESCRIPTION,
     payload: description
+  }),
+  setNewProjectLabels: (label, labels) => ({
+    type: SET_NEW_PROJECT_LABELS,
+    payload: { ...labels, ...label }
   }),
   setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name }),
   setProjectData: data => ({
@@ -510,6 +587,18 @@ const projectsAction = {
   setProjectLabels: labels => ({
     type: SET_PROJECT_LABELS,
     payload: { ...labels }
+  }),
+  setProjectParams: params => ({
+    type: SET_PROJECT_PARAMS,
+    payload: params
+  }),
+  setProjectSecrets: secrets => ({
+    type: SET_PROJECT_SECRETS,
+    payload: secrets
+  }),
+  setProjectSettings: settings => ({
+    type: SET_PROJECT_SETTINGS,
+    payload: settings
   })
 }
 

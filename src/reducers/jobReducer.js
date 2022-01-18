@@ -33,13 +33,25 @@ import {
   SET_NEW_JOB_SELECTOR_RESULT,
   RUN_NEW_JOB_BEGIN,
   RUN_NEW_JOB_SUCCESS,
-  SET_NEW_JOB_NODE_SELECTOR
+  SET_NEW_JOB_NODE_SELECTOR,
+  FETCH_JOB_BEGIN,
+  FETCH_JOB_FAILURE,
+  FETCH_JOB_SUCCESS,
+  SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
+  FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
+  FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
+  REMOVE_JOB
 } from '../constants'
 
 const initialState = {
   allJobsData: [],
+  job: {},
   jobs: [],
-  logs: '',
+  logs: {
+    data: '',
+    loading: false,
+    error: null
+  },
   loading: false,
   error: null,
   newJob: {
@@ -58,6 +70,11 @@ const initialState = {
       }
     },
     function: {
+      metadata: {
+        credentials: {
+          access_key: ''
+        }
+      },
       spec: {
         volumes: [],
         volume_mounts: [],
@@ -95,7 +112,28 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_JOB_LOGS_BEGIN:
       return {
         ...state,
+        logs: {
+          ...state.logs,
+          loading: true
+        }
+      }
+    case FETCH_JOB_BEGIN:
+      return {
+        ...state,
         loading: true
+      }
+    case FETCH_JOB_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_JOB_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        job: payload
       }
     case FETCH_JOB_FUNCTION_BEGIN:
       return {
@@ -117,15 +155,20 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_JOB_LOGS_FAILURE:
       return {
         ...state,
-        logs: [],
-        loading: false,
-        error: payload
+        logs: {
+          data: [],
+          loading: false,
+          error: payload
+        }
       }
     case FETCH_JOB_LOGS_SUCCESS:
       return {
         ...state,
-        logs: payload,
-        loading: false
+        logs: {
+          data: payload,
+          loading: false,
+          error: null
+        }
       }
     case FETCH_JOBS_BEGIN:
       return {
@@ -145,10 +188,25 @@ export default (state = initialState, { type, payload }) => {
         jobs: payload,
         loading: false
       }
+    case FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_SCHEDULED_JOB_ACCESS_KEY_END:
+      return {
+        ...state,
+        loading: false
+      }
+    case REMOVE_JOB:
+      return {
+        ...state,
+        job: {}
+      }
     case REMOVE_JOB_LOGS:
       return {
         ...state,
-        logs: ''
+        logs: initialState.logs
       }
     case REMOVE_JOB_ERROR:
       return {
@@ -212,12 +270,36 @@ export default (state = initialState, { type, payload }) => {
           },
           function: {
             ...state.newJob.function,
+            metadata: {
+              ...state.newJob.function.metadata,
+              credentials: {
+                ...state.newJob.function.metadata.credentials,
+                access_key: payload.access_key
+              }
+            },
             spec: {
               ...state.newJob.function.spec,
               volume_mounts: payload.volume_mounts,
               volumes: payload.volumes,
               env: payload.environmentVariables,
               node_selector: payload.node_selector
+            }
+          }
+        }
+      }
+    case SET_NEW_JOB_CREDENTIALS_ACCESS_KEY:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          function: {
+            ...state.newJob.function,
+            metadata: {
+              ...state.newJob.function.metadata,
+              credentials: {
+                ...state.newJob.function.metadata.credentials,
+                access_key: payload
+              }
             }
           }
         }

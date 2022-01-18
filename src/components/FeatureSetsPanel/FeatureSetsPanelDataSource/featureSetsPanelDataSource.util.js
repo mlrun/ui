@@ -1,30 +1,41 @@
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+import {
+  AZURE_STORAGE_INPUT_PATH_SCHEME,
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  S3_INPUT_PATH_SCHEME,
+  V3IO_INPUT_PATH_SCHEME
+} from '../../../constants'
+
+export const TIME_FIELD = 'timeField'
+export const START_TIME = 'startTime'
+export const END_TIME = 'endTime'
+export const CSV = 'csv'
+export const PARQUET = 'parquet'
 
 export const kindOptions = [
-  { label: 'CSV', id: 'csv' },
-  { label: 'PARQUET', id: 'parquet' }
+  { label: 'CSV', id: CSV },
+  { label: 'PARQUET', id: PARQUET }
 ]
 
 export const comboboxSelectList = [
   {
     className: 'path-type-store',
     label: 'MLRun store',
-    id: 'store://'
+    id: MLRUN_STORAGE_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-v3io',
     label: 'V3IO',
-    id: 'v3io://'
+    id: V3IO_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-s3',
     label: 'S3',
-    id: 's3://'
+    id: S3_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-az',
     label: 'Azure storage',
-    id: 'az://'
+    id: AZURE_STORAGE_INPUT_PATH_SCHEME
   }
 ]
 
@@ -81,19 +92,15 @@ export const isUrlInputValid = (
     dataSourceKind === CSV
       ? /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
       : /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
+  const defaultValidation =
+    pathInputValue.length > 0 && /.*?\/(.*?)/.test(pathInputValue)
 
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
       return regExp.test(pathInputValue)
     default:
       return dataSourceKind === CSV
-        ? pathInputValue.length > 0 && !pathInputValue.endsWith('/')
-        : pathInputValue.length > 0
+        ? defaultValidation && !pathInputValue.endsWith('/')
+        : defaultValidation
   }
 }
-
-export const TIME_FIELD = 'timeField'
-export const START_TIME = 'startTime'
-export const END_TIME = 'endTime'
-export const CSV = 'csv'
-export const PARQUET = 'parquet'

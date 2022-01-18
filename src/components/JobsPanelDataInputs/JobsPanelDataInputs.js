@@ -291,7 +291,7 @@ const JobsPanelDataInputs = ({
     handleInputPathTypeChange(
       inputsDispatch,
       inputsState.newInput,
-      path.replace(/:\/\/.*$/g, '://'),
+      path,
       inputsState.pathPlaceholder,
       inputsState.newInputDefaultPathProject,
       match.params.projectName

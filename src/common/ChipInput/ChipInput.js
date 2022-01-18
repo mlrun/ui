@@ -39,7 +39,7 @@ const ChipInput = ({
   useEffect(() => {
     const filteredList = suggestionList.filter(suggestionItem => {
       return (
-        suggestionItem.label.includes(typedValue) &&
+        suggestionItem.label.toLowerCase().includes(typedValue.toLowerCase()) &&
         !elements.find(element => element.id === suggestionItem.id)
       )
     })
@@ -73,7 +73,7 @@ const ChipInput = ({
   )
 
   const handleRemoveChip = useCallback(
-    chipIndex => {
+    (event, chipIndex) => {
       removeChip(chipIndex)
     },
     [removeChip]
@@ -96,6 +96,7 @@ const ChipInput = ({
             handleRemoveChip={handleRemoveChip}
             isDeleteMode={isDeleteMode}
             key={`${chip.value}${index}`}
+            showChips
           />
         )
       })}

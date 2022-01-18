@@ -1,9 +1,11 @@
-export const betaBreadcrumbs = ['feature-store']
-
-export const generateProjectScreens = match => [
-  { label: 'Models', id: 'models' },
+export const generateProjectScreens = (match, isDemoMode) => [
+  {
+    label: 'Project Monitoring',
+    id: 'monitor'
+  },
   { label: 'Feature Store (Beta)', id: 'feature-store' },
-  { label: 'Files', id: 'files' },
+  { label: 'Artifacts', id: 'files' },
+  { label: 'Models', id: 'models' },
   { label: 'Jobs', id: 'jobs' },
   { label: 'ML functions', id: 'functions' },
   {
@@ -15,5 +17,9 @@ export const generateProjectScreens = match => [
     label: 'API gateways',
     id: 'API gateways',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
+  },
+  {
+    label: 'Settings',
+    id: 'settings'
   }
 ]

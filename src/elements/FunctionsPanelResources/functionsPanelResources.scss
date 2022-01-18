@@ -1,14 +1,23 @@
 .resources {
+  .volume-mount {
+    width: 150px;
+    margin-bottom: 20px;
+  }
+
   .volumes {
     margin-bottom: 45px;
   }
 
   .memory,
   .cpu {
-    margin-right: 30px;
+    margin-right: 20px;
 
     .panel-section__body {
       align-items: center;
+    }
+
+    .select__value {
+      min-width: 120px;
     }
   }
 

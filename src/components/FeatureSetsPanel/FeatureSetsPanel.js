@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
@@ -17,30 +18,44 @@ const FeatureSetsPanel = ({
   featureStore,
   project,
   removeFeatureStoreError,
+  setNewFeatureSetCredentialsAccessKey,
   setNotification,
   startFeatureSetIngest
 }) => {
   const [validation, setValidation] = useState({
     isNameValid: true,
+    isTagValid: true,
     isUrlValid: true,
     isTimeFieldValid: true,
     isStartTimeValid: true,
     isEndTimeValid: true,
+    isParseDatesValid: true,
     isEntitiesValid: true,
-    isTargetsPathValid: true
+    isOnlineTargetPathValid: true,
+    isOfflineTargetPathValid: true,
+    isExternalOfflineTargetPathValid: true,
+    isOfflinePartitionColumnsValid: true,
+    isExternalOfflinePartitionColumnsValid: true,
+    isTimestampKeyValid: true,
+    isAccessKeyValid: true
   })
   const [confirmDialog, setConfirmDialog] = useState(null)
+  const [accessKeyRequired, setAccessKeyRequired] = useState(false)
   const history = useHistory()
 
   const handleSave = () => {
+    const data = {
+      kind: 'FeatureSet',
+      ...featureStore.newFeatureSet
+    }
+
+    delete data.credentials
+
     if (featureStore.error) {
       removeFeatureStoreError()
     }
 
-    createNewFeatureSet(project, {
-      kind: 'FeatureSet',
-      ...featureStore.newFeatureSet
-    })
+    createNewFeatureSet(project, data)
       .then(result => {
         setConfirmDialog(null)
 
@@ -60,7 +75,13 @@ const FeatureSetsPanel = ({
 
   const handleSaveOnClick = startIngestion => {
     if (
-      checkValidation(featureStore.newFeatureSet, setValidation, validation)
+      checkValidation(
+        featureStore.newFeatureSet,
+        setValidation,
+        validation,
+        startIngestion,
+        setAccessKeyRequired
+      )
     ) {
       setConfirmDialog({
         action: startIngestion ? 'save and ingest' : 'save'
@@ -70,13 +91,17 @@ const FeatureSetsPanel = ({
 
   const handleStartFeatureSetIngest = result => {
     const reference = result.data.metadata.tag || result.data.metadata.uid
+    const data = {
+      source: { ...result.data.spec.source, name: 'source' },
+      targets: result.data.spec.targets,
+      credentials: featureStore.newFeatureSet.credentials
+    }
 
     return startFeatureSetIngest(
       project,
       result.data.metadata.name,
       reference,
-      result.data.spec.source,
-      result.data.spec.targets
+      data
     ).then(() => {
       handleCreateFeatureSetSuccess(result.data.metadata.name, reference)
     })
@@ -95,20 +120,26 @@ const FeatureSetsPanel = ({
     })
   }
 
-  return (
+  return createPortal(
     <FeatureSetsPanelView
+      accessKeyRequired={accessKeyRequired}
       closePanel={closePanel}
       confirmDialog={confirmDialog}
       error={featureStore.error}
+      featureStore={featureStore}
       handleSave={handleSave}
       handleSaveOnClick={handleSaveOnClick}
       loading={featureStore.loading}
       project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
+      setNewFeatureSetCredentialsAccessKey={
+        setNewFeatureSetCredentialsAccessKey
+      }
       setValidation={setValidation}
       validation={validation}
-    />
+    />,
+    document.getElementById('overlay_container')
   )
 }
 

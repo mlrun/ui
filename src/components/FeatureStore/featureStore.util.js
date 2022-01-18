@@ -34,13 +34,18 @@ import {
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
+import { ReactComponent as Delete } from '../../images/delete.svg'
+
 export const pageDataInitialState = {
   actionsMenu: [],
-  detailsMenu: [],
+  actionsMenuHeader: '',
+  details: {
+    menu: [],
+    infoHeaders: []
+  },
   filters: [],
-  infoHeaders: [],
   page: '',
-  registerArtifactDialogTitle: '',
+  selectedRowData: {},
   tabs: []
 }
 export const datasetsInfoHeaders = [
@@ -277,7 +282,7 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
     },
     {
       header: '',
-      class: 'artifacts_big align-right',
+      class: 'artifacts_small align-right',
       hidden: !isTablePanelOpen
     }
   ]
@@ -294,32 +299,48 @@ export const tabs = [
   { id: DATASETS_TAB, label: 'Datasets' }
 ]
 
-const generateActionsMenu = tab => []
+const generateActionsMenu = (tab, handleDelete) => {
+  return tab === FEATURE_VECTORS_TAB
+    ? [
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          onClick: handleDelete
+        }
+      ]
+    : []
+}
 
 export const generatePageData = (
   pageTab,
   handleRequestOnExpand,
   handleRemoveRequestData,
+  onDeleteFeatureVector,
   getPopUpTemplate,
   isTablePanelOpen,
-  isSelectedItem
+  isSelectedItem,
+  isDemoMode
 ) => {
   let data = {
-    detailsMenu: [],
+    details: {
+      menu: []
+    },
     page,
     tabs
   }
 
   if (pageTab === FEATURE_SETS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_SETS_TAB)
+    data.actionsMenuHeader = createFeatureSetTitle
     data.filters = featureSetsFilters
-    data.infoHeaders = featureSetsInfoHeaders
+    data.details.infoHeaders = featureSetsInfoHeaders
+    data.details.type = FEATURE_SETS_TAB
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
-    data.registerArtifactDialogTitle = createFeatureSetTitle
     data.filterMenuActionButton = null
     data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
+    data.hidePageActionMenu = true
     data.filters = featuresFilters
     data.tableHeaders = generateFeaturesTableHeaders(isTablePanelOpen)
     data.tablePanel = getFeaturesTablePanel()
@@ -331,21 +352,29 @@ export const generatePageData = (
     }
     data.handleRequestOnExpand = handleRequestOnExpand
     data.mainRowItemsCount = 2
+    data.noDataMessage =
+      'No features yet. Go to "Feature Sets" tab to create your first feature set.'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
+    data.actionsMenu = generateActionsMenu(
+      FEATURE_VECTORS_TAB,
+      onDeleteFeatureVector
+    )
+    data.hidePageActionMenu = !isDemoMode
+    data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
-    data.infoHeaders = featureVectorsInfoHeaders
-    data.registerArtifactDialogTitle = createFeatureVectorTitle
+    data.details.infoHeaders = featureVectorsInfoHeaders
+    data.details.type = FEATURE_VECTORS_TAB
     data.filterMenuActionButton = null
   } else {
     data.actionsMenu = generateActionsMenu(DATASETS_TAB)
+    data.actionsMenuHeader = registerDatasetsTitle
     data.filters = datasetsFilters
-    data.infoHeaders = datasetsInfoHeaders
+    data.details.infoHeaders = datasetsInfoHeaders
+    data.details.type = DATASETS_TAB
     data.tableHeaders = datasetsTableHeaders(isSelectedItem)
-    data.registerArtifactDialogTitle = registerDatasetsTitle
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
     data.filterMenuActionButton = null
@@ -370,21 +399,20 @@ export const handleFetchData = async (
     originalContent: []
   }
   let result = null
+  const config = {
+    cancelToken: new axios.CancelToken(cancel => {
+      featureStoreRef.current.cancel = cancel
+    })
+  }
 
   if (pageTab === DATASETS_TAB) {
-    result = await fetchDataSets(project, filters)
+    result = await fetchDataSets(project, filters, config)
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
       data.originalContent = result
     }
   } else if (pageTab === FEATURE_SETS_TAB) {
-    const config = {
-      cancelToken: new axios.CancelToken(cancel => {
-        featureStoreRef.current.cancel = cancel
-      })
-    }
-
     result = await fetchFeatureSets(project, filters, config)
 
     if (result) {
@@ -396,8 +424,8 @@ export const handleFetchData = async (
     }
   } else if (pageTab === FEATURES_TAB) {
     const allSettledResult = await Promise.allSettled([
-      fetchFeatures(project, filters),
-      fetchEntities(project, filters)
+      fetchFeatures(project, filters, config),
+      fetchEntities(project, filters, config)
     ])
     const result = allSettledResult.reduce((prevValue, nextValue) => {
       return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
@@ -408,12 +436,6 @@ export const handleFetchData = async (
       data.originalContent = result
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    const config = {
-      cancelToken: new axios.CancelToken(cancel => {
-        featureStoreRef.current.cancel = cancel
-      })
-    }
-
     result = await fetchFeatureVectors(project, filters, config)
 
     if (result) {
@@ -465,7 +487,11 @@ export const navigateToDetailsPane = (
     const selectedItem = content.find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
-      if ([FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)) {
+      if (
+        [FEATURES_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
+          match.params.pageTab
+        )
+      ) {
         return (
           contentItem[searchKey] === name &&
           (contentItem.tag === tag || contentItem.uid === tag)
@@ -515,23 +541,29 @@ export const handleApplyDetailsChanges = (
   filters
 ) => {
   const data = {
+    metadata: {},
     spec: {}
   }
+  const metadataFields = ['labels']
 
-  Object.keys(changes.data).forEach(
-    key => (data.spec[key] = changes.data[key].previousFieldValue)
-  )
+  Object.keys(changes.data).forEach(key => {
+    if (metadataFields.includes(key)) {
+      data.metadata[key] = changes.data[key].previousFieldValue
+    } else {
+      data.spec[key] = changes.data[key].previousFieldValue
+    }
+  })
 
-  if (data.spec.labels) {
+  if (data.metadata.labels) {
     const objectLabels = {}
 
-    data.spec.labels.forEach(label => {
+    data.metadata.labels.forEach(label => {
       const splitedLabel = label.split(':')
 
       objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
     })
 
-    data.spec.labels = { ...objectLabels }
+    data.metadata.labels = { ...objectLabels }
   }
 
   return updateFeatureStoreData(
@@ -629,7 +661,8 @@ export const generateFeatureVectorsDetailsMenu = selectedItem => [
   },
   {
     label: 'preview',
-    id: 'preview'
+    id: 'preview',
+    hidden: true // Temporary hidden because there is no implementation yet
   },
   {
     label: 'statistics',
@@ -712,7 +745,8 @@ export const fetchFeatureRowData = async (fetchData, feature, setPageData) => {
 export const fetchFeatureSetRowData = async (
   fetchFeatureSet,
   featureSet,
-  setPageData
+  setPageData,
+  tag
 ) => {
   const featureSetIdentifier = getFeatureSetIdentifier(featureSet)
 
@@ -729,7 +763,8 @@ export const fetchFeatureSetRowData = async (
 
   const result = await fetchFeatureSet(
     featureSet.project,
-    featureSet.name
+    featureSet.name,
+    tag
   ).catch(error => {
     setPageData(state => ({
       ...state,
@@ -762,7 +797,8 @@ export const fetchFeatureSetRowData = async (
 export const fetchFeatureVectorRowData = async (
   fetchFeatureVector,
   featureVector,
-  setPageData
+  setPageData,
+  tag
 ) => {
   const featureVectorIdentifier = getFeatureVectorIdentifier(featureVector)
 
@@ -778,7 +814,8 @@ export const fetchFeatureVectorRowData = async (
 
   const result = await fetchFeatureVector(
     featureVector.project,
-    featureVector.name
+    featureVector.name,
+    tag
   ).catch(error => {
     setPageData(state => ({
       ...state,
@@ -812,7 +849,8 @@ export const fetchDataSetRowData = async (
   fetchDataSet,
   dataSet,
   setPageData,
-  iter
+  iter,
+  tag
 ) => {
   const dataSetIdentifier = getArtifactIdentifier(dataSet)
   let result = []
@@ -828,7 +866,7 @@ export const fetchDataSetRowData = async (
   }))
 
   try {
-    result = await fetchDataSet(dataSet.project, dataSet.db_key, iter)
+    result = await fetchDataSet(dataSet.project, dataSet.db_key, iter, tag)
   } catch (error) {
     setPageData(state => ({
       ...state,

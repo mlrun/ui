@@ -43,7 +43,6 @@ const FeatureSetsPanelDataSourceView = ({
   urlProjectItemTypeEntered,
   validation
 }) => {
-  // const httpKind = 'http', disabling temporarily until backend supports scheduling
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
       <FeatureSetsPanelSection title="Data Source">
@@ -85,7 +84,7 @@ const FeatureSetsPanelDataSourceView = ({
             selectPlaceholder="URL"
           />
         </div>
-        {false && ( // was: data.kind !== httpKind, disabling temporarily until backend supports scheduling
+        {data.kind !== CSV && (
           <div className="schedule-content">
             <Button
               className="schedule-tumbler"
@@ -115,6 +114,7 @@ const FeatureSetsPanelDataSourceView = ({
           <Input
             className="data-source__inputs-item"
             floatingLabel
+            invalid={!validation.isParseDatesValid}
             label="Parse Dates"
             onBlur={event => {
               if (
@@ -131,6 +131,9 @@ const FeatureSetsPanelDataSourceView = ({
               }))
             }
             placeholder="col_name1,col_name2,..."
+            setInvalid={value =>
+              setValidation(state => ({ ...state, isParseDatesValid: value }))
+            }
             type="text"
           />
         )}

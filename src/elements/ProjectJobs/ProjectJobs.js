@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
 import { MONITOR_JOBS_TAB } from '../../constants'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import {
   getJobsStatistics,
   getJobsTableData,
@@ -14,15 +14,9 @@ import {
 } from './projectJobs.utils'
 import projectsAction from '../../actions/projects'
 
-const ProjectJobs = ({
-  fetchProjectJobs,
-  fetchProjectScheduledJobs,
-  fetchProjectWorkflows,
-  match,
-  projectStore
-}) => {
-  const location = useLocation()
+const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
   const [groupedLatestItem, setGroupedLatestItem] = useState([])
+  const isDemoMode = useDemoMode()
 
   useEffect(() => {
     if (projectStore.project.jobs.data) {
@@ -34,22 +28,13 @@ const ProjectJobs = ({
 
   useEffect(() => {
     fetchProjectJobs(match.params.projectName)
-    fetchProjectScheduledJobs(match.params.projectName)
-    fetchProjectWorkflows(match.params.projectName)
-  }, [
-    match.params.projectName,
-    fetchProjectJobs,
-    fetchProjectScheduledJobs,
-    fetchProjectWorkflows
-  ])
+  }, [fetchProjectJobs, match.params.projectName])
 
   const jobsData = useMemo(() => {
     const statistics = getJobsStatistics(
-      projectStore.project.jobs,
+      projectStore.projectSummary,
       match,
-      location.search,
-      projectStore.project.scheduledJobs,
-      projectStore.project.workflows
+      isDemoMode
     )
     const table = getJobsTableData(groupedLatestItem, match)
 
@@ -57,14 +42,7 @@ const ProjectJobs = ({
       statistics,
       table
     }
-  }, [
-    groupedLatestItem,
-    match,
-    location.search,
-    projectStore.project.jobs,
-    projectStore.project.scheduledJobs,
-    projectStore.project.workflows
-  ])
+  }, [groupedLatestItem, isDemoMode, match, projectStore.projectSummary])
 
   return (
     <ProjectDataCard

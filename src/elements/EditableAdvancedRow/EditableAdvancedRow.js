@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
@@ -127,7 +129,9 @@ const EditableAdvancedRow = ({
           }
           onClick={() => handleEdit(selectedItem.data, index)}
         >
-          <Checkmark />
+          <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+            <Checkmark />
+          </Tooltip>
         </button>
       </div>
     </div>

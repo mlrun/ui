@@ -3,7 +3,9 @@ import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getVolumeType } from '../../utils/panelResources.util'
-import { PANEL_EDIT_MODE } from '../../constants'
+import { PANEL_DEFAULT_ACCESS_KEY, PANEL_EDIT_MODE } from '../../constants'
+import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
+import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 
 export const REQUESTS = 'REQUESTS'
 export const LIMITS = 'LIMITS'
@@ -276,22 +278,27 @@ export const generateTableData = (
       parameters,
       volume_mounts: volumeMounts,
       volumes,
-      environmentVariables: environmentVariables.map(env => ({
-        data: {
-          name: env.name,
-          value: env.value ?? ''
-        }
-      })),
+      environmentVariables: parseEnvVariables(environmentVariables).map(
+        env => ({
+          data: generateEnvVariable(env)
+        })
+      ),
       secretSources: [],
       node_selector
     }
   })
+  panelDispatch({
+    type: panelActions.SET_ACCESS_KEY,
+    payload: PANEL_DEFAULT_ACCESS_KEY
+  })
   setNewJob({
+    access_key: PANEL_DEFAULT_ACCESS_KEY,
     inputs: parseDefaultDataInputsContent(dataInputs),
     parameters: parseDefaultContent(parameters),
     volume_mounts: (volumeMounts ?? []).map(volumeMounts => ({
       name: volumeMounts.data.name,
-      mountPath: volumeMounts.data.mountPath
+      mountPath: volumeMounts.data.mountPath,
+      subPath: volumeMounts.data.subPath
     })),
     volumes,
     environmentVariables,
@@ -374,7 +381,8 @@ export const generateTableDataFromDefaultData = (
       return {
         data: {
           name: volume_mounts?.name,
-          mountPath: volume_mounts?.mountPath
+          mountPath: volume_mounts?.mountPath,
+          subPath: volume_mounts?.subPath
         },
         isDefault: true,
         canBeModified: mode === PANEL_EDIT_MODE
@@ -419,11 +427,8 @@ export const generateTableDataFromDefaultData = (
       volume_mounts: volumeMounts ?? [],
       volumes: defaultData.function?.spec.volumes ?? [],
       environmentVariables:
-        defaultData.function?.spec.env.map(env => ({
-          data: {
-            name: env.name,
-            value: env.value ?? ''
-          }
+        parseEnvVariables(defaultData.function?.spec.env ?? []).map(env => ({
+          data: generateEnvVariable(env)
         })) ?? [],
       secretSources: secrets,
       node_selector: Object.entries(
@@ -434,13 +439,19 @@ export const generateTableDataFromDefaultData = (
       }))
     }
   })
+  panelDispatch({
+    type: panelActions.SET_ACCESS_KEY,
+    payload: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY
+  })
   setNewJob({
+    access_key: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
     inputs: defaultData.task.spec.inputs ?? {},
     parameters: defaultData.task.spec.parameters ?? {},
     volume_mounts: volumeMounts?.length
       ? volumeMounts.map(volumeMounts => ({
           name: volumeMounts.data.name,
-          mountPath: volumeMounts.data.mountPath
+          mountPath: volumeMounts.data.mountPath,
+          subPath: volumeMounts.data.subPath
         }))
       : [],
     volumes: defaultData.function?.spec.volumes ?? [],
@@ -481,7 +492,9 @@ export const generateRequestData = (
   match,
   selectedFunction,
   isFunctionTemplate,
-  defaultFunc
+  defaultFunc,
+  mode,
+  defaultHandler
 ) => {
   const func = isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
@@ -511,7 +524,10 @@ export const generateRequestData = (
   const taskSpec = {
     ...jobsStore.newJob.task.spec,
     function: func,
-    handler: panelState.currentFunctionInfo.method,
+    handler:
+      mode === PANEL_EDIT_MODE
+        ? defaultHandler
+        : panelState.currentFunctionInfo.method,
     input_path: panelState.inputPath,
     output_path: panelState.outputPath
   }

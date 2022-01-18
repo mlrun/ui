@@ -1,31 +1,30 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { chain, isEqual, isEmpty } from 'lodash'
+import { isEqual, isEmpty } from 'lodash'
 
-import Button from '../../common/Button/Button'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
   detailsMenu,
   filters,
   FUNCTIONS_EDITABLE_STATES,
-  FUNCTIONS_EDITABLE_TYPES,
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
-  getTableHeaders,
-  TRANSIENT_FUNCTION_STATUSES
+  getFunctionsEditableTypes,
+  getTableHeaders
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import getState from '../../utils/getState.js'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { parseFunctions } from '../../utils/parseFunctions'
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
@@ -37,6 +36,7 @@ import {
   PANEL_EDIT_MODE,
   SECONDARY_BUTTON
 } from '../../constants'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -54,7 +54,6 @@ const Functions = ({
   removeFunctionsError,
   removeNewFunction,
   removeNewJob,
-  setLoading,
   setNotification
 }) => {
   const [confirmData, setConfirmData] = useState(null)
@@ -64,26 +63,18 @@ const Functions = ({
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   let fetchFunctionLogsTimeout = useRef(null)
+  const isDemoMode = useDemoMode()
 
   const handleFetchFunctionLogs = useCallback(
     (projectName, name, tag, offset) => {
-      return fetchFunctionLogs(projectName, name, tag, offset).then(result => {
-        if (
-          TRANSIENT_FUNCTION_STATUSES.includes(
-            result.headers?.['x-mlrun-function-status']
-          )
-        ) {
-          fetchFunctionLogsTimeout.current = setTimeout(() => {
-            let currentOffset = offset
-              ? offset + result.data.length
-              : result.data.length
-
-            handleFetchFunctionLogs(projectName, name, tag, currentOffset)
-          }, 2000)
-        } else {
-          clearTimeout(fetchFunctionLogsTimeout.current)
-        }
-      })
+      return getFunctionLogs(
+        fetchFunctionLogs,
+        fetchFunctionLogsTimeout,
+        projectName,
+        name,
+        tag,
+        offset
+      )
     },
     [fetchFunctionLogs]
   )
@@ -99,6 +90,7 @@ const Functions = ({
         <NewFunctionPopUp
           action={action}
           currentProject={match.params.projectName}
+          isCustomPosition
           setFunctionsPanelIsOpen={setFunctionsPanelIsOpen}
         />
       )
@@ -122,7 +114,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !FUNCTIONS_EDITABLE_TYPES.includes(item?.type) ||
+          !getFunctionsEditableTypes(isDemoMode).includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
@@ -131,57 +123,33 @@ const Functions = ({
         onClick: onRemoveFunction
       }
     ],
-    detailsMenu,
+    details: {
+      menu: detailsMenu,
+      infoHeaders,
+      refreshLogs: handleFetchFunctionLogs,
+      removeLogs: handleRemoveLogs,
+      withLogsRefreshBtn: false,
+      type: FUNCTIONS_PAGE
+    },
     filters,
     page,
     tableHeaders: getTableHeaders(!isEveryObjectValueEmpty(selectedFunction)),
-    infoHeaders,
+    hidePageActionMenu: true,
     filterMenuActionButton: {
       getCustomTemplate: getPopUpTemplate,
       label: 'New',
       variant: SECONDARY_BUTTON
-    },
-    refreshLogs: handleFetchFunctionLogs,
-    removeLogs: handleRemoveLogs,
-    withLogsRefreshBtn: false
+    }
   }
 
   const refreshFunctions = useCallback(
     filters => {
-      return fetchFunctions(match.params.projectName, filters?.name).then(
+      return fetchFunctions(match.params.projectName, filters).then(
         functions => {
-          const newFunctions = chain(functions)
-            .orderBy('metadata.updated', 'desc')
-            .map(func => ({
-              args: func.spec?.args ?? [],
-              build: func.spec?.build ?? {},
-              command: func.spec?.command,
-              default_class: func.spec?.default_class ?? '',
-              default_handler: func.spec?.default_handler ?? '',
-              description: func.spec?.description ?? '',
-              env: func.spec?.env ?? [],
-              error_stream: func.spec?.error_stream ?? '',
-              graph: func.spec?.graph ?? {},
-              hash: func.metadata?.hash ?? '',
-              image: func.spec?.image ?? '',
-              labels: func.metadata?.labels ?? {},
-              name: func.metadata?.name ?? '',
-              parameters: func.spec?.parameters ?? {},
-              project: func.metadata?.project || match.params.projectName,
-              resources: func.spec?.resources ?? {},
-              secret_sources: func.spec?.secret_sources ?? [],
-              state: getState(func.status?.state, page, 'function'),
-              tag: func.metadata?.tag ?? '',
-              track_models: func.spec?.track_models ?? false,
-              type: func.kind,
-              volume_mounts: func.spec?.volume_mounts ?? [],
-              volumes: func.spec?.volumes ?? [],
-              updated: new Date(func.metadata?.updated ?? ''),
-              ui: {
-                originalContent: func
-              }
-            }))
-            .value()
+          const newFunctions = parseFunctions(
+            functions,
+            match.params.projectName
+          )
 
           setFunctions(newFunctions)
 
@@ -210,10 +178,10 @@ const Functions = ({
   }, [filtersStore.showUntagged, functions])
 
   useEffect(() => {
-    if (match.params.hash && pageData.detailsMenu.length > 0) {
-      isDetailsTabExists(FUNCTIONS_PAGE, match, pageData.detailsMenu, history)
+    if (match.params.hash && pageData.details.menu.length > 0) {
+      isDetailsTabExists(FUNCTIONS_PAGE, match, pageData.details.menu, history)
     }
-  }, [history, match, pageData.detailsMenu])
+  }, [history, match, pageData.details.menu])
 
   useEffect(() => {
     let item = {}
@@ -296,8 +264,8 @@ const Functions = ({
   const onRemoveFunction = func => {
     setConfirmData({
       item: func,
-      title: `Delete function "${func.name}"?`,
-      description: 'Deleted functions cannot be restored.',
+      header: 'Delete function?',
+      message: `You try to delete function "${func.name}". Deleted functions cannot be restored.`,
       btnCancelLabel: 'Cancel',
       btnCancelVariant: LABEL_BUTTON,
       btnConfirmLabel: 'Delete',
@@ -382,24 +350,21 @@ const Functions = ({
   return (
     <div className="content-wrapper">
       {confirmData && (
-        <PopUpDialog
-          headerText={confirmData.title}
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: confirmData.btnCancelLabel,
+            variant: confirmData.btnCancelVariant
+          }}
           closePopUp={confirmData.rejectHandler}
-        >
-          <div>{confirmData.description}</div>
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              label={confirmData.btnCancelLabel}
-              onClick={confirmData.rejectHandler}
-              variant={confirmData.btnCancelVariant}
-            />
-            <Button
-              label={confirmData.btnConfirmLabel}
-              onClick={() => confirmData.confirmHandler(confirmData.item)}
-              variant={confirmData.btnConfirmVariant}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: () => confirmData.confirmHandler(confirmData.item),
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmVariant
+          }}
+          header={confirmData.header}
+          message={confirmData.message}
+        />
       )}
       {functionsStore.loading && <Loader />}
       <Content
@@ -412,7 +377,6 @@ const Functions = ({
         pageData={pageData}
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
-        setLoading={setLoading}
         getIdentifier={getFunctionIdentifier}
       />
       {editableItem && !functionsPanelIsOpen && (

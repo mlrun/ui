@@ -1,16 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Prism from 'prismjs'
 import { find, unset, cloneDeep } from 'lodash'
 
-import { ReactComponent as Arrow } from '../../../images/arrow.svg'
-// import { ReactComponent as Delete } from '../../../images/delete.svg'
+import CodeBlock from '../../../common/CodeBlock/CodeBlock'
 import Accordion from '../../../common/Accordion/Accordion'
 import Select from '../../../common/Select/Select'
 import TextArea from '../../../common/TextArea/TextArea'
 import RadioButtons from '../../../common/RadioButtons/RadioButtons'
 import { kindList } from '../detailsTransformations.util'
 // import { DANGER_BUTTON } from '../../../constants'
+
+import { ReactComponent as Arrow } from '../../../images/arrow.svg'
+// import { ReactComponent as Delete } from '../../../images/delete.svg'
 
 import './configSteps.scss'
 
@@ -179,28 +180,10 @@ const ConfigSteps = ({
           <div className="row-value">{states[selectedStep]?.handler}</div>
         </div>
         <div className="row">
-          <div className="code-block">
-            <div className="code-block__label">Arguments</div>
-            <div className="code-block__content">
-              {states[selectedStep]?.class_args && (
-                <pre>
-                  <code
-                    dangerouslySetInnerHTML={{
-                      __html: Prism.highlight(
-                        JSON.stringify(
-                          states[selectedStep].class_args,
-                          null,
-                          2
-                        ),
-                        Prism.languages.json,
-                        'json'
-                      )
-                    }}
-                  ></code>
-                </pre>
-              )}
-            </div>
-          </div>
+          <CodeBlock
+            label="Arguments"
+            codeData={states[selectedStep]?.class_args}
+          />
         </div>
         <div className="row">
           <TextArea

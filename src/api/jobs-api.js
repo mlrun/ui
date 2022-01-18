@@ -1,5 +1,5 @@
 import { mainHttpClient } from '../httpClient'
-import { INIT_STATE_FILTER } from '../constants'
+import { STATE_FILTER_ALL_ITEMS } from '../constants'
 
 export default {
   abortJob: (project, jobId, iter) => {
@@ -35,26 +35,31 @@ export default {
       params.name = `~${filters.name}`
     }
 
-    if (filters?.state && filters.state !== INIT_STATE_FILTER) {
+    if (filters?.state && filters.state !== STATE_FILTER_ALL_ITEMS) {
       params.state = filters.state
     }
 
     if (filters?.dates) {
-      if (filters.dates[0]) {
-        params.start_time_from = filters.dates[0].toISOString()
+      if (filters.dates.value[0]) {
+        params.start_time_from = filters.dates.value[0].toISOString()
       }
 
-      if (filters.dates[1]) {
-        params.start_time_to = filters.dates[1].toISOString()
+      if (filters.dates.value[1] && !filters.dates.isPredefined) {
+        params.start_time_to = filters.dates.value[1].toISOString()
       }
     }
 
     return mainHttpClient.get('/runs', { params })
   },
+  getJob: (project, jobId) => mainHttpClient.get(`/run/${project}/${jobId}`),
   getJobFunction: (project, functionName, hash) =>
     mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
-  getScheduledJobs: (project, status, filters) => {
+  getScheduledJobAccessKey: (project, job) =>
+    mainHttpClient.get(
+      `/projects/${project}/schedules/${job}?include-credentials=true`
+    ),
+  getScheduledJobs: (project, filters) => {
     const params = {
       include_last_run: 'yes'
     }

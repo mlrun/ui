@@ -134,6 +134,8 @@ const HiddenChipsBlock = React.forwardRef(
                 isEditMode={isEditMode}
                 ref={hiddenRef}
                 setEditConfig={setEditConfig}
+                showChips={true}
+                textOverflowEllipsis
               />
             </Tooltip>
           )

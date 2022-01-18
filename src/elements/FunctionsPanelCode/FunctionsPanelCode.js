@@ -29,6 +29,7 @@ const FunctionsPanelCode = ({
   setNewFunctionBuildImage,
   setNewFunctionCommands,
   setNewFunctionDefaultClass,
+  setNewFunctionForceBuild,
   setNewFunctionHandler,
   setNewFunctionImage,
   setNewFunctionSourceCode,
@@ -83,7 +84,9 @@ const FunctionsPanelCode = ({
             ]
         }))
       } else {
-        const buildImage = appStore.frontendSpec?.function_deployment_target_image_template
+        const buildImage = (
+          appStore.frontendSpec?.function_deployment_target_image_template || ''
+        )
           .replace('{project}', match.params.projectName)
           .replace('{name}', functionsStore.newFunction.metadata.name)
           .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
@@ -157,8 +160,8 @@ const FunctionsPanelCode = ({
     }
   }
 
-  const handleImageTypeChange = imageType => {
-    if (imageType === EXISTING_IMAGE) {
+  const handleImageTypeChange = type => {
+    if (type === EXISTING_IMAGE) {
       if (mode === PANEL_CREATE_MODE) {
         resetNewFunctionCodeCustomImage()
         setData(state => ({
@@ -181,15 +184,16 @@ const FunctionsPanelCode = ({
             ]
         }))
       }
-
       setNewFunctionImage(
         data.image ||
           appStore.frontendSpec?.default_function_image_by_kind?.[
             functionsStore.newFunction.kind
           ]
       )
-    } else {
-      const buildImage = appStore.frontendSpec?.function_deployment_target_image_template
+    } else if (type === NEW_IMAGE) {
+      const buildImage = (
+        appStore.frontendSpec?.function_deployment_target_image_template || ''
+      )
         .replace('{project}', match.params.projectName)
         .replace('{name}', functionsStore.newFunction.metadata.name)
         .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
@@ -199,7 +203,8 @@ const FunctionsPanelCode = ({
         setData(state => ({
           ...state,
           image: '',
-          commands: appStore.frontendSpec?.function_deployment_mlrun_command,
+          commands:
+            appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
           base_image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
@@ -211,7 +216,7 @@ const FunctionsPanelCode = ({
           ...state,
           commands:
             state.commands ||
-            appStore.frontendSpec?.function_deployment_mlrun_command,
+            (appStore.frontendSpec?.function_deployment_mlrun_command ?? ''),
           base_image:
             state.base_image ||
             appStore.frontendSpec?.default_function_image_by_kind?.[
@@ -225,7 +230,7 @@ const FunctionsPanelCode = ({
         data.commands.length > 0
           ? trimSplit(data.commands, '\n')
           : trimSplit(
-              appStore.frontendSpec?.function_deployment_mlrun_command,
+              appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
               '\n'
             )
       )
@@ -238,12 +243,13 @@ const FunctionsPanelCode = ({
       setNewFunctionBuildImage(data.build_image || buildImage)
     }
 
-    setImageType(imageType)
+    setImageType(type)
     setValidation(state => ({
       ...state,
       isCodeImageValid: true,
       isBaseImageValid: true,
-      isBuildCommandsValid: true
+      isBuildCommandsValid: true,
+      isBuildImageValid: true
     }))
   }
 
@@ -256,12 +262,14 @@ const FunctionsPanelCode = ({
       handleHandlerOnBlur={handleHandlerOnBlur}
       handleImageTypeChange={handleImageTypeChange}
       imageType={imageType}
+      mode={mode}
       setData={setData}
       setEditCode={setEditCode}
       setValidation={setValidation}
       setNewFunctionBaseImage={setNewFunctionBaseImage}
       setNewFunctionBuildImage={setNewFunctionBuildImage}
       setNewFunctionCommands={setNewFunctionCommands}
+      setNewFunctionForceBuild={setNewFunctionForceBuild}
       setNewFunctionImage={setNewFunctionImage}
       setNewFunctionSourceCode={setNewFunctionSourceCode}
       validation={validation}

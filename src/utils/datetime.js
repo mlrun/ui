@@ -1,7 +1,9 @@
+import moment from 'moment'
+
 export const formatDatetime = (datetime, invalidDateMessage) =>
   typeof datetime !== 'object' || !(datetime instanceof Date) || isNaN(datetime)
     ? invalidDateMessage
-    : new Intl.DateTimeFormat('en-GB', {
+    : new Intl.DateTimeFormat('en-US', {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
@@ -21,4 +23,35 @@ export const getFormatTime = time => {
     hour: hour.replace(/_/g, '0'),
     minute: minute.replace(/_/g, '0')
   }
+}
+
+export const getTimeElapsedByDate = creationDate => {
+  moment.updateLocale('en', {
+    relativeTime: {
+      future: 'in %s',
+      past: '%s ago',
+      s: 'a few seconds',
+      ss: '%d seconds',
+      m: 'a minute',
+      mm: '%d minutes',
+      h: 'an hour',
+      hh: '%d hrs.',
+      d: 'a day',
+      dd: '%d days',
+      w: 'a week',
+      ww: '%d weeks',
+      M: 'a month',
+      MM: '%d months',
+      y: 'a year',
+      yy: '%d years'
+    }
+  })
+
+  const time = moment.utc(creationDate)
+
+  return time.fromNow()
+}
+
+export const getDateAndTimeByFormat = (date, dateFormat) => {
+  return moment(date).format(dateFormat)
 }

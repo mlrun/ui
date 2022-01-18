@@ -1,6 +1,10 @@
 .new-function {
   &__pop-up {
-    width: 200px;
+    width: 100%;
+
+    &_short {
+      width: 200px;
+    }
 
     &-inputs {
       display: flex;

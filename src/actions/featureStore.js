@@ -46,7 +46,9 @@ import {
   SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
-  FETCH_FEATURE_SET_SUCCESS
+  FETCH_FEATURE_SET_SUCCESS,
+  SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY,
+  CONFLICT_CODE
 } from '../constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
@@ -69,7 +71,12 @@ const featureStoreActions = {
         return result
       })
       .catch(error => {
-        dispatch(featureStoreActions.createNewFeatureSetFailure(error.message))
+        const message =
+          error.response.status === CONFLICT_CODE
+            ? 'Adding an already-existing FeatureSet'
+            : error.message
+
+        dispatch(featureStoreActions.createNewFeatureSetFailure(message))
 
         throw error
       })
@@ -86,6 +93,9 @@ const featureStoreActions = {
   }),
   createNewFeatureVector: data => () =>
     featureStoreApi.createFeatureVector(data),
+  deleteFeatureVector: (project, featureVector) => () => {
+    return featureStoreApi.deleteFeatureVector(project, featureVector)
+  },
   fetchEntity: (project, entityName, entityMetadataName) => dispatch => {
     return featureStoreApi
       .getEntity(project, entityName)
@@ -112,11 +122,11 @@ const featureStoreActions = {
     type: FETCH_ENTITY_SUCCESS,
     payload: entities
   }),
-  fetchEntities: (project, filters) => dispatch => {
+  fetchEntities: (project, filters, config) => dispatch => {
     dispatch(featureStoreActions.fetchEntitiesBegin())
 
     return featureStoreApi
-      .getEntities(project, filters)
+      .getEntities(project, filters, config)
       .then(response => {
         dispatch(
           featureStoreActions.fetchEntitiesSuccess(response.data.entities)
@@ -168,9 +178,9 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SETS_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureSet: (project, featureSet) => dispatch => {
+  fetchFeatureSet: (project, featureSet, tag) => dispatch => {
     return featureStoreApi
-      .getFeatureSet(project, featureSet)
+      .getFeatureSet(project, featureSet, tag)
       .then(response => {
         const generatedFeatureSets = parseFeatureSets(
           response.data?.feature_sets
@@ -194,15 +204,19 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SET_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureVector: (project, featureVector) => dispatch => {
+  fetchFeatureVector: (project, featureVector, tag) => dispatch => {
     return featureStoreApi
-      .getFeatureVector(project, featureVector)
+      .getFeatureVector(project, featureVector, tag)
       .then(response => {
+        const generatedFeatureVectors = parseFeatureVectors(
+          response.data?.feature_vectors
+        )
+
         dispatch(
           featureStoreActions.fetchFeatureVectorSuccess({
-            [getFeatureVectorIdentifier(featureVector)]: parseFeatureVectors(
-              response.data?.feature_vectors
-            )
+            [getFeatureVectorIdentifier(
+              generatedFeatureVectors[0]
+            )]: generatedFeatureVectors
           })
         )
 
@@ -272,11 +286,11 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SUCCESS,
     payload: features
   }),
-  fetchFeatures: (project, filters) => dispatch => {
+  fetchFeatures: (project, filters, config) => dispatch => {
     dispatch(featureStoreActions.fetchFeaturesBegin())
 
     return featureStoreApi
-      .getFeatures(project, filters)
+      .getFeatures(project, filters, config)
       .then(response => {
         dispatch(
           featureStoreActions.fetchFeaturesSuccess(response.data.features)
@@ -332,6 +346,10 @@ const featureStoreActions = {
   }),
   removeNewFeatureSet: () => ({
     type: REMOVE_NEW_FEATURE_SET
+  }),
+  setNewFeatureSetCredentialsAccessKey: access_key => ({
+    type: SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY,
+    payload: access_key
   }),
   setNewFeatureSetDataSourceAttributes: attributes => ({
     type: SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
@@ -401,24 +419,23 @@ const featureStoreActions = {
     type: SET_NEW_FEATURE_SET_VERSION,
     payload: version
   }),
-  startFeatureSetIngest: (
-    project,
-    featureSet,
-    reference,
-    source,
-    targets
-  ) => dispatch => {
+  startFeatureSetIngest: (project, featureSet, reference, data) => dispatch => {
     dispatch(featureStoreActions.startFeatureSetIngestBegin())
 
     return featureStoreApi
-      .startIngest(project, featureSet, reference, source, targets)
+      .startIngest(project, featureSet, reference, data)
       .then(result => {
         dispatch(featureStoreActions.startFeatureSetIngestSuccess())
 
         return result
       })
       .catch(error => {
-        dispatch(featureStoreActions.createNewFeatureSetFailure(error.message))
+        const message =
+          error.response.status === CONFLICT_CODE
+            ? 'Adding an already-existing FeatureSet'
+            : error.message
+
+        dispatch(featureStoreActions.createNewFeatureSetFailure(message))
 
         throw error
       })

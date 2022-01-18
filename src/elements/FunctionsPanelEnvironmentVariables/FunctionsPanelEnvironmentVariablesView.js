@@ -3,23 +3,35 @@ import PropTypes from 'prop-types'
 
 import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
+import EnvironmentVariables from '../EnvironmentVariables/EnvironmentVariables'
 
 import './functionPanelEnviromnetVariables.scss'
 
 const FunctionsPanelEnvironmentVariablesView = ({
-  env,
+  envVariables,
   handleAddNewEnv,
   handleDeleteEnv,
-  handleEditEnv
+  handleEditEnv,
+  isDemoMode
 }) => {
-  return (
+  return isDemoMode ? (
+    <EnvironmentVariables
+      envVariables={envVariables}
+      handleAddNewEnv={handleAddNewEnv}
+      handleDeleteEnv={handleDeleteEnv}
+      handleEditEnv={handleEditEnv}
+    />
+  ) : (
     <div className="functions-panel__item advanced new-item-side-panel__item">
       <FunctionsPanelSection title="Environment Variables">
         <KeyValueTable
           addNewItem={handleAddNewEnv}
           addNewItemLabel="Add variable"
           className="env"
-          content={env}
+          content={envVariables.map(env => ({
+            key: env.name,
+            value: env.value
+          }))}
           deleteItem={handleDeleteEnv}
           editItem={handleEditEnv}
           isKeyRequired={true}
@@ -36,15 +48,25 @@ const FunctionsPanelEnvironmentVariablesView = ({
 }
 
 FunctionsPanelEnvironmentVariablesView.propTypes = {
-  env: PropTypes.arrayOf(
+  envVariables: PropTypes.arrayOf(
     PropTypes.shape({
-      key: PropTypes.string.isRequired,
-      value: PropTypes.string.isRequired
+      name: PropTypes.string.isRequired,
+      value: PropTypes.string,
+      valueFrom: PropTypes.shape({
+        name: PropTypes.string,
+        key: PropTypes.string
+      }),
+      ui: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        value: PropTypes.string.isRequired
+      })
     })
   ).isRequired,
   handleAddNewEnv: PropTypes.func.isRequired,
   handleDeleteEnv: PropTypes.func.isRequired,
-  handleEditEnv: PropTypes.func.isRequired
+  handleEditEnv: PropTypes.func.isRequired,
+  isDemoMode: PropTypes.bool.isRequired
 }
 
 export default FunctionsPanelEnvironmentVariablesView

@@ -7,7 +7,8 @@ import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
-import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { DETAILS_OVERVIEW_TAB, MONITOR_WORKFLOWS_TAB } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 const JobsTableRow = ({
   actionsMenu,
@@ -54,7 +55,7 @@ const JobsTableRow = ({
                     firstRow={rowItemKey === 'name'}
                     handleExpandRow={handleExpandRow}
                     item={rowItem}
-                    key={rowItemKey}
+                    key={rowItemData.id}
                     selectItem={handleSelectItem}
                     selectedItem={selectedItem}
                   />
@@ -110,7 +111,7 @@ const JobsTableRow = ({
                           link={cellContentObj.getLink?.(
                             match.params.tab ?? DETAILS_OVERVIEW_TAB
                           )}
-                          key={`${cellContentObj.value}${index}`}
+                          key={cellContentObj.id}
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
                         />
@@ -130,15 +131,20 @@ const JobsTableRow = ({
         </div>
       ) : (
         <>
-          {Object.values(rowItem).map((rowItemProp, index) => {
+          {Object.values(rowItem).map(rowItemProp => {
             return (
               !rowItemProp.hidden && (
                 <TableCell
                   data={rowItemProp}
-                  expandLink={!isEmpty(tableContent)}
+                  expandLink={
+                    !isEmpty(tableContent) &&
+                    (match.params.pageTab !== MONITOR_WORKFLOWS_TAB ||
+                      (match.params.pageTab === MONITOR_WORKFLOWS_TAB &&
+                        match.params.workflowId))
+                  }
                   handleExpandRow={handleExpandRow}
                   item={currentItem}
-                  key={`${new Date().getTime()}${index}`}
+                  key={rowItemProp.id}
                   link={
                     rowItemProp.getLink
                       ? rowItemProp.getLink?.(
@@ -169,10 +175,7 @@ JobsTableRow.defaultProps = {
 }
 
 JobsTableRow.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,

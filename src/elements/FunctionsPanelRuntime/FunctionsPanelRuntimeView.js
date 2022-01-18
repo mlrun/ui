@@ -11,7 +11,10 @@ import './functionsPanelRuntime.scss'
 const FunctionsPanelRuntimeView = ({
   defaultData,
   functionsStore,
-  sections
+  isDemoMode,
+  sections,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="functions-panel__item new-item-side-panel__item runtime">
@@ -24,12 +27,14 @@ const FunctionsPanelRuntimeView = ({
               defaultData={defaultData}
               key={section.id}
             />
-          ) : section.id === 'secrets' ? (
+          ) : section.id === 'secrets' && isDemoMode ? (
             <FunctionsPanelSecrets defaultData={defaultData} key={section.id} />
           ) : section.id === 'advanced' ? (
             <FunctionsPanelAdvanced
               defaultData={defaultData}
               key={section.id}
+              setValidation={setValidation}
+              validation={validation}
             />
           ) : null
         )}
@@ -41,7 +46,10 @@ const FunctionsPanelRuntimeView = ({
 FunctionsPanelRuntimeView.propTypes = {
   defaultData: PropTypes.shape({}).isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
-  sections: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  isDemoMode: PropTypes.bool.isRequired,
+  sections: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FunctionsPanelRuntimeView

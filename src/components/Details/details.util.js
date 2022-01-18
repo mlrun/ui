@@ -45,8 +45,8 @@ import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsPods from '../DetailsPods/DetailsPods'
 
-export const generateArtifactsContent = (page, pageTab, selectedItem) => {
-  if (pageTab === MODEL_ENDPOINTS_TAB) {
+export const generateArtifactsContent = (detailsType, selectedItem) => {
+  if (detailsType === MODEL_ENDPOINTS_TAB) {
     return {
       uid: {
         value: selectedItem?.metadata?.uid ?? '-'
@@ -95,7 +95,7 @@ export const generateArtifactsContent = (page, pageTab, selectedItem) => {
       },
       kind: {
         value:
-          page !== FEATURE_STORE_PAGE && page !== FILES_PAGE
+          detailsType !== FEATURE_STORE_PAGE && detailsType !== FILES_PAGE
             ? selectedItem.kind || ' '
             : null
       },
@@ -125,7 +125,7 @@ export const generateArtifactsContent = (page, pageTab, selectedItem) => {
         value: formatDatetime(new Date(selectedItem.updated), 'N/A')
       },
       framework: {
-        value: page === MODELS_PAGE ? selectedItem.framework ?? '' : null
+        value: detailsType === MODELS_PAGE ? selectedItem.framework ?? '' : null
       },
       algorithm: {
         value: selectedItem.algorithm
@@ -145,10 +145,10 @@ export const generateFeatureStoreContent = (
   deleteChip,
   editChips,
   editDescription,
-  pageTab,
+  detailsType,
   selectedItem
 ) => {
-  if (pageTab === FEATURE_SETS_TAB) {
+  if (detailsType === FEATURE_SETS_TAB) {
     return generateFeatureSetsOverviewContent(
       addChip,
       deleteChip,
@@ -156,7 +156,7 @@ export const generateFeatureStoreContent = (
       editDescription,
       selectedItem
     )
-  } else if (pageTab === FEATURE_VECTORS_TAB) {
+  } else if (detailsType === FEATURE_VECTORS_TAB) {
     return generateFeatureVectorsOverviewContent(selectedItem)
   }
 }
@@ -227,11 +227,10 @@ export const generateFunctionsContent = selectedItem => ({
 export const renderContent = (
   applyChangesRef,
   match,
-  detailsState,
+  detailsStore,
   selectedItem,
   pageData,
   handlePreview,
-  detailsStore,
   handleEditInput,
   setChanges,
   setChangesData,
@@ -242,8 +241,8 @@ export const renderContent = (
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
-          changes={detailsState.changes}
-          content={detailsState.infoContent}
+          changes={detailsStore.changes}
+          content={detailsStore.infoContent}
           match={match}
           pageData={pageData}
           ref={applyChangesRef}
@@ -267,7 +266,7 @@ export const renderContent = (
     case DETAILS_ARTIFACTS_TAB:
       return (
         <DetailsArtifacts
-          iteration={detailsState.iteration}
+          iteration={detailsStore.iteration}
           match={match}
           selectedItem={selectedItem}
           setIterationOption={setIterationOption}
@@ -281,13 +280,20 @@ export const renderContent = (
         <DetailsLogs
           item={selectedItem}
           match={match}
-          refreshLogs={pageData.refreshLogs}
-          removeLogs={pageData.removeLogs}
-          withLogsRefreshBtn={pageData.withLogsRefreshBtn}
+          refreshLogs={pageData.details.refreshLogs}
+          removeLogs={pageData.details.removeLogs}
+          withLogsRefreshBtn={pageData.details.withLogsRefreshBtn}
         />
       )
     case DETAILS_CODE_TAB:
-      return <DetailsCode code={selectedItem.build.functionSourceCode} />
+      return (
+        <DetailsCode
+          code={
+            selectedItem.build.functionSourceCode ??
+            selectedItem.base_spec.spec?.build?.functionSourceCode
+          }
+        />
+      )
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:
@@ -327,7 +333,7 @@ export const renderContent = (
     case DETAILS_REQUESTED_FEATURES_TAB:
       return (
         <DetailsRequestedFeatures
-          changes={detailsState.changes}
+          changes={detailsStore.changes}
           match={match}
           selectedItem={selectedItem}
           handleEditInput={(value, field) => handleEditInput(value, field)}
@@ -422,11 +428,7 @@ export const handleFinishEdit = (
   setChangesCounter
 ) => {
   detailsTabDispatch({
-    type: detailsTabActions.SET_EDIT_MODE,
-    payload: {
-      field: '',
-      fieldType: ''
-    }
+    type: detailsTabActions.RESET_EDIT_MODE
   })
 
   const changesData = cloneDeep(changes.data)

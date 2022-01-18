@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -27,12 +27,25 @@ const KeyValueTable = ({
   const [selectedItem, setSelectedItem] = useState(null)
   const [validation, setValidation] = useState({
     isKeyValid: true,
-    isValueValid: true
+    isValueValid: true,
+    isEditKeyValid: true,
+    isEditValueValid: true
   })
   const [key, setKey] = useState(defaultKeyValue || '')
   const [value, setValue] = useState('')
 
   const tableClassNames = classnames('key-value-table', className)
+
+  useEffect(() => {
+    return () => {
+      setValidation({
+        isKeyValid: true,
+        isValueValid: true,
+        isEditKeyValid: true,
+        isEditValueValid: true
+      })
+    }
+  }, [isAddNewItem])
 
   const saveItem = () => {
     const save = () => {
@@ -70,6 +83,7 @@ const KeyValueTable = ({
         save()
       } else {
         setValidation(state => ({
+          ...state,
           isKeyValid: key.length > 0 && state.isKeyValid,
           isValueValid: value.length > 0 && state.isValueValid
         }))
@@ -78,7 +92,7 @@ const KeyValueTable = ({
       setKey(defaultKeyValue || '')
       setValue('')
       setIsAddNewItem(false)
-    } else {
+    } else if (validation.isKeyValid && validation.isValueValid) {
       save()
     }
   }
@@ -93,30 +107,30 @@ const KeyValueTable = ({
     if (isKeyRequired && !isValueRequired) {
       if (
         (selectedItem.newKey?.length > 0 || selectedItem.key.length > 0) &&
-        validation.isKeyValid
+        validation.isEditKeyValid
       ) {
         saveEdit()
       } else {
         setValidation(state => ({
           ...state,
-          isKeyValid: false
+          isEditKeyValid: false
         }))
       }
     } else if (isValueRequired && !isKeyRequired) {
-      if (selectedItem.value.length > 0 && validation.isValueValid) {
+      if (selectedItem.value.length > 0 && validation.isEditValueValid) {
         saveEdit()
       } else {
         setValidation(state => ({
           ...state,
-          isValueValid: false
+          isEditValueValid: false
         }))
       }
     } else if (isKeyRequired && isValueRequired) {
       if (
         (selectedItem.newKey?.length > 0 || selectedItem.key.length > 0) &&
-        validation.isKeyValid &&
+        validation.isEditKeyValid &&
         selectedItem.value.length > 0 &&
-        validation.isValueValid
+        validation.isEditValueValid
       ) {
         saveEdit()
       }
@@ -131,7 +145,9 @@ const KeyValueTable = ({
     setIsAddNewItem(false)
     setValidation({
       isKeyValid: true,
-      isValueValid: true
+      isValueValid: true,
+      isEditKeyValid: true,
+      isEditValueValid: true
     })
   }
 

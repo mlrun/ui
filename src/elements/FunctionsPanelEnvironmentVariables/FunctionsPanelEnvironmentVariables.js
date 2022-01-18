@@ -1,51 +1,77 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 import FunctionsPanelEnvironmentVariablesView from './FunctionsPanelEnvironmentVariablesView'
 
 import functionsActions from '../../actions/functions'
+import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
+import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const FunctionsPanelEnvironmentVariables = ({
   functionsStore,
   setNewFunctionEnv
 }) => {
+  const [envVariables, setEnvVariables] = useState([])
+  const isDemoMode = useDemoMode()
+
+  useEffect(() => {
+    setEnvVariables(parseEnvVariables(functionsStore.newFunction.spec.env))
+  }, [functionsStore.newFunction.spec.env])
+
   const handleAddNewEnv = env => {
-    setNewFunctionEnv([
-      ...functionsStore.newFunction.spec.env,
-      { name: env.key, value: env.value }
-    ])
+    if (isDemoMode) {
+      const generatedVariable = generateEnvVariable(env)
+
+      setNewFunctionEnv([
+        ...functionsStore.newFunction.spec.env,
+        generatedVariable
+      ])
+    } else {
+      setNewFunctionEnv([...envVariables, { name: env.key, value: env.value }])
+    }
   }
 
   const handleEditEnv = env => {
-    setNewFunctionEnv(
-      functionsStore.newFunction.spec.env.map(item => {
-        if (item.name === env.key) {
-          item.name = env.newKey || env.key
-          item.value = env.value
-        }
+    if (isDemoMode) {
+      const generatedVariables = env.map(variable =>
+        generateEnvVariable(variable)
+      )
 
-        return item
-      })
-    )
+      setNewFunctionEnv([...generatedVariables])
+    } else {
+      setNewFunctionEnv(
+        envVariables.map(item => {
+          if (item.name === env.key) {
+            item.name = env.newKey || env.key
+            item.value = env.value
+          }
+
+          return item
+        })
+      )
+    }
   }
 
-  const handleDeleteEnv = envIndex => {
-    setNewFunctionEnv(
-      functionsStore.newFunction.spec.env.filter(
-        (env, index) => index !== envIndex
-      )
-    )
+  const handleDeleteEnv = env => {
+    if (isDemoMode) {
+      const generatedVariables = env.map(item => generateEnvVariable(item))
+
+      setNewFunctionEnv([...generatedVariables])
+    } else {
+      const newData = envVariables.filter((_, index) => index !== env)
+
+      setNewFunctionEnv([...newData])
+    }
   }
 
   return (
     <FunctionsPanelEnvironmentVariablesView
-      env={functionsStore.newFunction.spec.env.map(env => ({
-        key: env.name,
-        value: env.value
-      }))}
+      envVariables={envVariables}
       handleAddNewEnv={handleAddNewEnv}
       handleDeleteEnv={handleDeleteEnv}
       handleEditEnv={handleEditEnv}
+      isDemoMode={isDemoMode}
     />
   )
 }

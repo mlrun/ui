@@ -1,12 +1,51 @@
 @import '../../scss/borders';
 
+@mixin inputNode {
+  color: $white;
+  background-color: $hotPink;
+  border-color: $hotPink;
+  box-shadow: 0 3px 14px rgba($hotPink, 0.34);
+}
+
+@mixin outputNode {
+  color: $white;
+  background-color: $malibu;
+  border-color: $malibu;
+  box-shadow: 0 3px 14px rgba($malibu, 0.5);
+}
+
+@mixin primaryNode {
+  background-color: $white;
+  color: $malibu;
+  border-color: $malibu;
+}
+
+@mixin secondaryNode {
+  background-color: $white;
+  color: $orchid;
+  border-color: $orchid;
+}
+
+@mixin errorNode {
+  color: rgba($black, 0.2);
+  background-color: $white;
+
+  &:not(.selected) {
+    border-color: $bombay;
+  }
+}
+
 .react-flow__renderer {
   z-index: 5;
 
   .react-flow__node {
-    padding: 15px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
     font-size: 14px;
     border-width: 2px;
+    border-style: solid;
     border-radius: 8px;
     cursor: unset;
 
@@ -16,60 +55,54 @@
 
     .react-flow__node-label {
       position: relative;
+      width: 100%;
+      text-align: center;
+    }
 
-      &::before {
-        position: absolute;
-        right: 0;
-        bottom: 25px;
-        z-index: 10;
-        width: 150%;
-        min-width: fit-content;
-        padding: 6px 8px;
-        color: $white;
-        font-weight: 400;
-        font-size: 15px;
-        background-color: $primary;
-        border-radius: 4px;
-        visibility: hidden;
-        opacity: 0;
-        transition: all 0.2s ease-in-out;
-        content: attr(data-title);
-      }
+    .react-flow__node-sub-label {
+      opacity: 0.8;
+      font-size: 0.9em;
+    }
 
-      &:hover::before {
-        visibility: visible;
-        opacity: 1;
-      }
+    &.input-node {
+      @include inputNode;
+    }
+
+    &.output-node {
+      @include outputNode;
+    }
+
+    &.primary-node {
+      @include primaryNode;
+    }
+
+    &.secondary-node {
+      @include secondaryNode;
+    }
+
+    &.error-node {
+      @include errorNode;
     }
 
     &.react-flow__node-input {
-      color: $white;
-      background-color: $hotPink;
-      border-color: $hotPink;
-      box-shadow: 0 3px 14px rgba($hotPink, 0.34);
-    }
-
-    &.react-flow__node-default {
-      color: $malibu;
-      border-color: $malibu;
+      @include inputNode;
     }
 
     &.react-flow__node-output {
-      &:not(.error-handler) {
-        color: $white;
-        background-color: $malibu;
-        border-color: $malibu;
-        box-shadow: 0 3px 14px rgba($malibu, 0.5);
-      }
+      @include outputNode;
     }
 
-    &.error-handler {
-      color: rgba($black, 0.2);
-      background-color: $white;
+    &.react-flow__node-default {
+      @include primaryNode;
+    }
 
-      &:not(.selected) {
-        border-color: $bombay;
-      }
+
+    &.oval-shape {
+      border-radius: 30px;
+    }
+
+    &.with-opacity {
+      opacity: 0.7 !important;
     }
 
     &.selectable {
@@ -82,6 +115,7 @@
     }
 
     .react-flow__handle {
+      pointer-events: auto;
       width: 12px;
       height: 12px;
       background: $white;
@@ -104,11 +138,51 @@
       &-right {
         right: -6px;
       }
+
+      &.status-succeeded {
+        background: $brightTurquoise;
+      }
+
+      &.status-failed {
+        background: $burntSienna;
+      }
+
+      &.status-pending,
+      &.status-running {
+        background: $pictonBlue;
+      }
+
+      &.status-unknown {
+        background: $white;
+      }
     }
   }
 
-  .react-flow__edge-path {
-    stroke: $bombay;
-    stroke-width: 2px;
+
+  .react-flow__edge {
+    path,
+    polyline {
+      stroke: $bombay;
+      stroke-width: 2px;
+    }
+
+    .react-flow__arrowhead_closed {
+      polyline {
+        fill: $bombay;
+      }
+    }
+
+    &.selected {
+      path,
+      polyline {
+        stroke: $brightTurquoise;
+      }
+
+      .react-flow__arrowhead_closed {
+        polyline {
+          fill: $brightTurquoise;
+        }
+      }
+    }
   }
 }

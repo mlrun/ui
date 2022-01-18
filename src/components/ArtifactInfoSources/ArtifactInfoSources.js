@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { artifactInfoSourcesHeaders } from './artifactInfoSources.utils'
 
@@ -11,23 +14,28 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 const ArtifactInfoSources = ({ header, sources }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
+  const sourcesLength = useMemo(() => {
+    return Object.values(sources).length
+  }, [sources])
+
   const sourcesClassNames = classnames(
     'info-sources',
     isExpanded && 'info-sources_expanded'
   )
-
-  const sourcesLength = Object.values(sources).length
+  const sourcesRowClassNames = classnames(
+    'info-sources-row',
+    sourcesLength === 0 && 'info-sources-row_empty'
+  )
 
   useEffect(() => {
     if (sourcesLength === 0) {
       setIsExpanded(false)
     }
   }, [sourcesLength, isExpanded])
-
   return (
     <div className={sourcesClassNames}>
       <div
-        className="info-sources-row"
+        className={sourcesRowClassNames}
         onClick={() => {
           if (sourcesLength !== 0) setIsExpanded(prevState => !prevState)
         }}
@@ -65,7 +73,11 @@ const ArtifactInfoSources = ({ header, sources }) => {
               key={`${key}-${index}`}
               className="info-sources-table__content"
             >
-              <div className="info-sources-table__content-key">{key}</div>
+              <div className="info-sources-table__content-key">
+                <Tooltip template={<TextTooltipTemplate text={key} />}>
+                  {key}
+                </Tooltip>
+              </div>
               <div className="info-sources-table__content-value">{value}</div>
             </div>
           ))}

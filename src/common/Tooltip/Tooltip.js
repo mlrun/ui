@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
 import { debounce } from 'lodash'
+import { createPortal } from 'react-dom'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
@@ -62,11 +63,11 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
         const leftPosition =
           event.x - (event.x + tooltipWidth - window.innerWidth + offset)
         const left =
-          event.x + tooltipWidth > window.innerWidth
+          event.x + tooltipWidth + offset > window.innerWidth
             ? leftPosition > offset
               ? leftPosition
               : offset
-            : event.x
+            : event.x + offset
 
         if (top + height + offset + tooltipHeight >= window.innerHeight) {
           setStyle({
@@ -128,24 +129,28 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
       >
         {children}
       </div>
-      <CSSTransition
-        in={show}
-        timeout={duration}
-        classNames="fade"
-        unmountOnExit
-      >
-        <div
-          data-testid="tooltip"
-          ref={tooltipRef}
-          style={{
-            ...defaultStyle,
-            ...style
-          }}
-          className="tooltip"
-        >
-          {template}
-        </div>
-      </CSSTransition>
+      {!hidden &&
+        createPortal(
+          <CSSTransition
+            classNames="fade"
+            in={show}
+            timeout={duration}
+            unmountOnExit
+          >
+            <div
+              data-testid="tooltip"
+              ref={tooltipRef}
+              style={{
+                ...defaultStyle,
+                ...style
+              }}
+              className="tooltip"
+            >
+              {template}
+            </div>
+          </CSSTransition>,
+          document.getElementById('overlay_container')
+        )}
     </>
   )
 }

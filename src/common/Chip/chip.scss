@@ -9,7 +9,12 @@
   padding: 4px 8px;
   font-size: 14px;
   line-height: 16px;
+  visibility: hidden;
   cursor: default;
+
+  &_visible {
+    visibility: visible;
+  }
 
   &__content {
     display: flex;

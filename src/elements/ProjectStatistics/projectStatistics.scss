@@ -69,7 +69,7 @@
     &-label {
       min-width: 100%;
       max-width: 100px;
-      color: $topaz;
+      color: $primary;
       text-align: center;
     }
 
@@ -82,7 +82,7 @@
 
       &.statistics {
         &_running {
-          color: $pictonBlue;
+          color: $primary;
         }
 
         &_default {
@@ -96,6 +96,10 @@
         &_failed {
           color: $amaranth;
         }
+      }
+
+      &_not-available {
+        font-size: 32px;
       }
 
       .tooltip {

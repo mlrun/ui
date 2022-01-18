@@ -1,7 +1,10 @@
 import React from 'react'
 
-import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
-import { isDemoMode } from '../../utils/helper'
+import {
+  MONITOR_JOBS_TAB,
+  PRIMARY_BUTTON,
+  STATUS_CODE_FORBIDDEN
+} from '../../constants'
 
 import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
 import { ReactComponent as VSCode } from '../../images/vs-code.svg'
@@ -19,52 +22,13 @@ export const launchIDEOptions = [
   }
 ]
 
-export const getLinks = match => [
-  {
-    label: 'Models',
-    link: `/projects/${match.params.projectName}/models`
-  },
-  {
-    label: `Feature store${
-      window.mlrunConfig.betaMode === 'enabled' ? ' (Beta)' : ''
-    }`,
-    link: `/projects/${match.params.projectName}/feature-store`
-  },
-  {
-    label: 'Files',
-    link: `/projects/${match.params.projectName}/files`
-  },
-  {
-    label: 'Jobs and workflows',
-    link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
-  },
-  {
-    label: 'Schedule jobs',
-    link: `/projects/${match.params.projectName}/jobs/${SCHEDULE_TAB}`
-  },
-  {
-    label: 'ML functions',
-    link: `/projects/${match.params.projectName}/functions`
-  },
-  {
-    label: 'Real-time functions (Nuclio)',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`,
-    externalLink: true
-  },
-  {
-    label: 'API gateways (Nuclio)',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`,
-    externalLink: true
-  }
-]
-
 export const generateCreateNewOptions = (
   history,
   match,
   setArtifactKind,
   setIsPopupDialogOpen,
-  location,
-  setCreateFeatureSetsPanelIsOpen
+  setCreateFeatureSetsPanelIsOpen,
+  setIsNewFunctionPopUpOpen
 ) => [
   {
     label: 'Job',
@@ -75,17 +39,23 @@ export const generateCreateNewOptions = (
       )
   },
   {
-    label: 'Feature set',
-    id: 'featureSet',
-    handler: () => setCreateFeatureSetsPanelIsOpen(true),
-    hidden: !isDemoMode(location.search)
+    label: 'ML Function',
+    id: 'mlFunction',
+    handler: () => {
+      setIsNewFunctionPopUpOpen(true)
+    }
   },
   {
-    label: 'Register File',
+    label: 'Feature Set',
+    id: 'featureSet',
+    handler: () => setCreateFeatureSetsPanelIsOpen(true)
+  },
+  {
+    label: 'Register Artifact',
     id: 'registerFile',
     handler: () => {
       setIsPopupDialogOpen(true)
-      setArtifactKind('file')
+      setArtifactKind('artifact')
     }
   },
   {
@@ -105,3 +75,19 @@ export const generateCreateNewOptions = (
     }
   }
 ]
+
+export const handleFetchProjectError = (error, history, setConfirmData) => {
+  if (error.response?.status === STATUS_CODE_FORBIDDEN) {
+    setConfirmData({
+      message: 'You are not permitted to view this project.',
+      messageOnly: true,
+      btnConfirmLabel: 'Okay',
+      btnConfirmType: PRIMARY_BUTTON,
+      confirmHandler: () => {
+        history.push('/projects/')
+      }
+    })
+  } else {
+    history.push('/projects/')
+  }
+}

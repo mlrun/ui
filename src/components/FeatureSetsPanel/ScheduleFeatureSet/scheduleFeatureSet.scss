@@ -4,4 +4,13 @@
 
 .feature-set-panel__schedule {
   @include schedule;
+
+  .schedule-title {
+    display: flex;
+    align-items: center;
+
+    &__icon {
+      margin-left: auto;
+    }
+  }
 }

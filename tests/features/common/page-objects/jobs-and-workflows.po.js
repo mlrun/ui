@@ -5,9 +5,11 @@ import actionMenu from '../components/action-menu.component'
 import datepicker from '../components/date-picker.component'
 import inputGroup from '../components/input-group.component'
 import inputWithAutocomplete from '../components/input-with-autocomplete.component'
+import labelComponent from '../components/label.component'
 import {
   generateInputGroup,
-  generateDropdownGroup
+  generateDropdownGroup,
+  generateLabelGroup
 } from '../../common-tools/common-tools'
 
 // Monitor tab
@@ -42,7 +44,7 @@ const resultsTable = {
 const actionMenuStructure = {
   root: 'div.actions-menu__container',
   menuElements: {
-    open_button: 'div.data-ellipsis button',
+    open_button: 'button',
     options: 'div.actions-menu__body div.actions-menu__option'
   }
 }
@@ -67,12 +69,29 @@ const jobsMonitorTable = {
       root: 'div.table-body__row',
       fields: {
         expand_btn: 'div.table-body__cell:nth-of-type(1) svg',
-        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        status: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            'div.table-body__cell:nth-of-type(1) .status',
+            'i',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        },
+        name: 'div.table-body__cell:nth-of-type(1) a span.link .data-ellipsis',
         datetime:
           'div.table-body__cell:nth-of-type(1) a div.date__uid_row span:nth-of-type(1)',
         uid:
           'div.table-body__cell:nth-of-type(1) a div.date__uid_row span:nth-of-type(2)',
-        type: 'div.table-body__cell:nth-of-type(2) div.data-ellipsis svg',
+        type: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            'div.table-body__cell:nth-of-type(2)',
+            'div.data-ellipsis ',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        },
         duration: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
         owner: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
         labels: {
@@ -81,7 +100,8 @@ const jobsMonitorTable = {
             '.table-body__cell:nth-of-type(5)',
             '.chip-block span.chips_button',
             '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
-            false
+            false,
+            true // options_in_root ?
           )
         },
         parameters: {
@@ -90,7 +110,8 @@ const jobsMonitorTable = {
             '.table-body__cell:nth-of-type(6)',
             '.chip-block span.chips_button',
             '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
-            false
+            false,
+            true // options_in_root ?
           )
         },
         results: {
@@ -106,12 +127,93 @@ const jobsMonitorTable = {
   }
 }
 
-const startTimeFilterDropdown = {
-  root: 'div.content__action-bar div.filters div.date-picker-container',
-  dropdownElements: {
-    open_button: 'input.date-picker__input',
-    options: 'div.date-picker__pop-up div.select__item',
-    option_name: 'div.data-ellipsis div.data-ellipsis'
+const workflowsMonitorTable = {
+  root: 'div.table div.table__content',
+  header: {
+    root: 'div.table-head',
+    sorters: {
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      created: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      finished: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      duration: 'div.table-head__item:nth-of-type(4) div.data-ellipsis'
+    }
+  },
+  body: {
+    root: 'div.table-body',
+    row: {
+      root: 'div.table-body__row',
+      fields: {
+        status: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            'div.table-body__cell:nth-of-type(1) .status',
+            'i',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        },
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        created: 'div.table-body__cell:nth-of-type(2) div.data-ellipsis',
+        finished: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        duration: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
+const scheduleMonitorTable = {
+  root: 'div.table div.table__content',
+  header: {
+    root: 'div.table-head',
+    sorters: {
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      type: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      nextRun: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      schedule: 'div.table-head__item:nth-of-type(4) div.data-ellipsis',
+      labels: 'div.table-head__item:nth-of-type(5) div.data-ellipsis',
+      lastRun: 'div.table-head__item:nth-of-type(6) div.data-ellipsis',
+      createdTime: 'div.table-head__item:nth-of-type(7) div.data-ellipsis'
+    }
+  },
+  body: {
+    root: 'div.table-body',
+    row: {
+      root: 'div.table-body__row',
+      fields: {
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        type: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            'div.table-body__cell:nth-of-type(2)',
+            '.data-ellipsis',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        },
+        nextRun: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        schedule: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(5)',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            true // options_in_root ?
+          )
+        },
+        lastRun: 'div.table-head__item:nth-of-type(6) div.data-ellipsis',
+        createdTime: 'div.table-head__item:nth-of-type(7) div.data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
   }
 }
 
@@ -262,7 +364,7 @@ module.exports = {
     ),
     Table_Refresh_Button: tableRefreshButton,
     Table_Expand_Rows_Button: By.css(
-      'div.content__action-bar div.actions div.data-ellipsis:nth-of-type(2) button'
+      'div.content__action-bar div.actions div.round-icon-cp:nth-of-type(2) button'
     ),
     Status_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
@@ -294,9 +396,40 @@ module.exports = {
         false
       )
     ),
-    Start_Time_Filter_Dropdown: dropdownComponent(startTimeFilterDropdown),
+    Start_Time_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        'div.content__action-bar div.filters div.date-picker-container',
+        'input.date-picker__input',
+        'div.date-picker__pop-up div.select__item',
+        'div.data-ellipsis div.data-ellipsis',
+        true // options_in_root ?
+      )
+    ),
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Jobs_Monitor_Table: commonTable(jobsMonitorTable)
+  },
+  WorkflowsMonitorTab: {
+    Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
+    Toggle_View_Button: By.css('.workflow-header .actions .toggle-view-btn'),
+    Workflow_List_View_Table: commonTable(jobsMonitorTable)
+  },
+  ScheduleMonitorTab: {
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(1)',
+        true,
+        false
+      )
+    ),
+    Table_Labels_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(2)',
+        true,
+        false
+      )
+    ),
+    Table_Refresh_Button: tableRefreshButton,
+    Schedule_Monitor_Table: commonTable(scheduleMonitorTable)
   },
   CreateJob: {
     Back_Arrow_Button: By.css(

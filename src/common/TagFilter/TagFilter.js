@@ -6,7 +6,7 @@ import TagFilterDropdown from './TagFilterDropdown'
 
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
-import { KEY_CODES, INIT_TAG_FILTER } from '../../constants'
+import { KEY_CODES, TAG_FILTER_LATEST } from '../../constants'
 
 import './tagFilter.scss'
 
@@ -19,7 +19,7 @@ const TagFilter = ({
   value
 }) => {
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false)
-  const [tagFilter, setTagFilter] = useState(INIT_TAG_FILTER)
+  const [tagFilter, setTagFilter] = useState(TAG_FILTER_LATEST)
 
   const history = useHistory()
   const tagFilterRef = useRef()
@@ -32,9 +32,9 @@ const TagFilter = ({
     event => {
       if (!event.path.includes(tagFilterRef.current)) {
         if (tagFilter.length <= 0) {
-          onChange(INIT_TAG_FILTER)
+          onChange(TAG_FILTER_LATEST)
           setTagFilter(
-            tagFilterOptions.find(tag => tag.id === INIT_TAG_FILTER).label
+            tagFilterOptions.find(tag => tag.id === TAG_FILTER_LATEST).label
           )
         } else {
           const tag = tagFilterOptions.find(tag => tag.id === tagFilter)
@@ -54,7 +54,7 @@ const TagFilter = ({
       event.preventDefault()
 
       let searchItem = tagFilterOptions.find(tag => {
-        return tagFilter.toLowerCase() === tag.id
+        return tagFilter === tag.id
       })
 
       if (match.params.jobId || match.params.name) {
@@ -65,8 +65,8 @@ const TagFilter = ({
         )
       }
 
-      setTagFilter(searchItem?.id || event.target.value || INIT_TAG_FILTER)
-      onChange(searchItem?.id || event.target.value || INIT_TAG_FILTER)
+      setTagFilter(searchItem?.id || event.target.value || TAG_FILTER_LATEST)
+      onChange(searchItem?.id || event.target.value || TAG_FILTER_LATEST)
       event.target.blur()
       setIsDropDownMenuOpen(false)
     }

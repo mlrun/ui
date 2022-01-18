@@ -5,6 +5,8 @@ import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import RangeInput from '../../common/RangeInput/RangeInput'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import {
   BOOLEAN_TYPE,
@@ -20,7 +22,9 @@ const EditableFunctionParameterRow = ({
   handleEdit,
   parameters,
   selectedParameter,
-  setSelectedParameter
+  setSelectedParameter,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="table__row edit-row">
@@ -28,10 +32,15 @@ const EditableFunctionParameterRow = ({
         <Input
           floatingLabel
           invalid={
-            selectedParameter.newName !== selectedParameter.data.name &&
-            isNameNotUnique(selectedParameter.newName, parameters)
+            (selectedParameter.newName !== selectedParameter.data.name &&
+              isNameNotUnique(selectedParameter.newName, parameters)) ||
+            !validation.isEditNameValid
           }
-          invalidText="Name already exists"
+          invalidText={
+            isNameNotUnique(selectedParameter.newName, parameters)
+              ? 'Name already exists'
+              : 'This field is invalid'
+          }
           label="Name"
           onChange={name => {
             setSelectedParameter({
@@ -40,6 +49,12 @@ const EditableFunctionParameterRow = ({
             })
           }}
           required
+          setInvalid={value =>
+            setValidation(state => ({
+              ...state,
+              isEditNameValid: value
+            }))
+          }
           type="text"
           value={selectedParameter.newName ?? selectedParameter.data.name}
         />
@@ -96,6 +111,7 @@ const EditableFunctionParameterRow = ({
         ) : (
           <Input
             floatingLabel
+            invalid={!validation.isEditValueValid}
             label="Value"
             onChange={value => {
               setSelectedParameter({
@@ -107,6 +123,12 @@ const EditableFunctionParameterRow = ({
               })
             }}
             required
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                isEditValueValid: value
+              }))
+            }
             type="text"
             value={selectedParameter.data.value}
           />
@@ -118,7 +140,9 @@ const EditableFunctionParameterRow = ({
           disabled={!isEditableParameterValid(selectedParameter, parameters)}
           onClick={handleEdit}
         >
-          <Checkmark />
+          <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+            <Checkmark />
+          </Tooltip>
         </button>
       </div>
     </div>
@@ -129,7 +153,9 @@ EditableFunctionParameterRow.propTypes = {
   handleEdit: PropTypes.func.isRequired,
   parameters: PropTypes.array.isRequired,
   selectedParameter: PropTypes.shape({}).isRequired,
-  setSelectedParameter: PropTypes.func.isRequired
+  setSelectedParameter: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default EditableFunctionParameterRow

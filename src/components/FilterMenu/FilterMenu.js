@@ -1,39 +1,42 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
 import Select from '../../common/Select/Select'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import TagFilter from '../../common/TagFilter/TagFilter'
-import { isDemoMode } from '../../utils/helper'
 
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
-import { ReactComponent as Collapse } from '../../images/collapse.svg'
-import { ReactComponent as Expand } from '../../images/expand.svg'
+import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
+import { ReactComponent as CollapseIcon } from '../../images/collapse.svg'
+import { ReactComponent as ExpandIcon } from '../../images/expand.svg'
 
 import {
   DATE_RANGE_TIME_FILTER,
   GROUP_BY_FILTER,
+  GROUP_BY_NONE,
   ITERATIONS_FILTER,
-  JOBS_PAGE,
   KEY_CODES,
   LABELS_FILTER,
   NAME_FILTER,
   PERIOD_FILTER,
+  PROJECT_FILTER,
+  SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
+  SHOW_UNTAGGED_ITEMS,
+  SORT_BY,
   STATUS_FILTER,
   TAG_FILTER,
   TREE_FILTER
 } from '../../constants'
 import filtersActions from '../../actions/filters'
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
+import { generateProjectsList } from '../../utils/projects'
 
 import './filterMenu.scss'
 
@@ -46,7 +49,9 @@ const FilterMenu = ({
   match,
   onChange,
   page,
+  projectStore,
   removeFilters,
+  setFilterProjectOptions,
   setFilters,
   withoutExpandButton
 }) => {
@@ -54,20 +59,7 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const history = useHistory()
-  const location = useLocation()
-  const selectOptions = useMemo(() => {
-    const options = cloneDeep(filterSelectOptions)
-
-    if (
-      !isDemoMode(location.search) &&
-      page === JOBS_PAGE &&
-      !options.groupBy.find(option => option.id === 'workflow')
-    ) {
-      options.groupBy.push({ label: 'Workflow', id: 'workflow' })
-    }
-
-    return options
-  }, [location.search, page])
+  const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
 
   useEffect(() => {
     return () => {
@@ -80,19 +72,57 @@ const FilterMenu = ({
 
   useEffect(() => {
     if (
-      filtersStore.tagOptions.length > 0 &&
       filters.find(
         filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER
       )
     ) {
-      setTagOptions([
-        ...filtersStore.tagOptions.map(tag => ({
-          label: tag,
-          id: tag
-        }))
-      ])
+      if (filtersStore.tagOptions.length > 0) {
+        setTagOptions(() => {
+          const defaultOptionsTags = tagFilterOptions.map(option => option.id)
+
+          return [
+            ...tagFilterOptions,
+            ...filtersStore.tagOptions.reduce((acc, tag) => {
+              if (!defaultOptionsTags.includes(tag)) {
+                acc.push({
+                  label: tag,
+                  id: tag
+                })
+              }
+
+              return acc
+            }, [])
+          ]
+        })
+      } else {
+        setTagOptions(tagFilterOptions)
+      }
     }
   }, [filters, filtersStore.tagOptions])
+
+  useEffect(() => {
+    if (
+      filtersStore.projectOptions.length === 0 &&
+      filters.some(filter => filter.type === PROJECT_FILTER)
+    ) {
+      setFilterProjectOptions(
+        generateProjectsList(
+          projectStore.projectsNames.data,
+          match.params.projectName
+        )
+      )
+      setFilters({
+        project: match.params.projectName
+      })
+    }
+  }, [
+    filters,
+    filtersStore.projectOptions.length,
+    match.params.projectName,
+    projectStore.projectsNames.data,
+    setFilterProjectOptions,
+    setFilters
+  ])
 
   const applyChanges = (data, isRefreshed) => {
     if ((match.params.jobId || match.params.name) && !isRefreshed) {
@@ -103,10 +133,7 @@ const FilterMenu = ({
       )
     }
 
-    if (!isRefreshed) {
-      handleExpandAll(true)
-    }
-
+    handleExpandAll(true)
     onChange(data)
   }
 
@@ -117,16 +144,26 @@ const FilterMenu = ({
         ...filtersStore,
         state: item
       })
+    } else if (filter.type === SORT_BY) {
+      setFilters({ sortBy: item })
     } else if (filter.type === GROUP_BY_FILTER) {
       setFilters({ groupBy: item })
     } else if (
       (filter.type === TREE_FILTER || filter.type === TAG_FILTER) &&
       item !== filtersStore.tag
     ) {
-      setFilters({ tag: item.toLowerCase() })
+      setFilters({ tag: item })
       applyChanges({
         ...filtersStore,
-        tag: item.toLowerCase()
+        tag: item
+      })
+    } else if (filter.type === PROJECT_FILTER) {
+      setFilters({
+        project: item
+      })
+      applyChanges({
+        ...filtersStore,
+        project: item.toLowerCase()
       })
     }
   }
@@ -152,22 +189,30 @@ const FilterMenu = ({
     })
   }
 
-  const handleChangeDates = dates => {
+  const handleChangeDates = (dates, isPredefined) => {
     const generatedDates = [...dates]
 
     if (generatedDates.length === 1) {
       generatedDates.push(new Date())
     }
 
-    setFilters({ dates: generatedDates })
+    setFilters({
+      dates: {
+        value: generatedDates,
+        isPredefined
+      }
+    })
     applyChanges({
       ...filtersStore,
-      dates: generatedDates
+      dates: {
+        value: generatedDates,
+        isPredefined
+      }
     })
   }
 
   const handleIter = iteration => {
-    const iterValue = filtersStore.iter === iteration ? 'iter' : ''
+    const iterValue = filtersStore.iter === iteration ? SHOW_ITERATIONS : ''
 
     setFilters({
       iter: iterValue
@@ -238,8 +283,8 @@ const FilterMenu = ({
             case DATE_RANGE_TIME_FILTER:
               return (
                 <DatePicker
-                  date={filtersStore.dates[0]}
-                  dateTo={filtersStore.dates[1]}
+                  date={filtersStore.dates.value[0]}
+                  dateTo={filtersStore.dates.value[1]}
                   key={filter.type}
                   label={filter.label}
                   onChange={handleChangeDates}
@@ -261,9 +306,21 @@ const FilterMenu = ({
                 <CheckBox
                   key={filter.type}
                   className="filters-checkbox"
-                  item={{ label: filter.label, id: 'showUntagged' }}
+                  item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
                   onChange={handleShowUntagged}
                   selectedId={filtersStore.showUntagged}
+                />
+              )
+            case PROJECT_FILTER:
+              return (
+                <Select
+                  density="dense"
+                  className={''}
+                  label={filter.label}
+                  key={filter.type}
+                  onClick={project => handleSelectOption(project, filter)}
+                  options={filtersStore.projectOptions}
+                  selectedId={filtersStore.project}
                 />
               )
             default:
@@ -276,10 +333,11 @@ const FilterMenu = ({
                   label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
                   key={filter.type}
                   onClick={item => handleSelectOption(item, filter)}
-                  options={selectOptions[filter.type]}
+                  options={filter.options || selectOptions[filter.type]}
                   selectedId={
                     (filter.type === STATUS_FILTER && filtersStore.state) ||
-                    (filter.type === GROUP_BY_FILTER && filtersStore.groupBy)
+                    (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
+                    (filter.type === SORT_BY && filtersStore.sortBy)
                   }
                 />
               )
@@ -299,22 +357,22 @@ const FilterMenu = ({
             onClick={actionButton.onClick}
           />
         ))}
+
       <div className="actions">
-        <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
-          <button onClick={() => applyChanges(filtersStore, true)} id="refresh">
-            <Refresh />
-          </button>
-        </Tooltip>
-        {!withoutExpandButton && filtersStore.groupBy !== 'none' && (
-          <Tooltip
-            template={
-              <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand all'} />
-            }
+        <RoundedIcon
+          tooltipText="Refresh"
+          onClick={() => applyChanges(filtersStore, true)}
+          id="refresh"
+        >
+          <RefreshIcon />
+        </RoundedIcon>
+        {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
+          <RoundedIcon
+            tooltipText={expand ? 'Collapse' : 'Expand all'}
+            onClick={() => handleExpandAll()}
           >
-            <button onClick={() => handleExpandAll()}>
-              {expand ? <Collapse /> : <Expand />}
-            </button>
-          </Tooltip>
+            {expand ? <CollapseIcon /> : <ExpandIcon />}
+          </RoundedIcon>
         )}
       </div>
     </>
@@ -333,8 +391,9 @@ FilterMenu.propTypes = {
 }
 
 export default connect(
-  ({ filtersStore }) => ({
-    filtersStore
+  ({ filtersStore, projectStore }) => ({
+    filtersStore,
+    projectStore
   }),
-  filtersActions
+  { ...filtersActions }
 )(FilterMenu)

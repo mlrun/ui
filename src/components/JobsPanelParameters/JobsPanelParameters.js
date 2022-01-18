@@ -1,4 +1,4 @@
-import React, { useReducer, useMemo, useCallback } from 'react'
+import React, { useReducer, useMemo, useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -36,6 +36,10 @@ const JobsPanelParameters = ({
     jobsPanelParametersReducer,
     initialState
   )
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isValueValid: true
+  })
   const parameterTypeOptions = useMemo(() => {
     return getParameterTypeOptions(jobsStore.newJob.task.spec.param_file)
   }, [jobsStore.newJob.task.spec.param_file])
@@ -167,14 +171,34 @@ const JobsPanelParameters = ({
           }
         ]
       })
+      parametersDispatch({
+        type: parametersActions.SET_ADD_NEW_PARAMETER,
+        payload: false
+      })
+      parametersDispatch({
+        type: parametersActions.REMOVE_NEW_PARAMETER_DATA
+      })
+    } else {
+      setValidation(state => ({
+        isNameValid:
+          state.isNameValid && parametersState.newParameter.name.length > 0,
+        isValueValid:
+          state.isValueValid && parametersState.newParameter.value.length > 0
+      }))
     }
+  }
 
+  const undoParameterCreation = () => {
     parametersDispatch({
       type: parametersActions.SET_ADD_NEW_PARAMETER,
       payload: false
     })
     parametersDispatch({
       type: parametersActions.REMOVE_NEW_PARAMETER_DATA
+    })
+    setValidation({
+      isNameValid: true,
+      isValueValid: true
     })
   }
 
@@ -214,7 +238,7 @@ const JobsPanelParameters = ({
     )
   }
 
-  const handleDeleteParameter = item => {
+  const handleDeleteParameter = (item, index) => {
     const newParameters = { ...jobsStore.newJob.task.spec.parameters }
 
     delete newParameters[item.data.name]
@@ -269,9 +293,12 @@ const JobsPanelParameters = ({
       setNewJobSelectorResult={setNewJobSelectorResult}
       setTuningStrategy={setTuningStrategy}
       setUrl={setUrl}
+      setValidation={setValidation}
       tableContent={tableContent}
       tuningStrategy={jobsStore.newJob.task.spec.tuning_strategy}
+      undoParameterCreation={undoParameterCreation}
       url={jobsStore.newJob.task.spec.param_file}
+      validation={validation}
     />
   )
 }

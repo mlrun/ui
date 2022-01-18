@@ -22,7 +22,11 @@ const ScheduleJob = ({
   handleEditJob,
   handleRunJob,
   match,
-  setOpenScheduleJob
+  panelDispatch,
+  panelState,
+  setOpenScheduleJob,
+  setValidation,
+  validation
 }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
   const [cron, setCron] = useState(defaultCron || '10 * * * *')
@@ -179,6 +183,8 @@ const ScheduleJob = ({
       isRecurring={isRecurring}
       match={match}
       onSchedule={onSchedule}
+      panelDispatch={panelDispatch}
+      panelState={panelState}
       recurringDispatch={recurringDispatch}
       recurringState={recurringState}
       setActiveTab={setActiveTab}
@@ -187,6 +193,8 @@ const ScheduleJob = ({
       setIsRecurring={setIsRecurring}
       setTime={onHandleTimeChange}
       time={time}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }
@@ -201,6 +209,8 @@ ScheduleJob.propTypes = {
   handleEditJob: PropTypes.func,
   handleRunJob: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
+  panelDispatch: PropTypes.func.isRequired,
+  panelState: PropTypes.shape({}).isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired
 }
 

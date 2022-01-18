@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
 import { isEmpty, map } from 'lodash'
 
 import TableView from './TableView'
-import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
-import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
+import { GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../constants'
 import tableActions from '../../actions/table'
 
 import './table.scss'
@@ -22,6 +22,7 @@ const Table = ({
   cancelRequest,
   content,
   filtersStore,
+  getCloseDetailsLink,
   groupedContent,
   handleCancel,
   handleExpandRow,
@@ -30,39 +31,35 @@ const Table = ({
   pageData,
   retryRequest,
   selectedItem,
-  setLoading,
-  setTablePanelOpen,
   tableStore
 }) => {
-  const location = useLocation()
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
     groupWorkflowItems: [],
     content: [],
     mainRowItemsCount: 1
   })
+  const tableContentRef = useRef(null)
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
+  const isDemoMode = useDemoMode()
 
-  const previewArtifact = useSelector(
-    state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
-  )
   const workflows = useSelector(state => {
     return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
   })
 
   useEffect(() => {
-    return () => {
-      setTablePanelOpen(false)
-    }
-  }, [setTablePanelOpen])
-
-  useEffect(() => {
     const calculatePanelHeight = () => {
-      if (tableHeadRef && tablePanelRef.current) {
-        const cords = tableHeadRef.current.getBoundingClientRect()
-        tablePanelRef.current.style.height = `${window.innerHeight -
-          cords.top}px`
+      if (tableHeadRef && tableContentRef && tablePanelRef.current) {
+        const tableContentHeight = tableContentRef.current.getBoundingClientRect()
+          .height
+        const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
+        const panelHeight = window.innerHeight - tableHeadCords.top
+
+        tablePanelRef.current.style.height =
+          tableContentHeight > panelHeight
+            ? `${panelHeight}px`
+            : `${panelHeight - (panelHeight - tableContentHeight)}px`
       }
     }
 
@@ -80,16 +77,15 @@ const Table = ({
     }
   }, [tableStore.isTablePanelOpen])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const generatedTableContent = generateTableContent(
       content,
       groupedContent,
       filtersStore.groupBy,
       pageData.page,
       tableStore.isTablePanelOpen,
-      match.params.pageTab,
-      match.params.projectName,
-      location.search,
+      match.params,
+      isDemoMode,
       !isEveryObjectValueEmpty(selectedItem)
     )
 
@@ -104,103 +100,98 @@ const Table = ({
         groupWorkflowItems: [],
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
-    } else if (filtersStore.groupBy === 'workflow') {
+    } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
       let groupWorkflowItem = map(groupedContent, (jobs, workflowId) =>
         workflows.find(workflow => workflow.id === workflowId)
       )
 
-      setTableContent({
+      setTableContent(state => ({
+        ...state,
         content: generatedTableContent,
         groupLatestItem: [],
         groupWorkflowItems: createJobsContent(
           groupWorkflowItem,
           !isEveryObjectValueEmpty(selectedItem),
-          match.params.projectName,
-          location.search,
+          match.params,
+          isDemoMode,
           true
         )
-      })
-    } else if (filtersStore.groupBy === 'none') {
-      setTableContent({
+      }))
+    } else if (filtersStore.groupBy === GROUP_BY_NONE) {
+      setTableContent(state => ({
+        ...state,
         groupLatestItem: [],
         groupWorkflowItems: [],
         content: generatedTableContent
-      })
+      }))
     }
   }, [
     content,
-    groupedContent,
-    pageData.page,
-    setLoading,
-    workflows,
-    pageData.mainRowItemsCount,
-    tableStore.isTablePanelOpen,
     filtersStore.groupBy,
-    match.params.pageTab,
-    match.params.projectName,
-    location.search,
-    selectedItem
+    groupedContent,
+    isDemoMode,
+    match.params,
+    pageData.mainRowItemsCount,
+    pageData.page,
+    selectedItem,
+    tableStore.isTablePanelOpen,
+    workflows
   ])
 
   return (
-    <>
-      <TableView
-        actionsMenu={actionsMenu}
-        applyDetailsChanges={applyDetailsChanges}
-        cancelRequest={cancelRequest}
-        content={content}
-        groupFilter={filtersStore.groupBy}
-        groupLatestItem={
-          isEmpty(tableContent.groupLatestItem)
-            ? tableContent.groupWorkflowItems
-            : tableContent.groupLatestItem
-        }
-        groupedContent={groupedContent}
-        handleCancel={handleCancel}
-        handleExpandRow={handleExpandRow}
-        handleSelectItem={handleSelectItem}
-        isTablePanelOpen={tableStore.isTablePanelOpen}
-        mainRowItemsCount={tableContent.mainRowItemsCount}
-        match={match}
-        pageData={pageData}
-        retryRequest={retryRequest}
-        selectedItem={selectedItem}
-        tableContent={tableContent.content}
-        tableHeadRef={tableHeadRef}
-        tablePanelRef={tablePanelRef}
-        workflows={workflows}
-      />
-      {previewArtifact.isPreview && (
-        <PreviewModal item={previewArtifact.selectedItem} />
-      )}
-    </>
+    <TableView
+      actionsMenu={actionsMenu}
+      applyDetailsChanges={applyDetailsChanges}
+      cancelRequest={cancelRequest}
+      content={content}
+      getCloseDetailsLink={getCloseDetailsLink}
+      groupFilter={filtersStore.groupBy}
+      groupLatestItem={
+        isEmpty(tableContent.groupLatestItem)
+          ? tableContent.groupWorkflowItems
+          : tableContent.groupLatestItem
+      }
+      groupedContent={groupedContent}
+      handleCancel={handleCancel}
+      handleExpandRow={handleExpandRow}
+      handleSelectItem={handleSelectItem}
+      isTablePanelOpen={tableStore.isTablePanelOpen}
+      mainRowItemsCount={tableContent.mainRowItemsCount}
+      match={match}
+      pageData={pageData}
+      retryRequest={retryRequest}
+      selectedItem={selectedItem}
+      tableContent={tableContent.content}
+      tableContentRef={tableContentRef}
+      tableHeadRef={tableHeadRef}
+      tablePanelRef={tablePanelRef}
+      workflows={workflows}
+    />
   )
 }
 
 Table.defaultProps = {
   applyDetailsChanges: () => {},
+  getCloseDetailsLink: null,
   groupedContent: {},
   groupLatestJob: [],
   handleExpandRow: () => {},
-  selectedItem: {},
-  setLoading: null
+  selectedItem: {}
 }
 
 Table.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
+  retryRequest: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}),
-  setLoading: PropTypes.func
+  selectedItem: PropTypes.shape({})
 }
 
 export default connect(

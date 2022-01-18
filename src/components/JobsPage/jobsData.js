@@ -2,7 +2,9 @@ import React from 'react'
 
 import {
   DATE_RANGE_TIME_FILTER,
+  FUNCTIONS_PAGE,
   GROUP_BY_FILTER,
+  JOBS_PAGE,
   LABELS_FILTER,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -10,16 +12,17 @@ import {
   PERIOD_FILTER,
   SCHEDULE_TAB,
   STATUS_FILTER,
-  TERTIARY_BUTTON,
-  WORKFLOW_SUB_PAGE
+  TERTIARY_BUTTON
 } from '../../constants'
-import { isDemoMode } from '../../utils/helper'
+import { infoHeaders as functionsInfoHeaders } from '../FunctionsPage/functions.util'
+import { detailsMenu as functionsDetailsMenu } from '../FunctionsPage/functions.util'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Cancel } from '../../images/close.svg'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -34,10 +37,11 @@ export const infoHeaders = [
   { label: 'Output path', id: 'outputPath' },
   { label: 'Iterations', id: 'iterations' }
 ]
+export const actionsMenuHeader = 'New Job'
 
 const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
-export const generateTableHeaders = (pageTab, isSelectedItem) => {
+export const generateTableHeaders = (pageTab, workflowId, isSelectedItem) => {
   if (pageTab === SCHEDULE_TAB) {
     return [
       {
@@ -72,6 +76,35 @@ export const generateTableHeaders = (pageTab, isSelectedItem) => {
       {
         header: 'Created time (Local TZ)',
         class: 'jobs_medium',
+        hidden: isSelectedItem
+      },
+      {
+        header: '',
+        class: 'action_cell',
+        hidden: isSelectedItem
+      }
+    ]
+  }
+
+  if (pageTab === MONITOR_WORKFLOWS_TAB && !workflowId) {
+    return [
+      {
+        header: 'Name',
+        class: 'jobs_big'
+      },
+      {
+        header: 'Created at',
+        class: 'jobs_small',
+        hidden: isSelectedItem
+      },
+      {
+        header: 'Finished at',
+        class: 'jobs_small',
+        hidden: isSelectedItem
+      },
+      {
+        header: 'Duration',
+        class: 'jobs_small',
         hidden: isSelectedItem
       },
       {
@@ -151,47 +184,46 @@ export const detailsMenu = [
   }
 ]
 
-const filtersByTab = {
-  [MONITOR_JOBS_TAB]: [
-    { type: PERIOD_FILTER, label: 'Period:' },
-    { type: STATUS_FILTER, label: 'Status:' },
-    { type: GROUP_BY_FILTER, label: 'Group by:' },
-    { type: NAME_FILTER, label: 'Name:' },
-    { type: LABELS_FILTER, label: 'Labels:' },
-    { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
-  ],
-  [MONITOR_WORKFLOWS_TAB]: [
-    { type: PERIOD_FILTER, label: 'Period:' },
-    { type: STATUS_FILTER, label: 'Status:' },
-    { type: NAME_FILTER, label: 'Name:' },
-    { type: LABELS_FILTER, label: 'Labels:' },
-    { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
-  ],
-  [SCHEDULE_TAB]: [
-    { type: NAME_FILTER, label: 'Name:' },
-    { type: LABELS_FILTER, label: 'Labels:' }
-  ]
+const filtersByTab = (pageTab, isDemoMode) => {
+  if (pageTab === MONITOR_JOBS_TAB) {
+    return [
+      { type: PERIOD_FILTER, label: 'Period:' },
+      { type: STATUS_FILTER, label: 'Status:' },
+      { type: GROUP_BY_FILTER, label: 'Group by:' },
+      { type: NAME_FILTER, label: 'Name:' },
+      { type: LABELS_FILTER, label: 'Labels:' },
+      { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
+    ]
+  } else if (pageTab === MONITOR_WORKFLOWS_TAB) {
+    return [
+      { type: PERIOD_FILTER, label: 'Period:' },
+      { type: STATUS_FILTER, label: 'Status:' },
+      { type: NAME_FILTER, label: 'Name:' },
+      { type: LABELS_FILTER, label: 'Labels:' },
+      { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
+    ]
+  } else if (pageTab === SCHEDULE_TAB) {
+    return [
+      { type: NAME_FILTER, label: 'Name:' },
+      { type: LABELS_FILTER, label: 'Labels:' }
+    ]
+  }
 }
 
-const generateTabs = search => {
+const generateTabs = isDemoMode => {
   return [
     { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
-    {
-      id: MONITOR_WORKFLOWS_TAB,
-      label: 'Monitor Workflows',
-      hidden: !isDemoMode(search)
-    },
+    { id: MONITOR_WORKFLOWS_TAB, label: 'Monitor Workflows' },
     { id: SCHEDULE_TAB, label: 'Schedule' }
   ]
 }
 
 export const generatePageData = (
   pageTab,
-  search,
-  subPage,
+  isDemoMode,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem,
+  handleEditScheduleJob,
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
@@ -199,7 +231,11 @@ export const generatePageData = (
   abortableFunctionKinds,
   fetchJobLogs,
   removeJobLogs,
-  isSelectedItem
+  isSelectedItem,
+  workflowId,
+  selectedFunction,
+  handleFetchFunctionLogs,
+  handleRemoveFunctionLogs
 ) => {
   let filterMenuActionButton = {
     label: 'Resource monitoring',
@@ -218,24 +254,39 @@ export const generatePageData = (
       pageTab,
       removeScheduledJob,
       handleSubmitJob,
-      setEditableItem,
+      handleEditScheduleJob,
       handleRerunJob,
       handleMonitoring,
       jobsDashboardUrl,
       onAbortJob,
       abortableFunctionKinds
     ),
-    detailsMenu,
-    hideFilterMenu: subPage === WORKFLOW_SUB_PAGE,
+    actionsMenuHeader: actionsMenuHeader,
+    details: {
+      type: !isEveryObjectValueEmpty(selectedFunction)
+        ? FUNCTIONS_PAGE
+        : JOBS_PAGE,
+      menu: !isEveryObjectValueEmpty(selectedFunction)
+        ? functionsDetailsMenu
+        : detailsMenu,
+      infoHeaders: !isEveryObjectValueEmpty(selectedFunction)
+        ? functionsInfoHeaders
+        : infoHeaders,
+      refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
+        ? handleFetchFunctionLogs
+        : fetchJobLogs,
+      removeLogs: !isEveryObjectValueEmpty(selectedFunction)
+        ? handleRemoveFunctionLogs
+        : removeJobLogs,
+      withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
+    },
+    hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,
-    filters: filtersByTab[pageTab],
+    filters: filtersByTab(pageTab, isDemoMode) ?? [],
     page,
-    tableHeaders: generateTableHeaders(pageTab, isSelectedItem),
-    tabs: generateTabs(search),
-    infoHeaders,
-    refreshLogs: fetchJobLogs,
-    removeLogs: removeJobLogs,
-    withLogsRefreshBtn: true
+    tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
+    tabs: generateTabs(isDemoMode),
+    withoutExpandButton: pageTab === MONITOR_WORKFLOWS_TAB && !workflowId
   }
 }
 
@@ -248,7 +299,7 @@ export const generateActionsMenu = (
   pageTab,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem,
+  handleEditScheduleJob,
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
@@ -265,7 +316,7 @@ export const generateActionsMenu = (
         {
           label: 'Edit',
           icon: <Edit />,
-          onClick: setEditableItem
+          onClick: handleEditScheduleJob
         },
         {
           label: 'Delete',
