@@ -8,7 +8,8 @@ import {
   typeIntoInputField,
   hoverComponent,
   componentIsVisible,
-  componentIsNotVisible
+  componentIsNotVisible,
+  scrollToElement
 } from '../common/actions/common.action'
 import {
   getTableRows,
@@ -18,6 +19,7 @@ import {
   getCellByIndexColumn,
   isContainsSubstringInColumnCels,
   isContainsSubstringInColumnDropdownCels,
+  isContainsSubstringInColumnTooltipCells,
   isDatetimeCelsValueInRange,
   findRowIndexesByColumnTooltipsValue
 } from '../common/actions/table.action'
@@ -98,7 +100,8 @@ Then(
     )
     await hoverComponent(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][column](indx)
+      pageObjects[wizard][table]['tableFields'][column](indx),
+      false // scroll ?
     )
     await openActionMenu(this.driver, actionMenuSel)
     await this.driver.sleep(500)
@@ -356,6 +359,15 @@ Then(
         substring
       )
     }
+
+    if (type === 'tooltip') {
+      await isContainsSubstringInColumnTooltipCells(
+        this.driver,
+        pageObjects[wizard][table],
+        column,
+        substring
+      )
+    }
   }
 )
 
@@ -574,10 +586,15 @@ When(
       )
       for (const indx in pageComponents) {
         if (pageComponents[indx].includes('Dropdown')) {
+          await scrollToElement(
+            this.driver,
+            pageObjects[wizardName][accordionName][pageComponents[indx]].root
+          )
           await openDropdown(
             this.driver,
             pageObjects[wizardName][accordionName][pageComponents[indx]]
           )
+          // await scrollDown(this.driver)
           await selectOptionInDropdown(
             this.driver,
             pageObjects[wizardName][accordionName][pageComponents[indx]],

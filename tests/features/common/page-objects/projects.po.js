@@ -31,7 +31,7 @@ const ProjectsTableSelector = {
             root: 'div.project-card__actions-menu',
             menuElements: {
               open_button: 'button',
-              options: 'div.actions-menu__container div.actions-menu__option'
+              options: '#overlay_container div.actions-menu__option'
             }
           }
         }
@@ -55,12 +55,12 @@ module.exports = {
     )
   ),
   Projects_Sorter: By.css(
-    'div.projects-content-header-item div.sort div.sort__header button > svg'
+    'div.projects-content-header-item div.sort .split-btn__button:nth-of-type(1) button > svg'
   ),
   Projects_Sort_Dropdown: dropdownComponent(
     generateDropdownGroup(
-      '.projects-content-header-item .sort',
-      '.sort__header > div', // Open Component
+      'div.projects-content-header-item div.sort .split-btn__button:nth-of-type(2)',
+      'button > svg', // Open Component
       '.sort__body .select__item', // Options
       '.data-ellipsis > .tooltip-wrapper' // Option value
     )

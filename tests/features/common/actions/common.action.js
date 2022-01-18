@@ -3,6 +3,14 @@ import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
 import http from 'http'
 
+const REACT_APP_MLRUN_API_URL =
+  'http://mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
+
+async function scrollToWebElement(driver, element) {
+  await driver.executeScript('arguments[0].scrollIntoView()', element)
+  await driver.sleep(250)
+}
+
 const action = {
   navigateToPage: async function(driver, baseURL) {
     await driver.get(baseURL)
@@ -26,12 +34,15 @@ const action = {
     const coordinates = await element.getRect()
     const actions = driver.actions({ async: true })
     await actions
-      .move({ x: parseInt(coordinates.x) - 5, y: parseInt(coordinates.y) - 5 })
+      .move({ x: parseInt(coordinates.x) + 1, y: parseInt(coordinates.y) + 1 })
       .click()
       .perform()
   },
-  hoverComponent: async function(driver, component) {
+  hoverComponent: async function(driver, component, scroll = true) {
     const element = await driver.findElement(component)
+    if (scroll) {
+      await scrollToWebElement(driver, element)
+    }
     const coordinates = await element.getRect()
     const actions = driver.actions({ async: true })
     await actions
@@ -85,6 +96,11 @@ const action = {
     const txt = await element.getText('value')
     expect(txt).equal(value)
   },
+  verifyTextRegExp: async function(driver, component, regexp) {
+    const element = await driver.findElement(component)
+    const txt = await element.getText('value')
+    expect(true).equal(regexp.test(txt))
+  },
   isComponentContainsAttributeValue: async function(
     driver,
     component,
@@ -137,6 +153,74 @@ const action = {
       await expect(res.statusCode).equal(expectedStatusCode)
     })
   },
+  deleteAPIFeatureSet: async function(
+    projectName,
+    featureSetName,
+    expectedStatusCode
+  ) {
+    const options = {
+      host: test_url,
+      port: test_port,
+      path: `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/feature-sets/${featureSetName}`,
+      method: 'DELETE'
+    }
+    const req = http.get(options)
+    req.end()
+
+    req.once('response', async function(res) {
+      await expect(res.statusCode).equal(expectedStatusCode)
+    })
+  },
+  deleteAPIFeatureVector: async function(
+    projectName,
+    featureVectorName,
+    expectedStatusCode
+  ) {
+    const options = {
+      host: test_url,
+      port: test_port,
+      path: `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/feature-vectors/${featureVectorName}`,
+      method: 'DELETE'
+    }
+    const req = http.get(options)
+    req.end()
+
+    req.once('response', async function(res) {
+      await expect(res.statusCode).equal(expectedStatusCode)
+    })
+  },
+  deleteAPIFunction: async function(
+    projectName,
+    functionName,
+    expectedStatusCode
+  ) {
+    const options = {
+      host: test_url,
+      port: test_port,
+      path: `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/functions/${functionName}`,
+      method: 'DELETE'
+    }
+    const req = http.get(options)
+    req.end()
+
+    req.once('response', async function(res) {
+      await expect(res.statusCode).equal(expectedStatusCode)
+    })
+  },
+  deleteAPIJob: async function(projectName, jobName, expectedStatusCode) {
+    const options = {
+      host: test_url,
+      port: test_port,
+      path: `${REACT_APP_MLRUN_API_URL}/api/runs?project=${projectName}&run=${jobName}`,
+      method: 'DELETE'
+    }
+    const req = http.get(options)
+    req.end()
+
+    req.once('response', async function(res) {
+      await expect(res.statusCode).equal(expectedStatusCode)
+    })
+  },
   createAPIMLProject: async function(mlProjectName, expectedStatusCode) {
     const project_data = JSON.stringify({
       metadata: {
@@ -168,7 +252,13 @@ const action = {
   getElementText: async function(driver, component) {
     const element = await driver.findElement(component)
     return await element.getText('value')
-  }
+  },
+  scrollToElement: async function(driver, component) {
+    const element = await driver.findElement(component)
+    await driver.executeScript('arguments[0].scrollIntoView()', element)
+    await driver.sleep(250)
+  },
+  scrollToWebElement
 }
 
 module.exports = action

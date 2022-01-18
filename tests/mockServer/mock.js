@@ -16,6 +16,7 @@ import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
 import run from './data/run.json'
 import pipelines from './data/pipelines.json'
+import secretKeys from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
 import schedules from './data/schedules.json'
 import artifactTags from './data/artifactsTags.json'
@@ -112,10 +113,32 @@ function getFeatureSet(req, res) {
     featureSet => featureSet.metadata.project === req.params['project']
   )
 
+  if (req.query['tag']) {
+    collectedFeatureSets = collectedFeatureSets.filter(
+      featureSet => featureSet.metadata.tag === req.query['tag']
+    )
+  }
+
   if (req.query['name']) {
     collectedFeatureSets = collectedFeatureSets.filter(featureSet =>
       featureSet.metadata.name.includes(req.query['name'].slice(1))
     )
+  }
+
+  if (req.query['label']) {
+    let [key, value] = req.query['label'].split('=')
+    collectedFeatureSets = collectedFeatureSets.filter(feature => {
+      if (feature.spec.labels) {
+        return feature.spec.labels[key]
+      }
+    })
+    if (req.query['label'].includes('=')) {
+      collectedFeatureSets = collectedFeatureSets.filter(feature => {
+        if (feature.spec.labels) {
+          return feature.spec.labels[key] === value
+        }
+      })
+    }
   }
 
   res.send({ feature_sets: collectedFeatureSets })
@@ -257,6 +280,28 @@ function putProject(req, res) {
   )
 }
 
+function getSecretKeys(req, res) {
+  res.send(secretKeys[req.params['project']])
+}
+
+function postSecretKeys(req, res) {
+  secretKeys[req.params['project']].secret_keys.push(
+    Object.keys(req.body.secrets)[0]
+  )
+
+  res.statusCode = 201
+  res.send('')
+}
+
+function deleteSecretKeys(req, res) {
+  secretKeys[req.params['project']].secret_keys = secretKeys[
+    req.params['project']
+  ].secret_keys.filter(item => item !== req.query.secret)
+
+  res.statusCode = 204
+  res.send('')
+}
+
 function getProjectsSummaries(req, res) {
   res.send(projectsSummary)
 }
@@ -329,12 +374,29 @@ function getRun(req, res) {
 }
 
 function getProjectsShedules(req, res) {
-  let collectedShedules = schedules.schedules.filter(
+  let collectedSchedules = schedules.schedules.filter(
     schedule =>
       schedule.scheduled_object.task.metadata.project === req.params['project']
   )
 
-  res.send({ schedules: collectedShedules })
+  if (req.query['name']) {
+    collectedSchedules = collectedSchedules.filter(schedule =>
+      schedule.name.includes(req.query['name'].slice(1))
+    )
+  }
+  if (req.query['labels']) {
+    let [key, value] = req.query['labels'].split('=')
+    collectedSchedules = collectedSchedules.filter(schedule => {
+      return schedule.labels[key]
+    })
+    if (req.query['labels'].includes('=')) {
+      collectedSchedules = collectedSchedules.filter(
+        schedule => schedule.labels[key] === value
+      )
+    }
+  }
+
+  res.send({ schedules: collectedSchedules })
 }
 
 function getProjectsFeaturesEntities(req, res) {
@@ -382,11 +444,43 @@ function getProjectsFeaturesEntities(req, res) {
     if (req.query['name']) {
       collectedArtifacts = collectedArtifacts.filter(feature => {
         if (req.query['name'].includes('~')) {
-          return feature.feature.name.includes(req.query['name'].slice(1))
+          if (artifact === 'feature-vectors') {
+            return feature.metadata.name.includes(req.query['name'].slice(1))
+          } else if (artifact === 'features') {
+            return feature.feature.name.includes(req.query['name'].slice(1))
+          } else if (artifact === 'entities') {
+            return feature.entity.name.includes(req.query['name'].slice(1))
+          }
         } else {
-          return feature.feature.name === req.query['name']
+          if (artifact === 'feature-vectors') {
+            return feature.metadata.name.includes(req.query['name'].slice(1))
+          } else if (artifact === 'features') {
+            return feature.feature.name === req.query['name']
+          } else if (artifact === 'entities') {
+            return feature.entity.name === req.query['name']
+          }
         }
       })
+    }
+
+    if (req.query['label']) {
+      let [key, value] = req.query['label'].split('=')
+      collectedArtifacts = collectedArtifacts.filter(feature => {
+        if (artifact === 'feature-vectors') {
+          if (feature.metadata.labels) {
+            return feature.metadata.labels[key]
+          }
+        }
+      })
+      if (artifact === 'feature-vectors') {
+        if (req.query['label'].includes('=')) {
+          collectedArtifacts = collectedArtifacts.filter(feature => {
+            if (feature.metadata.labels) {
+              return feature.metadata.labels[key] === value
+            }
+          })
+        }
+      }
     }
   }
 
@@ -451,6 +545,21 @@ function getArtifacts(req, res) {
     collectedArtifacts = collectedArtifacts.filter(artifact =>
       categories[req.query['category']].includes(artifact.kind)
     )
+  }
+  if (req.query['label']) {
+    let [key, value] = req.query['label'].split('=')
+    collectedArtifacts = collectedArtifacts.filter(artifact => {
+      if (artifact.labels) {
+        return artifact.labels[key]
+      }
+    })
+    if (req.query['label'].includes('=')) {
+      collectedArtifacts = collectedArtifacts.filter(artifact => {
+        if (artifact.labels) {
+          return artifact.labels[key] === value
+        }
+      })
+    }
   }
 
   if (req.query['name']) {
@@ -757,7 +866,7 @@ function getFile(req, res) {
 }
 
 function getLog(req, res) {
-  const collectedLog = logs.logs.find(log => log.uid === req.params['uid'])
+  const collectedLog = logs.find(log => log.uid === req.params['uid'])
   res.send(collectedLog.log)
 }
 
@@ -832,10 +941,12 @@ function postSubmitJob(req, res) {
   delete job.status.status_text
   job.status.results = {}
 
-  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/master/${req.body.task.spec.function.slice(
+  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
     6
-  )}/function.yaml`
-  const funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
+  )}/${req.body.task.spec.function.slice(6)}.yaml`
+  let funcObject = yaml.load(
+    fs.readFileSync(funcYAMLPath, 'utf8').replace('|', '')
+  )
   const funcUID = makeUID(32)
   // funcObject.kind = respTemplate.data.metadata.labels.kind
   funcObject.metadata.hash = funcUID
@@ -859,7 +970,7 @@ function postSubmitJob(req, res) {
 
   runs.runs.push(job)
   funcs.funcs.push(funcObject)
-  logs.logs.push(jobLogs)
+  logs.push(jobLogs)
 
   res.send(respTemplate)
 }
@@ -874,8 +985,8 @@ function getNuclioAPIGateways(req, res) {
 
 // Iguazio
 function getIguazioProjects(req, res) {
-  // console.log('requests log: ', req.method, req.url)
-  // console.log('debug: ', req.params, req.query, req.body)
+  console.log('requests log: ', req.method, req.url)
+  console.log('debug: ', req.params, req.query, req.body)
 
   let resultTemplate = cloneDeep(iguazioProjects)
 
@@ -921,9 +1032,16 @@ function getIguazioProjects(req, res) {
   res.send(resultTemplate)
 }
 
+function getIguazioAuthorization(req, res) {
+  console.log('requests log: ', req.method, req.url)
+  console.log('debug: ', req.params, req.query, req.body)
+
+  res.send({ data: [], meta: { ctx: 11661436569072727632 } })
+}
+
 function getIguazioProject(req, res) {
-  // console.log('requests log: ', req.method, req.url)
-  // console.log('debug: ', req.params, req.query, req.body)
+  console.log('requests log: ', req.method, req.url)
+  console.log('debug: ', req.params, req.query, req.body)
 
   let filteredProject = iguazioProjects.data.find(
     item => item.id === req.params.id
@@ -941,12 +1059,12 @@ function getIguazioProject(req, res) {
   for (let authRole of filteredAuthRoles) {
     delete authRole.relationships
   }
-  // console.log(
-  //   'debug authRolesIDs',
-  //   Array.isArray(authRolesIDs),
-  //   authRolesIDs.length,
-  //   authRolesIDs
-  // )
+  console.log(
+    'debug authRolesIDs',
+    Array.isArray(authRolesIDs),
+    authRolesIDs.length,
+    authRolesIDs
+  )
 
   let filteredPrincipalUsers = []
   if (
@@ -954,7 +1072,7 @@ function getIguazioProject(req, res) {
   ) {
     let principalUserIDs = []
     for (let authID of authRolesIDs) {
-      // console.log('debug authID: ', authID)
+      console.log('debug authID: ', authID)
       let tmp = iguazioProjectsRelations[req.params.id].find(
         item => item.id === authID
       ).relationships
@@ -972,12 +1090,12 @@ function getIguazioProject(req, res) {
         iguazioUsers.data.find(item => item.id === userID)
       )
     }
-    // console.log(
-    //   'debug authRolesIDs 2',
-    //   Array.isArray(authRolesIDs),
-    //   authRolesIDs.length,
-    //   authRolesIDs
-    // )
+    console.log(
+      'debug authRolesIDs 2',
+      Array.isArray(authRolesIDs),
+      authRolesIDs.length,
+      authRolesIDs
+    )
   }
 
   let filteredPrincipalUserGroups = []
@@ -1019,15 +1137,15 @@ function getIguazioProject(req, res) {
 }
 
 function getIguazioUserGrops(req, res) {
-  // console.log('requests log: ', req.method, req.url)
-  // console.log('debug: ', req.params, req.query, req.body)
+  console.log('requests log: ', req.method, req.url)
+  console.log('debug: ', req.params, req.query, req.body)
 
   res.send(iguazioUserGrops)
 }
 
 function getIguazioUsers(req, res) {
-  // console.log('requests log: ', req.method, req.url)
-  // console.log('debug: ', req.params, req.query, req.body)
+  console.log('requests log: ', req.method, req.url)
+  console.log('debug: ', req.params, req.query, req.body)
 
   res.send(iguazioUsers)
 }
@@ -1047,6 +1165,9 @@ app.get(`${mlrunAPIIngress}/api/projects/:project`, getProject)
 app.delete(`${mlrunAPIIngress}/api/projects/:project`, deleteProject)
 app.patch(`${mlrunAPIIngress}/api/projects/:project`, patchProject)
 app.put(`${mlrunAPIIngress}/api/projects/:project`, putProject)
+app.get(`${mlrunAPIIngress}/api/projects/:project/secret-keys`, getSecretKeys)
+app.post(`${mlrunAPIIngress}/api/projects/:project/secrets`, postSecretKeys)
+app.delete(`${mlrunAPIIngress}/api/projects/:project/secrets`, deleteSecretKeys)
 
 app.get(`${mlrunAPIIngress}/api/project-summaries`, getProjectsSummaries)
 app.get(`${mlrunAPIIngress}/api/project-summaries/:project`, getProjectSummary)
@@ -1122,6 +1243,11 @@ app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)
 app.get(`${nuclioApiUrl}/api/api_gateways`, getNuclioAPIGateways)
 
 app.get(`${iguazioApiUrl}/api/projects`, getIguazioProjects)
+
+app.get(
+  `${iguazioApiUrl}/api/projects/__name__/:project/authorization`,
+  getIguazioAuthorization
+)
 
 app.get(`${iguazioApiUrl}/api/projects/:id`, getIguazioProject)
 
