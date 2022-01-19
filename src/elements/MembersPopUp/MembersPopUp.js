@@ -384,7 +384,10 @@ const MembersPopUp = ({
             {membersState.members
               .filter(member => {
                 return (
-                  (!filters.name || member.name.startsWith(filters.name)) &&
+                  (!filters.name ||
+                    member.name
+                      .toLowerCase()
+                      .includes(filters.name.toLowerCase())) &&
                   (filters.role === 'All' || member.role === filters.role) &&
                   member.modification !== 'delete'
                 )

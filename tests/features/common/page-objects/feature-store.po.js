@@ -3,9 +3,11 @@ import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
 import inputGroup from '../components/input-group.component'
+import labelComponent from '../components/label.component'
 import {
   generateInputGroup,
-  generateDropdownGroup
+  generateDropdownGroup,
+  generateLabelGroup
 } from '../../common-tools/common-tools'
 
 // Feature Sets
@@ -73,8 +75,8 @@ const featureSetsTable = {
       root: 'div.table-body__row',
       fields: {
         expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name:
-          'div.table-body__cell:nth-of-type(1) a div.data-ellipsis:nth-of-type(1) span',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        tag: 'div.table-body__cell:nth-of-type(1) .item-tag',
         description: 'div.table-body__cell:nth-of-type(2) > div.data-ellipsis',
         labels_table: {
           componentType: commonTable,
@@ -155,6 +157,7 @@ const featureVectorTable = {
       fields: {
         expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
         name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        tag: 'div.table-body__cell:nth-of-type(1) .item-tag',
         description: 'div.table-body__cell:nth-of-type(2) div.data-ellipsis',
         labels_table: {
           componentType: commonTable,
@@ -166,6 +169,32 @@ const featureVectorTable = {
           componentType: actionMenu,
           structure: actionMenuStructure
         }
+      }
+    }
+  }
+}
+
+const addToFeatureVectorTable = {
+  root: '.table-container .table .table__content',
+  header: {
+    root: 'div.table-head',
+    sorters: {
+      featureName: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      featureSet: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      type: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      entities: 'div.table-head__item:nth-of-type(4) div.data-ellipsis'
+    }
+  },
+  body: {
+    root: 'div.table-body',
+    row: {
+      root: 'div.table-body__row',
+      fields: {
+        expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
+        featureName: 'div.table-body__cell:nth-of-type(1) div.data-ellipsis',
+        featureSet: 'div.table-body__cell:nth-of-type(2) a span.link',
+        type: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        entities: 'div.table-body__cell:nth-of-type(4) div.chips-wrapper'
       }
     }
   }
@@ -186,7 +215,7 @@ const datasetsTable = {
       root: 'div.table-body__row',
       fields: {
         expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: 'div.table-body__cell:nth-of-type(1) div.data-ellipsis span.link',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
         labels: 'div.table-body__cell:nth-of-type(2)',
         producer:
           'div.table-body__cell:nth-of-type(3) div.data-ellipsis a.link',
@@ -233,7 +262,8 @@ const commonTableTreeFilterDropdown = dropdownComponent(
     '.content .content__action-bar .filters .tag-filter',
     'input',
     '.tag-filter__dropdown .tag-filter__dropdown-item',
-    ''
+    '',
+    true // options_in_root ?
   )
 )
 
@@ -253,7 +283,7 @@ module.exports = {
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Add_To_Feature_Vector_Button: By.css(
-      'div.feature-store-container div.content__action-bar div.add-to-feature-vector button'
+      'div.content__action-bar div.data-ellipsis  button.btn-secondary'
     ),
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
@@ -278,5 +308,29 @@ module.exports = {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
     Feature_Datasets_Table: commonTable(datasetsTable)
+  },
+  addToFeatureVector: {
+    Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Table_Name_Filter_Input: commonNameFilterInput,
+    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Projects_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '.content .content__action-bar .filters .select',
+        'svg',
+        '.select__options-list .select__item',
+        ''
+      )
+    ),
+    Table_Refresh_Button: tableRefreshButton,
+    Add_To_Feature_Vector_Table: commonTable(addToFeatureVectorTable),
+    Add_Button: By.css('.features-panel__buttons .btn-primary'),
+    Cancel_Button: By.css('.features-panel__buttons .btn-label'),
+    Features_Panel_Title: labelComponent(
+      generateLabelGroup(
+        '.add-to-feature-vector .features-panel__header',
+        false,
+        true
+      )
+    )
   }
 }

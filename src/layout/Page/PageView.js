@@ -26,7 +26,7 @@ export default function PageView({ children }) {
   )
 
   return (
-    <div className="App">
+    <div className="app">
       {headerShown && <Header />}
       {match && (
         <Navbar

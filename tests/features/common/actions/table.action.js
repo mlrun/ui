@@ -51,7 +51,7 @@ const action = {
     column,
     value
   ) {
-    const subStirng = value.replace('=', '\n:\n')
+    const subString = value.replace('=', '\n:\n')
     const rows = await getTableRows(driver, table)
     expect(rows).not.equal(0)
     let flag = true
@@ -61,7 +61,7 @@ const action = {
         driver,
         table.tableFields[column](i).options
       )
-      flag = flag && options.some(item => item.includes(subStirng))
+      flag = flag && options.some(item => item.includes(subString))
       // TODO: that is a workarround for collapsing labels dropdown
       await selectOptionInDropdownWithoutCheck(
         driver,
@@ -70,6 +70,25 @@ const action = {
       )
     }
     expect(flag).equal(true)
+  },
+  isContainsSubstringInColumnTooltipCells: async function(
+    driver,
+    table,
+    column,
+    value
+  ) {
+    const rows = await getTableRows(driver, table)
+    const arr = []
+    expect(rows).not.equal(0)
+    for (let i = rows; i >= 1; i--) {
+      await hoverComponent(driver, table.tableFields[column](i)['label'])
+      const text = await getElementText(
+        driver,
+        table.tableFields[column](i)['hint']
+      )
+      arr.push(text)
+    }
+    expect(arr.every(item => item.includes(value))).equal(true)
   },
   isDatetimeCelsValueInRange: async function(
     driver,

@@ -307,6 +307,13 @@ const synchronizeBackend = async () => {
     'pipelines/'
   )
 
+  const secretKeys = await fetchJsonsPerProject(
+    projectNames,
+    baseMlRunUrl,
+    'projects/',
+    '/secret-keys?provider=kubernetes'
+  )
+
   const artifactsLogs = await fetchArtifactsLogs(runs.runs)
   const logs = await fetchAllLogs(artifactsLogs)
 
@@ -321,6 +328,7 @@ const synchronizeBackend = async () => {
   saveDataToJson('./data/featureSets.json', featureSets)
   saveDataToJson('./data/featureVectors.json', featureVectors)
   saveDataToJson('./data/pipelines.json', pipelines)
+  saveDataToJson('./data/secretKeys.json', secretKeys)
   saveDataToJson('./data/schedules.json', schedules)
   saveDataToJson('./data/funcs.json', functions)
   saveDataToJson('./data/runs.json', runs)
@@ -341,7 +349,7 @@ const synchronizeBackend = async () => {
   saveDataToJson('./data/nuclioAPIGateways.json', nuclioApiGateways)
 
   // Iguazio API sync
-  if (frontendSpec.feature_flags.project_membership === 'enabled') {
+  if (frontendSpec?.feature_flags?.project_membership === 'enabled') {
     const igzProjects = await fetchData(igzApiUrl, 'projects')
     const igzProjectAuthRoles = await fetchData(
       igzApiUrl,
