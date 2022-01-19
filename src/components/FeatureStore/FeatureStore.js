@@ -568,12 +568,8 @@ const FeatureStore = ({
   useEffect(() => {
     if (openPanelByDefault) {
       switch (match.params.pageTab) {
-        case DATASETS_TAB:
-          return setIsPopupDialogOpen(true)
         case FEATURE_SETS_TAB:
           return setFeatureSetsPanelIsOpen(true)
-        case FEATURE_VECTORS_TAB:
-          return setCreateVectorPopUpIsOpen(true)
         default:
           return
       }
