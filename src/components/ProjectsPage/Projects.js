@@ -204,9 +204,7 @@ const Projects = ({
   ])
 
   useEffect(() => {
-    document.body.style.background = '#fff'
     return () => {
-      document.body.style.removeProperty('background')
       source.cancel('canceled')
     }
   }, [source])
