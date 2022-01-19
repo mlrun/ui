@@ -5,6 +5,7 @@
 @include newItemSidePanel;
 
 .feature-set-panel {
+  padding: 0 2rem;
   .accordion {
     &__container.open {
       .accordion__body {

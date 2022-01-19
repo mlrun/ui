@@ -8,7 +8,6 @@ import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelTitle = ({
   featureStore,
-  closePanel,
   setNewFeatureSetDescription,
   setNewFeatureSetLabels,
   setNewFeatureSetName,
@@ -60,7 +59,6 @@ const FeatureSetsPanelTitle = ({
 
   return (
     <FeatureSetsPanelTitleView
-      closePanel={closePanel}
       data={data}
       featureStore={featureStore}
       handleAddLabel={handleAddLabel}
@@ -76,7 +74,6 @@ const FeatureSetsPanelTitle = ({
 }
 
 FeatureSetsPanelTitle.propTypes = {
-  closePanel: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }

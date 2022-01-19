@@ -41,100 +41,97 @@ const FeatureSetsPanelView = ({
   const validationIsFailed = !Object.values(validation).every(value => value)
 
   return (
-    <div className="new-item-side-panel-container">
-      <div className="feature-set-panel new-item-side-panel">
-        {loading && <Loader />}
-        {confirmDialog && (
-          <ConfirmDialog
-            closePopUp={() => setConfirmDialog(null)}
-            confirmButton={{
-              handler: handleSave,
-              label: 'Okay',
-              variant: PRIMARY_BUTTON
-            }}
-            message="Note that data will be ingested to the feature set without any transformation and therefore you won't be able to add a transformation graph unless you delete the data first."
-          />
-        )}
-        <FeatureSetsPanelTitle
-          closePanel={closePanel}
-          setValidation={setValidation}
-          validation={validation}
+    <div className="feature-set-panel">
+      {loading && <Loader />}
+      {confirmDialog && (
+        <ConfirmDialog
+          closePopUp={() => setConfirmDialog(null)}
+          confirmButton={{
+            handler: handleSave,
+            label: 'Okay',
+            variant: PRIMARY_BUTTON
+          }}
+          message="Note that data will be ingested to the feature set without any transformation and therefore you won't be able to add a transformation graph unless you delete the data first."
         />
-        <div className="new-item-side-panel__body">
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FeatureSetsPanelDataSource
-              project={project}
-              setValidation={setValidation}
-              validation={validation}
-            />
-          </Accordion>
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FeatureSetsPanelSchema
-              setValidation={setValidation}
-              validation={validation}
-            />
-          </Accordion>
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FeatureSetsPanelTargetStore
-              setValidation={setValidation}
-              validation={validation}
-            />
-          </Accordion>
-          <PanelCredentialsAccessKey
-            credentialsAccessKey={
-              featureStore.newFeatureSet.credentials.access_key
-            }
-            required={accessKeyRequired}
-            setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
+      )}
+      <FeatureSetsPanelTitle
+        setValidation={setValidation}
+        validation={validation}
+      />
+      <div className="new-item-side-panel__body">
+        <Accordion
+          accordionClassName="new-item-side-panel__accordion"
+          icon={<Arrow />}
+          iconClassName="new-item-side-panel__expand-icon"
+          openByDefault
+        >
+          <FeatureSetsPanelDataSource
+            project={project}
             setValidation={setValidation}
             validation={validation}
           />
-          <div className="new-item-side-panel__buttons-container">
-            {error && (
-              <ErrorMessage
-                closeError={() => {
-                  if (error) {
-                    removeFeatureStoreError()
-                  }
-                }}
-                message={error}
-              />
-            )}
-            <Button
-              variant={TERTIARY_BUTTON}
-              label="Cancel"
-              className="pop-up-dialog__btn_cancel"
-              onClick={closePanel}
+        </Accordion>
+        <Accordion
+          accordionClassName="new-item-side-panel__accordion"
+          icon={<Arrow />}
+          iconClassName="new-item-side-panel__expand-icon"
+          openByDefault
+        >
+          <FeatureSetsPanelSchema
+            setValidation={setValidation}
+            validation={validation}
+          />
+        </Accordion>
+        <Accordion
+          accordionClassName="new-item-side-panel__accordion"
+          icon={<Arrow />}
+          iconClassName="new-item-side-panel__expand-icon"
+          openByDefault
+        >
+          <FeatureSetsPanelTargetStore
+            setValidation={setValidation}
+            validation={validation}
+          />
+        </Accordion>
+        <PanelCredentialsAccessKey
+          credentialsAccessKey={
+            featureStore.newFeatureSet.credentials.access_key
+          }
+          required={accessKeyRequired}
+          setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
+          setValidation={setValidation}
+          validation={validation}
+        />
+        <div className="new-item-side-panel__buttons-container">
+          {error && (
+            <ErrorMessage
+              closeError={() => {
+                if (error) {
+                  removeFeatureStoreError()
+                }
+              }}
+              message={error}
             />
-            <Button
-              disabled={validationIsFailed}
-              variant={SECONDARY_BUTTON}
-              label="Save"
-              onClick={() => handleSaveOnClick(false)}
-            />
-            <Button
-              className="btn_start-ingestion"
-              disabled={validationIsFailed}
-              label="Save and ingest"
-              onClick={() => handleSaveOnClick(true)}
-              variant={SECONDARY_BUTTON}
-            />
-          </div>
+          )}
+          <Button
+            variant={TERTIARY_BUTTON}
+            label="Cancel"
+            className="pop-up-dialog__btn_cancel"
+            onClick={closePanel}
+          />
+          <Button
+            disabled={validationIsFailed}
+            variant={SECONDARY_BUTTON}
+            label="Save"
+            onClick={() => handleSaveOnClick(false)}
+          />
+          <Button
+            className="btn_start-ingestion"
+            disabled={validationIsFailed}
+            label="Save and ingest"
+            onClick={() => handleSaveOnClick(true)}
+            variant={SECONDARY_BUTTON}
+          />
         </div>
       </div>
     </div>

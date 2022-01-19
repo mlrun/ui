@@ -35,7 +35,8 @@ export const getInitialCards = projectName => {
           id: 'createFeatureSet',
           label: 'Create Features Set',
           path: {
-            target: `${base_url}/feature-store/feature-sets?openPanel=true`
+            // target: `${base_url}/feature-store/feature-sets?openPanel=true`
+            target: 'featureSet' // Phase 2
           },
           tooltip: ''
         },

@@ -51,7 +51,6 @@ import {
   TAG_FILTER_LATEST
 } from '../../constants'
 import { useDemoMode } from '../../hooks/demoMode.hook'
-import { useOpenPanel } from '../../hooks/openPanel.hook'
 
 const FeatureStore = ({
   artifactsStore,
@@ -101,7 +100,6 @@ const FeatureStore = ({
   const [confirmData, setConfirmData] = useState(null)
   const featureStoreRef = useRef(null)
   const isDemoMode = useDemoMode()
-  const openPanelByDefault = useOpenPanel()
 
   const fetchData = useCallback(
     async filters => {
@@ -565,17 +563,6 @@ const FeatureStore = ({
     )
   }, [history, match])
 
-  useEffect(() => {
-    if (openPanelByDefault) {
-      switch (match.params.pageTab) {
-        case FEATURE_SETS_TAB:
-          return setFeatureSetsPanelIsOpen(true)
-        default:
-          return
-      }
-    }
-  }, [openPanelByDefault, match.params.pageTab])
-
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(
       changes,
@@ -667,13 +654,13 @@ const FeatureStore = ({
         title={pageData.actionsMenuHeader}
       />
 
-      {featureSetsPanelIsOpen && (
-        <FeatureSetsPanel
-          closePanel={closePanel}
-          createFeatureSetSuccess={createFeatureSetSuccess}
-          project={match.params.projectName}
-        />
-      )}
+      <FeatureSetsPanel
+        closePanel={closePanel}
+        createFeatureSetSuccess={createFeatureSetSuccess}
+        project={match.params.projectName}
+        show={featureSetsPanelIsOpen}
+      />
+
       <CreateFeatureVectorPopUp
         closePopUp={() => {
           setCreateVectorPopUpIsOpen(false)

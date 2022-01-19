@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
+import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
@@ -13,6 +14,7 @@ import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactP
 import Tooltip from '../../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
 
+import featureStoreActions from '../../../actions/featureStore'
 import projectsAction from '../../../actions/projects'
 import tableActions from '../../../actions/table'
 
@@ -29,9 +31,12 @@ import './ProjectOverview.scss'
 const ProjectOverview = ({
   createFeatureVector,
   fetchProject,
+  featureStore,
   history,
   match,
-  project
+  project,
+  removeFeatureStoreError,
+  removeNewFeatureSet
 }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
@@ -71,6 +76,15 @@ const ProjectOverview = ({
     setModal(prevModal => ({ ...prevModal, isOpen: false }))
   }
 
+  const closeFeatureSetPanel = () => {
+    setModal(prevModal => ({ ...prevModal, isOpen: false }))
+    removeNewFeatureSet()
+
+    if (featureStore.error) {
+      removeFeatureStoreError()
+    }
+  }
+
   const renderPopupContent = () => {
     switch (modal.name) {
       case 'artifact':
@@ -86,6 +100,15 @@ const ProjectOverview = ({
             }
             show={modal.isOpen}
             title={modal.label}
+          />
+        )
+      case 'featureSet':
+        return (
+          <FeatureSetsPanel
+            closePanel={closeFeatureSetPanel}
+            createFeatureSetSuccess={closeFeatureSetPanel}
+            project={projectName}
+            show={modal.isOpen}
           />
         )
       case 'featureVector':
@@ -275,12 +298,17 @@ const mapDispatchToProps = dispatch => ({
   fetchProject: projectName =>
     dispatch(projectsAction.fetchProject(projectName)),
   createFeatureVector: featureVectorData =>
-    dispatch(tableActions.setFeaturesPanelData(featureVectorData))
+    dispatch(tableActions.setFeaturesPanelData(featureVectorData)),
+  removeNewFeatureSet: () =>
+    dispatch(featureStoreActions.removeNewFeatureSet()),
+  removeFeatureStoreError: () =>
+    dispatch(featureStoreActions.removeFeatureStoreError())
 })
 
 export default connect(
-  ({ projectStore }) => ({
-    project: projectStore.project
+  ({ featureStore, projectStore }) => ({
+    project: projectStore.project,
+    featureStore
   }),
   mapDispatchToProps
 )(ProjectOverview)

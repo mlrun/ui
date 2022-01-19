@@ -296,13 +296,12 @@ const ProjectMonitorView = React.forwardRef(
             projectId={membersState.projectInfo.id}
           />
         )}
-        {createFeatureSetPanelIsOpen && (
-          <FeatureSetsPanel
-            closePanel={closeFeatureSetPanel}
-            createFeatureSetSuccess={createFeatureSetSuccess}
-            project={match.params.projectName}
-          />
-        )}
+        <FeatureSetsPanel
+          closePanel={closeFeatureSetPanel}
+          createFeatureSetSuccess={createFeatureSetSuccess}
+          project={match.params.projectName}
+          show={createFeatureSetPanelIsOpen}
+        />
         {isNewFunctionPopUpOpen && (
           <NewFunctionPopUp
             closePopUp={() => setIsNewFunctionPopUpOpen(false)}

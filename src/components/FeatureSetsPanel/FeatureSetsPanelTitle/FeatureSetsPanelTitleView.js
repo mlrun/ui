@@ -5,14 +5,10 @@ import { connect } from 'react-redux'
 import Input from '../../../common/Input/Input'
 import ChipCell from '../../../common/ChipCell/ChipCell'
 import TextArea from '../../../common/TextArea/TextArea'
-import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
-
-import { ReactComponent as CloseIcon } from '../../../images/close.svg'
 
 import './featureSetsPanelTitle.scss'
 
 const FeatureSetsPanelTitleView = ({
-  closePanel,
   data,
   featureStore,
   handleAddLabel,
@@ -119,20 +115,11 @@ const FeatureSetsPanelTitleView = ({
           </div>
         </div>
       </div>
-      <RoundedIcon
-        onClick={() => closePanel({})}
-        className="panel-title__btn_close"
-        tooltipText="Close"
-        data-testid="pop-up-close-btn"
-      >
-        <CloseIcon />
-      </RoundedIcon>
     </div>
   )
 }
 
 FeatureSetsPanelTitleView.propTypes = {
-  closePanel: PropTypes.func.isRequired,
   data: PropTypes.shape({}).isRequired,
   featureStore: PropTypes.shape({}).isRequired,
   handleAddLabel: PropTypes.func.isRequired,

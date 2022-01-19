@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { createPortal } from 'react-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
+import Modal from '../../common/Modal/Modal'
 
 import { FEATURE_SETS_TAB } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
@@ -20,6 +20,7 @@ const FeatureSetsPanel = ({
   removeFeatureStoreError,
   setNewFeatureSetCredentialsAccessKey,
   setNotification,
+  show,
   startFeatureSetIngest
 }) => {
   const [validation, setValidation] = useState({
@@ -120,26 +121,32 @@ const FeatureSetsPanel = ({
     })
   }
 
-  return createPortal(
-    <FeatureSetsPanelView
-      accessKeyRequired={accessKeyRequired}
-      closePanel={closePanel}
-      confirmDialog={confirmDialog}
-      error={featureStore.error}
-      featureStore={featureStore}
-      handleSave={handleSave}
-      handleSaveOnClick={handleSaveOnClick}
-      loading={featureStore.loading}
-      project={project}
-      removeFeatureStoreError={removeFeatureStoreError}
-      setConfirmDialog={setConfirmDialog}
-      setNewFeatureSetCredentialsAccessKey={
-        setNewFeatureSetCredentialsAccessKey
-      }
-      setValidation={setValidation}
-      validation={validation}
-    />,
-    document.getElementById('overlay_container')
+  return (
+    <Modal
+      onClose={closePanel}
+      size="md"
+      show={show}
+      title={'Create feature set'}
+    >
+      <FeatureSetsPanelView
+        accessKeyRequired={accessKeyRequired}
+        closePanel={closePanel}
+        confirmDialog={confirmDialog}
+        error={featureStore.error}
+        featureStore={featureStore}
+        handleSave={handleSave}
+        handleSaveOnClick={handleSaveOnClick}
+        loading={featureStore.loading}
+        project={project}
+        removeFeatureStoreError={removeFeatureStoreError}
+        setConfirmDialog={setConfirmDialog}
+        setNewFeatureSetCredentialsAccessKey={
+          setNewFeatureSetCredentialsAccessKey
+        }
+        setValidation={setValidation}
+        validation={validation}
+      />
+    </Modal>
   )
 }
 
