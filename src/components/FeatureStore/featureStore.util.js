@@ -338,6 +338,7 @@ export const generatePageData = (
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
     data.filterMenuActionButton = null
     data.handleRequestOnExpand = handleRequestOnExpand
+    data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
     data.hidePageActionMenu = true
