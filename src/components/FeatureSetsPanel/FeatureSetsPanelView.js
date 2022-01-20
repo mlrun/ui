@@ -2,8 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import Button from '../../common/Button/Button'
 import FeatureSetsPanelTitle from './FeatureSetsPanelTitle/FeatureSetsPanelTitle'
 import FeatureSetsPanelDataSource from './FeatureSetsPanelDataSource/FeatureSetsPanelDataSource'
 import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSchema'
@@ -12,11 +10,7 @@ import Loader from '../../common/Loader/Loader'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
 
-import {
-  PRIMARY_BUTTON,
-  SECONDARY_BUTTON,
-  TERTIARY_BUTTON
-} from '../../constants'
+import { PRIMARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -24,24 +18,18 @@ import './featureSetsPanel.scss'
 
 const FeatureSetsPanelView = ({
   accessKeyRequired,
-  closePanel,
   confirmDialog,
-  error,
   featureStore,
   handleSave,
-  handleSaveOnClick,
   loading,
   project,
-  removeFeatureStoreError,
   setConfirmDialog,
   setNewFeatureSetCredentialsAccessKey,
   setValidation,
   validation
 }) => {
-  const validationIsFailed = !Object.values(validation).every(value => value)
-
   return (
-    <div className="feature-set-panel">
+    <div>
       {loading && <Loader />}
       {confirmDialog && (
         <ConfirmDialog
@@ -102,37 +90,6 @@ const FeatureSetsPanelView = ({
           setValidation={setValidation}
           validation={validation}
         />
-        <div className="new-item-side-panel__buttons-container">
-          {error && (
-            <ErrorMessage
-              closeError={() => {
-                if (error) {
-                  removeFeatureStoreError()
-                }
-              }}
-              message={error}
-            />
-          )}
-          <Button
-            variant={TERTIARY_BUTTON}
-            label="Cancel"
-            className="pop-up-dialog__btn_cancel"
-            onClick={closePanel}
-          />
-          <Button
-            disabled={validationIsFailed}
-            variant={SECONDARY_BUTTON}
-            label="Save"
-            onClick={() => handleSaveOnClick(false)}
-          />
-          <Button
-            className="btn_start-ingestion"
-            disabled={validationIsFailed}
-            label="Save and ingest"
-            onClick={() => handleSaveOnClick(true)}
-            variant={SECONDARY_BUTTON}
-          />
-        </div>
       </div>
     </div>
   )
@@ -146,15 +103,11 @@ FeatureSetsPanelView.defaultProps = {
 
 FeatureSetsPanelView.propTypes = {
   accessKeyRequired: PropTypes.bool.isRequired,
-  closePanel: PropTypes.func.isRequired,
   confirmDialog: PropTypes.shape({ action: PropTypes.string.isRequired }),
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   featureStore: PropTypes.shape({}).isRequired,
   handleSave: PropTypes.func.isRequired,
-  handleSaveOnClick: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   project: PropTypes.string.isRequired,
-  removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
   setNewFeatureSetCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

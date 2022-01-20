@@ -153,12 +153,32 @@ const RegisterArtifactPopup = ({
   return (
     <Modal
       data-testid="register-artifact"
+      actions={[
+        registerArtifactData.error && (
+          <ErrorMessage
+            closeError={closeErrorMessage}
+            message={registerArtifactData.error}
+          />
+        ),
+        <Button
+          variant={TERTIARY_BUTTON}
+          label="Cancel"
+          className="pop-up-dialog__btn_cancel"
+          onClick={closePopupDialog}
+        />,
+        <Button
+          variant={PRIMARY_BUTTON}
+          label="Register"
+          onClick={registerArtifact}
+        />
+      ]}
+      className={'register-artifact-popup'}
       onClose={closePopupDialog}
       size="sm"
       show={show}
       title={title}
     >
-      <div className="register-artifact-popup">
+      <div>
         <RegisterArtifactForm
           registerArtifactData={registerArtifactData}
           onChange={setRegisterArtifactData}
@@ -167,25 +187,6 @@ const RegisterArtifactPopup = ({
           validation={validation}
           messageByKind={messagesByKind[artifactKind.toLowerCase()]}
         />
-        <div className="pop-up-dialog__footer-container">
-          {registerArtifactData.error && (
-            <ErrorMessage
-              closeError={closeErrorMessage}
-              message={registerArtifactData.error}
-            />
-          )}
-          <Button
-            variant={TERTIARY_BUTTON}
-            label="Cancel"
-            className="pop-up-dialog__btn_cancel"
-            onClick={closePopupDialog}
-          />
-          <Button
-            variant={PRIMARY_BUTTON}
-            label="Register"
-            onClick={registerArtifact}
-          />
-        </div>
       </div>
     </Modal>
   )

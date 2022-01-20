@@ -11,7 +11,15 @@ import { ReactComponent as CloseIcon } from '../../images/close.svg'
 
 import './Modal.scss'
 
-const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
+const JSX_MODAL = ({
+  actions,
+  children,
+  className,
+  onClose,
+  size,
+  show,
+  title
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const modalClassNames = classNames(
@@ -54,7 +62,15 @@ const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
               <h5 className="modal__header-title">{title}</h5>
             </div>
             <div className="modal__body">{children}</div>
-            {/* <div className="modal__footer"></div> */}
+            {actions && actions.length > 0 && (
+              <div className="modal__footer">
+                <div className="modal__footer-actions">
+                  {actions.map((action, idx) => (
+                    <div key={idx}>{action}</div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </CSSTransition>
@@ -69,12 +85,14 @@ const Modal = props => {
 }
 
 Modal.defaultProps = {
+  actions: [],
   show: false,
   size: 'md',
   title: ''
 }
 
 Modal.propTypes = {
+  actions: PropTypes.array,
   children: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.object,

@@ -3,10 +3,16 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
+import Button from '../../common/Button/Button'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 import Modal from '../../common/Modal/Modal'
 
-import { FEATURE_SETS_TAB } from '../../constants'
+import {
+  FEATURE_SETS_TAB,
+  TERTIARY_BUTTON,
+  SECONDARY_BUTTON
+} from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import notificationActions from '../../actions/notification'
 import { checkValidation } from './featureSetPanel.util'
@@ -43,6 +49,8 @@ const FeatureSetsPanel = ({
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)
   const history = useHistory()
+
+  const validationIsFailed = !Object.values(validation).every(value => value)
 
   const handleSave = () => {
     const data = {
@@ -123,6 +131,38 @@ const FeatureSetsPanel = ({
 
   return (
     <Modal
+      actions={[
+        featureStore.error && (
+          <ErrorMessage
+            closeError={() => {
+              if (featureStore.error) {
+                removeFeatureStoreError()
+              }
+            }}
+            message={featureStore.error}
+          />
+        ),
+        <Button
+          variant={TERTIARY_BUTTON}
+          label="Cancel"
+          className="pop-up-dialog__btn_cancel"
+          onClick={closePanel}
+        />,
+        <Button
+          disabled={validationIsFailed}
+          variant={SECONDARY_BUTTON}
+          label="Save"
+          onClick={() => handleSaveOnClick(false)}
+        />,
+        <Button
+          className="btn_start-ingestion"
+          disabled={validationIsFailed}
+          label="Save and ingest"
+          onClick={() => handleSaveOnClick(true)}
+          variant={SECONDARY_BUTTON}
+        />
+      ]}
+      className="feature-set-panel"
       onClose={closePanel}
       size="md"
       show={show}
@@ -130,15 +170,11 @@ const FeatureSetsPanel = ({
     >
       <FeatureSetsPanelView
         accessKeyRequired={accessKeyRequired}
-        closePanel={closePanel}
         confirmDialog={confirmDialog}
-        error={featureStore.error}
         featureStore={featureStore}
         handleSave={handleSave}
-        handleSaveOnClick={handleSaveOnClick}
         loading={featureStore.loading}
         project={project}
-        removeFeatureStoreError={removeFeatureStoreError}
         setConfirmDialog={setConfirmDialog}
         setNewFeatureSetCredentialsAccessKey={
           setNewFeatureSetCredentialsAccessKey

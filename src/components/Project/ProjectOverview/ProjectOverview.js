@@ -85,7 +85,7 @@ const ProjectOverview = ({
     }
   }
 
-  const renderPopupContent = () => {
+  const getPopUpTemplate = () => {
     switch (modal.name) {
       case 'artifact':
       case 'dataset':
@@ -189,7 +189,7 @@ const ProjectOverview = ({
 
   return (
     <div className="project-overview">
-      {renderPopupContent()}
+      {getPopUpTemplate()}
       <div className="project-overview__header">
         <div className="project-overview__header-title">
           {project.data.metadata.name}

@@ -12,7 +12,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { getValidationRules } from '../../utils/validationService'
-import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
+import { TERTIARY_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
 import './createFeatureVectorPopUp.scss'
 
@@ -39,12 +39,38 @@ const CreateFeatureVectorPopUp = ({
 
   return (
     <Modal
+      actions={[
+        <Button
+          variant={TERTIARY_BUTTON}
+          label="Cancel"
+          className="pop-up-dialog__btn_cancel"
+          onClick={closePopUp}
+        />,
+        <Button
+          variant={PRIMARY_BUTTON}
+          label="Create"
+          disabled={
+            !featureVectorName.trim() ||
+            !featureVectorTag.trim() ||
+            !nameIsValid
+          }
+          onClick={() =>
+            createFeatureVector({
+              name: featureVectorName,
+              tag: featureVectorTag,
+              description: featureVectorDescription,
+              labels: generateKeyValues(featureVectorLabels)
+            })
+          }
+        />
+      ]}
+      className="new-feature-vector"
       onClose={closePopUp}
       size="sm"
       show={show}
       title={`${!featureVectorData.name ? 'Create' : 'Edit'} feature vector`}
     >
-      <div className="new-feature-vector">
+      <div>
         <div className="new-feature-vector__row new-feature-vector__name-tag-row">
           <Input
             className="vector-name"
@@ -100,31 +126,6 @@ const CreateFeatureVectorPopUp = ({
               removeChip={setFeatureVectorLabels}
             />
           </div>
-        </div>
-        <div className="pop-up-dialog__footer-container">
-          <Button
-            variant={LABEL_BUTTON}
-            label="Cancel"
-            className="pop-up-dialog__btn_cancel"
-            onClick={closePopUp}
-          />
-          <Button
-            variant={PRIMARY_BUTTON}
-            label="Create"
-            disabled={
-              !featureVectorName.trim() ||
-              !featureVectorTag.trim() ||
-              !nameIsValid
-            }
-            onClick={() =>
-              createFeatureVector({
-                name: featureVectorName,
-                tag: featureVectorTag,
-                description: featureVectorDescription,
-                labels: generateKeyValues(featureVectorLabels)
-              })
-            }
-          />
         </div>
       </div>
     </Modal>

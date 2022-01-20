@@ -15,7 +15,11 @@ const ErrorMessage = ({ closeError, message }) => {
       <UnsuccessAlert className="error-icon" />
       {message}
       {closeError && (
-        <button data-testid="close" onClick={closeError}>
+        <button
+          data-testid="close"
+          onClick={closeError}
+          className="error-close"
+        >
           <Tooltip template={<TextTooltipTemplate text="Close" />}>
             <Close />
           </Tooltip>
