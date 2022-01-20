@@ -1,6 +1,7 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
 @import '../../scss/shadows';
+@import '../../scss/variables';
 
 .settings {
   display: flex;
@@ -29,8 +30,9 @@
 
     width: 100%;
     padding: 40px;
-    background-color: rgba($white, 0.84);
-    border-radius: 4px;
+    background-color: $white;
+    border-radius: $mainBorderRadius;
+    box-shadow: $jobsShadow;
 
     &-header {
       margin-bottom: 25px;

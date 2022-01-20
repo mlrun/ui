@@ -224,22 +224,23 @@ const Content = ({
               tabs={pageData.tabs}
             />
           )}
-        <div className={filterMenuClassNames}>
-          <FilterMenu
-            actionButton={pageData.filterMenuActionButton}
-            expand={expand}
-            filters={pageData.filters}
-            handleExpandAll={handleExpandAll}
-            match={match}
-            onChange={filtersChangeCallback ?? refresh}
-            page={pageData.page}
-            withoutExpandButton={
-              Boolean(pageData.handleRequestOnExpand) ||
-              pageData.withoutExpandButton
-            }
-          />
-        </div>
+
         <div className="table-container">
+          <div className={filterMenuClassNames}>
+            <FilterMenu
+              actionButton={pageData.filterMenuActionButton}
+              expand={expand}
+              filters={pageData.filters}
+              handleExpandAll={handleExpandAll}
+              match={match}
+              onChange={filtersChangeCallback ?? refresh}
+              page={pageData.page}
+              withoutExpandButton={
+                Boolean(pageData.handleRequestOnExpand) ||
+                pageData.withoutExpandButton
+              }
+            />
+          </div>
           {children ? (
             children
           ) : loading ? null : (filtersStore.groupBy !== GROUP_BY_NONE &&

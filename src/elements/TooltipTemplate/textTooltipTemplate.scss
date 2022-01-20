@@ -2,6 +2,11 @@
 @import '../../scss/shadows';
 
 .tooltip {
+  &-template {
+    padding: 6px 8px;
+    word-break: break-word;
+  }
+
   &__text {
     color: $white;
     background-color: $primary;
