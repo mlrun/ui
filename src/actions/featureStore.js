@@ -23,6 +23,7 @@ import {
   REMOVE_FEATURE,
   REMOVE_FEATURES,
   REMOVE_FEATURES_ERROR,
+  REMOVE_FEATURE_SET,
   REMOVE_FEATURE_SETS,
   REMOVE_FEATURE_VECTOR,
   REMOVE_FEATURE_VECTORS,
@@ -323,6 +324,10 @@ const featureStoreActions = {
   }),
   removeEntities: () => ({
     type: REMOVE_ENTITIES
+  }),
+  removeFeatureSet: featureSets => ({
+    type: REMOVE_FEATURE_SET,
+    payload: featureSets
   }),
   removeFeatureSets: () => ({
     type: REMOVE_FEATURE_SETS

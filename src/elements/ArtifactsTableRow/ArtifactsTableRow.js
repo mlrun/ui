@@ -89,65 +89,67 @@ const ArtifactsTableRow = ({
               ) : null
             })}
           </div>
-          {tableContent.map((artifact, index) => {
-            const subRowCurrentItem = findCurrentItem(artifact)
-            const subRowClassNames = classnames(
-              'table-body__row',
-              getArtifactIdentifier(subRowCurrentItem, true) ===
-                getArtifactIdentifier(selectedItem, true) && 'row_active'
-            )
+          {pageData.selectedRowData[rowItem.key?.identifier].loading ? (
+            <div className="table-body__row">
+              <Loader />
+            </div>
+          ) : pageData.selectedRowData[rowItem.key?.identifier].error ? (
+            <ErrorMessage
+              message={
+                pageData.selectedRowData[rowItem.key?.identifier]?.error
+                  ?.message
+              }
+            />
+          ) : (
+            tableContent.map((artifact, index) => {
+              const subRowCurrentItem = findCurrentItem(artifact)
+              const subRowClassNames = classnames(
+                'table-body__row',
+                getArtifactIdentifier(subRowCurrentItem, true) ===
+                  getArtifactIdentifier(selectedItem, true) && 'row_active'
+              )
 
-            return (
-              <div className={subRowClassNames} key={index}>
-                {pageData.selectedRowData &&
-                pageData.selectedRowData[artifact.key?.value]?.loading ? (
-                  <Loader key={index} />
-                ) : pageData.selectedRowData &&
-                  pageData.selectedRowData[artifact.key?.value]?.error ? (
-                  <ErrorMessage
-                    message={
-                      pageData.selectedRowData[artifact.key?.value]?.error
-                        ?.message
-                    }
-                  />
-                ) : (
-                  <>
-                    {Object.values(artifact).map(value => {
-                      return (
-                        !value.hidden && (
-                          <TableCell
-                            data={
-                              value.expandedCellContent
-                                ? value.expandedCellContent
-                                : value
-                            }
-                            item={subRowCurrentItem}
-                            link={value.getLink?.(
-                              match.params.tab ?? DETAILS_OVERVIEW_TAB
-                            )}
-                            match={match}
-                            key={value.id}
-                            selectItem={handleSelectItem}
-                            selectedItem={selectedItem}
-                          />
+              return (
+                <div className={subRowClassNames} key={index}>
+                  {
+                    <>
+                      {Object.values(artifact).map(value => {
+                        return (
+                          !value.hidden && (
+                            <TableCell
+                              data={
+                                value.expandedCellContent
+                                  ? value.expandedCellContent
+                                  : value
+                              }
+                              item={subRowCurrentItem}
+                              link={value.getLink?.(
+                                match.params.tab ?? DETAILS_OVERVIEW_TAB
+                              )}
+                              match={match}
+                              key={value.id}
+                              selectItem={handleSelectItem}
+                              selectedItem={selectedItem}
+                            />
+                          )
                         )
-                      )
-                    })}
-                    {!pageData.tableHeaders.find(
-                      header => header.id === ACTION_CELL_ID
-                    )?.hidden && (
-                      <div className="table-body__cell action_cell">
-                        <ActionsMenu
-                          dataItem={subRowCurrentItem}
-                          menu={actionsMenu}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            )
-          })}
+                      })}
+                      {!pageData.tableHeaders.find(
+                        header => header.id === ACTION_CELL_ID
+                      )?.hidden && (
+                        <div className="table-body__cell action_cell">
+                          <ActionsMenu
+                            dataItem={subRowCurrentItem}
+                            menu={actionsMenu}
+                          />
+                        </div>
+                      )}
+                    </>
+                  }
+                </div>
+              )
+            })
+          )}
         </div>
       ) : (
         <>
