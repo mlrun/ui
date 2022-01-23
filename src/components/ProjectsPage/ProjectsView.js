@@ -94,76 +94,74 @@ const ProjectsView = ({
         <Breadcrumbs match={match} />
       </div>
       <div className="projects__wrapper">
-        {projectStore.projects.length > 0 && !projectStore.error ? (
-          <>
-            <div className="projects-content-header">
-              <div className="projects-content-header-item">
-                <ContentMenu
-                  activeTab={selectedProjectsState}
-                  match={match}
-                  screen="active"
-                  tabs={projectsStates}
-                  onClick={setSelectedProjectsState}
-                />
+        <div className="projects-content-header">
+          <div className="projects-content-header-item">
+            <ContentMenu
+              activeTab={selectedProjectsState}
+              match={match}
+              screen="active"
+              tabs={projectsStates}
+              onClick={setSelectedProjectsState}
+            />
 
-                <Sort
-                  isDescendingOrder={isDescendingOrder}
-                  onSelectOption={setSortProjectId}
-                  options={projectsSortOptions}
-                  selectedId={sortProjectId}
-                  setIsDescendingOrder={setIsDescendingOrder}
-                />
-              </div>
-              <div className="projects-content-header-item">
-                <Search
-                  className="projects-search"
-                  matches={filterMatches}
-                  onChange={setFilterByName}
-                  placeholder="Search projects..."
-                  setMatches={setFilterMatches}
-                  value={filterByName}
-                />
-                <PageActionsMenu
-                  actionsMenuHeader={'New Project'}
-                  onClick={() => setCreateProject(true)}
-                  showActionsMenu
-                  variant={SECONDARY_BUTTON}
-                />
-                <RoundedIcon
-                  onClick={refreshProjects}
-                  className="panel-title__btn_close"
-                  tooltipText="Refresh"
-                  data-testid="pop-up-close-btn"
-                >
-                  <RefreshIcon />
-                </RoundedIcon>
-              </div>
-            </div>
-            <div className="projects-content">
-              {filterByName.length > 0 &&
-              (filterMatches.length === 0 || filteredProjects.length === 0) ? (
-                <NoData />
-              ) : selectedProjectsState === 'archived' &&
-                filteredProjects.length === 0 ? (
-                <div className="no-filtered-data">No archived projects.</div>
-              ) : (
-                filteredProjects.map(project => {
-                  return (
-                    <ProjectCard
-                      actionsMenu={actionsMenu}
-                      key={project.id || project.metadata.name}
-                      project={project}
-                      projectSummary={projectStore.projectsSummary.data.find(
-                        item => item.name === project.metadata.name
-                      )}
-                    />
-                  )
-                })
-              )}
-            </div>
-          </>
+            <Sort
+              isDescendingOrder={isDescendingOrder}
+              onSelectOption={setSortProjectId}
+              options={projectsSortOptions}
+              selectedId={sortProjectId}
+              setIsDescendingOrder={setIsDescendingOrder}
+            />
+          </div>
+          <div className="projects-content-header-item">
+            <Search
+              className="projects-search"
+              matches={filterMatches}
+              onChange={setFilterByName}
+              placeholder="Search projects..."
+              setMatches={setFilterMatches}
+              value={filterByName}
+            />
+            <PageActionsMenu
+              actionsMenuHeader={'New Project'}
+              onClick={() => setCreateProject(true)}
+              showActionsMenu
+              variant={SECONDARY_BUTTON}
+            />
+            <RoundedIcon
+              onClick={refreshProjects}
+              className="panel-title__btn_close"
+              tooltipText="Refresh"
+              data-testid="pop-up-close-btn"
+            >
+              <RefreshIcon />
+            </RoundedIcon>
+          </div>
+        </div>
+        {projectStore.projects.length > 0 && !projectStore.error ? (
+          <div className="projects-content">
+            {filterByName.length > 0 &&
+            (filterMatches.length === 0 || filteredProjects.length === 0) ? (
+              <NoData />
+            ) : selectedProjectsState === 'archived' &&
+              filteredProjects.length === 0 ? (
+              <div className="no-filtered-data">No archived projects.</div>
+            ) : (
+              filteredProjects.map(project => {
+                return (
+                  <ProjectCard
+                    actionsMenu={actionsMenu}
+                    key={project.id || project.metadata.name}
+                    project={project}
+                    projectSummary={projectStore.projectsSummary.data.find(
+                      item => item.name === project.metadata.name
+                    )}
+                  />
+                )
+              })
+            )}
+          </div>
         ) : projectStore.loading ? null : (
-          <NoData />
+          <NoData message="Your projects list is empty." />
         )}
       </div>
       {convertedYaml.length > 0 && (
