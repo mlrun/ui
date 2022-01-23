@@ -35,7 +35,7 @@ export const getTimeElapsedByDate = creationDate => {
       m: 'a minute',
       mm: '%d minutes',
       h: 'an hour',
-      hh: '%d hrs.',
+      hh: '%d hours',
       d: 'a day',
       dd: '%d days',
       w: 'a week',
