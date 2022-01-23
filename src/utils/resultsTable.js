@@ -11,7 +11,9 @@ export const resultsTable = array => {
   const tableContent = (array.iterationStats ?? [])
     .slice(1)
     .map(contentItem => {
-      return [contentItem[1], contentItem[0]].concat(contentItem.slice(2))
+      return [contentItem[1], contentItem[0]]
+        .concat(contentItem.slice(2))
+        .map(item => item ?? '')
     })
 
   return {
