@@ -90,6 +90,7 @@ const Jobs = ({
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
+  const [itemIsSelected, setItemIsSelected] = useState(false)
   const isDemoMode = useDemoMode()
 
   const dispatch = useDispatch()
@@ -392,6 +393,7 @@ const Jobs = ({
     fetchJob(match.params.projectName, match.params.jobId)
       .then(job => {
         setSelectedJob(parseJob(job))
+        setItemIsSelected(true)
       })
       .catch(() =>
         history.replace(
@@ -474,9 +476,6 @@ const Jobs = ({
       (isEmpty(selectedJob) || match.params.jobId !== selectedJob.uid)
     ) {
       fetchCurrentJob()
-    } else if (!isEmpty(selectedJob) && !match.params.jobId) {
-      setSelectedJob({})
-      removeJob()
     } else if (
       workflow.graph &&
       match.params.functionHash &&
@@ -513,12 +512,20 @@ const Jobs = ({
             setSelectedFunction(
               parseFunction(func, match.params.projectName, customFunctionState)
             )
+            setItemIsSelected(true)
           })
           .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
       }
+    } else if (!isEmpty(selectedJob) && !match.params.jobId) {
+      setSelectedJob({})
+      removeJob()
     } else if (!isEmpty(selectedFunction) && !match.params.functionHash) {
       setSelectedFunction({})
       removeFunction()
+    }
+
+    if (!match.params.functionHash && !match.params.jobId) {
+      setItemIsSelected(false)
     }
   }, [
     fetchCurrentJob,
@@ -602,11 +609,13 @@ const Jobs = ({
 
     setSelectedJob(item)
     setSelectedFunction({})
+    setItemIsSelected(true)
   }
 
   const handleCancel = () => {
     setSelectedJob({})
     setSelectedFunction({})
+    setItemIsSelected(false)
   }
 
   const onEditJob = (event, postData) => {
@@ -657,6 +666,7 @@ const Jobs = ({
             handleCancel={handleCancel}
             handleSelectItem={handleSelectJob}
             history={history}
+            itemIsSelected={itemIsSelected}
             match={match}
             pageData={pageData}
             refresh={refreshJobs}

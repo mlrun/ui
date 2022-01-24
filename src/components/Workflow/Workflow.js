@@ -39,6 +39,7 @@ const Workflow = ({
   handleCancel,
   handleSelectItem,
   history,
+  itemIsSelected,
   match,
   pageData,
   refresh,
@@ -50,7 +51,6 @@ const Workflow = ({
   workflowJobsIds,
   workflowsViewMode
 }) => {
-  const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobsContent, setJobsContent] = useState([])
   const [elements, setElements] = useState([])
 
@@ -70,14 +70,6 @@ const Workflow = ({
       )
     }
   }, [content, workflowJobsIds])
-
-  useEffect(() => {
-    setItemIsSelected(isEmpty(selectedFunction))
-  }, [selectedFunction])
-
-  useEffect(() => {
-    setItemIsSelected(isEmpty(selectedJob))
-  }, [selectedJob])
 
   useEffect(() => {
     const edges = []
@@ -230,7 +222,7 @@ const Workflow = ({
                 alignTriggerItem={itemIsSelected}
                 onElementClick={onElementClick}
               />
-              {(!isEmpty(selectedJob) || !isEmpty(selectedFunction)) && (
+              {itemIsSelected && (
                 <Details
                   actionsMenu={actionsMenu}
                   detailsMenu={pageData.details.menu}
@@ -277,6 +269,7 @@ Workflow.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   history: PropTypes.shape({}).isRequired,
+  itemIsSelected: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
