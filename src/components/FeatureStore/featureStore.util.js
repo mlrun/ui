@@ -73,7 +73,7 @@ export const datasetsInfoHeaders = [
 export const featureSetsInfoHeaders = [
   { label: 'Description', id: 'description' },
   { label: 'Labels', id: 'labels' },
-  { label: 'Version', id: 'tag' },
+  { label: 'Version tag', id: 'tag' },
   { label: 'Last updated', id: 'updated' },
   { label: 'Entities', id: 'entities' },
   { label: 'URI', id: 'target_uri' },
@@ -98,7 +98,7 @@ export const datasetsFilters = [
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
 export const featureSetsFilters = [
-  { type: TAG_FILTER, label: 'Tag:' },
+  { type: TAG_FILTER, label: 'Version Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Label:' }
 ]
