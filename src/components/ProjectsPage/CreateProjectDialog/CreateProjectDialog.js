@@ -90,10 +90,8 @@ const CreateProjectDialog = ({
           <Button
             disabled={
               projectStore.loading ||
-              !projectStore.newProject.name.match(
-                /^(?=[\S\s]{1,63}$)[a-z]([-a-z0-9]*[a-z0-9])?$/
-              ) ||
-              !isNameValid
+              !isNameValid ||
+              !projectStore.newProject.name
             }
             variant={SECONDARY_BUTTON}
             label="Create"
