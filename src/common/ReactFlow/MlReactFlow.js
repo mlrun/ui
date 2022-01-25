@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer'
 
@@ -27,17 +27,42 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
 
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
   const [observer] = useState(new MutationObserver(domChangeHandler))
+  const [initialGraphViewGenerated, setInitialGraphViewGenerated] = useState(
+    false
+  )
+
+  const handleFitGraphView = useCallback(() => {
+    reactFlowInstance.fitView()
+    const { position, zoom } = reactFlowInstance.toObject()
+
+    reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
+  }, [reactFlowInstance])
 
   useEffect(() => {
     setTimeout(() => {
       if (reactFlowInstance) {
-        reactFlowInstance.fitView()
-        const { position, zoom } = reactFlowInstance.toObject()
-
-        reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
+        handleFitGraphView()
       }
-    }, 100)
-  }, [reactFlowInstance, alignTriggerItem])
+    }, 0)
+  }, [reactFlowInstance, alignTriggerItem, handleFitGraphView])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (
+        reactFlowInstance &&
+        !initialGraphViewGenerated &&
+        elements.length > 0
+      ) {
+        handleFitGraphView()
+        setInitialGraphViewGenerated(true)
+      }
+    }, 0)
+  }, [
+    elements.length,
+    handleFitGraphView,
+    initialGraphViewGenerated,
+    reactFlowInstance
+  ])
 
   useEffect(() => {
     return () => {

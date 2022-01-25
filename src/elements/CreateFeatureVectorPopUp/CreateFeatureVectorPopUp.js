@@ -9,6 +9,7 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
+import { getValidationRules } from '../../utils/validationService'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
@@ -34,16 +35,6 @@ const CreateFeatureVectorPopUp = ({
     parseKeyValues(featureVectorData.labels)
   )
 
-  const nameValidationTip = (
-    <>
-      <span>&bull; Valid characters: A-Z, a-z, 0-9, -, _, .</span>
-      <br />
-      <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
-      <br />
-      <span>&bull; Length - max: 56</span>
-    </>
-  )
-
   return (
     <PopUpDialog
       className="new-feature-vector__pop-up"
@@ -59,13 +50,12 @@ const CreateFeatureVectorPopUp = ({
           invalid={!nameIsValid}
           label="Vector name"
           onChange={setFeatureVectorName}
-          pattern="^(?=[\S\s]{1,56}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
           required
           setInvalid={value => setNameIsValid(value)}
-          tip={nameValidationTip}
           type="text"
           value={featureVectorName}
           wrapperClassName="vector-name-wrapper"
+          validationRules={getValidationRules('feature.vector.name')}
         />
         <Tooltip
           className="vector-tag-wrapper"
