@@ -10,8 +10,8 @@ import TextArea from '../../common/TextArea/TextArea'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
-import { generateKeyValues, parseKeyValues } from '../../utils'
 import { getValidationRules } from '../../utils/validationService'
+import { generateKeyValues, parseKeyValues } from '../../utils'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
 import './createFeatureVectorPopUp.scss'
@@ -81,7 +81,7 @@ const CreateFeatureVectorPopUp = ({
             setInvalid={value => setNameIsValid(value)}
             type="text"
             value={featureVectorName}
-            validationRules={getValidationRules('artifact.artifactName')}
+            validationRules={getValidationRules('feature.vector.name')}
             wrapperClassName="vector-name-wrapper"
           />
           <Tooltip
