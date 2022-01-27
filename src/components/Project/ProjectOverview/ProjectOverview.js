@@ -10,6 +10,7 @@ import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
 import Tooltip from '../../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
+
 import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
 import projectsAction from '../../../actions/projects'
@@ -28,6 +29,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
   const [modal, setModal] = useState({ isOpen: false, name: '' })
+
   const isDemoMode = useDemoMode()
   const { projectName } = match.params
 
@@ -78,7 +80,6 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     if (selectedActionsIndex === index) {
       return setSelectedActionsIndex(null)
     }
-
     setSelectedActionsIndex(index)
   }
 
@@ -224,9 +225,13 @@ ProjectOverview.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
+const actionCreators = {
+  fetchProject: projectsAction.fetchProject
+}
+
 export default connect(
   ({ projectStore }) => ({
     project: projectStore.project
   }),
-  { ...projectsAction }
+  { ...actionCreators }
 )(ProjectOverview)

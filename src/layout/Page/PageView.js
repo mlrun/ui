@@ -12,7 +12,7 @@ import './PageView.scss'
 
 export default function PageView({ children }) {
   const [isPinned, setIsPinned] = useState(
-    localStorageService.getStorageValue('mlrunUi.navbarStatic', false)
+    localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
 
   const match = useRouteMatch('/projects/:projectName')

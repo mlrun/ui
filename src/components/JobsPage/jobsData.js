@@ -199,8 +199,7 @@ const filtersByTab = (pageTab, isDemoMode) => {
       { type: PERIOD_FILTER, label: 'Period:' },
       { type: STATUS_FILTER, label: 'Status:' },
       { type: NAME_FILTER, label: 'Name:' },
-      { type: LABELS_FILTER, label: 'Labels:' },
-      { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
+      { type: DATE_RANGE_TIME_FILTER, label: 'Created at:' }
     ]
   } else if (pageTab === SCHEDULE_TAB) {
     return [
@@ -245,7 +244,7 @@ export const generatePageData = (
     onClick: event => handleMonitoring()
   }
 
-  if (pageTab === SCHEDULE_TAB) {
+  if (pageTab === SCHEDULE_TAB || pageTab === MONITOR_WORKFLOWS_TAB) {
     filterMenuActionButton = null
   }
 
@@ -280,7 +279,7 @@ export const generatePageData = (
         : removeJobLogs,
       withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
     },
-    hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
+    hideFilterMenu: isSelectedItem || workflowId,
     filterMenuActionButton,
     filters: filtersByTab(pageTab, isDemoMode) ?? [],
     page,
