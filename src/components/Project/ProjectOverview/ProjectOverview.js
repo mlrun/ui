@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -126,7 +126,7 @@ const ProjectOverview = ({
     }
   }
 
-  const handleModalToogle = ({ label, path }) => {
+  const handleModalToggle = ({ label, path }) => {
     return setModal(prev => {
       return {
         ...prev,
@@ -137,7 +137,7 @@ const ProjectOverview = ({
     })
   }
 
-  const handlePathExecution = handlePath(handleModalToogle, history, isDemoMode)
+  const handlePathExecution = handlePath(handleModalToggle, history, isDemoMode)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
@@ -146,17 +146,11 @@ const ProjectOverview = ({
     setSelectedActionsIndex(index)
   }
 
-  const fetchProjectData = useCallback(async () => {
-    try {
-      await fetchProject(projectName)
-    } catch (error) {
-      handleFetchProjectError(error, history, setConfirmData)
-    }
-  }, [fetchProject, history, projectName])
-
   useEffect(() => {
-    fetchProjectData()
-  }, [fetchProjectData])
+    fetchProject(match.params.projectName).catch(error =>
+      handleFetchProjectError(error, history, setConfirmData)
+    )
+  }, [fetchProject, history, match.params.projectName])
 
   if (project.loading) {
     return <Loader />
@@ -294,21 +288,17 @@ ProjectOverview.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-const mapDispatchToProps = dispatch => ({
-  fetchProject: projectName =>
-    dispatch(projectsAction.fetchProject(projectName)),
-  createFeatureVector: featureVectorData =>
-    dispatch(tableActions.setFeaturesPanelData(featureVectorData)),
-  removeNewFeatureSet: () =>
-    dispatch(featureStoreActions.removeNewFeatureSet()),
-  removeFeatureStoreError: () =>
-    dispatch(featureStoreActions.removeFeatureStoreError())
-})
+const actionCreators = {
+  createFeatureVector: tableActions.setFeaturesPanelData,
+  fetchProject: projectsAction.fetchProject,
+  removeNewFeatureSet: featureStoreActions.removeNewFeatureSet,
+  removeFeatureStoreError: featureStoreActions.removeFeatureStoreError
+}
 
 export default connect(
   ({ featureStore, projectStore }) => ({
     project: projectStore.project,
     featureStore
   }),
-  mapDispatchToProps
+  { ...actionCreators }
 )(ProjectOverview)
