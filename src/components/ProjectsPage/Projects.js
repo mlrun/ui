@@ -16,7 +16,11 @@ import {
 import nuclioActions from '../../actions/nuclio'
 import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
-import { DANGER_BUTTON, PRIMARY_BUTTON } from '../../constants'
+import {
+  DANGER_BUTTON,
+  PRIMARY_BUTTON,
+  STATUS_CODE_FORBIDDEN
+} from '../../constants'
 
 const Projects = ({
   changeProjectState,
@@ -83,12 +87,24 @@ const Projects = ({
 
   const handleArchiveProject = useCallback(
     project => {
-      changeProjectState(project.metadata.name, 'archived').then(() => {
-        fetchProjects()
-      })
+      changeProjectState(project.metadata.name, 'archived')
+        .then(() => {
+          fetchProjects()
+        })
+        .catch(error => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: () => handleArchiveProject(project),
+            message:
+              error.response?.status === STATUS_CODE_FORBIDDEN
+                ? `You are not allowed to archive ${project.metadata.name} project`
+                : `Failed to archive ${project.metadata.name} project`
+          })
+        })
       setConfirmData(null)
     },
-    [changeProjectState, fetchProjects]
+    [changeProjectState, fetchProjects, setNotification]
   )
 
   const handleDeleteProject = useCallback(
