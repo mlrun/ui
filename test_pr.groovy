@@ -5,7 +5,8 @@ workDir = '/home/jenkins'
 podLabel = 'mlrun-ui-release'
 gitProject = 'ui'
 gitProjectUser = 'mlrun'
-dockerTag = env.TAG_NAME.replaceFirst(/^v/, '')
+prnumber_split = "${env.JOB_NAME.substring(env.JOB_NAME.lastIndexOf('/') + 1, env.JOB_NAME.length()).toLowerCase()}"
+prnumber = "${prnumber_split.substring(prnumber_split.lastIndexOf('-') + 1, prnumber_split.length()).toLowerCase()}"
 
 podTemplate(
     label: podLabel,
@@ -34,7 +35,7 @@ podTemplate(
                         string(credentialsId: "iguazio-prod-git-user-token", variable: 'GIT_TOKEN')
                     ]) {
                         container('jnlp') {
-                            github.update_pr_status(gitProject, gitProjectUser, env.TAG_NAME, GIT_TOKEN)
+                            github.update_pr_status(gitProject, gitProjectUser, prnumber, GIT_TOKEN)
                         }
                     }
                 }
