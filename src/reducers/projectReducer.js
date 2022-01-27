@@ -737,7 +737,8 @@ export default (state = initialState, { type, payload }) => {
         projectsSummary: {
           ...state.projectsSummary,
           data: payload,
-          loading: false
+          loading: false,
+          error: null
         }
       }
     case FETCH_PROJECT_SUMMARY_BEGIN:
