@@ -68,7 +68,8 @@
   &__body {
     overflow-y: auto;
     overflow-x: hidden;
-    flex: 1 1 auto;
+    flex: 1 0;
+    flex-basis: 0;
     padding: 1.5rem 2rem 0;
     margin-bottom: 1rem;
   }
