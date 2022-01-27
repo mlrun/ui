@@ -258,7 +258,8 @@ const validationRules = {
   project: {
     name: [
       generateRule.validCharacters('a-z 0-9 -'),
-      generateRule.beginEndWith('a-z'),
+      generateRule.beginWith('a-z'),
+      generateRule.endWith('a-z 0-9'),
       generateRule.length({ max: 63 }),
       generateRule.required()
     ]
