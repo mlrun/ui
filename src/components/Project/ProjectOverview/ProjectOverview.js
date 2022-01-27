@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -42,21 +42,21 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
       case 'registerdataset':
         return (
           <RegisterArtifactPopup
-            artifactKind={'dataset'}
+            artifactKind="dataset"
             match={match}
             refresh={() => {}}
-            setIsPopupOpen={() => handleModalToogle()}
-            title={'Register dataset'}
+            setIsPopupOpen={handleModalToggle}
+            title="Register dataset"
           />
         )
       case 'registerfile':
         return (
           <RegisterArtifactPopup
-            artifactKind={'artifact'}
+            artifactKind="artifact"
             match={match}
             refresh={() => {}}
-            setIsPopupOpen={() => handleModalToogle()}
-            title={'Register artifact'}
+            setIsPopupOpen={handleModalToggle}
+            title="Register artifact"
           />
         )
       default:
@@ -64,7 +64,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     }
   }
 
-  const handleModalToogle = popupName => {
+  const handleModalToggle = popupName => {
     return setModal(prev => {
       return {
         ...prev,
@@ -74,7 +74,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     })
   }
 
-  const handlePathExecution = handlePath(history, handleModalToogle, isDemoMode)
+  const handlePathExecution = handlePath(history, handleModalToggle, isDemoMode)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
@@ -83,17 +83,11 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     setSelectedActionsIndex(index)
   }
 
-  const fetchProjectData = useCallback(async () => {
-    try {
-      await fetchProject(match.params.projectName)
-    } catch (error) {
-      handleFetchProjectError(error, history, setConfirmData)
-    }
-  }, [fetchProject, history, match.params.projectName])
-
   useEffect(() => {
-    fetchProjectData()
-  }, [fetchProjectData])
+    fetchProject(match.params.projectName).catch(error =>
+      handleFetchProjectError(error, history, setConfirmData)
+    )
+  }, [fetchProject, history, match.params.projectName])
 
   if (project.loading) {
     return <Loader />
@@ -231,14 +225,13 @@ ProjectOverview.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-const mapDispatchToProps = dispatch => ({
-  fetchProject: projectName =>
-    dispatch(projectsAction.fetchProject(projectName))
-})
+const actionCreators = {
+  fetchProject: projectsAction.fetchProject
+}
 
 export default connect(
   ({ projectStore }) => ({
     project: projectStore.project
   }),
-  mapDispatchToProps
+  { ...actionCreators }
 )(ProjectOverview)
