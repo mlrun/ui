@@ -1,10 +1,6 @@
 import React from 'react'
 
-import {
-  MONITOR_JOBS_TAB,
-  PROJECT_MONITOR,
-  SCHEDULE_TAB
-} from '../../constants'
+import { PROJECT_MONITOR } from '../../constants'
 
 import { ReactComponent as APIIcon } from '../../images/api-getaway-icon.svg'
 import { ReactComponent as DashboardIcon } from '../../images/dashboard-icon.svg'
@@ -16,7 +12,6 @@ import { ReactComponent as ModelsIcon } from '../../images/models-icon.svg'
 import { ReactComponent as NuclioIcon } from '../../images/realtime-icon.svg'
 import { ReactComponent as PackageIcon } from '../../images/package.svg'
 // import { ReactComponent as RTPiplinesIcon } from '../../images/timer-outline-icon.svg'
-import { ReactComponent as ScJobsIcon } from '../../images/clock.svg'
 
 export const getLinks = match => {
   const base_url = `/projects/${match.params.projectName}`
@@ -57,13 +52,7 @@ export const getLinks = match => {
       icon: <JobsWorkflowIcon />,
       id: 'jobs',
       label: 'Jobs and workflows',
-      link: `${base_url}/jobs/${MONITOR_JOBS_TAB}` //TODO: fix path
-    },
-    {
-      icon: <ScJobsIcon />,
-      id: 'schedule jobs',
-      label: 'Schedule jobs',
-      link: `${base_url}/jobs/${SCHEDULE_TAB}`
+      link: `${base_url}/jobs`
     },
     //  {
     //    icon: <RTPiplinesIcon />,

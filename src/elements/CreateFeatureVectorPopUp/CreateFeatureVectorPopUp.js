@@ -75,7 +75,6 @@ const CreateFeatureVectorPopUp = ({
             required
             type="text"
             value={featureVectorTag}
-            validationRules={getValidationRules('job.name')}
           />
         </Tooltip>
       </div>
