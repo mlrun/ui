@@ -10,6 +10,7 @@ import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.
 
 const ProjectSettingsGeneralView = ({
   artifactPath,
+  default_artifact_path,
   editProject,
   error,
   generalParams,
@@ -59,14 +60,28 @@ const ProjectSettingsGeneralView = ({
                 onChange={value =>
                   handleArtifactPathChange(value, validation.isPathValid)
                 }
+                placeholder={default_artifact_path ?? ''}
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,
                     isPathValid: value
                   }))
                 }
+                tip=""
                 value={editProject.artifact_path.value ?? artifactPath}
               />
+              <span className="small">
+                Enter the default path for saving the artifacts within your
+                project.
+                <a
+                  className="link"
+                  href="https://docs.mlrun.org/en/latest/store/artifacts.html"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Read more
+                </a>
+              </span>
             </div>
             <p className="settings__card-subtitle">Parameters</p>
             <p>
