@@ -73,11 +73,11 @@ const ProjectOverview = ({
       },
       isNewFeatureVector: true
     })
-    setModal(prevModal => ({ ...prevModal, isOpen: false }))
+    handleModalClose()
   }
 
   const closeFeatureSetPanel = () => {
-    setModal(prevModal => ({ ...prevModal, isOpen: false }))
+    handleModalClose()
     removeNewFeatureSet()
 
     if (featureStore.error) {
@@ -95,9 +95,7 @@ const ProjectOverview = ({
             artifactKind={modal.name}
             match={match}
             refresh={() => {}}
-            setIsPopupOpen={isOpen =>
-              setModal(prevModal => ({ ...prevModal, isOpen }))
-            }
+            setIsPopupOpen={handleModalClose}
             show={modal.isOpen}
             title={modal.label}
           />
@@ -114,9 +112,7 @@ const ProjectOverview = ({
       case 'featureVector':
         return (
           <CreateFeatureVectorPopUp
-            closePopUp={() =>
-              setModal(prevModal => ({ ...prevModal, isOpen: false }))
-            }
+            closePopUp={handleModalClose}
             createFeatureVector={handleCreateFeatureVector} // TODO
             show={modal.isOpen}
           />
@@ -126,18 +122,22 @@ const ProjectOverview = ({
     }
   }
 
-  const handleModalToggle = ({ label, path }) => {
+  const handleModalOpen = ({ label, path }) => {
     return setModal(prev => {
       return {
         ...prev,
-        isOpen: !prev.isOpen,
+        isOpen: true,
         label,
         name: !prev.isOpen ? path.target : ''
       }
     })
   }
 
-  const handlePathExecution = handlePath(handleModalToggle, history, isDemoMode)
+  const handleModalClose = () => {
+    setModal(prevModal => ({ ...prevModal, label: '', isOpen: false }))
+  }
+
+  const handlePathExecution = handlePath(handleModalOpen, history, isDemoMode)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
