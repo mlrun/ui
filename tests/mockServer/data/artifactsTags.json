@@ -1,43 +1,147 @@
 [
-    {
-        "project": "default",
-        "tags": [
-            "latest",
-            "some-tag"
-        ]
-    },
-    {
-        "project": "long-long-long-long-long-long-long-long-long-long",
-        "tags": []
-    },
-    {
-        "project": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "tags": [
-            "latest"
-        ]
-    },
-    {
-        "project": "test-erann",
-        "tags": [
-            "latest"
-        ]
-    },
-    {
-        "project": "hhhh",
-        "tags": []
-    },
-    {
-        "project": "test7",
-        "tags": []
-    },
-    {
-        "project": "test5",
-        "tags": []
-    },
-    {
-        "project": "test",
-        "tags": [
-            "latest"
-        ]
-    }
+  {
+    "project": "cat-vs-dog-classification",
+    "tags": [
+      "latest",
+      "latest"
+    ]
+  },
+  {
+    "project": "churn-project-admin",
+    "tags": [
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest"
+    ]
+  },
+  {
+    "project": "default",
+    "tags": [
+      "latest",
+      "latest",
+      "latest"
+    ]
+  },
+  {
+    "project": "fraud-demo2-admin",
+    "tags": []
+  },
+  {
+    "project": "fsdemo-admin",
+    "tags": []
+  },
+  {
+    "project": "getting-started-tutorial-admin",
+    "tags": [
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest"
+    ]
+  },
+  {
+    "project": "hedi-proj",
+    "tags": []
+  },
+  {
+    "project": "mask-detection",
+    "tags": []
+  },
+  {
+    "project": "model-deployment-pipeline-admin",
+    "tags": []
+  },
+  {
+    "project": "moreofthesame",
+    "tags": []
+  },
+  {
+    "project": "network-operations",
+    "tags": []
+  },
+  {
+    "project": "network-operations-admin",
+    "tags": [
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest"
+    ]
+  },
+  {
+    "project": "sk-project-admin",
+    "tags": [
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest",
+      "latest"
+    ]
+  },
+  {
+    "project": "stocks",
+    "tags": []
+  },
+  {
+    "project": "stocks-admin",
+    "tags": []
+  },
+  {
+    "project": "test-test",
+    "tags": [
+      "latest"
+    ]
+  }
 ]
