@@ -1,223 +1,1618 @@
 {
-    "projects": [
-        {
-            "kind": "project",
-            "metadata": {
-                "name": "test",
-                "created": "2020-12-20T12:56:43.864588",
-                "labels": {
-                    "34534423": "345345",
-                    "key2": "value3",
-                    "key3": "value3",
-                    "key5": "value4",
-                    "abc": "def"
-                },
-                "annotations": null,
-                "label": null
-            },
-            "spec": {
-                "description": "abc",
-                "goals": "test goal2",
-                "params": null,
-                "functions": null,
-                "workflows": null,
-                "artifacts": null,
-                "artifact_path": null,
-                "conda": null,
-                "source": "http://example.com",
-                "subpath": null,
-                "origin_url": null,
-                "desired_state": "online"
-            },
-            "status": {
-                "state": "online"
-            }
+  "projects": [
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "cat-vs-dog-classification",
+        "created": "2021-08-29T15:21:14.286079",
+        "labels": {},
+        "annotations": null
+      },
+      "spec": {
+        "description": "123",
+        "owner": null,
+        "goals": "321",
+        "params": {
+          "se": "fg"
         },
-        {
-            "kind": "project",
-            "metadata": {
-                "name": "default",
-                "created": "2020-12-28T11:49:47.463195",
-                "labels": {
-                    "key1": "value1",
-                    "test": "test",
-                    "yes": "no"
-                },
-                "annotations": null
-            },
+        "functions": [
+          {
+            "name": "utils",
             "spec": {
-                "description": "default description1",
-                "goals": "asdfa2",
-                "params": null,
-                "functions": null,
-                "workflows": null,
-                "artifacts": null,
-                "artifact_path": null,
-                "conda": null,
+              "kind": "job",
+              "metadata": {
+                "name": "utils",
+                "tag": "",
+                "project": "cat-vs-dog-classification"
+              },
+              "spec": {
+                "command": "",
+                "args": [],
+                "image": "mlrun/mlrun",
+                "env": [],
+                "default_handler": "",
+                "entry_points": {
+                  "open_archive": {
+                    "name": "open_archive",
+                    "doc": "Open a file/object archive into a target directory\n\nCurrently supports zip and tar.gz",
+                    "parameters": [
+                      {
+                        "name": "context",
+                        "doc": "function execution context",
+                        "default": ""
+                      },
+                      {
+                        "name": "archive_url",
+                        "type": "DataItem",
+                        "doc": "url of archive file",
+                        "default": ""
+                      },
+                      {
+                        "name": "target_path",
+                        "doc": "file system path to store extracted files",
+                        "default": ""
+                      },
+                      {
+                        "name": "refresh",
+                        "default": false
+                      },
+                      {
+                        "name": "train_size",
+                        "default": 0.8
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 12
+                  }
+                },
+                "description": "",
+                "build": {
+                  "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmltcG9ydCB6aXBmaWxlCmltcG9ydCBqc29uCmltcG9ydCBzaHV0aWwKZnJvbSBnbG9iIGltcG9ydCBnbG9iCmltcG9ydCBwYW5kYXMgYXMgcGQKaW1wb3J0IG51bXB5IGFzIG5wCmZyb20gbWxydW4gaW1wb3J0IERhdGFJdGVtCiAKZGVmIG9wZW5fYXJjaGl2ZShjb250ZXh0LCAKICAgICAgICAgICAgICAgICBhcmNoaXZlX3VybDogRGF0YUl0ZW0sCiAgICAgICAgICAgICAgICAgdGFyZ2V0X3BhdGgsCiAgICAgICAgICAgICAgICAgcmVmcmVzaD1GYWxzZSwKICAgICAgICAgICAgICAgICB0cmFpbl9zaXplPTAuOCk6CiAgICAiIiJPcGVuIGEgZmlsZS9vYmplY3QgYXJjaGl2ZSBpbnRvIGEgdGFyZ2V0IGRpcmVjdG9yeQogICAgCiAgICBDdXJyZW50bHkgc3VwcG9ydHMgemlwIGFuZCB0YXIuZ3oKICAgIAogICAgOnBhcmFtIGNvbnRleHQ6ICAgICAgZnVuY3Rpb24gZXhlY3V0aW9uIGNvbnRleHQKICAgIDpwYXJhbSBhcmNoaXZlX3VybDogIHVybCBvZiBhcmNoaXZlIGZpbGUKICAgIDpwYXJhbSB0YXJnZXRfcGF0aDogIGZpbGUgc3lzdGVtIHBhdGggdG8gc3RvcmUgZXh0cmFjdGVkIGZpbGVzCiAgICA6cGFyYW0ga2V5OiAgICAgICAgICBrZXkgb2YgYXJjaGl2ZSBjb250ZW50cyBpbiBhcnRpZmFjdCBzdG9yZQogICAgOnBhcmFtIHRlc3Rfc2l6ZTogICAgc2V0IHRoZSB0cmFpbiBkYXRhc2V0IHNpemUgb3V0IG9mIHRvdGFsIGRhdGFzZXQKICAgICIiIgogICAgb3MubWFrZWRpcnModGFyZ2V0X3BhdGgsIGV4aXN0X29rPVRydWUpCiAgICAKICAgIGFyY2hpdmVfdXJsID0gYXJjaGl2ZV91cmwubG9jYWwoKQogICAgCiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdFeHRyYWN0aW5nIHppcCcpCiAgICBleHRyYWN0aW9uX3BhdGggPSBvcy5wYXRoLmpvaW4odGFyZ2V0X3BhdGgsICd0bXAnKQogICAgemlwX3JlZiA9IHppcGZpbGUuWmlwRmlsZShhcmNoaXZlX3VybCwgJ3InKQogICAgemlwX3JlZi5leHRyYWN0YWxsKGV4dHJhY3Rpb25fcGF0aCkKICAgIAogICAgZmlsZW5hbWVzID0gW2ZpbGUgZm9yIGZpbGUgaW4gZ2xvYihleHRyYWN0aW9uX3BhdGggKyAnLyovKicpIGlmIGZpbGUuZW5kc3dpdGgoJy5qcGcnKV0KICAgIAogICAgX2V4dHJhY3RfbGFiZWwgPSBsYW1iZGEgZmlsZW5hbWU6IG9zLnBhdGguYmFzZW5hbWUoZmlsZW5hbWUpLnNwbGl0KCcuJylbMF0KICAgIGZpbGVfbGFiZWxzID0gW19leHRyYWN0X2xhYmVsKGZpbGUpIGZvciBmaWxlIGluIGZpbGVuYW1lc10KICAgIGxhYmVscywgbGFiZWxfY291bnRzID0gbnAudW5pcXVlKGZpbGVfbGFiZWxzLCByZXR1cm5fY291bnRzPVRydWUpCiAgICAKICAgIGZpbGVzID0ge2xhYmVsOiBbXSBmb3IgbGFiZWwgaW4gbGFiZWxzfQogICAgZm9yIGxhYmVsLCBmaWxlIGluIHppcChmaWxlX2xhYmVscywgZmlsZW5hbWVzKToKICAgICAgICBmaWxlc1tsYWJlbF0uYXBwZW5kKGZpbGUpCiAgICAKICAgIG51bV9maWxlcyA9IGxlbihmaWxlbmFtZXMpCiAgICBudW1fdHJhaW4gPSBpbnQobnAuY2VpbChudW1fZmlsZXMgKiB0cmFpbl9zaXplKSkKICAgIG51bV9zYW1wbGVzX3Blcl9jbGFzcyA9IGludChucC5jZWlsKG51bV90cmFpbiAvIGxlbihsYWJlbHMpKSkKICAgIAogICAgZm9yIGxhYmVsIGluIGxhYmVsczoKICAgICAgICB0cmFpbl9kaXIgPSBvcy5wYXRoLmpvaW4odGFyZ2V0X3BhdGgsICJ0cmFpbiIsIGxhYmVsKQogICAgICAgIHZhbGlkYXRpb25fZGlyID0gb3MucGF0aC5qb2luKHRhcmdldF9wYXRoLCAidmFsaWRhdGlvbiIsIGxhYmVsKQogICAgICAgIG9zLm1ha2VkaXJzKHRyYWluX2RpciwgZXhpc3Rfb2s9VHJ1ZSkKICAgICAgICBvcy5tYWtlZGlycyh2YWxpZGF0aW9uX2RpciwgZXhpc3Rfb2s9VHJ1ZSkKICAgIAogICAgX2V4dHJhY3RfZGV0YXRzZXQgPSBsYW1iZGEgaSwgcGVyX2NsYXNzOiAndHJhaW4nIGlmIGkgPD0gcGVyX2NsYXNzIGVsc2UgJ3ZhbGlkYXRpb24nCiAgICBmb3IgbGFiZWwsIGZpbGVuYW1lcyBpbiBmaWxlcy5pdGVtcygpOgogICAgICAgIGZvciBpLCBmaWxlIGluIGVudW1lcmF0ZShmaWxlbmFtZXMpOgogICAgICAgICAgICBzaHV0aWwubW92ZShmaWxlLCBvcy5wYXRoLmpvaW4odGFyZ2V0X3BhdGgsIF9leHRyYWN0X2RldGF0c2V0KGksIG51bV9zYW1wbGVzX3Blcl9jbGFzcyksIGxhYmVsLCBvcy5wYXRoLmJhc2VuYW1lKGZpbGUpKSkKICAgIHNodXRpbC5ybXRyZWUoZXh0cmFjdGlvbl9wYXRoKQoKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidleHRyYWN0ZWQgYXJjaGl2ZSB0byB7dGFyZ2V0X3BhdGh9JykKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidEYXRhc2V0IGNvbnRhaW5zIHRoZSBsYWJlbHMge2xhYmVsc30nKQogICAgCiAgICBjb250ZXh0LmxvZ19hcnRpZmFjdCgnY29udGVudCcsIHRhcmdldF9wYXRoPXRhcmdldF9wYXRoKQoK",
+                  "commands": [],
+                  "code_origin": "utils.ipynb",
+                  "origin_filename": "utils.ipynb"
+                },
+                "mount_applied": false,
+                "affinity": null
+              },
+              "verbose": false
+            }
+          },
+          {
+            "name": "trainer",
+            "spec": {
+              "kind": "mpijob",
+              "metadata": {
+                "name": "trainer",
+                "project": "cat-vs-dog-classification",
+                "categories": []
+              },
+              "spec": {
+                "command": "/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py",
+                "args": [],
+                "image": "mlrun/ml-models",
+                "env": [],
+                "resources": {
+                  "requests": {
+                    "cpu": 4
+                  }
+                },
+                "description": "",
+                "replicas": 2,
+                "build": {
+                  "commands": []
+                },
+                "mpi_args": [
+                  "-x",
+                  "NCCL_SOCKET_NTHREADS=2",
+                  "-x",
+                  "NCCL_NSOCKS_PERTHREAD=8",
+                  "-x",
+                  "NCCL_MIN_NCHANNELS=4"
+                ],
+                "clean_pod_policy": "All",
+                "affinity": null
+              },
+              "verbose": false
+            }
+          },
+          {
+            "url": "hub://tf2_serving",
+            "name": "serving"
+          }
+        ],
+        "workflows": [
+          {
+            "name": "main",
+            "code": "from kfp import dsl\nfrom mlrun import mount_v3io\n\nfuncs = {}\n\n\ndef init_functions(functions: dict, project=None, secrets=None):\n    '''\n    This function will run before running the project.\n    It allows us to add our specific system configurations to the functions\n    like mounts or secrets if needed.\n\n    In this case we will add Iguazio's user mount to our functions using the\n    `mount_v3io()` function to automatically set the mount with the needed\n    variables taken from the environment. \n    * mount_v3io can be replaced with mlrun.platforms.mount_pvc() for \n    non-iguazio mount\n\n    @param functions: <function_name: function_yaml> dict of functions in the\n                        workflow\n    @param project: project object\n    @param secrets: secrets required for the functions for s3 connections and\n                    such\n    '''\n    for f in functions.values():\n        f.apply(mount_v3io())                  # On Iguazio (Auto-mount /User)\n        # f.apply(mlrun.platforms.mount_pvc()) # Non-Iguazio mount\n        \n    functions['serving'].set_env('MODEL_CLASS', 'TFModel')\n    functions['serving'].set_env('IMAGE_HEIGHT', '224')\n    functions['serving'].set_env('IMAGE_WIDTH', '224')\n    functions['serving'].set_env('ENABLE_EXPLAINER', 'False')\n    functions['serving'].spec.min_replicas = 1\n\n\n@dsl.pipeline(\n    name='Image classification demo',\n    description='Train an Image Classification TF Algorithm using MLRun'\n)\ndef kfpipeline(\n        image_archive='store:///images',\n        images_dir='/User/artifacts/images',\n        checkpoints_dir='/User/artifacts/models/checkpoints',\n        model_name='cat_vs_dog_tfv1',\n        epochs: int=2):\n\n    # step 1: download and prep images\n    open_archive = funcs['utils'].as_step(name='download',\n                                          handler='open_archive',\n                                          params={'target_path': images_dir},\n                                          inputs={'archive_url': image_archive},\n                                          outputs=['content'])\n\n    # step 2: train the model\n    train_dir = str(open_archive.outputs['content']) + '/train'\n    val_dir = str(open_archive.outputs['content']) + '/validation'\n    train = funcs['trainer'].as_step(name='train',\n                                     params={'epochs': epochs,\n                                             'checkpoints_dir': checkpoints_dir,\n                                             'model_dir'     : 'tfmodels',\n                                             'train_path'     : train_dir,\n                                             'val_path'       : val_dir,\n                                             'batch_size'     : 32},\n                                     outputs=['model'])\n\n    # deploy the model using nuclio functions\n    deploy = funcs['serving'].deploy_step(models={model_name: train.outputs['model']})\n",
+            "engine": "kfp"
+          }
+        ],
+        "artifacts": [
+          {
+            "key": "images",
+            "kind": "",
+            "iter": 0,
+            "tree": "latest",
+            "target_path": "https://s3.wasabisys.com/iguazio/data/image-classification/catsndogs.zip",
+            "db_key": "images"
+          }
+        ],
+        "artifact_path": "www",
+        "conda": null,
+        "source": "6t7y8",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "churn-project-admin",
+        "created": "2021-08-29T15:21:14.419242",
+        "labels": {},
+        "annotations": null
+      },
+      "spec": {
+        "description": "",
+        "owner": null,
+        "goals": "bbbbb",
+        "params": {
+          "a": "a",
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "c": "c"
+        },
+        "functions": [
+          {
+            "name": "clean-data",
+            "spec": {
+              "kind": "job",
+              "metadata": {
+                "name": "clean-data",
+                "tag": "",
+                "project": "churn-project-admin",
+                "labels": {
+                  "author": "yasha",
+                  "framework": "xgboost"
+                },
+                "categories": [
+                  "data-prep"
+                ]
+              },
+              "spec": {
+                "command": "",
+                "args": [],
+                "image": "mlrun/ml-models",
+                "env": [],
+                "default_handler": "",
+                "entry_points": {
+                  "data_clean": {
+                    "name": "data_clean",
+                    "doc": "process a raw churn data file\n\nData has 3 states here: `raw`, `cleaned` and `encoded`\n\n* `raw` kept by default, the pipeline begins with a raw data artifact\n* `cleaned` kept for charts, presentations\n* `encoded` is input for a cross validation and training function\n\nsteps (not necessarily in correct order, some parallel)\n* column name maps\n* deal with nans and other types of missings/junk\n* label encode binary and ordinal category columns\n* create category ranges from numerical columns\nAnd finally,\n* test\n\nWhy we don't one-hot-encode here? One hot encoding isn't a necessary\nstep for all algorithms. It can also generate a very large feature\nmatrix that doesn't need to be serialized (even if sparse).\nSo we leave one-hot-encoding for the training step.\n\nWhat about scaling numerical columns? Same as why we don't one hot\nencode here. Do we scale before train-test split?  IMHO, no.  Scaling\nbefore splitting introduces a type of data leakage.  In addition,\nmany estimators are completely immune to the monotonic transformations\nimplied by scaling, so why waste the cycles?\n\nTODO: \n    * parallelize where possible\n    * more abstraction (more parameters, chain sklearn transformers)\n    * convert to marketplace function",
+                    "parameters": [
+                      {
+                        "name": "context",
+                        "type": "MLClientCtx",
+                        "doc": "the function execution context",
+                        "default": ""
+                      },
+                      {
+                        "name": "src",
+                        "type": "DataItem",
+                        "doc": "an artifact or file path",
+                        "default": ""
+                      },
+                      {
+                        "name": "file_ext",
+                        "type": "str",
+                        "doc": "file type for artifacts",
+                        "default": "csv"
+                      },
+                      {
+                        "name": "models_dest",
+                        "type": "str",
+                        "doc": "label encoders and other preprocessing steps should be saved together with other pipeline models",
+                        "default": "models/encoders"
+                      },
+                      {
+                        "name": "cleaned_key",
+                        "type": "str",
+                        "doc": "key of cleaned data table in artifact store",
+                        "default": "cleaned-data"
+                      },
+                      {
+                        "name": "encoded_key",
+                        "type": "str",
+                        "doc": "key of encoded data table in artifact store",
+                        "default": "encoded-data"
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 18
+                  }
+                },
+                "description": "clean and encode raw data",
+                "build": {
+                  "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCgppbXBvcnQganNvbgppbXBvcnQgcGFuZGFzIGFzIHBkCmltcG9ydCBudW1weSBhcyBucApmcm9tIGNvbGxlY3Rpb25zIGltcG9ydCBkZWZhdWx0ZGljdAoKZnJvbSBjbG91ZHBpY2tsZSBpbXBvcnQgZHVtcHMsIGR1bXAsIGxvYWQKCmZyb20gc2tsZWFybi5wcmVwcm9jZXNzaW5nIGltcG9ydCAoT25lSG90RW5jb2RlciwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBMYWJlbEVuY29kZXIpCgpmcm9tIG1scnVuLmV4ZWN1dGlvbiBpbXBvcnQgTUxDbGllbnRDdHgKZnJvbSBtbHJ1bi5kYXRhc3RvcmUgaW1wb3J0IERhdGFJdGVtCgpkZWYgZGF0YV9jbGVhbigKICAgIGNvbnRleHQ6TUxDbGllbnRDdHgsIAogICAgc3JjOiBEYXRhSXRlbSwKICAgIGZpbGVfZXh0OiBzdHIgPSAiY3N2IiwKICAgIG1vZGVsc19kZXN0OiBzdHIgPSAibW9kZWxzL2VuY29kZXJzIiwKICAgIGNsZWFuZWRfa2V5OiBzdHIgPSAiY2xlYW5lZC1kYXRhIiwKICAgIGVuY29kZWRfa2V5OiBzdHIgPSAiZW5jb2RlZC1kYXRhIgopOgogICAgIiIicHJvY2VzcyBhIHJhdyBjaHVybiBkYXRhIGZpbGUKICAgIAogICAgRGF0YSBoYXMgMyBzdGF0ZXMgaGVyZTogYHJhd2AsIGBjbGVhbmVkYCBhbmQgYGVuY29kZWRgCiAgICAKICAgICogYHJhd2Aga2VwdCBieSBkZWZhdWx0LCB0aGUgcGlwZWxpbmUgYmVnaW5zIHdpdGggYSByYXcgZGF0YSBhcnRpZmFjdAogICAgKiBgY2xlYW5lZGAga2VwdCBmb3IgY2hhcnRzLCBwcmVzZW50YXRpb25zCiAgICAqIGBlbmNvZGVkYCBpcyBpbnB1dCBmb3IgYSBjcm9zcyB2YWxpZGF0aW9uIGFuZCB0cmFpbmluZyBmdW5jdGlvbgogICAgCiAgICBzdGVwcyAobm90IG5lY2Vzc2FyaWx5IGluIGNvcnJlY3Qgb3JkZXIsIHNvbWUgcGFyYWxsZWwpCiAgICAqIGNvbHVtbiBuYW1lIG1hcHMKICAgICogZGVhbCB3aXRoIG5hbnMgYW5kIG90aGVyIHR5cGVzIG9mIG1pc3NpbmdzL2p1bmsKICAgICogbGFiZWwgZW5jb2RlIGJpbmFyeSBhbmQgb3JkaW5hbCBjYXRlZ29yeSBjb2x1bW5zCiAgICAqIGNyZWF0ZSBjYXRlZ29yeSByYW5nZXMgZnJvbSBudW1lcmljYWwgY29sdW1ucwogICAgQW5kIGZpbmFsbHksCiAgICAqIHRlc3QKICAgIAogICAgV2h5IHdlIGRvbid0IG9uZS1ob3QtZW5jb2RlIGhlcmU/IE9uZSBob3QgZW5jb2RpbmcgaXNuJ3QgYSBuZWNlc3NhcnkKICAgIHN0ZXAgZm9yIGFsbCBhbGdvcml0aG1zLiBJdCBjYW4gYWxzbyBnZW5lcmF0ZSBhIHZlcnkgbGFyZ2UgZmVhdHVyZQogICAgbWF0cml4IHRoYXQgZG9lc24ndCBuZWVkIHRvIGJlIHNlcmlhbGl6ZWQgKGV2ZW4gaWYgc3BhcnNlKS4KICAgIFNvIHdlIGxlYXZlIG9uZS1ob3QtZW5jb2RpbmcgZm9yIHRoZSB0cmFpbmluZyBzdGVwLgogICAgCiAgICBXaGF0IGFib3V0IHNjYWxpbmcgbnVtZXJpY2FsIGNvbHVtbnM/IFNhbWUgYXMgd2h5IHdlIGRvbid0IG9uZSBob3QKICAgIGVuY29kZSBoZXJlLiBEbyB3ZSBzY2FsZSBiZWZvcmUgdHJhaW4tdGVzdCBzcGxpdD8gIElNSE8sIG5vLiAgU2NhbGluZwogICAgYmVmb3JlIHNwbGl0dGluZyBpbnRyb2R1Y2VzIGEgdHlwZSBvZiBkYXRhIGxlYWthZ2UuICBJbiBhZGRpdGlvbiwKICAgIG1hbnkgZXN0aW1hdG9ycyBhcmUgY29tcGxldGVseSBpbW11bmUgdG8gdGhlIG1vbm90b25pYyB0cmFuc2Zvcm1hdGlvbnMKICAgIGltcGxpZWQgYnkgc2NhbGluZywgc28gd2h5IHdhc3RlIHRoZSBjeWNsZXM/CiAgICAKICAgIFRPRE86IAogICAgICAgICogcGFyYWxsZWxpemUgd2hlcmUgcG9zc2libGUKICAgICAgICAqIG1vcmUgYWJzdHJhY3Rpb24gKG1vcmUgcGFyYW1ldGVycywgY2hhaW4gc2tsZWFybiB0cmFuc2Zvcm1lcnMpCiAgICAgICAgKiBjb252ZXJ0IHRvIG1hcmtldHBsYWNlIGZ1bmN0aW9uCiAgICAgICAgCiAgICA6cGFyYW0gY29udGV4dDogICAgICAgICAgdGhlIGZ1bmN0aW9uIGV4ZWN1dGlvbiBjb250ZXh0CiAgICA6cGFyYW0gc3JjOiAgICAgICAgICAgICAgYW4gYXJ0aWZhY3Qgb3IgZmlsZSBwYXRoCiAgICA6cGFyYW0gZmlsZV9leHQ6ICAgICAgICAgZmlsZSB0eXBlIGZvciBhcnRpZmFjdHMKICAgIDpwYXJhbSBtb2RlbHNfZGVzdDogICAgICAgbGFiZWwgZW5jb2RlcnMgYW5kIG90aGVyIHByZXByb2Nlc3Npbmcgc3RlcHMKICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaG91bGQgYmUgc2F2ZWQgdG9nZXRoZXIgd2l0aCBvdGhlciBwaXBlbGluZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVscwogICAgOnBhcmFtIGNsZWFuZWRfa2V5OiAgICAgIGtleSBvZiBjbGVhbmVkIGRhdGEgdGFibGUgaW4gYXJ0aWZhY3Qgc3RvcmUKICAgIDpwYXJhbSBlbmNvZGVkX2tleTogICAgICBrZXkgb2YgZW5jb2RlZCBkYXRhIHRhYmxlIGluIGFydGlmYWN0IHN0b3JlCiAgICAiIiIKICAgIGRmID0gc3JjLmFzX2RmKCkKICAgIAogICAgZHJvcF9jb2xzX2xpc3QgPSBbImN1c3RvbWVySUQiLCAiVG90YWxDaGFyZ2VzIl0KICAgIGRmLmRyb3AoZHJvcF9jb2xzX2xpc3QsIGF4aXM9MSwgaW5wbGFjZT1UcnVlKQogICAgCiAgICBvbGRfY29scyA9IGRmLmNvbHVtbnMKICAgIHJlbmFtZV9jb2xzX21hcCA9IHsKICAgICAgICAiU2VuaW9yQ2l0aXplbiIgOiAic2VuaW9yIiwKICAgICAgICAiUGFydG5lciIgICAgICAgOiAicGFydG5lciIsCiAgICAgICAgIkRlcGVuZGVudHMiICAgIDogImRlcHMiLAogICAgICAgICJDaHVybiIgICAgICAgICA6ICJsYWJlbHMiCiAgICB9CiAgICBkZi5yZW5hbWUocmVuYW1lX2NvbHNfbWFwLCBheGlzPTEsIGlucGxhY2U9VHJ1ZSkKCiAgICBmb3IgY29sIGluIGRyb3BfY29sc19saXN0OgogICAgICAgIHJlbmFtZV9jb2xzX21hcC51cGRhdGUoe2NvbDogIl9EUk9QUEVEXyJ9KQogICAgCiAgICB0cCA9IG9zLnBhdGguam9pbihtb2RlbHNfZGVzdCwgInByZXByb2MtY29sdW1uX21hcC5qc29uIikKICAgIGNvbnRleHQubG9nX2FydGlmYWN0KCJwcmVwcm9jLWNvbHVtbl9tYXAuanNvbiIsCiAgICAgICAgICAgICAgICAgICAgICAgICBib2R5PWpzb24uZHVtcHMocmVuYW1lX2NvbHNfbWFwKSwKICAgICAgICAgICAgICAgICAgICAgICAgIGxvY2FsX3BhdGg9dHApCiAgICAKCiAgICBkZiA9IGRmLmFwcGx5bWFwKGxhbWJkYSB4OiAiTm8iIGlmIHN0cih4KS5zdGFydHN3aXRoKCJObyAiKSBlbHNlIHgpCgogICAgYmlucyA9IFswLCAxMiwgMjQsIDM2LCA0OCwgNjAsIG5wLmluZl0KICAgIGxhYmVscyA9IFswLCAxLCAyLCAzLCA0LCA1XQogICAgdGVudXJlID0gZGYudGVudXJlLmNvcHkoZGVlcD1UcnVlKQogICAgZGZbInRlbnVyZV9tYXAiXSA9IHBkLmN1dChkZi50ZW51cmUsIGJpbnMsIGxhYmVscz1GYWxzZSkKICAgIHRlbnVyZV9tYXAgPSBkaWN0KHppcChiaW5zLCBsYWJlbHMpKQogICAgdHAgPSBvcy5wYXRoLmpvaW4obW9kZWxzX2Rlc3QsICJwcmVwcm9jLW51bWNhdF9tYXAuanNvbiIpCiAgICBjb250ZXh0LmxvZ19hcnRpZmFjdCgicHJlcHJvYy1udW1jYXRfbWFwLmpzb24iLCAKICAgICAgICAgICAgICAgICAgICAgICAgIGJvZHk9Ynl0ZXMoanNvbi5kdW1wcyh0ZW51cmVfbWFwKS5lbmNvZGUoInV0Zi04IikpLCAKICAgICAgICAgICAgICAgICAgICAgICAgIGxvY2FsX3BhdGg9dHApCiAgICAKICAgIGNvbnRleHQubG9nX2RhdGFzZXQoY2xlYW5lZF9rZXksIGRmPWRmLCBmb3JtYXQ9ZmlsZV9leHQsIGluZGV4PUZhbHNlKQogICAgCiAgICBmaXhfY29scyA9IFsiZ2VuZGVyIiwgInBhcnRuZXIiLCAiZGVwcyIsICJPbmxpbmVTZWN1cml0eSIsIAogICAgICAgICAgICAgICAgIk9ubGluZUJhY2t1cCIsICJEZXZpY2VQcm90ZWN0aW9uIiwgIlRlY2hTdXBwb3J0IiwKICAgICAgICAgICAgICAgICJTdHJlYW1pbmdUViIsICJTdHJlYW1pbmdNb3ZpZXMiLCAiUGhvbmVTZXJ2aWNlIiwKICAgICAgICAgICAgICAgICJNdWx0aXBsZUxpbmVzIiwgIlBhcGVybGVzc0JpbGxpbmciLCAiSW50ZXJuZXRTZXJ2aWNlIiwgCiAgICAgICAgICAgICAgICAiQ29udHJhY3QiLCAiUGF5bWVudE1ldGhvZCIsICJsYWJlbHMiXQogICAgCiAgICBkID0gZGVmYXVsdGRpY3QoTGFiZWxFbmNvZGVyKQogICAgZGZbZml4X2NvbHNdID0gZGZbZml4X2NvbHNdLmFwcGx5KGxhbWJkYSB4OiBkW3gubmFtZV0uZml0X3RyYW5zZm9ybSh4LmFzdHlwZShzdHIpKSkKICAgIGNvbnRleHQubG9nX2RhdGFzZXQoZW5jb2RlZF9rZXksIGRmPWRmLCBmb3JtYXQ9ZmlsZV9leHQsIGluZGV4PUZhbHNlKQoKICAgIG1vZGVsX2JpbiA9IGR1bXBzKGQpCiAgICBjb250ZXh0LmxvZ19tb2RlbCgibW9kZWwiLCAKICAgICAgICAgICAgICAgICAgICAgIGJvZHk9bW9kZWxfYmluLAogICAgICAgICAgICAgICAgICAgICAgYXJ0aWZhY3RfcGF0aD1vcy5wYXRoLmpvaW4oY29udGV4dC5hcnRpZmFjdF9wYXRoLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsc19kZXN0KSwKICAgICAgICAgICAgICAgICAgICAgIG1vZGVsX2ZpbGU9Im1vZGVsLnBrbCIpCgo=",
+                  "commands": [],
+                  "code_origin": "clean_data.ipynb",
+                  "origin_filename": "clean-data.ipynb"
+                },
+                "mount_applied": false,
+                "affinity": null
+              },
+              "verbose": false
+            }
+          },
+          {
+            "url": "hub://describe",
+            "name": "describe"
+          },
+          {
+            "url": "hub://xgb_trainer",
+            "name": "classify"
+          },
+          {
+            "url": "hub://xgb_test",
+            "name": "xgbtest"
+          },
+          {
+            "url": "hub://coxph_trainer",
+            "name": "survive"
+          },
+          {
+            "url": "hub://coxph_test",
+            "name": "coxtest"
+          },
+          {
+            "url": "hub://churn_server",
+            "name": "server"
+          }
+        ],
+        "workflows": [
+          {
+            "name": "main",
+            "code": "from kfp import dsl\nfrom mlrun import mount_v3io\nimport os\n\nfuncs = {}\nGPUS = False\n\n# init functions is used to configure function resources and local settings\ndef init_functions(functions: dict, project=None, secrets=None):\n    for f in functions.values():\n        f.apply(mount_v3io())\n        \n    functions[\"server\"].set_env(\"INFERENCE_STREAM\", f\"{os.environ['V3IO_HOME']}/artifacts/customer-churn-prediction/model_stream\")\n\n    \n@dsl.pipeline(\n    name=\"Demo training pipeline\",\n    description=\"Shows how to use mlrun.\"\n)\ndef kfpipeline():\n    \n    # encode the data\n    clean = funcs[\"clean-data\"].as_step(\n        name=\"clean-data\",\n        handler=\"data_clean\",\n        params={\"file_ext\": \"csv\",\n                \"models_dest\": \"models/encoders\"},\n        inputs={\"src\": \"store:///raw-data\"},  # use an artifact from the feature store\n        outputs=[\"cleaned-data\",\n                 \"encoded-data\"])\n\n    # analyze our dataset\n    describe = funcs[\"describe\"].as_step(\n        name=\"summary\",\n        params={\"label_column\"  : \"labels\"},\n        inputs={\"table\": clean.outputs[\"encoded-data\"]})\n    \n    # train with hyper-paremeters\n    xgb = funcs[\"classify\"].as_step(\n        name=\"current-state\",\n        handler=\"train_model\",\n        params={\"sample\"                  : -1, \n                \"label_column\"            : \"labels\",\n                \"model_type\"              : \"classifier\",\n                # xgb class initializers (tuning candidates):\n                \"CLASS_tree_method\"       : \"gpu_hist\" if GPUS else \"hist\",\n                \"CLASS_objective\"         : \"binary:logistic\",\n                \"CLASS_n_estimators\"      : 50,\n                \"CLASS_max_depth\"         : 5,\n                \"CLASS_learning_rate\"     : 0.15,\n                \"CLASS_colsample_bylevel\" : 0.7,\n                \"CLASS_colsample_bytree\"  : 0.8,\n                \"CLASS_gamma\"             : 1.0,\n                \"CLASS_max_delta_step\"    : 3,\n                \"CLASS_min_child_weight\"  : 1.0,\n                \"CLASS_reg_lambda\"        : 10.0,\n                \"CLASS_scale_pos_weight\"  : 1,\n                \"FIT_verbose\"             : 0,\n                \"CLASS_subsample\"         : 0.9,\n                \"CLASS_booster\"           : \"gbtree\",\n                \"CLASS_random_state\"      : 1,\n                # encoding:\n                \"encode_cols\"        : {\"InternetService\": \"ISP\",\n                                        \"Contract\"       : \"Contract\",\n                                        \"PaymentMethod\"   : \"Payment\"},\n                # outputs\n                \"models_dest\"        : \"models\",\n                \"plots_dest\"         : \"plots\",\n                \"file_ext\"           : \"csv\"\n               },\n        inputs={\"dataset\"   : clean.outputs[\"encoded-data\"]},\n        outputs=[\"model\", \"test_set\"])\n\n    cox = funcs[\"survive\"].as_step(\n        name=\"survival-curves\",\n        params={\"sample\"                  : -1, \n                \"event_column\"            : \"labels\",\n                \"strata_cols\" : ['InternetService', 'StreamingMovies', \n                                 'StreamingTV', 'PhoneService'],\n                \"encode_cols\" : {\"Contract\"       : \"Contract\",\n                                 \"PaymentMethod\"  : \"Payment\"},\n                # outputs\n                \"models_dest\"        : \"models/cox\",\n                \"plots_dest\"         : \"plots\",\n                \"file_ext\"           : \"csv\"\n               },\n        inputs={\"dataset\"   : clean.outputs[\"encoded-data\"]},\n        outputs=[\"cx-model\", \"tenured-test-set\"])\n\n    test_xgb = funcs[\"xgbtest\"].as_step(\n        name=\"test-classifier\",\n        params={\"label_column\": \"labels\",\n                \"plots_dest\"  : \"customer-churn-prediction/test/xgb\"},\n        inputs={\"models_path\" : xgb.outputs[\"model\"],\n                \"test_set\"    : xgb.outputs[\"test_set\"]})\n\n    test_cox = funcs[\"coxtest\"].as_step(\n        name=\"test-regressor\",\n        params={\"label_column\": \"labels\",\n                \"plots_dest\"  : \"customer-churn-prediction/test/cox\"},\n        inputs={\"models_path\" : cox.outputs[\"cx-model\"],\n                \"test_set\"    : cox.outputs[\"tenured-test-set\"]})\n\n    # deploy our model as a serverless function\n    deploy_xgb = funcs[\"server\"].deploy_step(\n        models={\"churn_server_v1\": xgb.outputs[\"model\"]})\n    deploy_xgb.after(cox)\n",
+            "engine": "kfp"
+          }
+        ],
+        "artifacts": [
+          {
+            "key": "raw-data",
+            "kind": "",
+            "iter": 0,
+            "tree": "latest",
+            "target_path": "https://raw.githubusercontent.com/mlrun/demos/release/v0.6.x-latest/customer-churn-prediction/WA_Fn-UseC_-Telco-Customer-Churn.csv",
+            "db_key": "raw-data"
+          }
+        ],
+        "artifact_path": "s2=",
+        "conda": null,
+        "source": "dd",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "default",
+        "created": "2021-08-29T15:21:14.355864",
+        "labels": {
+          "1": "2",
+          "9": "10",
+          "a": "a",
+          "c": "d",
+          "e": "f",
+          "g": "h",
+          "i": "j",
+          "k": "l",
+          "m": "n",
+          "o": "p"
+        },
+        "annotations": null
+      },
+      "spec": {
+        "description": "test summary",
+        "owner": null,
+        "goals": "test goals",
+        "params": {},
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": "aadsad112",
+        "conda": null,
+        "source": "https://github.com/mlrun/ui",
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online",
+        "artifactPath": null
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "fraud-demo2-admin",
+        "created": "2021-10-21T11:30:37.089271",
+        "labels": null,
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": [],
+        "workflows": [],
+        "artifacts": [],
+        "artifact_path": null,
+        "conda": null,
+        "source": "",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online",
+        "disable_auto_mount": false
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "fsdemo-admin",
+        "created": "2021-08-29T15:21:14.314422",
+        "labels": {
+          "123222222222222222222": "333333321",
+          "vv12": "ff"
+        },
+        "annotations": null
+      },
+      "spec": {
+        "description": "",
+        "owner": null,
+        "goals": "",
+        "params": {
+          "фф": "ии"
+        },
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": "asds",
+        "conda": null,
+        "source": " https://github.com/mlrun/ui",
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "getting-started-tutorial-admin",
+        "created": "2021-08-29T15:21:14.261398",
+        "labels": {},
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": [
+          {
+            "url": "db://getting-started-tutorial-admin/prep-data",
+            "name": "prep-data"
+          },
+          {
+            "url": "db://getting-started-tutorial-admin/describe",
+            "name": "describe"
+          },
+          {
+            "url": "db://getting-started-tutorial-admin/train-iris",
+            "name": "train"
+          },
+          {
+            "url": "db://getting-started-tutorial-admin/test-classifier",
+            "name": "test"
+          },
+          {
+            "url": "db://getting-started-tutorial-admin/serving",
+            "name": "serving"
+          }
+        ],
+        "workflows": [
+          {
+            "name": "main",
+            "path": "workflow.py",
+            "engine": "kfp"
+          }
+        ],
+        "artifacts": [],
+        "artifact_path": null,
+        "conda": null,
+        "source": "",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "hedi-proj",
+        "created": "2021-08-31T19:47:38.285213",
+        "labels": {},
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": null,
+        "source": null,
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "archived"
+      },
+      "status": {
+        "state": "archived"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "mask-detection",
+        "created": "2021-10-21T11:22:17.637326",
+        "labels": null,
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": [],
+        "workflows": [],
+        "artifacts": [],
+        "artifact_path": null,
+        "conda": null,
+        "source": "",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online",
+        "disable_auto_mount": false
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "model-deployment-pipeline-admin",
+        "created": "2021-08-29T15:21:14.378215",
+        "labels": null,
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": [
+          {
+            "name": "data-generator",
+            "spec": {
+              "kind": "job",
+              "metadata": {
+                "name": "data-generator",
+                "tag": "",
+                "project": "model-deployment-pipeline-admin"
+              },
+              "spec": {
+                "command": "",
+                "args": [],
+                "image": ".mlrun/func-model-deployment-pipeline-admin-data-generator:latest",
+                "env": [
+                  {
+                    "name": "V3IO_API",
+                    "value": ""
+                  },
+                  {
+                    "name": "V3IO_ACCESS_KEY",
+                    "value": ""
+                  }
+                ],
+                "default_handler": "main",
+                "entry_points": {
+                  "gen_postcode": {
+                    "name": "gen_postcode",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "is_churn",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 12
+                  },
+                  "new_registration": {
+                    "name": "new_registration",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "fake",
+                        "default": ""
+                      },
+                      {
+                        "name": "user_id",
+                        "default": ""
+                      },
+                      {
+                        "name": "event_time",
+                        "default": ""
+                      },
+                      {
+                        "name": "is_churn",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 21
+                  },
+                  "new_purchase": {
+                    "name": "new_purchase",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "fake",
+                        "default": ""
+                      },
+                      {
+                        "name": "user_id",
+                        "default": ""
+                      },
+                      {
+                        "name": "event_time",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 35
+                  },
+                  "new_bet": {
+                    "name": "new_bet",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "fake",
+                        "default": ""
+                      },
+                      {
+                        "name": "user_id",
+                        "default": ""
+                      },
+                      {
+                        "name": "event_time",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 42
+                  },
+                  "new_win": {
+                    "name": "new_win",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "fake",
+                        "default": ""
+                      },
+                      {
+                        "name": "user_id",
+                        "default": ""
+                      },
+                      {
+                        "name": "event_time",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 49
+                  },
+                  "gen_event_date": {
+                    "name": "gen_event_date",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "is_churn",
+                        "default": ""
+                      },
+                      {
+                        "name": "prev_event_date",
+                        "default": null
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 56
+                  },
+                  "generate_events": {
+                    "name": "generate_events",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "fake",
+                        "default": ""
+                      },
+                      {
+                        "name": "num_users",
+                        "default": ""
+                      },
+                      {
+                        "name": "events_dist",
+                        "default": ""
+                      },
+                      {
+                        "name": "num_events",
+                        "default": ""
+                      },
+                      {
+                        "name": "is_churn",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 66
+                  },
+                  "generate_user_ids": {
+                    "name": "generate_user_ids",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "n",
+                        "type": "int",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 88
+                  },
+                  "generate_event_stream": {
+                    "name": "generate_event_stream",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "v3io_client",
+                        "default": ""
+                      },
+                      {
+                        "name": "container",
+                        "default": ""
+                      },
+                      {
+                        "name": "output_stream_path",
+                        "default": ""
+                      },
+                      {
+                        "name": "num_users_group1",
+                        "default": ""
+                      },
+                      {
+                        "name": "num_users_group2",
+                        "default": ""
+                      },
+                      {
+                        "name": "events_per_user",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 92
+                  },
+                  "create_enrichment_table": {
+                    "name": "create_enrichment_table",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "v3io_client",
+                        "default": ""
+                      },
+                      {
+                        "name": "container",
+                        "default": ""
+                      },
+                      {
+                        "name": "enrichment_table_path",
+                        "default": ""
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 123
+                  },
+                  "main": {
+                    "name": "main",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "context",
+                        "type": "MLClientCtx",
+                        "default": ""
+                      },
+                      {
+                        "name": "container",
+                        "type": "str",
+                        "default": ""
+                      },
+                      {
+                        "name": "output_stream_path",
+                        "type": "str",
+                        "default": ""
+                      },
+                      {
+                        "name": "enrichment_table_path",
+                        "type": "str",
+                        "default": ""
+                      },
+                      {
+                        "name": "num_users_group1",
+                        "type": "int",
+                        "default": 1400
+                      },
+                      {
+                        "name": "num_users_group2",
+                        "type": "int",
+                        "default": 600
+                      },
+                      {
+                        "name": "events_per_user",
+                        "type": "int",
+                        "default": 1000
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 140
+                  }
+                },
+                "description": "",
+                "build": {
+                  "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKZnJvbSByYW5kb20gaW1wb3J0IHJhbmRpbnQsIHJhbmRvbQpmcm9tIGRhdGV0aW1lIGltcG9ydCBkYXRldGltZSwgdGltZWRlbHRhCmltcG9ydCBqc29uCmltcG9ydCB1dWlkCmZyb20gZmFrZXIgaW1wb3J0IEZha2VyCmltcG9ydCB2M2lvLmRhdGFwbGFuZQppbXBvcnQgb3MKZnJvbSBtbHJ1bi5leGVjdXRpb24gaW1wb3J0IE1MQ2xpZW50Q3R4CgpkZWYgZ2VuX3Bvc3Rjb2RlKGlzX2NodXJuKToKICAgIGJhc2VfcG9zdGNvZGUgPSAzICogcmFuZGludCgzMzM0LCAzMzMzMykKICAgIGdyb3VwID0gcmFuZGludCgwLCAxKQogICAgaWYgaXNfY2h1cm46CiAgICAgICAgcmV0dXJuIGJhc2VfcG9zdGNvZGUgKyBncm91cAogICAgZWxzZToKICAgICAgICByZXR1cm4gYmFzZV9wb3N0Y29kZSArIChncm91cCAqIDIpCgoKZGVmIG5ld19yZWdpc3RyYXRpb24oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSwgaXNfY2h1cm4pOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3JlZ2lzdHJhdGlvbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ25hbWUnOiBmYWtlLm5hbWUoKSwKICAgICAgICAgICAgJ2RhdGVfb2ZfYmlydGgnOiBmYWtlLmRhdGUoKSwKICAgICAgICAgICAgJ3N0cmVldF9hZGRyZXNzJzogZmFrZS5zdHJlZXRfYWRkcmVzcygpLAogICAgICAgICAgICAnY2l0eSc6IGZha2UuY2l0eSgpLAogICAgICAgICAgICAnY291bnRyeSc6IGZha2UuY291bnRyeSgpLAogICAgICAgICAgICAncG9zdGNvZGUnOiBnZW5fcG9zdGNvZGUoaXNfY2h1cm4pLAogICAgICAgICAgICAnYWZmaWxpYXRlX3VybCc6IGZha2UuaW1hZ2VfdXJsKCksCiAgICAgICAgICAgICdjYW1wYWlnbic6IGZha2UuZWFuOCgpfQoKCmRlZiBuZXdfcHVyY2hhc2UoZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSk6CiAgICByZXR1cm4geyd1c2VyX2lkJzogdXNlcl9pZCwKICAgICAgICAgICAgJ2V2ZW50X3R5cGUnOiAncHVyY2hhc2UnLAogICAgICAgICAgICAnZXZlbnRfdGltZSc6IGV2ZW50X3RpbWUsCiAgICAgICAgICAgICdhbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9NTApfQoKCmRlZiBuZXdfYmV0KGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ2JldCcsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ2JldF9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MTApfQoKCmRlZiBuZXdfd2luKGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3dpbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ3dpbl9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MjAwKX0KCgpkZWYgZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIHByZXZfZXZlbnRfZGF0ZT1Ob25lKToKICAgIGlmIHByZXZfZXZlbnRfZGF0ZSBpcyBOb25lOgogICAgICAgIHJldHVybiBkYXRldGltZS5ub3coKSAtIHRpbWVkZWx0YShob3Vycz1yYW5kaW50KDQ4LCA5NikpCiAgICBlbHNlOgogICAgICAgIGlmIHByZXZfZXZlbnRfZGF0ZSArIHRpbWVkZWx0YShob3Vycz0zMCkgPCBkYXRldGltZS5ub3coKSBhbmQgbm90IGlzX2NodXJuIGFuZCByYW5kaW50KDEsIDEwMDApIDw9IDU6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoaG91cnM9cmFuZGludCgxNSwgMjQpKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoc2Vjb25kcz1yYW5kaW50KDUsIDEwMCkpCgoKZGVmIGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnMsIGV2ZW50c19kaXN0LCBudW1fZXZlbnRzLCBpc19jaHVybik6CiAgICB1c2VyX2lkcyA9IGdlbmVyYXRlX3VzZXJfaWRzKG51bV91c2VycykKICAgIGV2ZW50cyA9IFtdCiAgICBmb3IgdXNlcl9pZCBpbiB1c2VyX2lkczoKICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4pCiAgICAgICAgcmVnX2V2ZW50ID0gbmV3X3JlZ2lzdHJhdGlvbihmYWtlLCB1c2VyX2lkLCBldmVudF90aW1lLCBpc19jaHVybikKICAgICAgICByZWdfZXZlbnRbJ2xhYmVsJ10gPSBpbnQoaXNfY2h1cm4pCiAgICAgICAgZXZlbnRzLmFwcGVuZChyZWdfZXZlbnQpCiAgICAgICAgZm9yIF8gaW4gcmFuZ2UobnVtX2V2ZW50cyk6CiAgICAgICAgICAgIGFjY19wcm9iID0gMAogICAgICAgICAgICByYW5kID0gcmFuZG9tKCkKICAgICAgICAgICAgZm9yIGV2ZW50X2Rpc3QgaW4gZXZlbnRzX2Rpc3Q6CiAgICAgICAgICAgICAgICBpZiByYW5kIDw9IGV2ZW50X2Rpc3RbJ3Byb2JhYmlsaXR5J10gKyBhY2NfcHJvYjoKICAgICAgICAgICAgICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIGV2ZW50X3RpbWUpCiAgICAgICAgICAgICAgICAgICAgbmV3X2V2ZW50ID0gZXZlbnRfZGlzdFsnZ2VuZXJhdG9yJ10oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSkKICAgICAgICAgICAgICAgICAgICBldmVudHMuYXBwZW5kKG5ld19ldmVudCkKICAgICAgICAgICAgICAgICAgICBicmVhawogICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICBhY2NfcHJvYiArPSBldmVudF9kaXN0Wydwcm9iYWJpbGl0eSddCiAgICByZXR1cm4gZXZlbnRzCgoKZGVmIGdlbmVyYXRlX3VzZXJfaWRzKG46IGludCk6CiAgICByZXR1cm4gKHN0cih1dWlkLnV1aWQ0KCkpIGZvciBfIGluIHJhbmdlKG4pKQoKCmRlZiBnZW5lcmF0ZV9ldmVudF9zdHJlYW0odjNpb19jbGllbnQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgIG91dHB1dF9zdHJlYW1fcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICBudW1fdXNlcnNfZ3JvdXAxLAogICAgICAgICAgICAgICAgICAgICAgICAgIG51bV91c2Vyc19ncm91cDIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgZXZlbnRzX3Blcl91c2VyKToKCiAgICBmYWtlID0gRmFrZXIoKQoKICAgIGdyb3VwMV9ldmVudHNfZGlzdCA9IFt7J3Byb2JhYmlsaXR5JzogMC4xLCAnZ2VuZXJhdG9yJzogbmV3X3B1cmNoYXNlfSwKICAgICAgICAgICAgICAgICAgICAgICAgICB7J3Byb2JhYmlsaXR5JzogMC44OSwgJ2dlbmVyYXRvcic6IG5ld19iZXR9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjAxLCAnZ2VuZXJhdG9yJzogbmV3X3dpbn1dCgogICAgZ3JvdXAyX2V2ZW50c19kaXN0ID0gW3sncHJvYmFiaWxpdHknOiAwLjEsICdnZW5lcmF0b3InOiBuZXdfcHVyY2hhc2V9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjg1LCAnZ2VuZXJhdG9yJzogbmV3X2JldH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgeydwcm9iYWJpbGl0eSc6IDAuMDUsICdnZW5lcmF0b3InOiBuZXdfd2lufV0KCiAgICBncm91cDFfZXZlbnRzID0gZ2VuZXJhdGVfZXZlbnRzKGZha2UsIG51bV91c2Vyc19ncm91cDEsIGdyb3VwMV9ldmVudHNfZGlzdCwgZXZlbnRzX3Blcl91c2VyLCBUcnVlKQogICAgZ3JvdXAyX2V2ZW50cyA9IGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnNfZ3JvdXAyLCBncm91cDJfZXZlbnRzX2Rpc3QsIGV2ZW50c19wZXJfdXNlciwgRmFsc2UpCgogICAgZXZlbnRzID0gKGdyb3VwMV9ldmVudHMgKyBncm91cDJfZXZlbnRzKQogICAgZXZlbnRzLnNvcnQoa2V5PWxhbWJkYSBldmVudDogZXZlbnQuZ2V0KCdldmVudF90aW1lJykpCgogICAgYmF0Y2hfc2l6ZSA9IDEwMDAKICAgIGZvciBpIGluIHJhbmdlKDAsIGxlbihldmVudHMpLCBiYXRjaF9zaXplKToKICAgICAgICByZWNvcmRzID0gW3snZGF0YSc6IGpzb24uZHVtcHMoZXZlbnQsIGRlZmF1bHQ9c3RyKX0gZm9yIGV2ZW50IGluIGV2ZW50c1tpOmkrYmF0Y2hfc2l6ZV1dCiAgICAgICAgdjNpb19jbGllbnQuYmF0Y2guc3RyZWFtLnB1dF9yZWNvcmRzKGNvbnRhaW5lcj1jb250YWluZXIsIHN0cmVhbV9wYXRoPW91dHB1dF9zdHJlYW1fcGF0aCwgcmVjb3Jkcz1yZWNvcmRzKQoKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCgpkZWYgY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKToKICAgIGZvciBwb3N0Y29kZSBpbiByYW5nZSgxMDAwMCwgOTk5OTkpOgogICAgICAgIHJlbWFpbmRlciA9IHBvc3Rjb2RlICUgMwogICAgICAgIGlmIHJlbWFpbmRlciA9PSAwOgogICAgICAgICAgICBpZHggPSByYW5kaW50KDMsIDUpCiAgICAgICAgZWxpZiByZW1haW5kZXIgPT0gMToKICAgICAgICAgICAgaWR4ID0gcmFuZGludCgxLCAzKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGlkeCA9IHJhbmRpbnQoNSwgNykKCiAgICAgICAgYXR0ciA9IHsncG9zdGNvZGUnOiBwb3N0Y29kZSwgJ3NvY2lvZWNvbm9taWNfaWR4JzogaWR4fQogICAgICAgIHYzaW9fY2xpZW50LmJhdGNoLmt2LnB1dChjb250YWluZXI9Y29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YWJsZV9wYXRoPWVucmljaG1lbnRfdGFibGVfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PXN0cihwb3N0Y29kZSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJpYnV0ZXM9YXR0cikKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCmRlZiBtYWluKGNvbnRleHQ6IE1MQ2xpZW50Q3R4LAogICAgICAgICBjb250YWluZXI6IHN0ciwKICAgICAgICAgb3V0cHV0X3N0cmVhbV9wYXRoOiBzdHIsCiAgICAgICAgIGVucmljaG1lbnRfdGFibGVfcGF0aDogc3RyLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAxOiBpbnQgPSAxNDAwLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAyOiBpbnQgPSA2MDAsCiAgICAgICAgIGV2ZW50c19wZXJfdXNlcjogaW50ID0gMTAwMCkgLT4gTm9uZToKCiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChlbmRwb2ludD1vcy5nZXRlbnYoJ1YzSU9fQVBJJyksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Nfa2V5PW9zLmdldGVudignVjNJT19BQ0NFU1NfS0VZJykpCiAgICAKICAgIHRhYmxlX3Jlc3BzID0gY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKQogICAgd3JpdHRlbl9pdGVtcyA9IHN1bShpbnQocmVzcC5zdGF0dXNfY29kZSA9PSAyMDApIGZvciByZXNwIGluIHRhYmxlX3Jlc3BzKQogICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0NyZWF0ZWQgZW5yaWNobWVudCB0YWJsZSB3aXRoIHt3cml0dGVuX2l0ZW1zfSBpdGVtcycpCiAgICAKICAgIHN0cmVhbV9yZXNwcyA9IGdlbmVyYXRlX2V2ZW50X3N0cmVhbSh2M2lvX2NsaWVudCwgY29udGFpbmVyLCBvdXRwdXRfc3RyZWFtX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbnVtX3VzZXJzX2dyb3VwMSwgbnVtX3VzZXJzX2dyb3VwMiwgZXZlbnRzX3Blcl91c2VyKQoKICAgIHJlY29yZHNfc2VudCA9IHN1bShsZW4oanNvbi5sb2FkcyhyZXNwLmJvZHkpWydSZWNvcmRzJ10pIGZvciByZXNwIGluIHN0cmVhbV9yZXNwcykKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidSZWNvcmRzIHNlbnQge3JlY29yZHNfc2VudH0nKQoKICAgIGZhaWxlZF9yZWNvcmRzID0gc3VtKGpzb24ubG9hZHMocmVzcC5ib2R5KVsnRmFpbGVkUmVjb3JkQ291bnQnXSBmb3IgcmVzcCBpbiBzdHJlYW1fcmVzcHMpCgogICAgaWYgZmFpbGVkX3JlY29yZHMgPiAwOgogICAgICAgIGNvbnRleHQubG9nZ2VyLndhcm4oZidGYWlsZWQgdG8gc3RyZWFtIHtmYWlsZWRfcmVjb3Jkc30nKQogICAgZWxzZToKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdBbGwgZGF0YSBzdHJlYW1lZCBzdWNjZXNzZnVsbHkuJykKCiAgICBwYXNzCgo=",
+                  "base_image": "mlrun/mlrun",
+                  "commands": [
+                    "python -m pip install faker"
+                  ],
+                  "code_origin": "functions/data-generator.ipynb",
+                  "origin_filename": "functions/data-generator.ipynb"
+                },
+                "mount_applied": false,
+                "affinity": null
+              },
+              "verbose": false
+            }
+          },
+          {
+            "name": "event-handler",
+            "spec": {
+              "kind": "remote",
+              "metadata": {
+                "name": "event-handler",
+                "tag": "",
+                "project": "model-deployment-pipeline-admin"
+              },
+              "spec": {
+                "command": "http://default-tenant.app.vmdev36.lab.iguazeng.com:31666",
+                "args": [],
+                "image": "",
+                "description": "",
+                "replicas": 1,
+                "min_replicas": 1,
+                "max_replicas": 4,
+                "env": [
+                  {
+                    "name": "V3IO_API",
+                    "value": ""
+                  },
+                  {
+                    "name": "V3IO_ACCESS_KEY",
+                    "value": ""
+                  },
+                  {
+                    "name": "PARQUET_SINK_FLAG",
+                    "value": "true"
+                  },
+                  {
+                    "name": "STREAM_SINK_FLAG",
+                    "value": "true"
+                  },
+                  {
+                    "name": "PARQUET_TARGET_PATH",
+                    "value": "/User/examples/model-deployment-pipeline/data/events-pq"
+                  },
+                  {
+                    "name": "PARQUET_BATCH_SIZE",
+                    "value": "8192"
+                  },
+                  {
+                    "name": "TS_KEY",
+                    "value": "event_time"
+                  },
+                  {
+                    "name": "TS_FORMAT",
+                    "value": "%Y-%m-%d %H:%M:%S.%f"
+                  },
+                  {
+                    "name": "CONTAINER",
+                    "value": "users"
+                  },
+                  {
+                    "name": "OUTPUT_STREAM_PATH",
+                    "value": "admin/examples/model-deployment-pipeline/data/incoming-events-stream"
+                  },
+                  {
+                    "name": "PARTITION_ATTR",
+                    "value": "user_id"
+                  },
+                  {
+                    "name": "V3IO_USERNAME",
+                    "value": ""
+                  },
+                  {
+                    "name": "V3IO_FRAMESD",
+                    "value": ""
+                  }
+                ],
+                "config": {
+                  "spec.triggers.serving_stream": {
+                    "kind": "v3ioStream",
+                    "url": "http://v3io-webapi:8081/users/admin/examples/model-deployment-pipeline/data/generated-stream@eh",
+                    "attributes": {
+                      "seekTo": "earliest",
+                      "readBatchSize": 64,
+                      "pollingIntervalMs": 500
+                    },
+                    "maxWorkers": 10,
+                    "password": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+                  }
+                },
+                "base_spec": {
+                  "apiVersion": "nuclio.io/v1",
+                  "kind": "Function",
+                  "metadata": {
+                    "annotations": {
+                      "nuclio.io/generated_by": "function generated from functions/event-handler.ipynb"
+                    },
+                    "labels": {},
+                    "name": "event-handler"
+                  },
+                  "spec": {
+                    "build": {
+                      "baseImage": "mlrun/mlrun",
+                      "commands": [],
+                      "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmltcG9ydCBwYW5kYXMgYXMgcGQKaW1wb3J0IGpzb24KaW1wb3J0IGRhdGV0aW1lCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lCmltcG9ydCB2M2lvLmRhdGFwbGFuZQoKZGVmIGluaXRfY29udGV4dChjb250ZXh0KToKICAgIHNldGF0dHIoY29udGV4dCwgJ3N0cmVhbV9zaW5rX2ZsYWcnLCBvcy5nZXRlbnYoJ1NUUkVBTV9TSU5LX0ZMQUcnKSkKICAgIHNldGF0dHIoY29udGV4dCwgJ3BhcnF1ZXRfc2lua19mbGFnJywgb3MuZ2V0ZW52KCdQQVJRVUVUX1NJTktfRkxBRycpKQoKICAgIGlmIGNvbnRleHQucGFycXVldF9zaW5rX2ZsYWcubG93ZXIoKSA9PSAndHJ1ZSc6CiAgICAgICAgc2V0YXR0cihjb250ZXh0LCAnYmF0Y2gnLCBbXSkKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICdiYXRjaF9zaXplJywgaW50KG9zLmdldGVudignUEFSUVVFVF9CQVRDSF9TSVpFJywgMTAyNCkpKQoKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfa2V5Jywgb3MuZ2V0ZW52KCdUU19LRVknKSkKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfZm9ybWF0Jywgb3MuZ2V0ZW52KCdUU19GT1JNQVQnLCAnJVktJW0tJWQgJUg6JU06JVMuJWYnKSkKCiAgICAgICAgc2V0YXR0cihjb250ZXh0LCAncHFfcGFydGl0aW9ucycsIFsncHFfeWVhcicsICdwcV9tb250aCcsICdwcV9kYXknLCAncHFfaG91ciddKQoKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICd0YXJnZXRfcGF0aCcsIG9zLmdldGVudignUEFSUVVFVF9UQVJHRVRfUEFUSCcpKQogICAgICAgIG9zLm1ha2VkaXJzKGNvbnRleHQudGFyZ2V0X3BhdGgsIGV4aXN0X29rPVRydWUpCgogICAgICAgIGZlYXR1cmVzID0gb3MuZ2V0ZW52KCdGRUFUVVJFUycpCiAgICAgICAgaWYgZmVhdHVyZXMgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGZlYXR1cmVzID0gZmVhdHVyZXMuc3BsaXQoJywnKQogICAgICAgIHNldGF0dHIoY29udGV4dCwgJ2ZlYXR1cmVzJywgZmVhdHVyZXMpCgogICAgICAgIHByZWRpY3Rpb25zID0gb3MuZ2V0ZW52KCdQUkVESUNUSU9OUycpCiAgICAgICAgaWYgcHJlZGljdGlvbnMgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIHByZWRpY3Rpb25zID0gcHJlZGljdGlvbnMuc3BsaXQoJywnKQogICAgICAgIHNldGF0dHIoY29udGV4dCwgJ3ByZWRpY3Rpb25zJywgcHJlZGljdGlvbnMpCgogICAgaWYgY29udGV4dC5zdHJlYW1fc2lua19mbGFnLmxvd2VyKCkgPT0gJ3RydWUnOgogICAgICAgIHYzaW9fYWNjZXNzX2tleSA9IG9zLmdldGVudignVjNJT19BQ0NFU1NfS0VZJykKICAgICAgICBjb250YWluZXIgPSBvcy5nZXRlbnYoJ0NPTlRBSU5FUicpCiAgICAgICAgb3V0cHV0X3N0cmVhbV9wYXRoID0gb3MuZ2V0ZW52KCdPVVRQVVRfU1RSRUFNX1BBVEgnKQogICAgICAgIHBhcnRpdGlvbl9hdHRyID0gb3MuZ2V0ZW52KCdQQVJUSVRJT05fQVRUUicpCiAgICAgICAgdjNpb19hcGkgPSBvcy5nZXRlbnYoJ1YzSU9fQVBJJykKICAgICAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChlbmRwb2ludD12M2lvX2FwaSwgYWNjZXNzX2tleT12M2lvX2FjY2Vzc19rZXkpCgogICAgICAgIHNldGF0dHIoY29udGV4dCwgJ3YzaW9fY2xpZW50JywgdjNpb19jbGllbnQpCiAgICAgICAgc2V0YXR0cihjb250ZXh0LCAncGFydGl0aW9uX2F0dHInLCBwYXJ0aXRpb25fYXR0cikKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICdjb250YWluZXInLCBjb250YWluZXIpCiAgICAgICAgc2V0YXR0cihjb250ZXh0LCAnb3V0cHV0X3N0cmVhbV9wYXRoJywgb3V0cHV0X3N0cmVhbV9wYXRoKQogICAgcGFzcwoKZGVmIGhhbmRsZXIoY29udGV4dCwgZXZlbnQpOgogICAgaWYgdHlwZShldmVudC5ib2R5KSBpcyBkaWN0OgogICAgICAgIGV2ZW50X2RpY3QgPSBldmVudC5ib2R5CiAgICBlbHNlOgogICAgICAgIGV2ZW50X2RpY3QgPSBqc29uLmxvYWRzKGV2ZW50LmJvZHkpCgogICAgY29udGV4dC5sb2dnZXIuaW5mb193aXRoKCdHb3QgaW52b2tlZCcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHJpZ2dlcl9raW5kPWV2ZW50LnRyaWdnZXIua2luZCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICBldmVudF9ib2R5PWV2ZW50X2RpY3QpCgogICAgaWYgY29udGV4dC5zdHJlYW1fc2lua19mbGFnLmxvd2VyKCkgPT0gJ3RydWUnOgogICAgICAgIHN0cmVhbV9zaW5rX2hhbmRsZXIoY29udGV4dCwgZXZlbnRfZGljdCkKICAgIGlmIGNvbnRleHQucGFycXVldF9zaW5rX2ZsYWcubG93ZXIoKSA9PSAndHJ1ZSc6CiAgICAgICAgcGFycXVldF9zaW5rX2hhbmRsZXIoY29udGV4dCwgZXZlbnRfZGljdCkKICAgIHBhc3MKCgpkZWYgc3RyZWFtX3NpbmtfaGFuZGxlcihjb250ZXh0LCBldmVudCk6CiAgICBwYXJ0aXRpb25fa2V5ID0gZXZlbnQuZ2V0KGNvbnRleHQucGFydGl0aW9uX2F0dHIpCiAgICByZWNvcmQgPSBldmVudF90b19yZWNvcmQoZXZlbnQsIHBhcnRpdGlvbl9rZXkpCiAgICAKICAgIHJlc3AgPSBjb250ZXh0LnYzaW9fY2xpZW50LnN0cmVhbS5wdXRfcmVjb3Jkcyhjb250YWluZXI9Y29udGV4dC5jb250YWluZXIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RyZWFtX3BhdGg9Y29udGV4dC5vdXRwdXRfc3RyZWFtX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVjb3Jkcz1bcmVjb3JkXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByYWlzZV9mb3Jfc3RhdHVzPXYzaW8uZGF0YXBsYW5lLlJhaXNlRm9yU3RhdHVzLm5ldmVyKQoKICAgIGNvbnRleHQubG9nZ2VyLmluZm9fd2l0aCgnU2VudCBldmVudCB0byBzdHJlYW0nLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlY29yZD1yZWNvcmQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzcG9uc2Vfc3RhdHVzPXJlc3Auc3RhdHVzX2NvZGUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzcG9uc2VfYm9keT1yZXNwLmJvZHkuZGVjb2RlKCd1dGYtOCcpKQogICAgcGFzcwoKCmRlZiBldmVudF90b19yZWNvcmQoZXZlbnRfZGljdCwgcGFydGl0aW9uX2tleSk6CiAgICBldmVudF9zdHIgPSBqc29uLmR1bXBzKGV2ZW50X2RpY3QpCiAgICByZXR1cm4geydkYXRhJzogZXZlbnRfc3RyLCAncGFydGl0aW9uX2tleSc6IHN0cihwYXJ0aXRpb25fa2V5KX0KCgpkZWYgcGFycXVldF9zaW5rX2hhbmRsZXIoY29udGV4dCwgZXZlbnQpOgogICAgaWYgY29udGV4dC5mZWF0dXJlcyBpcyBub3QgTm9uZSBhbmQgY29udGV4dC5wcmVkaWN0aW9ucyBpcyBub3QgTm9uZToKICAgICAgICBldmVudCA9IGZsYXR0ZW5faW5mZXJlbmNlX2V2ZW50KGNvbnRleHQsIGV2ZW50KQoKICAgIGV2ZW50X3dpdGhfdGltZV9wYXJ0aXRpb25zID0gYWRkX3RpbWVfcGFydGl0aW9uX2F0dHJpYnV0ZXMoY29udGV4dCwgZXZlbnQpCgogICAgY29udGV4dC5iYXRjaC5hcHBlbmQoZXZlbnRfd2l0aF90aW1lX3BhcnRpdGlvbnMpCgogICAgaWYgY29udGV4dC5iYXRjaF9zaXplID09IGxlbihjb250ZXh0LmJhdGNoKToKICAgICAgICB3cml0dGVuX3JlY29yZHMgPSB3cml0ZV9iYXRjaChjb250ZXh0KQogICAgICAgIGNvbnRleHQubG9nZ2VyLmluZm9fd2l0aCgnV3JpdHRlbiBiYXRjaCcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFdyaXR0ZW50X3JlY29yZHM9d3JpdHRlbl9yZWNvcmRzKQogICAgcGFzcwoKCmRlZiBmbGF0dGVuX2luZmVyZW5jZV9ldmVudChjb250ZXh0LCBldmVudCk6CiAgICBmZWF0dXJlX3ZhbHVlcyA9IGV2ZW50WydyZXF1ZXN0J11bJ2luc3RhbmNlcyddWzBdCiAgICBldmVudC51cGRhdGUoemlwKGNvbnRleHQuZmVhdHVyZXMsIGZlYXR1cmVfdmFsdWVzKSkKCiAgICBwcmVkaWN0aW9uX3ZhbHVlcyA9IGV2ZW50WydyZXNwJ10KICAgIGV2ZW50LnVwZGF0ZSh6aXAoY29udGV4dC5wcmVkaWN0aW9ucywgcHJlZGljdGlvbl92YWx1ZXMpKQoKICAgIHJldHVybiBldmVudAoKCmRlZiBhZGRfdGltZV9wYXJ0aXRpb25fYXR0cmlidXRlcyhjb250ZXh0LCBldmVudCk6CiAgICBpZiBoYXNhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfa2V5JykgYW5kIGV2ZW50LmdldChjb250ZXh0LnRpbWVzdGFtcF9rZXkpIGlzIG5vdCBOb25lOgogICAgICAgIGR0X29iamVjdCA9IGRhdGV0aW1lLnN0cnB0aW1lKGV2ZW50W2NvbnRleHQudGltZXN0YW1wX2tleV0sIGNvbnRleHQudGltZXN0YW1wX2Zvcm1hdCkKICAgIGVsc2U6CiAgICAgICAgZHRfb2JqZWN0ID0gZGF0ZXRpbWUubm93KCkKCiAgICBldmVudFsncHFfeWVhciddID0gZHRfb2JqZWN0LnN0cmZ0aW1lKCclWScpCiAgICBldmVudFsncHFfbW9udGgnXSA9IGR0X29iamVjdC5zdHJmdGltZSgnJW0nKQogICAgZXZlbnRbJ3BxX2RheSddID0gZHRfb2JqZWN0LnN0cmZ0aW1lKCclZCcpCiAgICBldmVudFsncHFfaG91ciddID0gZHRfb2JqZWN0LnN0cmZ0aW1lKCclSCcpCgogICAgcmV0dXJuIGV2ZW50CgoKZGVmIHdyaXRlX2JhdGNoKGNvbnRleHQpOgogICAgZGYgPSBwZC5EYXRhRnJhbWUuZnJvbV9yZWNvcmRzKGNvbnRleHQuYmF0Y2gpCiAgICBkZi50b19wYXJxdWV0KHBhdGg9Y29udGV4dC50YXJnZXRfcGF0aCwgcGFydGl0aW9uX2NvbHM9Y29udGV4dC5wcV9wYXJ0aXRpb25zKQogICAgY29udGV4dC5iYXRjaCA9IFtdCiAgICByZXR1cm4gbGVuKGRmLmluZGV4KQoK",
+                      "noBaseImagesPull": true
+                    },
+                    "env": [],
+                    "handler": "event-handler:handler",
+                    "readinessTimeoutSeconds": 200,
+                    "runtime": "python:3.6",
+                    "volumes": []
+                  }
+                },
                 "source": "",
-                "subpath": null,
-                "origin_url": null,
-                "desired_state": "online"
-            },
-            "status": {
-                "state": "online"
+                "build": {
+                  "commands": [],
+                  "code_origin": "functions/event-handler.ipynb",
+                  "origin_filename": "functions/event-handler.ipynb"
+                },
+                "default_handler": "handler",
+                "mount_applied": true,
+                "affinity": null
+              },
+              "verbose": false
             }
-        },
-        {
-            "kind": "project",
-            "metadata": {
-                "name": "hhhh",
-                "created": "2021-01-05T18:54:57.101178",
-                "labels": null,
-                "annotations": null
-            },
+          },
+          {
+            "name": "stream-to-features",
             "spec": {
-                "description": "hhhh",
-                "goals": null,
-                "params": null,
-                "functions": null,
-                "workflows": null,
-                "artifacts": null,
-                "artifact_path": null,
-                "conda": null,
-                "source": null,
-                "subpath": null,
-                "origin_url": null,
-                "desired_state": "archived"
-            },
-            "status": {
-                "state": "archived"
-            }
-        },
-        {
-            "kind": "project",
-            "metadata": {
-                "name": "test5",
-                "created": "2021-01-26T14:56:04.352956",
-                "labels": null,
-                "annotations": null
-            },
-            "spec": {
+              "kind": "remote",
+              "metadata": {
+                "name": "stream-to-features",
+                "tag": "",
+                "project": "model-deployment-pipeline-admin"
+              },
+              "spec": {
+                "command": "http://default-tenant.app.vmdev36.lab.iguazeng.com:31071",
+                "args": [],
+                "image": "",
                 "description": "",
-                "goals": null,
-                "params": null,
-                "functions": null,
-                "workflows": null,
-                "artifacts": null,
-                "artifact_path": null,
-                "conda": null,
-                "source": null,
-                "subpath": null,
-                "origin_url": null,
-                "desired_state": "archived"
-            },
-            "status": {
-                "state": "archived"
+                "replicas": 1,
+                "min_replicas": 1,
+                "max_replicas": 4,
+                "env": [
+                  {
+                    "name": "V3IO_API",
+                    "value": ""
+                  },
+                  {
+                    "name": "V3IO_ACCESS_KEY",
+                    "value": ""
+                  },
+                  {
+                    "name": "FEATURE_TABLE_PATH",
+                    "value": "admin/examples/model-deployment-pipeline/data/feature-table"
+                  },
+                  {
+                    "name": "SERVING_EVENTS",
+                    "value": "bet,win"
+                  },
+                  {
+                    "name": "FEATURE_LIST",
+                    "value": "socioeconomic_idx,purchase_sum,purchase_mean,purchase_count,purchase_var,bet_sum,bet_mean,bet_count,bet_var,win_sum,win_mean,win_count,win_var"
+                  },
+                  {
+                    "name": "CONTAINER",
+                    "value": "users"
+                  },
+                  {
+                    "name": "OUTPUT_STREAM_PATH",
+                    "value": "admin/examples/model-deployment-pipeline/data/serving-stream"
+                  },
+                  {
+                    "name": "PARTITION_ATTR",
+                    "value": "user_id"
+                  },
+                  {
+                    "name": "ENRICHMENT_TABLE_PATH",
+                    "value": "admin/examples/model-deployment-pipeline/data/enrichment-table"
+                  },
+                  {
+                    "name": "ENRICHMENT_KEY",
+                    "value": "postcode"
+                  }
+                ],
+                "config": {
+                  "spec.triggers.serving_stream": {
+                    "kind": "v3ioStream",
+                    "url": "http://v3io-webapi:8081/users/admin/examples/model-deployment-pipeline/data/incoming-events-stream@stf",
+                    "attributes": {
+                      "seekTo": "earliest",
+                      "readBatchSize": 64,
+                      "pollingIntervalMs": 500
+                    },
+                    "maxWorkers": 10,
+                    "password": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+                  }
+                },
+                "base_spec": {
+                  "apiVersion": "nuclio.io/v1",
+                  "kind": "Function",
+                  "metadata": {
+                    "annotations": {
+                      "nuclio.io/generated_by": "function generated from functions/stream-to-features.ipynb"
+                    },
+                    "labels": {},
+                    "name": "stream-to-features"
+                  },
+                  "spec": {
+                    "build": {
+                      "baseImage": "mlrun/mlrun",
+                      "commands": [],
+                      "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmltcG9ydCBqc29uCmltcG9ydCBudW1weSBhcyBucApmcm9tIHYzaW8gaW1wb3J0IGRhdGFwbGFuZSwgY29tbW9uCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lCgpkZWYgaW5pdF9jb250ZXh0KGNvbnRleHQpOgogICAgdjNpb19hY2Nlc3Nfa2V5ID0gb3MuZ2V0ZW52KCdWM0lPX0FDQ0VTU19LRVknKQogICAgY29udGFpbmVyID0gb3MuZ2V0ZW52KCdDT05UQUlORVInKQogICAgZmVhdHVyZV90YWJsZV9wYXRoID0gb3MuZ2V0ZW52KCdGRUFUVVJFX1RBQkxFX1BBVEgnKQogICAgZmVhdHVyZV9saXN0ID0gW3Yuc3RyaXAoKSBmb3IgdiBpbiBvcy5nZXRlbnYoJ0ZFQVRVUkVfTElTVCcpLnNwbGl0KCcsJyldCiAgICBzZXJ2aW5nX2V2ZW50cyA9IFt2LnN0cmlwKCkgZm9yIHYgaW4gb3MuZ2V0ZW52KCdTRVJWSU5HX0VWRU5UUycpLnNwbGl0KCcsJyldCiAgICBvdXRwdXRfc3RyZWFtX3BhdGggPSBvcy5nZXRlbnYoJ09VVFBVVF9TVFJFQU1fUEFUSCcpICAgIAogICAgcGFydGl0aW9uX2F0dHIgPSBvcy5nZXRlbnYoJ1BBUlRJVElPTl9BVFRSJykKICAgIGVucmljaG1lbnRfdGFibGVfcGF0aCA9IG9zLmdldGVudignRU5SSUNITUVOVF9UQUJMRV9QQVRIJykKICAgIGVucmljaG1lbnRfa2V5ID0gb3MuZ2V0ZW52KCdFTlJJQ0hNRU5UX0tFWScpCiAgICAKICAgIHYzaW9fY2xpZW50ID0gZGF0YXBsYW5lLkNsaWVudChlbmRwb2ludD0naHR0cDovL3YzaW8td2ViYXBpOjgwODEnLCBhY2Nlc3Nfa2V5PXYzaW9fYWNjZXNzX2tleSkKICAgIAogICAgZXZlbnRfaGFuZGxlcnMgPSB7J3JlZ2lzdHJhdGlvbic6IHByb2Nlc3NfcmVnaXN0cmF0aW9uLAogICAgICAgICAgICAgICAgICAgICAgJ3B1cmNoYXNlJzogcHJvY2Vzc19wdXJjaGFzZSwKICAgICAgICAgICAgICAgICAgICAgICdiZXQnOiBwcm9jZXNzX2JldCwKICAgICAgICAgICAgICAgICAgICAgICd3aW4nOiBwcm9jZXNzX3dpbn0KICAgIAogICAgc2V0YXR0cihjb250ZXh0LCAndjNpb19jbGllbnQnLCB2M2lvX2NsaWVudCkKICAgIHNldGF0dHIoY29udGV4dCwgJ2NvbnRhaW5lcicsIGNvbnRhaW5lcikKICAgIHNldGF0dHIoY29udGV4dCwgJ2ZlYXR1cmVfdGFibGVfcGF0aCcsIGZlYXR1cmVfdGFibGVfcGF0aCkKICAgIHNldGF0dHIoY29udGV4dCwgJ2ZlYXR1cmVfbGlzdCcsIGZlYXR1cmVfbGlzdCkKICAgIHNldGF0dHIoY29udGV4dCwgJ3NlcnZpbmdfZXZlbnRzJywgc2VydmluZ19ldmVudHMpCiAgICBzZXRhdHRyKGNvbnRleHQsICdvdXRwdXRfc3RyZWFtX3BhdGgnLCBvdXRwdXRfc3RyZWFtX3BhdGgpCiAgICBzZXRhdHRyKGNvbnRleHQsICdwYXJ0aXRpb25fYXR0cicsIHBhcnRpdGlvbl9hdHRyKQogICAgc2V0YXR0cihjb250ZXh0LCAnZXZlbnRfaGFuZGxlcnMnLCBldmVudF9oYW5kbGVycykKICAgIHNldGF0dHIoY29udGV4dCwgJ2VucmljaG1lbnRfdGFibGVfcGF0aCcsIGVucmljaG1lbnRfdGFibGVfcGF0aCkKICAgIHNldGF0dHIoY29udGV4dCwgJ2VucmljaG1lbnRfa2V5JywgZW5yaWNobWVudF9rZXkpCiAgICBwYXNzCgpkZWYgaGFuZGxlcihjb250ZXh0LCBldmVudCk6CiAgICBpZiB0eXBlKGV2ZW50LmJvZHkpIGlzIGRpY3Q6CiAgICAgICAgZXZlbnRfZGljdCA9IGV2ZW50LmJvZHkKICAgIGVsc2U6CiAgICAgICAgZXZlbnRfZGljdCA9IGpzb24ubG9hZHMoZXZlbnQuYm9keSkKICAgICAgICAKICAgIGlmIGlzX3JlbGV2YW50X2V2ZW50KGNvbnRleHQsIGV2ZW50X2RpY3QpOgogICAgICAgIGV2ZW50X3R5cGUgPSBnZXRfZXZlbnRfdHlwZShldmVudF9kaWN0KQogICAgICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidJbmNvbWluZyBldmVudCB0eXBlOiB7ZXZlbnRfdHlwZX0nKQogICAgICAgIAogICAgICAgIHByb2Nlc3NfZnVuYyA9IGNvbnRleHQuZXZlbnRfaGFuZGxlcnMuZ2V0KGV2ZW50X3R5cGUpCiAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ1Byb2Nlc3NpbmcgZXZlbnQge2V2ZW50X2RpY3R9JykKICAgICAgICByZXNwb25zZSA9IHByb2Nlc3NfZnVuYyhjb250ZXh0LCBldmVudF9kaWN0KQogICAgICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidGaW5pc2hlZCBwcm9jZXNzaW5nIHdpdGggc3RhdHVzOiB7cmVzcG9uc2Uuc3RhdHVzX2NvZGV9IC0gYW5kIHJlc3BvbnNlIGJvZHk6IHtyZXNwb25zZS5ib2R5fSAsIGV2ZW50OiB7ZXZlbnRfZGljdH0nKQogICAgICAgIGlmIGV2ZW50X3R5cGUgaW4gY29udGV4dC5zZXJ2aW5nX2V2ZW50cyBhbmQgKDIwMCA8PSByZXNwb25zZS5zdGF0dXNfY29kZSA8IDMwMCkgOgogICAgICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYnc2VuZGluZyBldmVudCBmb3Igc2VydmluZycpCiAgICAgICAgICAgIHdyaXRlX3RvX291dHB1dF9zdHJlYW0oY29udGV4dCwgZXZlbnRfZGljdCkKICAgIGVsc2U6CiAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ05vdCByZWxldmFudCBldmVudCcpCiAgICBwYXNzCgogICAgICAgIApkZWYgZ2V0X2V2ZW50X3R5cGUoZXZlbnQpOgogICAgcmV0dXJuIGV2ZW50WydldmVudF90eXBlJ10KCgpkZWYgaXNfcmVsZXZhbnRfZXZlbnQoY29udGV4dCwgZXZlbnQpOgogICAgcmV0dXJuIGdldF9ldmVudF90eXBlKGV2ZW50KSBpbiBjb250ZXh0LmV2ZW50X2hhbmRsZXJzCiAgICAgICAgCmRlZiBnZXRfZmVhdHVyZXMoY29udGV4dCwgZXZlbnQpOgogICAgdXNlcl9pZCA9IGV2ZW50Wyd1c2VyX2lkJ10KICAgIGZlYXR1cmVzX2xpc3QgPSBjb250ZXh0LmZlYXR1cmVfbGlzdAogICAgcmVzcCA9IGNvbnRleHQudjNpb19jbGllbnQua3YuZ2V0KGNvbnRhaW5lcj1jb250ZXh0LmNvbnRhaW5lciwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGFibGVfcGF0aD1jb250ZXh0LmZlYXR1cmVfdGFibGVfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9c3RyKHVzZXJfaWQpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJhaXNlX2Zvcl9zdGF0dXM9ZGF0YXBsYW5lLlJhaXNlRm9yU3RhdHVzLm5ldmVyKQogICAgCiAgICBmZWF0X2xpc3QgPSBbcmVzcC5vdXRwdXQuaXRlbS5nZXQoZmVhdCkgZm9yIGZlYXQgaW4gZmVhdHVyZXNfbGlzdF0KICAgIGZlYXRfbGlzdCA9IFswIGlmIHYgaXMgTm9uZSBlbHNlIHYgZm9yIHYgaW4gZmVhdF9saXN0XQogICAgcmV0dXJuIGpzb24uZHVtcHMoeyd1c2VyX2lkJzogdXNlcl9pZCwgJ2luc3RhbmNlcyc6IG5wLmFycmF5KGZlYXRfbGlzdCkucmVzaGFwZSgxLC0xKS50b2xpc3QoKX0pCgoKZGVmIHdyaXRlX3RvX291dHB1dF9zdHJlYW0oY29udGV4dCwgZXZlbnQpOgogICAgcGFydGl0aW9uX2tleSA9IGV2ZW50LmdldChjb250ZXh0LnBhcnRpdGlvbl9hdHRyKSAgICAKICAgIGRhdGEgPSBnZXRfZmVhdHVyZXMoY29udGV4dCwgZXZlbnQpCiAgICAKICAgIHJlY29yZCA9IHsncGFydGl0aW9uX2tleSc6IHN0cihwYXJ0aXRpb25fa2V5KSwgJ2RhdGEnOiBkYXRhIH0KICAgIHJlc3AgPSBjb250ZXh0LnYzaW9fY2xpZW50LnN0cmVhbS5wdXRfcmVjb3Jkcyhjb250YWluZXI9Y29udGV4dC5jb250YWluZXIsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cmVhbV9wYXRoPWNvbnRleHQub3V0cHV0X3N0cmVhbV9wYXRoLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWNvcmRzPVtyZWNvcmRdLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByYWlzZV9mb3Jfc3RhdHVzPWRhdGFwbGFuZS5SYWlzZUZvclN0YXR1cy5uZXZlcikKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidTZW50IGZlYXR1cmVzIGZvciB1c2VyOiB7ZXZlbnRbInVzZXJfaWQiXX0gdG8gc2VydmluZyBzdHJlYW0nKQogICAgY29udGV4dC5sb2dnZXIuZGVidWcoZidGZWF0dXJlIHZhbHVlczoge2RhdGF9JykKCgpkZWYgZXZlbnRfdGltZV90b190cyhldmVudF90aW1lKToKICAgIGR0ID0gZGF0ZXRpbWUuc3RycHRpbWUoZXZlbnRfdGltZSwnJVktJW0tJWQgJUg6JU06JVMuJWYnKQogICAgcmV0dXJuIGRhdGV0aW1lLnRpbWVzdGFtcChkdCkKCgpkZWYgZ2V0X3N1bV9jb3VudF9tZWFuX3Zhcl9leHByKGZlYXR1cmU6IHN0ciwgY3VycmVudF92YWx1ZSk6CiAgICBzdW1fc3RyID0gZiJTRVQge2ZlYXR1cmV9X3N1bT0gaWZfbm90X2V4aXN0cyh7ZmVhdHVyZX1fc3VtLCAwKSArIHtjdXJyZW50X3ZhbHVlfTsiCiAgICBjb3VudF9zdHIgPSBmIlNFVCB7ZmVhdHVyZX1fY291bnQ9IGlmX25vdF9leGlzdHMoe2ZlYXR1cmV9X2NvdW50LCAwKSArIDE7IgogICAgZGVsdGFfc3RyID0gZiJTRVQge2ZlYXR1cmV9X2RlbHRhPSB7Y3VycmVudF92YWx1ZX0gLSBpZl9ub3RfZXhpc3RzKHtmZWF0dXJlfV9tZWFuLCAwKTsiCiAgICBtZWFuX3N0ciA9IGYiU0VUIHtmZWF0dXJlfV9tZWFuPSBpZl9ub3RfZXhpc3RzKHtmZWF0dXJlfV9tZWFuLCAwKSArICh7ZmVhdHVyZX1fZGVsdGEgLyB7ZmVhdHVyZX1fY291bnQpOyIKICAgIG0yX3N0ciA9IGYiU0VUIHtmZWF0dXJlfV9tMj0gaWZfbm90X2V4aXN0cyh7ZmVhdHVyZX1fbTIsIDApICsgKHtmZWF0dXJlfV9kZWx0YSAqICh7Y3VycmVudF92YWx1ZX0gLSB7ZmVhdHVyZX1fbWVhbikpOyIKICAgIHZhcl9zdHIgPSBmIlNFVCB7ZmVhdHVyZX1fdmFyPSB7ZmVhdHVyZX1fbTIgLyAobWF4KDIsIHtmZWF0dXJlfV9jb3VudCktMSkgOyIKICAgIGV4cHJlc3Npb24gPSBzdW1fc3RyICsgY291bnRfc3RyICsgZGVsdGFfc3RyICsgbWVhbl9zdHIgKyBtMl9zdHIgKyB2YXJfc3RyCiAgICByZXR1cm4gZXhwcmVzc2lvbgoKCmRlZiB1cGRhdGVfZmVhdHVyZXMoY29udGV4dCwgdXNlcl9pZCwgZXhwcmVzc2lvbiwgY29uZGl0aW9uKToKICAgIHJldHVybiBjb250ZXh0LnYzaW9fY2xpZW50Lmt2LnVwZGF0ZShjb250YWluZXI9Y29udGV4dC5jb250YWluZXIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGFibGVfcGF0aD1jb250ZXh0LmZlYXR1cmVfdGFibGVfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9c3RyKHVzZXJfaWQpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbmRpdGlvbj1jb25kaXRpb24sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZXhwcmVzc2lvbj1leHByZXNzaW9uLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJhaXNlX2Zvcl9zdGF0dXM9ZGF0YXBsYW5lLlJhaXNlRm9yU3RhdHVzLm5ldmVyKQoKCmRlZiBlbnJpY2hfZXZlbnQoY29udGV4dCwgZXZlbnQpOgogICAgaWYgY29udGV4dC5lbnJpY2htZW50X2tleSBpbiBldmVudDoKICAgICAgICBlbnJpY2htZW50X2tleV92YWx1ZSA9IGV2ZW50W2NvbnRleHQuZW5yaWNobWVudF9rZXldCiAgICAgICAgcmVzcCA9IGNvbnRleHQudjNpb19jbGllbnQua3YuZ2V0KGNvbnRhaW5lcj1jb250ZXh0LmNvbnRhaW5lciwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRhYmxlX3BhdGg9Y29udGV4dC5lbnJpY2htZW50X3RhYmxlX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleT1zdHIoZW5yaWNobWVudF9rZXlfdmFsdWUpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByYWlzZV9mb3Jfc3RhdHVzPWRhdGFwbGFuZS5SYWlzZUZvclN0YXR1cy5uZXZlcikKICAgICAgICBpZiAyMDAgPD0gcmVzcC5zdGF0dXNfY29kZSA8PSAyOTk6CiAgICAgICAgICAgIGVucmljaGVkX2V2ZW50ID0gZGljdChldmVudCwgKipyZXNwLm91dHB1dC5pdGVtKQogICAgICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvX3dpdGgoJ0V2ZW50IHdhcyBlbnJpY2hlZCcsIGVucmljaGVkX2V2ZW50PWVucmljaGVkX2V2ZW50KQogICAgICAgICAgICByZXR1cm4gZW5yaWNoZWRfZXZlbnQKICAgICAgICBlbHNlOgogICAgICAgICAgICBjb250ZXh0LmxvZ2dlci5kZWJ1Z193aXRoKCJDb3VsZG4ndCBlbnJpY2ggZXZlbnQiLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbnJpY2htZW50X2tleV92YWx1ZT1lbnJpY2htZW50X2tleV92YWx1ZSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNwb25zZV9zdGF0dXM9cmVzcC5zdGF0dXNfY29kZSwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzcG9uc2VfYm9keT1yZXNwLmJvZHkuZGVjb2RlKCd1dGYtOCcpKQogICAgICAgICAgICByZXR1cm4gZXZlbnQKICAgIGVsc2U6CiAgICAgICAgcmV0dXJuIGV2ZW50CgoKZGVmIHByb2Nlc3NfcmVnaXN0cmF0aW9uKGNvbnRleHQsIGV2ZW50KToKICAgIHVzZXJfaWQgPSBldmVudFsndXNlcl9pZCddCiAgICAKICAgIGV2ZW50ID0gZW5yaWNoX2V2ZW50KGNvbnRleHQsIGV2ZW50KQogICAgCiAgICBmZWF0dXJlcyA9IHsndXNlcl9pZCc6IGV2ZW50Wyd1c2VyX2lkJ10sCiAgICAgICAgICAgICAgICdyZWdpc3RyYXRpb25fZGF0ZSc6IGV2ZW50WydldmVudF90aW1lJ10sCiAgICAgICAgICAgICAgICdkYXRlX29mX2JpcnRoJzogZXZlbnRbJ2RhdGVfb2ZfYmlydGgnXSwKICAgICAgICAgICAgICAgJ3NvY2lvZWNvbm9taWNfaWR4JzogIGV2ZW50Wydzb2Npb2Vjb25vbWljX2lkeCddLAogICAgICAgICAgICAgICAnYWZmaWxpYXRlX3VybCc6IGV2ZW50WydhZmZpbGlhdGVfdXJsJ10sCiAgICAgICAgICAgICAgICdsYWJlbCc6IGV2ZW50WydsYWJlbCddfQogICAgCiAgICByZXNwb25zZSA9IGNvbnRleHQudjNpb19jbGllbnQua3YucHV0KGNvbnRhaW5lcj1jb250ZXh0LmNvbnRhaW5lciwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGFibGVfcGF0aD1jb250ZXh0LmZlYXR1cmVfdGFibGVfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PXN0cih1c2VyX2lkKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cmlidXRlcz1mZWF0dXJlcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmFpc2VfZm9yX3N0YXR1cz1kYXRhcGxhbmUuUmFpc2VGb3JTdGF0dXMubmV2ZXIpCiAgICByZXR1cm4gcmVzcG9uc2UKCgpkZWYgcHJvY2Vzc19wdXJjaGFzZShjb250ZXh0LCBldmVudCk6CiAgICB1c2VyX2lkID0gZXZlbnRbJ3VzZXJfaWQnXQogICAgZXZlbnRfdGltZSA9IGV2ZW50WydldmVudF90aW1lJ10KICAgIGV2ZW50X3RzID0gZXZlbnRfdGltZV90b190cyhldmVudF90aW1lKQogICAgCiAgICBwdXJjaGFzZV9hbW91bnQgPSBldmVudFsnYW1vdW50J10KCiAgICBmaXJzdF9wdXJjaGFzZV90c19zdHIgPSBmIlNFVCBmaXJzdF9wdXJjaGFzZV90cz1pZl9ub3RfZXhpc3RzKGZpcnN0X3B1cmNoYXNlX3RzLCB7ZXZlbnRfdHN9KTsiCiAgICBzdW1fY291bnRfbWVhbl92YXJfZXhwciA9IGdldF9zdW1fY291bnRfbWVhbl92YXJfZXhwcigncHVyY2hhc2UnLCBwdXJjaGFzZV9hbW91bnQpCiAgICAKICAgIGV4cHJlc3Npb24gPSBmaXJzdF9wdXJjaGFzZV90c19zdHIgKyBzdW1fY291bnRfbWVhbl92YXJfZXhwcgogICAgY29uZGl0aW9uID0gZiJleGlzdHMocmVnaXN0cmF0aW9uX2RhdGUpIEFORCAoTk9UIGV4aXN0cyhmaXJzdF9wdXJjaGFzZV90cykgT1IgZmlyc3RfcHVyY2hhc2VfdHMgPj0gKHtldmVudF90c30gLSA4NjQwMCApKSIKICAgIAogICAgcmV0dXJuIHVwZGF0ZV9mZWF0dXJlcyhjb250ZXh0LCB1c2VyX2lkLCBleHByZXNzaW9uLCBjb25kaXRpb24pCgoKZGVmIHByb2Nlc3NfYmV0KGNvbnRleHQsIGV2ZW50KToKICAgIHVzZXJfaWQgPSBldmVudFsndXNlcl9pZCddCiAgICBldmVudF90aW1lID0gZXZlbnRbJ2V2ZW50X3RpbWUnXQogICAgZXZlbnRfdHMgPSBldmVudF90aW1lX3RvX3RzKGV2ZW50X3RpbWUpCiAgICAKICAgIGJldF9hbW91bnQgPSBldmVudFsnYmV0X2Ftb3VudCddCgogICAgc3VtX2NvdW50X21lYW5fdmFyX2V4cHIgPSBnZXRfc3VtX2NvdW50X21lYW5fdmFyX2V4cHIoJ2JldCcsIGJldF9hbW91bnQpCiAgICAKICAgIGV4cHJlc3Npb24gPSBzdW1fY291bnRfbWVhbl92YXJfZXhwcgogICAgY29uZGl0aW9uID0gZiJmaXJzdF9wdXJjaGFzZV90cyA+PSAoe2V2ZW50X3RzfSAtIDg2NDAwICkiCiAgICAKICAgIHJldHVybiB1cGRhdGVfZmVhdHVyZXMoY29udGV4dCwgdXNlcl9pZCwgZXhwcmVzc2lvbiwgY29uZGl0aW9uKQoKCmRlZiBwcm9jZXNzX3dpbihjb250ZXh0LCBldmVudCk6CiAgICB1c2VyX2lkID0gZXZlbnRbJ3VzZXJfaWQnXQogICAgZXZlbnRfdGltZSA9IGV2ZW50WydldmVudF90aW1lJ10KICAgIGV2ZW50X3RzID0gZXZlbnRfdGltZV90b190cyhldmVudF90aW1lKQogICAgCiAgICB3aW5fYW1vdW50ID0gZXZlbnRbJ3dpbl9hbW91bnQnXQoKICAgIHN1bV9jb3VudF9tZWFuX3Zhcl9leHByID0gZ2V0X3N1bV9jb3VudF9tZWFuX3Zhcl9leHByKCd3aW4nLCB3aW5fYW1vdW50KQogICAgCiAgICBleHByZXNzaW9uID0gc3VtX2NvdW50X21lYW5fdmFyX2V4cHIKICAgIGNvbmRpdGlvbiA9IGYiZmlyc3RfcHVyY2hhc2VfdHMgPj0gKHtldmVudF90c30gLSA4NjQwMCApIgogICAgCiAgICByZXR1cm4gdXBkYXRlX2ZlYXR1cmVzKGNvbnRleHQsIHVzZXJfaWQsIGV4cHJlc3Npb24sIGNvbmRpdGlvbikKCg==",
+                      "noBaseImagesPull": true
+                    },
+                    "env": [],
+                    "handler": "stream-to-features:handler",
+                    "runtime": "python:3.6",
+                    "volumes": []
+                  }
+                },
+                "source": "",
+                "build": {
+                  "commands": [],
+                  "code_origin": "functions/stream-to-features.ipynb",
+                  "origin_filename": "functions/stream-to-features.ipynb"
+                },
+                "readiness_timeout": 200,
+                "default_handler": "handler",
+                "mount_applied": false,
+                "affinity": null
+              },
+              "verbose": false
             }
-        },
-        {
-            "kind": "project",
-            "metadata": {
-                "name": "long-long-long-long-long-long-long-long-long-long",
-                "created": "2021-02-09T12:14:09.449762",
-                "labels": null,
-                "annotations": null
-            },
+          },
+          {
+            "url": "hub://model_server:development",
+            "name": "serving"
+          },
+          {
+            "name": "inference-logger",
             "spec": {
+              "kind": "remote",
+              "metadata": {
+                "name": "inference-logger",
+                "tag": "",
+                "project": "model-deployment-pipeline-admin"
+              },
+              "spec": {
+                "command": "http://default-tenant.app.vmdev36.lab.iguazeng.com:30243",
+                "args": [],
+                "image": "",
                 "description": "",
-                "goals": null,
-                "params": null,
-                "functions": null,
-                "workflows": null,
-                "artifacts": null,
-                "artifact_path": null,
-                "conda": null,
-                "source": null,
-                "subpath": null,
-                "origin_url": null,
-                "desired_state": "online"
-            },
-            "status": {
-                "state": "online"
+                "replicas": 1,
+                "min_replicas": 1,
+                "max_replicas": 4,
+                "env": [
+                  {
+                    "name": "V3IO_API",
+                    "value": ""
+                  },
+                  {
+                    "name": "V3IO_ACCESS_KEY",
+                    "value": ""
+                  },
+                  {
+                    "name": "PARQUET_SINK_FLAG",
+                    "value": "true"
+                  },
+                  {
+                    "name": "STREAM_SINK_FLAG",
+                    "value": "false"
+                  },
+                  {
+                    "name": "PARQUET_TARGET_PATH",
+                    "value": "/User/examples/model-deployment-pipeline/data/inference-pq"
+                  },
+                  {
+                    "name": "PARQUET_BATCH_SIZE",
+                    "value": "8192"
+                  },
+                  {
+                    "name": "TS_KEY",
+                    "value": "when"
+                  },
+                  {
+                    "name": "TS_FORMAT",
+                    "value": "%Y-%m-%d %H:%M:%S.%f"
+                  },
+                  {
+                    "name": "FEATURES",
+                    "value": "socioeconomic_idx,purchase_sum,purchase_mean,purchase_count,purchase_var,bet_sum,bet_mean,bet_count,bet_var,win_sum,win_mean,win_count,win_var"
+                  },
+                  {
+                    "name": "PREDICTIONS",
+                    "value": "about_to_churn"
+                  },
+                  {
+                    "name": "CONTAINER",
+                    "value": "users"
+                  },
+                  {
+                    "name": "V3IO_USERNAME",
+                    "value": ""
+                  },
+                  {
+                    "name": "V3IO_FRAMESD",
+                    "value": ""
+                  }
+                ],
+                "config": {
+                  "spec.triggers.inference_stream": {
+                    "kind": "v3ioStream",
+                    "url": "http://v3io-webapi:8081/users/admin/examples/model-deployment-pipeline/data/inference-stream@il",
+                    "attributes": {
+                      "seekTo": "earliest",
+                      "readBatchSize": 64,
+                      "pollingIntervalMs": 500
+                    },
+                    "maxWorkers": 10,
+                    "password": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+                  }
+                },
+                "base_spec": {
+                  "apiVersion": "nuclio.io/v1",
+                  "kind": "Function",
+                  "metadata": {
+                    "annotations": {
+                      "nuclio.io/generated_by": "function generated from functions/event-handler.ipynb"
+                    },
+                    "labels": {},
+                    "name": "inference-logger"
+                  },
+                  "spec": {
+                    "build": {
+                      "baseImage": "mlrun/mlrun",
+                      "commands": [],
+                      "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmltcG9ydCBwYW5kYXMgYXMgcGQKaW1wb3J0IGpzb24KaW1wb3J0IGRhdGV0aW1lCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lCmltcG9ydCB2M2lvLmRhdGFwbGFuZQoKZGVmIGluaXRfY29udGV4dChjb250ZXh0KToKICAgIHNldGF0dHIoY29udGV4dCwgJ3N0cmVhbV9zaW5rX2ZsYWcnLCBvcy5nZXRlbnYoJ1NUUkVBTV9TSU5LX0ZMQUcnKSkKICAgIHNldGF0dHIoY29udGV4dCwgJ3BhcnF1ZXRfc2lua19mbGFnJywgb3MuZ2V0ZW52KCdQQVJRVUVUX1NJTktfRkxBRycpKQoKICAgIGlmIGNvbnRleHQucGFycXVldF9zaW5rX2ZsYWcubG93ZXIoKSA9PSAndHJ1ZSc6CiAgICAgICAgc2V0YXR0cihjb250ZXh0LCAnYmF0Y2gnLCBbXSkKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICdiYXRjaF9zaXplJywgaW50KG9zLmdldGVudignUEFSUVVFVF9CQVRDSF9TSVpFJywgMTAyNCkpKQoKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfa2V5Jywgb3MuZ2V0ZW52KCdUU19LRVknKSkKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfZm9ybWF0Jywgb3MuZ2V0ZW52KCdUU19GT1JNQVQnLCAnJVktJW0tJWQgJUg6JU06JVMuJWYnKSkKCiAgICAgICAgc2V0YXR0cihjb250ZXh0LCAncHFfcGFydGl0aW9ucycsIFsncHFfeWVhcicsICdwcV9tb250aCcsICdwcV9kYXknLCAncHFfaG91ciddKQoKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICd0YXJnZXRfcGF0aCcsIG9zLmdldGVudignUEFSUVVFVF9UQVJHRVRfUEFUSCcpKQogICAgICAgIG9zLm1ha2VkaXJzKGNvbnRleHQudGFyZ2V0X3BhdGgsIGV4aXN0X29rPVRydWUpCgogICAgICAgIGZlYXR1cmVzID0gb3MuZ2V0ZW52KCdGRUFUVVJFUycpCiAgICAgICAgaWYgZmVhdHVyZXMgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGZlYXR1cmVzID0gZmVhdHVyZXMuc3BsaXQoJywnKQogICAgICAgIHNldGF0dHIoY29udGV4dCwgJ2ZlYXR1cmVzJywgZmVhdHVyZXMpCgogICAgICAgIHByZWRpY3Rpb25zID0gb3MuZ2V0ZW52KCdQUkVESUNUSU9OUycpCiAgICAgICAgaWYgcHJlZGljdGlvbnMgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIHByZWRpY3Rpb25zID0gcHJlZGljdGlvbnMuc3BsaXQoJywnKQogICAgICAgIHNldGF0dHIoY29udGV4dCwgJ3ByZWRpY3Rpb25zJywgcHJlZGljdGlvbnMpCgogICAgaWYgY29udGV4dC5zdHJlYW1fc2lua19mbGFnLmxvd2VyKCkgPT0gJ3RydWUnOgogICAgICAgIHYzaW9fYWNjZXNzX2tleSA9IG9zLmdldGVudignVjNJT19BQ0NFU1NfS0VZJykKICAgICAgICBjb250YWluZXIgPSBvcy5nZXRlbnYoJ0NPTlRBSU5FUicpCiAgICAgICAgb3V0cHV0X3N0cmVhbV9wYXRoID0gb3MuZ2V0ZW52KCdPVVRQVVRfU1RSRUFNX1BBVEgnKQogICAgICAgIHBhcnRpdGlvbl9hdHRyID0gb3MuZ2V0ZW52KCdQQVJUSVRJT05fQVRUUicpCiAgICAgICAgdjNpb19hcGkgPSBvcy5nZXRlbnYoJ1YzSU9fQVBJJykKICAgICAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChlbmRwb2ludD12M2lvX2FwaSwgYWNjZXNzX2tleT12M2lvX2FjY2Vzc19rZXkpCgogICAgICAgIHNldGF0dHIoY29udGV4dCwgJ3YzaW9fY2xpZW50JywgdjNpb19jbGllbnQpCiAgICAgICAgc2V0YXR0cihjb250ZXh0LCAncGFydGl0aW9uX2F0dHInLCBwYXJ0aXRpb25fYXR0cikKICAgICAgICBzZXRhdHRyKGNvbnRleHQsICdjb250YWluZXInLCBjb250YWluZXIpCiAgICAgICAgc2V0YXR0cihjb250ZXh0LCAnb3V0cHV0X3N0cmVhbV9wYXRoJywgb3V0cHV0X3N0cmVhbV9wYXRoKQogICAgcGFzcwoKZGVmIGhhbmRsZXIoY29udGV4dCwgZXZlbnQpOgogICAgaWYgdHlwZShldmVudC5ib2R5KSBpcyBkaWN0OgogICAgICAgIGV2ZW50X2RpY3QgPSBldmVudC5ib2R5CiAgICBlbHNlOgogICAgICAgIGV2ZW50X2RpY3QgPSBqc29uLmxvYWRzKGV2ZW50LmJvZHkpCgogICAgY29udGV4dC5sb2dnZXIuaW5mb193aXRoKCdHb3QgaW52b2tlZCcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHJpZ2dlcl9raW5kPWV2ZW50LnRyaWdnZXIua2luZCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICBldmVudF9ib2R5PWV2ZW50X2RpY3QpCgogICAgaWYgY29udGV4dC5zdHJlYW1fc2lua19mbGFnLmxvd2VyKCkgPT0gJ3RydWUnOgogICAgICAgIHN0cmVhbV9zaW5rX2hhbmRsZXIoY29udGV4dCwgZXZlbnRfZGljdCkKICAgIGlmIGNvbnRleHQucGFycXVldF9zaW5rX2ZsYWcubG93ZXIoKSA9PSAndHJ1ZSc6CiAgICAgICAgcGFycXVldF9zaW5rX2hhbmRsZXIoY29udGV4dCwgZXZlbnRfZGljdCkKICAgIHBhc3MKCgpkZWYgc3RyZWFtX3NpbmtfaGFuZGxlcihjb250ZXh0LCBldmVudCk6CiAgICBwYXJ0aXRpb25fa2V5ID0gZXZlbnQuZ2V0KGNvbnRleHQucGFydGl0aW9uX2F0dHIpCiAgICByZWNvcmQgPSBldmVudF90b19yZWNvcmQoZXZlbnQsIHBhcnRpdGlvbl9rZXkpCiAgICAKICAgIHJlc3AgPSBjb250ZXh0LnYzaW9fY2xpZW50LnN0cmVhbS5wdXRfcmVjb3Jkcyhjb250YWluZXI9Y29udGV4dC5jb250YWluZXIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RyZWFtX3BhdGg9Y29udGV4dC5vdXRwdXRfc3RyZWFtX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVjb3Jkcz1bcmVjb3JkXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByYWlzZV9mb3Jfc3RhdHVzPXYzaW8uZGF0YXBsYW5lLlJhaXNlRm9yU3RhdHVzLm5ldmVyKQoKICAgIGNvbnRleHQubG9nZ2VyLmluZm9fd2l0aCgnU2VudCBldmVudCB0byBzdHJlYW0nLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlY29yZD1yZWNvcmQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzcG9uc2Vfc3RhdHVzPXJlc3Auc3RhdHVzX2NvZGUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzcG9uc2VfYm9keT1yZXNwLmJvZHkuZGVjb2RlKCd1dGYtOCcpKQogICAgcGFzcwoKCmRlZiBldmVudF90b19yZWNvcmQoZXZlbnRfZGljdCwgcGFydGl0aW9uX2tleSk6CiAgICBldmVudF9zdHIgPSBqc29uLmR1bXBzKGV2ZW50X2RpY3QpCiAgICByZXR1cm4geydkYXRhJzogZXZlbnRfc3RyLCAncGFydGl0aW9uX2tleSc6IHN0cihwYXJ0aXRpb25fa2V5KX0KCgpkZWYgcGFycXVldF9zaW5rX2hhbmRsZXIoY29udGV4dCwgZXZlbnQpOgogICAgaWYgY29udGV4dC5mZWF0dXJlcyBpcyBub3QgTm9uZSBhbmQgY29udGV4dC5wcmVkaWN0aW9ucyBpcyBub3QgTm9uZToKICAgICAgICBldmVudCA9IGZsYXR0ZW5faW5mZXJlbmNlX2V2ZW50KGNvbnRleHQsIGV2ZW50KQoKICAgIGV2ZW50X3dpdGhfdGltZV9wYXJ0aXRpb25zID0gYWRkX3RpbWVfcGFydGl0aW9uX2F0dHJpYnV0ZXMoY29udGV4dCwgZXZlbnQpCgogICAgY29udGV4dC5iYXRjaC5hcHBlbmQoZXZlbnRfd2l0aF90aW1lX3BhcnRpdGlvbnMpCgogICAgaWYgY29udGV4dC5iYXRjaF9zaXplID09IGxlbihjb250ZXh0LmJhdGNoKToKICAgICAgICB3cml0dGVuX3JlY29yZHMgPSB3cml0ZV9iYXRjaChjb250ZXh0KQogICAgICAgIGNvbnRleHQubG9nZ2VyLmluZm9fd2l0aCgnV3JpdHRlbiBiYXRjaCcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFdyaXR0ZW50X3JlY29yZHM9d3JpdHRlbl9yZWNvcmRzKQogICAgcGFzcwoKCmRlZiBmbGF0dGVuX2luZmVyZW5jZV9ldmVudChjb250ZXh0LCBldmVudCk6CiAgICBmZWF0dXJlX3ZhbHVlcyA9IGV2ZW50WydyZXF1ZXN0J11bJ2luc3RhbmNlcyddWzBdCiAgICBldmVudC51cGRhdGUoemlwKGNvbnRleHQuZmVhdHVyZXMsIGZlYXR1cmVfdmFsdWVzKSkKCiAgICBwcmVkaWN0aW9uX3ZhbHVlcyA9IGV2ZW50WydyZXNwJ10KICAgIGV2ZW50LnVwZGF0ZSh6aXAoY29udGV4dC5wcmVkaWN0aW9ucywgcHJlZGljdGlvbl92YWx1ZXMpKQoKICAgIHJldHVybiBldmVudAoKCmRlZiBhZGRfdGltZV9wYXJ0aXRpb25fYXR0cmlidXRlcyhjb250ZXh0LCBldmVudCk6CiAgICBpZiBoYXNhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfa2V5JykgYW5kIGV2ZW50LmdldChjb250ZXh0LnRpbWVzdGFtcF9rZXkpIGlzIG5vdCBOb25lOgogICAgICAgIGR0X29iamVjdCA9IGRhdGV0aW1lLnN0cnB0aW1lKGV2ZW50W2NvbnRleHQudGltZXN0YW1wX2tleV0sIGNvbnRleHQudGltZXN0YW1wX2Zvcm1hdCkKICAgIGVsc2U6CiAgICAgICAgZHRfb2JqZWN0ID0gZGF0ZXRpbWUubm93KCkKCiAgICBldmVudFsncHFfeWVhciddID0gZHRfb2JqZWN0LnN0cmZ0aW1lKCclWScpCiAgICBldmVudFsncHFfbW9udGgnXSA9IGR0X29iamVjdC5zdHJmdGltZSgnJW0nKQogICAgZXZlbnRbJ3BxX2RheSddID0gZHRfb2JqZWN0LnN0cmZ0aW1lKCclZCcpCiAgICBldmVudFsncHFfaG91ciddID0gZHRfb2JqZWN0LnN0cmZ0aW1lKCclSCcpCgogICAgcmV0dXJuIGV2ZW50CgoKZGVmIHdyaXRlX2JhdGNoKGNvbnRleHQpOgogICAgZGYgPSBwZC5EYXRhRnJhbWUuZnJvbV9yZWNvcmRzKGNvbnRleHQuYmF0Y2gpCiAgICBkZi50b19wYXJxdWV0KHBhdGg9Y29udGV4dC50YXJnZXRfcGF0aCwgcGFydGl0aW9uX2NvbHM9Y29udGV4dC5wcV9wYXJ0aXRpb25zKQogICAgY29udGV4dC5iYXRjaCA9IFtdCiAgICByZXR1cm4gbGVuKGRmLmluZGV4KQoK",
+                      "noBaseImagesPull": true
+                    },
+                    "env": [],
+                    "handler": "event-handler:handler",
+                    "readinessTimeoutSeconds": 200,
+                    "runtime": "python:3.6",
+                    "volumes": []
+                  }
+                },
+                "source": "",
+                "build": {
+                  "commands": [],
+                  "code_origin": "functions/event-handler.ipynb",
+                  "origin_filename": "functions/event-handler.ipynb"
+                },
+                "default_handler": "handler",
+                "mount_applied": true,
+                "affinity": null
+              },
+              "verbose": false
             }
+          }
+        ],
+        "workflows": [],
+        "artifacts": [],
+        "artifact_path": "/User/demos/model-deployment-pipeline/artifacts",
+        "conda": null,
+        "source": "",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "moreofthesame",
+        "created": "2021-08-29T15:21:14.397414",
+        "labels": null,
+        "annotations": null
+      },
+      "spec": {
+        "description": "test",
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": null,
+        "source": null,
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "network-operations",
+        "created": "2021-08-29T15:21:13.996842",
+        "labels": {
+          "key0": "value0",
+          "key1": "value1",
+          "key2": "value2"
         },
-        {
-            "kind": "project",
-            "metadata": {
-                "name": "test7",
-                "created": "2021-02-19T18:01:18.639452",
-                "labels": null,
-                "annotations": null
-            },
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": null,
+        "source": null,
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "network-operations-admin",
+        "created": "2021-08-29T15:21:13.973287",
+        "labels": null,
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": [
+          {
+            "url": "hub://aggregate:master",
+            "name": "aggregate"
+          },
+          {
+            "url": "hub://describe:master",
+            "name": "describe"
+          },
+          {
+            "url": "hub://feature_selection:master",
+            "name": "feature_selection"
+          },
+          {
+            "url": "hub://sklearn_classifier:master",
+            "name": "train"
+          },
+          {
+            "url": "hub://test_classifier:master",
+            "name": "test"
+          },
+          {
+            "url": "hub://model_server_tester:master",
+            "name": "model_server-tester"
+          },
+          {
+            "url": "hub://concept_drift:master",
+            "name": "concept_drift"
+          },
+          {
+            "url": "hub://stream_to_parquet:master",
+            "name": "s2p"
+          },
+          {
+            "url": "hub://virtual_drift:master",
+            "name": "virtual_drift"
+          },
+          {
+            "url": "/User/demos/network-operations/notebooks/generator.ipynb",
+            "name": "generator"
+          },
+          {
+            "url": "/User/demos/network-operations/notebooks/preprocessor.ipynb",
+            "name": "create_feature_vector"
+          },
+          {
+            "url": "/User/demos/network-operations/notebooks/server.ipynb",
+            "name": "serving"
+          },
+          {
+            "url": "/User/demos/network-operations/notebooks/labeled_stream_creator.ipynb",
+            "name": "labeled_stream"
+          }
+        ],
+        "workflows": [
+          {
+            "name": "main",
+            "path": "/User/demos/network-operations/src/workflow.py",
+            "engine": "kfp"
+          }
+        ],
+        "artifacts": [
+          {
+            "key": "lgb_configs",
+            "kind": "",
+            "iter": 0,
+            "tree": "latest",
+            "target_path": "/User/demos/network-operations/config/lgb_model.json",
+            "db_key": "lgb_configs"
+          }
+        ],
+        "artifact_path": null,
+        "conda": null,
+        "source": "",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "sk-project-admin",
+        "created": "2021-08-29T15:21:14.336540",
+        "labels": null,
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": [
+          {
+            "name": "gen-iris",
             "spec": {
+              "kind": "job",
+              "metadata": {
+                "name": "gen-iris",
+                "tag": "",
+                "project": "sk-project-admin"
+              },
+              "spec": {
+                "command": "",
+                "args": [],
+                "image": "",
+                "env": [],
+                "default_handler": "",
+                "entry_points": {
+                  "iris_generator": {
+                    "name": "iris_generator",
+                    "doc": "",
+                    "parameters": [
+                      {
+                        "name": "context",
+                        "default": ""
+                      },
+                      {
+                        "name": "format",
+                        "default": "csv"
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "default": ""
+                      }
+                    ],
+                    "lineno": 11
+                  }
+                },
                 "description": "",
-                "goals": null,
-                "params": null,
-                "functions": null,
-                "workflows": null,
-                "artifacts": null,
-                "artifact_path": null,
-                "conda": null,
-                "source": null,
-                "subpath": null,
-                "origin_url": null,
-                "desired_state": "archived"
-            },
-            "status": {
-                "state": "archived"
+                "build": {
+                  "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmZyb20gc2tsZWFybi5kYXRhc2V0cyBpbXBvcnQgbG9hZF9pcmlzCmZyb20gc2tsZWFybi5tb2RlbF9zZWxlY3Rpb24gaW1wb3J0IHRyYWluX3Rlc3Rfc3BsaXQKaW1wb3J0IG51bXB5IGFzIG5wCmZyb20gc2tsZWFybi5tZXRyaWNzIGltcG9ydCBhY2N1cmFjeV9zY29yZQpmcm9tIG1scnVuLmFydGlmYWN0cyBpbXBvcnQgVGFibGVBcnRpZmFjdCwgUGxvdEFydGlmYWN0CmltcG9ydCBwYW5kYXMgYXMgcGQKCmRlZiBpcmlzX2dlbmVyYXRvcihjb250ZXh0LCBmb3JtYXQ9J2NzdicpOgogICAgaXJpcyA9IGxvYWRfaXJpcygpCiAgICBpcmlzX2RhdGFzZXQgPSBwZC5EYXRhRnJhbWUoZGF0YT1pcmlzLmRhdGEsIGNvbHVtbnM9aXJpcy5mZWF0dXJlX25hbWVzKQogICAgaXJpc19sYWJlbHMgPSBwZC5EYXRhRnJhbWUoZGF0YT1pcmlzLnRhcmdldCwgY29sdW1ucz1bJ2xhYmVsJ10pCiAgICBpcmlzX2RhdGFzZXQgPSBwZC5jb25jYXQoW2lyaXNfZGF0YXNldCwgaXJpc19sYWJlbHNdLCBheGlzPTEpCiAgICAKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ3NhdmluZyBpcmlzIGRhdGFmcmFtZSB0byB7fScuZm9ybWF0KGNvbnRleHQuYXJ0aWZhY3RfcGF0aCkpCiAgICBjb250ZXh0LmxvZ19kYXRhc2V0KCdpcmlzX2RhdGFzZXQnLCBkZj1pcmlzX2RhdGFzZXQsIGZvcm1hdD1mb3JtYXQsIGluZGV4PUZhbHNlKQoK",
+                  "base_image": "mlrun/mlrun",
+                  "commands": [
+                    "pip install sklearn",
+                    "pip install pyarrow"
+                  ],
+                  "code_origin": "gen_iris.ipynb",
+                  "origin_filename": "gen-iris.ipynb"
+                },
+                "mount_applied": false,
+                "affinity": null
+              },
+              "verbose": false
             }
+          },
+          {
+            "url": "hub://describe",
+            "name": "describe"
+          },
+          {
+            "url": "hub://sklearn_classifier",
+            "name": "train"
+          },
+          {
+            "url": "hub://test_classifier",
+            "name": "test"
+          },
+          {
+            "url": "hub://v2_model_server",
+            "name": "serving"
+          },
+          {
+            "url": "hub://v2_model_tester",
+            "name": "live_tester"
+          }
+        ],
+        "workflows": [
+          {
+            "name": "main",
+            "code": "from kfp import dsl\nfrom mlrun import mount_v3io\n\nfuncs = {}\nDATASET = 'iris_dataset'\nLABELS  = \"label\"\n\n\n# init functions is used to configure function resources and local settings\ndef init_functions(functions: dict, project=None, secrets=None):\n    for f in functions.values():\n        f.apply(mount_v3io())\n     \n    # uncomment this line to collect the inference results into a stream\n    # and specify a path in V3IO (<datacontainer>/<subpath>)\n    # functions['serving'].set_tracking(f'projects/{project.name}/model_stream')\n\n    \n@dsl.pipeline(\n    name=\"Demo training pipeline\",\n    description=\"Shows how to use mlrun.\"\n)\ndef kfpipeline():\n    \n    # build our ingestion function (container image)\n    builder = funcs['gen-iris'].deploy_step(skip_deployed=True)\n    \n    # run the ingestion function with the new image and params\n    ingest = funcs['gen-iris'].as_step(\n        name=\"get-data\",\n        handler='iris_generator',\n        image=builder.outputs['image'],\n        params={'format': 'pq'},\n        outputs=[DATASET])\n\n    # analyze our dataset\n    describe = funcs[\"describe\"].as_step(\n        name=\"summary\",\n        params={\"label_column\": LABELS},\n        inputs={\"table\": ingest.outputs[DATASET]})\n    \n    # train with hyper-paremeters \n    train = funcs[\"train\"].as_step(\n        name=\"train\",\n        params={\"sample\"          : -1, \n                \"label_column\"    : LABELS,\n                \"test_size\"       : 0.10},\n        hyperparams={'model_pkg_class': [\"sklearn.ensemble.RandomForestClassifier\", \n                                         \"sklearn.linear_model.LogisticRegression\",\n                                         \"sklearn.ensemble.AdaBoostClassifier\"]},\n        selector='max.accuracy',\n        inputs={\"dataset\"         : ingest.outputs[DATASET]},\n        outputs=['model', 'test_set'])\n\n    # test and visualize our model\n    test = funcs[\"test\"].as_step(\n        name=\"test\",\n        params={\"label_column\": LABELS},\n        inputs={\"models_path\" : train.outputs['model'],\n                \"test_set\"    : train.outputs['test_set']})\n\n    # deploy our model as a serverless function, we can pass a list of models to serve \n    deploy = funcs[\"serving\"].deploy_step(models=[{\"key\": f\"{DATASET}:v1\", \"model_path\": train.outputs['model']}])\n    \n    # test out new model server (via REST API calls)\n    tester = funcs[\"live_tester\"].as_step(name='model-tester',\n        params={'addr': deploy.outputs['endpoint'], 'model': f\"{DATASET}:v1\"},\n        inputs={'table': train.outputs['test_set']})\n",
+            "engine": "kfp"
+          }
+        ],
+        "artifacts": [],
+        "artifact_path": null,
+        "conda": null,
+        "source": "",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "stocks",
+        "created": "2021-10-22T12:48:37.168100",
+        "labels": null,
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": [],
+        "workflows": [],
+        "artifacts": [],
+        "artifact_path": null,
+        "conda": null,
+        "source": "",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online",
+        "disable_auto_mount": false
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "stocks-admin",
+        "created": "2021-08-29T15:21:14.237562",
+        "labels": {},
+        "annotations": null
+      },
+      "spec": {
+        "description": null,
+        "owner": null,
+        "goals": null,
+        "params": {
+          "PROJECT_NAME": "stocks-admin"
         },
-        {
-            "kind": "project",
-            "metadata": {
-                "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "created": "2021-05-26T09:36:15.846762",
-                "labels": null,
-                "annotations": null
-            },
-            "spec": {
-                "description": "gfdhfghfdghfgh",
-                "goals": null,
-                "params": null,
-                "functions": null,
-                "workflows": null,
-                "artifacts": null,
-                "artifact_path": null,
-                "conda": null,
-                "source": null,
-                "subpath": null,
-                "origin_url": null,
-                "desired_state": "online"
-            },
-            "status": {
-                "state": "online"
-            }
-        },
-        {
-            "kind": "project",
-            "metadata": {
-                "name": "test-erann",
-                "created": "2021-05-27T16:11:25.739737",
-                "labels": null,
-                "annotations": null
-            },
-            "spec": {
-                "description": "",
-                "goals": null,
-                "params": null,
-                "functions": null,
-                "workflows": null,
-                "artifacts": null,
-                "artifact_path": null,
-                "conda": null,
-                "source": null,
-                "subpath": null,
-                "origin_url": null,
-                "desired_state": "online"
-            },
-            "status": {
-                "state": "online"
-            }
-        }
-    ]
+        "functions": [
+          {
+            "url": "code/00-train-sentiment-analysis-model.ipynb",
+            "name": "bert_sentiment_classifier_trainer"
+          },
+          {
+            "url": "code/01-read-stocks.ipynb",
+            "name": "stocks_reader"
+          },
+          {
+            "url": "code/02-read-news.ipynb",
+            "name": "news_reader"
+          },
+          {
+            "url": "code/03-stream-viewer.ipynb",
+            "name": "stream_viewer"
+          },
+          {
+            "url": "hub://sentiment_analysis_serving",
+            "name": "sentiment_analysis_server"
+          },
+          {
+            "url": "code/06-read-vector.ipynb",
+            "name": "vector_reader"
+          },
+          {
+            "url": "code/07-grafana.ipynb",
+            "name": "grafana_view"
+          }
+        ],
+        "workflows": [
+          {
+            "name": "main",
+            "path": "/User/demos/stock-analysis/code/workflow.py",
+            "engine": "kfp"
+          }
+        ],
+        "artifacts": [],
+        "artifact_path": null,
+        "conda": null,
+        "source": "",
+        "subpath": "",
+        "origin_url": "",
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "test-test",
+        "created": "2021-10-12T19:44:32.123564",
+        "labels": null,
+        "annotations": null
+      },
+      "spec": {
+        "description": "",
+        "owner": null,
+        "goals": null,
+        "params": null,
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": null,
+        "source": null,
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "online"
+      }
+    }
+  ]
 }

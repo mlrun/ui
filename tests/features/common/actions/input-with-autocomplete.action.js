@@ -17,7 +17,7 @@ async function getOptionValues(driver, options) {
 const action = {
   clearManually,
   getOptionValues: getOptionValues,
-  typeSearchebleValue: async function(driver, inputGroup, value) {
+  typeSearchableValue: async function(driver, inputGroup, value) {
     const inputField = await driver.findElement(inputGroup.inputField)
     await clearManually(inputField)
     return await inputField.sendKeys(value)
@@ -30,11 +30,22 @@ const action = {
   isContainsSubstringInSuggestedOptions: async function(
     driver,
     inputGroup,
-    value
+    value,
+    caseSensitive = false
   ) {
-    const arr = await getOptionValues(driver, inputGroup.options, value)
-    expect(arr.length > 0).equal(true)
-    expect(arr.every(item => item.includes(value))).equal(true)
+    let arr = await getOptionValues(driver, inputGroup.options, value)
+    let tmpValue = value
+
+    if (caseSensitive) {
+      arr = arr.map(item => item.toLowerCase())
+      tmpValue = value.toLowerCase()
+    }
+
+    expect(arr.length > 0).equal(true, `Elements not found: [${arr}]`)
+    expect(arr.every(item => item.includes(tmpValue))).equal(
+      true,
+      `Searcheble string "${tmpValue}" do not find in all values of: [${arr}]`
+    )
   }
 }
 

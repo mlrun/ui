@@ -73,11 +73,7 @@ const getValueFromArray = (array, substring) => {
     : false
 }
 
-const setInvalidCharacters = (
-  allCharacters,
-  rule,
-  invalidCharacters
-) => {
+const setInvalidCharacters = (allCharacters, rule, invalidCharacters) => {
   const characters = allCharacters.sort(() => Math.random() - 0.5)
   let result = null
 

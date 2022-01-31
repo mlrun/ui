@@ -16,17 +16,16 @@ import models from './page-objects/models.po'
 
 module.exports = {
   commonPagesHeader: {
-    loader: By.css('div.loader-wrapper div.loader'),
+    loader: By.css('.loader-wrapper .loader'),
     See_On_Github: By.css('header.header a.header__link'),
-    Common_Hint: By.css('div.tip'),
-    MLRun_Logo: By.css('header.header a.header__logo'),
+    Common_Hint: By.css('.tip'),
+    MLRun_Logo: By.css('.header .header__logo'),
+    No_Data_Message: By.css('.no-data-block h3'),
     Breadcrumbs: breadcrumbsComponent
   },
   Projects: projects,
   Project: project,
   Create_New_Project: interactivePopup['createNewProject'],
-  Archive_Project: interactivePopup['archiveProject'],
-  Delete_Project: interactivePopup['deleteProject'],
   Feature_Store_Feature_Sets_Tab: featureStore['featureSetsTab'],
   Feature_Store_Features_Tab: featureStore['featuresTab'],
   Feature_Store_Features_Vectors_Tab: featureStore['featureVectorsTab'],
@@ -40,6 +39,7 @@ module.exports = {
   Preview_Info_Pane: infoPane['previewInfoPane'],
   Statistics_Info_Pane: infoPane['statisticsInfoPane'],
   Analysis_Info_Pane: infoPane['analysisInfoPane'],
+  Requested_Features_Info_Pane: infoPane['requestedFeaturesInfoPane'],
   Inputs_Info_Pane: infoPane['inputsInfoPane'],
   Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
   Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
@@ -52,15 +52,11 @@ module.exports = {
   Workflows_Monitor_Tab_Info_Pane: infoPane['workflowsMonitorTabInfoPane'],
   Workflows_Monitor_Tab: jobsAndWorkflows['WorkflowsMonitorTab'],
   Schedule_Monitor_Tab: jobsAndWorkflows['ScheduleMonitorTab'],
-  Delete_Scheduled_Job_Popup: interactivePopup['deleteScheduledJob'],
-  Create_Feature_Set_Popup_Dialog:
-    interactivePopup['createFeatureSetPopupDialog'],
   Create_Job: jobsAndWorkflows['CreateJob'],
   New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
   ML_Functions: Functions['mlFunctions'],
   New_Function: sidePanel['newFunction'],
   ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
-  Delete_Function_Popup: interactivePopup['deleteFunction'],
   Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup'],
   Project_Settings_General_Tab: projectsSettings['generalTab'],
   Change_Project_Owner_Popup: interactivePopup['changeProjectOwnerPopup'],
@@ -71,10 +67,15 @@ module.exports = {
   Register_File_Popup: interactivePopup['registerFilePopup'],
   Files_Info_Pane: infoPane['filesInfoPane'],
   Models: models['modelsTab'],
+  Real_Time_Pipelines: models['realTimePipelinesTab'],
   Models_Info_Pane: infoPane['modelsInfoPane'],
   Deploy_Model_Popup: interactivePopup['deployModelPopup'],
   Register_Model_Popup: interactivePopup['registerModelPopup'],
   View_YAML: interactivePopup['viewYamlPopup'],
   Add_To_Feature_Vector_Popup: interactivePopup['addToFeatureVectorPopup'],
-  Create_Feature_Vector_Popup: interactivePopup['createFeatureVectorPopup']
+  Create_Feature_Vector_Popup: interactivePopup['createFeatureVectorPopup'],
+  Remove_Member_Popup: interactivePopup['removeMemberPopup'],
+  Discard_Changes_Popup: interactivePopup['discardChangesPopup'],
+  Common_Popup: interactivePopup['commonPopup'],
+  Real_Time_Pipline_Pane: infoPane['modelsRealTimePiplineInfoPane']
 }
