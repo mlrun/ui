@@ -49,6 +49,15 @@
         max-width: 100%;
       }
     }
+
+    .radio-buttons__block {
+      display: block;
+      width: 200px;
+
+      div:not(:last-child) {
+        margin: 10px 0 43px 0;
+      }
+    }
   }
 
   .commands {
@@ -75,14 +84,5 @@
 
   &__force-build {
     margin-top: 19px;
-  }
-}
-
-.radio-buttons__block {
-  display: block;
-  width: 200px;
-
-  div:not(:last-child) {
-    margin: 10px 0 43px 0;
   }
 }
