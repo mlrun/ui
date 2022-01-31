@@ -1,8 +1,27 @@
 {
-    "jobs_dashboard_url": null,
-    "abortable_function_kinds": [
-        "job","spark",
-        "remote-spark",
-        "mpijob"
-    ]
+  "jobs_dashboard_url": null,
+  "abortable_function_kinds": [
+    "job",
+    "spark",
+    "remote-spark",
+    "mpijob"
+  ],
+  "feature_flags": {
+    "project_membership": "disabled",
+    "authentication": "none"
+  },
+  "default_function_priority_class_name": "",
+  "valid_function_priority_class_names": [],
+  "default_function_image_by_kind": {
+    "job": "mlrun/mlrun",
+    "serving": "mlrun/mlrun",
+    "nuclio": "mlrun/mlrun",
+    "remote": "mlrun/mlrun",
+    "dask": "mlrun/ml-base",
+    "mpijob": "mlrun/ml-models"
+  },
+  "function_deployment_target_image_template": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-{project}-{name}:{tag}",
+  "function_deployment_mlrun_command": "python -m pip install \"mlrun[complete]==0.8.0-rc15\"",
+  "auto_mount_type": "auto",
+  "auto_mount_params": {}
 }
