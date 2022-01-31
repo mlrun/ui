@@ -10,8 +10,11 @@ async function getOptionValues(driver, options) {
 
 const action = {
   getOptionValues: getOptionValues,
-  openDropdown: async function(driver, dropdown) {
+  openDropdown: async function(driver, dropdown, scroll = true) {
     const element = await driver.findElement(dropdown.open_button)
+    if (scroll) {
+      await scrollToWebElement(driver, element)
+    }
     if (element) {
       await element.click()
     }
@@ -57,18 +60,29 @@ const action = {
     const txt = await element.getText()
     expect(txt).equal(option)
   },
-  checkDropdownOptions: async function(
-    driver,
-    dropdown,
-    values,
-    scroll = true
-  ) {
-    const element = await driver.findElement(dropdown.root)
-    if (scroll) {
-      await scrollToWebElement(driver, element)
-    }
+  checkDropdownOptions: async function(driver, dropdown, values) {
     const options = await getOptionValues(driver, dropdown.options)
-    expect(differenceWith(options, values, isEqual).length).equal(0)
+    const diff = differenceWith(options, values, isEqual)
+    expect(diff.length).equal(0, 'Options difference: ' + diff)
+  },
+  checkDropdownContainsOptions: async function(driver, dropdown, values) {
+    const options = await getOptionValues(driver, dropdown.options)
+    let notPresent = []
+    for (let option of values) {
+      if (options.every(item => item !== option)) {
+        notPresent.push(option)
+      }
+    }
+    expect(notPresent.length).equal(
+      0,
+      '\nOptions not present: ' +
+        notPresent +
+        '\noptions: ' +
+        options +
+        '\nconst: ' +
+        values +
+        '\n'
+    )
   }
 }
 
