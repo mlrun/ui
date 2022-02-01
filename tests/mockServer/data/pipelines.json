@@ -1,63 +1,220 @@
 {
-    "default": {
-        "runs": [
-            {
-                "id": "75f8a9d1-382b-4172-b406-4b6799bd9698",
-                "name": "job_pipeline 2020-11-29 16-05-35",
-                "description": "None",
-                "created_at": "2020-11-29 16:05:36+00:00",
-                "scheduled_at": "1970-01-01 00:00:00+00:00",
-                "finished_at": "2020-11-29 16:06:13+00:00",
-                "status": "Failed",
-                "error": "None"
-            },
-            {
-                "id": "07850d1e-18bc-4ba6-a55a-bd00c3294d84",
-                "name": "job_pipeline 2020-12-03 16-57-03",
-                "description": "None",
-                "created_at": "2020-12-03 16:57:03+00:00",
-                "scheduled_at": "1970-01-01 00:00:00+00:00",
-                "finished_at": "2020-12-03 16:57:44+00:00",
-                "status": "Succeeded",
-                "error": "None"
-            },
-            {
-                "id": "839f92c3-aeae-4d95-b251-1479f0289bb0",
-                "name": "job_pipeline 2020-12-21 11-37-13",
-                "description": "None",
-                "created_at": "2020-12-21 11:37:14+00:00",
-                "scheduled_at": "1970-01-01 00:00:00+00:00",
-                "finished_at": "2020-12-21 11:37:40+00:00",
-                "status": "Succeeded",
-                "error": "None"
-            },
-            {
-                "id": "f9351734-f7e7-47d8-bdf5-38a832f39a1c",
-                "name": "job_pipeline 2020-12-28 13-40-18",
-                "description": "None",
-                "created_at": "2020-12-28 13:40:19+00:00",
-                "scheduled_at": "1970-01-01 00:00:00+00:00",
-                "finished_at": "2020-12-28 13:41:53+00:00",
-                "status": "Succeeded",
-                "error": "None"
-            },
-            {
-                "id": "e2133e46-4b73-4a5a-ba2c-aad88a677181",
-                "name": "job_pipeline 2020-12-29 14-31-19",
-                "description": "None",
-                "created_at": "2020-12-29 14:31:19+00:00",
-                "scheduled_at": "1970-01-01 00:00:00+00:00",
-                "finished_at": "2020-12-29 14:31:46+00:00",
-                "status": "Succeeded",
-                "error": "None"
-            }
-        ],
-        "total_size": 5,
-        "next_page_token": null
-    },
-    "_empty": {
-        "runs": [],
-        "total_size": 0,
-        "next_page_token": null
-    }
+  "cat-vs-dog-classification": {
+    "runs": [
+      {
+        "id": "5a5db6e3-7cdd-4d33-971c-d2310b02387c",
+        "name": "kfpipeline 2021-07-06 11-21-33",
+        "description": "None",
+        "created_at": "2021-07-06 11:21:34+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-07-06 12:16:47+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "cat-vs-dog-classification"
+      },
+      {
+        "id": "1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b",
+        "name": "cat-vs-dog-classification-main 2021-08-29 19-59-42",
+        "description": "None",
+        "created_at": "2021-08-29 19:59:43+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-08-29 20:02:05+00:00",
+        "status": "Failed",
+        "error": "None",
+        "project": "cat-vs-dog-classification"
+      }
+    ],
+    "total_size": 2,
+    "next_page_token": null
+  },
+  "churn-project-admin": {
+    "runs": [
+      {
+        "id": "e8c24cbd-187f-44eb-85df-52e003ff9eaa",
+        "name": "kfpipeline 2021-07-06 11-16-28",
+        "description": "None",
+        "created_at": "2021-07-06 11:16:29+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-07-06 11:19:23+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "churn-project-admin"
+      },
+      {
+        "id": "eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
+        "name": "churn-project-admin-main 2021-08-29 19-52-08",
+        "description": "None",
+        "created_at": "2021-08-29 19:52:09+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-08-29 19:57:32+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "churn-project-admin"
+      }
+    ],
+    "total_size": 2,
+    "next_page_token": null
+  },
+  "default": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "fraud-demo2-admin": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "fsdemo-admin": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "getting-started-tutorial-admin": {
+    "runs": [
+      {
+        "id": "8c420226-d88a-43a4-b938-fd002f39b0f6",
+        "name": "kfpipeline 2021-07-06 11-14-02",
+        "description": "None",
+        "created_at": "2021-07-06 11:14:03+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-07-06 11:14:53+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "getting-started-tutorial-admin"
+      },
+      {
+        "id": "dd5972cb-cbc2-4998-ab0e-705dba1b307d",
+        "name": "getting-started-tutorial-admin-main 2021-08-30 05-18-14",
+        "description": "None",
+        "created_at": "2021-08-30 05:18:15+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-08-30 05:19:09+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "getting-started-tutorial-admin"
+      }
+    ],
+    "total_size": 2,
+    "next_page_token": null
+  },
+  "hedi-proj": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "mask-detection": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "model-deployment-pipeline-admin": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "moreofthesame": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "network-operations": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "network-operations-admin": {
+    "runs": [
+      {
+        "id": "9c58289d-97f2-4977-8324-38e01af89ae4",
+        "name": "kfpipeline 2021-07-06 14-01-24",
+        "description": "None",
+        "created_at": "2021-07-06 14:01:25+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-07-06 14:16:14+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "network-operations-admin"
+      },
+      {
+        "id": "cd151783-05df-4f9c-a9db-3aa674e4a058",
+        "name": "network-operations-admin-main 2021-08-29 20-25-27",
+        "description": "None",
+        "created_at": "2021-08-29 20:25:28+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-08-29 20:42:18+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "network-operations-admin"
+      }
+    ],
+    "total_size": 2,
+    "next_page_token": null
+  },
+  "sk-project-admin": {
+    "runs": [
+      {
+        "id": "477bcee7-6a9f-488e-9a1a-7f87f36a625a",
+        "name": "kfpipeline 2021-07-07 11-29-28",
+        "description": "None",
+        "created_at": "2021-07-07 11:29:30+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-07-07 11:32:39+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "sk-project-admin"
+      },
+      {
+        "id": "a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
+        "name": "sk-project-admin-main 2021-08-30 05-20-26",
+        "description": "None",
+        "created_at": "2021-08-30 05:20:26+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-08-30 05:23:45+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "sk-project-admin"
+      }
+    ],
+    "total_size": 2,
+    "next_page_token": null
+  },
+  "stocks": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  },
+  "stocks-admin": {
+    "runs": [
+      {
+        "id": "247586b4-b3e2-4ffe-a7b9-ee33d100948a",
+        "name": "kfpipeline 2021-07-07 12-45-21",
+        "description": "None",
+        "created_at": "2021-07-07 12:45:22+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-07-07 12:47:42+00:00",
+        "status": "Succeeded",
+        "error": "None",
+        "project": "stocks-admin"
+      },
+      {
+        "id": "d0d9d40a-9dd7-43b9-91e0-7212939a8041",
+        "name": "stocks-admin-main 2021-08-30 05-36-35",
+        "description": "None",
+        "created_at": "2021-08-30 05:36:36+00:00",
+        "scheduled_at": "1970-01-01 00:00:00+00:00",
+        "finished_at": "2021-08-30 05:38:29+00:00",
+        "status": "Failed",
+        "error": "None",
+        "project": "stocks-admin"
+      }
+    ],
+    "total_size": 2,
+    "next_page_token": null
+  },
+  "test-test": {
+    "runs": [],
+    "total_size": 0,
+    "next_page_token": null
+  }
 }
