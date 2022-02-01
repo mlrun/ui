@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import Tip from '../../common/Tip/Tip'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './detailsMenu.scss'
@@ -155,6 +157,9 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
                     )}
                   >
                     {tab.label}
+                    {tab.tip && (
+                      <Tip className="details-menu__tab-tip" text={tab.tip} />
+                    )}
                   </li>
                 </Link>
               )

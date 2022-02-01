@@ -7,6 +7,11 @@
     justify-content: space-between;
     min-height: 26px;
 
+    &-icons {
+      display: flex;
+      align-items: center;
+    }
+
     .input {
       width: 100%;
 
@@ -16,13 +21,13 @@
     }
 
     &-link {
-      width: 95%;
+      width: 97%;
     }
 
     &-edit {
       position: relative;
       display: none;
-      margin-left: 10px;
+      margin: 0 10px;
       text-decoration: underline;
       cursor: pointer;
     }
