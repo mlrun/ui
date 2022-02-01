@@ -6,7 +6,7 @@ Feature: MLRun Project Page
     @sanity
     Scenario: Check all mandatory components
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         Then verify "Create_New" element visibility on "Project" wizard
@@ -16,7 +16,6 @@ Feature: MLRun Project Page
         Then verify "Mono_Values_Cards" element visibility on "Project" wizard
         Then verify "Jobs_Info_Card_Statistics" element visibility on "Project" wizard
         Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
-        When hover "Project_Navigation_Toggler" component on "Project" wizard
         Then verify "General_Info_Quick_Links" element visibility on "Project" wizard
 
     @passive
@@ -24,7 +23,7 @@ Feature: MLRun Project Page
     @enabledProjectMembership
     Scenario: Check all mandatory components on Project Owner Popup
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on "Owner_Link" element on "Project" wizard
         Then verify if "Change_Project_Owner_Popup" popup dialog appears
@@ -33,16 +32,13 @@ Feature: MLRun Project Page
         Then verify "Discard_Button" element visibility on "Change_Project_Owner_Popup" wizard
         Then verify "Apply_Button" element visibility on "Change_Project_Owner_Popup" wizard
         Then verify "Footer_Annotation_Label" element visibility on "Change_Project_Owner_Popup" wizard
-        When type searchable fragment "D" into "Search_Input" on "Change_Project_Owner_Popup" wizard
-        And wait load page
-        Then searchable case "insensitive" fragment "D" should be in every suggested option into "Search_Input" on "Change_Project_Owner_Popup" wizard
 
     @passive
     @inProgress
     @enabledProjectMembership
     Scenario: Check all mandatory components on Project Owner Popup
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on "Members_Link" element on "Project" wizard
         Then verify if "Project_Members_Popup" popup dialog appears
@@ -57,70 +53,11 @@ Feature: MLRun Project Page
         Then verify "Apply_Button" element visibility on "Project_Members_Popup" wizard
         Then verify "Footer_Annotation_Label" element visibility on "Project_Members_Popup" wizard
 
-    @enabledProjectMembership
-    Scenario: Verify behaviour of Invite New Members on Project Member Popup
-        * set tear-down property "project" created with "automation-test" value
-        * create "automation-test" MLRun Project with code 201
-        Given open url
-        And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        Then click on "Members_Link" element on "Project" wizard
-        Then verify if "Project_Members_Popup" popup dialog appears
-        Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
-        Then type value "a" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then searchable case "insensitive" fragment "a" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
-        Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then type value "a" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then type value "ig" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then searchable case "insensitive" fragment "ig" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
-        Then select "iguazio" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then type value "adm" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then searchable case "insensitive" fragment "adm" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
-        Then select "admin" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
-            |  label    |
-            | all_users |
-            | iguazio   |
-            | admin     |
-        When click on "remove_btn" in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
-            |  label    |
-            | iguazio   |
-            | all_users |
-        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
-            |  label    |
-            | admin     |
-        Then select "Admin" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
-        Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
-        Then type value "all" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then select "Viewer" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
-        Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
-            | name      | role   |
-            | admin     | Admin  |
-            | all_users | Viewer |
-        When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
-            | name  |
-            | admin |
-        Then verify if "Remove_Member_Popup" popup dialog appears
-        Then verify "Remove_Member_Button" element visibility on "Remove_Member_Popup" wizard
-        Then "Remove_Member_Button" element on "Remove_Member_Popup" should contains "Remove member" value
-        Then click on "Remove_Member_Button" element on "Remove_Member_Popup" wizard
-        Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
-            | name      | role   |
-            | all_users | Viewer |
-        Then click on "Discard_Button" element on "Project_Members_Popup" wizard
-        Then verify if "Discard_Changes_Popup" popup dialog appears
-        Then "No_Button" element on "Discard_Changes_Popup" should contains "No" value
-        Then "Discard_Button" element on "Discard_Changes_Popup" should contains "Discard" value
-        And remove "automation-test" MLRun Project with code 204
-
     @passive
     Scenario: Check MLRun logo redirection
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
@@ -129,12 +66,12 @@ Feature: MLRun Project Page
     @passive
     Scenario: Check all mandatory components on Register File Popup
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Register Artifact" option in "Create_New" dropdown on "Project" wizard
-        Then "Title" element on "Register_File_Popup" should contains "Register artifact" value
+        Then select "Register File" option in "Create_New" dropdown on "Project" wizard
+        Then verify if "Register_File_Popup" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
@@ -157,12 +94,12 @@ Feature: MLRun Project Page
     @passive
     Scenario: Check all mandatory components on Register Model Popup
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "Register Model" option in "Create_New" dropdown on "Project" wizard
-        Then "Title" element on "Register_Model_Popup" should contains "Register model" value
+        Then verify if "Register_Model_Popup" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
@@ -183,12 +120,12 @@ Feature: MLRun Project Page
     @passive
     Scenario: Check all mandatory components on Register Dataset Popup
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "Register Dataset" option in "Create_New" dropdown on "Project" wizard
-        Then "Title" element on "Register_Dataset" should contains "Register dataset" value
+        Then verify if "Register_Dataset" popup dialog appears
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Artifact_Names_Unique"
         Then verify "Target_Path_Input" element visibility on "Register_Dataset" wizard
@@ -208,7 +145,7 @@ Feature: MLRun Project Page
     @passive
     Scenario: Check all mandatory components on Create New Job
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
@@ -249,12 +186,12 @@ Feature: MLRun Project Page
     @passive
     Scenario: Check all mandatory components on Create ML Function
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
-        Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
+        Then verify if "Create_ML_Function_Popup" popup dialog appears
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -303,15 +240,12 @@ Feature: MLRun Project Page
     Scenario: Check all mandatory components on Create ML Function on Demo mode
         Given open url
         And turn on demo mode
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
-        Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
+        Then verify if "Create_ML_Function_Popup" popup dialog appears
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -364,9 +298,9 @@ Feature: MLRun Project Page
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
 
     @passive
-    Scenario: Check all mandatory components on Create New Feature Set
+    Scenario: Check all mandatory components on Create New Job
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
@@ -405,7 +339,7 @@ Feature: MLRun Project Page
     @passive
     Scenario: Check Project Counter redirection to Models tab
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on cell with value "Models" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
@@ -421,7 +355,7 @@ Feature: MLRun Project Page
     @passive
     Scenario: Check Project Counter redirection to Feature Sets tab
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on cell with value "Feature sets" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
@@ -442,9 +376,9 @@ Feature: MLRun Project Page
     @passive
     Scenario: Check Project Counter redirection to Files tab
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Artifacts" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on cell with value "Files" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "Files" wizard
@@ -453,12 +387,12 @@ Feature: MLRun Project Page
         Then verify "Table_Refresh_Button" element visibility on "Files" wizard
         Then verify "Files_Table" element visibility on "Files" wizard
         Then verify "Register_File_Button" element visibility on "Files" wizard
-        Then "Register_File_Button" element on "Files" should contains "Register Artifact" value
+        Then "Register_File_Button" element on "Files" should contains "Register File" value
 
     @passive
     Scenario: Check Project Counter redirection to Monitor Jobs tab
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on cell with value "Running jobs" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
         And wait load page
@@ -475,13 +409,12 @@ Feature: MLRun Project Page
         Then verify "Table_Labels_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @passive
     Scenario: Check Project Counter redirection to Schedules tab
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on cell with value "Scheduled" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
         And wait load page
@@ -494,14 +427,12 @@ Feature: MLRun Project Page
     @passive
     Scenario: Verify behaviour of Breadcrumbs menu
         Given open url
-        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
         Then select "project" with "default" value in breadcrumbs menu
         Then verify breadcrumbs "project" label should be equal "default" value
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
         Then click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Models" value
         Then verify "Models_Table" element visibility on "Models" wizard
@@ -509,20 +440,19 @@ Feature: MLRun Project Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
         Then verify "Feature_Sets_Table" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
-        Then select "tab" with "Artifacts" value in breadcrumbs menu
+        Then select "tab" with "Files" value in breadcrumbs menu
         And wait load page
-        When scroll and hover "Breadcrumbs" component on "commonPagesHeader" wizard
-        Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+        Then verify breadcrumbs "tab" label should be equal "Files" value
         Then verify "Files_Table" element visibility on "Files" wizard
         Then select "tab" with "Jobs" value in breadcrumbs menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
-        When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
         Then select "tab" with "ML functions" value in breadcrumbs menu
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "ML functions" value
+        Then verify breadcrumbs "tab" label should be equal "Functions" value
         Then verify "Functions_Table" element visibility on "ML_Functions" wizard
         Then select "project" with "churn-project-admin" value in breadcrumbs menu
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
-        Then verify breadcrumbs "tab" label should be equal "ML functions" value
+        Then verify breadcrumbs "tab" label should be equal "Functions" value

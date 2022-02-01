@@ -6,14 +6,12 @@ Feature: Files Page
   Scenario: Check all mandatory components on Files tab
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+    Then verify breadcrumbs "tab" label should be equal "Files" value
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "Files" wizard
     Then verify "Table_Tree_Filter_Dropdown" element visibility on "Files" wizard
@@ -21,21 +19,18 @@ Feature: Files Page
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
-    Then "Register_File_Button" element on "Files" should contains "Register Artifact" value
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Files" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then "Register_File_Button" element on "Files" should contains "Register File" value
 
   @passive
   Scenario: verify filtering by file name on Files page
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+    Then verify breadcrumbs "tab" label should be equal "Files" value
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then type value "test" to "Table_Name_Filter_Input" field on "Files" wizard
     Then click on "Table_Refresh_Button" element on "Files" wizard
@@ -47,11 +42,9 @@ Feature: Files Page
   Scenario: Check all mandatory components on Register File Popup
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
@@ -78,11 +71,9 @@ Feature: Files Page
   Scenario: Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
@@ -100,11 +91,9 @@ Feature: Files Page
   @inProgress
   Scenario: Check all mandatory components in Item infopane on Preview tab table
     Given open url
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -124,11 +113,9 @@ Feature: Files Page
   Scenario: Check expand sources Item infopane on Overview tab table
     Given open url
     And wait load page
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
@@ -141,11 +128,9 @@ Feature: Files Page
   Scenario: Check MLRun logo redirection
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
     And wait load page
@@ -155,11 +140,9 @@ Feature: Files Page
   Scenario: Verify View YAML action
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
     Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "test-i" value in "name" column
     Then verify if "View_YAML" popup dialog appears
@@ -170,11 +153,9 @@ Feature: Files Page
   Scenario: Verify View YAML action in Item infopane
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
@@ -182,3 +163,6 @@ Feature: Files Page
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+
+

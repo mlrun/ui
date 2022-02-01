@@ -26,13 +26,13 @@ const actionMenuStructure = {
 }
 
 const labelsTable = {
-  root: '.panel-title__labels-container .panel-title__labels-wrapper',
+  root: 'div.panel-title__labels-container div.panel-title__labels-wrapper',
   header: {},
   body: {
-    root: '.chips-wrapper',
+    root: 'div.chips-wrapper',
     add_row_btn: 'button.button-add',
     row: {
-      root: '.chip-block',
+      root: 'div.chip-block',
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
@@ -47,29 +47,29 @@ const labelsTable = {
 const calendarTable = {
   root: '',
   header: {
-    root: '.date-picker__weeks',
+    root: 'div.date-picker__weeks',
     sorters: {
-      Sunday: '.date-picker__weeks-day:nth-of-type(1)',
-      Monday: '.date-picker__weeks-day:nth-of-type(1)',
-      Tuesday: '.date-picker__weeks-day:nth-of-type(1)',
-      Wednesday: '.date-picker__weeks-day:nth-of-type(1)',
-      Thursday: '.date-picker__weeks-day:nth-of-type(1)',
-      Friday: '.date-picker__weeks-day:nth-of-type(1)',
-      Saturday: '.date-picker__weeks-day:nth-of-type(1)'
+      Sunday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Monday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Tuesday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Wednesday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Thursday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Friday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Saturday: 'div.date-picker__weeks-day:nth-of-type(1)'
     }
   },
   body: {
     offset: 3,
     row: {
-      root: '.date-picker__week',
+      root: 'div.date-picker__week',
       fields: {
-        Sunday: '.date-picker__week-day-wrapper:nth-of-type(1)',
-        Monday: '.date-picker__week-day-wrapper:nth-of-type(2)',
-        Tuesday: '.date-picker__week-day-wrapper:nth-of-type(3)',
-        Wednesday: '.date-picker__week-day-wrapper:nth-of-type(4)',
-        Thursday: '.date-picker__week-day-wrapper:nth-of-type(5)',
-        Friday: '.date-picker__week-day-wrapper:nth-of-type(6)',
-        Saturday: '.date-picker__week-day-wrapper:nth-of-type(7)'
+        Sunday: 'div.date-picker__week-day-wrapper:nth-of-type(1)',
+        Monday: 'div.date-picker__week-day-wrapper:nth-of-type(2)',
+        Tuesday: 'div.date-picker__week-day-wrapper:nth-of-type(3)',
+        Wednesday: 'div.date-picker__week-day-wrapper:nth-of-type(4)',
+        Thursday: 'div.date-picker__week-day-wrapper:nth-of-type(5)',
+        Friday: 'div.date-picker__week-day-wrapper:nth-of-type(6)',
+        Saturday: 'div.date-picker__week-day-wrapper:nth-of-type(7)'
       }
     }
   }
@@ -79,16 +79,17 @@ const startDateTimePickerCalendar = {
   root:
     '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .data-source__inputs-container .date-picker-container:nth-of-type(2)',
   apply_button: 'button.date-picker__apply-btn',
-  error_message: '.error-message',
+  error_message: 'div.error-message',
   datePicker: {
-    root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
+    root: 'div.date-picker__calendars div.date-picker__calendar:nth-of-type(1)',
     elements: {
       month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
-      month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
-      month_label: '.date-picker__header div .date-picker__header-month',
-      year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
+        'div.date-picker__header svg.date-picker__header-previous-month',
+      month_next_btn:
+        'div.date-picker__header svg.date-picker__header-next-month',
+      month_label: 'div.date-picker__header div span.date-picker__header-month',
+      year_label: 'div.date-picker__header div span.date-picker__header-year',
+      time_input: 'div.date-picker__time input',
       calendar: {
         componentType: commonTable,
         structure: calendarTable
@@ -100,17 +101,18 @@ const startDateTimePickerCalendar = {
 const endDateTimePickerCalendar = {
   root:
     '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .data-source__inputs-container .date-picker-container:nth-of-type(3)',
-  apply_button: '.date-picker__apply-btn',
-  error_message: '.error-message',
+  apply_button: 'button.date-picker__apply-btn',
+  error_message: 'div.error-message',
   datePicker: {
-    root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
+    root: 'div.date-picker__calendars div.date-picker__calendar:nth-of-type(1)',
     elements: {
       month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
-      month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
-      month_label: '.date-picker__header div .date-picker__header-month',
-      year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
+        'div.date-picker__header svg.date-picker__header-previous-month',
+      month_next_btn:
+        'div.date-picker__header svg.date-picker__header-next-month',
+      month_label: 'div.date-picker__header div span.date-picker__header-month',
+      year_label: 'div.date-picker__header div span.date-picker__header-year',
+      time_input: 'div.date-picker__time input',
       calendar: {
         componentType: commonTable,
         structure: calendarTable
@@ -203,9 +205,9 @@ const jobPredefinedParametersTable = {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.select',
-            '.select__header .select__value',
-            '.select__body .select__item',
-            '.data-ellipsis > .data-ellipsis'
+            'div.select__header div.select__value',
+            'div.select__body div.select__item',
+            'div.data-ellipsis > div.data-ellipsis'
           )
         },
         values_input: {
@@ -231,10 +233,11 @@ const jobCustomParametersTable = {
     }
   },
   body: {
-    add_row_btn: '.add-input',
+    root: 'div:not([class]):nth-of-type(3)',
+    add_row_btn: 'button.add-input',
     offset: 1,
     row: {
-      root: 'div:not([class]):nth-of-type(3) div[class^=table__row]',
+      root: 'div[class^=table__row]',
       fields: {
         checkbox: '.checkbox',
         name: '.parameter-name',
@@ -245,9 +248,9 @@ const jobCustomParametersTable = {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.select',
-            '.select__header .select__value',
-            '.select__body .select__item',
-            '.data-ellipsis > .data-ellipsis'
+            'div.select__header div.select__value',
+            'div.select__body div.select__item',
+            'div.data-ellipsis > div.data-ellipsis'
           )
         },
         values_input: {
@@ -424,9 +427,9 @@ const advancedSecretsTable = {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.select',
-            '.select__header .select__value',
-            '.select__body .select__item',
-            '.data-ellipsis > .data-ellipsis'
+            'div.select__header div.select__value',
+            'div.select__body div.select__item',
+            'div.data-ellipsis > div.data-ellipsis'
           )
         },
         value_input: {
@@ -445,10 +448,10 @@ const newFunctionLabelsTable = {
     '.new-item-side-panel .accordion__container:nth-of-type(1) .accordion__body .panel-section__body .general__labels-container',
   header: {},
   body: {
-    root: '.chips-wrapper',
-    add_row_btn: '.button-add',
+    root: 'div.chips-wrapper',
+    add_row_btn: 'button.button-add',
     row: {
-      root: '.chip-block',
+      root: 'div.chip-block',
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
@@ -659,7 +662,7 @@ const parametersRuntimeConfigurationTable = {
 
 // common components
 const commonCrossCloseButton = By.css(
-  '.new-item-side-panel .panel-title__btn_close .round-icon-cp__circle'
+  'div.new-item-side-panel button.round-icon-cp__icon'
 )
 
 const commonVolumePathsTableTypeDropdown = dropdownComponent(
@@ -671,7 +674,7 @@ const commonVolumePathsTableTypeDropdown = dropdownComponent(
   )
 )
 
-function resourcesTableCommonInput(accordionIndx, rowIndx, inputIndx) {
+function resourcesTableCommonInpute(accordionIndx, rowIndx, inputIndx) {
   return generateInputGroup(
     `.new-item-side-panel .accordion__container:nth-of-type(${accordionIndx}) .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(${rowIndx}) .input-wrapper:nth-of-type(${inputIndx})`,
     true,
@@ -704,7 +707,7 @@ module.exports = {
     Cross_Close_Button: commonCrossCloseButton,
     Feature_Set_Name_Input: inputGroup(
       generateInputGroup(
-        '.feature-set-panel .panel-title .name',
+        'div.feature-set-panel div.panel-title div.name',
         true,
         true,
         true
@@ -712,14 +715,14 @@ module.exports = {
     ),
     Version_Input: inputGroup(
       generateInputGroup(
-        '.feature-set-panel .panel-title .version',
+        'div.feature-set-panel div.panel-title div.version',
         true,
         false,
         true
       )
     ),
     Description_Input: inputGroup({
-      root: '.feature-set-panel .panel-title .text-area-wrapper',
+      root: 'div.feature-set-panel div.panel-title div.text-area-wrapper',
       elements: {
         input: 'textarea',
         label: 'label'
@@ -728,10 +731,10 @@ module.exports = {
     Labels_Table: commonTable(labelsTable),
     Data_Source_Accordion: {
       Accordion_Header: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(1) h5'
+        'div.feature-set-panel div.accordion__container:nth-of-type(1) h5'
       ),
       Collapse_Button: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        'div.feature-set-panel div.accordion__container:nth-of-type(1) button.new-item-side-panel__expand-icon'
       ),
       URL_Combobox: comboBox(
         '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .combobox'
@@ -761,31 +764,17 @@ module.exports = {
         )
       ),
       Start_Date_Time_Picker: singleDatepicker(startDateTimePickerCalendar),
-      Start_Date_Time_Hint: labelComponent(
-        generateLabelGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .data-source__inputs-container .date-picker-container:nth-of-type(2)',
-          false,
-          true
-        )
-      ),
       End_Date_Time_Picker: singleDatepicker(endDateTimePickerCalendar),
-      End_Date_Time_Hint: labelComponent(
-        generateLabelGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .data-source__inputs-container .date-picker-container:nth-of-type(3)',
-          false,
-          true
-        )
-      ),
       Schedule_Button: By.css(
         '.feature-set-panel .accordion__container:nth-of-type(1)  button.schedule-tumbler'
       )
     },
     Schema_Accordion: {
       Accordion_Header: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(2) h5'
+        'div.feature-set-panel div.accordion__container:nth-of-type(2) h5'
       ),
       Collapse_Button: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        'div.feature-set-panel div.accordion__container:nth-of-type(2) button.new-item-side-panel__expand-icon'
       ),
       Entities_Input: inputGroup(
         generateInputGroup(
@@ -806,30 +795,23 @@ module.exports = {
     },
     Target_Store_Accordion: {
       Accordion_Header: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(3) h5'
+        'div.feature-set-panel div.accordion__container:nth-of-type(3) h5'
       ),
       Collapse_Button: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        'div.feature-set-panel div.accordion__container:nth-of-type(3) button.new-item-side-panel__expand-icon'
       ),
       // online group
       Online_Checkbox: checkboxComponent(
         generateCheckboxGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(1) .checkbox',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(1) span.checkbox',
           true,
-          false,
-          true
-        )
-      ),
-      Online_Checkbox_Hint: labelComponent(
-        generateLabelGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(1) .checkbox',
           false,
           true
         )
       ),
       Online_Path_Input: inputGroup(
         generateInputGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(1) .input-wrapper',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(1) div.input-wrapper',
           true,
           false,
           true
@@ -838,22 +820,15 @@ module.exports = {
       // Offline group
       Offline_Checkbox: checkboxComponent(
         generateCheckboxGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(2) .checkbox',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(2) span.checkbox',
           true,
-          false,
-          true
-        )
-      ),
-      Offline_Checkbox_Hint: labelComponent(
-        generateLabelGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(2) .checkbox',
           false,
           true
         )
       ),
       Offline_Path_Input: inputGroup(
         generateInputGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .input-wrapper',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.input-wrapper',
           true,
           false,
           true
@@ -861,7 +836,7 @@ module.exports = {
       ),
       Offline_Partition_Checkbox: checkboxComponent(
         generateCheckboxGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .checkbox',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.target-store__inputs-container span.checkbox',
           true,
           false,
           true
@@ -914,9 +889,9 @@ module.exports = {
           description: 'span.radio-button__info'
         }
       }),
-      Offline_Partition_Key_Bucketing_Number_Input: numberInputGroup(
+      Offline_Partition_Key_Buckering_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .range-normal',
+          '.feature-set-panel div.accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .range-normal',
           false,
           true,
           true,
@@ -933,39 +908,32 @@ module.exports = {
       ),
       Offline_Partition_Granularity_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .select',
-          '.select__header .select__value',
-          '.select__body .select__item',
-          '.data-ellipsis > .data-ellipsis'
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.select',
+          'div.select__header div.select__value',
+          'div.select__body div.select__item',
+          'div.data-ellipsis > div.data-ellipsis'
         )
       ),
       // Other group
       External_Offline_Checkbox: checkboxComponent(
         generateCheckboxGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(3) .checkbox',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(3) span.checkbox',
           true,
-          false,
-          true
-        )
-      ),
-      External_Offline_Checkbox_Hint: labelComponent(
-        generateLabelGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(3) .checkbox',
           false,
           true
         )
       ),
       File_Type_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .select',
-          '.select__header .select__value',
-          '.select__body .select__item',
-          '.data-ellipsis > .data-ellipsis'
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(3) div.select',
+          'div.select__header div.select__value',
+          'div.select__body div.select__item',
+          'div.data-ellipsis > div.data-ellipsis'
         )
       ),
       URL_Input: inputGroup(
         generateInputGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .input-wrapper',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.input-wrapper',
           true,
           false,
           false
@@ -973,7 +941,7 @@ module.exports = {
       ),
       External_Offline_Partition_Checkbox: checkboxComponent(
         generateCheckboxGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .checkbox',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(3) div.target-store__inputs-container span.checkbox',
           true,
           false,
           true
@@ -1030,9 +998,9 @@ module.exports = {
           }
         }
       ),
-      External_Offline_Partition_Key_Bucketing_Number_Input: numberInputGroup(
+      External_Offline_Partition_Key_Buckering_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .range-normal',
+          '.feature-set-panel div.accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .range-normal',
           false,
           true,
           true,
@@ -1049,36 +1017,33 @@ module.exports = {
       ),
       External_Offline_Partition_Granularity_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .partition-fields__inputs-container .select',
-          '.select__header .select__value',
-          '.select__body .select__item',
-          '.data-ellipsis > .data-ellipsis'
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(3) div.select',
+          'div.select__header div.select__value',
+          'div.select__body div.select__item',
+          'div.data-ellipsis > div.data-ellipsis'
         )
-      ),
-      Error_Message: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(3) .error-message'
       )
     },
     Access_Key_Checkbox: commonAccessKeyCheckbox,
     Access_Key_Input: commonAccessKeyInput,
     Cancel_Button: By.css(
-      '.feature-set-panel .new-item-side-panel__buttons-container .pop-up-dialog__btn_cancel'
+      'div.feature-set-panel div.new-item-side-panel__buttons-container button.pop-up-dialog__btn_cancel'
     ),
     Save_Button: By.css(
-      '.feature-set-panel .new-item-side-panel__buttons-container button[class="btn btn-secondary"]'
+      'div.feature-set-panel div.new-item-side-panel__buttons-container button[class="btn btn-secondary"]'
     ),
     Save_And_Ingest_Button: By.css(
-      '.feature-set-panel .new-item-side-panel__buttons-container .btn_start-ingestion'
+      'div.feature-set-panel div.new-item-side-panel__buttons-container button.btn_start-ingestion'
     )
   },
   newJobTemplateEdit: {
     Cross_Close_Button: commonCrossCloseButton,
     Name_Edit_Button: By.css(
-      '.new-item-side-panel .panel-title__container .accordion__container button'
+      'div.new-item-side-panel div.panel-title__container div.accordion__container button'
     ),
     Job_Name_Input: inputGroup(
       generateInputGroup(
-        '.new-item-side-panel .panel-title__container .accordion__container .input-wrapper',
+        'div.new-item-side-panel div.panel-title__container div.accordion__container div.input-wrapper',
         true,
         true,
         true
@@ -1089,7 +1054,7 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(1) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel__body .accordion__container:nth-of-type(1) button.new-item-side-panel__expand-icon'
       ),
       Data_Source_Input_Sources_Table: commonTable(dataSourceInputSourcesTable),
       Default_Input_Path_Input: inputGroup(
@@ -1097,7 +1062,7 @@ module.exports = {
           '.new-item-side-panel__body .accordion__container:nth-of-type(1) .panel-section:nth-of-type(2) .input-wrapper:nth-of-type(1)',
           true,
           false,
-          true
+          false
         )
       ),
       Default_Artifact_Path_Input: inputGroup(
@@ -1105,22 +1070,11 @@ module.exports = {
           '.new-item-side-panel__body .accordion__container:nth-of-type(1) .panel-section:nth-of-type(2) .input-wrapper:nth-of-type(2)',
           true,
           false,
-          true
-        )
-      ),
-      Data_Inputs_Table_Name_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(1) .table__row-add-item .input-wrapper',
-          true,
-          false,
-          true
+          false
         )
       ),
       Add_Input_Button: By.css(
         '.new-item-side-panel__body .accordion__container:nth-of-type(1) .add-input'
-      ),
-      Add_Row_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(1) .table__row-add-item .btn-add'
       ),
       URL_Combobox: comboBox(
         '.new-item-side-panel__body .accordion__container:nth-of-type(1) .combobox'
@@ -1131,14 +1085,14 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(2) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel__body .accordion__container:nth-of-type(2) button.new-item-side-panel__expand-icon'
       ),
       Parameters_Additional_Settings_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel__body .accordion__container:nth-of-type(2) .panel-section__body .parameters-additional-settings-container .parameters-additional-settings:nth-of-type(2) .input-wrapper',
           true,
           false,
-          true
+          false
         )
       ),
       Result_Input: inputGroup(
@@ -1146,7 +1100,7 @@ module.exports = {
           '.new-item-side-panel__body .accordion__container:nth-of-type(2) .panel-section__body .parameters-additional-settings-container .parameters-additional-settings:nth-of-type(3) .input-wrapper',
           true,
           false,
-          true
+          false
         )
       ),
       Turning_Strategy_Dropdown: dropdownComponent(
@@ -1182,7 +1136,7 @@ module.exports = {
           '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .select:nth-of-type(2)',
           '.select__label',
           false,
-          '.data-ellipsis > .data-ellipsis'
+          false
         )
       ),
       Parameter_Table_Simple_Hyper_Dropdown: dropdownComponent(
@@ -1190,7 +1144,7 @@ module.exports = {
           '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .select:nth-of-type(3)',
           '.select__label',
           false,
-          '.data-ellipsis > .data-ellipsis'
+          false
         )
       ),
       Parameters_Table_Value_Input: inputGroup(
@@ -1203,12 +1157,6 @@ module.exports = {
       ),
       Add_New_Row_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section .panel-section__body button.add-input'
-      ),
-      Apply_New_Row_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section .panel-section__body button.btn-add'
-      ),
-      Discard_New_Row_Button: By.css(
-        '.new-item-side-panel__body .accordion__container .table__row-add-item .table__cell-actions button:not([class])'
       )
     },
     Resources_Accordion: {
@@ -1216,7 +1164,7 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(3) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel__body .accordion__container:nth-of-type(3) button.new-item-side-panel__expand-icon'
       ),
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
@@ -1228,35 +1176,35 @@ module.exports = {
       // Volume Path inputs
       Volume_Paths_Table_Type_Dropdown: commonVolumePathsTableTypeDropdown,
       Volume_Paths_Table_Volume_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 1, 2)
+        resourcesTableCommonInpute(3, 1, 2)
       ),
       Volume_Paths_Table_Path_Input: inputGroup(
-        resourcesTableCommonInput(3, 1, 3)
+        resourcesTableCommonInpute(3, 1, 3)
       ),
       Volume_Paths_Table_Container_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Config_Map_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Secret_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Claime_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Access_Key_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 2)
+        resourcesTableCommonInpute(3, 2, 2)
       ),
       Volume_Paths_Table_Resource_Path_Input: inputGroup(
-        resourcesTableCommonInput(3, 3, 1)
+        resourcesTableCommonInpute(3, 3, 1)
       ),
       Add_New_Row_Button: commonAddNewRowButton,
       Delete_New_Row_Button: commonDeleteNewRowButton,
       Volume_Paths_Table: commonTable(volumePathsTable),
       Memory_Unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .memory .select',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs div.memory .select',
           '.select__value',
           '.select__body .select__item',
           '.data-ellipsis .data-ellipsis'
@@ -1285,7 +1233,7 @@ module.exports = {
       ),
       CPU_Unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .cpu .select',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs div.cpu .select',
           '.select__value',
           '.select__body .select__item',
           '.data-ellipsis .data-ellipsis'
@@ -1325,7 +1273,7 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(4) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(4) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel__body .accordion__container:nth-of-type(4) button.new-item-side-panel__expand-icon'
       ),
       Advanced_Environment_Variables_Table: commonTable(
         advancedEnvironmentVariablesTable
@@ -1407,13 +1355,15 @@ module.exports = {
     )
   },
   newFunction: {
-    Cross_Close_Button: By.css('.new-item-side-panel .panel-title__btn_close'),
+    Cross_Close_Button: By.css(
+      'div.new-item-side-panel button.panel-title__btn_close'
+    ),
     General_Accordion: {
       Accordion_Header: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(1) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(1) button.new-item-side-panel__expand-icon'
       ),
       // TODO: add labels for name, tag and runtime
       New_Function_Description_Text_Area: By.css(
@@ -1426,7 +1376,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(2) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(2) button.new-item-side-panel__expand-icon'
       ),
       New_Function_Code_Entry_Dropdown: dropdownComponent(
         generateDropdownGroup(
@@ -1513,7 +1463,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(3) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(3) button.new-item-side-panel__expand-icon'
       ),
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
@@ -1534,35 +1484,35 @@ module.exports = {
       // Volume Path inputs
       Volume_Paths_Table_Type_Dropdown: commonVolumePathsTableTypeDropdown,
       Volume_Paths_Table_Volume_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 1, 2)
+        resourcesTableCommonInpute(3, 1, 2)
       ),
       Volume_Paths_Table_Path_Input: inputGroup(
-        resourcesTableCommonInput(3, 1, 3)
+        resourcesTableCommonInpute(3, 1, 3)
       ),
       Volume_Paths_Table_Container_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Config_Map_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Secret_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Claime_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Access_Key_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 2)
+        resourcesTableCommonInpute(3, 2, 2)
       ),
       Volume_Paths_Table_Resource_Path_Input: inputGroup(
-        resourcesTableCommonInput(3, 3, 1)
+        resourcesTableCommonInpute(3, 3, 1)
       ),
       Add_New_Row_Button: commonAddNewRowButton,
       Delete_New_Row_Button: commonDeleteNewRowButton,
       // Number input groups
       Memory_Unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .select',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs div.memory .select',
           '.select__value',
           '.select__body .select__item',
           '.data-ellipsis .data-ellipsis'
@@ -1591,7 +1541,7 @@ module.exports = {
       ),
       CPU_Unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .select',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs div.cpu .select',
           '.select__value',
           '.select__body .select__item',
           '.data-ellipsis .data-ellipsis'
@@ -1630,7 +1580,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(4) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(4) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(4) button.new-item-side-panel__expand-icon'
       ),
       Function_Environment_Variables_Table: commonTable(
         functionEnvironmentVariablesTable
@@ -1690,7 +1640,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(5) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(5) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(5) button.new-item-side-panel__expand-icon'
       ),
       Topology_Router_Type_Dropdown: dropdownComponent(
         generateDropdownGroup(
