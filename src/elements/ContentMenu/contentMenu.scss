@@ -46,10 +46,20 @@
     a {
       display: block;
       padding: 8px 24px;
+      position: relative;
+
+      &.content-menu__item_hasIcon {
+        padding-left: 45px;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
 
     &_active {
-      color: $cornflowerBlue;
+      color: $malibu;
 
       &::after {
         opacity: 1;
@@ -59,11 +69,24 @@
       a {
         cursor: default;
       }
+
+      .content-menu__item-icon {
+        path {
+          fill: $malibu;
+        }
+      }
     }
 
     &__preview {
       color: $spunPearl;
       font-size: 10px;
+    }
+
+    &-icon {
+      position: absolute;
+      left: 15px;
+      top: 4px;
+      bottom: 0;
     }
   }
 }
