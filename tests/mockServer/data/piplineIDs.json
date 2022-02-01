@@ -1,0 +1,1567 @@
+[
+  {
+    "graph": {
+      "image-classification-demo-sxjvt": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:21:34Z",
+        "finishedAt": "2021-07-06T12:16:47Z",
+        "type": "DAG",
+        "id": "image-classification-demo-sxjvt",
+        "parent": "",
+        "name": "image-classification-demo-sxjvt",
+        "children": [
+          "image-classification-demo-sxjvt-964597107"
+        ]
+      },
+      "image-classification-demo-sxjvt-1907362216": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T12:13:34Z",
+        "finishedAt": "2021-07-06T12:16:46Z",
+        "type": "Pod",
+        "id": "image-classification-demo-sxjvt-1907362216",
+        "parent": "image-classification-demo-sxjvt",
+        "name": "deploy-tf2-serving",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "image-classification-demo-sxjvt-655496255": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:22:46Z",
+        "finishedAt": "2021-07-06T12:13:33Z",
+        "type": "Pod",
+        "id": "image-classification-demo-sxjvt-655496255",
+        "parent": "image-classification-demo-sxjvt",
+        "name": "train",
+        "children": [
+          "image-classification-demo-sxjvt-1907362216"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "image-classification-demo-sxjvt-964597107": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:21:34Z",
+        "finishedAt": "2021-07-06T11:22:44Z",
+        "type": "Pod",
+        "id": "image-classification-demo-sxjvt-964597107",
+        "parent": "image-classification-demo-sxjvt",
+        "name": "download",
+        "children": [
+          "image-classification-demo-sxjvt-655496255"
+        ],
+        "function": "",
+        "run_type": ""
+      }
+    },
+    "run": {
+      "id": "5a5db6e3-7cdd-4d33-971c-d2310b02387c",
+      "name": "kfpipeline 2021-07-06 11-21-33",
+      "description": "None",
+      "created_at": "2021-07-06 11:21:34+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-07-06 12:16:47+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "cat-vs-dog-classification",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "image-classification-demo-4htbm": {
+        "phase": "Failed",
+        "startedAt": "2021-08-29T19:59:43Z",
+        "finishedAt": "2021-08-29T20:02:05Z",
+        "type": "DAG",
+        "id": "image-classification-demo-4htbm",
+        "parent": "",
+        "name": "image-classification-demo-4htbm",
+        "children": [
+          "image-classification-demo-4htbm-490629035"
+        ]
+      },
+      "image-classification-demo-4htbm-490629035": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:59:43Z",
+        "finishedAt": "2021-08-29T20:01:14Z",
+        "type": "Pod",
+        "id": "image-classification-demo-4htbm-490629035",
+        "parent": "image-classification-demo-4htbm",
+        "name": "download",
+        "children": [
+          "image-classification-demo-4htbm-888495559"
+        ],
+        "function": "cat-vs-dog-classification/utils",
+        "run_type": "run",
+        "run_uid": "59f8e3d6f3db4dd8ab890c4bf84a0a23",
+        "kind": "job"
+      },
+      "image-classification-demo-4htbm-888495559": {
+        "phase": "Failed",
+        "startedAt": "2021-08-29T20:01:15Z",
+        "finishedAt": "2021-08-29T20:02:04Z",
+        "type": "Pod",
+        "id": "image-classification-demo-4htbm-888495559",
+        "parent": "image-classification-demo-4htbm",
+        "name": "train",
+        "children": [],
+        "function": "cat-vs-dog-classification/trainer",
+        "run_type": "run",
+        "run_uid": "cf421548a6c04046a11f430caa5c4805",
+        "kind": "mpijob",
+        "error": "2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib:\n2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.\n2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set\n2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib:\n2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303)\n2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist\n2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA\nTo enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.\n2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set\nSome callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440\nTraceback (most recent call last):\n  File \"/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py\", line 116, in <module>\n    hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1),\nTypeError: __init__() missing 1 required positional argument: 'initial_lr'\n"
+      }
+    },
+    "run": {
+      "id": "1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b",
+      "name": "cat-vs-dog-classification-main 2021-08-29 19-59-42",
+      "description": "None",
+      "created_at": "2021-08-29 19:59:43+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-08-29 20:02:05+00:00",
+      "status": "Failed",
+      "error": "None",
+      "project": "cat-vs-dog-classification",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "demo-training-pipeline-2pvq9": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:16:29Z",
+        "finishedAt": "2021-07-06T11:19:23Z",
+        "type": "DAG",
+        "id": "demo-training-pipeline-2pvq9",
+        "parent": "",
+        "name": "demo-training-pipeline-2pvq9",
+        "children": [
+          "demo-training-pipeline-2pvq9-732003223"
+        ]
+      },
+      "demo-training-pipeline-2pvq9-1642378": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:17:12Z",
+        "finishedAt": "2021-07-06T11:17:27Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-2pvq9-1642378",
+        "parent": "demo-training-pipeline-2pvq9",
+        "name": "test-regressor",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-2pvq9-1645471209": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:17:23Z",
+        "finishedAt": "2021-07-06T11:19:19Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-2pvq9-1645471209",
+        "parent": "demo-training-pipeline-2pvq9",
+        "name": "deploy-churn-server",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-2pvq9-2924624192": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:16:45Z",
+        "finishedAt": "2021-07-06T11:17:11Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-2pvq9-2924624192",
+        "parent": "demo-training-pipeline-2pvq9",
+        "name": "survival-curves",
+        "children": [
+          "demo-training-pipeline-2pvq9-1642378",
+          "demo-training-pipeline-2pvq9-1645471209"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-2pvq9-2991782199": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:17:23Z",
+        "finishedAt": "2021-07-06T11:17:39Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-2pvq9-2991782199",
+        "parent": "demo-training-pipeline-2pvq9",
+        "name": "test-classifier",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-2pvq9-4003753044": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:16:45Z",
+        "finishedAt": "2021-07-06T11:17:22Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-2pvq9-4003753044",
+        "parent": "demo-training-pipeline-2pvq9",
+        "name": "current-state",
+        "children": [
+          "demo-training-pipeline-2pvq9-1645471209",
+          "demo-training-pipeline-2pvq9-2991782199"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-2pvq9-732003223": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:16:29Z",
+        "finishedAt": "2021-07-06T11:16:44Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-2pvq9-732003223",
+        "parent": "demo-training-pipeline-2pvq9",
+        "name": "clean-data",
+        "children": [
+          "demo-training-pipeline-2pvq9-2924624192",
+          "demo-training-pipeline-2pvq9-4003753044",
+          "demo-training-pipeline-2pvq9-826502093"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-2pvq9-826502093": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:16:45Z",
+        "finishedAt": "2021-07-06T11:19:22Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-2pvq9-826502093",
+        "parent": "demo-training-pipeline-2pvq9",
+        "name": "summary",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      }
+    },
+    "run": {
+      "id": "e8c24cbd-187f-44eb-85df-52e003ff9eaa",
+      "name": "kfpipeline 2021-07-06 11-16-28",
+      "description": "None",
+      "created_at": "2021-07-06 11:16:29+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-07-06 11:19:23+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "churn-project-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "demo-training-pipeline-99nll": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:52:09Z",
+        "finishedAt": "2021-08-29T19:57:32Z",
+        "type": "DAG",
+        "id": "demo-training-pipeline-99nll",
+        "parent": "",
+        "name": "demo-training-pipeline-99nll",
+        "children": [
+          "demo-training-pipeline-99nll-3517439017"
+        ]
+      },
+      "demo-training-pipeline-99nll-102354563": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:54:00Z",
+        "finishedAt": "2021-08-29T19:57:00Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-99nll-102354563",
+        "parent": "demo-training-pipeline-99nll",
+        "name": "summary",
+        "children": [],
+        "function": "churn-project-admin/describe",
+        "run_type": "run",
+        "run_uid": "ec940ba034254852b2d2f5e3ff014695",
+        "kind": "job"
+      },
+      "demo-training-pipeline-99nll-1213902052": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:54:30Z",
+        "finishedAt": "2021-08-29T19:54:47Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-99nll-1213902052",
+        "parent": "demo-training-pipeline-99nll",
+        "name": "test-regressor",
+        "children": [],
+        "function": "churn-project-admin/coxph-test",
+        "run_type": "run",
+        "run_uid": "374e9cb07db349618df2537f96191ccf",
+        "kind": "job",
+        "error": "[Errno 2] No such file or directory: '/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/tenured-test-set.csv'"
+      },
+      "demo-training-pipeline-99nll-2005043134": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:54:00Z",
+        "finishedAt": "2021-08-29T19:54:29Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-99nll-2005043134",
+        "parent": "demo-training-pipeline-99nll",
+        "name": "survival-curves",
+        "children": [
+          "demo-training-pipeline-99nll-1213902052",
+          "demo-training-pipeline-99nll-628396839"
+        ],
+        "function": "churn-project-admin/coxph-trainer",
+        "run_type": "run",
+        "run_uid": "b7d06b77b50c4ad7a4c84a99fa449113",
+        "kind": "job"
+      },
+      "demo-training-pipeline-99nll-232522637": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:55:00Z",
+        "finishedAt": "2021-08-29T19:55:27Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-99nll-232522637",
+        "parent": "demo-training-pipeline-99nll",
+        "name": "test-classifier",
+        "children": [],
+        "function": "churn-project-admin/xgb-test",
+        "run_type": "run",
+        "run_uid": "c9c66dee93a74dd0a04b2c7f490fdd59",
+        "kind": "job",
+        "error": "[Errno 2] No such file or directory: '/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/test_set.csv'"
+      },
+      "demo-training-pipeline-99nll-260952918": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:54:00Z",
+        "finishedAt": "2021-08-29T19:54:59Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-99nll-260952918",
+        "parent": "demo-training-pipeline-99nll",
+        "name": "current-state",
+        "children": [
+          "demo-training-pipeline-99nll-628396839",
+          "demo-training-pipeline-99nll-232522637"
+        ],
+        "function": "churn-project-admin/xgb-trainer",
+        "run_type": "run",
+        "run_uid": "07f98fb46a424b2dbee5247b35f37727",
+        "kind": "job"
+      },
+      "demo-training-pipeline-99nll-3517439017": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:52:09Z",
+        "finishedAt": "2021-08-29T19:53:59Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-99nll-3517439017",
+        "parent": "demo-training-pipeline-99nll",
+        "name": "clean-data",
+        "children": [
+          "demo-training-pipeline-99nll-102354563",
+          "demo-training-pipeline-99nll-260952918",
+          "demo-training-pipeline-99nll-2005043134"
+        ],
+        "function": "churn-project-admin/clean-data",
+        "run_type": "run",
+        "run_uid": "e3195358eaed416f8469451d8390ba19",
+        "kind": "job"
+      },
+      "demo-training-pipeline-99nll-628396839": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T19:55:00Z",
+        "finishedAt": "2021-08-29T19:57:31Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-99nll-628396839",
+        "parent": "demo-training-pipeline-99nll",
+        "name": "deploy-churn-server",
+        "children": [],
+        "function": "churn-project-admin/churn-server@c8c677b1c01ac936bd818f04543e77c48d21eb33",
+        "run_type": "deploy"
+      }
+    },
+    "run": {
+      "id": "eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
+      "name": "churn-project-admin-main 2021-08-29 19-52-08",
+      "description": "None",
+      "created_at": "2021-08-29 19:52:09+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-08-29 19:57:32+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "churn-project-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "getting-started-tutorial-2qgjq": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:14:03Z",
+        "finishedAt": "2021-07-06T11:14:53Z",
+        "type": "DAG",
+        "id": "getting-started-tutorial-2qgjq",
+        "parent": "",
+        "name": "getting-started-tutorial-2qgjq",
+        "children": [
+          "getting-started-tutorial-2qgjq-4022823886"
+        ]
+      },
+      "getting-started-tutorial-2qgjq-1034251488": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:14:36Z",
+        "finishedAt": "2021-07-06T11:14:51Z",
+        "type": "Pod",
+        "id": "getting-started-tutorial-2qgjq-1034251488",
+        "parent": "getting-started-tutorial-2qgjq",
+        "name": "test",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "getting-started-tutorial-2qgjq-1934114110": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:14:19Z",
+        "finishedAt": "2021-07-06T11:14:35Z",
+        "type": "Pod",
+        "id": "getting-started-tutorial-2qgjq-1934114110",
+        "parent": "getting-started-tutorial-2qgjq",
+        "name": "train",
+        "children": [
+          "getting-started-tutorial-2qgjq-1034251488",
+          "getting-started-tutorial-2qgjq-2692265090"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "getting-started-tutorial-2qgjq-2692265090": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:14:36Z",
+        "finishedAt": "2021-07-06T11:14:52Z",
+        "type": "Pod",
+        "id": "getting-started-tutorial-2qgjq-2692265090",
+        "parent": "getting-started-tutorial-2qgjq",
+        "name": "deploy-serving",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "getting-started-tutorial-2qgjq-4022823886": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T11:14:03Z",
+        "finishedAt": "2021-07-06T11:14:18Z",
+        "type": "Pod",
+        "id": "getting-started-tutorial-2qgjq-4022823886",
+        "parent": "getting-started-tutorial-2qgjq",
+        "name": "prep-data",
+        "children": [
+          "getting-started-tutorial-2qgjq-1934114110"
+        ],
+        "function": "",
+        "run_type": ""
+      }
+    },
+    "run": {
+      "id": "8c420226-d88a-43a4-b938-fd002f39b0f6",
+      "name": "kfpipeline 2021-07-06 11-14-02",
+      "description": "None",
+      "created_at": "2021-07-06 11:14:03+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-07-06 11:14:53+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "getting-started-tutorial-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "getting-started-tutorial-t7sfq": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:18:15Z",
+        "finishedAt": "2021-08-30T05:19:09Z",
+        "type": "DAG",
+        "id": "getting-started-tutorial-t7sfq",
+        "parent": "",
+        "name": "getting-started-tutorial-t7sfq",
+        "children": [
+          "getting-started-tutorial-t7sfq-3925802766"
+        ]
+      },
+      "getting-started-tutorial-t7sfq-2126900384": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:18:50Z",
+        "finishedAt": "2021-08-30T05:19:06Z",
+        "type": "Pod",
+        "id": "getting-started-tutorial-t7sfq-2126900384",
+        "parent": "getting-started-tutorial-t7sfq",
+        "name": "test",
+        "children": [],
+        "function": "getting-started-tutorial-admin/test-classifier:latest",
+        "run_type": "run",
+        "run_uid": "19583b8c68b145149c6966b7298e0ab2",
+        "kind": "job",
+        "error": "401 received while accessing 'getting-started-tutorial-admin/artifacts/pipeline/dd5972cb-cbc2-4998-ab0e-705dba1b307d/data/test_set.csv'"
+      },
+      "getting-started-tutorial-t7sfq-2313893826": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:18:50Z",
+        "finishedAt": "2021-08-30T05:19:08Z",
+        "type": "Pod",
+        "id": "getting-started-tutorial-t7sfq-2313893826",
+        "parent": "getting-started-tutorial-t7sfq",
+        "name": "deploy-serving",
+        "children": [],
+        "function": "getting-started-tutorial-admin/serving@2914febb010f9333a5a52a8c81b64d9d7c3ddff8",
+        "run_type": "deploy"
+      },
+      "getting-started-tutorial-t7sfq-3925802766": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:18:15Z",
+        "finishedAt": "2021-08-30T05:18:31Z",
+        "type": "Pod",
+        "id": "getting-started-tutorial-t7sfq-3925802766",
+        "parent": "getting-started-tutorial-t7sfq",
+        "name": "prep-data",
+        "children": [
+          "getting-started-tutorial-t7sfq-539323646"
+        ],
+        "function": "getting-started-tutorial-admin/prep-data:latest",
+        "run_type": "run",
+        "run_uid": "fa7361e779c949619d2c3dbd09e3c727",
+        "kind": "job"
+      },
+      "getting-started-tutorial-t7sfq-539323646": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:18:32Z",
+        "finishedAt": "2021-08-30T05:18:49Z",
+        "type": "Pod",
+        "id": "getting-started-tutorial-t7sfq-539323646",
+        "parent": "getting-started-tutorial-t7sfq",
+        "name": "train",
+        "children": [
+          "getting-started-tutorial-t7sfq-2126900384",
+          "getting-started-tutorial-t7sfq-2313893826"
+        ],
+        "function": "getting-started-tutorial-admin/train-iris:latest",
+        "run_type": "run",
+        "run_uid": "5cbfe3b5dbac4ab79e2165ff6b61651f",
+        "kind": "job"
+      }
+    },
+    "run": {
+      "id": "dd5972cb-cbc2-4998-ab0e-705dba1b307d",
+      "name": "getting-started-tutorial-admin-main 2021-08-30 05-18-14",
+      "description": "None",
+      "created_at": "2021-08-30 05:18:15+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-08-30 05:19:09+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "getting-started-tutorial-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "network-operations-demo-d2bhx": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:01:25Z",
+        "finishedAt": "2021-07-06T14:16:14Z",
+        "type": "DAG",
+        "id": "network-operations-demo-d2bhx",
+        "parent": "",
+        "name": "network-operations-demo-d2bhx",
+        "children": [
+          "network-operations-demo-d2bhx-3370959686"
+        ]
+      },
+      "network-operations-demo-d2bhx-1157325650": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:03:02Z",
+        "finishedAt": "2021-07-06T14:05:52Z",
+        "type": "DAG",
+        "id": "network-operations-demo-d2bhx-1157325650",
+        "parent": "network-operations-demo-d2bhx",
+        "name": "condition-1",
+        "children": [
+          "network-operations-demo-d2bhx-3430933266"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-1189686495": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:02:08Z",
+        "finishedAt": "2021-07-06T14:02:34Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-1189686495",
+        "parent": "network-operations-demo-d2bhx",
+        "name": "describe-feature-vector",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-1259874335": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:02:08Z",
+        "finishedAt": "2021-07-06T14:02:35Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-1259874335",
+        "parent": "network-operations-demo-d2bhx",
+        "name": "train",
+        "children": [
+          "network-operations-demo-d2bhx-1819804179",
+          "network-operations-demo-d2bhx-1157325650"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-1819804179": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:02:36Z",
+        "finishedAt": "2021-07-06T14:03:01Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-1819804179",
+        "parent": "network-operations-demo-d2bhx",
+        "name": "test",
+        "children": [
+          "network-operations-demo-d2bhx-1157325650"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-246905312": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:04:07Z",
+        "finishedAt": "2021-07-06T14:04:13Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-246905312",
+        "parent": "network-operations-demo-d2bhx-3370929586",
+        "name": "deploy-concept-drift",
+        "children": [
+          "network-operations-demo-d2bhx-3478892257"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-2613809599": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:03:40Z",
+        "finishedAt": "2021-07-06T14:04:01Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-2613809599",
+        "parent": "network-operations-demo-d2bhx-1157325650",
+        "name": "deploy-create-feature-vector",
+        "children": [
+          "network-operations-demo-d2bhx-4283445651"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-3346463703": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:03:23Z",
+        "finishedAt": "2021-07-06T14:03:39Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-3346463703",
+        "parent": "network-operations-demo-d2bhx-1157325650",
+        "name": "model-tester",
+        "children": [
+          "network-operations-demo-d2bhx-4221358232",
+          "network-operations-demo-d2bhx-2613809599"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-3370929586": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:04:07Z",
+        "finishedAt": "2021-07-06T14:04:59Z",
+        "type": "DAG",
+        "id": "network-operations-demo-d2bhx-3370929586",
+        "parent": "network-operations-demo-d2bhx-1157325650",
+        "name": "condition-2",
+        "children": [
+          "network-operations-demo-d2bhx-246905312",
+          "network-operations-demo-d2bhx-4128829765"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-3370959686": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:01:25Z",
+        "finishedAt": "2021-07-06T14:01:41Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-3370959686",
+        "parent": "network-operations-demo-d2bhx",
+        "name": "aggregate",
+        "children": [
+          "network-operations-demo-d2bhx-773411941",
+          "network-operations-demo-d2bhx-4133971444"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-3430933266": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:03:02Z",
+        "finishedAt": "2021-07-06T14:03:22Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-3430933266",
+        "parent": "network-operations-demo-d2bhx-1157325650",
+        "name": "deploy-serving",
+        "children": [
+          "network-operations-demo-d2bhx-3346463703"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-3478892257": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:04:14Z",
+        "finishedAt": "2021-07-06T14:04:58Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-3478892257",
+        "parent": "network-operations-demo-d2bhx-3370929586",
+        "name": "concept-drift-deployer",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-4128829765": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:04:07Z",
+        "finishedAt": "2021-07-06T14:04:27Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-4128829765",
+        "parent": "network-operations-demo-d2bhx-3370929586",
+        "name": "deploy-stream-to-parquet",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-4133971444": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:01:42Z",
+        "finishedAt": "2021-07-06T14:02:07Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-4133971444",
+        "parent": "network-operations-demo-d2bhx",
+        "name": "feature-selection",
+        "children": [
+          "network-operations-demo-d2bhx-1189686495",
+          "network-operations-demo-d2bhx-1259874335"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-4221358232": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:03:40Z",
+        "finishedAt": "2021-07-06T14:04:06Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-4221358232",
+        "parent": "network-operations-demo-d2bhx-1157325650",
+        "name": "deploy-labeled-stream",
+        "children": [
+          "network-operations-demo-d2bhx-3370929586"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-4283445651": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:04:02Z",
+        "finishedAt": "2021-07-06T14:05:51Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-4283445651",
+        "parent": "network-operations-demo-d2bhx-1157325650",
+        "name": "deploy-generator",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-d2bhx-773411941": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-06T14:01:42Z",
+        "finishedAt": "2021-07-06T14:16:13Z",
+        "type": "Pod",
+        "id": "network-operations-demo-d2bhx-773411941",
+        "parent": "network-operations-demo-d2bhx",
+        "name": "describe-aggregation",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      }
+    },
+    "run": {
+      "id": "9c58289d-97f2-4977-8324-38e01af89ae4",
+      "name": "kfpipeline 2021-07-06 14-01-24",
+      "description": "None",
+      "created_at": "2021-07-06 14:01:25+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-07-06 14:16:14+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "network-operations-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "network-operations-demo-gprgr": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:25:28Z",
+        "finishedAt": "2021-08-29T20:42:18Z",
+        "type": "DAG",
+        "id": "network-operations-demo-gprgr",
+        "parent": "",
+        "name": "network-operations-demo-gprgr",
+        "children": [
+          "network-operations-demo-gprgr-1985521300"
+        ]
+      },
+      "network-operations-demo-gprgr-1398783741": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:26:37Z",
+        "finishedAt": "2021-08-29T20:27:17Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-1398783741",
+        "parent": "network-operations-demo-gprgr",
+        "name": "describe-feature-vector",
+        "children": [],
+        "function": "network-operations-admin/describe",
+        "run_type": "run",
+        "run_uid": "0533f96c58904aee92a42a42b9368a3c",
+        "kind": "job"
+      },
+      "network-operations-demo-gprgr-1488982469": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:29:05Z",
+        "finishedAt": "2021-08-29T20:29:27Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-1488982469",
+        "parent": "network-operations-demo-gprgr-3022049036",
+        "name": "deploy-generator",
+        "children": [],
+        "function": "network-operations-admin/generator@5248aa4aabe2c61f2f98349ac935b781ae57e41d",
+        "run_type": "deploy"
+      },
+      "network-operations-demo-gprgr-1560897224": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:29:10Z",
+        "finishedAt": "2021-08-29T20:30:36Z",
+        "type": "DAG",
+        "id": "network-operations-demo-gprgr-1560897224",
+        "parent": "network-operations-demo-gprgr-3022049036",
+        "name": "condition-2",
+        "children": [
+          "network-operations-demo-gprgr-1711809250",
+          "network-operations-demo-gprgr-2723970239"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-gprgr-160761093": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:26:37Z",
+        "finishedAt": "2021-08-29T20:27:18Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-160761093",
+        "parent": "network-operations-demo-gprgr",
+        "name": "train",
+        "children": [
+          "network-operations-demo-gprgr-4281068657",
+          "network-operations-demo-gprgr-3022049036"
+        ],
+        "function": "network-operations-admin/sklearn-classifier",
+        "run_type": "run",
+        "run_uid": "3b321d04bc534befa5f40593f517d488",
+        "kind": "job"
+      },
+      "network-operations-demo-gprgr-1711809250": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:29:10Z",
+        "finishedAt": "2021-08-29T20:29:18Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-1711809250",
+        "parent": "network-operations-demo-gprgr-1560897224",
+        "name": "deploy-concept-drift",
+        "children": [
+          "network-operations-demo-gprgr-2249548351"
+        ],
+        "function": "network-operations-admin/concept-drift",
+        "run_type": "build"
+      },
+      "network-operations-demo-gprgr-1985521300": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:25:28Z",
+        "finishedAt": "2021-08-29T20:25:57Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-1985521300",
+        "parent": "network-operations-demo-gprgr",
+        "name": "aggregate",
+        "children": [
+          "network-operations-demo-gprgr-2292696714",
+          "network-operations-demo-gprgr-2469078183"
+        ],
+        "function": "network-operations-admin/aggregate",
+        "run_type": "run",
+        "run_uid": "566b0b42f7af4867bc9c5c582f92ae45",
+        "kind": "job"
+      },
+      "network-operations-demo-gprgr-2249548351": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:29:19Z",
+        "finishedAt": "2021-08-29T20:30:35Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-2249548351",
+        "parent": "network-operations-demo-gprgr-1560897224",
+        "name": "concept-drift-deployer",
+        "children": [],
+        "function": "network-operations-admin/concept-drift",
+        "run_type": "run",
+        "run_uid": "2721bc8f37cf4872b70e0798b709e289",
+        "kind": "job"
+      },
+      "network-operations-demo-gprgr-2292696714": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:25:58Z",
+        "finishedAt": "2021-08-29T20:26:35Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-2292696714",
+        "parent": "network-operations-demo-gprgr",
+        "name": "feature-selection",
+        "children": [
+          "network-operations-demo-gprgr-1398783741",
+          "network-operations-demo-gprgr-160761093"
+        ],
+        "function": "network-operations-admin/feature-selection",
+        "run_type": "run",
+        "run_uid": "10096f89c797471f83c96f96ed8869c8",
+        "kind": "job"
+      },
+      "network-operations-demo-gprgr-2469078183": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:25:58Z",
+        "finishedAt": "2021-08-29T20:42:17Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-2469078183",
+        "parent": "network-operations-demo-gprgr",
+        "name": "describe-aggregation",
+        "children": [],
+        "function": "network-operations-admin/describe",
+        "run_type": "run",
+        "run_uid": "1345cc708d964610a437481cf93ec8a6",
+        "kind": "job"
+      },
+      "network-operations-demo-gprgr-2486618005": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:28:38Z",
+        "finishedAt": "2021-08-29T20:29:04Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-2486618005",
+        "parent": "network-operations-demo-gprgr-3022049036",
+        "name": "deploy-create-feature-vector",
+        "children": [
+          "network-operations-demo-gprgr-1488982469"
+        ],
+        "function": "network-operations-admin/create-feature-vector@5d67cfb08150b3800c713099d50a89ce4f5897e6",
+        "run_type": "deploy"
+      },
+      "network-operations-demo-gprgr-2723970239": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:29:10Z",
+        "finishedAt": "2021-08-29T20:29:37Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-2723970239",
+        "parent": "network-operations-demo-gprgr-1560897224",
+        "name": "deploy-stream-to-parquet",
+        "children": [],
+        "function": "network-operations-admin/stream-to-parquet@5bc08b98421a96dc37e93dcc3db4ecdc877b5c06",
+        "run_type": "deploy"
+      },
+      "network-operations-demo-gprgr-2743149636": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:27:48Z",
+        "finishedAt": "2021-08-29T20:28:16Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-2743149636",
+        "parent": "network-operations-demo-gprgr-3022049036",
+        "name": "deploy-serving",
+        "children": [
+          "network-operations-demo-gprgr-2861013837"
+        ],
+        "function": "network-operations-admin/serving@70951091f661dc2a116f88a26f5fd9876e4ddccc",
+        "run_type": "deploy"
+      },
+      "network-operations-demo-gprgr-2861013837": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:28:17Z",
+        "finishedAt": "2021-08-29T20:28:37Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-2861013837",
+        "parent": "network-operations-demo-gprgr-3022049036",
+        "name": "model-tester",
+        "children": [
+          "network-operations-demo-gprgr-2486618005",
+          "network-operations-demo-gprgr-3228724158"
+        ],
+        "function": "network-operations-admin/model-server-tester",
+        "run_type": "run",
+        "run_uid": "c7370a9b5dcd4d73ae855f63a2b91bba",
+        "kind": "job"
+      },
+      "network-operations-demo-gprgr-3022049036": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:27:48Z",
+        "finishedAt": "2021-08-29T20:30:36Z",
+        "type": "DAG",
+        "id": "network-operations-demo-gprgr-3022049036",
+        "parent": "network-operations-demo-gprgr",
+        "name": "condition-1",
+        "children": [
+          "network-operations-demo-gprgr-2743149636"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "network-operations-demo-gprgr-3228724158": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:28:38Z",
+        "finishedAt": "2021-08-29T20:29:09Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-3228724158",
+        "parent": "network-operations-demo-gprgr-3022049036",
+        "name": "deploy-labeled-stream",
+        "children": [
+          "network-operations-demo-gprgr-1560897224"
+        ],
+        "function": "network-operations-admin/labeled-stream@283aedb860ef2ddffd4c9df1e1d0cacefa85bf2c",
+        "run_type": "deploy"
+      },
+      "network-operations-demo-gprgr-4281068657": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-29T20:27:19Z",
+        "finishedAt": "2021-08-29T20:27:47Z",
+        "type": "Pod",
+        "id": "network-operations-demo-gprgr-4281068657",
+        "parent": "network-operations-demo-gprgr",
+        "name": "test",
+        "children": [
+          "network-operations-demo-gprgr-3022049036"
+        ],
+        "function": "network-operations-admin/test-classifier",
+        "run_type": "run",
+        "run_uid": "2011a94c97cd4fe19096b3bd8276920c",
+        "kind": "job"
+      }
+    },
+    "run": {
+      "id": "cd151783-05df-4f9c-a9db-3aa674e4a058",
+      "name": "network-operations-admin-main 2021-08-29 20-25-27",
+      "description": "None",
+      "created_at": "2021-08-29 20:25:28+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-08-29 20:42:18+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "network-operations-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "demo-training-pipeline-xx29j": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T11:29:30Z",
+        "finishedAt": "2021-07-07T11:32:39Z",
+        "type": "DAG",
+        "id": "demo-training-pipeline-xx29j",
+        "parent": "",
+        "name": "demo-training-pipeline-xx29j",
+        "children": [
+          "demo-training-pipeline-xx29j-2197962766"
+        ]
+      },
+      "demo-training-pipeline-xx29j-1029662205": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T11:32:26Z",
+        "finishedAt": "2021-07-07T11:32:38Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-xx29j-1029662205",
+        "parent": "demo-training-pipeline-xx29j",
+        "name": "model-tester",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-xx29j-1347285630": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T11:32:06Z",
+        "finishedAt": "2021-07-07T11:32:21Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-xx29j-1347285630",
+        "parent": "demo-training-pipeline-xx29j",
+        "name": "test",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-xx29j-1435513904": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T11:32:06Z",
+        "finishedAt": "2021-07-07T11:32:25Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-xx29j-1435513904",
+        "parent": "demo-training-pipeline-xx29j",
+        "name": "deploy-v2-model-server",
+        "children": [
+          "demo-training-pipeline-xx29j-1029662205"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-xx29j-2197962766": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T11:29:30Z",
+        "finishedAt": "2021-07-07T11:31:20Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-xx29j-2197962766",
+        "parent": "demo-training-pipeline-xx29j",
+        "name": "deploy-gen-iris",
+        "children": [
+          "demo-training-pipeline-xx29j-2306315405"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-xx29j-2306315405": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T11:31:21Z",
+        "finishedAt": "2021-07-07T11:31:36Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-xx29j-2306315405",
+        "parent": "demo-training-pipeline-xx29j",
+        "name": "get-data",
+        "children": [
+          "demo-training-pipeline-xx29j-4168091884",
+          "demo-training-pipeline-xx29j-2316423250"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-xx29j-2316423250": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T11:31:37Z",
+        "finishedAt": "2021-07-07T11:32:03Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-xx29j-2316423250",
+        "parent": "demo-training-pipeline-xx29j",
+        "name": "summary",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "demo-training-pipeline-xx29j-4168091884": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T11:31:37Z",
+        "finishedAt": "2021-07-07T11:32:04Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-xx29j-4168091884",
+        "parent": "demo-training-pipeline-xx29j",
+        "name": "train",
+        "children": [
+          "demo-training-pipeline-xx29j-1435513904",
+          "demo-training-pipeline-xx29j-1347285630",
+          "demo-training-pipeline-xx29j-1029662205"
+        ],
+        "function": "",
+        "run_type": ""
+      }
+    },
+    "run": {
+      "id": "477bcee7-6a9f-488e-9a1a-7f87f36a625a",
+      "name": "kfpipeline 2021-07-07 11-29-28",
+      "description": "None",
+      "created_at": "2021-07-07 11:29:30+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-07-07 11:32:39+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "sk-project-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "demo-training-pipeline-fvtjg": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:20:26Z",
+        "finishedAt": "2021-08-30T05:23:45Z",
+        "type": "DAG",
+        "id": "demo-training-pipeline-fvtjg",
+        "parent": "",
+        "name": "demo-training-pipeline-fvtjg",
+        "children": [
+          "demo-training-pipeline-fvtjg-3051378056"
+        ]
+      },
+      "demo-training-pipeline-fvtjg-1031772059": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:22:19Z",
+        "finishedAt": "2021-08-30T05:22:35Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-fvtjg-1031772059",
+        "parent": "demo-training-pipeline-fvtjg",
+        "name": "get-data",
+        "children": [
+          "demo-training-pipeline-fvtjg-1205068706",
+          "demo-training-pipeline-fvtjg-1762941192"
+        ],
+        "function": "sk-project-admin/gen-iris",
+        "run_type": "run",
+        "run_uid": "7c723b9c93c844aabd3466026b86a2b1",
+        "kind": "job"
+      },
+      "demo-training-pipeline-fvtjg-1205068706": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:22:36Z",
+        "finishedAt": "2021-08-30T05:23:04Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-fvtjg-1205068706",
+        "parent": "demo-training-pipeline-fvtjg",
+        "name": "train",
+        "children": [
+          "demo-training-pipeline-fvtjg-348794906",
+          "demo-training-pipeline-fvtjg-850116916",
+          "demo-training-pipeline-fvtjg-4220729571"
+        ],
+        "function": "sk-project-admin/sklearn-classifier",
+        "run_type": "run",
+        "run_uid": "3d03c190ad57442099024be6bb8f5895",
+        "kind": "job"
+      },
+      "demo-training-pipeline-fvtjg-1762941192": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:22:36Z",
+        "finishedAt": "2021-08-30T05:23:03Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-fvtjg-1762941192",
+        "parent": "demo-training-pipeline-fvtjg",
+        "name": "summary",
+        "children": [],
+        "function": "sk-project-admin/describe",
+        "run_type": "run",
+        "run_uid": "a566d1db4eb148629a822ee6f2953a19",
+        "kind": "job"
+      },
+      "demo-training-pipeline-fvtjg-3051378056": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:20:26Z",
+        "finishedAt": "2021-08-30T05:22:18Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-fvtjg-3051378056",
+        "parent": "demo-training-pipeline-fvtjg",
+        "name": "deploy-gen-iris",
+        "children": [
+          "demo-training-pipeline-fvtjg-1031772059"
+        ],
+        "function": "sk-project-admin/gen-iris",
+        "run_type": "build"
+      },
+      "demo-training-pipeline-fvtjg-348794906": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:23:05Z",
+        "finishedAt": "2021-08-30T05:23:27Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-fvtjg-348794906",
+        "parent": "demo-training-pipeline-fvtjg",
+        "name": "deploy-v2-model-server",
+        "children": [
+          "demo-training-pipeline-fvtjg-4220729571"
+        ],
+        "function": "sk-project-admin/v2-model-server@ce92c2c20db71c29f952446359cfe98160af6f00",
+        "run_type": "deploy"
+      },
+      "demo-training-pipeline-fvtjg-4220729571": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:23:28Z",
+        "finishedAt": "2021-08-30T05:23:44Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-fvtjg-4220729571",
+        "parent": "demo-training-pipeline-fvtjg",
+        "name": "model-tester",
+        "children": [],
+        "function": "sk-project-admin/v2-model-tester",
+        "run_type": "run",
+        "run_uid": "2a0979a45d9347528431e352a6dda178",
+        "kind": "job"
+      },
+      "demo-training-pipeline-fvtjg-850116916": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:23:05Z",
+        "finishedAt": "2021-08-30T05:23:21Z",
+        "type": "Pod",
+        "id": "demo-training-pipeline-fvtjg-850116916",
+        "parent": "demo-training-pipeline-fvtjg",
+        "name": "test",
+        "children": [],
+        "function": "sk-project-admin/test-classifier",
+        "run_type": "run",
+        "run_uid": "795070c9f43a45c2b258a1877c796135",
+        "kind": "job"
+      }
+    },
+    "run": {
+      "id": "a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
+      "name": "sk-project-admin-main 2021-08-30 05-20-26",
+      "description": "None",
+      "created_at": "2021-08-30 05:20:26+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-08-30 05:23:45+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "sk-project-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "stocks-demo-deployer-dckxp": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:45:22Z",
+        "finishedAt": "2021-07-07T12:47:42Z",
+        "type": "DAG",
+        "id": "stocks-demo-deployer-dckxp",
+        "parent": "",
+        "name": "stocks-demo-deployer-dckxp",
+        "children": [
+          "stocks-demo-deployer-dckxp-1129305983",
+          "stocks-demo-deployer-dckxp-11604184",
+          "stocks-demo-deployer-dckxp-3010006322",
+          "stocks-demo-deployer-dckxp-2993228703"
+        ]
+      },
+      "stocks-demo-deployer-dckxp-1129305983": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:45:22Z",
+        "finishedAt": "2021-07-07T12:46:13Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-dckxp-1129305983",
+        "parent": "stocks-demo-deployer-dckxp",
+        "name": "deploy-stocks-reader",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-dckxp-11604184": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:45:22Z",
+        "finishedAt": "2021-07-07T12:47:12Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-dckxp-11604184",
+        "parent": "stocks-demo-deployer-dckxp",
+        "name": "deploy-grafana-view",
+        "children": [
+          "stocks-demo-deployer-dckxp-1495234599"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-dckxp-1495234599": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:47:29Z",
+        "finishedAt": "2021-07-07T12:47:41Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-dckxp-1495234599",
+        "parent": "stocks-demo-deployer-dckxp",
+        "name": "grafana-view-handler",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-dckxp-1815591020": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:46:14Z",
+        "finishedAt": "2021-07-07T12:46:58Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-dckxp-1815591020",
+        "parent": "stocks-demo-deployer-dckxp-3010006322",
+        "name": "deploy-news-reader-2",
+        "children": [
+          "stocks-demo-deployer-dckxp-3445073595",
+          "stocks-demo-deployer-dckxp-856894067"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-dckxp-240000642": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:45:22Z",
+        "finishedAt": "2021-07-07T12:46:13Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-dckxp-240000642",
+        "parent": "stocks-demo-deployer-dckxp-3010006322",
+        "name": "deploy-sentiment-analysis-serving-2",
+        "children": [
+          "stocks-demo-deployer-dckxp-1815591020"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-dckxp-2993228703": {
+        "phase": "Skipped",
+        "startedAt": "2021-07-07T12:45:22Z",
+        "finishedAt": "2021-07-07T12:45:22Z",
+        "type": "Skipped",
+        "id": "stocks-demo-deployer-dckxp-2993228703",
+        "parent": "stocks-demo-deployer-dckxp",
+        "name": "condition-1",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-dckxp-3010006322": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:45:22Z",
+        "finishedAt": "2021-07-07T12:46:59Z",
+        "type": "DAG",
+        "id": "stocks-demo-deployer-dckxp-3010006322",
+        "parent": "stocks-demo-deployer-dckxp",
+        "name": "condition-2",
+        "children": [
+          "stocks-demo-deployer-dckxp-240000642"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-dckxp-3445073595": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:46:59Z",
+        "finishedAt": "2021-07-07T12:47:27Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-dckxp-3445073595",
+        "parent": "stocks-demo-deployer-dckxp",
+        "name": "deploy-vector-reader",
+        "children": [
+          "stocks-demo-deployer-dckxp-1495234599"
+        ],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-dckxp-856894067": {
+        "phase": "Succeeded",
+        "startedAt": "2021-07-07T12:47:00Z",
+        "finishedAt": "2021-07-07T12:47:23Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-dckxp-856894067",
+        "parent": "stocks-demo-deployer-dckxp",
+        "name": "deploy-stream-viewer",
+        "children": [
+          "stocks-demo-deployer-dckxp-1495234599"
+        ],
+        "function": "",
+        "run_type": ""
+      }
+    },
+    "run": {
+      "id": "247586b4-b3e2-4ffe-a7b9-ee33d100948a",
+      "name": "kfpipeline 2021-07-07 12-45-21",
+      "description": "None",
+      "created_at": "2021-07-07 12:45:22+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-07-07 12:47:42+00:00",
+      "status": "Succeeded",
+      "error": "None",
+      "project": "stocks-admin",
+      "message": ""
+    }
+  },
+  {
+    "graph": {
+      "stocks-demo-deployer-8j79x": {
+        "phase": "Failed",
+        "startedAt": "2021-08-30T05:36:36Z",
+        "finishedAt": "2021-08-30T05:38:29Z",
+        "type": "DAG",
+        "id": "stocks-demo-deployer-8j79x",
+        "parent": "",
+        "name": "stocks-demo-deployer-8j79x",
+        "children": [
+          "stocks-demo-deployer-8j79x-3532485575",
+          "stocks-demo-deployer-8j79x-3491072535",
+          "stocks-demo-deployer-8j79x-3487838400",
+          "stocks-demo-deployer-8j79x-3549263194"
+        ]
+      },
+      "stocks-demo-deployer-8j79x-1150045578": {
+        "phase": "Failed",
+        "startedAt": "2021-08-30T05:36:36Z",
+        "finishedAt": "2021-08-30T05:36:42Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-8j79x-1150045578",
+        "parent": "stocks-demo-deployer-8j79x-3549263194",
+        "name": "deploy-sentiment-analysis-serving-2",
+        "children": [],
+        "function": "stocks-admin/sentiment-analysis-serving@2da8f838db349ee5e6f917f13c62852e16ea001c",
+        "run_type": "deploy"
+      },
+      "stocks-demo-deployer-8j79x-3487838400": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:36:36Z",
+        "finishedAt": "2021-08-30T05:38:28Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-8j79x-3487838400",
+        "parent": "stocks-demo-deployer-8j79x",
+        "name": "deploy-grafana-view",
+        "children": [],
+        "function": "stocks-admin/grafana-view",
+        "run_type": "build"
+      },
+      "stocks-demo-deployer-8j79x-3491072535": {
+        "phase": "Succeeded",
+        "startedAt": "2021-08-30T05:36:36Z",
+        "finishedAt": "2021-08-30T05:37:31Z",
+        "type": "Pod",
+        "id": "stocks-demo-deployer-8j79x-3491072535",
+        "parent": "stocks-demo-deployer-8j79x",
+        "name": "deploy-stocks-reader",
+        "children": [],
+        "function": "stocks-admin/stocks-reader@ce0a387f83a15c6d5eace67381922f5a25c5b0e5",
+        "run_type": "deploy"
+      },
+      "stocks-demo-deployer-8j79x-3532485575": {
+        "phase": "Skipped",
+        "startedAt": "2021-08-30T05:36:36Z",
+        "finishedAt": "2021-08-30T05:36:36Z",
+        "type": "Skipped",
+        "id": "stocks-demo-deployer-8j79x-3532485575",
+        "parent": "stocks-demo-deployer-8j79x",
+        "name": "condition-1",
+        "children": [],
+        "function": "",
+        "run_type": ""
+      },
+      "stocks-demo-deployer-8j79x-3549263194": {
+        "phase": "Failed",
+        "startedAt": "2021-08-30T05:36:36Z",
+        "finishedAt": "2021-08-30T05:36:42Z",
+        "type": "DAG",
+        "id": "stocks-demo-deployer-8j79x-3549263194",
+        "parent": "stocks-demo-deployer-8j79x",
+        "name": "condition-2",
+        "children": [
+          "stocks-demo-deployer-8j79x-1150045578"
+        ],
+        "function": "",
+        "run_type": ""
+      }
+    },
+    "run": {
+      "id": "d0d9d40a-9dd7-43b9-91e0-7212939a8041",
+      "name": "stocks-admin-main 2021-08-30 05-36-35",
+      "description": "None",
+      "created_at": "2021-08-30 05:36:36+00:00",
+      "scheduled_at": "1970-01-01 00:00:00+00:00",
+      "finished_at": "2021-08-30 05:38:29+00:00",
+      "status": "Failed",
+      "error": "None",
+      "project": "stocks-admin",
+      "message": ""
+    }
+  }
+]
