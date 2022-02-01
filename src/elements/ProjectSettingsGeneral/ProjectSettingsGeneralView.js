@@ -116,6 +116,7 @@ ProjectSettingsGeneralView.defaultProps = {
 
 ProjectSettingsGeneralView.propTypes = {
   artifactPath: PropTypes.string.isRequired,
+  defaultArtifactPath: PropTypes.string,
   editProject: PropTypes.object.isRequired,
   error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
