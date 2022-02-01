@@ -10,7 +10,7 @@ import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.
 
 const ProjectSettingsGeneralView = ({
   artifactPath,
-  default_artifact_path,
+  defaultArtifactPath,
   editProject,
   error,
   generalParams,
@@ -60,17 +60,16 @@ const ProjectSettingsGeneralView = ({
                 onChange={value =>
                   handleArtifactPathChange(value, validation.isPathValid)
                 }
-                placeholder={default_artifact_path ?? ''}
+                placeholder={defaultArtifactPath ?? ''}
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,
                     isPathValid: value
                   }))
                 }
-                tip=""
                 value={editProject.artifact_path.value ?? artifactPath}
               />
-              <span className="small">
+              <span className="settings__artifact-path-link">
                 Enter the default path for saving the artifacts within your
                 project.
                 <a

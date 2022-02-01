@@ -158,7 +158,7 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
                   >
                     {tab.label}
                     {tab.tip && (
-                      <Tip className="checkbox__label-tip" text={tab.tip} />
+                      <Tip className="details-menu__tab-tip" text={tab.tip} />
                     )}
                   </li>
                 </Link>
