@@ -1,12 +1,16 @@
 @import '../../scss/colors';
 
 .settings {
-  &__artifact-path {
-    margin-bottom: 25px;
+  &__artifact-path,
+  &__source {
+    margin-bottom: 15px;
+  }
 
+  &__artifact-path {
     &-link {
       display: block;
       font-size: 0.75rem;
+      font-weight: 400;
       margin-top: 5px;
 
       .link {

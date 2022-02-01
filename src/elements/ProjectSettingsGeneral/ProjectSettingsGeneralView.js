@@ -47,7 +47,6 @@ const ProjectSettingsGeneralView = ({
               settingsSource={source}
               validation={validation}
             />
-            <div className="settings__card-divider" />
             <div
               className="settings__artifact-path"
               onClick={() => handleEditProject(ARTIFACT_PATH)}
