@@ -13,6 +13,7 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import TableTop from '../../elements/TableTop/TableTop'
 
 import {
   generateContentActionsMenu,
@@ -54,7 +55,8 @@ const Content = ({
   pageData,
   projectStore,
   refresh,
-  selectedItem
+  selectedItem,
+  tableTop
 }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [expandedItems, setExpandedItems] = useState([])
@@ -226,6 +228,11 @@ const Content = ({
           )}
 
         <div className="table-container">
+          {tableTop && (
+            <TableTop link={tableTop.link} text={tableTop.text}>
+              {tableTop.children}
+            </TableTop>
+          )}
           <div className={filterMenuClassNames}>
             <FilterMenu
               actionButton={pageData.filterMenuActionButton}
@@ -293,7 +300,8 @@ Content.defaultProps = {
   handleActionsMenuClick: () => {},
   handleCancel: () => {},
   handleSelectItem: () => {},
-  selectedItem: {}
+  selectedItem: {},
+  tableTop: null
 }
 
 Content.propTypes = {
@@ -307,7 +315,11 @@ Content.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({})
+  selectedItem: PropTypes.shape({}),
+  tableTop: PropTypes.shape({
+    link: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired
+  })
 }
 
 export default connect(
