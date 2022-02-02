@@ -20,7 +20,7 @@ podTemplate(
 ) {
     node(podLabel) {
         common.notify_slack {
-            container('base-build') {
+            container('jnlp') {
 
                 stage("git clone") {
                     checkout scm
