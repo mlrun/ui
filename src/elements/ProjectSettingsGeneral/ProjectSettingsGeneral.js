@@ -11,6 +11,8 @@ import {
 } from '../../components/ProjectSettings/projectSettings.util'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
+import notificationActions from '../../actions/notification'
+import { STATUS_CODE_FORBIDDEN } from '../../constants'
 
 import './projectSettingsGeneral.scss'
 
@@ -20,6 +22,7 @@ const ProjectSettingsGeneral = ({
   match,
   projectStore,
   removeProjectData,
+  setNotification,
   setProjectParams,
   setProjectSettings
 }) => {
@@ -190,18 +193,29 @@ const ProjectSettingsGeneral = ({
       source: data.spec.source,
       artifact_path: data.spec.artifact_path
     })
-    projectsApi.editProject(match.params.projectName, { ...data }).catch(() => {
-      setEditProject({
-        source: {
-          value: projectStore.project.data.metadata.name,
-          isEdit: false
-        },
-        artifact_path: {
-          value: projectStore.project.data.spec.artifact_path,
-          isEdit: false
-        }
+    projectsApi
+      .editProject(match.params.projectName, { ...data })
+      .catch(error => {
+        setEditProject({
+          source: {
+            value: projectStore.project.data.spec.source,
+            isEdit: false
+          },
+          artifact_path: {
+            value: projectStore.project.data.spec.artifact_path,
+            isEdit: false
+          }
+        })
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message:
+            error.response?.status === STATUS_CODE_FORBIDDEN
+              ? 'You are not allowed to edit project'
+              : 'Failed to edit project data',
+          retry: () => sendProjectSettingsData(data)
+        })
       })
-    })
   }
 
   const handleSourceChange = value => {
@@ -235,7 +249,7 @@ const ProjectSettingsGeneral = ({
         setEditProject(prevState => ({
           ...prevState,
           source: {
-            ...prevState.source,
+            value: null,
             isEdit: false
           }
         }))
@@ -294,5 +308,5 @@ export default connect(
     projectStore,
     frontendSpec: appStore.frontendSpec
   }),
-  { ...projectsAction }
+  { ...projectsAction, setNotification: notificationActions.setNotification }
 )(ProjectSettingsGeneral)
