@@ -9,8 +9,8 @@ Feature: Feature Store Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
@@ -36,8 +36,8 @@ Feature: Feature Store Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
@@ -64,8 +64,8 @@ Feature: Feature Store Page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "fsdemo-admin" value
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -89,8 +89,8 @@ Feature: Feature Store Page
         And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
@@ -114,8 +114,8 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -196,8 +196,8 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
@@ -224,8 +224,8 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
@@ -949,8 +949,8 @@ Feature: Feature Store Page
         And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -959,7 +959,8 @@ Feature: Feature Store Page
         Then "Title" element on "Create_Feature_Vector_Popup" should contains "Create feature vector" value
         Then verify "Cross_Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" element visibility on "Create_Feature_Vector_Popup" wizard
-        Then verify "Name_Input" according hint rules on "Create_Feature_Vector_Popup" wizard
+        Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
+        Then verify "Name_Input" options rules on "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Description_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
@@ -997,8 +998,8 @@ Feature: Feature Store Page
         And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1013,7 +1014,8 @@ Feature: Feature Store Page
         Then "Title" element on "Create_Feature_Vector_Popup" should contains "Edit feature vector" value
         Then verify "Cross_Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" element visibility on "Create_Feature_Vector_Popup" wizard
-        Then verify "Name_Input" according hint rules on "Create_Feature_Vector_Popup" wizard
+        Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
+        Then verify "Name_Input" options rules on "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Description_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
@@ -1028,8 +1030,8 @@ Feature: Feature Store Page
         And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1066,8 +1068,8 @@ Feature: Feature Store Page
         And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1136,8 +1138,8 @@ Feature: Feature Store Page
         And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard

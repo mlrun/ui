@@ -76,6 +76,7 @@ const action = {
   componentIsNotVisible: async function(driver, component) {
     const _component = component.root ?? component
     const element = await driver.findElement(_component)
+    await driver.sleep(250)
     const displayed = await element.isDisplayed()
     expect(displayed).equal(false)
   },
@@ -91,7 +92,10 @@ const action = {
   verifyText: async function(driver, component, value) {
     const element = await driver.findElement(component)
     const txt = await element.getText('value')
-    expect(txt).equal(value)
+    expect(txt).equal(
+      value,
+      `should be expected "${value}" but actual value "${txt}"`
+    )
   },
   verifyTextRegExp: async function(driver, component, regexp) {
     const element = await driver.findElement(component)
@@ -106,6 +110,32 @@ const action = {
   ) {
     const element = await driver.findElement(component)
     return (await element.getAttribute(attribute)) === value
+  },
+  verifyComponentContainsAttributeValue: async function(
+    driver,
+    component,
+    attribute,
+    value
+  ) {
+    const element = await driver.findElement(component)
+    const attributes = await element.getAttribute(attribute)
+    expect(attributes.includes(value)).equal(
+      true,
+      `Attribute "${value}" does not present in "${attribute}" values list "${attributes}"`
+    )
+  },
+  verifyComponentNotContainsAttributeValue: async function(
+    driver,
+    component,
+    attribute,
+    value
+  ) {
+    const element = await driver.findElement(component)
+    const attributes = await element.getAttribute(attribute)
+    expect(attributes.includes(value)).equal(
+      false,
+      `Attribute "${value}" does present in "${attribute}" values list "${attributes}"`
+    )
   },
   collapseAccordionSection: async function(driver, collapseComponent) {
     const element = await driver.findElement(collapseComponent)

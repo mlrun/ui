@@ -9,8 +9,8 @@ Feature: Files Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Artifacts" value
@@ -31,8 +31,8 @@ Feature: Files Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Artifacts" value
@@ -49,8 +49,8 @@ Feature: Files Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then click on "Register_File_Button" element on "Files" wizard
@@ -80,8 +80,8 @@ Feature: Files Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
@@ -102,8 +102,8 @@ Feature: Files Page
     Given open url
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
@@ -126,8 +126,8 @@ Feature: Files Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
@@ -143,8 +143,8 @@ Feature: Files Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
@@ -157,8 +157,8 @@ Feature: Files Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "test-i" value in "name" column
@@ -172,8 +172,8 @@ Feature: Files Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "Project" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard

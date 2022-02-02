@@ -25,7 +25,7 @@ const infoPaneTabSelector = {
     row: {
       root: 'a',
       fields: {
-        tab: '.details-menu__tab'
+        key: '.details-menu__tab'
       }
     }
   }
@@ -38,7 +38,9 @@ const infoPaneOverviewHeaders = {
     row: {
       root: 'li:not(li.details-item_hidden)',
       fields: {
-        tab: '.details-item__header'
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
       }
     }
   }
@@ -277,7 +279,7 @@ const modelsRealTimeinfoPaneOverviewHeaders = {
     row: {
       root: '.graph-pane__row',
       fields: {
-        tab: ' .graph-pane__row-label'
+        key: '.graph-pane__row-label'
       }
     }
   }
@@ -469,12 +471,17 @@ module.exports = {
   },
   jobsMonitorTabInfoPane: {
     Arrow_Back: By.css('.table__item a.item-header__back-btn'),
+
     Header: header,
     Updated: updated,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Overview_Headers: commonTable(infoPaneOverviewHeaders)
+    Overview_Headers: commonTable(infoPaneOverviewHeaders),
+
+    // Logs tab.
+    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
+    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
   },
   workflowsMonitorTabInfoPane: {
     Arrow_Back: By.css('.workflow-header a.link-back__icon'),
@@ -483,7 +490,11 @@ module.exports = {
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Overview_Headers: commonTable(infoPaneOverviewHeaders)
+    Overview_Headers: commonTable(infoPaneOverviewHeaders),
+
+    // Logs tab.
+    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
+    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
   },
   inputsInfoPane: {
     Inputs_Table: commonTable(inputsTable)

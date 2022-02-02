@@ -1,6 +1,6 @@
 import { getNamedRowsGeometry, getNamedFieldsGeometry } from './table.action'
 
-import numjs from 'numjs'
+import numjs from '@d4c/numjs'
 import { expect } from 'chai'
 
 function diffMapper(array0, array1, deviation) {

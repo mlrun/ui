@@ -42,8 +42,9 @@ Feature: MLRun Projects Page
         Then click on "New_Project_Button" element on "Projects" wizard
         Then verify if "Create_New_Project" popup dialog appears
         Then verify "Name_Input" element visibility on "Create_New_Project" wizard
-        Then verify "Name_Input" on "Create_New_Project" wizard should display "Input_Hint"."Project_Name_Hint"
-        Then verify "Name_Input" according hint rules on "Create_New_Project" wizard
+        Then type value "   " to "Name_Input" field on "Create_New_Project" wizard
+        Then verify "Name_Input" on "Create_New_Project" wizard should display options "Input_Hint"."Project_Name_Hint"
+        Then verify "Name_Input" options rules on "Create_New_Project" wizard
         Then verify "Description_Input" element visibility on "Create_New_Project" wizard
         Then verify "Cancel_Button" element visibility on "Create_New_Project" wizard
         Then "Cancel_Button" element on "Create_New_Project" should contains "Cancel" value

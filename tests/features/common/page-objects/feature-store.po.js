@@ -19,7 +19,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        tab: 'a'
+        key: 'a'
       }
     }
   }

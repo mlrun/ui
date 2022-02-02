@@ -175,7 +175,7 @@ module.exports = {
       generateInputGroup(
         '.pop-up-dialog .input-wrapper:nth-of-type(1)',
         true,
-        true,
+        '.input__warning svg',
         true
       )
     ),
@@ -485,7 +485,7 @@ module.exports = {
       generateInputGroup(
         '.pop-up-dialog .vector-name-wrapper',
         true,
-        true,
+        '.input__warning svg',
         true
       )
     ),

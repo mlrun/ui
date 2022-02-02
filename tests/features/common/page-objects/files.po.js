@@ -63,7 +63,8 @@ module.exports = {
         '.content .content__action-bar .filters .tag-filter',
         'input',
         '.tag-filter__dropdown .tag-filter__dropdown-item',
-        ''
+        '',
+        true
       )
     ),
     Table_Name_Filter_Input: inputGroup(

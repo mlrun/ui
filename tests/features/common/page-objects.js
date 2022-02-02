@@ -1,7 +1,4 @@
-import { By } from 'selenium-webdriver'
-
-import breadcrumbsComponent from './components/breadcrumbs.component'
-
+import commonPagesHeader from './page-objects/commonPagesHeader.po'
 import project from './page-objects/project.po'
 import projects from './page-objects/projects.po'
 import featureStore from './page-objects/feature-store.po'
@@ -15,16 +12,10 @@ import files from './page-objects/files.po'
 import models from './page-objects/models.po'
 
 module.exports = {
-  commonPagesHeader: {
-    loader: By.css('.loader-wrapper .loader'),
-    See_On_Github: By.css('header.header a.header__link'),
-    Common_Hint: By.css('.tip'),
-    MLRun_Logo: By.css('.header .header__logo'),
-    No_Data_Message: By.css('.no-data-block h3'),
-    Breadcrumbs: breadcrumbsComponent
-  },
+  commonPagesHeader: commonPagesHeader,
   Projects: projects,
-  Project: project,
+  Project: project['project'],
+  Demo_Project: project['demoProject'],
   Create_New_Project: interactivePopup['createNewProject'],
   Feature_Store_Feature_Sets_Tab: featureStore['featureSetsTab'],
   Feature_Store_Features_Tab: featureStore['featuresTab'],

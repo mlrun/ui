@@ -22,7 +22,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        tab: 'a'
+        key: 'a'
       }
     }
   }
@@ -81,9 +81,9 @@ const jobsMonitorTable = {
         },
         name: '.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
         datetime:
-          '.table-body__cell:nth-of-type(1) a .date__uid_row span:nth-of-type(1)',
+          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
         uid:
-          '.table-body__cell:nth-of-type(1) a .date__uid_row span:nth-of-type(2)',
+          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(2)',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(

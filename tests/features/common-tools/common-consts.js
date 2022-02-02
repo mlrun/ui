@@ -7,7 +7,17 @@ module.exports = {
       'Register Artifact',
       'Register Model',
       'Register Dataset'
-    ]
+    ],
+    Online_Status: 'online',
+    Data_Collection_Description:
+      'This section enable users to upload data , crate features and register external data. Keep in mind that this ' +
+      'explaination is only temporary and should be replaced soon enough. This is not the final version.',
+    Development_Description:
+      'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various ' +
+      'processing types including model training, data processing and more. This is not the final version.',
+    Deployment_Description:
+      'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale. ' +
+      'This is not the final version.'
   },
   Feature_Store: {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors', 'Datasets']
@@ -156,11 +166,13 @@ module.exports = {
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
     Project_Name_Hint:
-      '• Valid characters: a-z, 0-9, -\n• Must being and end with: a-z, 0-9\n• Length - max: 63',
+      'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
+      'This field is required',
     Feature_Set_Name_Hint:
       '• Valid characters: A-Z, a-z, 0-9, -, _, .\n• Must begin and end with: A-Z, a-z, 0-9\n• Length - max: 56',
     Jobs_Name_Hint:
-      '• Valid characters: A-Z, a-z, 0-9, -, _, .\n• Must begin and end with: A-Z, a-z, 0-9\n• Length - max: 63',
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
+      'This field is required',
     Input_Field_Require: 'This field is required',
     Input_Field_Invalid: 'This field is invalid',
     URL_Field_Require: 'URL is required',

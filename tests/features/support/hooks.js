@@ -6,6 +6,7 @@ import { clearBackendAfterTest } from '../common-tools/common-tools'
 Before(async function() {
   await this.driver.manage().window()
   this.createdItems = []
+  this.testContext = {}
 })
 
 After(async function(testCase) {
