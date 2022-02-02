@@ -115,7 +115,9 @@ const createJobsContent = (
         return {
           name: {
             id: `name.${identifierUnique}`,
-            value: contentItem.name,
+            value: params.jobName
+              ? contentItem.uid || contentItem?.id
+              : contentItem.name,
             class: 'jobs_medium',
             type: type === 'workflow' && !isDemoMode ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
@@ -128,14 +130,23 @@ const createJobsContent = (
                     contentItem.uid,
                     tab
                   )
-                : generateLinkToDetailsPanel(
+                : params.jobName
+                ? generateLinkToDetailsPanel(
                     contentItem.project,
                     JOBS_PAGE,
                     MONITOR_JOBS_TAB,
                     contentItem.uid,
                     null,
-                    tab
+                    tab,
+                    null,
+                    null,
+                    contentItem.name
                   )
+                : `/projects/${
+                    contentItem.project
+                  }/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${
+                    contentItem.name
+                  }`
             }
           },
           type: {
