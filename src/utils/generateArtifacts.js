@@ -22,11 +22,6 @@ export const generateArtifacts = (artifacts, iter) => {
               )
 
               item.preview = generatedPreviewData.preview
-
-              if (generatedPreviewData.extraDataPath) {
-                generatedArtifact.target_path =
-                  generatedPreviewData.extraDataPath
-              }
             } else {
               item.preview ??= []
             }
