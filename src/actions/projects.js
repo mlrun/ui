@@ -87,7 +87,10 @@ const projectsAction = {
     return projectsApi
       .changeProjectState(project, status)
       .then(() => dispatch(projectsAction.changeProjectStateSuccess()))
-      .catch(() => dispatch(projectsAction.changeProjectStateFailure()))
+      .catch(error => {
+        dispatch(projectsAction.changeProjectStateFailure())
+        throw error
+      })
   },
   changeProjectStateBegin: () => ({ type: CHANGE_PROJECT_STATE_BEGIN }),
   changeProjectStateFailure: () => ({ type: CHANGE_PROJECT_STATE_FAILURE }),

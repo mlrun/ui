@@ -1,68 +1,164 @@
 {
-    "projects": [
-        {
-            "name": "test",
-            "functions_count": 3,
-            "feature_sets_count": 2,
-            "models_count": 1,
-            "runs_failed_recent_count": 0,
-            "runs_running_count": 2
-        },
-        {
-            "name": "default",
-            "functions_count": 14,
-            "feature_sets_count": 44,
-            "models_count": 14,
-            "runs_failed_recent_count": 2,
-            "runs_running_count": 10
-        },
-        {
-            "name": "hhhh",
-            "functions_count": 0,
-            "feature_sets_count": 0,
-            "models_count": 0,
-            "runs_failed_recent_count": 0,
-            "runs_running_count": 1
-        },
-        {
-            "name": "test5",
-            "functions_count": 0,
-            "feature_sets_count": 0,
-            "models_count": 0,
-            "runs_failed_recent_count": 0,
-            "runs_running_count": 0
-        },
-        {
-            "name": "long-long-long-long-long-long-long-long-long-long",
-            "functions_count": 0,
-            "feature_sets_count": 0,
-            "models_count": 0,
-            "runs_failed_recent_count": 0,
-            "runs_running_count": 0
-        },
-        {
-            "name": "test7",
-            "functions_count": 0,
-            "feature_sets_count": 0,
-            "models_count": 0,
-            "runs_failed_recent_count": 0,
-            "runs_running_count": 0
-        },
-        {
-            "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "functions_count": 1,
-            "feature_sets_count": 1,
-            "models_count": 1,
-            "runs_failed_recent_count": 0,
-            "runs_running_count": 0
-        },
-        {
-            "name": "test-erann",
-            "functions_count": 0,
-            "feature_sets_count": 0,
-            "models_count": 0,
-            "runs_failed_recent_count": 0,
-            "runs_running_count": 0
-        }
-    ]
+  "project_summaries": [
+    {
+      "name": "cat-vs-dog-classification",
+      "files_count": 2,
+      "feature_sets_count": 0,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 3,
+      "schedules_count": 1,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "churn-project-admin",
+      "files_count": 7,
+      "feature_sets_count": 1,
+      "models_count": 5,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 2,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "default",
+      "files_count": 2,
+      "feature_sets_count": 23,
+      "models_count": 1,
+      "runs_failed_recent_count": 1,
+      "runs_running_count": 7,
+      "schedules_count": 2,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "fraud-demo2-admin",
+      "files_count": 0,
+      "feature_sets_count": 1,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "fsdemo-admin",
+      "files_count": 0,
+      "feature_sets_count": 4,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "getting-started-tutorial-admin",
+      "files_count": 1,
+      "feature_sets_count": 0,
+      "models_count": 2,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 1,
+      "schedules_count": 1,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "hedi-proj",
+      "files_count": 0,
+      "feature_sets_count": 0,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "mask-detection",
+      "files_count": 0,
+      "feature_sets_count": 0,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "model-deployment-pipeline-admin",
+      "files_count": 0,
+      "feature_sets_count": 0,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "moreofthesame",
+      "files_count": 0,
+      "feature_sets_count": 0,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 2,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "network-operations",
+      "files_count": 0,
+      "feature_sets_count": 0,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "network-operations-admin",
+      "files_count": 13,
+      "feature_sets_count": 0,
+      "models_count": 6,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 3,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "sk-project-admin",
+      "files_count": 4,
+      "feature_sets_count": 0,
+      "models_count": 3,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 1,
+      "schedules_count": 1,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "stocks",
+      "files_count": 0,
+      "feature_sets_count": 2,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "stocks-admin",
+      "files_count": 0,
+      "feature_sets_count": 2,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    },
+    {
+      "name": "test-test",
+      "files_count": 1,
+      "feature_sets_count": 0,
+      "models_count": 0,
+      "runs_failed_recent_count": 0,
+      "runs_running_count": 0,
+      "schedules_count": 0,
+      "pipelines_running_count": 0
+    }
+  ]
 }
