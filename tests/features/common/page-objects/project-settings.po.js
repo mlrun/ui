@@ -7,7 +7,7 @@ const tabSelector = {
   root: '.content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: 'ul.content-menu__list',
     row: {
       root: '.content-menu__item',
       fields: {
@@ -60,7 +60,9 @@ const secretsTable = {
 module.exports = {
   generalTab: {
     Project_Settings_Tab_Selector: commonTable(tabSelector),
-    Source_URL_Edit_Button: By.css('.settings__card-content .settings__source'),
+    Source_URL_Edit_Button: By.css(
+      '.settings__card-content .settings__source .settings__source-link'
+    ),
     Source_URL_Edit_Input: inputGroup(
       generateInputGroup(
         '.settings__card-content .settings__source .input-wrapper',

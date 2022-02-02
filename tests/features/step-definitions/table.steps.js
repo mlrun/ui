@@ -17,7 +17,7 @@ import {
   isNotContainsValueInColumn,
   findRowIndexesByColumnValue,
   getCellByIndexColumn,
-  isContainsSubstringInColumnCells,
+  isContainsSubstringInColumnCels,
   isContainsSubstringInColumnDropdownCels,
   isContainsSubstringInColumnTooltipCells,
   isDatetimeCelsValueInRange,
@@ -291,8 +291,7 @@ When('click on {string} in {string} table on {string} wizard', async function(
     const indx = arr[0] - pageObjects[wizardName][tableName].offset
     await hoverComponent(
       this.driver,
-      pageObjects[wizardName][tableName]['tableFields'][field](indx),
-      false
+      pageObjects[wizardName][tableName]['tableFields'][field](indx)
     )
     await clickOnComponent(
       this.driver,
@@ -345,7 +344,7 @@ Then(
   'value in {string} column with {string} in {string} on {string} wizard should contains {string}',
   async function(column, type, table, wizard, substring) {
     if (type === 'text') {
-      await isContainsSubstringInColumnCells(
+      await isContainsSubstringInColumnCels(
         this.driver,
         pageObjects[wizard][table],
         column,
@@ -376,7 +375,7 @@ Then(
   'value in {string} column with {string} in {string} in {string} on {string} wizard should contains {string}',
   async function(column, type, table, accordion, wizard, substring) {
     if (type === 'text') {
-      await isContainsSubstringInColumnCells(
+      await isContainsSubstringInColumnCels(
         this.driver,
         pageObjects[wizard][accordion][table],
         column,
@@ -439,7 +438,7 @@ Then(
         i,
         subTable
       )
-      await isContainsSubstringInColumnCells(
+      await isContainsSubstringInColumnCels(
         this.driver,
         cellTable,
         subColumn,
@@ -565,23 +564,6 @@ When(
 )
 
 When(
-  'click on row root with value {string} in {string} column in {string} table on {string} wizard',
-  async function(value, columnName, table, wizard) {
-    const arr = await findRowIndexesByColumnValue(
-      this.driver,
-      pageObjects[wizard][table],
-      columnName,
-      value
-    )
-    const indx = arr[0]
-    await clickOnComponent(
-      this.driver,
-      pageObjects[wizard][table]['rowRoot'](indx)
-    )
-  }
-)
-
-When(
   'click on cell with row index {int} in {string} column in {string} table on {string} wizard',
   async function(indx, columnName, table, wizard) {
     await clickOnComponent(
@@ -602,8 +584,7 @@ When(
         this.driver,
         pageObjects[wizardName][accordionName][tableName]['add_row_btn']
       )
-
-      for (let indx = 0; indx < pageComponents.length; indx++) {
+      for (const indx in pageComponents) {
         if (pageComponents[indx].includes('Dropdown')) {
           await scrollToElement(
             this.driver,
@@ -804,7 +785,7 @@ Then('check {string} visibility in {string} on {string} wizard', async function(
 })
 
 Then(
-  'check {string} not visible in {string} on {string} wizard',
+  'check {string} not visibile in {string} on {string} wizard',
   async function(cellName, tableName, wizardName) {
     const rowsNumber = await getTableRows(
       this.driver,
@@ -816,15 +797,5 @@ Then(
         pageObjects[wizardName][tableName].tableFields[cellName](i + 1)
       )
     }
-  }
-)
-
-When(
-  'click on node with index {int} in {string} graph on {string} wizard',
-  async function(index, graphName, wizardName) {
-    await clickOnComponent(
-      this.driver,
-      pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
-    )
   }
 )

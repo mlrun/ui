@@ -1,12 +1,11 @@
 import { generateRegEx, getLength, getNotToBe, getRule } from './utils'
 import {
-  deleteAPIArtifact,
+  deleteAPIMLProject,
+  deleteAPIFunction,
   deleteAPIFeatureSet,
   deleteAPIFeatureVector,
-  deleteAPIFunction,
-  deleteAPIMLProject,
-  deleteAPISchedule
-} from '../common/actions/api.actions'
+  deleteAPIJob
+} from '../common/actions/common.action'
 
 module.exports = {
   locatorBuilder: function(strings, ...keys) {
@@ -33,11 +32,11 @@ module.exports = {
     }
     if (hint) {
       structure.elements.hint =
-        typeof hint === 'string' ? hint : '.tip-container svg'
+        typeof hint === 'string' ? hint : 'div.tip-container svg'
     }
     if (warning) {
-      structure.elements.warningHint = '.input__warning svg'
-      structure.elements.warningText = '.tooltip .tooltip__text'
+      structure.elements.warningHint = 'div.input__warning svg'
+      structure.elements.warningText = 'div.tooltip div.tooltip__text'
     }
 
     return structure
@@ -63,11 +62,11 @@ module.exports = {
 
     if (hint) {
       structure.elements.hint =
-        typeof hint === 'string' ? hint : '.tip-container svg'
+        typeof hint === 'string' ? hint : 'div.tip-container svg'
     }
     if (warning) {
       structure.elements.warningHint = '.range__warning svg'
-      structure.elements.warningText = '.tooltip .tooltip__text'
+      structure.elements.warningText = 'div.tooltip div.tooltip__text'
     }
 
     return structure
@@ -85,7 +84,7 @@ module.exports = {
 
     if (hintButton) {
       structure.elements.hintButton =
-        typeof hintButton === 'string' ? hintButton : '.tip-container svg'
+        typeof hintButton === 'string' ? hintButton : 'div.tip-container svg'
     }
 
     if (hint) {
@@ -150,21 +149,31 @@ module.exports = {
       notConsecutiveCharacters
     )
   },
-  clearBackendAfterTest: function(driver, items) {
-    items.forEach(item => {
-      switch (item.type) {
+  clearBackendAfterTest: function(items) {
+    Object.keys(items).forEach(key => {
+      switch (key) {
         case 'project':
-          return deleteAPIMLProject(driver, item.name, 204)
+          return deleteAPIMLProject(items[key], 204)
         case 'featureSet':
-          return deleteAPIFeatureSet(item.project, item.name, 204)
+          return deleteAPIFeatureSet(
+            items[key].projectName,
+            items[key].itemName,
+            204
+          )
         case 'featureVector':
-          return deleteAPIFeatureVector(item.project, item.name, 204)
+          return deleteAPIFeatureVector(
+            items[key].projectName,
+            items[key].itemName,
+            204
+          )
         case 'function':
-          return deleteAPIFunction(item.project, item.name, 204)
-        case 'schedule':
-          return deleteAPISchedule(item.project, item.name, 204)
-        case 'artifact':
-          return deleteAPIArtifact(item.project, item.name, 204)
+          return deleteAPIFunction(
+            items[key].projectName,
+            items[key].itemName,
+            204
+          )
+        case 'job':
+          return deleteAPIJob(items[key].projectName, items[key].itemName, 204)
         default:
           return null
       }
