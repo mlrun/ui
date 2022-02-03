@@ -6,7 +6,11 @@ import classnames from 'classnames'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
-import { FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../../constants'
+import {
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  REAL_TIME_PIPELINES_TAB
+} from '../../constants'
 import { formatDatetime, truncateUid } from '../../utils'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
@@ -22,10 +26,7 @@ const TableLinkCell = ({
   expandLink,
   handleExpandRow
 }) => {
-  const tableCellClassNames = classnames(
-    'table-body__cell',
-    data.type === 'date' ? 'jobs_medium' : data.class
-  )
+  const tableCellClassNames = classnames('table-body__cell', data.class)
   const itemNameCLassNames = classnames(
     'link',
     'item-name',
@@ -61,7 +62,9 @@ const TableLinkCell = ({
             </Tooltip>
           </span>
           {link.match(
-            new RegExp(`functions|${FEATURE_SETS_TAB}|${FEATURE_VECTORS_TAB}`)
+            new RegExp(
+              `functions|${FEATURE_SETS_TAB}|${FEATURE_VECTORS_TAB}|${REAL_TIME_PIPELINES_TAB}`
+            )
           ) &&
             data.value !== item.tag && (
               <Tooltip
