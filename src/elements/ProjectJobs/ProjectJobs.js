@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
 import { MONITOR_JOBS_TAB } from '../../constants'
-import { useDemoMode } from '../../hooks/demoMode.hook'
 import {
   getJobsStatistics,
   getJobsTableData,
@@ -16,7 +15,6 @@ import projectsAction from '../../actions/projects'
 
 const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
   const [groupedLatestItem, setGroupedLatestItem] = useState([])
-  const isDemoMode = useDemoMode()
 
   useEffect(() => {
     if (projectStore.project.jobs.data) {
@@ -31,18 +29,14 @@ const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
   }, [fetchProjectJobs, match.params.projectName])
 
   const jobsData = useMemo(() => {
-    const statistics = getJobsStatistics(
-      projectStore.projectSummary,
-      match,
-      isDemoMode
-    )
+    const statistics = getJobsStatistics(projectStore.projectSummary, match)
     const table = getJobsTableData(groupedLatestItem, match)
 
     return {
       statistics,
       table
     }
-  }, [groupedLatestItem, isDemoMode, match, projectStore.projectSummary])
+  }, [groupedLatestItem, match, projectStore.projectSummary])
 
   return (
     <ProjectDataCard

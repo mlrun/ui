@@ -8,7 +8,7 @@ import {
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
 
-export const getJobsStatistics = (projectCounter, match, isDemoMode) => {
+export const getJobsStatistics = (projectCounter, match) => {
   return {
     running: {
       value: projectCounter.error
@@ -31,9 +31,7 @@ export const getJobsStatistics = (projectCounter, match, isDemoMode) => {
         projectCounter.data.pipelines_running_count === 0
           ? 'default'
           : 'running',
-      link: `/projects/${match.params.projectName}/jobs/${
-        isDemoMode ? MONITOR_WORKFLOWS_TAB : MONITOR_JOBS_TAB
-      }`
+      link: `/projects/${match.params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`
     },
     failed: {
       value: projectCounter.error
