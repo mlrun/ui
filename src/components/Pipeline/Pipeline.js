@@ -94,8 +94,13 @@ const Pipeline = ({ content, match }) => {
           data: {
             subType: PRIMARY_NODE,
             label: graph.class_args?.name ?? '',
-            subLabel: '« router »'
+            subLabel: '« router »',
+            isSelectable: true,
+            customData: graph
           },
+          className: classnames(
+            selectedStep.id === mainRouterStepId && 'selected'
+          ),
           position: { x: 0, y: 0 }
         })
       }
