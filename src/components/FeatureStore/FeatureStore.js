@@ -654,7 +654,10 @@ const FeatureStore = ({
           message={confirmData.message}
         />
       )}
-      {(featureStore.loading || artifactsStore.loading) && <Loader />}
+      {(featureStore.loading ||
+        featureStore.entities.loading ||
+        featureStore.features.loading ||
+        artifactsStore.loading) && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}
         cancelRequest={cancelRequest}
@@ -663,7 +666,9 @@ const FeatureStore = ({
         loading={
           match.params.pageTab === DATASETS_TAB
             ? artifactsStore.loading
-            : featureStore.loading
+            : featureStore.loading ||
+              featureStore.entities.loading ||
+              featureStore.features.loading
         }
         match={match}
         handleActionsMenuClick={handleActionsMenuClick}
