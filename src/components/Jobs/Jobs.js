@@ -560,6 +560,7 @@ const Jobs = ({
     return () => {
       setJobs([])
       setDataIsLoaded(false)
+      setWorkflow({})
     }
   }, [match.params.projectName, match.params.pageTab, match.params.jobName])
 

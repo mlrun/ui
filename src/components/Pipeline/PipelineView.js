@@ -21,7 +21,7 @@ const PipelineView = ({
   setSelectedStep,
   stepIsSelected
 }) => {
-  const linkBackTitle = pipeline?.nuclio_name || pipeline?.name
+  const linkBackTitle = pipeline?.name
   const graphViewClassNames = classnames('graph-view')
 
   return (
@@ -73,7 +73,13 @@ const PipelineView = ({
                 ) : (
                   <>
                     <div className="graph-pane__row-label">{rowData.label}</div>
-                    <div className="graph-pane__row-value">{rowData.value}</div>
+                    <div className="graph-pane__row-value">
+                      <Tooltip
+                        template={<TextTooltipTemplate text={rowData.value} />}
+                      >
+                        {rowData.value}
+                      </Tooltip>
+                    </div>
                   </>
                 )}
               </div>
