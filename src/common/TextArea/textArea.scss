@@ -64,7 +64,9 @@
 
     &.active-label {
       top: 10px;
+      font-weight: 700;
       font-size: 10px;
+      line-height: 12px;
 
       .text-area__label-mandatory {
         color: $topaz;

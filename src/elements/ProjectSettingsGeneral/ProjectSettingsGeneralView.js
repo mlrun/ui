@@ -2,25 +2,26 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
-import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Loader from '../../common/Loader/Loader'
+import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
+import ProjectDescription from '../../components/Project/ProjectDescription/ProjectDescription'
 
 import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.util'
 
 const ProjectSettingsGeneralView = ({
   artifactPath,
   defaultArtifactPath,
+  description,
   editProject,
   error,
   generalParams,
   handleAddNewParameter,
-  handleArtifactPathChange,
   handleDeleteParameter,
   handleEditParameter,
   handleEditProject,
   handleOnBlur,
-  handleSourceChange,
+  handleOnChange,
   loading,
   setValidation,
   source,
@@ -42,7 +43,7 @@ const ProjectSettingsGeneralView = ({
               editSourceData={editProject.source}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
-              handleSourceChange={handleSourceChange}
+              handleSourceChange={handleOnChange}
               setValidation={setValidation}
               settingsSource={source}
               validation={validation}
@@ -56,8 +57,9 @@ const ProjectSettingsGeneralView = ({
                 invalid={!validation.isPathValid}
                 label="Artifact path"
                 onBlur={() => handleOnBlur(ARTIFACT_PATH)}
-                onChange={value =>
-                  handleArtifactPathChange(value, validation.isPathValid)
+                onChange={
+                  value => handleOnChange(ARTIFACT_PATH, value)
+                  // handleArtifactPathChange(value, validation.isPathValid)
                 }
                 placeholder={defaultArtifactPath ?? ''}
                 setInvalid={value =>
@@ -81,6 +83,14 @@ const ProjectSettingsGeneralView = ({
                 </a>
               </span>
             </div>
+            <ProjectDescription
+              editDescriptionData={editProject.description}
+              handleEditProject={handleEditProject}
+              handleOnChangeProject={handleOnChange}
+              handleOnBlur={handleOnBlur}
+              projectDescription={editProject.description.value ?? description}
+              // ref={ref}
+            />
             <p className="settings__card-subtitle">Parameters</p>
             <p>
               The parameters enable users to pass key/value to the project
@@ -120,12 +130,11 @@ ProjectSettingsGeneralView.propTypes = {
   error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
-  handleArtifactPathChange: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleOnBlur: PropTypes.func.isRequired,
-  handleSourceChange: PropTypes.func.isRequired,
+  handleOnChange: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   setValidation: PropTypes.func.isRequired,
   source: PropTypes.string.isRequired,

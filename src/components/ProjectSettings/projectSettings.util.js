@@ -11,6 +11,8 @@ import { ReactComponent as Secrets } from '../../images/lock-icon.svg'
 
 export const ARTIFACT_PATH = 'artifact_path'
 export const SOURCE_URL = 'source'
+export const DESCRIPTION = 'description'
+export const GOALS = 'goals'
 
 export const tabs = [
   { id: PROJECTS_SETTINGS_GENERAL_TAB, label: 'General', icon: <Settings /> },

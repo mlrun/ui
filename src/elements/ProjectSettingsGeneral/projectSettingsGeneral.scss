@@ -2,12 +2,14 @@
 
 .settings {
   &__artifact-path,
+  &__description,
   &__source {
     margin-bottom: 15px;
   }
 
   &__artifact-path {
     &-link {
+      color: $topaz;
       display: block;
       font-size: 0.75rem;
       font-weight: 400;
@@ -23,5 +25,9 @@
     .table-row__header {
       border-top: 0;
     }
+  }
+
+  .text-area {
+    width: 100%;
   }
 }

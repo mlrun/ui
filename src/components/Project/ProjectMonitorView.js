@@ -15,7 +15,6 @@ import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
 import ProjectName from './ProjectName/ProjectName'
-import ProjectDescription from './ProjectDescription/ProjectDescription'
 import ProjectLabels from './ProjectLabels/ProjectLabels'
 import ProjectGoals from './ProjectGoals/ProjectGoals'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
@@ -128,14 +127,6 @@ const ProjectMonitorView = React.forwardRef(
                     ref={ref}
                   />
                 </div>
-                <ProjectDescription
-                  editDescriptionData={editProject.description}
-                  handleEditProject={handleEditProject}
-                  handleOnChangeProject={handleOnChangeProject}
-                  handleOnKeyDown={handleOnKeyDown}
-                  projectDescription={project.data.spec.description ?? ''}
-                  ref={ref}
-                />
                 <ProjectGoals
                   editGoalsData={editProject.goals}
                   handleEditProject={handleEditProject}

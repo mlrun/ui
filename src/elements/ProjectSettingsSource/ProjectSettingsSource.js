@@ -29,19 +29,21 @@ const ProjectSettingsSource = ({
         label="Source URL"
         focused
         onBlur={() => handleOnBlur(SOURCE_URL)}
-        onChange={handleSourceChange}
+        onChange={value => handleSourceChange(SOURCE_URL, value)}
         setInvalid={value =>
-          setValidation(state => ({
-            ...state,
-            isSourceValid: value
-          }))
+          setValidation(state => {
+            return {
+              ...state,
+              isSourceValid: value
+            }
+          })
         }
         tip="Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from"
         type="text"
         value={editSourceData.value ?? settingsSource}
       />
 
-      {(editSourceData.value || settingsSource) && (
+      {(editSourceData.value ?? settingsSource) && (
         <div className="settings__source-text">
           <Tooltip
             template={
