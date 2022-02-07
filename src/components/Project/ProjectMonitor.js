@@ -23,7 +23,6 @@ import {
   generateCreateNewOptions,
   handleFetchProjectError
 } from './project.utils'
-import { generateKeyValues, parseKeyValues } from '../../utils'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { KEY_CODES } from '../../constants'
 import {
@@ -510,16 +509,6 @@ const ProjectMonitor = ({
     }
   }
 
-  const handleAddProjectLabel = (label, labels) => {
-    const objectLabels = generateKeyValues(labels)
-    const newLabel = {
-      [label.split(':')[0]]: label.split(':')[1].replace(' ', '')
-    }
-
-    setVisibleChipsMaxLength(null)
-    addProjectLabel(newLabel, objectLabels)
-  }
-
   const handleEditProject = useCallback(inputName => {
     setEditProject(prevState => ({
       ...prevState,
@@ -580,15 +569,12 @@ const ProjectMonitor = ({
     fetchProjectUsersData()
   }
 
-  const handleUpdateProjectLabels = labels => {
-    const objectLabels = {}
+  const handleAddProjectLabel = (label, labels) => {
+    setVisibleChipsMaxLength(null)
+    addProjectLabel(label, labels)
+  }
 
-    labels.forEach(label => {
-      const splitedLabel = label.split(':')
-
-      objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
-    })
-
+  const handleUpdateProjectLabels = objectLabels => {
     const projectData = {
       description:
         editProject.description.value ??
@@ -613,14 +599,6 @@ const ProjectMonitor = ({
     setVisibleChipsMaxLength(1)
     editProjectLabels(match.params.projectName, { ...data }, objectLabels)
   }
-
-  const projectLabels = useMemo(
-    () =>
-      projectStore.project.data?.metadata.labels
-        ? parseKeyValues(projectStore.project.data.metadata.labels || {})
-        : [],
-    [projectStore.project.data]
-  )
 
   return (
     <ProjectMonitorView
@@ -650,7 +628,6 @@ const ProjectMonitor = ({
       membersDispatch={membersDispatch}
       membersState={membersState}
       projectSummary={projectStore.projectSummary}
-      projectLabels={projectLabels}
       projectMembersIsShown={projectMembersIsShown}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
       projectOwnerIsShown={projectOwnerIsShown}

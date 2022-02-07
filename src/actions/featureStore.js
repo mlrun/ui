@@ -23,6 +23,7 @@ import {
   REMOVE_FEATURE,
   REMOVE_FEATURES,
   REMOVE_FEATURES_ERROR,
+  REMOVE_FEATURE_SET,
   REMOVE_FEATURE_SETS,
   REMOVE_FEATURE_VECTOR,
   REMOVE_FEATURE_VECTORS,
@@ -93,6 +94,9 @@ const featureStoreActions = {
   }),
   createNewFeatureVector: data => () =>
     featureStoreApi.createFeatureVector(data),
+  deleteFeatureVector: (project, featureVector) => () => {
+    return featureStoreApi.deleteFeatureVector(project, featureVector)
+  },
   fetchEntity: (project, entityName, entityMetadataName) => dispatch => {
     return featureStoreApi
       .getEntity(project, entityName)
@@ -175,9 +179,9 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SETS_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureSet: (project, featureSet) => dispatch => {
+  fetchFeatureSet: (project, featureSet, tag) => dispatch => {
     return featureStoreApi
-      .getFeatureSet(project, featureSet)
+      .getFeatureSet(project, featureSet, tag)
       .then(response => {
         const generatedFeatureSets = parseFeatureSets(
           response.data?.feature_sets
@@ -201,9 +205,9 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SET_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureVector: (project, featureVector) => dispatch => {
+  fetchFeatureVector: (project, featureVector, tag) => dispatch => {
     return featureStoreApi
-      .getFeatureVector(project, featureVector)
+      .getFeatureVector(project, featureVector, tag)
       .then(response => {
         const generatedFeatureVectors = parseFeatureVectors(
           response.data?.feature_vectors
@@ -320,6 +324,10 @@ const featureStoreActions = {
   }),
   removeEntities: () => ({
     type: REMOVE_ENTITIES
+  }),
+  removeFeatureSet: featureSets => ({
+    type: REMOVE_FEATURE_SET,
+    payload: featureSets
   }),
   removeFeatureSets: () => ({
     type: REMOVE_FEATURE_SETS

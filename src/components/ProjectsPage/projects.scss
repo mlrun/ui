@@ -3,10 +3,13 @@
 @import '../../scss/borders';
 
 .projects {
+  position: relative;
   display: flex;
   flex-direction: column;
+  background-color: $white;
   width: 100%;
-  height: inherit;
+  height: 100%;
+  overflow: inherit;
 
   &__header {
     display: flex;
@@ -14,20 +17,19 @@
     align-items: center;
     justify-content: space-between;
     padding: 14px 24px;
-    background-color: $white;
     min-height: 70px;
   }
 
   &__wrapper {
     position: relative;
-    min-height: 700px;
     padding: 0 12px 15px;
-    background-color: $white;
     height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
 
     .projects-content-header {
       display: flex;
-      flex: 1;
+      flex: 0 0 0%;
       flex-flow: row wrap;
       align-items: center;
       justify-content: space-between;

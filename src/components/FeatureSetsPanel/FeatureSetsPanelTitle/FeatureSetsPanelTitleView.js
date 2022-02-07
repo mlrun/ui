@@ -113,7 +113,7 @@ const FeatureSetsPanelTitleView = ({
               className="panel-title__labels-item"
               editChip={handleChangeLabels}
               elements={data.labels}
-              isEditMode={true}
+              isEditMode
               removeChip={handleChangeLabels}
             />
           </div>

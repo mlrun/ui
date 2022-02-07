@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { Key } from 'selenium-webdriver'
 import { parseString } from '../../common-tools/common-tools'
+import { hoverComponent } from './common.action'
 
 async function verifyInputInvalid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.inputField)
@@ -48,6 +49,7 @@ const action = {
   },
   checkInputAccordingHintText: async function(
     driver,
+    attach,
     inputGroup,
     hintComponent
   ) {
@@ -72,6 +74,8 @@ const action = {
       await verifyInputInvalid(driver, inputGroup)
       await clearManually(input)
     }
+
+    await attach(JSON.stringify({ validStrings, invalidStrings }))
   },
   checkWarningHintText: async function(
     driver,
@@ -79,8 +83,9 @@ const action = {
     hintComponent,
     text
   ) {
-    const hintButton = await driver.findElement(inputGroup.warningHint)
-    await hintButton.click()
+    // const hintButton = await driver.findElement(inputGroup.warningHint)
+    // await hintButton.click()
+    await hoverComponent(driver, inputGroup.warningHint)
     const hint = await driver.findElement(hintComponent)
     await driver.sleep(250)
     const hintText = await hint.getText()

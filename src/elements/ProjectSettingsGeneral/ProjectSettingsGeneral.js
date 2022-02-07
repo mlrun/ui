@@ -16,6 +16,7 @@ import './projectSettingsGeneral.scss'
 
 const ProjectSettingsGeneral = ({
   fetchProject,
+  frontendSpec,
   match,
   projectStore,
   removeProjectData,
@@ -160,7 +161,7 @@ const ProjectSettingsGeneral = ({
             source: !isNil(editProject.source.value)
               ? editProject.source.value
               : projectStore.project.data.spec.source,
-            artifact_path: value,
+            artifact_path: value.trim(),
             params: projectStore.project.data.spec.params
           }
         }
@@ -265,6 +266,7 @@ const ProjectSettingsGeneral = ({
   return (
     <ProjectSettingsGeneralView
       artifactPath={projectStore.project.data?.spec.artifact_path ?? ''}
+      defaultArtifactPath={frontendSpec.default_artifact_path}
       editProject={editProject}
       error={projectStore.project?.error}
       generalParams={generalParams}
@@ -288,8 +290,9 @@ ProjectSettingsGeneral.propTypes = {
 }
 
 export default connect(
-  ({ projectStore }) => ({
-    projectStore
+  ({ appStore, projectStore }) => ({
+    projectStore,
+    frontendSpec: appStore.frontendSpec
   }),
   { ...projectsAction }
 )(ProjectSettingsGeneral)

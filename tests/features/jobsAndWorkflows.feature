@@ -8,11 +8,14 @@ Feature: Jobs and workflows
         And wait load page
         And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "New_Job_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "New_Job_Button" element on "Jobs_Monitor_Tab" should contains "New Job" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Expand_Rows_Button" element visibility on "Jobs_Monitor_Tab" wizard
@@ -21,6 +24,7 @@ Feature: Jobs and workflows
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Labels_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
+        When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @passive
@@ -30,8 +34,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -45,8 +51,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -90,8 +98,8 @@ Feature: Jobs and workflows
         When pick up "Custom range" from "03/31/2044 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then verify error mesege in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "03/31/2030 10:30" to "03/31/2030 10:30" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "03/31/2030 10:30" to "03/31/2030 10:30" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "03/31/2030 10:30" to "03/31/2030 10:31" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "03/31/2030 10:30" to "03/31/2030 10:31" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When pick up "Custom range" from "03/31/2025 10:31" to "03/21/2025 10:30" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then verify error mesege in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
 
@@ -100,17 +108,17 @@ Feature: Jobs and workflows
         Given open url
         And wait load page
         And wait load page
-        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        Then type value "ing" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
+        When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then type value "test" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "ing"
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
 
     @passive
-    @inProgress
     Scenario: verify filtering by job name on Schedule Monitor tab
         Given open url
         And wait load page
@@ -126,27 +134,27 @@ Feature: Jobs and workflows
         Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
         And wait load page
         Then value in "name" column with "text" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "test"
-#    TO DO: should be implemented mock requests for filters
 
     @passive
     Scenario: verify filtering by job label with key on Jobs Monitor tab
         Given open url
         And wait load page
-        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
+        When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then type value "host" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "host"
-        Then type value "host=test-m-ingest-lw42t" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
+        Then type value "host=aggregate-test-ftk8n" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
-        Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "host=test-m-ingest-lw42t"
+        Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "host=aggregate-test-ftk8n"
 
     @passive
     @inProgress
-    Scenario: verify filtering by job label with key on Jobs Monitor tab
+    Scenario: verify filtering by job label with key on Schedule tab
         Given open url
         And wait load page
         And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -164,7 +172,66 @@ Feature: Jobs and workflows
         Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
         And wait load page
         Then value in "labels" column with "dropdowns" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "v3io_user=admin"
-#    TO DO: should be implemented mock requests for filters
+
+    @passive
+    Scenario: verify filtering by job status on Jobs Monitor tab
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Completed"
+        Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Error"
+        Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Pending"
+
+    @passive
+    Scenario: verify filtering Jobs after re-run action
+        Given open url
+        And wait load page
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then type value "test" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
+        Then type value "host" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then select "Re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test" value in "name" column
+        Then click on "Cross_Close_Button" element on "New_JobTemplate_Edit" wizard
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
+        Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "host"
+
+    @passive
+    Scenario: verify filtering Jobs after Details panel opened
+        Given open url
+        And wait load page
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then type value "agg" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
+        Then type value "host" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
+        Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "host"
 
     @passive
     @inProgress
@@ -204,7 +271,7 @@ Feature: Jobs and workflows
         Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
         When type searchable fragment "server" into "Search_Input" on "Create_Job" wizard
-        Then searchable fragment "server" should be in every sugested option into "Search_Input" on "Create_Job" wizard
+        Then searchable fragment "server" should be in every suggested option into "Search_Input" on "Create_Job" wizard
         Then value in "name" column with "text" in "Selected_Functions_Templates" in "Select_Functions_From_Accordion" on "Create_Job" wizard should contains "server"
         When expand each row in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
         And wait load page
@@ -214,11 +281,12 @@ Feature: Jobs and workflows
     Scenario: Check all mandatory components in Item infopane on Overview tab table on Jobs Monitor Page
         Given open url
         And wait load page
-        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
         Then verify "Arrow_Back" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
@@ -264,9 +332,11 @@ Feature: Jobs and workflows
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then select "Delete" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "clean-data" value in "name" column
         Then verify if "Delete_Scheduled_Job_Popup" popup dialog appears
-        Then "Description" component on "Delete_Scheduled_Job_Popup" should contains "Descriptions"."Delete_Scheduled_Job"
+        Then "Description" component on "Delete_Scheduled_Job_Popup" should be equal "Descriptions"."Delete_Scheduled_Job"
         Then verify "Cancel_Button" element visibility on "Delete_Scheduled_Job_Popup" wizard
+        Then "Cancel_Button" element on "Delete_Scheduled_Job_Popup" should contains "Cancel" value
         Then verify "Delete_Button" element visibility on "Delete_Scheduled_Job_Popup" wizard
+        Then "Delete_Button" element on "Delete_Scheduled_Job_Popup" should contains "Delete" value
 
     @passive
     Scenario: verify mandatory elements on Create New Jobs side panel except accordions
@@ -282,16 +352,24 @@ Feature: Jobs and workflows
         When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
         And wait load page
         Then click on "Name_Edit_Button" element on "New_JobTemplate_Edit" wizard
-        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display "Input_Hint"."Jobs_Name_Hint"
-        Then verify "Job_Name_Input" according hint rules on "New_JobTemplate_Edit" wizard
-        Then type value "" to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
-        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then type value "   " to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
-        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+#        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display "Input_Hint"."Jobs_Name_Hint"
+#        Then type value "" to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
+#        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+#        Then type value "   " to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
+#        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Shedule_For_Later_Button" element visibility on "New_JobTemplate_Edit" wizard
+        Then verify "Access_Key_Checkbox" element visibility on "New_JobTemplate_Edit" wizard
+        Then uncheck "Access_Key_Checkbox" element on "New_JobTemplate_Edit" wizard
+        Then verify "Access_Key_Input" element visibility on "New_JobTemplate_Edit" wizard
+        Then type value "  " to "Access_Key_Input" field on "New_JobTemplate_Edit" wizard
+        Then verify "Access_Key_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then type value "" to "Access_Key_Input" field on "New_JobTemplate_Edit" wizard
+        Then verify "Access_Key_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Schedule_For_Later_Button" element visibility on "New_JobTemplate_Edit" wizard
+        Then "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" should contains "Schedule for later" value
         Then verify "Run_Now_Button" element visibility on "New_JobTemplate_Edit" wizard
+        Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Run now" value
 
     @passive
     Scenario: verify mandatory elements in Data Inputs Accordion on Create New Jobs side panel
@@ -308,6 +386,45 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Default_Input_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Default_Artifact_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+
+    @passive
+    Scenario: Verify behaviour of Combobox element on Create New Jobs wizard on Data Inputs Accordion
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        Then click on "Add_Input_Button" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify options in "URL_Combobox" combobox in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard should contains "Create_New_Job"."Combobox_Options"
+        When select "MLRun store" option in "URL_Combobox" combobox on "Data_Inputs_Accordion" accordion on "New_JobTemplate_Edit" wizard
+        When select "Artifacts" option in "URL_Combobox" combobox suggestion on "Data_Inputs_Accordion" accordion on "New_JobTemplate_Edit" wizard
+        When type searchable fragment "c" into "URL_Combobox" combobox input in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then searchable fragment "c" should be in every suggested option into "URL_Combobox" combobox input in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "Current project" option in "URL_Combobox" combobox suggestion on "Data_Inputs_Accordion" accordion on "New_JobTemplate_Edit" wizard
+        When type searchable fragment "clean" into "URL_Combobox" combobox input in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then searchable fragment "clean" should be in every suggested option into "URL_Combobox" combobox input in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When type value "  " to "URL_Combobox" field on "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Accordion_Header" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "URL_Combobox" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Jobs_MLRun_Store_Path_Hint"
+        When type value "artifacts/default" to "URL_Combobox" field on "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then searchable fragment "default" should be in every suggested option into "URL_Combobox" combobox input in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When type value "artifacts/default/train" to "URL_Combobox" field on "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then searchable fragment "train" should be in every suggested option into "URL_Combobox" combobox input in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Inputs_Accordion" accordion on "New_JobTemplate_Edit" wizard
+        Then type value "" to "URL_Combobox" field on "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "URL_Combobox" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Inputs_Accordion" accordion on "New_JobTemplate_Edit" wizard
+        Then verify "URL_Combobox" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."S3_Path_Hint"
+        Then select "Azure storage" option in "URL_Combobox" combobox on "Data_Inputs_Accordion" accordion on "New_JobTemplate_Edit" wizard
+        Then verify "URL_Combobox" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Azure_Storage_Path_Hint"
+        Then select "Google storage" option in "URL_Combobox" combobox on "Data_Inputs_Accordion" accordion on "New_JobTemplate_Edit" wizard
+        Then verify "URL_Combobox" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."S3_Path_Hint"
 
     @passive
     Scenario: verify mandatory elements in Parameters Accordion on Create New Jobs side panel
@@ -327,8 +444,56 @@ Feature: Jobs and workflows
         Then verify "Job_Custom_Parameters_Table" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Parameters_Additional_Settings_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Result_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Turning_Stratedgy_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Turning_Strategy_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Criteria_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+
+    @passive
+    Scenario: Verify behaviour of Parameters Table in Resources Accordion on create New JobTemplate edit wizard
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Job_Custom_Parameters_Table" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Job_Custom_Parameters_Table" table in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Parameters_Table_Name_Input | Parameters_Table_Type_Dropdown | Parameter_Table_Simple_Hyper_Dropdown | Parameters_Table_Value_Input | Add_New_Row_Button |
+            | name1                       | str                            | Simple                                | value1                       | yes                |
+            | name2                       | int                            | Hyper                                 | value2                       | yes                |
+            | name3                       | map                            | Simple                                | value3                       | yes                |
+            | name4                       | bool                           | Hyper                                 | value4                       | yes                |
+            | name5                       | str                            | Hyper                                 | value5                       | yes                |
+            | name6                       | float                          | Simple                                | value6                       | yes                |
+            | name7                       | map                            | Hyper                                 | value7                       | yes                |
+            | name8                       | list                           | Simple                                | value8                       | yes                |
+        Then verify values in "Job_Custom_Parameters_Table" table in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+            | name  | type  | simple_hyper | values  |
+            | name1 | str   | Simple       | value1  |
+            | name2 | int   | Hyper        | value2  |
+            | name3 | map   | Simple       | value3  |
+            | name4 | bool  | Hyper        | value4  |
+            | name5 | str   | Hyper        | value5  |
+            | name6 | float | Simple       | value6  |
+            | name7 | map   | Hyper        | value7  |
+            | name8 | list  | Simple       | value8  |
+        When click on "delete_btn" in "Job_Custom_Parameters_Table" table in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | name  |
+            | name2 |
+            | name4 |
+            | name5 |
+            | name8 |
+        Then verify values in "Job_Custom_Parameters_Table" table in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+            | name  | type  | simple_hyper | values  |
+            | name1 | str   | Simple       | value1  |
+            | name3 | map   | Simple       | value3  |
+            | name6 | float | Simple       | value6  |
+            | name7 | map   | Hyper        | value7  |
 
     @passive
     Scenario: Verify behaviour of Volume Paths Table in Resources Accordion on create New JobTemplate edit wizard
@@ -345,43 +510,43 @@ Feature: Jobs and workflows
         And wait load page
         When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        When expand "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
             |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Moumt_Path_Hint"
-        Then verify "Volume_Paths_Table_Container_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Data_Container_Hint"
-        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
-        Then verify "Volume_Paths_Table_Resource_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Relative_Directory_Path_Hint"
-        When click on "Delete_New_Row_Button" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        Then verify "Volume_Paths_Table_Container_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Data_Container_Hint"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
+        Then verify "Volume_Paths_Table_Resource_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Relative_Directory_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
             |           Config Map             |                                      |                               |                                     |         yes        |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Moumt_Path_Hint"
-        When click on "Delete_New_Row_Button" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
             |             Secret               |                                      |                               |                                      |         yes        |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Moumt_Path_Hint"
-        When click on "Delete_New_Row_Button" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
             |               PVC                |                                      |                               |                                      |         yes        |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Moumt_Path_Hint"
-        When click on "Delete_New_Row_Button" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button | Delete_New_Row_Button |
             |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
             |               V3IO               |            Volume_Name_2             |       /path/to/happines2      |         Container_Input_2          |           Access_Key_2              |            /resource/path_2            |                    |         yes           |
@@ -393,25 +558,25 @@ Feature: Jobs and workflows
             |               V3IO               |            Volume_Name_8             |       /path/to/happines8      |         Container_Input_8          |           Access_Key_8              |            /resource/path_8            |                    |         yes           |
             |               V3IO               |            Volume_Name_9             |       /path/to/happines9      |         Container_Input_9          |           Access_Key_9              |            /resource/path_9            |                    |         yes           |
             |               V3IO               |            Volume_Name_0             |       /path/to/happines0      |         Container_Input_0          |           Access_Key_0              |            /resource/path_0            |         yes        |                       |
-        Then verify values in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
             |  volume_name  |        path        |
             | Volume_Name_1 | /path/to/happines1 |
             | Volume_Name_3 | /path/to/happines3 |
             | Volume_Name_5 | /path/to/happines5 |
             | Volume_Name_7 | /path/to/happines7 |
             | Volume_Name_0 | /path/to/happines0 |
-        When click on "Remove" in action menu in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+        When click on "Remove" in action menu in "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
             |  volume_name  |
             | Volume_Name_0 |
             | Volume_Name_3 |
-        Then verify values in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
             |  volume_name  |        path        |
             | Volume_Name_1 | /path/to/happines1 |
             | Volume_Name_5 | /path/to/happines5 |
             | Volume_Name_7 | /path/to/happines7 |
 
     @passive
-    Scenario: verify mandatory elements in Resouces Accordion on Create New Jobs side panel
+    Scenario: Verify behaviour of Node Selector Table in Resources Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
         And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -425,33 +590,72 @@ Feature: Jobs and workflows
         And wait load page
         When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        When expand "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Volumes_Subheader" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Volumes_Subheader" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
-        Then verify "Volume_Paths_Table" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Unit_Dropdown" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Request_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then type value "1" to "Memory_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then decrease value on 15 points in "Memory_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then type value "2" to "Memory_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Unit_Dropdown" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Request_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then type value "3" to "CPU_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then increase value on 15 points in "CPU_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then decrease value on 15 points in "CPU_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then type value "4" to "CPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then increase value on 15 points in "CPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then decrease value on 15 points in "CPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "GPU_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then type value "5" to "GPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Resources_Node_Selector_Table" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Resources_Node_Selector_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When add rows to "Resources_Node_Selector_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+            | key_input | value_input |
+            | key1      | value1      |
+            | key2      | value2      |
+            | key3      | value3      |
+            | key4      | value4      |
+        Then verify values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+            | key  | value  |
+            | key1 | value1 |
+            | key2 | value2 |
+            | key3 | value3 |
+            | key4 | value4 |
+        When click on "delete_btn" in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | key  |
+            | key1 |
+            | key3 |
+        Then verify values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+            | key  | value  |
+            | key2 | value2 |
+            | key4 | value4 |
+
+    @passive
+    Scenario: verify mandatory elements in Resources Accordion on Create New Jobs side panel
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        And wait load page
+        Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Volumes_Subheader" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "3" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "4" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "5" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Resources_Node_Selector_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
 
     @passive
     Scenario: verify mandatory elements in Advanced Accordion on Create New Jobs side panel
@@ -469,7 +673,7 @@ Feature: Jobs and workflows
         When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Advanced_Secrets_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Advanced_Environment_Variables_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
 
     @passive
@@ -491,6 +695,7 @@ Feature: Jobs and workflows
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Advanced_Environment_Variables_Demo_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Advanced_Secrets_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
 
     @passive
@@ -510,23 +715,34 @@ Feature: Jobs and workflows
         When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-        When add rows to "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-            | value_input |
-            |    value1   |
-            |    value2   |
-            |    value3   |
-        Then verify values in "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-            | kind | value  |
-            | file | value1 |
-            | file | value2 |
-            | file | value3 |
-         When click on "delete_btn" in "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
-            | value  |
-            | value3 |
-            | value1 |
-        Then verify values in "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-            | kind | value  |
-            | file | value2 |
+        When add new volume rows to "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Environment_Variables_Name_Input | Environment_Variables_Value_Input | Add_Row_Button | Discard_Row_Button |
+            |              name0               |              value0               |       yes      |                    |
+            |              name1               |              value1               |                |        yes         |
+            |              name2               |              value2               |       yes      |                    |
+            |              name3               |              value3               |                |        yes         |
+            |              name4               |              value4               |       yes      |                    |
+            |              name5               |              value5               |       yes      |                    |
+            |              name6               |              value6               |                |        yes         |
+            |              name7               |              value7               |                |        yes         |
+            |              name8               |              value8               |       yes      |                    |
+            |              name9               |              value9               |                |        yes         |
+        Then verify values in "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | name  |    value    |
+            | name0 | value0      |
+            | name2 | value2      |
+            | name4 | value4      |
+            | name5 | value5      |
+            | name8 | value8      |
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | name  |
+            | name2 |
+            | name4 |
+            | name8 |
+        Then verify values in "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | name  |    value    |
+            | name0 | value0      |
+            | name5 | value5      |
 
     @passive
     @inProgress
@@ -549,22 +765,22 @@ Feature: Jobs and workflows
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
-            | Environment_Variables_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Value_Input | Add_Row_Button |
+            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Demo_Value_Input | Add_Row_Button |
             |                                  |               Value                 |                                   |       yes      |
-        Then verify "Environment_Variables_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Environment_Variables_Value_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Environment_Variables_Demo_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Environment_Variables_Demo_Value_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
         When click on "Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
-            | Environment_Variables_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button |
+            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button |
             |                                  |              Secret                 |                                        |                 @#$                   |       yes      |
-        Then verify "Environment_Variables_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Environment_Variables_Demo_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Environment_Variables_Seret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Environment_Variables_Seret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
         Then verify "Environment_Variables_Seret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Environment_Variables_Seret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
         When click on "Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
-            | Environment_Variables_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Value_Input | Add_Row_Button | Discard_Row_Button |
+            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Demo_Value_Input | Add_Row_Button | Discard_Row_Button |
             |              name0               |                Value                |              value0               |       yes      |                    |
             |              name1               |                Value                |              value1               |                |        yes         |
             |              name2               |                Value                |              value2               |       yes      |                    |
@@ -576,7 +792,7 @@ Feature: Jobs and workflows
             |              name8               |                Value                |              value8               |       yes      |                    |
             |              name9               |                Value                |              value9               |                |        yes         |
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
-            | Environment_Variables_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button | Discard_Row_Button |
+            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button | Discard_Row_Button |
             |            name0                 |             Secret                  |               value0                   |                key0                   |                |        yes         |
             |            name1                 |             Secret                  |               value1                   |                key1                   |       yes      |                    |
             |            name2                 |             Secret                  |               value2                   |                key2                   |                |        yes         |
@@ -612,6 +828,59 @@ Feature: Jobs and workflows
             | name5 | value  | value5      |
             | name3 | secret | value3:key3 |
             | name6 | secret | value6:key6 |
+        When add rows to "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | value_input |
+            |    value1   |
+            |    value2   |
+            |    value3   |
+        Then verify values in "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | kind | value  |
+            | file | value1 |
+            | file | value2 |
+            | file | value3 |
+        When click on "delete_btn" in "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | value  |
+            | value3 |
+            | value1 |
+        Then verify values in "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | kind | value  |
+            | file | value2 |
+
+    @passive
+    @inProgress
+    Scenario: verify un unique value input hint on Create New Jobs side panel
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Job_Custom_Parameters_Table" table in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Parameters_Table_Name_Input | Parameters_Table_Type_Dropdown | Parameter_Table_Simple_Hyper_Dropdown | Parameters_Table_Value_Input | Add_New_Row_Button |
+            | name1                       | str                            | Simple                                | value1                       | yes                |
+            | name1                       | int                            | Hyper                                 | value2                       | yes                |
+        Then verify "Parameters_Table_Name_Input" element in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Name_Already_Exists"
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button | Delete_New_Row_Button |
+            |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
+            |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Name_Already_Exists"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Volumes_Path_Already_Exists"
+        When collapse "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Environment_Variables_Name_Input | Environment_Variables_Value_Input | Add_Row_Button | Discard_Row_Button |
+            |              name0               |              value0               |       yes      |                    |
+            |              name0               |              value0               |       yes      |                    |
+        Then verify "Environment_Variables_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Name_Already_Exists"
 
     @passive
     Scenario: Verify View YAML action on Jobs Monitor tab
@@ -622,8 +891,15 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        Then select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then select "View YAML" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test-m_ingest" value in "name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        When click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then select "View YAML" option in action menu on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
@@ -659,3 +935,216 @@ Feature: Jobs and workflows
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        When click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        And wait load page
+        Then select "View YAML" option in action menu on "ML_Function_Info_Pane" wizard
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+    @passive
+    Scenario: Check all mandatory components on Workflow List View
+        Given open url
+        And turn on demo mode
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        Then verify "Workflow_List_View_Table" element visibility on "Workflows_Monitor_Tab" wizard
+
+    @passive
+    Scenario: Check all mandatory components on Overview tab Item infopane on Workflow List View Tab
+        Given open url
+        And turn on demo mode
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        Then verify "Arrow_Back" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Header" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Updated" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Overview_Headers" on "Workflows_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
+
+    @passive
+    Scenario: Check all mandatory components on Inputs tab Item infopane on Workflow List View Tab
+        Given open url
+        And turn on demo mode
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Inputs_Table" element visibility on "Inputs_Info_Pane" wizard
+
+    @passive
+    Scenario: Check all mandatory components on Artifacts tab Item infopane on Workflow List View Tab
+        Given open url
+        And turn on demo mode
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
+
+    @passive
+    Scenario: Check all mandatory components on Results tab Item infopane on Workflow List View Tab
+        Given open url
+        And turn on demo mode
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "Results_Table" element visibility on "Results_Info_Pane" wizard
+
+    @passive
+    Scenario: Verify all mandatory component on Re-run Workflow sidebar
+        Given open url
+        And turn on demo mode
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        Then select "Re-run" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflow_List_View_Table" table at row with "test-classifier" value in "name" column
+        And wait load page
+        Then verify "Data_Source_Input_Sources_Table" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Default_Input_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Default_Artifact_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Job_Custom_Parameters_Table" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Parameters_Additional_Settings_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Result_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Turning_Strategy_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Criteria_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Resources_Node_Selector_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Advanced_Environment_Variables_Demo_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Schedule_For_Later_Button" element visibility on "New_JobTemplate_Edit" wizard
+        Then "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" should contains "Schedule for later" value
+        Then verify "Run_Now_Button" element visibility on "New_JobTemplate_Edit" wizard
+        Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Run now" value
+
+    @passive
+    Scenario: Check Artifacts preview action on Artifacts tab Item infopane on Workflow List View Tab
+        Given open url
+        And turn on demo mode
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 3 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
+        Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
+        Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+        Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
+
+    @passive
+    Scenario: Check options in action menu on Jobs Monitor tab
+        Given open url
+        And wait load page
+        And click on cell with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Deploying" value in "status" column should contains "Jobs_And_Workflows"."Pending_Job_Action_Menu_Options"
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Pending" value in "status" column should contains "Jobs_And_Workflows"."Pending_Job_Action_Menu_Options"
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+
+    @passive
+    Scenario: Check options in action menu on Workflows Monitor tab
+        Given open url
+        And turn on demo mode
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Succeeded" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
+
+    @passive
+    Scenario: Check options in action menu on Schedule tab
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify options in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table with "Job" value in "type" column should contains "Jobs_And_Workflows"."Schedule_Action_Menu_Options"

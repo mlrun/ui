@@ -34,6 +34,8 @@ import {
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
+import { ReactComponent as Delete } from '../../images/delete.svg'
+
 export const pageDataInitialState = {
   actionsMenu: [],
   actionsMenuHeader: '',
@@ -71,7 +73,7 @@ export const datasetsInfoHeaders = [
 export const featureSetsInfoHeaders = [
   { label: 'Description', id: 'description' },
   { label: 'Labels', id: 'labels' },
-  { label: 'Version', id: 'tag' },
+  { label: 'Version tag', id: 'tag' },
   { label: 'Last updated', id: 'updated' },
   { label: 'Entities', id: 'entities' },
   { label: 'URI', id: 'target_uri' },
@@ -96,7 +98,7 @@ export const datasetsFilters = [
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
 export const featureSetsFilters = [
-  { type: TAG_FILTER, label: 'Tag:' },
+  { type: TAG_FILTER, label: 'Version Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Label:' }
 ]
@@ -297,12 +299,23 @@ export const tabs = [
   { id: DATASETS_TAB, label: 'Datasets' }
 ]
 
-const generateActionsMenu = tab => []
+const generateActionsMenu = (tab, handleDelete) => {
+  return tab === FEATURE_VECTORS_TAB
+    ? [
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          onClick: handleDelete
+        }
+      ]
+    : []
+}
 
 export const generatePageData = (
   pageTab,
   handleRequestOnExpand,
   handleRemoveRequestData,
+  onDeleteFeatureVector,
   getPopUpTemplate,
   isTablePanelOpen,
   isSelectedItem,
@@ -325,6 +338,7 @@ export const generatePageData = (
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
     data.filterMenuActionButton = null
     data.handleRequestOnExpand = handleRequestOnExpand
+    data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
     data.hidePageActionMenu = true
@@ -342,7 +356,10 @@ export const generatePageData = (
     data.noDataMessage =
       'No features yet. Go to "Feature Sets" tab to create your first feature set.'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
+    data.actionsMenu = generateActionsMenu(
+      FEATURE_VECTORS_TAB,
+      onDeleteFeatureVector
+    )
     data.hidePageActionMenu = !isDemoMode
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
@@ -621,7 +638,8 @@ export const generateFeatureSetsDetailsMenu = selectedItem => [
   {
     label: 'statistics',
     id: 'statistics',
-    hidden: !selectedItem.item?.stats
+    hidden: !selectedItem.item?.stats,
+    tip: 'Statistics reflects the data for the latest ingestion'
   },
   {
     label: 'analysis',
@@ -729,7 +747,8 @@ export const fetchFeatureRowData = async (fetchData, feature, setPageData) => {
 export const fetchFeatureSetRowData = async (
   fetchFeatureSet,
   featureSet,
-  setPageData
+  setPageData,
+  tag
 ) => {
   const featureSetIdentifier = getFeatureSetIdentifier(featureSet)
 
@@ -746,7 +765,8 @@ export const fetchFeatureSetRowData = async (
 
   const result = await fetchFeatureSet(
     featureSet.project,
-    featureSet.name
+    featureSet.name,
+    tag
   ).catch(error => {
     setPageData(state => ({
       ...state,
@@ -779,7 +799,8 @@ export const fetchFeatureSetRowData = async (
 export const fetchFeatureVectorRowData = async (
   fetchFeatureVector,
   featureVector,
-  setPageData
+  setPageData,
+  tag
 ) => {
   const featureVectorIdentifier = getFeatureVectorIdentifier(featureVector)
 
@@ -795,7 +816,8 @@ export const fetchFeatureVectorRowData = async (
 
   const result = await fetchFeatureVector(
     featureVector.project,
-    featureVector.name
+    featureVector.name,
+    tag
   ).catch(error => {
     setPageData(state => ({
       ...state,
@@ -829,7 +851,8 @@ export const fetchDataSetRowData = async (
   fetchDataSet,
   dataSet,
   setPageData,
-  iter
+  iter,
+  tag
 ) => {
   const dataSetIdentifier = getArtifactIdentifier(dataSet)
   let result = []
@@ -845,7 +868,7 @@ export const fetchDataSetRowData = async (
   }))
 
   try {
-    result = await fetchDataSet(dataSet.project, dataSet.db_key, iter)
+    result = await fetchDataSet(dataSet.project, dataSet.db_key, iter, tag)
   } catch (error) {
     setPageData(state => ({
       ...state,

@@ -86,7 +86,7 @@ const JobsPanelTitleView = ({
                     payload: name
                   })
                 }
-                validationRules={getValidationRules('jobName')}
+                validationRules={getValidationRules('job.name')}
                 setInvalid={value =>
                   setNameValid(state => ({ ...state, isNameValid: value }))
                 }
@@ -116,7 +116,7 @@ const JobsPanelTitleView = ({
                         })
                       }
                       elements={currentFunctionInfo.labels}
-                      isEditMode={true}
+                      isEditMode
                       removeChip={chips =>
                         panelDispatch({
                           type: panelActions.REMOVE_JOB_LABEL,

@@ -59,6 +59,7 @@ import {
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
+  SET_NEW_PROJECT_LABELS,
   SET_NEW_PROJECT_NAME,
   SET_PROJECT_DATA,
   SET_PROJECT_LABELS,
@@ -86,7 +87,10 @@ const projectsAction = {
     return projectsApi
       .changeProjectState(project, status)
       .then(() => dispatch(projectsAction.changeProjectStateSuccess()))
-      .catch(() => dispatch(projectsAction.changeProjectStateFailure()))
+      .catch(error => {
+        dispatch(projectsAction.changeProjectStateFailure())
+        throw error
+      })
   },
   changeProjectStateBegin: () => ({ type: CHANGE_PROJECT_STATE_BEGIN }),
   changeProjectStateFailure: () => ({ type: CHANGE_PROJECT_STATE_FAILURE }),
@@ -573,6 +577,10 @@ const projectsAction = {
   setNewProjectDescription: description => ({
     type: SET_NEW_PROJECT_DESCRIPTION,
     payload: description
+  }),
+  setNewProjectLabels: (label, labels) => ({
+    type: SET_NEW_PROJECT_LABELS,
+    payload: { ...labels, ...label }
   }),
   setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name }),
   setProjectData: data => ({

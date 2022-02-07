@@ -7,6 +7,9 @@ import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 import Button from '../../../common/Button/Button'
 import Loader from '../../../common/Loader/Loader'
+import ProjectLabels from '../../Project/ProjectLabels/ProjectLabels'
+
+import { getValidationRules } from '../../../utils/validationService'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../../constants'
 
@@ -19,6 +22,7 @@ const CreateProjectDialog = ({
   removeNewProjectError,
   setNameValid,
   setNewProjectDescription,
+  setNewProjectLabels,
   setNewProjectName
 }) => {
   const projectStore = useSelector(store => store.projectStore)
@@ -38,15 +42,12 @@ const CreateProjectDialog = ({
             invalid={!isNameValid}
             invalidText="This field is invalid"
             label="Name"
-            maxLength={63}
             onChange={setNewProjectName}
             required
-            requiredText="Name is required"
-            pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
             setInvalid={value => setNameValid(value)}
-            tip="&bull; Valid characters: a-z, 0-9, -&#13;&#10;&bull; Must being and end with: a-z, 0-9&#13;&#10;&bull; Length - max: 63"
             type="text"
             value={projectStore.newProject.name}
+            validationRules={getValidationRules('project.name')}
           />
           <Input
             className="pop-up-dialog__form-input"
@@ -56,6 +57,16 @@ const CreateProjectDialog = ({
             type="text"
             value={projectStore.newProject.description}
           />
+          <div>
+            <span>Labels:</span>
+            <ProjectLabels
+              addProjectLabel={setNewProjectLabels}
+              isEditMode
+              labels={projectStore.newProject.labels}
+              updateProjectLabel={setNewProjectLabels}
+              visibleChipsMaxLength="all"
+            />
+          </div>
         </div>
         <div className="pop-up-dialog__footer-container">
           {projectStore.newProject.error && (
@@ -79,9 +90,8 @@ const CreateProjectDialog = ({
           <Button
             disabled={
               projectStore.loading ||
-              !projectStore.newProject.name.match(
-                /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
-              )
+              !isNameValid ||
+              !projectStore.newProject.name
             }
             variant={SECONDARY_BUTTON}
             label="Create"

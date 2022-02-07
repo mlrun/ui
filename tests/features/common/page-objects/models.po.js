@@ -37,14 +37,15 @@ const modelsTable = {
       root: '.table-body__row',
       fields: {
         expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper span',
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper span.link',
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(2)',
             '.chip-block span.chips_button',
             '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
-            false
+            false,
+            true
           )
         },
         producer: '.table-body__cell:nth-of-type(3) .data-ellipsis a',

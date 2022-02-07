@@ -18,10 +18,6 @@
     flex-flow: column nowrap;
     text-align: center;
 
-    .link {
-      text-transform: capitalize;
-    }
-
     &-wrapper {
       position: relative;
       max-width: 80px;
@@ -30,7 +26,7 @@
       &:hover,
       &:focus {
         .project-overview-actions__item-icon {
-          background-color: $gallery;
+          background-color: $hawkesBlue;
         }
 
         .link {

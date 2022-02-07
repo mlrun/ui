@@ -31,17 +31,12 @@
           width: 100%;
         }
 
-        &__input-btn {
-          min-width: 30px;
-          height: 30px;
-          margin-left: 10px;
-          padding: 0;
-          cursor: pointer;
-        }
-
         .input {
-          width: 90%;
           padding: 8px 17px;
+
+          &-wrapper {
+            width: 100%;
+          }
         }
       }
 

@@ -86,14 +86,10 @@
             }
           }
         }
+      }
 
-        &-btn {
-          display: block;
-          min-width: 30px;
-          height: 30px;
-          padding: 0;
-          cursor: pointer;
-        }
+      &_disabled {
+        pointer-events: none;
       }
 
       &_hidden {

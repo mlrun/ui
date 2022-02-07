@@ -31,6 +31,7 @@ import {
   MODELS_TAB,
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
+  TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
@@ -42,6 +43,8 @@ import {
   getFunctionIdentifier
 } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
+
+import { useOpenPanel } from '../../hooks/openPanel.hook'
 
 const Models = ({
   artifactsStore,
@@ -71,6 +74,14 @@ const Models = ({
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
+
+  const openPanelByDefault = useOpenPanel()
+
+  useEffect(() => {
+    if (openPanelByDefault) {
+      setIsRegisterArtifactPopupOpen(true)
+    }
+  }, [openPanelByDefault])
 
   const fetchData = useCallback(
     async filters => {
@@ -150,7 +161,8 @@ const Models = ({
         result = await fetchModel(
           model.project,
           model.db_key,
-          !filtersStore.iter
+          !filtersStore.iter,
+          filtersStore.tag
         )
       } catch (error) {
         setPageData(state => ({
@@ -187,7 +199,7 @@ const Models = ({
         })
       }
     },
-    [fetchModel, filtersStore.iter]
+    [fetchModel, filtersStore.iter, filtersStore.tag]
   )
 
   useEffect(() => {
@@ -237,9 +249,11 @@ const Models = ({
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
       setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' })
-    } else if (match.params.pageTab === REAL_TIME_PIPELINES_TAB) {
-      setFilters({ groupBy: GROUP_BY_NONE })
-    } else if (filtersStore.tag === TAG_FILTER_LATEST) {
+    } else if (
+      match.params.pageTab === REAL_TIME_PIPELINES_TAB ||
+      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
+      filtersStore.tag === TAG_FILTER_LATEST
+    ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else {
       setFilters({ groupBy: GROUP_BY_NONE })

@@ -1,296 +1,771 @@
 {
-    "schedules": [
-        {
-            "name": "feature-selection",
-            "kind": "job",
-            "scheduled_object": {
-                "task": {
-                    "spec": {
-                        "parameters": {
-                            "context": "",
-                            "df_artifact": "",
-                            "k": "2",
-                            "min_votes": "0.5",
-                            "label_column": "Y",
-                            "stat_filters": "[ { 0",
-                            "model_filters": "{ LinearSVC",
-                            "max_scaled_scores": "true"
-                        },
-                        "inputs": {},
-                        "hyperparams": {},
-                        "secret_sources": [],
-                        "param_file": "",
-                        "selector": "max.",
-                        "tuning_strategy": "list",
-                        "function": "default/feature-selection@28e5e453b0be3d4b68e1210bc460cab18477dc4a",
-                        "handler": "",
-                        "input_path": "",
-                        "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
-                    },
-                    "metadata": {
-                        "name": "feature-selection",
-                        "project": "default",
-                        "labels": {
-                            "author": "orz",
-                            "v3io_user": "admin",
-                            "owner": "admin",
-                            "kind": "job",
-                            "host": "feature-selection-56qlt"
-                        }
-                    }
-                },
-                "function": {
-                    "spec": {
-                        "volumes": [],
-                        "volume_mounts": [],
-                        "env": [],
-                        "resources": {
-                            "limits": {},
-                            "requests": {}
-                        }
-                    }
-                },
-                "schedule": "0 0 1 * *"
-            },
-            "cron_trigger": {
-                "year": null,
-                "month": "*",
-                "day": 1,
-                "week": null,
-                "day_of_week": "*",
-                "hour": 0,
-                "minute": 0,
-                "second": null,
-                "start_date": null,
-                "end_date": null,
-                "timezone": null,
-                "jitter": null
-            },
-            "desired_state": null,
+  "schedules": [
+    {
+      "name": "tf2-serving",
+      "kind": "job",
+      "scheduled_object": {
+        "task": {
+          "spec": {
+            "parameters": {},
+            "inputs": {},
+            "hyperparams": {},
+            "secret_sources": [],
+            "param_file": "",
+            "tuning_strategy": "list",
+            "function": "cat-vs-dog-classification/tf2-serving@e5876acc8399709149972ba36ba7337a46b88ac3",
+            "handler": "",
+            "input_path": "",
+            "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
+          },
+          "metadata": {
+            "name": "tf2-serving",
+            "project": "cat-vs-dog-classification",
             "labels": {
-                "author": "orz",
-                "v3io_user": "admin",
-                "owner": "admin",
-                "kind": "job",
-                "host": "feature-selection-56qlt"
-            },
-            "concurrency_limit": 1,
-            "creation_time": "2021-05-31T15:58:33.514482+00:00",
-            "project": "default",
-            "last_run_uri": "default@03c6c6b830da4e109bf48027586a6870#0",
-            "state": null,
-            "next_run_time": "2021-07-01T00:00:00+00:00",
-            "last_run": null
+              "author": "yaronh",
+              "v3io_user": "admin",
+              "owner": "admin"
+            }
+          }
         },
-        {
-            "name": "my-trainer-a",
-            "kind": "job",
-            "scheduled_object": {
-                "task": {
-                    "spec": {
-                        "parameters": {
-                            "context": "",
-                            "p1": 1,
-                            "p2": 2
-                        },
-                        "inputs": {
-                            "name": "store://artifacts/default/blafoobar"
-                        },
-                        "hyperparams": {},
-                        "secret_sources": [],
-                        "param_file": "",
-                        "tuning_strategy": "list",
-                        "function": "default/my-trainer@c56880f6875a972300ff6a0f25a478d2bd1fd295",
-                        "handler": "training",
-                        "input_path": "",
-                        "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
-                    },
-                    "metadata": {
-                        "name": "my-trainer-a",
-                        "project": "default",
-                        "labels": {
-                            "v3io_user": "admin",
-                            "owner": "admin"
-                        }
-                    }
-                },
-                "function": {
-                    "spec": {
-                        "volumes": [
-                            {
-                                "flexVolume": {
-                                    "driver": "v3io/fuse",
-                                    "options": {
-                                        "accessKey": "b32f408c-a53f-45e7-a5f6-e15ce778bba5",
-                                        "container": "users",
-                                        "subPath": "/admin"
-                                    }
-                                },
-                                "name": "v3io"
-                            },
-                            {
-                                "name": "",
-                                "secret": {
-                                    "secretName": "foobar"
-                                }
-                            },
-                            {
-                                "name": "1",
-                                "secret": {
-                                    "secretName": "1"
-                                }
-                            }
-                        ],
-                        "volume_mounts": [
-                            {
-                                "name": "v3io",
-                                "mountPath": "/User"
-                            },
-                            {
-                                "name": "",
-                                "mountPath": ""
-                            },
-                            {
-                                "name": "1",
-                                "mountPath": "1"
-                            }
-                        ],
-                        "env": [
-                            {
-                                "name": "V3IO_API",
-                                "value": "v3io-webapi.default-tenant.svc:8081"
-                            },
-                            {
-                                "name": "V3IO_USERNAME",
-                                "value": "admin"
-                            },
-                            {
-                                "name": "V3IO_ACCESS_KEY",
-                                "value": "b32f408c-a53f-45e7-a5f6-e15ce778bba5"
-                            },
-                            {
-                                "name": "foobar",
-                                "value": "dsgh"
-                            }
-                        ],
-                        "resources": {
-                            "limits": {},
-                            "requests": {}
-                        }
-                    }
-                },
-                "schedule": "0 0 1 * *"
-            },
-            "cron_trigger": {
-                "year": null,
-                "month": "*",
-                "day": 1,
-                "week": null,
-                "day_of_week": "*",
-                "hour": 0,
-                "minute": 0,
-                "second": null,
-                "start_date": null,
-                "end_date": null,
-                "timezone": null,
-                "jitter": null
-            },
-            "desired_state": null,
-            "labels": {
-                "v3io_user": "admin",
-                "owner": "admin"
-            },
-            "concurrency_limit": 1,
-            "creation_time": "2021-06-01T10:36:41.491403+00:00",
-            "project": "default",
-            "last_run_uri": null,
-            "state": null,
-            "next_run_time": "2021-07-01T00:00:00+00:00",
-            "last_run": null
+        "function": {
+          "spec": {
+            "volumes": [],
+            "volume_mounts": [],
+            "env": [],
+            "node_selector": {},
+            "resources": {
+              "limits": {},
+              "requests": {}
+            }
+          }
         },
-        {
-            "name": "aggregate",
-            "kind": "job",
-            "scheduled_object": {
-                "task": {
-                    "spec": {
-                        "parameters": {
-                            "context": "",
-                            "df_artifact": "",
-                            "save_to": "aggregated-df.pq",
-                            "keys": "",
-                            "metrics": "",
-                            "labels": "",
-                            "metric_aggs": [
-                                "mean"
-                            ],
-                            "label_aggs": [
-                                "max"
-                            ],
-                            "suffix": "",
-                            "window": 3,
-                            "center": "",
-                            "inplace": "",
-                            "drop_na": true,
-                            "files_to_select": 1
-                        },
-                        "inputs": {},
-                        "hyperparams": {},
-                        "secret_sources": [],
-                        "param_file": "",
-                        "selector": "max.",
-                        "tuning_strategy": "list",
-                        "function": "hub://aggregate",
-                        "handler": "",
-                        "input_path": "",
-                        "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
-                    },
-                    "metadata": {
-                        "name": "aggregate",
-                        "project": "test",
-                        "labels": {
-                            "author": "orz"
-                        }
-                    }
-                },
-                "function": {
-                    "spec": {
-                        "volumes": [],
-                        "volume_mounts": [],
-                        "env": [],
-                        "resources": {
-                            "limits": {},
-                            "requests": {}
-                        }
-                    }
-                },
-                "schedule": "0 0 1 * *"
+        "schedule": "0 0 1 * *"
+      },
+      "cron_trigger": {
+        "year": null,
+        "month": "*",
+        "day": 1,
+        "week": null,
+        "day_of_week": "*",
+        "hour": 0,
+        "minute": 0,
+        "second": null,
+        "start_date": null,
+        "end_date": null,
+        "timezone": null,
+        "jitter": null
+      },
+      "desired_state": null,
+      "labels": {
+        "author": "yaronh",
+        "v3io_user": "admin",
+        "owner": "admin"
+      },
+      "concurrency_limit": 1,
+      "credentials": {
+        "access_key": null
+      },
+      "creation_time": "2021-09-03T13:49:55.389926+00:00",
+      "project": "cat-vs-dog-classification",
+      "last_run_uri": null,
+      "state": null,
+      "next_run_time": "2021-12-01T00:00:00+00:00",
+      "last_run": null
+    },
+    {
+      "name": "clean-data",
+      "kind": "job",
+      "scheduled_object": {
+        "task": {
+          "spec": {
+            "parameters": {
+              "context": "",
+              "file_ext": "csv",
+              "models_dest": "models/encoders",
+              "cleaned_key": "cleaned-data",
+              "encoded_key": "encoded-data"
             },
-            "cron_trigger": {
-                "year": null,
-                "month": "*",
-                "day": 1,
-                "week": null,
-                "day_of_week": "*",
-                "hour": 0,
-                "minute": 0,
-                "second": null,
-                "start_date": null,
-                "end_date": null,
-                "timezone": null,
-                "jitter": null
+            "inputs": {
+              "src": ""
             },
-            "desired_state": null,
+            "hyperparams": {},
+            "secret_sources": [],
+            "param_file": "",
+            "tuning_strategy": "list",
+            "function": "churn-project-admin/clean-data@a343f9641503e9cdc21dc9293673e740a6e55228",
+            "handler": "",
+            "input_path": "",
+            "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
+          },
+          "metadata": {
+            "name": "clean-data",
+            "project": "churn-project-admin",
             "labels": {
-                "author": "orz"
+              "author": "yasha",
+              "framework": "xgboost",
+              "v3io_user": "admin",
+              "owner": "admin"
+            }
+          }
+        },
+        "function": {
+          "spec": {
+            "volumes": [
+              {
+                "flexVolume": {
+                  "driver": "v3io/fuse",
+                  "options": {
+                    "accessKey": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+                  }
+                },
+                "name": "v3io"
+              }
+            ],
+            "volume_mounts": [
+              {
+                "name": "v3io",
+                "mountPath": "/v3io"
+              }
+            ],
+            "env": [
+              {
+                "name": "V3IO_API",
+                "value": "v3io-webapi.default-tenant.svc:8081"
+              },
+              {
+                "name": "V3IO_USERNAME",
+                "value": "admin"
+              },
+              {
+                "name": "V3IO_ACCESS_KEY",
+                "value": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+              },
+              {
+                "name": "V3IO_FRAMESD",
+                "value": "framesd:8081"
+              },
+              {
+                "name": "testNamee",
+                "value_from": {
+                  "secret_key_ref": {
+                    "name": "a",
+                    "key": "b"
+                  }
+                }
+              },
+              {
+                "name": "fff",
+                "value": "aaaa"
+              }
+            ],
+            "node_selector": {},
+            "resources": {
+              "limits": {},
+              "requests": {}
+            }
+          }
+        },
+        "schedule": "0 0 1 * *"
+      },
+      "cron_trigger": {
+        "year": null,
+        "month": "*",
+        "day": 1,
+        "week": null,
+        "day_of_week": "*",
+        "hour": 0,
+        "minute": 0,
+        "second": null,
+        "start_date": null,
+        "end_date": null,
+        "timezone": null,
+        "jitter": null
+      },
+      "desired_state": null,
+      "labels": {
+        "author": "yasha",
+        "framework": "xgboost",
+        "v3io_user": "admin",
+        "owner": "admin"
+      },
+      "concurrency_limit": 1,
+      "credentials": {
+        "access_key": null
+      },
+      "creation_time": "2021-10-20T15:17:27.992118+00:00",
+      "project": "churn-project-admin",
+      "last_run_uri": null,
+      "state": null,
+      "next_run_time": "2021-12-01T00:00:00+00:00",
+      "last_run": null
+    },
+    {
+      "name": "clean-data-test",
+      "kind": "job",
+      "scheduled_object": {
+        "task": {
+          "spec": {
+            "parameters": {
+              "context": "",
+              "file_ext": "csv",
+              "models_dest": "models/encoders",
+              "cleaned_key": "cleaned-data",
+              "encoded_key": "encoded-data"
             },
-            "concurrency_limit": 1,
-            "creation_time": "2021-01-15T18:56:51.403002+00:00",
-            "project": "test",
-            "last_run_uri": "test@da2f5227679e4bc18571ee917a0a82b4#0",
-            "state": null,
-            "next_run_time": "2021-07-01T00:00:00+00:00",
-            "last_run": null
-        }
-    ]
+            "inputs": {
+              "src": ""
+            },
+            "hyperparams": {},
+            "secret_sources": [],
+            "param_file": "",
+            "tuning_strategy": "list",
+            "function": "churn-project-admin/clean-data@a343f9641503e9cdc21dc9293673e740a6e55228",
+            "handler": "",
+            "input_path": "",
+            "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
+          },
+          "metadata": {
+            "name": "clean-data-test",
+            "project": "churn-project-admin",
+            "labels": {
+              "author": "yasha",
+              "framework": "xgboost",
+              "v3io_user": "admin",
+              "owner": "admin"
+            }
+          }
+        },
+        "function": {
+          "spec": {
+            "volumes": [
+              {
+                "flexVolume": {
+                  "driver": "v3io/fuse",
+                  "options": {
+                    "accessKey": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+                  }
+                },
+                "name": "v3io"
+              }
+            ],
+            "volume_mounts": [
+              {
+                "name": "v3io",
+                "mountPath": "/v3io"
+              }
+            ],
+            "env": [
+              {
+                "name": "V3IO_API",
+                "value": "v3io-webapi.default-tenant.svc:8081"
+              },
+              {
+                "name": "V3IO_USERNAME",
+                "value": "admin"
+              },
+              {
+                "name": "V3IO_ACCESS_KEY",
+                "value": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+              },
+              {
+                "name": "test",
+                "value_from": {
+                  "secret_key_ref": {
+                    "name": "name",
+                    "key": "key"
+                  }
+                }
+              }
+            ],
+            "node_selector": {},
+            "resources": {
+              "limits": {},
+              "requests": {}
+            }
+          }
+        },
+        "schedule": "0 0 1 * *"
+      },
+      "cron_trigger": {
+        "year": null,
+        "month": "*",
+        "day": 1,
+        "week": null,
+        "day_of_week": "*",
+        "hour": 0,
+        "minute": 0,
+        "second": null,
+        "start_date": null,
+        "end_date": null,
+        "timezone": null,
+        "jitter": null
+      },
+      "desired_state": null,
+      "labels": {
+        "author": "yasha",
+        "framework": "xgboost",
+        "v3io_user": "admin",
+        "owner": "admin"
+      },
+      "concurrency_limit": 1,
+      "credentials": {
+        "access_key": null
+      },
+      "creation_time": "2021-10-20T11:36:10.278278+00:00",
+      "project": "churn-project-admin",
+      "last_run_uri": null,
+      "state": null,
+      "next_run_time": "2021-12-01T00:00:00+00:00",
+      "last_run": null
+    },
+    {
+      "name": "aggregate-test",
+      "kind": "job",
+      "scheduled_object": {
+        "task": {
+          "spec": {
+            "parameters": {
+              "context": "",
+              "df_artifact": "",
+              "save_to": "aggregated-df.pq",
+              "keys": "",
+              "metrics": "",
+              "labels": "",
+              "metric_aggs": "[ { 0: m , 1: e , 2: a , 3: n } ]",
+              "label_aggs": "[ { 0: m , 1: a , 2: x } ]",
+              "suffix": "",
+              "window": "3",
+              "center": "false",
+              "inplace": "false",
+              "drop_na": "true",
+              "files_to_select": "1"
+            },
+            "inputs": {},
+            "hyperparams": {},
+            "secret_sources": [],
+            "param_file": "",
+            "tuning_strategy": "list",
+            "function": "default/aggregate@79fd83704a8514dc2415bded0e9d0ffd94262e92",
+            "handler": "aggregate",
+            "input_path": "",
+            "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
+          },
+          "metadata": {
+            "name": "aggregate-test",
+            "project": "default",
+            "labels": {
+              "author": "avia",
+              "v3io_user": "admin",
+              "owner": "admin",
+              "kind": "job"
+            }
+          }
+        },
+        "function": {
+          "metadata": {
+            "credentials": {
+              "access_key": "$generate"
+            }
+          },
+          "spec": {
+            "volumes": [],
+            "volume_mounts": [],
+            "env": [
+              {
+                "name": "V3IO_API",
+                "value": "http://v3io-webapi:8081"
+              },
+              {
+                "name": "V3IO_USERNAME",
+                "value": "admin"
+              },
+              {
+                "name": "V3IO_ACCESS_KEY",
+                "value": "1bc19fc2-2089-4c9c-a622-2eaa9868382c"
+              },
+              {
+                "name": "V3IO_FRAMESD",
+                "value": "http://framesd:8080"
+              }
+            ],
+            "node_selector": {},
+            "resources": {
+              "limits": {},
+              "requests": {}
+            }
+          }
+        },
+        "schedule": "*/10 * * * *"
+      },
+      "cron_trigger": {
+        "year": null,
+        "month": "*",
+        "day": "*",
+        "week": null,
+        "day_of_week": "*",
+        "hour": "*",
+        "minute": "*/10",
+        "second": null,
+        "start_date": null,
+        "end_date": null,
+        "timezone": null,
+        "jitter": null
+      },
+      "desired_state": null,
+      "labels": {
+        "author": "avia",
+        "v3io_user": "admin",
+        "owner": "admin",
+        "kind": "job"
+      },
+      "concurrency_limit": 1,
+      "credentials": {
+        "access_key": null
+      },
+      "creation_time": "2021-11-23T10:04:19.018350+00:00",
+      "project": "default",
+      "last_run_uri": "default@864f4da42773494eb94dce1c8834feb6#0",
+      "state": null,
+      "next_run_time": "2021-11-25T15:30:00+00:00",
+      "last_run": null
+    },
+    {
+      "name": "erann-test",
+      "kind": "job",
+      "scheduled_object": {
+        "task": {
+          "spec": {
+            "parameters": {},
+            "inputs": {},
+            "hyperparams": {},
+            "secret_sources": [],
+            "param_file": "",
+            "tuning_strategy": "list",
+            "function": "default/erann-test@d6ab643566d4ff7024320c0103709718a8a9bb58",
+            "handler": "",
+            "input_path": "",
+            "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
+          },
+          "metadata": {
+            "name": "erann-test",
+            "project": "default",
+            "labels": {
+              "v3io_user": "admin",
+              "owner": "admin"
+            }
+          }
+        },
+        "function": {
+          "spec": {
+            "volumes": [
+              {
+                "name": "my-volume",
+                "flexVolume": {
+                  "driver": "v3io/fuse",
+                  "options": {
+                    "container": "projects",
+                    "accessKey": "242e47-a051-4ec3-8384-5f99a26c1451",
+                    "subPath": "/mount"
+                  }
+                }
+              }
+            ],
+            "volume_mounts": [
+              {
+                "name": "my-volume",
+                "mountPath": "/my-path3"
+              }
+            ],
+            "env": [
+              {
+                "name": "ENV_VAR_KEY",
+                "value": "env-var-value"
+              }
+            ],
+            "node_selector": {},
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "memory": "5Mi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "1",
+                "memory": "5Mi"
+              }
+            }
+          }
+        },
+        "schedule": "0 0 1 * *"
+      },
+      "cron_trigger": {
+        "year": null,
+        "month": "*",
+        "day": 1,
+        "week": null,
+        "day_of_week": "*",
+        "hour": 0,
+        "minute": 0,
+        "second": null,
+        "start_date": null,
+        "end_date": null,
+        "timezone": null,
+        "jitter": null
+      },
+      "desired_state": null,
+      "labels": {
+        "v3io_user": "admin",
+        "owner": "admin"
+      },
+      "concurrency_limit": 1,
+      "credentials": {
+        "access_key": null
+      },
+      "creation_time": "2021-09-23T07:34:41.427675+00:00",
+      "project": "default",
+      "last_run_uri": "default@f2a79eeaf7b246098b61c3659310eca6#0",
+      "state": null,
+      "next_run_time": "2021-12-01T00:00:00+00:00",
+      "last_run": null
+    },
+    {
+      "name": "prep-data",
+      "kind": "job",
+      "scheduled_object": {
+        "task": {
+          "spec": {
+            "parameters": {
+              "context": "",
+              "label_column": "label"
+            },
+            "inputs": {
+              "source_url": ""
+            },
+            "hyperparams": {},
+            "secret_sources": [],
+            "param_file": "",
+            "tuning_strategy": "list",
+            "function": "getting-started-tutorial-admin/prep-data@a9e0b216dbfdb33c1d354e2e117c9bf6912ef5cf",
+            "handler": "prep_data",
+            "input_path": "",
+            "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
+          },
+          "metadata": {
+            "name": "prep-data",
+            "project": "getting-started-tutorial-admin",
+            "labels": {
+              "v3io_user": "admin",
+              "owner": "admin"
+            }
+          }
+        },
+        "function": {
+          "metadata": {
+            "credentials": {
+              "access_key": "$generate"
+            }
+          },
+          "spec": {
+            "volumes": [
+              {
+                "flexVolume": {
+                  "driver": "v3io/fuse",
+                  "options": {
+                    "accessKey": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+                  }
+                },
+                "name": "v3io"
+              }
+            ],
+            "volume_mounts": [
+              {
+                "name": "v3io",
+                "mountPath": "/v3io"
+              }
+            ],
+            "env": [
+              {
+                "name": "V3IO_API",
+                "value": "http://v3io-webapi:8081"
+              },
+              {
+                "name": "V3IO_USERNAME",
+                "value": "admin"
+              },
+              {
+                "name": "V3IO_ACCESS_KEY",
+                "value": "1bc19fc2-2089-4c9c-a622-2eaa9868382c"
+              },
+              {
+                "name": "V3IO_FRAMESD",
+                "value": "http://framesd:8080"
+              }
+            ],
+            "node_selector": {},
+            "resources": {
+              "limits": {},
+              "requests": {}
+            }
+          }
+        },
+        "schedule": "*/10 * * * *"
+      },
+      "cron_trigger": {
+        "year": null,
+        "month": "*",
+        "day": "*",
+        "week": null,
+        "day_of_week": "*",
+        "hour": "*",
+        "minute": "*/10",
+        "second": null,
+        "start_date": null,
+        "end_date": null,
+        "timezone": null,
+        "jitter": null
+      },
+      "desired_state": null,
+      "labels": {
+        "v3io_user": "admin",
+        "owner": "admin"
+      },
+      "concurrency_limit": 1,
+      "credentials": {
+        "access_key": null
+      },
+      "creation_time": "2021-11-23T09:58:47.385416+00:00",
+      "project": "getting-started-tutorial-admin",
+      "last_run_uri": "getting-started-tutorial-admin@dfc5cbd6047046c0b505026e8cc81cb5#0",
+      "state": null,
+      "next_run_time": "2021-11-25T15:30:00+00:00",
+      "last_run": null
+    },
+    {
+      "name": "sklearn-classifier",
+      "kind": "job",
+      "scheduled_object": {
+        "task": {
+          "spec": {
+            "parameters": {
+              "context": "",
+              "model_pkg_class": "",
+              "label_column": "labels",
+              "encode_cols": [],
+              "sample": "<_ast.USub object at 0x7fd86dbc17b8>",
+              "test_size": 0.3,
+              "train_val_split": 0.7,
+              "test_set_key": "test_set",
+              "model_evaluator": "",
+              "models_dest": "",
+              "plots_dest": "plots",
+              "file_ext": "parquet",
+              "model_pkg_file": "",
+              "random_state": 1
+            },
+            "inputs": {
+              "dataset": ""
+            },
+            "hyperparams": {},
+            "secret_sources": [],
+            "param_file": "",
+            "tuning_strategy": "list",
+            "function": "sk-project-admin/sklearn-classifier@ab38336a9797c8caa495886a1531ff1633edd2c2",
+            "handler": "train_model",
+            "input_path": "",
+            "output_path": "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
+          },
+          "metadata": {
+            "name": "sklearn-classifier",
+            "project": "sk-project-admin",
+            "labels": {
+              "author": "yjb",
+              "framework": "sklearn",
+              "kind": " local",
+              "some": "test",
+              "v3io_user": "admin",
+              "owner": "admin"
+            }
+          }
+        },
+        "function": {
+          "spec": {
+            "volumes": [
+              {
+                "flexVolume": {
+                  "driver": "v3io/fuse",
+                  "options": {
+                    "accessKey": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+                  }
+                },
+                "name": "v3io"
+              }
+            ],
+            "volume_mounts": [
+              {
+                "name": "v3io",
+                "mountPath": "/v3io"
+              }
+            ],
+            "env": [
+              {
+                "name": "V3IO_API",
+                "value": "v3io-webapi.default-tenant.svc:8081"
+              },
+              {
+                "name": "V3IO_USERNAME",
+                "value": "admin"
+              },
+              {
+                "name": "V3IO_ACCESS_KEY",
+                "value": "b7242e47-a051-4ec3-8384-5f99a26c1451"
+              },
+              {
+                "name": "V3IO_FRAMESD",
+                "value": "framesd:8081"
+              }
+            ],
+            "node_selector": {},
+            "resources": {
+              "limits": {},
+              "requests": {}
+            }
+          }
+        },
+        "schedule": "0 0 1 * *"
+      },
+      "cron_trigger": {
+        "year": null,
+        "month": "*",
+        "day": 1,
+        "week": null,
+        "day_of_week": "*",
+        "hour": 0,
+        "minute": 0,
+        "second": null,
+        "start_date": null,
+        "end_date": null,
+        "timezone": null,
+        "jitter": null
+      },
+      "desired_state": null,
+      "labels": {
+        "author": "yjb",
+        "framework": "sklearn",
+        "kind": " local",
+        "some": "test",
+        "v3io_user": "admin",
+        "owner": "admin"
+      },
+      "concurrency_limit": 1,
+      "credentials": {
+        "access_key": null
+      },
+      "creation_time": "2021-08-31T12:29:30.402944+00:00",
+      "project": "sk-project-admin",
+      "last_run_uri": "sk-project-admin@7d0d687becd147469b6feb97b4ced565#0",
+      "state": null,
+      "next_run_time": "2021-12-01T00:00:00+00:00",
+      "last_run": null
+    }
+  ]
 }

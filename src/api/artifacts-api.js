@@ -63,11 +63,17 @@ export default {
       params: { project }
     })
   },
-  getDataSet: (project, dataSet) => {
+  getDataSet: (project, dataSet, tag) => {
     return fetchArtifacts(
       '/artifacts',
       {},
-      { params: { project, name: dataSet, tag: '*' } }
+      {
+        params: {
+          project,
+          name: dataSet,
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+        }
+      }
     )
   },
   getDataSets: (project, filters, config) => {
@@ -78,11 +84,17 @@ export default {
       true
     )
   },
-  getFile: (project, file) => {
+  getFile: (project, file, tag) => {
     return fetchArtifacts(
       '/artifacts',
       {},
-      { params: { project, name: file, tag: '*' } }
+      {
+        params: {
+          project,
+          name: file,
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+        }
+      }
     )
   },
   getFiles: (project, filters) => {
@@ -93,11 +105,17 @@ export default {
       true
     )
   },
-  getModel: (project, model) => {
+  getModel: (project, model, tag) => {
     return fetchArtifacts(
       '/artifacts',
       {},
-      { params: { project, name: model, tag: '*' } }
+      {
+        params: {
+          project,
+          name: model,
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+        }
+      }
     )
   },
   getModelEndpoints: (project, filters, params = {}) => {

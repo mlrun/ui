@@ -13,6 +13,7 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import TableTop from '../../elements/TableTop/TableTop'
 
 import {
   generateContentActionsMenu,
@@ -55,7 +56,7 @@ const Content = ({
   projectStore,
   refresh,
   selectedItem,
-  setLoading
+  tableTop
 }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [expandedItems, setExpandedItems] = useState([])
@@ -225,22 +226,28 @@ const Content = ({
               tabs={pageData.tabs}
             />
           )}
-        <div className={filterMenuClassNames}>
-          <FilterMenu
-            actionButton={pageData.filterMenuActionButton}
-            expand={expand}
-            filters={pageData.filters}
-            handleExpandAll={handleExpandAll}
-            match={match}
-            onChange={filtersChangeCallback ?? refresh}
-            page={pageData.page}
-            withoutExpandButton={
-              Boolean(pageData.handleRequestOnExpand) ||
-              pageData.withoutExpandButton
-            }
-          />
-        </div>
+
         <div className="table-container">
+          {tableTop && (
+            <TableTop link={tableTop.link} text={tableTop.text}>
+              {tableTop.children}
+            </TableTop>
+          )}
+          <div className={filterMenuClassNames}>
+            <FilterMenu
+              actionButton={pageData.filterMenuActionButton}
+              expand={expand}
+              filters={pageData.filters}
+              handleExpandAll={handleExpandAll}
+              match={match}
+              onChange={filtersChangeCallback ?? refresh}
+              page={pageData.page}
+              withoutExpandButton={
+                Boolean(pageData.handleRequestOnExpand) ||
+                pageData.withoutExpandButton
+              }
+            />
+          </div>
           {children ? (
             children
           ) : loading ? null : (filtersStore.groupBy !== GROUP_BY_NONE &&
@@ -269,7 +276,6 @@ const Content = ({
                 pageData={pageData}
                 retryRequest={refresh}
                 selectedItem={selectedItem}
-                setLoading={setLoading}
               />
             </>
           )}
@@ -295,7 +301,7 @@ Content.defaultProps = {
   handleCancel: () => {},
   handleSelectItem: () => {},
   selectedItem: {},
-  setLoading: () => {}
+  tableTop: null
 }
 
 Content.propTypes = {
@@ -310,7 +316,10 @@ Content.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  setLoading: PropTypes.func
+  tableTop: PropTypes.shape({
+    link: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired
+  })
 }
 
 export default connect(

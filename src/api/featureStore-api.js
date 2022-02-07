@@ -45,6 +45,10 @@ export default {
       `/projects/${data.metadata.project}/feature-vectors`,
       data
     ),
+  deleteFeatureVector: (project, featureVector) =>
+    mainHttpClient.delete(
+      `/projects/${project}/feature-vectors/${featureVector}`
+    ),
   fetchFeatureSetsTags: project =>
     mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`),
   fetchFeatureVectorsTags: project =>
@@ -60,10 +64,19 @@ export default {
       config ?? {},
       true
     ),
-  getFeatureSet: (project, featureSet) =>
-    mainHttpClient.get(`/projects/${project}/feature-sets`, {
-      params: { name: featureSet }
-    }),
+  getFeatureSet: (project, featureSet, tag) => {
+    const params = {
+      name: featureSet
+    }
+
+    if (tag !== TAG_FILTER_ALL_ITEMS) {
+      params.tag = tag
+    }
+
+    return mainHttpClient.get(`/projects/${project}/feature-sets`, {
+      params
+    })
+  },
   getFeatureSets: (project, filters, config) => {
     return fetchFeatureStoreContent(
       `/projects/${project}/${FEATURE_SETS_TAB}`,
@@ -72,10 +85,19 @@ export default {
       true
     )
   },
-  getFeatureVector: (project, featureVector) =>
-    mainHttpClient.get(`/projects/${project}/feature-vectors`, {
-      params: { name: featureVector }
-    }),
+  getFeatureVector: (project, featureVector, tag) => {
+    const params = {
+      name: featureVector
+    }
+
+    if (tag !== TAG_FILTER_ALL_ITEMS) {
+      params.tag = tag
+    }
+
+    return mainHttpClient.get(`/projects/${project}/feature-vectors`, {
+      params
+    })
+  },
   getFeatureVectors: (project, filters, config) => {
     return fetchFeatureStoreContent(
       `/projects/${project}/${FEATURE_VECTORS_TAB}`,

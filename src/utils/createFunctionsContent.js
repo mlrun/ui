@@ -11,7 +11,7 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
       ? {
           name: {
             id: `name.${identifierUnique}`,
-            value: func.nuclio_name || func.name,
+            value: func.name,
             class: 'functions_medium',
             identifier: getFunctionIdentifier(func),
             identifierUnique: getFunctionIdentifier(func, true),
@@ -26,6 +26,13 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
             value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
             class: 'functions_big',
             type: 'type'
+          },
+          updated: {
+            id: `updated.${identifierUnique}`,
+            value: formatDatetime(new Date(func.updated), 'N/A'),
+            class: 'functions_medium',
+            type: 'date',
+            hidden: true
           }
         }
       : {

@@ -30,7 +30,7 @@ const Files = React.lazy(() => import('./components/Files/Files'))
 const Functions = React.lazy(() =>
   import('./components/FunctionsPage/Functions')
 )
-const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
+const Jobs = React.lazy(() => import('./components/Jobs/Jobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const ProjectMonitor = React.lazy(() =>
@@ -47,6 +47,10 @@ const AddToFeatureVectorPage = React.lazy(() =>
 )
 
 const App = () => {
+  // TODO: Remove after ProjectOverview is Done.
+  const search = window.location.search
+  const isDemo =
+    new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Page>
@@ -57,11 +61,13 @@ const App = () => {
               exact
               render={routeProps => <Projects {...routeProps} />}
             />
-            <Redirect
-              exact
-              from="/projects/:projectName"
-              to="/projects/:projectName/monitor"
-            />
+            {!isDemo && (
+              <Redirect
+                exact
+                from="/projects/:projectName"
+                to="/projects/:projectName/monitor"
+              />
+            )}
             <Route
               path="/projects/:projectName"
               exact
@@ -104,7 +110,8 @@ const App = () => {
             />
             <Route
               path={[
-                '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
+                '/projects/:projectName/jobs/:pageTab/:jobName/:jobId/:tab',
+                '/projects/:projectName/jobs/:pageTab/:jobName',
                 '/projects/:projectName/jobs/:pageTab'
               ]}
               exact

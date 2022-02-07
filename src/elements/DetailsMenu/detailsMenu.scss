@@ -23,6 +23,8 @@
   }
 
   &__tab {
+    display: inline-flex;
+    align-items: center;
     padding: 8px 24px;
     color: $topaz;
     font-weight: bold;
@@ -33,6 +35,10 @@
     &_active {
       color: $cornflowerBlue;
       border-bottom-color: $cornflowerBlue;
+    }
+
+    &-tip {
+      margin-left: 5px;
     }
   }
 
