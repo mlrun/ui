@@ -14,9 +14,7 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
-import ProjectName from './ProjectName/ProjectName'
 import ProjectLabels from './ProjectLabels/ProjectLabels'
-import ProjectGoals from './ProjectGoals/ProjectGoals'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
@@ -117,25 +115,7 @@ const ProjectMonitorView = React.forwardRef(
         ) : (
           <div className="project__content">
             <div className="general-info">
-              <div className="general-info__main-data">
-                <div className="general-info__main-data-wrapper">
-                  <ProjectName
-                    editNameData={editProject.name}
-                    handleOnChangeProject={handleOnChangeProject}
-                    handleOnKeyDown={handleOnKeyDown}
-                    projectName={project.data.metadata.name}
-                    ref={ref}
-                  />
-                </div>
-                <ProjectGoals
-                  editGoalsData={editProject.goals}
-                  handleEditProject={handleEditProject}
-                  handleOnChangeProject={handleOnChangeProject}
-                  handleOnKeyDown={handleOnKeyDown}
-                  projectGoals={project.data.spec.goals ?? ''}
-                  ref={ref}
-                />
-              </div>
+              <div className="general-info__main-data"></div>
               <div className="general-info__divider" />
               {project.data.status.state && (
                 <div className="general-info__row status-row">

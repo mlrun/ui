@@ -4,8 +4,9 @@ import PropTypes from 'prop-types'
 import Input from '../../common/Input/Input'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Loader from '../../common/Loader/Loader'
-import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
+import ProjectGoals from '../../components/Project/ProjectGoals/ProjectGoals'
 import ProjectDescription from '../../components/Project/ProjectDescription/ProjectDescription'
+import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
 
 import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.util'
 
@@ -13,9 +14,10 @@ const ProjectSettingsGeneralView = ({
   artifactPath,
   defaultArtifactPath,
   description,
-  editProject,
+  editProjectData,
   error,
   generalParams,
+  goals,
   handleAddNewParameter,
   handleDeleteParameter,
   handleEditParameter,
@@ -40,7 +42,7 @@ const ProjectSettingsGeneralView = ({
           <div className="settings__card-header">General</div>
           <div className="settings__card-content">
             <ProjectSettingsSource
-              editSourceData={editProject.source}
+              editSourceData={editProjectData.source}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
               handleSourceChange={handleOnChange}
@@ -68,7 +70,7 @@ const ProjectSettingsGeneralView = ({
                     isPathValid: value
                   }))
                 }
-                value={editProject.artifact_path.value ?? artifactPath}
+                value={editProjectData.artifact_path.value ?? artifactPath}
               />
               <span className="settings__artifact-path-link">
                 Enter the default path for saving the artifacts within your
@@ -84,11 +86,22 @@ const ProjectSettingsGeneralView = ({
               </span>
             </div>
             <ProjectDescription
-              editDescriptionData={editProject.description}
+              editDescriptionData={editProjectData.description}
               handleEditProject={handleEditProject}
               handleOnChangeProject={handleOnChange}
               handleOnBlur={handleOnBlur}
-              projectDescription={editProject.description.value ?? description}
+              projectDescription={
+                editProjectData.description.value ?? description
+              }
+              // ref={ref}
+            />
+            <ProjectGoals
+              editGoalsData={editProjectData.goals}
+              handleEditProject={handleEditProject}
+              handleOnChangeProject={handleOnChange}
+              handleOnBlur={handleOnBlur}
+              // handleOnKeyDown={handleOnKeyDown}
+              projectGoals={editProjectData.goals.value ?? goals}
               // ref={ref}
             />
             <p className="settings__card-subtitle">Parameters</p>
@@ -126,9 +139,11 @@ ProjectSettingsGeneralView.defaultProps = {
 ProjectSettingsGeneralView.propTypes = {
   artifactPath: PropTypes.string.isRequired,
   defaultArtifactPath: PropTypes.string,
-  editProject: PropTypes.object.isRequired,
+  description: PropTypes.string,
+  editProjectData: PropTypes.object.isRequired,
   error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
+  goals: PropTypes.string.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,

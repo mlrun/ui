@@ -933,9 +933,9 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.project.data.spec,
               artifact_path: payload.artifact_path,
-              source: payload.source,
+              goals: payload.goals,
               description: payload.description,
-              goals: payload.goals
+              source: payload.source
             }
           }
         }

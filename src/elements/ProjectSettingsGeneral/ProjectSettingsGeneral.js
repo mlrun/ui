@@ -12,28 +12,10 @@ import {
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import notificationActions from '../../actions/notification'
+import { initialEditProjectData } from './projectSettingsGeneral.utils'
 import { STATUS_CODE_FORBIDDEN } from '../../constants'
 
 import './projectSettingsGeneral.scss'
-
-const initState = {
-  artifact_path: {
-    value: null,
-    isEdit: false
-  },
-  description: {
-    value: null,
-    isEdit: false
-  },
-  goals: {
-    value: null,
-    isEdit: false
-  },
-  source: {
-    value: null,
-    isEdit: true
-  }
-}
 
 const ProjectSettingsGeneral = ({
   fetchProject,
@@ -45,7 +27,8 @@ const ProjectSettingsGeneral = ({
   setProjectParams,
   setProjectSettings
 }) => {
-  const [editProject, setEditProject] = useState(initState)
+  const [editProjectData, setEditProjectData] = useState(initialEditProjectData)
+
   const [validation, setValidation] = useState({
     isSourceValid: true,
     isPathValid: true
@@ -55,7 +38,7 @@ const ProjectSettingsGeneral = ({
     fetchProject(match.params.projectName)
     return () => {
       removeProjectData()
-      setEditProject(prev => ({ ...prev, ...initState }))
+      setEditProjectData(prev => ({ ...prev, ...initialEditProjectData }))
     }
   }, [
     removeProjectData,
@@ -93,7 +76,7 @@ const ProjectSettingsGeneral = ({
           })
         })
         .finally(() => {
-          setEditProject(prev => ({ ...prev, ...initState }))
+          setEditProjectData(prev => ({ ...prev, ...initialEditProjectData }))
         })
     },
 
@@ -158,7 +141,7 @@ const ProjectSettingsGeneral = ({
   )
 
   const handleEditProject = useCallback(fieldName => {
-    setEditProject(prevState => ({
+    setEditProjectData(prevState => ({
       ...prevState,
       [fieldName]: {
         ...prevState[fieldName],
@@ -169,17 +152,17 @@ const ProjectSettingsGeneral = ({
 
   const handleOnChange = useCallback(
     (fieldName, value) => {
-      setEditProject(prevState => ({
+      setEditProjectData(prevState => ({
         ...prevState,
         [fieldName]: {
           ...prevState[fieldName],
-          value: editProject[fieldName].isEdit
+          value: editProjectData[fieldName].isEdit
             ? value
             : prevState[fieldName].value
         }
       }))
     },
-    [editProject]
+    [editProjectData]
   )
 
   const handleOnBlur = fieldName => {
@@ -187,7 +170,7 @@ const ProjectSettingsGeneral = ({
       (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
       (fieldName === SOURCE_URL && !validation.isSourceValid)
     ) {
-      setEditProject(prevState => ({
+      setEditProjectData(prevState => ({
         ...prevState,
         [fieldName]: {
           ...prevState[fieldName],
@@ -198,10 +181,11 @@ const ProjectSettingsGeneral = ({
     }
 
     if (
-      isNil(editProject[fieldName].value) ||
-      editProject[fieldName].value === projectStore.project.data.spec[fieldName]
+      isNil(editProjectData[fieldName].value) ||
+      editProjectData[fieldName].value ===
+        projectStore.project.data.spec[fieldName]
     ) {
-      setEditProject(prevState => ({
+      setEditProjectData(prevState => ({
         ...prevState,
         [fieldName]: {
           ...prevState[fieldName],
@@ -215,14 +199,15 @@ const ProjectSettingsGeneral = ({
       ...projectStore.project.data,
       spec: {
         ...projectStore.project.data.spec,
-        [fieldName]: editProject[fieldName].value.trim()
+        [fieldName]: editProjectData[fieldName].value.trim()
       }
     }
 
     setProjectSettings({
-      source: data.spec.source,
       artifact_path: data.spec.artifact_path,
-      description: data.spec.description
+      description: data.spec.description,
+      goals: data.spec.goals,
+      source: data.spec.source
     })
 
     sendProjectSettingsData(data)
@@ -233,9 +218,10 @@ const ProjectSettingsGeneral = ({
       artifactPath={projectStore.project.data?.spec.artifact_path ?? ''}
       defaultArtifactPath={frontendSpec.default_artifact_path}
       description={projectStore.project.data?.spec.description ?? ''}
-      editProject={editProject}
+      editProjectData={editProjectData}
       error={projectStore.project?.error}
       generalParams={generalParams}
+      goals={projectStore.project.data?.spec.goals ?? ''}
       handleAddNewParameter={handleAddNewParameter}
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
