@@ -59,24 +59,13 @@ const FeaturesTablePanel = ({
       !tableStore.features.isNewFeatureVector &&
       isNil(tableStore.features.labelFeature)
     ) {
-      setLabelFeature({
-        [tableStore.features
-          .currentProject]: tableStore.features.groupedFeatures[
-          tableStore.features.currentProject
-        ]?.some(
-          feature =>
-            feature.originalTemplate ===
-            tableStore.features.featureVector.spec.label_feature
-        )
-          ? tableStore.features.featureVector.spec.label_feature
-          : ''
-      })
+      setLabelFeature(
+        tableStore.features.featureVector.spec.label_feature ?? ''
+      )
     }
   }, [
     setLabelFeature,
-    tableStore.features.currentProject,
     tableStore.features.featureVector.spec.label_feature,
-    tableStore.features.groupedFeatures,
     tableStore.features.isNewFeatureVector,
     tableStore.features.labelFeature
   ])
@@ -97,8 +86,9 @@ const FeaturesTablePanel = ({
       []
     )
 
-    featureVector.spec.label_feature =
-      tableStore.features.labelFeature?.[tableStore.features.currentProject]
+    featureVector.spec.label_feature = tableStore.features.labelFeature
+      ? tableStore.features.labelFeature
+      : ''
 
     if (onSubmit) {
       onSubmit(featureVector)
@@ -137,10 +127,8 @@ const FeaturesTablePanel = ({
 
     updateGroupedFeatures(filteredFeatures, project)
 
-    if (featureTemplate === tableStore.features.labelFeature?.[project]) {
-      setLabelFeature({
-        [project]: ''
-      })
+    if (featureTemplate === tableStore.features.labelFeature) {
+      setLabelFeature('')
     }
   }
 
@@ -158,12 +146,10 @@ const FeaturesTablePanel = ({
     })
   }
 
-  const toggleLabelFeature = (featureTemplate, project) => {
-    setLabelFeature({
-      [project]: tableStore.features.labelFeature?.[project]
-        ? ''
-        : featureTemplate
-    })
+  const toggleLabelFeature = featureTemplate => {
+    setLabelFeature(
+      tableStore.features.labelFeature?.length > 0 ? '' : featureTemplate
+    )
   }
 
   return (
@@ -242,19 +228,13 @@ const FeaturesTablePanel = ({
                 <FeaturesTablePanelRow
                   key={feature.originalTemplate}
                   labelFeature={
-                    tableStore.features.labelFeature?.[
-                      tableStore.features.currentProject
-                    ]
-                      ? tableStore.features.labelFeature[
-                          tableStore.features.currentProject
-                        ]
+                    tableStore.features.labelFeature
+                      ? tableStore.features.labelFeature
                       : ''
                   }
                   isEditEnabled={true}
                   feature={feature}
-                  toggleLabelFeature={featureTemplate =>
-                    toggleLabelFeature(featureTemplate, feature.project)
-                  }
+                  toggleLabelFeature={toggleLabelFeature}
                   deleteFeature={featureTemplate =>
                     deleteFeature(featureTemplate, feature.project)
                   }
@@ -286,15 +266,13 @@ const FeaturesTablePanel = ({
                     <FeaturesTablePanelRow
                       key={feature.originalTemplate}
                       labelFeature={
-                        tableStore.features.labelFeature?.[projectName]
-                          ? tableStore.features.labelFeature[projectName]
+                        tableStore.features.labelFeature
+                          ? tableStore.features.labelFeature
                           : ''
                       }
                       isEditEnabled={true}
                       feature={feature}
-                      toggleLabelFeature={featureTemplate =>
-                        toggleLabelFeature(featureTemplate, feature.project)
-                      }
+                      toggleLabelFeature={toggleLabelFeature}
                       deleteFeature={featureTemplate =>
                         deleteFeature(featureTemplate, feature.project)
                       }

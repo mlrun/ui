@@ -30,10 +30,7 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         features: {
           ...state.features,
-          labelFeature: {
-            ...state.features.labelFeature,
-            ...payload
-          }
+          labelFeature: payload
         }
       }
     case SET_TABLE_PANEL_OPEN:
