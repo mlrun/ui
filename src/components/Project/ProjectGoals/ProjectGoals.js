@@ -19,16 +19,14 @@ const ProjectGoals = React.forwardRef(
   ) => {
     return (
       <div
-        className="general-info__description"
+        className="settings__goals"
         data-testid="project-goals"
         onClick={() => handleEditProject(GOALS)}
       >
         <TextArea
           floatingLabel
           label="Project goals"
-          // onChange={handleOnChangeProject}
           // onKeyDown={handleOnKeyDown}
-
           onBlur={() => handleOnBlur(GOALS)}
           onChange={value => handleOnChangeProject(GOALS, value)}
           // ref={ref}

@@ -1,8 +1,11 @@
 @import '../../scss/colors';
+@import '../../scss/mixins';
 
 .settings {
   &__artifact-path,
+  &__goals,
   &__description,
+  &__labels,
   &__source {
     margin-bottom: 15px;
   }
@@ -19,6 +22,10 @@
         margin-left: 5px;
       }
     }
+  }
+
+  &__labels {
+    @include fieldWrapper;
   }
 
   &__params {

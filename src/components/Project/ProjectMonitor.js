@@ -363,29 +363,6 @@ const ProjectMonitor = ({
     setProjectData
   ])
 
-  const handleDocumentClick = useCallback(
-    event => {
-      if (inputRef.current && event.target !== inputRef.current) {
-        handleSetProjectData()
-      }
-    },
-    [handleSetProjectData, inputRef]
-  )
-
-  useEffect(() => {
-    if (
-      editProject.name.isEdit ||
-      editProject.description.isEdit ||
-      editProject.goals.isEdit
-    ) {
-      document.addEventListener('click', handleDocumentClick)
-    }
-
-    return () => {
-      document.removeEventListener('click', handleDocumentClick)
-    }
-  }, [editProject, handleDocumentClick])
-
   const changeMembersCallback = () => {
     fetchProjectMembers(membersState.projectInfo.id)
   }
@@ -509,48 +486,7 @@ const ProjectMonitor = ({
     }
   }
 
-  const handleEditProject = useCallback(inputName => {
-    setEditProject(prevState => ({
-      ...prevState,
-      name: {
-        ...prevState.name,
-        isEdit: inputName === 'name'
-      },
-      description: {
-        ...prevState.description,
-        isEdit: inputName === 'description'
-      },
-      goals: {
-        ...prevState.goals,
-        isEdit: inputName === 'goals'
-      }
-    }))
-  }, [])
-
   const handleLaunchIDE = useCallback(launch => {}, [])
-
-  const handleOnChangeProject = useCallback(
-    value => {
-      setEditProject(prevState => ({
-        ...prevState,
-        name: {
-          ...prevState.name,
-          value: editProject.name.isEdit ? value : prevState.name.value
-        },
-        description: {
-          ...prevState.description,
-          value: editProject.description.isEdit
-            ? value
-            : prevState.description.value
-        },
-        goals: {
-          ...prevState.goals,
-          value: editProject.goals.isEdit ? value : prevState.goals.value
-        }
-      }))
-    },
-    [editProject]
-  )
 
   const handleOnKeyDown = useCallback(
     event => {
@@ -612,13 +548,10 @@ const ProjectMonitor = ({
       createFeatureSetSuccess={createFeatureSetSuccess}
       createFunctionSuccess={createFunctionSuccess}
       createNewOptions={createNewOptions}
-      editProject={editProject}
       handleAddProjectLabel={handleAddProjectLabel}
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-      handleEditProject={handleEditProject}
       handleLaunchIDE={handleLaunchIDE}
-      handleOnChangeProject={handleOnChangeProject}
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
       isDemoMode={isDemoMode}

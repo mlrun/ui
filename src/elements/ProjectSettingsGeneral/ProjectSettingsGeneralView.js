@@ -6,6 +6,7 @@ import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Loader from '../../common/Loader/Loader'
 import ProjectGoals from '../../components/Project/ProjectGoals/ProjectGoals'
 import ProjectDescription from '../../components/Project/ProjectDescription/ProjectDescription'
+import ProjectLabels from '../../components/Project/ProjectLabels/ProjectLabels'
 import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
 
 import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.util'
@@ -104,6 +105,17 @@ const ProjectSettingsGeneralView = ({
               projectGoals={editProjectData.goals.value ?? goals}
               // ref={ref}
             />
+            <div className="settings__labels">
+              <ProjectLabels
+                labels={{ a: 'b' }}
+                // addProjectLabel={handleAddProjectLabel}
+                isEditMode
+                // labels={project.data.metadata.labels}
+                // updateProjectLabel={handleUpdateProjectLabels}
+                // visibleChipsMaxLength={visibleChipsMaxLength}
+              />
+            </div>
+
             <p className="settings__card-subtitle">Parameters</p>
             <p>
               The parameters enable users to pass key/value to the project

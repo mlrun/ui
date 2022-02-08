@@ -70,8 +70,8 @@ const ProjectSettingsGeneral = ({
             id: Math.random(),
             message:
               error.response?.status === STATUS_CODE_FORBIDDEN
-                ? `You are not allowed to edit ${match.params.projectName} project`
-                : 'Failed to edit project data',
+                ? 'Missing Edit permission for the project.'
+                : 'Failed to edit project data.',
             retry: () => sendProjectSettingsData(data)
           })
         })
