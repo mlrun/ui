@@ -11,7 +11,12 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
-import { GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../constants'
+import {
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
+  JOBS_PAGE
+} from '../../constants'
 import tableActions from '../../actions/table'
 
 import './table.scss'
@@ -89,7 +94,7 @@ const Table = ({
       !isEveryObjectValueEmpty(selectedItem)
     )
 
-    if (filtersStore.groupBy === 'name') {
+    if (filtersStore.groupBy === GROUP_BY_NAME) {
       setTableContent({
         content: generatedTableContent,
         groupLatestItem: generateGroupLatestItem(

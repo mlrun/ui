@@ -83,23 +83,27 @@ const FunctionsTableRow = ({
                 >
                   {Object.values(func).map((value, i) => {
                     return (
-                      <TableCell
-                        data={i === 0 ? func.updated : value}
-                        item={subRowCurrentItem}
-                        link={
-                          i === 0 &&
-                          `/projects/${match.params.projectName}/functions/${
-                            subRowCurrentItem?.hash
-                          }${
-                            match.params.tab
-                              ? `/${match.params.tab}`
-                              : `/${detailsMenu[0].id}`
-                          }`
-                        }
-                        key={value.id}
-                        selectItem={handleSelectItem}
-                        selectedItem={selectedItem}
-                      />
+                      !value.hidden && (
+                        <TableCell
+                          data={i === 0 && func.updated ? func.updated : value}
+                          item={subRowCurrentItem}
+                          link={
+                            value.getLink
+                              ? value.getLink(currentItem?.hash)
+                              : i === 0 &&
+                                `/projects/${
+                                  match.params.projectName
+                                }/functions/${subRowCurrentItem?.hash}${
+                                  match.params.tab
+                                    ? `/${match.params.tab}`
+                                    : `/${detailsMenu[0].id}`
+                                }`
+                          }
+                          key={value.id}
+                          selectItem={handleSelectItem}
+                          selectedItem={selectedItem}
+                        />
+                      )
                     )
                   })}
                   <div className="table-body__cell action_cell">

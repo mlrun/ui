@@ -3,26 +3,15 @@ import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { find, isEmpty, cloneDeep } from 'lodash'
 
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
-import Content from '../../layout/Content/Content'
-import JobsPanel from '../JobsPanel/JobsPanel'
-import Loader from '../../common/Loader/Loader'
-import Workflow from '../Workflow/Workflow'
-import Details from '../Details/Details'
-import YamlModal from '../../common/YamlModal/YamlModal'
-
-import detailsActions from '../../actions/details'
-import filtersActions from '../../actions/filters'
-import jobsActions from '../../actions/jobs'
-import notificationActions from '../../actions/notification'
-import workflowsActions from '../../actions/workflow'
-import functionsActions from '../../actions/functions'
+import JobsView from './JobsView'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-import { generateKeyValues } from '../../utils'
-import { generatePageData } from './jobsData'
-import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
+import {
+  actionCreator,
+  generateEditableItem,
+  generatePageData
+} from './jobs.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import {
   datePickerOptions,
@@ -35,15 +24,14 @@ import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
-  PANEL_EDIT_MODE,
-  SCHEDULE_TAB,
-  TERTIARY_BUTTON
+  SCHEDULE_TAB
 } from '../../constants'
 import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isPageTabValid } from '../../utils/handleRedirect'
 import { generateContentActionsMenu } from '../../layout/Content/content.util'
+import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
@@ -52,6 +40,7 @@ const Jobs = ({
   appStore,
   editJob,
   editJobFailure,
+  fetchAllJobRuns,
   fetchFunctionLogs,
   fetchJob,
   fetchJobFunction,
@@ -91,6 +80,7 @@ const Jobs = ({
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
+  const [jobRuns, setJobRuns] = useState([])
   const isDemoMode = useDemoMode()
 
   const dispatch = useDispatch()
@@ -207,43 +197,7 @@ const Jobs = ({
       })
     }
 
-    setEditableItem({
-      rerun_object: {
-        credentials: {
-          access_key: functionData?.metadata?.credentials?.access_key ?? ''
-        },
-        function: {
-          spec: {
-            env: functionData?.spec.env ?? [],
-            resources: functionData?.spec.resources,
-            volume_mounts: functionData?.spec.volume_mounts ?? [],
-            volumes: functionData?.spec.volumes ?? [],
-            node_selector: functionData?.spec.node_selector ?? {}
-          }
-        },
-        schedule: null,
-        task: {
-          metadata: {
-            labels: generateKeyValues(job.labels ?? {}),
-            name: job.name,
-            project: job.project
-          },
-          spec: {
-            function: job.function,
-            handler: job?.handler ?? '',
-            hyperparams: job.hyperparams,
-            input_path: job.input_path ?? '',
-            inputs: job.inputs ?? {},
-            output_path: job.outputPath,
-            param_file: job.param_file ?? '',
-            parameters: generateKeyValues(job.parameters ?? {}),
-            secret_sources: job.secret_sources ?? [],
-            selector: job.selector ?? 'max.',
-            tuning_strategy: job.tuning_strategy ?? 'list'
-          }
-        }
-      }
-    })
+    setEditableItem(generateEditableItem(functionData, job))
   }
 
   const handleAbortJob = job => {
@@ -344,12 +298,14 @@ const Jobs = ({
       match.params.workflowId,
       selectedFunction,
       handleFetchFunctionLogs,
-      handleRemoveFunctionLogs
+      handleRemoveFunctionLogs,
+      match.params.jobName
     ),
     [
       match.params.projectName,
       match.params.pageTab,
       match.params.workflowId,
+      match.params.jobName,
       appStore.frontendSpec.jobs_dashboard_url,
       isDemoMode,
       selectedJob,
@@ -369,13 +325,23 @@ const Jobs = ({
 
   const refreshJobs = useCallback(
     filters => {
-      fetchJobs(
+      const fetchData = match.params.jobName ? fetchAllJobRuns : fetchJobs
+      fetchData(
         match.params.projectName,
         filters,
+        match.params.jobName,
         match.params.pageTab === SCHEDULE_TAB
       )
         .then(jobs => {
-          return setJobs(jobs.map(job => parseJob(job, match.params.pageTab)))
+          const parsedJobs = jobs.map(job =>
+            parseJob(job, match.params.pageTab)
+          )
+
+          if (match.params.jobName) {
+            setJobRuns(parsedJobs)
+          } else {
+            setJobs(parsedJobs)
+          }
         })
         .catch(error => {
           setNotification({
@@ -386,7 +352,14 @@ const Jobs = ({
           })
         })
     },
-    [fetchJobs, match.params.pageTab, match.params.projectName, setNotification]
+    [
+      fetchAllJobRuns,
+      fetchJobs,
+      match.params.jobName,
+      match.params.pageTab,
+      match.params.projectName,
+      setNotification
+    ]
   )
 
   const fetchCurrentJob = useCallback(() => {
@@ -548,7 +521,11 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (isEmpty(selectedJob) && !match.params.jobId && !dataIsLoaded) {
+    if (
+      ((isEmpty(selectedJob) && !match.params.jobId) ||
+        workflowsViewMode === 'list') &&
+      !dataIsLoaded
+    ) {
       let filters = {}
 
       if (match.params.pageTab === MONITOR_JOBS_TAB) {
@@ -575,42 +552,55 @@ const Jobs = ({
     match.params.pageTab,
     refreshJobs,
     selectedJob,
-    setFilters
+    setFilters,
+    workflowsViewMode
   ])
 
   useEffect(() => {
     return () => {
       setJobs([])
       setDataIsLoaded(false)
+      setWorkflow({})
     }
-  }, [match.params.projectName, match.params.pageTab])
+  }, [match.params.projectName, match.params.pageTab, match.params.jobName])
 
   const getWorkflows = useCallback(() => {
     fetchWorkflows(match.params.projectName)
   }, [fetchWorkflows, match.params.projectName])
 
   useEffect(() => {
-    if (match.params.pageTab === SCHEDULE_TAB) {
-      setFilters({ groupBy: GROUP_BY_NONE })
-    } else if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
+    if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
       if (match.params.workflowId) {
         setFilters({ groupBy: GROUP_BY_NONE })
       } else {
         getWorkflows()
         setFilters({ groupBy: GROUP_BY_WORKFLOW })
       }
+    } else {
+      setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [getWorkflows, match.params.pageTab, match.params.workflowId, setFilters])
+  }, [
+    getWorkflows,
+    match.params.pageTab,
+    match.params.workflowId,
+    match.params.jobName,
+    setFilters
+  ])
 
-  const handleSelectJob = item => {
-    if (document.getElementsByClassName('view')[0]) {
-      document.getElementsByClassName('view')[0].classList.remove('view')
-    }
+  const handleSelectJob = useCallback(
+    item => {
+      if (match.params.jobName) {
+        if (document.getElementsByClassName('view')[0]) {
+          document.getElementsByClassName('view')[0].classList.remove('view')
+        }
 
-    setSelectedJob(item)
-    setSelectedFunction({})
-    setItemIsSelected(true)
-  }
+        setSelectedJob(item)
+        setSelectedFunction({})
+        setItemIsSelected(true)
+      }
+    },
+    [match.params.jobName]
+  )
 
   const handleCancel = () => {
     setSelectedJob({})
@@ -646,102 +636,46 @@ const Jobs = ({
   }
 
   return (
-    <div className="content-wrapper">
-      <Content
-        content={jobs}
-        handleActionsMenuClick={handleActionsMenuClick}
-        handleCancel={handleCancel}
-        handleSelectItem={handleSelectJob}
-        loading={jobsStore.loading}
-        match={match}
-        pageData={pageData}
-        refresh={refreshJobs}
-        selectedItem={selectedJob}
-        getIdentifier={getJobIdentifier}
-      >
-        {match.params.workflowId ? (
-          <Workflow
-            actionsMenu={actionsMenu}
-            content={jobs}
-            handleCancel={handleCancel}
-            handleSelectItem={handleSelectJob}
-            history={history}
-            itemIsSelected={itemIsSelected}
-            match={match}
-            pageData={pageData}
-            refresh={refreshJobs}
-            refreshJobs={refreshJobs}
-            selectedFunction={selectedFunction}
-            selectedJob={selectedJob}
-            setWorkflowsViewMode={setWorkflowsViewMode}
-            workflow={workflow}
-            workflowJobsIds={workflowJobsIds}
-            workflowsViewMode={workflowsViewMode}
-          />
-        ) : !isEmpty(selectedJob) ? (
-          <Details
-            actionsMenu={actionsMenu}
-            detailsMenu={pageData.details.menu}
-            handleCancel={handleCancel}
-            handleRefresh={fetchCurrentJob}
-            isDetailsScreen
-            match={match}
-            pageData={pageData}
-            selectedItem={selectedJob}
-          />
-        ) : null}
-      </Content>
-      {confirmData && (
-        <ConfirmDialog
-          cancelButton={{
-            handler: confirmData.rejectHandler,
-            label: 'Cancel',
-            variant: TERTIARY_BUTTON
-          }}
-          closePopUp={confirmData.rejectHandler}
-          confirmButton={{
-            handler: () => confirmData.confirmHandler(confirmData.item),
-            label: confirmData.btnConfirmLabel,
-            variant: confirmData.btnConfirmType
-          }}
-          header={confirmData.header}
-          message={confirmData.message}
-        />
-      )}
-      {(jobsStore.loading ||
-        workflowsStore.workflows.loading ||
-        workflowsStore.activeWorkflow.loading ||
-        functionsStore.loading) && <Loader />}
-      {editableItem && (
-        <JobsPanel
-          closePanel={() => {
-            setEditableItem(null)
-            removeNewJob()
-          }}
-          defaultData={
-            editableItem.scheduled_object || editableItem.rerun_object
-          }
-          handleRunNewJob={{}}
-          match={match}
-          mode={PANEL_EDIT_MODE}
-          onEditJob={onEditJob}
-          onSuccessRun={tab => {
-            if (editableItem) {
-              handleSuccessRerunJob(tab)
+    <JobsView
+      actionsMenu={actionsMenu}
+      confirmData={confirmData}
+      convertedYaml={convertedYaml}
+      editableItem={editableItem}
+      fetchCurrentJob={fetchCurrentJob}
+      functionsStore={functionsStore}
+      getCloseDetailsLink={() => getCloseDetailsLink(match, 'jobName')}
+      jobRuns={jobRuns}
+      jobs={jobs}
+      handleActionsMenuClick={handleActionsMenuClick}
+      handleCancel={handleCancel}
+      handleSelectJob={handleSelectJob}
+      handleSuccessRerunJob={handleSuccessRerunJob}
+      history={history}
+      itemIsSelected={itemIsSelected}
+      jobsStore={jobsStore}
+      match={match}
+      onEditJob={onEditJob}
+      pageData={pageData}
+      refreshJobs={refreshJobs}
+      removeNewJob={removeNewJob}
+      selectedFunction={selectedFunction}
+      selectedJob={selectedJob}
+      setEditableItem={setEditableItem}
+      setWorkflowsViewMode={setWorkflowsViewMode}
+      tableTop={
+        match.params.jobName
+          ? {
+              link: `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`,
+              text: match.params.jobName
             }
-          }}
-          project={match.params.projectName}
-          withSaveChanges={Boolean(editableItem.scheduled_object)}
-        />
-      )}
-
-      {convertedYaml.length > 0 && (
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={toggleConvertedYaml}
-        />
-      )}
-    </div>
+          : null
+      }
+      toggleConvertedYaml={toggleConvertedYaml}
+      workflow={workflow}
+      workflowJobsIds={workflowJobsIds}
+      workflowsStore={workflowsStore}
+      workflowsViewMode={workflowsViewMode}
+    />
   )
 }
 
@@ -767,11 +701,6 @@ export default connect(
     workflowsStore
   }),
   {
-    ...functionsActions,
-    ...jobsActions,
-    ...workflowsActions,
-    ...detailsActions,
-    ...notificationActions,
-    ...filtersActions
+    ...actionCreator
   }
 )(React.memo(Jobs))

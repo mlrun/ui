@@ -13,6 +13,7 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import TableTop from '../../elements/TableTop/TableTop'
 
 import {
   generateContentActionsMenu,
@@ -54,10 +55,11 @@ const Content = ({
   pageData,
   projectStore,
   refresh,
-  selectedItem
+  selectedItem,
+  tableTop
 }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [expandedItems, setExpandedItems] = useState([])
+  const [expandedItems, setExpandedItems] = useState(0)
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
@@ -159,33 +161,31 @@ const Content = ({
 
   useEffect(() => {
     return () => {
-      setExpand(false)
-      setExpandedItems([])
+      setExpandedItems(0)
     }
-  }, [match.params.jobId])
+  }, [match.params.jobId, match.params.pipelineId, groupedContent])
+
+  useEffect(() => {
+    if (Object.keys(groupedContent).length > 0) {
+      setExpand(expandedItems === Object.keys(groupedContent).length)
+    }
+  }, [expandedItems, groupedContent])
 
   const handleExpandRow = (e, item) => {
     const parentRow = e.target.closest('.parent-row')
-    let newArray = []
 
     if (parentRow.classList.contains('parent-row-expanded')) {
-      newArray = expandedItems.filter(expanded =>
-        item.key?.value
-          ? expanded.name !== item.key?.value
-          : expanded.name !== item.name?.value
-      )
-
       parentRow.classList.remove('parent-row-expanded')
       pageData.handleRemoveRequestData && pageData.handleRemoveRequestData(item)
+
+      setExpandedItems(prev => --prev)
     } else {
       parentRow.classList.remove('row_active')
       parentRow.classList.add('parent-row-expanded')
       pageData.handleRequestOnExpand && pageData.handleRequestOnExpand(item)
-      newArray = [...expandedItems, item]
-    }
 
-    setExpandedItems(newArray)
-    setExpand(newArray.length === Object.keys(groupedContent).length)
+      setExpandedItems(prev => ++prev)
+    }
   }
 
   const handleExpandAll = collapseRows => {
@@ -195,11 +195,11 @@ const Content = ({
       if (collapseRows || expand) {
         rows.forEach(row => row.classList.remove('parent-row-expanded'))
 
-        setExpand(false)
+        setExpandedItems(0)
       } else {
         rows.forEach(row => row.classList.add('parent-row-expanded'))
 
-        setExpand(true)
+        setExpandedItems(Object.keys(groupedContent).length)
       }
     }
   }
@@ -226,6 +226,11 @@ const Content = ({
           )}
 
         <div className="table-container">
+          {tableTop && (
+            <TableTop link={tableTop.link} text={tableTop.text}>
+              {tableTop.children}
+            </TableTop>
+          )}
           <div className={filterMenuClassNames}>
             <FilterMenu
               actionButton={pageData.filterMenuActionButton}
@@ -293,7 +298,8 @@ Content.defaultProps = {
   handleActionsMenuClick: () => {},
   handleCancel: () => {},
   handleSelectItem: () => {},
-  selectedItem: {}
+  selectedItem: {},
+  tableTop: null
 }
 
 Content.propTypes = {
@@ -307,7 +313,11 @@ Content.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({})
+  selectedItem: PropTypes.shape({}),
+  tableTop: PropTypes.shape({
+    link: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired
+  })
 }
 
 export default connect(

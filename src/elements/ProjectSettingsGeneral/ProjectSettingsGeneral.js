@@ -11,6 +11,7 @@ import {
 } from '../../components/ProjectSettings/projectSettings.util'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
+import { initialEditProjectData } from './projectSettingsGeneral.utils'
 import notificationActions from '../../actions/notification'
 import { STATUS_CODE_FORBIDDEN } from '../../constants'
 
@@ -26,16 +27,7 @@ const ProjectSettingsGeneral = ({
   setProjectParams,
   setProjectSettings
 }) => {
-  const [editProject, setEditProject] = useState({
-    source: {
-      value: null,
-      isEdit: false
-    },
-    artifact_path: {
-      value: null,
-      isEdit: false
-    }
-  })
+  const [editProjectData, setEditProjectData] = useState(initialEditProjectData)
   const [validation, setValidation] = useState({
     isSourceValid: true,
     isPathValid: true
@@ -46,6 +38,7 @@ const ProjectSettingsGeneral = ({
 
     return () => {
       removeProjectData()
+      setEditProjectData(initialEditProjectData)
     }
   }, [
     removeProjectData,
@@ -71,9 +64,9 @@ const ProjectSettingsGeneral = ({
     params => {
       const projectData = {
         source:
-          editProject.source.value ?? projectStore.project.data.spec.source,
+          editProjectData.source.value ?? projectStore.project.data.spec.source,
         artifact_path:
-          editProject.artifact_path.value ??
+          editProjectData.artifact_path.value ??
           projectStore.project.data.spec.artifact_path,
         params: params
       }
@@ -91,8 +84,8 @@ const ProjectSettingsGeneral = ({
       projectsApi.editProject(match.params.projectName, { ...data })
     },
     [
-      editProject.artifact_path.value,
-      editProject.source.value,
+      editProjectData.artifact_path.value,
+      editProjectData.source.value,
       match.params.projectName,
       projectStore.project.data,
       setProjectParams
@@ -141,7 +134,7 @@ const ProjectSettingsGeneral = ({
   )
 
   const handleEditProject = useCallback(type => {
-    setEditProject(prevState => ({
+    setEditProjectData(prevState => ({
       ...prevState,
       source: {
         ...prevState.source,
@@ -161,8 +154,8 @@ const ProjectSettingsGeneral = ({
           ...projectStore.project.data,
           spec: {
             ...projectStore.project.data.spec,
-            source: !isNil(editProject.source.value)
-              ? editProject.source.value
+            source: !isNil(editProjectData.source.value)
+              ? editProjectData.source.value
               : projectStore.project.data.spec.source,
             artifact_path: value.trim(),
             params: projectStore.project.data.spec.params
@@ -173,7 +166,7 @@ const ProjectSettingsGeneral = ({
       }
     }, 250),
     [
-      editProject.artifact_path.value,
+      editProjectData.artifact_path.value,
       match.params.projectName,
       projectStore.project.data,
       setProjectSettings,
@@ -182,7 +175,7 @@ const ProjectSettingsGeneral = ({
   )
 
   const sendProjectSettingsData = data => {
-    setEditProject(prevState => ({
+    setEditProjectData(prevState => ({
       ...prevState,
       artifact_path: {
         ...prevState.artifact_path,
@@ -196,7 +189,7 @@ const ProjectSettingsGeneral = ({
     projectsApi
       .editProject(match.params.projectName, { ...data })
       .catch(error => {
-        setEditProject({
+        setEditProjectData({
           source: {
             value: projectStore.project.data.spec.source,
             isEdit: false
@@ -219,7 +212,7 @@ const ProjectSettingsGeneral = ({
   }
 
   const handleSourceChange = value => {
-    setEditProject(prevState => ({
+    setEditProjectData(prevState => ({
       ...prevState,
       source: {
         ...prevState.source,
@@ -231,22 +224,22 @@ const ProjectSettingsGeneral = ({
   const handleOnBlur = tab => {
     if (tab === SOURCE_URL) {
       if (
-        !isNil(editProject.source.value) &&
+        !isNil(editProjectData.source.value) &&
         validation.isSourceValid &&
-        editProject.source.value !== projectStore.project.data.spec.source
+        editProjectData.source.value !== projectStore.project.data.spec.source
       ) {
         const data = {
           ...projectStore.project.data,
           spec: {
             ...projectStore.project.data.spec,
-            source: !isNil(editProject.source.value)
-              ? editProject.source.value
+            source: !isNil(editProjectData.source.value)
+              ? editProjectData.source.value
               : projectStore.project.data.spec.source
           }
         }
 
         sendProjectSettingsData(data)
-        setEditProject(prevState => ({
+        setEditProjectData(prevState => ({
           ...prevState,
           source: {
             value: null,
@@ -254,7 +247,7 @@ const ProjectSettingsGeneral = ({
           }
         }))
       } else {
-        setEditProject(prevState => ({
+        setEditProjectData(prevState => ({
           ...prevState,
           source: {
             value: projectStore.project.data.spec.source,
@@ -267,7 +260,7 @@ const ProjectSettingsGeneral = ({
         }))
       }
     } else {
-      setEditProject(prevState => ({
+      setEditProjectData(prevState => ({
         ...prevState,
         artifact_path: {
           ...prevState.artifact_path,
@@ -281,7 +274,7 @@ const ProjectSettingsGeneral = ({
     <ProjectSettingsGeneralView
       artifactPath={projectStore.project.data?.spec.artifact_path ?? ''}
       defaultArtifactPath={frontendSpec.default_artifact_path}
-      editProject={editProject}
+      editProjectData={editProjectData}
       error={projectStore.project?.error}
       generalParams={generalParams}
       handleAddNewParameter={handleAddNewParameter}

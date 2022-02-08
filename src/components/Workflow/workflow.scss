@@ -6,31 +6,6 @@
   flex-direction: column;
   width: 100%;
 
-  .workflow-header {
-    display: flex;
-    justify-content: space-between;
-    height: 50px;
-    padding: 5px 10px;
-    border-bottom: $secondaryBorder;
-
-    .link-back {
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-
-      &__icon {
-        display: flex;
-        align-items: center;
-      }
-
-      &__title {
-        margin: 0 5px;
-        overflow: hidden;
-        font-weight: bold;
-      }
-    }
-  }
-
   .workflow-content {
     position: relative;
     flex-direction: column;
