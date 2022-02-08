@@ -28,7 +28,6 @@ const ProjectSettingsGeneral = ({
   setProjectSettings
 }) => {
   const [editProjectData, setEditProjectData] = useState(initialEditProjectData)
-
   const [validation, setValidation] = useState({
     isSourceValid: true,
     isPathValid: true
