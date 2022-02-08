@@ -5,12 +5,35 @@ import { isNil } from 'lodash'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
+import {
+  ARTIFACT_PATH,
+  SOURCE_URL
+} from '../../components/ProjectSettings/projectSettings.util'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import notificationActions from '../../actions/notification'
 import { STATUS_CODE_FORBIDDEN } from '../../constants'
 
 import './projectSettingsGeneral.scss'
+
+const initState = {
+  artifact_path: {
+    value: null,
+    isEdit: false
+  },
+  description: {
+    value: null,
+    isEdit: false
+  },
+  goals: {
+    value: null,
+    isEdit: false
+  },
+  source: {
+    value: null,
+    isEdit: true
+  }
+}
 
 const ProjectSettingsGeneral = ({
   fetchProject,
@@ -22,24 +45,7 @@ const ProjectSettingsGeneral = ({
   setProjectParams,
   setProjectSettings
 }) => {
-  const [editProject, setEditProject] = useState({
-    artifact_path: {
-      value: '',
-      isEdit: false
-    },
-    description: {
-      value: '',
-      isEdit: false
-    },
-    goals: {
-      value: '',
-      isEdit: false
-    },
-    source: {
-      value: '',
-      isEdit: true
-    }
-  })
+  const [editProject, setEditProject] = useState(initState)
   const [validation, setValidation] = useState({
     isSourceValid: true,
     isPathValid: true
@@ -49,6 +55,7 @@ const ProjectSettingsGeneral = ({
     fetchProject(match.params.projectName)
     return () => {
       removeProjectData()
+      setEditProject(prev => ({ ...prev, ...initState }))
     }
   }, [
     removeProjectData,
@@ -85,7 +92,11 @@ const ProjectSettingsGeneral = ({
             retry: () => sendProjectSettingsData(data)
           })
         })
+        .finally(() => {
+          setEditProject(prev => ({ ...prev, ...initState }))
+        })
     },
+
     [match.params.projectName, setNotification]
   )
 
@@ -146,29 +157,6 @@ const ProjectSettingsGeneral = ({
     [projectStore.project.data, setNewProjectParams]
   )
 
-  const closeEditMode = useCallback(() => {
-    setEditProject(prevState => ({
-      artifact_path: {
-        value:
-          prevState.artifact_path.value.trim() ??
-          projectStore.project.data.spec.artifact_path,
-        isEdit: false
-      },
-      description: {
-        value:
-          prevState.description.value.trim() ??
-          projectStore.project.data.spec.description,
-        isEdit: false
-      },
-      source: {
-        value:
-          prevState.source.value.trim() ??
-          projectStore.project.data.spec.source,
-        isEdit: false
-      }
-    }))
-  }, [projectStore.project])
-
   const handleEditProject = useCallback(fieldName => {
     setEditProject(prevState => ({
       ...prevState,
@@ -194,15 +182,29 @@ const ProjectSettingsGeneral = ({
     [editProject]
   )
 
-  const handleOnBlur = field => {
+  const handleOnBlur = fieldName => {
     if (
-      isNil(editProject[field].value) ||
-      editProject[field].value === projectStore.project.data.spec[field]
+      (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
+      (fieldName === SOURCE_URL && !validation.isSourceValid)
     ) {
       setEditProject(prevState => ({
         ...prevState,
-        [field]: {
-          ...prevState[field],
+        [fieldName]: {
+          ...prevState[fieldName],
+          isEdit: false
+        }
+      }))
+      return
+    }
+
+    if (
+      isNil(editProject[fieldName].value) ||
+      editProject[fieldName].value === projectStore.project.data.spec[fieldName]
+    ) {
+      setEditProject(prevState => ({
+        ...prevState,
+        [fieldName]: {
+          ...prevState[fieldName],
           isEdit: false
         }
       }))
@@ -213,7 +215,7 @@ const ProjectSettingsGeneral = ({
       ...projectStore.project.data,
       spec: {
         ...projectStore.project.data.spec,
-        [field]: editProject[field].value.trim()
+        [fieldName]: editProject[fieldName].value.trim()
       }
     }
 
@@ -222,8 +224,6 @@ const ProjectSettingsGeneral = ({
       artifact_path: data.spec.artifact_path,
       description: data.spec.description
     })
-
-    closeEditMode()
 
     sendProjectSettingsData(data)
   }

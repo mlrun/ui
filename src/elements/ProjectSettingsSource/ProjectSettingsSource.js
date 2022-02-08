@@ -43,7 +43,7 @@ const ProjectSettingsSource = ({
         value={editSourceData.value ?? settingsSource}
       />
 
-      {(editSourceData.value ?? settingsSource) && (
+      {(editSourceData.value || settingsSource) && (
         <div className="settings__source-text">
           <Tooltip
             template={
