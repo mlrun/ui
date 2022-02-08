@@ -363,10 +363,12 @@ const Jobs = ({
   )
 
   const fetchCurrentJob = useCallback(() => {
-    fetchJob(match.params.projectName, match.params.jobId)
+    return fetchJob(match.params.projectName, match.params.jobId)
       .then(job => {
         setSelectedJob(parseJob(job))
         setItemIsSelected(true)
+
+        return job
       })
       .catch(() =>
         history.replace(
@@ -448,8 +450,12 @@ const Jobs = ({
       match.params.jobId &&
       (isEmpty(selectedJob) || match.params.jobId !== selectedJob.uid)
     ) {
-      fetchCurrentJob()
-    } else if (
+      fetchCurrentJob().then(() => setSelectedFunction({}))
+    }
+  }, [fetchCurrentJob, match.params.jobId, selectedJob])
+
+  useEffect(() => {
+    if (
       workflow.graph &&
       match.params.functionHash &&
       (isEmpty(selectedFunction) ||
@@ -473,6 +479,8 @@ const Jobs = ({
             setSelectedFunction(
               parseFunction(func, match.params.projectName, customFunctionState)
             )
+            setItemIsSelected(true)
+            setSelectedJob({})
           })
           .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
       } else if (match.params.functionName !== selectedFunction.name) {
@@ -486,43 +494,35 @@ const Jobs = ({
               parseFunction(func, match.params.projectName, customFunctionState)
             )
             setItemIsSelected(true)
+            setSelectedJob({})
           })
           .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
       }
-    } else if (!isEmpty(selectedJob) && !match.params.jobId) {
-      setSelectedJob({})
-      removeJob()
-    } else if (!isEmpty(selectedFunction) && !match.params.functionHash) {
-      setSelectedFunction({})
-      removeFunction()
-    }
-
-    if (!match.params.functionHash && !match.params.jobId) {
-      setItemIsSelected(false)
     }
   }, [
-    fetchCurrentJob,
+    getFunction,
     getFunctionWithHash,
-    history,
+    handleCatchRequest,
     match.params.functionHash,
     match.params.functionName,
-    match.params.jobId,
     match.params.projectName,
-    match.path,
-    match.url,
-    handleCatchRequest,
-    removeFunction,
-    removeJob,
     selectedFunction,
-    selectedJob,
-    setNotification,
-    getFunction,
-    workflow
+    workflow.graph
   ])
 
   useEffect(() => {
+    if (!match.params.functionHash && !match.params.jobId) {
+      setItemIsSelected(false)
+      setSelectedJob({})
+      setSelectedFunction({})
+    }
+  }, [match.params.functionHash, match.params.jobId])
+
+  useEffect(() => {
     if (
-      ((isEmpty(selectedJob) && !match.params.jobId) ||
+      ((isEmpty(selectedJob) &&
+        !match.params.jobId &&
+        !match.params.workflowId) ||
         workflowsViewMode === 'list') &&
       !dataIsLoaded
     ) {
@@ -550,6 +550,7 @@ const Jobs = ({
     dataIsLoaded,
     match.params.jobId,
     match.params.pageTab,
+    match.params.workflowId,
     refreshJobs,
     selectedJob,
     setFilters,
