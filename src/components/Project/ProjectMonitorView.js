@@ -14,7 +14,6 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
-import ProjectLabels from './ProjectLabels/ProjectLabels'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
@@ -42,12 +41,9 @@ const ProjectMonitorView = React.forwardRef(
       createFeatureSetSuccess,
       createFunctionSuccess,
       createNewOptions,
-      handleAddProjectLabel,
       handleDeployFunctionFailure,
       handleDeployFunctionSuccess,
       handleLaunchIDE,
-      handleOnKeyDown,
-      handleUpdateProjectLabels,
       isDemoMode,
       isNewFunctionPopUpOpen,
       isPopupDialogOpen,
@@ -66,8 +62,7 @@ const ProjectMonitorView = React.forwardRef(
       setShowManageMembers,
       showChangeOwner,
       showFunctionsPanel,
-      showManageMembers,
-      visibleChipsMaxLength
+      showManageMembers
     },
     ref
   ) => {
@@ -113,7 +108,6 @@ const ProjectMonitorView = React.forwardRef(
           <div className="project__content">
             <div className="general-info">
               <div className="general-info__main-data"></div>
-              <div className="general-info__divider" />
               {project.data.status.state && (
                 <div className="general-info__row status-row">
                   <div className="row-value">
@@ -172,19 +166,6 @@ const ProjectMonitorView = React.forwardRef(
                   )}
                 </>
               )}
-              <div className="general-info__divider" />
-              <div className="general-info__labels">
-                <div className="general-info__labels-text">Labels</div>
-                <div className="general-info__labels-wrapper">
-                  <ProjectLabels
-                    addProjectLabel={handleAddProjectLabel}
-                    isEditMode
-                    labels={project.data.metadata.labels}
-                    updateProjectLabel={handleUpdateProjectLabels}
-                    visibleChipsMaxLength={visibleChipsMaxLength}
-                  />
-                </div>
-              </div>
             </div>
             <div className="main-info">
               <div className="main-info__toolbar">
@@ -297,8 +278,7 @@ const ProjectMonitorView = React.forwardRef(
 )
 
 ProjectMonitorView.defaultProps = {
-  confirmData: null,
-  visibleChipsMaxLength: null
+  confirmData: null
 }
 
 ProjectMonitorView.propTypes = {
@@ -312,12 +292,9 @@ ProjectMonitorView.propTypes = {
   createFeatureSetSuccess: PropTypes.func.isRequired,
   createFunctionSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
-  handleAddProjectLabel: PropTypes.func.isRequired,
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
-  handleOnKeyDown: PropTypes.func.isRequired,
-  handleUpdateProjectLabels: PropTypes.func.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
@@ -335,8 +312,7 @@ ProjectMonitorView.propTypes = {
   setShowManageMembers: PropTypes.func.isRequired,
   showChangeOwner: PropTypes.bool,
   showFunctionsPanel: PropTypes.bool.isRequired,
-  showManageMembers: PropTypes.bool,
-  visibleChipsMaxLength: PropTypes.number
+  showManageMembers: PropTypes.bool
 }
 
 export default ProjectMonitorView

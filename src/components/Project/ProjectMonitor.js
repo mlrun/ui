@@ -17,14 +17,12 @@ import featureStoreActions from '../../actions/featureStore'
 import projectsAction from '../../actions/projects'
 import notificationActions from '../../actions/notification'
 import functionsActions from '../../actions/functions'
-import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import {
   generateCreateNewOptions,
   handleFetchProjectError
 } from './project.utils'
 import { useDemoMode } from '../../hooks/demoMode.hook'
-import { KEY_CODES } from '../../constants'
 import {
   initialMembersState,
   membersActions,
@@ -35,9 +33,7 @@ import { ReactComponent as User } from '../../images/user.svg'
 import { ReactComponent as Users } from '../../images/users.svg'
 
 const ProjectMonitor = ({
-  addProjectLabel,
   appStore,
-  editProjectLabels,
   featureStore,
   fetchProject,
   fetchProjectSummary,
@@ -51,8 +47,7 @@ const ProjectMonitor = ({
   removeNewFeatureSet,
   removeProjectSummary,
   removeProjectData,
-  setNotification,
-  setProjectData
+  setNotification
 }) => {
   const [membersState, membersDispatch] = useReducer(
     membersReducer,
@@ -60,20 +55,6 @@ const ProjectMonitor = ({
   )
 
   const [artifactKind, setArtifactKind] = useState('')
-  const [editProject, setEditProject] = useState({
-    name: {
-      value: null,
-      isEdit: false
-    },
-    description: {
-      value: null,
-      isEdit: false
-    },
-    goals: {
-      value: null,
-      isEdit: false
-    }
-  })
   const [
     createFeatureSetPanelIsOpen,
     setCreateFeatureSetPanelIsOpen
@@ -83,7 +64,6 @@ const ProjectMonitor = ({
   const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const [showManageMembers, setShowManageMembers] = useState(false)
   const [showChangeOwner, setShowChangeOwner] = useState(false)
-  const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
@@ -111,25 +91,6 @@ const ProjectMonitor = ({
       appStore.frontendSpec?.feature_flags?.project_membership === 'enabled',
     [appStore.frontendSpec]
   )
-
-  const closeEditMode = useCallback(() => {
-    setEditProject(prevState => ({
-      name: {
-        value: prevState.name.value ?? projectStore.project.data.metadata.name,
-        isEdit: false
-      },
-      description: {
-        value:
-          prevState.description.value ??
-          projectStore.project.data.spec.description,
-        isEdit: false
-      },
-      goals: {
-        value: prevState.goals.value ?? projectStore.project.data.spec.goals,
-        isEdit: false
-      }
-    }))
-  }, [projectStore.project])
 
   const fetchProjectIdAndOwner = useCallback(() => {
     return projectsIguazioApi
@@ -298,71 +259,6 @@ const ProjectMonitor = ({
     fetchProjectUsersData()
   }, [fetchProjectUsersData])
 
-  const handleSetProjectData = useCallback(() => {
-    const data = {
-      name: editProject.name.value ?? projectStore.project.data.metadata.name,
-      goals: editProject.goals.value ?? projectStore.project.data.spec.goals,
-      description:
-        editProject.description.value ??
-        projectStore.project.data.spec.description
-    }
-
-    setProjectData({
-      ...projectStore.project,
-      data: {
-        ...projectStore.project.data,
-        spec: {
-          ...projectStore.project.data.spec,
-          description: data.description,
-          goals: data.goals
-        },
-        metadata: {
-          ...projectStore.project.data.metadata,
-          labels: {
-            ...projectStore.project.data.metadata.labels,
-            ...data.labels
-          }
-        }
-      }
-    })
-    closeEditMode()
-    projectsApi
-      .updateProject(match.params.projectName, {
-        metadata: {
-          name: data.name
-        },
-        spec: {
-          description: data.description,
-          goals: data.goals,
-          source: projectStore.project.data.spec.source
-        }
-      })
-      .catch(() => {
-        setEditProject({
-          name: {
-            value: projectStore.project.data.metadata.name,
-            isEdit: false
-          },
-          description: {
-            value: projectStore.project.data.spec.description,
-            isEdit: false
-          },
-          goals: {
-            value: projectStore.project.data.spec.goals,
-            isEdit: false
-          }
-        })
-      })
-  }, [
-    closeEditMode,
-    editProject.description.value,
-    editProject.goals.value,
-    editProject.name.value,
-    match.params.projectName,
-    projectStore.project,
-    setProjectData
-  ])
-
   const changeMembersCallback = () => {
     fetchProjectMembers(membersState.projectInfo.id)
   }
@@ -488,52 +384,12 @@ const ProjectMonitor = ({
 
   const handleLaunchIDE = useCallback(launch => {}, [])
 
-  const handleOnKeyDown = useCallback(
-    event => {
-      if (event.keyCode === KEY_CODES.ENTER) {
-        handleSetProjectData()
-      }
-    },
-    [handleSetProjectData]
-  )
-
   const handleRefresh = () => {
     removeProjectData()
     removeProjectSummary()
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
     fetchProjectUsersData()
-  }
-
-  const handleAddProjectLabel = (label, labels) => {
-    setVisibleChipsMaxLength(null)
-    addProjectLabel(label, labels)
-  }
-
-  const handleUpdateProjectLabels = objectLabels => {
-    const projectData = {
-      description:
-        editProject.description.value ??
-        projectStore.project.data.spec.description,
-      goals: editProject.goals.value ?? projectStore.project.data.spec.goals,
-      name: editProject.name.value ?? projectStore.project.data.metadata.name
-    }
-    const data = {
-      ...projectStore.project.data,
-      metadata: {
-        ...projectStore.project.data.metadata,
-        labels: objectLabels,
-        name: projectData.name
-      },
-      spec: {
-        ...projectStore.project.data.spec,
-        description: projectData.description,
-        goals: projectData.goals
-      }
-    }
-
-    setVisibleChipsMaxLength(1)
-    editProjectLabels(match.params.projectName, { ...data }, objectLabels)
   }
 
   return (
@@ -548,12 +404,9 @@ const ProjectMonitor = ({
       createFeatureSetSuccess={createFeatureSetSuccess}
       createFunctionSuccess={createFunctionSuccess}
       createNewOptions={createNewOptions}
-      handleAddProjectLabel={handleAddProjectLabel}
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
       handleLaunchIDE={handleLaunchIDE}
-      handleOnKeyDown={handleOnKeyDown}
-      handleUpdateProjectLabels={handleUpdateProjectLabels}
       isDemoMode={isDemoMode}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
@@ -574,7 +427,6 @@ const ProjectMonitor = ({
       showChangeOwner={showChangeOwner}
       showFunctionsPanel={showFunctionsPanel}
       showManageMembers={showManageMembers}
-      visibleChipsMaxLength={visibleChipsMaxLength}
     />
   )
 }

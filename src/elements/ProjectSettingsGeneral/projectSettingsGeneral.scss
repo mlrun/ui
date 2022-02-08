@@ -26,6 +26,11 @@
 
   &__labels {
     @include fieldWrapper;
+    padding: 25px 16px 11px;
+
+    .chips-wrapper {
+      flex-wrap: wrap;
+    }
   }
 
   &__params {

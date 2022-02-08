@@ -14,10 +14,13 @@ import projectsAction from '../../actions/projects'
 import notificationActions from '../../actions/notification'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
 import { STATUS_CODE_FORBIDDEN } from '../../constants'
+// import { KEY_CODES } from '../../constants'
 
 import './projectSettingsGeneral.scss'
 
 const ProjectSettingsGeneral = ({
+  addProjectLabel,
+  editProjectLabels,
   fetchProject,
   frontendSpec,
   match,
@@ -81,6 +84,36 @@ const ProjectSettingsGeneral = ({
 
     [match.params.projectName, setNotification]
   )
+
+  const handleAddProjectLabel = (label, labels) => {
+    addProjectLabel(label, labels)
+  }
+
+  const handleUpdateProjectLabels = objectLabels => {
+    const data = {
+      ...projectStore.project.data,
+      metadata: {
+        ...projectStore.project.data.metadata,
+        labels: objectLabels
+      }
+    }
+
+    editProjectLabels(
+      match.params.projectName,
+      { ...data },
+      objectLabels
+    ).catch(error => {
+      setNotification({
+        status: error.response?.status || 400,
+        id: Math.random(),
+        message:
+          error.response?.status === STATUS_CODE_FORBIDDEN
+            ? 'Missing Edit permission for the project.'
+            : 'Failed to edit project data.',
+        retry: () => sendProjectSettingsData(data)
+      })
+    })
+  }
 
   const setNewProjectParams = useCallback(
     params => {
@@ -209,6 +242,15 @@ const ProjectSettingsGeneral = ({
       source: data.spec.source
     })
 
+    // const handleOnKeyDown = useCallback(
+    //   event => {
+    //     if (event.keyCode === KEY_CODES.ENTER) {
+    //       handleSetProjectData()
+    //     }
+    //   },
+    //   [handleSetProjectData]
+    // )
+
     sendProjectSettingsData(data)
   }
 
@@ -222,11 +264,14 @@ const ProjectSettingsGeneral = ({
       generalParams={generalParams}
       goals={projectStore.project.data?.spec.goals ?? ''}
       handleAddNewParameter={handleAddNewParameter}
+      handleAddProjectLabel={handleAddProjectLabel}
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
       handleEditProject={handleEditProject}
       handleOnBlur={handleOnBlur}
       handleOnChange={handleOnChange}
+      handleUpdateProjectLabels={handleUpdateProjectLabels}
+      labels={projectStore.project.data?.metadata.labels ?? {}}
       loading={projectStore.project?.loading}
       setValidation={setValidation}
       source={projectStore.project.data?.spec.source ?? ''}

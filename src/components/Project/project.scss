@@ -57,12 +57,6 @@
         cursor: pointer;
       }
 
-      &__labels {
-        .chips-wrapper {
-          flex-wrap: wrap;
-        }
-      }
-
       &__description {
         margin-top: 16px;
         color: rgba($mulledWine, 0.88);
@@ -134,11 +128,6 @@
         &-link {
           margin-bottom: 15px;
         }
-      }
-
-      &__divider {
-        margin: 17px 0;
-        border-top: $secondaryBorder;
       }
     }
 

@@ -19,12 +19,15 @@ const ProjectSettingsGeneralView = ({
   error,
   generalParams,
   goals,
+  handleAddProjectLabel,
   handleAddNewParameter,
   handleDeleteParameter,
   handleEditParameter,
   handleEditProject,
   handleOnBlur,
   handleOnChange,
+  handleUpdateProjectLabels,
+  labels,
   loading,
   setValidation,
   source,
@@ -60,10 +63,7 @@ const ProjectSettingsGeneralView = ({
                 invalid={!validation.isPathValid}
                 label="Artifact path"
                 onBlur={() => handleOnBlur(ARTIFACT_PATH)}
-                onChange={
-                  value => handleOnChange(ARTIFACT_PATH, value)
-                  // handleArtifactPathChange(value, validation.isPathValid)
-                }
+                onChange={value => handleOnChange(ARTIFACT_PATH, value)}
                 placeholder={defaultArtifactPath ?? ''}
                 setInvalid={value =>
                   setValidation(state => ({
@@ -106,13 +106,18 @@ const ProjectSettingsGeneralView = ({
               // ref={ref}
             />
             <div className="settings__labels">
+              <label
+                data-testid="label"
+                className="input__label input__label-floating active-label"
+              >
+                Labels
+              </label>
               <ProjectLabels
-                labels={{ a: 'b' }}
-                // addProjectLabel={handleAddProjectLabel}
+                addProjectLabel={handleAddProjectLabel}
                 isEditMode
-                // labels={project.data.metadata.labels}
-                // updateProjectLabel={handleUpdateProjectLabels}
-                // visibleChipsMaxLength={visibleChipsMaxLength}
+                labels={labels}
+                updateProjectLabel={handleUpdateProjectLabels}
+                visibleChipsMaxLength="all"
               />
             </div>
 
@@ -156,12 +161,15 @@ ProjectSettingsGeneralView.propTypes = {
   error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
   goals: PropTypes.string.isRequired,
+  handleAddProjectLabel: PropTypes.func.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
+  handleOnKeyDown: PropTypes.func.isRequired,
   handleOnBlur: PropTypes.func.isRequired,
   handleOnChange: PropTypes.func.isRequired,
+  handleUpdateProjectLabels: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   setValidation: PropTypes.func.isRequired,
   source: PropTypes.string.isRequired,
