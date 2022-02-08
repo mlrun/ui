@@ -63,7 +63,9 @@ export const getJobsTableData = (jobs, match) => {
       return {
         name: {
           value: job[0].metadata.name,
-          link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}/${job[0].metadata.uid}/overview`,
+          link:
+            `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}/${job[0].metadata.name}/` +
+            `${job[0].metadata.uid}/overview`,
           className: 'table-cell_big'
         },
         type: {
