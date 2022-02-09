@@ -32,7 +32,6 @@ const ProjectSettingsSecretsView = ({
           </div>
         ) : (
           <>
-            <div className="settings__card-header">Secrets</div>
             <div className="settings__card-subtitle">
               These secrets will automatically be available to all jobs
               belonging to this project.

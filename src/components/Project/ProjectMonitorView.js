@@ -28,254 +28,244 @@ import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
 
-const ProjectMonitorView = React.forwardRef(
-  (
-    {
-      artifactKind,
-      changeMembersCallback,
-      changeOwnerCallback,
-      closeFeatureSetPanel,
-      closeFunctionsPanel,
-      confirmData,
-      createFeatureSetPanelIsOpen,
-      createFeatureSetSuccess,
-      createFunctionSuccess,
-      createNewOptions,
-      handleDeployFunctionFailure,
-      handleDeployFunctionSuccess,
-      handleLaunchIDE,
-      isDemoMode,
-      isNewFunctionPopUpOpen,
-      isPopupDialogOpen,
-      match,
-      membersDispatch,
-      membersState,
-      projectMembersIsShown,
-      projectMembershipIsEnabled,
-      projectOwnerIsShown,
-      projectSummary,
-      refresh,
-      setIsNewFunctionPopUpOpen,
-      setIsPopupDialogOpen,
-      setShowChangeOwner,
-      setShowFunctionsPanel,
-      setShowManageMembers,
-      showChangeOwner,
-      showFunctionsPanel,
-      showManageMembers
-    },
-    ref
-  ) => {
-    const project = useSelector(store => store.projectStore.project)
-    const history = useHistory()
-    const registerArtifactLink = `/projects/${match.params.projectName}/${
-      artifactKind === 'model'
-        ? 'models'
-        : artifactKind === 'dataset'
-        ? `feature-store/${DATASETS_TAB}`
-        : artifactKind === 'file'
-        ? 'files'
-        : 'artifacts'
-    }`
+const ProjectMonitorView = ({
+  artifactKind,
+  changeMembersCallback,
+  changeOwnerCallback,
+  closeFeatureSetPanel,
+  closeFunctionsPanel,
+  confirmData,
+  createFeatureSetPanelIsOpen,
+  createFeatureSetSuccess,
+  createFunctionSuccess,
+  createNewOptions,
+  handleDeployFunctionFailure,
+  handleDeployFunctionSuccess,
+  handleLaunchIDE,
+  isDemoMode,
+  isNewFunctionPopUpOpen,
+  isPopupDialogOpen,
+  match,
+  membersDispatch,
+  membersState,
+  projectMembersIsShown,
+  projectMembershipIsEnabled,
+  projectOwnerIsShown,
+  projectSummary,
+  refresh,
+  setIsNewFunctionPopUpOpen,
+  setIsPopupDialogOpen,
+  setShowChangeOwner,
+  setShowFunctionsPanel,
+  setShowManageMembers,
+  showChangeOwner,
+  showFunctionsPanel,
+  showManageMembers
+}) => {
+  const project = useSelector(store => store.projectStore.project)
+  const history = useHistory()
+  const registerArtifactLink = `/projects/${match.params.projectName}/${
+    artifactKind === 'model'
+      ? 'models'
+      : artifactKind === 'dataset'
+      ? `feature-store/${DATASETS_TAB}`
+      : artifactKind === 'file'
+      ? 'files'
+      : 'artifacts'
+  }`
 
-    return (
-      <div className="project-wrapper">
-        <div className="project__header">
-          <Breadcrumbs match={match} />
+  return (
+    <div className="project-wrapper">
+      <div className="project__header">
+        <Breadcrumbs match={match} />
+      </div>
+      {project.loading ? (
+        <Loader />
+      ) : project.error ? (
+        <div className="project__error-container">
+          {confirmData ? (
+            <ConfirmDialog
+              closePopUp={confirmData.confirmHandler}
+              confirmButton={{
+                handler: confirmData.confirmHandler,
+                label: confirmData.btnConfirmLabel,
+                variant: confirmData.btnConfirmType
+              }}
+              message={confirmData.message}
+              messageOnly={confirmData.messageOnly}
+            />
+          ) : (
+            <h1>{project.error.message}</h1>
+          )}
         </div>
-        {project.loading ? (
-          <Loader />
-        ) : project.error ? (
-          <div className="project__error-container">
-            {confirmData ? (
-              <ConfirmDialog
-                closePopUp={confirmData.confirmHandler}
-                confirmButton={{
-                  handler: confirmData.confirmHandler,
-                  label: confirmData.btnConfirmLabel,
-                  variant: confirmData.btnConfirmType
-                }}
-                message={confirmData.message}
-                messageOnly={confirmData.messageOnly}
-              />
-            ) : (
-              <h1>{project.error.message}</h1>
+      ) : isEmpty(project.data) ? (
+        <NoData />
+      ) : (
+        <div className="project__content">
+          <div className="general-info">
+            <div className="general-info__main-data"></div>
+            {project.data.status.state && (
+              <div className="general-info__row status-row">
+                <div className="row-value">
+                  <span className="row-label">Status:</span>
+                  <span className="row-name">{project.data.status.state}</span>
+                </div>
+              </div>
             )}
-          </div>
-        ) : isEmpty(project.data) ? (
-          <NoData />
-        ) : (
-          <div className="project__content">
-            <div className="general-info">
-              <div className="general-info__main-data"></div>
-              {project.data.status.state && (
-                <div className="general-info__row status-row">
-                  <div className="row-value">
-                    <span className="row-label">Status:</span>
-                    <span className="row-name">
-                      {project.data.status.state}
+            <div className="general-info__row created-at-row">
+              <div className="row-value">
+                <span className="row-label">Created at:</span>
+                <span className="row-name">
+                  {formatDatetime(new Date(project.data.metadata.created), '-')}
+                </span>
+              </div>
+            </div>
+            {projectMembershipIsEnabled && (
+              <>
+                {projectMembersIsShown && (
+                  <div className="general-info__row owner-row">
+                    <div className="row-value">
+                      <span className="row-label">Owner:</span>
+                      <span className="row-name">
+                        {membersState.projectInfo?.owner?.username}
+                      </span>
+                    </div>
+                    <span
+                      className="row-action link"
+                      onClick={() => setShowChangeOwner(true)}
+                    >
+                      Change
                     </span>
                   </div>
-                </div>
-              )}
-              <div className="general-info__row created-at-row">
-                <div className="row-value">
-                  <span className="row-label">Created at:</span>
-                  <span className="row-name">
-                    {formatDatetime(
-                      new Date(project.data.metadata.created),
-                      '-'
-                    )}
-                  </span>
-                </div>
-              </div>
-              {projectMembershipIsEnabled && (
-                <>
-                  {projectMembersIsShown && (
-                    <div className="general-info__row owner-row">
-                      <div className="row-value">
-                        <span className="row-label">Owner:</span>
-                        <span className="row-name">
-                          {membersState.projectInfo?.owner?.username}
-                        </span>
-                      </div>
-                      <span
-                        className="row-action link"
-                        onClick={() => setShowChangeOwner(true)}
-                      >
-                        Change
+                )}
+                {projectOwnerIsShown && (
+                  <div className="general-info__row members-row">
+                    <div className="row-value">
+                      <span className="row-label">Members:</span>
+                      <span className="row-name">
+                        {membersState.users.length +
+                          membersState.userGroups.length}
                       </span>
                     </div>
-                  )}
-                  {projectOwnerIsShown && (
-                    <div className="general-info__row members-row">
-                      <div className="row-value">
-                        <span className="row-label">Members:</span>
-                        <span className="row-name">
-                          {membersState.users.length +
-                            membersState.userGroups.length}
-                        </span>
-                      </div>
-                      <span
-                        className="row-action link"
-                        onClick={() => setShowManageMembers(true)}
-                      >
-                        Manage
-                      </span>
-                    </div>
-                  )}
-                </>
-              )}
+                    <span
+                      className="row-action link"
+                      onClick={() => setShowManageMembers(true)}
+                    >
+                      Manage
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+          <div className="main-info">
+            <div className="main-info__toolbar">
+              <RoundedIcon
+                onClick={refresh}
+                id="refresh"
+                tooltipText="Refresh"
+                className="refresh"
+              >
+                <RefreshIcon />
+              </RoundedIcon>
+              <Select
+                className="main-info__toolbar-menu launch-menu"
+                density="dense"
+                hideSelectedOption
+                label="Launch IDE"
+                onClick={handleLaunchIDE}
+                options={launchIDEOptions}
+              />
+              <Select
+                className="main-info__toolbar-menu create-new-menu"
+                density="dense"
+                hideSelectedOption
+                label="Create new"
+                options={createNewOptions}
+              />
             </div>
-            <div className="main-info">
-              <div className="main-info__toolbar">
-                <RoundedIcon
-                  onClick={refresh}
-                  id="refresh"
-                  tooltipText="Refresh"
-                  className="refresh"
-                >
-                  <RefreshIcon />
-                </RoundedIcon>
-                <Select
-                  className="main-info__toolbar-menu launch-menu"
-                  density="dense"
-                  hideSelectedOption
-                  label="Launch IDE"
-                  onClick={handleLaunchIDE}
-                  options={launchIDEOptions}
-                />
-                <Select
-                  className="main-info__toolbar-menu create-new-menu"
-                  density="dense"
-                  hideSelectedOption
-                  label="Create new"
-                  options={createNewOptions}
-                />
-              </div>
-              <div className="main-info__statistics-section">
-                <ProjectArtifacts
-                  counterValue={projectSummary.data.models_count ?? 0}
-                  link={`/projects/${match.params.projectName}/models`}
-                  projectSummary={projectSummary}
-                  title="Models"
-                />
-                <ProjectArtifacts
-                  counterValue={projectSummary.data.feature_sets_count ?? 0}
-                  link={`/projects/${match.params.projectName}/feature-store`}
-                  projectSummary={projectSummary}
-                  title="Feature sets"
-                />
-                <ProjectArtifacts
-                  counterValue={projectSummary.data.files_count ?? 0}
-                  link={`/projects/${match.params.projectName}/files`}
-                  projectSummary={projectSummary}
-                  title="Artifacts"
-                />
-              </div>
-              <div className="main-info__statistics-section">
-                <ProjectJobs match={match} />
-                <ProjectFunctions match={match} />
-              </div>
+            <div className="main-info__statistics-section">
+              <ProjectArtifacts
+                counterValue={projectSummary.data.models_count ?? 0}
+                link={`/projects/${match.params.projectName}/models`}
+                projectSummary={projectSummary}
+                title="Models"
+              />
+              <ProjectArtifacts
+                counterValue={projectSummary.data.feature_sets_count ?? 0}
+                link={`/projects/${match.params.projectName}/feature-store`}
+                projectSummary={projectSummary}
+                title="Feature sets"
+              />
+              <ProjectArtifacts
+                counterValue={projectSummary.data.files_count ?? 0}
+                link={`/projects/${match.params.projectName}/files`}
+                projectSummary={projectSummary}
+                title="Artifacts"
+              />
+            </div>
+            <div className="main-info__statistics-section">
+              <ProjectJobs match={match} />
+              <ProjectFunctions match={match} />
             </div>
           </div>
-        )}
-        {isPopupDialogOpen && (
-          <RegisterArtifactPopup
-            artifactKind={artifactKind}
-            match={match}
-            refresh={() => {
-              history.push(registerArtifactLink)
-            }}
-            setIsPopupOpen={setIsPopupDialogOpen}
-            title={`Register ${artifactKind}`}
-          />
-        )}
-        {showManageMembers && (
-          <MembersPopUp
-            changeMembersCallback={changeMembersCallback}
-            closePopUp={() => setShowManageMembers(false)}
-            membersState={membersState}
-            membersDispatch={membersDispatch}
-          />
-        )}
-        {showChangeOwner && (
-          <ChangeOwnerPopUp
-            changeOwnerCallback={changeOwnerCallback}
-            closePopUp={() => setShowChangeOwner(false)}
-            projectId={membersState.projectInfo.id}
-          />
-        )}
-        {createFeatureSetPanelIsOpen && (
-          <FeatureSetsPanel
-            closePanel={closeFeatureSetPanel}
-            createFeatureSetSuccess={createFeatureSetSuccess}
-            project={match.params.projectName}
-          />
-        )}
-        {isNewFunctionPopUpOpen && (
-          <NewFunctionPopUp
-            closePopUp={() => setIsNewFunctionPopUpOpen(false)}
-            currentProject={match.params.projectName}
-            isOpened={isNewFunctionPopUpOpen}
-            setFunctionsPanelIsOpen={setShowFunctionsPanel}
-          />
-        )}
-        {showFunctionsPanel && (
-          <FunctionsPanel
-            closePanel={closeFunctionsPanel}
-            createFunctionSuccess={createFunctionSuccess}
-            handleDeployFunctionFailure={handleDeployFunctionFailure}
-            handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-            match={match}
-            mode={PANEL_CREATE_MODE}
-            project={match.params.projectName}
-          />
-        )}
-      </div>
-    )
-  }
-)
+        </div>
+      )}
+      {isPopupDialogOpen && (
+        <RegisterArtifactPopup
+          artifactKind={artifactKind}
+          match={match}
+          refresh={() => {
+            history.push(registerArtifactLink)
+          }}
+          setIsPopupOpen={setIsPopupDialogOpen}
+          title={`Register ${artifactKind}`}
+        />
+      )}
+      {showManageMembers && (
+        <MembersPopUp
+          changeMembersCallback={changeMembersCallback}
+          closePopUp={() => setShowManageMembers(false)}
+          membersState={membersState}
+          membersDispatch={membersDispatch}
+        />
+      )}
+      {showChangeOwner && (
+        <ChangeOwnerPopUp
+          changeOwnerCallback={changeOwnerCallback}
+          closePopUp={() => setShowChangeOwner(false)}
+          projectId={membersState.projectInfo.id}
+        />
+      )}
+      {createFeatureSetPanelIsOpen && (
+        <FeatureSetsPanel
+          closePanel={closeFeatureSetPanel}
+          createFeatureSetSuccess={createFeatureSetSuccess}
+          project={match.params.projectName}
+        />
+      )}
+      {isNewFunctionPopUpOpen && (
+        <NewFunctionPopUp
+          closePopUp={() => setIsNewFunctionPopUpOpen(false)}
+          currentProject={match.params.projectName}
+          isOpened={isNewFunctionPopUpOpen}
+          setFunctionsPanelIsOpen={setShowFunctionsPanel}
+        />
+      )}
+      {showFunctionsPanel && (
+        <FunctionsPanel
+          closePanel={closeFunctionsPanel}
+          createFunctionSuccess={createFunctionSuccess}
+          handleDeployFunctionFailure={handleDeployFunctionFailure}
+          handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+          match={match}
+          mode={PANEL_CREATE_MODE}
+          project={match.params.projectName}
+        />
+      )}
+    </div>
+  )
+}
 
 ProjectMonitorView.defaultProps = {
   confirmData: null

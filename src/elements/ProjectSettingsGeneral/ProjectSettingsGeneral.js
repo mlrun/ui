@@ -7,6 +7,9 @@ import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
 import {
   ARTIFACT_PATH,
+  DATA,
+  LABELS,
+  PARAMS,
   SOURCE_URL
 } from '../../components/ProjectSettings/projectSettings.util'
 import projectsApi from '../../api/projects-api'
@@ -64,23 +67,27 @@ const ProjectSettingsGeneral = ({
   )
 
   const sendProjectSettingsData = useCallback(
-    data => {
-      projectsApi
-        .editProject(match.params.projectName, { ...data })
-        .catch(error => {
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message:
-              error.response?.status === STATUS_CODE_FORBIDDEN
-                ? 'Missing Edit permission for the project.'
-                : 'Failed to edit project data.',
-            retry: () => sendProjectSettingsData(data)
-          })
+    async (type, data, labels) => {
+      try {
+        if (type && type === LABELS) {
+          await editProjectLabels(match.params.projectName, { ...data }, labels)
+        } else {
+          await projectsApi.editProject(match.params.projectName, { ...data })
+        }
+      } catch (error) {
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message:
+            error.response?.status === STATUS_CODE_FORBIDDEN
+              ? 'Missing Edit permission for the project.'
+              : 'Failed to edit project data.',
+          retry: () => sendProjectSettingsData(type, data, labels)
         })
+      }
     },
 
-    [match.params.projectName, setNotification]
+    [editProjectLabels, match.params.projectName, setNotification]
   )
 
   const handleAddProjectLabel = (label, labels) => {
@@ -96,21 +103,7 @@ const ProjectSettingsGeneral = ({
       }
     }
 
-    editProjectLabels(
-      match.params.projectName,
-      { ...data },
-      objectLabels
-    ).catch(error => {
-      setNotification({
-        status: error.response?.status || 400,
-        id: Math.random(),
-        message:
-          error.response?.status === STATUS_CODE_FORBIDDEN
-            ? 'Missing Edit permission for the project.'
-            : 'Failed to edit project data.',
-        retry: () => sendProjectSettingsData(data)
-      })
-    })
+    sendProjectSettingsData(LABELS, data, objectLabels)
   }
 
   const setNewProjectParams = useCallback(
@@ -124,7 +117,7 @@ const ProjectSettingsGeneral = ({
       }
 
       setProjectParams(params)
-      sendProjectSettingsData(data)
+      sendProjectSettingsData(PARAMS, data)
     },
     [projectStore.project.data, setProjectParams, sendProjectSettingsData]
   )
@@ -247,7 +240,7 @@ const ProjectSettingsGeneral = ({
       ...initialEditProjectData
     }))
 
-    sendProjectSettingsData(data)
+    sendProjectSettingsData(DATA, data)
   }
 
   // const handleOnKeyDown = useCallback(

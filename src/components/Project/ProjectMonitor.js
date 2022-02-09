@@ -68,7 +68,6 @@ const ProjectMonitor = ({
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const history = useHistory()
-  const inputRef = React.useRef()
   const isDemoMode = useDemoMode()
 
   const { createNewOptions } = useMemo(() => {
@@ -417,7 +416,6 @@ const ProjectMonitor = ({
       projectMembersIsShown={projectMembersIsShown}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
       projectOwnerIsShown={projectOwnerIsShown}
-      ref={inputRef}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
