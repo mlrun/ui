@@ -13,6 +13,7 @@ import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import notificationActions from '../../actions/notification'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
+import { deleteUnsafeHtml } from '../../utils/string'
 import { STATUS_CODE_FORBIDDEN } from '../../constants'
 // import { KEY_CODES } from '../../constants'
 
@@ -230,7 +231,7 @@ const ProjectSettingsGeneral = ({
       ...projectStore.project.data,
       spec: {
         ...projectStore.project.data.spec,
-        [fieldName]: editProjectData[fieldName].value.trim()
+        [fieldName]: deleteUnsafeHtml(editProjectData[fieldName].value.trim())
       }
     }
 
@@ -275,6 +276,7 @@ const ProjectSettingsGeneral = ({
       loading={projectStore.project?.loading}
       setValidation={setValidation}
       validation={validation}
+      source={projectStore.project.data?.spec.source ?? ''}
     />
   )
 }
