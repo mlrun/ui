@@ -10,6 +10,7 @@ import { detailsMenu } from '../../components/Jobs/jobs.util'
 
 const TableProducerCell = ({ data }) => {
   const [project, uid] = data.value.uri?.split('/') || []
+  const { name } = data.value
   const overviewTab =
     detailsMenu.find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
 
@@ -26,7 +27,7 @@ const TableProducerCell = ({ data }) => {
         >
           <Link
             className="link"
-            to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${
+            to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${name}/${
               uid.split('-')[0]
             }/${overviewTab.id}`}
           >
