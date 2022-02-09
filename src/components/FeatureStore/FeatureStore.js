@@ -139,6 +139,12 @@ const FeatureStore = ({
     featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
   }
 
+  const handleRefresh = filters => {
+    getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
+
+    return fetchData(filters)
+  }
+
   const getPopUpTemplate = useCallback(
     action => {
       return (
@@ -620,7 +626,7 @@ const FeatureStore = ({
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
 
-    return fetchData({
+    return handleRefresh({
       project: match.params.projectName,
       tag: TAG_FILTER_LATEST
     })
@@ -673,7 +679,7 @@ const FeatureStore = ({
         match={match}
         handleActionsMenuClick={handleActionsMenuClick}
         pageData={pageData}
-        refresh={fetchData}
+        refresh={handleRefresh}
         selectedItem={selectedItem.item}
         getIdentifier={getIdentifierMethod(match.params.pageTab)}
       />
@@ -681,7 +687,7 @@ const FeatureStore = ({
         <RegisterArtifactPopup
           artifactKind={match.params.pageTab.slice(0, -1)}
           match={match}
-          refresh={fetchData}
+          refresh={handleRefresh}
           setIsPopupOpen={setIsPopupDialogOpen}
           title={pageData.actionsMenuHeader}
         />
