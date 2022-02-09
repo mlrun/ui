@@ -24,6 +24,7 @@ const ProjectSettingsGeneralView = ({
   handleEditProject,
   handleOnBlur,
   handleOnChange,
+  handleOnKeyDown,
   handleUpdateProjectLabels,
   loading,
   setValidation,
@@ -47,6 +48,7 @@ const ProjectSettingsGeneralView = ({
               editSourceData={editProjectData.source}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
+              handleOnKeyDown={handleOnKeyDown}
               handleSourceChange={handleOnChange}
               setValidation={setValidation}
               settingsSource={projectData?.spec.source ?? ''}
@@ -62,6 +64,7 @@ const ProjectSettingsGeneralView = ({
                 label="Artifact path"
                 onBlur={() => handleOnBlur(ARTIFACT_PATH)}
                 onChange={value => handleOnChange(ARTIFACT_PATH, value)}
+                onKeyDown={e => handleOnKeyDown(ARTIFACT_PATH, e)}
                 placeholder={defaultArtifactPath ?? ''}
                 setInvalid={value =>
                   setValidation(state => ({
@@ -94,16 +97,13 @@ const ProjectSettingsGeneralView = ({
               handleOnChangeProject={handleOnChange}
               handleOnBlur={handleOnBlur}
               projectDescription={projectData?.spec.description ?? ''}
-              // ref={ref}
             />
             <ProjectGoals
               editGoalsData={editProjectData.goals}
               handleEditProject={handleEditProject}
               handleOnChangeProject={handleOnChange}
               handleOnBlur={handleOnBlur}
-              // handleOnKeyDown={handleOnKeyDown}
               projectGoals={projectData?.spec.goals ?? ''}
-              // ref={ref}
             />
             <div className="settings__labels">
               <label
@@ -163,7 +163,7 @@ ProjectSettingsGeneralView.propTypes = {
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
-  // handleOnKeyDown: PropTypes.func.isRequired,
+  handleOnKeyDown: PropTypes.func.isRequired,
   handleOnBlur: PropTypes.func.isRequired,
   handleOnChange: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,

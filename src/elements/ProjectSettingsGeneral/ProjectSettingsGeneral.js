@@ -18,7 +18,7 @@ import notificationActions from '../../actions/notification'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
 import { deleteUnsafeHtml } from '../../utils/string'
 import { STATUS_CODE_FORBIDDEN } from '../../constants'
-// import { KEY_CODES } from '../../constants'
+import { KEY_CODES } from '../../constants'
 
 import './projectSettingsGeneral.scss'
 
@@ -195,67 +195,77 @@ const ProjectSettingsGeneral = ({
     [editProjectData]
   )
 
-  const handleOnBlur = fieldName => {
-    if (
-      (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
-      (fieldName === SOURCE_URL && !validation.isSourceValid)
-    ) {
-      setEditProjectData(prevState => ({
-        ...prevState,
-        [fieldName]: {
-          ...prevState[fieldName],
-          isEdit: false
-        }
-      }))
-      return
-    }
-
-    if (
-      isNil(editProjectData[fieldName].value) ||
-      editProjectData[fieldName].value ===
-        projectStore.project.data.spec[fieldName]
-    ) {
-      setEditProjectData(prevState => ({
-        ...prevState,
-        [fieldName]: {
-          ...prevState[fieldName],
-          isEdit: false
-        }
-      }))
-      return
-    }
-
-    const data = {
-      ...projectStore.project.data,
-      spec: {
-        ...projectStore.project.data.spec,
-        [fieldName]: deleteUnsafeHtml(editProjectData[fieldName].value.trim())
+  const handleOnBlur = useCallback(
+    fieldName => {
+      if (
+        (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
+        (fieldName === SOURCE_URL && !validation.isSourceValid)
+      ) {
+        setEditProjectData(prevState => ({
+          ...prevState,
+          [fieldName]: {
+            ...prevState[fieldName],
+            isEdit: false
+          }
+        }))
+        return
       }
-    }
 
-    setProjectSettings({
-      artifact_path: data.spec.artifact_path,
-      description: data.spec.description,
-      goals: data.spec.goals,
-      source: data.spec.source
-    })
+      if (
+        isNil(editProjectData[fieldName].value) ||
+        editProjectData[fieldName].value ===
+          projectStore.project.data.spec[fieldName]
+      ) {
+        setEditProjectData(prevState => ({
+          ...prevState,
+          [fieldName]: {
+            ...prevState[fieldName],
+            isEdit: false
+          }
+        }))
+        return
+      }
 
-    setEditProjectData(prev => ({
-      ...prev,
-      ...initialEditProjectData
-    }))
+      const data = {
+        ...projectStore.project.data,
+        spec: {
+          ...projectStore.project.data.spec,
+          [fieldName]: deleteUnsafeHtml(editProjectData[fieldName].value.trim())
+        }
+      }
 
-    sendProjectSettingsData(DATA, data)
-  }
+      setProjectSettings({
+        artifact_path: data.spec.artifact_path,
+        description: data.spec.description,
+        goals: data.spec.goals,
+        source: data.spec.source
+      })
 
-  // const handleOnKeyDown = useCallback(
-  //   event => {
-  //     if (event.keyCode === KEY_CODES.ENTER) {
-  //       handleOnBlur()
-  //     }
-  //   },
-  //   [handleOnBlur]
-  // )
+      setEditProjectData(prev => ({
+        ...prev,
+        ...initialEditProjectData
+      }))
+
+      sendProjectSettingsData(DATA, data)
+    },
+    [
+      editProjectData,
+      projectStore.project.data,
+      sendProjectSettingsData,
+      setProjectSettings,
+      validation.isPathValid,
+      validation.isSourceValid
+    ]
+  )
+
+  const handleOnKeyDown = useCallback(
+    (fieldName, event) => {
+      if (event.keyCode === KEY_CODES.ENTER) {
+        handleOnBlur(fieldName)
+      }
+    },
+    [handleOnBlur]
+  )
 
   return (
     <ProjectSettingsGeneralView
@@ -270,6 +280,7 @@ const ProjectSettingsGeneral = ({
       handleEditProject={handleEditProject}
       handleOnBlur={handleOnBlur}
       handleOnChange={handleOnChange}
+      handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
       loading={projectStore.project?.loading}
       setValidation={setValidation}

@@ -13,6 +13,7 @@ const ProjectSettingsSource = ({
   editSourceData,
   handleEditProject,
   handleOnBlur,
+  handleOnKeyDown,
   handleSourceChange,
   setValidation,
   settingsSource,
@@ -30,6 +31,7 @@ const ProjectSettingsSource = ({
         focused
         onBlur={() => handleOnBlur(SOURCE_URL)}
         onChange={value => handleSourceChange(SOURCE_URL, value)}
+        onKeyDown={e => handleOnKeyDown(SOURCE_URL, e)}
         setInvalid={value =>
           setValidation(state => {
             return {
