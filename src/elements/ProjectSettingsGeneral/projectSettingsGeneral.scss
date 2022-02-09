@@ -34,6 +34,8 @@
   }
 
   &__params {
+    @include fieldWrapper;
+
     .table-row__header {
       border-top: 0;
     }

@@ -77,9 +77,6 @@ const ProjectSettingsGeneral = ({
             retry: () => sendProjectSettingsData(data)
           })
         })
-        .finally(() => {
-          setEditProjectData(prev => ({ ...prev, ...initialEditProjectData }))
-        })
     },
 
     [match.params.projectName, setNotification]
@@ -184,15 +181,17 @@ const ProjectSettingsGeneral = ({
 
   const handleOnChange = useCallback(
     (fieldName, value) => {
-      setEditProjectData(prevState => ({
-        ...prevState,
-        [fieldName]: {
-          ...prevState[fieldName],
-          value: editProjectData[fieldName].isEdit
-            ? value
-            : prevState[fieldName].value
-        }
-      }))
+      if (fieldName && editProjectData[fieldName].isEdit) {
+        setEditProjectData(prevState => ({
+          ...prevState,
+          [fieldName]: {
+            ...prevState[fieldName],
+            value: editProjectData[fieldName].isEdit
+              ? value
+              : prevState[fieldName].value
+          }
+        }))
+      }
     },
     [editProjectData]
   )
@@ -242,27 +241,29 @@ const ProjectSettingsGeneral = ({
       source: data.spec.source
     })
 
-    // const handleOnKeyDown = useCallback(
-    //   event => {
-    //     if (event.keyCode === KEY_CODES.ENTER) {
-    //       handleSetProjectData()
-    //     }
-    //   },
-    //   [handleSetProjectData]
-    // )
+    setEditProjectData(prev => ({
+      ...prev,
+      ...initialEditProjectData
+    }))
 
     sendProjectSettingsData(data)
   }
 
+  // const handleOnKeyDown = useCallback(
+  //   event => {
+  //     if (event.keyCode === KEY_CODES.ENTER) {
+  //       handleOnBlur()
+  //     }
+  //   },
+  //   [handleOnBlur]
+  // )
+
   return (
     <ProjectSettingsGeneralView
-      artifactPath={projectStore.project.data?.spec.artifact_path ?? ''}
       defaultArtifactPath={frontendSpec.default_artifact_path}
-      description={projectStore.project.data?.spec.description ?? ''}
       editProjectData={editProjectData}
       error={projectStore.project?.error}
       generalParams={generalParams}
-      goals={projectStore.project.data?.spec.goals ?? ''}
       handleAddNewParameter={handleAddNewParameter}
       handleAddProjectLabel={handleAddProjectLabel}
       handleDeleteParameter={handleDeleteParameter}
@@ -271,10 +272,8 @@ const ProjectSettingsGeneral = ({
       handleOnBlur={handleOnBlur}
       handleOnChange={handleOnChange}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
-      labels={projectStore.project.data?.metadata.labels ?? {}}
       loading={projectStore.project?.loading}
       setValidation={setValidation}
-      source={projectStore.project.data?.spec.source ?? ''}
       validation={validation}
     />
   )

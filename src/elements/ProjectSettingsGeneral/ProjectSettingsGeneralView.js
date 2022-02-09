@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
@@ -12,13 +13,10 @@ import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSourc
 import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.util'
 
 const ProjectSettingsGeneralView = ({
-  artifactPath,
   defaultArtifactPath,
-  description,
   editProjectData,
   error,
   generalParams,
-  goals,
   handleAddProjectLabel,
   handleAddNewParameter,
   handleDeleteParameter,
@@ -27,12 +25,12 @@ const ProjectSettingsGeneralView = ({
   handleOnBlur,
   handleOnChange,
   handleUpdateProjectLabels,
-  labels,
   loading,
   setValidation,
-  source,
   validation
 }) => {
+  const projectData = useSelector(store => store.projectStore.project.data)
+
   return (
     <div className="settings__card">
       {loading ? (
@@ -51,7 +49,7 @@ const ProjectSettingsGeneralView = ({
               handleOnBlur={handleOnBlur}
               handleSourceChange={handleOnChange}
               setValidation={setValidation}
-              settingsSource={source}
+              settingsSource={projectData?.spec.source ?? ''}
               validation={validation}
             />
             <div
@@ -71,7 +69,11 @@ const ProjectSettingsGeneralView = ({
                     isPathValid: value
                   }))
                 }
-                value={editProjectData.artifact_path.value ?? artifactPath}
+                value={
+                  editProjectData.artifact_path.value ||
+                  projectData?.spec.artifact_path ||
+                  ''
+                }
               />
               <span className="settings__artifact-path-link">
                 Enter the default path for saving the artifacts within your
@@ -91,9 +93,7 @@ const ProjectSettingsGeneralView = ({
               handleEditProject={handleEditProject}
               handleOnChangeProject={handleOnChange}
               handleOnBlur={handleOnBlur}
-              projectDescription={
-                editProjectData.description.value ?? description
-              }
+              projectDescription={projectData?.spec.description ?? ''}
               // ref={ref}
             />
             <ProjectGoals
@@ -102,7 +102,7 @@ const ProjectSettingsGeneralView = ({
               handleOnChangeProject={handleOnChange}
               handleOnBlur={handleOnBlur}
               // handleOnKeyDown={handleOnKeyDown}
-              projectGoals={editProjectData.goals.value ?? goals}
+              projectGoals={projectData?.spec.goals ?? ''}
               // ref={ref}
             />
             <div className="settings__labels">
@@ -115,7 +115,7 @@ const ProjectSettingsGeneralView = ({
               <ProjectLabels
                 addProjectLabel={handleAddProjectLabel}
                 isEditMode
-                labels={labels}
+                labels={projectData?.metadata.labels ?? {}}
                 updateProjectLabel={handleUpdateProjectLabels}
                 visibleChipsMaxLength="all"
               />
@@ -154,25 +154,21 @@ ProjectSettingsGeneralView.defaultProps = {
 }
 
 ProjectSettingsGeneralView.propTypes = {
-  artifactPath: PropTypes.string.isRequired,
   defaultArtifactPath: PropTypes.string,
-  description: PropTypes.string,
   editProjectData: PropTypes.object.isRequired,
   error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
-  goals: PropTypes.string.isRequired,
   handleAddProjectLabel: PropTypes.func.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
-  handleOnKeyDown: PropTypes.func.isRequired,
+  // handleOnKeyDown: PropTypes.func.isRequired,
   handleOnBlur: PropTypes.func.isRequired,
   handleOnChange: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   setValidation: PropTypes.func.isRequired,
-  source: PropTypes.string.isRequired,
   validation: PropTypes.object.isRequired
 }
 
