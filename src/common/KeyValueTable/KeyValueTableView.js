@@ -51,149 +51,151 @@ const KeyValueTableView = ({
         </div>
         <div className="table-cell table-cell__actions" />
       </div>
-      {content.map((contentItem, index) => {
-        return isEditMode && index === selectedItem.index ? (
-          <div className="table-row table-row_edit" key={index}>
-            <div className="table-cell table-cell__key">
-              {keyType === 'select' ? (
-                <Select
-                  density="dense"
-                  onClick={key =>
-                    setSelectedItem({
-                      ...selectedItem,
-                      newKey: key,
-                      index
-                    })
-                  }
-                  options={keyOptions}
-                  selectedId={selectedItem.newKey ?? selectedItem.key}
-                />
-              ) : (
+      <div className="key-value-table__body">
+        {content.map((contentItem, index) => {
+          return isEditMode && index === selectedItem.index ? (
+            <div className="table-row table-row_edit" key={index}>
+              <div className="table-cell table-cell__key">
+                {keyType === 'select' ? (
+                  <Select
+                    density="dense"
+                    onClick={key =>
+                      setSelectedItem({
+                        ...selectedItem,
+                        newKey: key,
+                        index
+                      })
+                    }
+                    options={keyOptions}
+                    selectedId={selectedItem.newKey ?? selectedItem.key}
+                  />
+                ) : (
+                  <Input
+                    className="input_edit"
+                    density="dense"
+                    invalid={
+                      (selectedItem.newKey !== selectedItem.key &&
+                        isKeyNotUnique(selectedItem.newKey, content)) ||
+                      !validation.isEditKeyValid
+                    }
+                    invalidText={
+                      isKeyNotUnique(selectedItem.newKey, content)
+                        ? 'Name already exists'
+                        : 'This field is invalid'
+                    }
+                    onChange={key =>
+                      setSelectedItem({
+                        ...selectedItem,
+                        newKey: key,
+                        index
+                      })
+                    }
+                    required={isKeyRequired}
+                    setInvalid={value =>
+                      setValidation(state => ({
+                        ...state,
+                        isEditKeyValid: value
+                      }))
+                    }
+                    type="text"
+                    value={selectedItem.newKey ?? selectedItem.key}
+                  />
+                )}
+              </div>
+              <div className="table-cell table-cell__value">
                 <Input
                   className="input_edit"
                   density="dense"
-                  invalid={
-                    (selectedItem.newKey !== selectedItem.key &&
-                      isKeyNotUnique(selectedItem.newKey, content)) ||
-                    !validation.isEditKeyValid
-                  }
-                  invalidText={
-                    isKeyNotUnique(selectedItem.newKey, content)
-                      ? 'Name already exists'
-                      : 'This field is invalid'
-                  }
-                  onChange={key =>
+                  invalid={!validation.isEditValueValid}
+                  onChange={value =>
                     setSelectedItem({
                       ...selectedItem,
-                      newKey: key,
+                      value,
                       index
                     })
                   }
-                  required={isKeyRequired}
+                  required={isValueRequired}
                   setInvalid={value =>
                     setValidation(state => ({
                       ...state,
-                      isEditKeyValid: value
+                      isEditValueValid: value
                     }))
                   }
                   type="text"
-                  value={selectedItem.newKey ?? selectedItem.key}
+                  value={selectedItem.newValue ?? selectedItem.value}
                 />
-              )}
+              </div>
+              <div className="table-cell table-cell__actions">
+                <button
+                  className="key-value-table__btn"
+                  disabled={
+                    isValueRequired &&
+                    isKeyRequired &&
+                    (!validation.isEditKeyValid ||
+                      !validation.isEditValueValid ||
+                      (selectedItem.newKey !== selectedItem.key &&
+                        isKeyNotUnique(selectedItem.newKey, content)))
+                  }
+                  onClick={handleEditItem}
+                >
+                  <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+                    <Checkmark />
+                  </Tooltip>
+                </button>
+              </div>
             </div>
-            <div className="table-cell table-cell__value">
-              <Input
-                className="input_edit"
-                density="dense"
-                invalid={!validation.isEditValueValid}
-                onChange={value =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    value,
-                    index
+          ) : (
+            <div
+              className="table-row"
+              key={index}
+              onClick={() => {
+                if (withEditMode) {
+                  setSelectedItem({ ...contentItem, index })
+                  setEditMode(true)
+                  setValidation({
+                    isKeyValid: true,
+                    isValueValid: true,
+                    isEditKeyValid: true,
+                    isEditValueValid: true
                   })
                 }
-                required={isValueRequired}
-                setInvalid={value =>
-                  setValidation(state => ({
-                    ...state,
-                    isEditValueValid: value
-                  }))
-                }
-                type="text"
-                value={selectedItem.newValue ?? selectedItem.value}
-              />
-            </div>
-            <div className="table-cell table-cell__actions">
-              <button
-                className="key-value-table__btn"
-                disabled={
-                  isValueRequired &&
-                  isKeyRequired &&
-                  (!validation.isEditKeyValid ||
-                    !validation.isEditValueValid ||
-                    (selectedItem.newKey !== selectedItem.key &&
-                      isKeyNotUnique(selectedItem.newKey, content)))
-                }
-                onClick={handleEditItem}
-              >
-                <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-                  <Checkmark />
-                </Tooltip>
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div
-            className="table-row"
-            key={index}
-            onClick={() => {
-              if (withEditMode) {
-                setSelectedItem({ ...contentItem, index })
-                setEditMode(true)
-                setValidation({
-                  isKeyValid: true,
-                  isValueValid: true,
-                  isEditKeyValid: true,
-                  isEditValueValid: true
-                })
-              }
-            }}
-          >
-            <div className="table-cell__inputs-wrapper">
-              <div className="table-cell table-cell__key">
-                <Tooltip
-                  template={<TextTooltipTemplate text={contentItem.key} />}
-                >
-                  {contentItem.key}
-                </Tooltip>
+              }}
+            >
+              <div className="table-cell__inputs-wrapper">
+                <div className="table-cell table-cell__key">
+                  <Tooltip
+                    template={<TextTooltipTemplate text={contentItem.key} />}
+                  >
+                    {contentItem.key}
+                  </Tooltip>
+                </div>
+                <div className="table-cell table-cell__value">
+                  <Tooltip
+                    template={<TextTooltipTemplate text={contentItem.value} />}
+                  >
+                    {contentItem.value}
+                  </Tooltip>
+                </div>
               </div>
-              <div className="table-cell table-cell__value">
-                <Tooltip
-                  template={<TextTooltipTemplate text={contentItem.value} />}
+              <div className="table-cell table-cell__actions">
+                <button
+                  className="key-value-table__btn"
+                  onClick={event => {
+                    event.stopPropagation()
+                    deleteItem(index, contentItem)
+                  }}
                 >
-                  {contentItem.value}
-                </Tooltip>
+                  <Tooltip template={<TextTooltipTemplate text="Delete" />}>
+                    <Delete />
+                  </Tooltip>
+                </button>
               </div>
             </div>
-            <div className="table-cell table-cell__actions">
-              <button
-                className="key-value-table__btn"
-                onClick={event => {
-                  event.stopPropagation()
-                  deleteItem(index, contentItem)
-                }}
-              >
-                <Tooltip template={<TextTooltipTemplate text="Delete" />}>
-                  <Delete />
-                </Tooltip>
-              </button>
-            </div>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
       {isAddNewItem ? (
-        <div className="table-row no-hover">
+        <div className="table-row table-row__last no-hover">
           <div className="table-cell__inputs-wrapper">
             {keyType === 'select' ? (
               <Select
@@ -263,7 +265,7 @@ const KeyValueTableView = ({
           </div>
         </div>
       ) : (
-        <div className="table-row no-hover">
+        <div className="table-row table-row__last no-hover">
           <button
             className="add-new-item-btn"
             onClick={() => {
