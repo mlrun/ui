@@ -74,6 +74,11 @@ const ProjectSettingsGeneral = ({
         } else {
           await projectsApi.editProject(match.params.projectName, { ...data })
         }
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Data was edited successfully'
+        })
       } catch (error) {
         setNotification({
           status: error.response?.status || 400,
