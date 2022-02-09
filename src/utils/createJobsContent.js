@@ -29,10 +29,12 @@ const createJobsContent = (
           contentItem.func?.match(/\w(?<!\d)[\w'-]*/g, '') || []
         const [, projectName, jobUid] =
           contentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
+        const jobName = contentItem.name
         const lastRunLink = () =>
           projectName &&
+          jobName &&
           jobUid &&
-          `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobUid}/overview`
+          `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
 
         return {
           name: {
