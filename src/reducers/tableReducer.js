@@ -14,7 +14,7 @@ const initialState = {
     featureVector: {},
     groupedFeatures: {},
     isNewFeatureVector: false,
-    labelFeature: {}
+    labelFeature: null
   }
 }
 
@@ -30,10 +30,7 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         features: {
           ...state.features,
-          labelFeature: {
-            ...state.features.labelFeature,
-            ...payload
-          }
+          labelFeature: payload
         }
       }
     case SET_TABLE_PANEL_OPEN:
@@ -74,7 +71,7 @@ export default (state = initialState, { type, payload }) => {
           ...state.features,
           groupedFeatures: {
             ...state.features.groupedFeatures,
-            [state.features.currentProject]: payload
+            [payload.projectName]: payload.groupedFeatures
           }
         }
       }
