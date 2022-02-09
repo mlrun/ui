@@ -6,6 +6,8 @@ import Input from '../../../common/Input/Input'
 import ChipCell from '../../../common/ChipCell/ChipCell'
 import TextArea from '../../../common/TextArea/TextArea'
 
+import { getValidationRules } from '../../../utils/validationService'
+
 import './featureSetsPanelTitle.scss'
 
 const FeatureSetsPanelTitleView = ({
@@ -20,16 +22,6 @@ const FeatureSetsPanelTitleView = ({
   setValidation,
   validation
 }) => {
-  const titleValidationTip = (
-    <>
-      <span>&bull; Valid characters: A-Z, a-z, 0-9, -, _, .</span>
-      <br />
-      <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
-      <br />
-      <span>&bull; Length - max: 56</span>
-    </>
-  )
-
   return (
     <div className="panel-title feature-sets-panel__title">
       <div className="panel-title__container">
@@ -40,17 +32,15 @@ const FeatureSetsPanelTitleView = ({
             invalid={!validation.isNameValid}
             invalidText="This field is invalid"
             label="Feature Set Name"
-            maxLength={56}
             onChange={name => setData(state => ({ ...state, name }))}
             onBlur={handleNameOnBlur}
-            pattern="^(?=[\S\s]{1,56}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
             required
             requiredText="This field is required"
             setInvalid={value =>
               setValidation(state => ({ ...state, isNameValid: value }))
             }
-            tip={titleValidationTip}
             type="text"
+            validationRules={getValidationRules('feature.vector.name')}
             value={data.name}
             wrapperClassName="name"
           />
@@ -78,6 +68,7 @@ const FeatureSetsPanelTitleView = ({
             }
             type="text"
             value={data.version}
+            validationRules={getValidationRules('feature.set.tag')}
             wrapperClassName="version"
           />
         </div>

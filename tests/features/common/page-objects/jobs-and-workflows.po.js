@@ -6,7 +6,6 @@ import datepicker from '../components/date-picker.component'
 import inputGroup from '../components/input-group.component'
 import inputWithAutocomplete from '../components/input-with-autocomplete.component'
 import labelComponent from '../components/label.component'
-import graph from '../components/graph.component'
 import {
   generateInputGroup,
   generateDropdownGroup,
@@ -15,12 +14,12 @@ import {
 
 // Monitor tab
 const tabSelector = {
-  root: '.content_with-menu .content-menu',
+  root: 'div.content_with-menu div.content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: 'ul.content-menu__list',
     row: {
-      root: '.content-menu__item',
+      root: 'li.content-menu__item',
       fields: {
         tab: 'a'
       }
@@ -29,72 +28,72 @@ const tabSelector = {
 }
 
 const resultsTable = {
-  root: '.table-body__cell:nth-of-type(7)',
+  root: 'div.table-body__cell:nth-of-type(7)',
   header: {},
   body: {
-    root: '.chips-wrapper',
+    root: 'div.chips-wrapper',
     row: {
-      root: '.chip-block',
+      root: 'div.chip-block',
       field: {
-        label: '.chip__content'
+        label: 'div.chip__content'
       }
     }
   }
 }
 
 const actionMenuStructure = {
-  root: '.actions-menu__container',
+  root: 'div.actions-menu__container',
   menuElements: {
     open_button: 'button',
-    options: '.actions-menu__body .actions-menu__option'
+    options: 'div.actions-menu__body div.actions-menu__option'
   }
 }
 
 const jobsMonitorTable = {
-  root: '.table .table__content',
+  root: 'div.table div.table__content',
   header: {
-    root: '.table-head',
+    root: 'div.table-head',
     sorters: {
-      name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      type: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      duration: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      owner: '.table-head__item:nth-of-type(4) .data-ellipsis',
-      labels: '.table-head__item:nth-of-type(5) .data-ellipsis',
-      parameters: '.table-head__item:nth-of-type(6) .data-ellipsis',
-      results: '.table-head__item:nth-of-type(7) .data-ellipsis'
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      type: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      duration: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      owner: 'div.table-head__item:nth-of-type(4) div.data-ellipsis',
+      labels: 'div.table-head__item:nth-of-type(5) div.data-ellipsis',
+      parameters: 'div.table-head__item:nth-of-type(6) div.data-ellipsis',
+      results: 'div.table-head__item:nth-of-type(7) div.data-ellipsis'
     }
   },
   body: {
-    root: '.table-body',
+    root: 'div.table-body',
     row: {
-      root: '.table-body__row',
+      root: 'div.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg',
+        expand_btn: 'div.table-body__cell:nth-of-type(1) svg',
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(1) .status',
+            'div.table-body__cell:nth-of-type(1) .status',
             'i',
             true,
             '.tooltip .tooltip__text span'
           )
         },
-        name: '.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link .data-ellipsis',
         datetime:
-          '.table-body__cell:nth-of-type(1) a .date__uid_row span:nth-of-type(1)',
+          'div.table-body__cell:nth-of-type(1) a div.date__uid_row span:nth-of-type(1)',
         uid:
-          '.table-body__cell:nth-of-type(1) a .date__uid_row span:nth-of-type(2)',
+          'div.table-body__cell:nth-of-type(1) a div.date__uid_row span:nth-of-type(2)',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(2)',
-            '.data-ellipsis ',
+            'div.table-body__cell:nth-of-type(2)',
+            'div.data-ellipsis ',
             true,
             '.tooltip .tooltip__text span'
           )
         },
-        duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
-        owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        duration: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        owner: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
@@ -129,34 +128,34 @@ const jobsMonitorTable = {
 }
 
 const workflowsMonitorTable = {
-  root: '.table .table__content',
+  root: 'div.table div.table__content',
   header: {
-    root: '.table-head',
+    root: 'div.table-head',
     sorters: {
-      name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      created: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      finished: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      duration: '.table-head__item:nth-of-type(4) .data-ellipsis'
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      created: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      finished: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      duration: 'div.table-head__item:nth-of-type(4) div.data-ellipsis'
     }
   },
   body: {
-    root: '.table-body',
+    root: 'div.table-body',
     row: {
-      root: '.table-body__row',
+      root: 'div.table-body__row',
       fields: {
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(1) .status',
+            'div.table-body__cell:nth-of-type(1) .status',
             'i',
             true,
             '.tooltip .tooltip__text span'
           )
         },
-        name: '.table-body__cell:nth-of-type(1) a .link',
-        created: '.table-body__cell:nth-of-type(2) .data-ellipsis',
-        finished: '.table-body__cell:nth-of-type(3) .data-ellipsis',
-        duration: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        created: 'div.table-body__cell:nth-of-type(2) div.data-ellipsis',
+        finished: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        duration: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -166,79 +165,37 @@ const workflowsMonitorTable = {
   }
 }
 
-const monitorWorkflowGraph = {
-  root: '.react-flow',
-  elements: {
-    workflowGraphNodesTable: {
-      componentType: commonTable,
-      structure: {
-        root: '',
-        header: {},
-        body: {
-          root: '.react-flow__nodes',
-          row: {
-            root: '.selectable',
-            fields: {
-              name: '.react-flow__node-label .data-ellipsis .data-ellipsis',
-              top_hendler: '.data-ellipsis .react-flow__handle-top',
-              bottom_hendler: '.data-ellipsis .react-flow__handle-bottom'
-            }
-          }
-        }
-      }
-    },
-    workflowGraphConnectionsTable: {
-      componentType: commonTable,
-      structure: {
-        root: '',
-        header: {},
-        body: {
-          root: '.react-flow__edges g[transform]',
-          row: {
-            root: '.react-flow__edge',
-            fields: {
-              path: '.react-flow__edge-path'
-            }
-          }
-        }
-      }
-    },
-    svg: '.react-flow__edges',
-    zoomPane: '.react-flow__nodes'
-  }
-}
-
 const scheduleMonitorTable = {
-  root: '.table .table__content',
+  root: 'div.table div.table__content',
   header: {
-    root: '.table-head',
+    root: 'div.table-head',
     sorters: {
-      name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      type: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      nextRun: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      schedule: '.table-head__item:nth-of-type(4) .data-ellipsis',
-      labels: '.table-head__item:nth-of-type(5) .data-ellipsis',
-      lastRun: '.table-head__item:nth-of-type(6) .data-ellipsis',
-      createdTime: '.table-head__item:nth-of-type(7) .data-ellipsis'
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      type: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      nextRun: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      schedule: 'div.table-head__item:nth-of-type(4) div.data-ellipsis',
+      labels: 'div.table-head__item:nth-of-type(5) div.data-ellipsis',
+      lastRun: 'div.table-head__item:nth-of-type(6) div.data-ellipsis',
+      createdTime: 'div.table-head__item:nth-of-type(7) div.data-ellipsis'
     }
   },
   body: {
-    root: '.table-body',
+    root: 'div.table-body',
     row: {
-      root: '.table-body__row',
+      root: 'div.table-body__row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .link .link',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(2)',
+            'div.table-body__cell:nth-of-type(2)',
             '.data-ellipsis',
             true,
             '.tooltip .tooltip__text span'
           )
         },
-        nextRun: '.table-body__cell:nth-of-type(3) .data-ellipsis',
-        schedule: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        nextRun: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        schedule: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
@@ -249,8 +206,8 @@ const scheduleMonitorTable = {
             true // options_in_root ?
           )
         },
-        lastRun: '.table-head__item:nth-of-type(6) .data-ellipsis',
-        createdTime: '.table-head__item:nth-of-type(7) .data-ellipsis',
+        lastRun: 'div.table-head__item:nth-of-type(6) div.data-ellipsis',
+        createdTime: 'div.table-head__item:nth-of-type(7) div.data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -264,47 +221,48 @@ const scheduleMonitorTable = {
 const calendarTable = {
   root: '',
   header: {
-    root: '.date-picker__weeks',
+    root: 'div.date-picker__weeks',
     sorters: {
-      Sunday: '.date-picker__weeks-day:nth-of-type(1)',
-      Monday: '.date-picker__weeks-day:nth-of-type(1)',
-      Tuesday: '.date-picker__weeks-day:nth-of-type(1)',
-      Wednesday: '.date-picker__weeks-day:nth-of-type(1)',
-      Thursday: '.date-picker__weeks-day:nth-of-type(1)',
-      Friday: '.date-picker__weeks-day:nth-of-type(1)',
-      Saturday: '.date-picker__weeks-day:nth-of-type(1)'
+      Sunday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Monday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Tuesday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Wednesday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Thursday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Friday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Saturday: 'div.date-picker__weeks-day:nth-of-type(1)'
     }
   },
   body: {
     offset: 3,
     row: {
-      root: '.date-picker__week',
+      root: 'div.date-picker__week',
       fields: {
-        Sunday: '.date-picker__week-day-wrapper:nth-of-type(1)',
-        Monday: '.date-picker__week-day-wrapper:nth-of-type(2)',
-        Tuesday: '.date-picker__week-day-wrapper:nth-of-type(3)',
-        Wednesday: '.date-picker__week-day-wrapper:nth-of-type(4)',
-        Thursday: '.date-picker__week-day-wrapper:nth-of-type(5)',
-        Friday: '.date-picker__week-day-wrapper:nth-of-type(6)',
-        Saturday: '.date-picker__week-day-wrapper:nth-of-type(7)'
+        Sunday: 'div.date-picker__week-day-wrapper:nth-of-type(1)',
+        Monday: 'div.date-picker__week-day-wrapper:nth-of-type(2)',
+        Tuesday: 'div.date-picker__week-day-wrapper:nth-of-type(3)',
+        Wednesday: 'div.date-picker__week-day-wrapper:nth-of-type(4)',
+        Thursday: 'div.date-picker__week-day-wrapper:nth-of-type(5)',
+        Friday: 'div.date-picker__week-day-wrapper:nth-of-type(6)',
+        Saturday: 'div.date-picker__week-day-wrapper:nth-of-type(7)'
       }
     }
   }
 }
 
 const dateTimePickerCalendars = {
-  root: '.date-picker-container',
+  root: 'div.date-picker-container',
   apply_button: 'button.date-picker__apply-btn',
-  error_message: '.error-message',
+  error_message: 'div.error-message',
   fromDatePicker: {
-    root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
+    root: 'div.date-picker__calendars div.date-picker__calendar:nth-of-type(1)',
     elements: {
       month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
-      month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
-      month_label: '.date-picker__header div .date-picker__header-month',
-      year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
+        'div.date-picker__header svg.date-picker__header-previous-month',
+      month_next_btn:
+        'div.date-picker__header svg.date-picker__header-next-month',
+      month_label: 'div.date-picker__header div span.date-picker__header-month',
+      year_label: 'div.date-picker__header div span.date-picker__header-year',
+      time_input: 'div.date-picker__time input',
       calendar: {
         componentType: commonTable,
         structure: calendarTable
@@ -312,14 +270,15 @@ const dateTimePickerCalendars = {
     }
   },
   toDatePicker: {
-    root: '.date-picker__calendars .date-picker__calendar:nth-of-type(2)',
+    root: 'div.date-picker__calendars div.date-picker__calendar:nth-of-type(2)',
     elements: {
       month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
-      month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
-      month_label: '.date-picker__header div .date-picker__header-month',
-      year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
+        'div.date-picker__header svg.date-picker__header-previous-month',
+      month_next_btn:
+        'div.date-picker__header svg.date-picker__header-next-month',
+      month_label: 'div.date-picker__header div span.date-picker__header-month',
+      year_label: 'div.date-picker__header div span.date-picker__header-year',
+      time_input: 'div.date-picker__time input',
       calendar: {
         componentType: commonTable,
         structure: calendarTable
@@ -332,21 +291,21 @@ const dateTimePickerCalendars = {
 // Create job
 const selectFunctionFromDropdown = {
   root:
-    '.create-container .create-container__data  .accordion__container.functions-wrapper .data-header__select',
+    'div.create-container div.create-container__data  div.accordion__container.functions-wrapper div.data-header__select',
   dropdownElements: {
-    open_button: '.select__header .select__value',
-    options: '.select__body .select__item',
-    option_name: '.data-ellipsis .data-ellipsis'
+    open_button: 'div.select__header div.select__value',
+    options: 'div.select__body div.select__item',
+    option_name: 'div.data-ellipsis div.data-ellipsis'
   }
 }
 
 const selectedFunctionsTemplates = {
   root:
-    '.create-container .create-container__data  .accordion__container.functions-wrapper .create-container__data-list',
+    'div.create-container div.create-container__data  div.accordion__container.functions-wrapper div.create-container__data-list',
   header: {},
   body: {
     row: {
-      root: '.card-template',
+      root: 'div.card-template',
       fields: {
         name: '.card-template__header'
       }
@@ -355,11 +314,11 @@ const selectedFunctionsTemplates = {
 }
 
 const predefinedFunctionsTemplates = {
-  root: '.create-container__data-list',
+  root: 'div.create-container__data-list',
   header: {},
   body: {
     row: {
-      root: '.card-template',
+      root: 'div.card-template',
       fields: {
         name: '.card-template__header',
         description: '.card-template__description'
@@ -370,14 +329,14 @@ const predefinedFunctionsTemplates = {
 
 const functionsTemplates = {
   root:
-    '.create-container .create-container__data > .accordion__container:nth-of-type(3) .accordion__body .data-wrapper .templates-container',
+    'div.create-container div.create-container__data > div.accordion__container:nth-of-type(3) div.accordion__body div.data-wrapper div.templates-container',
   header: {},
   body: {
     row: {
-      root: '.accordion__container',
+      root: 'div.accordion__container',
       fields: {
         expand_btn: 'button',
-        name: '.accordion__body > h6',
+        name: 'div.accordion__body > h6',
         templates_list: {
           componentType: commonTable,
           structure: predefinedFunctionsTemplates
@@ -389,11 +348,11 @@ const functionsTemplates = {
 
 // Common components
 const pageHeaderButton = By.css(
-  '.content__header .page-actions-container button'
+  'div.content__header div.page-actions-container button'
 )
 const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
-  '.content__action-bar .data-ellipsis:nth-of-type(1) button[id=refresh]'
+  'div.content__action-bar div.data-ellipsis:nth-of-type(1) button[id=refresh]'
 )
 
 module.exports = {
@@ -401,11 +360,11 @@ module.exports = {
     Jobs_Tab_Selector: jobsTabSelector,
     New_Job_Button: pageHeaderButton,
     Resource_Monitoring_Button: By.css(
-      '.content__action-bar > .data-ellipsis:nth-of-type(2) button'
+      'div.content__action-bar > div.data-ellipsis:nth-of-type(2) button'
     ),
     Table_Refresh_Button: tableRefreshButton,
     Table_Expand_Rows_Button: By.css(
-      '.content__action-bar .actions .round-icon-cp:nth-of-type(2) button'
+      'div.content__action-bar div.actions div.round-icon-cp:nth-of-type(2) button'
     ),
     Status_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
@@ -417,32 +376,32 @@ module.exports = {
     ),
     Group_By_Name_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '.content__action-bar .filters .select:nth-of-type(3)',
-        '.select__header', // Open Component
-        '.select__body .select__item', // Options
-        '.data-ellipsis .data-ellipsis' // Option value
+        'div.content__action-bar div.filters div.select:nth-of-type(3)',
+        'div.select__header', // Open Component
+        'div.select__body div.select__item', // Options
+        'div.data-ellipsis div.data-ellipsis' // Option value
       )
     ),
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(4)',
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(4)',
         true,
         false
       )
     ),
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(5)',
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(5)',
         true,
         false
       )
     ),
     Start_Time_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '.content__action-bar .filters .date-picker-container',
+        'div.content__action-bar div.filters div.date-picker-container',
         'input.date-picker__input',
-        '.date-picker__pop-up .select__item',
-        '.data-ellipsis .data-ellipsis',
+        'div.date-picker__pop-up div.select__item',
+        'div.data-ellipsis div.data-ellipsis',
         true // options_in_root ?
       )
     ),
@@ -452,20 +411,19 @@ module.exports = {
   WorkflowsMonitorTab: {
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
     Toggle_View_Button: By.css('.workflow-header .actions .toggle-view-btn'),
-    Workflow_List_View_Table: commonTable(jobsMonitorTable),
-    Workflow_Graph: graph(monitorWorkflowGraph)
+    Workflow_List_View_Table: commonTable(jobsMonitorTable)
   },
   ScheduleMonitorTab: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(1)',
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(1)',
         true,
         false
       )
     ),
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(2)',
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(2)',
         true,
         false
       )
@@ -475,25 +433,26 @@ module.exports = {
   },
   CreateJob: {
     Back_Arrow_Button: By.css(
-      '.create-container .create-container__header .header-link a.header-link__icon'
+      'div.create-container div.create-container__header div.header-link a.header-link__icon'
     ),
     Create_Job_Header: By.css(
-      '.create-container .create-container__header .header-link h3.header-link__title'
+      'div.create-container div.create-container__header div.header-link h3.header-link__title'
     ),
     Search_Input: inputWithAutocomplete({
-      root: '.create-container .create-container__data  .search-container',
+      root:
+        'div.create-container div.create-container__data  div.search-container',
       elements: {
         input: 'input',
-        options: '.search-matches .search-matches__item',
+        options: 'ul.search-matches li.search-matches__item',
         option_name: ''
       }
     }),
     Select_Functions_From_Accordion: {
       Accordion_Header: By.css(
-        '.create-container .create-container__data .accordion__container.functions-wrapper h5.data-header__title span'
+        'div.create-container div.create-container__data div.accordion__container.functions-wrapper h5.data-header__title span'
       ),
       Collapse_Button: By.css(
-        '.create-container .create-container__data .accordion__container.functions-wrapper .accordion__icon'
+        'div.create-container div.create-container__data div.accordion__container.functions-wrapper button.accordion__icon'
       ),
       Select_Function_From_Dropdown: dropdownComponent(
         selectFunctionFromDropdown
@@ -502,10 +461,10 @@ module.exports = {
     },
     Function_Templates_Accordion: {
       Accordion_Header: By.css(
-        '.create-container .create-container__data > .accordion__container:nth-of-type(3) h5.data-header__title'
+        'div.create-container div.create-container__data > div.accordion__container:nth-of-type(3) h5.data-header__title'
       ),
       Collapse_Button: By.css(
-        '.create-container .create-container__data > .accordion__container:nth-of-type(3) > .accordion__icon'
+        'div.create-container div.create-container__data > div.accordion__container:nth-of-type(3) > button.accordion__icon'
       ),
       Functions_Templates_Table: commonTable(functionsTemplates)
     }

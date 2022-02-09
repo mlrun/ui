@@ -10,7 +10,8 @@ import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.
 
 const ProjectSettingsGeneralView = ({
   artifactPath,
-  editProject,
+  defaultArtifactPath,
+  editProjectData,
   error,
   generalParams,
   handleAddNewParameter,
@@ -38,7 +39,7 @@ const ProjectSettingsGeneralView = ({
           <div className="settings__card-header">General</div>
           <div className="settings__card-content">
             <ProjectSettingsSource
-              editSourceData={editProject.source}
+              editSourceData={editProjectData.source}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
               handleSourceChange={handleSourceChange}
@@ -59,14 +60,27 @@ const ProjectSettingsGeneralView = ({
                 onChange={value =>
                   handleArtifactPathChange(value, validation.isPathValid)
                 }
+                placeholder={defaultArtifactPath ?? ''}
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,
                     isPathValid: value
                   }))
                 }
-                value={editProject.artifact_path.value ?? artifactPath}
+                value={editProjectData.artifact_path.value ?? artifactPath}
               />
+              <span className="settings__artifact-path-link">
+                Enter the default path for saving the artifacts within your
+                project.
+                <a
+                  className="link"
+                  href="https://docs.mlrun.org/en/latest/store/artifacts.html"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Read more
+                </a>
+              </span>
             </div>
             <p className="settings__card-subtitle">Parameters</p>
             <p>
@@ -102,7 +116,8 @@ ProjectSettingsGeneralView.defaultProps = {
 
 ProjectSettingsGeneralView.propTypes = {
   artifactPath: PropTypes.string.isRequired,
-  editProject: PropTypes.object.isRequired,
+  defaultArtifactPath: PropTypes.string,
+  editProjectData: PropTypes.object.isRequired,
   error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,

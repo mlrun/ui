@@ -3,7 +3,6 @@ import React from 'react'
 import {
   DATE_RANGE_TIME_FILTER,
   FUNCTIONS_PAGE,
-  GROUP_BY_FILTER,
   JOBS_PAGE,
   LABELS_FILTER,
   MONITOR_JOBS_TAB,
@@ -23,6 +22,13 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Cancel } from '../../images/close.svg'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import jobsActions from '../../actions/jobs'
+import functionsActions from '../../actions/functions'
+import detailsActions from '../../actions/details'
+import workflowsActions from '../../actions/workflow'
+import filtersActions from '../../actions/filters'
+import notificationActions from '../../actions/notification'
+import { generateKeyValues } from '../../utils'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -184,13 +190,12 @@ export const detailsMenu = [
   }
 ]
 
-const filtersByTab = (pageTab, isDemoMode) => {
+const filtersByTab = (pageTab, jobName) => {
   if (pageTab === MONITOR_JOBS_TAB) {
     return [
       { type: PERIOD_FILTER, label: 'Period:' },
       { type: STATUS_FILTER, label: 'Status:' },
-      { type: GROUP_BY_FILTER, label: 'Group by:' },
-      { type: NAME_FILTER, label: 'Name:' },
+      { type: NAME_FILTER, label: 'Name:', hidden: Boolean(jobName) },
       { type: LABELS_FILTER, label: 'Labels:' },
       { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
     ]
@@ -234,7 +239,8 @@ export const generatePageData = (
   workflowId,
   selectedFunction,
   handleFetchFunctionLogs,
-  handleRemoveFunctionLogs
+  handleRemoveFunctionLogs,
+  jobName
 ) => {
   let filterMenuActionButton = {
     label: 'Resource monitoring',
@@ -281,7 +287,7 @@ export const generatePageData = (
     },
     hideFilterMenu: isSelectedItem || workflowId,
     filterMenuActionButton,
-    filters: filtersByTab(pageTab, isDemoMode) ?? [],
+    filters: filtersByTab(pageTab, jobName) ?? [],
     page,
     tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
     tabs: generateTabs(isDemoMode),
@@ -355,4 +361,72 @@ export const generateActionsMenu = (
         }
       ]
     : []
+}
+
+export const actionCreator = {
+  abortJob: jobsActions.abortJob,
+  editJob: jobsActions.editJob,
+  editJobFailure: jobsActions.editJobFailure,
+  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
+  fetchFunctionLogs: functionsActions.fetchFunctionLogs,
+  fetchJob: jobsActions.fetchJob,
+  fetchJobFunction: jobsActions.fetchJobFunction,
+  fetchJobLogs: jobsActions.fetchJobLogs,
+  fetchJobPods: detailsActions.fetchJobPods,
+  fetchJobs: jobsActions.fetchJobs,
+  fetchScheduledJobAccessKey: jobsActions.fetchScheduledJobAccessKey,
+  fetchWorkflow: workflowsActions.fetchWorkflow,
+  fetchWorkflows: workflowsActions.fetchWorkflows,
+  getFunction: functionsActions.getFunction,
+  getFunctionWithHash: functionsActions.getFunctionWithHash,
+  handleRunScheduledJob: jobsActions.handleRunScheduledJob,
+  removeFunction: functionsActions.removeFunction,
+  removeFunctionLogs: functionsActions.removeFunctionLogs,
+  removeJob: jobsActions.removeJob,
+  removeJobLogs: jobsActions.removeJobLogs,
+  removeNewJob: jobsActions.removeNewJob,
+  removePods: detailsActions.removePods,
+  removeScheduledJob: jobsActions.removeScheduledJob,
+  setFilters: filtersActions.setFilters,
+  setNotification: notificationActions.setNotification
+}
+
+export const generateEditableItem = (functionData, job) => {
+  return {
+    rerun_object: {
+      credentials: {
+        access_key: functionData?.metadata?.credentials?.access_key ?? ''
+      },
+      function: {
+        spec: {
+          env: functionData?.spec.env ?? [],
+          resources: functionData?.spec.resources,
+          volume_mounts: functionData?.spec.volume_mounts ?? [],
+          volumes: functionData?.spec.volumes ?? [],
+          node_selector: functionData?.spec.node_selector ?? {}
+        }
+      },
+      schedule: null,
+      task: {
+        metadata: {
+          labels: generateKeyValues(job.labels ?? {}),
+          name: job.name,
+          project: job.project
+        },
+        spec: {
+          function: job.function,
+          handler: job?.handler ?? '',
+          hyperparams: job.hyperparams,
+          input_path: job.input_path ?? '',
+          inputs: job.inputs ?? {},
+          output_path: job.outputPath,
+          param_file: job.param_file ?? '',
+          parameters: generateKeyValues(job.parameters ?? {}),
+          secret_sources: job.secret_sources ?? [],
+          selector: job.selector ?? 'max.',
+          tuning_strategy: job.tuning_strategy ?? 'list'
+        }
+      }
+    }
+  }
 }

@@ -23,7 +23,7 @@ export const createArtifactPreviewContent = (res, fileFormat) => {
   } else if (res.headers['content-type'].includes('text/plain')) {
     artifact.type = 'text'
     artifact.data = {
-      content: res.data
+      content: String(res.data)
     }
   } else if (res.headers['content-type'].includes('text/html')) {
     artifact.type = 'html'

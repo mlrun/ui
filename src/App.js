@@ -30,7 +30,7 @@ const Files = React.lazy(() => import('./components/Files/Files'))
 const Functions = React.lazy(() =>
   import('./components/FunctionsPage/Functions')
 )
-const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
+const Jobs = React.lazy(() => import('./components/Jobs/Jobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const ProjectMonitor = React.lazy(() =>
@@ -110,7 +110,8 @@ const App = () => {
             />
             <Route
               path={[
-                '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
+                '/projects/:projectName/jobs/:pageTab/:jobName/:jobId/:tab',
+                '/projects/:projectName/jobs/:pageTab/:jobName',
                 '/projects/:projectName/jobs/:pageTab'
               ]}
               exact

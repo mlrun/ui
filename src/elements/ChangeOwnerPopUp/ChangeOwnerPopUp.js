@@ -46,6 +46,26 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
     }
   }, [closeSuggestionList])
 
+  useEffect(() => {
+    usersList.forEach(item => {
+      if (item.name === searchValue || item.username === searchValue) {
+        setNewOwnerId(item.id)
+      }
+    })
+
+    if (
+      usersList.filter(member => {
+        return member.label.toLowerCase().includes(searchValue.toLowerCase())
+      }).length === 0
+    ) {
+      setShowSuggestionList(false)
+    }
+
+    return () => {
+      setNewOwnerId('')
+    }
+  }, [searchValue, usersList])
+
   const applyChanges = () => {
     if (newOwnerId) {
       const projectData = {
@@ -89,6 +109,8 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
         users.map(user => {
           return {
             name: `${user.attributes.first_name} ${user.attributes.last_name}`,
+            username: user.attributes.username,
+            label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
             id: user.id,
             role: ''
           }
@@ -146,7 +168,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
               <div className="members-list">
                 {usersList
                   .filter(member => {
-                    return member.name
+                    return member.label
                       .toLowerCase()
                       .includes(searchValue.toLowerCase())
                   })
@@ -171,7 +193,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
                         <span
                           className="member-name"
                           dangerouslySetInnerHTML={{
-                            __html: member.name.replace(
+                            __html: member.label.replace(
                               new RegExp(searchValue, 'gi'),
                               match => (match ? `<b>${match}</b>` : match)
                             )

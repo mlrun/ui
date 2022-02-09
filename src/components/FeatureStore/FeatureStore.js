@@ -137,6 +137,12 @@ const FeatureStore = ({
     featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
   }
 
+  const handleRefresh = filters => {
+    getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
+
+    return fetchData(filters)
+  }
+
   const getPopUpTemplate = useCallback(
     action => {
       return (
@@ -603,7 +609,7 @@ const FeatureStore = ({
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
 
-    return fetchData({
+    return handleRefresh({
       project: match.params.projectName,
       tag: TAG_FILTER_LATEST
     })
@@ -637,7 +643,10 @@ const FeatureStore = ({
           message={confirmData.message}
         />
       )}
-      {(featureStore.loading || artifactsStore.loading) && <Loader />}
+      {(featureStore.loading ||
+        featureStore.entities.loading ||
+        featureStore.features.loading ||
+        artifactsStore.loading) && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}
         cancelRequest={cancelRequest}
@@ -646,12 +655,14 @@ const FeatureStore = ({
         loading={
           match.params.pageTab === DATASETS_TAB
             ? artifactsStore.loading
-            : featureStore.loading
+            : featureStore.loading ||
+              featureStore.entities.loading ||
+              featureStore.features.loading
         }
         match={match}
         handleActionsMenuClick={handleActionsMenuClick}
         pageData={pageData}
-        refresh={fetchData}
+        refresh={handleRefresh}
         selectedItem={selectedItem.item}
         getIdentifier={getIdentifierMethod(match.params.pageTab)}
       />
