@@ -12,7 +12,6 @@ const Header = () => {
         <img src={logo} alt="Logo" />
       </Link>
       <h1>MLRun</h1>
-      <sup className="header__beta">beta</sup>
       <a
         href="https://github.com/mlrun/mlrun"
         className="header__link"
