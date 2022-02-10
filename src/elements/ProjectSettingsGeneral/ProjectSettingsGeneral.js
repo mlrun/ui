@@ -197,24 +197,26 @@ const ProjectSettingsGeneral = ({
 
   const handleOnBlur = useCallback(
     fieldName => {
-      if (
-        (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
-        (fieldName === SOURCE_URL && !validation.isSourceValid)
-      ) {
-        setEditProjectData(prevState => ({
-          ...prevState,
-          [fieldName]: {
-            ...prevState[fieldName],
-            isEdit: false
-          }
-        }))
-        return
-      }
+      // if (
+      //   (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
+      //   (fieldName === SOURCE_URL && !validation.isSourceValid)
+      // ) {
+      //   setEditProjectData(prevState => ({
+      //     ...prevState,
+      //     [fieldName]: {
+      //       ...prevState[fieldName],
+      //       isEdit: false
+      //     }
+      //   }))
+      //   return
+      // }
 
       if (
         isNil(editProjectData[fieldName].value) ||
         editProjectData[fieldName].value ===
-          projectStore.project.data.spec[fieldName]
+          projectStore.project.data.spec[fieldName] ||
+        (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
+        (fieldName === SOURCE_URL && !validation.isSourceValid)
       ) {
         setEditProjectData(prevState => ({
           ...prevState,
@@ -258,14 +260,12 @@ const ProjectSettingsGeneral = ({
     ]
   )
 
-  const handleOnKeyDown = useCallback(
-    (fieldName, event) => {
-      if (event.keyCode === KEY_CODES.ENTER) {
-        handleOnBlur(fieldName)
-      }
-    },
-    [handleOnBlur]
-  )
+  const handleOnKeyDown = useCallback(e => {
+    if (e.keyCode === KEY_CODES.ENTER) {
+      e.preventDefault()
+      e.target.blur()
+    }
+  }, [])
 
   return (
     <ProjectSettingsGeneralView

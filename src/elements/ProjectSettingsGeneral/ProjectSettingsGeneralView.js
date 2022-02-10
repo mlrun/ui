@@ -42,7 +42,6 @@ const ProjectSettingsGeneralView = ({
         </div>
       ) : (
         <>
-          <div className="settings__card-header">General</div>
           <div className="settings__card-content">
             <ProjectSettingsSource
               editSourceData={editProjectData.source}
@@ -64,7 +63,7 @@ const ProjectSettingsGeneralView = ({
                 label="Artifact path"
                 onBlur={() => handleOnBlur(ARTIFACT_PATH)}
                 onChange={value => handleOnChange(ARTIFACT_PATH, value)}
-                onKeyDown={e => handleOnKeyDown(ARTIFACT_PATH, e)}
+                onKeyDown={handleOnKeyDown}
                 placeholder={defaultArtifactPath ?? ''}
                 setInvalid={value =>
                   setValidation(state => ({
