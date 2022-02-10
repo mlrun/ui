@@ -9,13 +9,13 @@ $actionsBlockWidth: 72px;
   &__body {
     overflow: hidden;
     overflow-y: auto;
-    max-height: 150px;
+    max-height: 165px;
   }
 
   .table-row {
     display: flex;
     align-items: center;
-    height: 55px;
+    min-height: 55px;
     border-bottom: $primaryBorder;
 
     &:not(.no-hover):hover {
@@ -39,7 +39,7 @@ $actionsBlockWidth: 72px;
   .table-cell {
     display: flex;
     align-items: center;
-    padding: 10px 16px;
+    padding: 10px 5px 10px 10px;
     color: $primary;
   }
 
@@ -60,6 +60,10 @@ $actionsBlockWidth: 72px;
     justify-content: flex-end;
     min-width: $actionsBlockWidth;
     padding: 0;
+
+    & > * {
+      margin: 0 5px;
+    }
   }
 
   .add-new-item-btn {
@@ -87,7 +91,6 @@ $actionsBlockWidth: 72px;
 
     .input {
       width: 100%;
-      border: none;
       border-radius: unset;
 
       &_edit {

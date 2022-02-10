@@ -143,6 +143,8 @@ const KeyValueTable = ({
     setKey(defaultKeyValue || '')
     setValue('')
     setIsAddNewItem(false)
+    setEditMode(false)
+
     setValidation({
       isKeyValid: true,
       isValueValid: true,

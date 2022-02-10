@@ -6,6 +6,8 @@ import Tooltip from '../Tooltip/Tooltip'
 import Select from '../Select/Select'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
+import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
@@ -132,22 +134,32 @@ const KeyValueTableView = ({
                 />
               </div>
               <div className="table-cell table-cell__actions">
-                <button
-                  className="key-value-table__btn"
-                  disabled={
-                    isValueRequired &&
-                    isKeyRequired &&
-                    (!validation.isEditKeyValid ||
-                      !validation.isEditValueValid ||
-                      (selectedItem.newKey !== selectedItem.key &&
-                        isKeyNotUnique(selectedItem.newKey, content)))
-                  }
-                  onClick={handleEditItem}
-                >
-                  <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+                <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+                  <button
+                    className="key-value-table__btn"
+                    disabled={
+                      isValueRequired &&
+                      isKeyRequired &&
+                      (!validation.isEditKeyValid ||
+                        !validation.isEditValueValid ||
+                        (selectedItem.newKey !== selectedItem.key &&
+                          isKeyNotUnique(selectedItem.newKey, content)))
+                    }
+                    onClick={handleEditItem}
+                  >
                     <Checkmark />
-                  </Tooltip>
-                </button>
+                  </button>
+                </Tooltip>
+                <Tooltip
+                  template={<TextTooltipTemplate text="Discard changes" />}
+                >
+                  <button
+                    className="key-value-table__btn"
+                    onClick={handleResetForm}
+                  >
+                    <Close />
+                  </button>
+                </Tooltip>
               </div>
             </div>
           ) : (
@@ -158,6 +170,7 @@ const KeyValueTableView = ({
                 if (withEditMode) {
                   setSelectedItem({ ...contentItem, index })
                   setEditMode(true)
+                  setIsAddNewItem(false)
                   setValidation({
                     isKeyValid: true,
                     isValueValid: true,
@@ -184,17 +197,27 @@ const KeyValueTableView = ({
                 </div>
               </div>
               <div className="table-cell table-cell__actions">
-                <button
-                  className="key-value-table__btn"
-                  onClick={event => {
-                    event.stopPropagation()
-                    deleteItem(index, contentItem)
-                  }}
-                >
-                  <Tooltip template={<TextTooltipTemplate text="Delete" />}>
+                <Tooltip template={<TextTooltipTemplate text="Edit" />}>
+                  <button
+                    className="key-value-table__btn"
+                    onClick={event => {
+                      event.preventDefault()
+                    }}
+                  >
+                    <Edit />
+                  </button>
+                </Tooltip>
+                <Tooltip template={<TextTooltipTemplate text="Delete" />}>
+                  <button
+                    className="key-value-table__btn"
+                    onClick={event => {
+                      event.stopPropagation()
+                      deleteItem(index, contentItem)
+                    }}
+                  >
                     <Delete />
-                  </Tooltip>
-                </button>
+                  </button>
+                </Tooltip>
               </div>
             </div>
           )
@@ -203,71 +226,72 @@ const KeyValueTableView = ({
       {isAddNewItem ? (
         <div className="table-row table-row__last no-hover">
           <div className="table-cell__inputs-wrapper">
-            {keyType === 'select' ? (
-              <Select
-                className="table-cell__key"
-                density="dense"
-                label={keyValue || keyLabel}
-                onClick={setKey}
-                options={keyOptions}
-              />
-            ) : (
+            <div className="table-cell table-cell__key">
+              {keyType === 'select' ? (
+                <Select
+                  density="dense"
+                  label={keyValue || keyLabel}
+                  onClick={setKey}
+                  options={keyOptions}
+                />
+              ) : (
+                <Input
+                  density="dense"
+                  floatingLabel
+                  label={keyLabel}
+                  invalid={
+                    isKeyNotUnique(keyValue, content) || !validation.isKeyValid
+                  }
+                  invalidText={
+                    isKeyNotUnique(keyValue, content)
+                      ? 'Name already exists'
+                      : 'This field is invalid'
+                  }
+                  onChange={setKey}
+                  required={isKeyRequired}
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isKeyValid: value
+                    }))
+                  }
+                  type="text"
+                />
+              )}
+            </div>
+            <div className="table-cell table-cell__value">
               <Input
+                density="dense"
                 floatingLabel
-                label={keyLabel}
-                invalid={
-                  isKeyNotUnique(keyValue, content) || !validation.isKeyValid
-                }
-                invalidText={
-                  isKeyNotUnique(keyValue, content)
-                    ? 'Name already exists'
-                    : 'This field is invalid'
-                }
-                onChange={setKey}
-                required={isKeyRequired}
+                invalid={!validation.isValueValid}
+                label={valueLabel}
+                onChange={setValue}
+                required={isValueRequired}
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,
-                    isKeyValid: value
+                    isValueValid: value
                   }))
                 }
-                type="text"
-                wrapperClassName="table-cell__key"
+                type={keyType !== 'password' ? 'text' : keyType}
               />
-            )}
-            <Input
-              floatingLabel
-              invalid={!validation.isValueValid}
-              label={valueLabel}
-              onChange={setValue}
-              required={isValueRequired}
-              setInvalid={value =>
-                setValidation(state => ({
-                  ...state,
-                  isValueValid: value
-                }))
-              }
-              type={keyType !== 'password' ? 'text' : keyType}
-              wrapperClassName="table-cell__value"
-            />
+            </div>
           </div>
           <div className="table-cell table-cell__actions">
-            <button
-              className="btn-add"
-              onClick={saveItem}
-              disabled={isKeyNotUnique(keyValue, content)}
-            >
-              <Tooltip template={<TextTooltipTemplate text="Add item" />}>
-                <Plus />
-              </Tooltip>
-            </button>
-            <button onClick={handleResetForm}>
-              <Tooltip
-                template={<TextTooltipTemplate text="Discard changes" />}
+            <Tooltip template={<TextTooltipTemplate text="Add item" />}>
+              <button
+                className="btn-add"
+                onClick={saveItem}
+                disabled={isKeyNotUnique(keyValue, content)}
               >
-                <Delete />
-              </Tooltip>
-            </button>
+                <Plus />
+              </button>
+            </Tooltip>
+            <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
+              <button onClick={handleResetForm}>
+                <Close />
+              </button>
+            </Tooltip>
           </div>
         </div>
       ) : (
@@ -275,6 +299,7 @@ const KeyValueTableView = ({
           <button
             className="add-new-item-btn"
             onClick={() => {
+              handleResetForm()
               setIsAddNewItem(true)
             }}
           >
