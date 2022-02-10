@@ -17,8 +17,7 @@ import projectsAction from '../../actions/projects'
 import notificationActions from '../../actions/notification'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
 import { deleteUnsafeHtml } from '../../utils/string'
-import { STATUS_CODE_FORBIDDEN } from '../../constants'
-import { KEY_CODES } from '../../constants'
+import { KEY_CODES, STATUS_CODE_FORBIDDEN } from '../../constants'
 
 import './projectSettingsGeneral.scss'
 
@@ -44,7 +43,7 @@ const ProjectSettingsGeneral = ({
     fetchProject(match.params.projectName)
     return () => {
       removeProjectData()
-      setEditProjectData(prev => ({ ...prev, ...initialEditProjectData }))
+      setEditProjectData(initialEditProjectData)
     }
   }, [
     removeProjectData,
@@ -233,11 +232,7 @@ const ProjectSettingsGeneral = ({
         source: data.spec.source
       })
 
-      setEditProjectData(prev => ({
-        ...prev,
-        ...initialEditProjectData
-      }))
-
+      setEditProjectData(initialEditProjectData)
       sendProjectSettingsData(DATA, data)
     },
     [

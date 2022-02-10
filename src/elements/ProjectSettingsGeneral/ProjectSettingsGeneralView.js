@@ -31,7 +31,6 @@ const ProjectSettingsGeneralView = ({
   validation
 }) => {
   const projectData = useSelector(store => store.projectStore.project.data)
-
   return (
     <div className="settings__card">
       {loading ? (
@@ -121,7 +120,7 @@ const ProjectSettingsGeneralView = ({
             </div>
 
             <p className="settings__card-subtitle">Parameters</p>
-            <p>
+            <p className="settings__card-subtitle">
               The parameters enable users to pass key/value to the project
               context that can later be used for running jobs & pipelines
             </p>
@@ -132,8 +131,8 @@ const ProjectSettingsGeneralView = ({
               content={generalParams}
               deleteItem={handleDeleteParameter}
               editItem={handleEditParameter}
-              isKeyRequired={true}
-              isValueRequired={true}
+              isKeyRequired
+              isValueRequired
               keyHeader="Key"
               keyLabel="Key"
               valueHeader="Value"

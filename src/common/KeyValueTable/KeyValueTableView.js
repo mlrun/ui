@@ -69,6 +69,12 @@ const KeyValueTableView = ({
                     options={keyOptions}
                     selectedId={selectedItem.newKey ?? selectedItem.key}
                   />
+                ) : keyType === 'password' ? (
+                  <Tooltip
+                    template={<TextTooltipTemplate text={contentItem.key} />}
+                  >
+                    {contentItem.key}
+                  </Tooltip>
                 ) : (
                   <Input
                     className="input_edit"
@@ -121,7 +127,7 @@ const KeyValueTableView = ({
                       isEditValueValid: value
                     }))
                   }
-                  type="text"
+                  type={keyType !== 'password' ? 'text' : keyType}
                   value={selectedItem.newValue ?? selectedItem.value}
                 />
               </div>
@@ -241,7 +247,7 @@ const KeyValueTableView = ({
                   isValueValid: value
                 }))
               }
-              type="text"
+              type={keyType !== 'password' ? 'text' : keyType}
               wrapperClassName="table-cell__value"
             />
           </div>
