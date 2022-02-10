@@ -644,7 +644,9 @@ const Jobs = ({
       editableItem={editableItem}
       fetchCurrentJob={fetchCurrentJob}
       functionsStore={functionsStore}
-      getCloseDetailsLink={() => getCloseDetailsLink(match, 'jobName')}
+      getCloseDetailsLink={() =>
+        getCloseDetailsLink(match, match.params.jobName ? 'jobName' : 'pageTab')
+      }
       jobRuns={jobRuns}
       jobs={jobs}
       handleActionsMenuClick={handleActionsMenuClick}
