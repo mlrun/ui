@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { isNil } from 'lodash'
+import { isEqual, isNil } from 'lodash'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
@@ -68,28 +68,28 @@ const ProjectSettingsGeneral = ({
 
   const sendProjectSettingsData = useCallback(
     async (type, data, labels) => {
-      try {
-        if (type && type === LABELS) {
-          await editProjectLabels(match.params.projectName, { ...data }, labels)
-        } else {
-          await projectsApi.editProject(match.params.projectName, { ...data })
-        }
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Data was edited successfully'
+      const editFunc =
+        type && type === LABELS ? editProjectLabels : projectsApi.editProject
+
+      editFunc(match.params.projectName, { ...data }, labels)
+        .then(() => {
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Data was edited successfully'
+          })
         })
-      } catch (error) {
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message:
-            error.response?.status === STATUS_CODE_FORBIDDEN
-              ? 'Missing Edit permission for the project.'
-              : 'Failed to edit project data.',
-          retry: () => sendProjectSettingsData(type, data, labels)
+        .catch(error => {
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message:
+              error.response?.status === STATUS_CODE_FORBIDDEN
+                ? 'Missing Edit permission for the project.'
+                : 'Failed to edit project data.',
+            retry: () => sendProjectSettingsData(type, data, labels)
+          })
         })
-      }
     },
 
     [editProjectLabels, match.params.projectName, setNotification]
@@ -108,7 +108,9 @@ const ProjectSettingsGeneral = ({
       }
     }
 
-    sendProjectSettingsData(LABELS, data, objectLabels)
+    if (!isEqual(objectLabels, projectStore.project.data.metadata.labels)) {
+      sendProjectSettingsData(LABELS, data, objectLabels)
+    }
   }
 
   const setNewProjectParams = useCallback(
@@ -121,8 +123,10 @@ const ProjectSettingsGeneral = ({
         }
       }
 
-      setProjectParams(params)
-      sendProjectSettingsData(PARAMS, data)
+      if (!isEqual(params, projectStore.project.data.spec.params)) {
+        setProjectParams(params)
+        sendProjectSettingsData(PARAMS, data)
+      }
     },
     [projectStore.project.data, setProjectParams, sendProjectSettingsData]
   )
@@ -197,20 +201,6 @@ const ProjectSettingsGeneral = ({
 
   const handleOnBlur = useCallback(
     fieldName => {
-      // if (
-      //   (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
-      //   (fieldName === SOURCE_URL && !validation.isSourceValid)
-      // ) {
-      //   setEditProjectData(prevState => ({
-      //     ...prevState,
-      //     [fieldName]: {
-      //       ...prevState[fieldName],
-      //       isEdit: false
-      //     }
-      //   }))
-      //   return
-      // }
-
       if (
         isNil(editProjectData[fieldName].value) ||
         editProjectData[fieldName].value ===
