@@ -18,7 +18,8 @@ import {
   NAME_FILTER,
   SECONDARY_BUTTON,
   TAG_FILTER,
-  TREE_FILTER
+  TREE_FILTER,
+  STATUS_CODE_FORBIDDEN
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -585,11 +586,14 @@ export const handleApplyDetailsChanges = (
         return response
       })
     })
-    .catch(() => {
+    .catch(error => {
       setNotification({
-        status: 400,
+        status: error.response?.status || 400,
         id: Math.random(),
-        message: 'Failed to update',
+        message:
+          error.response?.status === STATUS_CODE_FORBIDDEN
+            ? 'Permission denied.'
+            : 'Failed to update.',
         retry: handleApplyDetailsChanges
       })
     })
