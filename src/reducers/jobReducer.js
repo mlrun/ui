@@ -40,12 +40,16 @@ import {
   SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
-  REMOVE_JOB
+  REMOVE_JOB,
+  FETCH_ALL_JOB_RUNS_BEGIN,
+  FETCH_ALL_JOB_RUNS_FAILURE,
+  FETCH_ALL_JOB_RUNS_SUCCESS
 } from '../constants'
 
 const initialState = {
   allJobsData: [],
   job: {},
+  jobRuns: [],
   jobs: [],
   logs: {
     data: '',
@@ -108,6 +112,24 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload
+      }
+    case FETCH_ALL_JOB_RUNS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_ALL_JOB_RUNS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_ALL_JOB_RUNS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        jobRuns: payload
       }
     case FETCH_JOB_LOGS_BEGIN:
       return {

@@ -152,7 +152,7 @@ const renderWithRedux = (
   return { ...render(<Provider store={store}>{ui}</Provider>), store }
 }
 
-describe('JobsPage component', () => {
+describe('Jobs component', () => {
   let wrapper
 
   beforeEach(async () => {

@@ -15,7 +15,7 @@ const tabSelector = {
   root: '.content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: 'ul.content-menu__list',
     row: {
       root: '.content-menu__item',
       fields: {
@@ -26,58 +26,58 @@ const tabSelector = {
 }
 
 const actionMenuStructure = {
-  root: '.actions-menu__container',
+  root: 'div.actions-menu__container',
   menuElements: {
     open_button: 'button',
-    options: '.actions-menu__body .actions-menu__option'
+    options: 'div.actions-menu__body div.actions-menu__option'
   }
 }
 
 const labelsTable = {
-  root: '.table-body__cell:nth-of-type(3)',
+  root: 'div.table-body__cell:nth-of-type(3)',
   header: {},
   body: {
-    root: '.chips-wrapper',
+    root: 'div.chips-wrapper',
     row: {
-      root: '.chip-block',
+      root: 'div.chip-block',
       field: {
-        label: '.chip > .chip_short'
+        label: 'span.chip > div.chip_short'
       }
     }
   }
 }
 
 const labelsDropdown = {
-  root: '.table-body__cell:nth-of-type(3)',
+  root: 'div.table-body__cell:nth-of-type(3)',
   dropdownElements: {
-    open_button: '.chip-block span.chips_button',
+    open_button: 'div.chip-block span.chips_button',
     options:
-      '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
-    option_name: '.chip > .chip_short'
+      'div.chip-block div.chip-block-hidden_visible div.data-ellipsis.tooltip-wrapper',
+    option_name: 'span.chip > div.chip_short'
   }
 }
 
 const featureSetsTable = {
   root: '.content .table-container .table__content',
   header: {
-    root: '.table-head',
+    root: 'div.table-head',
     sorters: {
-      name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      description: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      labels: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      entity: '.table-head__item:nth-of-type(4) .data-ellipsis',
-      targets: '.table-head__item:nth-of-type(5) .data-ellipsis'
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      description: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      labels: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      entity: 'div.table-head__item:nth-of-type(4) div.data-ellipsis',
+      targets: 'div.table-head__item:nth-of-type(5) div.data-ellipsis'
     }
   },
   body: {
-    root: '.table-body',
+    root: 'div.table-body',
     row: {
-      root: '.table-body__row',
+      root: 'div.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .link',
-        tag: '.table-body__cell:nth-of-type(1) .item-tag',
-        description: '.table-body__cell:nth-of-type(2) > .data-ellipsis',
+        expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        tag: 'div.table-body__cell:nth-of-type(1) .item-tag',
+        description: 'div.table-body__cell:nth-of-type(2) > div.data-ellipsis',
         labels_table: {
           componentType: commonTable,
           structure: labelsTable
@@ -86,9 +86,9 @@ const featureSetsTable = {
           componentType: dropdownComponent,
           structure: labelsDropdown
         },
-        entity: '.table-body__cell:nth-of-type(4) > .data-ellipsis',
-        targets: '.table-body__cell:nth-of-type(5) > .data-ellipsis',
-        copy_uri: '.table-body__cell:nth-of-type(6) > button',
+        entity: 'div.table-body__cell:nth-of-type(4) > div.data-ellipsis',
+        targets: 'div.table-body__cell:nth-of-type(5) > div.data-ellipsis',
+        copy_uri: 'div.table-body__cell:nth-of-type(6) > button',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -102,33 +102,33 @@ const featureSetsTable = {
 const featuresTable = {
   root: '.table-container .table .table__content',
   header: {
-    root: '.table-head',
+    root: 'div.table-head',
     sorters: {
-      feature_name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      feature_set: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      type: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      entity: '.table-head__item:nth-of-type(4) .data-ellipsis',
-      description: '.table-head__item:nth-of-type(5) .data-ellipsis',
-      labels: '.table-head__item:nth-of-type(6) .data-ellipsis',
-      targets: '.table-head__item:nth-of-type(7) .data-ellipsis',
-      validator: '.table-head__item:nth-of-type(8) .data-ellipsis'
+      feature_name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      feature_set: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      type: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      entity: 'div.table-head__item:nth-of-type(4) div.data-ellipsis',
+      description: 'div.table-head__item:nth-of-type(5) div.data-ellipsis',
+      labels: 'div.table-head__item:nth-of-type(6) div.data-ellipsis',
+      targets: 'div.table-head__item:nth-of-type(7) div.data-ellipsis',
+      validator: 'div.table-head__item:nth-of-type(8) div.data-ellipsis'
     }
   },
   body: {
-    root: '.table-body',
+    root: 'div.table-body',
     row: {
-      root: '.table-body__row',
+      root: 'div.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(2) svg.expand-arrow',
-        feature_name: '.table-body__cell:nth-of-type(1) .data-ellipsis',
-        feature_set: '.table-body__cell:nth-of-type(2) .link',
-        type: '.table-body__cell:nth-of-type(3) .data-ellipsis',
-        entity: '.table-body__cell:nth-of-type(4) .data-ellipsis',
-        description: '.table-body__cell:nth-of-type(5) .data-ellipsis',
-        labels: '.table-body__cell:nth-of-type(6)',
-        targets: '.table-body__cell:nth-of-type(7)',
+        expand_btn: 'div.table-body__cell:nth-of-type(2) svg.expand-arrow',
+        feature_name: 'div.table-body__cell:nth-of-type(1) div.data-ellipsis',
+        feature_set: 'div.table-body__cell:nth-of-type(2) div.link',
+        type: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        entity: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
+        description: 'div.table-body__cell:nth-of-type(5) div.data-ellipsis',
+        labels: 'div.table-body__cell:nth-of-type(6)',
+        targets: 'div.table-body__cell:nth-of-type(7)',
         validator:
-          '.table-body__cell:nth-of-type(8) .feature-validator .data-ellipsis',
+          'div.table-body__cell:nth-of-type(8) div.feature-validator div.data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -142,29 +142,29 @@ const featuresTable = {
 const featureVectorTable = {
   root: '.table-container .table .table__content',
   header: {
-    root: '.table-head',
+    root: 'div.table-head',
     sorters: {
-      name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      description: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      labels: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      updated: '.table-head__item:nth-of-type(4) .data-ellipsis'
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      description: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      labels: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      updated: 'div.table-head__item:nth-of-type(4) div.data-ellipsis'
     }
   },
   body: {
-    root: '.table-body',
+    root: 'div.table-body',
     row: {
-      root: '.table-body__row',
+      root: 'div.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a div.link',
-        tag: '.table-body__cell:nth-of-type(1) .item-tag',
-        description: '.table-body__cell:nth-of-type(2) .data-ellipsis',
+        expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        tag: 'div.table-body__cell:nth-of-type(1) .item-tag',
+        description: 'div.table-body__cell:nth-of-type(2) div.data-ellipsis',
         labels_table: {
           componentType: commonTable,
           structure: labelsTable
         },
-        updated: '.table-body__cell:nth-of-type(4) .data-ellipsis',
-        copy_uri: '.table-body__cell:nth-of-type(6) > button',
+        updated: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
+        copy_uri: 'div.table-body__cell:nth-of-type(6) > button',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -177,54 +177,24 @@ const featureVectorTable = {
 const addToFeatureVectorTable = {
   root: '.table-container .table .table__content',
   header: {
-    root: '.table-head',
+    root: 'div.table-head',
     sorters: {
-      featureName: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      featureSet: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      type: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      entities: '.table-head__item:nth-of-type(4) .data-ellipsis'
+      featureName: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      featureSet: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      type: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      entities: 'div.table-head__item:nth-of-type(4) div.data-ellipsis'
     }
   },
   body: {
-    root: '.table-body',
+    root: 'div.table-body',
     row: {
-      root: '.table-body__row',
+      root: 'div.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        featureName: '.table-body__cell:nth-of-type(1) .data-ellipsis',
-        featureSet: '.table-body__cell:nth-of-type(2) a .link',
-        type: '.table-body__cell:nth-of-type(3) .data-ellipsis',
-        entities: '.table-body__cell:nth-of-type(4) .chips-wrapper',
-        add_feature_btn: '.add-feature-button svg'
-      }
-    }
-  }
-}
-
-const featuresPanelTable = {
-  root: '.table__panel-container .features-panel__expand-content',
-  header: {},
-  body: {
-    row: {
-      root: '.feature-row',
-      fields: {
-        feature: '.feature-row__feature-template',
-        set_as_label_btn: '.feature-row__actions svg.set-as-label',
-        remove_btn: '.feature-row__actions svg.remove'
-      }
-    }
-  }
-}
-
-const featuresByProjectsTable = {
-  root:
-    '.table__panel-container .features-panel__divider:nth-of-type(4) + div + .accordion__container',
-  header: {},
-  body: {
-    row: {
-      root: '.feature-row',
-      fields: {
-        feature: '.feature-row__feature-template'
+        expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
+        featureName: 'div.table-body__cell:nth-of-type(1) div.data-ellipsis',
+        featureSet: 'div.table-body__cell:nth-of-type(2) a span.link',
+        type: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        entities: 'div.table-body__cell:nth-of-type(4) div.chips-wrapper'
       }
     }
   }
@@ -234,26 +204,28 @@ const featuresByProjectsTable = {
 const datasetsTable = {
   root: '.table-container .table .table__content',
   header: {
-    root: '.table-head',
+    root: 'div.table-head',
     sorters: {
-      name: '.table-head__item:nth-of-type(1) .data-ellipsis'
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis'
     }
   },
   body: {
-    root: '.table-body',
+    root: 'div.table-body',
     row: {
-      root: '.table-body__row',
+      root: 'div.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a span.link',
-        labels: '.table-body__cell:nth-of-type(2)',
-        producer: '.table-body__cell:nth-of-type(3) .data-ellipsis a.link',
-        owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
-        uploaded: '.table-body__cell:nth-of-type(5) .data-ellipsis',
-        size: '.table-body__cell:nth-of-type(6) .data-ellipsis',
-        artifact_preview_btn: '.table-body__cell:nth-of-type(7) button',
-        download_btn: '.table-body__cell:nth-of-type(8) .download-container',
-        copy_uri: '.table-body__cell:nth-of-type(9) > button',
+        expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        labels: 'div.table-body__cell:nth-of-type(2)',
+        producer:
+          'div.table-body__cell:nth-of-type(3) div.data-ellipsis a.link',
+        owner: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
+        uploaded: 'div.table-body__cell:nth-of-type(5) div.data-ellipsis',
+        size: 'div.table-body__cell:nth-of-type(6) div.data-ellipsis',
+        artifact_preview_btn: 'div.table-body__cell:nth-of-type(7) button',
+        download_btn:
+          'div.table-body__cell:nth-of-type(8) div.download-container',
+        copy_uri: 'div.table-body__cell:nth-of-type(9) > button',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -267,7 +239,7 @@ const datasetsTable = {
 const featureStoreTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css('.content__action-bar .actions #refresh')
 const pageHeaderButton = By.css(
-  '.content__header .page-actions-container button'
+  'div.content__header div.page-actions-container button'
 )
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
@@ -300,7 +272,7 @@ module.exports = {
     Table_Refresh_Button: tableRefreshButton,
     Create_Set_Button: pageHeaderButton,
     Table_Expand_Rows_Button: By.css(
-      '.feature-store-container .content__action-bar .data-ellipsis:nth-of-type(2) button'
+      'div.feature-store-container div.content__action-bar div.data-ellipsis:nth-of-type(2) button'
     ),
     Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Name_Filter_Input: commonNameFilterInput,
@@ -311,7 +283,7 @@ module.exports = {
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Add_To_Feature_Vector_Button: By.css(
-      '.content__action-bar .data-ellipsis  button.btn-secondary'
+      'div.content__action-bar div.data-ellipsis  button.btn-secondary'
     ),
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
@@ -359,18 +331,6 @@ module.exports = {
         false,
         true
       )
-    ),
-    Edit_Feature_Vector_Button: By.css(
-      '.add-to-feature-vector .features-panel__header-vector-actions button'
-    ),
-    Selected_Project_Accordion: {
-      Features_Panel_Table: commonTable(featuresPanelTable)
-    },
-    Features_By_Projects_Accordion: {
-      Collapse_Button: By.css(
-        '.table__panel-container .features-panel__content .accordion__container:nth-of-type(6) .round-icon-cp__circle'
-      ),
-      Features_By_Projects_Table: commonTable(featuresByProjectsTable)
-    }
+    )
   }
 }

@@ -39,7 +39,10 @@ const fetchFeatureStoreContent = (
 
 export default {
   createFeatureSet: (project, data) =>
-    mainHttpClient.post(`/projects/${project}/feature-sets`, data),
+    mainHttpClient.put(
+      `/projects/${project}/feature-sets/${data.metadata.name}/references/${data.metadata.tag}`,
+      data
+    ),
   createFeatureVector: data =>
     mainHttpClient.post(
       `/projects/${data.metadata.project}/feature-vectors`,

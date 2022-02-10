@@ -249,9 +249,8 @@ const Models = ({
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
       setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' })
-    } else if (match.params.pageTab === REAL_TIME_PIPELINES_TAB) {
-      setFilters({ groupBy: GROUP_BY_NONE })
     } else if (
+      match.params.pageTab === REAL_TIME_PIPELINES_TAB ||
       filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
       filtersStore.tag === TAG_FILTER_LATEST
     ) {

@@ -352,7 +352,9 @@ const JobsPanel = ({
           return history.push(
             `/projects/${project}/jobs/${
               cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
-            }/${result.data.data.metadata.uid}/overview`
+            }/${result.data.data.metadata.name}/${
+              result.data.data.metadata.uid
+            }/overview`
           )
         }
 

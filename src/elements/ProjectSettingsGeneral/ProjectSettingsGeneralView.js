@@ -11,7 +11,7 @@ import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.
 const ProjectSettingsGeneralView = ({
   artifactPath,
   defaultArtifactPath,
-  editProject,
+  editProjectData,
   error,
   generalParams,
   handleAddNewParameter,
@@ -39,7 +39,7 @@ const ProjectSettingsGeneralView = ({
           <div className="settings__card-header">General</div>
           <div className="settings__card-content">
             <ProjectSettingsSource
-              editSourceData={editProject.source}
+              editSourceData={editProjectData.source}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
               handleSourceChange={handleSourceChange}
@@ -67,7 +67,7 @@ const ProjectSettingsGeneralView = ({
                     isPathValid: value
                   }))
                 }
-                value={editProject.artifact_path.value ?? artifactPath}
+                value={editProjectData.artifact_path.value ?? artifactPath}
               />
               <span className="settings__artifact-path-link">
                 Enter the default path for saving the artifacts within your
@@ -117,7 +117,7 @@ ProjectSettingsGeneralView.defaultProps = {
 ProjectSettingsGeneralView.propTypes = {
   artifactPath: PropTypes.string.isRequired,
   defaultArtifactPath: PropTypes.string,
-  editProject: PropTypes.object.isRequired,
+  editProjectData: PropTypes.object.isRequired,
   error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,

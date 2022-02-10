@@ -26,8 +26,7 @@ export const getJobAccordingIteration = (
 export const generateContent = selectedJob => {
   return selectedJob.artifacts.map(artifact => {
     let generatedPreviewData = {
-      preview: [],
-      extraDataPath: ''
+      preview: []
     }
 
     if (artifact.extra_data) {

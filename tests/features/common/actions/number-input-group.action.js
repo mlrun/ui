@@ -1,3 +1,6 @@
+import { expect } from 'chai'
+import { Key } from 'selenium-webdriver'
+
 const action = {
   incrementValue: async function(driver, inputGroup, value) {
     const inc_btn = await driver.findElement(inputGroup.inc_btn)
