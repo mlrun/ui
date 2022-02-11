@@ -273,11 +273,11 @@ const AddToFeatureVectorPage = ({
       ref={addToFeatureVectorPageRef}
       className="add-to-feature-vector content-wrapper"
     >
-      {featureStore.loading && <Loader />}
+      {(featureStore.loading || featureStore.features.loading) && <Loader />}
       <Content
         content={content}
         header={<AddToFeatureVectorPageHeader match={match} />}
-        loading={featureStore.loading}
+        loading={featureStore.loading || featureStore.features.loading}
         match={match}
         pageData={pageData}
         refresh={fetchData}
