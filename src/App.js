@@ -111,6 +111,7 @@ const App = () => {
             <Route
               path={[
                 '/projects/:projectName/jobs/:pageTab/:jobName/:jobId/:tab',
+                '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
                 '/projects/:projectName/jobs/:pageTab/:jobName',
                 '/projects/:projectName/jobs/:pageTab'
               ]}

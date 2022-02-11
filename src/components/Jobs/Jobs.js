@@ -636,6 +636,16 @@ const Jobs = ({
       })
   }
 
+  const generateCloseDetailsLink = name => {
+    return match.params.jobName
+      ? getCloseDetailsLink(match, 'jobName')
+      : match.url
+          .split('/')
+          .splice(0, match.path.split('/').indexOf(':pageTab') + 1)
+          .concat(name)
+          .join('/')
+  }
+
   return (
     <JobsView
       actionsMenu={actionsMenu}
@@ -644,7 +654,7 @@ const Jobs = ({
       editableItem={editableItem}
       fetchCurrentJob={fetchCurrentJob}
       functionsStore={functionsStore}
-      getCloseDetailsLink={() => getCloseDetailsLink(match, 'jobName')}
+      getCloseDetailsLink={generateCloseDetailsLink}
       jobRuns={jobRuns}
       jobs={jobs}
       handleActionsMenuClick={handleActionsMenuClick}
@@ -663,14 +673,6 @@ const Jobs = ({
       selectedJob={selectedJob}
       setEditableItem={setEditableItem}
       setWorkflowsViewMode={setWorkflowsViewMode}
-      tableTop={
-        match.params.jobName
-          ? {
-              link: `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`,
-              text: match.params.jobName
-            }
-          : null
-      }
       toggleConvertedYaml={toggleConvertedYaml}
       workflow={workflow}
       workflowJobsIds={workflowJobsIds}
