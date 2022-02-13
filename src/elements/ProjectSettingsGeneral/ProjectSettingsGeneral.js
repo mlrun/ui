@@ -53,6 +53,11 @@ const ProjectSettingsGeneral = ({
     fetchProject
   ])
 
+  const projectMembershipIsEnabled = useMemo(
+    () => frontendSpec?.feature_flags?.project_membership === 'enabled',
+    [frontendSpec]
+  )
+
   const generalParams = useMemo(
     () =>
       projectStore.project.data?.spec.params
@@ -262,6 +267,7 @@ const ProjectSettingsGeneral = ({
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
       project={projectStore.project}
+      projectMembershipIsEnabled={projectMembershipIsEnabled}
       setValidation={setValidation}
       validation={validation}
     />

@@ -30,13 +30,6 @@
       width: 250px;
       padding-right: 64px;
 
-      &__main-data {
-        &-wrapper {
-          display: flex;
-          align-items: center;
-        }
-      }
-
       &__name {
         display: flex;
         flex: 2;
@@ -50,41 +43,6 @@
           width: 100%;
           font-weight: 300;
           font-size: 36px;
-        }
-      }
-
-      &__settings {
-        cursor: pointer;
-      }
-
-      &__description {
-        margin-top: 16px;
-        color: rgba($mulledWine, 0.88);
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 16px;
-        cursor: pointer;
-
-        &-info {
-          padding: 17px 9px;
-          border: $primaryBorder;
-          border-radius: 4px;
-        }
-
-        .text-area {
-          width: 100%;
-          height: 150px;
-          white-space: normal;
-        }
-
-        &-title {
-          color: $topaz;
-          font-size: 12px;
-        }
-
-        &-text {
-          max-width: 185px;
-          margin: 3px 0;
         }
       }
 

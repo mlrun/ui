@@ -103,7 +103,6 @@ const ProjectMonitorView = ({
       ) : (
         <div className="project__content">
           <div className="general-info">
-            <div className="general-info__main-data"></div>
             {project.data.status.state && (
               <div className="general-info__row status-row">
                 <div className="row-value">

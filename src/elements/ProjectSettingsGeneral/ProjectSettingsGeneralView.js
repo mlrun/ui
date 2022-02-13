@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import Input from '../../common/Input/Input'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Loader from '../../common/Loader/Loader'
@@ -25,6 +26,7 @@ const ProjectSettingsGeneralView = ({
   handleOnKeyDown,
   handleUpdateProjectLabels,
   project,
+  projectMembershipIsEnabled,
   setValidation,
   validation
 }) => {
@@ -117,26 +119,42 @@ const ProjectSettingsGeneralView = ({
             </div>
           </div>
           <div className="settings__card-content-col">
-            <p className="settings__card-subtitle">Parameters</p>
-            <p className="settings__card-subtitle">
-              The parameters enable users to pass key/value to the project
-              context that can later be used for running jobs & pipelines
-            </p>
-            <KeyValueTable
-              addNewItem={handleAddNewParameter}
-              addNewItemLabel="Add parameter"
-              className="settings__params"
-              content={generalParams}
-              deleteItem={handleDeleteParameter}
-              editItem={handleEditParameter}
-              isKeyRequired
-              isValueRequired
-              keyHeader="Key"
-              keyLabel="Key"
-              valueHeader="Value"
-              valueLabel="Value"
-              withEditMode
-            />
+            <div className="settings__owner-row">
+              <div className="row-value">
+                <span className="row-label">Owner:</span>
+                <span className="row-name">{project.data?.spec.owner}</span>
+              </div>
+            </div>
+            {projectMembershipIsEnabled && (
+              <div className="settings__owner">
+                <ChangeOwnerPopUp
+                // changeOwnerCallback={changeOwnerCallback}
+                // projectId={membersState.projectInfo.id}
+                />
+              </div>
+            )}
+            <div>
+              <p className="settings__card-subtitle">Parameters</p>
+              <p className="settings__card-subtitle">
+                The parameters enable users to pass key/value to the project
+                context that can later be used for running jobs & pipelines
+              </p>
+              <KeyValueTable
+                addNewItem={handleAddNewParameter}
+                addNewItemLabel="Add parameter"
+                className="settings__params"
+                content={generalParams}
+                deleteItem={handleDeleteParameter}
+                editItem={handleEditParameter}
+                isKeyRequired
+                isValueRequired
+                keyHeader="Key"
+                keyLabel="Key"
+                valueHeader="Value"
+                valueLabel="Value"
+                withEditMode
+              />
+            </div>
           </div>
         </div>
       )}
@@ -163,6 +181,7 @@ ProjectSettingsGeneralView.propTypes = {
   handleOnChange: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
+  projectMembershipIsEnabled: PropTypes.bool.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.object.isRequired
 }

@@ -9,13 +9,13 @@ $actionsBlockWidth: 72px;
   &__body {
     overflow: hidden;
     overflow-y: auto;
-    max-height: 165px;
+    max-height: 200px;
   }
 
   .table-row {
     display: flex;
     align-items: center;
-    min-height: 55px;
+    min-height: 61px;
     border-bottom: $primaryBorder;
 
     &:not(.no-hover):hover {
