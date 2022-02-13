@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
@@ -15,7 +14,6 @@ import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.
 const ProjectSettingsGeneralView = ({
   defaultArtifactPath,
   editProjectData,
-  error,
   generalParams,
   handleAddProjectLabel,
   handleAddNewParameter,
@@ -26,22 +24,21 @@ const ProjectSettingsGeneralView = ({
   handleOnChange,
   handleOnKeyDown,
   handleUpdateProjectLabels,
-  loading,
+  project,
   setValidation,
   validation
 }) => {
-  const projectData = useSelector(store => store.projectStore.project.data)
   return (
     <div className="settings__card">
-      {loading ? (
+      {project.loading ? (
         <Loader />
-      ) : error ? (
+      ) : project.error ? (
         <div>
-          <h1>{error.message}</h1>
+          <h1>{project.error.message}</h1>
         </div>
       ) : (
-        <>
-          <div className="settings__card-content">
+        <div className="settings__card-content">
+          <div className="settings__card-content-col">
             <ProjectSettingsSource
               editSourceData={editProjectData.source}
               handleEditProject={handleEditProject}
@@ -49,7 +46,7 @@ const ProjectSettingsGeneralView = ({
               handleOnKeyDown={handleOnKeyDown}
               handleSourceChange={handleOnChange}
               setValidation={setValidation}
-              settingsSource={projectData?.spec.source ?? ''}
+              settingsSource={project.data?.spec.source ?? ''}
               validation={validation}
             />
             <div
@@ -72,7 +69,7 @@ const ProjectSettingsGeneralView = ({
                 }
                 value={
                   editProjectData.artifact_path.value ||
-                  projectData?.spec.artifact_path ||
+                  project.data?.spec.artifact_path ||
                   ''
                 }
               />
@@ -94,14 +91,14 @@ const ProjectSettingsGeneralView = ({
               handleEditProject={handleEditProject}
               handleOnChangeProject={handleOnChange}
               handleOnBlur={handleOnBlur}
-              projectDescription={projectData?.spec.description ?? ''}
+              projectDescription={project.data?.spec.description ?? ''}
             />
             <ProjectGoals
               editGoalsData={editProjectData.goals}
               handleEditProject={handleEditProject}
               handleOnChangeProject={handleOnChange}
               handleOnBlur={handleOnBlur}
-              projectGoals={projectData?.spec.goals ?? ''}
+              projectGoals={project.data?.spec.goals ?? ''}
             />
             <div className="settings__labels">
               <label
@@ -113,12 +110,13 @@ const ProjectSettingsGeneralView = ({
               <ProjectLabels
                 addProjectLabel={handleAddProjectLabel}
                 isEditMode
-                labels={projectData?.metadata.labels ?? {}}
+                labels={project.data?.metadata.labels ?? {}}
                 updateProjectLabel={handleUpdateProjectLabels}
                 visibleChipsMaxLength="all"
               />
             </div>
-
+          </div>
+          <div className="settings__card-content-col">
             <p className="settings__card-subtitle">Parameters</p>
             <p className="settings__card-subtitle">
               The parameters enable users to pass key/value to the project
@@ -140,7 +138,7 @@ const ProjectSettingsGeneralView = ({
               withEditMode
             />
           </div>
-        </>
+        </div>
       )}
     </div>
   )
@@ -154,7 +152,6 @@ ProjectSettingsGeneralView.defaultProps = {
 ProjectSettingsGeneralView.propTypes = {
   defaultArtifactPath: PropTypes.string,
   editProjectData: PropTypes.object.isRequired,
-  error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
   handleAddProjectLabel: PropTypes.func.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
@@ -165,7 +162,7 @@ ProjectSettingsGeneralView.propTypes = {
   handleOnBlur: PropTypes.func.isRequired,
   handleOnChange: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
-  loading: PropTypes.bool,
+  project: PropTypes.object.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.object.isRequired
 }

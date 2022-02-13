@@ -22,6 +22,12 @@
       &-block {
         position: relative;
         max-width: 100%;
+
+        &:first-child {
+          .chip {
+            margin-left: 0;
+          }
+        }
       }
     }
 

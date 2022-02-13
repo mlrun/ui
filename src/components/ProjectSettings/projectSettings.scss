@@ -8,6 +8,7 @@
   flex: 1;
   flex-direction: column;
   min-width: 600px;
+  background-color: $white;
 
   &__content {
     position: relative;
@@ -25,14 +26,20 @@
 
   &__card {
     &-content {
-      max-width: 800px;
+      display: flex;
+      flex-flow: row wrap;
+      margin: 0 -15px;
+
+      &-col {
+        padding: 0 15px;
+        flex: 0 0 auto;
+        width: 50%;
+      }
     }
 
     width: 100%;
-    padding: 40px;
+    padding: 24px 0;
     background-color: $white;
-    border-radius: $mainBorderRadius;
-    box-shadow: $jobsShadow;
 
     &-divider {
       margin: 16px 0;

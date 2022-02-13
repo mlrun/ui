@@ -8,6 +8,7 @@
   left: 0;
   width: 100%;
   min-width: 510px;
+  border-bottom: $dividerBorder;
 
   &__list {
     display: flex;

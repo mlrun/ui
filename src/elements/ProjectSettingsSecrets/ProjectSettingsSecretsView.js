@@ -26,26 +26,28 @@ const ProjectSettingsSecretsView = ({
           </div>
         ) : (
           <div className="settings__card-content">
-            <p className="settings__card-subtitle">
-              These secrets will automatically be available to all jobs
-              belonging to this project.
-            </p>
-            <KeyValueTable
-              addNewItem={handleAddNewSecret}
-              addNewItemLabel="Add secret"
-              className="settings__secrets"
-              content={secrets}
-              deleteItem={handleSecretDelete}
-              editItem={handleSecretEdit}
-              isKeyRequired
-              isValueRequired
-              keyHeader="Key"
-              keyLabel="Key"
-              keyType="password"
-              valueHeader="Value"
-              valueLabel="Value"
-              withEditMode
-            />
+            <div className="settings__card-content-col">
+              <p className="settings__card-subtitle">
+                These secrets will automatically be available to all jobs
+                belonging to this project.
+              </p>
+              <KeyValueTable
+                addNewItem={handleAddNewSecret}
+                addNewItemLabel="Add secret"
+                className="settings__secrets"
+                content={secrets}
+                deleteItem={handleSecretDelete}
+                editItem={handleSecretEdit}
+                isKeyRequired
+                isValueRequired
+                keyHeader="Key"
+                keyLabel="Key"
+                keyType="password"
+                valueHeader="Value"
+                valueLabel="Value"
+                withEditMode
+              />
+            </div>
           </div>
         )}
       </div>
