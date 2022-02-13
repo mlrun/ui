@@ -39,7 +39,6 @@ const JobsView = ({
   selectedJob,
   setEditableItem,
   setWorkflowsViewMode,
-  tableTop,
   toggleConvertedYaml,
   workflow,
   workflowJobsIds,
@@ -60,7 +59,14 @@ const JobsView = ({
         pageData={pageData}
         refresh={refreshJobs}
         selectedItem={selectedJob}
-        tableTop={tableTop}
+        tableTop={
+          match.params.jobName
+            ? {
+                link: `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`,
+                text: match.params.jobName
+              }
+            : null
+        }
       >
         {match.params.workflowId ? (
           <Workflow
@@ -151,8 +157,7 @@ const JobsView = ({
 
 JobsView.defaultProps = {
   confirmData: null,
-  editableItem: null,
-  tableTop: null
+  editableItem: null
 }
 
 JobsView.propTypes = {
@@ -181,10 +186,6 @@ JobsView.propTypes = {
   selectedJob: PropTypes.object.isRequired,
   setEditableItem: PropTypes.func.isRequired,
   setWorkflowsViewMode: PropTypes.func.isRequired,
-  tableTop: PropTypes.shape({
-    link: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired
-  }),
   toggleConvertedYaml: PropTypes.func.isRequired,
   workflow: PropTypes.object.isRequired,
   workflowJobsIds: PropTypes.arrayOf(PropTypes.string).isRequired,

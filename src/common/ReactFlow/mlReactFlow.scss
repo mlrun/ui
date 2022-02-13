@@ -100,7 +100,6 @@
       @include primaryNode;
     }
 
-
     &.oval-shape {
       border-radius: 30px;
     }
@@ -147,13 +146,18 @@
         background: $brightTurquoise;
       }
 
-      &.status-failed {
+      &.status-failed,
+      &.status-error {
         background: $burntSienna;
       }
 
-      &.status-pending,
       &.status-running {
         background: $pictonBlue;
+      }
+
+      &.status-skipped {
+        background: $gossamer;
+        border: 3px solid $brightTurquoise;
       }
 
       &.status-unknown {
@@ -161,7 +165,6 @@
       }
     }
   }
-
 
   .react-flow__edge {
     path,
