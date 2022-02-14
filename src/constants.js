@@ -28,6 +28,7 @@ export const STATUS_CODE_FORBIDDEN = 403
 export const PROJECTS_PAGE = 'PROJECTS'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
 export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
+export const PROJECTS_SETTINGS_MEMBERS_TAB = 'members'
 export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
 
 export const JOBS_PAGE = 'JOBS'

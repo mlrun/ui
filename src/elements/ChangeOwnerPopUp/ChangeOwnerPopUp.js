@@ -9,7 +9,7 @@ import Input from '../../common/Input/Input'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
-import { SECONDARY_BUTTON } from '../../constants'
+import { SECONDARY_BUTTON, LABEL_BUTTON } from '../../constants'
 import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
@@ -27,6 +27,13 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
   const { width: dropdownWidth } =
     searchRowRef?.current?.getBoundingClientRect() || {}
+
+  const handleOnClose = () => {
+    setSearchValue('')
+    setNewOwnerId('')
+    setUsersList([])
+    setShowSuggestionList(false)
+  }
 
   useEffect(() => {
     usersList.forEach(item => {
@@ -68,6 +75,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
       projectsIguazioApi
         .editProject(projectId, projectData)
         .then(changeOwnerCallback)
+      handleOnClose()
     }
   }
 
@@ -186,6 +194,12 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
         <div className="footer-actions">
           <div className="apply-discard-buttons">
+            <Button
+              className="pop-up-dialog__btn_cancel"
+              label="Discard"
+              onClick={handleOnClose}
+              variant={LABEL_BUTTON}
+            />
             <Button
               disabled={!newOwnerId}
               label="Apply"

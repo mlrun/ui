@@ -1,0 +1,21 @@
+@import '../../scss/colors';
+
+.settings {
+  &__members {
+    &-summary {
+      color: $primary;
+      background-color: $wildSand;
+      padding: 19px 0 19px 25px;
+      margin-bottom: 30px;
+
+      &_icon {
+        margin-right: 10px;
+      }
+
+      &_amount {
+        margin-right: 5px;
+        font-weight: 700;
+      }
+    }
+  }
+}

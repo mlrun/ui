@@ -13,6 +13,7 @@ import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSourc
 import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.util'
 
 const ProjectSettingsGeneralView = ({
+  changeOwnerCallback,
   defaultArtifactPath,
   editProjectData,
   generalParams,
@@ -25,6 +26,7 @@ const ProjectSettingsGeneralView = ({
   handleOnChange,
   handleOnKeyDown,
   handleUpdateProjectLabels,
+  membersState,
   project,
   projectMembershipIsEnabled,
   setValidation,
@@ -122,14 +124,16 @@ const ProjectSettingsGeneralView = ({
             <div className="settings__owner-row">
               <div className="row-value">
                 <span className="row-label">Owner:</span>
-                <span className="row-name">{project.data?.spec.owner}</span>
+                <span className="row-name">
+                  {membersState.projectInfo?.owner?.username}
+                </span>
               </div>
             </div>
             {projectMembershipIsEnabled && (
               <div className="settings__owner">
                 <ChangeOwnerPopUp
-                // changeOwnerCallback={changeOwnerCallback}
-                // projectId={membersState.projectInfo.id}
+                  changeOwnerCallback={changeOwnerCallback}
+                  projectId={membersState.projectInfo.id}
                 />
               </div>
             )}
@@ -168,6 +172,7 @@ ProjectSettingsGeneralView.defaultProps = {
 }
 
 ProjectSettingsGeneralView.propTypes = {
+  changeOwnerCallback: PropTypes.func.isRequired,
   defaultArtifactPath: PropTypes.string,
   editProjectData: PropTypes.object.isRequired,
   generalParams: PropTypes.array.isRequired,
@@ -180,6 +185,7 @@ ProjectSettingsGeneralView.propTypes = {
   handleOnBlur: PropTypes.func.isRequired,
   handleOnChange: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
+  membersState: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
   setValidation: PropTypes.func.isRequired,

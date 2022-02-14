@@ -23,11 +23,14 @@ import './projectSettingsGeneral.scss'
 
 const ProjectSettingsGeneral = ({
   addProjectLabel,
+  changeOwnerCallback,
   editProjectLabels,
   fetchProject,
   frontendSpec,
   match,
+  membersState,
   projectStore,
+  projectMembershipIsEnabled,
   removeProjectData,
   setNotification,
   setProjectParams,
@@ -38,25 +41,6 @@ const ProjectSettingsGeneral = ({
     isSourceValid: true,
     isPathValid: true
   })
-
-  useEffect(() => {
-    fetchProject(match.params.projectName)
-
-    return () => {
-      removeProjectData()
-      setEditProjectData(initialEditProjectData)
-    }
-  }, [
-    removeProjectData,
-    match.params.pageTab,
-    match.params.projectName,
-    fetchProject
-  ])
-
-  const projectMembershipIsEnabled = useMemo(
-    () => frontendSpec?.feature_flags?.project_membership === 'enabled',
-    [frontendSpec]
-  )
 
   const generalParams = useMemo(
     () =>
@@ -252,8 +236,23 @@ const ProjectSettingsGeneral = ({
     }
   }, [])
 
+  useEffect(() => {
+    fetchProject(match.params.projectName)
+
+    return () => {
+      removeProjectData()
+      setEditProjectData(initialEditProjectData)
+    }
+  }, [
+    removeProjectData,
+    match.params.pageTab,
+    match.params.projectName,
+    fetchProject
+  ])
+
   return (
     <ProjectSettingsGeneralView
+      changeOwnerCallback={changeOwnerCallback}
       defaultArtifactPath={frontendSpec.default_artifact_path}
       editProjectData={editProjectData}
       generalParams={generalParams}
@@ -266,6 +265,7 @@ const ProjectSettingsGeneral = ({
       handleOnChange={handleOnChange}
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
+      membersState={membersState}
       project={projectStore.project}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
       setValidation={setValidation}
