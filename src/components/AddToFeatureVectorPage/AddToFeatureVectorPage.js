@@ -22,6 +22,7 @@ import {
   FEATURES_TAB,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  STATUS_CODE_FORBIDDEN,
   TAG_FILTER_LATEST
 } from '../../constants'
 import { parseFeatures } from '../../utils/parseFeatures'
@@ -155,8 +156,9 @@ const AddToFeatureVectorPage = ({
   }, [history, match.params.projectName])
 
   const handleCancelCreateFeatureVector = useCallback(() => {
+    setTablePanelOpen(false)
     navigateToFeatureVectorsScreen()
-  }, [navigateToFeatureVectorsScreen])
+  }, [navigateToFeatureVectorsScreen, setTablePanelOpen])
 
   const handleCreateFeatureVector = useCallback(
     featureVector => {
@@ -170,13 +172,21 @@ const AddToFeatureVectorPage = ({
           setTablePanelOpen(false)
           navigateToFeatureVectorsScreen()
         })
-        .catch(() => {
+        .catch(error => {
           setNotification({
-            status: 400,
+            status: error.response.status || 400,
             id: Math.random(),
-            message: 'Feature vector creation failed',
+            message:
+              error.response.status === STATUS_CODE_FORBIDDEN
+                ? 'You are not permitted to create new feature vector.'
+                : 'Feature vector creation failed.',
             retry: handleCreateFeatureVector
           })
+
+          if (error.response.status === STATUS_CODE_FORBIDDEN) {
+            setTablePanelOpen(false)
+            navigateToFeatureVectorsScreen()
+          }
         })
     },
     [
