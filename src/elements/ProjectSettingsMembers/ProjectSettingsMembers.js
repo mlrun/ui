@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import MembersPopUp from '../MembersPopUp/MembersPopUp'
 
@@ -36,6 +37,13 @@ const ProjectSettingsMembers = ({
       </div>
     </div>
   )
+}
+
+ProjectSettingsMembers.propTypes = {
+  changeMembersCallback: PropTypes.func.isRequired,
+  membersDispatch: PropTypes.func.isRequired,
+  membersState: PropTypes.shape({}).isRequired,
+  projectMembershipIsEnabled: PropTypes.bool.isRequired
 }
 
 export default ProjectSettingsMembers

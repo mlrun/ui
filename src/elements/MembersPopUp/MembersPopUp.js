@@ -61,6 +61,7 @@ const MembersPopUp = ({
   const handleOnClose = () => {
     setConfirmDiscard(false)
     setNotifyByEmail(false)
+    setNewMembers([])
   }
 
   const addNewMembers = () => {

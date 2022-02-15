@@ -14,8 +14,6 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
-import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
-import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
@@ -30,8 +28,6 @@ import './project.scss'
 
 const ProjectMonitorView = ({
   artifactKind,
-  changeMembersCallback,
-  changeOwnerCallback,
   closeFeatureSetPanel,
   closeFunctionsPanel,
   confirmData,
@@ -42,25 +38,15 @@ const ProjectMonitorView = ({
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   handleLaunchIDE,
-  isDemoMode,
   isNewFunctionPopUpOpen,
   isPopupDialogOpen,
   match,
-  membersDispatch,
-  membersState,
-  projectMembersIsShown,
-  projectMembershipIsEnabled,
-  projectOwnerIsShown,
   projectSummary,
   refresh,
   setIsNewFunctionPopUpOpen,
   setIsPopupDialogOpen,
-  setShowChangeOwner,
   setShowFunctionsPanel,
-  setShowManageMembers,
-  showChangeOwner,
-  showFunctionsPanel,
-  showManageMembers
+  showFunctionsPanel
 }) => {
   const project = useSelector(store => store.projectStore.project)
   const history = useHistory()
@@ -119,43 +105,6 @@ const ProjectMonitorView = ({
                 </span>
               </div>
             </div>
-            {projectMembershipIsEnabled && (
-              <>
-                {projectMembersIsShown && (
-                  <div className="general-info__row owner-row">
-                    <div className="row-value">
-                      <span className="row-label">Owner:</span>
-                      <span className="row-name">
-                        {membersState.projectInfo?.owner?.username}
-                      </span>
-                    </div>
-                    <span
-                      className="row-action link"
-                      onClick={() => setShowChangeOwner(true)}
-                    >
-                      Change
-                    </span>
-                  </div>
-                )}
-                {projectOwnerIsShown && (
-                  <div className="general-info__row members-row">
-                    <div className="row-value">
-                      <span className="row-label">Members:</span>
-                      <span className="row-name">
-                        {membersState.users.length +
-                          membersState.userGroups.length}
-                      </span>
-                    </div>
-                    <span
-                      className="row-action link"
-                      onClick={() => setShowManageMembers(true)}
-                    >
-                      Manage
-                    </span>
-                  </div>
-                )}
-              </>
-            )}
           </div>
           <div className="main-info">
             <div className="main-info__toolbar">
@@ -221,21 +170,6 @@ const ProjectMonitorView = ({
           title={`Register ${artifactKind}`}
         />
       )}
-      {showManageMembers && (
-        <MembersPopUp
-          changeMembersCallback={changeMembersCallback}
-          closePopUp={() => setShowManageMembers(false)}
-          membersState={membersState}
-          membersDispatch={membersDispatch}
-        />
-      )}
-      {showChangeOwner && (
-        <ChangeOwnerPopUp
-          changeOwnerCallback={changeOwnerCallback}
-          closePopUp={() => setShowChangeOwner(false)}
-          projectId={membersState.projectInfo.id}
-        />
-      )}
       {createFeatureSetPanelIsOpen && (
         <FeatureSetsPanel
           closePanel={closeFeatureSetPanel}
@@ -272,8 +206,6 @@ ProjectMonitorView.defaultProps = {
 
 ProjectMonitorView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
-  changeMembersCallback: PropTypes.func.isRequired,
-  changeOwnerCallback: PropTypes.func.isRequired,
   closeFeatureSetPanel: PropTypes.func.isRequired,
   closeFunctionsPanel: PropTypes.func.isRequired,
   confirmData: PropTypes.object,
@@ -284,24 +216,14 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
-  isDemoMode: PropTypes.bool.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
-  membersDispatch: PropTypes.func.isRequired,
-  membersState: PropTypes.shape({}).isRequired,
-  projectMembersIsShown: PropTypes.bool.isRequired,
-  projectMembershipIsEnabled: PropTypes.bool.isRequired,
-  projectOwnerIsShown: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
-  setShowChangeOwner: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
-  setShowManageMembers: PropTypes.func.isRequired,
-  showChangeOwner: PropTypes.bool,
-  showFunctionsPanel: PropTypes.bool.isRequired,
-  showManageMembers: PropTypes.bool
+  showFunctionsPanel: PropTypes.bool.isRequired
 }
 
 export default ProjectMonitorView

@@ -93,7 +93,6 @@ const ProjectSettings = ({ match, frontendSpec, projectStore }) => {
         } = groupBy(membersResponse.data.included, includeItem => {
           return includeItem.type
         })
-
         membersDispatch({
           type: membersActions.SET_PROJECT_AUTHORIZATION_ROLES,
           payload: projectAuthorizationRoles
@@ -136,7 +135,6 @@ const ProjectSettings = ({ match, frontendSpec, projectStore }) => {
             })
           }
         })
-
         membersDispatch({
           type: membersActions.SET_MEMBERS_ORIGINAL,
           payload: members
@@ -176,9 +174,19 @@ const ProjectSettings = ({ match, frontendSpec, projectStore }) => {
     fetchProjectIdAndOwner()
   }
 
+  const resetProjectData = useCallback(() => {
+    membersDispatch({
+      type: membersActions.RESET_MEMBERS_STATE
+    })
+  }, [])
+
   useEffect(() => {
     fetchProjectUsersData()
-  }, [fetchProjectUsersData])
+
+    return () => {
+      resetProjectData()
+    }
+  }, [fetchProjectUsersData, resetProjectData])
 
   useEffect(() => {
     isProjectValid(
