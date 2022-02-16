@@ -13,7 +13,10 @@ import Tip from '../Tip/Tip'
 import { checkPatternsValidity } from '../../utils/validationService'
 import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
+import { INPUT_LINK } from '../../types'
+
 import { ReactComponent as InvalidIcon } from '../../images/invalid.svg'
+import { ReactComponent as Popout } from '../../images/popout.svg'
 import { ReactComponent as WarningIcon } from '../../images/warning.svg'
 
 import './input.scss'
@@ -32,6 +35,7 @@ const Input = React.forwardRef(
       invalid,
       invalidText,
       label,
+      link,
       suggestionList,
       maxLength,
       onBlur,
@@ -200,8 +204,8 @@ const Input = React.forwardRef(
       validateField(value)
     }
 
-    const handleInputChange = ({ target: { value } }) => {
-      changeValue(value)
+    const handleInputChange = event => {
+      changeValue(event.target.value)
     }
 
     const renderValidationRules = validationRules.map(
@@ -248,24 +252,44 @@ const Input = React.forwardRef(
           style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px` }}
         />
         {label && (
-          <label
-            data-testid="label"
-            className={labelClassNames}
-            ref={inputLabelRef}
-            style={
-              infoLabel
-                ? {
-                    left: (value ? value.length + 2 : 2) * 10
+          <div className={labelClassNames}>
+            <label
+              data-testid="label"
+              ref={inputLabelRef}
+              style={
+                infoLabel
+                  ? {
+                      left: (value ? value.length + 2 : 2) * 10
+                    }
+                  : {}
+              }
+            >
+              {label}
+              {required && (
+                <span className={inputLabelMandatoryClassNames}> *</span>
+              )}
+            </label>
+            {floatingLabel && link && link.show && typedValue && (
+              <div className="input__link-icon">
+                <Tooltip
+                  template={
+                    <TextTooltipTemplate text={link.url || typedValue} />
                   }
-                : {}
-            }
-          >
-            {label}
-            {required && (
-              <span className={inputLabelMandatoryClassNames}> *</span>
+                >
+                  <a
+                    href={link.url || typedValue}
+                    onClick={event => event.stopPropagation()}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Popout />
+                  </a>
+                </Tooltip>
+              </div>
             )}
-          </label>
+          </div>
         )}
+
         {isInvalid && !isEmpty(validationRules) && (
           <i className="input__warning" onClick={toggleValidationRulesMenu}>
             <WarningIcon />
@@ -332,6 +356,7 @@ Input.defaultProps = {
   inputIcon: null,
   invalid: false,
   invalidText: 'This field is invalid',
+  link: { show: '', value: '' },
   label: '',
   maxLength: null,
   onBlur: () => {},
@@ -361,6 +386,7 @@ Input.propTypes = {
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,
   label: PropTypes.string,
+  link: INPUT_LINK,
   maxLength: PropTypes.number,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,

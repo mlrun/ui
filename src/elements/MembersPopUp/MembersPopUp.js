@@ -163,8 +163,8 @@ const MembersPopUp = ({
 
     projectsIguazioApi
       .updateProjectMembers(changesBody)
-      .then(changeMembersCallback)
       .then(() => {
+        changeMembersCallback()
         setNotification({
           status: 200,
           id: Math.random(),
@@ -177,7 +177,7 @@ const MembersPopUp = ({
           id: Math.random(),
           message:
             error.response?.status === STATUS_CODE_FORBIDDEN
-              ? 'Missing Edit permission for the project.'
+              ? 'Missing edit permission for the project.'
               : 'Failed to edit project data.',
           retry: () => applyMembersChanges(changesBody)
         })

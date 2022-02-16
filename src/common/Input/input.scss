@@ -141,6 +141,7 @@
       font-weight: 700;
       font-size: 10px;
       line-height: 12px;
+      pointer-events: auto;
 
       .input__label-mandatory:not(.input__label-mandatory_disabled) {
         color: $topaz;
@@ -148,6 +149,8 @@
     }
 
     &-floating {
+      display: flex;
+      align-items: center;
       position: absolute;
       top: 15px;
       left: 16px;
@@ -157,6 +160,23 @@
 
     &_disabled {
       color: $spunPearl;
+    }
+  }
+
+  &__link {
+    &-icon {
+      position: absolute;
+      top: -1px;
+      right: -14px;
+
+      svg {
+        width: 12px;
+        height: 12px;
+
+        path {
+          fill: $cornflowerBlue;
+        }
+      }
     }
   }
 

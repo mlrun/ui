@@ -2,12 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { SOURCE_URL } from '../../components/ProjectSettings/projectSettings.util'
-
-import { ReactComponent as Popout } from '../../images/popout.svg'
 
 import './projectSettingsSource.scss'
 
@@ -30,7 +26,10 @@ const ProjectSettingsSource = ({
         floatingLabel
         invalid={!validation.isSourceValid}
         label="Source URL"
-        focused
+        link={{
+          show: editSourceData.value ?? settingsSource,
+          url: editSourceData.value ?? settingsSource
+        }}
         onBlur={() => handleOnBlur(SOURCE_URL)}
         onChange={value => handleSourceChange(SOURCE_URL, value)}
         onKeyDown={handleOnKeyDown}
@@ -46,27 +45,6 @@ const ProjectSettingsSource = ({
         type="text"
         value={editSourceData.value ?? settingsSource}
       />
-
-      {(editSourceData.value || settingsSource) && (
-        <div className="settings__source-icon">
-          <Tooltip
-            template={
-              <TextTooltipTemplate
-                text={editSourceData.value || settingsSource}
-              />
-            }
-          >
-            <a
-              href={editSourceData.value || settingsSource}
-              onClick={event => event.stopPropagation()}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Popout />
-            </a>
-          </Tooltip>
-        </div>
-      )}
     </div>
   )
 }
