@@ -7,6 +7,8 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { SOURCE_URL } from '../../components/ProjectSettings/projectSettings.util'
 
+import { ReactComponent as Popout } from '../../images/popout.svg'
+
 import './projectSettingsSource.scss'
 
 const ProjectSettingsSource = ({
@@ -46,7 +48,7 @@ const ProjectSettingsSource = ({
       />
 
       {(editSourceData.value || settingsSource) && (
-        <div className="settings__source-text">
+        <div className="settings__source-icon">
           <Tooltip
             template={
               <TextTooltipTemplate
@@ -60,7 +62,7 @@ const ProjectSettingsSource = ({
               target="_blank"
               rel="noreferrer"
             >
-              {editSourceData.value || settingsSource}
+              <Popout />
             </a>
           </Tooltip>
         </div>

@@ -12,7 +12,6 @@ const ProjectGoals = React.forwardRef(
       handleEditProject,
       handleOnBlur,
       handleOnChangeProject,
-      // handleOnKeyDown,
       projectGoals
     },
     ref
@@ -26,10 +25,9 @@ const ProjectGoals = React.forwardRef(
         <TextArea
           floatingLabel
           label="Project goals"
-          // onKeyDown={handleOnKeyDown}
           onBlur={() => handleOnBlur(GOALS)}
           onChange={value => handleOnChangeProject(GOALS, value)}
-          // ref={ref}
+          rows="5"
           value={editGoalsData.value ?? projectGoals}
         />
       </div>

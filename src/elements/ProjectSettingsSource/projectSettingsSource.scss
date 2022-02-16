@@ -10,11 +10,15 @@
       }
     }
 
-    &-text {
-      display: inline-block;
-      margin-top: 5px;
-      font-size: 0.75rem;
-      color: $cornflowerBlue;
+    &-icon {
+      svg {
+        width: 1em;
+        height: 1em;
+
+        path {
+          fill: $cornflowerBlue;
+        }
+      }
     }
   }
 }

@@ -43,14 +43,19 @@
     }
   }
 
-  &__owner-row {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0 30px;
+  &__owner {
+    border-bottom: $dividerBorder;
+    margin-bottom: 17px;
 
-    .row-label {
-      display: inline-block;
-      width: 80px;
+    &-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0 36px;
+
+      .row-label {
+        display: inline-block;
+        margin-right: 1rem;
+      }
     }
   }
 

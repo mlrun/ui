@@ -122,23 +122,23 @@ const ProjectSettingsGeneralView = ({
             </div>
           </div>
           <div className="settings__card-content-col">
-            <div className="settings__owner-row">
-              <div className="row-value">
-                <span className="row-label">Owner:</span>
-                <span className="row-name">
-                  {membersState.projectInfo?.owner?.username}
-                </span>
+            <div className="settings__owner">
+              <div className="settings__owner-row">
+                <div className="row-value">
+                  <span className="row-label">Owner:</span>
+                  <span className="row-name">
+                    {membersState.projectInfo?.owner?.username}
+                  </span>
+                </div>
               </div>
-            </div>
-            {projectMembershipIsEnabled && (
-              <div className="settings__owner">
+              {projectMembershipIsEnabled && (
                 <ChangeOwnerPopUp
                   changeOwnerCallback={changeOwnerCallback}
                   projectId={membersState.projectInfo.id}
                   setNotification={setNotification}
                 />
-              </div>
-            )}
+              )}
+            </div>
             <div>
               <p className="settings__card-subtitle">Parameters</p>
               <p className="settings__card-subtitle">
