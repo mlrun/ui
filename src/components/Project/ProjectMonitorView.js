@@ -88,26 +88,31 @@ const ProjectMonitorView = ({
         <NoData />
       ) : (
         <div className="project__content">
-          <div className="general-info">
-            {project.data.status.state && (
-              <div className="general-info__row status-row">
-                <div className="row-value">
-                  <span className="row-label">Status:</span>
-                  <span className="row-name">{project.data.status.state}</span>
-                </div>
-              </div>
-            )}
-            <div className="general-info__row created-at-row">
-              <div className="row-value">
-                <span className="row-label">Created at:</span>
-                <span className="row-name">
-                  {formatDatetime(new Date(project.data.metadata.created), '-')}
-                </span>
-              </div>
-            </div>
-          </div>
           <div className="main-info">
             <div className="main-info__toolbar">
+              <div>
+                {project.data.status.state && (
+                  <div className="general-info__row status-row">
+                    <div className="row-value">
+                      <span className="row-label">Status:</span>
+                      <span className="row-name">
+                        {project.data.status.state}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <div className="general-info__row created-at-row">
+                  <div className="row-value">
+                    <span className="row-label">Created at:</span>
+                    <span className="row-name">
+                      {formatDatetime(
+                        new Date(project.data.metadata.created),
+                        '-'
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
               <RoundedIcon
                 onClick={refresh}
                 id="refresh"

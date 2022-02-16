@@ -30,27 +30,11 @@
       width: 250px;
       padding-right: 64px;
 
-      &__name {
-        display: flex;
-        flex: 2;
-        width: 100%;
-        color: rgba($mulledWine, 0.88);
-        font-weight: 300;
-        font-size: 36px;
-        line-height: 42px;
-
-        .input {
-          width: 100%;
-          font-weight: 300;
-          font-size: 36px;
-        }
-      }
-
       &__row {
         display: flex;
         justify-content: space-between;
-        margin: 5px 0;
         color: $primary;
+        margin-top: 5px;
 
         .row-label {
           display: inline-block;
@@ -65,11 +49,6 @@
           .row-name {
             text-transform: capitalize;
           }
-        }
-
-        &.owner-row,
-        &.members-row {
-          color: $topaz;
         }
       }
 
@@ -97,6 +76,7 @@
       &__toolbar {
         display: flex;
         justify-content: space-between;
+        align-items: flex-end;
         margin-bottom: 15px;
 
         &-menu {
