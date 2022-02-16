@@ -11,7 +11,8 @@ const ProjectSettingsMembers = ({
   changeMembersCallback,
   membersDispatch,
   membersState,
-  projectMembershipIsEnabled
+  projectMembershipIsEnabled,
+  setNotification
 }) => {
   return (
     <div className="settings__card">
@@ -31,6 +32,7 @@ const ProjectSettingsMembers = ({
               changeMembersCallback={changeMembersCallback}
               membersState={membersState}
               membersDispatch={membersDispatch}
+              setNotification={setNotification}
             />
           </div>
         )}

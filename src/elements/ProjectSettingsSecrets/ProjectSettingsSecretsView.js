@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Loader from '../../common/Loader/Loader'
-// import ProjectSecretRow from '../ProjectSecretRow/ProjectSecretRow'
 
 import './ProjectSettingsSecrets.scss'
 
@@ -22,7 +21,7 @@ const ProjectSettingsSecretsView = ({
           <Loader />
         ) : error ? (
           <div>
-            <h1>{error.message}</h1>
+            <h1>{error.message || error}</h1>
           </div>
         ) : (
           <div className="settings__card-content">
@@ -61,7 +60,7 @@ ProjectSettingsSecretsView.defaultProps = {
 }
 
 ProjectSettingsSecretsView.propTypes = {
-  error: PropTypes.object,
+  error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   handleAddNewSecret: PropTypes.func.isRequired,
   handleSecretDelete: PropTypes.func.isRequired,
   handleSecretEdit: PropTypes.func.isRequired,

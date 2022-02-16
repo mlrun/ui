@@ -14,7 +14,6 @@ import {
 } from '../../components/ProjectSettings/projectSettings.util'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
-import notificationActions from '../../actions/notification'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
 import { deleteUnsafeHtml } from '../../utils/string'
 import { KEY_CODES, STATUS_CODE_FORBIDDEN } from '../../constants'
@@ -268,6 +267,7 @@ const ProjectSettingsGeneral = ({
       membersState={membersState}
       project={projectStore.project}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
+      setNotification={setNotification}
       setValidation={setValidation}
       validation={validation}
     />
@@ -283,5 +283,5 @@ export default connect(
     projectStore,
     frontendSpec: appStore.frontendSpec
   }),
-  { ...projectsAction, setNotification: notificationActions.setNotification }
+  { ...projectsAction }
 )(ProjectSettingsGeneral)

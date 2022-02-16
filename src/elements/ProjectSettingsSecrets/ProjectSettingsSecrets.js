@@ -2,12 +2,10 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import notificationAction from '../../actions/notification'
-
 import projectApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import ProjectSettingsSecretsView from './ProjectSettingsSecretsView'
-
+import { STATUS_CODE_FORBIDDEN } from '../../constants'
 import {
   ADD_PROJECT_SECRET,
   DELETE_PROJECT_SECRET,
@@ -25,8 +23,18 @@ const ProjectSettingsSecrets = ({
   const { projectName } = match.params
 
   const fetchSecrets = useCallback(() => {
-    fetchProjectSecrets(projectName)
-  }, [fetchProjectSecrets, projectName])
+    fetchProjectSecrets(projectName).catch(error => {
+      setNotification({
+        status: error.response?.status || 400,
+        id: Math.random(),
+        message:
+          error.response?.status === STATUS_CODE_FORBIDDEN
+            ? 'Permission denied.'
+            : 'Failed to fetch project data.',
+        retry: () => fetchSecrets()
+      })
+    })
+  }, [fetchProjectSecrets, projectName, setNotification])
 
   useEffect(() => {
     fetchSecrets()
@@ -136,5 +144,5 @@ export default connect(
   ({ projectStore }) => ({
     projectStore
   }),
-  { ...notificationAction, ...projectsAction }
+  { ...projectsAction }
 )(ProjectSettingsSecrets)

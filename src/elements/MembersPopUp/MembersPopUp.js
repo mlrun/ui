@@ -22,7 +22,8 @@ import {
   DANGER_BUTTON,
   LABEL_BUTTON,
   PRIMARY_BUTTON,
-  SECONDARY_BUTTON
+  SECONDARY_BUTTON,
+  STATUS_CODE_FORBIDDEN
 } from '../../constants'
 
 import { ReactComponent as Add } from '../../images/add.svg'
@@ -36,7 +37,8 @@ import './membersPopUp.scss'
 const MembersPopUp = ({
   changeMembersCallback,
   membersDispatch,
-  membersState
+  membersState,
+  setNotification
 }) => {
   const [deleteMemberId, setDeleteMemberId] = useState('')
   const [confirmDiscard, setConfirmDiscard] = useState(false)
@@ -159,10 +161,27 @@ const MembersPopUp = ({
       }
     )
 
-    projectsIguazioApi.updateProjectMembers(changesBody).then(() => {
-      changeMembersCallback()
-    })
-
+    projectsIguazioApi
+      .updateProjectMembers(changesBody)
+      .then(changeMembersCallback)
+      .then(() => {
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Mebmers updated successfully'
+        })
+      })
+      .catch(error => {
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message:
+            error.response?.status === STATUS_CODE_FORBIDDEN
+              ? 'Missing Edit permission for the project.'
+              : 'Failed to edit project data.',
+          retry: () => applyMembersChanges(changesBody)
+        })
+      })
     handleOnClose()
   }
 

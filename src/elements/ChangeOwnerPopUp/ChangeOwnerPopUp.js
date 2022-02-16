@@ -9,14 +9,22 @@ import Input from '../../common/Input/Input'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
-import { SECONDARY_BUTTON, LABEL_BUTTON } from '../../constants'
+import {
+  SECONDARY_BUTTON,
+  LABEL_BUTTON,
+  STATUS_CODE_FORBIDDEN
+} from '../../constants'
 import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
 import './changeOwnerPopUp.scss'
 
-const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
+const ChangeOwnerPopUp = ({
+  changeOwnerCallback,
+  setNotification,
+  projectId
+}) => {
   const [searchValue, setSearchValue] = useState('')
   const [newOwnerId, setNewOwnerId] = useState('')
   const [usersList, setUsersList] = useState([])
@@ -75,6 +83,24 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
       projectsIguazioApi
         .editProject(projectId, projectData)
         .then(changeOwnerCallback)
+        .then(() => {
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Owner updated successfully'
+          })
+        })
+        .catch(error => {
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message:
+              error.response?.status === STATUS_CODE_FORBIDDEN
+                ? 'Missing Edit permission for the project.'
+                : 'Failed to edit project data.',
+            retry: () => applyChanges(newOwnerId)
+          })
+        })
       handleOnClose()
     }
   }

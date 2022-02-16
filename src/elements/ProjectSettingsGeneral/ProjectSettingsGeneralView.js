@@ -29,6 +29,7 @@ const ProjectSettingsGeneralView = ({
   membersState,
   project,
   projectMembershipIsEnabled,
+  setNotification,
   setValidation,
   validation
 }) => {
@@ -134,6 +135,7 @@ const ProjectSettingsGeneralView = ({
                 <ChangeOwnerPopUp
                   changeOwnerCallback={changeOwnerCallback}
                   projectId={membersState.projectInfo.id}
+                  setNotification={setNotification}
                 />
               </div>
             )}

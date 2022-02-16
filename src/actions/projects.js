@@ -434,7 +434,7 @@ const projectsAction = {
       .catch(error => {
         dispatch(projectsAction.fetchProjectSecretsFailure(error.message))
 
-        throw error.message
+        throw error
       })
   },
   fetchProjectSecretsBegin: () => ({

@@ -16,7 +16,7 @@ import ProjectSettingsSecrets from '../../elements/ProjectSettingsSecrets/Projec
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 
-import projectsAction from '../../actions/projects'
+import notificationActions from '../../actions/notification'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import {
   PROJECTS_SETTINGS_MEMBERS_TAB,
@@ -35,7 +35,12 @@ import { ReactComponent as Users } from '../../images/users.svg'
 
 import './projectSettings.scss'
 
-const ProjectSettings = ({ match, frontendSpec, projectStore }) => {
+const ProjectSettings = ({
+  match,
+  frontendSpec,
+  projectStore,
+  setNotification
+}) => {
   const location = useLocation()
   const history = useHistory()
   const [membersState, membersDispatch] = useReducer(
@@ -222,15 +227,20 @@ const ProjectSettings = ({ match, frontendSpec, projectStore }) => {
             membersState={membersState}
             membersDispatch={membersDispatch}
             projectMembershipIsEnabled={projectMembershipIsEnabled}
+            setNotification={setNotification}
           />
         ) : match.params.pageTab === PROJECTS_SETTINGS_SECRETS_TAB ? (
-          <ProjectSettingsSecrets match={match} />
+          <ProjectSettingsSecrets
+            match={match}
+            setNotification={setNotification}
+          />
         ) : (
           <ProjectSettingsGeneral
             changeOwnerCallback={changeOwnerCallback}
             match={match}
             membersState={membersState}
             projectMembershipIsEnabled={projectMembershipIsEnabled}
+            setNotification={setNotification}
           />
         )}
       </div>
@@ -248,6 +258,6 @@ export default connect(
     frontendSpec: appStore.frontendSpec
   }),
   {
-    ...projectsAction
+    setNotification: notificationActions.setNotification
   }
 )(ProjectSettings)
