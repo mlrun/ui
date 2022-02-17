@@ -11,7 +11,7 @@ import {
   LABELS,
   PARAMS,
   SOURCE_URL
-} from '../../components/ProjectSettings/projectSettings.util'
+} from '../../constants'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
@@ -275,6 +275,7 @@ const ProjectSettingsGeneral = ({
 }
 
 ProjectSettingsGeneral.propTypes = {
+  changeOwnerCallback: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired
 }
 

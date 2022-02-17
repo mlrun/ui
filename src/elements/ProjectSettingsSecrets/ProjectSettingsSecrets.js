@@ -57,18 +57,22 @@ const ProjectSettingsSecrets = ({
 
   const handleProjectSecret = useCallback(
     (type, data) => {
-      const secretFun =
+      const updateSecret =
         type === ADD_PROJECT_SECRET || type === EDIT_PROJECT_SECRET
           ? projectApi.setProjectSecret
           : projectApi.deleteSecret
 
-      secretFun(projectName, data)
+      updateSecret(projectName, data)
         .then(() => {
           setNotification({
             status: 200,
             id: Math.random(),
-            message: `Secret ${type}${
-              type === DELETE_PROJECT_SECRET ? 'd' : 'ed'
+            message: `Secret ${
+              type === DELETE_PROJECT_SECRET
+                ? 'deleted'
+                : type === EDIT_PROJECT_SECRET
+                ? 'edited'
+                : 'added'
             } successfully`
           })
         })
@@ -98,7 +102,6 @@ const ProjectSettingsSecrets = ({
       ]
 
       setProjectSecrets(secretKeys) // redux
-
       handleProjectSecret(ADD_PROJECT_SECRET, data) // api
     },
     [handleProjectSecret, projectStore.project.secrets.data, setProjectSecrets]

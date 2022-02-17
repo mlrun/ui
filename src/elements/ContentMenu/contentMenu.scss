@@ -49,8 +49,14 @@
       padding: 8px 24px;
       position: relative;
 
-      &.content-menu__item_hasIcon {
-        padding-left: 45px;
+      &.content-menu__item-icon {
+        padding-left: 40px;
+        & > * {
+          position: absolute;
+          left: 15px;
+          top: 4px;
+          bottom: 0;
+        }
       }
 
       svg {
@@ -81,13 +87,6 @@
     &__preview {
       color: $spunPearl;
       font-size: 10px;
-    }
-
-    &-icon {
-      position: absolute;
-      left: 15px;
-      top: 4px;
-      bottom: 0;
     }
   }
 }

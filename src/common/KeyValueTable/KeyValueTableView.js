@@ -22,6 +22,7 @@ const KeyValueTableView = ({
   handleResetForm,
   isAddNewItem,
   isEditMode,
+  isKeyEditable,
   isKeyNotUnique,
   isKeyRequired,
   isValueRequired,
@@ -42,6 +43,7 @@ const KeyValueTableView = ({
   validation,
   valueHeader,
   valueLabel,
+  valueType,
   withEditMode
 }) => {
   return (
@@ -58,7 +60,13 @@ const KeyValueTableView = ({
           return isEditMode && index === selectedItem.index ? (
             <div className="table-row table-row_edit" key={index}>
               <div className="table-cell table-cell__key">
-                {keyType === 'select' ? (
+                {!isKeyEditable ? (
+                  <Tooltip
+                    template={<TextTooltipTemplate text={contentItem.key} />}
+                  >
+                    {contentItem.key}
+                  </Tooltip>
+                ) : keyType === 'select' ? (
                   <Select
                     density="dense"
                     onClick={key =>
@@ -71,12 +79,6 @@ const KeyValueTableView = ({
                     options={keyOptions}
                     selectedId={selectedItem.newKey ?? selectedItem.key}
                   />
-                ) : keyType === 'password' ? (
-                  <Tooltip
-                    template={<TextTooltipTemplate text={contentItem.key} />}
-                  >
-                    {contentItem.key}
-                  </Tooltip>
                 ) : (
                   <Input
                     className="input_edit"
@@ -129,7 +131,7 @@ const KeyValueTableView = ({
                       isEditValueValid: value
                     }))
                   }
-                  type={keyType !== 'password' ? 'text' : keyType}
+                  type={valueType}
                   value={selectedItem.newValue ?? selectedItem.value}
                 />
               </div>
@@ -273,7 +275,7 @@ const KeyValueTableView = ({
                     isValueValid: value
                   }))
                 }
-                type={keyType !== 'password' ? 'text' : keyType}
+                type={valueType}
               />
             </div>
           </div>
@@ -313,11 +315,13 @@ const KeyValueTableView = ({
 }
 
 KeyValueTableView.defaultProps = {
+  isKeyEditable: true,
   keyLabel: 'Key',
   keyOptions: [],
   keyType: 'input',
   selectedItem: {},
   valueLabel: 'Value',
+  valueType: 'text',
   withEditMode: false
 }
 
@@ -334,6 +338,7 @@ KeyValueTableView.propTypes = {
   handleResetForm: PropTypes.func.isRequired,
   isAddNewItem: PropTypes.bool.isRequired,
   isEditMode: PropTypes.bool.isRequired,
+  isKeyEditable: PropTypes.bool.isRequired,
   isKeyNotUnique: PropTypes.func.isRequired,
   isKeyRequired: PropTypes.bool.isRequired,
   isValueRequired: PropTypes.bool.isRequired,
@@ -359,6 +364,7 @@ KeyValueTableView.propTypes = {
   validation: PropTypes.object.isRequired,
   valueHeader: PropTypes.string.isRequired,
   valueLabel: PropTypes.string,
+  valueType: PropTypes.string,
   withEditMode: PropTypes.bool
 }
 

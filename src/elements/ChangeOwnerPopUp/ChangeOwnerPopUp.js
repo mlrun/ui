@@ -22,8 +22,8 @@ import './changeOwnerPopUp.scss'
 
 const ChangeOwnerPopUp = ({
   changeOwnerCallback,
-  setNotification,
-  projectId
+  projectId,
+  setNotification
 }) => {
   const [searchValue, setSearchValue] = useState('')
   const [newOwnerId, setNewOwnerId] = useState('')
@@ -241,7 +241,8 @@ const ChangeOwnerPopUp = ({
 
 ChangeOwnerPopUp.propTypes = {
   changeOwnerCallback: PropTypes.func.isRequired,
-  projectId: PropTypes.string.isRequired
+  projectId: PropTypes.string.isRequired,
+  setNotification: PropTypes.func.isRequired
 }
 
 export default ChangeOwnerPopUp

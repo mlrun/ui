@@ -10,7 +10,7 @@ import ProjectDescription from '../../components/Project/ProjectDescription/Proj
 import ProjectLabels from '../../components/Project/ProjectLabels/ProjectLabels'
 import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
 
-import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.util'
+import { ARTIFACT_PATH } from '../../constants'
 
 const ProjectSettingsGeneralView = ({
   changeOwnerCallback,
@@ -140,7 +140,7 @@ const ProjectSettingsGeneralView = ({
               )}
             </div>
             <div>
-              <p className="settings__card-subtitle">Parameters</p>
+              <p className="settings__card-title">Parameters</p>
               <p className="settings__card-subtitle">
                 The parameters enable users to pass key/value to the project
                 context that can later be used for running jobs & pipelines

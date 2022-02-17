@@ -3,9 +3,10 @@
 @import '../../scss/mixins';
 
 .text-area {
+  @include fieldWrapper;
+
   white-space: pre;
   resize: none;
-  @include fieldWrapper;
 
   &__warning {
     position: absolute;

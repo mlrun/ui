@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
 
-import { SOURCE_URL } from '../../components/ProjectSettings/projectSettings.util'
+import { SOURCE_URL } from '../../constants'
 
 import './projectSettingsSource.scss'
 
@@ -52,6 +52,7 @@ const ProjectSettingsSource = ({
 ProjectSettingsSource.propTypes = {
   editSourceData: PropTypes.shape({}).isRequired,
   handleEditProject: PropTypes.func.isRequired,
+  handleOnKeyDown: PropTypes.func.isRequired,
   handleSourceChange: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   settingsSource: PropTypes.string.isRequired,

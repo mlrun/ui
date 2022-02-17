@@ -3,10 +3,10 @@
 .settings {
   &__members {
     &-summary {
+      margin-bottom: 30px;
+      padding: 19px 0 19px 25px;
       color: $primary;
       background-color: $wildSand;
-      padding: 19px 0 19px 25px;
-      margin-bottom: 30px;
 
       &_icon {
         margin-right: 10px;

@@ -1,14 +1,7 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  createRef
-} from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useHistory, useLocation } from 'react-router-dom'
-import { forEach, groupBy } from 'lodash'
 
 import ProjectSettingsGeneral from '../../elements/ProjectSettingsGeneral/ProjectSettingsGeneral'
 import ProjectSettingsMembers from '../../elements/ProjectSettingsMembers/ProjectSettingsMembers'
@@ -22,7 +15,7 @@ import {
   PROJECTS_SETTINGS_MEMBERS_TAB,
   PROJECTS_SETTINGS_SECRETS_TAB
 } from '../../constants'
-import { page, tabs, validTabs } from './projectSettings.util'
+import { generateMembers, page, tabs, validTabs } from './projectSettings.util'
 import { isProjectValid } from '../../utils/handleRedirect'
 import {
   initialMembersState,
@@ -30,14 +23,11 @@ import {
   membersReducer
 } from '../../elements/MembersPopUp/membersReducer'
 
-import { ReactComponent as User } from '../../images/user.svg'
-import { ReactComponent as Users } from '../../images/users.svg'
-
 import './projectSettings.scss'
 
 const ProjectSettings = ({
-  match,
   frontendSpec,
+  match,
   projectStore,
   setNotification
 }) => {
@@ -86,70 +76,23 @@ const ProjectSettings = ({
       })
   }, [match.params.projectName])
 
-  const fetchProjectMembers = projectId => {
-    return projectsIguazioApi
-      .getProjectMembers(projectId)
-      .then(membersResponse => {
-        const members = []
-        const {
-          project_authorization_role: projectAuthorizationRoles = [],
-          user: users = [],
-          user_group: userGroups = []
-        } = groupBy(membersResponse.data.included, includeItem => {
-          return includeItem.type
-        })
-        membersDispatch({
-          type: membersActions.SET_PROJECT_AUTHORIZATION_ROLES,
-          payload: projectAuthorizationRoles
-        })
-        membersDispatch({
-          type: membersActions.SET_USERS,
-          payload: users
-        })
-        membersDispatch({
-          type: membersActions.SET_USER_GROUPS,
-          payload: userGroups
-        })
-
-        projectAuthorizationRoles.forEach(role => {
-          if (role.relationships) {
-            forEach(role.relationships, relationData => {
-              relationData.data.forEach(identity => {
-                const identityList =
-                  identity.type === 'user' ? users : userGroups
-
-                const {
-                  attributes: { name, username },
-                  id,
-                  type
-                } = identityList.find(identityData => {
-                  return identityData.id === identity.id
-                })
-
-                members.push({
-                  name: type === 'user' ? username : name,
-                  id: id,
-                  type: type,
-                  initialRole: role.attributes.name,
-                  role: role.attributes.name,
-                  icon: type === 'user' ? <User /> : <Users />,
-                  modification: '',
-                  actionElement: createRef()
-                })
-              })
-            })
-          }
-        })
-        membersDispatch({
-          type: membersActions.SET_MEMBERS_ORIGINAL,
-          payload: members
-        })
-        membersDispatch({
-          type: membersActions.SET_MEMBERS,
-          payload: members
-        })
-      })
-  }
+  const fetchProjectMembers = useCallback(
+    projectId => {
+      return projectsIguazioApi
+        .getProjectMembers(projectId)
+        .then(membersResponse =>
+          generateMembers(membersResponse, membersDispatch)
+        )
+        .catch(() =>
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            message: 'Failed to fetch data'
+          })
+        )
+    },
+    [setNotification]
+  )
 
   const fetchProjectMembersVisibility = project => {
     projectsIguazioApi.getProjectMembersVisibility(project)
@@ -167,6 +110,7 @@ const ProjectSettings = ({
     }
   }, [
     fetchProjectIdAndOwner,
+    fetchProjectMembers,
     match.params.projectName,
     projectMembershipIsEnabled
   ])

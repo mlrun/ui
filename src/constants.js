@@ -529,3 +529,13 @@ export const FLOATING_EDGE = 'floating-edge'
 export const STRAIGHT_EDGE = 'straight-edge'
 export const STEP_EDGE = 'step-edge'
 export const SMOOTH_STEP_EDGE = 'smooth-step-edge'
+
+/*=========== PROJECT SETTINGS =============*/
+
+export const ARTIFACT_PATH = 'artifact_path'
+export const SOURCE_URL = 'source'
+export const DESCRIPTION = 'description'
+export const GOALS = 'goals'
+export const DATA = 'data'
+export const LABELS = 'labels'
+export const PARAMS = 'params'

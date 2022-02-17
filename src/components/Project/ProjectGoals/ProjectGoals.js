@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import TextArea from '../../../common/TextArea/TextArea'
 
-import { GOALS } from '../../../components/ProjectSettings/projectSettings.util'
+import { GOALS } from '../../../constants'
 
 const ProjectGoals = React.forwardRef(
   (

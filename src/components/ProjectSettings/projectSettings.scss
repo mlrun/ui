@@ -46,6 +46,12 @@
       border-top: $primaryBorder;
     }
 
+    &-title {
+      margin: 0 0 15px;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 16px;
+    }
     &-subtitle {
       margin: 0 0 15px;
       font-weight: 400;

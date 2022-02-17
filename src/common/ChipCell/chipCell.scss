@@ -22,12 +22,6 @@
       &-block {
         position: relative;
         max-width: 100%;
-
-        &:first-child {
-          .chip {
-            margin-left: 0;
-          }
-        }
       }
     }
 
@@ -35,7 +29,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 2px 0 2px 10px;
+      margin: 2px 0 2px 0;
       border-radius: 32px;
 
       &-background {

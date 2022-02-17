@@ -13,11 +13,11 @@
 
   &__artifact-path {
     &-link {
-      color: $topaz;
       display: block;
-      font-size: 0.75rem;
-      font-weight: 400;
       margin-top: 5px;
+      font-weight: 400;
+      color: $topaz;
+      font-size: 0.75rem;
 
       .link {
         margin-left: 5px;
@@ -27,6 +27,7 @@
 
   &__labels {
     @include fieldWrapper;
+
     padding: 25px 16px 11px;
 
     .chips-wrapper {
@@ -35,8 +36,8 @@
   }
 
   &__params {
-    padding-bottom: 0;
     padding-top: 0;
+    padding-bottom: 0;
 
     .table-row__header {
       border-top: 0;
@@ -44,8 +45,8 @@
   }
 
   &__owner {
-    border-bottom: $dividerBorder;
     margin-bottom: 17px;
+    border-bottom: $dividerBorder;
 
     &-row {
       display: flex;

@@ -532,7 +532,8 @@ const MembersPopUp = ({
 MembersPopUp.propTypes = {
   changeMembersCallback: PropTypes.func.isRequired,
   membersDispatch: PropTypes.func.isRequired,
-  membersState: PropTypes.shape({}).isRequired
+  membersState: PropTypes.shape({}).isRequired,
+  setNotification: PropTypes.func.isRequired
 }
 
 export default MembersPopUp

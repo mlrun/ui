@@ -165,9 +165,17 @@
 
   &__link {
     &-icon {
-      position: absolute;
-      top: -1px;
-      right: -14px;
+      display: inline-flex;
+      margin-left: 3px;
+
+      & > *,
+      a {
+        display: inline-flex;
+      }
+
+      a {
+        transform: translateY(-1px);
+      }
 
       svg {
         width: 12px;

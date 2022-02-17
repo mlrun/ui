@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import { useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
@@ -38,9 +36,11 @@ const ProjectMonitorView = ({
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   handleLaunchIDE,
+  history,
   isNewFunctionPopUpOpen,
   isPopupDialogOpen,
   match,
+  project,
   projectSummary,
   refresh,
   setIsNewFunctionPopUpOpen,
@@ -48,8 +48,6 @@ const ProjectMonitorView = ({
   setShowFunctionsPanel,
   showFunctionsPanel
 }) => {
-  const project = useSelector(store => store.projectStore.project)
-  const history = useHistory()
   const registerArtifactLink = `/projects/${match.params.projectName}/${
     artifactKind === 'model'
       ? 'models'
@@ -221,9 +219,11 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
+  history: PropTypes.shape({}).isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
+  project: PropTypes.object.isRequired,
   projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,

@@ -37,13 +37,15 @@ const ProjectSettingsSecretsView = ({
                 content={secrets}
                 deleteItem={handleSecretDelete}
                 editItem={handleSecretEdit}
+                isKeyEditable={false}
                 isKeyRequired
                 isValueRequired
                 keyHeader="Key"
                 keyLabel="Key"
-                keyType="password"
+                keyType="input"
                 valueHeader="Value"
                 valueLabel="Value"
+                valueType="password"
                 withEditMode
               />
             </div>

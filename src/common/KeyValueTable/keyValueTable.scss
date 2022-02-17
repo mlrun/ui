@@ -2,14 +2,13 @@
 $actionsBlockWidth: 72px;
 
 .key-value-table {
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 305px;
+  background-color: $white;
+
   &__btn {
     visibility: hidden;
-  }
-
-  &__body {
-    overflow: hidden;
-    overflow-y: auto;
-    max-height: 200px;
   }
 
   .table-row {
@@ -27,12 +26,19 @@ $actionsBlockWidth: 72px;
     }
 
     &__last {
+      position: sticky;
+      bottom: 0;
       border: 0;
+      background-color: inherit;
     }
   }
 
   .table-row__header {
+    position: sticky;
+    top: 0;
     font-weight: bold;
+    font-size: 18px;
+    background-color: inherit;
     border-top: $primaryBorder;
   }
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import TextArea from '../../../common/TextArea/TextArea'
 
-import { DESCRIPTION } from '../../../components/ProjectSettings/projectSettings.util'
+import { DESCRIPTION } from '../../../constants'
 
 const ProjectDescription = ({
   editDescriptionData,

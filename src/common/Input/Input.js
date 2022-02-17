@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
 import OptionsMenu from '../OptionsMenu/OptionsMenu'
-import ValidationTemplate from '../OptionsMenu/ValidationTemplate/ValidationTemplate'
+import ValidationTemplate from '../../elements/ValidationTemplate/ValidationTemplate'
 
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -269,7 +269,7 @@ const Input = React.forwardRef(
                 <span className={inputLabelMandatoryClassNames}> *</span>
               )}
             </label>
-            {floatingLabel && link && link.show && typedValue && (
+            {floatingLabel && link && link.show && typedValue.trim() && (
               <div className="input__link-icon">
                 <Tooltip
                   template={
