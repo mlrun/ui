@@ -8,10 +8,13 @@ import {
   clickOnComponent,
   componentIsPresent,
   componentIsVisible,
+  componentIsNotVisible,
   verifyText,
   verifyTextRegExp,
   waitPageLoad,
   isComponentContainsAttributeValue,
+  verifyComponentContainsAttributeValue,
+  verifyComponentNotContainsAttributeValue,
   collapseAccordionSection,
   expandAccordionSection,
   isAccordionSectionCollapsed,
@@ -481,6 +484,13 @@ Then('verify {string} element visibility on {string} wizard', async function(
   await componentIsVisible(this.driver, pageObjects[wizard][component])
 })
 
+Then('verify {string} element invisibility on {string} wizard', async function(
+  component,
+  wizard
+) {
+  await componentIsNotVisible(this.driver, pageObjects[wizard][component])
+})
+
 Then(
   'verify {string} element visibility in {string} on {string} wizard',
   async function(component, accordion, wizard) {
@@ -560,7 +570,7 @@ Then(
     const arr = await findRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][tabSelector],
-      'tab',
+      'key',
       tabName
     )
     const indx = arr[0]
@@ -574,7 +584,7 @@ Then(
     await checkTableColumnValues(
       this.driver,
       pageObjects[wizard][tabSelector],
-      'tab',
+      'key',
       pageObjectsConsts[constWizard][constValue]
     )
   }
@@ -588,13 +598,13 @@ When('select {string} tab in {string} on {string} wizard', async function(
   const arr = await findRowIndexesByColumnValue(
     this.driver,
     pageObjects[wizard][tabSelector],
-    'tab',
+    'key',
     tabName
   )
   const indx = arr[0]
   await clickOnComponent(
     this.driver,
-    pageObjects[wizard][tabSelector]['tableFields']['tab'](indx)
+    pageObjects[wizard][tabSelector]['tableFields']['key'](indx)
   )
 })
 
@@ -605,6 +615,30 @@ Then(
       this.driver,
       pageObjects[wizard][inputField],
       pageObjects['commonPagesHeader']['Common_Hint'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} on {string} wizard should display {string}.{string} in {string}',
+  async function(inputField, wizard, constStorage, constValue, commonTipType) {
+    await checkHintText(
+      this.driver,
+      pageObjects[wizard][inputField],
+      pageObjects['commonPagesHeader'][commonTipType],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} on {string} wizard should display options {string}.{string}',
+  async function(inputField, wizard, constStorage, constValue) {
+    await checkHintText(
+      this.driver,
+      pageObjects[wizard][inputField],
+      pageObjects['commonPagesHeader']['Common_Options'],
       pageObjectsConsts[constStorage][constValue]
     )
   }
@@ -823,6 +857,18 @@ Then('verify {string} according hint rules on {string} wizard', async function(
   )
 })
 
+Then('verify {string} options rules on {string} wizard', async function(
+  inputField,
+  wizardName
+) {
+  await checkInputAccordingHintText(
+    this.driver,
+    this.attach,
+    pageObjects[wizardName][inputField],
+    pageObjects['commonPagesHeader']['Common_Options']
+  )
+})
+
 Then(
   'verify breadcrumbs {string} label should be equal {string} value',
   async function(labelType, value) {
@@ -830,6 +876,28 @@ Then(
       this.driver,
       pageObjects['commonPagesHeader']['Breadcrumbs'][`${labelType}Label`],
       value
+    )
+  }
+)
+
+Then(
+  'verify value should equal {string} in {string} on {string} wizard',
+  async function(value, componentName, wizardName) {
+    await verifyText(
+      this.driver,
+      pageObjects[wizardName][componentName]['label'],
+      value
+    )
+  }
+)
+
+Then(
+  'verify value should equal {string}.{string} in {string} on {string} wizard',
+  async function(constStorage, constValue, componentName, wizardName) {
+    await verifyText(
+      this.driver,
+      pageObjects[wizardName][componentName]['label'],
+      pageObjectsConsts[constStorage][constValue]
     )
   }
 )
@@ -906,6 +974,52 @@ When(
     await clickOnComponent(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](indx)
+    )
+  }
+)
+
+Then('{string} on {string} wizard should be {string}', async function(
+  componentName,
+  wizardName,
+  state
+) {
+  await verifyComponentContainsAttributeValue(
+    this.driver,
+    pageObjects[wizardName][componentName],
+    'class',
+    state
+  )
+})
+
+Then('{string} on {string} wizard should not be {string}', async function(
+  componentName,
+  wizardName,
+  state
+) {
+  await verifyComponentNotContainsAttributeValue(
+    this.driver,
+    pageObjects[wizardName][componentName],
+    'class',
+    state
+  )
+})
+
+Then(
+  'compare {string} element value on {string} wizard with test {string} context value',
+  async function(componentName, wizardName, savedValue) {
+    await verifyText(
+      this.driver,
+      pageObjects[wizardName][componentName],
+      this.testContext[savedValue].value
+    )
+  }
+)
+
+Then(
+  'compare current browser URL with test {string} context value',
+  async function(savedValue) {
+    expect(await this.driver.getCurrentUrl()).equal(
+      this.testContext[savedValue].value
     )
   }
 )

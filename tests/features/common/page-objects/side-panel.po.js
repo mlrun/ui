@@ -1080,7 +1080,7 @@ module.exports = {
       generateInputGroup(
         '.new-item-side-panel .panel-title__container .accordion__container .input-wrapper',
         true,
-        true,
+        '.input__warning svg',
         true
       )
     ),

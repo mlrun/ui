@@ -275,6 +275,14 @@ function deleteProject(req, res) {
       artifacts.artifacts,
       artifact => artifact.project === req.params['project']
     )
+    remove(
+      run.data,
+      artifact => artifact.metadata.project === req.params['project']
+    )
+    remove(
+      run.data,
+      artifact => artifact.metadata.project === req.params['project']
+    )
     delete secretKeys[req.params.project]
     res.statusCode = 204
   } else {
@@ -1062,12 +1070,32 @@ function postSubmitJob(req, res) {
     delete job.status.status_text
     job.status.results = {}
 
-    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-      6
-    )}/${req.body.task.spec.function.slice(6)}.yaml`
-    let funcObject = yaml.load(
-      fs.readFileSync(funcYAMLPath, 'utf8').replace('|', '')
-    )
+    let funcObject
+    if (
+      req.body.task.spec.function.includes('@') &&
+      req.body.task.spec.function.includes('/')
+    ) {
+      const filterPRJ = req.body.task.spec.function.split('/')[0]
+      const filterFunc = req.body.task.spec.function.split('/')[1].split('@')[0]
+      const filterFuncHash = req.body.task.spec.function
+        .split('/')[1]
+        .split('@')[1]
+      funcObject = funcs.funcs
+        .filter(item => item.metadata.hash === filterFuncHash)
+        .filter(item => item.metadata.project === filterPRJ)
+        .filter(item => item.metadata.name === filterFunc)[0]
+    } else {
+      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
+        6
+      )}/${req.body.task.spec.function.slice(6)}.yaml`
+      funcObject = yaml.load(
+        fs
+          .readFileSync(funcYAMLPath, 'utf8')
+          .replace('|+', '')
+          .replace('|', '')
+      )
+    }
+
     const funcUID = makeUID(32)
     // funcObject.kind = respTemplate.data.metadata.labels.kind
     funcObject.metadata.hash = funcUID

@@ -12,8 +12,8 @@ Feature: Project Settings page
         And click on row root with value "automation-test-name8" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "automation-test-name8" value
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        Then click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard should contains "Project_Settings"."Tab_List"
         Then verify "General" tab is active in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
@@ -31,8 +31,8 @@ Feature: Project Settings page
         Given open url
         And click on row root with value "automation-test-name5" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        Then click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button |
@@ -68,7 +68,6 @@ Feature: Project Settings page
             | key  | value  |
             | key0 | value0 |
             | key6 | value6 |
-        And remove "automation-test-name5" MLRun Project with code 204
 
     @passive
     Scenario: Check MLRun logo redirection
@@ -76,8 +75,8 @@ Feature: Project Settings page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        Then click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
@@ -89,8 +88,8 @@ Feature: Project Settings page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        Then click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
@@ -114,8 +113,8 @@ Feature: Project Settings page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "Project" wizard
-        Then click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard

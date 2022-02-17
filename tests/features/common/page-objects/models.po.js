@@ -28,7 +28,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        tab: 'a'
+        key: 'a'
       }
     }
   }
@@ -168,7 +168,8 @@ module.exports = {
         '.content .content__action-bar .filters .tag-filter',
         'input',
         '.tag-filter__dropdown div',
-        ''
+        '',
+        true
       )
     ),
     Table_Name_Filter_Input: inputGroup(

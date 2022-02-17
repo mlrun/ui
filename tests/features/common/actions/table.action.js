@@ -106,13 +106,29 @@ const action = {
   isDatetimeCelsValueInRange: async function(
     driver,
     table,
-    column,
+    columnName,
     fromDateTime,
     toDateTime
   ) {
-    // const arr = await getColumnValues(driver, table, column)
-    // TODO: wait while defect with year will be fixed
-    console.log('TODO: Should be implemented')
+    const arr = await getColumnValues(driver, table, columnName)
+
+    const minDate = new Date(fromDateTime)
+    const maxDate = new Date(toDateTime)
+
+    const minStamp = Date.parse(
+      minDate.toString().slice(0, 11) + minDate.toString().slice(16, 24)
+    )
+    const maxStamp = Date.parse(
+      maxDate.toString().slice(0, 11) + maxDate.toString().slice(16, 24)
+    )
+
+    const flag = arr.every(
+      item => minStamp < Date.parse(item) && maxStamp > Date.parse(item)
+    )
+    expect(flag).equal(
+      true,
+      `values "${arr}" is not in range: (${fromDateTime}..${toDateTime})`
+    )
   },
   findRowIndexesByColumnValue: async function(
     driver,
@@ -122,6 +138,7 @@ const action = {
   ) {
     const arr = await getColumnValues(driver, table, columnName)
     const indexes = []
+
     for (let indx in arr) {
       if (arr[indx] === value) {
         indexes.push(parseInt(indx) + 1)
@@ -283,6 +300,27 @@ const action = {
     }
 
     return new DataFrame(result)
+  },
+  putToTestContextCellParameters: async function(
+    driver,
+    testContext,
+    table,
+    index,
+    column,
+    attribute
+  ) {
+    const cellElement = await driver.findElement(
+      table.tableFields[column](index)
+    )
+
+    testContext['cell'] = {
+      name: column,
+      value: await cellElement.getText()
+    }
+    testContext[attribute] = {
+      kind: attribute,
+      value: await cellElement.getAttribute(attribute)
+    }
   }
 }
 
