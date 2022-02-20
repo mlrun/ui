@@ -82,6 +82,8 @@ export const FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN =
   'FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN'
 export const FETCH_SCHEDULED_JOB_ACCESS_KEY_END =
   'FETCH_SCHEDULED_JOB_ACCESS_KEY_END'
+export const JOB_DEFAULT_OUTPUT_PATH =
+  'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}'
 export const REMOVE_JOB = 'REMOVE_JOB'
 export const REMOVE_JOB_ERROR = 'REMOVE_JOB_ERROR'
 export const REMOVE_JOB_PODS = 'REMOVE_JOB_PODS'
