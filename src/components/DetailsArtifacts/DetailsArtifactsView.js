@@ -7,7 +7,7 @@ import Download from '../../common/Download/Download'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 
-import { DATASETS_TAB, MODELS_TAB } from '../../constants'
+import { DATASETS_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 
 import { ReactComponent as Popout } from '../../images/popout.svg'
 import { ReactComponent as DetailsIcon } from '../../images/view-details.svg'
@@ -17,6 +17,7 @@ import './detailsArtifacts.scss'
 const DetailsArtifactsView = ({
   artifactsIndexes,
   content,
+  iteration,
   match,
   noData,
   preview,
@@ -28,11 +29,14 @@ const DetailsArtifactsView = ({
       const artifactScreenLinks = {
         model: `/projects/${
           match.params.projectName
-        }/models/${MODELS_TAB}/${artifact.db_key || artifact.key}/overview`,
+        }/models/${MODELS_TAB}/${artifact.db_key ||
+          artifact.key}/${artifact.tag ??
+          TAG_FILTER_LATEST}/${iteration}/overview`,
         dataset: `/projects/${
           match.params.projectName
         }/feature-store/${DATASETS_TAB}/${artifact.db_key ||
-          artifact.key}/overview`
+          artifact.key}/${artifact.tag ??
+          TAG_FILTER_LATEST}/${iteration}/overview`
       }
 
       return (
@@ -73,8 +77,8 @@ const DetailsArtifactsView = ({
                     artifactScreenLinks[artifact.kind] ??
                     `/projects/${
                       match.params.projectName
-                    }/files/${artifact.db_key || artifact.key}/${artifact.tag ||
-                      artifact.tree}/overview`
+                    }/files/${artifact.db_key || artifact.key}/${artifact.tag ??
+                      TAG_FILTER_LATEST}/${iteration}/overview`
                   }
                 >
                   <DetailsIcon />
@@ -116,6 +120,7 @@ const DetailsArtifactsView = ({
 DetailsArtifactsView.propTypes = {
   artifactsIndexes: PropTypes.array.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  iteration: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   noData: PropTypes.bool.isRequired,
   preview: PropTypes.shape({}).isRequired,
