@@ -73,8 +73,8 @@ const ProjectSettingsGeneralView = ({
                   }))
                 }
                 value={
-                  editProjectData.artifact_path.value ||
-                  project.data?.spec.artifact_path ||
+                  editProjectData.artifact_path.value ??
+                  project.data?.spec.artifact_path ??
                   ''
                 }
               />

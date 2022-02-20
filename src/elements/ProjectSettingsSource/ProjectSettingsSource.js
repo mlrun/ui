@@ -24,6 +24,7 @@ const ProjectSettingsSource = ({
     >
       <Input
         floatingLabel
+        focused
         invalid={!validation.isSourceValid}
         label="Source URL"
         link={{
