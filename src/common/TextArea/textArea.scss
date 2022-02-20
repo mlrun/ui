@@ -5,7 +5,7 @@
 .text-area {
   @include fieldWrapper;
 
-  white-space: pre;
+  white-space: pre-wrap;
   resize: none;
 
   &__warning {
