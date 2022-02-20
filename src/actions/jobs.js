@@ -44,7 +44,8 @@ import {
   REMOVE_JOB,
   FETCH_ALL_JOB_RUNS_BEGIN,
   FETCH_ALL_JOB_RUNS_FAILURE,
-  FETCH_ALL_JOB_RUNS_SUCCESS
+  FETCH_ALL_JOB_RUNS_SUCCESS,
+  STATUS_CODE_FORBIDDEN
 } from '../constants'
 
 const jobsActions = {
@@ -259,7 +260,13 @@ const jobsActions = {
         return result
       })
       .catch(error => {
-        dispatch(jobsActions.runNewJobFailure(error.message))
+        dispatch(
+          jobsActions.runNewJobFailure(
+            error.response.status === STATUS_CODE_FORBIDDEN
+              ? 'You are not permitted to run new job'
+              : error.message
+          )
+        )
 
         throw error
       })
