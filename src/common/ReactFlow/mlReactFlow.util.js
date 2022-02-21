@@ -3,8 +3,8 @@ import dagre from 'dagre'
 import { isEdge, isNode, Position } from 'react-flow-renderer'
 
 export const getLayoutedElements = (elements, direction = 'TB') => {
-  const elWidth = 130
-  const elHeight = 50
+  const elWidth = 300
+  const elHeight = 80
   const dagreGraph = new dagre.graphlib.Graph()
   const isHorizontal = direction === 'LR'
 
