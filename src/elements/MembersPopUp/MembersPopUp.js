@@ -168,7 +168,7 @@ const MembersPopUp = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Mebmers updated successfully'
+          message: 'Members updated successfully'
         })
       })
       .catch(error => {

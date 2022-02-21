@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { isEqual, isNil } from 'lodash'
+import { isEmpty, isEqual, isNil, omitBy } from 'lodash'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
@@ -32,6 +32,7 @@ const ProjectSettingsGeneral = ({
   projectMembershipIsEnabled,
   removeProjectData,
   setNotification,
+  setProjectLabels,
   setProjectParams,
   setProjectSettings
 }) => {
@@ -92,8 +93,15 @@ const ProjectSettingsGeneral = ({
       }
     }
 
-    if (!isEqual(objectLabels, projectStore.project.data.metadata.labels)) {
+    const storeLabels = omitBy(
+      projectStore.project.data.metadata.labels,
+      isEmpty
+    )
+
+    if (!isEqual(objectLabels, storeLabels)) {
       sendProjectSettingsData(LABELS, data, objectLabels)
+    } else {
+      setProjectLabels(storeLabels)
     }
   }
 
