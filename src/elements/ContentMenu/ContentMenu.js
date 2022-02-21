@@ -37,8 +37,10 @@ const ContentMenu = ({ activeTab, match, screen, tabs, onClick }) => {
                           isDemoMode ? '?demo=true' : ''
                         }`
                   }
+                  className={tab.icon && 'content-menu__item-icon'}
                   onClick={onClick && (e => handleClick(e, tab.id))}
                 >
+                  {tab.icon && <i>{tab.icon}</i>}
                   {tab.label ?? tab.id}
                   {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
                     <span className="content-menu__item__preview"> (Beta)</span>

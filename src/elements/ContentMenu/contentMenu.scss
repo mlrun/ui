@@ -8,6 +8,7 @@
   left: 0;
   width: 100%;
   min-width: 510px;
+  border-bottom: $dividerBorder;
 
   &__list {
     display: flex;
@@ -46,10 +47,26 @@
     a {
       display: block;
       padding: 8px 24px;
+      position: relative;
+
+      &.content-menu__item-icon {
+        padding-left: 40px;
+        & > * {
+          position: absolute;
+          left: 15px;
+          top: 4px;
+          bottom: 0;
+        }
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
 
     &_active {
-      color: $cornflowerBlue;
+      color: $malibu;
 
       &::after {
         opacity: 1;
@@ -58,6 +75,12 @@
 
       a {
         cursor: default;
+      }
+
+      .content-menu__item-icon {
+        path {
+          fill: $malibu;
+        }
       }
     }
 

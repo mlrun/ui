@@ -8,8 +8,6 @@ import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
 
-import { PROJECTS_SETTINGS_GENERAL_TAB } from '../../constants'
-
 import { ReactComponent as PinIcon } from '../../images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from '../../images/unpin-icon.svg'
 import { ReactComponent as SettingsIcon } from '../../images/pref-icon.svg'
@@ -62,7 +60,7 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
             <NavbarLink
               icon={<SettingsIcon />}
               label="Project settings"
-              link={`/projects/${match.params.projectName}/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
+              link={`/projects/${match.params.projectName}/settings`}
             />
           </ul>
         </div>

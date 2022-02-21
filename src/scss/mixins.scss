@@ -992,3 +992,13 @@
     );
   }
 }
+
+@mixin fieldWrapper {
+  position: relative;
+  width: 100%;
+  padding: 18px 16px;
+  color: $primary;
+  background-color: transparent;
+  border: $primaryBorder;
+  border-radius: 4px;
+}
