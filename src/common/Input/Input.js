@@ -138,8 +138,8 @@ const Input = React.forwardRef(
     }, [inputRef, focused])
 
     useEffect(() => {
-      if (inputLabelRef) {
-        setLabelWidth(inputLabelRef.current?.clientWidth)
+      if (inputLabelRef.current) {
+        setLabelWidth(inputLabelRef.current?.getBoundingClientRect().width)
       }
     }, [label])
 
