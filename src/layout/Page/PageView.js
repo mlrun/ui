@@ -15,24 +15,25 @@ export default function PageView({ children }) {
     localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
 
-  const match = useRouteMatch('/projects/:projectName')
+  const projectName = useRouteMatch('/projects/:projectName')?.params
+    .projectName
 
   const headerShown =
     window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
 
   const pinnedClasses = classNames(
-    isPinned && match ? 'pinned' : 'unpinned',
+    isPinned && projectName ? 'pinned' : 'unpinned',
     headerShown && 'has-header'
   )
 
   return (
     <div className="app">
       {headerShown && <Header />}
-      {match && (
+      {projectName && (
         <Navbar
-          match={match}
           isPinned={isPinned}
           headerShown={headerShown}
+          projectName={projectName}
           setIsPinned={setIsPinned}
         />
       )}
