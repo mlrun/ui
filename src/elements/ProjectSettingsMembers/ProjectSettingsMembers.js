@@ -14,6 +14,8 @@ const ProjectSettingsMembers = ({
   projectMembershipIsEnabled,
   setNotification
 }) => {
+  const totalMembersInProject =
+    membersState.users.length + membersState.userGroups.length
   return (
     <div className="settings__card">
       <div className="settings__card-content">
@@ -24,9 +26,10 @@ const ProjectSettingsMembers = ({
                 <Users />
               </span>
               <span className="settings__members-summary_amount">
-                {membersState.users.length + membersState.userGroups.length}
+                {totalMembersInProject}
               </span>
-              members has access to this project
+              member{totalMembersInProject !== 1 && 's'} has access to this
+              project
             </div>
             <MembersPopUp
               changeMembersCallback={changeMembersCallback}
