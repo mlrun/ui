@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { Link } from 'react-router-dom'
 import { forEach, isEmpty, intersectionWith } from 'lodash'
 
 import Details from '../Details/Details'
@@ -10,6 +9,7 @@ import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import Table from '../Table/Table'
+import TableTop from '../../elements/TableTop/TableTop'
 
 import {
   getLayoutedElements,
@@ -17,7 +17,7 @@ import {
 } from '../../common/ReactFlow/mlReactFlow.util'
 import { getWorkflowDetailsLink } from './workflow.util'
 import functionsActions from '../../actions/functions'
-import { page } from '../JobsPage/jobsData'
+import { page } from '../Jobs/jobs.util'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
@@ -26,8 +26,8 @@ import {
   ML_NODE,
   PRIMARY_NODE
 } from '../../constants'
+import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 
-import { ReactComponent as Back } from '../../images/back-arrow.svg'
 import { ReactComponent as ListView } from '../../images/listview.svg'
 import { ReactComponent as Pipelines } from '../../images/pipelines.svg'
 
@@ -131,13 +131,6 @@ const Workflow = ({
     workflow.graph
   ])
 
-  const getCloseDetailsLink = () => {
-    return match.url
-      .split('/')
-      .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
-      .join('/')
-  }
-
   const onElementClick = (event, element) => {
     if (element.data?.customData?.run_uid) {
       history.push(
@@ -170,24 +163,10 @@ const Workflow = ({
 
   return (
     <div className="workflow-container">
-      <div className="workflow-header">
-        <div className="link-back">
-          <Link
-            to={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`}
-            className="link-back__icon"
-          >
-            <Tooltip template={<TextTooltipTemplate text="Back" />}>
-              <Back />
-            </Tooltip>
-          </Link>
-          <div className="link-back__title">
-            <Tooltip
-              template={<TextTooltipTemplate text={workflow?.run?.name} />}
-            >
-              {workflow?.run?.name}
-            </Tooltip>
-          </div>
-        </div>
+      <TableTop
+        link={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`}
+        text={workflow?.run?.name}
+      >
         <div className="actions">
           <Tooltip
             template={
@@ -212,7 +191,7 @@ const Workflow = ({
             </button>
           </Tooltip>
         </div>
-      </div>
+      </TableTop>
       <div className="graph-container workflow-content">
         {workflowsViewMode === 'graph' ? (
           <>
@@ -226,7 +205,9 @@ const Workflow = ({
                 <Details
                   actionsMenu={actionsMenu}
                   detailsMenu={pageData.details.menu}
-                  getCloseDetailsLink={getCloseDetailsLink}
+                  getCloseDetailsLink={() =>
+                    getCloseDetailsLink(match, 'workflowId')
+                  }
                   handleCancel={handleCancel}
                   match={match}
                   pageData={pageData}
@@ -242,7 +223,7 @@ const Workflow = ({
           <Table
             actionsMenu={actionsMenu}
             content={jobsContent}
-            getCloseDetailsLink={getCloseDetailsLink}
+            getCloseDetailsLink={() => getCloseDetailsLink(match, 'workflowId')}
             handleCancel={handleCancel}
             handleSelectItem={handleSelectItem}
             match={match}

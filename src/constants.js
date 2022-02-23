@@ -28,6 +28,7 @@ export const STATUS_CODE_FORBIDDEN = 403
 export const PROJECTS_PAGE = 'PROJECTS'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
 export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
+export const PROJECTS_SETTINGS_MEMBERS_TAB = 'members'
 export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
 
 export const JOBS_PAGE = 'JOBS'
@@ -61,6 +62,9 @@ export const ABORT_JOB_BEGIN = 'ABORT_JOB_BEGIN'
 export const ABORT_JOB_FAILURE = 'ABORT_JOB_FAILURE'
 export const ABORT_JOB_SUCCESS = 'ABORT_JOB_SUCCESS'
 export const EDIT_JOB_FAILURE = 'EDIT_JOB_FAILURE'
+export const FETCH_ALL_JOB_RUNS_BEGIN = 'FETCH_ALL_JOB_RUNS_BEGIN'
+export const FETCH_ALL_JOB_RUNS_FAILURE = 'FETCH_ALL_JOB_RUNS_FAILURE'
+export const FETCH_ALL_JOB_RUNS_SUCCESS = 'FETCH_ALL_JOB_RUNS_SUCCESS'
 export const FETCH_JOB_BEGIN = 'FETCH_JOB_BEGIN'
 export const FETCH_JOB_FAILURE = 'FETCH_JOB_FAILURE'
 export const FETCH_JOB_SUCCESS = 'FETCH_JOB_SUCCESS'
@@ -79,6 +83,8 @@ export const FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN =
   'FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN'
 export const FETCH_SCHEDULED_JOB_ACCESS_KEY_END =
   'FETCH_SCHEDULED_JOB_ACCESS_KEY_END'
+export const JOB_DEFAULT_OUTPUT_PATH =
+  'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}'
 export const REMOVE_JOB = 'REMOVE_JOB'
 export const REMOVE_JOB_ERROR = 'REMOVE_JOB_ERROR'
 export const REMOVE_JOB_PODS = 'REMOVE_JOB_PODS'
@@ -525,3 +531,13 @@ export const FLOATING_EDGE = 'floating-edge'
 export const STRAIGHT_EDGE = 'straight-edge'
 export const STEP_EDGE = 'step-edge'
 export const SMOOTH_STEP_EDGE = 'smooth-step-edge'
+
+/*=========== PROJECT SETTINGS =============*/
+
+export const ARTIFACT_PATH = 'artifact_path'
+export const SOURCE_URL = 'source'
+export const DESCRIPTION = 'description'
+export const GOALS = 'goals'
+export const DATA = 'data'
+export const LABELS = 'labels'
+export const PARAMS = 'params'

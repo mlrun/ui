@@ -82,7 +82,10 @@ const DetailsView = React.forwardRef(
                 to={location => {
                   const urlArray = location.pathname.split('/')
 
-                  return urlArray.slice(0, -2).join('/')
+                  return (
+                    getCloseDetailsLink(selectedItem.name) ??
+                    urlArray.slice(0, -2).join('/')
+                  )
                 }}
                 onClick={() => {
                   if (detailsStore.changes.counter > 0) {
@@ -214,12 +217,13 @@ const DetailsView = React.forwardRef(
           <Link
             data-testid="details-close-btn"
             to={
-              getCloseDetailsLink ??
-              `/projects/${
-                match.params.projectName
-              }/${pageData.page.toLowerCase()}${
-                match.params.pageTab ? `/${match.params.pageTab}` : ''
-              }`
+              getCloseDetailsLink
+                ? getCloseDetailsLink(selectedItem.name)
+                : `/projects/${
+                    match.params.projectName
+                  }/${pageData.page.toLowerCase()}${
+                    match.params.pageTab ? `/${match.params.pageTab}` : ''
+                  }`
             }
             onClick={() => {
               if (detailsStore.changes.counter > 0) {

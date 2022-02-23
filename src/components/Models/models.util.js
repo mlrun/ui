@@ -253,6 +253,10 @@ const realTimePipelinesTableHeaders = () => [
   {
     header: 'Type',
     class: 'functions_big'
+  },
+  {
+    header: '',
+    class: 'action_cell'
   }
 ]
 export const tabs = [

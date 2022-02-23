@@ -1,15 +1,10 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
 @import '../../scss/shadows';
+@import '../../scss/mixins';
 
 .input {
-  position: relative;
-  width: 100%;
-  padding: 18px 16px;
-  color: $primary;
-  background-color: transparent;
-  border: $primaryBorder;
-  border-radius: 4px;
+  @include fieldWrapper;
 
   &::placeholder {
     color: $spunPearl;
@@ -146,6 +141,7 @@
       font-weight: 700;
       font-size: 10px;
       line-height: 12px;
+      pointer-events: auto;
 
       .input__label-mandatory:not(.input__label-mandatory_disabled) {
         color: $topaz;
@@ -153,6 +149,8 @@
     }
 
     &-floating {
+      display: flex;
+      align-items: center;
       position: absolute;
       top: 15px;
       left: 16px;
@@ -162,6 +160,31 @@
 
     &_disabled {
       color: $spunPearl;
+    }
+  }
+
+  &__link {
+    &-icon {
+      display: inline-flex;
+      margin-left: 3px;
+
+      & > *,
+      a {
+        display: inline-flex;
+      }
+
+      a {
+        transform: translateY(-1px);
+      }
+
+      svg {
+        width: 12px;
+        height: 12px;
+
+        path {
+          fill: $cornflowerBlue;
+        }
+      }
     }
   }
 

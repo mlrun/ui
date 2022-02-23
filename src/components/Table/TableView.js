@@ -78,7 +78,7 @@ const TableView = ({
                 case ARTIFACTS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
-                  return match.params.pageTab !== REAL_TIME_PIPELINES_TAB ? (
+                  return (
                     <ArtifactsTableRow
                       actionsMenu={actionsMenu}
                       content={content}
@@ -88,16 +88,6 @@ const TableView = ({
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
-                    />
-                  ) : (
-                    <FunctionsTableRow
-                      actionsMenu={actionsMenu}
-                      key={i}
-                      content={content}
-                      match={match}
-                      rowItem={rowItem}
-                      selectedItem={selectedItem}
-                      handleSelectItem={handleSelectItem}
                     />
                   )
                 case FEATURE_STORE_PAGE:
@@ -158,7 +148,19 @@ const TableView = ({
                 case ARTIFACTS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
-                  return (
+                  return match.params.pageTab === REAL_TIME_PIPELINES_TAB ? (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      handleExpandRow={handleExpandRow}
+                      handleSelectItem={handleSelectItem}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                    />
+                  ) : (
                     <ArtifactsTableRow
                       actionsMenu={actionsMenu}
                       content={content}

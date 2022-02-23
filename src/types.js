@@ -132,3 +132,8 @@ export const ADDITIONAL_SPLIT_BUTTON = PropTypes.shape({
   selectedOption: SELECT_OPTION,
   variant: BUTTON_VARIANTS
 })
+
+export const INPUT_LINK = PropTypes.shape({
+  show: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  url: PropTypes.string
+})

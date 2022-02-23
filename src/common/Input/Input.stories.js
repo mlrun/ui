@@ -83,8 +83,33 @@ export const withValidationRules = Template.bind({})
 withValidationRules.args = {
   ...commonArgs,
   density: 'chunky',
+  invalid: true,
   label: 'Field is required',
   required: true,
   requiredText: 'Field is required',
-  validationRules: getValidationRules('jobName')
+  validationRules: getValidationRules('job.name'),
+  value: ' test#2!'
+}
+
+export const withStaticLink = Template.bind({})
+withStaticLink.args = {
+  ...commonArgs,
+  label: 'label with static link',
+  link: {
+    show: true,
+    url: 'https:github.com'
+  },
+  value: 'test'
+}
+
+export const withDynamicLink = Template.bind({})
+const value = 'some text'
+withDynamicLink.args = {
+  ...commonArgs,
+  label: 'label with dynamic link',
+  link: {
+    show: value,
+    url: value
+  },
+  value
 }

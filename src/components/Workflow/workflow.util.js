@@ -1,4 +1,4 @@
-import { page } from '../JobsPage/jobsData'
+import { page } from '../Jobs/jobs.util'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
 export const getWorkflowDetailsLink = (params, workflowId, jobId, tab) => {

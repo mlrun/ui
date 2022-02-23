@@ -36,10 +36,10 @@ const tableActions = {
       payload: featureVectorData
     })
   },
-  updateGroupedFeatures: groupedFeatures => dispatch => {
+  updateGroupedFeatures: (groupedFeatures, projectName) => dispatch => {
     return dispatch({
       type: UPDATE_GROUPED_FEATURES,
-      payload: groupedFeatures
+      payload: { groupedFeatures, projectName }
     })
   }
 }

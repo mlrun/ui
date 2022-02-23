@@ -33,9 +33,7 @@ export const getLinks = match => {
     {
       icon: <PackageIcon />,
       id: 'feature-store',
-      label: `Feature store${
-        window.mlrunConfig.betaMode === 'enabled' ? ' (Beta)' : ''
-      }`,
+      label: 'Feature store',
       link: `${base_url}/feature-store`
     },
     {

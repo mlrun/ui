@@ -245,6 +245,12 @@ const validationRules = {
         generateRule.length({ max: 56 }),
         generateRule.required()
       ]
+    },
+    set: {
+      tag: [
+        generateRule.validCharacters('a-z A-Z 0-9 - _ .'),
+        generateRule.beginEndWith('a-z A-Z 0-9')
+      ]
     }
   },
   job: {

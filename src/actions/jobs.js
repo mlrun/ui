@@ -41,7 +41,11 @@ import {
   SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
-  REMOVE_JOB
+  REMOVE_JOB,
+  FETCH_ALL_JOB_RUNS_BEGIN,
+  FETCH_ALL_JOB_RUNS_FAILURE,
+  FETCH_ALL_JOB_RUNS_SUCCESS,
+  STATUS_CODE_FORBIDDEN
 } from '../constants'
 
 const jobsActions = {
@@ -70,6 +74,33 @@ const jobsActions = {
   editJobFailure: error => ({
     type: EDIT_JOB_FAILURE,
     payload: error
+  }),
+  fetchAllJobRuns: (project, filters, jobName, scheduled) => dispatch => {
+    dispatch(jobsActions.fetchAllJobRunsBegin())
+
+    return jobsApi
+      .getAllJobRuns(project, jobName, filters)
+      .then(({ data }) => {
+        dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
+
+        return data.runs
+      })
+      .catch(error => {
+        dispatch(jobsActions.fetchAllJobRunsFailure(error))
+
+        throw error
+      })
+  },
+  fetchAllJobRunsBegin: () => ({
+    type: FETCH_ALL_JOB_RUNS_BEGIN
+  }),
+  fetchAllJobRunsFailure: error => ({
+    type: FETCH_ALL_JOB_RUNS_FAILURE,
+    payload: error
+  }),
+  fetchAllJobRunsSuccess: jobsList => ({
+    type: FETCH_ALL_JOB_RUNS_SUCCESS,
+    payload: jobsList
   }),
   fetchJob: (project, jobId) => dispatch => {
     dispatch(jobsActions.fetchJobBegin())
@@ -140,7 +171,7 @@ const jobsActions = {
     type: FETCH_JOB_LOGS_SUCCESS,
     payload: logs
   }),
-  fetchJobs: (project, filters, scheduled) => dispatch => {
+  fetchJobs: (project, filters, jobName, scheduled) => dispatch => {
     const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getAllJobs
 
     dispatch(jobsActions.fetchJobsBegin())
@@ -229,7 +260,13 @@ const jobsActions = {
         return result
       })
       .catch(error => {
-        dispatch(jobsActions.runNewJobFailure(error.message))
+        dispatch(
+          jobsActions.runNewJobFailure(
+            error.response.status === STATUS_CODE_FORBIDDEN
+              ? 'You are not permitted to run new job'
+              : error.message
+          )
+        )
 
         throw error
       })
