@@ -312,8 +312,16 @@ const projectsAction = {
   fetchProjectJobs: project => dispatch => {
     dispatch(projectsAction.fetchProjectJobsBegin())
 
+    const params = {
+      project,
+      'partition-by': 'name',
+      'partition-sort-by': 'updated',
+      'rows-per-partition': '5',
+      last: '5'
+    }
+
     return projectsApi
-      .getJobsAndWorkflows(project)
+      .getJobsAndWorkflows(project, params)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectJobsSuccess(
