@@ -127,7 +127,8 @@ const ProjectSettingsGeneralView = ({
                 <div className="row-value">
                   <span className="row-label">Owner:</span>
                   <span className="row-name">
-                    {membersState.projectInfo?.owner?.username}
+                    {membersState.projectInfo?.owner?.username ||
+                      project.data?.spec?.owner}
                   </span>
                 </div>
               </div>

@@ -493,6 +493,7 @@ const MembersPopUp = ({
         />
         <div className="apply-discard-buttons">
           <Button
+            disabled={!areChangesMade()}
             variant={LABEL_BUTTON}
             label="Discard"
             className="pop-up-dialog__btn_cancel"
