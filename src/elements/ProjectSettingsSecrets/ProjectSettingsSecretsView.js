@@ -21,7 +21,7 @@ const ProjectSettingsSecretsView = ({
           <Loader />
         ) : error ? (
           <div>
-            <h1>{error.message || error}</h1>
+            <h1>You are not allowed to read resources</h1>
           </div>
         ) : (
           <div className="settings__card-content">

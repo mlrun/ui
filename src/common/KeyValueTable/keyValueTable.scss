@@ -4,7 +4,7 @@ $actionsBlockWidth: 72px;
 .key-value-table {
   overflow: hidden;
   overflow-y: auto;
-  max-height: 305px;
+  max-height: 280px;
   background-color: $white;
 
   &__btn {
@@ -14,7 +14,7 @@ $actionsBlockWidth: 72px;
   .table-row {
     display: flex;
     align-items: center;
-    min-height: 61px;
+    min-height: 56px;
     border-bottom: $primaryBorder;
 
     &:not(.no-hover):hover {
@@ -45,7 +45,7 @@ $actionsBlockWidth: 72px;
   .table-cell {
     display: flex;
     align-items: center;
-    padding: 10px 5px 10px 10px;
+    padding: 8px 5px 8px 10px;
     color: $primary;
   }
 
@@ -97,7 +97,6 @@ $actionsBlockWidth: 72px;
 
     .input {
       width: 100%;
-      border-radius: unset;
 
       &_edit {
         border: $primaryBorder;
