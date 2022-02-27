@@ -108,7 +108,7 @@ const Table = ({
     } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
       let groupWorkflowItem = map(groupedContent, (jobs, workflowId) =>
         workflows.find(workflow => workflow.id === workflowId)
-      )
+      ).filter(workflow => workflow)
 
       setTableContent(state => ({
         ...state,

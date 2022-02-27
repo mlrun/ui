@@ -142,6 +142,24 @@ const TableView = ({
                   return null
               }
             })
+          ) : groupFilter === GROUP_BY_WORKFLOW &&
+            groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
+            groupLatestItem.map((workflow, index) => {
+              return (
+                <JobsTableRow
+                  actionsMenu={actionsMenu}
+                  key={index}
+                  content={content}
+                  handleExpandRow={handleExpandRow}
+                  handleSelectItem={handleSelectItem}
+                  isGroupedByWorkflow
+                  match={match}
+                  rowItem={workflow}
+                  selectedItem={selectedItem}
+                  workflows={workflows}
+                />
+              )
+            })
           ) : groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
             tableContent.map((group, i) => {
               switch (pageData.page) {
