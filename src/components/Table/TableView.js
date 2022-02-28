@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
+import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/ConsumerGroupTableRow'
+import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
 import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
@@ -13,6 +15,8 @@ import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureSto
 
 import {
   ARTIFACTS_PAGE,
+  CONSUMER_GROUPS_PAGE,
+  CONSUMER_GROUP_PAGE,
   DATASETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
@@ -75,6 +79,24 @@ const TableView = ({
           (groupFilter === GROUP_BY_NONE && isEmpty(groupLatestItem)) ? (
             tableContent.map((rowItem, i) => {
               switch (pageData.page) {
+                case CONSUMER_GROUPS_PAGE:
+                  return (
+                    <ConsumerGroupTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      rowItem={rowItem}
+                    />
+                  )
+                case CONSUMER_GROUP_PAGE:
+                  return (
+                    <ConsumerGroupShardLagTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      rowItem={rowItem}
+                    />
+                  )
                 case ARTIFACTS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
@@ -281,6 +303,7 @@ TableView.propTypes = {
   isTablePanelOpen: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),

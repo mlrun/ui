@@ -11,10 +11,10 @@
   }
 
   &__header {
+    min-height: 70px;
     padding: 20px 24px;
     background-color: $white;
     box-shadow: $headerShadow;
-    min-height: 70px;
   }
 
   &__content {
