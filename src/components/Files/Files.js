@@ -8,7 +8,7 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 
 import artifactsAction from '../../actions/artifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import { generatePageData } from './files.util'
+import { generatePageData, pageDataInitialState } from './files.util'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateUri } from '../../utils/resources'
@@ -17,6 +17,7 @@ import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import { useOpenPanel } from '../../hooks/openPanel.hook'
+import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 import {
   ARTIFACTS,
@@ -35,27 +36,18 @@ const Files = ({
   fetchFile,
   fetchFiles,
   filtersStore,
-  getFilterTagOptions,
   history,
   match,
   removeFile,
   removeFiles,
   setFilters
 }) => {
+  const [pageData, setPageData] = useState(pageDataInitialState)
+  const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
+  const openPanelByDefault = useOpenPanel()
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
-  const [pageData, setPageData] = useState({
-    details: {
-      menu: [],
-      infoHeaders: []
-    },
-    filters: [],
-    page: '',
-    registerArtifactDialogTitle: '',
-    tableHeaders: []
-  })
-  const openPanelByDefault = useOpenPanel()
 
   const fetchData = useCallback(
     filters => {
@@ -172,7 +164,7 @@ const Files = ({
       ...state,
       selectedRowData: {}
     }))
-  }, [filtersStore.iter, removeFile])
+  }, [filtersStore.iter, filtersStore.tag, removeFile])
 
   useEffect(() => {
     if (
@@ -185,14 +177,18 @@ const Files = ({
   }, [history, match, pageData.details.menu])
 
   useEffect(() => {
-    fetchData({ tag: TAG_FILTER_LATEST, iter: SHOW_ITERATIONS })
+    if (urlTagOption) {
+      fetchData({ tag: urlTagOption, iter: SHOW_ITERATIONS })
+    }
+  }, [fetchData, urlTagOption])
 
+  useEffect(() => {
     return () => {
       setFiles([])
       removeFiles()
       setSelectedFile({})
     }
-  }, [fetchData, removeFiles])
+  }, [match.params.projectName, removeFiles])
 
   useEffect(() => {
     if (
@@ -241,18 +237,6 @@ const Files = ({
   ])
 
   useEffect(() => setFiles([]), [filtersStore.tag])
-
-  useEffect(() => {
-    if (filtersStore.tagOptions.length === 0) {
-      getFilterTagOptions(fetchArtifactTags, match.params.projectName)
-    }
-  }, [
-    fetchArtifactTags,
-    filtersStore.tagOptions.length,
-    getFilterTagOptions,
-    match.params.projectName,
-    pageData.page
-  ])
 
   return (
     <div className="content-wrapper">

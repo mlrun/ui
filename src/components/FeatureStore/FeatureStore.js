@@ -52,6 +52,7 @@ import {
 } from '../../constants'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
+import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 const FeatureStore = ({
   artifactsStore,
@@ -93,16 +94,24 @@ const FeatureStore = ({
   tableStore,
   updateFeatureStoreData
 }) => {
+  const [pageData, setPageData] = useState(pageDataInitialState)
+  const urlTagOption = useGetTagOptions(
+    match.params.pageTab === DATASETS_TAB
+      ? fetchArtifactTags
+      : match.params.pageTab === FEATURE_VECTORS_TAB
+      ? fetchFeatureVectorsTags
+      : fetchFeatureSetsTags,
+    pageData.filters
+  )
+  const isDemoMode = useDemoMode()
+  const openPanelByDefault = useOpenPanel()
   const [content, setContent] = useState([])
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
-  const [pageData, setPageData] = useState(pageDataInitialState)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const featureStoreRef = useRef(null)
-  const isDemoMode = useDemoMode()
-  const openPanelByDefault = useOpenPanel()
 
   const fetchData = useCallback(
     async filters => {
@@ -393,18 +402,25 @@ const FeatureStore = ({
 
   useEffect(() => {
     removeDataSet({})
+  }, [filtersStore.iter, removeDataSet])
+
+  useEffect(() => {
     setPageData(state => ({
       ...state,
       selectedRowData: {}
     }))
-  }, [filtersStore.iter, removeDataSet])
+  }, [filtersStore.tag])
 
   useEffect(() => {
-    fetchData({
-      tag: TAG_FILTER_LATEST,
-      iter: match.params.pageTab === DATASETS_TAB ? SHOW_ITERATIONS : ''
-    })
+    if (urlTagOption) {
+      fetchData({
+        tag: urlTagOption,
+        iter: match.params.pageTab === DATASETS_TAB ? SHOW_ITERATIONS : ''
+      })
+    }
+  }, [fetchData, match.params.pageTab, urlTagOption])
 
+  useEffect(() => {
     return () => {
       setContent([])
       removeDataSets()
@@ -417,13 +433,12 @@ const FeatureStore = ({
       cancelRequest('cancel')
     }
   }, [
-    fetchData,
     match.params.pageTab,
     removeDataSets,
+    removeEntities,
     removeFeatureSets,
     removeFeatureVectors,
-    removeFeatures,
-    removeEntities
+    removeFeatures
   ])
 
   useEffect(() => {
@@ -554,25 +569,6 @@ const FeatureStore = ({
   ])
 
   useEffect(() => setContent([]), [filtersStore.tag])
-
-  useEffect(() => {
-    if (match.params.pageTab === DATASETS_TAB) {
-      getFilterTagOptions(fetchArtifactTags, match.params.projectName)
-    } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
-      getFilterTagOptions(fetchFeatureVectorsTags, match.params.projectName)
-    } else if (
-      [FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)
-    ) {
-      getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
-    }
-  }, [
-    fetchArtifactTags,
-    fetchFeatureSetsTags,
-    fetchFeatureVectorsTags,
-    getFilterTagOptions,
-    match.params.pageTab,
-    match.params.projectName
-  ])
 
   useEffect(() => {
     isPageTabValid(
