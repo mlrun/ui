@@ -19,26 +19,26 @@ const ProjectSettingsMembers = ({
   return (
     <div className="settings__card">
       <div className="settings__card-content">
-        {projectMembershipIsEnabled && (
-          <div className="settings__card-content-col">
-            <div className="settings__members-summary">
-              <span className="settings__members-summary_icon">
-                <Users />
-              </span>
-              <span className="settings__members-summary_amount">
-                {totalMembersInProject}
-              </span>
-              member{totalMembersInProject !== 1 && 's'} has access to this
-              project
-            </div>
+        <div className="settings__card-content-col">
+          <div className="settings__members-summary">
+            <span className="settings__members-summary_icon">
+              <Users />
+            </span>
+            <span className="settings__members-summary_amount">
+              {totalMembersInProject}
+            </span>
+            member{totalMembersInProject !== 1 && 's'} has access to this
+            project
+          </div>
+          {projectMembershipIsEnabled && (
             <MembersPopUp
               changeMembersCallback={changeMembersCallback}
               membersState={membersState}
               membersDispatch={membersDispatch}
               setNotification={setNotification}
             />
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   )

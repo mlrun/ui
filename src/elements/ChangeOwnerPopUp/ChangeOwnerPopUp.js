@@ -221,6 +221,7 @@ const ChangeOwnerPopUp = ({
         <div className="footer-actions">
           <div className="apply-discard-buttons">
             <Button
+              disabled={!newOwnerId}
               className="pop-up-dialog__btn_cancel"
               label="Discard"
               onClick={handleOnClose}
