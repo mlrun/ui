@@ -5,15 +5,12 @@ import { cloneDeep, debounce } from 'lodash'
 
 import Button from '../../common/Button/Button'
 import CheckBox from '../../common/CheckBox/CheckBox'
-import Input from '../../common/Input/Input'
-import Select from '../../common/Select/Select'
-import Tip from '../../common/Tip/Tip'
 import ChipInput from '../../common/ChipInput/ChipInput'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
-
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import { ReactComponent as Close } from '../../images/close.svg'
+import Input from '../../common/Input/Input'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import Select from '../../common/Select/Select'
+import Tip from '../../common/Tip/Tip'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
@@ -27,6 +24,7 @@ import {
 } from '../../constants'
 
 import { ReactComponent as Add } from '../../images/add.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Filter } from '../../images/filter.svg'
 import { ReactComponent as User } from '../../images/user.svg'
@@ -51,12 +49,9 @@ const MembersPopUp = ({
     name: '',
     role: 'All'
   })
-  const inviteMembersBtnClassNames = classnames(
-    'invite-new-members-btn',
-    inviteNewMembers && 'disabled'
-  )
-  const membersTableClassNames = classnames(
-    'members-table',
+
+  const membersTableRowClassNames = classnames(
+    'table-row',
     inviteNewMembers && 'inactive'
   )
 
@@ -307,7 +302,7 @@ const MembersPopUp = ({
           <Tip text="Some of the members might be user groups" />
         </div>
         <div
-          className={inviteMembersBtnClassNames}
+          className="invite-new-members-btn"
           onClick={() => setInviteNewMembers(true)}
         >
           <Add className="add-icon" />
@@ -319,12 +314,12 @@ const MembersPopUp = ({
           <div className="new-members-title">
             <span>Invite new members</span>
             <div className="close-icon">
-              <Tooltip template={<TextTooltipTemplate text="Close" />}>
-                <Close
-                  data-testid="pop-up-close-btn"
-                  onClick={() => setInviteNewMembers(false)}
-                />
-              </Tooltip>
+              <RoundedIcon
+                onClick={() => setInviteNewMembers(false)}
+                tooltipText="Close"
+              >
+                <Close data-testid="pop-up-close-btn" />
+              </RoundedIcon>
             </div>
           </div>
           <div className="new-members-row">
@@ -364,11 +359,12 @@ const MembersPopUp = ({
           </div>
         </div>
       )}
-      <div className={membersTableClassNames}>
+      <div className="members-table">
         <div className="table-header">
           <div className="member-info">
             <Filter />
             <Input
+              disabled={inviteNewMembers}
               placeholder="Type to filter members..."
               withoutBorder
               density="dense"
@@ -384,8 +380,10 @@ const MembersPopUp = ({
           </div>
           <div className="member-roles">
             <Select
+              disabled={inviteNewMembers}
               density="dense"
-              withoutBorder
+              floatingLabel
+              label="Role"
               onClick={roleOption => {
                 setFilters({
                   ...filters,
@@ -411,7 +409,10 @@ const MembersPopUp = ({
               )
             })
             .map(member => (
-              <div className="table-row" key={`${member.name}${member.role}`}>
+              <div
+                className={membersTableRowClassNames}
+                key={`${member.name}${member.role}`}
+              >
                 <div className="member-info">
                   <div
                     className={`member-status ${
@@ -430,7 +431,7 @@ const MembersPopUp = ({
                   <Select
                     density="dense"
                     label="Role"
-                    disabled={member.role === 'Owner'}
+                    disabled={member.role === 'Owner' || inviteNewMembers}
                     floatingLabel
                     onClick={roleOption => changeMemberRole(roleOption, member)}
                     options={getRoleOptions(member.role)}
@@ -439,6 +440,7 @@ const MembersPopUp = ({
                 </div>
                 <div className="member-actions actions">
                   <button
+                    disabled={inviteNewMembers}
                     ref={member.actionElement}
                     onClick={() => setDeleteMemberId(member.id)}
                   >
