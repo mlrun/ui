@@ -4,42 +4,46 @@ import PropTypes from 'prop-types'
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import Select from '../../common/Select/Select'
 import RangeInput from '../../common/RangeInput/RangeInput'
-import { VolumesTable } from '../../elements/VolumesTable/VolumesTable'
-import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 
 import { selectMemoryOptions as selectTypeOptions } from '../../utils/panelResources.util'
 import { LIMITS, REQUESTS } from '../JobsPanel/jobsPanel.util'
+import JobsPanelNodeSelector from './JobsPanelNodeSelector/JobsPanelNodeSelector'
+import JobsPanelVolumes from './JobsPanelVolumes/JobsPanelVolumes'
 
 const JobsPanelResourcesView = ({
-  handleAddNewVolume,
-  handleAddNewNodeSelector,
-  handleDeleteNodeSelector,
-  handleDeleteVolume,
-  handleEditNodeSelector,
-  handleEditVolume,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
+  panelDispatch,
   panelState,
   resourcesData,
   setCpuValue,
   setGpuValue,
   setMemoryValue,
-  validation
+  setPriorityClassName,
+  validation,
+  validFunctionPriorityClassNames
 }) => {
   return (
     <div className="job-panel__item resources new-item-side-panel__item">
       <JobsPanelSection title="Resources" />
+      {validFunctionPriorityClassNames.length > 0 && (
+        <JobsPanelSection title="Pods priority">
+          <Select
+            className="pods-priority"
+            density="dense"
+            onClick={setPriorityClassName}
+            options={validFunctionPriorityClassNames}
+            selectedId={panelState.priority_class_name}
+          />
+        </JobsPanelSection>
+      )}
       <JobsPanelSection
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
       >
-        <VolumesTable
-          handleAddNewVolume={handleAddNewVolume}
-          handleDelete={handleDeleteVolume}
-          handleEdit={handleEditVolume}
-          className={'data-inputs volumes'}
-          volumeMounts={panelState.tableData.volume_mounts}
-          volumes={panelState.tableData.volumes}
+        <JobsPanelVolumes
+          panelDispatch={panelDispatch}
+          panelState={panelState}
         />
       </JobsPanelSection>
       <div className="inputs">
@@ -130,18 +134,9 @@ const JobsPanelResourcesView = ({
         </JobsPanelSection>
       </div>
       <JobsPanelSection title="Node selector">
-        <KeyValueTable
-          addNewItem={handleAddNewNodeSelector}
-          addNewItemLabel="Add entry"
-          className="node-selector"
-          content={panelState.tableData.node_selector}
-          deleteItem={handleDeleteNodeSelector}
-          editItem={handleEditNodeSelector}
-          isKeyRequired
-          keyHeader="Key"
-          keyType="input"
-          valueHeader="Value"
-          withEditMode
+        <JobsPanelNodeSelector
+          panelDispatch={panelDispatch}
+          panelState={panelState}
         />
       </JobsPanelSection>
     </div>
@@ -149,14 +144,9 @@ const JobsPanelResourcesView = ({
 }
 
 JobsPanelResourcesView.propTypes = {
-  handleAddNewNodeSelector: PropTypes.func.isRequired,
-  handleDeleteNodeSelector: PropTypes.func.isRequired,
-  handleAddNewVolume: PropTypes.func.isRequired,
-  handleDeleteVolume: PropTypes.func.isRequired,
-  handleEditNodeSelector: PropTypes.func.isRequired,
-  handleEditVolume: PropTypes.func.isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
+  panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   resourcesData: PropTypes.shape({}).isRequired,
   setCpuValue: PropTypes.func.isRequired,
