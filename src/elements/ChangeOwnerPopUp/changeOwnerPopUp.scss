@@ -2,13 +2,14 @@
 @import '../../scss/borders';
 
 .change-owner {
+  margin-top: 15px;
   .owner-table {
     .search-row {
       position: relative;
       display: flex;
       align-items: center;
       border-bottom: $primaryBorder;
-      margin-bottom: 30px;
+      margin-bottom: 15px;
 
       .search-input {
         display: flex;
@@ -46,6 +47,7 @@
   }
 
   .footer-annotation {
+    margin-bottom: 15px;
     color: $topaz;
     font-size: 12px;
     white-space: pre-line;

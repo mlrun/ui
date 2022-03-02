@@ -12,6 +12,7 @@ const ProjectSettingsMembers = ({
   membersDispatch,
   membersState,
   projectMembershipIsEnabled,
+  projectMembersIsShown,
   setNotification
 }) => {
   const totalMembersInProject =
@@ -30,7 +31,7 @@ const ProjectSettingsMembers = ({
             member{totalMembersInProject !== 1 && 's'} has access to this
             project
           </div>
-          {projectMembershipIsEnabled && (
+          {projectMembershipIsEnabled && projectMembersIsShown && (
             <MembersPopUp
               changeMembersCallback={changeMembersCallback}
               membersState={membersState}
@@ -48,7 +49,8 @@ ProjectSettingsMembers.propTypes = {
   changeMembersCallback: PropTypes.func.isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
-  projectMembershipIsEnabled: PropTypes.bool.isRequired
+  projectMembershipIsEnabled: PropTypes.bool.isRequired,
+  projectMembersIsShown: PropTypes.bool.isRequired
 }
 
 export default ProjectSettingsMembers

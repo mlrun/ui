@@ -30,6 +30,7 @@ const ProjectSettingsGeneral = ({
   membersState,
   projectStore,
   projectMembershipIsEnabled,
+  projectOwnerIsShown,
   removeProjectData,
   setNotification,
   setProjectLabels,
@@ -275,6 +276,7 @@ const ProjectSettingsGeneral = ({
       membersState={membersState}
       project={projectStore.project}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
+      projectOwnerIsShown={projectOwnerIsShown}
       setNotification={setNotification}
       setValidation={setValidation}
       validation={validation}

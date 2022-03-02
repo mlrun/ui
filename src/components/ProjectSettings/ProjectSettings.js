@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useReducer } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState
+} from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -31,6 +37,8 @@ const ProjectSettings = ({
   projectStore,
   setNotification
 }) => {
+  const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
+  const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const location = useLocation()
   const history = useHistory()
   const [membersState, membersDispatch] = useReducer(
@@ -93,13 +101,25 @@ const ProjectSettings = ({
     },
     [setNotification]
   )
-
   const fetchProjectMembersVisibility = project => {
-    projectsIguazioApi.getProjectMembersVisibility(project)
+    projectsIguazioApi
+      .getProjectMembersVisibility(project)
+      .then(() => {
+        setProjectMembersIsShown(true)
+      })
+      .catch(() => {
+        setProjectMembersIsShown(false)
+      })
   }
-
   const fetchProjectOwnerVisibility = project => {
-    projectsIguazioApi.getProjectOwnerVisibility(project)
+    projectsIguazioApi
+      .getProjectOwnerVisibility(project)
+      .then(() => {
+        setProjectOwnerIsShown(true)
+      })
+      .catch(() => {
+        setProjectOwnerIsShown(false)
+      })
   }
 
   const fetchProjectUsersData = useCallback(() => {
@@ -171,6 +191,7 @@ const ProjectSettings = ({
             membersState={membersState}
             membersDispatch={membersDispatch}
             projectMembershipIsEnabled={projectMembershipIsEnabled}
+            projectMembersIsShown={projectMembersIsShown}
             setNotification={setNotification}
           />
         ) : match.params.pageTab === PROJECTS_SETTINGS_SECRETS_TAB ? (
@@ -184,6 +205,7 @@ const ProjectSettings = ({
             match={match}
             membersState={membersState}
             projectMembershipIsEnabled={projectMembershipIsEnabled}
+            projectOwnerIsShown={projectOwnerIsShown}
             setNotification={setNotification}
           />
         )}
