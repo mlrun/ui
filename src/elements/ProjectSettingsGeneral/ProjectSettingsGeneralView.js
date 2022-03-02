@@ -1,53 +1,59 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import Input from '../../common/Input/Input'
-import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Loader from '../../common/Loader/Loader'
+import ProjectGoals from '../../components/Project/ProjectGoals/ProjectGoals'
+import ProjectDescription from '../../components/Project/ProjectDescription/ProjectDescription'
+import ProjectLabels from '../../components/Project/ProjectLabels/ProjectLabels'
+import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
 
-import { ARTIFACT_PATH } from '../../components/ProjectSettings/projectSettings.util'
+import { ARTIFACT_PATH } from '../../constants'
 
 const ProjectSettingsGeneralView = ({
-  artifactPath,
+  changeOwnerCallback,
   defaultArtifactPath,
   editProjectData,
-  error,
   generalParams,
+  handleAddProjectLabel,
   handleAddNewParameter,
-  handleArtifactPathChange,
   handleDeleteParameter,
   handleEditParameter,
   handleEditProject,
   handleOnBlur,
-  handleSourceChange,
-  loading,
+  handleOnChange,
+  handleOnKeyDown,
+  handleUpdateProjectLabels,
+  membersState,
+  project,
+  projectMembershipIsEnabled,
+  setNotification,
   setValidation,
-  source,
   validation
 }) => {
   return (
     <div className="settings__card">
-      {loading ? (
+      {project.loading ? (
         <Loader />
-      ) : error ? (
+      ) : project.error ? (
         <div>
-          <h1>{error.message}</h1>
+          <h1>{project.error.message}</h1>
         </div>
       ) : (
-        <>
-          <div className="settings__card-header">General</div>
-          <div className="settings__card-content">
+        <div className="settings__card-content">
+          <div className="settings__card-content-col">
             <ProjectSettingsSource
               editSourceData={editProjectData.source}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
-              handleSourceChange={handleSourceChange}
+              handleOnKeyDown={handleOnKeyDown}
+              handleSourceChange={handleOnChange}
               setValidation={setValidation}
-              settingsSource={source}
+              settingsSource={project.data?.spec.source ?? ''}
               validation={validation}
             />
-            <div className="settings__card-divider" />
             <div
               className="settings__artifact-path"
               onClick={() => handleEditProject(ARTIFACT_PATH)}
@@ -57,9 +63,8 @@ const ProjectSettingsGeneralView = ({
                 invalid={!validation.isPathValid}
                 label="Artifact path"
                 onBlur={() => handleOnBlur(ARTIFACT_PATH)}
-                onChange={value =>
-                  handleArtifactPathChange(value, validation.isPathValid)
-                }
+                onChange={value => handleOnChange(ARTIFACT_PATH, value)}
+                onKeyDown={handleOnKeyDown}
                 placeholder={defaultArtifactPath ?? ''}
                 setInvalid={value =>
                   setValidation(state => ({
@@ -67,7 +72,11 @@ const ProjectSettingsGeneralView = ({
                     isPathValid: value
                   }))
                 }
-                value={editProjectData.artifact_path.value ?? artifactPath}
+                value={
+                  editProjectData.artifact_path.value ??
+                  project.data?.spec.artifact_path ??
+                  ''
+                }
               />
               <span className="settings__artifact-path-link">
                 Enter the default path for saving the artifacts within your
@@ -82,28 +91,79 @@ const ProjectSettingsGeneralView = ({
                 </a>
               </span>
             </div>
-            <p className="settings__card-subtitle">Parameters</p>
-            <p>
-              The parameters enable users to pass key/value to the project
-              context that can later be used for running jobs & pipelines
-            </p>
-            <KeyValueTable
-              addNewItem={handleAddNewParameter}
-              addNewItemLabel="Add parameter"
-              className="settings__params"
-              content={generalParams}
-              deleteItem={handleDeleteParameter}
-              editItem={handleEditParameter}
-              isKeyRequired={true}
-              isValueRequired={true}
-              keyHeader="Key"
-              keyLabel="Key"
-              valueHeader="Value"
-              valueLabel="Value"
-              withEditMode
+            <ProjectDescription
+              editDescriptionData={editProjectData.description}
+              handleEditProject={handleEditProject}
+              handleOnChangeProject={handleOnChange}
+              handleOnBlur={handleOnBlur}
+              projectDescription={project.data?.spec.description ?? ''}
             />
+            <ProjectGoals
+              editGoalsData={editProjectData.goals}
+              handleEditProject={handleEditProject}
+              handleOnChangeProject={handleOnChange}
+              handleOnBlur={handleOnBlur}
+              projectGoals={project.data?.spec.goals ?? ''}
+            />
+            <div className="settings__labels">
+              <label
+                data-testid="label"
+                className="input__label input__label-floating active-label"
+              >
+                Labels
+              </label>
+              <ProjectLabels
+                addProjectLabel={handleAddProjectLabel}
+                isEditMode
+                labels={project.data?.metadata.labels ?? {}}
+                updateProjectLabel={handleUpdateProjectLabels}
+                visibleChipsMaxLength="all"
+              />
+            </div>
           </div>
-        </>
+          <div className="settings__card-content-col">
+            <div className="settings__owner">
+              <div className="settings__owner-row">
+                <div className="row-value">
+                  <span className="row-label">Owner:</span>
+                  <span className="row-name">
+                    {membersState.projectInfo?.owner?.username ||
+                      project.data?.spec?.owner}
+                  </span>
+                </div>
+              </div>
+              {projectMembershipIsEnabled && (
+                <ChangeOwnerPopUp
+                  changeOwnerCallback={changeOwnerCallback}
+                  projectId={membersState.projectInfo.id}
+                  setNotification={setNotification}
+                />
+              )}
+            </div>
+            <div>
+              <p className="settings__card-title">Parameters</p>
+              <p className="settings__card-subtitle">
+                The parameters enable users to pass key/value to the project
+                context that can later be used for running jobs & pipelines
+              </p>
+              <KeyValueTable
+                addNewItem={handleAddNewParameter}
+                addNewItemLabel="Add parameter"
+                className="settings__params"
+                content={generalParams}
+                deleteItem={handleDeleteParameter}
+                editItem={handleEditParameter}
+                isKeyRequired
+                isValueRequired
+                keyHeader="Key"
+                keyLabel="Key"
+                valueHeader="Value"
+                valueLabel="Value"
+                withEditMode
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
@@ -115,21 +175,23 @@ ProjectSettingsGeneralView.defaultProps = {
 }
 
 ProjectSettingsGeneralView.propTypes = {
-  artifactPath: PropTypes.string.isRequired,
+  changeOwnerCallback: PropTypes.func.isRequired,
   defaultArtifactPath: PropTypes.string,
   editProjectData: PropTypes.object.isRequired,
-  error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
+  handleAddProjectLabel: PropTypes.func.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
-  handleArtifactPathChange: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
+  handleOnKeyDown: PropTypes.func.isRequired,
   handleOnBlur: PropTypes.func.isRequired,
-  handleSourceChange: PropTypes.func.isRequired,
-  loading: PropTypes.bool,
+  handleOnChange: PropTypes.func.isRequired,
+  handleUpdateProjectLabels: PropTypes.func.isRequired,
+  membersState: PropTypes.shape({}).isRequired,
+  project: PropTypes.object.isRequired,
+  projectMembershipIsEnabled: PropTypes.bool.isRequired,
   setValidation: PropTypes.func.isRequired,
-  source: PropTypes.string.isRequired,
   validation: PropTypes.object.isRequired
 }
 

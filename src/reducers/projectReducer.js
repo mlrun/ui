@@ -1,4 +1,5 @@
 import {
+  ADD_PROJECT_LABEL,
   CHANGE_PROJECT_STATE_BEGIN,
   CHANGE_PROJECT_STATE_FAILURE,
   CHANGE_PROJECT_STATE_SUCCESS,
@@ -8,12 +9,11 @@ import {
   DELETE_PROJECT_BEGIN,
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_SUCCESS,
-  ADD_PROJECT_LABEL,
   FETCH_PROJECT_BEGIN,
-  FETCH_PROJECT_SUMMARY_SUCCESS,
+  FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_SUMMARY_BEGIN,
   FETCH_PROJECT_SUMMARY_FAILURE,
-  FETCH_PROJECT_DATASETS_BEGIN,
+  FETCH_PROJECT_SUMMARY_SUCCESS,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
   FETCH_PROJECT_FAILED_JOBS_BEGIN,
@@ -933,6 +933,8 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.project.data.spec,
               artifact_path: payload.artifact_path,
+              description: payload.description,
+              goals: payload.goals,
               source: payload.source
             }
           }

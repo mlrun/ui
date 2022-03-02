@@ -45,11 +45,11 @@ export default {
       { params }
     )
   },
-  editJob: (postData, project) => Promise.reject({ response: { status: 403 } }),
-  // mainHttpClient.put(
-  //   `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
-  //   postData
-  // ),
+  editJob: (postData, project) =>
+    mainHttpClient.put(
+      `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
+      postData
+    ),
   getAllJobs: (project, filters) => {
     const params = {
       project,
@@ -100,9 +100,8 @@ export default {
     mainHttpClient.delete(`/projects/${project}/schedules/${scheduleName}`),
   runJob: postData => mainHttpClient.post('/submit_job', postData),
   runScheduledJob: (postData, project, job) =>
-    // mainHttpClient.post(
-    //   `/projects/${project}/schedules/${job}/invoke`,
-    //   postData
-    // )
-    Promise.reject({ response: { status: 403 } })
+    mainHttpClient.post(
+      `/projects/${project}/schedules/${job}/invoke`,
+      postData
+    )
 }

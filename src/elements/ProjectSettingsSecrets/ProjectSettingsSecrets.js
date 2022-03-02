@@ -1,12 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-
-import notificationAction from '../../actions/notification'
 
 import projectApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import ProjectSettingsSecretsView from './ProjectSettingsSecretsView'
+import { STATUS_CODE_FORBIDDEN } from '../../constants'
+import {
+  ADD_PROJECT_SECRET,
+  DELETE_PROJECT_SECRET,
+  EDIT_PROJECT_SECRET
+} from './ProjectSettingsSecrets.utils'
 
 const ProjectSettingsSecrets = ({
   fetchProjectSecrets,
@@ -16,19 +20,21 @@ const ProjectSettingsSecrets = ({
   setNotification,
   setProjectSecrets
 }) => {
-  const [isCreateNewSecretDialogOpen, setCreateNewSecretDialogOpen] = useState(
-    false
-  )
-  const [editableSecret, setEditableSecret] = useState('')
-
-  const handleEditClick = secret => {
-    setEditableSecret(secret)
-    setCreateNewSecretDialogOpen(true)
-  }
+  const { projectName } = match.params
 
   const fetchSecrets = useCallback(() => {
-    fetchProjectSecrets(match.params.projectName)
-  }, [fetchProjectSecrets, match.params.projectName])
+    fetchProjectSecrets(projectName).catch(error => {
+      setNotification({
+        status: error.response?.status || 400,
+        id: Math.random(),
+        message:
+          error.response?.status === STATUS_CODE_FORBIDDEN
+            ? 'Permission denied.'
+            : 'Failed to fetch project data.',
+        retry: () => fetchSecrets()
+      })
+    })
+  }, [fetchProjectSecrets, projectName, setNotification])
 
   useEffect(() => {
     fetchSecrets()
@@ -36,47 +42,99 @@ const ProjectSettingsSecrets = ({
     return () => {
       removeProjectData()
     }
-  }, [fetchSecrets, removeProjectData, match.params.projectName])
+  }, [fetchSecrets, removeProjectData, projectName])
 
-  const handleSecretDelete = (secret, index) => {
+  const generalSecrets = useMemo(
+    () =>
+      projectStore.project.secrets?.data['secret_keys']
+        ? projectStore.project.secrets.data['secret_keys'].map(secret => ({
+            key: secret,
+            value: ''
+          }))
+        : [],
+    [projectStore.project.secrets.data]
+  )
+
+  const handleProjectSecret = useCallback(
+    (type, data) => {
+      const updateSecret =
+        type === ADD_PROJECT_SECRET || type === EDIT_PROJECT_SECRET
+          ? projectApi.setProjectSecret
+          : projectApi.deleteSecret
+
+      updateSecret(projectName, data)
+        .then(() => {
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: `Secret ${
+              type === DELETE_PROJECT_SECRET
+                ? 'deleted'
+                : type === EDIT_PROJECT_SECRET
+                ? 'edited'
+                : 'added'
+            } successfully`
+          })
+        })
+        .catch(err => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            message: err.message
+          })
+        })
+    },
+    [projectName, setNotification]
+  )
+
+  const handleAddNewSecret = useCallback(
+    createSecretData => {
+      const data = {
+        provider: 'kubernetes',
+        secrets: {
+          [createSecretData.key]: createSecretData.value
+        }
+      }
+
+      const secretKeys = [
+        ...projectStore.project.secrets?.data['secret_keys'],
+        createSecretData.key
+      ]
+
+      setProjectSecrets(secretKeys) // redux
+      handleProjectSecret(ADD_PROJECT_SECRET, data) // api
+    },
+    [handleProjectSecret, projectStore.project.secrets.data, setProjectSecrets]
+  )
+
+  const handleSecretDelete = (index, secret) => {
     const filteredArray = projectStore.project.secrets?.data[
       'secret_keys'
-    ].filter((element, elementIndex) => elementIndex !== index)
+    ].filter((_, elementIndex) => elementIndex !== index)
 
     setProjectSecrets(filteredArray)
+    handleProjectSecret(DELETE_PROJECT_SECRET, secret.key) // api
+  }
 
-    projectApi
-      .deleteSecret(match.params.projectName, secret)
-      .then(() => {
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Secret deleted successfully'
-        })
-      })
-      .catch(err => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: err.message
-        })
-      })
+  const handleSecretEdit = editedSecretData => {
+    const data = {
+      provider: 'kubernetes',
+      secrets: {
+        [editedSecretData.key]: editedSecretData.value
+      }
+    }
+
+    handleProjectSecret(EDIT_PROJECT_SECRET, data) // api
   }
 
   return (
     <ProjectSettingsSecretsView
-      editableSecret={editableSecret}
       error={projectStore.project.secrets?.error}
-      handleEditClick={handleEditClick}
+      handleAddNewSecret={handleAddNewSecret}
       handleSecretDelete={handleSecretDelete}
-      isCreateNewSecretDialogOpen={isCreateNewSecretDialogOpen}
+      handleSecretEdit={handleSecretEdit}
       loading={projectStore.project.secrets?.loading}
-      match={match}
-      secrets={projectStore.project.secrets?.data ?? {}}
-      setCreateNewSecretDialogOpen={setCreateNewSecretDialogOpen}
-      setEditableSecret={setEditableSecret}
-      setNotification={setNotification}
-      setProjectSecrets={setProjectSecrets}
+      secrets={generalSecrets}
     />
   )
 }
@@ -89,5 +147,5 @@ export default connect(
   ({ projectStore }) => ({
     projectStore
   }),
-  { ...notificationAction, ...projectsAction }
+  { ...projectsAction }
 )(ProjectSettingsSecrets)

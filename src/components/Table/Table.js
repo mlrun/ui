@@ -108,7 +108,7 @@ const Table = ({
     } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
       let groupWorkflowItem = map(groupedContent, (jobs, workflowId) =>
         workflows.find(workflow => workflow.id === workflowId)
-      )
+      ).filter(workflow => workflow)
 
       setTableContent(state => ({
         ...state,
@@ -178,9 +178,12 @@ const Table = ({
 Table.defaultProps = {
   applyDetailsChanges: () => {},
   getCloseDetailsLink: null,
-  groupedContent: {},
   groupLatestJob: [],
+  groupedContent: {},
+  handleCancel: () => {},
   handleExpandRow: () => {},
+  handleSelectItem: () => {},
+  retryRequest: () => {},
   selectedItem: {}
 }
 
@@ -190,12 +193,12 @@ Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),
-  handleCancel: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
-  handleSelectItem: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func,
   match: PropTypes.shape({}).isRequired,
-  retryRequest: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({})
 }
 

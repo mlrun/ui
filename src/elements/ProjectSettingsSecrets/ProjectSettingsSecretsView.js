@@ -1,25 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Loader from '../../common/Loader/Loader'
-import ProjectSecretRow from '../ProjectSecretRow/ProjectSecretRow'
-import CreateNewSecretPopUp from '../CreateNewSecretPopUp/CreateNewSecretPopUp'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import './ProjectSettingsSecrets.scss'
 
 const ProjectSettingsSecretsView = ({
-  editableSecret,
   error,
-  handleEditClick,
+  handleAddNewSecret,
   handleSecretDelete,
-  isCreateNewSecretDialogOpen,
+  handleSecretEdit,
   loading,
-  match,
-  secrets,
-  setCreateNewSecretDialogOpen,
-  setEditableSecret,
-  setNotification,
-  setProjectSecrets
+  secrets
 }) => {
   return (
     <>
@@ -28,60 +21,37 @@ const ProjectSettingsSecretsView = ({
           <Loader />
         ) : error ? (
           <div>
-            <h1>{error.message}</h1>
+            <h1>{error.message || error}</h1>
           </div>
         ) : (
-          <>
-            <div className="settings__card-header">Secrets</div>
-            <div className="settings__card-subtitle">
-              These secrets will automatically be available to all jobs
-              belonging to this project.
+          <div className="settings__card-content">
+            <div className="settings__card-content-col">
+              <p className="settings__card-subtitle">
+                These secrets will automatically be available to all jobs
+                belonging to this project.
+              </p>
+              <KeyValueTable
+                addNewItem={handleAddNewSecret}
+                addNewItemLabel="Add secret"
+                className="settings__secrets"
+                content={secrets}
+                deleteItem={handleSecretDelete}
+                editItem={handleSecretEdit}
+                isKeyEditable={false}
+                isKeyRequired
+                isValueRequired
+                keyHeader="Key"
+                keyLabel="Key"
+                keyType="input"
+                valueHeader="Value"
+                valueLabel="Value"
+                valueType="password"
+                withEditMode
+              />
             </div>
-            <div className="settings__card-content">
-              {secrets?.['secret_keys'] &&
-                secrets['secret_keys'].map((secret, index) => (
-                  <ProjectSecretRow
-                    handleEditClick={handleEditClick}
-                    handleSecretDelete={secret =>
-                      handleSecretDelete(secret, index)
-                    }
-                    key={index}
-                    secret={secret}
-                  />
-                ))}
-              <div className="secret__row">
-                <button
-                  className="new-secret__button"
-                  onClick={() => {
-                    setCreateNewSecretDialogOpen(true)
-                  }}
-                >
-                  <Plus />
-                  Add secret
-                </button>
-              </div>
-            </div>
-          </>
+          </div>
         )}
       </div>
-      {isCreateNewSecretDialogOpen && (
-        <CreateNewSecretPopUp
-          editableSecret={editableSecret}
-          match={match}
-          popUpTitle={
-            editableSecret.length === 0
-              ? 'Create new secret'
-              : `Edit secret ${editableSecret}`
-          }
-          secretKeys={secrets['secret_keys']}
-          setCreateNewSecretDialogOpen={() =>
-            setCreateNewSecretDialogOpen(false)
-          }
-          setEditableSecret={setEditableSecret}
-          setNotification={setNotification}
-          setProjectSecrets={setProjectSecrets}
-        />
-      )}
     </>
   )
 }
@@ -92,18 +62,12 @@ ProjectSettingsSecretsView.defaultProps = {
 }
 
 ProjectSettingsSecretsView.propTypes = {
-  editableSecret: PropTypes.string.isRequired,
-  error: PropTypes.object,
-  handleEditClick: PropTypes.func.isRequired,
+  error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  handleAddNewSecret: PropTypes.func.isRequired,
   handleSecretDelete: PropTypes.func.isRequired,
-  isCreateNewSecretDialogOpen: PropTypes.bool.isRequired,
+  handleSecretEdit: PropTypes.func.isRequired,
   loading: PropTypes.bool,
-  match: PropTypes.object.isRequired,
-  secrets: PropTypes.object.isRequired,
-  setCreateNewSecretDialogOpen: PropTypes.func.isRequired,
-  setEditableSecret: PropTypes.func.isRequired,
-  setNotification: PropTypes.func.isRequired,
-  setProjectSecrets: PropTypes.func.isRequired
+  secrets: PropTypes.array.isRequired
 }
 
 export default ProjectSettingsSecretsView

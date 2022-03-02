@@ -27,6 +27,7 @@ const TextArea = React.forwardRef(
       placeholder,
       required,
       requiredText,
+      rows,
       setInvalid,
       textAreaIcon,
       tip,
@@ -131,6 +132,7 @@ const TextArea = React.forwardRef(
           onChange={handleClick}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
+          rows={rows}
           required={isInvalid}
           ref={textArea}
           value={value && value}
@@ -183,6 +185,7 @@ TextArea.defaultProps = {
   placeholder: '',
   required: false,
   requiredText: 'This field is required',
+  rows: 2,
   setInvalid: () => {},
   tip: '',
   value: '',
@@ -205,6 +208,7 @@ TextArea.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
+  rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setInvalid: PropTypes.func,
   tip: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

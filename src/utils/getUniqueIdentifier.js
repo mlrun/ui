@@ -66,6 +66,14 @@ export const getFeatureVectorIdentifier = (featureVector, unique) => {
   return identifier
 }
 
+export const getV3ioStreamIdentifier = v3ioStream => {
+  return `${v3ioStream?.consumerGroup || ''}`
+}
+
+export const getV3ioStreamShardLagIdentifier = v3ioStream => {
+  return `${v3ioStream?.shardLagId || ''}`
+}
+
 export const getIdentifierMethod = tab => {
   switch (tab) {
     case FEATURES_TAB:

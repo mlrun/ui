@@ -111,6 +111,7 @@ const DetailsArtifacts = ({
     <DetailsArtifactsView
       artifactsIndexes={artifactsIndexes}
       content={content}
+      iteration={iteration}
       match={match}
       noData={noData}
       preview={preview}
