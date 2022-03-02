@@ -73,7 +73,7 @@
 
     .new-members-row {
       display: flex;
-      align-items: flex-start;
+      align-items: stretch;
       padding: 15px;
 
       .new-member-name,
@@ -94,6 +94,15 @@
 
       .auto-resizable-input {
         padding: 0;
+      }
+    }
+
+    .new-member-btn {
+      height: inherit;
+
+      & > *,
+      .btn {
+        height: 100%;
       }
     }
   }
