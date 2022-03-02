@@ -24,7 +24,8 @@ import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
-  SCHEDULE_TAB
+  SCHEDULE_TAB,
+  STATUS_CODE_FORBIDDEN
 } from '../../constants'
 import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
@@ -136,12 +137,15 @@ const Jobs = ({
           message: 'Job started successfully'
         })
       })
-      .catch(() => {
+      .catch(error => {
         setNotification({
           status: 400,
           id: Math.random(),
           retry: item => handleRunJob(item),
-          message: 'Job failed to start'
+          message:
+            error.response.status === STATUS_CODE_FORBIDDEN
+              ? 'You are not permitted to run new job.'
+              : 'Job failed to start.'
         })
       })
   }
@@ -522,7 +526,8 @@ const Jobs = ({
     if (
       ((isEmpty(selectedJob) &&
         !match.params.jobId &&
-        !match.params.workflowId) ||
+        !match.params.workflowId &&
+        match.params.pageTab !== MONITOR_WORKFLOWS_TAB) ||
         workflowsViewMode === 'list') &&
       !dataIsLoaded
     ) {
@@ -632,7 +637,13 @@ const Jobs = ({
         refreshJobs(filtersStore)
       })
       .catch(error => {
-        dispatch(editJobFailure(error.message))
+        dispatch(
+          editJobFailure(
+            error.response.status === STATUS_CODE_FORBIDDEN
+              ? 'You are not permitted to run new job'
+              : error.message
+          )
+        )
       })
   }
 
