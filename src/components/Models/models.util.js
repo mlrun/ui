@@ -301,7 +301,9 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = parseFunctions(
-        result.filter(func => func.kind === 'serving')
+        result.filter(
+          func => func.kind === 'serving' && func.metadata.tag?.length
+        )
       )
       data.originalContent = result
     }

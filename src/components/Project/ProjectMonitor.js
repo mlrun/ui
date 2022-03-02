@@ -6,9 +6,10 @@ import { useHistory } from 'react-router-dom'
 import ProjectMonitorView from './ProjectMonitorView'
 
 import featureStoreActions from '../../actions/featureStore'
-import projectsAction from '../../actions/projects'
-import notificationActions from '../../actions/notification'
 import functionsActions from '../../actions/functions'
+import notificationActions from '../../actions/notification'
+import nuclioAction from '../../actions/nuclio'
+import projectsAction from '../../actions/projects'
 import {
   generateCreateNewOptions,
   handleFetchProjectError
@@ -17,18 +18,21 @@ import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const ProjectMonitor = ({
   featureStore,
+  fetchNuclioV3ioStreams,
   fetchProject,
-  fetchProjectSummary,
   fetchProjectFunctions,
+  fetchProjectSummary,
   functionsStore,
   match,
+  nuclioStore,
   projectStore,
   removeFeatureStoreError,
   removeFunctionsError,
-  removeNewFunction,
   removeNewFeatureSet,
-  removeProjectSummary,
+  removeNewFunction,
   removeProjectData,
+  removeProjectSummary,
+  removeV3ioStreams,
   setNotification
 }) => {
   const [artifactKind, setArtifactKind] = useState('')
@@ -71,17 +75,21 @@ const ProjectMonitor = ({
   useEffect(() => {
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
+    fetchNuclioV3ioStreams(match.params.projectName)
 
     return () => {
       resetProjectData()
       removeProjectSummary()
+      removeV3ioStreams()
     }
   }, [
     fetchProjectSummary,
+    fetchNuclioV3ioStreams,
     fetchProjectData,
     match.params.projectName,
     removeProjectSummary,
-    resetProjectData
+    resetProjectData,
+    removeV3ioStreams
   ])
 
   const closeFeatureSetPanel = () => {
@@ -199,13 +207,14 @@ const ProjectMonitor = ({
     }
   }
 
-  const handleLaunchIDE = useCallback(launch => {}, [])
+  const handleLaunchIDE = useCallback(() => {}, [])
 
   const handleRefresh = () => {
     removeProjectData()
     removeProjectSummary()
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
+    fetchNuclioV3ioStreams()
   }
 
   return (
@@ -233,6 +242,7 @@ const ProjectMonitor = ({
       setIsPopupDialogOpen={setIsPopupDialogOpen}
       setShowFunctionsPanel={setShowFunctionsPanel}
       showFunctionsPanel={showFunctionsPanel}
+      v3ioStreams={nuclioStore.v3ioStreams}
     />
   )
 }
@@ -242,15 +252,17 @@ ProjectMonitor.propTypes = {
 }
 
 export default connect(
-  ({ functionsStore, featureStore, projectStore }) => ({
+  ({ functionsStore, featureStore, nuclioStore, projectStore }) => ({
     featureStore,
     functionsStore,
+    nuclioStore,
     projectStore
   }),
   {
     ...featureStoreActions,
     ...functionsActions,
     ...projectsAction,
+    ...nuclioAction,
     ...notificationActions
   }
 )(ProjectMonitor)

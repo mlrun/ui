@@ -14,7 +14,7 @@ export const functionTemplatesHttpClient = axios.create({
 })
 
 export const nuclioHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/nuclio`
+  baseURL: `${process.env.PUBLIC_URL}/nuclio/api`
 })
 
 export const iguazioHttpClient = axios.create({
