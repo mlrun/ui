@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
-import { isEmpty, map } from 'lodash'
+import { isEmpty } from 'lodash'
 
 import TableView from './TableView'
 
@@ -106,16 +106,12 @@ const Table = ({
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
     } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
-      let groupWorkflowItem = map(groupedContent, (jobs, workflowId) =>
-        workflows.find(workflow => workflow.id === workflowId)
-      ).filter(workflow => workflow)
-
       setTableContent(state => ({
         ...state,
         content: generatedTableContent,
         groupLatestItem: [],
         groupWorkflowItems: createJobsContent(
-          groupWorkflowItem,
+          workflows,
           !isEveryObjectValueEmpty(selectedItem),
           match.params,
           isDemoMode,

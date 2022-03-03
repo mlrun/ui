@@ -58,9 +58,7 @@ const Jobs = ({
   history,
   jobsStore,
   match,
-  removeFunction,
   removeFunctionLogs,
-  removeJob,
   removeJobLogs,
   removeNewJob,
   removePods,
@@ -667,7 +665,11 @@ const Jobs = ({
       match={match}
       onEditJob={onEditJob}
       pageData={pageData}
-      refreshJobs={refreshJobs}
+      refreshJobs={
+        match.params.pageTab === MONITOR_WORKFLOWS_TAB
+          ? getWorkflows
+          : refreshJobs
+      }
       removeNewJob={removeNewJob}
       selectedFunction={selectedFunction}
       selectedJob={selectedJob}
