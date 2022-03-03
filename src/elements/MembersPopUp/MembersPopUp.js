@@ -174,7 +174,10 @@ const MembersPopUp = ({
             error.response?.status === STATUS_CODE_FORBIDDEN
               ? 'Missing edit permission for the project.'
               : 'Failed to edit project data.',
-          retry: () => applyMembersChanges(changesBody)
+          retry:
+            error.response?.status === STATUS_CODE_FORBIDDEN
+              ? null
+              : () => applyMembersChanges(changesBody)
         })
       })
     handleOnClose()

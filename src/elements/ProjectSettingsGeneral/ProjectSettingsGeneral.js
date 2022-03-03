@@ -77,7 +77,10 @@ const ProjectSettingsGeneral = ({
               error.response?.status === STATUS_CODE_FORBIDDEN
                 ? 'Missing edit permission for the project.'
                 : 'Failed to edit project data.',
-            retry: () => sendProjectSettingsData(type, data, labels)
+            retry:
+              error.response?.status === STATUS_CODE_FORBIDDEN
+                ? null
+                : () => sendProjectSettingsData(type, data, labels)
           })
         })
     },

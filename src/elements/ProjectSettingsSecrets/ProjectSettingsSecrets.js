@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -20,19 +20,27 @@ const ProjectSettingsSecrets = ({
   setNotification,
   setProjectSecrets
 }) => {
+  const [isUserAllowed, setIsUserAllowed] = useState(true)
   const { projectName } = match.params
 
   const fetchSecrets = useCallback(() => {
+    setIsUserAllowed(true)
     fetchProjectSecrets(projectName).catch(error => {
-      setNotification({
-        status: error.response?.status || 400,
-        id: Math.random(),
-        message:
-          error.response?.status === STATUS_CODE_FORBIDDEN
-            ? 'Permission denied.'
-            : 'Failed to fetch project data.',
-        retry: () => fetchSecrets()
-      })
+      if (error.response?.status === STATUS_CODE_FORBIDDEN) {
+        setIsUserAllowed(false)
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: 'Permission denied.'
+        })
+      } else {
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch project data.',
+          retry: () => fetchSecrets()
+        })
+      }
     })
   }, [fetchProjectSecrets, projectName, setNotification])
 
@@ -133,6 +141,7 @@ const ProjectSettingsSecrets = ({
       handleAddNewSecret={handleAddNewSecret}
       handleSecretDelete={handleSecretDelete}
       handleSecretEdit={handleSecretEdit}
+      isUserAllowed={isUserAllowed}
       loading={projectStore.project.secrets?.loading}
       secrets={generalSecrets}
     />

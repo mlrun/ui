@@ -11,6 +11,7 @@ const ProjectSettingsSecretsView = ({
   handleAddNewSecret,
   handleSecretDelete,
   handleSecretEdit,
+  isUserAllowed,
   loading,
   secrets
 }) => {
@@ -19,9 +20,9 @@ const ProjectSettingsSecretsView = ({
       <div className="settings__card">
         {loading ? (
           <Loader />
-        ) : error ? (
+        ) : !isUserAllowed ? (
           <div>
-            <h1>{error.message || error}</h1>
+            <h1>You don't have access to this project's secrets</h1>
           </div>
         ) : (
           <div className="settings__card-content">
@@ -58,6 +59,7 @@ const ProjectSettingsSecretsView = ({
 
 ProjectSettingsSecretsView.defaultProps = {
   error: null,
+  isUserAllowed: true,
   loading: null
 }
 
@@ -66,6 +68,7 @@ ProjectSettingsSecretsView.propTypes = {
   handleAddNewSecret: PropTypes.func.isRequired,
   handleSecretDelete: PropTypes.func.isRequired,
   handleSecretEdit: PropTypes.func.isRequired,
+  isUserAllowed: PropTypes.bool.isRequired,
   loading: PropTypes.bool,
   secrets: PropTypes.array.isRequired
 }
