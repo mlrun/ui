@@ -149,7 +149,14 @@ const FeatureStore = ({
   }
 
   const handleRefresh = filters => {
-    getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
+    const fetchTags =
+      match.params.pageTab === DATASETS_TAB
+        ? fetchArtifactTags
+        : match.params.pageTab === FEATURE_VECTORS_TAB
+        ? fetchFeatureVectorsTags
+        : fetchFeatureSetsTags
+
+    getFilterTagOptions(fetchTags, match.params.projectName)
 
     return fetchData(filters)
   }
