@@ -132,7 +132,11 @@ const KeyValueTableView = ({
                     }))
                   }
                   type={valueType}
-                  value={selectedItem.newValue ?? selectedItem.value}
+                  value={
+                    valueType === 'password'
+                      ? ''
+                      : selectedItem.newValue ?? selectedItem.value
+                  }
                 />
               </div>
               <div className="table-cell table-cell__actions">

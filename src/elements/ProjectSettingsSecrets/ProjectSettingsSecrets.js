@@ -57,7 +57,7 @@ const ProjectSettingsSecrets = ({
       projectStore.project.secrets?.data['secret_keys']
         ? projectStore.project.secrets.data['secret_keys'].map(secret => ({
             key: secret,
-            value: ''
+            value: '*****'
           }))
         : [],
     [projectStore.project.secrets.data]
