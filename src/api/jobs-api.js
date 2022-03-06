@@ -67,6 +67,8 @@ export default {
       ...generateRequestParams(filters)
     }
 
+    params.iter = false
+
     return mainHttpClient.get('/runs', { params })
   },
   getJob: (project, jobId) => mainHttpClient.get(`/run/${project}/${jobId}`),
