@@ -50,6 +50,7 @@ export const FEATURE_SETS_TAB = 'feature-sets'
 export const FEATURE_VECTORS_TAB = 'feature-vectors'
 export const ADD_TO_FEATURE_VECTOR_TAB = 'add-to-feature-vector'
 
+export const DATASETS_PAGE = 'DATASETS'
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
 export const FILES_PAGE = 'FILES'

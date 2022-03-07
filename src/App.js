@@ -23,6 +23,7 @@ import './scss/main.scss'
 const CreateJobPage = React.lazy(() =>
   import('./components/CreateJobPage/CreateJobPage')
 )
+const Datasets = React.lazy(() => import('./components/Datasets/Datasets'))
 const FeatureStore = React.lazy(() =>
   import('./components/FeatureStore/FeatureStore')
 )
@@ -142,9 +143,20 @@ const App = () => {
             />
             <Route
               exact
+              path="/projects/:projectName/datasets"
+              render={routeProps => <Datasets {...routeProps} />}
+            />
+            {/* <Redirect
+              exact
+              from="/projects/:projectName/feature-store/datasets"
+              to="/projects/:projectName/datasets"
+            /> */}
+            <Route
+              exact
               path="/projects/:projectName/feature-store/add-to-feature-vector"
               render={routeProps => <AddToFeatureVectorPage {...routeProps} />}
             />
+
             <Redirect
               exact
               from="/projects/:projectName/feature-store"
