@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -19,9 +19,11 @@ import { PANEL_CREATE_MODE } from '../../constants'
 
 const FunctionsPanelResources = ({
   defaultData,
+  frontendSpec,
   functionsStore,
   mode,
   setNewFunctionDisableAutoMount,
+  setNewFunctionPriorityClassName,
   setNewFunctionVolumeMounts,
   setNewFunctionVolumes,
   setNewFunctionResources,
@@ -57,11 +59,32 @@ const FunctionsPanelResources = ({
     }
   })
 
+  const validFunctionPriorityClassNames = useMemo(() => {
+    return (frontendSpec.valid_function_priority_class_names ?? []).map(
+      className => ({
+        id: className,
+        label: className
+      })
+    )
+  }, [frontendSpec.valid_function_priority_class_names])
+
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
       setNewFunctionDisableAutoMount(false)
     }
   }, [mode, setNewFunctionDisableAutoMount])
+
+  useEffect(() => {
+    if (mode === PANEL_CREATE_MODE) {
+      setNewFunctionPriorityClassName(
+        frontendSpec.default_function_priority_class_name ?? ''
+      )
+    }
+  }, [
+    frontendSpec.default_function_priority_class_name,
+    mode,
+    setNewFunctionPriorityClassName
+  ])
 
   const handleSelectMemoryUnit = value => {
     const unit = value.match(/i/)
@@ -353,11 +376,16 @@ const FunctionsPanelResources = ({
       handleSelectMemoryUnit={handleSelectMemoryUnit}
       handleSelectVolumeMount={handleSelectVolumeMount}
       mode={mode}
-      setData={setData}
-      setMemoryValue={setMemoryValue}
+      priorityClassName={
+        defaultData.priority_class_name ||
+        functionsStore.newFunction.spec.priority_class_name
+      }
       setCpuValue={setCpuValue}
       setGpuValue={setGpuValue}
+      setMemoryValue={setMemoryValue}
+      setNewFunctionPriorityClassName={setNewFunctionPriorityClassName}
       validation={validation}
+      validFunctionPriorityClassNames={validFunctionPriorityClassNames}
     />
   )
 }
@@ -373,6 +401,12 @@ FunctionsPanelResources.propTypes = {
   validation: PropTypes.shape({})
 }
 
-export default connect(functionsStore => ({ ...functionsStore }), {
-  ...functionsActions
-})(FunctionsPanelResources)
+export default connect(
+  ({ functionsStore, appStore }) => ({
+    functionsStore,
+    frontendSpec: appStore.frontendSpec
+  }),
+  {
+    ...functionsActions
+  }
+)(FunctionsPanelResources)
