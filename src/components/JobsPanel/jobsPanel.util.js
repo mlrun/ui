@@ -3,7 +3,11 @@ import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getVolumeType } from '../../utils/panelResources.util'
-import { PANEL_DEFAULT_ACCESS_KEY, PANEL_EDIT_MODE } from '../../constants'
+import {
+  JOB_DEFAULT_OUTPUT_PATH,
+  PANEL_DEFAULT_ACCESS_KEY,
+  PANEL_EDIT_MODE
+} from '../../constants'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 
@@ -451,6 +455,10 @@ export const generateTableDataFromDefaultData = (
   panelDispatch({
     type: panelActions.SET_ACCESS_KEY,
     payload: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY
+  })
+  panelDispatch({
+    type: panelActions.SET_OUTPUT_PATH,
+    payload: defaultData.task.spec.output_path ?? JOB_DEFAULT_OUTPUT_PATH
   })
   setNewJob({
     access_key: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,

@@ -180,7 +180,9 @@ TableCell.defaultProps = {
     schema: ''
   },
   link: '',
-  match: null
+  match: null,
+  selectItem: () => {},
+  selectedItem: {}
 }
 
 TableCell.propTypes = {
@@ -191,8 +193,8 @@ TableCell.propTypes = {
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.bool]),
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   match: PropTypes.shape({}),
-  selectItem: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectItem: PropTypes.func,
+  selectedItem: PropTypes.shape({})
 }
 
 export default TableCell

@@ -1,13 +1,23 @@
 @import '../../scss/colors';
+@import '../../scss/mixins';
 
 .settings {
-  &__artifact-path {
-    margin-bottom: 25px;
+  &__artifact-path,
+  &__goals,
+  &__description,
+  &__labels,
+  &__owner,
+  &__source {
+    margin-bottom: 15px;
+  }
 
+  &__artifact-path {
     &-link {
       display: block;
-      font-size: 0.75rem;
       margin-top: 5px;
+      font-weight: 400;
+      color: $topaz;
+      font-size: 0.75rem;
 
       .link {
         margin-left: 5px;
@@ -15,9 +25,42 @@
     }
   }
 
+  &__labels {
+    @include fieldWrapper;
+
+    padding: 25px 16px 11px;
+
+    .chips-wrapper {
+      flex-wrap: wrap;
+    }
+  }
+
   &__params {
+    padding-top: 0;
+    padding-bottom: 0;
+
     .table-row__header {
       border-top: 0;
     }
+  }
+
+  &__owner {
+    margin-bottom: 17px;
+    border-bottom: $dividerBorder;
+
+    &-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0;
+
+      .row-label {
+        display: inline-block;
+        margin-right: 1rem;
+      }
+    }
+  }
+
+  .text-area {
+    width: 100%;
   }
 }

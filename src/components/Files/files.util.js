@@ -6,6 +6,17 @@ import {
   TREE_FILTER
 } from '../../constants'
 
+export const pageDataInitialState = {
+  details: {
+    menu: [],
+    infoHeaders: []
+  },
+  filters: [],
+  page: '',
+  registerArtifactDialogTitle: '',
+  tableHeaders: []
+}
+
 export const infoHeaders = [
   {
     label: 'Hash',

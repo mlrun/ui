@@ -9,42 +9,39 @@ import Input from '../../common/Input/Input'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
-import { LABEL_BUTTON, SECONDARY_BUTTON } from '../../constants'
+import {
+  SECONDARY_BUTTON,
+  LABEL_BUTTON,
+  STATUS_CODE_FORBIDDEN
+} from '../../constants'
+import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
 import './changeOwnerPopUp.scss'
 
-const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
+const ChangeOwnerPopUp = ({
+  changeOwnerCallback,
+  projectId,
+  setNotification
+}) => {
   const [searchValue, setSearchValue] = useState('')
   const [newOwnerId, setNewOwnerId] = useState('')
   const [usersList, setUsersList] = useState([])
   const [showSuggestionList, setShowSuggestionList] = useState(false)
   const searchInputRef = useRef(null)
   const searchRowRef = useRef(null)
+  useDetectOutsideClick(searchInputRef, () => setShowSuggestionList(false))
 
   const { width: dropdownWidth } =
     searchRowRef?.current?.getBoundingClientRect() || {}
 
-  const closeSuggestionList = useCallback(
-    event => {
-      if (
-        searchInputRef.current &&
-        !searchInputRef.current.contains(event.target)
-      ) {
-        setShowSuggestionList(false)
-      }
-    },
-    [searchInputRef]
-  )
-
-  useEffect(() => {
-    window.addEventListener('click', closeSuggestionList)
-
-    return () => {
-      window.removeEventListener('click', closeSuggestionList)
-    }
-  }, [closeSuggestionList])
+  const handleOnClose = () => {
+    setSearchValue('')
+    setNewOwnerId('')
+    setUsersList([])
+    setShowSuggestionList(false)
+  }
 
   useEffect(() => {
     usersList.forEach(item => {
@@ -86,12 +83,29 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
       projectsIguazioApi
         .editProject(projectId, projectData)
         .then(changeOwnerCallback)
-      closePopUp()
+        .then(() => {
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Owner updated successfully'
+          })
+        })
+        .catch(error => {
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message:
+              error.response?.status === STATUS_CODE_FORBIDDEN
+                ? 'Missing edit permission for the project.'
+                : 'Failed to edit project data.',
+            retry:
+              error.response?.status === STATUS_CODE_FORBIDDEN
+                ? null
+                : () => applyChanges(newOwnerId)
+          })
+        })
+        .finally(handleOnClose)
     }
-  }
-
-  const discardChanges = () => {
-    closePopUp()
   }
 
   const generateSuggestionList = useCallback(
@@ -136,11 +150,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
   }
 
   return (
-    <PopUpDialog
-      className="change-owner__pop-up"
-      closePopUp={discardChanges}
-      headerText="Change owner"
-    >
+    <div className="change-owner">
       <div className="owner-table">
         <div className="search-row" ref={searchRowRef}>
           <div className="search-input">
@@ -207,35 +217,36 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
             </PopUpDialog>
           )}
         </div>
-      </div>
-      <div className="footer-actions">
-        <div className="apply-discard-buttons">
-          <Button
-            className="pop-up-dialog__btn_cancel"
-            label="Discard"
-            onClick={discardChanges}
-            variant={LABEL_BUTTON}
-          />
-          <Button
-            disabled={!newOwnerId}
-            label="Apply"
-            onClick={applyChanges}
-            variant={SECONDARY_BUTTON}
-          />
+        <div className="footer-annotation">
+          Previous owner will still have Admin access to this project.
+        </div>
+
+        <div className="footer-actions">
+          <div className="apply-discard-buttons">
+            <Button
+              disabled={!newOwnerId}
+              className="pop-up-dialog__btn_cancel"
+              label="Discard"
+              onClick={handleOnClose}
+              variant={LABEL_BUTTON}
+            />
+            <Button
+              disabled={!newOwnerId}
+              label="Apply"
+              onClick={applyChanges}
+              variant={SECONDARY_BUTTON}
+            />
+          </div>
         </div>
       </div>
-      <div className="footer-annotation">
-        Previous owner will still have Admin access to this project.
-      </div>
-      <div className="divider" />
-    </PopUpDialog>
+    </div>
   )
 }
 
 ChangeOwnerPopUp.propTypes = {
   changeOwnerCallback: PropTypes.func.isRequired,
-  closePopUp: PropTypes.func.isRequired,
-  projectId: PropTypes.string.isRequired
+  projectId: PropTypes.string.isRequired,
+  setNotification: PropTypes.func.isRequired
 }
 
 export default ChangeOwnerPopUp

@@ -58,9 +58,7 @@ const Jobs = ({
   history,
   jobsStore,
   match,
-  removeFunction,
   removeFunctionLogs,
-  removeJob,
   removeJobLogs,
   removeNewJob,
   removePods,
@@ -81,6 +79,7 @@ const Jobs = ({
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
+  const [dateFilter, setDateFilter] = useState(['', ''])
   const isDemoMode = useDemoMode()
 
   const dispatch = useDispatch()
@@ -325,6 +324,9 @@ const Jobs = ({
 
   const refreshJobs = useCallback(
     filters => {
+      if (filters.dates) {
+        setDateFilter(filters.dates.value)
+      }
       const fetchData = match.params.jobName ? fetchAllJobRuns : fetchJobs
       fetchData(
         match.params.projectName,
@@ -382,6 +384,13 @@ const Jobs = ({
     match.params.pageTab,
     match.params.projectName
   ])
+
+  const isJobDataEmpty = useCallback(
+    () =>
+      jobs.length === 0 &&
+      ((!match.params.jobName && jobRuns.length === 0) || match.params.jobName),
+    [jobRuns.length, jobs.length, match.params.jobName]
+  )
 
   useEffect(() => {
     if (
@@ -528,7 +537,7 @@ const Jobs = ({
     ) {
       let filters = {}
 
-      if (match.params.pageTab === MONITOR_JOBS_TAB) {
+      if (match.params.pageTab === MONITOR_JOBS_TAB && isJobDataEmpty()) {
         const pastWeekOption = datePickerOptions.find(
           option => option.id === PAST_WEEK_DATE_OPTION
         )
@@ -539,15 +548,23 @@ const Jobs = ({
             isPredefined: pastWeekOption.isPredefined
           }
         }
-
-        setFilters(filters)
+      } else if (match.params.pageTab === MONITOR_JOBS_TAB) {
+        filters = {
+          dates: {
+            value: dateFilter,
+            isPredefined: false
+          }
+        }
       }
 
       refreshJobs(filters)
+      setFilters(filters)
       setDataIsLoaded(true)
     }
   }, [
     dataIsLoaded,
+    dateFilter,
+    isJobDataEmpty,
     match.params.jobId,
     match.params.pageTab,
     match.params.workflowId,
@@ -560,8 +577,14 @@ const Jobs = ({
   useEffect(() => {
     return () => {
       setJobs([])
-      setDataIsLoaded(false)
+      setJobRuns([])
       setWorkflow({})
+    }
+  }, [match.params.projectName, match.params.pageTab])
+
+  useEffect(() => {
+    return () => {
+      setDataIsLoaded(false)
     }
   }, [match.params.projectName, match.params.pageTab, match.params.jobName])
 
@@ -667,7 +690,11 @@ const Jobs = ({
       match={match}
       onEditJob={onEditJob}
       pageData={pageData}
-      refreshJobs={refreshJobs}
+      refreshJobs={
+        match.params.pageTab === MONITOR_WORKFLOWS_TAB
+          ? getWorkflows
+          : refreshJobs
+      }
       removeNewJob={removeNewJob}
       selectedFunction={selectedFunction}
       selectedJob={selectedJob}

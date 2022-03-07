@@ -30,7 +30,7 @@ import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
 import { generateKeyValues } from '../../utils'
 
-export const page = 'JOBS'
+export const page = JOBS_PAGE
 export const infoHeaders = [
   { label: 'UID', id: 'uid' },
   { label: 'Start time', id: 'startTime' },
@@ -214,7 +214,7 @@ const filtersByTab = (pageTab, jobName) => {
   }
 }
 
-const generateTabs = isDemoMode => {
+const generateTabs = () => {
   return [
     { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
     { id: MONITOR_WORKFLOWS_TAB, label: 'Monitor Workflows' },
@@ -247,7 +247,7 @@ export const generatePageData = (
     tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
     variant: TERTIARY_BUTTON,
     disabled: !jobsDashboardUrl,
-    onClick: event => handleMonitoring()
+    onClick: () => handleMonitoring()
   }
 
   if (pageTab === SCHEDULE_TAB || pageTab === MONITOR_WORKFLOWS_TAB) {

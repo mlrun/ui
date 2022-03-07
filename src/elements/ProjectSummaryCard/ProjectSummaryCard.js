@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
 
-const ProjectArtifacts = ({ counterValue, link, projectSummary, title }) => {
+const ProjectSummaryCard = ({ counterValue, link, projectSummary, title }) => {
   return (
     <Link to={link} className="project-data-card project-data-card_small">
       <div className="project-data-card__header">
@@ -27,11 +27,11 @@ const ProjectArtifacts = ({ counterValue, link, projectSummary, title }) => {
   )
 }
 
-ProjectArtifacts.propTypes = {
+ProjectSummaryCard.propTypes = {
   counterValue: PropTypes.number.isRequired,
   link: PropTypes.string.isRequired,
   projectSummary: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired
 }
 
-export default ProjectArtifacts
+export default ProjectSummaryCard

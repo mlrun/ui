@@ -1,5 +1,6 @@
 @import './variables';
 @import './button';
+@import './shadows';
 @import './colors';
 @import './mixins';
 @import './borders';
@@ -14,13 +15,13 @@
 body {
   display: flex;
   flex: 1;
-  background: $gallery;
+  height: 100vh;
+  overflow-x: hidden;
   font-weight: normal;
   font-size: 15px;
   font-family: Roboto, sans-serif;
   font-style: normal;
-  height: 100vh;
-  overflow-x: hidden;
+  background: $gallery;
 
   @include resetSpaces;
 }
@@ -40,18 +41,18 @@ body {
 
 main {
   position: relative;
+  z-index: 1;
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
-  padding: 0;
   width: 100%;
+  padding: 0;
   overflow: auto;
-  z-index: 1;
   transition: padding 0.3s ease-in-out;
 
   &.has-header {
-    margin-top: $headerHeight;
     height: calc(100vh - #{$headerHeight});
+    margin-top: $headerHeight;
   }
 
   &.pinned {
@@ -76,6 +77,51 @@ main {
   }
 }
 
+.page {
+  flex: 1 1;
+  min-width: 500px;
+  background-color: $white;
+
+  .page-breadcrumbs {
+    padding: 20px 24px;
+    box-shadow: $headerShadow;
+  }
+
+  .page-content {
+    padding: 20px 40px;
+
+    .page-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin: 20px 0;
+
+      .search-container {
+        flex: unset;
+        width: 250px;
+      }
+    }
+
+    .table {
+      border-top: none;
+
+      .table-head__item,
+      .table-body__cell {
+        color: $primaryTextColor;
+      }
+
+      .table-head {
+        background-color: $titanWhite;
+        border-radius: $mainBorderRadius;
+
+        .table-head__item {
+          height: 40px;
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
+
 .navbar {
   &.has-header {
     margin-top: $headerHeight;
@@ -86,8 +132,8 @@ main {
     transform: translateX(0);
 
     .navbar__toggler {
-      opacity: 0;
       right: 0;
+      opacity: 0;
     }
   }
 }

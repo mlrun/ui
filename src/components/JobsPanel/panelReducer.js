@@ -1,3 +1,5 @@
+import { JOB_DEFAULT_OUTPUT_PATH } from '../../constants'
+
 export const initialState = {
   access_key: '',
   cpuUnit: 'cpu',
@@ -16,7 +18,7 @@ export const initialState = {
     'nvidia.com/gpu': ''
   },
   memoryUnit: 'Bytes',
-  outputPath: 'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}',
+  outputPath: JOB_DEFAULT_OUTPUT_PATH,
   previousPanelData: {
     access_key: '',
     tableData: {

@@ -1,70 +1,56 @@
 @import '../../scss/variables';
 @import '../../scss/borders';
 
-.change-owner__pop-up {
-  .pop-up-dialog {
-    width: 700px;
-    max-height: 100vh;
-    overflow-y: auto;
-    background-color: $wildSand;
-
-    &__header-text {
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    .owner-table {
-      margin: 20px 0;
-      padding: 20px;
-      background-color: $white;
-      border-radius: $mainBorderRadius;
-
-      .search-row {
-        position: relative;
-        display: flex;
-        align-items: center;
-        border-bottom: $primaryBorder;
-
-        .search-input {
-          display: flex;
-          align-items: center;
-          width: 70%;
-
-          .input-wrapper {
-            width: 100%;
-
-            input {
-              width: 100%;
-            }
-          }
-        }
-
-        .search-role {
-          width: 30%;
-          font-weight: bold;
-        }
-      }
-    }
-
-    .footer-actions {
+.change-owner {
+  margin-top: 15px;
+  .owner-table {
+    .search-row {
+      position: relative;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      border-bottom: $primaryBorder;
       margin-bottom: 15px;
-      padding: 15px 0;
-      border-bottom: $dividerBorder;
 
-      .apply-discard-buttons {
+      .search-input {
         display: flex;
         align-items: center;
+        width: 70%;
+
+        .input-wrapper {
+          width: 100%;
+
+          input {
+            width: 100%;
+          }
+        }
+      }
+
+      .search-role {
+        width: 30%;
+        font-weight: bold;
+        text-align: right;
+        padding: 0 15px;
       }
     }
+  }
 
-    .footer-annotation {
-      color: $topaz;
-      font-size: 12px;
-      white-space: pre-line;
+  .footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 15px 0;
+
+    .apply-discard-buttons {
+      display: flex;
+      align-items: center;
     }
+  }
+
+  .footer-annotation {
+    margin-bottom: 15px;
+    color: $topaz;
+    font-size: 12px;
+    white-space: pre-line;
   }
 }
 
