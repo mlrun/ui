@@ -152,7 +152,10 @@ JobsPanelResourcesView.propTypes = {
   setCpuValue: PropTypes.func.isRequired,
   setGpuValue: PropTypes.func.isRequired,
   setMemoryValue: PropTypes.func.isRequired,
-  validation: PropTypes.shape({}).isRequired
+  setPriorityClassName: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired,
+  validFunctionPriorityClassNames: PropTypes.arrayOf(PropTypes.object)
+    .isRequired
 }
 
 export default JobsPanelResourcesView

@@ -19,6 +19,7 @@ export const parseFunction = (func, projectName, customState) => ({
   name: func.metadata?.name ?? '',
   nuclio_name: func.status?.nuclio_name ?? '',
   parameters: func.spec?.parameters ?? {},
+  priority_class_name: func.spec?.priority_class_name ?? '',
   project: func.metadata?.project || projectName,
   resources: func.spec?.resources ?? {},
   secret_sources: func.spec?.secret_sources ?? [],

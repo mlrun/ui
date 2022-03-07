@@ -198,7 +198,6 @@ JobsPanelResources.propTypes = {
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }
-//frontendSpec
 
 export default connect(
   ({ appStore }) => ({
