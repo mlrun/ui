@@ -538,6 +538,10 @@ const Jobs = ({
           }
         }
 
+        if (match.params.jobName) {
+          filters.iter = 'false'
+        }
+
         setFilters(filters)
       }
 
@@ -547,6 +551,7 @@ const Jobs = ({
   }, [
     dataIsLoaded,
     match.params.jobId,
+    match.params.jobName,
     match.params.pageTab,
     match.params.workflowId,
     refreshJobs,
