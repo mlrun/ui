@@ -48,10 +48,10 @@ const DetailsLogs = ({
 
   return (
     <div className="table__item_logs">
-      {detailsLogs.length > 0 ? (
-        <div className="table__item_logs__content">{detailsLogs}</div>
-      ) : functionsStore.logs.loading || jobsStore.logs.loading ? (
+      {functionsStore.logs.loading || jobsStore.logs.loading ? (
         <Loader section secondary />
+      ) : detailsLogs.length > 0 ? (
+        <div className="table__item_logs__content">{detailsLogs}</div>
       ) : (
         <NoData />
       )}

@@ -30,14 +30,28 @@ const FunctionsPanelResourcesView = ({
   handleSelectMemoryUnit,
   handleSelectVolumeMount,
   mode,
-  setMemoryValue,
+  priorityClassName,
   setCpuValue,
   setGpuValue,
-  validation
+  setMemoryValue,
+  setNewFunctionPriorityClassName,
+  validation,
+  validFunctionPriorityClassNames
 }) => {
   return (
     <div className="functions-panel__item resources new-item-side-panel__item">
       <FunctionsPanelSection title="Resources" />
+      {validFunctionPriorityClassNames.length > 0 && (
+        <FunctionsPanelSection title="Pods priority">
+          <Select
+            className="pods-priority"
+            density="dense"
+            onClick={setNewFunctionPriorityClassName}
+            options={validFunctionPriorityClassNames}
+            selectedId={priorityClassName}
+          />
+        </FunctionsPanelSection>
+      )}
       <FunctionsPanelSection
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
@@ -157,10 +171,14 @@ FunctionsPanelResourcesView.propTypes = {
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   handleSelectVolumeMount: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
+  priorityClassName: PropTypes.string.isRequired,
   setMemoryValue: PropTypes.func.isRequired,
   setCpuValue: PropTypes.func.isRequired,
   setGpuValue: PropTypes.func.isRequired,
-  validation: PropTypes.shape({}).isRequired
+  setNewFunctionPriorityClassName: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}),
+  validFunctionPriorityClassNames: PropTypes.arrayOf(PropTypes.object)
+    .isRequired
 }
 
 export default FunctionsPanelResourcesView

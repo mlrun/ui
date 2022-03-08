@@ -403,7 +403,8 @@ export const generateEditableItem = (functionData, job) => {
           resources: functionData?.spec.resources,
           volume_mounts: functionData?.spec.volume_mounts ?? [],
           volumes: functionData?.spec.volumes ?? [],
-          node_selector: functionData?.spec.node_selector ?? {}
+          node_selector: functionData?.spec.node_selector ?? {},
+          priority_class_name: functionData?.spec.priority_class_name ?? ''
         }
       },
       schedule: null,

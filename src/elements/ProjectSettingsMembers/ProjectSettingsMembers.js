@@ -33,8 +33,8 @@ const ProjectSettingsMembers = ({
               <span className="settings__members-summary_amount">
                 {totalMembersInProject}
               </span>
-              member{totalMembersInProject !== 1 && 's'} has access to this
-              project
+              member{totalMembersInProject !== 1 ? 's have' : ' has'} access to
+              this project
             </div>
             {projectMembershipIsEnabled && projectMembersIsShown && (
               <MembersPopUp

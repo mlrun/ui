@@ -16,11 +16,7 @@
   cursor: pointer;
   transition: box-shadow 0.3s ease-in-out;
 
-  &::before {
-    content: '';
-
-    @include gradient('card');
-  }
+  @include gradient('card');
 
   &__general-info {
     position: relative;
