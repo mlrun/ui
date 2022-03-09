@@ -47,7 +47,7 @@ const ProjectSettings = ({
   )
 
   const projectMembershipIsEnabled = useMemo(
-    () => frontendSpec?.feature_flags?.project_membership === 'enabled',
+    () => frontendSpec?.feature_flags?.project_membership !== 'enabled',
     [frontendSpec]
   )
 
@@ -182,15 +182,15 @@ const ProjectSettings = ({
           location={location}
           match={match}
           screen={page}
-          tabs={tabs}
+          tabs={tabs(projectMembershipIsEnabled)}
         />
-        {match.params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB ? (
+        {match.params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB &&
+        projectMembershipIsEnabled ? (
           <ProjectSettingsMembers
             changeMembersCallback={changeMembersCallback}
             match={match}
             membersState={membersState}
             membersDispatch={membersDispatch}
-            projectMembershipIsEnabled={projectMembershipIsEnabled}
             projectMembersIsShown={projectMembersIsShown}
             setNotification={setNotification}
           />
