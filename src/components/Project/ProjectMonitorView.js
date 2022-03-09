@@ -56,9 +56,7 @@ const ProjectMonitorView = ({
       ? 'models'
       : artifactKind === 'dataset'
       ? `feature-store/${DATASETS_TAB}`
-      : artifactKind === 'file'
-      ? 'files'
-      : 'artifacts'
+      : 'files'
   }`
 
   return (

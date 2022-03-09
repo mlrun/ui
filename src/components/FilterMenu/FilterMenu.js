@@ -18,6 +18,7 @@ import { ReactComponent as ExpandIcon } from '../../images/expand.svg'
 
 import {
   DATE_RANGE_TIME_FILTER,
+  ENTITIES_FILTER,
   GROUP_BY_FILTER,
   GROUP_BY_NONE,
   ITERATIONS_FILTER,
@@ -57,6 +58,7 @@ const FilterMenu = ({
 }) => {
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
+  const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const history = useHistory()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
@@ -66,6 +68,7 @@ const FilterMenu = ({
       removeFilters()
       setLabels('')
       setName('')
+      setEntities('')
       setTagOptions(tagFilterOptions)
     }
   }, [
@@ -178,12 +181,14 @@ const FilterMenu = ({
     if (event.keyCode === KEY_CODES.ENTER) {
       setFilters({
         labels,
-        name
+        name,
+        entities
       })
       applyChanges({
         ...filtersStore,
         labels,
-        name
+        name,
+        entities
       })
     }
   }
@@ -191,7 +196,8 @@ const FilterMenu = ({
   const onBlur = () => {
     setFilters({
       labels,
-      name
+      name,
+      entities
     })
   }
 
@@ -285,6 +291,19 @@ const FilterMenu = ({
                     onKeyDown={onKeyDown}
                     type="text"
                     value={name}
+                  />
+                )
+              case ENTITIES_FILTER:
+                return (
+                  <Input
+                    density="dense"
+                    key={filter.type}
+                    label={filter.label}
+                    onChange={setEntities}
+                    onBlur={onBlur}
+                    onKeyDown={onKeyDown}
+                    type="text"
+                    value={entities}
                   />
                 )
               case DATE_RANGE_TIME_FILTER:
