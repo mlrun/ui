@@ -15,6 +15,7 @@ const initialState = {
     value: DATE_FILTER_ANY_TIME,
     isPredefined: false
   },
+  entities: '',
   groupBy: GROUP_BY_NAME,
   iter: SHOW_ITERATIONS,
   labels: '',
