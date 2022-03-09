@@ -124,9 +124,15 @@ const ProjectSettings = ({
 
   const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
-      fetchProjectIdAndOwner().then(fetchProjectMembers)
       fetchProjectMembersVisibility(match.params.projectName)
       fetchProjectOwnerVisibility(match.params.projectName)
+      fetchProjectIdAndOwner()
+        .then(fetchProjectMembers)
+        .finally(() =>
+          membersDispatch({
+            type: membersActions.GET_PROJECT_USERS_DATA_END
+          })
+        )
     }
   }, [
     fetchProjectIdAndOwner,
@@ -150,6 +156,9 @@ const ProjectSettings = ({
   }, [])
 
   useEffect(() => {
+    membersDispatch({
+      type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
+    })
     fetchProjectUsersData()
 
     return () => {
@@ -187,6 +196,7 @@ const ProjectSettings = ({
         {match.params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB ? (
           <ProjectSettingsMembers
             changeMembersCallback={changeMembersCallback}
+            loading={membersState.loading}
             match={match}
             membersState={membersState}
             membersDispatch={membersDispatch}

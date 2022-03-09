@@ -66,7 +66,7 @@ const DatePicker = ({
   )
   const [isInvalid, setIsInvalid] = useState(false)
 
-  const datePickerRef = React.createRef()
+  const datePickerRef = useRef()
   const datePickerViewRef = useRef()
   const dateMask = getDateMask(isRange, isTime, splitCharacter)
   const autoCorrectedDatePipe = createAutoCorrectedDatePipe(
