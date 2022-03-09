@@ -80,6 +80,11 @@ const FilterMenu = ({
   ])
 
   useEffect(() => {
+    setLabels(filtersStore.labels)
+    setName(filtersStore.name)
+  }, [filtersStore.labels, filtersStore.name])
+
+  useEffect(() => {
     if (
       filters.find(
         filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER
