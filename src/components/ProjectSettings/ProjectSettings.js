@@ -47,7 +47,7 @@ const ProjectSettings = ({
   )
 
   const projectMembershipIsEnabled = useMemo(
-    () => frontendSpec?.feature_flags?.project_membership !== 'enabled',
+    () => frontendSpec?.feature_flags?.project_membership === 'enabled',
     [frontendSpec]
   )
 
@@ -124,9 +124,15 @@ const ProjectSettings = ({
 
   const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
-      fetchProjectIdAndOwner().then(fetchProjectMembers)
       fetchProjectMembersVisibility(match.params.projectName)
       fetchProjectOwnerVisibility(match.params.projectName)
+      fetchProjectIdAndOwner()
+        .then(fetchProjectMembers)
+        .finally(() =>
+          membersDispatch({
+            type: membersActions.GET_PROJECT_USERS_DATA_END
+          })
+        )
     }
   }, [
     fetchProjectIdAndOwner,
@@ -150,6 +156,9 @@ const ProjectSettings = ({
   }, [])
 
   useEffect(() => {
+    membersDispatch({
+      type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
+    })
     fetchProjectUsersData()
 
     return () => {
@@ -188,6 +197,7 @@ const ProjectSettings = ({
         projectMembershipIsEnabled ? (
           <ProjectSettingsMembers
             changeMembersCallback={changeMembersCallback}
+            loading={membersState.loading}
             match={match}
             membersState={membersState}
             membersDispatch={membersDispatch}

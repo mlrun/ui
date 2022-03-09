@@ -19,6 +19,10 @@ const fetchFeatureStoreContent = (
     params.label = filters.labels?.split(',')
   }
 
+  if (filters?.entities) {
+    params.entity = filters.entities.split(',')
+  }
+
   if (
     filters?.tag &&
     filters.tag !== TAG_FILTER_ALL_ITEMS &&

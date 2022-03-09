@@ -30,10 +30,13 @@ export const initialMembersState = {
   membersOriginal: [],
   members: [],
   groupedOriginalMembers: [],
-  groupedVisibleMembers: []
+  groupedVisibleMembers: [],
+  loading: false
 }
 
 export const membersActions = {
+  GET_PROJECT_USERS_DATA_BEGIN: 'GET_PROJECT_USERS_DATA_BEGIN',
+  GET_PROJECT_USERS_DATA_END: 'GET_PROJECT_USERS_DATA_END',
   RESET_MEMBERS_STATE: 'RESET_MEMBERS_STATE',
   SET_MEMBERS: 'SET_MEMBERS',
   SET_MEMBERS_ORIGINAL: 'SET_MEMBERS_ORIGINAL',
@@ -48,6 +51,16 @@ export const membersReducer = (state, { type, payload }) => {
     case membersActions.RESET_MEMBERS_STATE:
       return {
         ...initialMembersState
+      }
+    case membersActions.GET_PROJECT_USERS_DATA_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case membersActions.GET_PROJECT_USERS_DATA_END:
+      return {
+        ...state,
+        loading: false
       }
     case membersActions.SET_MEMBERS:
       return {
