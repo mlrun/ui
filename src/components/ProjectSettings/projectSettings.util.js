@@ -15,7 +15,7 @@ import { ReactComponent as Secrets } from '../../images/lock-icon.svg'
 import { ReactComponent as User } from '../../images/user.svg'
 import { ReactComponent as Users } from '../../images/users.svg'
 
-export const tabs = [
+export const tabs = projectMembershipIsEnabled => [
   {
     id: PROJECTS_SETTINGS_GENERAL_TAB,
     label: 'General',
@@ -24,7 +24,8 @@ export const tabs = [
   {
     id: PROJECTS_SETTINGS_MEMBERS_TAB,
     label: 'Members',
-    icon: <Users />
+    icon: <Users />,
+    hidden: !projectMembershipIsEnabled
   },
   {
     id: PROJECTS_SETTINGS_SECRETS_TAB,
