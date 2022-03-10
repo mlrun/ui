@@ -3,7 +3,7 @@ export const generateProjectScreens = (match, isDemoMode) => [
     label: 'Project Monitoring',
     id: 'monitor'
   },
-  { label: 'Feature Store (Beta)', id: 'feature-store' },
+  { label: 'Feature Store', id: 'feature-store' },
   { label: 'Artifacts', id: 'files' },
   { label: 'Models', id: 'models' },
   { label: 'Jobs', id: 'jobs' },

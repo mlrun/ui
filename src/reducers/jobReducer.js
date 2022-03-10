@@ -40,12 +40,17 @@ import {
   SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
-  REMOVE_JOB
+  REMOVE_JOB,
+  FETCH_ALL_JOB_RUNS_BEGIN,
+  FETCH_ALL_JOB_RUNS_FAILURE,
+  FETCH_ALL_JOB_RUNS_SUCCESS,
+  SET_NEW_JOB_PRIORITY_CLASS_NAME
 } from '../constants'
 
 const initialState = {
   allJobsData: [],
   job: {},
+  jobRuns: [],
   jobs: [],
   logs: {
     data: '',
@@ -79,7 +84,8 @@ const initialState = {
         volumes: [],
         volume_mounts: [],
         env: [],
-        node_selector: {}
+        node_selector: {},
+        priority_class_name: ''
       }
     }
   }
@@ -108,6 +114,24 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload
+      }
+    case FETCH_ALL_JOB_RUNS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_ALL_JOB_RUNS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_ALL_JOB_RUNS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        jobRuns: payload
       }
     case FETCH_JOB_LOGS_BEGIN:
       return {
@@ -282,7 +306,8 @@ export default (state = initialState, { type, payload }) => {
               volume_mounts: payload.volume_mounts,
               volumes: payload.volumes,
               env: payload.environmentVariables,
-              node_selector: payload.node_selector
+              node_selector: payload.node_selector,
+              priority_class_name: payload.priority_class_name
             }
           }
         }
@@ -356,6 +381,20 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.task.spec,
               parameters: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_JOB_PRIORITY_CLASS_NAME:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              priority_class_name: payload
             }
           }
         }

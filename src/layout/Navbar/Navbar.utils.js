@@ -13,8 +13,8 @@ import { ReactComponent as NuclioIcon } from '../../images/realtime-icon.svg'
 import { ReactComponent as PackageIcon } from '../../images/package.svg'
 // import { ReactComponent as RTPiplinesIcon } from '../../images/timer-outline-icon.svg'
 
-export const getLinks = match => {
-  const base_url = `/projects/${match.params.projectName}`
+export const getLinks = projectName => {
+  const base_url = `/projects/${projectName}`
 
   return [
     {
@@ -33,9 +33,7 @@ export const getLinks = match => {
     {
       icon: <PackageIcon />,
       id: 'feature-store',
-      label: `Feature store${
-        window.mlrunConfig.betaMode === 'enabled' ? ' (Beta)' : ''
-      }`,
+      label: 'Feature store',
       link: `${base_url}/feature-store`
     },
     {

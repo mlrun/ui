@@ -30,11 +30,14 @@ const Files = React.lazy(() => import('./components/Files/Files'))
 const Functions = React.lazy(() =>
   import('./components/FunctionsPage/Functions')
 )
-const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
+const Jobs = React.lazy(() => import('./components/Jobs/Jobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const ProjectMonitor = React.lazy(() =>
   import('./components/Project/ProjectMonitor')
+)
+const ConsumerGroupsWrapper = React.lazy(() =>
+  import('./components/ConsumerGroupsWrapper/ConsumerGroupsWrapper')
 )
 const ProjectOverview = React.lazy(() =>
   import('./components/Project/ProjectOverview/ProjectOverview')
@@ -79,6 +82,10 @@ const App = () => {
               render={routeProps => <ProjectMonitor {...routeProps} />}
             />
             <Route
+              path="/projects/:projectName/monitor/consumer-groups"
+              render={routeProps => <ConsumerGroupsWrapper {...routeProps} />}
+            />
+            <Route
               exact
               path="/projects/:projectName/settings/:pageTab"
               render={routeProps => <ProjectSettings {...routeProps} />}
@@ -110,7 +117,9 @@ const App = () => {
             />
             <Route
               path={[
+                '/projects/:projectName/jobs/:pageTab/:jobName/:jobId/:tab',
                 '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
+                '/projects/:projectName/jobs/:pageTab/:jobName',
                 '/projects/:projectName/jobs/:pageTab'
               ]}
               exact

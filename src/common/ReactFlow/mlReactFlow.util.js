@@ -3,8 +3,8 @@ import dagre from 'dagre'
 import { isEdge, isNode, Position } from 'react-flow-renderer'
 
 export const getLayoutedElements = (elements, direction = 'TB') => {
-  const elWidth = 130
-  const elHeight = 50
+  const elWidth = 300
+  const elHeight = 80
   const dagreGraph = new dagre.graphlib.Graph()
   const isHorizontal = direction === 'LR'
 
@@ -151,9 +151,9 @@ export const getWorkflowSourceHandle = phase => {
 }
 
 const nodeStates = {
-  succeeded: 'Succeeded',
-  failed: 'Failed',
-  pending: 'Pending',
-  running: 'Running',
-  unknown: 'Unknown'
+  succeeded: 'Completed',
+  failed: 'Error',
+  skipped: 'Skipped',
+  error: 'Error',
+  running: 'Running'
 }

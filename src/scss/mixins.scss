@@ -971,18 +971,7 @@
 
 @mixin gradient($type) {
   @if $type == 'card' {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 8px 8px 0 0;
-    padding: 4px 0 0 0;
-    background: linear-gradient(90deg, #16bc9e, #1fcc9e);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    background: linear-gradient(180deg, $brightTurquoise 4px, $white 4px);
   } @else {
     background: linear-gradient(
       88.84deg,
@@ -991,4 +980,14 @@
       #ffb971 107.73%
     );
   }
+}
+
+@mixin fieldWrapper {
+  position: relative;
+  width: 100%;
+  padding: 18px 16px;
+  color: $primary;
+  background-color: transparent;
+  border: $primaryBorder;
+  border-radius: 4px;
 }

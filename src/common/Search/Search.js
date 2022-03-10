@@ -14,7 +14,8 @@ const Search = ({
   onChange,
   placeholder,
   searchWhileTyping,
-  value
+  value,
+  wrapperClassName
 }) => {
   const [searchValue, setSearchValue] = useState(value ?? '')
   const [label, setLabel] = useState('')
@@ -74,6 +75,7 @@ const Search = ({
     >
       <Input
         className="search-input"
+        wrapperClassName={wrapperClassName}
         placeholder={placeholder}
         inputIcon={<SearchIcon />}
         iconClass="search-icon"
@@ -121,7 +123,8 @@ Search.defaultProps = {
   matches: [],
   placeholder: '',
   searchWhileTyping: false,
-  value: ''
+  value: '',
+  wrapperClassName: ''
 }
 
 Search.propTypes = {
@@ -130,7 +133,8 @@ Search.propTypes = {
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   searchWhileTyping: PropTypes.bool,
-  value: PropTypes.string
+  value: PropTypes.string,
+  wrapperClassName: PropTypes.string
 }
 
 export default Search

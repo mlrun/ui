@@ -1,3 +1,5 @@
+import { JOB_DEFAULT_OUTPUT_PATH } from '../../constants'
+
 export const initialState = {
   access_key: '',
   cpuUnit: 'cpu',
@@ -16,7 +18,7 @@ export const initialState = {
     'nvidia.com/gpu': ''
   },
   memoryUnit: 'Bytes',
-  outputPath: 'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}',
+  outputPath: JOB_DEFAULT_OUTPUT_PATH,
   previousPanelData: {
     access_key: '',
     tableData: {
@@ -33,6 +35,7 @@ export const initialState = {
       version: ''
     }
   },
+  priority_class_name: '',
   requests: {
     cpu: '',
     memory: ''
@@ -85,6 +88,7 @@ export const panelActions = {
   SET_PREVIOUS_PANEL_DATA_VOLUMES: 'SET_PREVIOUS_PANEL_DATA_VOLUMES',
   SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS:
     'SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS',
+  SET_PRIORITY_CLASS_NAME: 'SET_PRIORITY_CLASS_NAME',
   SET_REQUESTS: 'SET_REQUESTS',
   SET_REQUESTS_CPU: 'SET_REQUESTS_CPU',
   SET_REQUESTS_MEMORY: 'SET_REQUESTS_MEMORY',
@@ -357,6 +361,11 @@ export const panelReducer = (state, { type, payload }) => {
             volume_mounts: payload
           }
         }
+      }
+    case panelActions.SET_PRIORITY_CLASS_NAME:
+      return {
+        ...state,
+        priority_class_name: payload
       }
     case panelActions.SET_REQUESTS:
       return {

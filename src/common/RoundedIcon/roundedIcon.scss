@@ -12,27 +12,27 @@
     justify-content: center;
     width: 30px;
     height: 30px;
-    padding: 0;
+    padding: 4px;
 
     & > * {
       position: relative;
+      z-index: 2;
       display: inline-flex;
       margin: 0 !important;
-      z-index: 2;
     }
 
     &::before {
-      content: '';
+      position: absolute;
+      right: 0;
+      left: 0;
+      z-index: 1;
       width: inherit;
       height: inherit;
       background-color: $mulledWineThree;
       border-radius: 50%;
-      position: absolute;
-      left: 0;
-      right: 0;
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
-      z-index: 1;
+      content: '';
     }
 
     &:hover {
