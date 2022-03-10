@@ -551,15 +551,21 @@ const Jobs = ({
           dates: {
             value: pastWeekOption.handler(),
             isPredefined: pastWeekOption.isPredefined
-          }
+          },
+          iter: ''
         }
       } else if (match.params.pageTab === MONITOR_JOBS_TAB) {
         filters = {
           dates: {
             value: dateFilter,
             isPredefined: false
-          }
+          },
+          iter: ''
         }
+      }
+
+      if (match.params.jobName) {
+        filters.iter = 'false'
       }
 
       refreshJobs(filters)
@@ -571,6 +577,7 @@ const Jobs = ({
     dateFilter,
     isJobDataEmpty,
     match.params.jobId,
+    match.params.jobName,
     match.params.pageTab,
     match.params.workflowId,
     refreshJobs,
