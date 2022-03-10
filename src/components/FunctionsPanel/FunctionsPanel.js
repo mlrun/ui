@@ -92,6 +92,7 @@ const FunctionsPanel = ({
           description: defaultData.description,
           env: defaultData.env,
           image: defaultData.image,
+          priority_class_name: defaultData.priority_class_name,
           volume_mounts:
             chain(defaultData.volume_mounts)
               .flatten()

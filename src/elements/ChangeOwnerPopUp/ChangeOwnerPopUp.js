@@ -98,7 +98,10 @@ const ChangeOwnerPopUp = ({
               error.response?.status === STATUS_CODE_FORBIDDEN
                 ? 'Missing edit permission for the project.'
                 : 'Failed to edit project data.',
-            retry: () => applyChanges(newOwnerId)
+            retry:
+              error.response?.status === STATUS_CODE_FORBIDDEN
+                ? null
+                : () => applyChanges(newOwnerId)
           })
         })
         .finally(handleOnClose)
@@ -214,13 +217,11 @@ const ChangeOwnerPopUp = ({
             </PopUpDialog>
           )}
         </div>
-        <div className="footer-annotation">
-          Previous owner will still have Admin access to this project.
-        </div>
 
         <div className="footer-actions">
           <div className="apply-discard-buttons">
             <Button
+              disabled={!newOwnerId}
               className="pop-up-dialog__btn_cancel"
               label="Discard"
               onClick={handleOnClose}

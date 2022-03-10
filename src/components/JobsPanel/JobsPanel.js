@@ -39,6 +39,7 @@ const JobsPanel = ({
   closePanel,
   defaultData,
   fetchFunctionTemplate,
+  frontendSpec,
   functionsStore,
   groupedFunctions,
   jobsStore,
@@ -138,7 +139,8 @@ const JobsPanel = ({
           setNewJob,
           panelState.limits,
           panelState.requests,
-          mode
+          mode,
+          frontendSpec
         )
       } else {
         panelDispatch({
@@ -148,6 +150,7 @@ const JobsPanel = ({
       }
     }
   }, [
+    frontendSpec,
     mode,
     panelState.currentFunctionInfo.method,
     panelState.editMode,
@@ -175,7 +178,8 @@ const JobsPanel = ({
         setNewJob,
         panelState.limits,
         panelState.requests,
-        mode
+        mode,
+        frontendSpec
       )
       setTableDataIsLoaded(true)
     } else if (
@@ -197,6 +201,7 @@ const JobsPanel = ({
   }, [
     defaultData,
     defaultDataIsLoaded,
+    frontendSpec,
     mode,
     panelState.currentFunctionInfo,
     panelState.currentFunctionInfo.method,
@@ -448,9 +453,10 @@ JobsPanel.propTypes = {
 }
 
 export default connect(
-  ({ jobsStore, functionsStore }) => ({
+  ({ jobsStore, functionsStore, appStore }) => ({
     jobsStore,
-    functionsStore
+    functionsStore,
+    frontendSpec: appStore.frontendSpec
   }),
   { ...jobsActions, ...functionActions, ...notificationActions }
 )(JobsPanel)

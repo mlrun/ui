@@ -2,13 +2,15 @@
 @import '../../scss/borders';
 
 .change-owner {
+  margin-top: 15px;
+
   .owner-table {
     .search-row {
       position: relative;
       display: flex;
       align-items: center;
+      margin-bottom: 15px;
       border-bottom: $primaryBorder;
-      margin-bottom: 30px;
 
       .search-input {
         display: flex;
@@ -26,9 +28,9 @@
 
       .search-role {
         width: 30%;
+        padding: 0 15px;
         font-weight: bold;
         text-align: right;
-        padding: 0 15px;
       }
     }
   }
@@ -43,12 +45,6 @@
       display: flex;
       align-items: center;
     }
-  }
-
-  .footer-annotation {
-    color: $topaz;
-    font-size: 12px;
-    white-space: pre-line;
   }
 }
 

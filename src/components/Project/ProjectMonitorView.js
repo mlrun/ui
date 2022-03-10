@@ -11,7 +11,7 @@ import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Select from '../../common/Select/Select'
-import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
+import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
@@ -23,6 +23,7 @@ import { formatDatetime } from '../../utils'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const ProjectMonitorView = ({
   artifactKind,
@@ -46,16 +47,16 @@ const ProjectMonitorView = ({
   setIsNewFunctionPopUpOpen,
   setIsPopupDialogOpen,
   setShowFunctionsPanel,
-  showFunctionsPanel
+  showFunctionsPanel,
+  v3ioStreams
 }) => {
+  const isDemoMode = useDemoMode()
   const registerArtifactLink = `/projects/${match.params.projectName}/${
     artifactKind === 'model'
       ? 'models'
       : artifactKind === 'dataset'
       ? `feature-store/${DATASETS_TAB}`
-      : artifactKind === 'file'
-      ? 'files'
-      : 'artifacts'
+      : 'files'
   }`
 
   return (
@@ -136,24 +137,32 @@ const ProjectMonitorView = ({
               />
             </div>
             <div className="main-info__statistics-section">
-              <ProjectArtifacts
+              <ProjectSummaryCard
                 counterValue={projectSummary.data.models_count ?? 0}
                 link={`/projects/${match.params.projectName}/models`}
                 projectSummary={projectSummary}
                 title="Models"
               />
-              <ProjectArtifacts
+              <ProjectSummaryCard
                 counterValue={projectSummary.data.feature_sets_count ?? 0}
                 link={`/projects/${match.params.projectName}/feature-store`}
                 projectSummary={projectSummary}
                 title="Feature sets"
               />
-              <ProjectArtifacts
+              <ProjectSummaryCard
                 counterValue={projectSummary.data.files_count ?? 0}
                 link={`/projects/${match.params.projectName}/files`}
                 projectSummary={projectSummary}
                 title="Artifacts"
               />
+              {isDemoMode && (
+                <ProjectSummaryCard
+                  counterValue={Object.keys(v3ioStreams.data).length ?? 0}
+                  link={`/projects/${match.params.projectName}/monitor/consumer-groups`}
+                  projectSummary={v3ioStreams}
+                  title="Consumer groups"
+                />
+              )}
             </div>
             <div className="main-info__statistics-section">
               <ProjectJobs match={match} />
@@ -228,7 +237,8 @@ ProjectMonitorView.propTypes = {
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
-  showFunctionsPanel: PropTypes.bool.isRequired
+  showFunctionsPanel: PropTypes.bool.isRequired,
+  v3ioStreams: PropTypes.shape({}).isRequired
 }
 
 export default ProjectMonitorView

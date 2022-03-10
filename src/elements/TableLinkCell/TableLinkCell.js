@@ -19,19 +19,15 @@ import './tableLinkCell.scss'
 
 const TableLinkCell = ({
   data,
-  selectItem,
-  link,
-  item,
-  selectedItem,
   expandLink,
-  handleExpandRow
+  handleExpandRow,
+  item,
+  link,
+  selectItem,
+  selectedItem
 }) => {
   const tableCellClassNames = classnames('table-body__cell', data.class)
-  const itemNameCLassNames = classnames(
-    'link',
-    'item-name',
-    link.match(/functions/) && 'function-name'
-  )
+  const itemNameCLassNames = classnames('link', 'item-name')
   const { value: stateValue, label: stateLabel, className: stateClassName } =
     item.state ?? {}
 
@@ -45,13 +41,9 @@ const TableLinkCell = ({
           <i className={stateClassName} />
         </Tooltip>
       )}
-      <Link
-        to={link}
-        onClick={() => selectItem(item)}
-        className="data-ellipsis"
-      >
-        <div className="name-wrapper">
-          <span className="link">
+      {data.linkIsExternal ? (
+        <span className="data-ellipsis">
+          <a href={link} className="link" target="blank">
             <Tooltip
               className={itemNameCLassNames}
               template={
@@ -60,44 +52,63 @@ const TableLinkCell = ({
             >
               {data.value}
             </Tooltip>
-          </span>
-          {link.match(
-            new RegExp(
-              `functions|${FEATURE_SETS_TAB}|${FEATURE_VECTORS_TAB}|${REAL_TIME_PIPELINES_TAB}`
-            )
-          ) &&
-            data.value !== item.tag && (
+          </a>
+        </span>
+      ) : (
+        <Link
+          to={link}
+          onClick={() => selectItem(item)}
+          className="data-ellipsis"
+        >
+          <div className="name-wrapper">
+            <span className="link">
               <Tooltip
-                className="item-tag"
-                template={<TextTooltipTemplate text={item.tag} />}
+                className={itemNameCLassNames}
+                template={
+                  <TextTooltipTemplate text={data.tooltip || data.value} />
+                }
               >
-                <span className="link-subtext">{item.tag}</span>
+                {data.value}
               </Tooltip>
-            )}
-        </div>
-        {(link.match(/jobs/) ||
-          (link.match(/functions/) &&
-            Object.values(selectedItem).length !== 0)) && (
-          <div className="date-uid-row">
-            {(item.startTime || item.updated) && (
-              <span className="link-subtext">
-                {data.type !== 'date' &&
-                  (link.match(/functions/)
-                    ? formatDatetime(item.updated, 'N/A')
-                    : formatDatetime(
-                        item.startTime,
-                        stateValue === 'aborted' ? 'N/A' : 'Not yet started'
-                      ))}
-              </span>
-            )}
-            {data.value !== item.uid && data.value !== item.hash && (
-              <span className="link-subtext">
-                {truncateUid(item.uid || item.hash)}
-              </span>
-            )}
+            </span>
+            {link.match(
+              new RegExp(
+                `functions|${FEATURE_SETS_TAB}|${FEATURE_VECTORS_TAB}|${REAL_TIME_PIPELINES_TAB}`
+              )
+            ) &&
+              data.value !== item.tag && (
+                <Tooltip
+                  className="item-tag"
+                  template={<TextTooltipTemplate text={item.tag} />}
+                >
+                  <span className="link-subtext">{item.tag}</span>
+                </Tooltip>
+              )}
           </div>
-        )}
-      </Link>
+          {(link.match(/jobs/) ||
+            (link.match(/functions/) &&
+              Object.values(selectedItem).length !== 0)) && (
+            <div className="date-uid-row">
+              {(item.startTime || item.updated) && (
+                <span className="link-subtext">
+                  {data.type !== 'date' &&
+                    (link.match(/functions/)
+                      ? formatDatetime(item.updated, 'N/A')
+                      : formatDatetime(
+                          item.startTime,
+                          stateValue === 'aborted' ? 'N/A' : 'Not yet started'
+                        ))}
+                </span>
+              )}
+              {data.value !== item.uid && data.value !== item.hash && (
+                <span className="link-subtext">
+                  {truncateUid(item.uid || item.hash)}
+                </span>
+              )}
+            </div>
+          )}
+        </Link>
+      )}
       {expandLink && (
         <Arrow
           onClick={e => {
@@ -114,7 +125,8 @@ const TableLinkCell = ({
 
 TableLinkCell.defaultProps = {
   data: {},
-  expandLink: false
+  expandLink: false,
+  selectedItem: {}
 }
 
 TableLinkCell.propTypes = {
@@ -123,7 +135,7 @@ TableLinkCell.propTypes = {
   item: PropTypes.shape({}).isRequired,
   link: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({})
 }
 
 export default TableLinkCell

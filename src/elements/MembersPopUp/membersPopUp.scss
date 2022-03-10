@@ -13,6 +13,7 @@
       align-items: center;
 
       .member-overview {
+        margin-right: 5px;
         color: $spunPearl;
 
         .member-count {
@@ -55,7 +56,7 @@
 
   .invite-new-members {
     margin-top: 20px;
-    background-color: $white;
+    background-color: $wildSand;
     border-radius: $mainBorderRadius;
 
     .new-members-title {
@@ -72,7 +73,7 @@
 
     .new-members-row {
       display: flex;
-      align-items: flex-start;
+      align-items: stretch;
       padding: 15px;
 
       .new-member-name,
@@ -82,10 +83,26 @@
 
       .new-member-name {
         width: 70%;
+        padding-left: 10px;
+        padding-right: 10px;
       }
 
       .new-member-role {
         width: 30%;
+        background-color: $white;
+      }
+
+      .auto-resizable-input {
+        padding: 0;
+      }
+    }
+
+    .new-member-btn {
+      height: inherit;
+
+      & > *,
+      .btn {
+        height: 100%;
       }
     }
   }
@@ -99,14 +116,6 @@
     overflow-y: auto;
     background-color: $white;
     border-radius: $mainBorderRadius;
-
-    &.inactive {
-      background-color: transparent;
-
-      .table-header {
-        background-color: $wildSand;
-      }
-    }
 
     .member-info {
       display: flex;
@@ -134,9 +143,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-bottom: 25px;
       padding: 15px 5px 0;
       background-color: $white;
-      border-bottom: $primaryBorder;
+
+      .member-info {
+        margin-right: 5%;
+        width: 65%;
+        border-bottom: $primaryBorder;
+      }
     }
 
     .table-body {
@@ -194,6 +209,16 @@
 
             path {
               fill: rgba($black, 0.2);
+            }
+          }
+        }
+
+        &.inactive {
+          &:hover {
+            cursor: not-allowed;
+
+            .member-actions {
+              visibility: hidden;
             }
           }
         }

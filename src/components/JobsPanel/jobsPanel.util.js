@@ -212,7 +212,8 @@ export const generateTableData = (
   setNewJob,
   stateLimits,
   stateRequests,
-  mode
+  mode,
+  frontendSpec
 ) => {
   const functionParameters = getFunctionParameters(selectedFunction, method)
   const [limits] = getLimits(selectedFunction)
@@ -250,6 +251,13 @@ export const generateTableData = (
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'cpu'
+    })
+  }
+
+  if (frontendSpec.default_function_priority_class_name) {
+    panelDispatch({
+      type: panelActions.SET_PRIORITY_CLASS_NAME,
+      payload: frontendSpec.default_function_priority_class_name
     })
   }
 
@@ -307,7 +315,8 @@ export const generateTableData = (
     volumes,
     environmentVariables,
     secret_sources: [],
-    node_selector: parseDefaultNodeSelectorContent(node_selector)
+    node_selector: parseDefaultNodeSelectorContent(node_selector),
+    priority_class_name: frontendSpec.default_function_priority_class_name ?? ''
   })
 }
 
@@ -465,7 +474,8 @@ export const generateTableDataFromDefaultData = (
     volumes: defaultData.function?.spec.volumes ?? [],
     environmentVariables: defaultData.function?.spec.env ?? [],
     secret_sources: defaultData.task.spec.secret_sources ?? [],
-    node_selector: defaultData.function?.spec.node_selector ?? {}
+    node_selector: defaultData.function?.spec.node_selector ?? {},
+    priority_class_name: defaultData.function?.spec.priority_class_name ?? ''
   })
 
   if (limits) {
@@ -485,6 +495,13 @@ export const generateTableDataFromDefaultData = (
         ...panelRequests,
         ...requests
       }
+    })
+  }
+
+  if (defaultData.function?.spec.priority_class_name) {
+    panelDispatch({
+      type: panelActions.SET_PRIORITY_CLASS_NAME,
+      payload: defaultData.function.spec.priority_class_name
     })
   }
 

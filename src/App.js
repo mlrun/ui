@@ -36,6 +36,9 @@ const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const ProjectMonitor = React.lazy(() =>
   import('./components/Project/ProjectMonitor')
 )
+const ConsumerGroupsWrapper = React.lazy(() =>
+  import('./components/ConsumerGroupsWrapper/ConsumerGroupsWrapper')
+)
 const ProjectOverview = React.lazy(() =>
   import('./components/Project/ProjectOverview/ProjectOverview')
 )
@@ -77,6 +80,10 @@ const App = () => {
               path="/projects/:projectName/monitor"
               exact
               render={routeProps => <ProjectMonitor {...routeProps} />}
+            />
+            <Route
+              path="/projects/:projectName/monitor/consumer-groups"
+              render={routeProps => <ConsumerGroupsWrapper {...routeProps} />}
             />
             <Route
               exact

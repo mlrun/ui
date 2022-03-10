@@ -30,6 +30,7 @@ const ProjectSettingsGeneral = ({
   membersState,
   projectStore,
   projectMembershipIsEnabled,
+  projectOwnerIsShown,
   removeProjectData,
   setNotification,
   setProjectLabels,
@@ -76,7 +77,10 @@ const ProjectSettingsGeneral = ({
               error.response?.status === STATUS_CODE_FORBIDDEN
                 ? 'Missing edit permission for the project.'
                 : 'Failed to edit project data.',
-            retry: () => sendProjectSettingsData(type, data, labels)
+            retry:
+              error.response?.status === STATUS_CODE_FORBIDDEN
+                ? null
+                : () => sendProjectSettingsData(type, data, labels)
           })
         })
     },
@@ -275,6 +279,7 @@ const ProjectSettingsGeneral = ({
       membersState={membersState}
       project={projectStore.project}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
+      projectOwnerIsShown={projectOwnerIsShown}
       setNotification={setNotification}
       setValidation={setValidation}
       validation={validation}

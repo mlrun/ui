@@ -6,20 +6,17 @@
 .project-card {
   position: relative;
   flex: 0 0 23%;
-  min-height: 240px;
   min-width: 400px;
+  min-height: 240px;
   margin: 9px 12px;
   color: $topaz;
   background-color: $white;
-  box-shadow: $previewBoxShadowInit;
   border-radius: 8px;
+  box-shadow: $previewBoxShadowInit;
   cursor: pointer;
   transition: box-shadow 0.3s ease-in-out;
 
-  &::before {
-    content: '';
-    @include gradient('card');
-  }
+  @include gradient('card');
 
   &__general-info {
     position: relative;
@@ -37,10 +34,10 @@
     &-title {
       display: flex;
       align-items: stretch;
-      font-size: 1.25rem;
-      font-weight: normal;
       margin-bottom: 5px;
       color: $primary;
+      font-weight: normal;
+      font-size: 1.25rem;
 
       :not(:first-child) {
         flex: 1 0 auto;
@@ -53,8 +50,8 @@
   }
 
   &__description {
-    margin-bottom: 1.25rem;
     min-height: 20px;
+    margin-bottom: 1.25rem;
   }
 
   &__content {
@@ -65,8 +62,8 @@
   &__statistic {
     display: flex;
     justify-content: center;
-    margin-bottom: 1.25rem;
     width: 100%;
+    margin-bottom: 1.25rem;
   }
 
   &__title {
@@ -81,8 +78,8 @@
 
     & > *:first-child {
       flex: 0 0 auto;
-      color: $spunPearl;
       margin-right: 5px;
+      color: $spunPearl;
     }
 
     &-icon {
@@ -114,8 +111,8 @@
 
   .project-data-card__statistics {
     &-item {
-      margin: 0 27px;
       flex: 0 0 auto;
+      margin: 0 27px;
 
       &::after {
         display: none;
@@ -123,9 +120,9 @@
     }
 
     &-data {
-      padding: 0;
-      margin: 0;
       width: auto;
+      margin: 0;
+      padding: 0;
     }
 
     &-value {
@@ -133,10 +130,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 5px;
-      font-size: 22px;
       width: 65px;
       height: 65px;
+      margin-bottom: 5px;
+      font-size: 22px;
       background-color: $wildSand;
       border-radius: 50%;
 
@@ -147,8 +144,8 @@
     }
 
     &-label {
-      font-size: 14px;
       font-weight: 500;
+      font-size: 14px;
     }
   }
 

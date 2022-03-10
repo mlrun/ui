@@ -28,19 +28,19 @@
     text-transform: capitalize;
 
     &::after {
-      content: '';
-      border-bottom: $activeJobTabBorder;
       display: block;
       width: 100%;
-      opacity: 0;
+      border-bottom: $activeJobTabBorder;
       transform: scale(0);
+      opacity: 0;
       transition: all 0.3s ease-in-out;
+      content: '';
     }
 
     &:hover:not([class*='_active']) {
       &::after {
-        opacity: 0.6;
         transform: scale(1);
+        opacity: 0.6;
       }
     }
 
@@ -69,8 +69,8 @@
       color: $malibu;
 
       &::after {
-        opacity: 1;
         transform: scale(1);
+        opacity: 1;
       }
 
       a {

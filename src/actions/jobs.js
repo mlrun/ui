@@ -45,6 +45,7 @@ import {
   FETCH_ALL_JOB_RUNS_BEGIN,
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
+  SET_NEW_JOB_PRIORITY_CLASS_NAME,
   STATUS_CODE_FORBIDDEN
 } from '../constants'
 
@@ -316,6 +317,10 @@ const jobsActions = {
   setNewJobParameters: parameters => ({
     type: SET_NEW_JOB_PARAMETERS,
     payload: parameters
+  }),
+  setNewJobPriorityClassName: className => ({
+    type: SET_NEW_JOB_PRIORITY_CLASS_NAME,
+    payload: className
   }),
   setNewJobSecretSources: secretSources => ({
     type: SET_NEW_JOB_SECRET_SOURCES,

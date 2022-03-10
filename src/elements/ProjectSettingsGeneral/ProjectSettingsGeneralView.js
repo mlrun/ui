@@ -29,6 +29,7 @@ const ProjectSettingsGeneralView = ({
   membersState,
   project,
   projectMembershipIsEnabled,
+  projectOwnerIsShown,
   setNotification,
   setValidation,
   validation
@@ -127,11 +128,12 @@ const ProjectSettingsGeneralView = ({
                 <div className="row-value">
                   <span className="row-label">Owner:</span>
                   <span className="row-name">
-                    {membersState.projectInfo?.owner?.username}
+                    {membersState.projectInfo?.owner?.username ||
+                      project.data?.spec?.owner}
                   </span>
                 </div>
               </div>
-              {projectMembershipIsEnabled && (
+              {projectMembershipIsEnabled && projectOwnerIsShown && (
                 <ChangeOwnerPopUp
                   changeOwnerCallback={changeOwnerCallback}
                   projectId={membersState.projectInfo.id}
@@ -190,6 +192,7 @@ ProjectSettingsGeneralView.propTypes = {
   membersState: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
+  projectOwnerIsShown: PropTypes.bool.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.object.isRequired
 }
