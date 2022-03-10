@@ -535,7 +535,8 @@ const Jobs = ({
           dates: {
             value: pastWeekOption.handler(),
             isPredefined: pastWeekOption.isPredefined
-          }
+          },
+          iter: ''
         }
 
         if (match.params.jobName) {
