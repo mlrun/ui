@@ -15,6 +15,7 @@ import LoadButton from '../../common/LoadButton/LoadButton'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 
 import { formatDatetime } from '../../utils'
 import {
@@ -207,14 +208,17 @@ const DetailsView = React.forwardRef(
               </Tooltip>
             )}
           {isDetailsScreen && (
-            <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
-              <button onClick={handleRefresh} id="refresh">
-                <Refresh />
-              </button>
-            </Tooltip>
+            <RoundedIcon
+              id="refresh"
+              onClick={handleRefresh}
+              tooltipText="Refresh"
+            >
+              <Refresh />
+            </RoundedIcon>
           )}
           <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
           <Link
+            className="details-close-btn"
             data-testid="details-close-btn"
             to={
               getCloseDetailsLink
@@ -233,9 +237,9 @@ const DetailsView = React.forwardRef(
               }
             }}
           >
-            <Tooltip template={<TextTooltipTemplate text="Close" />}>
+            <RoundedIcon tooltipText="Close">
               <Close />
-            </Tooltip>
+            </RoundedIcon>
           </Link>
         </div>
         <DetailsMenu

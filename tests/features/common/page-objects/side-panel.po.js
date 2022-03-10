@@ -662,7 +662,7 @@ const parametersRuntimeConfigurationTable = {
 
 // common components
 const commonCrossCloseButton = By.css(
-  'div.new-item-side-panel button.round-icon-cp__icon'
+  'div.new-item-side-panel button.round-icon-cp__circle'
 )
 
 const commonVolumePathsTableTypeDropdown = dropdownComponent(

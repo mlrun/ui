@@ -141,9 +141,14 @@ const App = () => {
               path="/projects/:projectName/functions/:hash/:tab"
               render={routeProps => <Functions {...routeProps} />}
             />
+
             <Route
               exact
-              path="/projects/:projectName/datasets"
+              path={[
+                '/projects/:projectName/datasets',
+                '/projects/:projectName/datasets/:name/:tag/:tab',
+                '/projects/:projectName/datasets/:name/:tag/:iter/:tab'
+              ]}
               render={routeProps => <Datasets {...routeProps} />}
             />
             {/* <Redirect

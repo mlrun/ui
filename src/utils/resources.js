@@ -1,4 +1,5 @@
 import {
+  DATASETS,
   DATASETS_TAB,
   ARTIFACTS,
   FEATURE_SETS_TAB,
@@ -10,7 +11,12 @@ import { isNil } from 'lodash'
 export const generateUri = (item, tab) => {
   let uri = `store://${tab}/${item.project}/`
 
-  if (tab === MODELS_TAB || tab === DATASETS_TAB || tab === ARTIFACTS) {
+  if (
+    tab === MODELS_TAB ||
+    tab === DATASETS ||
+    tab === DATASETS_TAB ||
+    tab === ARTIFACTS
+  ) {
     uri += item.db_key
     uri += getArtifactReference(item)
   } else if (tab === FEATURE_SETS_TAB || tab === FEATURE_VECTORS_TAB) {

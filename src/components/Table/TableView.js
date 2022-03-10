@@ -17,6 +17,7 @@ import {
   ARTIFACTS_PAGE,
   CONSUMER_GROUPS_PAGE,
   CONSUMER_GROUP_PAGE,
+  DATASETS_PAGE,
   DATASETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
@@ -98,6 +99,7 @@ const TableView = ({
                     />
                   )
                 case ARTIFACTS_PAGE:
+                case DATASETS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
                   return (
@@ -186,6 +188,7 @@ const TableView = ({
             tableContent.map((group, i) => {
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
+                case DATASETS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
                   return match.params.pageTab === REAL_TIME_PIPELINES_TAB ? (

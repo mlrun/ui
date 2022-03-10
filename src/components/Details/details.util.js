@@ -2,6 +2,7 @@ import React from 'react'
 import { isEmpty, isEqual, cloneDeep } from 'lodash'
 
 import {
+  DATASETS_PAGE,
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_BUILD_LOG_TAB,
@@ -95,7 +96,9 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
       },
       kind: {
         value:
-          detailsType !== FEATURE_STORE_PAGE && detailsType !== FILES_PAGE
+          detailsType !== FEATURE_STORE_PAGE &&
+          detailsType !== FILES_PAGE &&
+          detailsType !== DATASETS_PAGE
             ? selectedItem.kind || ' '
             : null
       },

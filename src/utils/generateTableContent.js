@@ -4,6 +4,7 @@ import {
   ARTIFACTS_PAGE,
   CONSUMER_GROUPS_PAGE,
   CONSUMER_GROUP_PAGE,
+  DATASETS_PAGE,
   DATASETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
@@ -73,6 +74,7 @@ export const generateTableContent = (
       ? createJobsContent(content, isSelectedItem, params, isDemoMode, false)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
+        page === DATASETS_PAGE ||
         (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB) ||
         params.pageTab === DATASETS_TAB
       ? createArtifactsContent(
