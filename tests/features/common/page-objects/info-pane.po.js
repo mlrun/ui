@@ -484,8 +484,8 @@ module.exports = {
     Logs_Refresh_Button: By.css('.table__item .logs_refresh')
   },
   workflowsMonitorTabInfoPane: {
-    Arrow_Back: By.css('.workflow-header a.link-back__icon'),
-    Header: By.css('.workflow-header .link-back__title .data-ellipsis'),
+    Arrow_Back: By.css('.workflow-container a.link-back__icon'),
+    Header: By.css('.workflow-container .link-back__title .data-ellipsis'),
     Updated: updated,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
