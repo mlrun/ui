@@ -217,9 +217,6 @@ const ChangeOwnerPopUp = ({
             </PopUpDialog>
           )}
         </div>
-        <div className="footer-annotation">
-          Previous owner will still have Admin access to this project.
-        </div>
 
         <div className="footer-actions">
           <div className="apply-discard-buttons">
