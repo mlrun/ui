@@ -1,6 +1,34 @@
 import { mainHttpClient } from '../httpClient'
 import { STATE_FILTER_ALL_ITEMS } from '../constants'
 
+const generateRequestParams = filters => {
+  const params = {}
+
+  if (filters?.labels) {
+    params.label = filters.labels.split(',')
+  }
+
+  if (filters?.name) {
+    params.name = `~${filters.name}`
+  }
+
+  if (filters?.state && filters.state !== STATE_FILTER_ALL_ITEMS) {
+    params.state = filters.state
+  }
+
+  if (filters?.dates) {
+    if (filters.dates.value[0]) {
+      params.start_time_from = filters.dates.value[0].toISOString()
+    }
+
+    if (filters.dates.value[1] && !filters.dates.isPredefined) {
+      params.start_time_to = filters.dates.value[1].toISOString()
+    }
+  }
+
+  return params
+}
+
 export default {
   abortJob: (project, jobId, iter) => {
     const params = {}
@@ -24,30 +52,22 @@ export default {
     ),
   getAllJobs: (project, filters) => {
     const params = {
-      project
+      project,
+      'partition-by': 'name',
+      'partition-sort-by': 'updated',
+      ...generateRequestParams(filters)
     }
 
-    if (filters?.labels) {
-      params.label = filters.labels.split(',')
+    return mainHttpClient.get('/runs', { params })
+  },
+  getAllJobRuns: (project, jobName, filters) => {
+    const params = {
+      project,
+      name: jobName,
+      ...generateRequestParams(filters)
     }
 
-    if (filters?.name) {
-      params.name = `~${filters.name}`
-    }
-
-    if (filters?.state && filters.state !== STATE_FILTER_ALL_ITEMS) {
-      params.state = filters.state
-    }
-
-    if (filters?.dates) {
-      if (filters.dates.value[0]) {
-        params.start_time_from = filters.dates.value[0].toISOString()
-      }
-
-      if (filters.dates.value[1] && !filters.dates.isPredefined) {
-        params.start_time_to = filters.dates.value[1].toISOString()
-      }
-    }
+    params.iter = false
 
     return mainHttpClient.get('/runs', { params })
   },

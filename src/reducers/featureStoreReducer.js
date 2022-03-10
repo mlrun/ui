@@ -69,13 +69,15 @@ const initialState = {
     allData: [],
     selectedRowData: {
       content: {}
-    }
+    },
+    loading: false
   },
   entities: {
     allData: [],
     selectedRowData: {
       content: {}
-    }
+    },
+    loading: false
   },
   loading: false,
   newFeatureSet: {
@@ -243,13 +245,19 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_FEATURES_BEGIN:
       return {
         ...state,
-        loading: true
+        features: {
+          ...state.features,
+          loading: true
+        }
       }
     case FETCH_FEATURES_FAILURE:
       return {
         ...state,
-        error: payload,
-        loading: false
+        features: {
+          ...state.features,
+          loading: false
+        },
+        error: payload
       }
     case FETCH_FEATURES_SUCCESS:
       return {
@@ -257,20 +265,26 @@ export default (state = initialState, { type, payload }) => {
         error: false,
         features: {
           ...state.features,
-          allData: payload
-        },
-        loading: false
+          allData: payload,
+          loading: false
+        }
       }
     case FETCH_ENTITIES_BEGIN:
       return {
         ...state,
-        loading: true
+        entities: {
+          ...state.entities,
+          loading: true
+        }
       }
     case FETCH_ENTITIES_FAILURE:
       return {
         ...state,
-        error: payload,
-        loading: false
+        entities: {
+          ...state.entities,
+          loading: false
+        },
+        error: payload
       }
     case FETCH_ENTITIES_SUCCESS:
       return {
@@ -278,9 +292,9 @@ export default (state = initialState, { type, payload }) => {
         error: false,
         entities: {
           ...state.entities,
-          allData: payload
-        },
-        loading: false
+          allData: payload,
+          loading: false
+        }
       }
     case REMOVE_ENTITY:
       return {
@@ -301,7 +315,8 @@ export default (state = initialState, { type, payload }) => {
           allData: [],
           selectedRowData: {
             content: {}
-          }
+          },
+          loading: false
         }
       }
     case REMOVE_FEATURE_SET:
@@ -369,7 +384,8 @@ export default (state = initialState, { type, payload }) => {
           allData: [],
           selectedRowData: {
             content: {}
-          }
+          },
+          loading: false
         }
       }
     case REMOVE_NEW_FEATURE_SET:

@@ -2,6 +2,11 @@
 $actionsBlockWidth: 72px;
 
 .key-value-table {
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 280px;
+  background-color: $white;
+
   &__btn {
     visibility: hidden;
   }
@@ -9,7 +14,7 @@ $actionsBlockWidth: 72px;
   .table-row {
     display: flex;
     align-items: center;
-    height: 55px;
+    min-height: 56px;
     border-bottom: $primaryBorder;
 
     &:not(.no-hover):hover {
@@ -19,17 +24,28 @@ $actionsBlockWidth: 72px;
         visibility: visible;
       }
     }
+
+    &__last {
+      position: sticky;
+      bottom: 0;
+      border: 0;
+      background-color: inherit;
+    }
   }
 
   .table-row__header {
+    position: sticky;
+    top: 0;
     font-weight: bold;
+    font-size: 18px;
+    background-color: inherit;
     border-top: $primaryBorder;
   }
 
   .table-cell {
     display: flex;
     align-items: center;
-    padding: 10px 16px;
+    padding: 8px 5px 8px 10px;
     color: $primary;
   }
 
@@ -50,6 +66,10 @@ $actionsBlockWidth: 72px;
     justify-content: flex-end;
     min-width: $actionsBlockWidth;
     padding: 0;
+
+    & > * {
+      margin: 0 5px 0 0;
+    }
   }
 
   .add-new-item-btn {
@@ -77,8 +97,6 @@ $actionsBlockWidth: 72px;
 
     .input {
       width: 100%;
-      border: none;
-      border-radius: unset;
 
       &_edit {
         border: $primaryBorder;

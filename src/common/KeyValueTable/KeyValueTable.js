@@ -12,6 +12,7 @@ const KeyValueTable = ({
   deleteItem,
   defaultKeyValue,
   editItem,
+  isKeyEditable,
   isKeyRequired,
   isValueRequired,
   keyHeader,
@@ -20,6 +21,7 @@ const KeyValueTable = ({
   keyType,
   valueHeader,
   valueLabel,
+  valueType,
   withEditMode
 }) => {
   const [isAddNewItem, setIsAddNewItem] = useState(false)
@@ -143,6 +145,8 @@ const KeyValueTable = ({
     setKey(defaultKeyValue || '')
     setValue('')
     setIsAddNewItem(false)
+    setEditMode(false)
+
     setValidation({
       isKeyValid: true,
       isValueValid: true,
@@ -164,6 +168,7 @@ const KeyValueTable = ({
       handleResetForm={handleResetForm}
       isAddNewItem={isAddNewItem}
       isEditMode={isEditMode}
+      isKeyEditable={isKeyEditable}
       isKeyNotUnique={isKeyNotUnique}
       isKeyRequired={isKeyRequired}
       isValueRequired={isValueRequired}
@@ -184,6 +189,7 @@ const KeyValueTable = ({
       validation={validation}
       valueHeader={valueHeader}
       valueLabel={valueLabel}
+      valueType={valueType}
       withEditMode={withEditMode}
     />
   )
@@ -199,6 +205,7 @@ KeyValueTable.defaultProps = {
   keyOptions: [],
   keyType: 'input',
   valueLabel: 'Value',
+  valueType: 'text',
   withEditMode: false
 }
 
@@ -228,6 +235,7 @@ KeyValueTable.propTypes = {
   keyType: PropTypes.string,
   valueHeader: PropTypes.string.isRequired,
   valueLabel: PropTypes.string,
+  valueType: PropTypes.string,
   withEditMode: PropTypes.bool
 }
 

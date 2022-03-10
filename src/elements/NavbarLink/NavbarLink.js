@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import './NavbarLink.scss'
 
-const NavbarLink = ({ externalLink, icon, label, link, rootPath }) => {
+const NavbarLink = ({ externalLink, icon, label, link }) => {
   return (
     <li className="nav-link">
       {externalLink ? (

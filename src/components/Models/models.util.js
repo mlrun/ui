@@ -253,6 +253,10 @@ const realTimePipelinesTableHeaders = () => [
   {
     header: 'Type',
     class: 'functions_big'
+  },
+  {
+    header: '',
+    class: 'action_cell'
   }
 ]
 export const tabs = [
@@ -297,7 +301,9 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = parseFunctions(
-        result.filter(func => func.kind === 'serving')
+        result.filter(
+          func => func.kind === 'serving' && func.metadata.tag?.length
+        )
       )
       data.originalContent = result
     }

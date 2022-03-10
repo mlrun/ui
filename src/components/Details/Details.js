@@ -115,6 +115,7 @@ const Details = ({
   useEffect(() => {
     return () => {
       if (pageData.details.type === JOBS_PAGE) {
+        //TODO
         setIteration('0')
       }
 
@@ -163,6 +164,7 @@ const Details = ({
 
   useEffect(() => {
     return () => {
+      //TODO
       if (pageData.details.type === MODELS_TAB) {
         removeModelFeatureVector()
       }

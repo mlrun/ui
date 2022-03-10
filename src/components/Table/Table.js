@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
-import { isEmpty, map } from 'lodash'
+import { isEmpty } from 'lodash'
 
 import TableView from './TableView'
 
@@ -11,7 +11,12 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
-import { GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../constants'
+import {
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
+  JOBS_PAGE
+} from '../../constants'
 import tableActions from '../../actions/table'
 
 import './table.scss'
@@ -89,7 +94,7 @@ const Table = ({
       !isEveryObjectValueEmpty(selectedItem)
     )
 
-    if (filtersStore.groupBy === 'name') {
+    if (filtersStore.groupBy === GROUP_BY_NAME) {
       setTableContent({
         content: generatedTableContent,
         groupLatestItem: generateGroupLatestItem(
@@ -101,16 +106,12 @@ const Table = ({
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
     } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
-      let groupWorkflowItem = map(groupedContent, (jobs, workflowId) =>
-        workflows.find(workflow => workflow.id === workflowId)
-      )
-
       setTableContent(state => ({
         ...state,
         content: generatedTableContent,
         groupLatestItem: [],
         groupWorkflowItems: createJobsContent(
-          groupWorkflowItem,
+          workflows,
           !isEveryObjectValueEmpty(selectedItem),
           match.params,
           isDemoMode,
@@ -173,9 +174,12 @@ const Table = ({
 Table.defaultProps = {
   applyDetailsChanges: () => {},
   getCloseDetailsLink: null,
-  groupedContent: {},
   groupLatestJob: [],
+  groupedContent: {},
+  handleCancel: () => {},
   handleExpandRow: () => {},
+  handleSelectItem: () => {},
+  retryRequest: () => {},
   selectedItem: {}
 }
 
@@ -185,12 +189,12 @@ Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),
-  handleCancel: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
-  handleSelectItem: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func,
   match: PropTypes.shape({}).isRequired,
-  retryRequest: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({})
 }
 

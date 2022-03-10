@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 
 export const mainHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/api`,
+  baseURL: `${process.env.PUBLIC_URL}/api/v1`,
 
   // serialize a param with an array value as a repeated param, for example:
   // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
@@ -14,7 +14,7 @@ export const functionTemplatesHttpClient = axios.create({
 })
 
 export const nuclioHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/nuclio`
+  baseURL: `${process.env.PUBLIC_URL}/nuclio/api`
 })
 
 export const iguazioHttpClient = axios.create({

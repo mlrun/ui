@@ -45,6 +45,7 @@ import {
 import { isPageTabValid } from '../../utils/handleRedirect'
 
 import { useOpenPanel } from '../../hooks/openPanel.hook'
+import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 const Models = ({
   artifactsStore,
@@ -57,7 +58,6 @@ const Models = ({
   fetchModelFeatureVector,
   fetchModels,
   filtersStore,
-  getFilterTagOptions,
   history,
   match,
   removeModel,
@@ -65,6 +65,9 @@ const Models = ({
   setFilters,
   subPage
 }) => {
+  const [pageData, setPageData] = useState(pageDataInitialState)
+  const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
+  const openPanelByDefault = useOpenPanel()
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const [deployModel, setDeployModel] = useState({})
@@ -73,9 +76,6 @@ const Models = ({
     setIsRegisterArtifactPopupOpen
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
-  const [pageData, setPageData] = useState(pageDataInitialState)
-
-  const openPanelByDefault = useOpenPanel()
 
   useEffect(() => {
     if (openPanelByDefault) {
@@ -208,21 +208,25 @@ const Models = ({
       ...state,
       selectedRowData: {}
     }))
-  }, [filtersStore.iter, removeModel])
+  }, [filtersStore.iter, filtersStore.tag, removeModel])
 
   useEffect(() => {
-    fetchData({
-      tag: TAG_FILTER_LATEST,
-      iter: match.params.pageTab === MODELS_TAB ? SHOW_ITERATIONS : ''
-    })
+    const filtersParams = urlTagOption
+      ? { tag: urlTagOption, iter: SHOW_ITERATIONS }
+      : {}
+    if (urlTagOption || match.params.pageTab !== MODELS_TAB) {
+      fetchData(filtersParams)
+    }
+  }, [fetchData, match.params.pageTab, urlTagOption])
 
+  useEffect(() => {
     return () => {
       setContent([])
       removeModels()
       setSelectedModel({})
       setPageData(pageDataInitialState)
     }
-  }, [fetchData, match.params.pageTab, removeModels])
+  }, [match.params.pageTab, removeModels])
 
   useEffect(() => {
     setPageData(state => ({
@@ -249,9 +253,8 @@ const Models = ({
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
       setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' })
-    } else if (match.params.pageTab === REAL_TIME_PIPELINES_TAB) {
-      setFilters({ groupBy: GROUP_BY_NONE })
     } else if (
+      match.params.pageTab === REAL_TIME_PIPELINES_TAB ||
       filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
       filtersStore.tag === TAG_FILTER_LATEST
     ) {
@@ -345,21 +348,6 @@ const Models = ({
     match.params.pageTab,
     match.params.projectName,
     selectedModel.item
-  ])
-
-  useEffect(() => {
-    if (
-      filtersStore.tagOptions.length === 0 &&
-      match.params.pageTab === MODELS_TAB
-    ) {
-      getFilterTagOptions(fetchArtifactTags, match.params.projectName)
-    }
-  }, [
-    fetchArtifactTags,
-    filtersStore.tagOptions.length,
-    getFilterTagOptions,
-    match.params.pageTab,
-    match.params.projectName
   ])
 
   useEffect(() => {

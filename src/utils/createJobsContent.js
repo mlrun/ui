@@ -29,10 +29,12 @@ const createJobsContent = (
           contentItem.func?.match(/\w(?<!\d)[\w'-]*/g, '') || []
         const [, projectName, jobUid] =
           contentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
+        const jobName = contentItem.name
         const lastRunLink = () =>
           projectName &&
+          jobName &&
           jobUid &&
-          `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobUid}/overview`
+          `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
 
         return {
           name: {
@@ -115,7 +117,9 @@ const createJobsContent = (
         return {
           name: {
             id: `name.${identifierUnique}`,
-            value: contentItem.name,
+            value: params.jobName
+              ? contentItem.uid || contentItem?.id
+              : contentItem.name,
             class: 'jobs_medium',
             type: type === 'workflow' && !isDemoMode ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
@@ -128,14 +132,23 @@ const createJobsContent = (
                     contentItem.uid,
                     tab
                   )
-                : generateLinkToDetailsPanel(
+                : params.jobName
+                ? generateLinkToDetailsPanel(
                     contentItem.project,
                     JOBS_PAGE,
                     MONITOR_JOBS_TAB,
                     contentItem.uid,
                     null,
-                    tab
+                    tab,
+                    null,
+                    null,
+                    contentItem.name
                   )
+                : `/projects/${
+                    contentItem.project
+                  }/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${
+                    contentItem.name
+                  }`
             }
           },
           type: {

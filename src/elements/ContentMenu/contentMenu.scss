@@ -8,6 +8,7 @@
   left: 0;
   width: 100%;
   min-width: 510px;
+  border-bottom: $dividerBorder;
 
   &__list {
     display: flex;
@@ -27,37 +28,59 @@
     text-transform: capitalize;
 
     &::after {
-      content: '';
-      border-bottom: $activeJobTabBorder;
       display: block;
       width: 100%;
-      opacity: 0;
+      border-bottom: $activeJobTabBorder;
       transform: scale(0);
+      opacity: 0;
       transition: all 0.3s ease-in-out;
+      content: '';
     }
 
     &:hover:not([class*='_active']) {
       &::after {
-        opacity: 0.6;
         transform: scale(1);
+        opacity: 0.6;
       }
     }
 
     a {
       display: block;
       padding: 8px 24px;
+      position: relative;
+
+      &.content-menu__item-icon {
+        padding-left: 40px;
+        & > * {
+          position: absolute;
+          left: 15px;
+          top: 4px;
+          bottom: 0;
+        }
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
 
     &_active {
-      color: $cornflowerBlue;
+      color: $malibu;
 
       &::after {
-        opacity: 1;
         transform: scale(1);
+        opacity: 1;
       }
 
       a {
         cursor: default;
+      }
+
+      .content-menu__item-icon {
+        path {
+          fill: $malibu;
+        }
       }
     }
 

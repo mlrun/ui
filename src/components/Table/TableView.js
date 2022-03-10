@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
+import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/ConsumerGroupTableRow'
+import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
 import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
@@ -13,6 +15,8 @@ import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureSto
 
 import {
   ARTIFACTS_PAGE,
+  CONSUMER_GROUPS_PAGE,
+  CONSUMER_GROUP_PAGE,
   DATASETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
@@ -75,10 +79,28 @@ const TableView = ({
           (groupFilter === GROUP_BY_NONE && isEmpty(groupLatestItem)) ? (
             tableContent.map((rowItem, i) => {
               switch (pageData.page) {
+                case CONSUMER_GROUPS_PAGE:
+                  return (
+                    <ConsumerGroupTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      rowItem={rowItem}
+                    />
+                  )
+                case CONSUMER_GROUP_PAGE:
+                  return (
+                    <ConsumerGroupShardLagTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      rowItem={rowItem}
+                    />
+                  )
                 case ARTIFACTS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
-                  return match.params.pageTab !== REAL_TIME_PIPELINES_TAB ? (
+                  return (
                     <ArtifactsTableRow
                       actionsMenu={actionsMenu}
                       content={content}
@@ -88,16 +110,6 @@ const TableView = ({
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
-                    />
-                  ) : (
-                    <FunctionsTableRow
-                      actionsMenu={actionsMenu}
-                      key={i}
-                      content={content}
-                      match={match}
-                      rowItem={rowItem}
-                      selectedItem={selectedItem}
-                      handleSelectItem={handleSelectItem}
                     />
                   )
                 case FEATURE_STORE_PAGE:
@@ -152,13 +164,43 @@ const TableView = ({
                   return null
               }
             })
+          ) : groupFilter === GROUP_BY_WORKFLOW &&
+            groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
+            groupLatestItem.map((workflow, index) => {
+              return (
+                <JobsTableRow
+                  actionsMenu={actionsMenu}
+                  key={index}
+                  content={content}
+                  handleExpandRow={handleExpandRow}
+                  handleSelectItem={handleSelectItem}
+                  isGroupedByWorkflow
+                  match={match}
+                  rowItem={workflow}
+                  selectedItem={selectedItem}
+                  workflows={workflows}
+                />
+              )
+            })
           ) : groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
             tableContent.map((group, i) => {
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
-                  return (
+                  return match.params.pageTab === REAL_TIME_PIPELINES_TAB ? (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      handleExpandRow={handleExpandRow}
+                      handleSelectItem={handleSelectItem}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                    />
+                  ) : (
                     <ArtifactsTableRow
                       actionsMenu={actionsMenu}
                       content={content}
@@ -279,6 +321,7 @@ TableView.propTypes = {
   isTablePanelOpen: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),

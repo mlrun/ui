@@ -53,7 +53,8 @@ import {
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
   PANEL_DEFAULT_ACCESS_KEY,
-  SET_NEW_FUNCTION_FORCE_BUILD
+  SET_NEW_FUNCTION_FORCE_BUILD,
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
 } from '../constants'
 
 const initialState = {
@@ -89,6 +90,7 @@ const initialState = {
       description: '',
       env: [],
       image: '',
+      priority_class_name: '',
       secret_sources: [],
       volume_mounts: [],
       volumes: [],
@@ -478,6 +480,17 @@ export default (state = initialState, { type, payload }) => {
           spec: {
             ...state.newFunction.spec,
             parameters: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_PRIORITY_CLASS_NAME:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            priority_class_name: payload
           }
         }
       }

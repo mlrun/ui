@@ -1,0 +1,26 @@
+@import '../../scss/colors.scss';
+@import '../../scss/variables.scss';
+
+.page-header {
+  &__title-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &__back-btn,
+  &__description-placeholder {
+    display: flex;
+    width: 30px;
+  }
+
+  &__title {
+    color: $primaryTextColor;
+    font-weight: 300;
+    font-size: 48px;
+  }
+
+  &__description {
+    display: flex;
+    color: $secondaryTextColor;
+  }
+}
