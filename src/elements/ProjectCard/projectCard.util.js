@@ -48,7 +48,8 @@ export const generateProjectStatistic = (
         projectSummary.runs_failed_recent_count + failedNuclioFunctions > 0
           ? 'failed'
           : 'default',
-      counterTooltip: 'ML jobs and Nuclio functions',
+      counterTooltip:
+        'Failed ML jobs and nuclio functions in the last 24 hours',
       label: 'Failed',
       labelClassName: 'wrap',
       loading: projectsSummaryLoading || nuclioFunctionsLoading,

@@ -6,11 +6,15 @@ Feature: Project Settings page
     @passive
     @inProgress
     Scenario: Verify all mandatory components on General Tab
+        * create "automation-test-name8" MLRun Project with code 201
+        And set tear-down property "project" created with "automation-test-name8" value
         Given open url
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "automation-test-name8" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "default" value
-        Then click on "Project_Settings_Button" element on "Project" wizard
+        Then verify breadcrumbs "project" label should be equal "automation-test-name8" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard should contains "Project_Settings"."Tab_List"
         Then verify "General" tab is active in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         Then verify "Artifact_Path_Input" element visibility on "Project_Settings_General_Tab" wizard
@@ -22,12 +26,14 @@ Feature: Project Settings page
         Then verify "Source_URL_Edit_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
 
     Scenario: Verify Parameters Table on General Tab
-        * create "automation-test-name5" MLRun Project with code 200
-        And set tear-down property "project" created with "automation-test-name5" value
+        * set tear-down property "project" created with "automation-test-name5" value
+        * create "automation-test-name5" MLRun Project with code 201
         Given open url
-        And click on cell with value "automation-test-name5" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "automation-test-name5" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button |
             |                            |                              |               yes               |
@@ -62,15 +68,16 @@ Feature: Project Settings page
             | key  | value  |
             | key0 | value0 |
             | key6 | value6 |
-        And remove "automation-test-name5" MLRun Project with code 204
 
     @passive
     Scenario: Check MLRun logo redirection
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
@@ -79,9 +86,11 @@ Feature: Project Settings page
     Scenario: Verify all mandatory components on Secrets tab and Create New Secret Popup
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
@@ -102,9 +111,11 @@ Feature: Project Settings page
     Scenario: Verify Secrets table on Secrets tab
         Given open url
         And wait load page
-        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on "Project_Settings_Button" element on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page

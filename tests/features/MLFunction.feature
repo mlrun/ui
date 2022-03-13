@@ -6,12 +6,14 @@ Feature: ML Functions
     Scenario: Check all mandatory components on ML Functions Page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Functions" value
+        Then verify breadcrumbs "tab" label should be equal "ML functions" value
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         Then verify "Show_Untagged_Functions_Checkbox" element visibility on "ML_Functions" wizard
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
@@ -24,9 +26,11 @@ Feature: ML Functions
     Scenario: verify filtering by function name on Functions page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         Then type value "test" to "Table_Name_Filter_Input" field on "ML_Functions" wizard
@@ -38,9 +42,11 @@ Feature: ML Functions
     Scenario: Check all mandatory components in Item infopane on Overview tab table
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
@@ -55,47 +61,55 @@ Feature: ML Functions
     Scenario: Verify all mandatory components on Delete existing function
         Given open url
         And wait load page
-        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
-        Then verify if "Delete_Function_Popup" popup dialog appears
-        Then "Description" component on "Delete_Function_Popup" should be equal "Descriptions"."Delete_Function"
-        Then verify "Cancel_Button" element visibility on "Delete_Function_Popup" wizard
-        Then "Cancel_Button" element on "Delete_Function_Popup" should contains "Cancel" value
-        Then verify "Delete_Button" element visibility on "Delete_Function_Popup" wizard
-        Then "Delete_Button" element on "Delete_Function_Popup" should contains "Delete" value
+        And wait load page
+        Then "Title" element on "Common_Popup" should contains "Delete function?" value
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Function"
+        Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
+        Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Common_Popup" wizard
+        Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
 
     @passive
     Scenario: Verify all mandatory components on Delete existing function in Item infopane
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then select "Delete" option in action menu on "ML_Function_Info_Pane" wizard
-        Then verify if "Delete_Function_Popup" popup dialog appears
-        Then "Description" component on "Delete_Function_Popup" should be equal "Descriptions"."Delete_Function"
-        Then verify "Cancel_Button" element visibility on "Delete_Function_Popup" wizard
-        Then "Cancel_Button" element on "Delete_Function_Popup" should contains "Cancel" value
-        Then verify "Delete_Button" element visibility on "Delete_Function_Popup" wizard
-        Then "Delete_Button" element on "Delete_Function_Popup" should contains "Delete" value
+        And wait load page
+        Then "Title" element on "Common_Popup" should contains "Delete function?" value
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Function"
+        Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
+        Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Common_Popup" wizard
+        Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
 
     @passive
     @inProgress
     Scenario: Check all mandatory components on Create ML Function Popup
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then click on "New_Function_Button" element on "ML_Functions" wizard
-        Then verify if "Create_ML_Function_Popup" popup dialog appears
+        Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -114,9 +128,11 @@ Feature: ML Functions
     Scenario: Check all mandatory components in General Accordion on create New Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -147,9 +163,11 @@ Feature: ML Functions
     Scenario: Check all mandatory components in Code Accordion on create New Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -182,14 +200,15 @@ Feature: ML Functions
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Base_Image_Hint"
 
-
     @passive
     Scenario: Check all mandatory components in Resources Accordion on create New Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -198,6 +217,8 @@ Feature: ML Functions
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "New_Function" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        Then verify "New_Function_Volume_Mount_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Volume_Mount_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Volume_Mount_Options"
         Then type value "0" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -213,6 +234,7 @@ Feature: ML Functions
         Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."GPU_Minimum_Value_Warning"
         Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Unit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
         Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -222,6 +244,7 @@ Feature: ML Functions
         Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Unit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
         Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "3" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 15 points in "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -239,9 +262,11 @@ Feature: ML Functions
     Scenario: Verify behaviour of Volume Paths Table in Resources Accordion on create New Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-03" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -318,9 +343,11 @@ Feature: ML Functions
     Scenario: Check all mandatory components in Resources Accordion on create New Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-04" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -370,9 +397,11 @@ Feature: ML Functions
     Scenario: Check all mandatory components in Resources Accordion on create New Function page in Demo mode
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -451,9 +480,11 @@ Feature: ML Functions
     Scenario: Save new ml-function
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -463,22 +494,63 @@ Feature: ML Functions
         Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
+        And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Then click on "Save_Button" element on "New_Function" wizard
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
-        Then verify values in "Functions_Table" table on "ML_Functions" wizard
-            |         name        |
-            | new-aqa-function-00 |
-        And select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "new-aqa-function-00" value in "name" column
-        And click on "Delete_Button" element on "Delete_Function_Popup" wizard
+        Then check "new-aqa-function-00" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
+
+    @inProgress
+    Scenario: deploy new ml-function wit build new image option
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        When collapse "General_Accordion" on "New_Function" wizard
+        Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
+        When select "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function"
+        When collapse "General_Accordion" on "New_Function" wizard
+        When collapse "Resources_Accordion" on "New_Function" wizard
+        And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
+        Then click on "Deploy_Button" element on "New_Function" wizard
+        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
+        Then check "new-aqa-function-00" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
+
+    Scenario: Delete ml-function
+        * create "automation-test-name07" MLRun Project with code 201
+        And set tear-down property "project" created with "automation-test-name07" value
+        * create "new-aqa-function-01" Function in "automation-test-name07" project with code 200
+        And set tear-down property "function" created in "automation-test-name07" project with "new-aqa-function-01" value
+        Given open url
+        And wait load page
+        And click on row root with value "automation-test-name07" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "new-aqa-function-01" value in "name" column
+        And click on "Delete_Button" element on "Common_Popup" wizard
+        Then check "new-aqa-function-01" value not in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @passive
     @demo
     Scenario: Check all mandatory components in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -504,9 +576,11 @@ Feature: ML Functions
     Scenario: Check Model Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -556,9 +630,11 @@ Feature: ML Functions
     Scenario: Check Secret Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -600,9 +676,11 @@ Feature: ML Functions
     Scenario: Check Parameters Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -640,12 +718,14 @@ Feature: ML Functions
 
     @passive
     @inProgress
-    Scenario: verify un unique value input hint on Create New Function page
+    Scenario: verify non-unique value input hint on Create New Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-5" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -662,12 +742,14 @@ Feature: ML Functions
 
     @passive
     @demo
-    Scenario: verify un unique value input hint on Create New Serving Function page
+    Scenario: verify non-unique value input hint on Create New Serving Function page
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -705,9 +787,11 @@ Feature: ML Functions
     Scenario: Check MLRun logo redirection
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
@@ -717,9 +801,11 @@ Feature: ML Functions
     Scenario: Verify View YAML action
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
         Then verify if "View_YAML" popup dialog appears
@@ -730,9 +816,11 @@ Feature: ML Functions
     Scenario: Verify View YAML action in Item infopane
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
@@ -745,9 +833,11 @@ Feature: ML Functions
     Scenario: Verify Edit action visibility in action menu
         Given open url
         And wait load page
-        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Job" value in "kind" column should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
         Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Serving" value in "kind" column should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
@@ -756,9 +846,11 @@ Feature: ML Functions
     Scenario: Verify Edit action visibility in Item infopane for Job function
         Given open url
         And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
@@ -768,9 +860,11 @@ Feature: ML Functions
     Scenario: Verify Edit action visibility in Item infopane for Serving function
         Given open url
         And wait load page
-        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on cell with row index 9 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
@@ -780,9 +874,11 @@ Feature: ML Functions
     Scenario: Verify all mandatory component on Edit Function sidebar
         Given open url
         And wait load page
-        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
         And wait load page

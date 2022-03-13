@@ -69,8 +69,34 @@ const summuryTemplate = {
   pipelines_running_count: 0
 }
 const jobTemplate = { kind: 'run', metadata: {}, spec: {}, status: {} }
+const scheduleTemplate = {
+  kind: 'job',
+  scheduled_object: {
+    task: {
+      spec: {},
+      metadata: {
+        labels: {}
+      }
+    },
+    function: {},
+    schedule: '0 0 1 * *',
+    credentials: { access_key: null }
+  },
+  labels: {}
+}
 const projectExistsConflict = {
   detail: "MLRunConflictError('Conflict - Project already exists')"
+}
+const projectsLimitReachedConflict = {
+  detail: {
+    reason:
+      'MLRunHTTPError("405 Client Error: Method Not Allowed for url: https://dashboard.default-tenant.app.vmdev2.lab.iguazeng.com/api/projects: ' +
+      "Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")"
+  }
+}
+const secretKeyTemplate = {
+  provider: 'kubernetes',
+  secret_keys: []
 }
 
 // Mock consts
@@ -156,6 +182,23 @@ function createProjectsFeatureSet(req, res) {
   res.send(featureSet)
 }
 
+function deleteFeatureSet(req, res) {
+  const collecledFeatureSet = featureSets.feature_sets
+    .filter(featureSet => featureSet.metadata.project === req.params.project)
+    .filter(featureSet => featureSet.metadata.name === req.params.featureSet)
+  if (collecledFeatureSet.length) {
+    remove(
+      featureSets.feature_sets,
+      item => item.metadata.name === req.params.featureSet
+    )
+    res.statusCode = 204
+  } else {
+    res.statusCode = 500
+  }
+
+  res.send()
+}
+
 function getProject(req, res) {
   res.send(
     projects.projects.find(
@@ -187,8 +230,10 @@ function createNewProject(req, res) {
   const collectedProjects = projects.projects.filter(
     project => project.metadata.name === req.body.metadata.name
   )
-
-  if (!collectedProjects.length) {
+  if (projects.projects.length > 50) {
+    res.statusCode = 405
+    data = projectsLimitReachedConflict
+  } else if (!collectedProjects.length) {
     const project = cloneDeep(projectTemplate)
     project.metadata.name = req.body.metadata.name
     project.metadata.created = currentDate.toISOString()
@@ -198,6 +243,8 @@ function createNewProject(req, res) {
     summary.name = req.body.metadata.name
     projectsSummary.project_summaries.push(summary)
     data = project
+    secretKeys[req.body.metadata.name] = secretKeyTemplate
+    res.statusCode = 201
   } else {
     res.statusCode = 409
     data = projectExistsConflict
@@ -228,7 +275,15 @@ function deleteProject(req, res) {
       artifacts.artifacts,
       artifact => artifact.project === req.params['project']
     )
-
+    remove(
+      run.data,
+      artifact => artifact.metadata.project === req.params['project']
+    )
+    remove(
+      run.data,
+      artifact => artifact.metadata.project === req.params['project']
+    )
+    delete secretKeys[req.params.project]
     res.statusCode = 204
   } else {
     res.statusCode = 500
@@ -307,11 +362,11 @@ function getProjectsSummaries(req, res) {
 }
 
 function getProjectSummary(req, res) {
-  const collectedProjet = projectsSummary.project_summaries.find(
+  const collectedProject = projectsSummary.project_summaries.find(
     item => item.name === req.params['project']
   )
 
-  res.send(collectedProjet)
+  res.send(collectedProject)
 }
 
 function getRuns(req, res) {
@@ -336,10 +391,16 @@ function getRuns(req, res) {
 
   if (req.query['label']) {
     let [key, value] = req.query['label'].split('=')
-    collectedRuns = collectedRuns.filter(run => run.metadata.labels[key])
+    collectedRuns = collectedRuns.filter(run =>
+      run.metadata.labels ? run.metadata.labels[key] : false
+    )
     if (req.query['label'].includes('=')) {
       collectedRuns = collectedRuns.filter(
         run => run.metadata.labels[key] === value
+      )
+    } else {
+      collectedRuns = collectedRuns.filter(
+        run => run.metadata.labels[key] || false
       )
     }
   }
@@ -347,7 +408,9 @@ function getRuns(req, res) {
   if (req.query['name']) {
     collectedRuns = collectedRuns.filter(run => {
       if (req.query['name'].includes('~')) {
-        return run.metadata.name.includes(req.query['name'].slice(1))
+        return run.metadata.name
+          ? run.metadata.name.includes(req.query['name'].slice(1))
+          : false
       } else {
         return run.metadata.name === req.query['name']
       }
@@ -373,7 +436,17 @@ function getRun(req, res) {
   res.send({ data: run_prj_uid })
 }
 
-function getProjectsShedules(req, res) {
+function patchRun(req, res) {
+  const collectedRun = runs.runs
+    .filter(run => run.metadata.project === req.params.project)
+    .filter(run => run.metadata.uid === req.params.uid)
+
+  collectedRun[0].status.state = req.body['status.state']
+
+  res.send()
+}
+
+function getProjectsSchedules(req, res) {
   let collectedSchedules = schedules.schedules.filter(
     schedule =>
       schedule.scheduled_object.task.metadata.project === req.params['project']
@@ -399,10 +472,15 @@ function getProjectsShedules(req, res) {
   res.send({ schedules: collectedSchedules })
 }
 
-function getProjectsFeaturesEntities(req, res) {
-  // console.log('requests log: ', req.method, req.url)
-  // console.log('debug: ', req.params, req.query, req.body)
+function getProjectsSchedule(req, res) {
+  const collectedSchedule = schedules.schedules.find(
+    item => item.name === req.params['schedule']
+  )
 
+  res.send(collectedSchedule)
+}
+
+function getProjectsFeaturesEntities(req, res) {
   const artifact = req.params.artifact
   let collectedArtifacts = []
 
@@ -465,21 +543,28 @@ function getProjectsFeaturesEntities(req, res) {
 
     if (req.query['label']) {
       let [key, value] = req.query['label'].split('=')
-      collectedArtifacts = collectedArtifacts.filter(feature => {
-        if (artifact === 'feature-vectors') {
-          if (feature.metadata.labels) {
-            return feature.metadata.labels[key]
-          }
+
+      collectedArtifacts = collectedArtifacts.filter(item => {
+        if (artifact === 'feature-vectors' && item.metadata.labels) {
+          return item.metadata.labels[key]
+        } else if (item.feature?.labels) {
+          return item.feature.labels[key]
+        } else if (item.entity?.labels) {
+          return item.entity.labels[key]
         }
       })
-      if (artifact === 'feature-vectors') {
-        if (req.query['label'].includes('=')) {
-          collectedArtifacts = collectedArtifacts.filter(feature => {
-            if (feature.metadata.labels) {
-              return feature.metadata.labels[key] === value
-            }
-          })
-        }
+
+      if (req.query['label'].includes('=')) {
+        collectedArtifacts = collectedArtifacts.filter(item => {
+          if (artifact === 'feature-vectors' && item.metadata.labels) {
+            return item.metadata.labels[key] === value
+          }
+          if (artifact === 'features') {
+            return item.feature.labels[key] === value
+          } else if (artifact === 'entities') {
+            return item.entity.labels[key] === value
+          }
+        })
       }
     }
   }
@@ -586,6 +671,27 @@ function getArtifacts(req, res) {
   }
 
   res.send({ artifacts: collectedArtifacts })
+}
+
+function getProjectsFeatureSets(req, res) {
+  const featureArtifactTags = featureSets.feature_sets
+    .filter(artifact => artifact.metadata.project === req.params.project)
+    .filter(artifact => artifact.metadata.name === req.params.name)
+    .filter(artifact => artifact.metadata.tag === req.params.tag)
+
+  res.send(featureArtifactTags[0])
+}
+
+function patchProjectsFeatureSets(req, res) {
+  const featureArtifactTags = featureSets.feature_sets
+    .filter(artifact => artifact.metadata.project === req.params.project)
+    .filter(artifact => artifact.metadata.name === req.params.name)
+    .filter(artifact => artifact.metadata.tag === req.params.tag)
+
+  if (featureArtifactTags.length) {
+    featureArtifactTags[0].metadata.labels = req.body.metadata.labels
+  }
+  res.send(featureArtifactTags[0])
 }
 
 function postProjectsFeatureVectors(req, res) {
@@ -865,6 +971,21 @@ function getFile(req, res) {
   res.sendFile(filePath)
 }
 
+function deleteSchedule(req, res) {
+  const collectedSchedule = schedules.schedules
+    .filter(schedule => schedule.project === req.params.project)
+    .filter(schedule => schedule.name === req.params.schedule)
+
+  if (collectedSchedule.length) {
+    remove(schedules.schedules, item => item.name === req.params.schedule)
+    res.statusCode = 204
+  } else {
+    res.statusCode = 500
+  }
+
+  res.send()
+}
+
 function getLog(req, res) {
   const collectedLog = logs.find(log => log.uid === req.params['uid'])
   res.send(collectedLog.log)
@@ -875,9 +996,6 @@ function getRuntimeResources(req, res) {
 }
 
 function postSubmitJob(req, res) {
-  // console.log('requests log: ', req.method, req.url)
-  // console.log('debug: ', req.params, req.query, req.body)
-
   const currentDate = new Date()
 
   let respTemplate = {
@@ -928,51 +1046,113 @@ function postSubmitJob(req, res) {
   respTemplate.data.spec.output_path = outputPath
   respTemplate.data.spec.parameters = req.body.task.spec.parameters
 
-  let job = { ...jobTemplate }
-  job.metadata = { ...respTemplate.data.metadata }
-  job.metadata.anotations = {}
-  job.spec = { ...respTemplate.data.spec }
-  delete job.spec.secret_sources
-  job.spec.hyper_param_options = {}
-  job.spec.hyperparams = {}
-  job.spec.inputs = {}
-  job.spec.log_level = 'info'
-  job.status = { ...respTemplate.data.status }
-  delete job.status.status_text
-  job.status.results = {}
+  if (req.body.schedule) {
+    let schedule = { ...scheduleTemplate }
+    schedule.name = runName
+    schedule.project = runProject
+    schedule.scheduled_object.task.metadata.name = runName
+    schedule.scheduled_object.task.metadata.project = runProject
+    schedule.scheduled_object.task.metadata.labels.author = runAuthor
+    schedule.creation_time = currentDate.toISOString()
 
-  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-    6
-  )}/${req.body.task.spec.function.slice(6)}.yaml`
-  let funcObject = yaml.load(
-    fs.readFileSync(funcYAMLPath, 'utf8').replace('|', '')
-  )
-  const funcUID = makeUID(32)
-  // funcObject.kind = respTemplate.data.metadata.labels.kind
-  funcObject.metadata.hash = funcUID
-  funcObject.metadata.project = runProject
-  funcObject.metadata.tag = 'latest'
-  funcObject.metadata.updated = currentDate.toISOString()
-  funcObject.spec.disable_auto_mount = false
-  funcObject.spec.priority_class_name = ''
-  funcObject.spec.volume_mounts = req.body.function.spec.volume_mounts
-  funcObject.spec.volumes = req.body.function.spec.volumes
-  funcObject.status = {}
+    schedules.schedules.push(schedule)
+  } else {
+    let job = { ...jobTemplate }
+    job.metadata = { ...respTemplate.data.metadata }
+    job.metadata.anotations = {}
+    job.spec = { ...respTemplate.data.spec }
+    delete job.spec.secret_sources
+    job.spec.hyper_param_options = {}
+    job.spec.hyperparams = {}
+    job.spec.inputs = {}
+    job.spec.log_level = 'info'
+    job.status = { ...respTemplate.data.status }
+    delete job.status.status_text
+    job.status.results = {}
 
-  const functionSpec = `${runProject}/${req.body.task.spec.handler}@${funcUID}`
-  respTemplate.data.spec.function = functionSpec
-  job.spec.function = functionSpec
+    let funcObject
+    if (
+      req.body.task.spec.function.includes('@') &&
+      req.body.task.spec.function.includes('/')
+    ) {
+      const filterPRJ = req.body.task.spec.function.split('/')[0]
+      const filterFunc = req.body.task.spec.function.split('/')[1].split('@')[0]
+      const filterFuncHash = req.body.task.spec.function
+        .split('/')[1]
+        .split('@')[1]
+      funcObject = funcs.funcs
+        .filter(item => item.metadata.hash === filterFuncHash)
+        .filter(item => item.metadata.project === filterPRJ)
+        .filter(item => item.metadata.name === filterFunc)[0]
+    } else {
+      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
+        6
+      )}/${req.body.task.spec.function.slice(6)}.yaml`
+      funcObject = yaml.load(
+        fs
+          .readFileSync(funcYAMLPath, 'utf8')
+          .replace('|+', '')
+          .replace('|', '')
+      )
+    }
 
-  const jobLogs = {
-    uid: runUID,
-    log: `> ${currentDate.toISOString()} Mock autogenerated log data`
+    const funcUID = makeUID(32)
+    // funcObject.kind = respTemplate.data.metadata.labels.kind
+    funcObject.metadata.hash = funcUID
+    funcObject.metadata.project = runProject
+    funcObject.metadata.tag = 'latest'
+    funcObject.metadata.updated = currentDate.toISOString()
+    funcObject.spec.disable_auto_mount = false
+    funcObject.spec.priority_class_name = ''
+    funcObject.spec.volume_mounts = req.body.function.spec.volume_mounts
+    funcObject.spec.volumes = req.body.function.spec.volumes
+    funcObject.status = {}
+
+    const functionSpec = `${runProject}/${req.body.task.spec.handler}@${funcUID}`
+    respTemplate.data.spec.function = functionSpec
+    job.spec.function = functionSpec
+
+    const jobLogs = {
+      uid: runUID,
+      log: `> ${currentDate.toISOString()} Mock autogenerated log data`
+    }
+
+    runs.runs.push(job)
+    funcs.funcs.push(funcObject)
+    logs.push(jobLogs)
   }
 
-  runs.runs.push(job)
-  funcs.funcs.push(funcObject)
-  logs.push(jobLogs)
-
   res.send(respTemplate)
+}
+
+function postModel(req, res) {
+  const currentDate = new Date()
+  const modelHash = makeUID(32)
+
+  const modelTemplate = {
+    key: 'model',
+    kind: 'model',
+    iter: 0,
+    tree: req.body.tree,
+    target_path: '',
+    hash: modelHash,
+    size: null,
+    db_key: req.body.db_key,
+    model_file: req.body.model_file,
+    framework: '',
+    producer: {
+      kind: req.body.producer.kind,
+      uri: req.body.producer.uri,
+      owner: 'admin'
+    },
+    sources: [],
+    project: req.body.project,
+    updated: currentDate.toISOString(),
+    tag: 'latest'
+  }
+
+  artifacts.artifacts.push(modelTemplate)
+  res.send()
 }
 
 function getNuclioFunctions(req, res) {
@@ -985,9 +1165,6 @@ function getNuclioAPIGateways(req, res) {
 
 // Iguazio
 function getIguazioProjects(req, res) {
-  console.log('requests log: ', req.method, req.url)
-  console.log('debug: ', req.params, req.query, req.body)
-
   let resultTemplate = cloneDeep(iguazioProjects)
 
   let filteredProject = {}
@@ -1033,16 +1210,10 @@ function getIguazioProjects(req, res) {
 }
 
 function getIguazioAuthorization(req, res) {
-  console.log('requests log: ', req.method, req.url)
-  console.log('debug: ', req.params, req.query, req.body)
-
   res.send({ data: [], meta: { ctx: 11661436569072727632 } })
 }
 
 function getIguazioProject(req, res) {
-  console.log('requests log: ', req.method, req.url)
-  console.log('debug: ', req.params, req.query, req.body)
-
   let filteredProject = iguazioProjects.data.find(
     item => item.id === req.params.id
   )
@@ -1072,7 +1243,6 @@ function getIguazioProject(req, res) {
   ) {
     let principalUserIDs = []
     for (let authID of authRolesIDs) {
-      console.log('debug authID: ', authID)
       let tmp = iguazioProjectsRelations[req.params.id].find(
         item => item.id === authID
       ).relationships
@@ -1158,6 +1328,10 @@ app.post(
   `${mlrunAPIIngress}/api/projects/:project/feature-sets`,
   createProjectsFeatureSet
 )
+app.delete(
+  `${mlrunAPIIngress}/api/projects/:project/feature-sets/:featureSet`,
+  deleteFeatureSet
+)
 
 app.get(`${mlrunAPIIngress}/api/projects`, getProjects)
 app.post(`${mlrunAPIIngress}/api/projects`, createNewProject)
@@ -1175,10 +1349,19 @@ app.get(`${mlrunAPIIngress}/api/project-summaries/:project`, getProjectSummary)
 app.get(`${mlrunAPIIngress}/api/runs`, getRuns)
 
 app.get(`${mlrunAPIIngress}/api/run/:project/:uid`, getRun)
+app.patch(`${mlrunAPIIngress}/api/run/:project/:uid`, patchRun)
 
 app.get(
   `${mlrunAPIIngress}/api/projects/:project/schedules`,
-  getProjectsShedules
+  getProjectsSchedules
+)
+app.get(
+  `${mlrunAPIIngress}/api/projects/:project/schedules/:schedule`,
+  getProjectsSchedule
+)
+app.delete(
+  `${mlrunAPIIngress}/api/projects/:project/schedules/:schedule`,
+  deleteSchedule
 )
 app.get(
   `${mlrunAPIIngress}/api/projects/:project/:artifact`,
@@ -1190,6 +1373,15 @@ app.get(
 )
 app.get(`${mlrunAPIIngress}/api/artifacts`, getArtifacts)
 
+app.post(`${mlrunAPIIngress}/api/artifact/:project/:uid/:artifact`, postModel)
+app.get(
+  `${mlrunAPIIngress}/api/projects/:project/feature-sets/:name/references/:tag`,
+  getProjectsFeatureSets
+)
+app.patch(
+  `${mlrunAPIIngress}/api/projects/:project/feature-sets/:name/references/:tag`,
+  patchProjectsFeatureSets
+)
 app.post(
   `${mlrunAPIIngress}/api/projects/:project/feature-vectors`,
   postProjectsFeatureVectors
