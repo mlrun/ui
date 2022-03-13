@@ -141,7 +141,16 @@ const App = () => {
               path="/projects/:projectName/functions/:hash/:tab"
               render={routeProps => <Functions {...routeProps} />}
             />
-
+            <Redirect
+              exact
+              path={[
+                '/projects/:projectName/feature-store/datasets',
+                '/projects/:projectName/feature-store/datasets/:name/:tab',
+                '/projects/:projectName/feature-store/datasets/:name/:tag/:tab',
+                '/projects/:projectName/feature-store/datasets/:name/:tag/:iter/:tab'
+              ]}
+              to="/projects/:projectName/datasets/:name/:tag/:iter/:tab"
+            />
             <Route
               exact
               path={[
@@ -151,11 +160,7 @@ const App = () => {
               ]}
               render={routeProps => <Datasets {...routeProps} />}
             />
-            {/* <Redirect
-              exact
-              from="/projects/:projectName/feature-store/datasets"
-              to="/projects/:projectName/datasets"
-            /> */}
+
             <Route
               exact
               path="/projects/:projectName/feature-store/add-to-feature-vector"

@@ -5,7 +5,6 @@ import {
   CONSUMER_GROUPS_PAGE,
   CONSUMER_GROUP_PAGE,
   DATASETS_PAGE,
-  DATASETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -49,7 +48,7 @@ export const generateTableContent = (
         : page === FUNCTIONS_PAGE ||
           (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
         ? createFunctionsContent(group, isSelectedItem, params)
-        : page === FEATURE_STORE_PAGE && params.pageTab !== DATASETS_TAB
+        : page === FEATURE_STORE_PAGE
         ? createFeatureStoreContent(
             group,
             params.pageTab,
@@ -75,8 +74,7 @@ export const generateTableContent = (
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
         page === DATASETS_PAGE ||
-        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB) ||
-        params.pageTab === DATASETS_TAB
+        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB)
       ? createArtifactsContent(
           content,
           page,

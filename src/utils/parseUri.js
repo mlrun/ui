@@ -49,7 +49,7 @@
  *         uid:       '24fce79e709f9b3fe5e8251a39e67c678d94c20c' }
  */
 import {
-  DATASETS_TAB,
+  DATASETS,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   MODELS_TAB,
@@ -63,7 +63,7 @@ const parseUri = uri =>
 
 const kindToScreen = {
   artifacts: 'files',
-  datasets: `feature-store/${DATASETS_TAB}`,
+  datasets: `feature-store/${DATASETS}`,
   'feature-sets': `feature-store/${FEATURE_SETS_TAB}`,
   'feature-vectors': `feature-store/${FEATURE_VECTORS_TAB}`,
   functions: 'functions',

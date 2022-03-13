@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -20,7 +20,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
-  DATASETS_TAB,
+  DATASETS,
   DATASETS_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -50,7 +50,7 @@ const Datasets = ({
   const [datasets, setDatasets] = useState([])
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
-
+  const datasetsRef = useRef(null)
   const openPanelByDefault = useOpenPanel()
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
 
@@ -66,6 +66,10 @@ const Datasets = ({
     },
     [fetchDataSets, match.params.projectName]
   )
+
+  const cancelRequest = message => {
+    datasetsRef.current?.cancel && datasetsRef.current.cancel(message)
+  }
 
   const handleRequestOnExpand = useCallback(
     async item => {
@@ -138,7 +142,7 @@ const Datasets = ({
       if (!selectedItem) {
         history.replace(`/projects/${match.params.projectName}/datasets}`)
       } else {
-        selectedItem.URI = generateUri(selectedItem, DATASETS_TAB)
+        selectedItem.URI = generateUri(selectedItem, DATASETS)
         setSelectedItem({ item: selectedItem })
       }
     } else {
@@ -157,14 +161,30 @@ const Datasets = ({
       return {
         ...state,
         ...generatePageData(
-          handleRequestOnExpand,
-          handleRemoveDataSet,
           !isEveryObjectValueEmpty(selectedItem),
           selectedItem
         )
       }
     })
   }, [handleRemoveDataSet, handleRequestOnExpand, selectedItem])
+
+  useEffect(() => {
+    removeDataSet({})
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {}
+    }))
+  }, [filtersStore.iter, filtersStore.tag, removeDataSet])
+
+  useEffect(() => {
+    setPageData(state => {
+      return {
+        ...state,
+        handleRequestOnExpand,
+        handleRemoveDataSet
+      }
+    })
+  }, [handleRemoveDataSet, handleRequestOnExpand])
 
   useEffect(() => {
     if (urlTagOption) {
@@ -201,20 +221,24 @@ const Datasets = ({
   useEffect(() => {
     return () => {
       setDatasets([])
+      removeDataSet({})
       removeDataSets()
       setSelectedItem({})
       setPageData(pageDataInitialState)
+      cancelRequest('cancel')
     }
-  }, [removeDataSets, setSelectedItem])
+  }, [filtersStore.iter, removeDataSet, removeDataSets, setSelectedItem])
 
   return (
-    <div className="content-wrapper">
+    <div className="content-wrapper" ref={datasetsRef}>
       {loading && <Loader />}
       <Content
+        cancelRequest={cancelRequest}
         content={datasets}
         getIdentifier={getArtifactIdentifier}
+        handleCancel={() => setSelectedItem({})}
         handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
-        loading={false}
+        loading={loading}
         match={match}
         pageData={pageData}
         refresh={handleRefresh}

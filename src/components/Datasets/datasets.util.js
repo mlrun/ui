@@ -130,12 +130,7 @@ const generateDataSetsDetailsMenu = selectedItem => [
   }
 ]
 
-export const generatePageData = (
-  handleRequestOnExpand,
-  handleRemoveRequestData,
-  isSelectedItem,
-  selectedItem
-) => ({
+export const generatePageData = (isSelectedItem, selectedItem) => ({
   actionsMenuHeader,
   details: {
     menu: generateDataSetsDetailsMenu(selectedItem),
@@ -144,8 +139,6 @@ export const generatePageData = (
   },
   filters,
   filterMenuActionButton: null,
-  handleRequestOnExpand,
-  handleRemoveRequestData,
   page,
   tableHeaders: tableHeaders(isSelectedItem)
 })
