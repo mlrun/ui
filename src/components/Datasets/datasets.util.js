@@ -151,7 +151,7 @@ export const fetchDataSetRowData = async (
   tag
 ) => {
   const dataSetIdentifier = getArtifactIdentifier(dataSet)
-  let result = []
+
   setPageData(state => ({
     ...state,
     selectedRowData: {
@@ -162,35 +162,35 @@ export const fetchDataSetRowData = async (
     }
   }))
 
-  try {
-    result = await fetchDataSet(dataSet.project, dataSet.db_key, iter, tag)
-  } catch (error) {
-    setPageData(state => ({
-      ...state,
-      selectedRowData: {
-        ...state.selectedRowData,
-        [dataSetIdentifier]: {
-          ...state.selectedRowData[dataSetIdentifier],
-          error,
-          loading: false
-        }
+  fetchDataSet(dataSet.project, dataSet.db_key, iter, tag)
+    .then(result => {
+      if (result?.length > 0) {
+        setPageData(state => {
+          return {
+            ...state,
+            selectedRowData: {
+              ...state.selectedRowData,
+              [dataSetIdentifier]: {
+                content: [...generateArtifacts(filterArtifacts(result), iter)],
+                error: null,
+                loading: false
+              }
+            }
+          }
+        })
       }
-    }))
-  }
-
-  if (result?.length > 0) {
-    setPageData(state => {
-      return {
+    })
+    .catch(error => {
+      setPageData(state => ({
         ...state,
         selectedRowData: {
           ...state.selectedRowData,
           [dataSetIdentifier]: {
-            content: [...generateArtifacts(filterArtifacts(result), iter)],
-            error: null,
+            ...state.selectedRowData[dataSetIdentifier],
+            error,
             loading: false
           }
         }
-      }
+      }))
     })
-  }
 }
