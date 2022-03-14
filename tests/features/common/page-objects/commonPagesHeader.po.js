@@ -10,7 +10,7 @@ const generalInfoQuickLinks = {
     row: {
       root: '.nav-link',
       fields: {
-        link: '.nav-link__button'
+        link: '.nav-link__button span'
       }
     }
   }
