@@ -184,7 +184,7 @@ const jobsActions = {
           : (data || {}).runs.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
-        dispatch(jobsActions.setAllJobsData(data.runs || {}))
+        dispatch(jobsActions.setAllJobsData(data.runs || []))
 
         return newJobs
       })
