@@ -4,22 +4,17 @@ const yaml = require('js-yaml')
 const lodash = require('lodash')
 
 const baseMlRunUrl =
-  'http://mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/'
-// const baseMlRunUrl =
-//   'http://mlrun-api-ingress.default-tenant.app.dev35.lab.iguazeng.com/api/'
+  'http://mlrun-api-ingress.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
 
 const baseNuclioUrl =
-  'http://nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/'
-// const baseNuclioUrl =
-//   'http://nuclio-ingress.default-tenant.app.dev35.lab.iguazeng.com/api/'
+  'http://nuclio-ingress.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
+
 const githubFunctionsUrl = 'https://github.com/mlrun/functions/tree/master'
 const githubYamlUrl =
   'https://raw.githubusercontent.com/mlrun/functions/master/'
 const saveFolder = 'data'
 const igzApiUrl =
-  'platform-api.default-tenant.app.vmdev36.lab.iguazeng.com/api/'
-// const igzApiUrl =
-//   'http://platform-api.default-tenant.app.dev35.lab.iguazeng.com/api/'
+  'http://platform-api.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
 
 const fetchData = async (host, endpoint = '') => {
   try {
