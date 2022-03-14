@@ -69,7 +69,7 @@ const jobsMonitorTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg',
+        name: '.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -79,7 +79,6 @@ const jobsMonitorTable = {
             '.tooltip .tooltip__text span'
           )
         },
-        name: '.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
         datetime:
           '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
         uid:
@@ -404,9 +403,6 @@ module.exports = {
       '.content__action-bar > .data-ellipsis:nth-of-type(2) button'
     ),
     Table_Refresh_Button: tableRefreshButton,
-    Table_Expand_Rows_Button: By.css(
-      '.content__action-bar .actions .round-icon-cp:nth-of-type(2) button'
-    ),
     Status_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '.content__action-bar .filters .select:nth-of-type(2)',
@@ -415,24 +411,16 @@ module.exports = {
         '.data-ellipsis .data-ellipsis' // Option value
       )
     ),
-    Group_By_Name_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content__action-bar .filters .select:nth-of-type(3)',
-        '.select__header', // Open Component
-        '.select__body .select__item', // Options
-        '.data-ellipsis .data-ellipsis' // Option value
-      )
-    ),
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(4)',
+        '.content__action-bar .filters > .input-wrapper:nth-of-type(3)',
         true,
         false
       )
     ),
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(5)',
+        '.content__action-bar .filters > .input-wrapper:nth-of-type(4)',
         true,
         false
       )
@@ -451,7 +439,7 @@ module.exports = {
   },
   WorkflowsMonitorTab: {
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
-    Toggle_View_Button: By.css('.workflow-header .actions .toggle-view-btn'),
+    Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
     Workflow_List_View_Table: commonTable(jobsMonitorTable),
     Workflow_Graph: graph(monitorWorkflowGraph)
   },

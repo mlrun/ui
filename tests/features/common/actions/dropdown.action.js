@@ -63,7 +63,7 @@ const action = {
   checkDropdownOptions: async function(driver, dropdown, values) {
     const options = await getOptionValues(driver, dropdown.options)
     const diff = differenceWith(options, values, isEqual)
-    expect(diff.length).equal(0, 'Options difference: ' + diff)
+    expect(diff.length).equal(0, `Options difference: "${diff}"`)
   },
   checkDropdownContainsOptions: async function(driver, dropdown, values) {
     const options = await getOptionValues(driver, dropdown.options)

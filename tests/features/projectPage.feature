@@ -583,15 +583,7 @@ Feature: MLRun Project Page
         Then "New_Job_Button" element on "Jobs_Monitor_Tab" should contains "New Job" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Table_Expand_Rows_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Group_By_Name_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Table_Labels_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @passive
     Scenario: Check Project Counter redirection to Schedules tab
@@ -620,9 +612,9 @@ Feature: MLRun Project Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Models" value
         Then verify "Models_Table" element visibility on "Models" wizard
-        Then select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        Then select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
+        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
         Then verify "Feature_Sets_Table" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "tab" with "Artifacts" value in breadcrumbs menu
         And wait load page
@@ -830,7 +822,7 @@ Feature: MLRun Project Page
             |     name     |
             | Feature Sets |
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
+        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -878,7 +870,7 @@ Feature: MLRun Project Page
             |   name   |
             | Datasets |
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
+        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
@@ -943,15 +935,8 @@ Feature: MLRun Project Page
         Then "New_Job_Button" element on "Jobs_Monitor_Tab" should contains "New Job" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Table_Expand_Rows_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Status_Filter_Options"
-        Then verify "Group_By_Name_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Group_By_Name_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Group_By_Filter_Options"
-        Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Table_Labels_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Start_Time_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Start_Time_Filter_Options"
 
     @passive
     @demo
@@ -1041,7 +1026,6 @@ Feature: MLRun Project Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        # When click on cell with row index 1 in "name" column in "Jobs_And_Workflows" table on "Project" wizard
         Then click on "See_All_Jobs_Link" element on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
@@ -1051,16 +1035,8 @@ Feature: MLRun Project Page
         Then "New_Job_Button" element on "Jobs_Monitor_Tab" should contains "New Job" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Table_Expand_Rows_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Status_Filter_Options"
-        Then verify "Group_By_Name_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Group_By_Name_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Group_By_Filter_Options"
-        Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Table_Labels_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Start_Time_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Start_Time_Filter_Options"
-        When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
 
     @passive
     @links
