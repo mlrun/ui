@@ -10,10 +10,10 @@ Feature: Feature Store Page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
+        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -37,10 +37,10 @@ Feature: Feature Store Page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
+        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -65,12 +65,12 @@ Feature: Feature Store Page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "fsdemo-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
+        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Feature_Store"."Tab_List"
         And turn on demo mode
@@ -90,10 +90,10 @@ Feature: Feature Store Page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store (Beta)" value
+        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
@@ -115,7 +115,7 @@ Feature: Feature Store Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -171,7 +171,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
@@ -197,7 +197,7 @@ Feature: Feature Store Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
@@ -225,7 +225,7 @@ Feature: Feature Store Page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
@@ -250,7 +250,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -271,7 +271,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -293,7 +293,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -314,7 +314,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -334,7 +334,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -355,7 +355,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
@@ -368,7 +368,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Tab" wizard
@@ -384,7 +384,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "io" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
@@ -397,7 +397,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Datasets_Tab" wizard
@@ -410,7 +410,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
@@ -423,7 +423,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "test-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
@@ -438,7 +438,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -461,12 +461,12 @@ Feature: Feature Store Page
         Then verify if "Feature_Set_Schedule_Popup" popup dialog appears
 
     @passive
-        Scenario: Verify behaviour of Combobox element on Feature Store Feature Set new item wizard on Data Source Accordion
+    Scenario: Verify behaviour of Combobox element on Feature Store Feature Set new item wizard on Data Source Accordion
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
@@ -506,7 +506,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
@@ -530,7 +530,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -581,15 +581,17 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display "Input_Hint"."Feature_Set_Name_Hint"
-        Then verify "Feature_Set_Name_Input" according hint rules on "New_Feature_Set" wizard
-        Then type value "#$@" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
-        Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then type value "   " to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Name_Hint"
+        Then verify "Feature_Set_Name_Input" options rules on "New_Feature_Set" wizard
+        Then type value "   " to "Version_Input" field on "New_Feature_Set" wizard
+        Then verify "Version_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Version_Hint"
+        Then verify "Version_Input" options rules on "New_Feature_Set" wizard
         Then verify "Kind_Dropdown" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Kind_Options"
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
@@ -602,7 +604,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -618,7 +620,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -641,7 +643,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -708,7 +710,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -750,7 +752,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -776,13 +778,13 @@ Feature: Feature Store Page
     @inProgress
     @failed
     Scenario: Save new Feature Store Feature Set new item wizard
+        * set tear-down property "project" created with "automation-test-name3" value
         * create "automation-test-name3" MLRun Project with code 201
-        And set tear-down property "project" created with "automation-test-name3" value
         Given open url
         And wait load page
         And click on row root with value "automation-test-name3" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -823,7 +825,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -837,7 +839,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
@@ -849,7 +851,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "test-i" value in "name" column
         Then verify if "View_YAML" popup dialog appears
@@ -862,7 +864,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -878,7 +880,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -894,7 +896,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -910,7 +912,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -925,7 +927,7 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -950,7 +952,7 @@ Feature: Feature Store Page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -999,7 +1001,7 @@ Feature: Feature Store Page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1031,7 +1033,7 @@ Feature: Feature Store Page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1069,7 +1071,7 @@ Feature: Feature Store Page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1139,7 +1141,7 @@ Feature: Feature Store Page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1198,7 +1200,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature Store (Beta)" value in breadcrumbs menu
+        And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page

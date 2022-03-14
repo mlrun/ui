@@ -224,7 +224,9 @@ const featuresByProjectsTable = {
     row: {
       root: '.feature-row',
       fields: {
-        feature: '.feature-row__feature-template'
+        feature: '.feature-row__feature-template',
+        set_label_btn: '.feature-row__actions .label-actions',
+        delete_feature_btn: '.feature-row__actions .label-actions'
       }
     }
   }
