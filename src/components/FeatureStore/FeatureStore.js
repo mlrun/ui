@@ -18,11 +18,9 @@ import notificationActions from '../../actions/notification'
 import tableActions from '../../actions/table'
 import {
   checkTabIsValid,
-  fetchDataSetRowData,
   fetchFeatureRowData,
   fetchFeatureSetRowData,
   fetchFeatureVectorRowData,
-  generateDataSetsDetailsMenu,
   generateFeatureSetsDetailsMenu,
   generateFeatureVectorsDetailsMenu,
   generatePageData,
@@ -38,7 +36,6 @@ import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 import {
   DANGER_BUTTON,
-  DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
@@ -46,7 +43,6 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   LABEL_BUTTON,
-  SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../constants'
@@ -55,12 +51,8 @@ import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 const FeatureStore = ({
-  artifactsStore,
   deleteFeatureVector,
   featureStore,
-  fetchArtifactTags,
-  fetchDataSet,
-  fetchDataSets,
   fetchEntities,
   fetchEntity,
   fetchFeature,
@@ -75,8 +67,6 @@ const FeatureStore = ({
   getFilterTagOptions,
   history,
   match,
-  removeDataSet,
-  removeDataSets,
   removeEntities,
   removeEntity,
   removeFeature,
@@ -96,9 +86,7 @@ const FeatureStore = ({
 }) => {
   const [pageData, setPageData] = useState(pageDataInitialState)
   const urlTagOption = useGetTagOptions(
-    match.params.pageTab === DATASETS_TAB
-      ? fetchArtifactTags
-      : match.params.pageTab === FEATURE_VECTORS_TAB
+    match.params.pageTab === FEATURE_VECTORS_TAB
       ? fetchFeatureVectorsTags
       : fetchFeatureSetsTags,
     pageData.filters
@@ -117,7 +105,6 @@ const FeatureStore = ({
     async filters => {
       const data = await handleFetchData(
         featureStoreRef,
-        fetchDataSets,
         fetchFeatureSets,
         fetchFeatures,
         fetchEntities,
@@ -134,7 +121,6 @@ const FeatureStore = ({
       return data.originalContent
     },
     [
-      fetchDataSets,
       fetchFeatureSets,
       fetchFeatures,
       fetchEntities,
@@ -150,9 +136,7 @@ const FeatureStore = ({
 
   const handleRefresh = filters => {
     const fetchTags =
-      match.params.pageTab === DATASETS_TAB
-        ? fetchArtifactTags
-        : match.params.pageTab === FEATURE_VECTORS_TAB
+      match.params.pageTab === FEATURE_VECTORS_TAB
         ? fetchFeatureVectorsTags
         : fetchFeatureSetsTags
 
@@ -262,21 +246,6 @@ const FeatureStore = ({
     ]
   )
 
-  const handleRemoveDataSet = useCallback(
-    dataSet => {
-      handleRemoveRowData(
-        dataSet,
-        removeDataSet,
-        artifactsStore.dataSets.selectedRowData.content
-      )
-    },
-    [
-      artifactsStore.dataSets.selectedRowData.content,
-      handleRemoveRowData,
-      removeDataSet
-    ]
-  )
-
   const handleRemoveFeatureSet = useCallback(
     featureSet => {
       handleRemoveRowData(
@@ -312,23 +281,13 @@ const FeatureStore = ({
           setPageData,
           filtersStore.tag
         )
-      } else if (match.params.pageTab === DATASETS_TAB) {
-        await fetchDataSetRowData(
-          fetchDataSet,
-          item,
-          setPageData,
-          !filtersStore.iter,
-          filtersStore.tag
-        )
       }
     },
     [
-      fetchDataSet,
       fetchEntity,
       fetchFeature,
       fetchFeatureSet,
       fetchFeatureVector,
-      filtersStore.iter,
       filtersStore.tag,
       match.params.pageTab
     ]
@@ -408,10 +367,6 @@ const FeatureStore = ({
   )
 
   useEffect(() => {
-    removeDataSet({})
-  }, [filtersStore.iter, removeDataSet])
-
-  useEffect(() => {
     setPageData(state => ({
       ...state,
       selectedRowData: {}
@@ -422,7 +377,7 @@ const FeatureStore = ({
     if (urlTagOption) {
       fetchData({
         tag: urlTagOption,
-        iter: match.params.pageTab === DATASETS_TAB ? SHOW_ITERATIONS : ''
+        iter: ''
       })
     }
   }, [fetchData, match.params.pageTab, urlTagOption])
@@ -430,7 +385,6 @@ const FeatureStore = ({
   useEffect(() => {
     return () => {
       setContent([])
-      removeDataSets()
       removeFeatures()
       removeEntities()
       removeFeatureSets()
@@ -441,7 +395,6 @@ const FeatureStore = ({
     }
   }, [
     match.params.pageTab,
-    removeDataSets,
     removeEntities,
     removeFeatureSets,
     removeFeatureVectors,
@@ -470,9 +423,7 @@ const FeatureStore = ({
             ? handleRemoveFeatureVector
             : match.params.pageTab === FEATURES_TAB
             ? handleRemoveFeature
-            : match.params.pageTab === FEATURE_SETS_TAB
-            ? handleRemoveFeatureSet
-            : handleRemoveDataSet,
+            : handleRemoveFeatureSet,
           onDeleteFeatureVector,
           getPopUpTemplate,
           tableStore.isTablePanelOpen,
@@ -483,7 +434,6 @@ const FeatureStore = ({
     })
   }, [
     getPopUpTemplate,
-    handleRemoveDataSet,
     handleRemoveFeature,
     handleRemoveFeatureSet,
     handleRemoveFeatureVector,
@@ -500,14 +450,12 @@ const FeatureStore = ({
       featureStore.featureSets,
       featureStore.features.allData,
       featureStore.entities.allData,
-      artifactsStore.dataSets,
       featureStore.featureVectors,
       history,
       match,
       setSelectedItem
     )
   }, [
-    artifactsStore.dataSets,
     featureStore.featureSets,
     featureStore.featureVectors,
     featureStore.features.allData,
@@ -553,15 +501,6 @@ const FeatureStore = ({
             type: FEATURE_VECTORS_TAB
           }
         }
-      } else if (match.params.pageTab === DATASETS_TAB) {
-        return {
-          ...state,
-          details: {
-            ...state.details,
-            menu: [...generateDataSetsDetailsMenu(selectedItem)],
-            type: DATASETS_TAB
-          }
-        }
       }
 
       return { ...state }
@@ -588,8 +527,6 @@ const FeatureStore = ({
   useEffect(() => {
     if (openPanelByDefault) {
       switch (match.params.pageTab) {
-        case DATASETS_TAB:
-          return setIsPopupDialogOpen(true)
         case FEATURE_SETS_TAB:
           return setFeatureSetsPanelIsOpen(true)
         case FEATURE_VECTORS_TAB:
@@ -614,8 +551,6 @@ const FeatureStore = ({
 
   const handleActionsMenuClick = () => {
     switch (match.params.pageTab) {
-      case DATASETS_TAB:
-        return setIsPopupDialogOpen(true)
       case FEATURE_SETS_TAB:
         return setFeatureSetsPanelIsOpen(true)
       case FEATURE_VECTORS_TAB:
@@ -673,19 +608,16 @@ const FeatureStore = ({
       )}
       {(featureStore.loading ||
         featureStore.entities.loading ||
-        featureStore.features.loading ||
-        artifactsStore.loading) && <Loader />}
+        featureStore.features.loading) && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}
         cancelRequest={cancelRequest}
         content={content}
         handleCancel={() => setSelectedItem({})}
         loading={
-          match.params.pageTab === DATASETS_TAB
-            ? artifactsStore.loading
-            : featureStore.loading ||
-              featureStore.entities.loading ||
-              featureStore.features.loading
+          featureStore.loading ||
+          featureStore.entities.loading ||
+          featureStore.features.loading
         }
         match={match}
         handleActionsMenuClick={handleActionsMenuClick}
@@ -727,8 +659,7 @@ FeatureStore.propTypes = {
 }
 
 export default connect(
-  ({ artifactsStore, tableStore, filtersStore, featureStore }) => ({
-    artifactsStore,
+  ({ tableStore, filtersStore, featureStore }) => ({
     tableStore,
     filtersStore,
     featureStore

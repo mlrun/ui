@@ -4,7 +4,7 @@ import {
   ARTIFACTS_PAGE,
   CONSUMER_GROUPS_PAGE,
   CONSUMER_GROUP_PAGE,
-  DATASETS_TAB,
+  DATASETS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -48,7 +48,7 @@ export const generateTableContent = (
         : page === FUNCTIONS_PAGE ||
           (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
         ? createFunctionsContent(group, isSelectedItem, params)
-        : page === FEATURE_STORE_PAGE && params.pageTab !== DATASETS_TAB
+        : page === FEATURE_STORE_PAGE
         ? createFeatureStoreContent(
             group,
             params.pageTab,
@@ -73,8 +73,8 @@ export const generateTableContent = (
       ? createJobsContent(content, isSelectedItem, params, isDemoMode, false)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
-        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB) ||
-        params.pageTab === DATASETS_TAB
+        page === DATASETS_PAGE ||
+        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB)
       ? createArtifactsContent(
           content,
           page,

@@ -16,7 +16,7 @@ import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
-import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
+import { DATASETS, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
@@ -55,7 +55,7 @@ const ProjectMonitorView = ({
     artifactKind === 'model'
       ? 'models'
       : artifactKind === 'dataset'
-      ? `feature-store/${DATASETS_TAB}`
+      ? DATASETS
       : 'files'
   }`
 
