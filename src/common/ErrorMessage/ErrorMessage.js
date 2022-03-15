@@ -12,7 +12,9 @@ import './errorMessage.scss'
 const ErrorMessage = ({ closeError, message }) => {
   return (
     <div data-testid="error-message" className="error">
-      <UnsuccessAlert className="error__icon" />
+      <div>
+        <UnsuccessAlert className="error__icon" />
+      </div>
       <div className="error__message"> {message}</div>
       {closeError && (
         <button data-testid="close" onClick={closeError}>

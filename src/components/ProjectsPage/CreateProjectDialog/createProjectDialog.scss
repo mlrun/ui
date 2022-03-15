@@ -1,4 +1,8 @@
 .create-project-dialog {
+  &__buttons-wrapper {
+    display: flex;
+  }
+
   .pop-up-dialog {
     &__footer-container {
       align-items: center;

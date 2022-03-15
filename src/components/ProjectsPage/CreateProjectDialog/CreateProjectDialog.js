@@ -79,24 +79,26 @@ const CreateProjectDialog = ({
               message={projectStore.newProject.error}
             />
           )}
-          <Button
-            type="button"
-            disabled={projectStore.loading}
-            variant={TERTIARY_BUTTON}
-            label="Cancel"
-            className="pop-up-dialog__btn_cancel"
-            onClick={closeNewProjectPopUp}
-          />
-          <Button
-            disabled={
-              projectStore.loading ||
-              !isNameValid ||
-              !projectStore.newProject.name
-            }
-            variant={SECONDARY_BUTTON}
-            label="Create"
-            onClick={handleCreateProject}
-          />
+          <div className="create-project-dialog__buttons-wrapper">
+            <Button
+              type="button"
+              disabled={projectStore.loading}
+              variant={TERTIARY_BUTTON}
+              label="Cancel"
+              className="pop-up-dialog__btn_cancel"
+              onClick={closeNewProjectPopUp}
+            />
+            <Button
+              disabled={
+                projectStore.loading ||
+                !isNameValid ||
+                !projectStore.newProject.name
+              }
+              variant={SECONDARY_BUTTON}
+              label="Create"
+              onClick={handleCreateProject}
+            />
+          </div>
         </div>
       </form>
     </PopUpDialog>
