@@ -10,6 +10,7 @@ import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
 import {
   fetchDataSetRowData,
+  generateDataSetsDetailsMenu,
   generatePageData,
   pageDataInitialState
 } from './datasets.util'
@@ -160,21 +161,22 @@ const Datasets = ({
     setPageData(state => {
       return {
         ...state,
-        ...generatePageData(
-          !isEveryObjectValueEmpty(selectedItem),
-          selectedItem
-        )
+        ...generatePageData(!isEveryObjectValueEmpty(selectedItem))
       }
     })
-  }, [handleRemoveDataSet, handleRequestOnExpand, selectedItem])
+  }, [selectedItem])
 
   useEffect(() => {
-    removeDataSet({})
-    setPageData(state => ({
-      ...state,
-      selectedRowData: {}
-    }))
-  }, [filtersStore.iter, filtersStore.tag, removeDataSet])
+    if (selectedItem.item) {
+      setPageData(state => ({
+        ...state,
+        details: {
+          ...state.details,
+          menu: generateDataSetsDetailsMenu(selectedItem)
+        }
+      }))
+    }
+  }, [selectedItem, selectedItem.item])
 
   useEffect(() => {
     setPageData(state => {
@@ -185,6 +187,14 @@ const Datasets = ({
       }
     })
   }, [handleRemoveDataSet, handleRequestOnExpand])
+
+  useEffect(() => {
+    removeDataSet({})
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {}
+    }))
+  }, [filtersStore.iter, filtersStore.tag, removeDataSet])
 
   useEffect(() => {
     if (urlTagOption) {

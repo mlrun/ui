@@ -109,7 +109,7 @@ export const tableHeaders = isSelectedItem => [
   }
 ]
 
-const generateDataSetsDetailsMenu = selectedItem => [
+export const generateDataSetsDetailsMenu = selectedItem => [
   {
     label: 'overview',
     id: 'overview'
@@ -130,10 +130,10 @@ const generateDataSetsDetailsMenu = selectedItem => [
   }
 ]
 
-export const generatePageData = (isSelectedItem, selectedItem) => ({
+export const generatePageData = isSelectedItem => ({
   actionsMenuHeader,
   details: {
-    menu: generateDataSetsDetailsMenu(selectedItem),
+    menu: [],
     infoHeaders,
     type: DATASETS
   },
