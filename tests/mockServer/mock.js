@@ -1324,8 +1324,14 @@ function getIguazioUsers(req, res) {
 app.get(`${mlrunAPIIngress}/api/frontend-spec`, getFrontendSpec)
 
 app.get(`${mlrunAPIIngress}/api/projects/:project/feature-sets`, getFeatureSet)
+
+// POST request after ferification should be deleted
 app.post(
   `${mlrunAPIIngress}/api/projects/:project/feature-sets`,
+  createProjectsFeatureSet
+)
+app.put(
+  `${mlrunAPIIngress}/api/projects/:project/feature-sets/:name/references/:tag`,
   createProjectsFeatureSet
 )
 app.delete(

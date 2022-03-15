@@ -40,7 +40,7 @@
       &-item {
         display: flex;
         flex: 0 0 23%;
-        align-items: center;
+        align-items: stretch;
         justify-content: space-between;
         min-width: 100%;
 
@@ -50,6 +50,12 @@
 
         @media screen and (min-width: 576px) {
           min-width: 435px;
+        }
+
+        .data-ellipsis,
+        .btn,
+        .split-btn {
+          height: 100%;
         }
       }
 
@@ -111,9 +117,5 @@
 
   &-modal_opened {
     overflow: hidden;
-
-    .input-wrapper {
-      margin: 10px 0;
-    }
   }
 }

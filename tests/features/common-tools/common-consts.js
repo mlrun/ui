@@ -48,7 +48,7 @@ module.exports = {
     Overview_General_Headers: [
       'Description',
       'Labels',
-      'Version',
+      'Version tag',
       'Last updated',
       'Entities',
       'URI',
@@ -136,7 +136,14 @@ module.exports = {
   },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
-    Combobox_Options: ['MLRun store', 'V3IO', 'S3', 'Azure storage'],
+    Combobox_Options: [
+      'MLRun store',
+      'V3IO',
+      'S3',
+      'Azure storage',
+      'Go-ogle storage',
+      'Google storage'
+    ],
     Target_Store_File_Type: [
       'CSV',
       'TSDB',
@@ -169,7 +176,10 @@ module.exports = {
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
     Feature_Set_Name_Hint:
-      '• Valid characters: A-Z, a-z, 0-9, -, _, .\n• Must begin and end with: A-Z, a-z, 0-9\n• Length - max: 56',
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
+      'This field is required',
+    Feature_Set_Version_Hint:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9',
     Jobs_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',

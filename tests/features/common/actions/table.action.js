@@ -221,7 +221,10 @@ const action = {
     const arr = await getColumnValues(driver, table, columnName)
     const diff = differenceWith(arr, values, isEqual)
 
-    expect(diff.length).equal(0, 'Diff arrays: ' + diff)
+    expect(diff.length).equal(
+      0,
+      `Arrays not equal: web "${arr}" vs. const "${values} diff "${diff}"`
+    )
   },
   getAllCellsWithAttribute: async function(driver, table, attribute) {
     const result = []

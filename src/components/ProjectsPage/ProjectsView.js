@@ -16,7 +16,7 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
@@ -125,7 +125,7 @@ const ProjectsView = ({
               actionsMenuHeader={'New Project'}
               onClick={() => setCreateProject(true)}
               showActionsMenu
-              variant={SECONDARY_BUTTON}
+              variant={PRIMARY_BUTTON}
             />
             <RoundedIcon
               onClick={refreshProjects}
