@@ -34,11 +34,11 @@ const workflowActions = {
     type: FETCH_WORKFLOW_FAILURE,
     payload: error
   }),
-  fetchWorkflows: project => dispatch => {
+  fetchWorkflows: (project, filter) => dispatch => {
     dispatch(workflowActions.fetchWorkflowsBegin())
 
     return workflowApi
-      .getWorkflows(project)
+      .getWorkflows(project, filter)
       .then(response =>
         dispatch(
           workflowActions.fetchWorkflowsSuccess(
