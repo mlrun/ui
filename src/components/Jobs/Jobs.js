@@ -535,8 +535,7 @@ const Jobs = ({
     if (
       ((isEmpty(selectedJob) &&
         !match.params.jobId &&
-        !match.params.workflowId &&
-        match.params.pageTab !== MONITOR_WORKFLOWS_TAB) ||
+        !match.params.workflowId) ||
         workflowsViewMode === 'list') &&
       !dataIsLoaded
     ) {
@@ -600,9 +599,12 @@ const Jobs = ({
     }
   }, [match.params.projectName, match.params.pageTab, match.params.jobName])
 
-  const getWorkflows = useCallback(() => {
-    fetchWorkflows(match.params.projectName)
-  }, [fetchWorkflows, match.params.projectName])
+  const getWorkflows = useCallback(
+    filter => {
+      fetchWorkflows(match.params.projectName, filter)
+    },
+    [fetchWorkflows, match.params.projectName]
+  )
 
   useEffect(() => {
     if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
