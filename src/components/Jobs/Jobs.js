@@ -107,7 +107,7 @@ const Jobs = ({
 
   const handleRemoveScheduledJob = schedule => {
     removeScheduledJob(match.params.projectName, schedule.name).then(() => {
-      refreshJobs()
+      refreshJobs(filtersStore)
     })
 
     setConfirmData(null)
@@ -312,7 +312,9 @@ const Jobs = ({
       appStore.frontendSpec.jobs_dashboard_url,
       isDemoMode,
       selectedJob,
-      selectedFunction
+      selectedFunction,
+      onAbortJob,
+      onRemoveScheduledJob
     ]
   )
 

@@ -2,7 +2,7 @@ export const parseKeyValues = (object = {}) =>
   object == null
     ? []
     : Object.entries(object).map(([key, value]) => {
-        return Array.isArray(value)
+        return Array.isArray(value) && value.every(item => item)
           ? `${key}: [${value.map(arrayItem => {
               return ` {${Object.entries(arrayItem).map(
                 ([arrayItemKey, arrayItemValue]) =>
