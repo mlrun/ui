@@ -72,7 +72,7 @@ const FeatureSetsPanelTitleView = ({
             }
             type="text"
             value={data.version}
-            validationRules={getValidationRules('feature.set.tag')}
+            validationRules={getValidationRules('common.tag')}
             wrapperClassName="version"
           />
         </div>

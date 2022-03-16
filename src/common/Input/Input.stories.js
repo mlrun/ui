@@ -87,7 +87,7 @@ withValidationRules.args = {
   label: 'Field is required',
   required: true,
   requiredText: 'Field is required',
-  validationRules: getValidationRules('job.name'),
+  validationRules: getValidationRules('common.name'),
   value: ' test#2!'
 }
 
