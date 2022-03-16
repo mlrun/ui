@@ -23,6 +23,10 @@
     }
   }
 
+  &__buttons-wrapper {
+    display: flex;
+  }
+
   .access-key {
     height: 64px;
     padding: 22px 40px;

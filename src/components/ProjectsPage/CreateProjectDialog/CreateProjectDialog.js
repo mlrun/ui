@@ -68,37 +68,35 @@ const CreateProjectDialog = ({
             />
           </div>
         </div>
-        <div className="pop-up-dialog__footer-container">
-          {projectStore.newProject.error && (
-            <ErrorMessage
-              closeError={() => {
-                if (projectStore.newProject.error) {
-                  removeNewProjectError()
-                }
-              }}
-              message={projectStore.newProject.error}
-            />
-          )}
-          <div className="create-project-dialog__buttons-wrapper">
-            <Button
-              type="button"
-              disabled={projectStore.loading}
-              variant={TERTIARY_BUTTON}
-              label="Cancel"
-              className="pop-up-dialog__btn_cancel"
-              onClick={closeNewProjectPopUp}
-            />
-            <Button
-              disabled={
-                projectStore.loading ||
-                !isNameValid ||
-                !projectStore.newProject.name
+        {projectStore.newProject.error && (
+          <ErrorMessage
+            closeError={() => {
+              if (projectStore.newProject.error) {
+                removeNewProjectError()
               }
-              variant={SECONDARY_BUTTON}
-              label="Create"
-              onClick={handleCreateProject}
-            />
-          </div>
+            }}
+            message={projectStore.newProject.error}
+          />
+        )}
+        <div className="pop-up-dialog__footer-container">
+          <Button
+            type="button"
+            disabled={projectStore.loading}
+            variant={TERTIARY_BUTTON}
+            label="Cancel"
+            className="pop-up-dialog__btn_cancel"
+            onClick={closeNewProjectPopUp}
+          />
+          <Button
+            disabled={
+              projectStore.loading ||
+              !isNameValid ||
+              !projectStore.newProject.name
+            }
+            variant={SECONDARY_BUTTON}
+            label="Create"
+            onClick={handleCreateProject}
+          />
         </div>
       </form>
     </PopUpDialog>
