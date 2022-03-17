@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
+import { getValidationRules } from '../../utils/validationService'
+
 import './registerArtifactForm.scss'
 
 const RegisterArtifactForm = ({
@@ -69,6 +71,7 @@ const RegisterArtifactForm = ({
         }
         tip="Artifact names in the same project must be unique"
         type="text"
+        validationRules={getValidationRules('artifact.name')}
         value={key}
       />
       <Input
