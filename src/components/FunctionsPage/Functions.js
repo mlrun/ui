@@ -65,6 +65,24 @@ const Functions = ({
   let fetchFunctionLogsTimeout = useRef(null)
   const isDemoMode = useDemoMode()
 
+  const refreshFunctions = useCallback(
+    filters => {
+      return fetchFunctions(match.params.projectName, filters).then(
+        functions => {
+          const newFunctions = parseFunctions(
+            functions,
+            match.params.projectName
+          )
+
+          setFunctions(newFunctions)
+
+          return newFunctions
+        }
+      )
+    },
+    [fetchFunctions, match.params.projectName]
+  )
+
   const handleFetchFunctionLogs = useCallback(
     (projectName, name, tag, offset) => {
       return getFunctionLogs(
@@ -73,10 +91,12 @@ const Functions = ({
         projectName,
         name,
         tag,
-        offset
+        offset,
+        history,
+        refreshFunctions
       )
     },
-    [fetchFunctionLogs]
+    [fetchFunctionLogs, history, refreshFunctions]
   )
 
   const handleRemoveLogs = useCallback(() => {
@@ -141,24 +161,6 @@ const Functions = ({
       variant: SECONDARY_BUTTON
     }
   }
-
-  const refreshFunctions = useCallback(
-    filters => {
-      return fetchFunctions(match.params.projectName, filters).then(
-        functions => {
-          const newFunctions = parseFunctions(
-            functions,
-            match.params.projectName
-          )
-
-          setFunctions(newFunctions)
-
-          return newFunctions
-        }
-      )
-    },
-    [fetchFunctions, match.params.projectName]
-  )
 
   useEffect(() => {
     refreshFunctions()
