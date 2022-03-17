@@ -8,6 +8,7 @@ import { chain } from 'lodash'
 import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { FUNCTION_PANEL_MODE } from '../../types'
 import {
   FUNCTION_TYPE_SERVING,
@@ -144,10 +145,50 @@ const FunctionsPanel = ({
   ])
 
   const createFunction = deploy => {
-    createNewFunction(project, functionsStore.newFunction).then(result => {
+    const defaultPodsResources =
+      appStore.frontendSpec?.default_function_pod_resources
+    let functionData = { ...functionsStore.newFunction }
+
+    if (
+      defaultPodsResources &&
+      !isEveryObjectValueEmpty(defaultPodsResources.limits) &&
+      !isEveryObjectValueEmpty(defaultPodsResources.requests)
+    ) {
+      const newResources = {
+        limits: {
+          cpu:
+            functionsStore.newFunction.spec.resources.limits?.cpu ||
+            defaultPodsResources.limits.cpu,
+          memory:
+            functionsStore.newFunction.spec.resources.limits?.memory ||
+            defaultPodsResources.limits.memory,
+          'nvidia.com/gpu':
+            functionsStore.newFunction.spec.resources.limits?.gpu ||
+            defaultPodsResources.limits.gpu
+        },
+        requests: {
+          cpu:
+            functionsStore.newFunction.spec.resources.requests?.cpu ||
+            defaultPodsResources.requests.cpu,
+          memory:
+            functionsStore.newFunction.spec.resources.requests?.memory ||
+            defaultPodsResources.requests.memory
+        }
+      }
+
+      functionData = {
+        ...functionsStore.newFunction,
+        spec: {
+          ...functionsStore.newFunction.spec,
+          resources: newResources
+        }
+      }
+    }
+
+    createNewFunction(project, functionData).then(result => {
       if (deploy) {
         const data = {
-          function: { ...functionsStore.newFunction },
+          function: { ...functionData },
           with_mlrun: functionsStore.newFunction.spec.build.commands.includes(
             appStore.frontendSpec.function_deployment_mlrun_command
           )

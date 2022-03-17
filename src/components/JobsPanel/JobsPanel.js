@@ -168,7 +168,7 @@ const JobsPanel = ({
       isEveryObjectValueEmpty(panelState.tableData) &&
       isEveryObjectValueEmpty(panelState.requests) &&
       isEveryObjectValueEmpty(panelState.limits) &&
-      !isEveryObjectValueEmpty(selectedFunction) &&
+      (!selectedFunction || !isEveryObjectValueEmpty(selectedFunction)) &&
       !tableDataIsLoaded
     ) {
       generateTableData(
