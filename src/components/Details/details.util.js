@@ -414,6 +414,9 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
   },
+  entities: {
+    value: selectedItem.index_keys?.join(', ')
+  },
   usage_example: {
     value: selectedItem.usage_example ?? ''
   },

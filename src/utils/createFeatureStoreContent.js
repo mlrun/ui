@@ -286,6 +286,12 @@ const createFeatureVectorsRowData = (
       type: 'hidden',
       hidden: isSelectedItem
     },
+    entity: {
+      id: `entity.${identifierUnique}`,
+      value: featureVector.index_keys?.join(', ') ?? '',
+      class: 'artifacts_small',
+      hidden: isSelectedItem
+    },
     updated: {
       id: `updated.${identifierUnique}`,
       value: featureVector.updated
