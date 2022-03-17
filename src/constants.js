@@ -539,7 +539,7 @@ export const validation = {
 
 /*=========== STATUS CODES =============*/
 
-export const AMOUNT_LIMIT_CODE = 405
+export const AMOUNT_LIMIT_CODE = 500
 export const CONFLICT_CODE = 409
 
 /*=========== ML REACT FLOW =============*/

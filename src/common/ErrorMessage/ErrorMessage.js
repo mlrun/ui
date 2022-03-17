@@ -12,8 +12,12 @@ import './errorMessage.scss'
 const ErrorMessage = ({ closeError, message }) => {
   return (
     <div data-testid="error-message" className="error">
-      <UnsuccessAlert className="error__icon" />
-      <div className="error__message"> {message}</div>
+      <div className="error__data">
+        <div>
+          <UnsuccessAlert className="error__icon" />
+        </div>
+        <div className="error__message"> {message}</div>
+      </div>
       {closeError && (
         <button data-testid="close" onClick={closeError}>
           <Tooltip template={<TextTooltipTemplate text="Close" />}>

@@ -158,25 +158,27 @@ const FunctionsPanelView = ({
                   message={error}
                 />
               )}
-              <Button
-                className="btn_cancel"
-                variant={LABEL_BUTTON}
-                label="Cancel"
-                onClick={closePanel}
-              />
-              <Button
-                className="btn_save"
-                disabled={!checkValidation()}
-                variant={TERTIARY_BUTTON}
-                label="Save"
-                onClick={() => handleSave()}
-              />
-              <Button
-                variant={SECONDARY_BUTTON}
-                label="Deploy"
-                onClick={() => handleSave(true)}
-                disabled={!checkValidation()}
-              />
+              <div className="functions-panel__buttons-wrapper">
+                <Button
+                  className="btn_cancel"
+                  variant={LABEL_BUTTON}
+                  label="Cancel"
+                  onClick={closePanel}
+                />
+                <Button
+                  className="btn_save"
+                  disabled={!checkValidation()}
+                  variant={TERTIARY_BUTTON}
+                  label="Save"
+                  onClick={() => handleSave()}
+                />
+                <Button
+                  variant={SECONDARY_BUTTON}
+                  label="Deploy"
+                  onClick={() => handleSave(true)}
+                  disabled={!checkValidation()}
+                />
+              </div>
             </div>
           </div>
         </div>

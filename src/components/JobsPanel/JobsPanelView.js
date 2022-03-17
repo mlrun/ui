@@ -126,31 +126,35 @@ const JobsPanelView = ({
                   message={jobsStore.error}
                 />
               )}
-              <Button
-                className="pop-up-dialog__btn_cancel"
-                disabled={!checkValidation}
-                label="Schedule for later"
-                onClick={() => setOpenScheduleJob(true)}
-                variant={TERTIARY_BUTTON}
-              />
-              {withSaveChanges ? (
+              <div className="jobs-panel__buttons_wrapper">
                 <Button
-                  label="Save"
-                  onClick={event => handleEditJob(event, defaultData.schedule)}
-                  variant={SECONDARY_BUTTON}
-                />
-              ) : (
-                <Button
-                  label={
-                    <>
-                      <Run /> <span> Run now </span>
-                    </>
-                  }
+                  className="pop-up-dialog__btn_cancel"
                   disabled={!checkValidation}
-                  onClick={() => handleRunJob()}
-                  variant={SECONDARY_BUTTON}
+                  label="Schedule for later"
+                  onClick={() => setOpenScheduleJob(true)}
+                  variant={TERTIARY_BUTTON}
                 />
-              )}
+                {withSaveChanges ? (
+                  <Button
+                    label="Save"
+                    onClick={event =>
+                      handleEditJob(event, defaultData.schedule)
+                    }
+                    variant={SECONDARY_BUTTON}
+                  />
+                ) : (
+                  <Button
+                    label={
+                      <>
+                        <Run /> <span> Run now </span>
+                      </>
+                    }
+                    disabled={!checkValidation}
+                    onClick={() => handleRunJob()}
+                    variant={SECONDARY_BUTTON}
+                  />
+                )}
+              </div>
             </div>
           </div>
         ) : (

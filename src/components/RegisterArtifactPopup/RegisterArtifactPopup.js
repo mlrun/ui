@@ -161,13 +161,13 @@ const RegisterArtifactPopup = ({
         validation={validation}
         messageByKind={messagesByKind[artifactKind.toLowerCase()]}
       />
+      {registerArtifactData.error && (
+        <ErrorMessage
+          closeError={closeErrorMessage}
+          message={registerArtifactData.error}
+        />
+      )}
       <div className="pop-up-dialog__footer-container">
-        {registerArtifactData.error && (
-          <ErrorMessage
-            closeError={closeErrorMessage}
-            message={registerArtifactData.error}
-          />
-        )}
         <Button
           variant={TERTIARY_BUTTON}
           label="Cancel"
