@@ -34,7 +34,8 @@ import {
   LABEL_BUTTON,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
-  SECONDARY_BUTTON
+  SECONDARY_BUTTON,
+  TAG_LATEST
 } from '../../constants'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
@@ -305,7 +306,7 @@ const Functions = ({
     let { name, tag } = functionsStore.newFunction.metadata
     const tab = ready === false ? 'build-log' : 'overview'
 
-    tag ||= 'latest'
+    tag ||= TAG_LATEST
 
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)

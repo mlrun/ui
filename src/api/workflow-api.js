@@ -8,7 +8,7 @@ const generateQueryParams = filter => {
   // each "predicates" item is a single filter
   // key - type of filter (filter by name, by status, by dates)
   // op === 1 - means that the filtered response should be equal to the "string_value"
-  // op === 4 - means that the filtered response should be equal or to be greater to the "timestamp_value"
+  // op === 5 - means that the filtered response should be equal or to be greater to the "timestamp_value"
   // op === 7 - means that the filtered response should be equal or to be less to the "timestamp_value"
   const queryParams = {
     predicates: []
@@ -35,7 +35,7 @@ const generateQueryParams = filter => {
     if (filter.dates.value[0]) {
       queryParams.predicates.push({
         key: 'created_at',
-        op: 4,
+        op: 5,
         timestamp_value: filter.dates.value[0].toISOString()
       })
     }

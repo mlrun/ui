@@ -2,6 +2,7 @@ import {
   FUNCTIONS_READY_STATES,
   TRANSIENT_FUNCTION_STATUSES
 } from '../components/FunctionsPage/functions.util'
+import { TAG_LATEST } from '../constants'
 
 export const getFunctionLogs = (
   fetchFunctionLogs,
@@ -45,12 +46,12 @@ export const getFunctionLogs = (
         startedDeploying
       ) {
         refreshFunctions().then(response => {
-          const uid = response.find(
-            item => item.name === name && item.tag === 'latest'
+          const hash = response.find(
+            item => item.name === name && item.tag === TAG_LATEST
           ).hash
 
-          if (uid) {
-            history.push(`/projects/${projectName}/functions/${uid}/build-log`)
+          if (hash) {
+            history.push(`/projects/${projectName}/functions/${hash}/build-log`)
           }
         })
       }

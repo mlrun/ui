@@ -5,6 +5,10 @@
 @include newItemSidePanel;
 
 .job-panel {
+  &__buttons-wrapper {
+    display: flex;
+  }
+
   &__item {
     .panel-section__body {
       .default-input-wrapper {
