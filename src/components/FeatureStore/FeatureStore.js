@@ -622,13 +622,21 @@ const FeatureStore = ({
     }
   }
 
-  const createFeatureSetSuccess = () => {
+  const createFeatureSetSuccess = tag => {
+    const currentTag =
+      filtersStore.tag === TAG_FILTER_ALL_ITEMS ? TAG_FILTER_ALL_ITEMS : tag
+
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
+    setFilters({
+      name: '',
+      labels: '',
+      tag: currentTag
+    })
 
     return handleRefresh({
       project: match.params.projectName,
-      tag: TAG_FILTER_LATEST
+      tag: currentTag
     })
   }
 
