@@ -22,6 +22,7 @@ const ProjectMonitor = ({
   fetchProject,
   fetchProjectFunctions,
   fetchProjectSummary,
+  frontendSpec,
   functionsStore,
   match,
   nuclioStore,
@@ -46,6 +47,11 @@ const ProjectMonitor = ({
   const [confirmData, setConfirmData] = useState(null)
   const history = useHistory()
   const isDemoMode = useDemoMode()
+
+  const projectNuclioStremsIsEnabled = useMemo(
+    () => frontendSpec?.feature_flags?.nuclio_streams === 'enabled',
+    [frontendSpec]
+  )
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
@@ -75,20 +81,29 @@ const ProjectMonitor = ({
   useEffect(() => {
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
-    fetchNuclioV3ioStreams(match.params.projectName)
 
     return () => {
       resetProjectData()
       removeProjectSummary()
-      removeV3ioStreams()
     }
   }, [
     fetchProjectSummary,
-    fetchNuclioV3ioStreams,
     fetchProjectData,
     match.params.projectName,
     removeProjectSummary,
-    resetProjectData,
+    resetProjectData
+  ])
+
+  useEffect(() => {
+    if (projectNuclioStremsIsEnabled) {
+      fetchNuclioV3ioStreams(match.params.projectName)
+
+      return () => removeV3ioStreams()
+    }
+  }, [
+    fetchNuclioV3ioStreams,
+    match.params.projectName,
+    projectNuclioStremsIsEnabled,
     removeV3ioStreams
   ])
 
@@ -214,7 +229,8 @@ const ProjectMonitor = ({
     removeProjectSummary()
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
-    fetchNuclioV3ioStreams()
+    projectNuclioStremsIsEnabled &&
+      fetchNuclioV3ioStreams(match.params.projectName)
   }
 
   return (
@@ -235,8 +251,9 @@ const ProjectMonitor = ({
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       match={match}
-      projectSummary={projectStore.projectSummary}
       project={projectStore.project}
+      projectNuclioStremsIsEnabled={projectNuclioStremsIsEnabled}
+      projectSummary={projectStore.projectSummary}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
@@ -252,9 +269,10 @@ ProjectMonitor.propTypes = {
 }
 
 export default connect(
-  ({ functionsStore, featureStore, nuclioStore, projectStore }) => ({
+  ({ appStore, functionsStore, featureStore, nuclioStore, projectStore }) => ({
     featureStore,
     functionsStore,
+    frontendSpec: appStore.frontendSpec,
     nuclioStore,
     projectStore
   }),
