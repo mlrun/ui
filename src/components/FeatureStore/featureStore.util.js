@@ -62,6 +62,7 @@ export const featureVectorsInfoHeaders = [
   { label: 'Version', id: 'tag' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Last updated', id: 'updated' },
+  { label: 'Entities', id: 'entities' },
   { label: 'Label column', id: 'label_column' },
   { label: 'Usage example', id: 'usage_example' }
 ]
@@ -134,6 +135,11 @@ export const featureVectorsTableHeaders = isSelectedItem => [
   {
     header: 'Labels',
     class: 'artifacts_big',
+    hidden: isSelectedItem
+  },
+  {
+    header: 'Entities',
+    class: 'artifacts_small',
     hidden: isSelectedItem
   },
   {
