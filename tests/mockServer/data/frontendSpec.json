@@ -3,8 +3,7 @@
   "abortable_function_kinds": ["job", "spark", "remote-spark", "mpijob"],
   "feature_flags": {
     "project_membership": "disabled",
-    "authentication": "none",
-    "nuclio_streams": "disabled"
+    "authentication": "none"
   },
   "default_function_priority_class_name": "",
   "valid_function_priority_class_names": [],
