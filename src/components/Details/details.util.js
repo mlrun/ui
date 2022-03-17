@@ -303,12 +303,19 @@ export const renderContent = (
       return detailsStore.modelFeatureVectorData.features ??
         (selectedItem.schema ||
           selectedItem.entities ||
-          selectedItem.features) ? (
+          selectedItem.features ||
+          selectedItem.inputs ||
+          selectedItem.outputs) ? (
         <DetailsMetadata
           selectedItem={
-            detailsStore.modelFeatureVectorData.features
-              ? detailsStore.modelFeatureVectorData
-              : selectedItem
+            selectedItem.schema ||
+            selectedItem.entities ||
+            selectedItem.features ||
+            selectedItem.inputs ||
+            selectedItem.outputs ||
+            !detailsStore.modelFeatureVectorData.features
+              ? selectedItem
+              : detailsStore.modelFeatureVectorData
           }
         />
       ) : null
@@ -322,13 +329,19 @@ export const renderContent = (
         return <DetailsAnalysis artifact={selectedItem} />
       } else return null
     case DETAILS_STATISTICS_TAB:
-      if (detailsStore.modelFeatureVectorData.stats || selectedItem.stats) {
+      if (
+        detailsStore.modelFeatureVectorData.stats ||
+        selectedItem.stats ||
+        selectedItem.feature_stats
+      ) {
         return (
           <DetailsStatistics
             selectedItem={
-              detailsStore.modelFeatureVectorData.stats
-                ? detailsStore.modelFeatureVectorData
-                : selectedItem
+              selectedItem?.stats ||
+              selectedItem.feature_stats ||
+              !detailsStore.modelFeatureVectorData.stats
+                ? selectedItem
+                : detailsStore.modelFeatureVectorData.stats
             }
           />
         )

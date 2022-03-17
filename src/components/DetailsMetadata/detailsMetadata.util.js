@@ -18,6 +18,8 @@ export const generateMetadata = (selectedItem, primaryKey) => {
     ? generateArtifactMetadataFromEntities(selectedItem)
     : selectedItem.features
     ? generateArtifactMetadataFromFeatures(selectedItem)
+    : selectedItem.inputs || selectedItem.outputs
+    ? generateArtifactMetadataFromInputsAndOutputs(selectedItem)
     : []
 }
 
@@ -194,3 +196,56 @@ export const generateArtifactMetadataFromFeatures = selectedItem =>
       }
     }
   })
+
+export const generateArtifactMetadataFromInputsAndOutputs = selectedItem =>
+  (selectedItem.outputs ?? [])
+    .map(item => ({ ...item, output: 'output' }))
+    .concat(selectedItem.inputs ?? [])
+    .map(item => {
+      return {
+        timestampKeyIcon: {
+          value: (
+            <Tooltip template={<TextTooltipTemplate text="Timestamp key" />}>
+              <TimestampKey />
+            </Tooltip>
+          ),
+          type: 'icon',
+          hidden:
+            selectedItem.timestamp_key !== item.name &&
+            selectedItem.timestamp_field !== item.name
+        },
+        labelColumnIcon: {
+          value: (
+            <Tooltip template={<TextTooltipTemplate text="Output" />}>
+              <LabelColumn />
+            </Tooltip>
+          ),
+          type: 'icon',
+          hidden: !item.output
+        },
+        name: {
+          value: item.name,
+          type: 'text'
+        },
+        type: {
+          value: item.value_type,
+          type: 'text'
+        },
+        description: {
+          value: item.description,
+          type: 'text'
+        },
+        labels: {
+          value: parseKeyValues(item.labels),
+          type: 'chip',
+          className: 'table-body__labels'
+        },
+        validators: {
+          value: item.validator && (
+            <FeatureValidator validator={item.validator} />
+          ),
+          type: 'html',
+          hidden: !item.validator
+        }
+      }
+    })
