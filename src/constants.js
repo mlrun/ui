@@ -21,8 +21,6 @@ export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
 export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
 
-export const STATUS_CODE_FORBIDDEN = 403
-
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
@@ -541,6 +539,7 @@ export const validation = {
 
 export const AMOUNT_LIMIT_CODE = 500
 export const CONFLICT_CODE = 409
+export const STATUS_CODE_FORBIDDEN = 403
 
 /*=========== ML REACT FLOW =============*/
 
