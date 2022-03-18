@@ -195,7 +195,8 @@ const JobsPanel = ({
         panelState.requests,
         setNewJob,
         setDefaultDataIsLoaded,
-        mode
+        mode,
+        frontendSpec?.default_function_pod_resources
       )
     }
   }, [

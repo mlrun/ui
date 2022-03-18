@@ -20,6 +20,9 @@ const JobsPanelResources = ({
   setValidation,
   validation
 }) => {
+  const defaultPodsResources = useMemo(() => {
+    return frontendSpec?.default_function_pod_resources
+  }, [frontendSpec.default_function_pod_resources])
   const validFunctionPriorityClassNames = useMemo(() => {
     return (frontendSpec.valid_function_priority_class_names ?? []).map(
       className => ({
@@ -31,12 +34,31 @@ const JobsPanelResources = ({
 
   const generateResourcesData = useCallback(
     () => ({
-      limitsCpu: generateCpuValue(panelState.limits.cpu),
-      requestsCpu: generateCpuValue(panelState.requests.cpu),
-      requestsMemory: generateMemoryValue(panelState.requests.memory),
-      limitsMemory: generateMemoryValue(panelState.limits.memory)
+      limitsCpu: generateCpuValue(
+        panelState.limits.cpu || defaultPodsResources?.limits?.cpu || ''
+      ),
+      requestsCpu: generateCpuValue(
+        panelState.requests.cpu || defaultPodsResources?.requests?.cpu || ''
+      ),
+      requestsMemory: generateMemoryValue(
+        panelState.requests.memory ||
+          defaultPodsResources?.requests?.memory ||
+          ''
+      ),
+      limitsMemory: generateMemoryValue(
+        panelState.limits.memory || defaultPodsResources?.limits.memory || ''
+      )
     }),
-    [panelState.limits.cpu, panelState.limits.memory, panelState.requests]
+    [
+      defaultPodsResources.limits.cpu,
+      defaultPodsResources.limits.memory,
+      defaultPodsResources.requests.cpu,
+      defaultPodsResources.requests.memory,
+      panelState.limits.cpu,
+      panelState.limits.memory,
+      panelState.requests.cpu,
+      panelState.requests.memory
+    ]
   )
 
   const handleSelectMemoryUnit = value => {

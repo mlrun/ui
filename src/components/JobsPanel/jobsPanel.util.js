@@ -66,11 +66,15 @@ export const getFunctionParameters = (selectedFunction, method) => {
     .value()
 }
 
-export const getLimits = selectedFunction => {
+export const getLimits = (selectedFunction, defaultLimits) => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.resources?.limits ?? {}
+      return func.spec.resources?.limits
+        ? func.spec.resources?.limits
+        : !isEveryObjectValueEmpty(defaultLimits)
+        ? defaultLimits
+        : {}
     })
     .filter(limits => !isEveryObjectValueEmpty(limits))
     .flatten()
@@ -78,11 +82,15 @@ export const getLimits = selectedFunction => {
     .value()
 }
 
-export const getRequests = selectedFunction => {
+export const getRequests = (selectedFunction, defaultRequests) => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.resources?.requests ?? {}
+      return func.spec.resources?.requests
+        ? func.spec.resources.requests
+        : !isEveryObjectValueEmpty(defaultRequests)
+        ? defaultRequests
+        : {}
     })
     .filter(request => !isEveryObjectValueEmpty(request))
     .flatten()
@@ -215,9 +223,10 @@ export const generateTableData = (
   mode,
   frontendSpec
 ) => {
+  const defaultResources = frontendSpec?.default_function_pod_resources
   const functionParameters = getFunctionParameters(selectedFunction, method)
-  const [limits] = getLimits(selectedFunction)
-  const [requests] = getRequests(selectedFunction)
+  const [limits] = getLimits(selectedFunction, defaultResources?.limits)
+  const [requests] = getRequests(selectedFunction, defaultResources?.requests)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
@@ -374,7 +383,8 @@ export const generateTableDataFromDefaultData = (
   panelRequests,
   setNewJob,
   setDefaultDataIsLoaded,
-  mode
+  mode,
+  defaultResources
 ) => {
   const parameters = generateDefaultParameters(
     Object.entries(defaultData.task.spec.parameters ?? {})
@@ -382,10 +392,17 @@ export const generateTableDataFromDefaultData = (
   const dataInputs = generateDefaultDataInputs(
     Object.entries(defaultData.task.spec.inputs ?? {})
   )
-  const { limits, requests } = defaultData.function?.spec.resources ?? {
-    limits: {},
-    requests: {}
-  }
+  const { limits, requests } = defaultData.function?.spec.resources
+    ? defaultData.function?.spec.resources
+    : !(
+        isEveryObjectValueEmpty(defaultResources.limits) &&
+        isEveryObjectValueEmpty(defaultResources.requests)
+      )
+    ? defaultResources
+    : {
+        limits: {},
+        requests: {}
+      }
   const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
     data: secret
   }))

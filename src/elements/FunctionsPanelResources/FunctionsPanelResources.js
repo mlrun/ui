@@ -30,6 +30,10 @@ const FunctionsPanelResources = ({
   setValidation,
   validation
 }) => {
+  const defaultPodsResources = useMemo(() => {
+    return frontendSpec?.default_function_pod_resources
+  }, [frontendSpec.default_function_pod_resources])
+
   const [data, setData] = useState({
     volumeMounts: getDefaultVolumeMounts(
       defaultData.volume_mounts ?? [],
@@ -49,13 +53,28 @@ const FunctionsPanelResources = ({
         defaultData.resources?.requests ?? {}
       ) ?? 'cpu',
     limits: {
-      cpu: defaultData.resources?.limits?.cpu ?? '',
-      memory: defaultData.resources?.limits?.memory ?? '',
-      'nvidia.com/gpu': defaultData.resources?.limits?.['nvidia.com/gpu'] ?? ''
+      cpu:
+        defaultData.resources?.limits?.cpu ??
+        defaultPodsResources?.limits.cpu ??
+        '',
+      memory:
+        defaultData.resources?.limits?.memory ??
+        defaultPodsResources?.limits.memory ??
+        '',
+      'nvidia.com/gpu':
+        defaultData.resources?.limits?.['nvidia.com/gpu'] ??
+        defaultPodsResources?.limits.gpu ??
+        ''
     },
     requests: {
-      cpu: defaultData.resources?.requests?.cpu ?? '',
-      memory: defaultData.resources?.requests?.memory ?? ''
+      cpu:
+        defaultData.resources?.requests?.cpu ??
+        defaultPodsResources?.requests.cpu ??
+        '',
+      memory:
+        defaultData.resources?.requests?.memory ??
+        defaultPodsResources?.requests.memory ??
+        ''
     }
   })
 
