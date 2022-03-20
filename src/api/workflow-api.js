@@ -10,6 +10,7 @@ const generateQueryParams = filter => {
   // op === 1 - means that the filtered response should be equal to the "string_value"
   // op === 5 - means that the filtered response should be equal or to be greater to the "timestamp_value"
   // op === 7 - means that the filtered response should be equal or to be less to the "timestamp_value"
+  // op === 9 - checks if the value contains |string_value| as a substring match
   const queryParams = {
     predicates: []
   }
@@ -17,7 +18,7 @@ const generateQueryParams = filter => {
   if (filter.name) {
     queryParams.predicates.push({
       key: 'name',
-      op: 1,
+      op: 9,
       string_value: filter.name
     })
   }
