@@ -6,5 +6,5 @@ export const isPanelOpened = search => {
   return new URLSearchParams(search).get('openPanel')?.toLowerCase() === 'true'
 }
 
-export const nuclioStreamsIsEnabled = frontendSpec =>
+export const isNuclioStreamsEnabled = frontendSpec =>
   frontendSpec?.feature_flags?.nuclio_streams === 'enabled'

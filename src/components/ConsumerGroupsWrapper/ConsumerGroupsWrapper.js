@@ -14,7 +14,7 @@ import notificationActions from '../../actions/notification'
 import nuclioActions from '../../actions/nuclio'
 import { GROUP_BY_NONE } from '../../constants'
 import { isProjectValid } from '../../utils/handleRedirect'
-import { nuclioStreamsIsEnabled } from '../../utils/helper'
+import { isNuclioStreamsEnabled } from '../../utils/helper'
 
 const ConsumerGroupsWrapper = ({
   fetchNuclioV3ioStreams,
@@ -29,8 +29,8 @@ const ConsumerGroupsWrapper = ({
   let { path } = useRouteMatch()
   const history = useHistory()
 
-  const isNuclioStreamsEnabled = useMemo(
-    () => nuclioStreamsIsEnabled(frontendSpec),
+  const nuclioStreamsEnabled = useMemo(
+    () => isNuclioStreamsEnabled(frontendSpec),
     [frontendSpec]
   )
 
@@ -65,22 +65,22 @@ const ConsumerGroupsWrapper = ({
   ])
 
   useEffect(() => {
-    if (!isEmpty(frontendSpec) && !isNuclioStreamsEnabled) {
+    if (!isEmpty(frontendSpec) && !nuclioStreamsEnabled) {
       history.push(`/projects/${match.params.projectName}/monitor`)
     }
   }, [
     frontendSpec,
     history,
-    isNuclioStreamsEnabled,
+    nuclioStreamsEnabled,
     match.params.projectName,
     refreshConsumerGroups
   ])
 
   useEffect(() => {
-    if (isNuclioStreamsEnabled) {
+    if (nuclioStreamsEnabled) {
       refreshConsumerGroups()
     }
-  }, [isNuclioStreamsEnabled, refreshConsumerGroups])
+  }, [nuclioStreamsEnabled, refreshConsumerGroups])
 
   if (isEmpty(frontendSpec)) {
     return <Loader />
