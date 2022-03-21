@@ -41,8 +41,8 @@ const ProjectMonitorView = ({
   isNewFunctionPopUpOpen,
   isPopupDialogOpen,
   match,
+  nuclioStreamsAreEnabled,
   project,
-  projectNuclioStremsIsEnabled,
   projectSummary,
   refresh,
   setIsNewFunctionPopUpOpen,
@@ -156,7 +156,7 @@ const ProjectMonitorView = ({
                 projectSummary={projectSummary}
                 title="Artifacts"
               />
-              {isDemoMode && projectNuclioStremsIsEnabled && (
+              {isDemoMode && nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
                   counterValue={Object.keys(v3ioStreams.data).length ?? 0}
                   link={`/projects/${match.params.projectName}/monitor/consumer-groups`}

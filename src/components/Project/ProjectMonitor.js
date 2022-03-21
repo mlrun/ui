@@ -14,7 +14,7 @@ import {
   generateCreateNewOptions,
   handleFetchProjectError
 } from './project.utils'
-import { isNuclioStreamsEnabled } from '../../utils/helper'
+import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const ProjectMonitor = ({
@@ -50,8 +50,8 @@ const ProjectMonitor = ({
   const history = useHistory()
   const isDemoMode = useDemoMode()
 
-  const nuclioStreamsEnabled = useMemo(
-    () => isNuclioStreamsEnabled(frontendSpec),
+  const nuclioStreamsAreEnabled = useMemo(
+    () => areNuclioStreamsEnabled(frontendSpec),
     [frontendSpec]
   )
 
@@ -97,7 +97,7 @@ const ProjectMonitor = ({
   ])
 
   useEffect(() => {
-    if (nuclioStreamsEnabled) {
+    if (nuclioStreamsAreEnabled) {
       fetchNuclioV3ioStreams(match.params.projectName)
 
       return () => removeV3ioStreams()
@@ -105,7 +105,7 @@ const ProjectMonitor = ({
   }, [
     fetchNuclioV3ioStreams,
     match.params.projectName,
-    nuclioStreamsEnabled,
+    nuclioStreamsAreEnabled,
     removeV3ioStreams
   ])
 
@@ -231,7 +231,7 @@ const ProjectMonitor = ({
     removeProjectSummary()
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
-    nuclioStreamsEnabled && fetchNuclioV3ioStreams(match.params.projectName)
+    nuclioStreamsAreEnabled && fetchNuclioV3ioStreams(match.params.projectName)
   }
 
   return (
@@ -252,8 +252,8 @@ const ProjectMonitor = ({
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       match={match}
+      nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
       project={projectStore.project}
-      projectNuclioStremsIsEnabled={nuclioStreamsEnabled}
       projectSummary={projectStore.projectSummary}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
