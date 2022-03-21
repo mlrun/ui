@@ -237,6 +237,14 @@ const generateRule = {
 // ]
 //}
 const validationRules = {
+  artifact: {
+    name: [
+      generateRule.validCharacters('a-z A-Z 0-9 - _ .'),
+      generateRule.beginEndWith('a-z A-Z 0-9'),
+      generateRule.length({ max: 253 }),
+      generateRule.required()
+    ]
+  },
   feature: {
     vector: {
       name: [
@@ -245,20 +253,19 @@ const validationRules = {
         generateRule.length({ max: 56 }),
         generateRule.required()
       ]
-    },
-    set: {
-      tag: [
-        generateRule.validCharacters('a-z A-Z 0-9 - _ .'),
-        generateRule.beginEndWith('a-z A-Z 0-9')
-      ]
     }
   },
-  job: {
+  common: {
     name: [
       generateRule.validCharacters('a-z A-Z 0-9 - _ .'),
       generateRule.beginEndWith('a-z A-Z 0-9'),
       generateRule.length({ max: 63 }),
       generateRule.required()
+    ],
+    tag: [
+      generateRule.validCharacters('a-z A-Z 0-9 - _ .'),
+      generateRule.beginEndWith('a-z A-Z 0-9'),
+      generateRule.length({ max: 56 })
     ]
   },
   project: {
