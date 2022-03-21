@@ -5,3 +5,6 @@ export const isDemoMode = search => {
 export const isPanelOpened = search => {
   return new URLSearchParams(search).get('openPanel')?.toLowerCase() === 'true'
 }
+
+export const areNuclioStreamsEnabled = frontendSpec =>
+  frontendSpec?.feature_flags?.nuclio_streams === 'enabled'
