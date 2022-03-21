@@ -30,7 +30,7 @@ export const filters = [
   { type: TAG_FILTER, label: 'Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: ENTITIES_FILTER, label: 'Entity:' },
-  { type: LABELS_FILTER, label: 'Label:' },
+  { type: LABELS_FILTER, label: 'Labels:' },
   { type: PROJECT_FILTER, label: 'Project:' }
 ]
 
