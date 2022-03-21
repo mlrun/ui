@@ -6,7 +6,8 @@ import { getVolumeType } from '../../utils/panelResources.util'
 import {
   JOB_DEFAULT_OUTPUT_PATH,
   PANEL_DEFAULT_ACCESS_KEY,
-  PANEL_EDIT_MODE
+  PANEL_EDIT_MODE,
+  TAG_LATEST
 } from '../../constants'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
@@ -173,9 +174,9 @@ export const getVersionOptions = selectedFunctions => {
     selectedFunctions.map(func => {
       return {
         label:
-          (func.metadata.tag === 'latest' ? '$' : '') +
+          (func.metadata.tag === TAG_LATEST ? '$' : '') +
           (func.metadata.tag || '$latest'),
-        id: func.metadata.tag || 'latest'
+        id: func.metadata.tag || TAG_LATEST
       }
     }),
     'id'
