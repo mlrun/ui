@@ -237,7 +237,7 @@ const Datasets = ({
       setPageData(pageDataInitialState)
       cancelRequest('cancel')
     }
-  }, [filtersStore.iter, removeDataSet, removeDataSets, setSelectedItem])
+  }, [removeDataSet, removeDataSets, setSelectedItem])
 
   return (
     <div className="content-wrapper" ref={datasetsRef}>
