@@ -23,7 +23,6 @@ import { formatDatetime } from '../../utils'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
-import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const ProjectMonitorView = ({
   artifactKind,
@@ -51,7 +50,6 @@ const ProjectMonitorView = ({
   showFunctionsPanel,
   v3ioStreams
 }) => {
-  const isDemoMode = useDemoMode()
   const registerArtifactLink = `/projects/${match.params.projectName}/${
     artifactKind === 'model'
       ? 'models'
@@ -156,7 +154,7 @@ const ProjectMonitorView = ({
                 projectSummary={projectSummary}
                 title="Artifacts"
               />
-              {isDemoMode && nuclioStreamsAreEnabled && (
+              {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
                   counterValue={Object.keys(v3ioStreams.data).length ?? 0}
                   link={`/projects/${match.params.projectName}/monitor/consumer-groups`}
