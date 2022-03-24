@@ -232,7 +232,7 @@ ProjectMonitorView.propTypes = {
   isPopupDialogOpen: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
-  projectNuclioStremsIsEnabled: PropTypes.bool.isRequired,
+  nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
