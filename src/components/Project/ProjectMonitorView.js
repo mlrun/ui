@@ -23,7 +23,6 @@ import { formatDatetime } from '../../utils'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
-import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const ProjectMonitorView = ({
   artifactKind,
@@ -41,6 +40,7 @@ const ProjectMonitorView = ({
   isNewFunctionPopUpOpen,
   isPopupDialogOpen,
   match,
+  nuclioStreamsAreEnabled,
   project,
   projectSummary,
   refresh,
@@ -50,7 +50,6 @@ const ProjectMonitorView = ({
   showFunctionsPanel,
   v3ioStreams
 }) => {
-  const isDemoMode = useDemoMode()
   const registerArtifactLink = `/projects/${match.params.projectName}/${
     artifactKind === 'model'
       ? 'models'
@@ -155,7 +154,7 @@ const ProjectMonitorView = ({
                 projectSummary={projectSummary}
                 title="Artifacts"
               />
-              {isDemoMode && (
+              {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
                   counterValue={Object.keys(v3ioStreams.data).length ?? 0}
                   link={`/projects/${match.params.projectName}/monitor/consumer-groups`}
@@ -233,6 +232,7 @@ ProjectMonitorView.propTypes = {
   isPopupDialogOpen: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
+  projectNuclioStremsIsEnabled: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,

@@ -70,17 +70,17 @@ export const featureVectorsInfoHeaders = [
 export const featureSetsFilters = [
   { type: TAG_FILTER, label: 'Version Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Label:' }
+  { type: LABELS_FILTER, label: 'Labels:' }
 ]
 export const featureVectorsFilters = [
   { type: TAG_FILTER, label: 'Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Label:' }
+  { type: LABELS_FILTER, label: 'Labels:' }
 ]
 export const featuresFilters = [
   { type: TAG_FILTER, label: 'Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Label:' }
+  { type: LABELS_FILTER, label: 'Labels:' }
 ]
 export const page = 'FEATURE-STORE'
 export const createFeatureSetTitle = 'Create set'

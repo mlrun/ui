@@ -27,12 +27,12 @@
       &-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         width: 100%;
 
         &__title {
           display: flex;
           align-items: center;
-          max-width: calc(100% - 370px);
         }
 
         &__back-btn {
@@ -48,6 +48,7 @@
 
         &__data {
           flex: 0 1 100%;
+          max-width: calc(100% - 130px);
 
           h3 {
             margin: 27px 24px 10px;

@@ -92,9 +92,8 @@ const nuclioActions = {
   }),
   fetchNuclioV3ioStreamShardLags: (project, body) => dispatch => {
     dispatch(nuclioActions.fetchNuclioV3ioStreamShardLagsBegin())
-
     return nuclioApi
-      .getV3ioStreamShardLags(project)
+      .getV3ioStreamShardLags(project, body)
       .then(({ data }) => {
         const parsedV3ioStreamShardLags = parseV3ioStreamShardLags(data, body)
 

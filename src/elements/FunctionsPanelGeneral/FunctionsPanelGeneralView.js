@@ -5,6 +5,8 @@ import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSectio
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
 
+import { TAG_LATEST } from '../../constants'
+
 import './functionsPanelGeneral.scss'
 
 const FunctionsPanelGeneralView = ({
@@ -22,7 +24,7 @@ const FunctionsPanelGeneralView = ({
             Name: <span>{data.name}</span>
           </div>
           <div className="tag">
-            Tag: <span>{data.tag || 'latest'}</span>
+            Tag: <span>{data.tag || TAG_LATEST}</span>
           </div>
           <div className="runtime">
             Runtime: <span>{data.kind}</span>

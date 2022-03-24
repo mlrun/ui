@@ -49,7 +49,7 @@ export const infoHeaders = [
 export const filters = [
   { type: TREE_FILTER, label: 'Tree:' },
   { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Label:' },
+  { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
 

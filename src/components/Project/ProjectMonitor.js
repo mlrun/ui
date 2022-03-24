@@ -14,6 +14,7 @@ import {
   generateCreateNewOptions,
   handleFetchProjectError
 } from './project.utils'
+import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const ProjectMonitor = ({
@@ -22,6 +23,7 @@ const ProjectMonitor = ({
   fetchProject,
   fetchProjectFunctions,
   fetchProjectSummary,
+  frontendSpec,
   functionsStore,
   match,
   nuclioStore,
@@ -44,8 +46,14 @@ const ProjectMonitor = ({
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
+
   const history = useHistory()
   const isDemoMode = useDemoMode()
+
+  const nuclioStreamsAreEnabled = useMemo(
+    () => areNuclioStreamsEnabled(frontendSpec),
+    [frontendSpec]
+  )
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
@@ -75,20 +83,29 @@ const ProjectMonitor = ({
   useEffect(() => {
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
-    fetchNuclioV3ioStreams(match.params.projectName)
 
     return () => {
       resetProjectData()
       removeProjectSummary()
-      removeV3ioStreams()
     }
   }, [
     fetchProjectSummary,
-    fetchNuclioV3ioStreams,
     fetchProjectData,
     match.params.projectName,
     removeProjectSummary,
-    resetProjectData,
+    resetProjectData
+  ])
+
+  useEffect(() => {
+    if (nuclioStreamsAreEnabled) {
+      fetchNuclioV3ioStreams(match.params.projectName)
+
+      return () => removeV3ioStreams()
+    }
+  }, [
+    fetchNuclioV3ioStreams,
+    match.params.projectName,
+    nuclioStreamsAreEnabled,
     removeV3ioStreams
   ])
 
@@ -214,7 +231,7 @@ const ProjectMonitor = ({
     removeProjectSummary()
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
-    fetchNuclioV3ioStreams()
+    nuclioStreamsAreEnabled && fetchNuclioV3ioStreams(match.params.projectName)
   }
 
   return (
@@ -235,8 +252,9 @@ const ProjectMonitor = ({
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       match={match}
-      projectSummary={projectStore.projectSummary}
+      nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
       project={projectStore.project}
+      projectSummary={projectStore.projectSummary}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
@@ -252,9 +270,10 @@ ProjectMonitor.propTypes = {
 }
 
 export default connect(
-  ({ functionsStore, featureStore, nuclioStore, projectStore }) => ({
+  ({ appStore, functionsStore, featureStore, nuclioStore, projectStore }) => ({
     featureStore,
     functionsStore,
+    frontendSpec: appStore.frontendSpec,
     nuclioStore,
     projectStore
   }),
