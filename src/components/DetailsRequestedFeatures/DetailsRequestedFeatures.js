@@ -7,8 +7,6 @@ import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import Input from '../../common/Input/Input'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { headers } from './detailsRequestedFeatures.utils.js'
 import { handleFinishEdit } from '../Details/details.util.js'
@@ -20,7 +18,7 @@ import {
 } from './detailsRequestedFeaturesReducer.js'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
-import { ReactComponent as AddIcon } from '../../images/add-circle.svg'
+import { ReactComponent as AddIcon } from '../../images/add.svg'
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -297,11 +295,11 @@ const DetailsRequestedFeatures = ({
                 ) : (
                   <>
                     <div className="item-requested-features__table-cell cell_alias">
-                      {alias ? (
+                      {alias && (
                         <div className="cell_alias__input-wrapper">
                           <span>{alias}</span>
                           <RoundedIcon
-                            className={!alias ? 'visiblity-hidden' : ''}
+                            className={!alias ? 'visibility-hidden' : ''}
                             onClick={() =>
                               handleItemClick(
                                 'features',
@@ -316,30 +314,25 @@ const DetailsRequestedFeatures = ({
                             <EditIcon />
                           </RoundedIcon>
                         </div>
-                      ) : (
-                        <Tooltip
-                          template={
-                            <TextTooltipTemplate text="Click to add an alias" />
-                          }
-                        >
-                          <span
-                            className="pointer"
-                            onClick={() =>
-                              handleItemClick(
-                                'features',
-                                'input',
-                                currentData,
-                                index,
-                                featureTemplate
-                              )
-                            }
-                          >
-                            <AddIcon />
-                          </span>
-                        </Tooltip>
                       )}
                     </div>
                     <div className="cell_actions">
+                      <RoundedIcon
+                        className={alias && 'visibility-hidden'}
+                        onClick={() =>
+                          handleItemClick(
+                            'features',
+                            'input',
+                            currentData,
+                            index,
+                            featureTemplate
+                          )
+                        }
+                        tooltipText="Click to add an alias"
+                      >
+                        <AddIcon />
+                      </RoundedIcon>
+
                       <RoundedIcon
                         onClick={() => setConfirmDialogData({ index, feature })}
                         tooltipText="Delete"
