@@ -6,7 +6,7 @@
   display: inline-flex;
   align-items: flex-end;
   position: absolute;
-  top: -36px;
+  top: -33px;
   left: 0;
   width: 100%;
   min-width: 510px;
@@ -24,7 +24,7 @@
     margin: 0 24px 0 0;
     color: $topaz;
     font-weight: normal;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 1;
     text-align: center;
     text-transform: capitalize;
@@ -49,15 +49,15 @@
 
     a {
       display: block;
-      padding: 5px 2px;
+      padding: 5px;
       position: relative;
 
       &.content-menu__item-icon {
         padding-left: 30px;
         & > * {
           position: absolute;
-          left: 2px;
-          bottom: 3px;
+          left: 5px;
+          bottom: 2px;
         }
       }
 
