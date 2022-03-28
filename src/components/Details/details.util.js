@@ -322,12 +322,7 @@ export const renderContent = (
     case DETAILS_TRANSFORMATIONS_TAB:
       return <DetailsTransformations selectedItem={selectedItem} />
     case DETAILS_ANALYSIS_TAB:
-      if (
-        (selectedItem.kind === 'dataset' && selectedItem.extra_data) ||
-        selectedItem.analysis
-      ) {
-        return <DetailsAnalysis artifact={selectedItem} />
-      } else return null
+      return <DetailsAnalysis artifact={selectedItem} />
     case DETAILS_STATISTICS_TAB:
       if (
         detailsStore.modelFeatureVectorData.stats ||

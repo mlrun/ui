@@ -8,6 +8,7 @@ import Input from '../../common/Input/Input'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import NoData from '../../common/NoData/NoData'
 
 import { headers } from './detailsRequestedFeatures.utils.js'
 import { handleFinishEdit } from '../Details/details.util.js'
@@ -217,7 +218,9 @@ const DetailsRequestedFeatures = ({
     })
   }
 
-  return (
+  return currentData.length === 0 ? (
+    <NoData />
+  ) : (
     <div className="item-requested-features">
       <div className="item-requested-features__table">
         <div className="item-requested-features__table-header">
