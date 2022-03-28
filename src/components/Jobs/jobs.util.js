@@ -387,6 +387,7 @@ export const actionCreator = {
   removeNewJob: jobsActions.removeNewJob,
   removePods: detailsActions.removePods,
   removeScheduledJob: jobsActions.removeScheduledJob,
+  resetWorkflow: workflowsActions.resetWorkflow,
   setFilters: filtersActions.setFilters,
   setNotification: notificationActions.setNotification
 }
