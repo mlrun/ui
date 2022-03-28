@@ -45,6 +45,7 @@ import DetailsTransformations from '../DetailsTransformations/DetailsTransformat
 import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsPods from '../DetailsPods/DetailsPods'
+import NoData from '../../common/NoData/NoData'
 
 export const generateArtifactsContent = (detailsType, selectedItem) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
@@ -322,7 +323,12 @@ export const renderContent = (
     case DETAILS_TRANSFORMATIONS_TAB:
       return <DetailsTransformations selectedItem={selectedItem} />
     case DETAILS_ANALYSIS_TAB:
-      return <DetailsAnalysis artifact={selectedItem} />
+      if (
+        (selectedItem.kind === 'dataset' && selectedItem.extra_data) ||
+        selectedItem.analysis
+      ) {
+        return <DetailsAnalysis artifact={selectedItem} />
+      } else return <NoData />
     case DETAILS_STATISTICS_TAB:
       if (
         detailsStore.modelFeatureVectorData.stats ||
@@ -340,7 +346,7 @@ export const renderContent = (
             }
           />
         )
-      } else return null
+      } else return <NoData />
     case DETAILS_REQUESTED_FEATURES_TAB:
       return (
         <DetailsRequestedFeatures
