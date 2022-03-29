@@ -3,5 +3,5 @@ export const headers = [
   { label: 'Feature set', id: 'feature-set' },
   { label: 'Feature', id: 'feature' },
   { label: 'Alias', id: 'alias' },
-  { label: '', id: 'delete' }
+  { label: '', id: 'actions' }
 ]

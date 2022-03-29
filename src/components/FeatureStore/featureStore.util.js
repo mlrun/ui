@@ -372,7 +372,7 @@ export const navigateToDetailsPane = (
     featureSets.allData.length > 0
   ) {
     content = featureSets.selectedRowData.content[name] || featureSets.allData
-  } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
+  } else if (match.params.pageTab === FEATURES_TAB && features?.length > 0) {
     content = [...features, ...entities]
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&
