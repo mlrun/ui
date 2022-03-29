@@ -5,7 +5,7 @@ import { find, isEmpty, cloneDeep } from 'lodash'
 
 import JobsView from './JobsView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/demoMode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import {
   actionCreator,
@@ -81,7 +81,7 @@ const Jobs = ({
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
   const [dateFilter, setDateFilter] = useState(['', ''])
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const dispatch = useDispatch()
   let fetchFunctionLogsTimeout = useRef(null)
@@ -286,7 +286,7 @@ const Jobs = ({
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
-      isDemoMode,
+      isStagingMode,
       onRemoveScheduledJob,
       handleRunJob,
       handleEditScheduleJob,
@@ -310,7 +310,7 @@ const Jobs = ({
       match.params.workflowId,
       match.params.jobName,
       appStore.frontendSpec.jobs_dashboard_url,
-      isDemoMode,
+      isStagingMode,
       selectedJob,
       selectedFunction,
       onAbortJob,

@@ -241,7 +241,7 @@ export const generatePageData = (
   getPopUpTemplate,
   isTablePanelOpen,
   isSelectedItem,
-  isDemoMode
+  isStagingMode
 ) => {
   let data = {
     details: {
@@ -282,7 +282,7 @@ export const generatePageData = (
       FEATURE_VECTORS_TAB,
       onDeleteFeatureVector
     )
-    data.hidePageActionMenu = !isDemoMode
+    data.hidePageActionMenu = !isStagingMode
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)

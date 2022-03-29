@@ -37,7 +37,7 @@ import {
   SECONDARY_BUTTON,
   TAG_LATEST
 } from '../../constants'
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/demoMode.hook'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -64,7 +64,7 @@ const Functions = ({
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   let fetchFunctionLogsTimeout = useRef(null)
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const refreshFunctions = useCallback(
     filters => {
@@ -135,7 +135,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !getFunctionsEditableTypes(isDemoMode).includes(item?.type) ||
+          !getFunctionsEditableTypes(isStagingMode).includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {

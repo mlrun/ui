@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import FunctionsPanelRuntimeView from './FunctionsPanelRuntimeView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/demoMode.hook'
 
 const FunctionsPanelRuntime = ({
   defaultData,
@@ -13,13 +13,13 @@ const FunctionsPanelRuntime = ({
   setValidation,
   validation
 }) => {
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   return (
     <FunctionsPanelRuntimeView
       defaultData={defaultData}
       functionsStore={functionsStore}
-      isDemoMode={isDemoMode}
+      isStagingMode={isStagingMode}
       sections={sections}
       setValidation={setValidation}
       validation={validation}

@@ -27,10 +27,10 @@ export const FUNCTIONS_EDITABLE_STATES = [
   ...FUNCTIONS_READY_STATES,
   ...FUNCTIONS_FAILED_STATES
 ]
-export const getFunctionsEditableTypes = isDemoMode => {
+export const getFunctionsEditableTypes = isStagingMode => {
   const editableTypes = [FUNCTION_TYPE_JOB, FUNCTION_TYPE_LOCAL, '']
 
-  if (isDemoMode) {
+  if (isStagingMode) {
     editableTypes.push(FUNCTION_TYPE_SERVING)
   }
 

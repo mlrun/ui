@@ -19,8 +19,6 @@ import { handlePath, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
 import { getDateAndTimeByFormat } from '../../../utils/'
 
-import { useDemoMode } from '../../../hooks/demoMode.hook'
-
 import { ReactComponent as ArrowIcon } from '../../../images/arrow.svg'
 
 import './ProjectOverview.scss'
@@ -30,7 +28,6 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [modal, setModal] = useState({ isOpen: false, name: '' })
 
-  const isDemoMode = useDemoMode()
   const { projectName } = match.params
 
   const cards = useMemo(() => {
@@ -74,7 +71,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     })
   }
 
-  const handlePathExecution = handlePath(history, handleModalToggle, isDemoMode)
+  const handlePathExecution = handlePath(history, handleModalToggle)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {

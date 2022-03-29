@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash'
 
 import TableView from './TableView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/demoMode.hook'
 import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
@@ -47,7 +47,7 @@ const Table = ({
   const tableContentRef = useRef(null)
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const workflows = useSelector(state => {
     return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
@@ -90,7 +90,7 @@ const Table = ({
       pageData.page,
       tableStore.isTablePanelOpen,
       match.params,
-      isDemoMode,
+      isStagingMode,
       !isEveryObjectValueEmpty(selectedItem)
     )
 
@@ -114,7 +114,7 @@ const Table = ({
           workflows,
           !isEveryObjectValueEmpty(selectedItem),
           match.params,
-          isDemoMode,
+          isStagingMode,
           true
         )
       }))
@@ -130,7 +130,7 @@ const Table = ({
     content,
     filtersStore.groupBy,
     groupedContent,
-    isDemoMode,
+    isStagingMode,
     match.params,
     pageData.mainRowItemsCount,
     pageData.page,

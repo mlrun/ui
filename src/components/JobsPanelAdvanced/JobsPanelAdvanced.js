@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import JobsPanelAdvancedView from './JobsPanelAdvancedView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/demoMode.hook'
 
 import {
   initialState,
@@ -26,7 +26,7 @@ const JobsPanelAdvanced = ({
   const [validation, setValidation] = useState({
     secretsSourceValue: true
   })
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const handleAddNewItem = () => {
     let data = {}
@@ -143,7 +143,7 @@ const JobsPanelAdvanced = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handleResetForm={handleResetForm}
-      isDemoMode={isDemoMode}
+      isStagingMode={isStagingMode}
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
