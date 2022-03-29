@@ -2,9 +2,9 @@
 $actionsBlockWidth: 72px;
 
 .key-value-table {
+  max-height: 280px;
   overflow: hidden;
   overflow-y: auto;
-  max-height: 280px;
   background-color: $white;
 
   &__btn {
@@ -28,14 +28,15 @@ $actionsBlockWidth: 72px;
     &__last {
       position: sticky;
       bottom: 0;
-      border: 0;
       background-color: inherit;
+      border: 0;
     }
   }
 
   .table-row__header {
     position: sticky;
     top: 0;
+    z-index: 1;
     font-weight: bold;
     font-size: 18px;
     background-color: inherit;

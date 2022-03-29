@@ -181,7 +181,9 @@
     &_grey {
       @include chipButtonAddBackground($mulledWineThree, $topaz);
     }
-  } @else {
+  }
+
+  @else {
     &_none {
       background-color: transparent;
     }
@@ -259,7 +261,9 @@
     &_medium {
       @include chipButtonAddSize(34px);
     }
-  } @else {
+  }
+
+  @else {
     &_dense {
       height: 26px;
     }
@@ -304,7 +308,9 @@
     &_purple {
       @include editableChipFont($amethyst);
     }
-  } @else if $component == Chip {
+  }
+
+  @else if $component == Chip {
     &_white {
       @include chipFont($white);
     }
@@ -324,7 +330,9 @@
     &_orange {
       @include chipFont($sorbus);
     }
-  } @else if $component == ButtonAddChip {
+  }
+
+  @else if $component == ButtonAddChip {
     &_primary {
       @include chipButtonAddColor($topaz);
     }
@@ -407,7 +415,7 @@
     &__header {
       color: $topaz;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 18px;
       line-height: 24px;
     }
 
@@ -658,9 +666,9 @@
       justify-content: center;
       width: 32px;
       height: 32px;
+      margin: 0;
       background: $malibu;
       border-radius: 50%;
-      margin: 0;
 
       &:hover {
         background-color: $cornflowerBlue;
@@ -972,13 +980,16 @@
 @mixin gradient($type) {
   @if $type == 'card' {
     background: linear-gradient(180deg, $brightTurquoise 4px, $white 4px);
-  } @else {
-    background: linear-gradient(
-      88.84deg,
-      #d873e1 5.49%,
-      #fc658f 57.67%,
-      #ffb971 107.73%
-    );
+  }
+
+  @else {
+    background:
+      linear-gradient(
+        88.84deg,
+        #d873e1 5.49%,
+        #fc658f 57.67%,
+        #ffb971 107.73%
+      );
   }
 }
 
