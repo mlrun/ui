@@ -125,7 +125,7 @@ const initialState = {
   }
 }
 
-export default (state = initialState, { type, payload }) => {
+const featureStoreReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case CREATE_NEW_FEATURE_SET_BEGIN:
       return {
@@ -641,3 +641,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default featureStoreReducer

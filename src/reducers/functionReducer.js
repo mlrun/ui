@@ -104,7 +104,7 @@ const initialState = {
   template: {}
 }
 
-export default (state = initialState, { type, payload }) => {
+const functionReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case CREATE_NEW_FUNCTION_BEGIN:
       return {
@@ -589,3 +589,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default functionReducer

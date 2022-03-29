@@ -7,16 +7,9 @@ import JobsView from './JobsView'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-import {
-  actionCreator,
-  generateEditableItem,
-  generatePageData
-} from './jobs.util'
+import { actionCreator, generateEditableItem, generatePageData } from './jobs.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import {
-  datePickerOptions,
-  PAST_WEEK_DATE_OPTION
-} from '../../utils/datePicker.util'
+import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../utils/datePicker.util'
 import {
   DANGER_BUTTON,
   GROUP_BY_NONE,
@@ -100,54 +93,103 @@ const Jobs = ({
     [fetchFunctionLogs, fetchFunctionLogsTimeout]
   )
 
+  const refreshJobs = useCallback(
+    filters => {
+      if (filters.dates) {
+        setDateFilter(filters.dates.value)
+      }
+      const fetchData = match.params.jobName ? fetchAllJobRuns : fetchJobs
+      fetchData(
+        match.params.projectName,
+        filters,
+        match.params.jobName,
+        match.params.pageTab === SCHEDULE_TAB
+      )
+        .then(jobs => {
+          const parsedJobs = jobs.map(job => parseJob(job, match.params.pageTab))
+
+          if (match.params.jobName) {
+            setJobRuns(parsedJobs)
+          } else {
+            setJobs(parsedJobs)
+          }
+        })
+        .catch(error => {
+          setNotification({
+            status: error?.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to fetch jobs',
+            retry: () => refreshJobs(filters)
+          })
+        })
+    },
+    [
+      fetchAllJobRuns,
+      fetchJobs,
+      match.params.jobName,
+      match.params.pageTab,
+      match.params.projectName,
+      setNotification
+    ]
+  )
+
   const handleRemoveFunctionLogs = useCallback(() => {
     clearTimeout(fetchFunctionLogsTimeout.current)
     removeFunctionLogs()
   }, [fetchFunctionLogsTimeout, removeFunctionLogs])
 
-  const handleRemoveScheduledJob = schedule => {
-    removeScheduledJob(match.params.projectName, schedule.name).then(() => {
-      refreshJobs(filtersStore)
-    })
-
-    setConfirmData(null)
-  }
-
-  const handleMonitoring = item => {
-    let redirectUrl = appStore.frontendSpec.jobs_dashboard_url
-      .replace('{filter_name}', item ? 'uid' : 'project')
-      .replace('{filter_value}', item ? item.uid : match.params.projectName)
-
-    window.open(redirectUrl, '_blank')
-  }
-
-  const handleRunJob = job => {
-    handleRunScheduledJob(
-      {
-        ...job.scheduled_object
-      },
-      match.params.projectName,
-      job.name
-    )
-      .then(response => {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Job started successfully'
-        })
+  const handleRemoveScheduledJob = useCallback(
+    schedule => {
+      removeScheduledJob(match.params.projectName, schedule.name).then(() => {
+        refreshJobs(filtersStore)
       })
-      .catch(error => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          retry: item => handleRunJob(item),
-          message:
-            error.response.status === STATUS_CODE_FORBIDDEN
-              ? 'You are not permitted to run new job.'
-              : 'Job failed to start.'
+
+      setConfirmData(null)
+    },
+    [filtersStore, match.params.projectName, refreshJobs, removeScheduledJob]
+  )
+
+  const handleMonitoring = useCallback(
+    item => {
+      let redirectUrl = appStore.frontendSpec.jobs_dashboard_url
+        .replace('{filter_name}', item ? 'uid' : 'project')
+        .replace('{filter_value}', item ? item.uid : match.params.projectName)
+
+      window.open(redirectUrl, '_blank')
+    },
+    [appStore.frontendSpec.jobs_dashboard_url, match.params.projectName]
+  )
+
+  const handleRunJob = useCallback(
+    job => {
+      handleRunScheduledJob(
+        {
+          ...job.scheduled_object
+        },
+        match.params.projectName,
+        job.name
+      )
+        .then(response => {
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Job started successfully'
+          })
         })
-      })
-  }
+        .catch(error => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: item => handleRunJob(item),
+            message:
+              error.response.status === STATUS_CODE_FORBIDDEN
+                ? 'You are not permitted to run new job.'
+                : 'Job failed to start.'
+          })
+        })
+    },
+    [handleRunScheduledJob, match.params.projectName, setNotification]
+  )
 
   const handleSuccessRerunJob = tab => {
     if (tab === match.params.pageTab) {
@@ -162,21 +204,24 @@ const Jobs = ({
     })
   }
 
-  const onRemoveScheduledJob = scheduledJob => {
-    setConfirmData({
-      item: scheduledJob,
-      header: 'Delete scheduled job?',
-      message: `You try to delete scheduled job "${scheduledJob.name}". Deleted scheduled jobs can not be restored.`,
-      btnConfirmLabel: 'Delete',
-      btnConfirmType: DANGER_BUTTON,
-      rejectHandler: () => {
-        setConfirmData(null)
-      },
-      confirmHandler: () => {
-        handleRemoveScheduledJob(scheduledJob)
-      }
-    })
-  }
+  const onRemoveScheduledJob = useCallback(
+    scheduledJob => {
+      setConfirmData({
+        item: scheduledJob,
+        header: 'Delete scheduled job?',
+        message: `You try to delete scheduled job "${scheduledJob.name}". Deleted scheduled jobs can not be restored.`,
+        btnConfirmLabel: 'Delete',
+        btnConfirmType: DANGER_BUTTON,
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: () => {
+          handleRemoveScheduledJob(scheduledJob)
+        }
+      })
+    },
+    [handleRemoveScheduledJob]
+  )
 
   const handleActionsMenuClick = () => {
     history.push(
@@ -184,61 +229,70 @@ const Jobs = ({
     )
   }
 
-  const handleRerunJob = async job => {
-    const [project = '', func = ''] = job?.function?.split('/') ?? []
-    const functionData = await fetchJobFunction(
-      project,
-      func.replace(/@.*$/g, ''),
-      func.replace(/.*@/g, '')
-    )
+  const handleRerunJob = useCallback(
+    async job => {
+      const [project = '', func = ''] = job?.function?.split('/') ?? []
+      const functionData = await fetchJobFunction(
+        project,
+        func.replace(/@.*$/g, ''),
+        func.replace(/.*@/g, '')
+      )
 
-    if (!functionData) {
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Job’s function failed to load'
-      })
-    }
-
-    setEditableItem(generateEditableItem(functionData, job))
-  }
-
-  const handleAbortJob = job => {
-    abortJob(match.params.projectName, job)
-      .then(() => {
-        refreshJobs(filtersStore)
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job is successfully aborted'
-        })
-      })
-      .catch(() => {
+      if (!functionData) {
         setNotification({
           status: 400,
           id: Math.random(),
-          retry: () => handleAbortJob(job),
-          message: 'Aborting job failed'
+          message: 'Job’s function failed to load'
         })
-      })
-    setConfirmData(null)
-  }
-
-  const onAbortJob = job => {
-    setConfirmData({
-      item: job,
-      header: 'Abort job?',
-      message: `You try to abort job "${job.name}".`,
-      btnConfirmLabel: 'Abort',
-      btnConfirmType: DANGER_BUTTON,
-      rejectHandler: () => {
-        setConfirmData(null)
-      },
-      confirmHandler: () => {
-        handleAbortJob(job)
       }
-    })
-  }
+
+      setEditableItem(generateEditableItem(functionData, job))
+    },
+    [fetchJobFunction, setNotification]
+  )
+
+  const handleAbortJob = useCallback(
+    job => {
+      abortJob(match.params.projectName, job)
+        .then(() => {
+          refreshJobs(filtersStore)
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Job is successfully aborted'
+          })
+        })
+        .catch(() => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: () => handleAbortJob(job),
+            message: 'Aborting job failed'
+          })
+        })
+      setConfirmData(null)
+    },
+    [abortJob, filtersStore, match.params.projectName, refreshJobs, setNotification]
+  )
+
+  const onAbortJob = useCallback(
+    job => {
+      setConfirmData({
+        item: job,
+        header: 'Abort job?',
+        message: `You try to abort job "${job.name}".`,
+        btnConfirmLabel: 'Abort',
+        btnConfirmType: DANGER_BUTTON,
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: () => {
+          handleAbortJob(job)
+        }
+      })
+    },
+    [handleAbortJob]
+  )
 
   const handleCatchRequest = useCallback(
     (error, message) => {
@@ -283,9 +337,32 @@ const Jobs = ({
     [fetchScheduledJobAccessKey, match.params.projectName, setNotification]
   )
 
-  const pageData = useCallback(
-    generatePageData(
+  const pageData = useMemo(
+    () =>
+      generatePageData(
+        match.params.pageTab,
+        isDemoMode,
+        onRemoveScheduledJob,
+        handleRunJob,
+        handleEditScheduleJob,
+        handleRerunJob,
+        handleMonitoring,
+        appStore.frontendSpec.jobs_dashboard_url,
+        onAbortJob,
+        appStore.frontendSpec.abortable_function_kinds,
+        fetchJobLogs,
+        removeJobLogs,
+        !isEmpty(selectedJob),
+        match.params.workflowId,
+        selectedFunction,
+        handleFetchFunctionLogs,
+        handleRemoveFunctionLogs,
+        match.params.jobName
+      ),
+    [
       match.params.pageTab,
+      match.params.workflowId,
+      match.params.jobName,
       isDemoMode,
       onRemoveScheduledJob,
       handleRunJob,
@@ -293,28 +370,14 @@ const Jobs = ({
       handleRerunJob,
       handleMonitoring,
       appStore.frontendSpec.jobs_dashboard_url,
-      onAbortJob,
       appStore.frontendSpec.abortable_function_kinds,
+      onAbortJob,
       fetchJobLogs,
       removeJobLogs,
-      !isEmpty(selectedJob),
-      match.params.workflowId,
-      selectedFunction,
-      handleFetchFunctionLogs,
-      handleRemoveFunctionLogs,
-      match.params.jobName
-    ),
-    [
-      match.params.projectName,
-      match.params.pageTab,
-      match.params.workflowId,
-      match.params.jobName,
-      appStore.frontendSpec.jobs_dashboard_url,
-      isDemoMode,
       selectedJob,
       selectedFunction,
-      onAbortJob,
-      onRemoveScheduledJob
+      handleFetchFunctionLogs,
+      handleRemoveFunctionLogs
     ]
   )
 
@@ -328,48 +391,6 @@ const Jobs = ({
     ])
   }, [pageData.actionsMenu, toggleConvertedYaml])
 
-  const refreshJobs = useCallback(
-    filters => {
-      if (filters.dates) {
-        setDateFilter(filters.dates.value)
-      }
-      const fetchData = match.params.jobName ? fetchAllJobRuns : fetchJobs
-      fetchData(
-        match.params.projectName,
-        filters,
-        match.params.jobName,
-        match.params.pageTab === SCHEDULE_TAB
-      )
-        .then(jobs => {
-          const parsedJobs = jobs.map(job =>
-            parseJob(job, match.params.pageTab)
-          )
-
-          if (match.params.jobName) {
-            setJobRuns(parsedJobs)
-          } else {
-            setJobs(parsedJobs)
-          }
-        })
-        .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch jobs',
-            retry: () => refreshJobs(filters)
-          })
-        })
-    },
-    [
-      fetchAllJobRuns,
-      fetchJobs,
-      match.params.jobName,
-      match.params.pageTab,
-      match.params.projectName,
-      setNotification
-    ]
-  )
-
   const fetchCurrentJob = useCallback(() => {
     return fetchJob(match.params.projectName, match.params.jobId)
       .then(job => {
@@ -379,17 +400,9 @@ const Jobs = ({
         return job
       })
       .catch(() =>
-        history.replace(
-          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
-        )
+        history.replace(`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`)
       )
-  }, [
-    fetchJob,
-    history,
-    match.params.jobId,
-    match.params.pageTab,
-    match.params.projectName
-  ])
+  }, [fetchJob, history, match.params.jobId, match.params.pageTab, match.params.projectName])
 
   const isJobDataEmpty = useCallback(
     () =>
@@ -414,13 +427,7 @@ const Jobs = ({
         clearInterval(interval)
       }
     }
-  }, [
-    fetchJobPods,
-    match.params.pageTab,
-    match.params.projectName,
-    removePods,
-    selectedJob
-  ])
+  }, [fetchJobPods, match.params.pageTab, match.params.projectName, removePods, selectedJob])
 
   useEffect(() => {
     if (match.params.jobId && pageData.details.menu.length > 0) {
@@ -441,14 +448,10 @@ const Jobs = ({
       fetchWorkflow(match.params.workflowId)
         .then(workflow => {
           setWorkflow(workflow)
-          setWorkflowJobsIds(
-            Object.values(workflow.graph).map(jobData => jobData.run_uid)
-          )
+          setWorkflowJobsIds(Object.values(workflow.graph).map(jobData => jobData.run_uid))
         })
         .catch(() =>
-          history.replace(
-            `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
-          )
+          history.replace(`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`)
         )
     }
   }, [
@@ -461,10 +464,7 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (
-      match.params.jobId &&
-      (isEmpty(selectedJob) || match.params.jobId !== selectedJob.uid)
-    ) {
+    if (match.params.jobId && (isEmpty(selectedJob) || match.params.jobId !== selectedJob.uid)) {
       fetchCurrentJob().then(() => setSelectedFunction({}))
     }
   }, [fetchCurrentJob, match.params.jobId, selectedJob])
@@ -473,8 +473,7 @@ const Jobs = ({
     if (
       workflow.graph &&
       match.params.functionHash &&
-      (isEmpty(selectedFunction) ||
-        match.params.functionHash !== selectedFunction.hash)
+      (isEmpty(selectedFunction) || match.params.functionHash !== selectedFunction.hash)
     ) {
       const selectedWorkflowFunction = find(workflow.graph, workflowItem => {
         return (
@@ -491,9 +490,7 @@ const Jobs = ({
       ) {
         getFunction(match.params.projectName, match.params.functionName)
           .then(func => {
-            setSelectedFunction(
-              parseFunction(func, match.params.projectName, customFunctionState)
-            )
+            setSelectedFunction(parseFunction(func, match.params.projectName, customFunctionState))
             setItemIsSelected(true)
             setSelectedJob({})
           })
@@ -505,9 +502,7 @@ const Jobs = ({
           match.params.functionHash
         )
           .then(func => {
-            setSelectedFunction(
-              parseFunction(func, match.params.projectName, customFunctionState)
-            )
+            setSelectedFunction(parseFunction(func, match.params.projectName, customFunctionState))
             setItemIsSelected(true)
             setSelectedJob({})
           })
@@ -535,18 +530,14 @@ const Jobs = ({
 
   useEffect(() => {
     if (
-      ((isEmpty(selectedJob) &&
-        !match.params.jobId &&
-        !match.params.workflowId) ||
+      ((isEmpty(selectedJob) && !match.params.jobId && !match.params.workflowId) ||
         workflowsViewMode === 'list') &&
       !dataIsLoaded
     ) {
       let filters = {}
 
       if (match.params.pageTab === MONITOR_JOBS_TAB && isJobDataEmpty()) {
-        const pastWeekOption = datePickerOptions.find(
-          option => option.id === PAST_WEEK_DATE_OPTION
-        )
+        const pastWeekOption = datePickerOptions.find(option => option.id === PAST_WEEK_DATE_OPTION)
 
         filters = {
           dates: {
@@ -664,9 +655,7 @@ const Jobs = ({
       .then(() => {
         removeNewJob()
 
-        history.push(
-          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
-        )
+        history.push(`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`)
         setEditableItem(null)
         refreshJobs(filtersStore)
       })
@@ -712,11 +701,7 @@ const Jobs = ({
       match={match}
       onEditJob={onEditJob}
       pageData={pageData}
-      refreshJobs={
-        match.params.pageTab === MONITOR_WORKFLOWS_TAB
-          ? getWorkflows
-          : refreshJobs
-      }
+      refreshJobs={match.params.pageTab === MONITOR_WORKFLOWS_TAB ? getWorkflows : refreshJobs}
       removeNewJob={removeNewJob}
       selectedFunction={selectedFunction}
       selectedJob={selectedJob}
@@ -737,14 +722,7 @@ Jobs.propTypes = {
 }
 
 export default connect(
-  ({
-    appStore,
-    filtersStore,
-    functionsStore,
-    jobsStore,
-    detailsStore,
-    workflowsStore
-  }) => ({
+  ({ appStore, filtersStore, functionsStore, jobsStore, detailsStore, workflowsStore }) => ({
     appStore,
     detailsStore,
     filtersStore,

@@ -100,6 +100,8 @@ const ComboboxView = React.forwardRef(
           disabled={selectValue.id.length === 0}
           onChange={handleInputOnChange}
           onFocus={inputOnFocus}
+          onBlur={() => {
+            console.log('here3')}}
           placeholder={inputPlaceholder}
           ref={inputRef}
           type="text"

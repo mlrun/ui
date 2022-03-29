@@ -34,7 +34,7 @@ const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
   })
 }
 
-export default {
+const artifactsApi = {
   buildFunction: data => mainHttpClient.post('/build/function', data),
   getArtifactPreview: (path, user, fileFormat) => {
     const config = {
@@ -138,3 +138,5 @@ export default {
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)
 }
+
+export default artifactsApi

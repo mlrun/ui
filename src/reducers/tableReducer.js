@@ -18,7 +18,7 @@ const initialState = {
   }
 }
 
-export default (state = initialState, { type, payload }) => {
+const tableReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case SET_FEATURES_PANEL_DATA:
       return {
@@ -79,3 +79,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default tableReducer

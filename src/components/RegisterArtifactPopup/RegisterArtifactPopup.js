@@ -99,15 +99,12 @@ const RegisterArtifactPopup = ({
     }
 
     if (registerArtifactData.kind === 'model') {
-      const {
-        target_path,
-        model_file
-      } = registerArtifactData.target_path.match(
+      const groups = registerArtifactData.target_path.match(
         /^(?:(?<target_path>.+\/))?(?<model_file>.+)$/
-      )?.groups
+      )
 
-      data.target_path = target_path
-      data.model_file = model_file
+      data.target_path = groups?.target_path
+      data.model_file = groups?.model_file
     }
 
     artifactApi

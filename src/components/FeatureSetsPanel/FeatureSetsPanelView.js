@@ -79,10 +79,7 @@ const FeatureSetsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FeatureSetsPanelSchema
-              setValidation={setValidation}
-              validation={validation}
-            />
+            <FeatureSetsPanelSchema setValidation={setValidation} validation={validation} />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -90,15 +87,10 @@ const FeatureSetsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FeatureSetsPanelTargetStore
-              setValidation={setValidation}
-              validation={validation}
-            />
+            <FeatureSetsPanelTargetStore setValidation={setValidation} validation={validation} />
           </Accordion>
           <PanelCredentialsAccessKey
-            credentialsAccessKey={
-              featureStore.newFeatureSet.credentials.access_key
-            }
+            credentialsAccessKey={featureStore.newFeatureSet.credentials.access_key}
             required={accessKeyRequired}
             setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
             setValidation={setValidation}
@@ -125,7 +117,10 @@ const FeatureSetsPanelView = ({
               disabled={validationIsFailed}
               variant={SECONDARY_BUTTON}
               label="Save"
-              onClick={() => handleSaveOnClick(false)}
+              onClick={() => {
+                console.log('here2')
+                handleSaveOnClick(false)
+              }}
             />
             <Button
               className="btn_start-ingestion"

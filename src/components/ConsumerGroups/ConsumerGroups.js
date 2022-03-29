@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -45,7 +45,7 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
     )
   }, [nuclioStore.v3ioStreams.parsedData, filterByName])
 
-  const pageData = useCallback(generatePageData(), [])
+  const pageData = useMemo(() => generatePageData(), [])
 
   return (
     <>

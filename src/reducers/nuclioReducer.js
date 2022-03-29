@@ -37,7 +37,7 @@ const initialState = {
   error: null
 }
 
-export default (state = initialState, { type, payload }) => {
+const nuclioReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case FETCH_ALL_NUCLIO_FUNCTIONS_SUCCESS:
       return {
@@ -173,3 +173,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default nuclioReducer

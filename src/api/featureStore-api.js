@@ -41,7 +41,7 @@ const fetchFeatureStoreContent = (
   })
 }
 
-export default {
+const featureStoreApi = {
   createFeatureSet: (project, data) =>
     mainHttpClient.put(
       `/projects/${project}/feature-sets/${data.metadata.name}/references/${data.metadata.tag}`,
@@ -140,3 +140,5 @@ export default {
       data
     )
 }
+
+export default featureStoreApi

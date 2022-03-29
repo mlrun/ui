@@ -61,7 +61,7 @@ const initialState = {
   preview: {}
 }
 
-export default (state = initialState, { type, payload }) => {
+const artifactReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case BUILD_FUNCTION_BEGIN:
       return {
@@ -318,3 +318,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default artifactReducer

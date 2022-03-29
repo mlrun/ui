@@ -105,7 +105,7 @@ const ProjectSettingsSecrets = ({
       }
 
       const secretKeys = [
-        ...projectStore.project.secrets?.data['secret_keys'],
+        ...(projectStore.project.secrets.data?.secret_keys ?? []),
         createSecretData.key
       ]
 

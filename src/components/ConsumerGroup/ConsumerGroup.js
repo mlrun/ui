@@ -103,7 +103,7 @@ const ConsumerGroup = ({
     setNotification
   ])
 
-  const pageData = useCallback(generatePageData(), [])
+  const pageData = useMemo(() => generatePageData(), [])
 
   return (
     <>
