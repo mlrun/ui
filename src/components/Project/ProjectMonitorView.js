@@ -19,7 +19,7 @@ import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import { DATASETS, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 

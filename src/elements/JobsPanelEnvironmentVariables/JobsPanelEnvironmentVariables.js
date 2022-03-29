@@ -9,7 +9,7 @@ import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
 import jobsActions from '../../actions/jobs'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { ENV_VARIABLE_TYPE_VALUE } from '../../constants'
 
 import './jobsPanelEnviromnetVariables.scss'

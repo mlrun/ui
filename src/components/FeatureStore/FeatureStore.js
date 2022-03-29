@@ -46,7 +46,7 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../constants'
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 

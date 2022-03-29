@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import FunctionsPanelRuntimeView from './FunctionsPanelRuntimeView'
 
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 const FunctionsPanelRuntime = ({
   defaultData,

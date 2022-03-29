@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash'
 
 import TableView from './TableView'
 
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'

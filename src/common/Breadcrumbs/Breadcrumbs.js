@@ -9,7 +9,7 @@ import RoundedIcon from '../RoundedIcon/RoundedIcon'
 
 import { ReactComponent as ArrowIcon } from '../../images/arrow.svg'
 
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { generateProjectScreens } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'

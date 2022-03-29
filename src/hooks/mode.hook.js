@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react'
 import localStorageService from '../utils/localStorageService'
-import { isURLMode } from '../utils/helper'
+import { getUrlMode } from '../utils/helper'
 
 /**
  * @hook
@@ -10,27 +10,27 @@ import { isURLMode } from '../utils/helper'
  *
  * isStagingMode = When ready for testing but not for production. Specific for staging
  *
- * @returns {Object} Object
+ * @returns {{isDemoMode: boolean, isStagingMode: boolean}}
  *
  * @example
  *
- * { isDemoMode: true | false, isStagingMode: true | false}
+ * { isDemoMode: boolean, isStagingMode: boolean}
  */
 
 export const useMode = () => {
   const [mode, setMode] = useState(localStorageService.getStorageValue('mode'))
-  const urlMode = isURLMode(window.location.search)
+  const urlMode = getUrlMode(window.location.search)
 
   useLayoutEffect(() => {
     if (urlMode) {
-      localStorageService.setStorageValue('mode', urlMode)
+      localStorageService.setStorageValue('mode', JSON.stringify(urlMode))
       setMode(urlMode)
     }
   }, [urlMode])
 
   return {
-    isDemoMode: mode === 'demo' || false,
-    isStagingMode: mode === 'staging' || mode === 'demo' || false
+    isDemoMode: mode === 'demo',
+    isStagingMode: mode === 'staging' || mode === 'demo'
   }
 }
 

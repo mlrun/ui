@@ -7,7 +7,7 @@ const getStorageValue = (key, defaultValue) => {
 }
 
 const setStorageValue = (key, defaultValue) => {
-  localStorage.setItem(key, JSON.stringify(defaultValue))
+  localStorage.setItem(key, defaultValue)
 }
 
 export default {

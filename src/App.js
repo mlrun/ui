@@ -9,7 +9,7 @@ import {
 import Page from './layout/Page/Page'
 import Loader from './common/Loader/Loader'
 
-import { useMode } from './hooks/demoMode.hook'
+import { useMode } from './hooks/mode.hook'
 import {
   FEATURE_SETS_TAB,
   MODELS_TAB,

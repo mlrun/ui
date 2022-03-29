@@ -5,7 +5,7 @@ import { find, isEmpty, cloneDeep } from 'lodash'
 
 import JobsView from './JobsView'
 
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import {
   actionCreator,

@@ -6,7 +6,7 @@ import FunctionsPanelEnvironmentVariablesView from './FunctionsPanelEnvironmentV
 import functionsActions from '../../actions/functions'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 const FunctionsPanelEnvironmentVariables = ({
   functionsStore,

@@ -2,7 +2,7 @@ export const isDemoMode = search => {
   return new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
 }
 
-export const isURLMode = search => {
+export const getUrlMode = search => {
   return new URLSearchParams(search).get('mode')?.toLowerCase()
 }
 

@@ -10,7 +10,7 @@ import Input from '../../common/Input/Input'
 
 import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { getValidationRules } from '../../utils/validationService'
 

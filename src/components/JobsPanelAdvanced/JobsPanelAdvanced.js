@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import JobsPanelAdvancedView from './JobsPanelAdvancedView'
 
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 import {
   initialState,

@@ -37,7 +37,7 @@ import {
   SECONDARY_BUTTON,
   TAG_LATEST
 } from '../../constants'
-import { useMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
