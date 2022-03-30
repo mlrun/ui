@@ -6,11 +6,6 @@ import classnames from 'classnames'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
-import {
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  REAL_TIME_PIPELINES_TAB
-} from '../../constants'
 import { formatDatetime, truncateUid } from '../../utils'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
@@ -33,7 +28,7 @@ const TableLinkCell = ({
 
   return (
     <div className={tableCellClassNames}>
-      {stateValue && stateLabel && (
+      {data.showStatus && stateValue && stateLabel && (
         <Tooltip
           className="status"
           template={<TextTooltipTemplate text={stateLabel} />}
@@ -71,19 +66,14 @@ const TableLinkCell = ({
                 {data.value}
               </Tooltip>
             </span>
-            {link.match(
-              new RegExp(
-                `functions|${FEATURE_SETS_TAB}|${FEATURE_VECTORS_TAB}|${REAL_TIME_PIPELINES_TAB}`
-              )
-            ) &&
-              data.value !== item.tag && (
-                <Tooltip
-                  className="item-tag"
-                  template={<TextTooltipTemplate text={item.tag} />}
-                >
-                  <span className="link-subtext">{item.tag}</span>
-                </Tooltip>
-              )}
+            {data.showTag && data.value !== item.tag && (
+              <Tooltip
+                className="item-tag"
+                template={<TextTooltipTemplate text={item.tag} />}
+              >
+                <span className="link-subtext">{item.tag}</span>
+              </Tooltip>
+            )}
           </div>
           {(link.match(/jobs/) ||
             (link.match(/functions/) &&
