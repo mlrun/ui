@@ -38,7 +38,6 @@ const FunctionsPanelView = ({
   handleSave,
   imageType,
   loading,
-  match,
   mode,
   newFunction,
   removeFunctionsError,
@@ -88,7 +87,6 @@ const FunctionsPanelView = ({
               <FunctionsPanelCode
                 defaultData={defaultData}
                 imageType={imageType}
-                match={match}
                 mode={mode}
                 setImageType={setImageType}
                 setValidation={setValidation}
@@ -136,9 +134,7 @@ const FunctionsPanelView = ({
             )}
             <PanelCredentialsAccessKey
               className="functions-panel__item"
-              credentialsAccessKey={
-                functionsStore.newFunction.metadata.credentials.access_key
-              }
+              credentialsAccessKey={functionsStore.newFunction.metadata.credentials.access_key}
               required={
                 functionsStore.newFunction.metadata.credentials.access_key !==
                 PANEL_DEFAULT_ACCESS_KEY

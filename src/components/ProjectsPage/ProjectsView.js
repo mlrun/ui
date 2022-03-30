@@ -36,7 +36,6 @@ const ProjectsView = ({
   handleCreateProject,
   isDescendingOrder,
   isNameValid,
-  match,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -51,7 +50,8 @@ const ProjectsView = ({
   setNewProjectName,
   setSelectedProjectsState,
   setSortProjectId,
-  sortProjectId
+  sortProjectId,
+  urlParams
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -91,14 +91,13 @@ const ProjectsView = ({
         />
       )}
       <div className="projects__header">
-        <Breadcrumbs match={match} />
+        <Breadcrumbs />
       </div>
       <div className="projects__wrapper">
         <div className="projects-content-header">
           <div className="projects-content-header-item">
             <ContentMenu
               activeTab={selectedProjectsState}
-              match={match}
               screen="active"
               tabs={projectsStates}
               onClick={setSelectedProjectsState}
@@ -142,8 +141,7 @@ const ProjectsView = ({
             {filterByName.length > 0 &&
             (filterMatches.length === 0 || filteredProjects.length === 0) ? (
               <NoData />
-            ) : selectedProjectsState === 'archived' &&
-              filteredProjects.length === 0 ? (
+            ) : selectedProjectsState === 'archived' && filteredProjects.length === 0 ? (
               <div className="no-filtered-data">No archived projects.</div>
             ) : (
               filteredProjects.map(project => {
@@ -165,10 +163,7 @@ const ProjectsView = ({
         )}
       </div>
       {convertedYaml.length > 0 && (
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={convertToYaml}
-        />
+        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={convertToYaml} />
       )}
       <Notification />
     </div>
@@ -191,7 +186,6 @@ ProjectsView.propTypes = {
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
@@ -204,7 +198,8 @@ ProjectsView.propTypes = {
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
   setSortProjectId: PropTypes.func.isRequired,
-  sortProjectId: PropTypes.string.isRequired
+  sortProjectId: PropTypes.string.isRequired,
+  urlParams: PropTypes.shape({}).isRequired
 }
 
 export default ProjectsView

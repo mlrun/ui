@@ -17,7 +17,7 @@ const createJobsContent = (
   content,
   isSelectedItem,
   params,
-  isDemoMode,
+  isStagingMode,
   groupedByWorkflow
 ) => {
   return content.map(contentItem => {
@@ -121,7 +121,7 @@ const createJobsContent = (
               ? contentItem.uid || contentItem?.id
               : contentItem.name,
             class: 'jobs_medium',
-            type: type === 'workflow' && !isDemoMode ? 'hidden' : '',
+            type: type === 'workflow' && !isStagingMode ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
             identifierUnique: identifierUnique,
             getLink: tab => {

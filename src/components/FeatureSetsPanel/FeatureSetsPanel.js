@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
@@ -41,7 +41,7 @@ const FeatureSetsPanel = ({
   })
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const handleSave = () => {
     const data = {
@@ -67,10 +67,7 @@ const FeatureSetsPanel = ({
           return handleStartFeatureSetIngest(result)
         }
 
-        handleCreateFeatureSetSuccess(
-          result.data.metadata.name,
-          result.data.metadata.tag
-        )
+        handleCreateFeatureSetSuccess(result.data.metadata.name, result.data.metadata.tag)
       })
       .catch(() => {
         setConfirmDialog(null)
@@ -101,21 +98,14 @@ const FeatureSetsPanel = ({
       credentials: featureStore.newFeatureSet.credentials
     }
 
-    return startFeatureSetIngest(
-      project,
-      result.data.metadata.name,
-      reference,
-      data
-    ).then(() => {
+    return startFeatureSetIngest(project, result.data.metadata.name, reference, data).then(() => {
       handleCreateFeatureSetSuccess(result.data.metadata.name, reference)
     })
   }
 
   const handleCreateFeatureSetSuccess = (name, tag) => {
     createFeatureSetSuccess(tag).then(() => {
-      history.push(
-        `/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview`
-      )
+      navigate(`/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview`)
       setNotification({
         status: 200,
         id: Math.random(),
@@ -137,9 +127,7 @@ const FeatureSetsPanel = ({
       project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
-      setNewFeatureSetCredentialsAccessKey={
-        setNewFeatureSetCredentialsAccessKey
-      }
+      setNewFeatureSetCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
       setValidation={setValidation}
       validation={validation}
     />,

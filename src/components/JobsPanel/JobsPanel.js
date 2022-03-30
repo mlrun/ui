@@ -168,7 +168,7 @@ const JobsPanel = ({
       isEveryObjectValueEmpty(panelState.tableData) &&
       isEveryObjectValueEmpty(panelState.requests) &&
       isEveryObjectValueEmpty(panelState.limits) &&
-      !isEveryObjectValueEmpty(selectedFunction) &&
+      (!selectedFunction || !isEveryObjectValueEmpty(selectedFunction)) &&
       !tableDataIsLoaded
     ) {
       generateTableData(
@@ -195,7 +195,8 @@ const JobsPanel = ({
         panelState.requests,
         setNewJob,
         setDefaultDataIsLoaded,
-        mode
+        mode,
+        frontendSpec?.default_function_pod_resources
       )
     }
   }, [

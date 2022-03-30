@@ -1,4 +1,4 @@
-export const generateProjectScreens = (match, isDemoMode) => [
+export const generateProjectScreens = params => [
   {
     label: 'Project Monitoring',
     id: 'monitor'
@@ -12,12 +12,12 @@ export const generateProjectScreens = (match, isDemoMode) => [
   {
     label: 'Real-time functions',
     id: 'Real-time functions',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
+    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`
   },
   {
     label: 'API gateways',
     id: 'API gateways',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
+    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/api-gateways`
   },
   {
     label: 'Settings',

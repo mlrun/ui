@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useRouteMatch } from 'react-router-dom'
 import classNames from 'classnames'
+import { useParams } from 'react-router-dom'
 
 import Header from '../Header/Header'
 import Navbar from '../Navbar/Navbar'
@@ -14,12 +14,9 @@ export default function PageView({ children }) {
   const [isPinned, setIsPinned] = useState(
     localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
-
-  const projectName = useRouteMatch('/projects/:projectName')?.params
-    .projectName
-
-  const headerShown =
-    window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
+  const params = useParams()
+  const projectName = params.projectName
+  const headerShown = window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
 
   const pinnedClasses = classNames(
     isPinned && projectName ? 'pinned' : 'unpinned',
@@ -40,7 +37,6 @@ export default function PageView({ children }) {
       <main id="main" className={pinnedClasses}>
         {children}
       </main>
-
       <Notification />
     </div>
   )

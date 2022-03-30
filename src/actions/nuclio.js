@@ -92,61 +92,21 @@ const nuclioActions = {
   }),
   fetchNuclioV3ioStreamShardLags: (project, body) => dispatch => {
     dispatch(nuclioActions.fetchNuclioV3ioStreamShardLagsBegin())
+    return nuclioApi
+      .getV3ioStreamShardLags(project, body)
+      .then(({ data }) => {
+        const parsedV3ioStreamShardLags = parseV3ioStreamShardLags(data, body)
 
-    const cgs = {
-      [`${body.containerName}${body.streamPath}`]: {
-        [body.consumerGroup]: {
-          'shard-id-0': {
-            committed: '0_123',
-            current: '0_456',
-            lag: '0_789'
-          },
-          'shard-id-1': {
-            committed: '1_123',
-            current: '1_456',
-            lag: '1_789'
-          }
-        }
-      }
-    }
-
-    const cgsParsed = parseV3ioStreamShardLags(cgs, body)
-
-    const newProm = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(cgs)
-      }, 1000)
-    })
-    newProm
-      .then(() => {
-        console.log('cgsParsed', cgsParsed)
-        dispatch(
+        return dispatch(
           nuclioActions.fetchNuclioV3ioStreamShardLagsSuccess({
-            data: cgs,
-            parsedData: cgsParsed
+            data,
+            parsedData: parsedV3ioStreamShardLags
           })
         )
-        // return Promise.reject('Issue')
       })
       .catch(error => {
         dispatch(nuclioActions.fetchNuclioV3ioStreamShardLagsFailure(error))
       })
-
-    // return nuclioApi
-    //   .getV3ioStreamShardLags(project, body)
-    //   .then(({ data }) => {
-    //     const parsedV3ioStreamShardLags = parseV3ioStreamShardLags(data, body)
-    //
-    //     return dispatch(
-    //       nuclioActions.fetchNuclioV3ioStreamShardLagsSuccess({
-    //         data,
-    //         parsedData: parsedV3ioStreamShardLags
-    //       })
-    //     )
-    //   })
-    //   .catch(error => {
-    //     dispatch(nuclioActions.fetchNuclioV3ioStreamShardLagsFailure(error))
-    //   })
   },
   fetchNuclioV3ioStreamShardLagsBegin: () => ({
     type: FETCH_NUCLIO_V3IO_STREAM_SHARD_LAGS_BEGIN
@@ -162,86 +122,21 @@ const nuclioActions = {
   fetchNuclioV3ioStreams: project => dispatch => {
     dispatch(nuclioActions.fetchNuclioV3ioStreamsBegin())
 
-    const cgs = {
-      'function-1@stream-name-1': {
-        consumerGroup: 'ConsumerGroup1',
-        containerName: 'ContainerName1',
-        streamPath: '/path/of/stream'
-      },
-      'function-2@stream-name-2': {
-        consumerGroup: 'ConsumerGroup2',
-        containerName: 'ContainerName2',
-        streamPath: '/path/of/stream2'
-      },
-      'function-4@stream-name-4': {
-        consumerGroup: 'ConsumerGroup4',
-        containerName: 'ContainerName4',
-        streamPath: '/path/of/stream4'
-      },
-      'function-5@stream-name-5': {
-        consumerGroup: 'ConsumerGroup5',
-        containerName: 'ContainerName5',
-        streamPath: '/path/of/stream5'
-      },
-      'function-6@stream-name-6': {
-        consumerGroup: 'ConsumerGroup6',
-        containerName: 'ContainerName6',
-        streamPath: '/path/of/stream6'
-      },
-      'function-7@stream-name-7': {
-        consumerGroup: 'ConsumerGroup7',
-        containerName: 'ContainerName7',
-        streamPath: '/path/of/stream7'
-      },
-      'function-8@stream-name-8': {
-        consumerGroup: 'ConsumerGroup8',
-        containerName: 'ContainerName8',
-        streamPath: '/path/of/stream8'
-      },
-      'function-9@stream-name-9': {
-        consumerGroup: 'ConsumerGroup9',
-        containerName: 'ContainerName9',
-        streamPath: '/path/of/stream9'
-      }
-    }
+    return nuclioApi
+      .getV3ioStreams(project)
+      .then(({ data }) => {
+        const parsedV3ioStreams = parseV3ioStreams(data)
 
-    const cgsParsed = parseV3ioStreams(cgs)
-
-    const newProm = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(cgs)
-      }, 1000)
-    })
-    newProm
-      .then(() => {
-        console.log('cgsParsed', cgsParsed)
-        dispatch(
+        return dispatch(
           nuclioActions.fetchNuclioV3ioStreamsSuccess({
-            data: cgs,
-            parsedData: cgsParsed
+            data: data,
+            parsedData: parsedV3ioStreams
           })
         )
-        // return Promise.reject('Issue')
       })
       .catch(error => {
         dispatch(nuclioActions.fetchNuclioV3ioStreamsFailure(error))
       })
-
-    // return nuclioApi
-    //   .getV3ioStreams(project)
-    //   .then(({ data }) => {
-    //     const parsedV3ioStreams = parseV3ioStreams(data)
-    //
-    //     return dispatch(
-    //       nuclioActions.fetchNuclioV3ioStreamsSuccess({
-    //         data: data,
-    //         parsedData: parsedV3ioStreams
-    //       })
-    //     )
-    //   })
-    //   .catch(error => {
-    //     dispatch(nuclioActions.fetchNuclioV3ioStreamsFailure(error))
-    //   })
   },
   fetchNuclioV3ioStreamsBegin: () => ({
     type: FETCH_NUCLIO_V3IO_STREAMS_BEGIN

@@ -8,20 +8,22 @@ import { groupByUniqName } from '../../utils/groupByUniqName'
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
 import nuclioActions from '../../actions/nuclio'
+import { useParams } from 'react-router-dom'
 
 const ProjectFunctions = ({
   fetchApiGateways,
   fetchNuclioFunctions,
-  match,
   nuclioStore
 }) => {
-  useEffect(() => {
-    fetchNuclioFunctions(match.params.projectName)
-  }, [fetchNuclioFunctions, match.params.projectName])
+  const params = useParams()
 
   useEffect(() => {
-    fetchApiGateways(match.params.projectName)
-  }, [fetchApiGateways, match.params.projectName])
+    fetchNuclioFunctions(params.projectName)
+  }, [fetchNuclioFunctions, params.projectName])
+
+  useEffect(() => {
+    fetchApiGateways(params.projectName)
+  }, [fetchApiGateways, params.projectName])
 
   const functions = useMemo(() => {
     const groupeFunctionsRunning = groupByUniqName(
@@ -46,23 +48,23 @@ const ProjectFunctions = ({
         value: functionsRunning,
         label: 'Running',
         className: functionsRunning > 0 ? 'running' : 'default',
-        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`
       },
       failed: {
         value: functionsFailed,
         label: 'Failed',
         className: functionsFailed > 0 ? 'failed' : 'default',
-        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`
       },
       apiGateways: {
         value: nuclioStore.apiGateways,
         label: 'API gateways',
         className: nuclioStore.apiGateways > 0 ? 'running' : 'default',
-        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/api-gateways`
       }
     }
   }, [
-    match.params.projectName,
+    params.projectName,
     nuclioStore.apiGateways,
     nuclioStore.currentProjectFunctions
   ])
@@ -90,7 +92,7 @@ const ProjectFunctions = ({
           return {
             name: {
               value: func.metadata.name,
-              href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions/${func.metadata.name}`,
+              href: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions/${func.metadata.name}`,
               className: 'table-cell_big'
             },
             status: {
@@ -114,7 +116,7 @@ const ProjectFunctions = ({
         body: functionsTableBody
       }
     }
-  }, [match.params.projectName, nuclioStore.currentProjectFunctions])
+  }, [params.projectName, nuclioStore.currentProjectFunctions])
 
   return (
     <ProjectDataCard
@@ -123,9 +125,9 @@ const ProjectFunctions = ({
         error: nuclioStore.error,
         loading: nuclioStore.loading
       }}
-      headerLink={`${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`}
-      href={`${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`}
-      match={match}
+      headerLink={`${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`}
+      href={`${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`}
+      params={params}
       statistics={functions}
       table={functionsTable}
       title="Real-time functions (Nuclio)"
@@ -135,8 +137,7 @@ const ProjectFunctions = ({
 
 ProjectFunctions.propTypes = {
   fetchApiGateways: PropTypes.func.isRequired,
-  fetchNuclioFunctions: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired
+  fetchNuclioFunctions: PropTypes.func.isRequired
 }
 
 export default connect(

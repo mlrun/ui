@@ -175,11 +175,11 @@ const AddToFeatureVectorPopUp = ({
         label={action.label}
         tooltip={
           action.tooltip ||
-          (featureStore.features?.allData.length === 0
+          (featureStore.features?.allData?.length === 0
             ? 'No features in the project.'
             : '')
         }
-        disabled={action.disabled || !featureStore.features?.allData.length}
+        disabled={action.disabled || !featureStore.features?.allData?.length}
         onClick={handleAddToFeatureVector}
       />
       {isPopUpOpen && (

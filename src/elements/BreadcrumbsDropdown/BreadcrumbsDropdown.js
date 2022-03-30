@@ -10,22 +10,11 @@ import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
 import './breadcrumbsDropdown.scss'
 
-const BreadcrumbsDropdown = ({
-  link,
-  list,
-  onClick,
-  screen,
-  selectedItem,
-  tab,
-  withSearch
-}) => {
+const BreadcrumbsDropdown = ({ link, list, onClick, screen, selectedItem, tab, withSearch }) => {
   const [searchValue, setSearchValue] = useState('')
 
   return (
-    <div
-      className="breadcrumbs__dropdown-wrapper"
-      data-testid="breadcrumbs-dropdown"
-    >
+    <div className="breadcrumbs__dropdown-wrapper" data-testid="breadcrumbs-dropdown">
       {withSearch && (
         <div className="breadcrumbs__dropdown-search">
           <input
@@ -44,18 +33,13 @@ const BreadcrumbsDropdown = ({
             const dropdownItemClassNames = classnames(
               'breadcrumbs__dropdown-item',
               'data-ellipsis',
-              selectedItem === listItem.id &&
-                'breadcrumbs__dropdown-item_selected'
+              selectedItem === listItem.id && 'breadcrumbs__dropdown-item_selected'
             )
 
             return (
               !listItem.hidden &&
               (listItem.link ? (
-                <a
-                  href={listItem.link}
-                  key={listItem.id}
-                  className={dropdownItemClassNames}
-                >
+                <a href={listItem.link} key={listItem.id} className={dropdownItemClassNames}>
                   {listItem.label}
                 </a>
               ) : (
@@ -68,9 +52,7 @@ const BreadcrumbsDropdown = ({
                   className={dropdownItemClassNames}
                   onClick={onClick}
                 >
-                  <Tooltip
-                    template={<TextTooltipTemplate text={listItem.label} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
                     {listItem.label}
                   </Tooltip>
                 </Link>

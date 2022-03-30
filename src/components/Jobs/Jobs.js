@@ -5,7 +5,7 @@ import { find, isEmpty, cloneDeep } from 'lodash'
 
 import JobsView from './JobsView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { actionCreator, generateEditableItem, generatePageData } from './jobs.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -74,7 +74,7 @@ const Jobs = ({
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
   const [dateFilter, setDateFilter] = useState(['', ''])
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const dispatch = useDispatch()
   let fetchFunctionLogsTimeout = useRef(null)
@@ -341,7 +341,7 @@ const Jobs = ({
     () =>
       generatePageData(
         match.params.pageTab,
-        isDemoMode,
+        isStagingMode,
         onRemoveScheduledJob,
         handleRunJob,
         handleEditScheduleJob,
@@ -363,7 +363,7 @@ const Jobs = ({
       match.params.pageTab,
       match.params.workflowId,
       match.params.jobName,
-      isDemoMode,
+      isStagingMode,
       onRemoveScheduledJob,
       handleRunJob,
       handleEditScheduleJob,

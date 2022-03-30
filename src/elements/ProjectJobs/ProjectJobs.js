@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
@@ -13,8 +13,9 @@ import {
 } from './projectJobs.utils'
 import projectsAction from '../../actions/projects'
 
-const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
+const ProjectJobs = ({ fetchProjectJobs, projectStore }) => {
   const [groupedLatestItem, setGroupedLatestItem] = useState([])
+  const params = useParams()
 
   useEffect(() => {
     if (projectStore.project.jobs.data) {
@@ -25,34 +26,30 @@ const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
   }, [projectStore.project.jobs.data])
 
   useEffect(() => {
-    fetchProjectJobs(match.params.projectName)
-  }, [fetchProjectJobs, match.params.projectName])
+    fetchProjectJobs(params.projectName)
+  }, [fetchProjectJobs, params.projectName])
 
   const jobsData = useMemo(() => {
-    const statistics = getJobsStatistics(projectStore.projectSummary, match)
-    const table = getJobsTableData(groupedLatestItem, match)
+    const statistics = getJobsStatistics(projectStore.projectSummary, params.projectName)
+    const table = getJobsTableData(groupedLatestItem, params.projectName)
 
     return {
       statistics,
       table
     }
-  }, [groupedLatestItem, match, projectStore.projectSummary])
+  }, [groupedLatestItem, params.projectName, projectStore.projectSummary])
 
   return (
     <ProjectDataCard
       content={projectStore.project.jobs}
-      headerLink={`/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
-      link={`/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
-      match={match}
+      headerLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+      link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+      params={params}
       statistics={jobsData.statistics}
       table={jobsData.table}
       title="Jobs and workflows"
     />
   )
-}
-
-ProjectJobs.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

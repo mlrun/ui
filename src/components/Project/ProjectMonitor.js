@@ -1,7 +1,5 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
 
@@ -14,7 +12,8 @@ import {
   generateCreateNewOptions,
   handleFetchProjectError
 } from './project.utils'
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { areNuclioStreamsEnabled } from '../../utils/helper'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const ProjectMonitor = ({
   featureStore,
@@ -22,8 +21,8 @@ const ProjectMonitor = ({
   fetchProject,
   fetchProjectFunctions,
   fetchProjectSummary,
+  frontendSpec,
   functionsStore,
-  match,
   nuclioStore,
   projectStore,
   removeFeatureStoreError,
@@ -44,13 +43,18 @@ const ProjectMonitor = ({
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
-  const history = useHistory()
-  const isDemoMode = useDemoMode()
+  const navigate = useNavigate()
+  const params = useParams()
+
+  const nuclioStreamsAreEnabled = useMemo(
+    () => areNuclioStreamsEnabled(frontendSpec),
+    [frontendSpec]
+  )
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
-      history,
-      match,
+      navigate,
+      params,
       setArtifactKind,
       setIsPopupDialogOpen,
       setCreateFeatureSetPanelIsOpen,
@@ -60,13 +64,13 @@ const ProjectMonitor = ({
     return {
       createNewOptions
     }
-  }, [history, match])
+  }, [navigate, params])
 
   const fetchProjectData = useCallback(() => {
-    fetchProject(match.params.projectName).catch(error => {
-      handleFetchProjectError(error, history, setConfirmData)
+    fetchProject(params.projectName).catch(error => {
+      handleFetchProjectError(error, navigate, setConfirmData)
     })
-  }, [fetchProject, history, match.params.projectName])
+  }, [fetchProject, navigate, params.projectName])
 
   const resetProjectData = useCallback(() => {
     removeProjectData()
@@ -74,21 +78,30 @@ const ProjectMonitor = ({
 
   useEffect(() => {
     fetchProjectData()
-    fetchProjectSummary(match.params.projectName)
-    fetchNuclioV3ioStreams(match.params.projectName)
+    fetchProjectSummary(params.projectName)
 
     return () => {
       resetProjectData()
       removeProjectSummary()
-      removeV3ioStreams()
     }
   }, [
     fetchProjectSummary,
-    fetchNuclioV3ioStreams,
     fetchProjectData,
-    match.params.projectName,
+    params.projectName,
     removeProjectSummary,
-    resetProjectData,
+    resetProjectData
+  ])
+
+  useEffect(() => {
+    if (nuclioStreamsAreEnabled) {
+      fetchNuclioV3ioStreams(params.projectName)
+
+      return () => removeV3ioStreams()
+    }
+  }, [
+    fetchNuclioV3ioStreams,
+    params.projectName,
+    nuclioStreamsAreEnabled,
     removeV3ioStreams
   ])
 
@@ -135,7 +148,7 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(match.params.projectName).catch(
+    const funcs = await fetchProjectFunctions(params.projectName).catch(
       () => {
         setNotification({
           status: 200,
@@ -156,8 +169,8 @@ const ProjectMonitor = ({
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      history.push(
-        `/projects/${match.params.projectName}/functions/${currentItem.metadata.hash}/${tab}`
+      navigate(
+        `/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`
       )
 
       return setNotification({
@@ -174,7 +187,7 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(match.params.projectName).catch(
+    const funcs = await fetchProjectFunctions(params.projectName).catch(
       () => {
         setNotification({
           status: 400,
@@ -195,8 +208,8 @@ const ProjectMonitor = ({
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      history.push(
-        `/projects/${match.params.projectName}/functions/${currentItem.metadata.hash}/overview`
+      navigate(
+        `/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`
       )
 
       return setNotification({
@@ -213,8 +226,8 @@ const ProjectMonitor = ({
     removeProjectData()
     removeProjectSummary()
     fetchProjectData()
-    fetchProjectSummary(match.params.projectName)
-    fetchNuclioV3ioStreams()
+    fetchProjectSummary(params.projectName)
+    nuclioStreamsAreEnabled && fetchNuclioV3ioStreams(params.projectName)
   }
 
   return (
@@ -230,13 +243,13 @@ const ProjectMonitor = ({
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
       handleLaunchIDE={handleLaunchIDE}
-      history={history}
-      isDemoMode={isDemoMode}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
-      match={match}
-      projectSummary={projectStore.projectSummary}
+      navigate={navigate}
+      nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
+      params={params}
       project={projectStore.project}
+      projectSummary={projectStore.projectSummary}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
@@ -247,14 +260,11 @@ const ProjectMonitor = ({
   )
 }
 
-ProjectMonitor.propTypes = {
-  match: PropTypes.shape({}).isRequired
-}
-
 export default connect(
-  ({ functionsStore, featureStore, nuclioStore, projectStore }) => ({
+  ({ appStore, functionsStore, featureStore, nuclioStore, projectStore }) => ({
     featureStore,
     functionsStore,
+    frontendSpec: appStore.frontendSpec,
     nuclioStore,
     projectStore
   }),

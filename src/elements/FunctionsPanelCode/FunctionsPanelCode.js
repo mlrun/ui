@@ -13,15 +13,15 @@ import {
   NEW_IMAGE,
   sourceCodeInBase64
 } from './functionsPanelCode.util'
-import { PANEL_CREATE_MODE } from '../../constants'
+import { PANEL_CREATE_MODE, TAG_LATEST } from '../../constants'
 import { trimSplit } from '../../utils'
+import { useParams } from 'react-router-dom'
 
 const FunctionsPanelCode = ({
   appStore,
   defaultData,
   functionsStore,
   imageType,
-  match,
   mode,
   resetNewFunctionCodeCustomImage,
   setImageType,
@@ -46,6 +46,7 @@ const FunctionsPanelCode = ({
     build_image: defaultData.build?.image ?? ''
   })
   const [editCode, setEditCode] = useState(false)
+  const params = useParams()
 
   useEffect(() => {
     if (
@@ -87,9 +88,12 @@ const FunctionsPanelCode = ({
         const buildImage = (
           appStore.frontendSpec?.function_deployment_target_image_template || ''
         )
-          .replace('{project}', match.params.projectName)
+          .replace('{project}', params.projectName)
           .replace('{name}', functionsStore.newFunction.metadata.name)
-          .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
+          .replace(
+            '{tag}',
+            functionsStore.newFunction.metadata.tag || TAG_LATEST
+          )
 
         setNewFunctionCommands(
           trimSplit(
@@ -139,7 +143,7 @@ const FunctionsPanelCode = ({
     functionsStore.newFunction.metadata.name,
     functionsStore.newFunction.metadata.tag,
     imageType.length,
-    match.params.projectName,
+    params.projectName,
     mode,
     setImageType,
     setNewFunctionBaseImage,
@@ -194,9 +198,9 @@ const FunctionsPanelCode = ({
       const buildImage = (
         appStore.frontendSpec?.function_deployment_target_image_template || ''
       )
-        .replace('{project}', match.params.projectName)
+        .replace('{project}', params.projectName)
         .replace('{name}', functionsStore.newFunction.metadata.name)
-        .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
+        .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
 
       if (mode === PANEL_CREATE_MODE) {
         setNewFunctionImage('')
@@ -284,7 +288,6 @@ FunctionsPanelCode.defaultProps = {
 FunctionsPanelCode.propTypes = {
   defaultData: PropTypes.shape({}),
   imageType: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   mode: PropTypes.string.isRequired,
   setImageType: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

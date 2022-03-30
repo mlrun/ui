@@ -205,18 +205,10 @@ export const getInitialCards = projectName => {
   }
 }
 
-export const calcIsDemoPrefix = (path, isDemoMode) => {
-  let prefix = path.includes('?') ? '&' : '?'
-  return isDemoMode ? prefix.concat('demo=true') : ''
-}
-
-export const handlePath = (history, cb, isDemoMode) => ({
-  target,
-  externalLink
-}) => {
+export const handlePath = (navigate, cb) => ({ target, externalLink }) => {
   return target.indexOf('/') < 0
     ? cb(target.toLowerCase())
     : externalLink
     ? (window.top.location.href = target)
-    : history.push(`${target}${calcIsDemoPrefix(target, isDemoMode)}`)
+    : navigate(target)
 }
