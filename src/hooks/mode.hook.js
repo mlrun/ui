@@ -14,7 +14,7 @@ import { getUrlMode } from '../utils/helper'
  *
  * @example
  *
- * { isDemoMode: boolean, isStagingMode: boolean}
+ * { isDemoMode: false, isStagingMode: true }
  */
 
 export const useMode = () => {
