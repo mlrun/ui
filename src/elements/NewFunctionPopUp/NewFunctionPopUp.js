@@ -10,7 +10,7 @@ import Input from '../../common/Input/Input'
 
 import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { getValidationRules } from '../../utils/validationService'
 
@@ -37,7 +37,7 @@ const NewFunctionPopUp = ({
     isNameValid: true,
     isTagValid: true
   })
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
   const openPanelByDefault = useOpenPanel()
   const newFunctionBtn = useRef(null)
   const popUpClassNames = classnames(
@@ -148,7 +148,7 @@ const NewFunctionPopUp = ({
             floatingLabel
             label="Runtime"
             onClick={selectRuntime}
-            options={runtimeOptions(isDemoMode)}
+            options={runtimeOptions(isStagingMode)}
             selectedId={data.runtime}
           />
           <div className="pop-up-dialog__footer-container">

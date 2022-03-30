@@ -82,9 +82,24 @@ Given('open url', async function() {
   await navigateToPage(this.driver, `http://${test_url}:${test_port}`)
 })
 
+/*
+   Changes Log:
+  turning on demo mode by URL param check of `demo=true` has been deprecated.
+
+  Now: `demo` flag replaced with `mode` flag that can be set with either 2 modes
+  - `mode=demo` = Not ready for production or testing (Missing UI or BE). shows all the code for staging + demo
+  - `mode=staging` = When ready for testing but not for production. Specific for staging
+  once `mode` flag (URL param) is passed, it is saved to localStorage and check is done NOW by localStorage `mode` value
+
+  ** TODO **
+  1. Change `demo=true` to `mode=demo` in 'turn on demo mode' test case and adjust test cases
+  2. Create another test cases for "turn on staging mode" with `mode=staging`
+
+*/
+
 When('turn on demo mode', async function() {
   const url = await this.driver.getCurrentUrl()
-  await navigateToPage(this.driver, `${url}?demo=true`)
+  await navigateToPage(this.driver, `${url}?demo=true`) // TODO: see above
 })
 
 Then('additionally redirect by INVALID-TAB', async function() {

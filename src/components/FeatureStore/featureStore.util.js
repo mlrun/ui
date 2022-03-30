@@ -240,7 +240,7 @@ export const generatePageData = (
   getPopUpTemplate,
   isTablePanelOpen,
   isSelectedItem,
-  isDemoMode
+  isStagingMode
 ) => {
   let data = {
     details: {
@@ -278,7 +278,7 @@ export const generatePageData = (
       FEATURE_VECTORS_TAB,
       onDeleteFeatureVector
     )
-    data.hidePageActionMenu = !isDemoMode
+    data.hidePageActionMenu = !isStagingMode
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
@@ -365,7 +365,7 @@ export const navigateToDetailsPane = (
     featureSets.allData.length > 0
   ) {
     content = featureSets.selectedRowData.content[name] || featureSets.allData
-  } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
+  } else if (match.params.pageTab === FEATURES_TAB && features?.length > 0) {
     content = [...features, ...entities]
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&

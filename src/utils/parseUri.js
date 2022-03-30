@@ -1,3 +1,11 @@
+import {
+  DATASETS,
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  MODELS_TAB,
+  MONITOR_JOBS_TAB
+} from '../constants'
+
 /**
  * Parses a URI of MLRun store and returns an object with the different URI parts, all as strings.
  * `kind` should be one of: `'artifacts'`, `'models'`, `'datasets'`, `'feature-vectors'`, `'feature-sets'`, `'jobs'` or `'functions'`.
@@ -48,13 +56,6 @@
  *         tag:       undefined,
  *         uid:       '24fce79e709f9b3fe5e8251a39e67c678d94c20c' }
  */
-import {
-  DATASETS,
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  MODELS_TAB,
-  MONITOR_JOBS_TAB
-} from '../constants'
 
 const parseUri = uri =>
   (uri ?? '').match(
@@ -70,6 +71,7 @@ const kindToScreen = {
   jobs: `jobs/${MONITOR_JOBS_TAB}`,
   models: `models/${MODELS_TAB}`
 }
+
 const generateLinkPath = (uri = '') => {
   const { kind, project, key, tag, uid } = parseUri(uri)
   const screen = kindToScreen[kind] ?? 'files'

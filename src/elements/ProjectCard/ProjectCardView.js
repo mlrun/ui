@@ -52,7 +52,7 @@ const ProjectCardView = React.forwardRef(
 
             <div
               className={`project-card__header-sub-title project-card__info ${
-                !project.spec.owner ? 'visiblity-hidden' : ''
+                !project.spec.owner ? 'visibility-hidden' : ''
               } `}
             >
               <span>Owner:</span>
