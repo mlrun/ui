@@ -15,7 +15,7 @@ const JobsPanelAdvancedView = ({
   handleDeleteItems,
   handleEditItems,
   handleResetForm,
-  isDemoMode,
+  isStagingMode,
   match,
   panelDispatch,
   panelState,
@@ -34,7 +34,7 @@ const JobsPanelAdvancedView = ({
         />
       </JobsPanelSection>
 
-      {isDemoMode && (
+      {isStagingMode && (
         <JobsPanelSection title="Secrets">
           <JobsPanelAdvancedTable
             addNewItem={advancedState.addNewSecret}
@@ -90,7 +90,7 @@ JobsPanelAdvancedView.propTypes = {
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
-  isDemoMode: PropTypes.bool.isRequired,
+  isStagingMode: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,

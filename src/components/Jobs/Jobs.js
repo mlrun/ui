@@ -5,7 +5,7 @@ import { find, isEmpty, cloneDeep } from 'lodash'
 
 import JobsView from './JobsView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import {
   actionCreator,
@@ -80,7 +80,7 @@ const Jobs = ({
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
   const [dateFilter, setDateFilter] = useState(['', ''])
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const dispatch = useDispatch()
   let fetchFunctionLogsTimeout = useRef(null)
@@ -285,7 +285,7 @@ const Jobs = ({
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
-      isDemoMode,
+      isStagingMode,
       onRemoveScheduledJob,
       handleRunJob,
       handleEditScheduleJob,
@@ -309,7 +309,7 @@ const Jobs = ({
       match.params.workflowId,
       match.params.jobName,
       appStore.frontendSpec.jobs_dashboard_url,
-      isDemoMode,
+      isStagingMode,
       selectedJob,
       selectedFunction,
       onAbortJob,
@@ -436,7 +436,7 @@ const Jobs = ({
   }, [history, pageData.tabs, match])
 
   useEffect(() => {
-    const workflow = workflowsStore.activeWorkflow.data
+    const { data: workflow } = workflowsStore.activeWorkflow
     const getWorkflow = () => {
       fetchWorkflow(match.params.workflowId).catch(() =>
         history.replace(
@@ -469,7 +469,7 @@ const Jobs = ({
     match.params.projectName,
     match.params.workflowId,
     resetWorkflow,
-    workflowsStore.activeWorkflow.data
+    workflowsStore.activeWorkflow
   ])
 
   useEffect(() => {
@@ -482,7 +482,7 @@ const Jobs = ({
   }, [fetchCurrentJob, match.params.jobId, selectedJob])
 
   useEffect(() => {
-    const workflow = workflowsStore.activeWorkflow.data
+    const { data: workflow } = workflowsStore.activeWorkflow
 
     if (
       workflow.graph &&
@@ -536,7 +536,7 @@ const Jobs = ({
     match.params.functionName,
     match.params.projectName,
     selectedFunction,
-    workflowsStore.activeWorkflow.data
+    workflowsStore.activeWorkflow
   ])
 
   useEffect(() => {

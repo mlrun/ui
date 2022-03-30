@@ -9,6 +9,7 @@ import {
 import Page from './layout/Page/Page'
 import Loader from './common/Loader/Loader'
 
+import { useMode } from './hooks/mode.hook'
 import {
   FEATURE_SETS_TAB,
   MODELS_TAB,
@@ -51,10 +52,8 @@ const AddToFeatureVectorPage = React.lazy(() =>
 )
 
 const App = () => {
-  // TODO: Remove after ProjectOverview is Done.
-  const search = window.location.search
-  const isDemo =
-    new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
+  const { isDemoMode } = useMode()
+
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Page>
@@ -65,7 +64,7 @@ const App = () => {
               exact
               render={routeProps => <Projects {...routeProps} />}
             />
-            {!isDemo && (
+            {!isDemoMode && (
               <Redirect
                 exact
                 from="/projects/:projectName"
