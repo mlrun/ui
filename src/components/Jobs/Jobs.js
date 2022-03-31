@@ -64,6 +64,7 @@ const Jobs = ({
   removeNewJob,
   removePods,
   removeScheduledJob,
+  resetWorkflow,
   setFilters,
   setNotification,
   workflowsStore
@@ -72,8 +73,6 @@ const Jobs = ({
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
-  const [workflow, setWorkflow] = useState({})
-  const [workflowJobsIds, setWorkflowJobsIds] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
@@ -437,19 +436,31 @@ const Jobs = ({
   }, [history, pageData.tabs, match])
 
   useEffect(() => {
-    if (!workflow.graph && match.params.workflowId) {
-      fetchWorkflow(match.params.workflowId)
-        .then(workflow => {
-          setWorkflow(workflow)
-          setWorkflowJobsIds(
-            Object.values(workflow.graph).map(jobData => jobData.run_uid)
-          )
-        })
-        .catch(() =>
-          history.replace(
-            `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
-          )
+    const { data: workflow } = workflowsStore.activeWorkflow
+    const getWorkflow = () => {
+      fetchWorkflow(match.params.workflowId).catch(() =>
+        history.replace(
+          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
         )
+      )
+    }
+
+    if (!match.params.workflowId && workflow.graph) {
+      resetWorkflow()
+    }
+
+    if (!workflow.graph && match.params.workflowId) {
+      getWorkflow()
+    }
+
+    if (
+      ['Running', 'None'].includes(workflow?.run?.status) &&
+      match.params.workflowId &&
+      workflow.graph
+    ) {
+      const timeout = setTimeout(getWorkflow, 10000)
+
+      return () => clearTimeout(timeout)
     }
   }, [
     fetchWorkflow,
@@ -457,7 +468,8 @@ const Jobs = ({
     match.params.pageTab,
     match.params.projectName,
     match.params.workflowId,
-    workflow.graph
+    resetWorkflow,
+    workflowsStore.activeWorkflow
   ])
 
   useEffect(() => {
@@ -470,6 +482,8 @@ const Jobs = ({
   }, [fetchCurrentJob, match.params.jobId, selectedJob])
 
   useEffect(() => {
+    const { data: workflow } = workflowsStore.activeWorkflow
+
     if (
       workflow.graph &&
       match.params.functionHash &&
@@ -522,7 +536,7 @@ const Jobs = ({
     match.params.functionName,
     match.params.projectName,
     selectedFunction,
-    workflow.graph
+    workflowsStore.activeWorkflow
   ])
 
   useEffect(() => {
@@ -591,7 +605,6 @@ const Jobs = ({
     return () => {
       setJobs([])
       setJobRuns([])
-      setWorkflow({})
     }
   }, [match.params.projectName, match.params.pageTab])
 
@@ -723,8 +736,8 @@ const Jobs = ({
       setEditableItem={setEditableItem}
       setWorkflowsViewMode={setWorkflowsViewMode}
       toggleConvertedYaml={toggleConvertedYaml}
-      workflow={workflow}
-      workflowJobsIds={workflowJobsIds}
+      workflow={workflowsStore.activeWorkflow.data}
+      workflowJobsIds={workflowsStore.activeWorkflow.workflowJobsIds}
       workflowsStore={workflowsStore}
       workflowsViewMode={workflowsViewMode}
     />
