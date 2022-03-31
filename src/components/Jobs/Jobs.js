@@ -436,7 +436,7 @@ const Jobs = ({
   }, [history, pageData.tabs, match])
 
   useEffect(() => {
-    const { data: workflow } = workflowsStore.activeWorkflow
+    const workflow = { ...workflowsStore.activeWorkflow.data }
     const getWorkflow = () => {
       fetchWorkflow(match.params.workflowId).catch(() =>
         history.replace(
@@ -482,7 +482,7 @@ const Jobs = ({
   }, [fetchCurrentJob, match.params.jobId, selectedJob])
 
   useEffect(() => {
-    const { data: workflow } = workflowsStore.activeWorkflow
+    const workflow = { ...workflowsStore.activeWorkflow.data }
 
     if (
       workflow.graph &&
