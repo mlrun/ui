@@ -246,7 +246,6 @@ export const generatePageData = (
     details: {
       menu: []
     },
-    handleRequestOnExpand,
     page,
     tabs
   }
@@ -259,6 +258,7 @@ export const generatePageData = (
     data.details.type = FEATURE_SETS_TAB
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
     data.filterMenuActionButton = null
+    data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
     data.hidePageActionMenu = true
@@ -270,6 +270,7 @@ export const generatePageData = (
       variant: SECONDARY_BUTTON,
       getCustomTemplate: getPopUpTemplate
     }
+    data.handleRequestOnExpand = handleRequestOnExpand
     data.mainRowItemsCount = 2
     data.noDataMessage =
       'No features yet. Go to "Feature Sets" tab to create your first feature set.'
@@ -282,10 +283,12 @@ export const generatePageData = (
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
+    data.handleRequestOnExpand = handleRequestOnExpand
     data.details.infoHeaders = featureVectorsInfoHeaders
     data.details.type = FEATURE_VECTORS_TAB
     data.filterMenuActionButton = null
   }
+
   return data
 }
 

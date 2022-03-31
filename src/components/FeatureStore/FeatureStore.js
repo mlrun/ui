@@ -438,26 +438,6 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    const handleRemoveRequestData =
-      match.params.pageTab === FEATURE_VECTORS_TAB
-        ? handleRemoveFeatureVector
-        : match.params.pageTab === FEATURES_TAB
-        ? handleRemoveFeature
-        : handleRemoveFeatureSet
-
-    setPageData(state => ({
-      ...state,
-      handleRemoveRequestData
-    }))
-  }, [
-    handleRemoveFeature,
-    handleRemoveFeatureSet,
-    handleRemoveFeatureVector,
-    handleRequestOnExpand,
-    match.params.pageTab
-  ])
-
-  useEffect(() => {
     navigateToDetailsPane(
       featureStore.featureSets,
       featureStore.features.allData,
@@ -628,6 +608,13 @@ const FeatureStore = ({
         cancelRequest={cancelRequest}
         content={content}
         handleCancel={() => setSelectedItem({})}
+        handleRemoveRequestData={
+          match.params.pageTab === FEATURE_VECTORS_TAB
+            ? handleRemoveFeatureVector
+            : match.params.pageTab === FEATURES_TAB
+            ? handleRemoveFeature
+            : handleRemoveFeatureSet
+        }
         loading={
           featureStore.loading ||
           featureStore.entities.loading ||

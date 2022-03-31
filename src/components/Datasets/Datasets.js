@@ -161,10 +161,13 @@ const Datasets = ({
     setPageData(state => {
       return {
         ...state,
-        ...generatePageData(!isEveryObjectValueEmpty(selectedItem))
+        ...generatePageData(
+          handleRequestOnExpand,
+          !isEveryObjectValueEmpty(selectedItem)
+        )
       }
     })
-  }, [selectedItem])
+  }, [handleRequestOnExpand, selectedItem])
 
   useEffect(() => {
     if (selectedItem.item) {
@@ -177,16 +180,6 @@ const Datasets = ({
       }))
     }
   }, [selectedItem, selectedItem.item])
-
-  useEffect(() => {
-    setPageData(state => {
-      return {
-        ...state,
-        handleRequestOnExpand,
-        handleRemoveDataSet
-      }
-    })
-  }, [handleRemoveDataSet, handleRequestOnExpand])
 
   useEffect(() => {
     removeDataSet({})
@@ -248,6 +241,7 @@ const Datasets = ({
         getIdentifier={getArtifactIdentifier}
         handleCancel={() => setSelectedItem({})}
         handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
+        handleRemoveRequestData={handleRemoveDataSet}
         loading={loading}
         match={match}
         pageData={pageData}

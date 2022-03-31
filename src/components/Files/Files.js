@@ -154,9 +154,12 @@ const Files = ({
   useEffect(() => {
     setPageData(state => ({
       ...state,
-      ...generatePageData(!isEveryObjectValueEmpty(selectedFile))
+      ...generatePageData(
+        handleRequestOnExpand,
+        !isEveryObjectValueEmpty(selectedFile)
+      )
     }))
-  }, [selectedFile])
+  }, [handleRequestOnExpand, selectedFile])
 
   useEffect(() => {
     removeFile({})
@@ -202,14 +205,6 @@ const Files = ({
   }, [match.params.pageTab, filtersStore.tag, filtersStore.groupBy, setFilters])
 
   useEffect(() => {
-    setPageData(state => ({
-      ...state,
-      handleRequestOnExpand,
-      handleRemoveRequestData: handleRemoveFile
-    }))
-  }, [handleRemoveFile, handleRequestOnExpand])
-
-  useEffect(() => {
     if (match.params.name) {
       const { name, tag, iter } = match.params
       const artifacts =
@@ -244,6 +239,7 @@ const Files = ({
       <Content
         content={files}
         handleCancel={() => setSelectedFile({})}
+        handleRemoveRequestData={handleRemoveFile}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
         match={match}
