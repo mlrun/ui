@@ -224,7 +224,7 @@ const generateTabs = () => {
 
 export const generatePageData = (
   pageTab,
-  isDemoMode,
+  isStagingMode,
   removeScheduledJob,
   handleSubmitJob,
   handleEditScheduleJob,
@@ -290,7 +290,7 @@ export const generatePageData = (
     filters: filtersByTab(pageTab, jobName) ?? [],
     page,
     tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
-    tabs: generateTabs(isDemoMode),
+    tabs: generateTabs(isStagingMode),
     withoutExpandButton: pageTab === MONITOR_WORKFLOWS_TAB && !workflowId
   }
 }
@@ -387,6 +387,7 @@ export const actionCreator = {
   removeNewJob: jobsActions.removeNewJob,
   removePods: detailsActions.removePods,
   removeScheduledJob: jobsActions.removeScheduledJob,
+  resetWorkflow: workflowsActions.resetWorkflow,
   setFilters: filtersActions.setFilters,
   setNotification: notificationActions.setNotification
 }

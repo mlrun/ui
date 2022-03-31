@@ -246,6 +246,13 @@ const validationRules = {
     ]
   },
   feature: {
+    sets: {
+      tag: [
+        generateRule.validCharacters('a-z A-Z 0-9 - _'),
+        generateRule.beginEndWith('a-z A-Z 0-9'),
+        generateRule.length({ max: 56 })
+      ]
+    },
     vector: {
       name: [
         generateRule.validCharacters('a-z A-Z 0-9 - _ .'),

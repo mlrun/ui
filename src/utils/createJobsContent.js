@@ -17,7 +17,7 @@ const createJobsContent = (
   content,
   isSelectedItem,
   params,
-  isDemoMode,
+  isStagingMode,
   groupedByWorkflow
 ) => {
   return content.map(contentItem => {
@@ -43,6 +43,7 @@ const createJobsContent = (
             class: 'jobs_big',
             identifier: getJobIdentifier(contentItem),
             identifierUnique: identifierUnique,
+            showStatus: true,
             getLink: tab =>
               generateLinkToDetailsPanel(
                 contentItem.project,
@@ -121,7 +122,7 @@ const createJobsContent = (
               ? contentItem.uid || contentItem?.id
               : contentItem.name,
             class: 'jobs_medium',
-            type: type === 'workflow' && !isDemoMode ? 'hidden' : '',
+            type: type === 'workflow' && !isStagingMode ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
             identifierUnique: identifierUnique,
             getLink: tab => {
@@ -149,7 +150,8 @@ const createJobsContent = (
                   }/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${
                     contentItem.name
                   }`
-            }
+            },
+            showStatus: true
           },
           type: {
             id: `type.${identifierUnique}`,
@@ -222,7 +224,8 @@ const createJobsContent = (
             identifierUnique: identifierUnique,
             getLink: () => {
               return getWorkflowDetailsLink(params, contentItem.id)
-            }
+            },
+            showStatus: true
           },
           uid: {
             id: `uid.${identifierUnique}`,

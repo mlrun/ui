@@ -15,7 +15,6 @@ import {
   handleFetchProjectError
 } from './project.utils'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
-import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const ProjectMonitor = ({
   featureStore,
@@ -48,7 +47,6 @@ const ProjectMonitor = ({
   const [confirmData, setConfirmData] = useState(null)
 
   const history = useHistory()
-  const isDemoMode = useDemoMode()
 
   const nuclioStreamsAreEnabled = useMemo(
     () => areNuclioStreamsEnabled(frontendSpec),
@@ -248,7 +246,6 @@ const ProjectMonitor = ({
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
       handleLaunchIDE={handleLaunchIDE}
       history={history}
-      isDemoMode={isDemoMode}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       match={match}

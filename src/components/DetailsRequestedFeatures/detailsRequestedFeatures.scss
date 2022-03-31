@@ -35,6 +35,7 @@
           padding: 8px 17px;
 
           &-wrapper {
+            margin-right: 5px;
             width: 100%;
           }
         }
@@ -53,13 +54,17 @@
         color: $topaz;
       }
 
-      &_delete {
+      &_actions {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 30px;
-        cursor: pointer;
+        flex: 0 1;
+        flex-direction: row;
+        justify-content: flex-end;
         opacity: 0;
+        min-width: 80px;
+
+        &-visible {
+          opacity: 1;
+        }
       }
     }
 
@@ -68,9 +73,9 @@
         max-width: 180px;
       }
 
-      &_delete {
-        flex: 0 0 30px;
-        min-width: auto;
+      &_actions {
+        flex: 0 1 auto;
+        min-width: 80px;
       }
     }
 
@@ -80,7 +85,7 @@
       border-bottom: $secondaryBorder;
 
       &:hover {
-        .cell_delete {
+        .cell_actions {
           opacity: 1;
           transition: all 0.3s;
         }
