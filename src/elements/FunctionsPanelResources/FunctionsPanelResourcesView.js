@@ -30,11 +30,11 @@ const FunctionsPanelResourcesView = ({
   handleSelectMemoryUnit,
   handleSelectVolumeMount,
   mode,
-  priorityClassName,
+  podsPriorityClassName,
+  selectPodsPriorityClassName,
   setCpuValue,
   setGpuValue,
   setMemoryValue,
-  setNewFunctionPriorityClassName,
   validation,
   validFunctionPriorityClassNames
 }) => {
@@ -46,9 +46,9 @@ const FunctionsPanelResourcesView = ({
           <Select
             className="pods-priority"
             density="dense"
-            onClick={setNewFunctionPriorityClassName}
+            onClick={selectPodsPriorityClassName}
             options={validFunctionPriorityClassNames}
-            selectedId={priorityClassName}
+            selectedId={podsPriorityClassName}
           />
         </FunctionsPanelSection>
       )}
@@ -171,11 +171,11 @@ FunctionsPanelResourcesView.propTypes = {
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   handleSelectVolumeMount: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
-  priorityClassName: PropTypes.string.isRequired,
+  podsPriorityClassName: PropTypes.string.isRequired,
+  selectPodsPriorityClassName: PropTypes.func.isRequired,
   setMemoryValue: PropTypes.func.isRequired,
   setCpuValue: PropTypes.func.isRequired,
   setGpuValue: PropTypes.func.isRequired,
-  setNewFunctionPriorityClassName: PropTypes.func.isRequired,
   validation: PropTypes.shape({}),
   validFunctionPriorityClassNames: PropTypes.arrayOf(PropTypes.object)
     .isRequired
