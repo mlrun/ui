@@ -419,11 +419,6 @@ const FeatureStore = ({
         ...generatePageData(
           match.params.pageTab,
           handleRequestOnExpand,
-          match.params.pageTab === FEATURE_VECTORS_TAB
-            ? handleRemoveFeatureVector
-            : match.params.pageTab === FEATURES_TAB
-            ? handleRemoveFeature
-            : handleRemoveFeatureSet,
           onDeleteFeatureVector,
           getPopUpTemplate,
           tableStore.isTablePanelOpen,
@@ -434,9 +429,6 @@ const FeatureStore = ({
     })
   }, [
     getPopUpTemplate,
-    handleRemoveFeature,
-    handleRemoveFeatureSet,
-    handleRemoveFeatureVector,
     handleRequestOnExpand,
     isStagingMode,
     match.params.pageTab,
@@ -482,29 +474,31 @@ const FeatureStore = ({
   useEffect(() => {
     checkTabIsValid(history, match, selectedItem)
 
-    setPageData(state => {
-      if (match.params.pageTab === FEATURE_SETS_TAB) {
-        return {
-          ...state,
-          details: {
-            ...state.details,
-            menu: [...generateFeatureSetsDetailsMenu(selectedItem)],
-            type: FEATURE_SETS_TAB
+    if (selectedItem.item) {
+      setPageData(state => {
+        if (match.params.pageTab === FEATURE_SETS_TAB) {
+          return {
+            ...state,
+            details: {
+              ...state.details,
+              menu: [...generateFeatureSetsDetailsMenu(selectedItem)],
+              type: FEATURE_SETS_TAB
+            }
+          }
+        } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
+          return {
+            ...state,
+            details: {
+              ...state.details,
+              menu: [...generateFeatureVectorsDetailsMenu(selectedItem)],
+              type: FEATURE_VECTORS_TAB
+            }
           }
         }
-      } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
-        return {
-          ...state,
-          details: {
-            ...state.details,
-            menu: [...generateFeatureVectorsDetailsMenu(selectedItem)],
-            type: FEATURE_VECTORS_TAB
-          }
-        }
-      }
 
-      return { ...state }
-    })
+        return { ...state }
+      })
+    }
   }, [
     history,
     selectedItem.item,
@@ -614,6 +608,13 @@ const FeatureStore = ({
         cancelRequest={cancelRequest}
         content={content}
         handleCancel={() => setSelectedItem({})}
+        handleRemoveRequestData={
+          match.params.pageTab === FEATURE_VECTORS_TAB
+            ? handleRemoveFeatureVector
+            : match.params.pageTab === FEATURES_TAB
+            ? handleRemoveFeature
+            : handleRemoveFeatureSet
+        }
         loading={
           featureStore.loading ||
           featureStore.entities.loading ||

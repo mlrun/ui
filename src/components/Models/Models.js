@@ -237,13 +237,11 @@ const Models = ({
         match.params.pageTab,
         handleDeployModel,
         handleRequestOnExpand,
-        handleRemoveModel,
         !isEveryObjectValueEmpty(selectedModel)
       )
     }))
   }, [
     handleDeployModel,
-    handleRemoveModel,
     handleRequestOnExpand,
     match.params.pageTab,
     selectedModel,
@@ -372,6 +370,9 @@ const Models = ({
         content={sortedContent}
         handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
         handleCancel={() => setSelectedModel({})}
+        handleRemoveRequestData={
+          match.params.pageTab === MODELS_TAB && handleRemoveModel
+        }
         loading={artifactsStore.loading}
         match={match}
         pageData={pageData}

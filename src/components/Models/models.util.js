@@ -329,7 +329,6 @@ export const generatePageData = (
   pageTab,
   handleDeployModel,
   handleRequestOnExpand,
-  handleRemoveRequestData,
   isSelectedModel
 ) => {
   const data = {
@@ -351,7 +350,6 @@ export const generatePageData = (
     data.details.infoHeaders = modelsInfoHeaders
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)
     data.handleRequestOnExpand = handleRequestOnExpand
-    data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     data.hidePageActionMenu = true
     data.details.menu = modelEndpointsDetailsMenu
