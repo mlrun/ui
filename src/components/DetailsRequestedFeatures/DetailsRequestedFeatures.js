@@ -7,6 +7,7 @@ import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import Input from '../../common/Input/Input'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import NoData from '../../common/NoData/NoData'
 
 import { headers } from './detailsRequestedFeatures.utils.js'
 import { handleFinishEdit } from '../Details/details.util.js'
@@ -219,7 +220,9 @@ const DetailsRequestedFeatures = ({
     })
   }
 
-  return (
+  return currentData.length === 0 ? (
+    <NoData />
+  ) : (
     <div className="item-requested-features">
       <div className="item-requested-features__table">
         <div className="item-requested-features__table-header">
