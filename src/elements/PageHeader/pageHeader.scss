@@ -2,15 +2,18 @@
 @import '../../scss/variables.scss';
 
 .page-header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+
   &__title-wrapper {
     display: flex;
-    align-items: center;
+    flex-flow: column nowrap;
+    align-items: flex-start;
   }
 
-  &__back-btn,
-  &__description-placeholder {
-    display: flex;
-    width: 30px;
+  &__back-btn {
+    margin-right: 5px;
   }
 
   &__title {

@@ -34,9 +34,10 @@ import {
   LABEL_BUTTON,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
-  SECONDARY_BUTTON
+  SECONDARY_BUTTON,
+  TAG_LATEST
 } from '../../constants'
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -63,7 +64,25 @@ const Functions = ({
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   let fetchFunctionLogsTimeout = useRef(null)
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
+
+  const refreshFunctions = useCallback(
+    filters => {
+      return fetchFunctions(match.params.projectName, filters).then(
+        functions => {
+          const newFunctions = parseFunctions(
+            functions,
+            match.params.projectName
+          )
+
+          setFunctions(newFunctions)
+
+          return newFunctions
+        }
+      )
+    },
+    [fetchFunctions, match.params.projectName]
+  )
 
   const handleFetchFunctionLogs = useCallback(
     (projectName, name, tag, offset) => {
@@ -73,10 +92,12 @@ const Functions = ({
         projectName,
         name,
         tag,
-        offset
+        offset,
+        history,
+        refreshFunctions
       )
     },
-    [fetchFunctionLogs]
+    [fetchFunctionLogs, history, refreshFunctions]
   )
 
   const handleRemoveLogs = useCallback(() => {
@@ -114,7 +135,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !getFunctionsEditableTypes(isDemoMode).includes(item?.type) ||
+          !getFunctionsEditableTypes(isStagingMode).includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
@@ -141,24 +162,6 @@ const Functions = ({
       variant: SECONDARY_BUTTON
     }
   }
-
-  const refreshFunctions = useCallback(
-    filters => {
-      return fetchFunctions(match.params.projectName, filters).then(
-        functions => {
-          const newFunctions = parseFunctions(
-            functions,
-            match.params.projectName
-          )
-
-          setFunctions(newFunctions)
-
-          return newFunctions
-        }
-      )
-    },
-    [fetchFunctions, match.params.projectName]
-  )
 
   useEffect(() => {
     refreshFunctions()
@@ -303,7 +306,7 @@ const Functions = ({
     let { name, tag } = functionsStore.newFunction.metadata
     const tab = ready === false ? 'build-log' : 'overview'
 
-    tag ||= 'latest'
+    tag ||= TAG_LATEST
 
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)

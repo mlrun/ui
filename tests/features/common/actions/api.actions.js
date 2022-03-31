@@ -1,6 +1,7 @@
 import { mainHttpClient } from '../../../../src/httpClient'
 import { expect } from 'chai'
 import { v4 as uuidv4 } from 'uuid'
+import { TAG_LATEST } from '../../../../src/constants'
 
 const REACT_APP_MLRUN_API_URL = 'http://localhost:3000'
 
@@ -176,7 +177,7 @@ const action = {
       metadata: {
         labels: {},
         name: mlFeatureSetName,
-        tag: 'latest'
+        tag: TAG_LATEST
       },
       spec: {},
       status: {}
@@ -201,7 +202,7 @@ const action = {
       metadata: {
         name: mlFeatureVectorName,
         project: mlProjectName,
-        tag: 'latest',
+        tag: TAG_LATEST,
         labels: {}
       },
       spec: {},

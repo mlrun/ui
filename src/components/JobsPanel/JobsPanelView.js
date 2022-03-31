@@ -126,7 +126,7 @@ const JobsPanelView = ({
                   message={jobsStore.error}
                 />
               )}
-              <div className="jobs-panel__buttons_wrapper">
+              <div className="job-panel__buttons-wrapper">
                 <Button
                   className="pop-up-dialog__btn_cancel"
                   disabled={!checkValidation}

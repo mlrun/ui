@@ -29,7 +29,7 @@ export const generateTableContent = (
   page,
   isTablePanelOpen,
   params,
-  isDemoMode,
+  isStagingMode,
   isSelectedItem
 ) => {
   if (
@@ -42,7 +42,7 @@ export const generateTableContent = (
             group,
             isSelectedItem,
             params,
-            isDemoMode,
+            isStagingMode,
             groupFilter === GROUP_BY_WORKFLOW
           )
         : page === FUNCTIONS_PAGE ||
@@ -70,7 +70,7 @@ export const generateTableContent = (
       : page === CONSUMER_GROUPS_PAGE
       ? createConsumerGroupsContent(content, params)
       : page === JOBS_PAGE
-      ? createJobsContent(content, isSelectedItem, params, isDemoMode, false)
+      ? createJobsContent(content, isSelectedItem, params, isStagingMode, false)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
         page === DATASETS_PAGE ||

@@ -1,4 +1,4 @@
-export const generateProjectScreens = (match, isDemoMode) => [
+export const generateProjectScreens = match => [
   {
     label: 'Project Monitoring',
     id: 'monitor'

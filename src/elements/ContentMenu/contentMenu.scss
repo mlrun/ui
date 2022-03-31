@@ -3,12 +3,13 @@
 @import '../../scss/borders';
 
 .content-menu {
+  display: inline-flex;
+  align-items: flex-end;
   position: absolute;
-  top: -36px;
+  top: -33px;
   left: 0;
   width: 100%;
   min-width: 510px;
-  border-bottom: $dividerBorder;
 
   &__list {
     display: flex;
@@ -20,9 +21,10 @@
   }
 
   &__item {
+    margin: 0 24px 0 0;
     color: $topaz;
-    font-weight: bold;
-    font-size: 15px;
+    font-weight: normal;
+    font-size: 20px;
     line-height: 1;
     text-align: center;
     text-transform: capitalize;
@@ -31,6 +33,7 @@
       display: block;
       width: 100%;
       border-bottom: $activeJobTabBorder;
+      border-width: 2px;
       transform: scale(0);
       opacity: 0;
       transition: all 0.3s ease-in-out;
@@ -46,16 +49,15 @@
 
     a {
       display: block;
-      padding: 8px 24px;
+      padding: 5px;
       position: relative;
 
       &.content-menu__item-icon {
-        padding-left: 40px;
+        padding-left: 30px;
         & > * {
           position: absolute;
-          left: 15px;
-          top: 4px;
-          bottom: 0;
+          left: 5px;
+          bottom: 2px;
         }
       }
 
@@ -66,7 +68,8 @@
     }
 
     &_active {
-      color: $malibu;
+      color: $primary;
+      font-weight: bold;
 
       &::after {
         transform: scale(1);
