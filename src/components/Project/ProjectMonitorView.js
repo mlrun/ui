@@ -19,7 +19,6 @@ import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import { DATASETS, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
-import { useMode } from '../../hooks/mode.hook'
 
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
@@ -51,7 +50,6 @@ const ProjectMonitorView = ({
   showFunctionsPanel,
   v3ioStreams
 }) => {
-  const { isDemoMode } = useMode()
   const registerArtifactLink = `/projects/${match.params.projectName}/${
     artifactKind === 'model'
       ? 'models'
@@ -156,7 +154,7 @@ const ProjectMonitorView = ({
                 projectSummary={projectSummary}
                 title="Artifacts"
               />
-              {isDemoMode && nuclioStreamsAreEnabled && (
+              {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
                   counterValue={Object.keys(v3ioStreams.data).length ?? 0}
                   link={`/projects/${match.params.projectName}/monitor/consumer-groups`}
