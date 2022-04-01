@@ -107,15 +107,13 @@ const initialState = {
         {
           kind: 'parquet',
           name: 'parquet',
-          path:
-            'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag'
+          path: ''
         },
         {
           name: 'nosql',
           kind: 'nosql',
           online: true,
-          path:
-            'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
+          path: ''
         }
       ],
       timestamp_key: '',
