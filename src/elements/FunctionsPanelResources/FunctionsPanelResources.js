@@ -93,19 +93,18 @@ const FunctionsPanelResources = ({
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
-      setNewFunctionDisableAutoMount(false)
-    }
-  }, [mode, setNewFunctionDisableAutoMount])
-
-  useEffect(() => {
-    if (mode === PANEL_CREATE_MODE) {
       setNewFunctionPriorityClassName(
         frontendSpec.default_function_priority_class_name ?? ''
       )
+      setPodsPriorityClassName(
+        frontendSpec.default_function_priority_class_name ?? ''
+      )
+      setNewFunctionDisableAutoMount(false)
     }
   }, [
     frontendSpec.default_function_priority_class_name,
     mode,
+    setNewFunctionDisableAutoMount,
     setNewFunctionPriorityClassName
   ])
 
