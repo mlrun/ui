@@ -41,14 +41,15 @@ body {
 
 main {
   position: relative;
-  z-index: 1;
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
   width: 100%;
+  margin: 0;
   padding: 0;
-  overflow: auto;
-  transition: padding 0.3s ease-in-out;
+  overflow: hidden;
+  transition: margin-left 0.3s ease-in-out;
+  z-index: 1;
 
   &.has-header {
     height: calc(100vh - #{$headerHeight});
@@ -56,7 +57,7 @@ main {
   }
 
   &.pinned {
-    padding-left: $navbarWidth;
+    margin-left: $navbarWidth;
   }
 
   &.unpinned {

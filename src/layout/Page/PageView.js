@@ -38,7 +38,7 @@ export default function PageView({ children }) {
         />
       )}
       <main id="main" className={pinnedClasses}>
-        {children}
+        <div className="main-wrapper">{children}</div>
       </main>
 
       <Notification />

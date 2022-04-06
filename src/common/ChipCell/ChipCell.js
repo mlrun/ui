@@ -103,7 +103,7 @@ const ChipCell = ({
 
   useEffect(() => {
     handleResize()
-  }, [handleResize])
+  }, [handleResize, showChips])
 
   useEffect(() => {
     if (!isEditMode) {
