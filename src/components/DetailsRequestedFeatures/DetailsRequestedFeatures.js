@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useMemo, useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
 import { cloneDeep, isNil } from 'lodash'
 
@@ -8,6 +8,8 @@ import Input from '../../common/Input/Input'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import NoData from '../../common/NoData/NoData'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 import { headers } from './detailsRequestedFeatures.utils.js'
 import { handleFinishEdit } from '../Details/details.util.js'
@@ -24,6 +26,7 @@ import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as EditIcon } from '../../images/edit.svg'
+import { ReactComponent as LabelColumn } from '../../images/ic_target-with-dart.svg'
 
 import './detailsRequestedFeatures.scss'
 
@@ -47,6 +50,11 @@ const DetailsRequestedFeatures = ({
   })
   const [editableItemIndex, setEditableItemIndex] = useState(null)
   const [labelFetureIsEditable, setLabelFeatureIsEditable] = useState(false)
+
+  const labelFeature = useMemo(
+    () => parseFeatureTemplate(selectedItem.label_feature).feature,
+    [selectedItem]
+  )
 
   useEffect(() => {
     return () => {
@@ -250,6 +258,16 @@ const DetailsRequestedFeatures = ({
                 className="item-requested-features__table-row"
                 key={featureTemplate}
               >
+                <div className="item-requested-features__table-cel cell_icon">
+                  {labelFeature === feature && (
+                    <Tooltip
+                      className="icon-wrapper"
+                      template={<TextTooltipTemplate text="Label column" />}
+                    >
+                      <LabelColumn />
+                    </Tooltip>
+                  )}
+                </div>
                 <div className="item-requested-features__table-cell cell_project-name">
                   {project || match.params.projectName}
                 </div>
