@@ -402,10 +402,7 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    if (
-      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
-      filtersStore.tag === TAG_FILTER_LATEST
-    ) {
+    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })

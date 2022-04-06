@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -26,8 +27,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 
 import { useOpenPanel } from '../../hooks/openPanel.hook'
@@ -201,13 +201,19 @@ const Datasets = ({
   useEffect(() => {
     if (
       filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
-      filtersStore.tag === TAG_FILTER_LATEST
+      isEmpty(filtersStore.iter)
     ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [filtersStore.groupBy, filtersStore.tag, match.params.name, setFilters])
+  }, [
+    filtersStore.groupBy,
+    filtersStore.iter,
+    filtersStore.tag,
+    match.params.name,
+    setFilters
+  ])
 
   useEffect(() => {
     if (
