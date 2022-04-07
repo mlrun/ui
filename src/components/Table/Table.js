@@ -20,11 +20,11 @@ import {
 import tableActions from '../../actions/table'
 
 import './table.scss'
+import { useParams } from 'react-router-dom'
 
 const Table = ({
   actionsMenu,
   applyDetailsChanges,
-  cancelRequest,
   content,
   filtersStore,
   getCloseDetailsLink,
@@ -32,7 +32,6 @@ const Table = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
-  match,
   pageData,
   retryRequest,
   selectedItem,
@@ -48,6 +47,7 @@ const Table = ({
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
   const { isStagingMode } = useMode()
+  const params = useParams()
 
   const workflows = useSelector(state => {
     return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
@@ -89,7 +89,7 @@ const Table = ({
       filtersStore.groupBy,
       pageData.page,
       tableStore.isTablePanelOpen,
-      match.params,
+      params,
       isStagingMode,
       !isEveryObjectValueEmpty(selectedItem)
     )
@@ -100,7 +100,7 @@ const Table = ({
         groupLatestItem: generateGroupLatestItem(
           pageData.page,
           generatedTableContent,
-          match.params.pageTab
+          params.pageTab
         ),
         groupWorkflowItems: [],
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
@@ -113,7 +113,7 @@ const Table = ({
         groupWorkflowItems: createJobsContent(
           workflows,
           !isEveryObjectValueEmpty(selectedItem),
-          match.params,
+          params,
           isStagingMode,
           true
         )
@@ -131,7 +131,7 @@ const Table = ({
     filtersStore.groupBy,
     groupedContent,
     isStagingMode,
-    match.params,
+    params,
     pageData.mainRowItemsCount,
     pageData.page,
     selectedItem,
@@ -143,7 +143,6 @@ const Table = ({
     <TableView
       actionsMenu={actionsMenu}
       applyDetailsChanges={applyDetailsChanges}
-      cancelRequest={cancelRequest}
       content={content}
       getCloseDetailsLink={getCloseDetailsLink}
       groupFilter={filtersStore.groupBy}
@@ -158,8 +157,8 @@ const Table = ({
       handleSelectItem={handleSelectItem}
       isTablePanelOpen={tableStore.isTablePanelOpen}
       mainRowItemsCount={tableContent.mainRowItemsCount}
-      match={match}
       pageData={pageData}
+      params={params}
       retryRequest={retryRequest}
       selectedItem={selectedItem}
       tableContent={tableContent.content}
@@ -192,7 +191,6 @@ Table.propTypes = {
   handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({})

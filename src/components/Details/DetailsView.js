@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
@@ -52,8 +52,8 @@ const DetailsView = React.forwardRef(
       handleShowWarning,
       isDetailsScreen,
       leavePage,
-      match,
       pageData,
+      params,
       selectedItem,
       setIteration,
       setRefreshWasHandled,
@@ -61,34 +61,32 @@ const DetailsView = React.forwardRef(
     },
     ref
   ) => {
+    const location = useLocation()
     const detailsPanelClassNames = classnames(
       'table__item',
       detailsStore.showWarning && 'pop-up-dialog-opened',
       isDetailsScreen && 'table__item_big'
     )
-    const { value: stateValue, label: stateLabel, className: stateClassName } =
-      selectedItem.state || {}
+    const {
+      value: stateValue,
+      label: stateLabel,
+      className: stateClassName
+    } = selectedItem.state || {}
 
     return (
       <div className={detailsPanelClassNames} ref={ref}>
         {detailsStore.loading && <Loader />}
-        {detailsStore.error && (
-          <ErrorMessage message={detailsStore.error.message} />
-        )}
+        {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
         <div className="item-header">
           <div className="item-header__data">
             <h3 className="item-header__title">
               {isDetailsScreen && (
                 <Link
                   className="item-header__back-btn"
-                  to={location => {
-                    const urlArray = location.pathname.split('/')
-
-                    return (
-                      getCloseDetailsLink(selectedItem.name) ??
-                      urlArray.slice(0, -2).join('/')
-                    )
-                  }}
+                  to={
+                    getCloseDetailsLink(location, selectedItem.name) ??
+                    location.pathname.split('/').slice(0, -2).join('/')
+                  }
                   onClick={() => {
                     if (detailsStore.changes.counter > 0) {
                       handleShowWarning(true)
@@ -113,9 +111,10 @@ const DetailsView = React.forwardRef(
                   />
                 }
               >
-                {selectedItem.name ||
-                  selectedItem.db_key ||
-                  selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
+                {
+                  selectedItem.name ||
+                    selectedItem.db_key ||
+                    selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
                 }
               </Tooltip>
             </h3>
@@ -147,9 +146,7 @@ const DetailsView = React.forwardRef(
                 </span>
               )}
               {detailsStore.pods.error && (
-                <span className="item-header__pods-error left-margin">
-                  Failed to load pods
-                </span>
+                <span className="item-header__pods-error left-margin">Failed to load pods</span>
               )}
             </span>
           </div>
@@ -182,7 +179,7 @@ const DetailsView = React.forwardRef(
                 </Tooltip>
               </>
             )}
-            {match.params.tab === DETAILS_ARTIFACTS_TAB && (
+            {params.tab === DETAILS_ARTIFACTS_TAB && (
               <Select
                 density="dense"
                 key="Iteration"
@@ -195,44 +192,30 @@ const DetailsView = React.forwardRef(
               />
             )}
             {![JOBS_PAGE, FUNCTIONS_PAGE].includes(pageData.page) &&
-              ![
-                FEATURE_SETS_TAB,
-                FEATURE_VECTORS_TAB,
-                MODEL_ENDPOINTS_TAB
-              ].includes(match.params.pageTab) && (
+              ![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, MODEL_ENDPOINTS_TAB].includes(
+                params.pageTab
+              ) && (
                 <Tooltip template={<TextTooltipTemplate text="Download" />}>
                   <Download
-                    path={`${
-                      selectedItem.target_path
-                    }${selectedItem.model_file || ''}`}
+                    path={`${selectedItem.target_path}${selectedItem.model_file || ''}`}
                     user={selectedItem.producer?.owner}
                   />
                 </Tooltip>
               )}
             {isDetailsScreen && (
-              <RoundedIcon
-                id="refresh"
-                onClick={handleRefresh}
-                tooltipText="Refresh"
-              >
+              <RoundedIcon id="refresh" onClick={handleRefresh} tooltipText="Refresh">
                 <Refresh />
               </RoundedIcon>
             )}
-            <ActionsMenu
-              dataItem={selectedItem}
-              menu={actionsMenu}
-              time={500}
-            />
+            <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
             <Link
               className="details-close-btn"
               data-testid="details-close-btn"
               to={
                 getCloseDetailsLink
                   ? getCloseDetailsLink(selectedItem.name)
-                  : `/projects/${
-                      match.params.projectName
-                    }/${pageData.page.toLowerCase()}${
-                      match.params.pageTab ? `/${match.params.pageTab}` : ''
+                  : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
+                      params.pageTab ? `/${params.pageTab}` : ''
                     }`
               }
               onClick={() => {
@@ -249,12 +232,7 @@ const DetailsView = React.forwardRef(
             </Link>
           </div>
         </div>
-
-        <DetailsMenu
-          detailsMenu={detailsMenu}
-          match={match}
-          onClick={detailsMenuClick}
-        />
+        <DetailsMenu detailsMenu={detailsMenu} onClick={detailsMenuClick} params={params} />
         {tabsContent}
         {detailsStore.showWarning && (
           <ConfirmDialog
@@ -263,9 +241,7 @@ const DetailsView = React.forwardRef(
                 handleShowWarning(false)
                 setRefreshWasHandled(false)
               },
-              label: detailsStore.refreshWasHandled
-                ? "Don't refresh"
-                : "Don't Leave",
+              label: detailsStore.refreshWasHandled ? "Don't refresh" : "Don't Leave",
               variant: TERTIARY_BUTTON
             }}
             closePopUp={() => {
@@ -279,9 +255,7 @@ const DetailsView = React.forwardRef(
             }}
             header="You have unsaved changes."
             message={`${
-              detailsStore.refreshWasHandled
-                ? 'Refreshing the list'
-                : 'Leaving this page'
+              detailsStore.refreshWasHandled ? 'Refreshing the list' : 'Leaving this page'
             } will discard your changes.`}
           />
         )}
@@ -310,8 +284,8 @@ DetailsView.propTypes = {
   handleShowWarning: PropTypes.func.isRequired,
   isDetailsScreen: PropTypes.bool.isRequired,
   leavePage: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
   setRefreshWasHandled: PropTypes.func.isRequired,

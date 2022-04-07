@@ -23,7 +23,6 @@ export const JobsPanelAdvancedTable = ({
   handleEditItems,
   handleResetForm,
   headers,
-  match,
   newName,
   section,
   selectedId,
@@ -43,7 +42,6 @@ export const JobsPanelAdvancedTable = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       headers={headers}
-      match={match}
       section={section}
       selectedItem={selectedItem}
       setSelectedItem={setSelectedItem}
@@ -140,7 +138,6 @@ JobsPanelAdvancedTable.propTypes = {
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  match: PropTypes.shape({}).isRequired,
   newName: PropTypes.string,
   section: PropTypes.string.isRequired,
   selectedId: PropTypes.string,

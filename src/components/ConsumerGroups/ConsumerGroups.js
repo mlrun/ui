@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
@@ -18,10 +18,11 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
-const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
+const ConsumerGroups = ({ nuclioStore, setFilters }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [filteredV3ioStreams, setFilteredV3ioStreams] = useState([])
   const [filterByName, setFilterByName] = useState('')
+  const params = useParams()
 
   useEffect(() => {
     setFilters({ groupBy: GROUP_BY_NONE })
@@ -44,6 +45,7 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
       )
     )
   }, [nuclioStore.v3ioStreams.parsedData, filterByName])
+  console.log(filteredV3ioStreams)
 
   const pageData = useMemo(() => generatePageData(), [])
 
@@ -52,7 +54,7 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
       <PageHeader
         title="Consumer groups (v3io stream)"
         description="This report displays the project's consumer groups for Iguazio v3io streams"
-        backLink={`/projects/${match.params.projectName}/monitor`}
+        backLink={`/projects/${params.projectName}/monitor`}
       />
       <div className="page-actions">
         <Search
@@ -65,7 +67,6 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
       <Table
         actionsMenu={actionsMenu}
         content={filteredV3ioStreams}
-        match={match}
         pageData={pageData}
       />
       {convertedYaml.length > 0 && (
@@ -81,10 +82,6 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
       {nuclioStore.v3ioStreams.loading && <Loader />}
     </>
   )
-}
-
-ConsumerGroups.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

@@ -1,6 +1,6 @@
-export const getCloseDetailsLink = (match, paramName) => {
-  return match.url
+export const getCloseDetailsLink = (location, paramName) => {
+  return location.pathname
     .split('/')
-    .splice(0, match.path.split('/').indexOf(`:${paramName}`) + 1)
+    .splice(0, location.pathname.split('/').indexOf(paramName) + 1)
     .join('/')
 }

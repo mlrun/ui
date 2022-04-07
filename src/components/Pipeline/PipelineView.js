@@ -14,7 +14,7 @@ import { ReactComponent as CloseIcon } from '../../images/close.svg'
 
 const PipelineView = ({
   elements,
-  match,
+  params,
   pipeline,
   selectedStep,
   selectedStepData,
@@ -29,7 +29,7 @@ const PipelineView = ({
       <div className="pipeline-header">
         <div className="link-back">
           <Link
-            to={`/projects/${match.params.projectName}/models/${match.params.pageTab}`}
+            to={`/projects/${params.projectName}/models/${params.pageTab}`}
             className="link-back__icon"
           >
             <Tooltip template={<TextTooltipTemplate text="Back" />}>
@@ -59,10 +59,7 @@ const PipelineView = ({
           <div className="graph-pane">
             <div className="graph-pane__title">
               <span>{selectedStep.id}</span>
-              <RoundedIcon
-                onClick={() => setSelectedStep({})}
-                tooltipText="Close"
-              >
+              <RoundedIcon onClick={() => setSelectedStep({})} tooltipText="Close">
                 <CloseIcon />
               </RoundedIcon>
             </div>
@@ -74,9 +71,7 @@ const PipelineView = ({
                   <>
                     <div className="graph-pane__row-label">{rowData.label}</div>
                     <div className="graph-pane__row-value">
-                      <Tooltip
-                        template={<TextTooltipTemplate text={rowData.value} />}
-                      >
+                      <Tooltip template={<TextTooltipTemplate text={rowData.value} />}>
                         {rowData.value}
                       </Tooltip>
                     </div>
@@ -97,7 +92,7 @@ PipelineView.defaultProps = {
 
 PipelineView.propTypes = {
   elements: PropTypes.array.isRequired,
-  match: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
   pipeline: PropTypes.object,
   selectedStep: PropTypes.object.isRequired,
   selectedStepData: PropTypes.array.isRequired,

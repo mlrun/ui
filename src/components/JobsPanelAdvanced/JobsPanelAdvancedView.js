@@ -16,7 +16,6 @@ const JobsPanelAdvancedView = ({
   handleEditItems,
   handleResetForm,
   isStagingMode,
-  match,
   panelDispatch,
   panelState,
   setValidation,
@@ -45,7 +44,6 @@ const JobsPanelAdvancedView = ({
             handleDeleteItems={handleDeleteItems}
             handleResetForm={handleResetForm}
             headers={panelData['secrets']['table-headers']}
-            match={match}
             panelState={panelState}
             section="advanced secrets"
             selectedId={advancedState.newSecret.kind}
@@ -91,7 +89,6 @@ JobsPanelAdvancedView.propTypes = {
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
   isStagingMode: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   setValidation: PropTypes.func.isRequired,

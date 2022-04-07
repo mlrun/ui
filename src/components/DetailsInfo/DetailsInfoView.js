@@ -33,8 +33,8 @@ const DetailsInfoView = React.forwardRef(
       detailsInfoState,
       handleFinishEdit,
       handleInfoItemClick,
-      match,
       pageData,
+      params,
       selectedItem,
       setChangesData,
       sources
@@ -49,9 +49,7 @@ const DetailsInfoView = React.forwardRef(
             pageData.page === FILES_PAGE ||
             pageData.page === MODELS_PAGE ||
             pageData.page === FEATURE_STORE_PAGE) &&
-            match.params.pageTab !== FEATURE_SETS_TAB && (
-              <h3 className="item-info__header">General</h3>
-            )}
+            params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
           <ul className="item-info__details">
             {pageData.details.infoHeaders?.map(header => {
               let chipsData = {
@@ -73,9 +71,7 @@ const DetailsInfoView = React.forwardRef(
                 if (content[header.id]?.value === selectedItem.parameters) {
                   chipsData.chips = selectedItem.parameters
                   chipsData.chipOptions = getChipOptions('parameters')
-                } else if (
-                  content[header.id]?.value === selectedItem.resultsChips
-                ) {
+                } else if (content[header.id]?.value === selectedItem.resultsChips) {
                   chipsData.chips = selectedItem.resultsChips
                   chipsData.chipOptions = getChipOptions('results')
                 } else if (content[header.id]?.value === selectedItem.labels) {
@@ -84,9 +80,7 @@ const DetailsInfoView = React.forwardRef(
                 }
 
                 func =
-                  content[header.id]?.value === selectedItem.function
-                    ? selectedItem.function
-                    : ''
+                  content[header.id]?.value === selectedItem.function ? selectedItem.function : ''
                 state =
                   content[header.id]?.value === selectedItem.state?.value
                     ? selectedItem.state?.value
@@ -131,20 +125,12 @@ const DetailsInfoView = React.forwardRef(
               return (
                 <li className={detailsItemClassNames} key={header.id}>
                   {header.id === 'sources' ? (
-                    <ArtifactInfoSources
-                      header={header.label}
-                      sources={sources}
-                    />
+                    <ArtifactInfoSources header={header.label} sources={sources} />
                   ) : (
                     <>
                       <div className="details-item__header">
                         {header.label}
-                        {header.tip && (
-                          <Tip
-                            className="details-item__tip"
-                            text={header.tip}
-                          />
-                        )}
+                        {header.tip && <Tip className="details-item__tip" text={header.tip} />}
                       </div>
                       <DetailsInfoItem
                         changesData={changes.data}
@@ -157,13 +143,11 @@ const DetailsInfoView = React.forwardRef(
                         func={func}
                         handleFinishEdit={handleFinishEdit}
                         info={info}
-                        isFieldInEditMode={
-                          detailsInfoState.editMode.field === header.id
-                        }
+                        isFieldInEditMode={detailsInfoState.editMode.field === header.id}
                         item={content[header.id]}
                         link={content[header.id]?.link}
-                        match={match}
                         onClick={handleInfoItemClick}
+                        params={params}
                         ref={ref}
                         setChangesData={setChangesData}
                         state={state}
@@ -198,9 +182,7 @@ const DetailsInfoView = React.forwardRef(
 
                     return (
                       <li className="details-item" key={key}>
-                        <div className="details-item__header">
-                          {capitalize(key)}
-                        </div>
+                        <div className="details-item__header">{capitalize(key)}</div>
                         <DetailsInfoItem link={url} info={value} />
                       </li>
                     )
@@ -225,8 +207,8 @@ DetailsInfoView.propTypes = {
   detailsInfoState: PropTypes.shape({}).isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleInfoItemClick: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   sources: PropTypes.shape({})
 }

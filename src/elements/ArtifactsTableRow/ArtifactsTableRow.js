@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { useParams } from 'react-router-dom'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
@@ -21,7 +22,6 @@ const ArtifactsTableRow = ({
   handleExpandRow,
   handleSelectItem,
   mainRowItemsCount,
-  match,
   rowItem,
   pageData,
   selectedItem,
@@ -29,6 +29,7 @@ const ArtifactsTableRow = ({
 }) => {
   const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
+  const params = useParams()
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
@@ -81,7 +82,7 @@ const ArtifactsTableRow = ({
                   link={
                     data.rowExpanded?.getLink
                       ? data.rowExpanded.getLink(
-                          match.params.tab ?? DETAILS_OVERVIEW_TAB
+                          params.tab ?? DETAILS_OVERVIEW_TAB
                         )
                       : ''
                   }
@@ -124,9 +125,8 @@ const ArtifactsTableRow = ({
                               }
                               item={subRowCurrentItem}
                               link={value.getLink?.(
-                                match.params.tab ?? DETAILS_OVERVIEW_TAB
+                                params.tab ?? DETAILS_OVERVIEW_TAB
                               )}
-                              match={match}
                               key={value.id}
                               selectItem={handleSelectItem}
                               selectedItem={selectedItem}
@@ -160,16 +160,15 @@ const ArtifactsTableRow = ({
                 <TableCell
                   expandLink={
                     Array.isArray(tableContent) &&
-                    match.params.pageTab !== MODEL_ENDPOINTS_TAB
+                    params.pageTab !== MODEL_ENDPOINTS_TAB
                   }
                   handleExpandRow={handleExpandRow}
                   data={value}
                   item={currentItem}
                   key={value.id}
                   link={value.getLink?.(
-                    match.params.tab ?? DETAILS_OVERVIEW_TAB
+                    params.tab ?? DETAILS_OVERVIEW_TAB
                   )}
-                  match={match}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
                 />
@@ -200,7 +199,6 @@ ArtifactsTableRow.propTypes = {
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   mainRowItemsCount: PropTypes.number,
-  match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.shape({}))

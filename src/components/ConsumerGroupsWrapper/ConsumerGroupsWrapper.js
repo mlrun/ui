@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
+import { useNavigate, useParams, Outlet } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
-import PropTypes from 'prop-types'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import ConsumerGroup from '../ConsumerGroup/ConsumerGroup'
-import ConsumerGroups from '../ConsumerGroups/ConsumerGroups'
 import Loader from '../../common/Loader/Loader'
 
 import filtersActions from '../../actions/filters'
@@ -19,15 +16,14 @@ import { areNuclioStreamsEnabled } from '../../utils/helper'
 const ConsumerGroupsWrapper = ({
   fetchNuclioV3ioStreams,
   frontendSpec,
-  match,
   projectsNames,
   resetV3ioStreamsError,
   setFilters,
   setNotification,
   v3ioStreams
 }) => {
-  let { path } = useRouteMatch()
-  const history = useHistory()
+  const navigate = useNavigate()
+  const params = useParams()
 
   const nuclioStreamsAreEnabled = useMemo(
     () => areNuclioStreamsEnabled(frontendSpec),
@@ -35,16 +31,16 @@ const ConsumerGroupsWrapper = ({
   )
 
   useEffect(() => {
-    isProjectValid(history, projectsNames.data, match.params.projectName)
-  }, [history, match.params.projectName, projectsNames.data])
+    isProjectValid(navigate, projectsNames.data,params.projectName)
+  }, [navigate, params.projectName, projectsNames.data])
 
   useEffect(() => {
     setFilters({ groupBy: GROUP_BY_NONE })
   }, [setFilters])
 
   const refreshConsumerGroups = useCallback(() => {
-    fetchNuclioV3ioStreams(match.params.projectName)
-  }, [fetchNuclioV3ioStreams, match.params.projectName])
+    fetchNuclioV3ioStreams(params.projectName)
+  }, [fetchNuclioV3ioStreams, params.projectName])
 
   useEffect(() => {
     if (v3ioStreams.error) {
@@ -66,13 +62,13 @@ const ConsumerGroupsWrapper = ({
 
   useEffect(() => {
     if (!isEmpty(frontendSpec) && !nuclioStreamsAreEnabled) {
-      history.push(`/projects/${match.params.projectName}/monitor`)
+      navigate(`/projects/${params.projectName}/monitor`)
     }
   }, [
     frontendSpec,
-    history,
+    navigate,
     nuclioStreamsAreEnabled,
-    match.params.projectName,
+    params.projectName,
     refreshConsumerGroups
   ])
 
@@ -89,28 +85,13 @@ const ConsumerGroupsWrapper = ({
   return (
     <div className="page">
       <div className="page-breadcrumbs">
-        <Breadcrumbs match={match} />
+        <Breadcrumbs />
       </div>
       <div className="page-content">
-        <Switch>
-          <Route
-            path={path}
-            exact
-            render={routeProps => <ConsumerGroups {...routeProps} />}
-          />
-          <Route
-            path={`${path}/:consumerGroupName`}
-            exact
-            render={routeProps => <ConsumerGroup {...routeProps} />}
-          />
-        </Switch>
+        <Outlet/>
       </div>
     </div>
   )
-}
-
-ConsumerGroupsWrapper.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

@@ -16,7 +16,6 @@ const JobsPanelTable = ({
   handleDeleteItems,
   handleEditItems,
   headers,
-  match,
   section,
   sectionData,
   sectionDispatch,
@@ -78,7 +77,6 @@ const JobsPanelTable = ({
       handleDelete={handleDelete}
       handleEdit={handleEdit}
       headers={headers}
-      match={match}
       section={section}
       sectionData={sectionData}
       sectionDispatch={sectionDispatch}
@@ -115,7 +113,6 @@ JobsPanelTable.propTypes = {
   handleEditItems: PropTypes.func.isRequired,
   handleSetSelectedVolume: PropTypes.func,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
-  match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
   sectionData: PropTypes.shape({}),
   sectionDispatch: PropTypes.func,

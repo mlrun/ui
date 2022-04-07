@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import axios from 'axios'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -10,14 +10,8 @@ import AddToFeatureVectorPageHeader from '../../elements/AddToFeatureVectorPageH
 import featureStoreActions from '../../actions/featureStore'
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
-import {
-  generatePageData,
-  pageDataInitialState
-} from './addToFeatureVectorPage.util'
-import {
-  getFeatureIdentifier,
-  getIdentifierMethod
-} from '../../utils/getUniqueIdentifier'
+import { generatePageData, pageDataInitialState } from './addToFeatureVectorPage.util'
+import { getFeatureIdentifier, getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 import {
   FEATURES_TAB,
   GROUP_BY_NAME,
@@ -37,8 +31,6 @@ const AddToFeatureVectorPage = ({
   filtersStore,
   fetchFeatureSetsTags,
   getFilterTagOptions,
-  history,
-  match,
   removeDataSet,
   removeFeature,
   removeFeatures,
@@ -50,10 +42,11 @@ const AddToFeatureVectorPage = ({
   const [content, setContent] = useState([])
   const [pageData, setPageData] = useState(pageDataInitialState)
   const addToFeatureVectorPageRef = useRef(null)
+  const params = useParams()
+  const navigate = useNavigate()
 
   const cancelRequest = message => {
-    addToFeatureVectorPageRef.current?.cancel &&
-      addToFeatureVectorPageRef.current.cancel(message)
+    addToFeatureVectorPageRef.current?.cancel && addToFeatureVectorPageRef.current.cancel(message)
   }
 
   const fetchData = useCallback(
@@ -91,11 +84,7 @@ const AddToFeatureVectorPage = ({
         selectedRowData: newPageDataSelectedRowData
       }))
     },
-    [
-      featureStore.features.selectedRowData.content,
-      pageData.selectedRowData,
-      removeFeature
-    ]
+    [featureStore.features.selectedRowData.content, pageData.selectedRowData, removeFeature]
   )
 
   const handleRequestOnExpand = useCallback(
@@ -112,11 +101,7 @@ const AddToFeatureVectorPage = ({
         }
       }))
 
-      fetchFeature(
-        feature.metadata.project,
-        feature.name,
-        feature.metadata.name
-      )
+      fetchFeature(feature.metadata.project, feature.name, feature.metadata.name)
         .then(result => {
           if (result?.length > 0) {
             setPageData(state => ({
@@ -150,10 +135,8 @@ const AddToFeatureVectorPage = ({
   )
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
-    history.push(
-      `/projects/${match.params.projectName}/feature-store/feature-vectors`
-    )
-  }, [history, match.params.projectName])
+    navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
+  }, [navigate, params.projectName])
 
   const handleCancelCreateFeatureVector = useCallback(() => {
     setTablePanelOpen(false)
@@ -189,12 +172,7 @@ const AddToFeatureVectorPage = ({
           }
         })
     },
-    [
-      createNewFeatureVector,
-      navigateToFeatureVectorsScreen,
-      setNotification,
-      setTablePanelOpen
-    ]
+    [createNewFeatureVector, navigateToFeatureVectorsScreen, setNotification, setTablePanelOpen]
   )
 
   useEffect(() => {
@@ -207,7 +185,7 @@ const AddToFeatureVectorPage = ({
   useEffect(() => {
     fetchData({
       tag: TAG_FILTER_LATEST,
-      project: match.params.projectName
+      project: params.projectName
     })
 
     return () => {
@@ -216,7 +194,7 @@ const AddToFeatureVectorPage = ({
       setPageData(pageDataInitialState)
       cancelRequest('cancel')
     }
-  }, [fetchData, match.params.projectName, removeFeatures])
+  }, [fetchData, params.projectName, removeFeatures])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_LATEST) {
@@ -224,7 +202,7 @@ const AddToFeatureVectorPage = ({
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [filtersStore.groupBy, filtersStore.tag, match.params.pageTab, setFilters])
+  }, [filtersStore.groupBy, filtersStore.tag, params.pageTab, setFilters])
 
   useEffect(() => {
     setPageData(state => {
@@ -251,13 +229,13 @@ const AddToFeatureVectorPage = ({
 
   useEffect(() => {
     if (filtersStore.tagOptions.length === 0) {
-      getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
+      getFilterTagOptions(fetchFeatureSetsTags, params.projectName)
     }
   }, [
     fetchFeatureSetsTags,
     filtersStore.tagOptions.length,
     getFilterTagOptions,
-    match.params.projectName
+    params.projectName
   ])
 
   useEffect(() => {
@@ -279,26 +257,18 @@ const AddToFeatureVectorPage = ({
   ])
 
   return (
-    <div
-      ref={addToFeatureVectorPageRef}
-      className="add-to-feature-vector content-wrapper"
-    >
+    <div ref={addToFeatureVectorPageRef} className="add-to-feature-vector content-wrapper">
       {(featureStore.loading || featureStore.features.loading) && <Loader />}
       <Content
         content={content}
-        header={<AddToFeatureVectorPageHeader match={match} />}
+        header={<AddToFeatureVectorPageHeader params={params} />}
         loading={featureStore.loading || featureStore.features.loading}
-        match={match}
         pageData={pageData}
         refresh={fetchData}
         getIdentifier={getIdentifierMethod(FEATURES_TAB)}
       />
     </div>
   )
-}
-
-AddToFeatureVectorPage.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

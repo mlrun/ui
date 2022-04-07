@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
@@ -49,6 +48,7 @@ import {
 import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 const FeatureStore = ({
   deleteFeatureVector,
@@ -65,8 +65,6 @@ const FeatureStore = ({
   fetchFeatures,
   filtersStore,
   getFilterTagOptions,
-  history,
-  match,
   removeEntities,
   removeEntity,
   removeFeature,
@@ -84,11 +82,10 @@ const FeatureStore = ({
   tableStore,
   updateFeatureStoreData
 }) => {
+  const params = useParams()
   const [pageData, setPageData] = useState(pageDataInitialState)
   const urlTagOption = useGetTagOptions(
-    match.params.pageTab === FEATURE_VECTORS_TAB
-      ? fetchFeatureVectorsTags
-      : fetchFeatureSetsTags,
+    params.pageTab === FEATURE_VECTORS_TAB ? fetchFeatureVectorsTags : fetchFeatureSetsTags,
     pageData.filters
   )
   const { isStagingMode } = useMode()
@@ -100,6 +97,8 @@ const FeatureStore = ({
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const featureStoreRef = useRef(null)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const fetchData = useCallback(
     async filters => {
@@ -110,8 +109,8 @@ const FeatureStore = ({
         fetchEntities,
         fetchFeatureVectors,
         filters,
-        match.params.projectName,
-        match.params.pageTab
+        params.projectName,
+        params.pageTab
       )
 
       if (data.content) {
@@ -125,8 +124,8 @@ const FeatureStore = ({
       fetchFeatures,
       fetchEntities,
       fetchFeatureVectors,
-      match.params.projectName,
-      match.params.pageTab
+      params.projectName,
+      params.pageTab
     ]
   )
 
@@ -136,11 +135,9 @@ const FeatureStore = ({
 
   const handleRefresh = filters => {
     const fetchTags =
-      match.params.pageTab === FEATURE_VECTORS_TAB
-        ? fetchFeatureVectorsTags
-        : fetchFeatureSetsTags
+      params.pageTab === FEATURE_VECTORS_TAB ? fetchFeatureVectorsTags : fetchFeatureSetsTags
 
-    getFilterTagOptions(fetchTags, match.params.projectName)
+    getFilterTagOptions(fetchTags, params.projectName)
 
     return fetchData(filters)
   }
@@ -150,23 +147,23 @@ const FeatureStore = ({
       return (
         <AddToFeatureVectorPopUp
           action={action}
-          currentProject={match.params.projectName}
+          currentProject={params.projectName}
           fetchFeatureVectors={fetchFeatureVectors}
         />
       )
     },
-    [fetchFeatureVectors, match.params.projectName]
+    [fetchFeatureVectors, params.projectName]
   )
 
   const createFeatureVector = featureVectorData => {
     setCreateVectorPopUpIsOpen(false)
     setFeaturesPanelData({
-      currentProject: match.params.projectName,
+      currentProject: params.projectName,
       featureVector: {
         kind: 'FeatureVector',
         metadata: {
           name: featureVectorData.name,
-          project: match.params.projectName,
+          project: params.projectName,
           tag: featureVectorData.tag,
           labels: featureVectorData.labels
         },
@@ -178,19 +175,17 @@ const FeatureStore = ({
         status: {}
       },
       groupedFeatures: {
-        [match.params.projectName]: []
+        [params.projectName]: []
       },
       isNewFeatureVector: true
     })
-    history.push(
-      `/projects/${match.params.projectName}/feature-store/add-to-feature-vector`
-    )
+    navigate(`/projects/${params.projectName}/feature-store/add-to-feature-vector`)
   }
   useEffect(() => {
     return () => {
       setTablePanelOpen(false)
     }
-  }, [setTablePanelOpen, match.params.projectName, match.params.pageTab])
+  }, [setTablePanelOpen, params.projectName, params.pageTab])
 
   const handleRemoveRowData = useCallback(
     (item, removeData, content) => {
@@ -219,11 +214,7 @@ const FeatureStore = ({
         featureStore.featureVectors.selectedRowData.content
       )
     },
-    [
-      featureStore.featureVectors.selectedRowData.content,
-      handleRemoveRowData,
-      removeFeatureVector
-    ]
+    [featureStore.featureVectors.selectedRowData.content, handleRemoveRowData, removeFeatureVector]
   )
 
   const handleRemoveFeature = useCallback(
@@ -232,8 +223,7 @@ const FeatureStore = ({
         feature.key.type === 'feature'
           ? featureStore.features.selectedRowData.content
           : featureStore.entities.selectedRowData.content
-      const removeData =
-        feature.key.type === 'feature' ? removeFeature : removeEntity
+      const removeData = feature.key.type === 'feature' ? removeFeature : removeEntity
 
       handleRemoveRowData(feature, removeData, content)
     },
@@ -254,33 +244,18 @@ const FeatureStore = ({
         featureStore.featureSets.selectedRowData.content
       )
     },
-    [
-      featureStore.featureSets.selectedRowData.content,
-      handleRemoveRowData,
-      removeFeatureSet
-    ]
+    [featureStore.featureSets.selectedRowData.content, handleRemoveRowData, removeFeatureSet]
   )
 
   const handleRequestOnExpand = useCallback(
     async item => {
-      if (match.params.pageTab === FEATURES_TAB) {
-        const fetchData =
-          item.ui?.type === 'feature' ? fetchFeature : fetchEntity
+      if (params.pageTab === FEATURES_TAB) {
+        const fetchData = item.ui?.type === 'feature' ? fetchFeature : fetchEntity
         await fetchFeatureRowData(fetchData, item, setPageData)
-      } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
-        await fetchFeatureVectorRowData(
-          fetchFeatureVector,
-          item,
-          setPageData,
-          filtersStore.tag
-        )
-      } else if (match.params.pageTab === FEATURE_SETS_TAB) {
-        await fetchFeatureSetRowData(
-          fetchFeatureSet,
-          item,
-          setPageData,
-          filtersStore.tag
-        )
+      } else if (params.pageTab === FEATURE_VECTORS_TAB) {
+        await fetchFeatureVectorRowData(fetchFeatureVector, item, setPageData, filtersStore.tag)
+      } else if (params.pageTab === FEATURE_SETS_TAB) {
+        await fetchFeatureSetRowData(fetchFeatureSet, item, setPageData, filtersStore.tag)
       }
     },
     [
@@ -289,19 +264,19 @@ const FeatureStore = ({
       fetchFeatureSet,
       fetchFeatureVector,
       filtersStore.tag,
-      match.params.pageTab
+      params.pageTab
     ]
   )
 
   const handleDeleteFeatureVector = useCallback(
     featureVector => {
-      deleteFeatureVector(match.params.projectName, featureVector.name)
+      deleteFeatureVector(params.projectName, featureVector.name)
         .then(() => {
           if (!isEmpty(selectedItem)) {
             setSelectedItem({})
-            history.replace(
-              `/projects/${match.params.projectName}/feature-store/feature-vectors`
-            )
+            navigate(`/projects/${params.projectName}/feature-store/feature-vectors`, {
+              replace: true
+            })
           }
 
           setNotification({
@@ -310,13 +285,8 @@ const FeatureStore = ({
             message: 'Feature vector deleted successfully'
           })
 
-          getFilterTagOptions(
-            fetchFeatureVectorsTags,
-            match.params.projectName
-          ).then(response => {
-            const tag = [...response.payload, TAG_FILTER_ALL_ITEMS].includes(
-              filtersStore.tag
-            )
+          getFilterTagOptions(fetchFeatureVectorsTags, params.projectName).then(response => {
+            const tag = [...response.payload, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
               ? filtersStore.tag
               : TAG_FILTER_LATEST
 
@@ -341,8 +311,8 @@ const FeatureStore = ({
       fetchFeatureVectorsTags,
       filtersStore,
       getFilterTagOptions,
-      history,
-      match.params.projectName,
+      navigate,
+      params.projectName,
       selectedItem,
       setFilters,
       setNotification
@@ -380,7 +350,7 @@ const FeatureStore = ({
         iter: ''
       })
     }
-  }, [fetchData, match.params.pageTab, urlTagOption])
+  }, [fetchData, params.pageTab, urlTagOption])
 
   useEffect(() => {
     return () => {
@@ -393,35 +363,26 @@ const FeatureStore = ({
       setPageData(pageDataInitialState)
       cancelRequest('cancel')
     }
-  }, [
-    match.params.pageTab,
-    removeEntities,
-    removeFeatureSets,
-    removeFeatureVectors,
-    removeFeatures
-  ])
+  }, [params.pageTab, removeEntities, removeFeatureSets, removeFeatureVectors, removeFeatures])
 
   useEffect(() => {
-    if (
-      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
-      filtersStore.tag === TAG_FILTER_LATEST
-    ) {
+    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || filtersStore.tag === TAG_FILTER_LATEST) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [filtersStore.groupBy, filtersStore.tag, match.params.pageTab, setFilters])
+  }, [filtersStore.groupBy, filtersStore.tag, params.pageTab, setFilters])
 
   useEffect(() => {
     setPageData(state => {
       return {
         ...state,
         ...generatePageData(
-          match.params.pageTab,
+          params.pageTab,
           handleRequestOnExpand,
-          match.params.pageTab === FEATURE_VECTORS_TAB
+          params.pageTab === FEATURE_VECTORS_TAB
             ? handleRemoveFeatureVector
-            : match.params.pageTab === FEATURES_TAB
+            : params.pageTab === FEATURES_TAB
             ? handleRemoveFeature
             : handleRemoveFeatureSet,
           onDeleteFeatureVector,
@@ -439,7 +400,7 @@ const FeatureStore = ({
     handleRemoveFeatureVector,
     handleRequestOnExpand,
     isStagingMode,
-    match.params.pageTab,
+    params.pageTab,
     onDeleteFeatureVector,
     selectedItem,
     tableStore.isTablePanelOpen
@@ -451,8 +412,8 @@ const FeatureStore = ({
       featureStore.features.allData,
       featureStore.entities.allData,
       featureStore.featureVectors,
-      history,
-      match,
+      navigate,
+      params,
       setSelectedItem
     )
   }, [
@@ -460,30 +421,21 @@ const FeatureStore = ({
     featureStore.featureVectors,
     featureStore.features.allData,
     featureStore.entities.allData,
-    history,
-    match
+    navigate,
+    params
   ])
 
   useEffect(() => {
-    if (
-      match.params.name &&
-      match.params.tag &&
-      pageData.details.menu.length > 0
-    ) {
-      isDetailsTabExists(
-        FEATURE_STORE_PAGE,
-        match,
-        pageData.details.menu,
-        history
-      )
+    if (params.name && params.tag && pageData.details.menu.length > 0) {
+      isDetailsTabExists(FEATURE_STORE_PAGE, params, pageData.details.menu, navigate, location)
     }
-  }, [history, match, pageData.details.menu])
+  }, [navigate, location, params, pageData.details.menu])
 
   useEffect(() => {
-    checkTabIsValid(history, match, selectedItem)
+    checkTabIsValid(navigate, params, selectedItem)
 
     setPageData(state => {
-      if (match.params.pageTab === FEATURE_SETS_TAB) {
+      if (params.pageTab === FEATURE_SETS_TAB) {
         return {
           ...state,
           details: {
@@ -492,7 +444,7 @@ const FeatureStore = ({
             type: FEATURE_SETS_TAB
           }
         }
-      } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
+      } else if (params.pageTab === FEATURE_VECTORS_TAB) {
         return {
           ...state,
           details: {
@@ -505,28 +457,22 @@ const FeatureStore = ({
 
       return { ...state }
     })
-  }, [
-    history,
-    selectedItem.item,
-    selectedItem.entities,
-    match.params.pageTab,
-    selectedItem,
-    match
-  ])
+  }, [navigate, selectedItem.item, selectedItem.entities, params, selectedItem])
 
   useEffect(() => setContent([]), [filtersStore.tag])
 
   useEffect(() => {
     isPageTabValid(
-      match,
+      params.pageTab,
       tabs.map(tab => tab.id),
-      history
+      navigate,
+      location
     )
-  }, [history, match])
+  }, [navigate, location, params.pageTab])
 
   useEffect(() => {
     if (openPanelByDefault) {
-      switch (match.params.pageTab) {
+      switch (params.pageTab) {
         case FEATURE_SETS_TAB:
           return setFeatureSetsPanelIsOpen(true)
         case FEATURE_VECTORS_TAB:
@@ -535,13 +481,13 @@ const FeatureStore = ({
           return
       }
     }
-  }, [openPanelByDefault, match.params.pageTab])
+  }, [openPanelByDefault, params.pageTab])
 
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(
       changes,
       fetchData,
-      match,
+      params,
       selectedItem,
       setNotification,
       updateFeatureStoreData,
@@ -550,7 +496,7 @@ const FeatureStore = ({
   }
 
   const handleActionsMenuClick = () => {
-    switch (match.params.pageTab) {
+    switch (params.pageTab) {
       case FEATURE_SETS_TAB:
         return setFeatureSetsPanelIsOpen(true)
       case FEATURE_VECTORS_TAB:
@@ -561,8 +507,7 @@ const FeatureStore = ({
   }
 
   const createFeatureSetSuccess = tag => {
-    const currentTag =
-      filtersStore.tag === TAG_FILTER_ALL_ITEMS ? TAG_FILTER_ALL_ITEMS : tag
+    const currentTag = filtersStore.tag === TAG_FILTER_ALL_ITEMS ? TAG_FILTER_ALL_ITEMS : tag
 
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
@@ -573,7 +518,7 @@ const FeatureStore = ({
     })
 
     return handleRefresh({
-      project: match.params.projectName,
+      project: params.projectName,
       tag: currentTag
     })
   }
@@ -606,30 +551,26 @@ const FeatureStore = ({
           message={confirmData.message}
         />
       )}
-      {(featureStore.loading ||
-        featureStore.entities.loading ||
-        featureStore.features.loading) && <Loader />}
+      {(featureStore.loading || featureStore.entities.loading || featureStore.features.loading) && (
+        <Loader />
+      )}
       <Content
         applyDetailsChanges={applyDetailsChanges}
         cancelRequest={cancelRequest}
         content={content}
         handleCancel={() => setSelectedItem({})}
         loading={
-          featureStore.loading ||
-          featureStore.entities.loading ||
-          featureStore.features.loading
+          featureStore.loading || featureStore.entities.loading || featureStore.features.loading
         }
-        match={match}
         handleActionsMenuClick={handleActionsMenuClick}
         pageData={pageData}
         refresh={handleRefresh}
         selectedItem={selectedItem.item}
-        getIdentifier={getIdentifierMethod(match.params.pageTab)}
+        getIdentifier={getIdentifierMethod(params.pageTab)}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
-          artifactKind={match.params.pageTab.slice(0, -1)}
-          match={match}
+          artifactKind={params.pageTab.slice(0, -1)}
           refresh={handleRefresh}
           setIsPopupOpen={setIsPopupDialogOpen}
           title={pageData.actionsMenuHeader}
@@ -639,7 +580,7 @@ const FeatureStore = ({
         <FeatureSetsPanel
           closePanel={closePanel}
           createFeatureSetSuccess={createFeatureSetSuccess}
-          project={match.params.projectName}
+          project={params.projectName}
         />
       )}
       {createVectorPopUpIsOpen && (
@@ -652,10 +593,6 @@ const FeatureStore = ({
       )}
     </div>
   )
-}
-
-FeatureStore.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

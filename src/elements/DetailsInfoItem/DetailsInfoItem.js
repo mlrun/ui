@@ -32,8 +32,8 @@ const DetailsInfoItem = React.forwardRef(
       isFieldInEditMode,
       item,
       link,
-      match,
       onClick,
+      params,
       setChangesData,
       state,
       target_path
@@ -62,7 +62,10 @@ const DetailsInfoItem = React.forwardRef(
           <div className="details-item__input-wrapper" ref={ref}>
             <Input onChange={item.onChange} value={info} type="text" focused />
             <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-              <Checkmark className="details-item__apply-btn" onClick={handleFinishEdit} />
+              <Checkmark
+                className="details-item__apply-btn"
+                onClick={handleFinishEdit}
+              />
             </Tooltip>
           </div>
         )
@@ -75,7 +78,9 @@ const DetailsInfoItem = React.forwardRef(
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             elements={chipsData.chips}
-            onClick={() => onClick(currentField, item?.editModeType, chipsData.chips)}
+            onClick={() =>
+              onClick(currentField, item?.editModeType, chipsData.chips)
+            }
             visibleChipsMaxLength="all"
           />
         </div>
@@ -86,7 +91,9 @@ const DetailsInfoItem = React.forwardRef(
           className="details-item__data details-item__path"
           template={<TextTooltipTemplate text="Click to copy" />}
         >
-          <span onClick={() => copyToClipboard(target_path)}>{target_path}</span>
+          <span onClick={() => copyToClipboard(target_path)}>
+            {target_path}
+          </span>
         </Tooltip>
       )
     } else if (currentField === 'target_uri') {
@@ -98,8 +105,7 @@ const DetailsInfoItem = React.forwardRef(
           <span onClick={() => copyToClipboard(info)}>{info}</span>
         </Tooltip>
       )
-    } else if (currentField === 'usage_example' && Prism.languages.py) {
-      console.log('here')
+    } else if (currentField === 'usage_example') {
       return (
         <div className="details-item__data details-item__usage-example">
           {info.map((item, index) => (
@@ -118,7 +124,9 @@ const DetailsInfoItem = React.forwardRef(
               <pre>
                 <code
                   dangerouslySetInnerHTML={{
-                    __html: item.code && Prism.highlight(item.code, Prism.languages.py, 'py')
+                    __html:
+                      item.code &&
+                      Prism.highlight(item.code, Prism.languages.py, 'py')
                   }}
                 />
               </pre>
@@ -143,7 +151,7 @@ const DetailsInfoItem = React.forwardRef(
         >
           <Link
             className="link"
-            to={`/projects/${match.params.projectName}/functions/${funcStr}/overview`}
+            to={`/projects/${params.projectName}/functions/${funcStr}/overview`}
           >
             {funcStr}
           </Link>
@@ -168,7 +176,9 @@ const DetailsInfoItem = React.forwardRef(
               }}
             >
               {info.length === 0 ? (
-                <span className="details-item__data-edit-placeholder">Click to edit</span>
+                <span className="details-item__data-edit-placeholder">
+                  Click to edit
+                </span>
               ) : (
                 info
               )}
@@ -176,8 +186,7 @@ const DetailsInfoItem = React.forwardRef(
           </Tooltip>
         )
       }
-
-      return <div className="details-item__data">{}</div>
+      return <div className="details-item__data">{info}</div>
     }
 
     return null
@@ -200,8 +209,8 @@ DetailsInfoItem.defaultProps = {
   isFieldInEditMode: false,
   item: {},
   link: '',
-  match: {},
   onClick: null,
+  params: {},
   setChangesData: () => {},
   state: '',
   target_path: ''
@@ -224,8 +233,8 @@ DetailsInfoItem.propTypes = {
   isFieldInEditMode: PropTypes.bool,
   item: PropTypes.shape({}),
   link: PropTypes.string,
-  match: PropTypes.shape({}),
   onClick: PropTypes.func,
+  params: PropTypes.shape({}),
   setChangesData: PropTypes.func,
   state: PropTypes.string,
   target_path: PropTypes.string

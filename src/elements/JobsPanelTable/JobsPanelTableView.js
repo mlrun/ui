@@ -16,7 +16,6 @@ const JobsPanelTableView = ({
   handleDelete,
   handleEdit,
   headers,
-  match,
   section,
   sectionData,
   sectionDispatch,
@@ -67,7 +66,6 @@ const JobsPanelTableView = ({
               handleEdit={handleEdit}
               index={index}
               key={index}
-              match={match}
               selectedItem={selectedItem}
               setEditItem={setEditItem}
               setSelectedItem={setSelectedItem}
@@ -113,7 +111,6 @@ JobsPanelTableView.propTypes = {
   handleDelete: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
-  match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
   sectionData: PropTypes.shape({}),
   sectionDispatch: PropTypes.func,

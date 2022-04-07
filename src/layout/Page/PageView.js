@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
-import { useParams } from 'react-router-dom'
+import { useParams, Outlet } from 'react-router-dom'
 
 import Header from '../Header/Header'
 import Navbar from '../Navbar/Navbar'
@@ -10,7 +10,7 @@ import localStorageService from '../../utils/localStorageService'
 
 import './PageView.scss'
 
-export default function PageView({ children }) {
+export default function PageView() {
   const [isPinned, setIsPinned] = useState(
     localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
@@ -35,7 +35,7 @@ export default function PageView({ children }) {
         />
       )}
       <main id="main" className={pinnedClasses}>
-        {children}
+        <Outlet />
       </main>
       <Notification />
     </div>

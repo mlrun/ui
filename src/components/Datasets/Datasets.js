@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -40,9 +40,7 @@ const Datasets = ({
   fetchDataSets,
   filtersStore,
   getFilterTagOptions,
-  history,
   loading,
-  match,
   removeDataSet,
   removeDataSets,
   setFilters
@@ -54,10 +52,13 @@ const Datasets = ({
   const datasetsRef = useRef(null)
   const openPanelByDefault = useOpenPanel()
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
+  const params = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const fetchData = useCallback(
     filters => {
-      fetchDataSets(match.params.projectName, filters).then(result => {
+      fetchDataSets(params.projectName, filters).then(result => {
         if (result) {
           setDatasets(generateArtifacts(filterArtifacts(result)))
         }
@@ -65,7 +66,7 @@ const Datasets = ({
         return result
       })
     },
-    [fetchDataSets, match.params.projectName]
+    [fetchDataSets, params.projectName]
   )
 
   const cancelRequest = message => {
@@ -106,23 +107,19 @@ const Datasets = ({
 
   const handleRemoveDataSet = useCallback(
     dataSet => {
-      handleRemoveRowData(
-        dataSet,
-        removeDataSet,
-        dataSets.selectedRowData.content
-      )
+      handleRemoveRowData(dataSet, removeDataSet, dataSets.selectedRowData.content)
     },
     [dataSets.selectedRowData.content, handleRemoveRowData, removeDataSet]
   )
 
   const handleRefresh = filters => {
-    getFilterTagOptions(fetchArtifactTags, match.params.projectName)
+    getFilterTagOptions(fetchArtifactTags, params.projectName)
 
     return fetchData(filters)
   }
 
   const navigateToDetailsPane = () => {
-    const { name, tag, iter } = match.params
+    const { name, tag, iter } = params
     let content = []
 
     if (dataSets.allData.length > 0) {
@@ -136,12 +133,11 @@ const Datasets = ({
           ? Number(iter) === contentItem.iter &&
               contentItem[searchKey] === name &&
               (contentItem.tag === tag || contentItem.tree === tag)
-          : contentItem[searchKey] === name &&
-              (contentItem.tag === tag || contentItem.tree === tag)
+          : contentItem[searchKey] === name && (contentItem.tag === tag || contentItem.tree === tag)
       })
 
       if (!selectedItem) {
-        history.replace(`/projects/${match.params.projectName}/datasets}`)
+        navigate(`/projects/${params.projectName}/datasets}`, { replace: true })
       } else {
         selectedItem.URI = generateUri(selectedItem, DATASETS)
         setSelectedItem({ item: selectedItem })
@@ -206,27 +202,20 @@ const Datasets = ({
   }, [fetchData, urlTagOption])
 
   useEffect(() => {
-    if (
-      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
-      filtersStore.tag === TAG_FILTER_LATEST
-    ) {
+    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || filtersStore.tag === TAG_FILTER_LATEST) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [filtersStore.groupBy, filtersStore.tag, match.params.name, setFilters])
+  }, [filtersStore.groupBy, filtersStore.tag, params.name, setFilters])
 
   useEffect(() => {
-    if (
-      match.params.name &&
-      match.params.tag &&
-      pageData.details.menu.length > 0
-    ) {
-      isDetailsTabExists(DATASETS_PAGE, match, pageData.details.menu, history)
+    if (params.name && params.tag && pageData.details.menu.length > 0) {
+      isDetailsTabExists(DATASETS_PAGE, params, pageData.details.menu, navigate, location)
     }
-  }, [history, match, pageData.details.menu])
+  }, [location, navigate, params, pageData.details.menu])
 
-  useEffect(navigateToDetailsPane, [dataSets, history, match, setSelectedItem])
+  useEffect(navigateToDetailsPane, [dataSets, navigate, params, setSelectedItem])
 
   useEffect(() => {
     return () => {
@@ -249,7 +238,6 @@ const Datasets = ({
         handleCancel={() => setSelectedItem({})}
         handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
         loading={loading}
-        match={match}
         pageData={pageData}
         refresh={handleRefresh}
         selectedItem={selectedItem.item}
@@ -257,7 +245,6 @@ const Datasets = ({
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactKind="dataset"
-          match={match}
           refresh={handleRefresh}
           setIsPopupOpen={setIsPopupDialogOpen}
           title={pageData.actionsMenuHeader}
@@ -265,10 +252,6 @@ const Datasets = ({
       )}
     </div>
   )
-}
-
-Datasets.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 const actionCreators = {

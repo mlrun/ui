@@ -44,7 +44,7 @@ export const getInitialCards = projectName => {
           id: 'registerDataset',
           label: 'Register Dataset',
           path: {
-            target: `${base_url}/feature-store/datasets?openPanel=true`
+            target: `${base_url}/datasets?openPanel=true`
             // target: 'dataset' // Phase 2
           },
           tooltip: ''
@@ -84,7 +84,7 @@ export const getInitialCards = projectName => {
         {
           id: 'dataset',
           label: 'Datasets',
-          path: { target: `${base_url}/feature-store/datasets` }
+          path: { target: `${base_url}/datasets` }
         },
         {
           id: 'featurevectors',

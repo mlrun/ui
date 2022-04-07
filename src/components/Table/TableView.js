@@ -43,8 +43,8 @@ const TableView = ({
   handleSelectItem,
   isTablePanelOpen,
   mainRowItemsCount,
-  match,
   pageData,
+  params,
   retryRequest,
   selectedItem,
   tableContent,
@@ -60,13 +60,8 @@ const TableView = ({
           {pageData.tableHeaders.map(
             (item, index) =>
               !item.hidden && (
-                <div
-                  className={`table-head__item ${item.class}`}
-                  key={`${item.header}${index}`}
-                >
-                  <Tooltip
-                    template={<TextTooltipTemplate text={item.header} />}
-                  >
+                <div className={`table-head__item ${item.class}`} key={`${item.header}${index}`}>
+                  <Tooltip template={<TextTooltipTemplate text={item.header} />}>
                     {item.header}
                   </Tooltip>
                 </div>
@@ -107,7 +102,6 @@ const TableView = ({
                       content={content}
                       handleSelectItem={handleSelectItem}
                       key={i}
-                      match={match}
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
@@ -120,7 +114,6 @@ const TableView = ({
                       content={content}
                       handleSelectItem={handleSelectItem}
                       key={i}
-                      match={match}
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
@@ -132,7 +125,6 @@ const TableView = ({
                       actionsMenu={actionsMenu}
                       key={i}
                       content={content}
-                      match={match}
                       rowItem={rowItem}
                       selectedItem={selectedItem}
                       handleSelectItem={handleSelectItem}
@@ -145,7 +137,6 @@ const TableView = ({
                       key={i}
                       content={content}
                       handleSelectItem={handleSelectItem}
-                      match={match}
                       rowItem={rowItem}
                       selectedItem={selectedItem}
                     />
@@ -165,7 +156,6 @@ const TableView = ({
                   handleExpandRow={handleExpandRow}
                   handleSelectItem={handleSelectItem}
                   isGroupedByWorkflow
-                  match={match}
                   rowItem={workflow}
                   selectedItem={selectedItem}
                   workflows={workflows}
@@ -179,14 +169,13 @@ const TableView = ({
                 case DATASETS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
-                  return match.params.pageTab === REAL_TIME_PIPELINES_TAB ? (
+                  return params.pageTab === REAL_TIME_PIPELINES_TAB ? (
                     <FunctionsTableRow
                       actionsMenu={actionsMenu}
                       key={i}
                       content={content}
                       handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
-                      match={match}
                       rowItem={groupLatestItem[i]}
                       selectedItem={selectedItem}
                       tableContent={group}
@@ -199,7 +188,6 @@ const TableView = ({
                       handleExpandRow={handleExpandRow}
                       key={i}
                       mainRowItemsCount={mainRowItemsCount}
-                      match={match}
                       rowItem={groupLatestItem[i]}
                       pageData={pageData}
                       selectedItem={selectedItem}
@@ -214,7 +202,6 @@ const TableView = ({
                       content={content}
                       handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
-                      match={match}
                       rowItem={groupLatestItem[i]}
                       selectedItem={selectedItem}
                       tableContent={group}
@@ -229,7 +216,6 @@ const TableView = ({
                       handleExpandRow={handleExpandRow}
                       key={i}
                       mainRowItemsCount={mainRowItemsCount}
-                      match={match}
                       rowItem={groupLatestItem[i]}
                       pageData={pageData}
                       selectedItem={selectedItem}
@@ -245,7 +231,6 @@ const TableView = ({
                       handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
                       isGroupedByWorkflow={groupFilter === GROUP_BY_WORKFLOW}
-                      match={match}
                       rowItem={groupLatestItem[i]}
                       selectedItem={selectedItem}
                       tableContent={group}
@@ -268,11 +253,9 @@ const TableView = ({
         <Details
           actionsMenu={actionsMenu}
           applyDetailsChanges={applyDetailsChanges}
-          cancelRequest={cancelRequest}
           getCloseDetailsLink={getCloseDetailsLink}
           detailsMenu={pageData.details.menu}
           handleCancel={handleCancel}
-          match={match}
           pageData={pageData}
           retryRequest={retryRequest}
           selectedItem={selectedItem}
@@ -296,8 +279,8 @@ TableView.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   isTablePanelOpen: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.oneOfType([

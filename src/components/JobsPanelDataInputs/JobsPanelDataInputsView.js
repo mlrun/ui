@@ -19,7 +19,6 @@ const JobsPanelDataInputsView = ({
   inputsDispatch,
   inputsState,
   isArtifactPathValid,
-  match,
   panelDispatch,
   panelState,
   resetDataInputsData,
@@ -40,7 +39,6 @@ const JobsPanelDataInputsView = ({
           handlePathTypeChange={handlePathTypeChange}
           inputsDispatch={inputsDispatch}
           inputsState={inputsState}
-          match={match}
           panelState={panelState}
           resetDataInputsData={resetDataInputsData}
           setValidation={setValidation}
@@ -96,7 +94,6 @@ JobsPanelDataInputsView.propTypes = {
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   isArtifactPathValid: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   resetDataInputsData: PropTypes.func.isRequired,

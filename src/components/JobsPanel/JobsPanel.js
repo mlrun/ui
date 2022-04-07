@@ -1,23 +1,13 @@
-import React, {
-  useState,
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-  useEffect
-} from 'react'
+import React, { useState, useLayoutEffect, useMemo, useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
 
-import {
-  MONITOR_JOBS_TAB,
-  PANEL_DEFAULT_ACCESS_KEY,
-  SCHEDULE_TAB
-} from '../../constants'
+import { MONITOR_JOBS_TAB, PANEL_DEFAULT_ACCESS_KEY, SCHEDULE_TAB } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
 import {
@@ -43,7 +33,6 @@ const JobsPanel = ({
   functionsStore,
   groupedFunctions,
   jobsStore,
-  match,
   mode,
   onEditJob,
   onSuccessRun,
@@ -79,7 +68,8 @@ const JobsPanel = ({
     isGpuLimitValid: true,
     isAccessKeyValid: true
   })
-  const history = useHistory()
+  const navigate = useNavigate()
+  const params = useParams()
 
   useLayoutEffect(() => {
     if (
@@ -88,13 +78,11 @@ const JobsPanel = ({
       !defaultData &&
       !functionsStore.error
     ) {
-      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest).then(
-        result => {
-          if (result) {
-            setSelectedFunction(result.functions)
-          }
+      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest).then(result => {
+        if (result) {
+          setSelectedFunction(result.functions)
         }
-      )
+      })
     }
 
     return () => functionsStore.template.name && removeFunctionTemplate()
@@ -128,10 +116,7 @@ const JobsPanel = ({
 
   useEffect(() => {
     if (panelState.editMode) {
-      if (
-        panelState.previousPanelData.titleInfo.method !==
-        panelState.currentFunctionInfo.method
-      ) {
+      if (panelState.previousPanelData.titleInfo.method !== panelState.currentFunctionInfo.method) {
         generateTableData(
           panelState.currentFunctionInfo.method,
           selectedFunction,
@@ -338,7 +323,7 @@ const JobsPanel = ({
       panelState,
       project,
       labels,
-      match,
+      params,
       selectedFunction,
       isFunctionTemplate,
       defaultData?.task.spec.function,
@@ -355,24 +340,17 @@ const JobsPanel = ({
         removeNewJob()
 
         if (redirectToDetailsPane) {
-          return history.push(
-            `/projects/${project}/jobs/${
-              cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
-            }/${result.data.data.metadata.name}/${
-              result.data.data.metadata.uid
-            }/overview`
+          return navigate(
+            `/projects/${project}/jobs/${cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB}/${
+              result.data.data.metadata.name
+            }/${result.data.data.metadata.uid}/overview`
           )
         }
 
-        return history.push(
-          `/projects/${project}/jobs/${
-            cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
-          }`
-        )
+        return navigate(`/projects/${project}/jobs/${cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`)
       })
       .then(() => {
-        onSuccessRun &&
-          onSuccessRun(cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB)
+        onSuccessRun && onSuccessRun(cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB)
       })
   }
 
@@ -393,7 +371,7 @@ const JobsPanel = ({
       panelState,
       project,
       defaultData.task.metadata.labels,
-      match,
+      params,
       selectedFunction,
       false,
       defaultData.task.spec.function
@@ -416,7 +394,6 @@ const JobsPanel = ({
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
       loading={jobsStore.loading || functionsStore.loading}
-      match={match}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}
       panelState={panelState}
@@ -444,7 +421,6 @@ JobsPanel.propTypes = {
   closePanel: PropTypes.func.isRequired,
   defaultData: PropTypes.shape({}),
   groupedFunctions: PropTypes.shape({}),
-  match: PropTypes.shape({}).isRequired,
   mode: PropTypes.string.isRequired,
   onEditJob: PropTypes.func,
   project: PropTypes.string.isRequired,

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -36,8 +36,6 @@ const Files = ({
   fetchFile,
   fetchFiles,
   filtersStore,
-  history,
-  match,
   removeFile,
   removeFiles,
   setFilters
@@ -48,10 +46,13 @@ const Files = ({
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const params = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const fetchData = useCallback(
     filters => {
-      fetchFiles(match.params.projectName, filters).then(result => {
+      fetchFiles(params.projectName, filters).then(result => {
         if (result) {
           setFiles(generateArtifacts(filterArtifacts(result)))
         }
@@ -59,7 +60,7 @@ const Files = ({
         return result
       })
     },
-    [fetchFiles, match.params.projectName]
+    [fetchFiles, params.projectName]
   )
 
   const handleRemoveFile = useCallback(
@@ -78,11 +79,7 @@ const Files = ({
         selectedRowData: newPageDataSelectedRowData
       }))
     },
-    [
-      artifactsStore.files.selectedRowData.content,
-      pageData.selectedRowData,
-      removeFile
-    ]
+    [artifactsStore.files.selectedRowData.content, pageData.selectedRowData, removeFile]
   )
 
   const handleRequestOnExpand = useCallback(
@@ -102,7 +99,7 @@ const Files = ({
 
       try {
         result = await fetchFile(
-          file.project ?? match.params.projectName,
+          file.project ?? params.projectName,
           file.db_key,
           !filtersStore.iter,
           filtersStore.tag
@@ -128,12 +125,7 @@ const Files = ({
             selectedRowData: {
               ...state.selectedRowData,
               [fileIdentifier]: {
-                content: [
-                  ...generateArtifacts(
-                    filterArtifacts(result),
-                    !filtersStore.iter
-                  )
-                ],
+                content: [...generateArtifacts(filterArtifacts(result), !filtersStore.iter)],
                 error: null,
                 loading: false
               }
@@ -142,7 +134,7 @@ const Files = ({
         })
       }
     },
-    [fetchFile, filtersStore.iter, filtersStore.tag, match.params.projectName]
+    [fetchFile, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
   useEffect(() => {
@@ -167,14 +159,10 @@ const Files = ({
   }, [filtersStore.iter, filtersStore.tag, removeFile])
 
   useEffect(() => {
-    if (
-      match.params.name &&
-      match.params.tag &&
-      pageData.details.menu.length > 0
-    ) {
-      isDetailsTabExists(FILES_PAGE, match, pageData.details.menu, history)
+    if (params.name && params.tag && pageData.details.menu.length > 0) {
+      isDetailsTabExists(FILES_PAGE, params, pageData.details.menu, navigate, location)
     }
-  }, [history, match, pageData.details.menu])
+  }, [navigate, location, params, pageData.details.menu])
 
   useEffect(() => {
     if (urlTagOption) {
@@ -188,18 +176,15 @@ const Files = ({
       removeFiles()
       setSelectedFile({})
     }
-  }, [match.params.projectName, removeFiles])
+  }, [params.projectName, removeFiles])
 
   useEffect(() => {
-    if (
-      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
-      filtersStore.tag === TAG_FILTER_LATEST
-    ) {
+    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || filtersStore.tag === TAG_FILTER_LATEST) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [match.params.pageTab, filtersStore.tag, filtersStore.groupBy, setFilters])
+  }, [params.pageTab, filtersStore.tag, filtersStore.groupBy, setFilters])
 
   useEffect(() => {
     setPageData(state => ({
@@ -210,17 +195,16 @@ const Files = ({
   }, [handleRemoveFile, handleRequestOnExpand])
 
   useEffect(() => {
-    if (match.params.name) {
-      const { name, tag, iter } = match.params
+    if (params.name) {
+      const { name, tag, iter } = params
       const artifacts =
-        artifactsStore.files.selectedRowData.content[name] ||
-        artifactsStore.files.allData
+        artifactsStore.files.selectedRowData.content[name] || artifactsStore.files.allData
 
       if (artifacts.length > 0) {
         const searchItem = searchArtifactItem(artifacts, name, tag, iter)
 
         if (!searchItem) {
-          history.replace(`/projects/${match.params.projectName}/files`)
+          navigate(`/projects/${params.projectName}/files`, { replace: true })
         } else {
           searchItem.URI = generateUri(searchItem, ARTIFACTS)
           setSelectedFile({ item: searchItem })
@@ -229,12 +213,7 @@ const Files = ({
     } else {
       setSelectedFile({})
     }
-  }, [
-    artifactsStore.files.allData,
-    artifactsStore.files.selectedRowData.content,
-    history,
-    match.params
-  ])
+  }, [artifactsStore.files.allData, artifactsStore.files.selectedRowData.content, navigate, params])
 
   useEffect(() => setFiles([]), [filtersStore.tag])
 
@@ -246,7 +225,6 @@ const Files = ({
         handleCancel={() => setSelectedFile({})}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
-        match={match}
         handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
@@ -256,7 +234,6 @@ const Files = ({
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactKind="artifact"
-          match={match}
           refresh={fetchData}
           setIsPopupOpen={setIsPopupDialogOpen}
           title={pageData.actionsMenuHeader}
@@ -264,10 +241,6 @@ const Files = ({
       )}
     </div>
   )
-}
-
-Files.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
@@ -23,7 +23,6 @@ import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const ConsumerGroup = ({
   fetchNuclioV3ioStreamShardLags,
-  match,
   nuclioStore,
   resetV3ioStreamShardLagsError,
   setNotification
@@ -35,16 +34,17 @@ const ConsumerGroup = ({
     setFilteredV3ioStreamShardLags
   ] = useState([])
   const [filterByName, setFilterByName] = useState('')
+  const params = useParams()
 
   useEffect(() => {
     const v3ioStream = nuclioStore.v3ioStreams.parsedData.find(
-      stream => stream.consumerGroup === match.params.consumerGroupName
+      stream => stream.consumerGroup === params.consumerGroupName
     )
 
     if (v3ioStream) {
       setCurrentV3ioStream(v3ioStream)
     }
-  }, [match.params.consumerGroupName, nuclioStore.v3ioStreams])
+  }, [params.consumerGroupName, nuclioStore.v3ioStreams])
 
   const actionsMenu = useMemo(() => {
     return [
@@ -64,11 +64,11 @@ const ConsumerGroup = ({
         streamPath: currentV3ioStream.streamPath
       }
       fetchNuclioV3ioStreamShardLags(
-        match.params.projectName,
+        params.projectName,
         fetchV3ioStreamBody
       )
     },
-    [fetchNuclioV3ioStreamShardLags, match.params.projectName]
+    [fetchNuclioV3ioStreamShardLags, params.projectName]
   )
 
   useEffect(() => {
@@ -109,10 +109,10 @@ const ConsumerGroup = ({
     <>
       <PageHeader
         title={
-          match.params.consumerGroupName ?? currentV3ioStream.consumerGroup
+          params.consumerGroupName ?? currentV3ioStream.consumerGroup
         }
         description={currentV3ioStream.streamName}
-        backLink={`/projects/${match.params.projectName}/monitor/consumer-groups`}
+        backLink={`/projects/${params.projectName}/monitor/consumer-groups`}
       />
       <div className="page-actions">
         <Search
@@ -131,7 +131,6 @@ const ConsumerGroup = ({
       <Table
         actionsMenu={actionsMenu}
         content={filteredV3ioStreamShardLags}
-        match={match}
         pageData={pageData}
       />
       {convertedYaml.length > 0 && (
@@ -149,10 +148,6 @@ const ConsumerGroup = ({
         nuclioStore.v3ioStreamShardLags.loading) && <Loader />}
     </>
   )
-}
-
-ConsumerGroup.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

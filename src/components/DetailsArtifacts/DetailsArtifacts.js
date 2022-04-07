@@ -15,7 +15,6 @@ import {
 const DetailsArtifacts = ({
   iteration,
   jobsStore,
-  match,
   selectedItem,
   setIterationOption
 }) => {
@@ -112,7 +111,6 @@ const DetailsArtifacts = ({
       artifactsIndexes={artifactsIndexes}
       content={content}
       iteration={iteration}
-      match={match}
       noData={noData}
       preview={preview}
       showArtifact={showArtifact}
@@ -123,7 +121,6 @@ const DetailsArtifacts = ({
 
 DetailsArtifacts.propTypes = {
   iteration: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIterationOption: PropTypes.func.isRequired
 }

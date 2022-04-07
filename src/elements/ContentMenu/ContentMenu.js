@@ -1,11 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import './contentMenu.scss'
 
-const ContentMenu = ({ activeTab, match, screen, tabs, onClick }) => {
+const ContentMenu = ({ activeTab, screen, tabs, onClick }) => {
+  const params = useParams()
   const handleClick = (e, tabId) => {
     e.preventDefault()
     onClick(tabId)
@@ -28,7 +29,7 @@ const ContentMenu = ({ activeTab, match, screen, tabs, onClick }) => {
                     onClick
                       ? '/'
                       : `/projects/${
-                          match.params.projectName
+                          params.projectName
                         }/${screen.toLowerCase()}/${tab.id}`
                   }
                   className={tab.icon && 'content-menu__item-icon'}

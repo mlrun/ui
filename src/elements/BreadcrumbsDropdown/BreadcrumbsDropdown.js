@@ -44,9 +44,7 @@ const BreadcrumbsDropdown = ({ link, list, onClick, screen, selectedItem, tab, w
                 </a>
               ) : (
                 <Link
-                  to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
-                    tab ? `/${tab}` : ''
-                  }`}
+                  to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`}
                   data-testid="breadcrumbs-dropdown-item"
                   key={listItem.id}
                   className={dropdownItemClassNames}

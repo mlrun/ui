@@ -8,10 +8,7 @@ import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
-import {
-  generateCreateNewOptions,
-  handleFetchProjectError
-} from './project.utils'
+import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -35,10 +32,7 @@ const ProjectMonitor = ({
   setNotification
 }) => {
   const [artifactKind, setArtifactKind] = useState('')
-  const [
-    createFeatureSetPanelIsOpen,
-    setCreateFeatureSetPanelIsOpen
-  ] = useState(false)
+  const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
@@ -98,12 +92,7 @@ const ProjectMonitor = ({
 
       return () => removeV3ioStreams()
     }
-  }, [
-    fetchNuclioV3ioStreams,
-    params.projectName,
-    nuclioStreamsAreEnabled,
-    removeV3ioStreams
-  ])
+  }, [fetchNuclioV3ioStreams, params.projectName, nuclioStreamsAreEnabled, removeV3ioStreams])
 
   const closeFeatureSetPanel = () => {
     setCreateFeatureSetPanelIsOpen(false)
@@ -148,30 +137,26 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(params.projectName).catch(
-      () => {
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Function deployment initiated successfully'
-        })
+    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function deployment initiated successfully'
+      })
 
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to fetch functions'
-        })
-      }
-    )
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Failed to fetch functions'
+      })
+    })
 
     if (funcs) {
       const currentItem = funcs.find(func => {
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      navigate(
-        `/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`
-      )
+      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
 
       return setNotification({
         status: 200,
@@ -187,30 +172,26 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(params.projectName).catch(
-      () => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Function deployment failed to initiate'
-        })
+    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Function deployment failed to initiate'
+      })
 
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to fetch functions'
-        })
-      }
-    )
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Failed to fetch functions'
+      })
+    })
 
     if (funcs) {
       const currentItem = funcs.find(func => {
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      navigate(
-        `/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`
-      )
+      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
 
       return setNotification({
         status: 400,
@@ -231,32 +212,34 @@ const ProjectMonitor = ({
   }
 
   return (
-    <ProjectMonitorView
-      artifactKind={artifactKind}
-      closeFeatureSetPanel={closeFeatureSetPanel}
-      closeFunctionsPanel={closeFunctionsPanel}
-      confirmData={confirmData}
-      createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
-      createFeatureSetSuccess={createFeatureSetSuccess}
-      createFunctionSuccess={createFunctionSuccess}
-      createNewOptions={createNewOptions}
-      handleDeployFunctionFailure={handleDeployFunctionFailure}
-      handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-      handleLaunchIDE={handleLaunchIDE}
-      isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
-      isPopupDialogOpen={isPopupDialogOpen}
-      navigate={navigate}
-      nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
-      params={params}
-      project={projectStore.project}
-      projectSummary={projectStore.projectSummary}
-      refresh={handleRefresh}
-      setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
-      setIsPopupDialogOpen={setIsPopupDialogOpen}
-      setShowFunctionsPanel={setShowFunctionsPanel}
-      showFunctionsPanel={showFunctionsPanel}
-      v3ioStreams={nuclioStore.v3ioStreams}
-    />
+    <>
+      <ProjectMonitorView
+        artifactKind={artifactKind}
+        closeFeatureSetPanel={closeFeatureSetPanel}
+        closeFunctionsPanel={closeFunctionsPanel}
+        confirmData={confirmData}
+        createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
+        createFeatureSetSuccess={createFeatureSetSuccess}
+        createFunctionSuccess={createFunctionSuccess}
+        createNewOptions={createNewOptions}
+        handleDeployFunctionFailure={handleDeployFunctionFailure}
+        handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+        handleLaunchIDE={handleLaunchIDE}
+        isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
+        isPopupDialogOpen={isPopupDialogOpen}
+        navigate={navigate}
+        nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
+        params={params}
+        project={projectStore.project}
+        projectSummary={projectStore.projectSummary}
+        refresh={handleRefresh}
+        setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
+        setIsPopupDialogOpen={setIsPopupDialogOpen}
+        setShowFunctionsPanel={setShowFunctionsPanel}
+        showFunctionsPanel={showFunctionsPanel}
+        v3ioStreams={nuclioStore.v3ioStreams}
+      />
+    </>
   )
 }
 

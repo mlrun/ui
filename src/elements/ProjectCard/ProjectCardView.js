@@ -13,13 +13,11 @@ import { getTimeElapsedByDate } from '../../utils'
 import { ReactComponent as ClockIcon } from '../../images/clock.svg'
 
 import './projectCard.scss'
-import { useMode } from '../../hooks/mode.hook'
 
 const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, ref) => {
   const cardRef = useRef()
   const chipRef = useRef()
   const navigate = useNavigate()
-  const { isDemoMode } = useMode()
 
   return (
     <div
@@ -30,7 +28,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
           !ref.current.contains(event.target) &&
           !chipRef.current?.contains(event.target)
         ) {
-          navigate(`/projects/${project.metadata.name}${isDemoMode ? '' : '/monitor'}`)
+          navigate(`/projects/${project.metadata.name}`)
         }
       }}
       ref={cardRef}

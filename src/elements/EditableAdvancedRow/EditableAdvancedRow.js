@@ -142,7 +142,6 @@ EditableAdvancedRow.propTypes = {
   content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
-  match: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setEditItem: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,

@@ -533,7 +533,7 @@ export const generateRequestData = (
   panelState,
   project,
   labels,
-  match,
+  params,
   selectedFunction,
   isFunctionTemplate,
   defaultFunc,
@@ -543,7 +543,7 @@ export const generateRequestData = (
   const func = isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
     : defaultFunc ??
-      `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+      `${params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
   const resources = {
     limits: {},
     requests: {}
