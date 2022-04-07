@@ -9,10 +9,14 @@ import Input from '../../../common/Input/Input'
 import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
 import Tip from '../../../common/Tip/Tip'
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
+import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
+import Tooltip from '../../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import {
   EXTERNAL_OFFLINE,
   externalOfflineKindOptions,
+  ONLINE,
   PARQUET,
   checkboxModels
 } from './featureSetsPanelTargetStore.util'
@@ -20,16 +24,20 @@ import {
 import { ReactComponent as Online } from '../../../images/nosql.svg'
 import { ReactComponent as Offline } from '../../../images/db-icon.svg'
 import { ReactComponent as ExternalOffline } from '../../../images/other.svg'
+import { ReactComponent as Edit } from '../../../images/edit.svg'
+import { ReactComponent as Checkmark } from '../../../images/checkmark.svg'
+import { ReactComponent as Close } from '../../../images/close.svg'
 
 import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
   data,
   handleAdvancedLinkClick,
+  handleDiscardPathChange,
   handleExternalOfflineKindPathOnBlur,
   handleKeyBucketingNumberChange,
-  handleOfflineKindPathOnBlur,
-  handleOnlineKindPathOnBlur,
+  handleOfflineKindPathChange,
+  handleOnlineKindPathChange,
   handleExternalOfflineKindTypeChange,
   handlePartitionColsOnBlur,
   handlePartitionColsOnChange,
@@ -42,6 +50,7 @@ const FeatureSetsPanelTargetStoreView = ({
   setData,
   setValidation,
   showAdvanced,
+  targetsPathEditData,
   triggerPartitionAdvancedCheckboxes,
   triggerPartitionCheckbox,
   validation
@@ -69,28 +78,77 @@ const FeatureSetsPanelTargetStoreView = ({
             kind => checkboxModels.online.id === kind
           ) && (
             <div className="target-store__inputs-container">
-              <Input
-                density="normal"
-                floatingLabel
-                invalid={!validation.isOnlineTargetPathValid}
-                label="Path"
-                onBlur={handleOnlineKindPathOnBlur}
-                onChange={path =>
-                  setData(prevState => ({
-                    ...prevState,
-                    online: { ...prevState.online, path }
-                  }))
-                }
-                placeholder={data.online.path}
-                setInvalid={value =>
-                  setValidation(state => ({
-                    ...state,
-                    isOnlineTargetPathValid: value
-                  }))
-                }
-                type="text"
-                value={data.online.path}
-              />
+              <div className="target-store__path-wrapper">
+                {targetsPathEditData.online.isEditMode && (
+                  <>
+                    <Input
+                      density="normal"
+                      floatingLabel
+                      focused
+                      invalid={!validation.isOnlineTargetPathValid}
+                      label="Path"
+                      onChange={path =>
+                        setData(prevState => ({
+                          ...prevState,
+                          online: { ...prevState.online, path }
+                        }))
+                      }
+                      placeholder={
+                        'v3io:///projects/{project}/FeatureStore/{name}/{run_id}/nosql/sets/{name}'
+                      }
+                      required
+                      setInvalid={value =>
+                        setValidation(state => ({
+                          ...state,
+                          isOnlineTargetPathValid: value
+                        }))
+                      }
+                      type="text"
+                      value={data.online.path}
+                      wrapperClassName="online-path"
+                    />
+                    <div className="target-store__path-actions editable">
+                      <RoundedIcon tooltipText="Apply">
+                        <Checkmark
+                          className="target-store__apply-btn"
+                          onClick={handleOnlineKindPathChange}
+                        />
+                      </RoundedIcon>
+                      <RoundedIcon
+                        onClick={() => handleDiscardPathChange(ONLINE)}
+                        tooltipText="Discard changes"
+                      >
+                        <Close />
+                      </RoundedIcon>
+                    </div>
+                  </>
+                )}
+                {!targetsPathEditData.online.isEditMode && (
+                  <>
+                    <Tooltip
+                      className="path-data online-path"
+                      template={<TextTooltipTemplate text={data.online.path} />}
+                    >
+                      {data.online.path}
+                    </Tooltip>
+                    <div className="target-store__path-actions">
+                      <RoundedIcon
+                        tooltipText="Edit"
+                        onClick={handleOnlineKindPathChange}
+                      >
+                        <Edit />
+                      </RoundedIcon>
+                    </div>
+                  </>
+                )}
+              </div>
+              {targetsPathEditData.online.isEditMode && (
+                <div className="annotation">
+                  {
+                    'Note that in order to keep the feature set versioning you need to keep the {run-id} as part of the path.'
+                  }
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -114,29 +172,84 @@ const FeatureSetsPanelTargetStoreView = ({
             kind => checkboxModels.parquet.id === kind
           ) && (
             <div className="target-store__inputs-container">
-              <div className="target-store__item">
-                <Input
-                  density="normal"
-                  floatingLabel
-                  label="Path"
-                  onBlur={handleOfflineKindPathOnBlur}
-                  onChange={path =>
-                    setData(state => ({
-                      ...state,
-                      parquet: { ...state.parquet, path }
-                    }))
-                  }
-                  placeholder={data.parquet.path}
-                  type="text"
-                  value={data.parquet.path}
-                  wrapperClassName="offline-path"
-                />
+              <div className="target-store__path-wrapper">
+                {targetsPathEditData.parquet.isEditMode && (
+                  <>
+                    <Input
+                      density="normal"
+                      floatingLabel
+                      focused
+                      invalid={!validation.isOfflineTargetPathValid}
+                      label="Path"
+                      onChange={path =>
+                        setData(state => ({
+                          ...state,
+                          parquet: { ...state.parquet, path }
+                        }))
+                      }
+                      placeholder={
+                        'v3io:///projects/{project}/FeatureStore/{name}/{run_id}/parquet/sets/{name}.parquet'
+                      }
+                      required
+                      setInvalid={value =>
+                        setValidation(state => ({
+                          ...state,
+                          isOfflineTargetPathValid: value
+                        }))
+                      }
+                      type="text"
+                      value={data.parquet.path}
+                      wrapperClassName="offline-path"
+                    />
+                    <div className="target-store__path-actions editable">
+                      <RoundedIcon
+                        onClick={handleOfflineKindPathChange}
+                        tooltipText="Apply"
+                      >
+                        <Checkmark className="target-store__apply-btn" />
+                      </RoundedIcon>
+                      <RoundedIcon
+                        onClick={() => handleDiscardPathChange(PARQUET)}
+                        tooltipText="Discard changes"
+                      >
+                        <Close />
+                      </RoundedIcon>
+                    </div>
+                  </>
+                )}
+                {!targetsPathEditData.parquet.isEditMode && (
+                  <>
+                    <Tooltip
+                      className="path-data offline-path"
+                      template={
+                        <TextTooltipTemplate text={data.parquet.path} />
+                      }
+                    >
+                      {data.parquet.path}
+                    </Tooltip>
+                    <div className="target-store__path-actions">
+                      <RoundedIcon
+                        onClick={handleOfflineKindPathChange}
+                        tooltipText="Edit"
+                      >
+                        <Edit />
+                      </RoundedIcon>
+                    </div>
+                  </>
+                )}
                 <CheckBox
                   item={{ id: 'partitioned', label: 'Partition' }}
                   onChange={id => triggerPartitionCheckbox(id, PARQUET)}
                   selectedId={data.parquet.partitioned}
                 />
               </div>
+              {targetsPathEditData.parquet.isEditMode && (
+                <div className="annotation">
+                  {
+                    'Note that in order to keep the feature set versioning you need to keep the {run-id} as part of the path.'
+                  }
+                </div>
+              )}
               {data.parquet.partitioned && (
                 <div className="partition-fields">
                   <span
@@ -233,7 +346,6 @@ const FeatureSetsPanelTargetStoreView = ({
                   }
                   placeholder="s3://bucket/path"
                   required
-                  requiredText="This field is required"
                   setInvalid={value =>
                     setValidation(state => ({
                       ...state,
@@ -329,11 +441,12 @@ const FeatureSetsPanelTargetStoreView = ({
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
+  handleDiscardPathChange: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,
   handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,
-  handleOfflineKindPathOnBlur: PropTypes.func.isRequired,
-  handleOnlineKindPathOnBlur: PropTypes.func.isRequired,
+  handleOfflineKindPathChange: PropTypes.func.isRequired,
+  handleOnlineKindPathChange: PropTypes.func.isRequired,
   handlePartitionColsOnBlur: PropTypes.func.isRequired,
   handlePartitionColsOnChange: PropTypes.func.isRequired,
   handlePartitionRadioButtonClick: PropTypes.func.isRequired,
