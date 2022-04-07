@@ -2,9 +2,11 @@ import React from 'react'
 
 import { ReactComponent as DB } from '../../../images/db-icon.svg'
 
-export const PARQUET = 'parquet'
 export const EXTERNAL_OFFLINE = 'externalOffline'
 export const EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE = 'csv'
+export const NOSQL = 'nosql'
+export const ONLINE = 'online'
+export const PARQUET = 'parquet'
 
 export const checkboxModels = {
   online: {
@@ -13,8 +15,7 @@ export const checkboxModels = {
       name: 'nosql',
       kind: 'nosql',
       online: true,
-      path:
-        'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
+      path: ''
     }
   },
   parquet: {
@@ -22,8 +23,7 @@ export const checkboxModels = {
     data: {
       name: 'parquet',
       kind: 'parquet',
-      path:
-        'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag'
+      path: ''
     }
   },
   externalOffline: {
@@ -85,13 +85,13 @@ export const onlineKindDataInitialState = {
   name: 'nosql',
   kind: 'nosql',
   online: true,
-  path: 'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
+  path: ''
 }
 
 export const offlineKindDataInitialState = {
   name: 'parquet',
   kind: 'parquet',
-  path: 'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag'
+  path: ''
 }
 
 export const externalOfflineKindDataInitialState = {
@@ -105,3 +105,20 @@ export const dataInitialState = {
   parquet: offlineKindDataInitialState,
   externalOffline: externalOfflineKindDataInitialState
 }
+
+export const targetsPathEditDataInitialState = {
+  online: {
+    isEditMode: false,
+    isModified: false
+  },
+  parquet: {
+    isEditMode: false,
+    isModified: false
+  }
+}
+
+export const generatePath = (project, name, kind) =>
+  `v3io:///projects/${project}/FeatureStore/${name ||
+    '{name}'}/{run_id}/${kind}/sets/${name || '{name}'}${
+    kind === PARQUET ? '.parquet' : ''
+  }`
