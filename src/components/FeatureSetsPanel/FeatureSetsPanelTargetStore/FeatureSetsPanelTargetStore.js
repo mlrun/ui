@@ -291,6 +291,35 @@ const FeatureSetsPanelTargetStore = ({
     }
   }
 
+  const handleDiscardPathChange = kind => {
+    setData(state => ({
+      ...state,
+      [kind]: {
+        ...state[kind],
+        path: kind === PARQUET ? offlineTarget.path : onlineTarget.path
+      }
+    }))
+    setTargetsPathEditData(state => ({
+      ...state,
+      [kind]: {
+        ...state[kind],
+        isEditMode: false
+      }
+    }))
+    setDisableButtons(state => ({
+      ...state,
+      [kind === PARQUET
+        ? 'isOfflineTargetPathEditModeClosed'
+        : 'isOnlineTargetPathEditModeClosed']: true
+    }))
+    setValidation(state => ({
+      ...state,
+      [kind === PARQUET
+        ? 'isOfflineTargetPathValid'
+        : 'isOnlineTargetPathValid']: true
+    }))
+  }
+
   const handleExternalOfflineKindTypeChange = kind => {
     setData(state => ({
       ...state,
@@ -367,6 +396,12 @@ const FeatureSetsPanelTargetStore = ({
         [kindId === PARQUET
           ? 'isOfflineTargetPathEditModeClosed'
           : 'isOnlineTargetPathEditModeClosed']: true
+      }))
+      setValidation(state => ({
+        ...state,
+        [kindId === PARQUET
+          ? 'isOfflineTargetPathValid'
+          : 'isOnlineTargetPathValid']: true
       }))
 
       if (
@@ -630,6 +665,7 @@ const FeatureSetsPanelTargetStore = ({
     <FeatureSetsPanelTargetStoreView
       data={data}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
+      handleDiscardPathChange={handleDiscardPathChange}
       handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
       handleExternalOfflineKindTypeChange={handleExternalOfflineKindTypeChange}
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}

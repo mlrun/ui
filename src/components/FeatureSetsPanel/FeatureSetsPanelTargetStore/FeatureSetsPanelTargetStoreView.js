@@ -16,6 +16,7 @@ import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTe
 import {
   EXTERNAL_OFFLINE,
   externalOfflineKindOptions,
+  ONLINE,
   PARQUET,
   checkboxModels
 } from './featureSetsPanelTargetStore.util'
@@ -25,12 +26,14 @@ import { ReactComponent as Offline } from '../../../images/db-icon.svg'
 import { ReactComponent as ExternalOffline } from '../../../images/other.svg'
 import { ReactComponent as Edit } from '../../../images/edit.svg'
 import { ReactComponent as Checkmark } from '../../../images/checkmark.svg'
+import { ReactComponent as Close } from '../../../images/close.svg'
 
 import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
   data,
   handleAdvancedLinkClick,
+  handleDiscardPathChange,
   handleExternalOfflineKindPathOnBlur,
   handleKeyBucketingNumberChange,
   handleOfflineKindPathChange,
@@ -76,7 +79,7 @@ const FeatureSetsPanelTargetStoreView = ({
           ) && (
             <div className="target-store__inputs-container">
               <div className="target-store__path-wrapper">
-                {targetsPathEditData.online.isEditMode ? (
+                {targetsPathEditData.online.isEditMode && (
                   <>
                     <Input
                       density="normal"
@@ -104,17 +107,23 @@ const FeatureSetsPanelTargetStoreView = ({
                       value={data.online.path}
                       wrapperClassName="online-path"
                     />
-                    <RoundedIcon
-                      className="target-store__apply-btn-wrapper"
-                      tooltipText="Apply"
-                    >
-                      <Checkmark
-                        className="target-store__apply-btn"
-                        onClick={handleOnlineKindPathChange}
-                      />
-                    </RoundedIcon>
+                    <div className="target-store__path-actions editable">
+                      <RoundedIcon tooltipText="Apply">
+                        <Checkmark
+                          className="target-store__apply-btn"
+                          onClick={handleOnlineKindPathChange}
+                        />
+                      </RoundedIcon>
+                      <RoundedIcon
+                        onClick={() => handleDiscardPathChange(ONLINE)}
+                        tooltipText="Discard changes"
+                      >
+                        <Close />
+                      </RoundedIcon>
+                    </div>
                   </>
-                ) : (
+                )}
+                {!targetsPathEditData.online.isEditMode && (
                   <>
                     <Tooltip
                       className="path-data online-path"
@@ -122,12 +131,14 @@ const FeatureSetsPanelTargetStoreView = ({
                     >
                       {data.online.path}
                     </Tooltip>
-                    <RoundedIcon
-                      tooltipText="Edit"
-                      onClick={handleOnlineKindPathChange}
-                    >
-                      <Edit />
-                    </RoundedIcon>
+                    <div className="target-store__path-actions">
+                      <RoundedIcon
+                        tooltipText="Edit"
+                        onClick={handleOnlineKindPathChange}
+                      >
+                        <Edit />
+                      </RoundedIcon>
+                    </div>
                   </>
                 )}
               </div>
@@ -162,7 +173,7 @@ const FeatureSetsPanelTargetStoreView = ({
           ) && (
             <div className="target-store__inputs-container">
               <div className="target-store__path-wrapper">
-                {targetsPathEditData.parquet.isEditMode ? (
+                {targetsPathEditData.parquet.isEditMode && (
                   <>
                     <Input
                       density="normal"
@@ -190,15 +201,23 @@ const FeatureSetsPanelTargetStoreView = ({
                       value={data.parquet.path}
                       wrapperClassName="offline-path"
                     />
-                    <RoundedIcon
-                      className="target-store__apply-btn-wrapper"
-                      onClick={handleOfflineKindPathChange}
-                      tooltipText="Apply"
-                    >
-                      <Checkmark className="target-store__apply-btn" />
-                    </RoundedIcon>
+                    <div className="target-store__path-actions editable">
+                      <RoundedIcon
+                        onClick={handleOfflineKindPathChange}
+                        tooltipText="Apply"
+                      >
+                        <Checkmark className="target-store__apply-btn" />
+                      </RoundedIcon>
+                      <RoundedIcon
+                        onClick={() => handleDiscardPathChange(PARQUET)}
+                        tooltipText="Discard changes"
+                      >
+                        <Close />
+                      </RoundedIcon>
+                    </div>
                   </>
-                ) : (
+                )}
+                {!targetsPathEditData.parquet.isEditMode && (
                   <>
                     <Tooltip
                       className="path-data offline-path"
@@ -208,12 +227,14 @@ const FeatureSetsPanelTargetStoreView = ({
                     >
                       {data.parquet.path}
                     </Tooltip>
-                    <RoundedIcon
-                      onClick={handleOfflineKindPathChange}
-                      tooltipText="Edit"
-                    >
-                      <Edit />
-                    </RoundedIcon>
+                    <div className="target-store__path-actions">
+                      <RoundedIcon
+                        onClick={handleOfflineKindPathChange}
+                        tooltipText="Edit"
+                      >
+                        <Edit />
+                      </RoundedIcon>
+                    </div>
                   </>
                 )}
                 <CheckBox
@@ -420,6 +441,7 @@ const FeatureSetsPanelTargetStoreView = ({
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
+  handleDiscardPathChange: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,
   handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,

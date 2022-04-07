@@ -5,6 +5,7 @@ import { ReactComponent as DB } from '../../../images/db-icon.svg'
 export const EXTERNAL_OFFLINE = 'externalOffline'
 export const EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE = 'csv'
 export const NOSQL = 'nosql'
+export const ONLINE = 'online'
 export const PARQUET = 'parquet'
 
 export const checkboxModels = {
