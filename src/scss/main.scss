@@ -80,7 +80,7 @@ main {
 
 .page {
   flex: 1 1;
-  min-width: 500px;
+  min-width: 100%;
   background-color: $white;
 
   .page-breadcrumbs {
