@@ -29,7 +29,8 @@ const Select = ({
   selectType,
   selectedId,
   selectedItemAction,
-  withoutBorder
+  withoutBorder,
+  withSelectedIcon
 }) => {
   const selectRef = useRef()
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
@@ -222,6 +223,7 @@ const Select = ({
                     }}
                     selectType={selectType}
                     selectedId={selectedId}
+                    withSelectedIcon={withSelectedIcon}
                   />
                 )
               })}
@@ -243,7 +245,8 @@ Select.defaultProps = {
   search: false,
   selectType: '',
   selectedId: '',
-  withoutBorder: false
+  withoutBorder: false,
+  withSelectedIcon: false
 }
 
 Select.propTypes = {
@@ -259,7 +262,8 @@ Select.propTypes = {
   search: PropTypes.bool,
   selectType: PropTypes.string,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  withoutBorder: PropTypes.bool
+  withoutBorder: PropTypes.bool,
+  withSelectedIcon: PropTypes.bool
 }
 
 export default React.memo(Select)
