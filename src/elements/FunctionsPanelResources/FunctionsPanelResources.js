@@ -14,6 +14,7 @@ import {
   VOLUME_MOUNT_AUTO_TYPE,
   VOLUME_MOUNT_NONE_TYPE
 } from './functionsPanelResources.util'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { PANEL_CREATE_MODE } from '../../constants'
 
@@ -32,7 +33,8 @@ const FunctionsPanelResources = ({
 }) => {
   const [podsPriorityClassName, setPodsPriorityClassName] = useState(
     defaultData.priority_class_name ||
-      functionsStore.newFunction.spec.priority_class_name
+      functionsStore.newFunction.spec.priority_class_name ||
+      frontendSpec.default_function_priority_class_name
   )
   const defaultPodsResources = useMemo(() => {
     return frontendSpec?.default_function_pod_resources
@@ -86,7 +88,7 @@ const FunctionsPanelResources = ({
     return (frontendSpec.valid_function_priority_class_names ?? []).map(
       className => ({
         id: className,
-        label: className
+        label: generateFunctionPriorityLabel(className)
       })
     )
   }, [frontendSpec.valid_function_priority_class_names])
@@ -96,9 +98,7 @@ const FunctionsPanelResources = ({
       setNewFunctionPriorityClassName(
         frontendSpec.default_function_priority_class_name ?? ''
       )
-      setPodsPriorityClassName(
-        frontendSpec.default_function_priority_class_name ?? ''
-      )
+
       setNewFunctionDisableAutoMount(false)
     }
   }, [
