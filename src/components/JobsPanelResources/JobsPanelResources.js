@@ -9,7 +9,7 @@ import {
   generateCpuValue,
   generateMemoryValue
 } from '../../utils/panelResources.util'
-import { parseFunctionPriorityLabel } from '../../utils/parseFunctionPriorityLabel'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { setRangeInputValidation } from './jobsPanelResources.util'
 import jobsActions from '../../actions/jobs'
 
@@ -28,7 +28,7 @@ const JobsPanelResources = ({
     return (frontendSpec.valid_function_priority_class_names ?? []).map(
       className => ({
         id: className,
-        label: parseFunctionPriorityLabel(className)
+        label: generateFunctionPriorityLabel(className)
       })
     )
   }, [frontendSpec.valid_function_priority_class_names])
