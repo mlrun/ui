@@ -16,9 +16,9 @@ const createConsumerGroupsContent = (content, params) => {
             return `/projects/${params.projectName}/monitor/consumer-groups/${contentItem.consumerGroup}`
           }
         },
-        stream: {
-          id: `stream.${identifier}`,
-          value: contentItem?.streamName,
+        streamPath: {
+          id: `streamPath.${identifier}`,
+          value: contentItem?.streamPath,
           class: 'table-cell-1'
         },
         realTimeFunction: {
