@@ -17,7 +17,7 @@ const createConsumerGroupsContent = (content, params) => {
           }
         },
         streamPath: {
-          id: `stream.${identifier}`,
+          id: `streamPath.${identifier}`,
           value: contentItem?.streamPath,
           class: 'table-cell-1'
         },
