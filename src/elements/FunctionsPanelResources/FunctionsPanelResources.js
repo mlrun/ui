@@ -33,7 +33,8 @@ const FunctionsPanelResources = ({
 }) => {
   const [podsPriorityClassName, setPodsPriorityClassName] = useState(
     defaultData.priority_class_name ||
-      functionsStore.newFunction.spec.priority_class_name
+      functionsStore.newFunction.spec.priority_class_name ||
+      frontendSpec.default_function_priority_class_name
   )
   const defaultPodsResources = useMemo(() => {
     return frontendSpec?.default_function_pod_resources
@@ -97,9 +98,7 @@ const FunctionsPanelResources = ({
       setNewFunctionPriorityClassName(
         frontendSpec.default_function_priority_class_name ?? ''
       )
-      setPodsPriorityClassName(
-        frontendSpec.default_function_priority_class_name ?? ''
-      )
+
       setNewFunctionDisableAutoMount(false)
     }
   }, [
