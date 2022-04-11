@@ -113,6 +113,12 @@ const ChipCell = ({
     }
   }, [handleResize, isEditMode])
 
+  useEffect(() => {
+    window.addEventListener('mainResize', handleResize)
+
+    return () => window.removeEventListener('mainResize', handleResize)
+  }, [handleResize])
+
   const handleAddNewChip = useCallback(
     (event, chip) => {
       event.preventDefault()
