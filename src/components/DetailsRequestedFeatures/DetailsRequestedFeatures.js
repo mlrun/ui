@@ -269,10 +269,23 @@ const DetailsRequestedFeatures = ({
                   )}
                 </div>
                 <div className="item-requested-features__table-cell cell_project-name">
-                  {project || match.params.projectName}
+                  <Tooltip
+                    template={
+                      <TextTooltipTemplate
+                        text={project || match.params.projectName}
+                      />
+                    }
+                  >
+                    {project || match.params.projectName}
+                  </Tooltip>
                 </div>
                 <div className="item-requested-features__table-cell">
-                  <span className="cell_feature-set">{featureSet}</span>
+                  <Tooltip
+                    className="cell_feature-set"
+                    template={<TextTooltipTemplate text={featureSet} />}
+                  >
+                    {featureSet}
+                  </Tooltip>
                   {tag && (
                     <>
                       <span className="cell_tag">: {tag}</span>
@@ -280,7 +293,9 @@ const DetailsRequestedFeatures = ({
                   )}
                 </div>
                 <div className="item-requested-features__table-cell cell_feature">
-                  {feature}
+                  <Tooltip template={<TextTooltipTemplate text={feature} />}>
+                    {feature}
+                  </Tooltip>
                 </div>
                 {editableItemIndex === index ? (
                   <>
@@ -318,7 +333,11 @@ const DetailsRequestedFeatures = ({
                     <div className="item-requested-features__table-cell cell_alias">
                       {alias && (
                         <div className="cell_alias__input-wrapper">
-                          <span>{alias}</span>
+                          <Tooltip
+                            template={<TextTooltipTemplate text={alias} />}
+                          >
+                            {alias}
+                          </Tooltip>
                           <RoundedIcon
                             className={!alias ? 'visibility-hidden' : ''}
                             onClick={() =>
