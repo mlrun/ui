@@ -34,6 +34,7 @@ const JobsPanelResourcesView = ({
             onClick={setPriorityClassName}
             options={validFunctionPriorityClassNames}
             selectedId={panelState.priority_class_name}
+            withSelectedIcon
           />
         </JobsPanelSection>
       )}

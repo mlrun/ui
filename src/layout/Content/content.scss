@@ -10,6 +10,7 @@
   background-color: $white;
   border-radius: $mainBorderRadius;
   box-shadow: $jobsShadow;
+  min-width: 900px;
 
   @include jobsFlex;
 
@@ -47,6 +48,7 @@
     display: flex;
     flex: 1 1;
     flex-direction: column;
+    min-width: 100%;
   }
 
   &_with-menu {

@@ -49,6 +49,7 @@ const FunctionsPanelResourcesView = ({
             onClick={selectPodsPriorityClassName}
             options={validFunctionPriorityClassNames}
             selectedId={podsPriorityClassName}
+            withSelectedIcon
           />
         </FunctionsPanelSection>
       )}

@@ -39,6 +39,10 @@ const FeatureSetsPanel = ({
     isTimestampKeyValid: true,
     isAccessKeyValid: true
   })
+  const [disableButtons, setDisableButtons] = useState({
+    isOnlineTargetPathEditModeClosed: true,
+    isOfflineTargetPathEditModeClosed: true
+  })
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)
   const history = useHistory()
@@ -129,6 +133,7 @@ const FeatureSetsPanel = ({
       accessKeyRequired={accessKeyRequired}
       closePanel={closePanel}
       confirmDialog={confirmDialog}
+      disableButtons={disableButtons}
       error={featureStore.error}
       featureStore={featureStore}
       handleSave={handleSave}
@@ -137,6 +142,7 @@ const FeatureSetsPanel = ({
       project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
+      setDisableButtons={setDisableButtons}
       setNewFeatureSetCredentialsAccessKey={
         setNewFeatureSetCredentialsAccessKey
       }
