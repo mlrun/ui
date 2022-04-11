@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import classNames from 'classnames'
 
@@ -7,6 +7,7 @@ import Navbar from '../Navbar/Navbar'
 import Notification from '../../common/Notification/Notification'
 
 import localStorageService from '../../utils/localStorageService'
+import { getTransitionEndEventName } from '../../utils/getTransitionEndEventName'
 
 import './PageView.scss'
 
@@ -14,6 +15,8 @@ export default function PageView({ children }) {
   const [isPinned, setIsPinned] = useState(
     localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
+  const mainRef = useRef()
+  const transitionEndEventName = getTransitionEndEventName()
 
   const projectName = useRouteMatch('/projects/:projectName')?.params
     .projectName
@@ -26,6 +29,14 @@ export default function PageView({ children }) {
     headerShown && 'has-header'
   )
 
+  useEffect(() => {
+    if (mainRef) {
+      mainRef.current.addEventListener(transitionEndEventName, () => {
+        window.dispatchEvent(new CustomEvent('mainResize'))
+      })
+    }
+  }, [isPinned, transitionEndEventName])
+
   return (
     <div className="app">
       {headerShown && <Header />}
@@ -37,7 +48,7 @@ export default function PageView({ children }) {
           setIsPinned={setIsPinned}
         />
       )}
-      <main id="main" className={pinnedClasses}>
+      <main id="main" className={pinnedClasses} ref={mainRef}>
         <div className="main-wrapper">{children}</div>
       </main>
 
