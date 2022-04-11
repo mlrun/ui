@@ -263,7 +263,7 @@ const realTimePipelinesTableHeaders = () => [
   },
   {
     header: 'Function',
-    class: 'functions_medium'
+    class: 'functions_big'
   },
   {
     header: '',

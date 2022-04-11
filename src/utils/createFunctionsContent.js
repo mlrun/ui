@@ -33,7 +33,7 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
           function: {
             id: `function.${identifierUnique}`,
             value: func.name,
-            class: 'functions_medium',
+            class: 'functions_big',
             getLink: tab =>
               generateLinkToDetailsPanel(
                 func.project,

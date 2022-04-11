@@ -11,3 +11,12 @@
     transition: all 0.3s ease-in-out;
   }
 }
+
+.main-wrapper {
+  display: flex;
+  flex: 1;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  overflow: auto;
+  width: 100%;
+}
