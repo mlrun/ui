@@ -26,6 +26,7 @@ const FeatureSetsPanelView = ({
   accessKeyRequired,
   closePanel,
   confirmDialog,
+  disableButtons,
   error,
   featureStore,
   handleSave,
@@ -34,11 +35,13 @@ const FeatureSetsPanelView = ({
   project,
   removeFeatureStoreError,
   setConfirmDialog,
+  setDisableButtons,
   setNewFeatureSetCredentialsAccessKey,
   setValidation,
   validation
 }) => {
   const validationIsFailed = !Object.values(validation).every(value => value)
+  const buttonsIsDisabled = !Object.values(disableButtons).every(value => value)
 
   return (
     <div className="new-item-side-panel-container">
@@ -91,6 +94,8 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelTargetStore
+              project={project}
+              setDisableButtons={setDisableButtons}
               setValidation={setValidation}
               validation={validation}
             />
@@ -122,14 +127,14 @@ const FeatureSetsPanelView = ({
               onClick={closePanel}
             />
             <Button
-              disabled={validationIsFailed}
+              disabled={validationIsFailed || buttonsIsDisabled}
               variant={SECONDARY_BUTTON}
               label="Save"
               onClick={() => handleSaveOnClick(false)}
             />
             <Button
               className="btn_start-ingestion"
-              disabled={validationIsFailed}
+              disabled={validationIsFailed || buttonsIsDisabled}
               label="Save and ingest"
               onClick={() => handleSaveOnClick(true)}
               variant={SECONDARY_BUTTON}
@@ -151,6 +156,7 @@ FeatureSetsPanelView.propTypes = {
   accessKeyRequired: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   confirmDialog: PropTypes.shape({ action: PropTypes.string.isRequired }),
+  disableButtons: PropTypes.shape({}).isRequired,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   featureStore: PropTypes.shape({}).isRequired,
   handleSave: PropTypes.func.isRequired,
@@ -159,6 +165,7 @@ FeatureSetsPanelView.propTypes = {
   project: PropTypes.string.isRequired,
   removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
+  setDisableButtons: PropTypes.func.isRequired,
   setNewFeatureSetCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired

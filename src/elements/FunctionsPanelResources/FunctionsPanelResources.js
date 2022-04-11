@@ -14,6 +14,7 @@ import {
   VOLUME_MOUNT_AUTO_TYPE,
   VOLUME_MOUNT_NONE_TYPE
 } from './functionsPanelResources.util'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { PANEL_CREATE_MODE } from '../../constants'
 
@@ -86,7 +87,7 @@ const FunctionsPanelResources = ({
     return (frontendSpec.valid_function_priority_class_names ?? []).map(
       className => ({
         id: className,
-        label: className
+        label: generateFunctionPriorityLabel(className)
       })
     )
   }, [frontendSpec.valid_function_priority_class_names])
