@@ -1,10 +1,7 @@
 .resources {
-  .volume {
-    &-mount,
-    &-toleration {
-      width: 150px;
-      margin-bottom: 20px;
-    }
+  .volume-mount {
+    width: 150px;
+    margin-bottom: 20px;
   }
 
   .volumes {
@@ -47,8 +44,24 @@
     }
   }
 
-  .pods-priority {
-    width: 300px;
-    margin-bottom: 20px;
+  .pods {
+    .panel-section__title {
+      margin-bottom: 10px;
+    }
+
+    .select {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    &-priority {
+      margin-right: 20px;
+    }
+  }
+
+  .volumes-section {
+    .panel-section__title {
+      margin-bottom: 10px;
+    }
   }
 }

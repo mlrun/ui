@@ -43,31 +43,34 @@ const FunctionsPanelResourcesView = ({
   return (
     <div className="functions-panel__item resources new-item-side-panel__item">
       <FunctionsPanelSection title="Resources" />
-      {validFunctionPriorityClassNames.length > 0 && (
-        <FunctionsPanelSection title="Pods priority">
-          <Select
-            className="pods-priority"
-            density="dense"
-            onClick={selectPodsPriorityClassName}
-            options={validFunctionPriorityClassNames}
-            selectedId={podsPriorityClassName}
-            withSelectedIcon
-          />
-        </FunctionsPanelSection>
-      )}
-      {mode === PANEL_CREATE_MODE && data.preemptionMode && (
-        <FunctionsPanelSection title="Pods toleration">
-          <Select
-            className="volume-toleration"
-            floatingLabel
-            label="Run on Spot nodes"
-            options={volumePreemptionModeOptions}
-            onClick={handleSelectPreemptionMode}
-            selectedId={data.preemptionMode}
-          />
-        </FunctionsPanelSection>
-      )}
+      <div className="pods">
+        {validFunctionPriorityClassNames.length > 0 && (
+          <FunctionsPanelSection title="Pods priority">
+            <Select
+              className="pods-priority"
+              onClick={selectPodsPriorityClassName}
+              options={validFunctionPriorityClassNames}
+              selectedId={podsPriorityClassName}
+              withSelectedIcon
+            />
+          </FunctionsPanelSection>
+        )}
+        {mode === PANEL_CREATE_MODE && data.preemptionMode && (
+          <FunctionsPanelSection title="Pods toleration">
+            <Select
+              className="pods-toleration"
+              floatingLabel
+              label="Run on Spot nodes"
+              options={volumePreemptionModeOptions}
+              onClick={handleSelectPreemptionMode}
+              selectedId={data.preemptionMode}
+              withSelectedIcon
+            />
+          </FunctionsPanelSection>
+        )}
+      </div>
       <FunctionsPanelSection
+        className="volumes-section"
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
       >

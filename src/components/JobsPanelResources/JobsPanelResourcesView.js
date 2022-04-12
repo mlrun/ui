@@ -153,6 +153,7 @@ const JobsPanelResourcesView = ({
             options={volumePreemptionModeOptions}
             onClick={handleSelectPreemptionMode}
             selectedId={panelState.preemption_mode}
+            withSelectedIcon
           />
         </JobsPanelSection>
       )}
