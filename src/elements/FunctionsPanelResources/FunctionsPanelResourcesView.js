@@ -9,7 +9,8 @@ import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSectio
 import {
   generateCpuValue,
   generateMemoryValue,
-  selectMemoryOptions
+  selectMemoryOptions,
+  volumePreemptionModeOptions
 } from '../../utils/panelResources.util'
 import {
   LIMITS,
@@ -28,6 +29,7 @@ const FunctionsPanelResourcesView = ({
   handleEditVolume,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
+  handleSelectPreemptionMode,
   handleSelectVolumeMount,
   mode,
   podsPriorityClassName,
@@ -50,6 +52,18 @@ const FunctionsPanelResourcesView = ({
             options={validFunctionPriorityClassNames}
             selectedId={podsPriorityClassName}
             withSelectedIcon
+          />
+        </FunctionsPanelSection>
+      )}
+      {mode === PANEL_CREATE_MODE && data.preemptionMode && (
+        <FunctionsPanelSection title="Pods toleration">
+          <Select
+            className="volume-toleration"
+            floatingLabel
+            label="Run on Spot nodes"
+            options={volumePreemptionModeOptions}
+            onClick={handleSelectPreemptionMode}
+            selectedId={data.preemptionMode}
           />
         </FunctionsPanelSection>
       )}
@@ -170,6 +184,7 @@ FunctionsPanelResourcesView.propTypes = {
   handleEditVolume: PropTypes.func.isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
+  handleSelectPreemptionMode: PropTypes.func.isRequired,
   handleSelectVolumeMount: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
   podsPriorityClassName: PropTypes.string.isRequired,

@@ -405,6 +405,7 @@ export const generateEditableItem = (functionData, job) => {
           volume_mounts: functionData?.spec.volume_mounts ?? [],
           volumes: functionData?.spec.volumes ?? [],
           node_selector: functionData?.spec.node_selector ?? {},
+          preemption_mode: functionData?.spec.preemption_mode ?? '',
           priority_class_name: functionData?.spec.priority_class_name ?? ''
         }
       },

@@ -1,7 +1,10 @@
 .resources {
-  .volume-mount {
-    width: 150px;
-    margin-bottom: 20px;
+  .volume {
+    &-mount,
+    &-toleration {
+      width: 150px;
+      margin-bottom: 20px;
+    }
   }
 
   .volumes {

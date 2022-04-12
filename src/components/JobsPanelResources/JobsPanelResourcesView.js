@@ -5,7 +5,10 @@ import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import Select from '../../common/Select/Select'
 import RangeInput from '../../common/RangeInput/RangeInput'
 
-import { selectMemoryOptions as selectTypeOptions } from '../../utils/panelResources.util'
+import {
+  selectMemoryOptions as selectTypeOptions,
+  volumePreemptionModeOptions
+} from '../../utils/panelResources.util'
 import { LIMITS, REQUESTS } from '../JobsPanel/jobsPanel.util'
 import JobsPanelNodeSelector from './JobsPanelNodeSelector/JobsPanelNodeSelector'
 import JobsPanelVolumes from './JobsPanelVolumes/JobsPanelVolumes'
@@ -13,6 +16,7 @@ import JobsPanelVolumes from './JobsPanelVolumes/JobsPanelVolumes'
 const JobsPanelResourcesView = ({
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
+  handleSelectPreemptionMode,
   panelDispatch,
   panelState,
   resourcesData,
@@ -140,6 +144,18 @@ const JobsPanelResourcesView = ({
           panelState={panelState}
         />
       </JobsPanelSection>
+      {panelState.preemption_mode && (
+        <JobsPanelSection title="Pods toleration">
+          <Select
+            className="volume-toleration"
+            floatingLabel
+            label="Run on Spot nodes"
+            options={volumePreemptionModeOptions}
+            onClick={handleSelectPreemptionMode}
+            selectedId={panelState.preemption_mode}
+          />
+        </JobsPanelSection>
+      )}
     </div>
   )
 }
@@ -147,6 +163,7 @@ const JobsPanelResourcesView = ({
 JobsPanelResourcesView.propTypes = {
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
+  handleSelectPreemptionMode: PropTypes.func.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   resourcesData: PropTypes.shape({}).isRequired,
