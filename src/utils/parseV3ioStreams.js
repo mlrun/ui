@@ -11,7 +11,7 @@ export const parseV3ioStreams = consumerGroups => {
 
     return {
       ...consumerGroupData,
-      streamPath: consumerGroupData.containerName + streamPath,
+      streamPath,
       functionName,
       streamName,
       ui: {

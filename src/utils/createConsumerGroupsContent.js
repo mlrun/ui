@@ -18,7 +18,7 @@ const createConsumerGroupsContent = (content, params) => {
         },
         streamPath: {
           id: `streamPath.${identifier}`,
-          value: contentItem?.streamPath,
+          value: contentItem?.containerName + contentItem?.streamPath,
           class: 'table-cell-1'
         },
         realTimeFunction: {
