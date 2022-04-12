@@ -41,7 +41,8 @@ const FeatureSetsPanel = ({
   })
   const [disableButtons, setDisableButtons] = useState({
     isOnlineTargetPathEditModeClosed: true,
-    isOfflineTargetPathEditModeClosed: true
+    isOfflineTargetPathEditModeClosed: true,
+    isUrlEditModeClosed: true
   })
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)

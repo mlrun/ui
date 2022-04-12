@@ -67,6 +67,17 @@ export const getFunctionParameters = (selectedFunction, method) => {
     .value()
 }
 
+export const getFunctionPriorityClass = selectedFunction => {
+  return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => {
+      return func.spec.priority_class_name
+    })
+    .flatten()
+    .unionBy('name')
+    .value()
+}
+
 export const getLimits = (selectedFunction, defaultLimits) => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
@@ -237,10 +248,14 @@ export const generateTableData = (
 ) => {
   const defaultResources = frontendSpec?.default_function_pod_resources
   const functionParameters = getFunctionParameters(selectedFunction, method)
+  const [functionPriorityClassName] = getFunctionPriorityClass(selectedFunction)
   const [limits] = getLimits(selectedFunction, defaultResources?.limits)
   const [requests] = getRequests(selectedFunction, defaultResources?.requests)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const [preemptionMode] = getPreemptionMode(selectedFunction)
+  const jobPriorityClassName =
+    functionPriorityClassName ??
+    frontendSpec.default_function_priority_class_name
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
   const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
@@ -283,10 +298,10 @@ export const generateTableData = (
     })
   }
 
-  if (frontendSpec.default_function_priority_class_name) {
+  if (jobPriorityClassName) {
     panelDispatch({
       type: panelActions.SET_PRIORITY_CLASS_NAME,
-      payload: frontendSpec.default_function_priority_class_name
+      payload: jobPriorityClassName
     })
   }
 
