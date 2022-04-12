@@ -24,6 +24,7 @@ const FunctionsPanelResources = ({
   functionsStore,
   mode,
   setNewFunctionDisableAutoMount,
+  setNewFunctionPreemtionMode,
   setNewFunctionPriorityClassName,
   setNewFunctionVolumeMounts,
   setNewFunctionVolumes,
@@ -72,6 +73,10 @@ const FunctionsPanelResources = ({
         defaultPodsResources?.limits.gpu ??
         ''
     },
+    preemptionMode:
+      frontendSpec.feature_flags.preemption_nodes === 'enabled'
+        ? frontendSpec.default_function_preemption_mode
+        : '',
     requests: {
       cpu:
         defaultData.resources?.requests?.cpu ??
@@ -95,6 +100,9 @@ const FunctionsPanelResources = ({
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
+      setNewFunctionPreemtionMode(
+        frontendSpec.default_function_preemption_mode ?? ''
+      )
       setNewFunctionPriorityClassName(
         frontendSpec.default_function_priority_class_name ?? ''
       )
@@ -102,9 +110,11 @@ const FunctionsPanelResources = ({
       setNewFunctionDisableAutoMount(false)
     }
   }, [
+    frontendSpec.default_function_preemption_mode,
     frontendSpec.default_function_priority_class_name,
     mode,
     setNewFunctionDisableAutoMount,
+    setNewFunctionPreemtionMode,
     setNewFunctionPriorityClassName
   ])
 
@@ -331,6 +341,14 @@ const FunctionsPanelResources = ({
     setNewFunctionVolumes(volumes)
   }
 
+  const handleSelectPreemptionMode = value => {
+    setData(state => ({
+      ...state,
+      preemptionMode: value
+    }))
+    setNewFunctionPreemtionMode(value)
+  }
+
   const handleSelectVolumeMount = value => {
     switch (value) {
       case VOLUME_MOUNT_AUTO_TYPE:
@@ -401,6 +419,7 @@ const FunctionsPanelResources = ({
       handleEditVolume={handleEditVolume}
       handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
+      handleSelectPreemptionMode={handleSelectPreemptionMode}
       handleSelectVolumeMount={handleSelectVolumeMount}
       mode={mode}
       podsPriorityClassName={podsPriorityClassName}

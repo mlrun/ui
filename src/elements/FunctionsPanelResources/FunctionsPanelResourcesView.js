@@ -9,7 +9,8 @@ import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSectio
 import {
   generateCpuValue,
   generateMemoryValue,
-  selectMemoryOptions
+  selectMemoryOptions,
+  volumePreemptionModeOptions
 } from '../../utils/panelResources.util'
 import {
   LIMITS,
@@ -28,6 +29,7 @@ const FunctionsPanelResourcesView = ({
   handleEditVolume,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
+  handleSelectPreemptionMode,
   handleSelectVolumeMount,
   mode,
   podsPriorityClassName,
@@ -41,19 +43,34 @@ const FunctionsPanelResourcesView = ({
   return (
     <div className="functions-panel__item resources new-item-side-panel__item">
       <FunctionsPanelSection title="Resources" />
-      {validFunctionPriorityClassNames.length > 0 && (
-        <FunctionsPanelSection title="Pods priority">
-          <Select
-            className="pods-priority"
-            density="dense"
-            onClick={selectPodsPriorityClassName}
-            options={validFunctionPriorityClassNames}
-            selectedId={podsPriorityClassName}
-            withSelectedIcon
-          />
-        </FunctionsPanelSection>
-      )}
+      <div className="pods">
+        {validFunctionPriorityClassNames.length > 0 && (
+          <FunctionsPanelSection title="Pods priority">
+            <Select
+              className="pods-priority"
+              onClick={selectPodsPriorityClassName}
+              options={validFunctionPriorityClassNames}
+              selectedId={podsPriorityClassName}
+              withSelectedIcon
+            />
+          </FunctionsPanelSection>
+        )}
+        {mode === PANEL_CREATE_MODE && data.preemptionMode && (
+          <FunctionsPanelSection title="Pods toleration">
+            <Select
+              className="pods-toleration"
+              floatingLabel
+              label="Run on Spot nodes"
+              options={volumePreemptionModeOptions}
+              onClick={handleSelectPreemptionMode}
+              selectedId={data.preemptionMode}
+              withSelectedIcon
+            />
+          </FunctionsPanelSection>
+        )}
+      </div>
       <FunctionsPanelSection
+        className="volumes-section"
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
       >
@@ -170,6 +187,7 @@ FunctionsPanelResourcesView.propTypes = {
   handleEditVolume: PropTypes.func.isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
+  handleSelectPreemptionMode: PropTypes.func.isRequired,
   handleSelectVolumeMount: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
   podsPriorityClassName: PropTypes.string.isRequired,

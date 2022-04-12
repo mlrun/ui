@@ -142,6 +142,17 @@ export const getNodeSelectors = selectedFunction => {
     .value()
 }
 
+export const getPreemptionMode = selectedFunction => {
+  return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => {
+      return func.spec.preemption_mode ?? ''
+    })
+    .flatten()
+    .unionBy('key')
+    .value()
+}
+
 export const getVolumeMounts = (selectedFunction, volumes, mode) => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
@@ -241,6 +252,7 @@ export const generateTableData = (
   const [limits] = getLimits(selectedFunction, defaultResources?.limits)
   const [requests] = getRequests(selectedFunction, defaultResources?.requests)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
+  const [preemptionMode] = getPreemptionMode(selectedFunction)
   const jobPriorityClassName =
     functionPriorityClassName ??
     frontendSpec.default_function_priority_class_name
@@ -276,6 +288,13 @@ export const generateTableData = (
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'cpu'
+    })
+  }
+
+  if (preemptionMode) {
+    panelDispatch({
+      type: panelActions.SET_PREEMPTION_MODE,
+      payload: preemptionMode
     })
   }
 
@@ -341,6 +360,7 @@ export const generateTableData = (
     environmentVariables,
     secret_sources: [],
     node_selector: parseDefaultNodeSelectorContent(node_selector),
+    preemption_mode: preemptionMode ?? '',
     priority_class_name: frontendSpec.default_function_priority_class_name ?? ''
   })
 }
@@ -493,6 +513,10 @@ export const generateTableDataFromDefaultData = (
     type: panelActions.SET_OUTPUT_PATH,
     payload: defaultData.task.spec.output_path ?? JOB_DEFAULT_OUTPUT_PATH
   })
+  panelDispatch({
+    type: panelActions.SET_PREEMPTION_MODE,
+    payload: defaultData.function?.spec.preemption_mode || ''
+  })
   setNewJob({
     access_key: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
     inputs: defaultData.task.spec.inputs ?? {},
@@ -508,6 +532,7 @@ export const generateTableDataFromDefaultData = (
     environmentVariables: defaultData.function?.spec.env ?? [],
     secret_sources: defaultData.task.spec.secret_sources ?? [],
     node_selector: defaultData.function?.spec.node_selector ?? {},
+    preemption_mode: defaultData.function?.spec.preemption_mode ?? '',
     priority_class_name: defaultData.function?.spec.priority_class_name ?? ''
   })
 
