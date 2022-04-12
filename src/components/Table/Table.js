@@ -72,7 +72,7 @@ const Table = ({
       calculatePanelHeight()
 
       document
-        .getElementById('main')
+        .querySelector('.main-wrapper')
         .addEventListener('scroll', calculatePanelHeight)
       window.addEventListener('resize', calculatePanelHeight)
     }
