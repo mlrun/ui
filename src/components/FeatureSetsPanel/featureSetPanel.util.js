@@ -7,6 +7,8 @@ export const checkValidation = (
   startIngestion,
   setAccessKeyRequired
 ) => {
+  let isValid = true
+
   const externalOfflineTarget = newFeatureSet.spec.targets.find(
     targetKind => targetKind.name === 'externalOffline'
   )
@@ -15,7 +17,7 @@ export const checkValidation = (
   )
 
   if (!Object.values(validation).every(value => value)) {
-    return false
+    isValid = false
   }
 
   if (newFeatureSet.metadata.name.length === 0 || !validation.isNameValid) {
@@ -24,7 +26,7 @@ export const checkValidation = (
       isNameValid: false
     }))
 
-    return false
+    isValid = false
   }
 
   if (newFeatureSet.spec.source.path.length === 0 || !validation.isUrlValid) {
@@ -33,7 +35,7 @@ export const checkValidation = (
       isUrlValid: false
     }))
 
-    return false
+    isValid = false
   }
 
   if (newFeatureSet.spec.source.kind === 'parquet') {
@@ -52,7 +54,7 @@ export const checkValidation = (
       }))
     } else {
       if (!validation.isTimeFieldValid) {
-        return false
+        isValid = false
       }
 
       if (start_time.length === 0 && end_time.length === 0) {
@@ -62,18 +64,18 @@ export const checkValidation = (
           isEndTimeValid: false
         }))
 
-        return false
+        isValid = false
       } else if (time_field.length === 0) {
         setValidation(prevState => ({
           ...prevState,
           isTimeFieldValid: false
         }))
 
-        return false
+        isValid = false
       }
 
       if (!validation.isStartTimeValid || !validation.isEndTimeValid) {
-        return false
+        isValid = false
       }
     }
   }
@@ -84,7 +86,7 @@ export const checkValidation = (
       isEntitiesValid: false
     }))
 
-    return false
+    isValid = false
   }
 
   if (
@@ -97,7 +99,7 @@ export const checkValidation = (
       isExternalOfflineTargetPathValid: false
     }))
 
-    return false
+    isValid = false
   }
 
   if (isPartitionByTimeExist && newFeatureSet.spec.timestamp_key.length === 0) {
@@ -106,7 +108,7 @@ export const checkValidation = (
       isTimestampKeyValid: false
     }))
 
-    return false
+    isValid = false
   }
 
   if (newFeatureSet.credentials.access_key.length === 0 && startIngestion) {
@@ -116,7 +118,7 @@ export const checkValidation = (
     }))
     setAccessKeyRequired(true)
 
-    return false
+    isValid = false
   } else {
     setValidation(state => ({
       ...state,
@@ -125,5 +127,5 @@ export const checkValidation = (
     setAccessKeyRequired(false)
   }
 
-  return true
+  return isValid
 }

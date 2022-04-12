@@ -72,6 +72,7 @@ const FeatureSetsPanelView = ({
           >
             <FeatureSetsPanelDataSource
               project={project}
+              setDisableButtons={setDisableButtons}
               setValidation={setValidation}
               validation={validation}
             />
