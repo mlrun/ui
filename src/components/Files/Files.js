@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -25,8 +26,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import filtersActions from '../../actions/filters'
 
@@ -154,9 +154,12 @@ const Files = ({
   useEffect(() => {
     setPageData(state => ({
       ...state,
-      ...generatePageData(!isEveryObjectValueEmpty(selectedFile))
+      ...generatePageData(
+        handleRequestOnExpand,
+        !isEveryObjectValueEmpty(selectedFile)
+      )
     }))
-  }, [selectedFile])
+  }, [handleRequestOnExpand, selectedFile])
 
   useEffect(() => {
     removeFile({})
@@ -193,21 +196,19 @@ const Files = ({
   useEffect(() => {
     if (
       filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
-      filtersStore.tag === TAG_FILTER_LATEST
+      isEmpty(filtersStore.iter)
     ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [match.params.pageTab, filtersStore.tag, filtersStore.groupBy, setFilters])
-
-  useEffect(() => {
-    setPageData(state => ({
-      ...state,
-      handleRequestOnExpand,
-      handleRemoveRequestData: handleRemoveFile
-    }))
-  }, [handleRemoveFile, handleRequestOnExpand])
+  }, [
+    match.params.pageTab,
+    filtersStore.tag,
+    filtersStore.iter,
+    filtersStore.groupBy,
+    setFilters
+  ])
 
   useEffect(() => {
     if (match.params.name) {
@@ -244,6 +245,7 @@ const Files = ({
       <Content
         content={files}
         handleCancel={() => setSelectedFile({})}
+        handleRemoveRequestData={handleRemoveFile}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
         match={match}

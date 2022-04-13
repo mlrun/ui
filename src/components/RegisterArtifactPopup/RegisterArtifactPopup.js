@@ -54,14 +54,14 @@ const RegisterArtifactPopup = ({
   }, [])
 
   const registerArtifact = useCallback(() => {
-    if (
-      registerArtifactData.key.trim().length === 0 ||
-      registerArtifactData.key.trim().length === 0
-    ) {
+    const name = registerArtifactData.key.trim()
+    const path = registerArtifactData.target_path.trim()
+
+    if (name.length === 0 || path.length === 0) {
       return setValidation(state => ({
         ...state,
-        isNameValid: false,
-        isTargetPathValid: false
+        isNameValid: name.length !== 0,
+        isTargetPathValid: path.length !== 0
       }))
     } else if (
       registerArtifactData.key.trim().length === 0 ||
@@ -161,13 +161,13 @@ const RegisterArtifactPopup = ({
         validation={validation}
         messageByKind={messagesByKind[artifactKind.toLowerCase()]}
       />
+      {registerArtifactData.error && (
+        <ErrorMessage
+          closeError={closeErrorMessage}
+          message={registerArtifactData.error}
+        />
+      )}
       <div className="pop-up-dialog__footer-container">
-        {registerArtifactData.error && (
-          <ErrorMessage
-            closeError={closeErrorMessage}
-            message={registerArtifactData.error}
-          />
-        )}
         <Button
           variant={TERTIARY_BUTTON}
           label="Cancel"
@@ -178,6 +178,7 @@ const RegisterArtifactPopup = ({
           variant={PRIMARY_BUTTON}
           label="Register"
           onClick={registerArtifact}
+          disabled={!validation.isNameValid || !validation.isTargetPathValid}
         />
       </div>
     </PopUpDialog>

@@ -4,6 +4,10 @@ import PropTypes from 'prop-types'
 import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+
+import { TAG_LATEST } from '../../constants'
 
 import './functionsPanelGeneral.scss'
 
@@ -19,10 +23,16 @@ const FunctionsPanelGeneralView = ({
       <FunctionsPanelSection title="General">
         <div className="general__required-info">
           <div className="name">
-            Name: <span>{data.name}</span>
+            <Tooltip template={<TextTooltipTemplate text={data.name} />}>
+              Name: <span>{data.name}</span>
+            </Tooltip>
           </div>
-          <div className="tag">
-            Tag: <span>{data.tag || 'latest'}</span>
+          <div className="tag data-ellipsis">
+            <Tooltip
+              template={<TextTooltipTemplate text={data.tag || TAG_LATEST} />}
+            >
+              Tag: <span>{data.tag || TAG_LATEST}</span>
+            </Tooltip>
           </div>
           <div className="runtime">
             Runtime: <span>{data.kind}</span>

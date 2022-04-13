@@ -6,7 +6,7 @@ import { createPortal } from 'react-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
-import { FEATURE_SETS_TAB } from '../../constants'
+import { FEATURE_SETS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import notificationActions from '../../actions/notification'
 import { checkValidation } from './featureSetPanel.util'
@@ -39,6 +39,11 @@ const FeatureSetsPanel = ({
     isTimestampKeyValid: true,
     isAccessKeyValid: true
   })
+  const [disableButtons, setDisableButtons] = useState({
+    isOnlineTargetPathEditModeClosed: true,
+    isOfflineTargetPathEditModeClosed: true,
+    isUrlEditModeClosed: true
+  })
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)
   const history = useHistory()
@@ -46,7 +51,11 @@ const FeatureSetsPanel = ({
   const handleSave = () => {
     const data = {
       kind: 'FeatureSet',
-      ...featureStore.newFeatureSet
+      ...featureStore.newFeatureSet,
+      metadata: {
+        ...featureStore.newFeatureSet.metadata,
+        tag: featureStore.newFeatureSet.metadata.tag || TAG_FILTER_LATEST
+      }
     }
 
     delete data.credentials
@@ -108,7 +117,7 @@ const FeatureSetsPanel = ({
   }
 
   const handleCreateFeatureSetSuccess = (name, tag) => {
-    createFeatureSetSuccess().then(() => {
+    createFeatureSetSuccess(tag).then(() => {
       history.push(
         `/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview`
       )
@@ -125,6 +134,7 @@ const FeatureSetsPanel = ({
       accessKeyRequired={accessKeyRequired}
       closePanel={closePanel}
       confirmDialog={confirmDialog}
+      disableButtons={disableButtons}
       error={featureStore.error}
       featureStore={featureStore}
       handleSave={handleSave}
@@ -133,6 +143,7 @@ const FeatureSetsPanel = ({
       project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
+      setDisableButtons={setDisableButtons}
       setNewFeatureSetCredentialsAccessKey={
         setNewFeatureSetCredentialsAccessKey
       }

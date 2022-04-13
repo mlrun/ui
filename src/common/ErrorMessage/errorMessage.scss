@@ -2,11 +2,16 @@
 
 .error {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   padding: 10px 14px;
   color: $amaranth;
   background-color: rgba($amaranth, 0.1);
   border: $errorBorder;
+
+  &__data {
+    display: flex;
+    align-items: center;
+  }
 
   &__message {
     margin-right: 10px;

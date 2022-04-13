@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import MembersPopUp from '../MembersPopUp/MembersPopUp'
+import Loader from '../../common/Loader/Loader'
 
 import { ReactComponent as Users } from '../../images/users.svg'
 
@@ -9,9 +10,9 @@ import './ProjectSettingsMembers.scss'
 
 const ProjectSettingsMembers = ({
   changeMembersCallback,
+  loading,
   membersDispatch,
   membersState,
-  projectMembershipIsEnabled,
   projectMembersIsShown,
   setNotification
 }) => {
@@ -19,37 +20,41 @@ const ProjectSettingsMembers = ({
     membersState.users.length + membersState.userGroups.length
   return (
     <div className="settings__card">
-      <div className="settings__card-content">
-        <div className="settings__card-content-col">
-          <div className="settings__members-summary">
-            <span className="settings__members-summary_icon">
-              <Users />
-            </span>
-            <span className="settings__members-summary_amount">
-              {totalMembersInProject}
-            </span>
-            member{totalMembersInProject !== 1 ? 's have' : ' has'} access to
-            this project
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="settings__card-content">
+          <div className="settings__card-content-col">
+            <div className="settings__members-summary">
+              <span className="settings__members-summary_icon">
+                <Users />
+              </span>
+              <span className="settings__members-summary_amount">
+                {totalMembersInProject}
+              </span>
+              member{totalMembersInProject !== 1 ? 's have' : ' has'} access to
+              this project
+            </div>
+            {projectMembersIsShown && (
+              <MembersPopUp
+                changeMembersCallback={changeMembersCallback}
+                membersState={membersState}
+                membersDispatch={membersDispatch}
+                setNotification={setNotification}
+              />
+            )}
           </div>
-          {projectMembershipIsEnabled && projectMembersIsShown && (
-            <MembersPopUp
-              changeMembersCallback={changeMembersCallback}
-              membersState={membersState}
-              membersDispatch={membersDispatch}
-              setNotification={setNotification}
-            />
-          )}
         </div>
-      </div>
+      )}
     </div>
   )
 }
 
 ProjectSettingsMembers.propTypes = {
   changeMembersCallback: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
-  projectMembershipIsEnabled: PropTypes.bool.isRequired,
   projectMembersIsShown: PropTypes.bool.isRequired
 }
 

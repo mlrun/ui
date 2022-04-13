@@ -86,7 +86,7 @@ const JobsPanelTitleView = ({
                     payload: name
                   })
                 }
-                validationRules={getValidationRules('job.name')}
+                validationRules={getValidationRules('common.name')}
                 setInvalid={value =>
                   setNameValid(state => ({ ...state, isNameValid: value }))
                 }

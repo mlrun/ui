@@ -17,7 +17,7 @@ import {
   ARTIFACTS_PAGE,
   CONSUMER_GROUPS_PAGE,
   CONSUMER_GROUP_PAGE,
-  DATASETS_TAB,
+  DATASETS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -98,6 +98,7 @@ const TableView = ({
                     />
                   )
                 case ARTIFACTS_PAGE:
+                case DATASETS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
                   return (
@@ -113,18 +114,7 @@ const TableView = ({
                     />
                   )
                 case FEATURE_STORE_PAGE:
-                  return match.params.pageTab === DATASETS_TAB ? (
-                    <ArtifactsTableRow
-                      actionsMenu={actionsMenu}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      key={i}
-                      match={match}
-                      rowItem={rowItem}
-                      pageData={pageData}
-                      selectedItem={selectedItem}
-                    />
-                  ) : (
+                  return (
                     <FeatureStoreTableRow
                       actionsMenu={actionsMenu}
                       content={content}
@@ -186,6 +176,7 @@ const TableView = ({
             tableContent.map((group, i) => {
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
+                case DATASETS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
                   return match.params.pageTab === REAL_TIME_PIPELINES_TAB ? (
@@ -230,21 +221,7 @@ const TableView = ({
                     />
                   )
                 case FEATURE_STORE_PAGE:
-                  return match.params.pageTab === DATASETS_TAB ? (
-                    <ArtifactsTableRow
-                      actionsMenu={actionsMenu}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      handleExpandRow={handleExpandRow}
-                      key={i}
-                      mainRowItemsCount={mainRowItemsCount}
-                      match={match}
-                      rowItem={groupLatestItem[i]}
-                      pageData={pageData}
-                      selectedItem={selectedItem}
-                      tableContent={group}
-                    />
-                  ) : (
+                  return (
                     <FeatureStoreTableRow
                       actionsMenu={actionsMenu}
                       content={content}

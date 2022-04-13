@@ -11,7 +11,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { getValidationRules } from '../../utils/validationService'
 import { generateKeyValues, parseKeyValues } from '../../utils'
-import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
+import { LABEL_BUTTON, PRIMARY_BUTTON, TAG_LATEST } from '../../constants'
 
 import './createFeatureVectorPopUp.scss'
 
@@ -26,7 +26,7 @@ const CreateFeatureVectorPopUp = ({
     featureVectorData.name
   )
   const [featureVectorTag, setFeatureVectorTag] = useState(
-    featureVectorData.tag || 'latest'
+    featureVectorData.tag || TAG_LATEST
   )
   const [featureVectorDescription, setFeatureVectorDescription] = useState(
     featureVectorData.description
@@ -71,9 +71,9 @@ const CreateFeatureVectorPopUp = ({
               setTagTooltipIsHidden(true)
               setFeatureVectorTag(value)
             }}
-            pattern="^(?=[\S\s]{1,56}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
             required
             type="text"
+            validationRules={getValidationRules('common.tag')}
             value={featureVectorTag}
           />
         </Tooltip>

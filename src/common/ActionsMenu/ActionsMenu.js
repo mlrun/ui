@@ -9,7 +9,7 @@ import RoundedIcon from '../RoundedIcon/RoundedIcon'
 
 import { ACTIONS_MENU } from '../../types'
 
-import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
+import { ReactComponent as ActionMenuIcon } from '../../images/elipsis.svg'
 
 import './actionsMenu.scss'
 
@@ -96,7 +96,7 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
       ref={actionMenuRef}
     >
       <RoundedIcon onClick={showActionsList}>
-        <ActionMenu />
+        <ActionMenuIcon />
       </RoundedIcon>
 
       {renderMenu &&

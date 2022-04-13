@@ -45,6 +45,8 @@ import {
   FETCH_ALL_JOB_RUNS_BEGIN,
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
+  SET_NEW_JOB_PREEMTION_MODE,
+  SET_NEW_JOB_PRIORITY_CLASS_NAME,
   STATUS_CODE_FORBIDDEN
 } from '../constants'
 
@@ -183,7 +185,7 @@ const jobsActions = {
           : (data || {}).runs.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
-        dispatch(jobsActions.setAllJobsData(data.runs || {}))
+        dispatch(jobsActions.setAllJobsData(data.runs || []))
 
         return newJobs
       })
@@ -316,6 +318,14 @@ const jobsActions = {
   setNewJobParameters: parameters => ({
     type: SET_NEW_JOB_PARAMETERS,
     payload: parameters
+  }),
+  setNewJobPreemtionMode: mode => ({
+    type: SET_NEW_JOB_PREEMTION_MODE,
+    payload: mode
+  }),
+  setNewJobPriorityClassName: className => ({
+    type: SET_NEW_JOB_PRIORITY_CLASS_NAME,
+    payload: className
   }),
   setNewJobSecretSources: secretSources => ({
     type: SET_NEW_JOB_SECRET_SOURCES,

@@ -35,6 +35,8 @@ export const initialState = {
       version: ''
     }
   },
+  preemption_mode: '',
+  priority_class_name: '',
   requests: {
     cpu: '',
     memory: ''
@@ -70,6 +72,7 @@ export const panelActions = {
   SET_LIMITS_NVIDIA_GPU: 'SET_LIMITS_NVIDIA_GPU',
   SET_MEMORY_UNIT: 'SET_MEMORY_UNIT',
   SET_OUTPUT_PATH: 'SET_OUTPUT_PATH',
+  SET_PREEMPTION_MODE: 'SET_PREEMPTION_MODE',
   SET_PREVIOUS_PANEL_DATA: 'SET_PREVIOUS_PANEL_DATA',
   SET_PREVIOUS_PANEL_DATA_ACCESS_KEY: 'SET_PREVIOUS_PANEL_DATA_ACCESS_KEY',
   SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
@@ -87,6 +90,7 @@ export const panelActions = {
   SET_PREVIOUS_PANEL_DATA_VOLUMES: 'SET_PREVIOUS_PANEL_DATA_VOLUMES',
   SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS:
     'SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS',
+  SET_PRIORITY_CLASS_NAME: 'SET_PRIORITY_CLASS_NAME',
   SET_REQUESTS: 'SET_REQUESTS',
   SET_REQUESTS_CPU: 'SET_REQUESTS_CPU',
   SET_REQUESTS_MEMORY: 'SET_REQUESTS_MEMORY',
@@ -229,6 +233,11 @@ export const panelReducer = (state, { type, payload }) => {
         ...state,
         outputPath: payload
       }
+    case panelActions.SET_PREEMPTION_MODE:
+      return {
+        ...state,
+        preemption_mode: payload
+      }
     case panelActions.SET_PREVIOUS_PANEL_DATA:
       return {
         ...state,
@@ -359,6 +368,11 @@ export const panelReducer = (state, { type, payload }) => {
             volume_mounts: payload
           }
         }
+      }
+    case panelActions.SET_PRIORITY_CLASS_NAME:
+      return {
+        ...state,
+        priority_class_name: payload
       }
     case panelActions.SET_REQUESTS:
       return {

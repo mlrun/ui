@@ -9,7 +9,7 @@ import RoundedIcon from '../RoundedIcon/RoundedIcon'
 
 import { ReactComponent as ArrowIcon } from '../../images/arrow.svg'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { generateProjectScreens } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'
@@ -20,12 +20,12 @@ import './breadcrums.scss'
 const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
   const breadcrumbsRef = useRef()
 
   const projectScreens = useMemo(() => {
-    return generateProjectScreens(match, isDemoMode)
-  }, [isDemoMode, match])
+    return generateProjectScreens(match, isStagingMode)
+  }, [isStagingMode, match])
   const projectsList = useMemo(() => {
     return generateProjectsList(projectStore.projectsNames.data)
   }, [projectStore.projectsNames.data])

@@ -32,6 +32,7 @@ const FeatureSetsPanelDataSourceView = ({
   featureStore,
   handleKindOnChange,
   handleUrlOnBlur,
+  handleUrlOnFocus,
   handleUrlPathTypeChange,
   handleUrlPathChange,
   setData,
@@ -75,6 +76,7 @@ const FeatureSetsPanelDataSourceView = ({
             matches={comboboxMatches}
             maxSuggestedMatches={3}
             onBlur={handleUrlOnBlur}
+            onFocus={handleUrlOnFocus}
             required
             requiredText="This field is required"
             selectDropdownList={comboboxSelectList}
@@ -154,6 +156,7 @@ FeatureSetsPanelDataSourceView.propTypes = {
   featureStore: PropTypes.shape({}).isRequired,
   handleKindOnChange: PropTypes.func.isRequired,
   handleUrlOnBlur: PropTypes.func.isRequired,
+  handleUrlOnFocus: PropTypes.func.isRequired,
   handleUrlPathTypeChange: PropTypes.func.isRequired,
   handleUrlPathChange: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,

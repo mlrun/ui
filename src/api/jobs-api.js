@@ -26,6 +26,10 @@ const generateRequestParams = filters => {
     }
   }
 
+  if (filters?.iter) {
+    params.iter = filters.iter
+  }
+
   return params
 }
 
@@ -66,8 +70,6 @@ export default {
       name: jobName,
       ...generateRequestParams(filters)
     }
-
-    params.iter = false
 
     return mainHttpClient.get('/runs', { params })
   },

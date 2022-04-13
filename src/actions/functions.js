@@ -55,7 +55,9 @@ import {
   GET_FUNCTION_WITH_HASH_FAILURE,
   GET_FUNCTION_WITH_HASH_SUCCESS,
   REMOVE_FUNCTION,
-  SET_NEW_FUNCTION_FORCE_BUILD
+  SET_NEW_FUNCTION_FORCE_BUILD,
+  SET_NEW_FUNCTION_PREEMTION_MODE,
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -369,6 +371,14 @@ const functionsActions = {
   setNewFunctionParameters: parameters => ({
     type: SET_NEW_FUNCTION_PARAMETERS,
     payload: parameters
+  }),
+  setNewFunctionPriorityClassName: className => ({
+    type: SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
+    payload: className
+  }),
+  setNewFunctionPreemtionMode: mode => ({
+    type: SET_NEW_FUNCTION_PREEMTION_MODE,
+    payload: mode
   }),
   setNewFunctionProject: project => ({
     type: SET_NEW_FUNCTION_PROJECT,

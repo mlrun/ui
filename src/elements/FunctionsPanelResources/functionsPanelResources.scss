@@ -43,4 +43,25 @@
       margin-right: 5px;
     }
   }
+
+  .pods {
+    .panel-section__title {
+      margin-bottom: 10px;
+    }
+
+    .select {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    &-priority {
+      margin-right: 20px;
+    }
+  }
+
+  .volumes-section {
+    .panel-section__title {
+      margin-bottom: 10px;
+    }
+  }
 }

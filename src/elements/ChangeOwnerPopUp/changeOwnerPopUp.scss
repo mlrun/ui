@@ -3,13 +3,14 @@
 
 .change-owner {
   margin-top: 15px;
+
   .owner-table {
     .search-row {
       position: relative;
       display: flex;
       align-items: center;
-      border-bottom: $primaryBorder;
       margin-bottom: 15px;
+      border-bottom: $primaryBorder;
 
       .search-input {
         display: flex;
@@ -27,9 +28,9 @@
 
       .search-role {
         width: 30%;
+        padding: 0 15px;
         font-weight: bold;
         text-align: right;
-        padding: 0 15px;
       }
     }
   }
@@ -44,13 +45,6 @@
       display: flex;
       align-items: center;
     }
-  }
-
-  .footer-annotation {
-    margin-bottom: 15px;
-    color: $topaz;
-    font-size: 12px;
-    white-space: pre-line;
   }
 }
 

@@ -1,9 +1,10 @@
-export const generateProjectScreens = (match, isDemoMode) => [
+export const generateProjectScreens = match => [
   {
     label: 'Project Monitoring',
     id: 'monitor'
   },
   { label: 'Feature Store', id: 'feature-store' },
+  { label: 'Datasets', id: 'datasets' },
   { label: 'Artifacts', id: 'files' },
   { label: 'Models', id: 'models' },
   { label: 'Jobs', id: 'jobs' },

@@ -1,5 +1,5 @@
 import {
-  DATASETS_TAB,
+  DATASETS,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB
@@ -82,7 +82,7 @@ export const getIdentifierMethod = tab => {
       return getFeatureSetIdentifier
     case FEATURE_VECTORS_TAB:
       return getFeatureVectorIdentifier
-    case DATASETS_TAB:
+    case DATASETS:
       return getArtifactIdentifier
     default:
       return getFeatureIdentifier

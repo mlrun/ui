@@ -29,27 +29,41 @@
 
     .projects-content-header {
       display: flex;
-      flex: 0 0 0;
       flex-flow: row wrap;
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      margin-bottom: 1rem;
-      padding-left: 15px;
+
+      &__col {
+        display: flex;
+        flex: 0 0 auto;
+        padding: 0 15px;
+        width: 100%;
+
+        @media screen and (min-width: 992px) {
+          width: 50%;
+        }
+
+        &-right {
+          justify-content: flex-end;
+        }
+      }
 
       &-item {
         display: flex;
-        flex: 0 0 23%;
-        align-items: center;
-        justify-content: space-between;
-        min-width: 100%;
+        flex: 0 0 100%;
+        align-items: flex-end;
+        justify-content: flex-start;
+        margin-bottom: 1rem;
 
-        &:not(:last-child) {
-          margin-right: 24px;
+        @media screen and (min-width: 992px) {
+          max-width: 435px;
         }
 
-        @media screen and (min-width: 576px) {
-          min-width: 435px;
+        .data-ellipsis,
+        .btn,
+        .split-btn {
+          height: 40px;
         }
       }
 
@@ -86,22 +100,6 @@
       width: auto;
       min-width: auto;
       margin-right: 1rem;
-      border: 0;
-
-      &__item {
-        margin: 0 24px 0 0;
-        font-weight: normal;
-        font-size: 24px;
-
-        &_active {
-          color: $primary;
-          font-weight: bold;
-        }
-
-        a {
-          padding: 8px 0;
-        }
-      }
     }
   }
 
@@ -111,9 +109,5 @@
 
   &-modal_opened {
     overflow: hidden;
-
-    .input-wrapper {
-      margin: 10px 0;
-    }
   }
 }

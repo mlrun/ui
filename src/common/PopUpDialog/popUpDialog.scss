@@ -11,6 +11,10 @@
   border-radius: $mainBorderRadius;
   box-shadow: 0 6px 26px rgba($black, 0.2);
 
+  &__buttons_wrapper {
+    display: flex;
+  }
+
   &__overlay {
     position: fixed;
     top: 0;

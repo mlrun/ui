@@ -10,6 +10,7 @@ import Tip from '../../common/Tip/Tip'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   ARTIFACTS_PAGE,
+  DATASETS_PAGE,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
@@ -44,6 +45,7 @@ const DetailsInfoView = React.forwardRef(
       !isEveryObjectValueEmpty(content) && (
         <div className="item-info">
           {(pageData.page === ARTIFACTS_PAGE ||
+            pageData.page === DATASETS_PAGE ||
             pageData.page === FILES_PAGE ||
             pageData.page === MODELS_PAGE ||
             pageData.page === FEATURE_STORE_PAGE) &&
@@ -92,6 +94,7 @@ const DetailsInfoView = React.forwardRef(
                 info = content[header.id]?.value
               } else if (
                 pageData.page === ARTIFACTS_PAGE ||
+                pageData.page === DATASETS_PAGE ||
                 pageData.page === FILES_PAGE ||
                 pageData.page === MODELS_PAGE ||
                 pageData.page === FEATURE_STORE_PAGE
@@ -173,6 +176,7 @@ const DetailsInfoView = React.forwardRef(
             })}
           </ul>
           {(pageData.page === ARTIFACTS_PAGE ||
+            pageData.page === DATASETS_PAGE ||
             pageData.page === FILES_PAGE ||
             pageData.page === MODELS_PAGE ||
             pageData.page === FEATURE_STORE_PAGE) &&

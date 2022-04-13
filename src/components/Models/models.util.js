@@ -85,12 +85,19 @@ export const generateModelsDetailsMenu = selectedModel => [
   {
     label: 'features',
     id: 'features',
-    hidden: !selectedModel.item?.features && !selectedModel.item?.feature_vector
+    hidden:
+      !selectedModel.item?.features &&
+      !selectedModel.item?.inputs &&
+      !selectedModel.item?.outputs &&
+      !selectedModel.item?.feature_vector
   },
   {
     label: 'statistics',
     id: 'statistics',
-    hidden: !selectedModel.item?.stats && !selectedModel.item?.feature_vector
+    hidden:
+      !selectedModel.item?.stats &&
+      !selectedModel.item?.feature_stats &&
+      !selectedModel.item?.feature_vector
   }
 ]
 
@@ -252,6 +259,10 @@ const realTimePipelinesTableHeaders = () => [
   },
   {
     header: 'Type',
+    class: 'functions_medium'
+  },
+  {
+    header: 'Function',
     class: 'functions_big'
   },
   {
@@ -318,7 +329,6 @@ export const generatePageData = (
   pageTab,
   handleDeployModel,
   handleRequestOnExpand,
-  handleRemoveRequestData,
   isSelectedModel
 ) => {
   const data = {
@@ -340,7 +350,6 @@ export const generatePageData = (
     data.details.infoHeaders = modelsInfoHeaders
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)
     data.handleRequestOnExpand = handleRequestOnExpand
-    data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     data.hidePageActionMenu = true
     data.details.menu = modelEndpointsDetailsMenu

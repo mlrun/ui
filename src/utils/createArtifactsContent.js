@@ -2,8 +2,8 @@ import React from 'react'
 
 import {
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
-  FEATURE_STORE_PAGE,
+  DATASETS,
+  DATASETS_PAGE,
   FILES_PAGE,
   MODELS_PAGE,
   MODEL_ENDPOINTS_TAB,
@@ -363,6 +363,7 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
           artifact.metadata?.uid,
           tab
         ),
+      showStatus: true,
       tooltip: artifact.spec?.model_uri
         ? `${name} - ${artifact.spec?.model_uri}`
         : name
@@ -448,8 +449,8 @@ const createDatasetsRowData = (artifact, project, isSelectedItem) => {
       getLink: tab =>
         generateLinkToDetailsPanel(
           project,
-          FEATURE_STORE_PAGE,
-          DATASETS_TAB,
+          DATASETS_PAGE,
+          null,
           artifact.db_key,
           artifact.tag,
           tab,
@@ -530,7 +531,8 @@ const createDatasetsRowData = (artifact, project, isSelectedItem) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',
-      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
+      actionHandler: (item, tab) =>
+        copyToClipboard(generateUri(item, tab ?? DATASETS)),
       hidden: isSelectedItem
     }
   }

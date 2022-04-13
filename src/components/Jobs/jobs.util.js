@@ -224,7 +224,7 @@ const generateTabs = () => {
 
 export const generatePageData = (
   pageTab,
-  isDemoMode,
+  isStagingMode,
   removeScheduledJob,
   handleSubmitJob,
   handleEditScheduleJob,
@@ -290,7 +290,7 @@ export const generatePageData = (
     filters: filtersByTab(pageTab, jobName) ?? [],
     page,
     tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
-    tabs: generateTabs(isDemoMode),
+    tabs: generateTabs(isStagingMode),
     withoutExpandButton: pageTab === MONITOR_WORKFLOWS_TAB && !workflowId
   }
 }
@@ -387,6 +387,7 @@ export const actionCreator = {
   removeNewJob: jobsActions.removeNewJob,
   removePods: detailsActions.removePods,
   removeScheduledJob: jobsActions.removeScheduledJob,
+  resetWorkflow: workflowsActions.resetWorkflow,
   setFilters: filtersActions.setFilters,
   setNotification: notificationActions.setNotification
 }
@@ -403,7 +404,9 @@ export const generateEditableItem = (functionData, job) => {
           resources: functionData?.spec.resources,
           volume_mounts: functionData?.spec.volume_mounts ?? [],
           volumes: functionData?.spec.volumes ?? [],
-          node_selector: functionData?.spec.node_selector ?? {}
+          node_selector: functionData?.spec.node_selector ?? {},
+          preemption_mode: functionData?.spec.preemption_mode ?? '',
+          priority_class_name: functionData?.spec.priority_class_name ?? ''
         }
       },
       schedule: null,

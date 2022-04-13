@@ -6,21 +6,21 @@ import FunctionsPanelEnvironmentVariablesView from './FunctionsPanelEnvironmentV
 import functionsActions from '../../actions/functions'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 const FunctionsPanelEnvironmentVariables = ({
   functionsStore,
   setNewFunctionEnv
 }) => {
   const [envVariables, setEnvVariables] = useState([])
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   useEffect(() => {
     setEnvVariables(parseEnvVariables(functionsStore.newFunction.spec.env))
   }, [functionsStore.newFunction.spec.env])
 
   const handleAddNewEnv = env => {
-    if (isDemoMode) {
+    if (isStagingMode) {
       const generatedVariable = generateEnvVariable(env)
 
       setNewFunctionEnv([
@@ -33,7 +33,7 @@ const FunctionsPanelEnvironmentVariables = ({
   }
 
   const handleEditEnv = env => {
-    if (isDemoMode) {
+    if (isStagingMode) {
       const generatedVariables = env.map(variable =>
         generateEnvVariable(variable)
       )
@@ -54,7 +54,7 @@ const FunctionsPanelEnvironmentVariables = ({
   }
 
   const handleDeleteEnv = env => {
-    if (isDemoMode) {
+    if (isStagingMode) {
       const generatedVariables = env.map(item => generateEnvVariable(item))
 
       setNewFunctionEnv([...generatedVariables])
@@ -71,7 +71,7 @@ const FunctionsPanelEnvironmentVariables = ({
       handleAddNewEnv={handleAddNewEnv}
       handleDeleteEnv={handleDeleteEnv}
       handleEditEnv={handleEditEnv}
-      isDemoMode={isDemoMode}
+      isStagingMode={isStagingMode}
     />
   )
 }

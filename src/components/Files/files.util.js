@@ -114,10 +114,11 @@ export const tableHeaders = isSelectedFile => [
   }
 ]
 
-export const generatePageData = isSelectedFile => ({
+export const generatePageData = (handleRequestOnExpand, isSelectedFile) => ({
   actionsMenuHeader,
   details: { menu: detailsMenu, infoHeaders, type: FILES_PAGE },
   filters,
+  handleRequestOnExpand,
   page,
   tableHeaders: tableHeaders(isSelectedFile)
 })

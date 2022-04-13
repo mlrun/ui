@@ -16,7 +16,7 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
@@ -95,46 +95,50 @@ const ProjectsView = ({
       </div>
       <div className="projects__wrapper">
         <div className="projects-content-header">
-          <div className="projects-content-header-item">
-            <ContentMenu
-              activeTab={selectedProjectsState}
-              match={match}
-              screen="active"
-              tabs={projectsStates}
-              onClick={setSelectedProjectsState}
-            />
+          <div className="projects-content-header__col">
+            <div className="projects-content-header-item">
+              <ContentMenu
+                activeTab={selectedProjectsState}
+                match={match}
+                screen="active"
+                tabs={projectsStates}
+                onClick={setSelectedProjectsState}
+              />
 
-            <Sort
-              isDescendingOrder={isDescendingOrder}
-              onSelectOption={setSortProjectId}
-              options={projectsSortOptions}
-              selectedId={sortProjectId}
-              setIsDescendingOrder={setIsDescendingOrder}
-            />
+              <Sort
+                isDescendingOrder={isDescendingOrder}
+                onSelectOption={setSortProjectId}
+                options={projectsSortOptions}
+                selectedId={sortProjectId}
+                setIsDescendingOrder={setIsDescendingOrder}
+              />
+            </div>
           </div>
-          <div className="projects-content-header-item">
-            <Search
-              className="projects-search"
-              matches={filterMatches}
-              onChange={setFilterByName}
-              placeholder="Search projects..."
-              setMatches={setFilterMatches}
-              value={filterByName}
-            />
-            <PageActionsMenu
-              actionsMenuHeader={'New Project'}
-              onClick={() => setCreateProject(true)}
-              showActionsMenu
-              variant={SECONDARY_BUTTON}
-            />
-            <RoundedIcon
-              onClick={refreshProjects}
-              className="panel-title__btn_close"
-              tooltipText="Refresh"
-              data-testid="pop-up-close-btn"
-            >
-              <RefreshIcon />
-            </RoundedIcon>
+          <div className="projects-content-header__col projects-content-header__col-right">
+            <div className="projects-content-header-item">
+              <Search
+                className="projects-search"
+                matches={filterMatches}
+                onChange={setFilterByName}
+                placeholder="Search projects..."
+                setMatches={setFilterMatches}
+                value={filterByName}
+              />
+              <PageActionsMenu
+                actionsMenuHeader={'New Project'}
+                onClick={() => setCreateProject(true)}
+                showActionsMenu
+                variant={PRIMARY_BUTTON}
+              />
+              <RoundedIcon
+                onClick={refreshProjects}
+                className="panel-title__btn_close"
+                tooltipText="Refresh"
+                data-testid="pop-up-close-btn"
+              >
+                <RefreshIcon />
+              </RoundedIcon>
+            </div>
           </div>
         </div>
         {projectStore.projects.length > 0 && !projectStore.error ? (

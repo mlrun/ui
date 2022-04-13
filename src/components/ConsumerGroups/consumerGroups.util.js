@@ -9,7 +9,7 @@ export const generatePageData = () => {
         class: 'table-cell-2'
       },
       {
-        header: 'Stream',
+        header: 'Stream Path',
         class: 'table-cell-2'
       },
       {

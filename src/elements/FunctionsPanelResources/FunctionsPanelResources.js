@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -14,20 +14,33 @@ import {
   VOLUME_MOUNT_AUTO_TYPE,
   VOLUME_MOUNT_NONE_TYPE
 } from './functionsPanelResources.util'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { PANEL_CREATE_MODE } from '../../constants'
 
 const FunctionsPanelResources = ({
   defaultData,
+  frontendSpec,
   functionsStore,
   mode,
   setNewFunctionDisableAutoMount,
+  setNewFunctionPreemtionMode,
+  setNewFunctionPriorityClassName,
   setNewFunctionVolumeMounts,
   setNewFunctionVolumes,
   setNewFunctionResources,
   setValidation,
   validation
 }) => {
+  const [podsPriorityClassName, setPodsPriorityClassName] = useState(
+    defaultData.priority_class_name ||
+      functionsStore.newFunction.spec.priority_class_name ||
+      frontendSpec.default_function_priority_class_name
+  )
+  const defaultPodsResources = useMemo(() => {
+    return frontendSpec?.default_function_pod_resources
+  }, [frontendSpec.default_function_pod_resources])
+
   const [data, setData] = useState({
     volumeMounts: getDefaultVolumeMounts(
       defaultData.volume_mounts ?? [],
@@ -47,21 +60,63 @@ const FunctionsPanelResources = ({
         defaultData.resources?.requests ?? {}
       ) ?? 'cpu',
     limits: {
-      cpu: defaultData.resources?.limits?.cpu ?? '',
-      memory: defaultData.resources?.limits?.memory ?? '',
-      'nvidia.com/gpu': defaultData.resources?.limits?.['nvidia.com/gpu'] ?? ''
+      cpu:
+        defaultData.resources?.limits?.cpu ??
+        defaultPodsResources?.limits.cpu ??
+        '',
+      memory:
+        defaultData.resources?.limits?.memory ??
+        defaultPodsResources?.limits.memory ??
+        '',
+      'nvidia.com/gpu':
+        defaultData.resources?.limits?.['nvidia.com/gpu'] ??
+        defaultPodsResources?.limits.gpu ??
+        ''
     },
+    preemptionMode:
+      frontendSpec.feature_flags.preemption_nodes === 'enabled'
+        ? frontendSpec.default_function_preemption_mode
+        : '',
     requests: {
-      cpu: defaultData.resources?.requests?.cpu ?? '',
-      memory: defaultData.resources?.requests?.memory ?? ''
+      cpu:
+        defaultData.resources?.requests?.cpu ??
+        defaultPodsResources?.requests.cpu ??
+        '',
+      memory:
+        defaultData.resources?.requests?.memory ??
+        defaultPodsResources?.requests.memory ??
+        ''
     }
   })
 
+  const validFunctionPriorityClassNames = useMemo(() => {
+    return (frontendSpec.valid_function_priority_class_names ?? []).map(
+      className => ({
+        id: className,
+        label: generateFunctionPriorityLabel(className)
+      })
+    )
+  }, [frontendSpec.valid_function_priority_class_names])
+
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
+      setNewFunctionPreemtionMode(
+        frontendSpec.default_function_preemption_mode ?? ''
+      )
+      setNewFunctionPriorityClassName(
+        frontendSpec.default_function_priority_class_name ?? ''
+      )
+
       setNewFunctionDisableAutoMount(false)
     }
-  }, [mode, setNewFunctionDisableAutoMount])
+  }, [
+    frontendSpec.default_function_preemption_mode,
+    frontendSpec.default_function_priority_class_name,
+    mode,
+    setNewFunctionDisableAutoMount,
+    setNewFunctionPreemtionMode,
+    setNewFunctionPriorityClassName
+  ])
 
   const handleSelectMemoryUnit = value => {
     const unit = value.match(/i/)
@@ -286,6 +341,14 @@ const FunctionsPanelResources = ({
     setNewFunctionVolumes(volumes)
   }
 
+  const handleSelectPreemptionMode = value => {
+    setData(state => ({
+      ...state,
+      preemptionMode: value
+    }))
+    setNewFunctionPreemtionMode(value)
+  }
+
   const handleSelectVolumeMount = value => {
     switch (value) {
       case VOLUME_MOUNT_AUTO_TYPE:
@@ -343,6 +406,11 @@ const FunctionsPanelResources = ({
     setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
   }
 
+  const selectPodsPriorityClassName = value => {
+    setNewFunctionPriorityClassName(value)
+    setPodsPriorityClassName(value)
+  }
+
   return (
     <FunctionsPanelResourcesView
       data={data}
@@ -351,13 +419,16 @@ const FunctionsPanelResources = ({
       handleEditVolume={handleEditVolume}
       handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
+      handleSelectPreemptionMode={handleSelectPreemptionMode}
       handleSelectVolumeMount={handleSelectVolumeMount}
       mode={mode}
-      setData={setData}
-      setMemoryValue={setMemoryValue}
+      podsPriorityClassName={podsPriorityClassName}
+      selectPodsPriorityClassName={selectPodsPriorityClassName}
       setCpuValue={setCpuValue}
       setGpuValue={setGpuValue}
+      setMemoryValue={setMemoryValue}
       validation={validation}
+      validFunctionPriorityClassNames={validFunctionPriorityClassNames}
     />
   )
 }
@@ -373,6 +444,12 @@ FunctionsPanelResources.propTypes = {
   validation: PropTypes.shape({})
 }
 
-export default connect(functionsStore => ({ ...functionsStore }), {
-  ...functionsActions
-})(FunctionsPanelResources)
+export default connect(
+  ({ functionsStore, appStore }) => ({
+    functionsStore,
+    frontendSpec: appStore.frontendSpec
+  }),
+  {
+    ...functionsActions
+  }
+)(FunctionsPanelResources)

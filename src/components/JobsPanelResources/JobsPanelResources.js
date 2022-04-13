@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -9,28 +9,58 @@ import {
   generateCpuValue,
   generateMemoryValue
 } from '../../utils/panelResources.util'
-import { createNewVolume } from '../../utils/createNewVolume'
-import jobsActions from '../../actions/jobs'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { setRangeInputValidation } from './jobsPanelResources.util'
+import jobsActions from '../../actions/jobs'
 
 const JobsPanelResources = ({
-  jobsStore,
+  frontendSpec,
   panelDispatch,
   panelState,
-  setNewJobNodeSelector,
-  setNewJobVolumeMounts,
-  setNewJobVolumes,
+  setNewJobPreemtionMode,
+  setNewJobPriorityClassName,
   setValidation,
   validation
 }) => {
+  const defaultPodsResources = useMemo(() => {
+    return frontendSpec?.default_function_pod_resources
+  }, [frontendSpec.default_function_pod_resources])
+  const validFunctionPriorityClassNames = useMemo(() => {
+    return (frontendSpec.valid_function_priority_class_names ?? []).map(
+      className => ({
+        id: className,
+        label: generateFunctionPriorityLabel(className)
+      })
+    )
+  }, [frontendSpec.valid_function_priority_class_names])
+
   const generateResourcesData = useCallback(
     () => ({
-      limitsCpu: generateCpuValue(panelState.limits.cpu),
-      requestsCpu: generateCpuValue(panelState.requests.cpu),
-      requestsMemory: generateMemoryValue(panelState.requests.memory),
-      limitsMemory: generateMemoryValue(panelState.limits.memory)
+      limitsCpu: generateCpuValue(
+        panelState.limits.cpu || defaultPodsResources?.limits?.cpu || ''
+      ),
+      requestsCpu: generateCpuValue(
+        panelState.requests.cpu || defaultPodsResources?.requests?.cpu || ''
+      ),
+      requestsMemory: generateMemoryValue(
+        panelState.requests.memory ||
+          defaultPodsResources?.requests?.memory ||
+          ''
+      ),
+      limitsMemory: generateMemoryValue(
+        panelState.limits.memory || defaultPodsResources?.limits.memory || ''
+      )
     }),
-    [panelState.limits.cpu, panelState.limits.memory, panelState.requests]
+    [
+      defaultPodsResources.limits.cpu,
+      defaultPodsResources.limits.memory,
+      defaultPodsResources.requests.cpu,
+      defaultPodsResources.requests.memory,
+      panelState.limits.cpu,
+      panelState.limits.memory,
+      panelState.requests.cpu,
+      panelState.requests.memory
+    ]
   )
 
   const handleSelectMemoryUnit = value => {
@@ -111,175 +141,12 @@ const JobsPanelResources = ({
     })
   }
 
-  const handleAddNewVolume = newVolume => {
-    const newVolumeMount = {
-      isDefault: false,
-      data: {
-        type: newVolume.type,
-        name: newVolume.name,
-        mountPath: newVolume.path
-      },
-      canBeModified: true
-    }
-    const generatedVolume = createNewVolume(newVolume)
-
+  const handleSelectPreemptionMode = value => {
     panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
-      payload: [
-        ...panelState.previousPanelData.tableData.volume_mounts,
-        newVolumeMount
-      ]
+      type: panelActions.SET_PREEMPTION_MODE,
+      payload: value
     })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
-      payload: [...panelState.tableData.volume_mounts, newVolumeMount]
-    })
-    setNewJobVolumeMounts([
-      ...jobsStore.newJob.function.spec.volume_mounts,
-      {
-        name: newVolumeMount.data.name,
-        mountPath: newVolumeMount.data.mountPath
-      }
-    ])
-    setNewJobVolumes([
-      ...jobsStore.newJob.function.spec.volumes,
-      generatedVolume
-    ])
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
-      payload: [
-        ...panelState.previousPanelData.tableData.volumes,
-        generatedVolume
-      ]
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_VOLUMES,
-      payload: [...panelState.tableData.volumes, generatedVolume]
-    })
-  }
-
-  const handleEditVolume = (volumes, volumeMounts) => {
-    setNewJobVolumes([...volumes])
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
-      payload: volumes
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_VOLUMES,
-      payload: volumes
-    })
-    setNewJobVolumeMounts(
-      volumeMounts.map(volume => ({
-        name: volume.data.name,
-        mountPath: volume.data.mountPath
-      }))
-    )
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
-      payload: volumeMounts
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
-      payload: volumeMounts
-    })
-  }
-
-  const handleDeleteVolume = (volumes, volumeMounts) => {
-    setNewJobVolumes(volumes)
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
-      payload: volumes
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_VOLUMES,
-      payload: volumes
-    })
-    setNewJobVolumeMounts(
-      volumeMounts.map(volumeMount => ({
-        name: volumeMount.data.name,
-        mountPath: volumeMount.data.mountPath
-      }))
-    )
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
-      payload: volumeMounts
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
-      payload: volumeMounts
-    })
-  }
-
-  const handleAddNewNodeSelector = newNodeSelector => {
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR,
-      payload: [
-        ...panelState.previousPanelData.tableData.node_selector,
-        newNodeSelector
-      ]
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_NODE_SELECTOR,
-      payload: [...panelState.tableData.node_selector, newNodeSelector]
-    })
-    setNewJobNodeSelector({
-      ...jobsStore.newJob.function.spec.node_selector,
-      [newNodeSelector.key]: newNodeSelector.value
-    })
-  }
-
-  const handleEditNodeSelector = nodeSelector => {
-    const newNodeSelector = { ...jobsStore.newJob.function.spec.node_selector }
-    const newTableData = [...panelState.tableData.node_selector].map(
-      dataItem => {
-        if (dataItem.key === nodeSelector.key) {
-          dataItem.key = nodeSelector.newKey || nodeSelector.key
-          dataItem.value = nodeSelector.value
-        }
-
-        return dataItem
-      }
-    )
-
-    if (nodeSelector.newKey) {
-      delete newNodeSelector[nodeSelector.key]
-    }
-
-    newNodeSelector[nodeSelector.newKey || nodeSelector.key] =
-      nodeSelector.value
-
-    setNewJobNodeSelector(newNodeSelector)
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR,
-      payload: newTableData
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_NODE_SELECTOR,
-      payload: newTableData
-    })
-  }
-
-  const handleDeleteNodeSelector = (index, nodeSelector) => {
-    const newNodeSelector = { ...jobsStore.newJob.function.spec.node_selector }
-
-    delete newNodeSelector[nodeSelector.key]
-    setNewJobNodeSelector(newNodeSelector)
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR,
-      payload: [
-        ...panelState.previousPanelData.tableData.node_selector.filter(
-          item => item.key !== nodeSelector.key
-        )
-      ]
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_NODE_SELECTOR,
-      payload: [
-        ...panelState.tableData.node_selector.filter(
-          item => item.key !== nodeSelector.key
-        )
-      ]
-    })
+    setNewJobPreemtionMode(value)
   }
 
   const setCpuValue = (value, data, type, validationField) => {
@@ -332,22 +199,28 @@ const JobsPanelResources = ({
     setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
   }
 
+  const setPriorityClassName = value => {
+    panelDispatch({
+      type: panelActions.SET_PRIORITY_CLASS_NAME,
+      payload: value
+    })
+    setNewJobPriorityClassName(value)
+  }
+
   return (
     <JobsPanelResourcesView
-      handleAddNewVolume={handleAddNewVolume}
-      handleAddNewNodeSelector={handleAddNewNodeSelector}
-      handleDeleteNodeSelector={handleDeleteNodeSelector}
-      handleDeleteVolume={handleDeleteVolume}
-      handleEditNodeSelector={handleEditNodeSelector}
-      handleEditVolume={handleEditVolume}
       handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
+      handleSelectPreemptionMode={handleSelectPreemptionMode}
+      panelDispatch={panelDispatch}
       panelState={panelState}
       resourcesData={generateResourcesData()}
       setCpuValue={setCpuValue}
       setGpuValue={setGpuValue}
       setMemoryValue={setMemoryValue}
+      setPriorityClassName={setPriorityClassName}
       validation={validation}
+      validFunctionPriorityClassNames={validFunctionPriorityClassNames}
     />
   )
 }
@@ -359,6 +232,12 @@ JobsPanelResources.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(jobsStore => jobsStore, { ...jobsActions })(
-  JobsPanelResources
-)
+export default connect(
+  ({ appStore }) => ({
+    frontendSpec: appStore.frontendSpec
+  }),
+  {
+    setNewJobPriorityClassName: jobsActions.setNewJobPriorityClassName,
+    setNewJobPreemtionMode: jobsActions.setNewJobPreemtionMode
+  }
+)(JobsPanelResources)

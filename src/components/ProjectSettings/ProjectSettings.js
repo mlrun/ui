@@ -124,9 +124,15 @@ const ProjectSettings = ({
 
   const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
-      fetchProjectIdAndOwner().then(fetchProjectMembers)
       fetchProjectMembersVisibility(match.params.projectName)
       fetchProjectOwnerVisibility(match.params.projectName)
+      fetchProjectIdAndOwner()
+        .then(fetchProjectMembers)
+        .finally(() =>
+          membersDispatch({
+            type: membersActions.GET_PROJECT_USERS_DATA_END
+          })
+        )
     }
   }, [
     fetchProjectIdAndOwner,
@@ -140,7 +146,13 @@ const ProjectSettings = ({
   }
 
   const changeOwnerCallback = () => {
-    fetchProjectIdAndOwner()
+    const prevOwner = membersState.projectInfo.owner.id
+
+    fetchProjectIdAndOwner().then(() => {
+      if (!membersState.members.some(member => member.id === prevOwner)) {
+        history.push('/projects/')
+      }
+    })
   }
 
   const resetProjectData = useCallback(() => {
@@ -150,6 +162,9 @@ const ProjectSettings = ({
   }, [])
 
   useEffect(() => {
+    membersDispatch({
+      type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
+    })
     fetchProjectUsersData()
 
     return () => {
@@ -182,15 +197,16 @@ const ProjectSettings = ({
           location={location}
           match={match}
           screen={page}
-          tabs={tabs}
+          tabs={tabs(projectMembershipIsEnabled)}
         />
-        {match.params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB ? (
+        {match.params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB &&
+        projectMembershipIsEnabled ? (
           <ProjectSettingsMembers
             changeMembersCallback={changeMembersCallback}
+            loading={membersState.loading}
             match={match}
             membersState={membersState}
             membersDispatch={membersDispatch}
-            projectMembershipIsEnabled={projectMembershipIsEnabled}
             projectMembersIsShown={projectMembersIsShown}
             setNotification={setNotification}
           />
