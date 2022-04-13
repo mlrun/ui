@@ -147,7 +147,8 @@ const featureVectorTable = {
       name: '.table-head__item:nth-of-type(1) .data-ellipsis',
       description: '.table-head__item:nth-of-type(2) .data-ellipsis',
       labels: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      updated: '.table-head__item:nth-of-type(4) .data-ellipsis'
+      entities: '.table-head__item:nth-of-type(4) .data-ellipsis',
+      updated: '.table-head__item:nth-of-type(5) .data-ellipsis'
     }
   },
   body: {

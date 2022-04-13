@@ -15,7 +15,6 @@ module.exports = function(inputStructure) {
 
   element.options = By.css(
     options(
-      inputStructure.root,
       inputStructure.elements.options,
       inputStructure.elements.option_name
     )
@@ -24,7 +23,6 @@ module.exports = function(inputStructure) {
   element.option = function(index) {
     return By.css(
       option(
-        inputStructure.root,
         inputStructure.elements.options,
         index,
         inputStructure.elements.option_name

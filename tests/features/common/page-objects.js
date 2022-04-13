@@ -15,6 +15,7 @@ module.exports = {
   commonPagesHeader: commonPagesHeader,
   Projects: projects,
   Project: project['project'],
+  Consumer_Groups: project['consumerGroups'],
   Demo_Project: project['demoProject'],
   Create_New_Project: interactivePopup['createNewProject'],
   Feature_Store_Feature_Sets_Tab: featureStore['featureSetsTab'],

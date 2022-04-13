@@ -186,7 +186,9 @@ const requestedFeaturesTable = {
         featureSet: '.item-requested-features__table-cell:nth-of-type(2)',
         feature: '.cell_feature',
         alias: '.cell_alias',
-        delete_btn: '.cell_delete svg'
+        add_alias: '.cell_actions .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.cell_actions-visible .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.cell_actions .round-icon-cp:nth-of-type(2)'
       }
     }
   }
@@ -459,7 +461,10 @@ module.exports = {
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector
   },
   requestedFeaturesInfoPane: {
-    Requested_Features_Table: commonTable(requestedFeaturesTable)
+    Requested_Features_Table: commonTable(requestedFeaturesTable),
+    Alias_Input: inputGroup(
+      generateInputGroup('.cell_alias__input-wrapper', false, false, false)
+    )
   },
   mlFunctionInfoPane: {
     Header: header,
@@ -470,7 +475,7 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders)
   },
   jobsMonitorTabInfoPane: {
-    Arrow_Back: By.css('.table__item a.item-header__back-btn'),
+    Arrow_Back: By.css('a.link-back__icon'),
 
     Header: header,
     Updated: updated,

@@ -20,7 +20,7 @@ module.exports = {
       'This is not the final version.'
   },
   Feature_Store: {
-    Tab_List: ['Feature Sets', 'Features', 'Feature Vectors', 'Datasets']
+    Tab_List: ['Feature Sets', 'Features', 'Feature Vectors']
   },
   Models: {
     Tab_List: ['Models', 'Model Endpoints (Beta)', 'Real-Time Pipelines']
@@ -65,6 +65,7 @@ module.exports = {
       'Version',
       'URI',
       'Last updated',
+      'Entities',
       'Label column',
       'Usage example'
     ]
@@ -168,10 +169,13 @@ module.exports = {
     Type_Options: ['General', 'Chart', 'Plot', 'Table']
   },
   Project_Settings: {
-    Tab_List: ['General', 'Secrets']
+    Tab_List: ['General', 'Members', 'Secrets']
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
+    Artifact_Name_Hint:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
+      'This field is required',
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
@@ -179,7 +183,7 @@ module.exports = {
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
     Feature_Set_Version_Hint:
-      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9',
+      'Valid characters: a–z, A–Z, 0–9, –, _\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Jobs_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',
@@ -191,7 +195,10 @@ module.exports = {
       'better performance. In this case the path would be path/bucket-num/year=/month=/day= etc.. In case the ' +
       'value is 0 then no bucketing will be done and your data will be partitioned by key.',
     Function_Name_Hint:
-      '• Valid characters: a-z, 0-9, -\n• Must begin and end with: a-z, 0-9\n• Length - max: 63',
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
+      'This field is required',
+    Function_Tag_Hint:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Function_Handler_Hint:
       'Enter the function handler name (e.g. for the default sample function the name should be `handler`)',
     Image_Name_Hint: 'The name of the function‘s container image',
@@ -308,7 +315,7 @@ module.exports = {
   Error_Messages: {
     Project_Already_Exists: /Project name "[^"]+[$"] already exists/,
     Projects_Limit_Reached:
-      'Resource limit reached. Cannot create more records',
+      'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance',
     Must_Select_One: 'Must select at least one'
   },
   Dropdown_Options: {

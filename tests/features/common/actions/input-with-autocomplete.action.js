@@ -33,7 +33,7 @@ const action = {
     value,
     caseSensitive = false
   ) {
-    let arr = await getOptionValues(driver, inputGroup.options, value)
+    let arr = await getOptionValues(driver, inputGroup.options)
     let tmpValue = value
 
     if (caseSensitive) {

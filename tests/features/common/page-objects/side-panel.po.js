@@ -264,7 +264,7 @@ const jobCustomParametersTable = {
 // TODO: Wait for some details
 const volumePathsTable = {
   root:
-    '.new-item-side-panel__body .accordion__container:nth-of-type(3) .job-panel__item > .panel-section:nth-of-type(2) .volumes-table',
+    '.new-item-side-panel__body .accordion__container:nth-of-type(3) .job-panel__item > .panel-section:nth-of-type(3) .volumes-table',
   header: {
     root: '.table__header',
     sorters: {
@@ -293,7 +293,7 @@ const volumePathsTable = {
 
 const resourcesNodeSelectorTable = {
   root:
-    '.new-item-side-panel__body .accordion__container:nth-of-type(3) .panel-section:nth-of-type(4) .key-value-table',
+    '.new-item-side-panel__body .accordion__container:nth-of-type(3) .panel-section:nth-of-type(5) .key-value-table',
   header: {
     root: '.table-row__header',
     sorters: {
@@ -302,14 +302,14 @@ const resourcesNodeSelectorTable = {
     }
   },
   body: {
-    offset: 1,
     add_row_btn: '.table-row .add-new-item-btn',
+    save_row_btn: '.btn-add',
     row: {
-      root: 'div[class^=table-row]',
+      root: '.table-row:not(.table-row__header)',
       fields: {
         key: '.table-cell__key .data-ellipsis',
         value: '.table-cell__value .data-ellipsis',
-        delete_btn: '.table-cell__actions button',
+        delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
         key_input: {
           componentType: inputGroup,
           structure: generateInputGroup('.table-cell__key', true, false, false)
@@ -322,8 +322,7 @@ const resourcesNodeSelectorTable = {
             false,
             false
           )
-        },
-        add_row_btn: 'button svg'
+        }
       }
     }
   }
@@ -340,14 +339,13 @@ const advancedEnvironmentVariablesTable = {
     }
   },
   body: {
-    offset: 1,
     add_row_btn: '.table-row .add-new-item-btn',
     row: {
       root: 'div[class^=table-row]',
       fields: {
         name: '.table-cell:nth-of-type(1) .data-ellipsis',
         value: '.table-cell:nth-of-type(2) .data-ellipsis',
-        delete_btn: '.key-value-table__btn',
+        delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
         name_input: {
           componentType: inputGroup,
           structure: generateInputGroup(
@@ -365,8 +363,7 @@ const advancedEnvironmentVariablesTable = {
             false,
             false
           )
-        },
-        add_row_btn: 'button svg'
+        }
       }
     }
   }
@@ -461,7 +458,7 @@ const newFunctionLabelsTable = {
 
 const functionVolumePathsTable = {
   root:
-    '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body',
+    '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(3) .panel-section__body',
   header: {
     root: '.table__header',
     sorters: {
@@ -499,18 +496,18 @@ const functionEnvironmentVariablesTable = {
     }
   },
   body: {
-    offset: 1,
     add_row_btn: '.add-new-item-btn',
+    save_row_btn: '.btn-add',
     row: {
-      root: '.table-row',
+      root: '.table-row:not(.table-row__header)',
       fields: {
         name: '.table-cell__key .data-ellipsis',
         value: '.table-cell__value .data-ellipsis',
-        delete_btn: '.table-cell:nth-of-type(2) .key-value-table__btn',
+        delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
         name_input: {
           componentType: inputGroup,
           structure: generateInputGroup(
-            '.table-cell__key.input-wrapper',
+            '.table-cell__key .input-wrapper',
             true,
             false,
             false
@@ -519,13 +516,12 @@ const functionEnvironmentVariablesTable = {
         value_input: {
           componentType: inputGroup,
           structure: generateInputGroup(
-            '.table-cell__value.input-wrapper',
+            '.table-cell__value .input-wrapper',
             true,
             false,
             false
           )
-        },
-        add_row_btn: 'button svg'
+        }
       }
     }
   }
@@ -600,14 +596,14 @@ const secretRuntimeConfigurationTable = {
     }
   },
   body: {
-    offset: 1,
     add_row_btn: '.add-new-item-btn',
+    save_row_btn: '.btn-add',
     row: {
-      root: '.table-row',
+      root: '.table-row:not(.table-row__header)',
       fields: {
         kind: '.table-cell__key',
         value: '.table-cell__value',
-        delete_btn: '.table-cell__actions button',
+        delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
         kind_dropdown: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
@@ -620,9 +616,7 @@ const secretRuntimeConfigurationTable = {
         value_input: {
           componentType: inputGroup,
           structure: generateInputGroup('.input-wrapper', true, false, true)
-        },
-        add_row_btn: '.btn-add',
-        remove_row_btn: 'button:nth-of-type(2)'
+        }
       }
     }
   }
@@ -664,7 +658,7 @@ const commonCrossCloseButton = By.css(
 
 const commonVolumePathsTableTypeDropdown = dropdownComponent(
   generateDropdownGroup(
-    '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .select',
+    '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .select',
     '.select__value',
     '.select__body .select__item',
     '.data-ellipsis .data-ellipsis'
@@ -673,7 +667,7 @@ const commonVolumePathsTableTypeDropdown = dropdownComponent(
 
 function resourcesTableCommonInput(accordionIndx, rowIndx, inputIndx) {
   return generateInputGroup(
-    `.new-item-side-panel .accordion__container:nth-of-type(${accordionIndx}) .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(${rowIndx}) .input-wrapper:nth-of-type(${inputIndx})`,
+    `.new-item-side-panel .accordion__container:nth-of-type(${accordionIndx}) .panel-section:nth-of-type(3) .panel-section__body .table__body .input-row-wrapper:nth-of-type(${rowIndx}) .input-wrapper:nth-of-type(${inputIndx})`,
     true,
     true,
     true
@@ -681,10 +675,10 @@ function resourcesTableCommonInput(accordionIndx, rowIndx, inputIndx) {
 }
 
 const commonAddNewRowButton = By.css(
-  '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(2) .panel-section__body .table__body button.btn-add'
+  '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3) .panel-section__body .table__body button.btn-add'
 )
 const commonDeleteNewRowButton = By.css(
-  '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(2) .panel-section__body .table__body button:not([class])'
+  '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3) .panel-section__body .table__body button:not([class])'
 )
 
 const commonAccessKeyCheckbox = checkboxComponent(
@@ -731,7 +725,7 @@ module.exports = {
         '.feature-set-panel .accordion__container:nth-of-type(1) h5'
       ),
       Collapse_Button: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.feature-set-panel .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon'
       ),
       URL_Combobox: comboBox(
         '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .combobox'
@@ -785,7 +779,7 @@ module.exports = {
         '.feature-set-panel .accordion__container:nth-of-type(2) h5'
       ),
       Collapse_Button: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.feature-set-panel .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon'
       ),
       Entities_Input: inputGroup(
         generateInputGroup(
@@ -809,7 +803,7 @@ module.exports = {
         '.feature-set-panel .accordion__container:nth-of-type(3) h5'
       ),
       Collapse_Button: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.feature-set-panel .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon'
       ),
       // online group
       Online_Checkbox: checkboxComponent(
@@ -1056,7 +1050,7 @@ module.exports = {
         )
       ),
       Error_Message: By.css(
-        '.feature-set-panel .accordion__container:nth-of-type(3) .error-message'
+        '.feature-set-panel .accordion__container:nth-of-type(3) .error'
       )
     },
     Access_Key_Checkbox: commonAccessKeyCheckbox,
@@ -1089,7 +1083,7 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(1) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel__body .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon'
       ),
       Data_Source_Input_Sources_Table: commonTable(dataSourceInputSourcesTable),
       Default_Input_Path_Input: inputGroup(
@@ -1131,7 +1125,7 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(2) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel__body .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon'
       ),
       Parameters_Additional_Settings_Input: inputGroup(
         generateInputGroup(
@@ -1216,11 +1210,11 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(3) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel__body .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon'
       ),
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .job-panel__item > .panel-section:nth-of-type(2)',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3)',
           'h5',
           true
         )
@@ -1325,7 +1319,7 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(4) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel__body .accordion__container:nth-of-type(4) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel__body .accordion__container:nth-of-type(4) .new-item-side-panel__expand-icon'
       ),
       Advanced_Environment_Variables_Table: commonTable(
         advancedEnvironmentVariablesTable
@@ -1360,7 +1354,7 @@ module.exports = {
       ),
       Environment_Variables_Value_Input: inputGroup(
         generateInputGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(4) .panel-section .input-wrapper:nth-of-type(2)',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(4) .panel-section .table-cell__value .input-wrapper',
           true,
           false,
           true
@@ -1394,7 +1388,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .btn-add'
       ),
       Discard_Row_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body button:nth-of-type(2)'
+        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .variables-table__btn:nth-of-type(2)'
       )
     },
     Access_Key_Checkbox: commonAccessKeyCheckbox,
@@ -1413,7 +1407,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(1) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon'
       ),
       // TODO: add labels for name, tag and runtime
       New_Function_Description_Text_Area: By.css(
@@ -1426,7 +1420,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(2) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon'
       ),
       New_Function_Code_Entry_Dropdown: dropdownComponent(
         generateDropdownGroup(
@@ -1513,18 +1507,18 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(3) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon'
       ),
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__title',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3)',
           'h5',
           true
         )
       ),
       New_Function_Volume_Mount_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .select.volume-mount',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3) .panel-section__body .select.volume-mount',
           false,
           false,
           false
@@ -1630,7 +1624,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(4) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(4) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(4) .new-item-side-panel__expand-icon'
       ),
       Function_Environment_Variables_Table: commonTable(
         functionEnvironmentVariablesTable
@@ -1690,7 +1684,7 @@ module.exports = {
         '.new-item-side-panel .accordion__container:nth-of-type(5) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(5) .new-item-side-panel__expand-icon .round-icon-cp__circle'
+        '.new-item-side-panel .accordion__container:nth-of-type(5) .new-item-side-panel__expand-icon'
       ),
       Topology_Router_Type_Dropdown: dropdownComponent(
         generateDropdownGroup(
