@@ -68,17 +68,17 @@ const CreateProjectDialog = ({
             />
           </div>
         </div>
+        {projectStore.newProject.error && (
+          <ErrorMessage
+            closeError={() => {
+              if (projectStore.newProject.error) {
+                removeNewProjectError()
+              }
+            }}
+            message={projectStore.newProject.error}
+          />
+        )}
         <div className="pop-up-dialog__footer-container">
-          {projectStore.newProject.error && (
-            <ErrorMessage
-              closeError={() => {
-                if (projectStore.newProject.error) {
-                  removeNewProjectError()
-                }
-              }}
-              message={projectStore.newProject.error}
-            />
-          )}
           <Button
             type="button"
             disabled={projectStore.loading}

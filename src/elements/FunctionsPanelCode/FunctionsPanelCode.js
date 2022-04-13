@@ -13,7 +13,7 @@ import {
   NEW_IMAGE,
   sourceCodeInBase64
 } from './functionsPanelCode.util'
-import { PANEL_CREATE_MODE } from '../../constants'
+import { PANEL_CREATE_MODE, TAG_LATEST } from '../../constants'
 import { trimSplit } from '../../utils'
 
 const FunctionsPanelCode = ({
@@ -89,7 +89,10 @@ const FunctionsPanelCode = ({
         )
           .replace('{project}', match.params.projectName)
           .replace('{name}', functionsStore.newFunction.metadata.name)
-          .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
+          .replace(
+            '{tag}',
+            functionsStore.newFunction.metadata.tag || TAG_LATEST
+          )
 
         setNewFunctionCommands(
           trimSplit(
@@ -196,7 +199,7 @@ const FunctionsPanelCode = ({
       )
         .replace('{project}', match.params.projectName)
         .replace('{name}', functionsStore.newFunction.metadata.name)
-        .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
+        .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
 
       if (mode === PANEL_CREATE_MODE) {
         setNewFunctionImage('')

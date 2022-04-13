@@ -35,6 +35,7 @@ export const initialState = {
       version: ''
     }
   },
+  preemption_mode: '',
   priority_class_name: '',
   requests: {
     cpu: '',
@@ -71,6 +72,7 @@ export const panelActions = {
   SET_LIMITS_NVIDIA_GPU: 'SET_LIMITS_NVIDIA_GPU',
   SET_MEMORY_UNIT: 'SET_MEMORY_UNIT',
   SET_OUTPUT_PATH: 'SET_OUTPUT_PATH',
+  SET_PREEMPTION_MODE: 'SET_PREEMPTION_MODE',
   SET_PREVIOUS_PANEL_DATA: 'SET_PREVIOUS_PANEL_DATA',
   SET_PREVIOUS_PANEL_DATA_ACCESS_KEY: 'SET_PREVIOUS_PANEL_DATA_ACCESS_KEY',
   SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
@@ -230,6 +232,11 @@ export const panelReducer = (state, { type, payload }) => {
       return {
         ...state,
         outputPath: payload
+      }
+    case panelActions.SET_PREEMPTION_MODE:
+      return {
+        ...state,
+        preemption_mode: payload
       }
     case panelActions.SET_PREVIOUS_PANEL_DATA:
       return {

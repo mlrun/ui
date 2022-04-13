@@ -146,7 +146,13 @@ const ProjectSettings = ({
   }
 
   const changeOwnerCallback = () => {
-    fetchProjectIdAndOwner()
+    const prevOwner = membersState.projectInfo.owner.id
+
+    fetchProjectIdAndOwner().then(() => {
+      if (!membersState.members.some(member => member.id === prevOwner)) {
+        history.push('/projects/')
+      }
+    })
   }
 
   const resetProjectData = useCallback(() => {

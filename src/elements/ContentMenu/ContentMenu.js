@@ -3,13 +3,9 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
-
 import './contentMenu.scss'
 
 const ContentMenu = ({ activeTab, match, screen, tabs, onClick }) => {
-  const isDemoMode = useDemoMode()
-
   const handleClick = (e, tabId) => {
     e.preventDefault()
     onClick(tabId)
@@ -33,9 +29,7 @@ const ContentMenu = ({ activeTab, match, screen, tabs, onClick }) => {
                       ? '/'
                       : `/projects/${
                           match.params.projectName
-                        }/${screen.toLowerCase()}/${tab.id}${
-                          isDemoMode ? '?demo=true' : ''
-                        }`
+                        }/${screen.toLowerCase()}/${tab.id}`
                   }
                   className={tab.icon && 'content-menu__item-icon'}
                   onClick={onClick && (e => handleClick(e, tab.id))}

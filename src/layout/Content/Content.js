@@ -48,6 +48,7 @@ const Content = ({
   getIdentifier,
   handleActionsMenuClick,
   handleCancel,
+  handleRemoveRequestData,
   handleSelectItem,
   header,
   loading,
@@ -176,7 +177,7 @@ const Content = ({
 
     if (parentRow.classList.contains('parent-row-expanded')) {
       parentRow.classList.remove('parent-row-expanded')
-      pageData.handleRemoveRequestData && pageData.handleRemoveRequestData(item)
+      handleRemoveRequestData && handleRemoveRequestData(item)
 
       setExpandedItems(prev => --prev)
     } else {

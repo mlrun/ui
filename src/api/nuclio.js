@@ -8,8 +8,8 @@ export default {
       }
     })
   },
-  getV3ioStreamShardLags: project =>
-    nuclioHttpClient.get('/v3io_streams/get_shard_lags', {
+  getV3ioStreamShardLags: (project, body) =>
+    nuclioHttpClient.post('/v3io_streams/get_shard_lags', body, {
       headers: { 'x-nuclio-project-name': project }
     }),
   getV3ioStreams: project =>

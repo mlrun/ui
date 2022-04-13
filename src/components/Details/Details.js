@@ -9,7 +9,7 @@ import artifactActions from '../../actions/artifacts'
 import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
+  DATASETS,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -132,7 +132,7 @@ const Details = ({
         pageData.details.type === FILES_PAGE ||
         pageData.details.type === MODELS_TAB ||
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
-        pageData.details.type === DATASETS_TAB
+        pageData.details.type === DATASETS
       ) {
         setInfoContent(
           generateArtifactsContent(pageData.details.type, selectedItem)

@@ -9,6 +9,7 @@ import {
 import Page from './layout/Page/Page'
 import Loader from './common/Loader/Loader'
 
+import { useMode } from './hooks/mode.hook'
 import {
   FEATURE_SETS_TAB,
   MODELS_TAB,
@@ -23,6 +24,7 @@ import './scss/main.scss'
 const CreateJobPage = React.lazy(() =>
   import('./components/CreateJobPage/CreateJobPage')
 )
+const Datasets = React.lazy(() => import('./components/Datasets/Datasets'))
 const FeatureStore = React.lazy(() =>
   import('./components/FeatureStore/FeatureStore')
 )
@@ -50,10 +52,8 @@ const AddToFeatureVectorPage = React.lazy(() =>
 )
 
 const App = () => {
-  // TODO: Remove after ProjectOverview is Done.
-  const search = window.location.search
-  const isDemo =
-    new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
+  const { isDemoMode } = useMode()
+
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Page>
@@ -64,7 +64,7 @@ const App = () => {
               exact
               render={routeProps => <Projects {...routeProps} />}
             />
-            {!isDemo && (
+            {!isDemoMode && (
               <Redirect
                 exact
                 from="/projects/:projectName"
@@ -140,11 +140,32 @@ const App = () => {
               path="/projects/:projectName/functions/:hash/:tab"
               render={routeProps => <Functions {...routeProps} />}
             />
+            <Redirect
+              exact
+              path={[
+                '/projects/:projectName/feature-store/datasets',
+                '/projects/:projectName/feature-store/datasets/:name/:tab',
+                '/projects/:projectName/feature-store/datasets/:name/:tag/:tab',
+                '/projects/:projectName/feature-store/datasets/:name/:tag/:iter/:tab'
+              ]}
+              to="/projects/:projectName/datasets/:name/:tag/:iter/:tab"
+            />
+            <Route
+              exact
+              path={[
+                '/projects/:projectName/datasets',
+                '/projects/:projectName/datasets/:name/:tag/:tab',
+                '/projects/:projectName/datasets/:name/:tag/:iter/:tab'
+              ]}
+              render={routeProps => <Datasets {...routeProps} />}
+            />
+
             <Route
               exact
               path="/projects/:projectName/feature-store/add-to-feature-vector"
               render={routeProps => <AddToFeatureVectorPage {...routeProps} />}
             />
+
             <Redirect
               exact
               from="/projects/:projectName/feature-store"

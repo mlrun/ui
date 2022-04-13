@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useMemo, useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
 import { cloneDeep, isNil } from 'lodash'
 
@@ -6,8 +6,10 @@ import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 
 import Input from '../../common/Input/Input'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import NoData from '../../common/NoData/NoData'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 import { headers } from './detailsRequestedFeatures.utils.js'
 import { handleFinishEdit } from '../Details/details.util.js'
@@ -19,8 +21,12 @@ import {
 } from './detailsRequestedFeaturesReducer.js'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
+import { ReactComponent as AddIcon } from '../../images/add.svg'
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as EditIcon } from '../../images/edit.svg'
+import { ReactComponent as LabelColumn } from '../../images/ic_target-with-dart.svg'
 
 import './detailsRequestedFeatures.scss'
 
@@ -44,6 +50,11 @@ const DetailsRequestedFeatures = ({
   })
   const [editableItemIndex, setEditableItemIndex] = useState(null)
   const [labelFetureIsEditable, setLabelFeatureIsEditable] = useState(false)
+
+  const labelFeature = useMemo(
+    () => parseFeatureTemplate(selectedItem.label_feature).feature,
+    [selectedItem]
+  )
 
   useEffect(() => {
     return () => {
@@ -97,7 +108,7 @@ const DetailsRequestedFeatures = ({
   }
 
   const handleItemClick = (field, fieldType, info, index, featureTemplate) => {
-    if (isNil(editableItemIndex)) {
+    if (isNil(editableItemIndex) || editableItemIndex !== index) {
       setEditableItemIndex(index)
       detailsRequestedFeaturesDispatch({
         type: detailsRequestedFeaturesActions.SET_EDIT_MODE,
@@ -217,7 +228,9 @@ const DetailsRequestedFeatures = ({
     })
   }
 
-  return (
+  return currentData.length === 0 ? (
+    <NoData />
+  ) : (
     <div className="item-requested-features">
       <div className="item-requested-features__table">
         <div className="item-requested-features__table-header">
@@ -245,11 +258,34 @@ const DetailsRequestedFeatures = ({
                 className="item-requested-features__table-row"
                 key={featureTemplate}
               >
+                <div className="item-requested-features__table-cel cell_icon">
+                  {labelFeature === feature && (
+                    <Tooltip
+                      className="icon-wrapper"
+                      template={<TextTooltipTemplate text="Label column" />}
+                    >
+                      <LabelColumn />
+                    </Tooltip>
+                  )}
+                </div>
                 <div className="item-requested-features__table-cell cell_project-name">
-                  {project || match.params.projectName}
+                  <Tooltip
+                    template={
+                      <TextTooltipTemplate
+                        text={project || match.params.projectName}
+                      />
+                    }
+                  >
+                    {project || match.params.projectName}
+                  </Tooltip>
                 </div>
                 <div className="item-requested-features__table-cell">
-                  <span className="cell_feature-set">{featureSet}</span>
+                  <Tooltip
+                    className="cell_feature-set"
+                    template={<TextTooltipTemplate text={featureSet} />}
+                  >
+                    {featureSet}
+                  </Tooltip>
                   {tag && (
                     <>
                       <span className="cell_tag">: {tag}</span>
@@ -257,55 +293,95 @@ const DetailsRequestedFeatures = ({
                   )}
                 </div>
                 <div className="item-requested-features__table-cell cell_feature">
-                  {feature}
-                </div>
-                {editableItemIndex === index ? (
-                  <div className="item-requested-features__table-cell cell_alias">
-                    <div className="cell_alias__input-wrapper">
-                      <Input
-                        className="input"
-                        focused
-                        onChange={alias => handleAliasChange(index, alias)}
-                        type="text"
-                        value={alias}
-                      />
-                      <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-                        <Checkmark
-                          className="details-item__apply-btn"
-                          onClick={() =>
-                            onFinishEdit(['features', 'label_feature'])
-                          }
-                        />
-                      </Tooltip>
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    className="item-requested-features__table-cell cell_alias"
-                    onClick={() =>
-                      handleItemClick(
-                        'features',
-                        'input',
-                        currentData,
-                        index,
-                        featureTemplate
-                      )
-                    }
-                  >
-                    <Tooltip
-                      template={<TextTooltipTemplate text="Click to edit" />}
-                    >
-                      <div>{alias}</div>
-                    </Tooltip>
-                  </div>
-                )}
-                <div className="cell_delete">
-                  <Tooltip template={<TextTooltipTemplate text="Delete" />}>
-                    <Delete
-                      onClick={() => setConfirmDialogData({ index, feature })}
-                    />
+                  <Tooltip template={<TextTooltipTemplate text={feature} />}>
+                    {feature}
                   </Tooltip>
                 </div>
+                {editableItemIndex === index ? (
+                  <>
+                    <div className="item-requested-features__table-cell cell_alias">
+                      <div className="cell_alias__input-wrapper">
+                        <Input
+                          className="input"
+                          focused
+                          onChange={alias => handleAliasChange(index, alias)}
+                          type="text"
+                          value={alias}
+                        />
+                      </div>
+                    </div>
+                    <div className="cell_actions cell_actions-visible">
+                      <RoundedIcon
+                        onClick={() =>
+                          onFinishEdit(['features', 'label_feature'])
+                        }
+                        tooltipText="Apply"
+                      >
+                        <Checkmark className="details-item__apply-btn" />
+                      </RoundedIcon>
+
+                      <RoundedIcon
+                        onClick={() => setEditableItemIndex(null)}
+                        tooltipText="Discard changes"
+                      >
+                        <Close />
+                      </RoundedIcon>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="item-requested-features__table-cell cell_alias">
+                      {alias && (
+                        <div className="cell_alias__input-wrapper">
+                          <Tooltip
+                            template={<TextTooltipTemplate text={alias} />}
+                          >
+                            {alias}
+                          </Tooltip>
+                          <RoundedIcon
+                            className={!alias ? 'visibility-hidden' : ''}
+                            onClick={() =>
+                              handleItemClick(
+                                'features',
+                                'input',
+                                currentData,
+                                index,
+                                featureTemplate
+                              )
+                            }
+                            tooltipText="Click to edit"
+                          >
+                            <EditIcon />
+                          </RoundedIcon>
+                        </div>
+                      )}
+                    </div>
+                    <div className="cell_actions">
+                      <RoundedIcon
+                        className={alias && 'visibility-hidden'}
+                        onClick={() =>
+                          handleItemClick(
+                            'features',
+                            'input',
+                            currentData,
+                            index,
+                            featureTemplate
+                          )
+                        }
+                        tooltipText="Click to add an alias"
+                      >
+                        <AddIcon />
+                      </RoundedIcon>
+
+                      <RoundedIcon
+                        onClick={() => setConfirmDialogData({ index, feature })}
+                        tooltipText="Delete"
+                      >
+                        <Delete />
+                      </RoundedIcon>
+                    </div>
+                  </>
+                )}
               </div>
             )
           })}

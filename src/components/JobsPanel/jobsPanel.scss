@@ -5,6 +5,10 @@
 @include newItemSidePanel;
 
 .job-panel {
+  &__buttons-wrapper {
+    display: flex;
+  }
+
   &__item {
     .panel-section__body {
       .default-input-wrapper {
@@ -40,6 +44,10 @@
         margin-right: 5px;
       }
 
+      .volume-toleration {
+        max-width: 150px;
+      }
+
       .range {
         max-width: 90px;
 
@@ -53,7 +61,7 @@
       }
 
       .pods-priority {
-        max-width: 300px;
+        max-width: 150px;
       }
     }
 

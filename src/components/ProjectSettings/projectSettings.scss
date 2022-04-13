@@ -7,7 +7,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  min-width: 600px;
+  min-width: 100%;
   background-color: $white;
 
   &__content {
@@ -27,13 +27,14 @@
   &__card {
     &-content {
       display: flex;
-      flex-flow: row wrap;
+      flex-flow: row nowrap;
       margin: 0 -15px;
 
       &-col {
         padding: 0 15px;
         flex: 0 0 auto;
         width: 50%;
+        min-width: 500px;
       }
     }
 

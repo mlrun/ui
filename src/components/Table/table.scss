@@ -107,6 +107,8 @@
 
     .functions {
       &_medium {
+        max-width: 240px;
+
         @include tableColumnFlex(1, 240px);
       }
 

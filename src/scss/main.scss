@@ -41,14 +41,15 @@ body {
 
 main {
   position: relative;
-  z-index: 1;
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
   width: 100%;
+  margin: 0;
   padding: 0;
-  overflow: auto;
-  transition: padding 0.3s ease-in-out;
+  overflow: hidden;
+  transition: margin-left 0.3s ease-in-out;
+  z-index: 1;
 
   &.has-header {
     height: calc(100vh - #{$headerHeight});
@@ -56,7 +57,7 @@ main {
   }
 
   &.pinned {
-    padding-left: $navbarWidth;
+    margin-left: $navbarWidth;
   }
 
   &.unpinned {
@@ -79,7 +80,7 @@ main {
 
 .page {
   flex: 1 1;
-  min-width: 500px;
+  min-width: 100%;
   background-color: $white;
 
   .page-breadcrumbs {
@@ -273,7 +274,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
 
-  button:not([class*='round-icon-cp__icon']) {
+  button:not([class*='round-icon-cp__circle']) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -350,8 +351,12 @@ textarea {
   }
 }
 
-.visiblity-hidden {
+.visibility-hidden {
   visibility: hidden;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .graph-container {

@@ -110,7 +110,7 @@ const projectsAction = {
           error.response.status === CONFLICT_CODE
             ? `Project name "${postData.metadata.name}" already exists`
             : error.response.status === AMOUNT_LIMIT_CODE
-            ? 'Resource limit reached. Cannot create more records'
+            ? 'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance'
             : error.message
 
         dispatch(projectsAction.createProjectFailure(message))

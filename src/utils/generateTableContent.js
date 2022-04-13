@@ -4,7 +4,7 @@ import {
   ARTIFACTS_PAGE,
   CONSUMER_GROUPS_PAGE,
   CONSUMER_GROUP_PAGE,
-  DATASETS_TAB,
+  DATASETS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -29,7 +29,7 @@ export const generateTableContent = (
   page,
   isTablePanelOpen,
   params,
-  isDemoMode,
+  isStagingMode,
   isSelectedItem
 ) => {
   if (
@@ -42,13 +42,13 @@ export const generateTableContent = (
             group,
             isSelectedItem,
             params,
-            isDemoMode,
+            isStagingMode,
             groupFilter === GROUP_BY_WORKFLOW
           )
         : page === FUNCTIONS_PAGE ||
           (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
         ? createFunctionsContent(group, isSelectedItem, params)
-        : page === FEATURE_STORE_PAGE && params.pageTab !== DATASETS_TAB
+        : page === FEATURE_STORE_PAGE
         ? createFeatureStoreContent(
             group,
             params.pageTab,
@@ -70,11 +70,11 @@ export const generateTableContent = (
       : page === CONSUMER_GROUPS_PAGE
       ? createConsumerGroupsContent(content, params)
       : page === JOBS_PAGE
-      ? createJobsContent(content, isSelectedItem, params, isDemoMode, false)
+      ? createJobsContent(content, isSelectedItem, params, isStagingMode, false)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
-        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB) ||
-        params.pageTab === DATASETS_TAB
+        page === DATASETS_PAGE ||
+        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB)
       ? createArtifactsContent(
           content,
           page,

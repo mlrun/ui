@@ -63,10 +63,14 @@ const createFeatureSetsRowData = (featureSet, project, isSelectedItem) => {
           tab,
           featureSet.uid
         ),
+      showTag: true,
+      showStatus: true,
       expandedCellContent: {
         class: 'artifacts_medium',
         value: featureSet.tag || truncateUid(featureSet.uid),
-        tooltip: featureSet.tag || featureSet.uid
+        tooltip: featureSet.tag || featureSet.uid,
+        showTag: true,
+        showStatus: true
       }
     },
     description: {
@@ -260,10 +264,14 @@ const createFeatureVectorsRowData = (
           tab,
           featureVector.uid
         ),
+      showTag: true,
+      showStatus: true,
       expandedCellContent: {
         class: 'artifacts_medium',
         value: featureVector.tag || truncateUid(featureVector.uid),
-        tooltip: featureVector.tag || featureVector.uid
+        tooltip: featureVector.tag || featureVector.uid,
+        showTag: true,
+        showStatus: true
       }
     },
     description: {
@@ -286,12 +294,20 @@ const createFeatureVectorsRowData = (
       type: 'hidden',
       hidden: isSelectedItem
     },
+    entity: {
+      id: `entity.${identifierUnique}`,
+      value: featureVector.index_keys?.join(', ') ?? '',
+      class: 'artifacts_small',
+      hidden: isSelectedItem
+    },
     updated: {
       id: `updated.${identifierUnique}`,
       value: featureVector.updated
         ? formatDatetime(new Date(featureVector.updated), 'N/A')
         : 'N/A',
       class: 'artifacts_small',
+      showTag: true,
+      showStatus: true,
       hidden: isSelectedItem
     },
     buttonCopy: {

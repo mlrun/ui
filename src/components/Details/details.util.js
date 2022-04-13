@@ -2,6 +2,7 @@ import React from 'react'
 import { isEmpty, isEqual, cloneDeep } from 'lodash'
 
 import {
+  DATASETS_PAGE,
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_BUILD_LOG_TAB,
@@ -44,6 +45,7 @@ import DetailsTransformations from '../DetailsTransformations/DetailsTransformat
 import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsPods from '../DetailsPods/DetailsPods'
+import NoData from '../../common/NoData/NoData'
 
 export const generateArtifactsContent = (detailsType, selectedItem) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
@@ -95,7 +97,9 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
       },
       kind: {
         value:
-          detailsType !== FEATURE_STORE_PAGE && detailsType !== FILES_PAGE
+          detailsType !== FEATURE_STORE_PAGE &&
+          detailsType !== FILES_PAGE &&
+          detailsType !== DATASETS_PAGE
             ? selectedItem.kind || ' '
             : null
       },
@@ -300,12 +304,19 @@ export const renderContent = (
       return detailsStore.modelFeatureVectorData.features ??
         (selectedItem.schema ||
           selectedItem.entities ||
-          selectedItem.features) ? (
+          selectedItem.features ||
+          selectedItem.inputs ||
+          selectedItem.outputs) ? (
         <DetailsMetadata
           selectedItem={
-            detailsStore.modelFeatureVectorData.features
-              ? detailsStore.modelFeatureVectorData
-              : selectedItem
+            selectedItem.schema ||
+            selectedItem.entities ||
+            selectedItem.features ||
+            selectedItem.inputs ||
+            selectedItem.outputs ||
+            !detailsStore.modelFeatureVectorData.features
+              ? selectedItem
+              : detailsStore.modelFeatureVectorData
           }
         />
       ) : null
@@ -317,19 +328,25 @@ export const renderContent = (
         selectedItem.analysis
       ) {
         return <DetailsAnalysis artifact={selectedItem} />
-      } else return null
+      } else return <NoData />
     case DETAILS_STATISTICS_TAB:
-      if (detailsStore.modelFeatureVectorData.stats || selectedItem.stats) {
+      if (
+        detailsStore.modelFeatureVectorData.stats ||
+        selectedItem.stats ||
+        selectedItem.feature_stats
+      ) {
         return (
           <DetailsStatistics
             selectedItem={
-              detailsStore.modelFeatureVectorData.stats
-                ? detailsStore.modelFeatureVectorData
-                : selectedItem
+              selectedItem?.stats ||
+              selectedItem.feature_stats ||
+              !detailsStore.modelFeatureVectorData.stats
+                ? selectedItem
+                : detailsStore.modelFeatureVectorData.stats
             }
           />
         )
-      } else return null
+      } else return <NoData />
     case DETAILS_REQUESTED_FEATURES_TAB:
       return (
         <DetailsRequestedFeatures
@@ -410,6 +427,9 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+  },
+  entities: {
+    value: selectedItem.index_keys?.join(', ')
   },
   usage_example: {
     value: selectedItem.usage_example ?? ''

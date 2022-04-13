@@ -31,8 +31,7 @@ import {
   MODELS_TAB,
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -237,13 +236,11 @@ const Models = ({
         match.params.pageTab,
         handleDeployModel,
         handleRequestOnExpand,
-        handleRemoveModel,
         !isEveryObjectValueEmpty(selectedModel)
       )
     }))
   }, [
     handleDeployModel,
-    handleRemoveModel,
     handleRequestOnExpand,
     match.params.pageTab,
     selectedModel,
@@ -256,7 +253,7 @@ const Models = ({
     } else if (
       match.params.pageTab === REAL_TIME_PIPELINES_TAB ||
       filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
-      filtersStore.tag === TAG_FILTER_LATEST
+      isEmpty(filtersStore.iter)
     ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else {
@@ -267,6 +264,7 @@ const Models = ({
     match.params.projectName,
     match.params.pipelineId,
     filtersStore.tag,
+    filtersStore.iter,
     setFilters
   ])
 
@@ -372,6 +370,9 @@ const Models = ({
         content={sortedContent}
         handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
         handleCancel={() => setSelectedModel({})}
+        handleRemoveRequestData={
+          match.params.pageTab === MODELS_TAB && handleRemoveModel
+        }
         loading={artifactsStore.loading}
         match={match}
         pageData={pageData}

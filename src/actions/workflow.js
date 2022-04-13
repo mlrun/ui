@@ -5,7 +5,8 @@ import {
   FETCH_WORKFLOW_SUCCESS,
   FETCH_WORKFLOWS_BEGIN,
   FETCH_WORKFLOWS_FAILURE,
-  FETCH_WORKFLOWS_SUCCESS
+  FETCH_WORKFLOWS_SUCCESS,
+  RESET_WORKFLOW
 } from '../constants'
 import { parseWorkflows } from '../utils/parseWorkflows'
 
@@ -34,11 +35,11 @@ const workflowActions = {
     type: FETCH_WORKFLOW_FAILURE,
     payload: error
   }),
-  fetchWorkflows: project => dispatch => {
+  fetchWorkflows: (project, filter) => dispatch => {
     dispatch(workflowActions.fetchWorkflowsBegin())
 
     return workflowApi
-      .getWorkflows(project)
+      .getWorkflows(project, filter)
       .then(response =>
         dispatch(
           workflowActions.fetchWorkflowsSuccess(
@@ -58,6 +59,9 @@ const workflowActions = {
   fetchWorkflowsFailure: error => ({
     type: FETCH_WORKFLOWS_FAILURE,
     payload: error
+  }),
+  resetWorkflow: () => ({
+    type: RESET_WORKFLOW
   })
 }
 

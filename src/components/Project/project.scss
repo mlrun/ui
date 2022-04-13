@@ -7,7 +7,7 @@
     display: flex;
     flex: 1 1;
     flex-direction: column;
-    min-width: 1100px;
+    min-width: 100%;
   }
 
   &__header {
@@ -76,7 +76,7 @@
       &__toolbar {
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
         margin-bottom: 15px;
 
         &-menu {
@@ -100,7 +100,7 @@
           }
 
           &.create-new-menu {
-            background-color: $malibu;
+            background-color: $brightTurquoise;
             border: none;
 
             .select {

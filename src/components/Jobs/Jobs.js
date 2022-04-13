@@ -5,7 +5,7 @@ import { find, isEmpty, cloneDeep } from 'lodash'
 
 import JobsView from './JobsView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import {
   actionCreator,
@@ -64,6 +64,7 @@ const Jobs = ({
   removeNewJob,
   removePods,
   removeScheduledJob,
+  resetWorkflow,
   setFilters,
   setNotification,
   workflowsStore
@@ -72,8 +73,6 @@ const Jobs = ({
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
-  const [workflow, setWorkflow] = useState({})
-  const [workflowJobsIds, setWorkflowJobsIds] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
@@ -81,7 +80,7 @@ const Jobs = ({
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
   const [dateFilter, setDateFilter] = useState(['', ''])
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const dispatch = useDispatch()
   let fetchFunctionLogsTimeout = useRef(null)
@@ -107,7 +106,7 @@ const Jobs = ({
 
   const handleRemoveScheduledJob = schedule => {
     removeScheduledJob(match.params.projectName, schedule.name).then(() => {
-      refreshJobs()
+      refreshJobs(filtersStore)
     })
 
     setConfirmData(null)
@@ -286,7 +285,7 @@ const Jobs = ({
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
-      isDemoMode,
+      isStagingMode,
       onRemoveScheduledJob,
       handleRunJob,
       handleEditScheduleJob,
@@ -310,9 +309,11 @@ const Jobs = ({
       match.params.workflowId,
       match.params.jobName,
       appStore.frontendSpec.jobs_dashboard_url,
-      isDemoMode,
+      isStagingMode,
       selectedJob,
-      selectedFunction
+      selectedFunction,
+      onAbortJob,
+      onRemoveScheduledJob
     ]
   )
 
@@ -435,19 +436,31 @@ const Jobs = ({
   }, [history, pageData.tabs, match])
 
   useEffect(() => {
-    if (!workflow.graph && match.params.workflowId) {
-      fetchWorkflow(match.params.workflowId)
-        .then(workflow => {
-          setWorkflow(workflow)
-          setWorkflowJobsIds(
-            Object.values(workflow.graph).map(jobData => jobData.run_uid)
-          )
-        })
-        .catch(() =>
-          history.replace(
-            `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
-          )
+    const workflow = { ...workflowsStore.activeWorkflow.data }
+    const getWorkflow = () => {
+      fetchWorkflow(match.params.workflowId).catch(() =>
+        history.replace(
+          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
         )
+      )
+    }
+
+    if (!match.params.workflowId && workflow.graph) {
+      resetWorkflow()
+    }
+
+    if (!workflow.graph && match.params.workflowId) {
+      getWorkflow()
+    }
+
+    if (
+      ['Running', 'None'].includes(workflow?.run?.status) &&
+      match.params.workflowId &&
+      workflow.graph
+    ) {
+      const timeout = setTimeout(getWorkflow, 10000)
+
+      return () => clearTimeout(timeout)
     }
   }, [
     fetchWorkflow,
@@ -455,7 +468,8 @@ const Jobs = ({
     match.params.pageTab,
     match.params.projectName,
     match.params.workflowId,
-    workflow.graph
+    resetWorkflow,
+    workflowsStore.activeWorkflow
   ])
 
   useEffect(() => {
@@ -468,6 +482,8 @@ const Jobs = ({
   }, [fetchCurrentJob, match.params.jobId, selectedJob])
 
   useEffect(() => {
+    const workflow = { ...workflowsStore.activeWorkflow.data }
+
     if (
       workflow.graph &&
       match.params.functionHash &&
@@ -520,7 +536,7 @@ const Jobs = ({
     match.params.functionName,
     match.params.projectName,
     selectedFunction,
-    workflow.graph
+    workflowsStore.activeWorkflow
   ])
 
   useEffect(() => {
@@ -535,8 +551,7 @@ const Jobs = ({
     if (
       ((isEmpty(selectedJob) &&
         !match.params.jobId &&
-        !match.params.workflowId &&
-        match.params.pageTab !== MONITOR_WORKFLOWS_TAB) ||
+        !match.params.workflowId) ||
         workflowsViewMode === 'list') &&
       !dataIsLoaded
     ) {
@@ -590,7 +605,6 @@ const Jobs = ({
     return () => {
       setJobs([])
       setJobRuns([])
-      setWorkflow({})
     }
   }, [match.params.projectName, match.params.pageTab])
 
@@ -600,9 +614,12 @@ const Jobs = ({
     }
   }, [match.params.projectName, match.params.pageTab, match.params.jobName])
 
-  const getWorkflows = useCallback(() => {
-    fetchWorkflows(match.params.projectName)
-  }, [fetchWorkflows, match.params.projectName])
+  const getWorkflows = useCallback(
+    filter => {
+      fetchWorkflows(match.params.projectName, filter)
+    },
+    [fetchWorkflows, match.params.projectName]
+  )
 
   useEffect(() => {
     if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
@@ -719,8 +736,8 @@ const Jobs = ({
       setEditableItem={setEditableItem}
       setWorkflowsViewMode={setWorkflowsViewMode}
       toggleConvertedYaml={toggleConvertedYaml}
-      workflow={workflow}
-      workflowJobsIds={workflowJobsIds}
+      workflow={workflowsStore.activeWorkflow.data}
+      workflowJobsIds={workflowsStore.activeWorkflow.workflowJobsIds}
       workflowsStore={workflowsStore}
       workflowsViewMode={workflowsViewMode}
     />

@@ -9,6 +9,7 @@ import {
   generateCpuValue,
   generateMemoryValue
 } from '../../utils/panelResources.util'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { setRangeInputValidation } from './jobsPanelResources.util'
 import jobsActions from '../../actions/jobs'
 
@@ -16,27 +17,50 @@ const JobsPanelResources = ({
   frontendSpec,
   panelDispatch,
   panelState,
+  setNewJobPreemtionMode,
   setNewJobPriorityClassName,
   setValidation,
   validation
 }) => {
+  const defaultPodsResources = useMemo(() => {
+    return frontendSpec?.default_function_pod_resources
+  }, [frontendSpec.default_function_pod_resources])
   const validFunctionPriorityClassNames = useMemo(() => {
     return (frontendSpec.valid_function_priority_class_names ?? []).map(
       className => ({
         id: className,
-        label: className
+        label: generateFunctionPriorityLabel(className)
       })
     )
   }, [frontendSpec.valid_function_priority_class_names])
 
   const generateResourcesData = useCallback(
     () => ({
-      limitsCpu: generateCpuValue(panelState.limits.cpu),
-      requestsCpu: generateCpuValue(panelState.requests.cpu),
-      requestsMemory: generateMemoryValue(panelState.requests.memory),
-      limitsMemory: generateMemoryValue(panelState.limits.memory)
+      limitsCpu: generateCpuValue(
+        panelState.limits.cpu || defaultPodsResources?.limits?.cpu || ''
+      ),
+      requestsCpu: generateCpuValue(
+        panelState.requests.cpu || defaultPodsResources?.requests?.cpu || ''
+      ),
+      requestsMemory: generateMemoryValue(
+        panelState.requests.memory ||
+          defaultPodsResources?.requests?.memory ||
+          ''
+      ),
+      limitsMemory: generateMemoryValue(
+        panelState.limits.memory || defaultPodsResources?.limits.memory || ''
+      )
     }),
-    [panelState.limits.cpu, panelState.limits.memory, panelState.requests]
+    [
+      defaultPodsResources.limits.cpu,
+      defaultPodsResources.limits.memory,
+      defaultPodsResources.requests.cpu,
+      defaultPodsResources.requests.memory,
+      panelState.limits.cpu,
+      panelState.limits.memory,
+      panelState.requests.cpu,
+      panelState.requests.memory
+    ]
   )
 
   const handleSelectMemoryUnit = value => {
@@ -117,6 +141,14 @@ const JobsPanelResources = ({
     })
   }
 
+  const handleSelectPreemptionMode = value => {
+    panelDispatch({
+      type: panelActions.SET_PREEMPTION_MODE,
+      payload: value
+    })
+    setNewJobPreemtionMode(value)
+  }
+
   const setCpuValue = (value, data, type, validationField) => {
     panelDispatch({
       type: panelActions[`SET_${type}_CPU`],
@@ -179,6 +211,7 @@ const JobsPanelResources = ({
     <JobsPanelResourcesView
       handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
+      handleSelectPreemptionMode={handleSelectPreemptionMode}
       panelDispatch={panelDispatch}
       panelState={panelState}
       resourcesData={generateResourcesData()}
@@ -203,5 +236,8 @@ export default connect(
   ({ appStore }) => ({
     frontendSpec: appStore.frontendSpec
   }),
-  { setNewJobPriorityClassName: jobsActions.setNewJobPriorityClassName }
+  {
+    setNewJobPriorityClassName: jobsActions.setNewJobPriorityClassName,
+    setNewJobPreemtionMode: jobsActions.setNewJobPreemtionMode
+  }
 )(JobsPanelResources)
