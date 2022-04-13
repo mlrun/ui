@@ -49,7 +49,7 @@ export default function PageView({ children }) {
         />
       )}
       <main id="main" className={pinnedClasses} ref={mainRef}>
-        <div className="main-wrapper">{children}</div>
+        <div id="main-wrapper">{children}</div>
       </main>
 
       <Notification />
