@@ -361,7 +361,7 @@ export const generateTableData = (
     secret_sources: [],
     node_selector: parseDefaultNodeSelectorContent(node_selector),
     preemption_mode: preemptionMode ?? '',
-    priority_class_name: frontendSpec.default_function_priority_class_name ?? ''
+    priority_class_name: jobPriorityClassName ?? ''
   })
 }
 
