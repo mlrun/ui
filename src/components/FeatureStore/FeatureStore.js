@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -14,7 +15,6 @@ import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
-import tableActions from '../../actions/table'
 import {
   checkTabIsValid,
   fetchFeatureRowData,
@@ -48,7 +48,7 @@ import {
 import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { setFeaturesPanelData, setTablePanelOpen } from '../../reducers/tableReducer'
 
 const FeatureStore = ({
   deleteFeatureVector,
@@ -75,11 +75,8 @@ const FeatureStore = ({
   removeFeatureVectors,
   removeFeatures,
   removeNewFeatureSet,
-  setFeaturesPanelData,
   setFilters,
   setNotification,
-  setTablePanelOpen,
-  tableStore,
   updateFeatureStoreData
 }) => {
   const params = useParams()
@@ -99,6 +96,8 @@ const FeatureStore = ({
   const featureStoreRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
+  const tableStore = useSelector(store => store.tableStore)
+  const dispatch = useDispatch()
 
   const fetchData = useCallback(
     async filters => {
@@ -157,35 +156,37 @@ const FeatureStore = ({
 
   const createFeatureVector = featureVectorData => {
     setCreateVectorPopUpIsOpen(false)
-    setFeaturesPanelData({
-      currentProject: params.projectName,
-      featureVector: {
-        kind: 'FeatureVector',
-        metadata: {
-          name: featureVectorData.name,
-          project: params.projectName,
-          tag: featureVectorData.tag,
-          labels: featureVectorData.labels
+    dispatch(
+      setFeaturesPanelData({
+        currentProject: params.projectName,
+        featureVector: {
+          kind: 'FeatureVector',
+          metadata: {
+            name: featureVectorData.name,
+            project: params.projectName,
+            tag: featureVectorData.tag,
+            labels: featureVectorData.labels
+          },
+          spec: {
+            description: featureVectorData.description,
+            features: [],
+            label_feature: ''
+          },
+          status: {}
         },
-        spec: {
-          description: featureVectorData.description,
-          features: [],
-          label_feature: ''
+        groupedFeatures: {
+          [params.projectName]: []
         },
-        status: {}
-      },
-      groupedFeatures: {
-        [params.projectName]: []
-      },
-      isNewFeatureVector: true
-    })
+        isNewFeatureVector: true
+      })
+    )
     navigate(`/projects/${params.projectName}/feature-store/add-to-feature-vector`)
   }
   useEffect(() => {
     return () => {
-      setTablePanelOpen(false)
+      dispatch(setTablePanelOpen(false))
     }
-  }, [setTablePanelOpen, params.projectName, params.pageTab])
+  }, [params.projectName, params.pageTab, dispatch])
 
   const handleRemoveRowData = useCallback(
     (item, removeData, content) => {
@@ -596,8 +597,7 @@ const FeatureStore = ({
 }
 
 export default connect(
-  ({ tableStore, filtersStore, featureStore }) => ({
-    tableStore,
+  ({ filtersStore, featureStore }) => ({
     filtersStore,
     featureStore
   }),
@@ -605,7 +605,6 @@ export default connect(
     ...artifactsAction,
     ...featureStoreActions,
     ...notificationActions,
-    ...filtersActions,
-    ...tableActions
+    ...filtersActions
   }
 )(FeatureStore)

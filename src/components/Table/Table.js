@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import TableView from './TableView'
 
@@ -11,16 +12,9 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
-import {
-  GROUP_BY_NAME,
-  GROUP_BY_NONE,
-  GROUP_BY_WORKFLOW,
-  JOBS_PAGE
-} from '../../constants'
-import tableActions from '../../actions/table'
+import { GROUP_BY_NAME, GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../constants'
 
 import './table.scss'
-import { useParams } from 'react-router-dom'
 
 const Table = ({
   actionsMenu,
@@ -34,8 +28,7 @@ const Table = ({
   handleSelectItem,
   pageData,
   retryRequest,
-  selectedItem,
-  tableStore
+  selectedItem
 }) => {
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
@@ -48,6 +41,7 @@ const Table = ({
   const tableHeadRef = useRef(null)
   const { isStagingMode } = useMode()
   const params = useParams()
+  const tableStore = useSelector(store => store.tableStore)
 
   const workflows = useSelector(state => {
     return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
@@ -56,8 +50,7 @@ const Table = ({
   useEffect(() => {
     const calculatePanelHeight = () => {
       if (tableHeadRef && tableContentRef && tablePanelRef.current) {
-        const tableContentHeight = tableContentRef.current.getBoundingClientRect()
-          .height
+        const tableContentHeight = tableContentRef.current.getBoundingClientRect().height
         const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
         const panelHeight = window.innerHeight - tableHeadCords.top
 
@@ -71,9 +64,7 @@ const Table = ({
     if (tableStore.isTablePanelOpen && tablePanelRef.current) {
       calculatePanelHeight()
 
-      document
-        .getElementById('main')
-        .addEventListener('scroll', calculatePanelHeight)
+      document.getElementById('main').addEventListener('scroll', calculatePanelHeight)
       window.addEventListener('resize', calculatePanelHeight)
     }
     return () => {
@@ -197,11 +188,8 @@ Table.propTypes = {
 }
 
 export default connect(
-  ({ tableStore, filtersStore }) => ({
-    tableStore,
+  ({ filtersStore }) => ({
     filtersStore
   }),
-  {
-    ...tableActions
-  }
+  {}
 )(Table)

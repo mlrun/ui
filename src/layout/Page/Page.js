@@ -1,19 +1,21 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import PageView from './PageView'
-import appActions from '../../actions/app'
+import { fetchFrontendSpec } from '../../reducers/appReducer'
 
-const Page = ({ children, fetchFrontendSpec }) => {
+const Page = ({ children }) => {
+  const dispatch = useDispatch()
+
   useEffect(() => {
-    fetchFrontendSpec()
+    dispatch(fetchFrontendSpec())
 
-    const interval = setInterval(fetchFrontendSpec, 60000)
+    const interval = setInterval(() => dispatch(fetchFrontendSpec()), 60000)
 
     return () => clearInterval(interval)
-  }, [fetchFrontendSpec])
+  }, [dispatch])
 
   return <PageView>{children}</PageView>
 }
 
-export default connect(({ appStore }) => ({ appStore }), { ...appActions })(Page)
+export default Page

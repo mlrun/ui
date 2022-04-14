@@ -21,8 +21,6 @@ import {
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureSets } from '../../utils/parseFeatureSets'
-import { generateUri } from '../../utils/resources'
-import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 import {
   getFeatureIdentifier,
   getFeatureSetIdentifier,
@@ -373,7 +371,7 @@ export const navigateToDetailsPane = (
   }
 
   if (params.name && content.length !== 0) {
-    const selectedItem = content.find(contentItem => {
+    const selectedItem = [...content].find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
       if ([FEATURES_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(params.pageTab)) {
@@ -388,11 +386,6 @@ export const navigateToDetailsPane = (
     if (!selectedItem) {
       navigate(`/projects/${params.projectName}/feature-store/${params.pageTab}`, { replace: true })
     } else {
-      if (params.pageTab === FEATURE_SETS_TAB || params.pageTab === FEATURE_VECTORS_TAB) {
-        selectedItem.usage_example = generateUsageSnippets(params.pageTab, selectedItem)
-      }
-
-      selectedItem.URI = generateUri(selectedItem, params.pageTab)
       setSelectedItem({ item: selectedItem })
     }
   } else {

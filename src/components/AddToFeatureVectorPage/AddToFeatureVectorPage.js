@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -20,8 +20,8 @@ import {
   TAG_FILTER_LATEST
 } from '../../constants'
 import { parseFeatures } from '../../utils/parseFeatures'
-import tableActions from '../../actions/table'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { setTablePanelOpen } from '../../reducers/tableReducer'
 
 const AddToFeatureVectorPage = ({
   createNewFeatureVector,
@@ -35,15 +35,15 @@ const AddToFeatureVectorPage = ({
   removeFeature,
   removeFeatures,
   setFilters,
-  setNotification,
-  setTablePanelOpen,
-  tableStore
+  setNotification
 }) => {
   const [content, setContent] = useState([])
   const [pageData, setPageData] = useState(pageDataInitialState)
   const addToFeatureVectorPageRef = useRef(null)
   const params = useParams()
   const navigate = useNavigate()
+  const tableStore = useSelector(store => store.tableStore)
+  const dispatch = useDispatch()
 
   const cancelRequest = message => {
     addToFeatureVectorPageRef.current?.cancel && addToFeatureVectorPageRef.current.cancel(message)
@@ -139,9 +139,9 @@ const AddToFeatureVectorPage = ({
   }, [navigate, params.projectName])
 
   const handleCancelCreateFeatureVector = useCallback(() => {
-    setTablePanelOpen(false)
+    dispatch(setTablePanelOpen(false))
     navigateToFeatureVectorsScreen()
-  }, [navigateToFeatureVectorsScreen, setTablePanelOpen])
+  }, [dispatch, navigateToFeatureVectorsScreen])
 
   const handleCreateFeatureVector = useCallback(
     featureVector => {
@@ -152,7 +152,7 @@ const AddToFeatureVectorPage = ({
             id: Math.random(),
             message: 'Feature vector created successfully'
           })
-          setTablePanelOpen(false)
+          dispatch(setTablePanelOpen(false))
           navigateToFeatureVectorsScreen()
         })
         .catch(error => {
@@ -167,12 +167,12 @@ const AddToFeatureVectorPage = ({
           })
 
           if (error.response.status === STATUS_CODE_FORBIDDEN) {
-            setTablePanelOpen(false)
+            dispatch(setTablePanelOpen(false))
             navigateToFeatureVectorsScreen()
           }
         })
     },
-    [createNewFeatureVector, navigateToFeatureVectorsScreen, setNotification, setTablePanelOpen]
+    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen, setNotification]
   )
 
   useEffect(() => {
@@ -247,14 +247,9 @@ const AddToFeatureVectorPage = ({
         message: 'Please, create a feature vector first'
       })
     } else {
-      setTablePanelOpen(true)
+      dispatch(setTablePanelOpen(true))
     }
-  }, [
-    navigateToFeatureVectorsScreen,
-    setNotification,
-    setTablePanelOpen,
-    tableStore.features.featureVector
-  ])
+  }, [dispatch, navigateToFeatureVectorsScreen, setNotification, tableStore.features.featureVector])
 
   return (
     <div ref={addToFeatureVectorPageRef} className="add-to-feature-vector content-wrapper">
@@ -272,8 +267,7 @@ const AddToFeatureVectorPage = ({
 }
 
 export default connect(
-  ({ tableStore, filtersStore, featureStore }) => ({
-    tableStore,
+  ({ filtersStore, featureStore }) => ({
     filtersStore,
     featureStore
   }),
@@ -281,7 +275,6 @@ export default connect(
     ...featureStoreActions,
     ...notificationActions,
     ...filtersActions,
-    ...tableActions,
     ...notificationActions
   }
 )(AddToFeatureVectorPage)

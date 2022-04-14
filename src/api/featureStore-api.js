@@ -7,12 +7,7 @@ import {
   TAG_FILTER_LATEST
 } from '../constants'
 
-const fetchFeatureStoreContent = (
-  path,
-  filters,
-  config = {},
-  withLatestTag
-) => {
+const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag) => {
   const params = {}
 
   if (filters?.labels) {
@@ -53,11 +48,8 @@ const featureStoreApi = {
       data
     ),
   deleteFeatureVector: (project, featureVector) =>
-    mainHttpClient.delete(
-      `/projects/${project}/feature-vectors/${featureVector}`
-    ),
-  fetchFeatureSetsTags: project =>
-    mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`),
+    mainHttpClient.delete(`/projects/${project}/feature-vectors/${featureVector}`),
+  fetchFeatureSetsTags: project => mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`),
   fetchFeatureVectorsTags: project =>
     mainHttpClient.get(`/projects/${project}/feature-vectors/*/tags`),
   getEntity: (project, entity) =>
@@ -65,12 +57,7 @@ const featureStoreApi = {
       params: { name: entity }
     }),
   getEntities: (project, filters, config) =>
-    fetchFeatureStoreContent(
-      `/projects/${project}/entities`,
-      filters,
-      config ?? {},
-      true
-    ),
+    fetchFeatureStoreContent(`/projects/${project}/entities`, filters, config ?? {}, true),
   getFeatureSet: (project, featureSet, tag) => {
     const params = {
       name: featureSet
@@ -118,12 +105,7 @@ const featureStoreApi = {
       params: { name: feature }
     }),
   getFeatures: (project, filters, config) =>
-    fetchFeatureStoreContent(
-      `/projects/${project}/${FEATURES_TAB}`,
-      filters,
-      config ?? {},
-      true
-    ),
+    fetchFeatureStoreContent(`/projects/${project}/${FEATURES_TAB}`, filters, config ?? {}, true),
   startIngest: (project, featureSet, reference, data) =>
     mainHttpClient.post(
       `/projects/${project}/feature-sets/${featureSet}/references/${reference}/ingest`,
