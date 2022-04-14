@@ -52,7 +52,7 @@ const DetailsRequestedFeatures = ({
   const [labelFetureIsEditable, setLabelFeatureIsEditable] = useState(false)
 
   const labelFeature = useMemo(
-    () => parseFeatureTemplate(selectedItem.label_feature).feature,
+    () => parseFeatureTemplate(selectedItem.label_feature ?? '').feature,
     [selectedItem]
   )
 
