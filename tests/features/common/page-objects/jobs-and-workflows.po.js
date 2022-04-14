@@ -294,7 +294,7 @@ const calendarTable = {
 const dateTimePickerCalendars = {
   root: '.date-picker-container',
   apply_button: 'button.date-picker__apply-btn',
-  error_message: '.error-message',
+  error_message: '.error',
   fromDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
     elements: {
@@ -394,6 +394,30 @@ const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
   '.content__action-bar .data-ellipsis:nth-of-type(1) button[id=refresh]'
 )
+const commonStatusFilter = dropdownComponent(
+  generateDropdownGroup(
+    '.content__action-bar .filters .select:nth-of-type(2)',
+    '.select__header', // Open Component
+    '.select__body .select__item', // Options
+    '.data-ellipsis .data-ellipsis' // Option value
+  )
+)
+const commonNameFilter = inputGroup(
+  generateInputGroup(
+    '.content__action-bar .filters > .input-wrapper:nth-of-type(3)',
+    true,
+    false
+  )
+)
+const commonStartTimeFilter = dropdownComponent(
+  generateDropdownGroup(
+    '.content__action-bar .filters .date-picker-container',
+    'input.date-picker__input',
+    '.date-picker__pop-up .select__item',
+    '.data-ellipsis .data-ellipsis',
+    true // options_in_root ?
+  )
+)
 
 module.exports = {
   JobsMonitorTab: {
@@ -403,14 +427,7 @@ module.exports = {
       '.content__action-bar > .data-ellipsis:nth-of-type(2) button'
     ),
     Table_Refresh_Button: tableRefreshButton,
-    Status_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content__action-bar .filters .select:nth-of-type(2)',
-        '.select__header', // Open Component
-        '.select__body .select__item', // Options
-        '.data-ellipsis .data-ellipsis' // Option value
-      )
-    ),
+    Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
         '.content__action-bar .filters > .input-wrapper:nth-of-type(3)',
@@ -425,23 +442,20 @@ module.exports = {
         false
       )
     ),
-    Start_Time_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content__action-bar .filters .date-picker-container',
-        'input.date-picker__input',
-        '.date-picker__pop-up .select__item',
-        '.data-ellipsis .data-ellipsis',
-        true // options_in_root ?
-      )
-    ),
+    Start_Time_Filter_Dropdown: commonStartTimeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Jobs_Monitor_Table: commonTable(jobsMonitorTable)
   },
   WorkflowsMonitorTab: {
+    Status_Filter_Dropdown: commonStatusFilter,
+    Table_Name_Filter_Input: commonNameFilter,
+    Start_Time_Filter_Dropdown: commonStartTimeFilter,
+    Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
     Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
     Workflow_List_View_Table: commonTable(jobsMonitorTable),
-    Workflow_Graph: graph(monitorWorkflowGraph)
+    Workflow_Graph: graph(monitorWorkflowGraph),
+    Table_Refresh_Button: tableRefreshButton
   },
   ScheduleMonitorTab: {
     Table_Name_Filter_Input: inputGroup(

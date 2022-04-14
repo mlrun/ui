@@ -1,11 +1,14 @@
 import { By } from 'selenium-webdriver'
+import actionMenu from '../components/action-menu.component'
 import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
 import labelComponent from '../components/label.component'
 import {
+  generateInputGroup,
   generateLabelGroup,
   generateDropdownGroup
 } from '../../common-tools/common-tools'
+import inputGroup from '../components/input-group.component'
 
 const createNewObject = dropdownComponent(
   generateDropdownGroup(
@@ -15,6 +18,14 @@ const createNewObject = dropdownComponent(
     false
   )
 )
+
+const actionMenuStructure = {
+  root: '.actions-menu__container',
+  menuElements: {
+    open_button: 'button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
 
 const projectDashboardRealtimeFunctionsTable = {
   root: '.project-data-card:nth-of-type(2) .project-data-card__table',
@@ -212,6 +223,62 @@ const DeploymetLinksTable = {
   }
 }
 
+const consumerGroupsTable = {
+  root: '.page-content .table',
+  header: {
+    root: '.table-head',
+    sorters: {
+      consumer_group_name: '.table-head__item:nth-of-type(1) .data-ellipsis',
+      stream: '.table-head__item:nth-of-type(2) .data-ellipsis',
+      function: '.table-head__item:nth-of-type(3) .data-ellipsis'
+    }
+  },
+  body: {
+    root: '.table-body',
+    row: {
+      root: '.table-body__row',
+      fields: {
+        consumer_group_name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
+        stream: '.table-body__cell:nth-of-type(2) .data-ellipsis',
+        function: '.table-body__cell:nth-of-type(3) a.data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
+const shardLagsTable = {
+  root: '.page-content .table',
+  header: {
+    root: '.table-head',
+    sorters: {
+      shard_name: '.table-head__item:nth-of-type(1) .data-ellipsis',
+      lag: '.table-head__item:nth-of-type(2) .data-ellipsis',
+      last_sequence: '.table-head__item:nth-of-type(3) .data-ellipsis',
+      committed_offset: '.table-head__item:nth-of-type(4) .data-ellipsis'
+    }
+  },
+  body: {
+    root: '.table-body',
+    row: {
+      root: '.table-body__row',
+      fields: {
+        shard_name: '.table-body__cell:nth-of-type(1) .data-ellipsis',
+        lag: '.table-body__cell:nth-of-type(2) .data-ellipsis',
+        last_sequence: '.table-body__cell:nth-of-type(3) .data-ellipsis',
+        committed_offset: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
 module.exports = {
   project: {
     Create_New: createNewObject,
@@ -228,9 +295,7 @@ module.exports = {
     Real_Time_Functions_Card_Statistics: commonTable(
       generalInfoRealTimeFunctionsCardStat
     ),
-    Add_Source_URL_Label: By.css('.general-info .general-info__source'),
-    Owner_Link: By.css('.project__content .general-info .owner-row .link'),
-    Members_Link: By.css('.project__content .general-info .members-row .link')
+    Add_Source_URL_Label: By.css('.general-info .general-info__source')
   },
   demoProject: {
     Header_Name_Label: labelComponent(
@@ -300,5 +365,18 @@ module.exports = {
     ),
     Deployment_Actions_Table: commonTable(DeploymetActionsTable),
     Deployment_Links_Table: commonTable(DeploymetLinksTable)
+  },
+  consumerGroups: {
+    Arrow_Back: By.css('button > .page-header__back-btn'),
+    Title: By.css('.page-header__title-wrapper .page-header__title'),
+    Description: By.css(
+      '.page-header__title-wrapper .page-header__description'
+    ),
+    Search_Input: inputGroup(
+      generateInputGroup('.page-actions .search-container')
+    ),
+    Consumer_Groups_Table: commonTable(consumerGroupsTable),
+    Shard_Lags_Table: commonTable(shardLagsTable),
+    Refresh_Button: By.css('.page-actions .round-icon-cp')
   }
 }

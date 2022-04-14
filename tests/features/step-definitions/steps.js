@@ -99,7 +99,12 @@ Given('open url', async function() {
 
 When('turn on demo mode', async function() {
   const url = await this.driver.getCurrentUrl()
-  await navigateToPage(this.driver, `${url}?demo=true`) // TODO: see above
+  await navigateToPage(this.driver, `${url}?mode=demo`)
+})
+
+When('turn on staging mode', async function() {
+  const url = await this.driver.getCurrentUrl()
+  await navigateToPage(this.driver, `${url}?mode=staging`)
 })
 
 Then('additionally redirect by INVALID-TAB', async function() {
@@ -650,7 +655,7 @@ Then(
 Then(
   'verify {string} on {string} wizard should display options {string}.{string}',
   async function(inputField, wizard, constStorage, constValue) {
-    await checkHintText(
+    await checkWarningHintText(
       this.driver,
       pageObjects[wizard][inputField],
       pageObjects['commonPagesHeader']['Common_Options'],
@@ -1021,11 +1026,11 @@ Then('{string} on {string} wizard should not be {string}', async function(
 
 Then(
   'compare {string} element value on {string} wizard with test {string} context value',
-  async function(componentName, wizardName, savedValue) {
+  async function(componentName, wizardName, fieldName) {
     await verifyText(
       this.driver,
       pageObjects[wizardName][componentName],
-      this.testContext[savedValue].value
+      this.testContext[fieldName]
     )
   }
 )
@@ -1034,7 +1039,7 @@ Then(
   'compare current browser URL with test {string} context value',
   async function(savedValue) {
     expect(await this.driver.getCurrentUrl()).equal(
-      this.testContext[savedValue].value
+      this.testContext[savedValue]
     )
   }
 )
