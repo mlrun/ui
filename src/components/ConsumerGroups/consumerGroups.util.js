@@ -15,10 +15,6 @@ export const generatePageData = () => {
       {
         header: 'Real time functions',
         class: 'table-cell-2'
-      },
-      {
-        header: '',
-        class: 'action_cell'
       }
     ]
   }

@@ -82,7 +82,6 @@ const TableView = ({
                 case CONSUMER_GROUPS_PAGE:
                   return (
                     <ConsumerGroupTableRow
-                      actionsMenu={actionsMenu}
                       key={i}
                       content={content}
                       rowItem={rowItem}
@@ -91,7 +90,6 @@ const TableView = ({
                 case CONSUMER_GROUP_PAGE:
                   return (
                     <ConsumerGroupShardLagTableRow
-                      actionsMenu={actionsMenu}
                       key={i}
                       content={content}
                       rowItem={rowItem}
