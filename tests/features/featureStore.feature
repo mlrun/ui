@@ -84,30 +84,6 @@ Feature: Feature Store Page
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
     @passive
-    Scenario: Check all mandatory components on Datasets tab
-        Given open url
-        And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
-        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And wait load page
-        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
-        Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        Then verify "Register_Dataset_Button" element visibility on "Feature_Store_Datasets_Tab" wizard
-        Then "Register_Dataset_Button" element on "Feature_Store_Datasets_Tab" should contains "Register Dataset" value
-        Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Datasets_Tab" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Feature_Store_Datasets_Tab" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Feature_Store_Datasets_Tab" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Feature_Store_Datasets_Tab" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
-        Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Datasets_Tab" wizard
-        Then verify "Feature_Datasets_Table" element visibility on "Feature_Store_Datasets_Tab" wizard
-
-    @passive
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Overview tab table on Feature Sets tab
         Given open url
@@ -218,34 +194,6 @@ Feature: Feature Store Page
         Then verify "Overview_General_Headers" on "Feature_Vectors_Info_Pane" wizard should contains "Feature_Vectors_Info_Pane"."Overview_General_Headers"
 
     @passive
-    @inProgress
-    Scenario: Check all mandatory components in Item infopane on Overview tab table on Datasets tab
-        Given open url
-        And wait load page
-        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-        And wait load page
-        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
-        Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
-        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
-        Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
-        Then verify "Updated" element visibility on "Datasets_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Datasets_Info_Pane" wizard
-        Then "Cancel_Button" element on "Datasets_Info_Pane" should contains "Cancel" value
-        Then verify "Apply_Changes_Button" element visibility on "Datasets_Info_Pane" wizard
-        Then "Apply_Changes_Button" element on "Datasets_Info_Pane" should contains "Apply Changes" value
-        Then verify "Download_Button" element visibility on "Datasets_Info_Pane" wizard
-        Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
-        Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
-        Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
-        Then verify "Overview_Hash_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
-        Then verify "Overview_UID_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
-
-    @passive
     Scenario: Check all mandatory components in Item infopane on Features tab table
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -330,27 +278,6 @@ Feature: Feature Store Page
         # TO DO: tab components too complicated for quick automatization
 
     @passive
-    Scenario: Check all mandatory components on Register Dataset form
-        Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
-        And wait load page
-        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And wait load page
-        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
-        Then click on "Register_Dataset_Button" element on "Feature_Store_Datasets_Tab" wizard
-        Then verify if "Register_Dataset" popup dialog appears
-        Then verify "Name_Input" element visibility on "Register_Dataset" wizard
-        Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Artifact_Names_Unique"
-        Then verify "Target_Path_Input" element visibility on "Register_Dataset" wizard
-        Then verify "Description_Input" element visibility on "Register_Dataset" wizard
-        Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
-        Then "Cancel_Button" element on "Register_Dataset" should contains "Cancel" value
-        Then verify "Register_Button" element visibility on "Register_Dataset" wizard
-        Then "Register_Button" element on "Register_Dataset" should contains "Register" value
-
-    @passive
     Scenario: Check filtering by Name on Feature Store Feature Sets Tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -391,19 +318,6 @@ Feature: Feature Store Page
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "io"
-
-    @passive
-    Scenario: Check filtering by Name on Feature Store Datasets Tab
-        Given open url
-        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
-        And wait load page
-        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Datasets_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Datasets_Tab" wizard
-        And wait load page
-        Then value in "name" column with "text" in "Feature_Datasets_Table" on "Feature_Store_Datasets_Tab" wizard should contains "ea"
 
     @passive
     Scenario: Check filtering by Tag on Feature Store Feature Sets Tab
@@ -776,7 +690,6 @@ Feature: Feature Store Page
             | key2\n:\nvalue2 |
 
     @inProgress
-    @failed
     Scenario: Save new Feature Store Feature Set new item wizard
         * set tear-down property "project" created with "automation-test-name3" value
         * create "automation-test-name3" MLRun Project with code 201
@@ -890,21 +803,6 @@ Feature: Feature Store Page
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
-    @passive
-    Scenario: Verify View YAML action on Datasets tab
-        Given open url
-        And wait load page
-        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
-        And wait load page
-        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And wait load page
-        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
-        Then select "View YAML" option in action menu on "Feature_Store_Datasets_Tab" wizard in "Feature_Datasets_Table" table at row with "data_clean_cleaned-data" value in "name" column
-        Then verify if "View_YAML" popup dialog appears
-        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
-        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
     @passive
     Scenario: Verify View YAML action in Item infopane on Feature Sets tab
@@ -1083,32 +981,32 @@ Feature: Feature Store Page
         Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
         And wait load page
         Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard
-            | featureName |
-            | department  |
-            | room        |
-            | age         |
-            | gender      |
+            | featureName              |
+            | department               |
+            | room                     |
+            | age_mapped_elder         |
+            | gender                   |
         Then verify values in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
-            | feature                              |
-            | patient_details : latest #department |
-            | patient_details : latest #room       |
-            | patient_details : latest #age        |
-            | patient_details : latest #gender     |
+            | feature                                           |
+            | patient_details : latest #department              |
+            | patient_details : latest #room                    |
+            | patient_details : latest #age_mapped_elder        |
+            | patient_details : latest #gender                  |
         Then click on "remove_btn" in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                        |
             | patient_details : latest #room |
         Then verify values in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
-            | feature                              |
-            | patient_details : latest #department |
-            | patient_details : latest #age        |
-            | patient_details : latest #gender     |
+            | feature                                           |
+            | patient_details : latest #department              |
+            | patient_details : latest #age_mapped_elder        |
+            | patient_details : latest #gender                  |
         Then select "stocks" option in "Table_Projects_Filter_Dropdown" dropdown on "Add_To_Feature_Vector_Tab" wizard
         Then expand "Features_By_Projects_Accordion" on "Add_To_Feature_Vector_Tab" wizard
         Then verify values in "Features_By_Projects_Table" table in "Features_By_Projects_Accordion" on "Add_To_Feature_Vector_Tab" wizard
-            | feature                              |
-            | patient_details : latest #department |
-            | patient_details : latest #age        |
-            | patient_details : latest #gender     |
+            | feature                                           |
+            | patient_details : latest #department              |
+            | patient_details : latest #age_mapped_elder        |
+            | patient_details : latest #gender                  |
         Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard
             | featureName |
             | name        |
@@ -1156,7 +1054,7 @@ Feature: Feature Store Page
             | featureName |
             | department  |
             | bad         |
-            | age         |
+            | room         |
         Then select "stocks-admin" option in "Table_Projects_Filter_Dropdown" dropdown on "Add_To_Feature_Vector_Tab" wizard
         Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard
             | featureName  |
@@ -1170,14 +1068,28 @@ Feature: Feature Store Page
         And wait load page
         Then click on cell with value "temp_vector02" in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Requested Features" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        Then click on "add_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature    |
+            | room       |
+        Then type value "test_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
+        Then click on "apply_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature    |
+            | room       |
+        Then click on "add_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature    |
+            | price       |
+        Then type value "price_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
+        Then click on "apply_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature    |
+            | price      |
         Then verify values in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
-            | projectName  |        featureSet         |    feature   |
-            | fsdemo-admin | patient_details\n: latest |  department  |
-            | fsdemo-admin | patient_details\n: latest |      bad     |
-            | fsdemo-admin | patient_details\n: latest |      age     |
-            | stocks-admin |     stocks\n: latest      |     price    |
-            | stocks-admin |     stocks\n: latest      |    volume    |
-            | stocks-admin |     stocks\n: latest      | last_updated |
+            | projectName  |        featureSet         |    feature   |  alias      |
+            | fsdemo-admin | patient_details\n: latest |  department  |             |
+            | fsdemo-admin | patient_details\n: latest |      bad     |             |
+            | fsdemo-admin | patient_details\n: latest |      room    | test_alias  |
+            | stocks-admin |     stocks\n: latest      |     price    | price_alias |
+            | stocks-admin |     stocks\n: latest      |    volume    |             |
+            | stocks-admin |     stocks\n: latest      | last_updated |             |
         Then click on "delete_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature    |
             | department |
@@ -1189,23 +1101,45 @@ Feature: Feature Store Page
         Then verify values in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | projectName  |        featureSet         |   feature    |
             | fsdemo-admin | patient_details\n: latest |     bad      |
-            | fsdemo-admin | patient_details\n: latest |     age      |
+            | fsdemo-admin | patient_details\n: latest |     room     |
             | stocks-admin |      stocks\n: latest     |    price     |
             | stocks-admin |      stocks\n: latest     |   volume     |
             | stocks-admin |      stocks\n: latest     | last_updated |
 
-    @passive
-    Scenario: Check all mandatory components on Artifact Preview on Datasets tab
+    Scenario: Verify No Data message on Feature Store tabs
+        * set tear-down property "project" created with "automation-test-name001" value
+        * create "automation-test-name001" MLRun Project with code 201
         Given open url
-        And wait load page
-        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "automation-test-name001" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
-        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        * set tear-down property "featureSet" created in "automation-test-name001" project with "test_fs" value
+        * create "test_fs" Feature Set in "automation-test-name001" project with code 200
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        And click on cell with value "test_fs" in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         And wait load page
-        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
-        When click on cell with row index 1 in "artifact_preview_btn" column in "Feature_Datasets_Table" table on "Feature_Store_Datasets_Tab" wizard
-        Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
-        Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
+        And wait load page
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        * set tear-down property "featureVector" created in "automation-test-name001" project with "test_fv" value
+        * create "test_fv" Feature Vector in "automation-test-name001" project with code 200
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        And click on cell with value "test_fv" in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then select "Requested Features" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        And wait load page
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        And wait load page
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+
 

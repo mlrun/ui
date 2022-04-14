@@ -30,16 +30,16 @@ Feature: MLRun Project Page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_linck_Button" element visibility on "commonPagesHeader" wizard
-        Then click on "Pin_Quick_linck_Button" element on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
+        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element invisibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_linck_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_linck_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
 
     @passive
@@ -55,16 +55,16 @@ Feature: MLRun Project Page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_linck_Button" element visibility on "commonPagesHeader" wizard
-        Then click on "Pin_Quick_linck_Button" element on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
+        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element invisibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_linck_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_linck_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
 
     @passive
@@ -135,103 +135,6 @@ Feature: MLRun Project Page
             |     Monitoring      |
 
     @passive
-    @inProgress
-    @enabledProjectMembership
-    Scenario: Check all mandatory components on Project Owner Popup
-        Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        Then click on "Owner_Link" element on "Project" wizard
-        Then verify if "Change_Project_Owner_Popup" popup dialog appears
-        Then verify "Cross_Cancel_Button" element visibility on "Change_Project_Owner_Popup" wizard
-        Then verify "Title" element visibility on "Change_Project_Owner_Popup" wizard
-        Then verify "Discard_Button" element visibility on "Change_Project_Owner_Popup" wizard
-        Then verify "Apply_Button" element visibility on "Change_Project_Owner_Popup" wizard
-        Then verify "Footer_Annotation_Label" element visibility on "Change_Project_Owner_Popup" wizard
-        When type searchable fragment "D" into "Search_Input" on "Change_Project_Owner_Popup" wizard
-        And wait load page
-        Then searchable case "insensitive" fragment "D" should be in every suggested option into "Search_Input" on "Change_Project_Owner_Popup" wizard
-
-    @passive
-    @inProgress
-    @enabledProjectMembership
-    Scenario: Check all mandatory components on Project Owner Popup
-        Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        Then click on "Members_Link" element on "Project" wizard
-        Then verify if "Project_Members_Popup" popup dialog appears
-        Then verify "Member_Overview_Labels_Table" element visibility on "Project_Members_Popup" wizard
-        Then verify "Member_Overview_Tooltip" on "Project_Members_Popup" wizard should display "Label_Hint"."Members_Hint"
-        Then verify "Invite_New_Members_Button" element visibility on "Project_Members_Popup" wizard
-        Then verify "Members_Filter_Input" element visibility on "Project_Members_Popup" wizard
-        Then verify "Role_Filter_Dropdown" element visibility on "Project_Members_Popup" wizard
-        Then verify "Members_Table" element visibility on "Project_Members_Popup" wizard
-        Then verify "Notify_by_Email" element visibility on "Project_Members_Popup" wizard
-        Then verify "Discard_Button" element visibility on "Project_Members_Popup" wizard
-        Then verify "Apply_Button" element visibility on "Project_Members_Popup" wizard
-        Then verify "Footer_Annotation_Label" element visibility on "Project_Members_Popup" wizard
-
-    @enabledProjectMembership
-    Scenario: Verify behaviour of Invite New Members on Project Member Popup
-        * set tear-down property "project" created with "automation-test" value
-        * create "automation-test" MLRun Project with code 201
-        Given open url
-        And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        Then click on "Members_Link" element on "Project" wizard
-        Then verify if "Project_Members_Popup" popup dialog appears
-        Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
-        Then type value "a" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then searchable case "insensitive" fragment "a" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
-        Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then type value "a" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then type value "ig" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then searchable case "insensitive" fragment "ig" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
-        Then select "iguazio" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then type value "adm" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then searchable case "insensitive" fragment "adm" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
-        Then select "admin" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
-            |  label    |
-            | all_users |
-            | iguazio   |
-            | admin     |
-        When click on "remove_btn" in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
-            |  label    |
-            | iguazio   |
-            | all_users |
-        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
-            |  label    |
-            | admin     |
-        Then select "Admin" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
-        Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
-        Then type value "all" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
-        Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then select "Viewer" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
-        Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
-            | name      | role   |
-            | admin     | Admin  |
-            | all_users | Viewer |
-        When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
-            | name  |
-            | admin |
-        Then verify if "Remove_Member_Popup" popup dialog appears
-        Then verify "Remove_Member_Button" element visibility on "Remove_Member_Popup" wizard
-        Then "Remove_Member_Button" element on "Remove_Member_Popup" should contains "Remove member" value
-        Then click on "Remove_Member_Button" element on "Remove_Member_Popup" wizard
-        Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
-            | name      | role   |
-            | all_users | Viewer |
-        Then click on "Discard_Button" element on "Project_Members_Popup" wizard
-        Then verify if "Discard_Changes_Popup" popup dialog appears
-        Then "No_Button" element on "Discard_Changes_Popup" should contains "No" value
-        Then "Discard_Button" element on "Discard_Changes_Popup" should contains "Discard" value
-        And remove "automation-test" MLRun Project with code 204
-
-    @passive
     Scenario: Check MLRun logo redirection
         Given open url
         And wait load page
@@ -259,10 +162,9 @@ Feature: MLRun Project Page
         Then verify "Cancel_Button" element visibility on "Register_File_Popup" wizard
         Then verify "Register_Button" element visibility on "Register_File_Popup" wizard
         Then click on "Register_Button" element on "Register_File_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        Then verify "New_File_Name_Input" options rules on "Register_File_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
@@ -286,10 +188,9 @@ Feature: MLRun Project Page
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "Register_Button" element visibility on "Register_Model_Popup" wizard
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        Then verify "New_File_Name_Input" options rules on "Register_Model_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
@@ -311,10 +212,10 @@ Feature: MLRun Project Page
         Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
         Then verify "Register_Button" element visibility on "Register_Dataset" wizard
         Then click on "Register_Button" element on "Register_Dataset" wizard
-        Then verify "Name_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Target_Path_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
-        Then verify "Name_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        Then verify "Name_Input" options rules on "Register_Dataset" wizard
         Then type value "   " to "Target_Path_Input" field on "Register_Dataset" wizard
         Then verify "Target_Path_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "Description_Input" field on "Register_Dataset" wizard
@@ -373,11 +274,11 @@ Feature: MLRun Project Page
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display "Input_Hint"."Function_Name_Hint"
-        Then verify "New_Function_Name_Input" according hint rules on "Create_ML_Function_Popup" wizard
+        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Name_Hint"
+        Then verify "New_Function_Name_Input" options rules on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Tag_Hint"
+        Then verify "New_Function_Tag_Input" options rules on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Continue_Button" element visibility on "Create_ML_Function_Popup" wizard
@@ -430,11 +331,11 @@ Feature: MLRun Project Page
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display "Input_Hint"."Function_Name_Hint"
-        Then verify "New_Function_Name_Input" according hint rules on "Create_ML_Function_Popup" wizard
+        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Name_Hint"
+        Then verify "New_Function_Name_Input" options rules on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Tag_Hint"
+        Then verify "New_Function_Tag_Input" options rules on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Continue_Button" element visibility on "Create_ML_Function_Popup" wizard
@@ -635,11 +536,11 @@ Feature: MLRun Project Page
         Then verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display "Input_Hint"."Function_Name_Hint"
-        Then verify "New_Function_Name_Input" according hint rules on "Create_ML_Function_Popup" wizard
+        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Name_Hint"
+        Then verify "New_Function_Name_Input" options rules on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Tag_Hint"
+        Then verify "New_Function_Tag_Input" options rules on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Continue_Button" element visibility on "Create_ML_Function_Popup" wizard
@@ -680,10 +581,10 @@ Feature: MLRun Project Page
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "Register_Button" element visibility on "Register_Model_Popup" wizard
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        Then verify "New_File_Name_Input" options rules on "Register_Model_Popup" wizard
         Then type value "   " to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
@@ -750,10 +651,9 @@ Feature: MLRun Project Page
         Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
         Then verify "Register_Button" element visibility on "Register_Dataset" wizard
         Then click on "Register_Button" element on "Register_Dataset" wizard
-        Then verify "Name_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Target_Path_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
-        Then verify "Name_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        Then verify "Name_Input" options rules on "Register_Dataset" wizard
         Then type value "   " to "Target_Path_Input" field on "Register_Dataset" wizard
         Then verify "Target_Path_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "Description_Input" field on "Register_Dataset" wizard
@@ -780,10 +680,10 @@ Feature: MLRun Project Page
         Then verify "Cancel_Button" element visibility on "Register_File_Popup" wizard
         Then verify "Register_Button" element visibility on "Register_File_Popup" wizard
         Then click on "Register_Button" element on "Register_File_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        Then verify "New_File_Name_Input" options rules on "Register_File_Popup" wizard
         Then type value "   " to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
@@ -870,11 +770,7 @@ Feature: MLRun Project Page
             |   name   |
             | Datasets |
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
-        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And wait load page
-        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
-        Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard should contains "Feature_Store"."Tab_List"
+        Then verify breadcrumbs "tab" label should be equal "Datasets" value
         Then verify "Register_Dataset_Button" element visibility on "Feature_Store_Datasets_Tab" wizard
         Then "Register_Dataset_Button" element on "Feature_Store_Datasets_Tab" should contains "Register Dataset" value
         Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Datasets_Tab" wizard
@@ -1044,7 +940,7 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And save to context "name" column and "href" attributes on 1 row from "Jobs_And_Workflows" table on "Project" wizard
+        And save to context "name" column and "href" attribute on 1 row from "Jobs_And_Workflows" table on "Project" wizard
         When click on cell with row index 1 in "name" column in "Jobs_And_Workflows" table on "Project" wizard
         And wait load page
         Then verify "Arrow_Back" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
@@ -1055,5 +951,95 @@ Feature: MLRun Project Page
         Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
-        Then compare "Header" element value on "Jobs_Monitor_Tab_Info_Pane" wizard with test "cell" context value
+        Then compare "Header" element value on "Jobs_Monitor_Tab_Info_Pane" wizard with test "name" context value
         Then compare current browser URL with test "href" context value
+
+    @passive
+    Scenario: Check all mandatory components on Consumer Groups tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        And wait load page
+        Then "Title" element on "Consumer_Groups" should contains "Consumer groups (v3io stream)" value
+        Then "Description" element on "Consumer_Groups" should contains "This report displays the project's consumer groups for Iguazio v3io streams" value
+        Then verify "Arrow_Back" element visibility on "Consumer_Groups" wizard
+        Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
+        Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
+        Then select "View YAML" option in action menu on "Consumer_Groups" wizard in "Consumer_Groups_Table" table at row with "ConsumerGroup1" value in "consumer_group_name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        Then click on "Arrow_Back" element on "Consumer_Groups" wizard
+        And wait load page
+        Then verify breadcrumbs "project" label should be equal "default" value
+        Then verify "Create_New" element visibility on "Project" wizard
+        Then verify "Refresh_Button" element visibility on "Project" wizard
+        Then verify "Dashboard_Realtime_Functions_Table" element visibility on "Project" wizard
+        Then verify "Jobs_And_Workflows" element visibility on "Project" wizard
+        Then verify "Mono_Values_Cards" element visibility on "Project" wizard
+        Then verify "Jobs_Info_Card_Statistics" element visibility on "Project" wizard
+        Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
+
+    @passive
+    Scenario: Verify filtering by name on Consumer Groups tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        And wait load page
+        Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
+        Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
+        Then type value "C" to "Search_Input" field on "Consumer_Groups" wizard
+        Then value in "consumer_group_name" column with "text" in "Consumer_Groups_Table" on "Consumer_Groups" wizard should contains "C"
+        Then type value "Consumer" to "Search_Input" field on "Consumer_Groups" wizard
+        Then value in "consumer_group_name" column with "text" in "Consumer_Groups_Table" on "Consumer_Groups" wizard should contains "Consumer"
+        Then type value "randomText" to "Search_Input" field on "Consumer_Groups" wizard
+        Then check "ConsumerGroup1" value not in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
+
+    @passive
+    Scenario: Verify all mandatory components on Consumer Groups drill-down
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        And wait load page
+        And save to context "consumer_group_name" column and "href" attribute on 1 row from "Consumer_Groups_Table" table on "Consumer_Groups" wizard
+        And save to context "stream" column on 1 row from "Consumer_Groups_Table" table on "Consumer_Groups" wizard
+        And click on cell with row index 1 in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
+        And wait load page
+        Then compare current browser URL with test "href" context value
+        Then compare "Title" element value on "Consumer_Groups" wizard with test "consumer_group_name" context value
+        Then compare "Description" element value on "Consumer_Groups" wizard with test "stream" context value
+        Then verify "Arrow_Back" element visibility on "Consumer_Groups" wizard
+        Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
+        Then verify "Refresh_Button" element visibility on "Consumer_Groups" wizard
+        Then verify "Shard_Lags_Table" element visibility on "Consumer_Groups" wizard
+        Then click on "Arrow_Back" element on "Consumer_Groups" wizard
+        And wait load page
+        Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
+        Then "Title" element on "Consumer_Groups" should contains "Consumer groups (v3io stream)" value
+        Then "Description" element on "Consumer_Groups" should contains "This report displays the project's consumer groups for Iguazio v3io streams" value
+
+    Scenario: Verify filtering by name on Consumer Groups drill-down
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        And wait load page
+        And click on cell with row index 1 in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
+        And wait load page
+        Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
+        Then verify "Shard_Lags_Table" element visibility on "Consumer_Groups" wizard
+        Then type value "shard" to "Search_Input" field on "Consumer_Groups" wizard
+        Then click on "Refresh_Button" element on "Consumer_Groups" wizard
+        Then value in "shard_name" column with "text" in "Shard_Lags_Table" on "Consumer_Groups" wizard should contains "shard"
+        Then type value "shard-id-0" to "Search_Input" field on "Consumer_Groups" wizard
+        Then value in "shard_name" column with "text" in "Shard_Lags_Table" on "Consumer_Groups" wizard should contains "shard-id-0"
+        Then type value "randomText" to "Search_Input" field on "Consumer_Groups" wizard
+        Then check "shard-id-0" value not in "shard_name" column in "Shard_Lags_Table" table on "Consumer_Groups" wizard

@@ -118,6 +118,12 @@ module.exports = function(tableStructure) {
     resultTable.add_row_btn = By.css(`${table.root} ${table.body.add_row_btn}`)
   }
 
+  if (table.body.save_row_btn) {
+    resultTable.save_row_btn = By.css(
+      `${table.root} ${table.body.save_row_btn}`
+    )
+  }
+
   return resultTable
 }
 

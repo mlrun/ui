@@ -1,11 +1,11 @@
 import { expect } from 'chai'
 import { differenceWith, isEqual } from 'lodash'
 import {
+  getOptionValues,
   openDropdown,
-  selectOptionInDropdownWithoutCheck,
-  getOptionValues
+  selectOptionInDropdownWithoutCheck
 } from './dropdown.action'
-import { hoverComponent, getElementText } from './common.action'
+import { getElementText, hoverComponent } from './common.action'
 
 import { DataFrame } from 'pandas-js'
 
@@ -316,13 +316,10 @@ const action = {
       table.tableFields[column](index)
     )
 
-    testContext['cell'] = {
-      name: column,
-      value: await cellElement.getText()
-    }
-    testContext[attribute] = {
-      kind: attribute,
-      value: await cellElement.getAttribute(attribute)
+    testContext[column] = await cellElement.getText()
+
+    if (attribute) {
+      testContext[attribute] = await cellElement.getAttribute(attribute)
     }
   }
 }

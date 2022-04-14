@@ -59,7 +59,8 @@ Feature: Files Page
     Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
     Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
-    Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then verify "New_File_Name_Input" options rules on "Register_File_Popup" wizard
     Then verify "New_File_Target_Path_Input" element visibility on "Register_File_Popup" wizard
     Then type value "   " to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"

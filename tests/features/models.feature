@@ -118,7 +118,8 @@ Feature: Models Page
     Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
     Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-    Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then verify "New_File_Name_Input" options rules on "Register_Model_Popup" wizard
     Then verify "New_File_Target_Path_Input" element visibility on "Register_Model_Popup" wizard
     Then type value "   " to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
     Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
@@ -255,8 +256,8 @@ Feature: Models Page
       | name6 | value6 |
     When click on "delete_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
       | name  |
-      | name1 |
       | name6 |
+      | name1 |
     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
       | name  | value  |
       | name2 | value2 |
