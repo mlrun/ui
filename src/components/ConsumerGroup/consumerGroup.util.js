@@ -19,10 +19,6 @@ export const generatePageData = () => {
       {
         header: 'Committed offset',
         class: 'table-cell-1'
-      },
-      {
-        header: '',
-        class: 'action_cell'
       }
     ]
   }
