@@ -41,7 +41,7 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Log level', id: 'logLevel' },
   { label: 'Output path', id: 'outputPath' },
-  { label: 'Iterations', id: 'iterations' }
+  { label: 'Total iterations', id: 'iterations' }
 ]
 export const actionsMenuHeader = 'New Job'
 
