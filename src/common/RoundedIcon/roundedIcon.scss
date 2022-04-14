@@ -35,7 +35,8 @@
       content: '';
     }
 
-    &:hover {
+    &:hover,
+    &-active {
       &::before {
         opacity: 1;
       }

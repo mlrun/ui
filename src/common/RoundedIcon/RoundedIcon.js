@@ -8,8 +8,15 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import './roundedIcon.scss'
 
 const RoundedIcon = React.forwardRef(
-  ({ children, className, disabled, id, onClick, tooltipText }, ref) => {
+  (
+    { children, className, disabled, id, isActive, onClick, tooltipText },
+    ref
+  ) => {
     const wrapperClassNames = classNames('round-icon-cp', className)
+    const IconClassNames = classNames(
+      'round-icon-cp__circle',
+      isActive && 'round-icon-cp__circle-active'
+    )
 
     return (
       <div className={wrapperClassNames} ref={ref}>
@@ -21,7 +28,7 @@ const RoundedIcon = React.forwardRef(
             onClick={onClick}
             disabled={disabled}
             id={id}
-            className="round-icon-cp__circle"
+            className={IconClassNames}
           >
             {children}
           </button>
@@ -35,6 +42,7 @@ RoundedIcon.defaultProps = {
   className: '',
   disabled: false,
   id: '',
+  isActive: false,
   onClick: () => {},
   tooltipText: ''
 }
@@ -44,6 +52,7 @@ RoundedIcon.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   id: PropTypes.string,
+  isActive: PropTypes.bool,
   onClick: PropTypes.func,
   tooltipText: PropTypes.string
 }
