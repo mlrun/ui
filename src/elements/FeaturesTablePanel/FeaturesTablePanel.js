@@ -15,7 +15,11 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import tableActions from '../../actions/table'
 import featureStoreActions from '../../actions/featureStore'
 import notificationActions from '../../actions/notification'
-import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
+import {
+  LABEL_BUTTON,
+  PRIMARY_BUTTON,
+  STATUS_CODE_FORBIDDEN
+} from '../../constants'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
@@ -107,11 +111,17 @@ const FeaturesTablePanel = ({
             message: 'Features successfully added'
           })
         })
-        .catch(() => {
+        .catch(error => {
           setNotification({
             status: 400,
             id: Math.random(),
-            message: 'Failed to add features',
+            message:
+              tableStore.features.isNewFeatureVector &&
+              error.response.status === STATUS_CODE_FORBIDDEN
+                ? 'You are not permitted to create new feature vector.'
+                : tableStore.features.isNewFeatureVector
+                ? 'Feature vector creation failed.'
+                : 'Failed to add features',
             retry: addFeatures
           })
         })
