@@ -113,11 +113,11 @@ Feature: ML Functions
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display "Input_Hint"."Function_Name_Hint"
-        Then verify "New_Function_Name_Input" according hint rules on "Create_ML_Function_Popup" wizard
+        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Name_Hint"
+        Then verify "New_Function_Name_Input" options rules on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Tag_Hint"
+        Then verify "New_Function_Tag_Input" options rules on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then "Cancel_Button" element on "Create_ML_Function_Popup" should contains "Cancel" value
@@ -356,7 +356,7 @@ Feature: ML Functions
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
-        When add rows to "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
+        When add rows to "Function_Environment_Variables_Table" key-value table in "Environment_Variables_Accordion" on "New_Function" wizard
             | name_input | value_input |
             |    name1   |    value1   |
             |    name2   |    value2   |
@@ -500,7 +500,7 @@ Feature: ML Functions
         Then check "new-aqa-function-00" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @inProgress
-    Scenario: deploy new ml-function wit build new image option
+    Scenario: deploy new ml-function with build new image option
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -510,7 +510,7 @@ Feature: ML Functions
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
-        And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "new-aqa-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
@@ -521,7 +521,7 @@ Feature: ML Functions
         And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Then click on "Deploy_Button" element on "New_Function" wizard
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
-        Then check "new-aqa-function-00" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     Scenario: Delete ml-function
         * create "automation-test-name07" MLRun Project with code 201
@@ -646,7 +646,7 @@ Feature: ML Functions
         When collapse "Code_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
-        When add rows to "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        When add rows to "Secrets_Runtime_Configuration_Table" key-value table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | value_input |
             |    value0   |
             |    value1   |
@@ -662,9 +662,9 @@ Feature: ML Functions
             | file | value4 |
         When click on "delete_btn" in "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | value  |
-            | value0 |
-            | value2 |
             | value4 |
+            | value2 |
+            | value0 |
         Then verify values in "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | kind | value  |
             | file | value1 |

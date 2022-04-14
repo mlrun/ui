@@ -102,7 +102,7 @@ const secretKeyTemplate = {
 // Mock consts
 const mockHome = process.cwd() + '/tests/mockServer'
 const mlrunAPIIngress =
-  '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
+  '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/v1'
 const nuclioApiUrl =
   '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const iguazioApiUrl =
@@ -231,7 +231,7 @@ function createNewProject(req, res) {
     project => project.metadata.name === req.body.metadata.name
   )
   if (projects.projects.length > 50) {
-    res.statusCode = 405
+    res.statusCode = 500
     data = projectsLimitReachedConflict
   } else if (!collectedProjects.length) {
     const project = cloneDeep(projectTemplate)
@@ -499,11 +499,6 @@ function getProjectsFeaturesEntities(req, res) {
       item => item.feature_set_digest.metadata.project === req.params.project
     )
   }
-  if (artifact === 'pipelines') {
-    collectedArtifacts = pipelines[req.params.project]
-      ? pipelines[req.params.project]
-      : pipelines['_empty']
-  }
 
   if (collectedArtifacts.length) {
     if (req.query['tag']) {
@@ -578,9 +573,6 @@ function getProjectsFeaturesEntities(req, res) {
   }
   if (artifact === 'entities') {
     result = { entities: collectedArtifacts }
-  }
-  if (artifact === 'pipelines') {
-    result = collectedArtifacts
   }
 
   res.send(result)
@@ -770,6 +762,33 @@ function deleteProjectsFeatureVectors(req, res) {
 
   res.status = 204
   res.send('')
+}
+
+function getPipelines(req, res) {
+  const collectedPipelines = { ...pipelines[req.params.project] }
+
+  if (req.query.filter) {
+    const nameFilter = JSON.parse(req.query.filter).predicates.find(
+      item => item.key === 'name'
+    )
+    const statusFilter = JSON.parse(req.query.filter).predicates.find(
+      item => item.key === 'status'
+    )
+
+    if (nameFilter) {
+      collectedPipelines.runs = collectedPipelines.runs.filter(pipeline => {
+        return pipeline.name.includes(nameFilter.string_value)
+      })
+    }
+
+    if (statusFilter) {
+      collectedPipelines.runs = collectedPipelines.runs.filter(pipeline => {
+        return pipeline.status.includes(statusFilter.string_value)
+      })
+    }
+  }
+
+  res.send(collectedPipelines)
 }
 
 function getPipeline(req, res) {
@@ -1321,120 +1340,116 @@ function getIguazioUsers(req, res) {
 }
 
 // REQUESTS
-app.get(`${mlrunAPIIngress}/api/frontend-spec`, getFrontendSpec)
+app.get(`${mlrunAPIIngress}/frontend-spec`, getFrontendSpec)
 
-app.get(`${mlrunAPIIngress}/api/projects/:project/feature-sets`, getFeatureSet)
+app.get(`${mlrunAPIIngress}/projects/:project/feature-sets`, getFeatureSet)
 
 // POST request after ferification should be deleted
 app.post(
-  `${mlrunAPIIngress}/api/projects/:project/feature-sets`,
+  `${mlrunAPIIngress}/projects/:project/feature-sets`,
   createProjectsFeatureSet
 )
 app.put(
-  `${mlrunAPIIngress}/api/projects/:project/feature-sets/:name/references/:tag`,
+  `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   createProjectsFeatureSet
 )
 app.delete(
-  `${mlrunAPIIngress}/api/projects/:project/feature-sets/:featureSet`,
+  `${mlrunAPIIngress}/projects/:project/feature-sets/:featureSet`,
   deleteFeatureSet
 )
 
-app.get(`${mlrunAPIIngress}/api/projects`, getProjects)
-app.post(`${mlrunAPIIngress}/api/projects`, createNewProject)
-app.get(`${mlrunAPIIngress}/api/projects/:project`, getProject)
-app.delete(`${mlrunAPIIngress}/api/projects/:project`, deleteProject)
-app.patch(`${mlrunAPIIngress}/api/projects/:project`, patchProject)
-app.put(`${mlrunAPIIngress}/api/projects/:project`, putProject)
-app.get(`${mlrunAPIIngress}/api/projects/:project/secret-keys`, getSecretKeys)
-app.post(`${mlrunAPIIngress}/api/projects/:project/secrets`, postSecretKeys)
-app.delete(`${mlrunAPIIngress}/api/projects/:project/secrets`, deleteSecretKeys)
+app.get(`${mlrunAPIIngress}/projects`, getProjects)
+app.post(`${mlrunAPIIngress}/projects`, createNewProject)
+app.get(`${mlrunAPIIngress}/projects/:project`, getProject)
+app.delete(`${mlrunAPIIngress}/projects/:project`, deleteProject)
+app.patch(`${mlrunAPIIngress}/projects/:project`, patchProject)
+app.put(`${mlrunAPIIngress}/projects/:project`, putProject)
+app.get(`${mlrunAPIIngress}/projects/:project/secret-keys`, getSecretKeys)
+app.post(`${mlrunAPIIngress}/projects/:project/secrets`, postSecretKeys)
+app.delete(`${mlrunAPIIngress}/projects/:project/secrets`, deleteSecretKeys)
 
-app.get(`${mlrunAPIIngress}/api/project-summaries`, getProjectsSummaries)
-app.get(`${mlrunAPIIngress}/api/project-summaries/:project`, getProjectSummary)
+app.get(`${mlrunAPIIngress}/project-summaries`, getProjectsSummaries)
+app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
-app.get(`${mlrunAPIIngress}/api/runs`, getRuns)
+app.get(`${mlrunAPIIngress}/runs`, getRuns)
 
-app.get(`${mlrunAPIIngress}/api/run/:project/:uid`, getRun)
-app.patch(`${mlrunAPIIngress}/api/run/:project/:uid`, patchRun)
+app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
+app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 
+app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
 app.get(
-  `${mlrunAPIIngress}/api/projects/:project/schedules`,
-  getProjectsSchedules
-)
-app.get(
-  `${mlrunAPIIngress}/api/projects/:project/schedules/:schedule`,
+  `${mlrunAPIIngress}/projects/:project/schedules/:schedule`,
   getProjectsSchedule
 )
 app.delete(
-  `${mlrunAPIIngress}/api/projects/:project/schedules/:schedule`,
+  `${mlrunAPIIngress}/projects/:project/schedules/:schedule`,
   deleteSchedule
 )
+
+app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
+app.get(`${mlrunAPIIngress}/pipelines/:pipelineID`, getPipeline)
+
 app.get(
-  `${mlrunAPIIngress}/api/projects/:project/:artifact`,
+  `${mlrunAPIIngress}/projects/:project/:artifact`,
   getProjectsFeaturesEntities
 )
 app.get(
-  `${mlrunAPIIngress}/api/projects/:project/artifact-tags`,
+  `${mlrunAPIIngress}/projects/:project/artifact-tags`,
   getProjectsArtifactTags
 )
-app.get(`${mlrunAPIIngress}/api/artifacts`, getArtifacts)
+app.get(`${mlrunAPIIngress}/artifacts`, getArtifacts)
 
-app.post(`${mlrunAPIIngress}/api/artifact/:project/:uid/:artifact`, postModel)
+app.post(`${mlrunAPIIngress}/artifact/:project/:uid/:artifact`, postModel)
 app.get(
-  `${mlrunAPIIngress}/api/projects/:project/feature-sets/:name/references/:tag`,
+  `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   getProjectsFeatureSets
 )
 app.patch(
-  `${mlrunAPIIngress}/api/projects/:project/feature-sets/:name/references/:tag`,
+  `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   patchProjectsFeatureSets
 )
 app.post(
-  `${mlrunAPIIngress}/api/projects/:project/feature-vectors`,
+  `${mlrunAPIIngress}/projects/:project/feature-vectors`,
   postProjectsFeatureVectors
 )
 app.put(
-  `${mlrunAPIIngress}/api/projects/:project/feature-vectors/:name/references/:tag`,
+  `${mlrunAPIIngress}/projects/:project/feature-vectors/:name/references/:tag`,
   putProjectsFeatureVectors
 )
 app.patch(
-  `${mlrunAPIIngress}/api/projects/:project/feature-vectors/:name/references/:tag`,
+  `${mlrunAPIIngress}/projects/:project/feature-vectors/:name/references/:tag`,
   patchProjectsFeatureVectors
 )
 app.delete(
-  `${mlrunAPIIngress}/api/projects/:project/feature-vectors/:name`,
+  `${mlrunAPIIngress}/projects/:project/feature-vectors/:name`,
   deleteProjectsFeatureVectors
 )
 
-app.get(`${mlrunAPIIngress}/api/pipelines/:pipelineID`, getPipeline)
+app.get(`${mlrunAPIIngress}/funcs`, getFuncs)
 
-app.get(`${mlrunAPIIngress}/api/funcs`, getFuncs)
-
-app.get(`${mlrunAPIIngress}/api/func/:project/:func`, getFunc)
-app.post(`${mlrunAPIIngress}/api/func/:project/:func`, postFunc)
+app.get(`${mlrunAPIIngress}/func/:project/:func`, getFunc)
+app.post(`${mlrunAPIIngress}/func/:project/:func`, postFunc)
 
 app.get(
-  `${mlrunAPIIngress}/api/projects/:project/:featureArtifact/*/tags`,
+  `${mlrunAPIIngress}/projects/:project/:featureArtifact/*/tags`,
   getProjectsFeatureArtifactTags
 )
 
-app.delete(
-  `${mlrunAPIIngress}/api/projects/:project/functions/:func`,
-  deleteFunc
-)
+app.delete(`${mlrunAPIIngress}/projects/:project/functions/:func`, deleteFunc)
 
-app.get(`${mlrunAPIIngress}/api/build/status`, getBuildStatus)
-app.post(`${mlrunAPIIngress}/api/build/function`, deployMLFunction)
+app.get(`${mlrunAPIIngress}/build/status`, getBuildStatus)
+app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
 
-app.get(`${mlrunAPIIngress}/api/files`, getFile)
+app.get(`${mlrunAPIIngress}/files`, getFile)
 
-app.get(`${mlrunAPIIngress}/api/log/:project/:uid`, getLog)
+app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 
 app.get(
-  `${mlrunAPIIngress}/api/projects/:project/runtime-resources`,
+  `${mlrunAPIIngress}/projects/:project/runtime-resources`,
   getRuntimeResources
 )
 
-app.post(`${mlrunAPIIngress}/api/submit_job`, postSubmitJob)
+app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)
 
 app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)
 
