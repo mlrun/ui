@@ -57,7 +57,7 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
       <div className="page-actions">
         <Search
           wrapperClassName="search-input-wrapper"
-          onChange={setFilterByName}
+          onChange={searchTerm => setFilterByName(searchTerm.toLowerCase())}
           placeholder="Search consumer groups..."
           value={filterByName}
         />
