@@ -103,7 +103,7 @@ const ConsumerGroup = ({
       <div className="page-actions">
         <Search
           wrapperClassName="search-input-wrapper"
-          onChange={setFilterByName}
+          onChange={searchTerm => setFilterByName(searchTerm.toLowerCase())}
           placeholder="Search by shard name..."
           value={filterByName}
         />
