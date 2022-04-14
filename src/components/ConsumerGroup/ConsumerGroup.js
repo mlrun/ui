@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
@@ -9,17 +9,14 @@ import PageHeader from '../../elements/PageHeader/PageHeader'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Search from '../../common/Search/Search'
 import Table from '../Table/Table'
-import YamlModal from '../../common/YamlModal/YamlModal'
 
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
 import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../layout/Content/content.util'
-import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const ConsumerGroup = ({
   fetchNuclioV3ioStreamShardLags,
@@ -28,7 +25,6 @@ const ConsumerGroup = ({
   resetV3ioStreamShardLagsError,
   setNotification
 }) => {
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [currentV3ioStream, setCurrentV3ioStream] = useState([])
   const [
     filteredV3ioStreamShardLags,
@@ -45,16 +41,6 @@ const ConsumerGroup = ({
       setCurrentV3ioStream(v3ioStream)
     }
   }, [match.params.consumerGroupName, nuclioStore.v3ioStreams])
-
-  const actionsMenu = useMemo(() => {
-    return [
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
-    ]
-  }, [toggleConvertedYaml])
 
   const refreshConsumerGroup = useCallback(
     currentV3ioStream => {
@@ -129,17 +115,11 @@ const ConsumerGroup = ({
         </RoundedIcon>
       </div>
       <Table
-        actionsMenu={actionsMenu}
+        actionsMenu={[]}
         content={filteredV3ioStreamShardLags}
         match={match}
         pageData={pageData}
       />
-      {convertedYaml.length > 0 && (
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={toggleConvertedYaml}
-        />
-      )}
       {!nuclioStore.v3ioStreams.loading &&
         !nuclioStore.v3ioStreamShardLags.loading &&
         nuclioStore.v3ioStreamShardLags.parsedData.length === 0 && (
