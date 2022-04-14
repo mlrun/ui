@@ -197,7 +197,9 @@ export const generateJobsContent = selectedItem => ({
     value: selectedItem.outputPath
   },
   iterations: {
-    value: selectedItem.iterations?.length ? selectedItem.iterations : '0'
+    value: selectedItem.iterationStats?.length
+      ? selectedItem.iterationStats.length - 1
+      : 'N/A'
   }
 })
 
