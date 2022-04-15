@@ -25,10 +25,9 @@ import { parseFunction } from '../../utils/parseFunction'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isPageTabValid } from '../../utils/handleRedirect'
 import { generateContentActionsMenu } from '../../layout/Content/content.util'
-// import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
+import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
-import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 
 const Jobs = ({
   abortJob,
@@ -56,6 +55,7 @@ const Jobs = ({
   removeNewJob,
   removePods,
   removeScheduledJob,
+  resetWorkflow,
   setFilters,
   setNotification,
   workflowsStore
@@ -64,8 +64,6 @@ const Jobs = ({
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
-  const [workflow, setWorkflow] = useState({})
-  const [workflowJobsIds, setWorkflowJobsIds] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
@@ -438,15 +436,29 @@ const Jobs = ({
   }, [navigate, pageData.tabs, params.pageTab, location])
 
   useEffect(() => {
+    const workflow = { ...workflowsStore.activeWorkflow.data }
+    const getWorkflow = () => {
+      fetchWorkflow(params.workflowId).catch(() =>
+        navigate(`/projects/${params.projectName}/jobs/${params.pageTab}`, { replace: true })
+      )
+    }
+
+    if (!params.workflowId && workflow.graph) {
+      resetWorkflow()
+    }
+
     if (!workflow.graph && params.workflowId) {
-      fetchWorkflow(params.workflowId)
-        .then(workflow => {
-          setWorkflow(workflow)
-          setWorkflowJobsIds(Object.values(workflow.graph).map(jobData => jobData.run_uid))
-        })
-        .catch(() =>
-          navigate(`/projects/${params.projectName}/jobs/${params.pageTab}`, { replace: true })
-        )
+      getWorkflow()
+    }
+
+    if (
+      ['Running', 'None'].includes(workflow?.run?.status) &&
+      params.workflowId &&
+      workflow.graph
+    ) {
+      const timeout = setTimeout(getWorkflow, 10000)
+
+      return () => clearTimeout(timeout)
     }
   }, [
     fetchWorkflow,
@@ -454,7 +466,8 @@ const Jobs = ({
     params.pageTab,
     params.projectName,
     params.workflowId,
-    workflow.graph
+    resetWorkflow,
+    workflowsStore.activeWorkflow
   ])
 
   useEffect(() => {
@@ -464,6 +477,8 @@ const Jobs = ({
   }, [fetchCurrentJob, params.jobId, selectedJob])
 
   useEffect(() => {
+    const workflow = { ...workflowsStore.activeWorkflow.data }
+
     if (
       workflow.graph &&
       params.functionHash &&
@@ -503,7 +518,7 @@ const Jobs = ({
     params.functionName,
     params.projectName,
     selectedFunction,
-    workflow.graph
+    workflowsStore.activeWorkflow
   ])
 
   useEffect(() => {
@@ -568,7 +583,6 @@ const Jobs = ({
     return () => {
       setJobs([])
       setJobRuns([])
-      setWorkflow({})
     }
   }, [params.projectName, params.pageTab])
 
@@ -643,7 +657,7 @@ const Jobs = ({
         dispatch(
           editJobFailure(
             error.response.status === STATUS_CODE_FORBIDDEN
-              ? 'You are not permitted to run new job'
+              ? 'You are not permitted to run new job.'
               : error.message
           )
         )
@@ -687,8 +701,8 @@ const Jobs = ({
       setEditableItem={setEditableItem}
       setWorkflowsViewMode={setWorkflowsViewMode}
       toggleConvertedYaml={toggleConvertedYaml}
-      workflow={workflow}
-      workflowJobsIds={workflowJobsIds}
+      workflow={workflowsStore.activeWorkflow.data}
+      workflowJobsIds={workflowsStore.activeWorkflow.workflowJobsIds}
       workflowsStore={workflowsStore}
       workflowsViewMode={workflowsViewMode}
     />

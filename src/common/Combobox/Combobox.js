@@ -18,6 +18,7 @@ const Combobox = ({
   matches,
   maxSuggestedMatches,
   onBlur,
+  onFocus,
   required,
   requiredText,
   selectDefaultValue,
@@ -192,6 +193,8 @@ const Combobox = ({
   }
 
   const inputOnFocus = () => {
+    onFocus()
+
     if (showSelectDropdown) {
       setShowSelectDropdown(false)
     }
@@ -288,6 +291,7 @@ Combobox.propTypes = {
   matches: COMBOBOX_MATCHES.isRequired,
   maxSuggestedMatches: PropTypes.number,
   onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

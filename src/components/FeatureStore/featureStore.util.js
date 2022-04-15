@@ -234,7 +234,6 @@ const generateActionsMenu = (tab, handleDelete) => {
 export const generatePageData = (
   pageTab,
   handleRequestOnExpand,
-  handleRemoveRequestData,
   onDeleteFeatureVector,
   getPopUpTemplate,
   isTablePanelOpen,
@@ -258,14 +257,12 @@ export const generatePageData = (
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
     data.filterMenuActionButton = null
     data.handleRequestOnExpand = handleRequestOnExpand
-    data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
     data.hidePageActionMenu = true
     data.filters = featuresFilters
     data.tableHeaders = generateFeaturesTableHeaders(isTablePanelOpen)
     data.tablePanel = getFeaturesTablePanel()
-    data.handleRemoveRequestData = handleRemoveRequestData
     data.filterMenuActionButton = {
       label: 'Add to feature vector',
       variant: SECONDARY_BUTTON,
@@ -282,7 +279,6 @@ export const generatePageData = (
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
     data.handleRequestOnExpand = handleRequestOnExpand
-    data.handleRemoveRequestData = handleRemoveRequestData
     data.details.infoHeaders = featureVectorsInfoHeaders
     data.details.type = FEATURE_VECTORS_TAB
     data.filterMenuActionButton = null

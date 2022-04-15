@@ -41,7 +41,7 @@ const ProjectsTableSelector = {
 
 module.exports = {
   New_Project_Button: By.css(
-    '.projects__wrapper .projects-content-header-item .page-actions-container .btn-secondary'
+    '.projects__wrapper .projects-content-header-item .page-actions-container .btn_register'
   ),
   Refresh_Projects_Button: By.css(
     '.projects-content-header .data-ellipsis button'

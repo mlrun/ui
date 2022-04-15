@@ -9,6 +9,7 @@ import {
   generateCpuValue,
   generateMemoryValue
 } from '../../utils/panelResources.util'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { setRangeInputValidation } from './jobsPanelResources.util'
 import jobsActions from '../../actions/jobs'
 
@@ -16,6 +17,7 @@ const JobsPanelResources = ({
   frontendSpec,
   panelDispatch,
   panelState,
+  setNewJobPreemtionMode,
   setNewJobPriorityClassName,
   setValidation,
   validation
@@ -27,7 +29,7 @@ const JobsPanelResources = ({
     return (frontendSpec.valid_function_priority_class_names ?? []).map(
       className => ({
         id: className,
-        label: className
+        label: generateFunctionPriorityLabel(className)
       })
     )
   }, [frontendSpec.valid_function_priority_class_names])
@@ -139,6 +141,14 @@ const JobsPanelResources = ({
     })
   }
 
+  const handleSelectPreemptionMode = value => {
+    panelDispatch({
+      type: panelActions.SET_PREEMPTION_MODE,
+      payload: value
+    })
+    setNewJobPreemtionMode(value)
+  }
+
   const setCpuValue = (value, data, type, validationField) => {
     panelDispatch({
       type: panelActions[`SET_${type}_CPU`],
@@ -201,6 +211,7 @@ const JobsPanelResources = ({
     <JobsPanelResourcesView
       handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
+      handleSelectPreemptionMode={handleSelectPreemptionMode}
       panelDispatch={panelDispatch}
       panelState={panelState}
       resourcesData={generateResourcesData()}
@@ -225,5 +236,8 @@ export default connect(
   ({ appStore }) => ({
     frontendSpec: appStore.frontendSpec
   }),
-  { setNewJobPriorityClassName: jobsActions.setNewJobPriorityClassName }
+  {
+    setNewJobPriorityClassName: jobsActions.setNewJobPriorityClassName,
+    setNewJobPreemtionMode: jobsActions.setNewJobPreemtionMode
+  }
 )(JobsPanelResources)

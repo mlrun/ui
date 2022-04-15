@@ -363,6 +363,7 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
           artifact.metadata?.uid,
           tab
         ),
+      showStatus: true,
       tooltip: artifact.spec?.model_uri
         ? `${name} - ${artifact.spec?.model_uri}`
         : name

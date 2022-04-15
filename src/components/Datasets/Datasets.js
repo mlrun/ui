@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -16,7 +17,6 @@ import {
 } from './datasets.util'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { generateUri } from '../../utils/resources'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -26,8 +26,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 
 import { useOpenPanel } from '../../hooks/openPanel.hook'
@@ -60,7 +59,7 @@ const Datasets = ({
     filters => {
       fetchDataSets(params.projectName, filters).then(result => {
         if (result) {
-          setDatasets(generateArtifacts(filterArtifacts(result)))
+          setDatasets(generateArtifacts(filterArtifacts(result), DATASETS))
         }
 
         return result
@@ -139,7 +138,6 @@ const Datasets = ({
       if (!selectedItem) {
         navigate(`/projects/${params.projectName}/datasets}`, { replace: true })
       } else {
-        selectedItem.URI = generateUri(selectedItem, DATASETS)
         setSelectedItem({ item: selectedItem })
       }
     } else {
@@ -157,10 +155,10 @@ const Datasets = ({
     setPageData(state => {
       return {
         ...state,
-        ...generatePageData(!isEveryObjectValueEmpty(selectedItem))
+        ...generatePageData(handleRequestOnExpand, !isEveryObjectValueEmpty(selectedItem))
       }
     })
-  }, [selectedItem])
+  }, [handleRequestOnExpand, selectedItem])
 
   useEffect(() => {
     if (selectedItem.item) {
@@ -173,16 +171,6 @@ const Datasets = ({
       }))
     }
   }, [selectedItem, selectedItem.item])
-
-  useEffect(() => {
-    setPageData(state => {
-      return {
-        ...state,
-        handleRequestOnExpand,
-        handleRemoveDataSet
-      }
-    })
-  }, [handleRemoveDataSet, handleRequestOnExpand])
 
   useEffect(() => {
     removeDataSet({})
@@ -202,12 +190,12 @@ const Datasets = ({
   }, [fetchData, urlTagOption])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || filtersStore.tag === TAG_FILTER_LATEST) {
+    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [filtersStore.groupBy, filtersStore.tag, params.name, setFilters])
+  }, [filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name, setFilters])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -237,6 +225,7 @@ const Datasets = ({
         getIdentifier={getArtifactIdentifier}
         handleCancel={() => setSelectedItem({})}
         handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
+        handleRemoveRequestData={handleRemoveDataSet}
         loading={loading}
         pageData={pageData}
         refresh={handleRefresh}

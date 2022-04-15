@@ -31,8 +31,7 @@ import {
   MODELS_TAB,
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -165,7 +164,9 @@ const Models = ({
             selectedRowData: {
               ...state.selectedRowData,
               [modelIdentifier]: {
-                content: [...generateArtifacts(filterArtifacts(result), !filtersStore.iter)],
+                content: [
+                  ...generateArtifacts(filterArtifacts(result), MODELS_TAB, !filtersStore.iter)
+                ],
                 error: null,
                 loading: false
               }
@@ -210,18 +211,10 @@ const Models = ({
         params.pageTab,
         handleDeployModel,
         handleRequestOnExpand,
-        handleRemoveModel,
         !isEveryObjectValueEmpty(selectedModel)
       )
     }))
-  }, [
-    handleDeployModel,
-    handleRemoveModel,
-    handleRequestOnExpand,
-    params.pageTab,
-    selectedModel,
-    subPage
-  ])
+  }, [handleDeployModel, handleRequestOnExpand, params.pageTab, selectedModel, subPage])
 
   useEffect(() => {
     if (params.pageTab === MODEL_ENDPOINTS_TAB) {
@@ -229,13 +222,20 @@ const Models = ({
     } else if (
       params.pageTab === REAL_TIME_PIPELINES_TAB ||
       filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
-      filtersStore.tag === TAG_FILTER_LATEST
+      isEmpty(filtersStore.iter)
     ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [params.pageTab, params.projectName, params.pipelineId, filtersStore.tag, setFilters])
+  }, [
+    params.pageTab,
+    params.projectName,
+    params.pipelineId,
+    filtersStore.tag,
+    filtersStore.iter,
+    setFilters
+  ])
 
   useEffect(() => {
     if (
@@ -329,6 +329,7 @@ const Models = ({
         content={sortedContent}
         handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
         handleCancel={() => setSelectedModel({})}
+        handleRemoveRequestData={params.pageTab === MODELS_TAB && handleRemoveModel}
         loading={artifactsStore.loading}
         pageData={pageData}
         refresh={fetchData}

@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { v4 as uuidv4 } from 'uuid'
 import { TAG_LATEST } from '../../../../src/constants'
 
-const REACT_APP_MLRUN_API_URL = 'http://localhost:3000'
+const REACT_APP_MLRUN_API_URL = 'http://localhost:3000/api/v1'
 
 const newJobTemplate = {
   task: {
@@ -37,7 +37,7 @@ const action = {
   ) {
     await driver.sleep(1000)
     await mainHttpClient
-      .delete(`${REACT_APP_MLRUN_API_URL}/api/projects/${mlProjectName}`)
+      .delete(`${REACT_APP_MLRUN_API_URL}/projects/${mlProjectName}`)
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
@@ -49,7 +49,7 @@ const action = {
   ) {
     await mainHttpClient
       .delete(
-        `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/feature-sets/${featureSetName}`
+        `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/feature-sets/${featureSetName}`
       )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
@@ -62,7 +62,7 @@ const action = {
   ) {
     await mainHttpClient
       .delete(
-        `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/feature-vectors/${featureVectorName}`
+        `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/feature-vectors/${featureVectorName}`
       )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
@@ -75,7 +75,7 @@ const action = {
   ) {
     await mainHttpClient
       .delete(
-        `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/functions/${functionName}`
+        `${REACT_APP_MLRUN_API_URL}projects/${projectName}/functions/${functionName}`
       )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
@@ -88,7 +88,7 @@ const action = {
   ) {
     await mainHttpClient
       .delete(
-        `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/schedules/${scheduleName}`
+        `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/schedules/${scheduleName}`
       )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
@@ -101,7 +101,7 @@ const action = {
   ) {
     await mainHttpClient
       .delete(
-        `${REACT_APP_MLRUN_API_URL}/api/artifacts?project=${projectName}&name=${artifactName}`
+        `${REACT_APP_MLRUN_API_URL}/artifacts?project=${projectName}&name=${artifactName}`
       )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
@@ -118,7 +118,7 @@ const action = {
     }
 
     await mainHttpClient
-      .post(`${REACT_APP_MLRUN_API_URL}/api/projects`, project_data)
+      .post(`${REACT_APP_MLRUN_API_URL}/projects`, project_data)
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
@@ -134,7 +134,7 @@ const action = {
     data.task.metadata.project = mlProjectName
     data.schedule = '0 0 * * *'
     await mainHttpClient
-      .post(`${REACT_APP_MLRUN_API_URL}/api/submit_job`, data)
+      .post(`${REACT_APP_MLRUN_API_URL}/submit_job`, data)
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
@@ -160,7 +160,7 @@ const action = {
 
     await mainHttpClient
       .post(
-        `${REACT_APP_MLRUN_API_URL}/api/func/${mlProjectName}/${mlFunctionName}?tag=&versioned=true`,
+        `${REACT_APP_MLRUN_API_URL}/func/${mlProjectName}/${mlFunctionName}?tag=&versioned=true`,
         data
       )
       .then(res => {
@@ -179,13 +179,16 @@ const action = {
         name: mlFeatureSetName,
         tag: TAG_LATEST
       },
-      spec: {},
+      spec: {
+        entities: [{ name: 'entity', value_type: 'str' }],
+        features: []
+      },
       status: {}
     }
 
     await mainHttpClient
       .post(
-        `${REACT_APP_MLRUN_API_URL}/api/projects/${mlProjectName}/feature-sets`,
+        `${REACT_APP_MLRUN_API_URL}/projects/${mlProjectName}/feature-sets`,
         data
       )
       .then(res => {
@@ -205,13 +208,13 @@ const action = {
         tag: TAG_LATEST,
         labels: {}
       },
-      spec: {},
+      spec: { description: '', features: [], label_feature: '' },
       status: {}
     }
 
     await mainHttpClient
       .post(
-        `${REACT_APP_MLRUN_API_URL}/api/projects/${mlProjectName}/feature-vectors`,
+        `${REACT_APP_MLRUN_API_URL}/projects/${mlProjectName}/feature-vectors`,
         data
       )
       .then(res => {
@@ -240,7 +243,7 @@ const action = {
     }
     await mainHttpClient
       .post(
-        `${REACT_APP_MLRUN_API_URL}/api/artifact/${mlProjectName}/${uid}/${mlArtifactName}`,
+        `${REACT_APP_MLRUN_API_URL}/artifact/${mlProjectName}/${uid}/${mlArtifactName}`,
         data
       )
       .then(res => {
@@ -249,7 +252,7 @@ const action = {
   },
   getProjects: () => {
     return mainHttpClient
-      .get(`${REACT_APP_MLRUN_API_URL}/api/projects`)
+      .get(`${REACT_APP_MLRUN_API_URL}/projects`)
       .then(res => {
         return res.data.projects
       })

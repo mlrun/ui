@@ -22,7 +22,13 @@ const CreateJobCardTemplate = ({
       onClick={() => handleSelectGroupFunctions(func)}
     >
       <h6 className="card-template__header">
-        {func.name || func?.metadata.name}
+        <Tooltip
+          template={
+            <TextTooltipTemplate text={func.name || func?.metadata.name} />
+          }
+        >
+          {func.name || func?.metadata.name}
+        </Tooltip>
       </h6>
       {func.metadata && (
         <>

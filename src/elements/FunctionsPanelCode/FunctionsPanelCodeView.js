@@ -105,12 +105,11 @@ const FunctionsPanelCodeView = ({
                 <Input
                   floatingLabel
                   invalid={!validation.isHandlerValid}
-                  label="Handler"
+                  label="Default handler"
                   onChange={handler =>
                     setData(state => ({ ...state, handler }))
                   }
                   onBlur={handleHandlerOnBlur}
-                  required
                   setInvalid={value =>
                     setValidation(state => ({
                       ...state,

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -11,7 +12,6 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generatePageData, pageDataInitialState } from './files.util'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import { generateUri } from '../../utils/resources'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -25,8 +25,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import filtersActions from '../../actions/filters'
 
@@ -54,7 +53,7 @@ const Files = ({
     filters => {
       fetchFiles(params.projectName, filters).then(result => {
         if (result) {
-          setFiles(generateArtifacts(filterArtifacts(result)))
+          setFiles(generateArtifacts(filterArtifacts(result), ARTIFACTS))
         }
 
         return result
@@ -125,7 +124,9 @@ const Files = ({
             selectedRowData: {
               ...state.selectedRowData,
               [fileIdentifier]: {
-                content: [...generateArtifacts(filterArtifacts(result), !filtersStore.iter)],
+                content: [
+                  ...generateArtifacts(filterArtifacts(result), ARTIFACTS, !filtersStore.iter)
+                ],
                 error: null,
                 loading: false
               }
@@ -146,9 +147,9 @@ const Files = ({
   useEffect(() => {
     setPageData(state => ({
       ...state,
-      ...generatePageData(!isEveryObjectValueEmpty(selectedFile))
+      ...generatePageData(handleRequestOnExpand, !isEveryObjectValueEmpty(selectedFile))
     }))
-  }, [selectedFile])
+  }, [handleRequestOnExpand, selectedFile])
 
   useEffect(() => {
     removeFile({})
@@ -179,20 +180,12 @@ const Files = ({
   }, [params.projectName, removeFiles])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || filtersStore.tag === TAG_FILTER_LATEST) {
+    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [params.pageTab, filtersStore.tag, filtersStore.groupBy, setFilters])
-
-  useEffect(() => {
-    setPageData(state => ({
-      ...state,
-      handleRequestOnExpand,
-      handleRemoveRequestData: handleRemoveFile
-    }))
-  }, [handleRemoveFile, handleRequestOnExpand])
+  }, [params.pageTab, filtersStore.tag, filtersStore.iter, filtersStore.groupBy, setFilters])
 
   useEffect(() => {
     if (params.name) {
@@ -206,7 +199,6 @@ const Files = ({
         if (!searchItem) {
           navigate(`/projects/${params.projectName}/files`, { replace: true })
         } else {
-          searchItem.URI = generateUri(searchItem, ARTIFACTS)
           setSelectedFile({ item: searchItem })
         }
       }
@@ -223,6 +215,7 @@ const Files = ({
       <Content
         content={files}
         handleCancel={() => setSelectedFile({})}
+        handleRemoveRequestData={handleRemoveFile}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
         handleActionsMenuClick={() => setIsPopupDialogOpen(true)}

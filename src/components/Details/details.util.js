@@ -45,6 +45,7 @@ import DetailsTransformations from '../DetailsTransformations/DetailsTransformat
 import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsPods from '../DetailsPods/DetailsPods'
+import NoData from '../../common/NoData/NoData'
 
 export const generateArtifactsContent = (detailsType, selectedItem) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
@@ -196,7 +197,9 @@ export const generateJobsContent = selectedItem => ({
     value: selectedItem.outputPath
   },
   iterations: {
-    value: selectedItem.iterations?.length ? selectedItem.iterations : '0'
+    value: selectedItem.iterationStats?.length
+      ? selectedItem.iterationStats.length - 1
+      : 'N/A'
   }
 })
 
@@ -324,7 +327,7 @@ export const renderContent = (
         selectedItem.analysis
       ) {
         return <DetailsAnalysis artifact={selectedItem} />
-      } else return null
+      } else return <NoData />
     case DETAILS_STATISTICS_TAB:
       if (
         detailsStore.modelFeatureVectorData.stats ||
@@ -342,7 +345,7 @@ export const renderContent = (
             }
           />
         )
-      } else return null
+      } else return <NoData />
     case DETAILS_REQUESTED_FEATURES_TAB:
       return (
         <DetailsRequestedFeatures

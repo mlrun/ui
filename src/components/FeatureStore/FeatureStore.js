@@ -367,7 +367,7 @@ const FeatureStore = ({
   }, [params.pageTab, removeEntities, removeFeatureSets, removeFeatureVectors, removeFeatures])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || filtersStore.tag === TAG_FILTER_LATEST) {
+    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
@@ -381,11 +381,6 @@ const FeatureStore = ({
         ...generatePageData(
           params.pageTab,
           handleRequestOnExpand,
-          params.pageTab === FEATURE_VECTORS_TAB
-            ? handleRemoveFeatureVector
-            : params.pageTab === FEATURES_TAB
-            ? handleRemoveFeature
-            : handleRemoveFeatureSet,
           onDeleteFeatureVector,
           getPopUpTemplate,
           tableStore.isTablePanelOpen,
@@ -396,9 +391,6 @@ const FeatureStore = ({
     })
   }, [
     getPopUpTemplate,
-    handleRemoveFeature,
-    handleRemoveFeatureSet,
-    handleRemoveFeatureVector,
     handleRequestOnExpand,
     isStagingMode,
     params.pageTab,
@@ -435,29 +427,31 @@ const FeatureStore = ({
   useEffect(() => {
     checkTabIsValid(navigate, params, selectedItem)
 
-    setPageData(state => {
-      if (params.pageTab === FEATURE_SETS_TAB) {
-        return {
-          ...state,
-          details: {
-            ...state.details,
-            menu: [...generateFeatureSetsDetailsMenu(selectedItem)],
-            type: FEATURE_SETS_TAB
+    if (selectedItem.item) {
+      setPageData(state => {
+        if (params.pageTab === FEATURE_SETS_TAB) {
+          return {
+            ...state,
+            details: {
+              ...state.details,
+              menu: [...generateFeatureSetsDetailsMenu(selectedItem)],
+              type: FEATURE_SETS_TAB
+            }
+          }
+        } else if (params.pageTab === FEATURE_VECTORS_TAB) {
+          return {
+            ...state,
+            details: {
+              ...state.details,
+              menu: [...generateFeatureVectorsDetailsMenu(selectedItem)],
+              type: FEATURE_VECTORS_TAB
+            }
           }
         }
-      } else if (params.pageTab === FEATURE_VECTORS_TAB) {
-        return {
-          ...state,
-          details: {
-            ...state.details,
-            menu: [...generateFeatureVectorsDetailsMenu(selectedItem)],
-            type: FEATURE_VECTORS_TAB
-          }
-        }
-      }
 
-      return { ...state }
-    })
+        return { ...state }
+      })
+    }
   }, [navigate, selectedItem.item, selectedItem.entities, params, selectedItem])
 
   useEffect(() => setContent([]), [filtersStore.tag])
@@ -560,6 +554,13 @@ const FeatureStore = ({
         cancelRequest={cancelRequest}
         content={content}
         handleCancel={() => setSelectedItem({})}
+        handleRemoveRequestData={
+          params.pageTab === FEATURE_VECTORS_TAB
+            ? handleRemoveFeatureVector
+            : params.pageTab === FEATURES_TAB
+            ? handleRemoveFeature
+            : handleRemoveFeatureSet
+        }
         loading={
           featureStore.loading || featureStore.entities.loading || featureStore.features.loading
         }

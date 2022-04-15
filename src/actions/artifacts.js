@@ -1,10 +1,12 @@
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
 import {
+  ARTIFACTS,
   BUILD_FUNCTION_BEGIN,
   BUILD_FUNCTION_FAILURE,
   BUILD_FUNCTION_SUCCESS,
   CLOSE_ARTIFACT_PREVIEW,
+  DATASETS,
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
@@ -26,6 +28,7 @@ import {
   FETCH_MODELS_BEGIN,
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
+  MODELS_TAB,
   REMOVE_ARTIFACTS,
   REMOVE_ARTIFACTS_ERROR,
   REMOVE_DATASET,
@@ -110,7 +113,8 @@ const artifactsAction = {
       .then(response => {
         const generatedArtifacts = generateArtifacts(
           filterArtifacts(response.data.artifacts),
-          iter
+          iter,
+          DATASETS
         )
 
         dispatch(
@@ -137,7 +141,7 @@ const artifactsAction = {
       .then(({ data }) => {
         dispatch(
           artifactsAction.fetchDataSetsSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts))
+            generateArtifacts(filterArtifacts(data.artifacts), DATASETS)
           )
         )
 
@@ -163,6 +167,7 @@ const artifactsAction = {
       .then(response => {
         const generatedArtifacts = generateArtifacts(
           filterArtifacts(response.data.artifacts),
+          ARTIFACTS,
           iter
         )
 
@@ -190,7 +195,7 @@ const artifactsAction = {
       .then(({ data }) => {
         dispatch(
           artifactsAction.fetchFilesSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts))
+            generateArtifacts(filterArtifacts(data.artifacts), ARTIFACTS)
           )
         )
 
@@ -240,11 +245,7 @@ const artifactsAction = {
     return artifactsApi
       .getModelEndpoints(project, filters, params)
       .then(({ data: { endpoints = [] } }) => {
-        dispatch(
-          artifactsAction.fetchModelEndpointsSuccess(
-            generateModelEndpoints(endpoints)
-          )
-        )
+        dispatch(artifactsAction.fetchModelEndpointsSuccess(generateModelEndpoints(endpoints)))
 
         return endpoints
       })
@@ -268,6 +269,7 @@ const artifactsAction = {
       .then(response => {
         const generatedArtifacts = generateArtifacts(
           filterArtifacts(response.data.artifacts),
+          MODELS_TAB,
           iter
         )
 
@@ -295,7 +297,7 @@ const artifactsAction = {
       .then(({ data }) => {
         dispatch(
           artifactsAction.fetchModelsSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts))
+            generateArtifacts(filterArtifacts(data.artifacts), MODELS_TAB)
           )
         )
 

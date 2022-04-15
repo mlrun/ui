@@ -44,6 +44,7 @@ import {
   FETCH_ALL_JOB_RUNS_BEGIN,
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
+  SET_NEW_JOB_PREEMTION_MODE,
   SET_NEW_JOB_PRIORITY_CLASS_NAME
 } from '../constants'
 
@@ -81,11 +82,12 @@ const initialState = {
         }
       },
       spec: {
-        volumes: [],
-        volume_mounts: [],
         env: [],
         node_selector: {},
-        priority_class_name: ''
+        preemption_mode: '',
+        priority_class_name: '',
+        volume_mounts: [],
+        volumes: []
       }
     }
   }
@@ -307,6 +309,7 @@ const jobReducer = (state = initialState, { type, payload }) => {
               volumes: payload.volumes,
               env: payload.environmentVariables,
               node_selector: payload.node_selector,
+              preemption_mode: payload.preemption_mode,
               priority_class_name: payload.priority_class_name
             }
           }
@@ -381,6 +384,20 @@ const jobReducer = (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.task.spec,
               parameters: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_JOB_PREEMTION_MODE:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              preemption_mode: payload
             }
           }
         }

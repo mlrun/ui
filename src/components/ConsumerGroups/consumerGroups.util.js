@@ -9,16 +9,12 @@ export const generatePageData = () => {
         class: 'table-cell-2'
       },
       {
-        header: 'Stream',
+        header: 'Stream Path',
         class: 'table-cell-2'
       },
       {
         header: 'Real time functions',
         class: 'table-cell-2'
-      },
-      {
-        header: '',
-        class: 'action_cell'
       }
     ]
   }

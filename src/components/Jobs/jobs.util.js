@@ -41,7 +41,7 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Log level', id: 'logLevel' },
   { label: 'Output path', id: 'outputPath' },
-  { label: 'Iterations', id: 'iterations' }
+  { label: 'Total iterations', id: 'iterations' }
 ]
 export const actionsMenuHeader = 'New Job'
 
@@ -387,6 +387,7 @@ export const actionCreator = {
   removeNewJob: jobsActions.removeNewJob,
   removePods: detailsActions.removePods,
   removeScheduledJob: jobsActions.removeScheduledJob,
+  resetWorkflow: workflowsActions.resetWorkflow,
   setFilters: filtersActions.setFilters,
   setNotification: notificationActions.setNotification
 }
@@ -404,6 +405,7 @@ export const generateEditableItem = (functionData, job) => {
           volume_mounts: functionData?.spec.volume_mounts ?? [],
           volumes: functionData?.spec.volumes ?? [],
           node_selector: functionData?.spec.node_selector ?? {},
+          preemption_mode: functionData?.spec.preemption_mode ?? '',
           priority_class_name: functionData?.spec.priority_class_name ?? ''
         }
       },

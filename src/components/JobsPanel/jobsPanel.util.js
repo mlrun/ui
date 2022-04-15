@@ -67,6 +67,17 @@ export const getFunctionParameters = (selectedFunction, method) => {
     .value()
 }
 
+export const getFunctionPriorityClass = selectedFunction => {
+  return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => {
+      return func.spec.priority_class_name
+    })
+    .flatten()
+    .unionBy('name')
+    .value()
+}
+
 export const getLimits = (selectedFunction, defaultLimits) => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
@@ -128,6 +139,17 @@ export const getNodeSelectors = selectedFunction => {
         value
       }
     })
+    .value()
+}
+
+export const getPreemptionMode = selectedFunction => {
+  return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => {
+      return func.spec.preemption_mode ?? ''
+    })
+    .flatten()
+    .unionBy('key')
     .value()
 }
 
@@ -226,9 +248,14 @@ export const generateTableData = (
 ) => {
   const defaultResources = frontendSpec?.default_function_pod_resources
   const functionParameters = getFunctionParameters(selectedFunction, method)
+  const [functionPriorityClassName] = getFunctionPriorityClass(selectedFunction)
   const [limits] = getLimits(selectedFunction, defaultResources?.limits)
   const [requests] = getRequests(selectedFunction, defaultResources?.requests)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
+  const [preemptionMode] = getPreemptionMode(selectedFunction)
+  const jobPriorityClassName =
+    functionPriorityClassName ??
+    frontendSpec.default_function_priority_class_name
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
   const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
@@ -264,10 +291,17 @@ export const generateTableData = (
     })
   }
 
-  if (frontendSpec.default_function_priority_class_name) {
+  if (preemptionMode) {
+    panelDispatch({
+      type: panelActions.SET_PREEMPTION_MODE,
+      payload: preemptionMode
+    })
+  }
+
+  if (jobPriorityClassName) {
     panelDispatch({
       type: panelActions.SET_PRIORITY_CLASS_NAME,
-      payload: frontendSpec.default_function_priority_class_name
+      payload: jobPriorityClassName
     })
   }
 
@@ -326,7 +360,8 @@ export const generateTableData = (
     environmentVariables,
     secret_sources: [],
     node_selector: parseDefaultNodeSelectorContent(node_selector),
-    priority_class_name: frontendSpec.default_function_priority_class_name ?? ''
+    preemption_mode: preemptionMode ?? '',
+    priority_class_name: jobPriorityClassName ?? ''
   })
 }
 
@@ -479,6 +514,10 @@ export const generateTableDataFromDefaultData = (
     type: panelActions.SET_OUTPUT_PATH,
     payload: defaultData.task.spec.output_path ?? JOB_DEFAULT_OUTPUT_PATH
   })
+  panelDispatch({
+    type: panelActions.SET_PREEMPTION_MODE,
+    payload: defaultData.function?.spec.preemption_mode || ''
+  })
   setNewJob({
     access_key: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
     inputs: defaultData.task.spec.inputs ?? {},
@@ -494,6 +533,7 @@ export const generateTableDataFromDefaultData = (
     environmentVariables: defaultData.function?.spec.env ?? [],
     secret_sources: defaultData.task.spec.secret_sources ?? [],
     node_selector: defaultData.function?.spec.node_selector ?? {},
+    preemption_mode: defaultData.function?.spec.preemption_mode ?? '',
     priority_class_name: defaultData.function?.spec.priority_class_name ?? ''
   })
 

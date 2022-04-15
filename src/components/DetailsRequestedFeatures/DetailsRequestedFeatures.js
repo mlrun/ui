@@ -207,6 +207,7 @@ const DetailsRequestedFeatures = ({
       handleItemClick={handleItemClick}
       onFinishEdit={onFinishEdit}
       setConfirmDialogData={setConfirmDialogData}
+      selectedItem={selectedItem}
       setEditableItemIndex={setEditableItemIndex}
     />
   )

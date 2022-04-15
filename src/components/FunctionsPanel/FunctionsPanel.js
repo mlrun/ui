@@ -149,13 +149,9 @@ const FunctionsPanel = ({
   const handleSave = deploy => {
     if (checkValidation()) {
       if (
-        functionsStore.newFunction.kind !== FUNCTION_TYPE_SERVING &&
-        functionsStore.newFunction.spec.default_handler.length === 0
+        functionsStore.newFunction.spec.image.length === 0 &&
+        imageType === EXISTING_IMAGE
       ) {
-        return setValidation(state => ({ ...state, isHandlerValid: false }))
-      }
-
-      if (functionsStore.newFunction.spec.image.length === 0 && imageType === EXISTING_IMAGE) {
         return setValidation(state => ({
           ...state,
           isCodeImageValid: false

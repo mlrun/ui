@@ -14,6 +14,7 @@ import {
   updateFeatureVector,
   updateGroupedFeatures
 } from '../../reducers/tableReducer'
+import { STATUS_CODE_FORBIDDEN } from '../../constants'
 
 const FeaturesTablePanel = ({
   createNewFeatureVector,
@@ -86,11 +87,17 @@ const FeaturesTablePanel = ({
             message: 'Features successfully added'
           })
         })
-        .catch(() => {
+        .catch(error => {
           setNotification({
             status: 400,
             id: Math.random(),
-            message: 'Failed to add features',
+            message:
+              tableStore.features.isNewFeatureVector &&
+              error.response.status === STATUS_CODE_FORBIDDEN
+                ? 'You are not permitted to create new feature vector.'
+                : tableStore.features.isNewFeatureVector
+                ? 'Feature vector creation failed.'
+                : 'Failed to add features',
             retry: addFeatures
           })
         })

@@ -64,7 +64,7 @@ const Table = ({
     if (tableStore.isTablePanelOpen && tablePanelRef.current) {
       calculatePanelHeight()
 
-      document.getElementById('main').addEventListener('scroll', calculatePanelHeight)
+      document.getElementById('main-wrapper').addEventListener('scroll', calculatePanelHeight)
       window.addEventListener('resize', calculatePanelHeight)
     }
     return () => {

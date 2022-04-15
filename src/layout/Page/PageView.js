@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { useParams, Outlet } from 'react-router-dom'
 
@@ -7,6 +7,7 @@ import Navbar from '../Navbar/Navbar'
 import Notification from '../../common/Notification/Notification'
 
 import localStorageService from '../../utils/localStorageService'
+import { getTransitionEndEventName } from '../../utils/getTransitionEndEventName'
 
 import './PageView.scss'
 
@@ -15,13 +16,24 @@ export default function PageView() {
     localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
   const params = useParams()
+  const mainRef = useRef()
+
   const projectName = params.projectName
   const headerShown = window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
+  const transitionEndEventName = getTransitionEndEventName()
 
   const pinnedClasses = classNames(
     isPinned && projectName ? 'pinned' : 'unpinned',
     headerShown && 'has-header'
   )
+
+  useEffect(() => {
+    if (mainRef) {
+      mainRef.current.addEventListener(transitionEndEventName, () => {
+        window.dispatchEvent(new CustomEvent('mainResize'))
+      })
+    }
+  }, [isPinned, transitionEndEventName])
 
   return (
     <div className="app">
@@ -34,8 +46,8 @@ export default function PageView() {
           setIsPinned={setIsPinned}
         />
       )}
-      <main id="main" className={pinnedClasses}>
-        <Outlet />
+      <main id="main" className={pinnedClasses} ref={mainRef}>
+        <div id="main-wrapper"><Outlet /></div>
       </main>
       <Notification />
     </div>

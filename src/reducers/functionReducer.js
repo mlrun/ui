@@ -54,6 +54,7 @@ import {
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
   PANEL_DEFAULT_ACCESS_KEY,
   SET_NEW_FUNCTION_FORCE_BUILD,
+  SET_NEW_FUNCTION_PREEMTION_MODE,
   SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
 } from '../constants'
 
@@ -92,6 +93,7 @@ const initialState = {
       image: '',
       priority_class_name: '',
       secret_sources: [],
+      preemption_mode: '',
       volume_mounts: [],
       volumes: [],
       resources: {
@@ -502,6 +504,17 @@ const functionReducer = (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFunction.metadata,
             project: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_PREEMTION_MODE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            preemption_mode: payload
           }
         }
       }

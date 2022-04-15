@@ -138,6 +138,35 @@ When('add rows to {string} table on {string} wizard', async function(
   }
 })
 
+When('add rows to {string} key-value table on {string} wizard', async function(
+  table,
+  wizard,
+  dataTable
+) {
+  const inputFields = dataTable['rawTable'][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['add_row_btn']
+    )
+    await this.driver.sleep(100)
+    for (const i in inputFields) {
+      await typeIntoInputField(
+        this.driver,
+        pageObjects[wizard][table]['tableFields'][inputFields[i]](3),
+        rows[row_indx][i]
+      )
+    }
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['save_row_btn']
+    )
+    await clickNearComponent(this.driver, pageObjects[wizard][table]['root'])
+    await this.driver.sleep(100)
+  }
+})
+
 Then('verify values in {string} table on {string} wizard', async function(
   table,
   wizard,
@@ -213,6 +242,42 @@ When(
           pageObjects[wizard][accordion][table]['tableFields']['add_row_btn'](
             parseInt(row_indx) + 1
           )
+        )
+      } else {
+        await clickNearComponent(
+          this.driver,
+          pageObjects[wizard][accordion][table]['root']
+        )
+      }
+
+      await this.driver.sleep(100)
+    }
+  }
+)
+
+When(
+  'add rows to {string} key-value table in {string} on {string} wizard',
+  async function(table, accordion, wizard, dataTable) {
+    const inputFields = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+    for (const row_indx in rows) {
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizard][accordion][table]['add_row_btn']
+      )
+      await this.driver.sleep(100)
+      for (const i in inputFields) {
+        const component = pageObjects[wizard][accordion][table]['tableFields'][
+          inputFields[i]
+        ](3)
+        const inputField = component.inputField ?? component
+        await typeIntoInputField(this.driver, inputField, rows[row_indx][i])
+      }
+
+      if (pageObjects[wizard][accordion][table]['save_row_btn']) {
+        await clickOnComponent(
+          this.driver,
+          pageObjects[wizard][accordion][table]['save_row_btn']
         )
       } else {
         await clickNearComponent(
@@ -832,7 +897,7 @@ When(
 )
 
 When(
-  'save to context {string} column and {string} attributes on {int} row from {string} table on {string} wizard',
+  'save to context {string} column and {string} attribute on {int} row from {string} table on {string} wizard',
   async function(columnName, attributeName, rowIndex, tableName, wizardName) {
     await putToTestContextCellParameters(
       this.driver,
@@ -841,6 +906,19 @@ When(
       rowIndex,
       columnName,
       attributeName
+    )
+  }
+)
+
+When(
+  'save to context {string} column on {int} row from {string} table on {string} wizard',
+  async function(columnName, rowIndex, tableName, wizardName) {
+    await putToTestContextCellParameters(
+      this.driver,
+      this.testContext,
+      pageObjects[wizardName][tableName],
+      rowIndex,
+      columnName
     )
   }
 )
@@ -908,13 +986,11 @@ Then(
         pageObjects[wizardName][overviewTable].tableFields['value'](arr[0])
       )
       const cellValue = await cellComponent.getText()
-      expect(
-        this.testContext[contextContainer].value.includes(cellValue)
-      ).equal(
+      expect(this.testContext[contextContainer].includes(cellValue)).equal(
         true,
         `"${key}" value "${cellValue}" is not in link "${this.testContext[
           contextContainer
-        ].value.includes(cellValue)}"`
+        ].includes(cellValue)}"`
       )
     }
   }

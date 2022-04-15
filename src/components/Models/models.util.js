@@ -14,7 +14,6 @@ import {
 } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
 import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
@@ -250,6 +249,10 @@ const realTimePipelinesTableHeaders = () => [
   },
   {
     header: 'Type',
+    class: 'functions_medium'
+  },
+  {
+    header: 'Function',
     class: 'functions_big'
   },
   {
@@ -281,7 +284,7 @@ export const handleFetchData = async (
     result = await fetchModels(project, filters)
 
     if (result) {
-      data.content = generateArtifacts(filterArtifacts(result))
+      data.content = generateArtifacts(filterArtifacts(result), MODELS_TAB)
       data.originalContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
@@ -314,7 +317,6 @@ export const generatePageData = (
   pageTab,
   handleDeployModel,
   handleRequestOnExpand,
-  handleRemoveRequestData,
   isSelectedModel
 ) => {
   const data = {
@@ -336,7 +338,6 @@ export const generatePageData = (
     data.details.infoHeaders = modelsInfoHeaders
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)
     data.handleRequestOnExpand = handleRequestOnExpand
-    data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     data.hidePageActionMenu = true
     data.details.menu = modelEndpointsDetailsMenu
@@ -379,7 +380,6 @@ export const checkForSelectedModel = (
   if (!searchItem) {
     navigate(`/projects/${params.projectName}/models/${params.pageTab}`, { replace: true })
   } else {
-    searchItem.URI = generateUri(searchItem, MODELS_TAB)
     setSelectedModel({ item: searchItem })
   }
 }

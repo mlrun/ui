@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 
 import Input from '../../common/Input/Input'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { headers } from './detailsRequestedFeatures.utils'
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
@@ -15,6 +17,7 @@ import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as EditIcon } from '../../images/edit.svg'
 import { ReactComponent as AddIcon } from '../../images/add.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as LabelColumn } from '../../images/ic_target-with-dart.svg'
 
 import './detailsRequestedFeatures.scss'
 
@@ -27,9 +30,14 @@ const DetailsRequestedFeaturesView = ({
   handleItemClick,
   onFinishEdit,
   setConfirmDialogData,
+  selectedItem,
   setEditableItemIndex
 }) => {
   const params = useParams()
+  const labelFeature = useMemo(
+    () => parseFeatureTemplate(selectedItem.label_feature ?? '').feature,
+    [selectedItem]
+  )
 
   return (
     <div className="item-requested-features">
@@ -51,18 +59,37 @@ const DetailsRequestedFeaturesView = ({
 
             return (
               <div className="item-requested-features__table-row" key={featureTemplate}>
+                <div className="item-requested-features__table-cel cell_icon">
+                  {labelFeature === feature && (
+                    <Tooltip
+                      className="icon-wrapper"
+                      template={<TextTooltipTemplate text="Label column" />}
+                    >
+                      <LabelColumn />
+                    </Tooltip>
+                  )}
+                </div>
                 <div className="item-requested-features__table-cell cell_project-name">
-                  {project || params.projectName}
+                  <Tooltip template={<TextTooltipTemplate text={project || params.projectName} />}>
+                    {project || params.projectName}
+                  </Tooltip>
                 </div>
                 <div className="item-requested-features__table-cell">
-                  <span className="cell_feature-set">{featureSet}</span>
+                  <Tooltip
+                    className="cell_feature-set"
+                    template={<TextTooltipTemplate text={featureSet} />}
+                  >
+                    {featureSet}
+                  </Tooltip>
                   {tag && (
                     <>
                       <span className="cell_tag">: {tag}</span>
                     </>
                   )}
                 </div>
-                <div className="item-requested-features__table-cell cell_feature">{feature}</div>
+                <div className="item-requested-features__table-cell cell_feature">
+                  <Tooltip template={<TextTooltipTemplate text={feature} />}>{feature}</Tooltip>
+                </div>
                 {editableItemIndex === index ? (
                   <>
                     <div className="item-requested-features__table-cell cell_alias">
@@ -97,7 +124,7 @@ const DetailsRequestedFeaturesView = ({
                     <div className="item-requested-features__table-cell cell_alias">
                       {alias && (
                         <div className="cell_alias__input-wrapper">
-                          <span>{alias}</span>
+                          <Tooltip template={<TextTooltipTemplate text={alias} />}>{alias}</Tooltip>
                           <RoundedIcon
                             className={!alias ? 'visibility-hidden' : ''}
                             onClick={() =>
@@ -182,6 +209,7 @@ DetailsRequestedFeaturesView.propTypes = {
   handleItemClick: PropTypes.func.isRequired,
   onFinishEdit: PropTypes.func.isRequired,
   setConfirmDialogData: PropTypes.func.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired,
   setEditableItemIndex: PropTypes.func.isRequired
 }
 
