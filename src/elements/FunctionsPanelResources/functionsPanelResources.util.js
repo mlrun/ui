@@ -48,6 +48,7 @@ export const setRangeInputValidation = (
   validationField,
   kind
 ) => {
+  value = Number.parseInt(value)
   const validationKind = kind.charAt(0).toUpperCase() + kind.slice(1)
   const limitsValue = Number.parseInt(data.limits[kind])
   const requestsValue = Number.parseInt(data.requests[kind])
@@ -58,8 +59,8 @@ export const setRangeInputValidation = (
 
   if (value > 0) {
     if (
-      (type === REQUESTS && data.limits[kind].length > 0) ||
-      (type === LIMITS && data.requests[kind].length > 0)
+      (type === REQUESTS && requestsValue > 0) ||
+      (type === LIMITS && limitsValue > 0)
     ) {
       setValidation(prevState => ({
         ...prevState,
@@ -69,7 +70,7 @@ export const setRangeInputValidation = (
     } else {
       setValidation(prevState => ({ ...prevState, [validationField]: true }))
     }
-  } else if (value.length === 0) {
+  } else if (value === 0) {
     setValidation(prevState => ({
       ...prevState,
       [`is${validationKind}LimitValid`]:

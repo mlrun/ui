@@ -76,6 +76,7 @@ const JobsPanelResourcesView = ({
                 'isMemoryRequestValid'
               )
             }
+            required
             value={resourcesData.requestsMemory}
           />
           <RangeInput
@@ -88,6 +89,7 @@ const JobsPanelResourcesView = ({
             onChange={value =>
               setMemoryValue(value, resourcesData, LIMITS, 'isMemoryLimitValid')
             }
+            required
             value={resourcesData.limitsMemory}
           />
         </JobsPanelSection>
@@ -110,6 +112,7 @@ const JobsPanelResourcesView = ({
             onChange={value =>
               setCpuValue(value, resourcesData, REQUESTS, 'isCpuRequestValid')
             }
+            required
             value={resourcesData.requestsCpu}
           />
           <RangeInput
@@ -122,6 +125,7 @@ const JobsPanelResourcesView = ({
             onChange={value =>
               setCpuValue(value, resourcesData, LIMITS, 'isCpuLimitValid')
             }
+            required
             value={resourcesData.limitsCpu}
           />
         </JobsPanelSection>
