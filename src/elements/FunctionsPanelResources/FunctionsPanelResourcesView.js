@@ -116,6 +116,7 @@ const FunctionsPanelResourcesView = ({
             onChange={value =>
               setMemoryValue(value, REQUESTS, 'isMemoryRequestValid')
             }
+            required
             value={generateMemoryValue(data.requests.memory)}
           />
           <RangeInput
@@ -128,6 +129,7 @@ const FunctionsPanelResourcesView = ({
             onChange={value =>
               setMemoryValue(value, LIMITS, 'isMemoryLimitValid')
             }
+            required
             value={generateMemoryValue(data.limits.memory)}
           />
         </FunctionsPanelSection>
@@ -150,6 +152,7 @@ const FunctionsPanelResourcesView = ({
             onChange={value =>
               setCpuValue(value, REQUESTS, 'isCpuRequestValid')
             }
+            required
             value={generateCpuValue(data.requests.cpu)}
           />
           <RangeInput
@@ -160,6 +163,7 @@ const FunctionsPanelResourcesView = ({
             labelType="labelAtTop"
             min={1}
             onChange={value => setCpuValue(value, LIMITS, 'isCpuLimitValid')}
+            required
             value={generateCpuValue(data.limits.cpu)}
           />
         </FunctionsPanelSection>
