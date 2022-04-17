@@ -56,11 +56,9 @@ const FunctionsPanelResourcesView = ({
           </FunctionsPanelSection>
         )}
         {mode === PANEL_CREATE_MODE && data.preemptionMode && (
-          <FunctionsPanelSection title="Pods toleration">
+          <FunctionsPanelSection title="Run On Spot Nodes">
             <Select
               className="pods-toleration"
-              floatingLabel
-              label="Run on Spot nodes"
               options={volumePreemptionModeOptions}
               onClick={handleSelectPreemptionMode}
               selectedId={data.preemptionMode}
@@ -82,6 +80,7 @@ const FunctionsPanelResourcesView = ({
             options={volumeMountOptions}
             onClick={handleSelectVolumeMount}
             selectedId={data.volumeMount}
+            withSelectedIcon
           />
         )}
         {(data.volumeMount === VOLUME_MOUNT_MANUAL_TYPE ||

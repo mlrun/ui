@@ -30,18 +30,30 @@ const JobsPanelResourcesView = ({
   return (
     <div className="job-panel__item resources new-item-side-panel__item">
       <JobsPanelSection title="Resources" />
-      {validFunctionPriorityClassNames.length > 0 && (
-        <JobsPanelSection title="Pods priority">
-          <Select
-            className="pods-priority"
-            density="dense"
-            onClick={setPriorityClassName}
-            options={validFunctionPriorityClassNames}
-            selectedId={panelState.priority_class_name}
-            withSelectedIcon
-          />
-        </JobsPanelSection>
-      )}
+      <div className="pods">
+        {validFunctionPriorityClassNames.length > 0 && (
+          <JobsPanelSection title="Pods priority">
+            <Select
+              className="pods-priority"
+              onClick={setPriorityClassName}
+              options={validFunctionPriorityClassNames}
+              selectedId={panelState.priority_class_name}
+              withSelectedIcon
+            />
+          </JobsPanelSection>
+        )}
+        {panelState.preemption_mode && (
+          <JobsPanelSection title="Run On Spot Nodes">
+            <Select
+              className="volume-toleration"
+              options={volumePreemptionModeOptions}
+              onClick={handleSelectPreemptionMode}
+              selectedId={panelState.preemption_mode}
+              withSelectedIcon
+            />
+          </JobsPanelSection>
+        )}
+      </div>
       <JobsPanelSection
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
@@ -144,19 +156,6 @@ const JobsPanelResourcesView = ({
           panelState={panelState}
         />
       </JobsPanelSection>
-      {panelState.preemption_mode && (
-        <JobsPanelSection title="Pods toleration">
-          <Select
-            className="volume-toleration"
-            floatingLabel
-            label="Run on Spot nodes"
-            options={volumePreemptionModeOptions}
-            onClick={handleSelectPreemptionMode}
-            selectedId={panelState.preemption_mode}
-            withSelectedIcon
-          />
-        </JobsPanelSection>
-      )}
     </div>
   )
 }

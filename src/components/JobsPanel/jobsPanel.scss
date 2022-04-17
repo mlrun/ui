@@ -11,6 +11,8 @@
 
   &__item {
     .panel-section__body {
+      margin-bottom: 35px;
+
       .default-input-wrapper {
         margin-right: 15px;
       }
@@ -60,8 +62,26 @@
         }
       }
 
-      .pods-priority {
-        max-width: 150px;
+      .pods {
+        display: flex;
+        margin-bottom: 35px;
+
+        .panel-section__title {
+          margin-bottom: 10px;
+        }
+
+        .panel-section__body {
+          margin: 0;
+        }
+
+        .select {
+          width: 150px;
+          max-width: 100%;
+        }
+
+        &-priority {
+          margin-right: 20px;
+        }
       }
     }
 
