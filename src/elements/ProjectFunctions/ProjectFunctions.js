@@ -7,6 +7,8 @@ import { connect } from 'react-redux'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+
 import nuclioActions from '../../actions/nuclio'
 
 const ProjectFunctions = ({
@@ -15,13 +17,19 @@ const ProjectFunctions = ({
   match,
   nuclioStore
 }) => {
-  useEffect(() => {
-    fetchNuclioFunctions(match.params.projectName)
-  }, [fetchNuclioFunctions, match.params.projectName])
+  const { isNuclioModeDisabled } = useNuclioMode()
 
   useEffect(() => {
-    fetchApiGateways(match.params.projectName)
-  }, [fetchApiGateways, match.params.projectName])
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions(match.params.projectName)
+    }
+  }, [fetchNuclioFunctions, isNuclioModeDisabled, match.params.projectName])
+
+  useEffect(() => {
+    if (!isNuclioModeDisabled) {
+      fetchApiGateways(match.params.projectName)
+    }
+  }, [fetchApiGateways, isNuclioModeDisabled, match.params.projectName])
 
   const functions = useMemo(() => {
     const groupeFunctionsRunning = groupByUniqName(
@@ -120,7 +128,9 @@ const ProjectFunctions = ({
     <ProjectDataCard
       content={{
         data: nuclioStore.currentProjectFunctions,
-        error: nuclioStore.error,
+        error: isNuclioModeDisabled
+          ? 'Nuclio is not deployed'
+          : nuclioStore.error,
         loading: nuclioStore.loading
       }}
       headerLink={`${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`}
