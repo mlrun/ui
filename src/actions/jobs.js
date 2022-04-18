@@ -266,7 +266,7 @@ const jobsActions = {
           jobsActions.runNewJobFailure(
             error.response.status === STATUS_CODE_FORBIDDEN
               ? 'You are not permitted to run new job.'
-              : error.message
+              : 'Unable to create new job.'
           )
         )
 
