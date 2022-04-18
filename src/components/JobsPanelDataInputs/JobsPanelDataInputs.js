@@ -85,7 +85,7 @@ const JobsPanelDataInputs = ({
       inputsDispatch({
         type: inputsActions.SET_PROJECTS,
         payload: generateProjectsList(
-          projectStore.projects,
+          projectStore.projectsNames.data,
           match.params.projectName
         )
       })
@@ -96,7 +96,7 @@ const JobsPanelDataInputs = ({
     inputsState.projects.length,
     inputsState.selectedDataInput,
     match.params.projectName,
-    projectStore.projects
+    projectStore.projectsNames.data
   ])
 
   useEffect(() => {
