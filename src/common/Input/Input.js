@@ -243,7 +243,6 @@ const Input = React.forwardRef(
           required={isInvalid}
           {...{
             disabled,
-            min,
             maxLength,
             min,
             onKeyDown,
