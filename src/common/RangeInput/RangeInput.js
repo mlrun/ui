@@ -84,6 +84,8 @@ const RangeInput = ({
         floatingLabel={labelType === 'floatingLabel'}
         infoLabel={labelType === 'infoLabel'}
         label={labelType !== 'labelAtTop' && labelType !== 'none' ? label : ''}
+        min={min}
+        max={max}
         onChange={value => {
           setInputValue(value)
           onChange(value)
