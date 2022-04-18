@@ -10,6 +10,7 @@ import Page from './layout/Page/Page'
 import Loader from './common/Loader/Loader'
 
 import { useMode } from './hooks/mode.hook'
+import { useNuclioMode } from './hooks/nuclioMode.hook'
 import {
   FEATURE_SETS_TAB,
   MODELS_TAB,
@@ -53,6 +54,7 @@ const AddToFeatureVectorPage = React.lazy(() =>
 
 const App = () => {
   const { isDemoMode } = useMode()
+  const { isNuclioModeDisabled } = useNuclioMode()
 
   return (
     <Router basename={process.env.PUBLIC_URL}>
@@ -81,10 +83,12 @@ const App = () => {
               exact
               render={routeProps => <ProjectMonitor {...routeProps} />}
             />
-            <Route
-              path="/projects/:projectName/monitor/consumer-groups"
-              render={routeProps => <ConsumerGroupsWrapper {...routeProps} />}
-            />
+            {!isNuclioModeDisabled && (
+              <Route
+                path="/projects/:projectName/monitor/consumer-groups"
+                render={routeProps => <ConsumerGroupsWrapper {...routeProps} />}
+              />
+            )}
             <Route
               exact
               path="/projects/:projectName/settings/:pageTab"
