@@ -30,18 +30,30 @@ const JobsPanelResourcesView = ({
   return (
     <div className="job-panel__item resources new-item-side-panel__item">
       <JobsPanelSection title="Resources" />
-      {validFunctionPriorityClassNames.length > 0 && (
-        <JobsPanelSection title="Pods priority">
-          <Select
-            className="pods-priority"
-            density="dense"
-            onClick={setPriorityClassName}
-            options={validFunctionPriorityClassNames}
-            selectedId={panelState.priority_class_name}
-            withSelectedIcon
-          />
-        </JobsPanelSection>
-      )}
+      <div className="pods">
+        {validFunctionPriorityClassNames.length > 0 && (
+          <JobsPanelSection title="Pods priority">
+            <Select
+              className="pods-priority"
+              onClick={setPriorityClassName}
+              options={validFunctionPriorityClassNames}
+              selectedId={panelState.priority_class_name}
+              withSelectedIcon
+            />
+          </JobsPanelSection>
+        )}
+        {panelState.preemption_mode && (
+          <JobsPanelSection title="Run On Spot Nodes">
+            <Select
+              className="volume-toleration"
+              options={volumePreemptionModeOptions}
+              onClick={handleSelectPreemptionMode}
+              selectedId={panelState.preemption_mode}
+              withSelectedIcon
+            />
+          </JobsPanelSection>
+        )}
+      </div>
       <JobsPanelSection
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
@@ -76,6 +88,7 @@ const JobsPanelResourcesView = ({
                 'isMemoryRequestValid'
               )
             }
+            required
             value={resourcesData.requestsMemory}
           />
           <RangeInput
@@ -88,6 +101,7 @@ const JobsPanelResourcesView = ({
             onChange={value =>
               setMemoryValue(value, resourcesData, LIMITS, 'isMemoryLimitValid')
             }
+            required
             value={resourcesData.limitsMemory}
           />
         </JobsPanelSection>
@@ -110,6 +124,7 @@ const JobsPanelResourcesView = ({
             onChange={value =>
               setCpuValue(value, resourcesData, REQUESTS, 'isCpuRequestValid')
             }
+            required
             value={resourcesData.requestsCpu}
           />
           <RangeInput
@@ -122,6 +137,7 @@ const JobsPanelResourcesView = ({
             onChange={value =>
               setCpuValue(value, resourcesData, LIMITS, 'isCpuLimitValid')
             }
+            required
             value={resourcesData.limitsCpu}
           />
         </JobsPanelSection>
@@ -144,19 +160,6 @@ const JobsPanelResourcesView = ({
           panelState={panelState}
         />
       </JobsPanelSection>
-      {panelState.preemption_mode && (
-        <JobsPanelSection title="Pods toleration">
-          <Select
-            className="volume-toleration"
-            floatingLabel
-            label="Run on Spot nodes"
-            options={volumePreemptionModeOptions}
-            onClick={handleSelectPreemptionMode}
-            selectedId={panelState.preemption_mode}
-            withSelectedIcon
-          />
-        </JobsPanelSection>
-      )}
     </div>
   )
 }

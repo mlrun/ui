@@ -192,7 +192,7 @@ const Combobox = ({
   }
 
   const inputOnFocus = () => {
-    onFocus()
+    onFocus && onFocus()
 
     if (showSelectDropdown) {
       setShowSelectDropdown(false)
@@ -273,6 +273,7 @@ Combobox.defaultProps = {
   invalidText: '',
   maxSuggestedMatches: 1,
   onBlur: null,
+  onFocus: null,
   required: false,
   requiredText: '',
   selectDefaultValue: null,

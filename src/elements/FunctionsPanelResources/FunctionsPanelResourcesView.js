@@ -56,11 +56,9 @@ const FunctionsPanelResourcesView = ({
           </FunctionsPanelSection>
         )}
         {mode === PANEL_CREATE_MODE && data.preemptionMode && (
-          <FunctionsPanelSection title="Pods toleration">
+          <FunctionsPanelSection title="Run On Spot Nodes">
             <Select
               className="pods-toleration"
-              floatingLabel
-              label="Run on Spot nodes"
               options={volumePreemptionModeOptions}
               onClick={handleSelectPreemptionMode}
               selectedId={data.preemptionMode}
@@ -82,6 +80,7 @@ const FunctionsPanelResourcesView = ({
             options={volumeMountOptions}
             onClick={handleSelectVolumeMount}
             selectedId={data.volumeMount}
+            withSelectedIcon
           />
         )}
         {(data.volumeMount === VOLUME_MOUNT_MANUAL_TYPE ||
@@ -116,6 +115,7 @@ const FunctionsPanelResourcesView = ({
             onChange={value =>
               setMemoryValue(value, REQUESTS, 'isMemoryRequestValid')
             }
+            required
             value={generateMemoryValue(data.requests.memory)}
           />
           <RangeInput
@@ -128,6 +128,7 @@ const FunctionsPanelResourcesView = ({
             onChange={value =>
               setMemoryValue(value, LIMITS, 'isMemoryLimitValid')
             }
+            required
             value={generateMemoryValue(data.limits.memory)}
           />
         </FunctionsPanelSection>
@@ -150,6 +151,7 @@ const FunctionsPanelResourcesView = ({
             onChange={value =>
               setCpuValue(value, REQUESTS, 'isCpuRequestValid')
             }
+            required
             value={generateCpuValue(data.requests.cpu)}
           />
           <RangeInput
@@ -160,6 +162,7 @@ const FunctionsPanelResourcesView = ({
             labelType="labelAtTop"
             min={1}
             onChange={value => setCpuValue(value, LIMITS, 'isCpuLimitValid')}
+            required
             value={generateCpuValue(data.limits.cpu)}
           />
         </FunctionsPanelSection>

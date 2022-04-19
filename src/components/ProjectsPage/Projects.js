@@ -22,6 +22,8 @@ import {
   STATUS_CODE_FORBIDDEN
 } from '../../constants'
 
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+
 const Projects = ({
   changeProjectState,
   createNewProject,
@@ -52,6 +54,8 @@ const Projects = ({
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [source] = useState(axios.CancelToken.source())
   const urlParams = useParams()
+
+  const { isNuclioModeDisabled } = useNuclioMode()
 
   const isValidProjectState = useCallback(
     project => {
@@ -207,15 +211,19 @@ const Projects = ({
   ])
 
   useEffect(() => {
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions()
+    }
+
     fetchProjects()
     fetchProjectsNames()
-    fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
   }, [
     fetchNuclioFunctions,
     fetchProjects,
     fetchProjectsNames,
     fetchProjectsSummary,
+    isNuclioModeDisabled,
     source.token
   ])
 
@@ -248,10 +256,13 @@ const Projects = ({
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
   const refreshProjects = () => {
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions()
+    }
+
     removeProjects()
     fetchProjects()
     fetchProjectsNames()
-    fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
   }
 

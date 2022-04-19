@@ -254,7 +254,7 @@ export const generateTableData = (
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const [preemptionMode] = getPreemptionMode(selectedFunction)
   const jobPriorityClassName =
-    functionPriorityClassName ??
+    functionPriorityClassName ||
     frontendSpec.default_function_priority_class_name
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
@@ -591,7 +591,7 @@ export const generateRequestData = (
 
   if (!isEveryObjectValueEmpty(panelState.limits)) {
     for (let key in panelState.limits) {
-      if (panelState.limits[key].length > 0) {
+      if (panelState.limits[key]?.length > 0) {
         resources.limits[key] = panelState.limits[key]
       }
     }
@@ -599,7 +599,7 @@ export const generateRequestData = (
 
   if (!isEveryObjectValueEmpty(panelState.requests)) {
     for (let key in panelState.requests) {
-      if (panelState.requests[key].length > 0) {
+      if (panelState.requests[key]?.length > 0) {
         resources.requests[key] = panelState.requests[key]
       }
     }

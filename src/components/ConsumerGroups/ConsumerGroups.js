@@ -12,7 +12,6 @@ import filtersActions from '../../actions/filters'
 import nuclioActions from '../../actions/nuclio'
 import { GROUP_BY_NONE } from '../../constants'
 import { generatePageData } from './consumerGroups.util.js'
-import { getNoDataMessage } from '../../layout/Content/content.util'
 
 const ConsumerGroups = ({ nuclioStore, setFilters }) => {
   const [filteredV3ioStreams, setFilteredV3ioStreams] = useState([])
@@ -55,7 +54,7 @@ const ConsumerGroups = ({ nuclioStore, setFilters }) => {
       />
       {!nuclioStore.v3ioStreams.loading &&
         nuclioStore.v3ioStreams.parsedData.length === 0 && (
-          <NoData message={getNoDataMessage()} />
+          <NoData message="You haven’t created any consumer group yet" />
         )}
       {nuclioStore.v3ioStreams.loading && <Loader />}
     </>

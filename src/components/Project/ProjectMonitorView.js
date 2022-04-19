@@ -37,6 +37,7 @@ const ProjectMonitorView = ({
   handleDeployFunctionSuccess,
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
+  isNuclioModeDisabled,
   isPopupDialogOpen,
   navigate,
   nuclioStreamsAreEnabled,
@@ -142,10 +143,21 @@ const ProjectMonitorView = ({
               />
               {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
-                  counterValue={Object.keys(v3ioStreams.data).length ?? 0}
-                  link={`/projects/${params.projectName}/monitor/consumer-groups`}
+                  counterValue={
+                    isNuclioModeDisabled
+                      ? 'N/A'
+                      : Object.keys(v3ioStreams.data).length ?? 0
+                  }
+                  link={`/projects/${params.projectName}/monitor${
+                    !isNuclioModeDisabled ? '/consumer-groups' : ''
+                  }`}
                   projectSummary={v3ioStreams}
                   title="Consumer groups"
+                  tooltipText={
+                    isNuclioModeDisabled
+                      ? 'Consumer group feature works when Nuclio is deployed'
+                      : ''
+                  }
                 />
               )}
             </div>
@@ -212,6 +224,7 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
+  isNuclioModeDisabled: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,

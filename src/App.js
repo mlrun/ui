@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Loader from './common/Loader/Loader'
 
 import { useMode } from './hooks/mode.hook'
+import { useNuclioMode } from './hooks/nuclioMode.hook'
 import {
   FEATURE_SETS_TAB,
   MODELS_TAB,
@@ -40,6 +41,7 @@ const AddToFeatureVectorPage = React.lazy(() =>
 
 const App = () => {
   const { isDemoMode } = useMode()
+  const { isNuclioModeDisabled } = useNuclioMode()
 
   return (
     <Router basename={process.env.PUBLIC_URL}>
@@ -52,13 +54,15 @@ const App = () => {
               path="projects/:projectName"
               element={!isDemoMode ? <Navigate to="monitor" replace /> : <ProjectOverview />}
             />
-            <Route
-              path="projects/:projectName/monitor/consumer-groups/*"
-              element={<ConsumerGroupsWrapper />}
-            >
-              <Route path="" exact element={<ConsumerGroups />} />
-              <Route path=":consumerGroupName" exact element={<ConsumerGroup />} />
-            </Route>
+            {!isNuclioModeDisabled && (
+              <Route
+                path="projects/:projectName/monitor/consumer-groups/*"
+                element={<ConsumerGroupsWrapper />}
+              >
+                <Route path="" exact element={<ConsumerGroups />} />
+                <Route path=":consumerGroupName" exact element={<ConsumerGroup />} />
+              </Route>
+            )}
             <Route
               path="projects/:projectName/settings"
               element={<Navigate to={`${PROJECTS_SETTINGS_GENERAL_TAB}`} replace />}

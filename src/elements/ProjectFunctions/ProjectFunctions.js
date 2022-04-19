@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { lowerCase, upperFirst } from 'lodash'
 import { connect } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
-import { groupByUniqName } from '../../utils/groupByUniqName'
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
+import { groupByUniqName } from '../../utils/groupByUniqName'
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import nuclioActions from '../../actions/nuclio'
-import { useParams } from 'react-router-dom'
 
 const ProjectFunctions = ({
   fetchApiGateways,
@@ -16,14 +17,19 @@ const ProjectFunctions = ({
   nuclioStore
 }) => {
   const params = useParams()
+  const { isNuclioModeDisabled } = useNuclioMode()
 
   useEffect(() => {
-    fetchNuclioFunctions(params.projectName)
-  }, [fetchNuclioFunctions, params.projectName])
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions(params.projectName)
+    }
+  }, [fetchNuclioFunctions, isNuclioModeDisabled, params.projectName])
 
   useEffect(() => {
-    fetchApiGateways(params.projectName)
-  }, [fetchApiGateways, params.projectName])
+    if (!isNuclioModeDisabled) {
+      fetchApiGateways(params.projectName)
+    }
+  }, [fetchApiGateways, isNuclioModeDisabled, params.projectName])
 
   const functions = useMemo(() => {
     const groupeFunctionsRunning = groupByUniqName(
@@ -122,7 +128,9 @@ const ProjectFunctions = ({
     <ProjectDataCard
       content={{
         data: nuclioStore.currentProjectFunctions,
-        error: nuclioStore.error,
+        error: isNuclioModeDisabled
+          ? 'Nuclio is not deployed'
+          : nuclioStore.error,
         loading: nuclioStore.loading
       }}
       headerLink={`${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`}
