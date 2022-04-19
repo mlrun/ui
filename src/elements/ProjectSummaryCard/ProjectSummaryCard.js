@@ -46,7 +46,8 @@ ProjectSummaryCard.defaultProps = {
 }
 
 ProjectSummaryCard.propTypes = {
-  counterValue: PropTypes.number.isRequired,
+  counterValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
   link: PropTypes.string.isRequired,
   projectSummary: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
