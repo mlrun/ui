@@ -2,9 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import Loader from '../../common/Loader/Loader'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
+import Loader from '../../common/Loader/Loader'
 
 const ProjectSummaryCard = ({
   counterValue,
