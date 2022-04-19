@@ -10,8 +10,6 @@ import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-import { useNuclioMode } from '../../hooks/nuclioMode.hook'
-
 import nuclioActions from '../../actions/nuclio'
 
 const ProjectFunctions = ({
