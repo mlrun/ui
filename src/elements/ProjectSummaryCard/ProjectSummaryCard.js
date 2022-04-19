@@ -4,10 +4,7 @@ import PropTypes from 'prop-types'
 
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
-
 import Loader from '../../common/Loader/Loader'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
 
 const ProjectSummaryCard = ({
   counterValue,
