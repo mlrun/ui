@@ -254,7 +254,7 @@ export const generateTableData = (
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const [preemptionMode] = getPreemptionMode(selectedFunction)
   const jobPriorityClassName =
-    functionPriorityClassName ??
+    functionPriorityClassName ||
     frontendSpec.default_function_priority_class_name
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
