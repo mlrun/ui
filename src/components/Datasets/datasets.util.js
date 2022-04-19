@@ -27,8 +27,7 @@ export const infoHeaders = [
   {
     label: 'Hash',
     id: 'hash',
-    tip:
-      'Represents hash of the data. when the data changes the hash would change'
+    tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
@@ -38,8 +37,7 @@ export const infoHeaders = [
   {
     label: 'UID',
     id: 'tree',
-    tip:
-      'Unique identifier representing the job or the workflow that generated the artifact'
+    tip: 'Unique identifier representing the job or the workflow that generated the artifact'
   },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' },
@@ -144,13 +142,7 @@ export const generatePageData = (handleRequestOnExpand, isSelectedItem) => ({
   tableHeaders: tableHeaders(isSelectedItem)
 })
 
-export const fetchDataSetRowData = async (
-  fetchDataSet,
-  dataSet,
-  setPageData,
-  iter,
-  tag
-) => {
+export const fetchDataSetRowData = async (fetchDataSet, dataSet, setPageData, iter, tag) => {
   const dataSetIdentifier = getArtifactIdentifier(dataSet)
 
   setPageData(state => ({
@@ -172,7 +164,7 @@ export const fetchDataSetRowData = async (
             selectedRowData: {
               ...state.selectedRowData,
               [dataSetIdentifier]: {
-                content: [...generateArtifacts(filterArtifacts(result), iter)],
+                content: [...generateArtifacts(filterArtifacts(result), DATASETS, iter)],
                 error: null,
                 loading: false
               }

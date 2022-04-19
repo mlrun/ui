@@ -93,7 +93,7 @@ const initialState = {
   }
 }
 
-export default (state = initialState, { type, payload }) => {
+const jobReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case ABORT_JOB_BEGIN:
       return {
@@ -542,3 +542,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default jobReducer

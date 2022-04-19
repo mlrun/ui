@@ -83,10 +83,7 @@ const FeatureSetsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FeatureSetsPanelSchema
-              setValidation={setValidation}
-              validation={validation}
-            />
+            <FeatureSetsPanelSchema setValidation={setValidation} validation={validation} />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -102,9 +99,7 @@ const FeatureSetsPanelView = ({
             />
           </Accordion>
           <PanelCredentialsAccessKey
-            credentialsAccessKey={
-              featureStore.newFeatureSet.credentials.access_key
-            }
+            credentialsAccessKey={featureStore.newFeatureSet.credentials.access_key}
             required={accessKeyRequired}
             setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
             setValidation={setValidation}

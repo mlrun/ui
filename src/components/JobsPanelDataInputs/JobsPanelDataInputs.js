@@ -2,6 +2,7 @@ import React, { useReducer, useEffect, useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { uniqBy } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 
@@ -38,7 +39,6 @@ const JobsPanelDataInputs = ({
   fetchFeatureVectors,
   inputs,
   isArtifactPathValid,
-  match,
   panelDispatch,
   panelState,
   projectStore,
@@ -53,6 +53,7 @@ const JobsPanelDataInputs = ({
     isNameValid: true,
     isPathValid: true
   })
+  const params = useParams()
 
   const getInputValue = useCallback(
     inputItem => {
@@ -86,7 +87,7 @@ const JobsPanelDataInputs = ({
         type: inputsActions.SET_PROJECTS,
         payload: generateProjectsList(
           projectStore.projectsNames.data,
-          match.params.projectName
+          params.projectName
         )
       })
     }
@@ -95,7 +96,7 @@ const JobsPanelDataInputs = ({
     inputsState.newInput.path.project.length,
     inputsState.projects.length,
     inputsState.selectedDataInput,
-    match.params.projectName,
+    params.projectName,
     projectStore.projectsNames.data
   ])
 
@@ -223,7 +224,7 @@ const JobsPanelDataInputs = ({
           inputsState.inputProjectItemReferencePathEntered,
           inputsState.newInput,
           inputsState.projects,
-          match.params.projectName,
+          params.projectName,
           inputsState.selectedDataInput.data.path
         )
       })
@@ -240,7 +241,7 @@ const JobsPanelDataInputs = ({
     inputsState.newInput,
     inputsState.projects,
     inputsState.selectedDataInput.data.path,
-    match.params.projectName
+    params.projectName
   ])
 
   const handleAddNewItem = () => {
@@ -294,7 +295,7 @@ const JobsPanelDataInputs = ({
       path,
       inputsState.pathPlaceholder,
       inputsState.newInputDefaultPathProject,
-      match.params.projectName
+      params.projectName
     )
   }
 
@@ -320,7 +321,6 @@ const JobsPanelDataInputs = ({
       inputsState={inputsState}
       inputsDispatch={inputsDispatch}
       isArtifactPathValid={isArtifactPathValid}
-      match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
       resetDataInputsData={resetDataInputsData}
@@ -334,7 +334,6 @@ const JobsPanelDataInputs = ({
 JobsPanelDataInputs.propTypes = {
   inputs: PropTypes.shape({}).isRequired,
   isArtifactPathValid: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   setArtifactPathValid: PropTypes.func.isRequired,

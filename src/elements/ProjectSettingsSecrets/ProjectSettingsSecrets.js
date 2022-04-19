@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import projectApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
@@ -14,18 +14,17 @@ import {
 
 const ProjectSettingsSecrets = ({
   fetchProjectSecrets,
-  match,
   projectStore,
   removeProjectData,
   setNotification,
   setProjectSecrets
 }) => {
   const [isUserAllowed, setIsUserAllowed] = useState(true)
-  const { projectName } = match.params
+  const params = useParams()
 
   const fetchSecrets = useCallback(() => {
     setIsUserAllowed(true)
-    fetchProjectSecrets(projectName).catch(error => {
+    fetchProjectSecrets(params.projectName).catch(error => {
       if (error.response?.status === STATUS_CODE_FORBIDDEN) {
         setIsUserAllowed(false)
         setNotification({
@@ -42,7 +41,7 @@ const ProjectSettingsSecrets = ({
         })
       }
     })
-  }, [fetchProjectSecrets, projectName, setNotification])
+  }, [fetchProjectSecrets, params.projectName, setNotification])
 
   useEffect(() => {
     fetchSecrets()
@@ -50,7 +49,7 @@ const ProjectSettingsSecrets = ({
     return () => {
       removeProjectData()
     }
-  }, [fetchSecrets, removeProjectData, projectName])
+  }, [fetchSecrets, removeProjectData, params.projectName])
 
   const generalSecrets = useMemo(
     () =>
@@ -70,7 +69,7 @@ const ProjectSettingsSecrets = ({
           ? projectApi.setProjectSecret
           : projectApi.deleteSecret
 
-      updateSecret(projectName, data)
+      updateSecret(params.projectName, data)
         .then(() => {
           setNotification({
             status: 200,
@@ -92,7 +91,7 @@ const ProjectSettingsSecrets = ({
           })
         })
     },
-    [projectName, setNotification]
+    [params.projectName, setNotification]
   )
 
   const handleAddNewSecret = useCallback(
@@ -105,7 +104,7 @@ const ProjectSettingsSecrets = ({
       }
 
       const secretKeys = [
-        ...projectStore.project.secrets?.data['secret_keys'],
+        ...(projectStore.project.secrets.data?.secret_keys ?? []),
         createSecretData.key
       ]
 
@@ -146,10 +145,6 @@ const ProjectSettingsSecrets = ({
       secrets={generalSecrets}
     />
   )
-}
-
-ProjectSettingsSecrets.propTypes = {
-  match: PropTypes.object.isRequired
 }
 
 export default connect(

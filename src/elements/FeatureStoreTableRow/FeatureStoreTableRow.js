@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { useParams } from 'react-router-dom'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
@@ -18,7 +19,6 @@ const FeatureStoreTableRow = ({
   handleExpandRow,
   handleSelectItem,
   mainRowItemsCount,
-  match,
   rowItem,
   pageData,
   selectedItem,
@@ -26,10 +26,9 @@ const FeatureStoreTableRow = ({
 }) => {
   const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
-  const getIdentifier = useMemo(
-    () => getIdentifierMethod(match.params.pageTab),
-    [match.params.pageTab]
-  )
+  const params = useParams()
+
+  const getIdentifier = useMemo(() => getIdentifierMethod(params.pageTab), [params.pageTab])
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
@@ -37,21 +36,17 @@ const FeatureStoreTableRow = ({
       getIdentifier(selectedItem, true) === rowItem.key?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
-    parent.current?.classList.value.includes('parent-row-expanded') &&
-      'parent-row-expanded'
+    parent.current?.classList.value.includes('parent-row-expanded') && 'parent-row-expanded'
   )
   const mainRowData = Object.values(rowItem ?? {})
 
   const findCurrentItem = useCallback(
     feature => {
-      const currentContent =
-        pageData.selectedRowData?.[feature.key.identifier]?.content || content
+      const currentContent = pageData.selectedRowData?.[feature.key.identifier]?.content || content
 
       return (
         currentContent.find(contentItem => {
-          return (
-            getIdentifier(contentItem, true) === feature.key.identifierUnique
-          )
+          return getIdentifier(contentItem, true) === feature.key.identifierUnique
         }) ?? {}
       )
     },
@@ -80,9 +75,7 @@ const FeatureStoreTableRow = ({
                   firstRow={index === 0}
                   link={
                     data.rowExpanded?.getLink
-                      ? data.rowExpanded.getLink(
-                          match.params.tab ?? DETAILS_OVERVIEW_TAB
-                        )
+                      ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
                       : ''
                   }
                 />
@@ -95,10 +88,7 @@ const FeatureStoreTableRow = ({
             </div>
           ) : pageData.selectedRowData[rowItem.key?.identifier].error ? (
             <ErrorMessage
-              message={
-                pageData.selectedRowData[rowItem.key?.identifier]?.error
-                  ?.message
-              }
+              message={pageData.selectedRowData[rowItem.key?.identifier]?.error?.message}
             />
           ) : (
             tableContent.map((tableContentItem, index) => {
@@ -106,8 +96,7 @@ const FeatureStoreTableRow = ({
               const subRowClassNames = classnames(
                 'table-body__row',
                 selectedItem.name &&
-                  getIdentifier(selectedItem, true) ===
-                    getIdentifier(subRowCurrentItem, true) &&
+                  getIdentifier(selectedItem, true) === getIdentifier(subRowCurrentItem, true) &&
                   'row_active'
               )
 
@@ -119,16 +108,9 @@ const FeatureStoreTableRow = ({
                         return (
                           !value.hidden && (
                             <TableCell
-                              data={
-                                value.expandedCellContent
-                                  ? value.expandedCellContent
-                                  : value
-                              }
+                              data={value.expandedCellContent ? value.expandedCellContent : value}
                               item={subRowCurrentItem}
-                              link={value.getLink?.(
-                                match.params.tab ?? DETAILS_OVERVIEW_TAB
-                              )}
-                              match={match}
+                              link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                               key={value.id}
                               selectItem={handleSelectItem}
                               selectedItem={selectedItem}
@@ -136,14 +118,10 @@ const FeatureStoreTableRow = ({
                           )
                         )
                       })}
-                      {!pageData.tableHeaders.find(
-                        header => header.id === ACTION_CELL_ID
-                      )?.hidden && (
+                      {!pageData.tableHeaders.find(header => header.id === ACTION_CELL_ID)
+                        ?.hidden && (
                         <div className="table-body__cell action_cell">
-                          <ActionsMenu
-                            dataItem={subRowCurrentItem}
-                            menu={actionsMenu}
-                          />
+                          <ActionsMenu dataItem={subRowCurrentItem} menu={actionsMenu} />
                         </div>
                       )}
                     </>
@@ -165,18 +143,14 @@ const FeatureStoreTableRow = ({
                   data={value}
                   item={currentItem}
                   key={value.id}
-                  link={value.getLink?.(
-                    match.params.tab ?? DETAILS_OVERVIEW_TAB
-                  )}
-                  match={match}
+                  link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
                 />
               )
             )
           })}
-          {!pageData.tableHeaders.find(header => header.id === ACTION_CELL_ID)
-            ?.hidden && (
+          {!pageData.tableHeaders.find(header => header.id === ACTION_CELL_ID)?.hidden && (
             <div className="table-body__cell action_cell">
               <ActionsMenu dataItem={currentItem} menu={actionsMenu} />
             </div>
@@ -199,7 +173,6 @@ FeatureStoreTableRow.propTypes = {
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   mainRowItemsCount: PropTypes.number,
-  match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.shape({}))

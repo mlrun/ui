@@ -21,7 +21,7 @@ const NavbarLink = ({ externalLink, icon, label, link }) => {
         <NavLink
           to={link}
           className="nav-link__button btn btn-secondary"
-          activeClassName="active"
+          activeclassname="active"
         >
           {icon}
           <span>{label}</span>

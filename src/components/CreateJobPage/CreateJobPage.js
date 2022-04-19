@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import { useNavigate, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { includes, isEmpty } from 'lodash'
 
@@ -19,10 +18,10 @@ const CreateJobPage = ({
   fetchFunctionsTemplates,
   fetchProjectsNames,
   functionsStore,
-  match,
   projectStore,
   removeNewJob
 }) => {
+  const params = useParams()
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [filteredFunctions, setFilteredFunctions] = useState([])
@@ -31,41 +30,41 @@ const CreateJobPage = ({
   const [projects, setProjects] = useState(
     generateProjectsList(
       projectStore.projectsNames.data,
-      match.params.projectName
+      params.projectName
     )
   )
   const [selectedGroupFunctions, setSelectedGroupFunctions] = useState({})
   const [selectedProject, setSelectedProject] = useState(
-    match.params.projectName
+    params.projectName
   )
   const [templatesCategories, setTemplatesCategories] = useState(
     functionsStore.templatesCatalog
   )
   const [templates, setTemplates] = useState([])
   const [showPanel, setShowPanel] = useState(false)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     isProjectValid(
-      history,
+      navigate,
       projectStore.projectsNames.data,
-      match.params.projectName
+      params.projectName
     )
-  }, [history, match.params.projectName, projectStore.projectsNames.data])
+  }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
     if (!selectedProject) {
-      setSelectedProject(match.params.projectName)
+      setSelectedProject(params.projectName)
     }
-  }, [selectedProject, match.params.projectName])
+  }, [selectedProject, params.projectName])
 
   useEffect(() => {
     if (projects.length === 0) {
       fetchProjectsNames().then(projects => {
-        setProjects(generateProjectsList(projects, match.params.projectName))
+        setProjects(generateProjectsList(projects, params.projectName))
       })
     }
-  }, [fetchProjectsNames, match.params.projectName, projects.length])
+  }, [fetchProjectsNames, params.projectName, projects.length])
 
   useEffect(() => {
     fetchFunctions(selectedProject).then(functions => {
@@ -101,7 +100,7 @@ const CreateJobPage = ({
     fetchFunctions,
     fetchFunctionsTemplates,
     functionsStore.templatesCatalog,
-    match.params.projectName,
+    params.projectName,
     selectedProject
   ])
 
@@ -174,7 +173,7 @@ const CreateJobPage = ({
         handleSearchOnChange={handleSearchOnChange}
         handleSelectGroupFunctions={handleSelectGroupFunctions}
         loading={functionsStore.loading}
-        match={match}
+        params={params}
         projects={projects}
         selectProject={selectProject}
         selectedProject={selectedProject}
@@ -190,17 +189,12 @@ const CreateJobPage = ({
             removeNewJob()
           }}
           groupedFunctions={selectedGroupFunctions}
-          match={match}
           mode={PANEL_CREATE_MODE}
           project={selectedProject}
         />
       )}
     </>
   )
-}
-
-CreateJobPage.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

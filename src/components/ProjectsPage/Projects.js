@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 import { orderBy } from 'lodash'
 import axios from 'axios'
+import { useParams } from 'react-router-dom'
 
 import ProjectsView from './ProjectsView'
 
@@ -32,7 +32,6 @@ const Projects = ({
   fetchProjects,
   fetchProjectsNames,
   fetchProjectsSummary,
-  match,
   projectStore,
   removeNewProject,
   removeNewProjectError,
@@ -54,6 +53,7 @@ const Projects = ({
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [source] = useState(axios.CancelToken.source())
+  const urlParams = useParams()
 
   const { isNuclioModeDisabled } = useNuclioMode()
 
@@ -309,7 +309,6 @@ const Projects = ({
       handleCreateProject={handleCreateProject}
       isDescendingOrder={isDescendingOrder}
       isNameValid={isNameValid}
-      match={match}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}
@@ -325,12 +324,9 @@ const Projects = ({
       setSelectedProjectsState={setSelectedProjectsState}
       setSortProjectId={setSortProjectId}
       sortProjectId={sortProjectId}
+      urlParams={urlParams}
     />
   )
-}
-
-Projects.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

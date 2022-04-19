@@ -8,23 +8,19 @@ import { ReactComponent as BackArrowIcon } from '../../images/back-arrow.svg'
 
 import './addToFeatureVectorPageHeader.scss'
 
-const AddToFeatureVectorPageHeader = ({ match }) => {
+const AddToFeatureVectorPageHeader = ({ params }) => {
   return (
     <div className="add-to-feature-vector-header">
-      <Link
-        to={`/projects/${match.params.projectName}/feature-store/${FEATURE_VECTORS_TAB}`}
-      >
+      <Link to={`/projects/${params.projectName}/feature-store/${FEATURE_VECTORS_TAB}`}>
         <BackArrowIcon />
       </Link>
-      <h3 className="add-to-feature-vector-header__title">
-        Add to feature vector
-      </h3>
+      <h3 className="add-to-feature-vector-header__title">Add to feature vector</h3>
     </div>
   )
 }
 
 AddToFeatureVectorPageHeader.propTypes = {
-  match: PropTypes.shape({}).isRequired
+  params: PropTypes.shape({}).isRequired
 }
 
 export default AddToFeatureVectorPageHeader

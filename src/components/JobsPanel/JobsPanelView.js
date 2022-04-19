@@ -27,7 +27,6 @@ const JobsPanelView = ({
   handleRunJob,
   jobsStore,
   loading,
-  match,
   openScheduleJob,
   panelDispatch,
   panelState,
@@ -48,7 +47,6 @@ const JobsPanelView = ({
           editModeEnabled={!defaultData}
           functionData={functionData}
           isNameValid={validation.isNameValid}
-          match={match}
           openScheduleJob={openScheduleJob}
           panelState={panelState}
           panelDispatch={panelDispatch}
@@ -66,7 +64,6 @@ const JobsPanelView = ({
               <JobsPanelDataInputs
                 inputs={jobsStore.newJob.task.spec.inputs}
                 isArtifactPathValid={validation.isArtifactPathValid}
-                match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
                 setArtifactPathValid={setValidation}
@@ -79,10 +76,7 @@ const JobsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
               openByDefault
             >
-              <JobsPanelParameters
-                panelDispatch={panelDispatch}
-                panelState={panelState}
-              />
+              <JobsPanelParameters panelDispatch={panelDispatch} panelState={panelState} />
             </Accordion>
             <Accordion
               accordionClassName="new-item-side-panel__accordion"
@@ -102,7 +96,6 @@ const JobsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
             >
               <JobsPanelAdvanced
-                match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
                 secretSources={jobsStore.newJob.task.spec.secret_sources}
@@ -137,9 +130,7 @@ const JobsPanelView = ({
                 {withSaveChanges ? (
                   <Button
                     label="Save"
-                    onClick={event =>
-                      handleEditJob(event, defaultData.schedule)
-                    }
+                    onClick={event => handleEditJob(event, defaultData.schedule)}
                     variant={SECONDARY_BUTTON}
                   />
                 ) : (
@@ -162,7 +153,6 @@ const JobsPanelView = ({
             defaultCron={defaultData?.schedule}
             handleEditJob={handleEditJob}
             handleRunJob={handleRunJob}
-            match={match}
             panelDispatch={panelDispatch}
             panelState={panelState}
             setOpenScheduleJob={setOpenScheduleJob}
@@ -188,7 +178,6 @@ JobsPanelView.propTypes = {
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
   loading: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,

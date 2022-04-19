@@ -29,9 +29,7 @@ const nuclioActions = {
     return nuclioApi
       .getApiGateways(project)
       .then(({ data }) => {
-        dispatch(
-          nuclioActions.fetchApiGatewaysSuccess(Object.keys(data).length)
-        )
+        dispatch(nuclioActions.fetchApiGatewaysSuccess(Object.keys(data).length))
       })
       .catch(error => {
         dispatch(nuclioActions.fetchApiGatewaysFailure(error.message))
@@ -55,18 +53,14 @@ const nuclioActions = {
       .getFunctions(project)
       .then(({ data }) => {
         if (project) {
-          dispatch(
-            nuclioActions.fetchNuclioFunctionsSuccess(Object.values(data))
-          )
+          dispatch(nuclioActions.fetchNuclioFunctionsSuccess(Object.values(data)))
         } else {
           let functionsByProject = groupBy(
             data,
             property(['metadata', 'labels', 'nuclio.io/project-name'])
           )
 
-          dispatch(
-            nuclioActions.fetchAllNuclioFunctionsSuccess(functionsByProject)
-          )
+          dispatch(nuclioActions.fetchAllNuclioFunctionsSuccess(functionsByProject))
         }
       })
       .catch(error => {
@@ -92,6 +86,7 @@ const nuclioActions = {
   }),
   fetchNuclioV3ioStreamShardLags: (project, body) => dispatch => {
     dispatch(nuclioActions.fetchNuclioV3ioStreamShardLagsBegin())
+
     return nuclioApi
       .getV3ioStreamShardLags(project, body)
       .then(({ data }) => {

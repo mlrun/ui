@@ -21,7 +21,6 @@ const ScheduleJobView = ({
   daysOfWeek,
   handleDaysOfWeek,
   isRecurring,
-  match,
   onSchedule,
   panelDispatch,
   panelState,
@@ -67,7 +66,6 @@ const ScheduleJobView = ({
             daysOfWeek={daysOfWeek}
             handleDaysOfWeek={handleDaysOfWeek}
             isRecurring={isRecurring}
-            match={match}
             recurringDispatch={recurringDispatch}
             recurringState={recurringState}
             setDate={setDate}
@@ -109,7 +107,6 @@ ScheduleJobView.propTypes = {
   daysOfWeek: PropTypes.array.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   onSchedule: PropTypes.func.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,

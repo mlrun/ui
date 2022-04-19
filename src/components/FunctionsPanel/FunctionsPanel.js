@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { chain } from 'lodash'
 
@@ -9,19 +9,12 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
-import {
-  FUNCTION_TYPE_SERVING,
-  PANEL_DEFAULT_ACCESS_KEY
-} from '../../constants'
+import { FUNCTION_TYPE_SERVING, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
-import {
-  LABEL_BUTTON,
-  PANEL_CREATE_MODE,
-  SECONDARY_BUTTON
-} from '../../constants'
+import { LABEL_BUTTON, PANEL_CREATE_MODE, SECONDARY_BUTTON } from '../../constants'
 
 const FunctionsPanel = ({
   appStore,
@@ -33,8 +26,6 @@ const FunctionsPanel = ({
   getFunction,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
-  project,
-  match,
   mode,
   removeFunctionsError,
   createNewFunction,
@@ -66,7 +57,8 @@ const FunctionsPanel = ({
       ? NEW_IMAGE
       : ''
   )
-  const history = useHistory()
+  const params = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (defaultData) {
@@ -93,11 +85,7 @@ const FunctionsPanel = ({
           env: defaultData.env,
           image: defaultData.image,
           priority_class_name: defaultData.priority_class_name,
-          volume_mounts:
-            chain(defaultData.volume_mounts)
-              .flatten()
-              .unionBy('name')
-              .value() ?? [],
+          volume_mounts: chain(defaultData.volume_mounts).flatten().unionBy('name').value() ?? [],
           volumes: defaultData.volumes,
           resources: {
             limits: defaultData.resources.limits ?? {},
@@ -135,16 +123,12 @@ const FunctionsPanel = ({
 
   useEffect(() => {
     if (!functionsStore.newFunction.metadata.project) {
-      setNewFunctionProject(match.params.projectName)
+      setNewFunctionProject(params.projectName)
     }
-  }, [
-    functionsStore.newFunction.metadata.project,
-    match.params.projectName,
-    setNewFunctionProject
-  ])
+  }, [functionsStore.newFunction.metadata.project, params.projectName, setNewFunctionProject])
 
   const createFunction = deploy => {
-    createNewFunction(project, functionsStore.newFunction).then(result => {
+    createNewFunction(params.projectName, functionsStore.newFunction).then(result => {
       if (deploy) {
         const data = {
           function: { ...functionsStore.newFunction },
@@ -157,9 +141,7 @@ const FunctionsPanel = ({
       }
 
       createFunctionSuccess().then(() => {
-        history.push(
-          `/projects/${project}/functions/${result.data.hash_key}/overview`
-        )
+        navigate(`/projects/${params.projectName}/functions/${result.data.hash_key}/overview`)
       })
     })
   }
@@ -183,16 +165,12 @@ const FunctionsPanel = ({
       ) {
         return setValidation(state => ({
           ...state,
-          isBaseImageValid:
-            functionsStore.newFunction.spec.build.base_image.length > 0,
-          isBuildCommandsValid:
-            functionsStore.newFunction.spec.build.commands.length > 0
+          isBaseImageValid: functionsStore.newFunction.spec.build.base_image.length > 0,
+          isBuildCommandsValid: functionsStore.newFunction.spec.build.commands.length > 0
         }))
       }
 
-      if (
-        functionsStore.newFunction.metadata.credentials.access_key.length === 0
-      ) {
+      if (functionsStore.newFunction.metadata.credentials.access_key.length === 0) {
         return setValidation(state => ({
           ...state,
           isAccessKeyValid: false
@@ -204,7 +182,7 @@ const FunctionsPanel = ({
       }
 
       if (mode === PANEL_CREATE_MODE) {
-        getFunction(project, functionsStore.newFunction.metadata.name)
+        getFunction(params.projectName, functionsStore.newFunction.metadata.name)
           .then(() => {
             setConfirmData({
               header: 'Overwrite function?',
@@ -254,7 +232,6 @@ const FunctionsPanel = ({
       handleSave={handleSave}
       imageType={imageType}
       loading={functionsStore.loading}
-      match={match}
       mode={mode}
       newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}
@@ -277,14 +254,10 @@ FunctionsPanel.propTypes = {
   defaultData: PropTypes.shape({}),
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
   mode: FUNCTION_PANEL_MODE.isRequired,
   project: PropTypes.string.isRequired
 }
 
-export default connect(
-  ({ appStore, functionsStore }) => ({ appStore, functionsStore }),
-  {
-    ...functionsActions
-  }
-)(FunctionsPanel)
+export default connect(({ appStore, functionsStore }) => ({ appStore, functionsStore }), {
+  ...functionsActions
+})(FunctionsPanel)

@@ -8,15 +8,7 @@ import NoData from '../../common/NoData/NoData'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import ProjectTable from '../ProjectTable/ProjectTable'
 
-const ProjectDataCard = ({
-  content,
-  href,
-  link,
-  match,
-  statistics,
-  table,
-  title
-}) => {
+const ProjectDataCard = ({ content, href, link, params, statistics, table, title }) => {
   return (
     <div className="project-data-card">
       <div className="project-data-card__header table-header">
@@ -45,13 +37,9 @@ const ProjectDataCard = ({
         <NoData />
       ) : (
         <>
-          <ProjectTable match={match} table={table} />
+          <ProjectTable params={params} table={table} />
           {href ? (
-            <a
-              href={href}
-              target="_top"
-              className="link project-data-card__see-all-link"
-            >
+            <a href={href} target="_top" className="link project-data-card__see-all-link">
               See all
             </a>
           ) : (
@@ -76,7 +64,7 @@ ProjectDataCard.propTypes = {
   content: PropTypes.shape({}).isRequired,
   href: PropTypes.string,
   link: PropTypes.string,
-  match: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   statistics: PropTypes.shape({}),
   table: PropTypes.shape({}),
   title: PropTypes.string

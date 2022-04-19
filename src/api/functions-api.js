@@ -1,6 +1,6 @@
 import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
 
-export default {
+const functionsApi = {
   createNewFunction: (project, data) =>
     mainHttpClient.post(`/func/${project}/${data.metadata.name}`, data, {
       params: {
@@ -44,3 +44,5 @@ export default {
   getFunctionTemplatesCatalog: () =>
     functionTemplatesHttpClient.get('catalog.json')
 }
+
+export default functionsApi

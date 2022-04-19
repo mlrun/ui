@@ -11,7 +11,6 @@ const ScheduleJobSimple = ({
   daysOfWeek,
   handleDaysOfWeek,
   isRecurring,
-  match,
   recurringDispatch,
   recurringState,
   setDate,
@@ -38,7 +37,6 @@ const ScheduleJobSimple = ({
         <ScheduleRecurring
           daysOfWeek={daysOfWeek}
           handleDaysOfWeek={handleDaysOfWeek}
-          match={match}
           recurringDispatch={recurringDispatch}
           recurringState={recurringState}
         />
@@ -52,7 +50,6 @@ ScheduleJobSimple.propTypes = {
   daysOfWeek: PropTypes.array.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
   setDate: PropTypes.func.isRequired,

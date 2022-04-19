@@ -13,11 +13,11 @@ import Button from '../../common/Button/Button'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import artifactApi from '../../api/artifacts-api'
+import { useParams } from 'react-router-dom'
 
 const RegisterArtifactPopup = ({
   artifactKind,
   filtersStore,
-  match,
   refresh,
   setIsPopupOpen,
   title
@@ -33,6 +33,7 @@ const RegisterArtifactPopup = ({
     isNameValid: true,
     isTargetPathValid: true
   })
+  const params = useParams()
 
   useEffect(() => {
     if (artifactKind !== 'artifact') {
@@ -91,7 +92,7 @@ const RegisterArtifactPopup = ({
         registerArtifactData.kind === 'general'
           ? ''
           : registerArtifactData.kind,
-      project: match.params.projectName,
+      project: params.projectName,
       producer: {
         kind: 'api',
         uri: window.location.host
@@ -99,19 +100,16 @@ const RegisterArtifactPopup = ({
     }
 
     if (registerArtifactData.kind === 'model') {
-      const {
-        target_path,
-        model_file
-      } = registerArtifactData.target_path.match(
+      const groups = registerArtifactData.target_path.match(
         /^(?:(?<target_path>.+\/))?(?<model_file>.+)$/
-      )?.groups
+      )
 
-      data.target_path = target_path
-      data.model_file = model_file
+      data.target_path = groups?.target_path
+      data.model_file = groups?.model_file
     }
 
     artifactApi
-      .registerArtifact(match.params.projectName, data)
+      .registerArtifact(params.projectName, data)
       .then(() => {
         resetRegisterArtifactForm()
         setIsPopupOpen(false)
@@ -125,7 +123,7 @@ const RegisterArtifactPopup = ({
       })
   }, [
     filtersStore,
-    match.params.projectName,
+    params.projectName,
     refresh,
     registerArtifactData.description,
     registerArtifactData.error.length,
@@ -191,7 +189,6 @@ RegisterArtifactPopup.defaultProps = {
 
 RegisterArtifactPopup.propTypes = {
   artifactKind: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   setIsPopupOpen: PropTypes.func.isRequired,
   title: PropTypes.string

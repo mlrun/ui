@@ -1,7 +1,9 @@
-import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { maxBy, flatten } from 'lodash'
 
-export const generateArtifacts = (artifacts, iter) => {
+import { generateArtifactPreviewData } from './generateArtifactPreviewData'
+import { generateUri } from './resources'
+
+export const generateArtifacts = (artifacts, tab, iter) => {
   return flatten(
     artifacts
       .map(artifact => {
@@ -17,14 +19,14 @@ export const generateArtifacts = (artifacts, iter) => {
             let item = { ...generatedArtifact }
 
             if (generatedArtifact.extra_data) {
-              const generatedPreviewData = generateArtifactPreviewData(
-                generatedArtifact.extra_data
-              )
+              const generatedPreviewData = generateArtifactPreviewData(generatedArtifact.extra_data)
 
               item.preview = generatedPreviewData.preview
             } else {
               item.preview ??= []
             }
+
+            item.URI = generateUri(item, tab)
 
             item.ui = {
               originalContent: generatedArtifact

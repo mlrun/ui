@@ -1,6 +1,6 @@
 import { iguazioHttpClient } from '../httpClient'
 
-export default {
+const projectsIguazioApi = {
   editProject: (projectId, data) =>
     iguazioHttpClient.put(`/projects/${projectId}`, data),
   getProjects: config => {
@@ -42,3 +42,5 @@ export default {
   getScrubbedUsers: config => iguazioHttpClient.get('/scrubbed_users', config),
   getScrubbedUserGroups: () => iguazioHttpClient.get('/scrubbed_user_groups')
 }
+
+export default projectsIguazioApi

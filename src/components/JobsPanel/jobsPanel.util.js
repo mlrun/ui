@@ -428,8 +428,9 @@ export const generateTableDataFromDefaultData = (
   const dataInputs = generateDefaultDataInputs(
     Object.entries(defaultData.task.spec.inputs ?? {})
   )
-  const { limits, requests } = defaultData.function?.spec.resources
-    ? defaultData.function?.spec.resources
+  const funcSpec = defaultData.function?.spec
+  const { limits, requests } = funcSpec.resources
+    ? funcSpec.resources
     : !(
         isEveryObjectValueEmpty(defaultResources.limits) &&
         isEveryObjectValueEmpty(defaultResources.requests)
@@ -572,7 +573,7 @@ export const generateRequestData = (
   panelState,
   project,
   labels,
-  match,
+  params,
   selectedFunction,
   isFunctionTemplate,
   defaultFunc,
@@ -582,7 +583,7 @@ export const generateRequestData = (
   const func = isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
     : defaultFunc ??
-      `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+      `${params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
   const resources = {
     limits: {},
     requests: {}

@@ -2,16 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty, isEqual, isNil, omitBy } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
-import {
-  ARTIFACT_PATH,
-  DATA,
-  LABELS,
-  PARAMS,
-  SOURCE_URL
-} from '../../constants'
+import { ARTIFACT_PATH, DATA, LABELS, PARAMS, SOURCE_URL } from '../../constants'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
@@ -26,7 +21,6 @@ const ProjectSettingsGeneral = ({
   editProjectLabels,
   fetchProject,
   frontendSpec,
-  match,
   membersState,
   projectStore,
   projectMembershipIsEnabled,
@@ -42,26 +36,24 @@ const ProjectSettingsGeneral = ({
     isSourceValid: true,
     isPathValid: true
   })
+  const params = useParams()
 
   const generalParams = useMemo(
     () =>
       projectStore.project.data?.spec.params
-        ? Object.entries(projectStore.project.data?.spec.params).map(
-            ([key, value]) => ({
-              key,
-              value
-            })
-          )
+        ? Object.entries(projectStore.project.data?.spec.params).map(([key, value]) => ({
+            key,
+            value
+          }))
         : [],
     [projectStore.project.data]
   )
 
   const sendProjectSettingsData = useCallback(
     (type, data, labels) => {
-      const editFunc =
-        type && type === LABELS ? editProjectLabels : projectsApi.editProject
+      const editFunc = type && type === LABELS ? editProjectLabels : projectsApi.editProject
 
-      editFunc(match.params.projectName, { ...data }, labels)
+      editFunc(params.projectName, { ...data }, labels)
         .then(() => {
           setNotification({
             status: 200,
@@ -85,7 +77,7 @@ const ProjectSettingsGeneral = ({
         })
     },
 
-    [editProjectLabels, match.params.projectName, setNotification]
+    [editProjectLabels, params.projectName, setNotification]
   )
 
   const handleUpdateProjectLabels = objectLabels => {
@@ -97,10 +89,7 @@ const ProjectSettingsGeneral = ({
       }
     }
 
-    const storeLabels = omitBy(
-      projectStore.project.data.metadata.labels,
-      isEmpty
-    )
+    const storeLabels = omitBy(projectStore.project.data.metadata.labels, isEmpty)
 
     if (!isEqual(objectLabels, storeLabels)) {
       sendProjectSettingsData(LABELS, data, objectLabels)
@@ -185,9 +174,7 @@ const ProjectSettingsGeneral = ({
           ...prevState,
           [fieldName]: {
             ...prevState[fieldName],
-            value: editProjectData[fieldName].isEdit
-              ? value
-              : prevState[fieldName].value
+            value: editProjectData[fieldName].isEdit ? value : prevState[fieldName].value
           }
         }))
       }
@@ -199,8 +186,7 @@ const ProjectSettingsGeneral = ({
     fieldName => {
       if (
         isNil(editProjectData[fieldName].value) ||
-        editProjectData[fieldName].value ===
-          projectStore.project.data.spec[fieldName] ||
+        editProjectData[fieldName].value === projectStore.project.data.spec[fieldName] ||
         (fieldName === ARTIFACT_PATH && !validation.isPathValid) ||
         (fieldName === SOURCE_URL && !validation.isSourceValid)
       ) {
@@ -248,18 +234,13 @@ const ProjectSettingsGeneral = ({
   }, [])
 
   useEffect(() => {
-    fetchProject(match.params.projectName)
+    fetchProject(params.projectName)
 
     return () => {
       removeProjectData()
       setEditProjectData(initialEditProjectData)
     }
-  }, [
-    removeProjectData,
-    match.params.pageTab,
-    match.params.projectName,
-    fetchProject
-  ])
+  }, [removeProjectData, params.pageTab, params.projectName, fetchProject])
 
   return (
     <ProjectSettingsGeneralView
@@ -288,8 +269,7 @@ const ProjectSettingsGeneral = ({
 }
 
 ProjectSettingsGeneral.propTypes = {
-  changeOwnerCallback: PropTypes.func.isRequired,
-  match: PropTypes.object.isRequired
+  changeOwnerCallback: PropTypes.func.isRequired
 }
 
 export default connect(

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { groupBy, forEach, map, concat } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import PipelineView from './PipelineView'
 
@@ -18,18 +19,19 @@ import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 
 import './pipeline.scss'
 
-const Pipeline = ({ content, match }) => {
+const Pipeline = ({ content }) => {
   const [elements, setElements] = useState([])
   const [pipeline, setPipeline] = useState({})
   const [selectedStep, setSelectedStep] = useState({})
   const [selectedStepData, setSelectedStepData] = useState([])
   const [stepIsSelected, setStepIsSelected] = useState(false)
+  const params = useParams()
 
   useEffect(() => {
     setPipeline(
-      content.find(contentItem => contentItem.hash === match.params.pipelineId)
+      content.find(contentItem => contentItem.hash === params.pipelineId)
     )
-  }, [content, match.params.pipelineId])
+  }, [content, params.pipelineId])
 
   useEffect(() => {
     if (selectedStep.data) {
@@ -245,7 +247,7 @@ const Pipeline = ({ content, match }) => {
   return (
     <PipelineView
       elements={elements}
-      match={match}
+      params={params}
       pipeline={pipeline}
       selectedStep={selectedStep}
       selectedStepData={selectedStepData}
@@ -256,8 +258,7 @@ const Pipeline = ({ content, match }) => {
 }
 
 Pipeline.propTypes = {
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  match: PropTypes.shape({}).isRequired
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default React.memo(Pipeline)

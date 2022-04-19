@@ -32,8 +32,8 @@ const DetailsInfoItem = React.forwardRef(
       isFieldInEditMode,
       item,
       link,
-      match,
       onClick,
+      params,
       setChangesData,
       state,
       target_path
@@ -151,7 +151,7 @@ const DetailsInfoItem = React.forwardRef(
         >
           <Link
             className="link"
-            to={`/projects/${match.params.projectName}/functions/${funcStr}/overview`}
+            to={`/projects/${params.projectName}/functions/${funcStr}/overview`}
           >
             {funcStr}
           </Link>
@@ -186,9 +186,10 @@ const DetailsInfoItem = React.forwardRef(
           </Tooltip>
         )
       }
-
       return <div className="details-item__data">{info}</div>
     }
+
+    return null
   }
 )
 
@@ -208,8 +209,8 @@ DetailsInfoItem.defaultProps = {
   isFieldInEditMode: false,
   item: {},
   link: '',
-  match: {},
   onClick: null,
+  params: {},
   setChangesData: () => {},
   state: '',
   target_path: ''
@@ -232,8 +233,8 @@ DetailsInfoItem.propTypes = {
   isFieldInEditMode: PropTypes.bool,
   item: PropTypes.shape({}),
   link: PropTypes.string,
-  match: PropTypes.shape({}),
   onClick: PropTypes.func,
+  params: PropTypes.shape({}),
   setChangesData: PropTypes.func,
   state: PropTypes.string,
   target_path: PropTypes.string

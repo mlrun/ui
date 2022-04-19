@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
@@ -13,9 +13,10 @@ import nuclioActions from '../../actions/nuclio'
 import { GROUP_BY_NONE } from '../../constants'
 import { generatePageData } from './consumerGroups.util.js'
 
-const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
+const ConsumerGroups = ({ nuclioStore, setFilters }) => {
   const [filteredV3ioStreams, setFilteredV3ioStreams] = useState([])
   const [filterByName, setFilterByName] = useState('')
+  const params = useParams()
 
   useEffect(() => {
     setFilters({ groupBy: GROUP_BY_NONE })
@@ -29,14 +30,14 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
     )
   }, [nuclioStore.v3ioStreams.parsedData, filterByName])
 
-  const pageData = useCallback(generatePageData(), [])
+  const pageData = useMemo(() => generatePageData(), [])
 
   return (
     <>
       <PageHeader
         title="Consumer groups (v3io stream)"
         description="This report displays the project's consumer groups for Iguazio v3io streams"
-        backLink={`/projects/${match.params.projectName}/monitor`}
+        backLink={`/projects/${params.projectName}/monitor`}
       />
       <div className="page-actions">
         <Search
@@ -49,7 +50,6 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
       <Table
         actionsMenu={[]}
         content={filteredV3ioStreams}
-        match={match}
         pageData={pageData}
       />
       {!nuclioStore.v3ioStreams.loading &&
@@ -59,10 +59,6 @@ const ConsumerGroups = ({ match, nuclioStore, setFilters }) => {
       {nuclioStore.v3ioStreams.loading && <Loader />}
     </>
   )
-}
-
-ConsumerGroups.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(
