@@ -157,7 +157,11 @@ const ProjectMonitorView = ({
               />
               {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
-                  counterValue={Object.keys(v3ioStreams.data).length || 'N/A'}
+                  counterValue={
+                    isNuclioModeDisabled
+                      ? 'N/A'
+                      : Object.keys(v3ioStreams.data).length ?? 0
+                  }
                   link={`/projects/${match.params.projectName}/monitor${
                     !isNuclioModeDisabled ? '/consumer-groups' : ''
                   }`}
