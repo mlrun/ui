@@ -37,8 +37,6 @@ const tableSlice = createSlice({
       state.features.currentProject = action.payload
     },
     updateFeatureVector: (state, action) => {
-      // state.features.featureVector = {metadata: action.payload.metadata, spec: action.payload.spec}
-      console.log(action)
       state.features.featureVector.metadata = action.payload.metadata
       state.features.featureVector.spec = action.payload.spec
     },

@@ -119,7 +119,6 @@ function FeaturesTablePanelView({
         <div className="features-panel__divider" />
         <div className="features-panel__sub-title">Features by projects:</div>
         {Object.entries(tableStore.features.groupedFeatures).map(([projectName, features]) => {
-          // console.log(tableStore.features.groupedFeatures)
           return (
             projectName !== tableStore.features.currentProject && (
               <Accordion
