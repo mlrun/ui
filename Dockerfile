@@ -1,5 +1,5 @@
 # build stage
-FROM node:12-alpine as build-stage
+FROM quay.io/mlrun/node:12-alpine as build-stage
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
     echo ${DATE} > ./build/BUILD_DATE
 
 # production stage
-FROM nginx:stable-alpine as production-stage
+FROM quay.io/mlrun/nginx:stable-alpine as production-stage
 
 COPY --from=build-stage /app/build /usr/share/nginx/html
 COPY config.json.tmpl /usr/share/nginx/html/
