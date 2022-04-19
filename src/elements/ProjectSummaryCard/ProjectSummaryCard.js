@@ -6,6 +6,8 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 
 import Loader from '../../common/Loader/Loader'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 const ProjectSummaryCard = ({
   counterValue,
@@ -47,7 +49,8 @@ ProjectSummaryCard.defaultProps = {
 }
 
 ProjectSummaryCard.propTypes = {
-  counterValue: PropTypes.number.isRequired,
+  counterValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
   link: PropTypes.string.isRequired,
   projectSummary: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,

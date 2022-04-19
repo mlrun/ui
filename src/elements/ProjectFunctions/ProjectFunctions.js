@@ -5,6 +5,9 @@ import { lowerCase, upperFirst } from 'lodash'
 import { connect } from 'react-redux'
 
 import { groupByUniqName } from '../../utils/groupByUniqName'
+
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
