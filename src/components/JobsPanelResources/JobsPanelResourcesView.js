@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
+import PanelSection from '../../elements/PanelSection/PanelSection'
 import Select from '../../common/Select/Select'
 
 import { volumePreemptionModeOptions } from '../../utils/panelResources.util'
@@ -25,10 +25,10 @@ const JobsPanelResourcesView = ({
 }) => {
   return (
     <div className="job-panel__item resources new-item-side-panel__item">
-      <JobsPanelSection title="Resources" />
+      <PanelSection title="Resources" />
       <div className="pods">
         {validFunctionPriorityClassNames.length > 0 && (
-          <JobsPanelSection title="Pods priority">
+          <PanelSection title="Pods priority">
             <Select
               className="pods-priority"
               onClick={setPriorityClassName}
@@ -36,10 +36,10 @@ const JobsPanelResourcesView = ({
               selectedId={panelState.priority_class_name}
               withSelectedIcon
             />
-          </JobsPanelSection>
+          </PanelSection>
         )}
         {panelState.preemption_mode && (
-          <JobsPanelSection title="Run On Spot Nodes">
+          <PanelSection title="Run On Spot Nodes">
             <Select
               className="volume-toleration"
               options={volumePreemptionModeOptions}
@@ -47,10 +47,10 @@ const JobsPanelResourcesView = ({
               selectedId={panelState.preemption_mode}
               withSelectedIcon
             />
-          </JobsPanelSection>
+          </PanelSection>
         )}
       </div>
-      <JobsPanelSection
+      <PanelSection
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
       >
@@ -58,7 +58,7 @@ const JobsPanelResourcesView = ({
           panelDispatch={panelDispatch}
           panelState={panelState}
         />
-      </JobsPanelSection>
+      </PanelSection>
       <PanelResourcesUnits
         data={data}
         handleSelectCpuUnit={handleSelectCpuUnit}
@@ -68,12 +68,12 @@ const JobsPanelResourcesView = ({
         setMemoryValue={setMemoryValue}
         validation={validation}
       />
-      <JobsPanelSection title="Node selector">
+      <PanelSection title="Node selector">
         <JobsPanelNodeSelector
           panelDispatch={panelDispatch}
           panelState={panelState}
         />
-      </JobsPanelSection>
+      </PanelSection>
     </div>
   )
 }

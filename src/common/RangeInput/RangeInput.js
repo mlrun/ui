@@ -45,7 +45,7 @@ const RangeInput = ({
   const handleIncrease = () => {
     if (inputValue >= max) return
 
-    const value = isCurrentValueEmpty() ? -step : Number(inputValue) + step
+    const value = isCurrentValueEmpty() ? step : Number(inputValue) + step
     const nextValue = isInteger(value) ? value : value.toFixed(3)
 
     setInputValue(nextValue)

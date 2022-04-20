@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -20,7 +20,7 @@ const FunctionsPanelGeneralView = ({
 }) => {
   return (
     <div className="functions-panel__item new-item-side-panel__item general">
-      <FunctionsPanelSection title="General">
+      <PanelSection title="General">
         <div className="general__required-info">
           <div className="name">
             <Tooltip template={<TextTooltipTemplate text={data.name} />}>
@@ -65,7 +65,7 @@ const FunctionsPanelGeneralView = ({
             />
           </div>
         </div>
-      </FunctionsPanelSection>
+      </PanelSection>
     </div>
   )
 }

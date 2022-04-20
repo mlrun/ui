@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
@@ -39,7 +39,7 @@ const EnvironmentVariablesView = ({
 
   return (
     <div className="new-item-side-panel__item">
-      <FunctionsPanelSection title="Environment Variables">
+      <PanelSection title="Environment Variables">
         <div className={tableClassNames}>
           <div className="table__header table__row no-hover">
             {tableHeaders.map(header => {
@@ -122,7 +122,7 @@ const EnvironmentVariablesView = ({
             </div>
           )}
         </div>
-      </FunctionsPanelSection>
+      </PanelSection>
     </div>
   )
 }

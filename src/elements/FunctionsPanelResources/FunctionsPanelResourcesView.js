@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import Select from '../../common/Select/Select'
 import { VolumesTable } from '../VolumesTable/VolumesTable'
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import PanelResourcesUnits from '../PanelResourcesUnits/PanelResourcesUnits'
 
 import { volumePreemptionModeOptions } from '../../utils/panelResources.util'
@@ -32,10 +32,10 @@ const FunctionsPanelResourcesView = ({
 }) => {
   return (
     <div className="functions-panel__item resources new-item-side-panel__item">
-      <FunctionsPanelSection title="Resources" />
+      <PanelSection title="Resources" />
       <div className="pods">
         {validFunctionPriorityClassNames.length > 0 && (
-          <FunctionsPanelSection title="Pods priority">
+          <PanelSection title="Pods priority">
             <Select
               className="pods-priority"
               onClick={selectPodsPriorityClassName}
@@ -43,10 +43,10 @@ const FunctionsPanelResourcesView = ({
               selectedId={podsPriorityClassName}
               withSelectedIcon
             />
-          </FunctionsPanelSection>
+          </PanelSection>
         )}
         {mode === PANEL_CREATE_MODE && data.preemptionMode && (
-          <FunctionsPanelSection title="Run On Spot Nodes">
+          <PanelSection title="Run On Spot Nodes">
             <Select
               className="pods-toleration"
               options={volumePreemptionModeOptions}
@@ -54,10 +54,10 @@ const FunctionsPanelResourcesView = ({
               selectedId={data.preemptionMode}
               withSelectedIcon
             />
-          </FunctionsPanelSection>
+          </PanelSection>
         )}
       </div>
-      <FunctionsPanelSection
+      <PanelSection
         className="volumes-section"
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
@@ -83,7 +83,7 @@ const FunctionsPanelResourcesView = ({
             volumes={data.volumes}
           />
         )}
-      </FunctionsPanelSection>
+      </PanelSection>
       <PanelResourcesUnits
         data={data}
         handleSelectCpuUnit={handleSelectCpuUnit}

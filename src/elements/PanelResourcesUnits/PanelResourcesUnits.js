@@ -1,6 +1,11 @@
 import React from 'react'
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
+import PanelSection from '../PanelSection/PanelSection'
 import RangeInput from '../../common/RangeInput/RangeInput'
+import Select from '../../common/Select/Select'
+
 import {
   generateCpuValue,
   generateMemoryValue,
@@ -9,11 +14,8 @@ import {
   REQUESTS,
   selectMemoryOptions
 } from '../../utils/panelResources.util'
-import Select from '../../common/Select/Select'
-import { connect } from 'react-redux'
 
 import './panelResourcesUnits.scss'
-import PropTypes from 'prop-types'
 
 const PanelResourcesUnits = ({
   data,
@@ -26,7 +28,7 @@ const PanelResourcesUnits = ({
 }) => {
   return (
     <div className="resources__inputs">
-      <FunctionsPanelSection title="Memory" className="memory">
+      <PanelSection title="Memory" className="memory">
         <div className="resources__input">
           <RangeInput
             className="resources__range"
@@ -71,8 +73,8 @@ const PanelResourcesUnits = ({
             selectedId={data.limits.memoryUnit}
           />
         </div>
-      </FunctionsPanelSection>
-      <FunctionsPanelSection title="Cpu" className="cpu">
+      </PanelSection>
+      <PanelSection title="Cpu" className="cpu">
         <div className="resources__input">
           <RangeInput
             className="resources__range"
@@ -123,8 +125,8 @@ const PanelResourcesUnits = ({
             selectedId={data.limits.cpuUnit}
           />
         </div>
-      </FunctionsPanelSection>
-      <FunctionsPanelSection title="Gpu" className="section-gpu">
+      </PanelSection>
+      <PanelSection title="Gpu" className="section-gpu">
         <RangeInput
           density="dense"
           invalid={!validation.isGpuLimitValid}
@@ -135,7 +137,7 @@ const PanelResourcesUnits = ({
           onChange={setGpuValue}
           value={data.limits['nvidia.com/gpu']}
         />
-      </FunctionsPanelSection>
+      </PanelSection>
     </div>
   )
 }
