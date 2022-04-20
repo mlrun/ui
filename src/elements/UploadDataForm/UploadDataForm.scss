@@ -1,0 +1,42 @@
+.upload-data-form {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  height: 100%;
+
+  &__row {
+    display: flex;
+  }
+
+  &__col {
+    flex: 1 0 auto;
+    min-width: auto;
+  }
+
+  h4 {
+    margin: 0 0 1em 0;
+    font-size: 20px;
+    font-weight: normal;
+  }
+
+  &__section {
+    margin-bottom: 15px;
+  }
+
+  .radio-buttons {
+    flex-flow: column nowrap;
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 35%;
+
+    &__content {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .input-wrapper {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+}

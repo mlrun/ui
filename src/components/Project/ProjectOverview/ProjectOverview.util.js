@@ -1,16 +1,16 @@
 import React from 'react'
 
 import { ReactComponent as CreatFunctionIcon } from '../../../images/function2-icon.svg'
-import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg'
-import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
-import { ReactComponent as RegisterArtifactIcon } from '../../../images/flow-icon.svg'
+// import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg'
+// import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
+// import { ReactComponent as RegisterArtifactIcon } from '../../../images/flow-icon.svg'
 import { ReactComponent as CreateJobIcon } from '../../../images/run2-icon.svg'
 import { ReactComponent as DeployModelIcon } from '../../../images/rocket-icon.svg'
 import { ReactComponent as FeatureVectorIcon } from '../../../images/vector-icon.svg'
 import { ReactComponent as RegisterModelIcon } from '../../../images/model-icon.svg'
 import { ReactComponent as RTFunctionIcon } from '../../../images/realtime-icon-b.svg'
 import { ReactComponent as ServingFunctionIcon } from '../../../images/serving-icon.svg'
-// import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
+import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
 
 export const getInitialCards = projectName => {
   const base_url = `/projects/${projectName}`
@@ -21,44 +21,44 @@ export const getInitialCards = projectName => {
       subTitle:
         'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
       actions: [
+        {
+          icon: <UploadIcon />,
+          id: 'uploadData',
+          label: 'Upload data',
+          path: {
+            target: 'uploaddata'
+          },
+          tooltip: 'Test'
+        },
         // {
-        //   icon: <UploadIcon />,
-        //   id: 'uploadData',
-        //   label: 'Upload data',
+        //   icon: <FeatureSetIcon />,
+        //   id: 'createFeatureSet',
+        //   label: 'Create Features Set',
         //   path: {
-        //     target: 'uploaddata'
+        //     target: `${base_url}/feature-store/feature-sets?openPanel=true`
         //   },
-        //   tooltip: 'Test'
+        //   tooltip: ''
         // },
-        {
-          icon: <FeatureSetIcon />,
-          id: 'createFeatureSet',
-          label: 'Create Features Set',
-          path: {
-            target: `${base_url}/feature-store/feature-sets?openPanel=true`
-          },
-          tooltip: ''
-        },
-        {
-          icon: <DataSetIcon />,
-          id: 'registerDataset',
-          label: 'Register Dataset',
-          path: {
-            target: `${base_url}/datasets?openPanel=true`
-            // target: 'dataset' // Phase 2
-          },
-          tooltip: ''
-        },
-        {
-          icon: <RegisterArtifactIcon />,
-          id: 'registerArtifact',
-          label: 'Register Artifact',
-          path: {
-            target: `${base_url}/files?openPanel=true`
-            // target: 'artifact' // Phase 2
-          },
-          tooltip: ''
-        },
+        // {
+        //   icon: <DataSetIcon />,
+        //   id: 'registerDataset',
+        //   label: 'Register Dataset',
+        //   path: {
+        //     target: `${base_url}/datasets?openPanel=true`
+        //     // target: 'dataset' // Phase 2
+        //   },
+        //   tooltip: ''
+        // },
+        // {
+        //   icon: <RegisterArtifactIcon />,
+        //   id: 'registerArtifact',
+        //   label: 'Register Artifact',
+        //   path: {
+        //     target: `${base_url}/files?openPanel=true`
+        //     // target: 'artifact' // Phase 2
+        //   },
+        //   tooltip: ''
+        // },
         {
           icon: <FeatureVectorIcon />,
           id: 'createFeatureVector',
@@ -205,9 +205,10 @@ export const getInitialCards = projectName => {
   }
 }
 
-export const handlePath = (navigate, cb) => ({ target, externalLink }) => {
+export const handlePath = (navigate, cb) => config => {
+  const { externalLink, target } = config.path
   return target.indexOf('/') < 0
-    ? cb(target.toLowerCase())
+    ? cb(config)
     : externalLink
     ? (window.top.location.href = target)
     : navigate(target)

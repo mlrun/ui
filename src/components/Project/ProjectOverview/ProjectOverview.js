@@ -10,8 +10,7 @@ import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
 import Tooltip from '../../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
-
-import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
+import UploadData from '../../UploadDataPopup/UploadDataPopup'
 
 import projectsAction from '../../../actions/projects'
 
@@ -26,7 +25,7 @@ import './ProjectOverview.scss'
 const ProjectOverview = ({ fetchProject, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
-  const [modal, setModal] = useState({ isOpen: false, name: '' })
+  const [modals, setModals] = useState({ uploaddata: { isOpen: false, label: '' } })
   const params = useParams()
   const navigate = useNavigate()
 
@@ -34,42 +33,29 @@ const ProjectOverview = ({ fetchProject, project }) => {
     return params.projectName ? getInitialCards(params.projectName) : {}
   }, [params])
 
-  const renderPopupContent = () => {
-    switch (modal.name) {
-      case 'registerdataset':
-        return (
-          <RegisterArtifactPopup
-            artifactKind="dataset"
-            refresh={() => {}}
-            setIsPopupOpen={handleModalToggle}
-            title="Register dataset"
-          />
-        )
-      case 'registerfile':
-        return (
-          <RegisterArtifactPopup
-            artifactKind="artifact"
-            refresh={() => {}}
-            setIsPopupOpen={handleModalToggle}
-            title="Register artifact"
-          />
-        )
-      default:
-        return ''
-    }
-  }
-
-  const handleModalToggle = popupName => {
-    return setModal(prev => {
-      return {
-        ...prev,
-        isOpen: !prev.isOpen,
-        name: !prev.isOpen ? popupName : ''
+  const handleModalOpen = ({ label, path }) => {
+    return setModals(prev => ({
+      ...prev,
+      [path.target]: {
+        id: path.target,
+        isOpen: !prev[path.target].isOpen,
+        label
       }
-    })
+    }))
   }
 
-  const handlePathExecution = handlePath(navigate, handleModalToggle)
+  const handleModalClose = modalName => {
+    console.log(modalName)
+    setModals(oldModals => ({
+      ...oldModals,
+      [modalName]: {
+        ...oldModals[modalName],
+        isOpen: false
+      }
+    }))
+  }
+
+  const handlePathExecution = handlePath(navigate, handleModalOpen)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
@@ -115,34 +101,27 @@ const ProjectOverview = ({ fetchProject, project }) => {
 
   return (
     <div className="project-overview">
-      {modal.isOpen && renderPopupContent()}
+      <UploadData
+        onClose={() => handleModalClose(modals.uploaddata?.id)}
+        show={modals.uploaddata?.isOpen}
+        title={modals.uploaddata?.label}
+      />
       <div className="project-overview__header">
         <div className="project-overview__header-title">
           {project.data.metadata.name}
-          <Tooltip
-            template={<TextTooltipTemplate text={project.data.status.state} />}
-          >
-            <i
-              className={`state-${project.data.status.state}-job status-icon`}
-            />
+          <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>
+            <i className={`state-${project.data.status.state}-job status-icon`} />
           </Tooltip>
         </div>
         <div className="project-overview__header-subtitle">
           <div>
-            <span className="project-overview__header-subtitle-name">
-              Created:
-            </span>
+            <span className="project-overview__header-subtitle-name">Created:</span>
             <span>
-              {getDateAndTimeByFormat(
-                project.data.metadata.created,
-                'YYYY-MM-DD, HH:mm:ss A'
-              )}
+              {getDateAndTimeByFormat(project.data.metadata.created, 'YYYY-MM-DD, HH:mm:ss A')}
             </span>
           </div>
           <div>
-            <span className="project-overview__header-subtitle-name">
-              Owner:
-            </span>
+            <span className="project-overview__header-subtitle-name">Owner:</span>
             <span>{project.data.spec.owner}</span>
           </div>
         </div>
@@ -158,12 +137,8 @@ const ProjectOverview = ({ fetchProject, project }) => {
             <div className="project-overview-card" key={card}>
               <div className="project-overview-card__top">
                 <div className="project-overview-card__header">
-                  <h3 className="project-overview-card__header-title">
-                    {title}
-                  </h3>
-                  <p className="project-overview-card__header-subtitle">
-                    {subTitle ?? ''}
-                  </p>
+                  <h3 className="project-overview-card__header-title">{title}</h3>
+                  <p className="project-overview-card__header-subtitle">{subTitle ?? ''}</p>
                 </div>
                 <div className="project-overview-card__actions">
                   <ProjectAction
@@ -198,11 +173,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
                 <div className="additional-links">
                   {additionalLinks &&
                     additionalLinks.map(({ id, label, path }) => (
-                      <span
-                        key={id}
-                        className="link"
-                        onClick={() => handlePathExecution(path)}
-                      >
+                      <span key={id} className="link" onClick={() => handlePathExecution({ path })}>
                         {label}
                       </span>
                     ))}
