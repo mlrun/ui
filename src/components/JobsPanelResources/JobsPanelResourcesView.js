@@ -3,23 +3,19 @@ import PropTypes from 'prop-types'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import Select from '../../common/Select/Select'
-import RangeInput from '../../common/RangeInput/RangeInput'
 
-import {
-  selectMemoryOptions as selectTypeOptions,
-  volumePreemptionModeOptions
-} from '../../utils/panelResources.util'
-import { LIMITS, REQUESTS } from '../JobsPanel/jobsPanel.util'
+import { volumePreemptionModeOptions } from '../../utils/panelResources.util'
 import JobsPanelNodeSelector from './JobsPanelNodeSelector/JobsPanelNodeSelector'
 import JobsPanelVolumes from './JobsPanelVolumes/JobsPanelVolumes'
+import PanelResourcesUnits from '../../elements/PanelResourcesUnits/PanelResourcesUnits'
 
 const JobsPanelResourcesView = ({
+  data,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
   handleSelectPreemptionMode,
   panelDispatch,
   panelState,
-  resourcesData,
   setCpuValue,
   setGpuValue,
   setMemoryValue,
@@ -63,97 +59,15 @@ const JobsPanelResourcesView = ({
           panelState={panelState}
         />
       </JobsPanelSection>
-      <div className="inputs">
-        <JobsPanelSection title="Memory" className="memory">
-          <Select
-            density="dense"
-            label="Unit"
-            labelAtTop
-            onClick={value => handleSelectMemoryUnit(value)}
-            options={selectTypeOptions.unitMemory}
-            selectedId={panelState.memoryUnit}
-          />
-          <RangeInput
-            density="dense"
-            invalid={!validation.isMemoryRequestValid}
-            invalidText="Request must be less than or equal to Limit and not be less than 1"
-            label="Request"
-            labelType="labelAtTop"
-            min={1}
-            onChange={value =>
-              setMemoryValue(
-                value,
-                resourcesData,
-                REQUESTS,
-                'isMemoryRequestValid'
-              )
-            }
-            required
-            value={resourcesData.requestsMemory}
-          />
-          <RangeInput
-            density="dense"
-            invalid={!validation.isMemoryLimitValid}
-            invalidText="Limit must be bigger than or equal to Request and not be less than 1"
-            label="Limit"
-            labelType="labelAtTop"
-            min={1}
-            onChange={value =>
-              setMemoryValue(value, resourcesData, LIMITS, 'isMemoryLimitValid')
-            }
-            required
-            value={resourcesData.limitsMemory}
-          />
-        </JobsPanelSection>
-        <JobsPanelSection title="Cpu" className="cpu">
-          <Select
-            density="dense"
-            label="Unit"
-            labelAtTop
-            options={selectTypeOptions.unitCpu}
-            onClick={value => handleSelectCpuUnit(value)}
-            selectedId={panelState.cpuUnit}
-          />
-          <RangeInput
-            density="dense"
-            invalid={!validation.isCpuRequestValid}
-            invalidText="Request must be less than or equal to Limit and not be less than 1"
-            label="Request"
-            labelType="labelAtTop"
-            min={1}
-            onChange={value =>
-              setCpuValue(value, resourcesData, REQUESTS, 'isCpuRequestValid')
-            }
-            required
-            value={resourcesData.requestsCpu}
-          />
-          <RangeInput
-            density="dense"
-            invalid={!validation.isCpuLimitValid}
-            invalidText="Limit must be bigger than or equal to Request and not be less than 1"
-            label="Limit"
-            labelType="labelAtTop"
-            min={1}
-            onChange={value =>
-              setCpuValue(value, resourcesData, LIMITS, 'isCpuLimitValid')
-            }
-            required
-            value={resourcesData.limitsCpu}
-          />
-        </JobsPanelSection>
-        <JobsPanelSection title="Gpu" className="section-gpu">
-          <RangeInput
-            density="dense"
-            invalid={!validation.isGpuLimitValid}
-            invalidText="The minimum value should be 1"
-            label="Limit"
-            labelType="labelAtTop"
-            min={1}
-            onChange={setGpuValue}
-            value={panelState.limits['nvidia.com/gpu']}
-          />
-        </JobsPanelSection>
-      </div>
+      <PanelResourcesUnits
+        data={data}
+        handleSelectCpuUnit={handleSelectCpuUnit}
+        handleSelectMemoryUnit={handleSelectMemoryUnit}
+        setCpuValue={setCpuValue}
+        setGpuValue={setGpuValue}
+        setMemoryValue={setMemoryValue}
+        validation={validation}
+      />
       <JobsPanelSection title="Node selector">
         <JobsPanelNodeSelector
           panelDispatch={panelDispatch}
@@ -165,12 +79,12 @@ const JobsPanelResourcesView = ({
 }
 
 JobsPanelResourcesView.propTypes = {
+  data: PropTypes.shape({}).isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   handleSelectPreemptionMode: PropTypes.func.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  resourcesData: PropTypes.shape({}).isRequired,
   setCpuValue: PropTypes.func.isRequired,
   setGpuValue: PropTypes.func.isRequired,
   setMemoryValue: PropTypes.func.isRequired,
