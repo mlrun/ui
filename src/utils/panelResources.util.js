@@ -13,7 +13,7 @@ export const selectMemoryOptions = {
       step: 0.001,
       minValue: 0.001,
       onChange: function (value) {
-        return parseFloat(value) / 1000 + this.unit
+        return (parseFloat(value) / 1000).toFixed(3) + this.unit
       },
       convertValue: value => parseInt(value) * 1000
     },
@@ -49,7 +49,7 @@ export const getSelectedMemoryOption = id =>
   selectMemoryOptions.unitMemory.find(option => option.id === id)
 
 export const generateCpuValue = (cpu = '') =>
-  cpu.toString().match(/m/) ? cpu.toString().slice(0, cpu.toString().length - 1) : cpu
+  cpu.toString().match(/m/) ? cpu.toString().slice(0, cpu.toString().length - 1) : parseFloat(cpu).toFixed(3)
 
 export const generateMemoryValue = (memory = '') =>
   memory.toString().match(/[a-zA-Z]/)
@@ -95,6 +95,11 @@ export const setMemoryInputValidation = (data, setValidation, type, validationFi
       requestsValue,
       setValidation
     )
+  } else {
+    setValidation(prevState => ({
+      ...prevState,
+      [validationField]: false
+    }))
   }
 }
 
