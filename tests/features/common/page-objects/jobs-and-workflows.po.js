@@ -248,8 +248,8 @@ const scheduleMonitorTable = {
             true // options_in_root ?
           )
         },
-        lastRun: '.table-head__item:nth-of-type(6) .data-ellipsis',
-        createdTime: '.table-head__item:nth-of-type(7) .data-ellipsis',
+        lastRun: '.table-body__cell:nth-of-type(6) .data-ellipsis',
+        createdTime: '.table-body__cell:nth-of-type(7) .data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure

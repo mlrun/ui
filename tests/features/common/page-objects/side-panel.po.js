@@ -665,6 +665,15 @@ const commonVolumePathsTableTypeDropdown = dropdownComponent(
   )
 )
 
+const commonPodsPriorityDropdown = dropdownComponent(
+  generateDropdownGroup(
+    '.new-item-side-panel .accordion__container:nth-of-type(3) .pods-priority',
+    '.select__value',
+    '.select__body .select__item',
+    '.data-ellipsis .data-ellipsis'
+  )
+)
+
 function resourcesTableCommonInput(accordionIndx, rowIndx, inputIndx) {
   return generateInputGroup(
     `.new-item-side-panel .accordion__container:nth-of-type(${accordionIndx}) .panel-section:nth-of-type(3) .panel-section__body .table__body .input-row-wrapper:nth-of-type(${rowIndx}) .input-wrapper:nth-of-type(${inputIndx})`,
@@ -1212,6 +1221,7 @@ module.exports = {
       Collapse_Button: By.css(
         '.new-item-side-panel__body .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon'
       ),
+      Pods_Priority_Dropdown: commonPodsPriorityDropdown,
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3)',
@@ -1509,6 +1519,7 @@ module.exports = {
       Collapse_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon'
       ),
+      Pods_Priority_Dropdown: commonPodsPriorityDropdown,
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3)',

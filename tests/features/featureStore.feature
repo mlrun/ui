@@ -95,6 +95,8 @@ Feature: Feature Store Page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         When click on cell with row index 2 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Header" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Sets_Info_Pane" wizard
@@ -139,6 +141,12 @@ Feature: Feature Store Page
             | key2\n:\nvalue2 |
         Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
         Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is enabled
+        When click on cell with row index 2 in "expand_btn" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
+        When click on cell with row index 2 in "expand_btn" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
 
     @passive
     @inProgress
@@ -945,6 +953,7 @@ Feature: Feature Store Page
         Then verify "Add_To_Feature_Vector_Table" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Table_Tree_Filter_Dropdown" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Add_To_Feature_Vector_Tab" wizard
+        Then verify "Table_Entity_Filter_Input" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Table_Projects_Filter_Dropdown" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Add_To_Feature_Vector_Tab" wizard
@@ -961,6 +970,34 @@ Feature: Feature Store Page
         Then "Cancel_Button" element on "Add_To_Feature_Vector_Tab" should contains "Cancel" value
         Then verify "Add_Button" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then "Add_Button" element on "Add_To_Feature_Vector_Tab" should contains "Add" value
+
+    @passive
+    Scenario: Verify filtering by name and entity on Add to feature vector tab
+        Given open url
+        And turn on demo mode
+        And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then click on "Create_Vector_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then verify if "Create_Feature_Vector_Popup" popup dialog appears
+        Then type into "Name_Input" on "Create_Feature_Vector_Popup" popup dialog "test" value
+        Then type into "Tag_Input" on "Create_Feature_Vector_Popup" popup dialog "latest" value
+        Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
+        And wait load page
+        Then type value "dep" to "Table_Name_Filter_Input" field on "Add_To_Feature_Vector_Tab" wizard
+        Then type value "patient_id" to "Table_Entity_Filter_Input" field on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then value in "featureName" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "department"
+        Then value in "entities" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "patient_id"
+        Then type value "" to "Table_Name_Filter_Input" field on "Add_To_Feature_Vector_Tab" wizard
+        Then type value "patient_id" to "Table_Entity_Filter_Input" field on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then value in "entities" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "patient_id"
 
     @inProgress
     Scenario: Add to feature vector
