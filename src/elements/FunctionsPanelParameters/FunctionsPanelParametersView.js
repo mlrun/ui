@@ -7,7 +7,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import EditableFunctionParameterRow from './EditableFunctionParameterRow'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import AddFunctionParameterRow from './AddFunctionParameterRow'
 
 import { tableHeaders } from './functionsPanelParameters.util'
@@ -38,10 +38,10 @@ const FunctionsPanelParametersView = ({
   )
 
   return (
-    <FunctionsPanelSection title="Parameters">
+    <PanelSection title="Parameters">
       <div className={tableClassNames}>
         <div className="table__header table__row no-hover">
-          {tableHeaders.map((header, index) => (
+          {tableHeaders.map((header) => (
             <div className="table__cell" key={header.id}>
               {header.label}
             </div>
@@ -104,7 +104,7 @@ const FunctionsPanelParametersView = ({
           </div>
         )}
       </div>
-    </FunctionsPanelSection>
+    </PanelSection>
   )
 }
 

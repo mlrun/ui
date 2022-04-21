@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
+import PanelSection from '../../elements/PanelSection/PanelSection'
 import Input from '../../common/Input/Input'
 import { JobsPanelDataInputsTable } from '../../elements/JobsPanelDataInputsTable/JobsPanelDataInputsTable'
 
@@ -28,7 +28,7 @@ const JobsPanelDataInputsView = ({
 }) => {
   return (
     <div className="job-panel__item new-item-side-panel__item">
-      <JobsPanelSection title="Data inputs">
+      <PanelSection title="Data inputs">
         <JobsPanelDataInputsTable
           comboboxMatchesList={comboboxMatchesList}
           comboboxSelectList={comboboxSelectList}
@@ -44,8 +44,8 @@ const JobsPanelDataInputsView = ({
           setValidation={setValidation}
           validation={validation}
         />
-      </JobsPanelSection>
-      <JobsPanelSection title="General">
+      </PanelSection>
+      <PanelSection title="General">
         <Input
           label="Default input path"
           wrapperClassName="default-input-wrapper"
@@ -79,7 +79,7 @@ const JobsPanelDataInputsView = ({
           value={panelState.outputPath}
           type="text"
         />
-      </JobsPanelSection>
+      </PanelSection>
     </div>
   )
 }

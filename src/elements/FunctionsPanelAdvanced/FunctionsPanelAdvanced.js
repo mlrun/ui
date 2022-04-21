@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import FunctionsPanelParameters from '../FunctionsPanelParameters/FunctionsPanelParameters'
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import Input from '../../common/Input/Input'
 
 import functionsActions from '../../actions/functions'
@@ -20,7 +20,7 @@ const FunctionsPanelAdvanced = ({
   })
 
   return (
-    <FunctionsPanelSection title="Advanced" className="advanced">
+    <PanelSection title="Advanced" className="advanced">
       <FunctionsPanelParameters defaultData={defaultData} />
       <Input
         floatingLabel
@@ -46,7 +46,7 @@ const FunctionsPanelAdvanced = ({
         }
         type="text"
       />
-    </FunctionsPanelSection>
+    </PanelSection>
   )
 }
 

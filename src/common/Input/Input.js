@@ -46,6 +46,7 @@ const Input = React.forwardRef(
       required,
       requiredText,
       setInvalid,
+      step,
       suggestionList,
       tip,
       type,
@@ -249,6 +250,7 @@ const Input = React.forwardRef(
             onKeyDown,
             pattern,
             placeholder,
+            step,
             type,
             value: typedValue
           }}
@@ -370,6 +372,7 @@ Input.defaultProps = {
   required: false,
   requiredText: 'This field is required',
   setInvalid: () => {},
+  step: '',
   tip: '',
   type: 'text',
   validationRules: [],
@@ -401,6 +404,7 @@ Input.propTypes = {
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   setInvalid: PropTypes.func,
+  step: PropTypes.string,
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

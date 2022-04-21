@@ -2,7 +2,6 @@ import { JOB_DEFAULT_OUTPUT_PATH } from '../../constants'
 
 export const initialState = {
   access_key: '',
-  cpuUnit: 'cpu',
   currentFunctionInfo: {
     labels: [],
     method: '',
@@ -14,10 +13,11 @@ export const initialState = {
   inputPath: '',
   limits: {
     cpu: '',
+    cpuUnit: '',
     memory: '',
+    memoryUnit: '',
     'nvidia.com/gpu': ''
   },
-  memoryUnit: 'Bytes',
   outputPath: JOB_DEFAULT_OUTPUT_PATH,
   previousPanelData: {
     access_key: '',
@@ -39,7 +39,9 @@ export const initialState = {
   priority_class_name: '',
   requests: {
     cpu: '',
-    memory: ''
+    cpuUnit: '',
+    memory: '',
+    memoryUnit: ''
   },
   tableData: {
     parameters: [],
@@ -57,7 +59,6 @@ export const panelActions = {
   REMOVE_JOB_LABEL: 'REMOVE_JOB_LABEL',
   REMOVE_PREVIOUS_PANEL_DATA: 'REMOVE_PREVIOUS_PANEL_DATA',
   SET_ACCESS_KEY: 'SET_ACCESS_KEY',
-  SET_CPU_UNIT: 'SET_CPU_UNIT',
   SET_CURRENT_FUNCTION_INFO: 'SET_CURRENT_FUNCTION_INFO',
   SET_CURRENT_FUNCTION_INFO_LABELS: 'SET_CURRENT_FUNCTION_INFO_LABELS',
   SET_CURRENT_FUNCTION_INFO_METHOD: 'SET_CURRENT_FUNCTION_INFO_METHOD',
@@ -68,9 +69,10 @@ export const panelActions = {
   SET_JOB_LABELS: 'SET_JOB_LABELS',
   SET_LIMITS: 'SET_LIMITS',
   SET_LIMITS_CPU: 'SET_LIMITS_CPU',
+  SET_LIMITS_CPU_UNIT: 'SET_LIMITS_CPU_UNIT',
   SET_LIMITS_MEMORY: 'SET_LIMITS_MEMORY',
+  SET_LIMITS_MEMORY_UNIT: 'SET_LIMITS_MEMORY_UNIT',
   SET_LIMITS_NVIDIA_GPU: 'SET_LIMITS_NVIDIA_GPU',
-  SET_MEMORY_UNIT: 'SET_MEMORY_UNIT',
   SET_OUTPUT_PATH: 'SET_OUTPUT_PATH',
   SET_PREEMPTION_MODE: 'SET_PREEMPTION_MODE',
   SET_PREVIOUS_PANEL_DATA: 'SET_PREVIOUS_PANEL_DATA',
@@ -93,7 +95,9 @@ export const panelActions = {
   SET_PRIORITY_CLASS_NAME: 'SET_PRIORITY_CLASS_NAME',
   SET_REQUESTS: 'SET_REQUESTS',
   SET_REQUESTS_CPU: 'SET_REQUESTS_CPU',
+  SET_REQUESTS_CPU_UNIT: 'SET_REQUESTS_CPU_UNIT',
   SET_REQUESTS_MEMORY: 'SET_REQUESTS_MEMORY',
+  SET_REQUESTS_MEMORY_UNIT: 'SET_REQUESTS_MEMORY_UNIT',
   SET_TABLE_DATA: 'SET_TABLE_DATA',
   SET_TABLE_DATA_ENVIRONMENT_VARIABLES: 'SET_TABLE_DATA_ENVIRONMENT_VARIABLES',
   SET_TABLE_DATA_INPUTS: 'SET_TABLE_DATA_INPUTS',
@@ -140,11 +144,6 @@ export const panelReducer = (state, { type, payload }) => {
           ...state.currentFunctionInfo,
           labels: payload
         }
-      }
-    case panelActions.SET_CPU_UNIT:
-      return {
-        ...state,
-        cpuUnit: payload
       }
     case panelActions.SET_CURRENT_FUNCTION_INFO:
       return {
@@ -207,12 +206,28 @@ export const panelReducer = (state, { type, payload }) => {
           cpu: payload
         }
       }
+    case panelActions.SET_LIMITS_CPU_UNIT:
+      return {
+        ...state,
+        limits: {
+          ...state.limits,
+          cpuUnit: payload
+        }
+      }
     case panelActions.SET_LIMITS_MEMORY:
       return {
         ...state,
         limits: {
           ...state.limits,
           memory: payload
+        }
+      }
+    case panelActions.SET_LIMITS_MEMORY_UNIT:
+      return {
+        ...state,
+        limits: {
+          ...state.limits,
+          memoryUnit: payload
         }
       }
     case panelActions.SET_LIMITS_NVIDIA_GPU:
@@ -222,11 +237,6 @@ export const panelReducer = (state, { type, payload }) => {
           ...state.limits,
           'nvidia.com/gpu': payload
         }
-      }
-    case panelActions.SET_MEMORY_UNIT:
-      return {
-        ...state,
-        memoryUnit: payload
       }
     case panelActions.SET_OUTPUT_PATH:
       return {
@@ -387,12 +397,28 @@ export const panelReducer = (state, { type, payload }) => {
           cpu: payload
         }
       }
+    case panelActions.SET_REQUESTS_CPU_UNIT:
+      return {
+        ...state,
+        requests: {
+          ...state.requests,
+          cpuUnit: payload
+        }
+      }
     case panelActions.SET_REQUESTS_MEMORY:
       return {
         ...state,
         requests: {
           ...state.requests,
           memory: payload
+        }
+      }
+    case panelActions.SET_REQUESTS_MEMORY_UNIT:
+      return {
+        ...state,
+        requests: {
+          ...state.requests,
+          memoryUnit: payload
         }
       }
     case panelActions.SET_TABLE_DATA:

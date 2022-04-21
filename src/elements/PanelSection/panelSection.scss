@@ -1,7 +1,7 @@
 @import '../../scss/colors';
 @import '../../scss/mixins';
 
-.job-panel__section {
+.panel-section {
   @include panelSection;
 
   .panel-section__tip {
