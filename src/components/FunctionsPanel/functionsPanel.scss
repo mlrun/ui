@@ -31,6 +31,12 @@
     height: 64px;
     padding: 22px 40px;
   }
+
+  .panel-section {
+    &__body {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .hidden {

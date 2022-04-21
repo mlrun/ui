@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
 
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import Select from '../../common/Select/Select'
 import Button from '../../common/Button/Button'
 import EditorModal from '../../common/EditorModal/EditorModal'
@@ -51,7 +51,7 @@ const FunctionsPanelCodeView = ({
 }) => {
   return (
     <div className="functions-panel__item new-item-side-panel__item code">
-      <FunctionsPanelSection title="Code">
+      <PanelSection title="Code">
         <div className="code__code-entry">
           <Select
             className="type"
@@ -282,7 +282,7 @@ const FunctionsPanelCodeView = ({
             }}
           />
         )}
-      </FunctionsPanelSection>
+      </PanelSection>
     </div>
   )
 }
