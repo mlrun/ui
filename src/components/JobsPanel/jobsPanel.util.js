@@ -1,4 +1,4 @@
-import { chain, isEmpty, unionBy } from 'lodash'
+import { chain, isEmpty, isEqual, unionBy } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -261,6 +261,11 @@ export const generateTableData = (
   const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
   let parameters = []
   let dataInputs = []
+  const currentLimits = {
+    ...stateLimits,
+    ...limits
+  }
+  const currentRequests = { ...stateRequests, ...requests }
 
   if (limits?.memory?.match(/[a-zA-Z]/)) {
     panelDispatch({
@@ -310,20 +315,25 @@ export const generateTableData = (
     dataInputs = getDataInputs(functionParameters)
   }
 
-  if (limits && !isEveryObjectValueEmpty(limits)) {
+  if (
+    limits &&
+    !isEveryObjectValueEmpty(limits) &&
+    !isEqual(currentLimits, stateLimits)
+  ) {
     panelDispatch({
       type: panelActions.SET_LIMITS,
-      payload: {
-        ...stateLimits,
-        ...limits
-      }
+      payload: currentLimits
     })
   }
 
-  if (requests && !isEveryObjectValueEmpty(requests)) {
+  if (
+    requests &&
+    !isEveryObjectValueEmpty(requests) &&
+    !isEqual(currentRequests, stateRequests)
+  ) {
     panelDispatch({
       type: panelActions.SET_REQUESTS,
-      payload: { ...stateRequests, ...requests }
+      payload: currentRequests
     })
   }
 
