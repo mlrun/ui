@@ -47,7 +47,7 @@ const App = () => {
   const headerShown = window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
 
   return (
-    <div className="app">
+    <div className="ml-app">
       <Router basename={process.env.PUBLIC_URL}>
         {headerShown && <Header />}
         <Suspense fallback={<Loader />}>
