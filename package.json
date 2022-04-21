@@ -1,6 +1,6 @@
 {
-  "name": "dashboard-react",
-  "version": "0.1.0",
+  "name": "mlrun.ui",
+  "version": "1.0.0",
   "private": true,
   "homepage": "/",
   "dependencies": {
@@ -157,7 +157,8 @@
     "postcss-safe-parser": "4.0.1",
     "prettier": "^2.5.1",
     "randexp": "^0.5.3",
-    "sass-loader": "^12.3.0",
+    "sass": "^1.50.1",
+    "sass-loader": "^12.6.0",
     "selenium-webdriver": "^4.0.0-beta.2",
     "source-map-loader": "^3.0.0",
     "style-loader": "^3.3.1",
@@ -168,7 +169,7 @@
     "stylelint-scss": "^3.17.2",
     "terser-webpack-plugin": "^5.2.5",
     "url-loader": "2.1.0",
-    "webpack": "^5.64.4",
+    "webpack": "^5.72.0",
     "webpack-dev-server": "^4.6.0",
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^6.4.1"

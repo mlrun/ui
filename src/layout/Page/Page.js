@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import PageView from './PageView'
 import { fetchFrontendSpec } from '../../reducers/appReducer'
 
-const Page = ({ children }) => {
+const Page = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Page = ({ children }) => {
     return () => clearInterval(interval)
   }, [dispatch])
 
-  return <PageView>{children}</PageView>
+  return <PageView />
 }
 
 export default Page
