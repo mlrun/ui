@@ -2,22 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Select from '../../common/Select/Select'
-import RangeInput from '../../common/RangeInput/RangeInput'
 import { VolumesTable } from '../VolumesTable/VolumesTable'
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
+import PanelResourcesUnits from '../PanelResourcesUnits/PanelResourcesUnits'
 
-import {
-  generateCpuValue,
-  generateMemoryValue,
-  selectMemoryOptions,
-  volumePreemptionModeOptions
-} from '../../utils/panelResources.util'
-import {
-  LIMITS,
-  REQUESTS,
-  VOLUME_MOUNT_MANUAL_TYPE,
-  volumeMountOptions
-} from './functionsPanelResources.util'
+import { volumePreemptionModeOptions } from '../../utils/panelResources.util'
+import { VOLUME_MOUNT_MANUAL_TYPE, volumeMountOptions } from './functionsPanelResources.util'
 import { PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
 
 import './functionsPanelResources.scss'
@@ -37,15 +27,15 @@ const FunctionsPanelResourcesView = ({
   setCpuValue,
   setGpuValue,
   setMemoryValue,
-  validation,
-  validFunctionPriorityClassNames
+  validFunctionPriorityClassNames,
+  validation
 }) => {
   return (
     <div className="functions-panel__item resources new-item-side-panel__item">
-      <FunctionsPanelSection title="Resources" />
+      <PanelSection title="Resources" />
       <div className="pods">
         {validFunctionPriorityClassNames.length > 0 && (
-          <FunctionsPanelSection title="Pods priority">
+          <PanelSection title="Pods priority">
             <Select
               className="pods-priority"
               onClick={selectPodsPriorityClassName}
@@ -53,10 +43,10 @@ const FunctionsPanelResourcesView = ({
               selectedId={podsPriorityClassName}
               withSelectedIcon
             />
-          </FunctionsPanelSection>
+          </PanelSection>
         )}
         {mode === PANEL_CREATE_MODE && data.preemptionMode && (
-          <FunctionsPanelSection title="Run On Spot Nodes">
+          <PanelSection title="Run On Spot Nodes">
             <Select
               className="pods-toleration"
               options={volumePreemptionModeOptions}
@@ -64,10 +54,10 @@ const FunctionsPanelResourcesView = ({
               selectedId={data.preemptionMode}
               withSelectedIcon
             />
-          </FunctionsPanelSection>
+          </PanelSection>
         )}
       </div>
-      <FunctionsPanelSection
+      <PanelSection
         className="volumes-section"
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
@@ -83,8 +73,7 @@ const FunctionsPanelResourcesView = ({
             withSelectedIcon
           />
         )}
-        {(data.volumeMount === VOLUME_MOUNT_MANUAL_TYPE ||
-          mode === PANEL_EDIT_MODE) && (
+        {(data.volumeMount === VOLUME_MOUNT_MANUAL_TYPE || mode === PANEL_EDIT_MODE) && (
           <VolumesTable
             handleAddNewVolume={handleAddNewVolume}
             handleDelete={handleDeleteVolume}
@@ -94,91 +83,16 @@ const FunctionsPanelResourcesView = ({
             volumes={data.volumes}
           />
         )}
-      </FunctionsPanelSection>
-      <div className="resources__inputs">
-        <FunctionsPanelSection title="Memory" className="memory">
-          <Select
-            density="dense"
-            label="Unit"
-            labelAtTop
-            options={selectMemoryOptions.unitMemory}
-            onClick={value => handleSelectMemoryUnit(value)}
-            selectedId={data.memoryUnit}
-          />
-          <RangeInput
-            density="dense"
-            invalid={!validation.isMemoryRequestValid}
-            invalidText="Request must be less than or equal to Limit and not be less than 1"
-            label="Request"
-            labelType="labelAtTop"
-            min={1}
-            onChange={value =>
-              setMemoryValue(value, REQUESTS, 'isMemoryRequestValid')
-            }
-            required
-            value={generateMemoryValue(data.requests.memory)}
-          />
-          <RangeInput
-            density="dense"
-            invalid={!validation.isMemoryLimitValid}
-            invalidText="Limit must be bigger than or equal to Request and not be less than 1"
-            label="Limit"
-            labelType="labelAtTop"
-            min={1}
-            onChange={value =>
-              setMemoryValue(value, LIMITS, 'isMemoryLimitValid')
-            }
-            required
-            value={generateMemoryValue(data.limits.memory)}
-          />
-        </FunctionsPanelSection>
-        <FunctionsPanelSection title="Cpu" className="cpu">
-          <Select
-            density="dense"
-            label="Unit"
-            labelAtTop
-            options={selectMemoryOptions.unitCpu}
-            onClick={value => handleSelectCpuUnit(value)}
-            selectedId={data.cpuUnit}
-          />
-          <RangeInput
-            density="dense"
-            invalid={!validation.isCpuRequestValid}
-            invalidText="Request must be less than or equal to Limit and not be less than 1"
-            label="Request"
-            labelType="labelAtTop"
-            min={1}
-            onChange={value =>
-              setCpuValue(value, REQUESTS, 'isCpuRequestValid')
-            }
-            required
-            value={generateCpuValue(data.requests.cpu)}
-          />
-          <RangeInput
-            density="dense"
-            invalid={!validation.isCpuLimitValid}
-            invalidText="Limit must be bigger than or equal to Request and not be less than 1"
-            label="Limit"
-            labelType="labelAtTop"
-            min={1}
-            onChange={value => setCpuValue(value, LIMITS, 'isCpuLimitValid')}
-            required
-            value={generateCpuValue(data.limits.cpu)}
-          />
-        </FunctionsPanelSection>
-        <FunctionsPanelSection title="Gpu" className="section-gpu">
-          <RangeInput
-            density="dense"
-            invalid={!validation.isGpuLimitValid}
-            invalidText="The minimum value should be 1"
-            label="Limit"
-            labelType="labelAtTop"
-            min={1}
-            onChange={setGpuValue}
-            value={data.limits['nvidia.com/gpu']}
-          />
-        </FunctionsPanelSection>
-      </div>
+      </PanelSection>
+      <PanelResourcesUnits
+        data={data}
+        handleSelectCpuUnit={handleSelectCpuUnit}
+        handleSelectMemoryUnit={handleSelectMemoryUnit}
+        setCpuValue={setCpuValue}
+        setGpuValue={setGpuValue}
+        setMemoryValue={setMemoryValue}
+        validation={validation}
+      />
     </div>
   )
 }
@@ -195,12 +109,11 @@ FunctionsPanelResourcesView.propTypes = {
   mode: PropTypes.string.isRequired,
   podsPriorityClassName: PropTypes.string.isRequired,
   selectPodsPriorityClassName: PropTypes.func.isRequired,
-  setMemoryValue: PropTypes.func.isRequired,
   setCpuValue: PropTypes.func.isRequired,
   setGpuValue: PropTypes.func.isRequired,
-  validation: PropTypes.shape({}),
-  validFunctionPriorityClassNames: PropTypes.arrayOf(PropTypes.object)
-    .isRequired
+  setMemoryValue: PropTypes.func.isRequired,
+  validFunctionPriorityClassNames: PropTypes.arrayOf(PropTypes.object).isRequired,
+  validation: PropTypes.shape({})
 }
 
 export default FunctionsPanelResourcesView

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
+import PanelSection from '../../elements/PanelSection/PanelSection'
 import Input from '../../common/Input/Input'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -56,7 +56,7 @@ const JobsPanelParametersView = ({
 
   return (
     <div className="job-panel__item new-item-side-panel__item">
-      <JobsPanelSection title="Parameters">
+      <PanelSection title="Parameters">
         <JobsPanelParametersTable
           addNewItem={parametersState.addNewParameter}
           checkParameter={checkParameter}
@@ -232,7 +232,7 @@ const JobsPanelParametersView = ({
             </div>
           </div>
         </div>
-      </JobsPanelSection>
+      </PanelSection>
     </div>
   )
 }

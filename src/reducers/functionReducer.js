@@ -525,7 +525,10 @@ const functionReducer = (state = initialState, { type, payload }) => {
           ...state.newFunction,
           spec: {
             ...state.newFunction.spec,
-            resources: payload
+            resources: {
+              ...state.newFunction.spec.resources,
+              ...payload
+            }
           }
         }
       }

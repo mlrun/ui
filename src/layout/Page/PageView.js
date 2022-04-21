@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { useParams, Outlet } from 'react-router-dom'
 
-import Header from '../Header/Header'
 import Navbar from '../Navbar/Navbar'
 import Notification from '../../common/Notification/Notification'
 
@@ -36,8 +35,7 @@ export default function PageView() {
   }, [isPinned, transitionEndEventName])
 
   return (
-    <div className="app">
-      {headerShown && <Header />}
+    <>
       {projectName && (
         <Navbar
           isPinned={isPinned}
@@ -47,9 +45,11 @@ export default function PageView() {
         />
       )}
       <main id="main" className={pinnedClasses} ref={mainRef}>
-        <div id="main-wrapper"><Outlet /></div>
+        <div id="main-wrapper">
+          <Outlet />
+        </div>
       </main>
       <Notification />
-    </div>
+    </>
   )
 }

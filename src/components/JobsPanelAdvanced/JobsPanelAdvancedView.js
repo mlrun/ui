@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
+import PanelSection from '../../elements/PanelSection/PanelSection'
 import { JobsPanelAdvancedTable } from '../../elements/JobsPanelAdvancedTable/JobsPanelAdvancedTable'
 import JobsPanelEnvironmentVariables from '../../elements/JobsPanelEnvironmentVariables/JobsPanelEnvironmentVariables'
 
@@ -23,7 +23,7 @@ const JobsPanelAdvancedView = ({
 }) => {
   return (
     <div className="job-panel__item advanced new-item-side-panel__item">
-      <JobsPanelSection title="Advanced">
+      <PanelSection title="Advanced">
         <JobsPanelEnvironmentVariables
           panelDispatch={panelDispatch}
           panelEnvData={panelState.tableData.environmentVariables}
@@ -31,10 +31,10 @@ const JobsPanelAdvancedView = ({
             panelState.previousPanelData.tableData.environmentVariables
           }
         />
-      </JobsPanelSection>
+      </PanelSection>
 
       {isStagingMode && (
-        <JobsPanelSection title="Secrets">
+        <PanelSection title="Secrets">
           <JobsPanelAdvancedTable
             addNewItem={advancedState.addNewSecret}
             className="advanced secrets"
@@ -75,7 +75,7 @@ const JobsPanelAdvancedView = ({
             setValidation={setValidation}
             validation={validation}
           />
-        </JobsPanelSection>
+        </PanelSection>
       )}
     </div>
   )
