@@ -49,7 +49,7 @@ export const getSelectedMemoryOption = id =>
   selectMemoryOptions.unitMemory.find(option => option.id === id)
 
 export const generateCpuValue = (cpu = '') =>
-  cpu.toString().match(/m/) ? cpu.toString().slice(0, cpu.toString().length - 1) : parseFloat(cpu).toFixed(3)
+  cpu.toString().match(/m/) ? cpu.toString().slice(0, cpu.toString().length - 1) : cpu ? parseFloat(cpu).toFixed(3) : ''
 
 export const generateMemoryValue = (memory = '') =>
   memory.toString().match(/[a-zA-Z]/)
