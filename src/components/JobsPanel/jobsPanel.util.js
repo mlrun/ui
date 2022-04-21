@@ -1,4 +1,4 @@
-import { chain, isEmpty, unionBy } from 'lodash'
+import { chain, isEmpty, unionBy, isEqual } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -254,6 +254,20 @@ export const generateTableData = (
   const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
   let parameters = []
   let dataInputs = []
+  const currentLimits = {
+    ...stateLimits,
+    cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
+    cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
+    memory: limits?.memory ?? defaultResources.limits?.memory ?? '',
+    memoryUnit: getDefaultMemoryUnit(limits ?? {}, defaultResources?.limits.memory)
+  }
+  const currentRequest = {
+    ...stateRequests,
+    cpu: requests?.cpu ?? defaultResources.requests?.cpu ?? '',
+    cpuUnit: getDefaultCpuUnit(requests ?? {}, defaultResources?.requests.cpu),
+    memory: requests?.memory ?? defaultResources.requests?.memory ?? '',
+    memoryUnit: getDefaultMemoryUnit(requests ?? {}, defaultResources?.requests.memory)
+  }
 
   if (preemptionMode) {
     panelDispatch({
@@ -274,36 +288,19 @@ export const generateTableData = (
     dataInputs = getDataInputs(functionParameters)
   }
 
-  panelDispatch({
-    type: panelActions.SET_LIMITS,
-    payload: {
-      ...stateLimits,
-      cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
-      cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
-      memory: limits?.memory ?? defaultResources.limits?.memory ?? '',
-      memoryUnit: getDefaultMemoryUnit(
-        limits ?? {},
-        defaultResources?.limits.memory
-      )
-    }
-  })
+  if (!isEqual(stateLimits, currentLimits)) {
+    panelDispatch({
+      type: panelActions.SET_LIMITS,
+      payload: currentLimits
+    })
+  }
 
-  panelDispatch({
-    type: panelActions.SET_REQUESTS,
-    payload: {
-      ...stateRequests,
-      cpu: requests?.cpu ?? defaultResources.requests?.cpu ?? '',
-      cpuUnit: getDefaultCpuUnit(
-        requests ?? {},
-        defaultResources?.requests.cpu
-      ),
-      memory: requests?.memory ?? defaultResources.requests?.memory ?? '',
-      memoryUnit: getDefaultMemoryUnit(
-        requests ?? {},
-        defaultResources?.requests.memory
-      )
-    }
-  })
+  if (!isEqual(stateRequests, currentRequest)) {
+    panelDispatch({
+      type: panelActions.SET_REQUESTS,
+      payload: currentRequest
+    })
+  }
 
   panelDispatch({
     type: panelActions.SET_TABLE_DATA,
