@@ -15,7 +15,11 @@ const UploadDataPopup = ({ onClose, show, title }) => {
   const [formData, setFormData] = useState({
     files: {
       file: null,
-      store: null
+      store: {
+        url: '',
+        accessKey: ''
+      },
+      targetPath: ''
     },
     tabular: {
       file: null,
@@ -27,7 +31,11 @@ const UploadDataPopup = ({ onClose, show, title }) => {
   const [validation, setValidations] = useState({
     files: {
       file: true,
-      store: true
+      store: {
+        url: true,
+        accessKey: true
+      },
+      targetPath: true
     },
     tabular: {
       file: true,

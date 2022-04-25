@@ -4,7 +4,7 @@ import Input from '../../common/Input/Input'
 import RadioButtons from '../../common/RadioButtons/RadioButtons'
 import UploadFile from '../../common/UploadFile/UploadFile'
 
-import { FILES } from '../../constants'
+import { FILES, TABULAR } from '../../constants'
 
 import './UploadDataForm.scss'
 
@@ -43,17 +43,33 @@ const UploadDataForm = ({
                 <div className="upload-data-form__col">
                   {pageData.config?.type === 'file' ? (
                     <UploadFile
+                      accept={pageData.type === TABULAR ? '.parquet' : ''}
                       changeFile={file => handleFormData(`${pageData.type}.file`, file)}
                       id={`${pageData.type}-file-upload`}
                       isValid={validation[pageData.type].file}
                       file={form[pageData.type].file}
+                      multiple
                       variant="input"
                     />
-                  ) : (
+                  ) : pageData.type === FILES ? (
                     <>
-                      <Input floatingLabel label="URL address" />
+                      <Input
+                        floatingLabel
+                        label="URL address"
+                        value={form.files.store.url ?? ''}
+                        onChange={url =>
+                          handleFormData(`${pageData.type}.${pageData.config?.type}.url`, url)
+                        }
+                      />
                       <Input floatingLabel label="Access key" />
+                      <RadioButtons
+                        elements={pageData.elements}
+                        onChangeCallback={setSourceType}
+                        selectedValue={pageData.type}
+                      />
                     </>
+                  ) : (
+                    'hello'
                   )}
                 </div>
               )}
@@ -66,8 +82,9 @@ const UploadDataForm = ({
           <Input
             floatingLabel
             label="Target path"
+            onChange={target => handleFormData('files.targetPath', target)}
             tip="TBD"
-            value={project.data?.spec.artifact_path ?? frontendSpec?.default_artifact_path ?? ''}
+            value={form.files.targetPath || frontendSpec?.default_artifact_path || ''}
           />
         </div>
       )}

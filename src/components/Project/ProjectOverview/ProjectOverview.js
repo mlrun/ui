@@ -38,7 +38,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
       ...prev,
       [path.target]: {
         id: path.target,
-        isOpen: !prev[path.target].isOpen,
+        isOpen: true,
         label
       }
     }))

@@ -91,7 +91,7 @@ export const checkValidation = (path, value, setValidations, pageData) => {
       lodash
         .chain(oldState)
         .cloneDeep()
-        .set(path, value.name.includes('.parquet'))
+        .set(path, value.name.includes('.parquet') || value.type.includes('.parquet'))
         .value()
     )
   }
