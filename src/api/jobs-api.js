@@ -33,7 +33,7 @@ const generateRequestParams = filters => {
   return params
 }
 
-export default {
+const jobsApi = {
   abortJob: (project, jobId, iter) => {
     const params = {}
 
@@ -109,3 +109,5 @@ export default {
       postData
     )
 }
+
+export default jobsApi

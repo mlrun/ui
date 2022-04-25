@@ -53,7 +53,7 @@ const generateQueryParams = filter => {
   return `?filter=${encodeURI(JSON.stringify(queryParams))}`
 }
 
-export default {
+const workflowsApi = {
   getWorkflow: workflowId => {
     return mainHttpClient.get(`/pipelines/${workflowId}`)
   },
@@ -67,3 +67,5 @@ export default {
     return mainHttpClient.get(`/projects/${project}/pipelines` + queryParams)
   }
 }
+
+export default workflowsApi

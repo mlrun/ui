@@ -57,7 +57,8 @@ import {
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_FORCE_BUILD,
   SET_NEW_FUNCTION_PREEMTION_MODE,
-  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
+  STATUS_CODE_FORBIDDEN
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -73,7 +74,12 @@ const functionsActions = {
         return result
       })
       .catch(error => {
-        dispatch(functionsActions.createNewFunctionFailure(error.message))
+        const message =
+          error.response.status === STATUS_CODE_FORBIDDEN
+            ? 'You are not permitted to create new function.'
+            : error.message
+
+        dispatch(functionsActions.createNewFunctionFailure(message))
 
         throw error
       })
@@ -233,7 +239,6 @@ const functionsActions = {
         return result.data.func
       })
       .catch(error => {
-        dispatch(functionsActions.getFunctionFailure(error.message))
         throw error
       })
   },

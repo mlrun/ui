@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { forEach, isEmpty, intersectionWith } from 'lodash'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Details from '../Details/Details'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
@@ -19,13 +20,7 @@ import { getWorkflowDetailsLink } from './workflow.util'
 import functionsActions from '../../actions/functions'
 import { page } from '../Jobs/jobs.util'
 import { ACTIONS_MENU } from '../../types'
-import {
-  DEFAULT_EDGE,
-  DETAILS_OVERVIEW_TAB,
-  ML_EDGE,
-  ML_NODE,
-  PRIMARY_NODE
-} from '../../constants'
+import { DEFAULT_EDGE, DETAILS_OVERVIEW_TAB, ML_EDGE, ML_NODE, PRIMARY_NODE } from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 
 import { ReactComponent as ListView } from '../../images/listview.svg'
@@ -38,9 +33,7 @@ const Workflow = ({
   content,
   handleCancel,
   handleSelectItem,
-  history,
   itemIsSelected,
-  match,
   pageData,
   refresh,
   refreshJobs,
@@ -53,6 +46,9 @@ const Workflow = ({
 }) => {
   const [jobsContent, setJobsContent] = useState([])
   const [elements, setElements] = useState([])
+  const params = useParams()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const graphViewClassNames = classnames(
     'graph-view',
@@ -85,9 +81,7 @@ const Workflow = ({
           subType: PRIMARY_NODE,
           label: job.name,
           isSelectable: Boolean(
-            job.run_uid ||
-              ((job.run_type === 'deploy' || job.run_type === 'build') &&
-                job.function)
+            job.run_uid || ((job.run_type === 'deploy' || job.run_type === 'build') && job.function)
           ),
           sourceHandle: getWorkflowSourceHandle(job.phase),
           customData: {
@@ -98,10 +92,8 @@ const Workflow = ({
         },
         className: classnames(
           ((job.run_uid && selectedJob.uid === job.run_uid) ||
-            (job.run_type === 'deploy' &&
-              job.function.includes(selectedFunction.hash)) ||
-            (job.run_type === 'build' &&
-              job.function.includes(selectedFunction.name))) &&
+            (job.run_type === 'deploy' && job.function.includes(selectedFunction.hash)) ||
+            (job.run_type === 'build' && job.function.includes(selectedFunction.name))) &&
             'selected'
         ),
         position: { x: 0, y: 0 }
@@ -124,22 +116,11 @@ const Workflow = ({
     })
 
     setElements(getLayoutedElements(nodes.concat(edges)))
-  }, [
-    selectedFunction.hash,
-    selectedFunction.name,
-    selectedJob.uid,
-    workflow.graph
-  ])
+  }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
 
   const onElementClick = (event, element) => {
     if (element.data?.customData?.run_uid) {
-      history.push(
-        getWorkflowDetailsLink(
-          match.params,
-          null,
-          element.data.customData.run_uid
-        )
-      )
+      navigate(getWorkflowDetailsLink(params, null, element.data.customData.run_uid))
     } else if (
       (element.data?.customData?.run_type === 'deploy' ||
         element.data?.customData?.run_type === 'build') &&
@@ -151,20 +132,18 @@ const Workflow = ({
       const funcHash = element.data.customData.function.includes('@')
         ? element.data.customData.function.replace(/.*@/g, '')
         : 'latest'
-      const link = `/projects/${
-        match.params.projectName
-      }/${page.toLowerCase()}/${match.params.pageTab}/workflow/${
-        match.params.workflowId
-      }/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
+      const link = `/projects/${params.projectName}/${page.toLowerCase()}/${
+        params.pageTab
+      }/workflow/${params.workflowId}/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
 
-      history.push(link)
+      navigate(link)
     }
   }
 
   return (
     <div className="workflow-container">
       <TableTop
-        link={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`}
+        link={`/projects/${params.projectName}/jobs/${params.pageTab}`}
         text={workflow?.run?.name}
       >
         <div className="actions">
@@ -172,20 +151,14 @@ const Workflow = ({
             template={
               <TextTooltipTemplate
                 text={
-                  workflowsViewMode === 'graph'
-                    ? 'Switch to list view'
-                    : 'Switch to graph view'
+                  workflowsViewMode === 'graph' ? 'Switch to list view' : 'Switch to graph view'
                 }
               />
             }
           >
             <button
               className="toggle-view-btn"
-              onClick={() =>
-                setWorkflowsViewMode(
-                  workflowsViewMode === 'graph' ? 'list' : 'graph'
-                )
-              }
+              onClick={() => setWorkflowsViewMode(workflowsViewMode === 'graph' ? 'list' : 'graph')}
             >
               {workflowsViewMode === 'graph' ? <ListView /> : <Pipelines />}
             </button>
@@ -205,16 +178,11 @@ const Workflow = ({
                 <Details
                   actionsMenu={actionsMenu}
                   detailsMenu={pageData.details.menu}
-                  getCloseDetailsLink={() =>
-                    getCloseDetailsLink(match, 'workflowId')
-                  }
+                  getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
                   handleCancel={handleCancel}
-                  match={match}
                   pageData={pageData}
                   retryRequest={refreshJobs}
-                  selectedItem={
-                    !isEmpty(selectedFunction) ? selectedFunction : selectedJob
-                  }
+                  selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
                 />
               )}
             </div>
@@ -223,10 +191,9 @@ const Workflow = ({
           <Table
             actionsMenu={actionsMenu}
             content={jobsContent}
-            getCloseDetailsLink={() => getCloseDetailsLink(match, 'workflowId')}
+            getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
             handleCancel={handleCancel}
             handleSelectItem={handleSelectItem}
-            match={match}
             pageData={pageData}
             retryRequest={refresh}
             selectedItem={selectedJob}
@@ -249,9 +216,7 @@ Workflow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  history: PropTypes.shape({}).isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   refreshJobs: PropTypes.func.isRequired,

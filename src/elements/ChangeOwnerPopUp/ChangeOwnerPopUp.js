@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { debounce } from 'lodash'
@@ -9,22 +9,14 @@ import Input from '../../common/Input/Input'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
-import {
-  SECONDARY_BUTTON,
-  LABEL_BUTTON,
-  STATUS_CODE_FORBIDDEN
-} from '../../constants'
+import { SECONDARY_BUTTON, LABEL_BUTTON, STATUS_CODE_FORBIDDEN } from '../../constants'
 import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
 import './changeOwnerPopUp.scss'
 
-const ChangeOwnerPopUp = ({
-  changeOwnerCallback,
-  projectId,
-  setNotification
-}) => {
+const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId, setNotification }) => {
   const [searchValue, setSearchValue] = useState('')
   const [newOwnerId, setNewOwnerId] = useState('')
   const [usersList, setUsersList] = useState([])
@@ -33,8 +25,7 @@ const ChangeOwnerPopUp = ({
   const searchRowRef = useRef(null)
   useDetectOutsideClick(searchInputRef, () => setShowSuggestionList(false))
 
-  const { width: dropdownWidth } =
-    searchRowRef?.current?.getBoundingClientRect() || {}
+  const { width: dropdownWidth } = searchRowRef?.current?.getBoundingClientRect() || {}
 
   const handleOnClose = () => {
     setSearchValue('')
@@ -108,33 +99,30 @@ const ChangeOwnerPopUp = ({
     }
   }
 
-  const generateSuggestionList = useCallback(
-    debounce(async resolve => {
-      const response = await projectsIguazioApi.getScrubbedUsers({
-        params: {
-          'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
+  const generateSuggestionList = debounce(async resolve => {
+    const response = await projectsIguazioApi.getScrubbedUsers({
+      params: {
+        'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
+      }
+    })
+    const {
+      data: { data: users }
+    } = response
+
+    setUsersList(
+      users.map(user => {
+        return {
+          name: `${user.attributes.first_name} ${user.attributes.last_name}`,
+          username: user.attributes.username,
+          label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
+          id: user.id,
+          role: ''
         }
       })
-      const {
-        data: { data: users }
-      } = response
+    )
 
-      setUsersList(
-        users.map(user => {
-          return {
-            name: `${user.attributes.first_name} ${user.attributes.last_name}`,
-            username: user.attributes.username,
-            label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
-            id: user.id,
-            role: ''
-          }
-        })
-      )
-
-      resolve()
-    }, 200),
-    []
-  )
+    resolve()
+  }, 200)
 
   const onSearchChange = memberName => {
     const memberNameEscaped = deleteUnsafeHtml(memberName)
@@ -178,15 +166,10 @@ const ChangeOwnerPopUp = ({
               <div className="members-list">
                 {usersList
                   .filter(member => {
-                    return member.label
-                      .toLowerCase()
-                      .includes(searchValue.toLowerCase())
+                    return member.label.toLowerCase().includes(searchValue.toLowerCase())
                   })
                   .map(member => {
-                    const memberClassNames = classnames(
-                      'member-row',
-                      member.role && 'disabled'
-                    )
+                    const memberClassNames = classnames('member-row', member.role && 'disabled')
 
                     return (
                       <div
@@ -203,9 +186,8 @@ const ChangeOwnerPopUp = ({
                         <span
                           className="member-name"
                           dangerouslySetInnerHTML={{
-                            __html: member.label.replace(
-                              new RegExp(searchValue, 'gi'),
-                              match => (match ? `<b>${match}</b>` : match)
+                            __html: member.label.replace(new RegExp(searchValue, 'gi'), match =>
+                              match ? `<b>${match}</b>` : match
                             )
                           }}
                         />

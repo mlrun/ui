@@ -3,35 +3,55 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
-const ProjectSummaryCard = ({ counterValue, link, projectSummary, title }) => {
+const ProjectSummaryCard = ({
+  counterValue,
+  link,
+  projectSummary,
+  title,
+  tooltipText
+}) => {
   return (
     <Link to={link} className="project-data-card project-data-card_small">
-      <div className="project-data-card__header">
-        <div className="project-data-card__header-text data-ellipsis">
-          {title}
-        </div>
-        <div className="project-data-card__statistics">
-          <div className="project-data-card__statistics-item">
-            {projectSummary.loading ? (
-              <Loader section />
-            ) : (
-              <div className="project-data-card__statistics-value statistics_default">
-                {projectSummary.error ? 'N/A' : counterValue}
-              </div>
-            )}
+      <Tooltip
+        className="data-ellipsis"
+        hidden={!tooltipText}
+        template={<TextTooltipTemplate text={tooltipText} />}
+      >
+        <div className="project-data-card__header">
+          <div className="project-data-card__header-text data-ellipsis">
+            {title}
+          </div>
+          <div className="project-data-card__statistics">
+            <div className="project-data-card__statistics-item">
+              {projectSummary.loading ? (
+                <Loader section />
+              ) : (
+                <div className="project-data-card__statistics-value statistics_default">
+                  {projectSummary.error ? 'N/A' : counterValue}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </Tooltip>
     </Link>
   )
 }
 
+ProjectSummaryCard.defaultProps = {
+  tooltipText: null
+}
+
 ProjectSummaryCard.propTypes = {
-  counterValue: PropTypes.number.isRequired,
+  counterValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
   link: PropTypes.string.isRequired,
   projectSummary: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  tooltipText: PropTypes.string
 }
 
 export default ProjectSummaryCard

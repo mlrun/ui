@@ -29,7 +29,7 @@ const CreateJobPageView = ({
   handleSearchOnChange,
   handleSelectGroupFunctions,
   loading,
-  match,
+  params,
   projects,
   selectProject,
   selectedProject,
@@ -40,7 +40,7 @@ const CreateJobPageView = ({
     <div className="create-container__header">
       <div className="header-link">
         <Link
-          to={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`}
+          to={`/projects/${params.projectName}/jobs/${params.pageTab}`}
           className="header-link__icon"
         >
           <Back />
@@ -90,8 +90,7 @@ const CreateJobPageView = ({
             {loading ? (
               <Loader />
             ) : (filterByName.length > 0 &&
-                (filterMatches.length === 0 ||
-                  filteredFunctions.length === 0)) ||
+                (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
               functions.length === 0 ? (
               <NoData />
             ) : (
@@ -114,8 +113,7 @@ const CreateJobPageView = ({
           </div>
           <div className="templates-container">
             {(filterByName.length > 0 &&
-              (filterMatches.length === 0 ||
-                isEveryObjectValueEmpty(filteredTemplates))) ||
+              (filterMatches.length === 0 || isEveryObjectValueEmpty(filteredTemplates))) ||
             templates.length === 0 ? (
               <NoData />
             ) : (
@@ -132,18 +130,14 @@ const CreateJobPageView = ({
                     key={category}
                   >
                     <h6 className={`category-header ${header.className}`}>
-                      <span className="category-header__icon">
-                        {header.icon}
-                      </span>
+                      <span className="category-header__icon">{header.icon}</span>
                       {header.label}
                     </h6>
                     <div className="create-container__data-list">
                       {category[1].map((template, index) => (
                         <CreateJobCardTemplate
                           func={template}
-                          handleSelectGroupFunctions={
-                            handleSelectGroupFunctions
-                          }
+                          handleSelectGroupFunctions={handleSelectGroupFunctions}
                           key={template?.metadata.hash + index}
                         />
                       ))}
@@ -167,7 +161,7 @@ CreateJobPageView.propTypes = {
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSearchOnChange: PropTypes.func.isRequired,
   handleSelectGroupFunctions: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   projects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectProject: PropTypes.func.isRequired,
   selectedProject: PropTypes.string.isRequired,

@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty, map } from 'lodash'
 import classnames from 'classnames'
+import { useParams } from 'react-router-dom'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
@@ -16,13 +17,13 @@ const JobsTableRow = ({
   handleExpandRow,
   handleSelectItem,
   isGroupedByWorkflow,
-  match,
   rowItem,
   selectedItem,
   tableContent,
   workflows
 }) => {
   const parent = useRef()
+  const params = useParams()
 
   const rowClassNames = classnames(
     'table-body__row',
@@ -30,15 +31,13 @@ const JobsTableRow = ({
     getJobIdentifier(selectedItem, true) === rowItem.name?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
-    parent.current?.classList.value.includes('parent-row-expanded') &&
-      'parent-row-expanded'
+    parent.current?.classList.value.includes('parent-row-expanded') && 'parent-row-expanded'
   )
 
   const currentItem = isGroupedByWorkflow
     ? workflows.find(workflow => workflow.id === rowItem.uid.value)
     : content.find(
-        contentItem =>
-          getJobIdentifier(contentItem, true) === rowItem.name?.identifierUnique
+        contentItem => getJobIdentifier(contentItem, true) === rowItem.name?.identifierUnique
       )
 
   return (
@@ -80,9 +79,7 @@ const JobsTableRow = ({
               const groupCurrentItem =
                 content.length > 0 &&
                 content.find(
-                  contentItem =>
-                    getJobIdentifier(contentItem, true) ===
-                    job.name?.identifierUnique
+                  contentItem => getJobIdentifier(contentItem, true) === job.name?.identifierUnique
                 )
 
               const groupFilteredActionsMenu = actionsMenu(groupCurrentItem)
@@ -90,9 +87,7 @@ const JobsTableRow = ({
               return (
                 <div
                   className={
-                    RegExp(job.uid.value.replace('...', ''), 'gi').test(
-                      selectedItem.uid
-                    )
+                    RegExp(job.uid.value.replace('...', ''), 'gi').test(selectedItem.uid)
                       ? 'table-body__row row_active'
                       : 'table-body__row'
                   }
@@ -108,9 +103,7 @@ const JobsTableRow = ({
                               : cellContentObj
                           }
                           item={groupCurrentItem}
-                          link={cellContentObj.getLink?.(
-                            match.params.tab ?? DETAILS_OVERVIEW_TAB
-                          )}
+                          link={cellContentObj.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                           key={cellContentObj.id}
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
@@ -119,10 +112,7 @@ const JobsTableRow = ({
                     )
                   })}
                   <div className="table-body__cell action_cell">
-                    <ActionsMenu
-                      menu={groupFilteredActionsMenu}
-                      dataItem={groupCurrentItem}
-                    />
+                    <ActionsMenu menu={groupFilteredActionsMenu} dataItem={groupCurrentItem} />
                   </div>
                 </div>
               )
@@ -138,18 +128,15 @@ const JobsTableRow = ({
                   data={rowItemProp}
                   expandLink={
                     !isEmpty(tableContent) &&
-                    (match.params.pageTab !== MONITOR_WORKFLOWS_TAB ||
-                      (match.params.pageTab === MONITOR_WORKFLOWS_TAB &&
-                        match.params.workflowId))
+                    (params.pageTab !== MONITOR_WORKFLOWS_TAB ||
+                      (params.pageTab === MONITOR_WORKFLOWS_TAB && params.workflowId))
                   }
                   handleExpandRow={handleExpandRow}
                   item={currentItem}
                   key={rowItemProp.id}
                   link={
                     rowItemProp.getLink
-                      ? rowItemProp.getLink?.(
-                          match.params.tab ?? DETAILS_OVERVIEW_TAB
-                        )
+                      ? rowItemProp.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)
                       : ''
                   }
                   selectItem={handleSelectItem}
@@ -180,11 +167,9 @@ JobsTableRow.propTypes = {
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   isGroupedByWorkflow: PropTypes.bool,
-  match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.shape({})),
   workflows: PropTypes.arrayOf(PropTypes.shape({}))
 }
-
 export default JobsTableRow

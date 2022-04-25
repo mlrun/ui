@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { isEqual, isEmpty } from 'lodash'
 
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
@@ -42,6 +41,7 @@ import { useMode } from '../../hooks/mode.hook'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 const Functions = ({
   deleteFunction,
@@ -49,8 +49,6 @@ const Functions = ({
   fetchFunctions,
   filtersStore,
   functionsStore,
-  history,
-  match,
   removeFunctionLogs,
   removeFunctionsError,
   removeNewFunction,
@@ -65,23 +63,21 @@ const Functions = ({
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   let fetchFunctionLogsTimeout = useRef(null)
   const { isStagingMode } = useMode()
+  const params = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const refreshFunctions = useCallback(
     filters => {
-      return fetchFunctions(match.params.projectName, filters).then(
-        functions => {
-          const newFunctions = parseFunctions(
-            functions,
-            match.params.projectName
-          )
+      return fetchFunctions(params.projectName, filters).then(functions => {
+        const newFunctions = parseFunctions(functions, params.projectName)
 
-          setFunctions(newFunctions)
+        setFunctions(newFunctions)
 
-          return newFunctions
-        }
-      )
+        return newFunctions
+      })
     },
-    [fetchFunctions, match.params.projectName]
+    [fetchFunctions, params.projectName]
   )
 
   const handleFetchFunctionLogs = useCallback(
@@ -93,11 +89,11 @@ const Functions = ({
         name,
         tag,
         offset,
-        history,
+        navigate,
         refreshFunctions
       )
     },
-    [fetchFunctionLogs, history, refreshFunctions]
+    [fetchFunctionLogs, navigate, refreshFunctions]
   )
 
   const handleRemoveLogs = useCallback(() => {
@@ -110,13 +106,13 @@ const Functions = ({
       return (
         <NewFunctionPopUp
           action={action}
-          currentProject={match.params.projectName}
+          currentProject={params.projectName}
           isCustomPosition
           setFunctionsPanelIsOpen={setFunctionsPanelIsOpen}
         />
       )
     },
-    [match.params.projectName]
+    [params.projectName]
   )
 
   const pageData = {
@@ -170,48 +166,41 @@ const Functions = ({
       setSelectedFunction({})
       setFunctions([])
     }
-  }, [history, match.params.projectName, refreshFunctions])
+  }, [params.projectName, refreshFunctions])
 
   useEffect(() => {
     setTaggedFunctions(
-      !filtersStore.showUntagged
-        ? functions.filter(func => func.tag.length)
-        : functions
+      !filtersStore.showUntagged ? functions.filter(func => func.tag.length) : functions
     )
   }, [filtersStore.showUntagged, functions])
 
   useEffect(() => {
-    if (match.params.hash && pageData.details.menu.length > 0) {
-      isDetailsTabExists(FUNCTIONS_PAGE, match, pageData.details.menu, history)
+    if (params.hash && pageData.details.menu.length > 0) {
+      isDetailsTabExists(FUNCTIONS_PAGE, params, pageData.details.menu, navigate, location)
     }
-  }, [history, match, pageData.details.menu])
+  }, [navigate, params, pageData.details.menu, location])
 
   useEffect(() => {
     let item = {}
 
-    if (match.params.hash && functions.length > 0) {
-      const funcTagIndex = match.params.hash.indexOf(':')
+    if (params.hash && functions.length > 0) {
+      const funcTagIndex = params.hash.indexOf(':')
 
       item = functions.find(func => {
         if (funcTagIndex > 0) {
-          return isEqual(func.tag, match.params.hash.slice(funcTagIndex + 1))
+          return isEqual(func.tag, params.hash.slice(funcTagIndex + 1))
         } else {
-          return isEqual(
-            func.hash,
-            match.params.hash.slice(match.params.hash.indexOf('@') + 1)
-          )
+          return isEqual(func.hash, params.hash.slice(params.hash.indexOf('@') + 1))
         }
       })
 
       if (!item || Object.keys(item).length === 0) {
-        return history.replace(
-          `/projects/${match.params.projectName}/functions`
-        )
+        return navigate(`/projects/${params.projectName}/functions`, { replace: true })
       }
     }
 
     setSelectedFunction(item)
-  }, [functions, history, match.params.hash, match.params.projectName])
+  }, [functions, navigate, params.hash, params.projectName])
 
   const filtersChangeCallback = filters => {
     if (
@@ -219,7 +208,7 @@ const Functions = ({
       filters.showUntagged !== filtersStore.showUntagged &&
       selectedFunction.hash
     ) {
-      history.push(`/projects/${match.params.projectName}/functions`)
+      navigate(`/projects/${params.projectName}/functions`)
     } else if (filters.showUntagged === filtersStore.showUntagged) {
       refreshFunctions(filters)
     }
@@ -238,11 +227,11 @@ const Functions = ({
   }
 
   const removeFunction = func => {
-    deleteFunction(func.name, match.params.projectName)
+    deleteFunction(func.name, params.projectName)
       .then(() => {
         if (!isEmpty(selectedFunction)) {
           setSelectedFunction({})
-          history.replace(`/projects/${match.params.projectName}/functions`)
+          navigate(`/projects/${params.projectName}/functions`, { replace: true })
         }
 
         setNotification({
@@ -313,13 +302,9 @@ const Functions = ({
     removeNewFunction()
 
     return refreshFunctions().then(functions => {
-      const currentItem = functions.find(
-        func => func.name === name && func.tag === tag
-      )
+      const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-      history.push(
-        `/projects/${match.params.projectName}/functions/${currentItem.hash}/${tab}`
-      )
+      navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}`)
       setNotification({
         status: 200,
         id: Math.random(),
@@ -335,13 +320,9 @@ const Functions = ({
     removeNewFunction()
 
     return refreshFunctions().then(functions => {
-      const currentItem = functions.find(
-        func => func.name === name && func.tag === tag
-      )
+      const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-      history.push(
-        `/projects/${match.params.projectName}/functions/${currentItem.hash}/overview`
-      )
+      navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
       setNotification({
         status: 400,
         id: Math.random(),
@@ -376,7 +357,6 @@ const Functions = ({
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
-        match={match}
         pageData={pageData}
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
@@ -393,13 +373,11 @@ const Functions = ({
             tag: editableItem.tag,
             functions: functionsStore.functions.filter(
               func =>
-                func.metadata.name === editableItem.name &&
-                func.metadata.hash === editableItem.hash
+                func.metadata.name === editableItem.name && func.metadata.hash === editableItem.hash
             )
           }}
-          match={match}
           mode={PANEL_EDIT_MODE}
-          project={match.params.projectName}
+          project={params.projectName}
           redirectToDetailsPane
         />
       )}
@@ -410,25 +388,16 @@ const Functions = ({
           defaultData={editableItem}
           handleDeployFunctionFailure={handleDeployFunctionFailure}
           handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-          match={match}
           mode={editableItem ? PANEL_EDIT_MODE : PANEL_CREATE_MODE}
-          project={match.params.projectName}
+          project={params.projectName}
         />
       )}
     </div>
   )
 }
 
-Functions.propTypes = {
-  history: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired
-}
-
-export default connect(
-  ({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }),
-  {
-    ...functionsActions,
-    ...notificationActions,
-    ...jobsActions
-  }
-)(React.memo(Functions))
+export default connect(({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }), {
+  ...functionsActions,
+  ...notificationActions,
+  ...jobsActions
+})(React.memo(Functions))

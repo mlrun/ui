@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -10,14 +10,8 @@ import AddToFeatureVectorPageHeader from '../../elements/AddToFeatureVectorPageH
 import featureStoreActions from '../../actions/featureStore'
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
-import {
-  generatePageData,
-  pageDataInitialState
-} from './addToFeatureVectorPage.util'
-import {
-  getFeatureIdentifier,
-  getIdentifierMethod
-} from '../../utils/getUniqueIdentifier'
+import { generatePageData, pageDataInitialState } from './addToFeatureVectorPage.util'
+import { getFeatureIdentifier, getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 import {
   FEATURES_TAB,
   GROUP_BY_NAME,
@@ -26,8 +20,8 @@ import {
   TAG_FILTER_LATEST
 } from '../../constants'
 import { parseFeatures } from '../../utils/parseFeatures'
-import tableActions from '../../actions/table'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { setTablePanelOpen } from '../../reducers/tableReducer'
 
 const AddToFeatureVectorPage = ({
   createNewFeatureVector,
@@ -37,23 +31,22 @@ const AddToFeatureVectorPage = ({
   filtersStore,
   fetchFeatureSetsTags,
   getFilterTagOptions,
-  history,
-  match,
   removeDataSet,
   removeFeature,
   removeFeatures,
   setFilters,
-  setNotification,
-  setTablePanelOpen,
-  tableStore
+  setNotification
 }) => {
   const [content, setContent] = useState([])
   const [pageData, setPageData] = useState(pageDataInitialState)
   const addToFeatureVectorPageRef = useRef(null)
+  const params = useParams()
+  const navigate = useNavigate()
+  const tableStore = useSelector(store => store.tableStore)
+  const dispatch = useDispatch()
 
   const cancelRequest = message => {
-    addToFeatureVectorPageRef.current?.cancel &&
-      addToFeatureVectorPageRef.current.cancel(message)
+    addToFeatureVectorPageRef.current?.cancel && addToFeatureVectorPageRef.current.cancel(message)
   }
 
   const fetchData = useCallback(
@@ -91,11 +84,7 @@ const AddToFeatureVectorPage = ({
         selectedRowData: newPageDataSelectedRowData
       }))
     },
-    [
-      featureStore.features.selectedRowData.content,
-      pageData.selectedRowData,
-      removeFeature
-    ]
+    [featureStore.features.selectedRowData.content, pageData.selectedRowData, removeFeature]
   )
 
   const handleRequestOnExpand = useCallback(
@@ -112,11 +101,7 @@ const AddToFeatureVectorPage = ({
         }
       }))
 
-      fetchFeature(
-        feature.metadata.project,
-        feature.name,
-        feature.metadata.name
-      )
+      fetchFeature(feature.metadata.project, feature.name, feature.metadata.name)
         .then(result => {
           if (result?.length > 0) {
             setPageData(state => ({
@@ -150,15 +135,13 @@ const AddToFeatureVectorPage = ({
   )
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
-    history.push(
-      `/projects/${match.params.projectName}/feature-store/feature-vectors`
-    )
-  }, [history, match.params.projectName])
+    navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
+  }, [navigate, params.projectName])
 
   const handleCancelCreateFeatureVector = useCallback(() => {
-    setTablePanelOpen(false)
+    dispatch(setTablePanelOpen(false))
     navigateToFeatureVectorsScreen()
-  }, [navigateToFeatureVectorsScreen, setTablePanelOpen])
+  }, [dispatch, navigateToFeatureVectorsScreen])
 
   const handleCreateFeatureVector = useCallback(
     featureVector => {
@@ -169,7 +152,7 @@ const AddToFeatureVectorPage = ({
             id: Math.random(),
             message: 'Feature vector created successfully'
           })
-          setTablePanelOpen(false)
+          dispatch(setTablePanelOpen(false))
           navigateToFeatureVectorsScreen()
         })
         .catch(error => {
@@ -184,17 +167,12 @@ const AddToFeatureVectorPage = ({
           })
 
           if (error.response.status === STATUS_CODE_FORBIDDEN) {
-            setTablePanelOpen(false)
+            dispatch(setTablePanelOpen(false))
             navigateToFeatureVectorsScreen()
           }
         })
     },
-    [
-      createNewFeatureVector,
-      navigateToFeatureVectorsScreen,
-      setNotification,
-      setTablePanelOpen
-    ]
+    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen, setNotification]
   )
 
   useEffect(() => {
@@ -207,7 +185,7 @@ const AddToFeatureVectorPage = ({
   useEffect(() => {
     fetchData({
       tag: TAG_FILTER_LATEST,
-      project: match.params.projectName
+      project: params.projectName
     })
 
     return () => {
@@ -216,7 +194,7 @@ const AddToFeatureVectorPage = ({
       setPageData(pageDataInitialState)
       cancelRequest('cancel')
     }
-  }, [fetchData, match.params.projectName, removeFeatures])
+  }, [fetchData, params.projectName, removeFeatures])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_LATEST) {
@@ -224,7 +202,7 @@ const AddToFeatureVectorPage = ({
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [filtersStore.groupBy, filtersStore.tag, match.params.pageTab, setFilters])
+  }, [filtersStore.groupBy, filtersStore.tag, params.pageTab, setFilters])
 
   useEffect(() => {
     setPageData(state => {
@@ -251,13 +229,13 @@ const AddToFeatureVectorPage = ({
 
   useEffect(() => {
     if (filtersStore.tagOptions.length === 0) {
-      getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
+      getFilterTagOptions(fetchFeatureSetsTags, params.projectName)
     }
   }, [
     fetchFeatureSetsTags,
     filtersStore.tagOptions.length,
     getFilterTagOptions,
-    match.params.projectName
+    params.projectName
   ])
 
   useEffect(() => {
@@ -269,26 +247,17 @@ const AddToFeatureVectorPage = ({
         message: 'Please, create a feature vector first'
       })
     } else {
-      setTablePanelOpen(true)
+      dispatch(setTablePanelOpen(true))
     }
-  }, [
-    navigateToFeatureVectorsScreen,
-    setNotification,
-    setTablePanelOpen,
-    tableStore.features.featureVector
-  ])
+  }, [dispatch, navigateToFeatureVectorsScreen, setNotification, tableStore.features.featureVector])
 
   return (
-    <div
-      ref={addToFeatureVectorPageRef}
-      className="add-to-feature-vector content-wrapper"
-    >
+    <div ref={addToFeatureVectorPageRef} className="add-to-feature-vector content-wrapper">
       {(featureStore.loading || featureStore.features.loading) && <Loader />}
       <Content
         content={content}
-        header={<AddToFeatureVectorPageHeader match={match} />}
+        header={<AddToFeatureVectorPageHeader params={params} />}
         loading={featureStore.loading || featureStore.features.loading}
-        match={match}
         pageData={pageData}
         refresh={fetchData}
         getIdentifier={getIdentifierMethod(FEATURES_TAB)}
@@ -297,13 +266,8 @@ const AddToFeatureVectorPage = ({
   )
 }
 
-AddToFeatureVectorPage.propTypes = {
-  match: PropTypes.shape({}).isRequired
-}
-
 export default connect(
-  ({ tableStore, filtersStore, featureStore }) => ({
-    tableStore,
+  ({ filtersStore, featureStore }) => ({
     filtersStore,
     featureStore
   }),
@@ -311,7 +275,6 @@ export default connect(
     ...featureStoreActions,
     ...notificationActions,
     ...filtersActions,
-    ...tableActions,
     ...notificationActions
   }
 )(AddToFeatureVectorPage)

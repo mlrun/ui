@@ -6,6 +6,10 @@
   &__container {
     position: relative;
     display: none;
+
+    &-active {
+      display: block;
+    }
   }
 
   &__body {

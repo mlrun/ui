@@ -1,8 +1,12 @@
-import { chain, isEmpty, unionBy } from 'lodash'
+import { chain, isEmpty, unionBy, isEqual } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { getVolumeType } from '../../utils/panelResources.util'
+import {
+  getDefaultCpuUnit,
+  getDefaultMemoryUnit,
+  getVolumeType
+} from '../../utils/panelResources.util'
 import {
   JOB_DEFAULT_OUTPUT_PATH,
   PANEL_DEFAULT_ACCESS_KEY,
@@ -11,9 +15,6 @@ import {
 } from '../../constants'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
-
-export const REQUESTS = 'REQUESTS'
-export const LIMITS = 'LIMITS'
 
 export const getParameters = functionParameters => {
   return functionParameters
@@ -78,15 +79,11 @@ export const getFunctionPriorityClass = selectedFunction => {
     .value()
 }
 
-export const getLimits = (selectedFunction, defaultLimits) => {
+export const getLimits = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.resources?.limits
-        ? func.spec.resources?.limits
-        : !isEveryObjectValueEmpty(defaultLimits)
-        ? defaultLimits
-        : {}
+      return func.spec.resources?.limits ? func.spec.resources?.limits : {}
     })
     .filter(limits => !isEveryObjectValueEmpty(limits))
     .flatten()
@@ -94,15 +91,11 @@ export const getLimits = (selectedFunction, defaultLimits) => {
     .value()
 }
 
-export const getRequests = (selectedFunction, defaultRequests) => {
+export const getRequests = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.resources?.requests
-        ? func.spec.resources.requests
-        : !isEveryObjectValueEmpty(defaultRequests)
-        ? defaultRequests
-        : {}
+      return func.spec.resources?.requests ? func.spec.resources.requests : {}
     })
     .filter(request => !isEveryObjectValueEmpty(request))
     .flatten()
@@ -249,46 +242,31 @@ export const generateTableData = (
   const defaultResources = frontendSpec?.default_function_pod_resources
   const functionParameters = getFunctionParameters(selectedFunction, method)
   const [functionPriorityClassName] = getFunctionPriorityClass(selectedFunction)
-  const [limits] = getLimits(selectedFunction, defaultResources?.limits)
-  const [requests] = getRequests(selectedFunction, defaultResources?.requests)
+  const [limits] = getLimits(selectedFunction)
+  const [requests] = getRequests(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const [preemptionMode] = getPreemptionMode(selectedFunction)
   const jobPriorityClassName =
-    functionPriorityClassName ??
+    functionPriorityClassName ||
     frontendSpec.default_function_priority_class_name
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
   const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
   let parameters = []
   let dataInputs = []
-
-  if (limits?.memory?.match(/[a-zA-Z]/)) {
-    panelDispatch({
-      type: panelActions.SET_MEMORY_UNIT,
-      payload: `${limits.memory.replace(/\d+/g, '')}B`
-    })
-  } else if (requests?.memory?.match(/[a-zA-Z]/)) {
-    panelDispatch({
-      type: panelActions.SET_MEMORY_UNIT,
-      payload: `${requests.memory.replace(/\d+/g, '')}B`
-    })
-  } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
-    panelDispatch({
-      type: panelActions.SET_MEMORY_UNIT,
-      payload: 'Bytes'
-    })
+  const currentLimits = {
+    ...stateLimits,
+    cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
+    cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
+    memory: limits?.memory ?? defaultResources.limits?.memory ?? '',
+    memoryUnit: getDefaultMemoryUnit(limits ?? {}, defaultResources?.limits.memory)
   }
-
-  if (limits?.cpu?.match?.(/m/) || requests?.cpu?.match?.(/m/)) {
-    panelDispatch({
-      type: panelActions.SET_CPU_UNIT,
-      payload: 'millicpu'
-    })
-  } else if (limits?.cpu?.length > 0 || requests?.cpu?.length > 0) {
-    panelDispatch({
-      type: panelActions.SET_CPU_UNIT,
-      payload: 'cpu'
-    })
+  const currentRequest = {
+    ...stateRequests,
+    cpu: requests?.cpu ?? defaultResources.requests?.cpu ?? '',
+    cpuUnit: getDefaultCpuUnit(requests ?? {}, defaultResources?.requests.cpu),
+    memory: requests?.memory ?? defaultResources.requests?.memory ?? '',
+    memoryUnit: getDefaultMemoryUnit(requests ?? {}, defaultResources?.requests.memory)
   }
 
   if (preemptionMode) {
@@ -310,20 +288,17 @@ export const generateTableData = (
     dataInputs = getDataInputs(functionParameters)
   }
 
-  if (limits && !isEveryObjectValueEmpty(limits)) {
+  if (!isEqual(stateLimits, currentLimits)) {
     panelDispatch({
       type: panelActions.SET_LIMITS,
-      payload: {
-        ...stateLimits,
-        ...limits
-      }
+      payload: currentLimits
     })
   }
 
-  if (requests && !isEveryObjectValueEmpty(requests)) {
+  if (!isEqual(stateRequests, currentRequest)) {
     panelDispatch({
       type: panelActions.SET_REQUESTS,
-      payload: { ...stateRequests, ...requests }
+      payload: currentRequest
     })
   }
 
@@ -428,13 +403,9 @@ export const generateTableDataFromDefaultData = (
   const dataInputs = generateDefaultDataInputs(
     Object.entries(defaultData.task.spec.inputs ?? {})
   )
-  const { limits, requests } = defaultData.function?.spec.resources
-    ? defaultData.function?.spec.resources
-    : !(
-        isEveryObjectValueEmpty(defaultResources.limits) &&
-        isEveryObjectValueEmpty(defaultResources.requests)
-      )
-    ? defaultResources
+  const funcSpec = defaultData.function?.spec
+  const { limits, requests } = funcSpec.resources
+    ? funcSpec.resources
     : {
         limits: {},
         requests: {}
@@ -455,35 +426,6 @@ export const generateTableDataFromDefaultData = (
       }
     }
   )
-
-  if (limits?.memory?.match(/[a-zA-Z]/)) {
-    panelDispatch({
-      type: panelActions.SET_MEMORY_UNIT,
-      payload: `${limits.memory.replace(/\d+/g, '')}B`
-    })
-  } else if (requests?.memory?.match(/[a-zA-Z]/)) {
-    panelDispatch({
-      type: panelActions.SET_MEMORY_UNIT,
-      payload: `${requests.memory.replace(/\d+/g, '')}B`
-    })
-  } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
-    panelDispatch({
-      type: panelActions.SET_MEMORY_UNIT,
-      payload: 'Bytes'
-    })
-  }
-
-  if (limits?.cpu?.match?.(/m/) || requests?.cpu?.match?.(/m/)) {
-    panelDispatch({
-      type: panelActions.SET_CPU_UNIT,
-      payload: 'millicpu'
-    })
-  } else if (limits?.cpu?.length > 0 || requests?.cpu?.length > 0) {
-    panelDispatch({
-      type: panelActions.SET_CPU_UNIT,
-      payload: 'cpu'
-    })
-  }
 
   panelDispatch({
     type: panelActions.SET_TABLE_DATA,
@@ -536,25 +478,36 @@ export const generateTableDataFromDefaultData = (
     priority_class_name: defaultData.function?.spec.priority_class_name ?? ''
   })
 
-  if (limits) {
-    panelDispatch({
-      type: panelActions.SET_LIMITS,
-      payload: {
-        ...panelLimits,
-        ...limits
-      }
-    })
-  }
+  panelDispatch({
+    type: panelActions.SET_LIMITS,
+    payload: {
+      ...panelLimits,
+      cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
+      cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
+      memory: limits?.memory ?? defaultResources.limits?.memory ?? '',
+      memoryUnit: getDefaultMemoryUnit(
+        limits ?? {},
+        defaultResources?.limits.memory
+      )
+    }
+  })
 
-  if (requests) {
-    panelDispatch({
-      type: panelActions.SET_REQUESTS,
-      payload: {
-        ...panelRequests,
-        ...requests
-      }
-    })
-  }
+  panelDispatch({
+    type: panelActions.SET_REQUESTS,
+    payload: {
+      ...panelRequests,
+      cpu: requests?.cpu ?? defaultResources.requests?.cpu ?? '',
+      cpuUnit: getDefaultCpuUnit(
+        requests ?? {},
+        defaultResources?.requests.cpu
+      ),
+      memory: requests?.memory ?? defaultResources.requests?.memory ?? '',
+      memoryUnit: getDefaultMemoryUnit(
+        requests ?? {},
+        defaultResources?.requests.memory
+      )
+    }
+  })
 
   if (defaultData.function?.spec.priority_class_name) {
     panelDispatch({
@@ -572,7 +525,7 @@ export const generateRequestData = (
   panelState,
   project,
   labels,
-  match,
+  params,
   selectedFunction,
   isFunctionTemplate,
   defaultFunc,
@@ -582,7 +535,7 @@ export const generateRequestData = (
   const func = isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
     : defaultFunc ??
-      `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+      `${params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
   const resources = {
     limits: {},
     requests: {}
@@ -590,7 +543,7 @@ export const generateRequestData = (
 
   if (!isEveryObjectValueEmpty(panelState.limits)) {
     for (let key in panelState.limits) {
-      if (panelState.limits[key].length > 0) {
+      if (panelState.limits[key]?.length > 0 && !['cpuUnit', 'memoryUnit'].includes(key)) {
         resources.limits[key] = panelState.limits[key]
       }
     }
@@ -598,7 +551,7 @@ export const generateRequestData = (
 
   if (!isEveryObjectValueEmpty(panelState.requests)) {
     for (let key in panelState.requests) {
-      if (panelState.requests[key].length > 0) {
+      if (panelState.requests[key]?.length > 0 && !['cpuUnit', 'memoryUnit'].includes(key)) {
         resources.requests[key] = panelState.requests[key]
       }
     }

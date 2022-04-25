@@ -155,21 +155,6 @@
     }
   }
 
-  &-actions {
-    height: 0;
-    max-height: 256px;
-    transition: height 0.5s ease-in-out;
-
-    &[aria-expanded='true'] {
-      height: 152px;
-    }
-
-    &__item {
-      flex: 1 0 0;
-      max-width: 28%;
-    }
-  }
-
   .link {
     font-size: 0.75rem;
   }

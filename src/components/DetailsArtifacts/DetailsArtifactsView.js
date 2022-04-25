@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
@@ -19,12 +19,13 @@ const DetailsArtifactsView = ({
   artifactsIndexes,
   content,
   iteration,
-  match,
   noData,
   preview,
   showArtifact,
   showPreview
 }) => {
+  const params = useParams()
+
   return (
     <div className="item-artifacts">
       {content.length === 0 ? (
@@ -32,15 +33,12 @@ const DetailsArtifactsView = ({
       ) : (
         content.map((artifact, index) => {
           const artifactScreenLinks = {
-            model: `/projects/${
-              match.params.projectName
-            }/models/${MODELS_TAB}/${artifact.db_key ||
-              artifact.key}/${artifact.tag ??
-              TAG_FILTER_LATEST}/${iteration}/overview`,
-            dataset: `/projects/${
-              match.params.projectName
-            }/${DATASETS}/${artifact.db_key || artifact.key}/${artifact.tag ??
-              TAG_FILTER_LATEST}/${iteration}/overview`
+            model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
+              artifact.db_key || artifact.key
+            }/${artifact.tag ?? TAG_FILTER_LATEST}/${iteration}/overview`,
+            dataset: `/projects/${params.projectName}/${DATASETS}/${
+              artifact.db_key || artifact.key
+            }/${artifact.tag ?? TAG_FILTER_LATEST}/${iteration}/overview`
           }
 
           return (
@@ -57,41 +55,29 @@ const DetailsArtifactsView = ({
                   </Tooltip>
                 </div>
                 <div className="item-artifacts__row-item item-artifacts__row-item_long">
-                  <Tooltip
-                    template={
-                      <TextTooltipTemplate text={artifact.target_path} />
-                    }
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={artifact.target_path} />}>
                     {artifact.target_path}
                   </Tooltip>
                 </div>
                 <div className="item-artifacts__row-item">
-                  <Tooltip
-                    template={<TextTooltipTemplate text={artifact.size} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={artifact.size} />}>
                     size: {artifact.size}
                   </Tooltip>
                 </div>
                 <div className="item-artifacts__row-item">
-                  <Tooltip
-                    template={<TextTooltipTemplate text={artifact.date} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={artifact.date} />}>
                     {artifact.date}
                   </Tooltip>
                 </div>
                 <div className="item-artifacts__row-item item-artifacts__row-item_short">
-                  <Tooltip
-                    template={<TextTooltipTemplate text="Show Details" />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text="Show Details" />}>
                     <Link
                       target="_blank"
                       to={
                         artifactScreenLinks[artifact.kind] ??
-                        `/projects/${
-                          match.params.projectName
-                        }/files/${artifact.db_key ||
-                          artifact.key}/${artifact.tag ??
-                          TAG_FILTER_LATEST}/${iteration}/overview`
+                        `/projects/${params.projectName}/files/${
+                          artifact.db_key || artifact.key
+                        }/${artifact.tag ?? TAG_FILTER_LATEST}/${iteration}/overview`
                       }
                     >
                       <DetailsIcon />
@@ -118,10 +104,7 @@ const DetailsArtifactsView = ({
                       }}
                     />
                   </Tooltip>
-                  <ArtifactsPreview
-                    noData={noData}
-                    preview={preview[index] || []}
-                  />
+                  <ArtifactsPreview noData={noData} preview={preview[index] || []} />
                 </div>
               )}
             </div>
@@ -136,7 +119,6 @@ DetailsArtifactsView.propTypes = {
   artifactsIndexes: PropTypes.array.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   iteration: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   noData: PropTypes.bool.isRequired,
   preview: PropTypes.shape({}).isRequired,
   showArtifact: PropTypes.func.isRequired,

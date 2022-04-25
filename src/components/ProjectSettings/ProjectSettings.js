@@ -1,13 +1,6 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState
-} from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import ProjectSettingsGeneral from '../../elements/ProjectSettingsGeneral/ProjectSettingsGeneral'
 import ProjectSettingsMembers from '../../elements/ProjectSettingsMembers/ProjectSettingsMembers'
@@ -17,10 +10,7 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 
 import notificationActions from '../../actions/notification'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import {
-  PROJECTS_SETTINGS_MEMBERS_TAB,
-  PROJECTS_SETTINGS_SECRETS_TAB
-} from '../../constants'
+import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
 import { generateMembers, page, tabs, validTabs } from './projectSettings.util'
 import { isProjectValid } from '../../utils/handleRedirect'
 import {
@@ -31,20 +21,13 @@ import {
 
 import './projectSettings.scss'
 
-const ProjectSettings = ({
-  frontendSpec,
-  match,
-  projectStore,
-  setNotification
-}) => {
+const ProjectSettings = ({ frontendSpec, projectStore, setNotification }) => {
   const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
   const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
+  const [membersState, membersDispatch] = useReducer(membersReducer, initialMembersState)
   const location = useLocation()
-  const history = useHistory()
-  const [membersState, membersDispatch] = useReducer(
-    membersReducer,
-    initialMembersState
-  )
+  const navigate = useNavigate()
+  const params = useParams()
 
   const projectMembershipIsEnabled = useMemo(
     () => frontendSpec?.feature_flags?.project_membership === 'enabled',
@@ -54,22 +37,16 @@ const ProjectSettings = ({
   const fetchProjectIdAndOwner = useCallback(() => {
     return projectsIguazioApi
       .getProjects({
-        params: { 'filter[name]': match.params.projectName, include: 'owner' }
+        params: { 'filter[name]': params.projectName, include: 'owner' }
       })
       .then(projects => {
         const currentProjectInfo = projects.data
         const currentProjectData = currentProjectInfo.data?.[0]
         const projectId = currentProjectData?.id
         const ownerId = currentProjectData?.relationships?.owner?.data?.id ?? ''
-        const ownerInfo = currentProjectInfo?.included.find(
-          data => data.id === ownerId
-        )
+        const ownerInfo = currentProjectInfo?.included.find(data => data.id === ownerId)
         const {
-          attributes: {
-            username = '',
-            first_name: firstName = '',
-            last_name: lastName = ''
-          } = {}
+          attributes: { username = '', first_name: firstName = '', last_name: lastName = '' } = {}
         } = ownerInfo ?? {}
 
         membersDispatch({
@@ -82,15 +59,13 @@ const ProjectSettings = ({
 
         return projectId
       })
-  }, [match.params.projectName])
+  }, [params.projectName])
 
   const fetchProjectMembers = useCallback(
     projectId => {
       return projectsIguazioApi
         .getProjectMembers(projectId)
-        .then(membersResponse =>
-          generateMembers(membersResponse, membersDispatch)
-        )
+        .then(membersResponse => generateMembers(membersResponse, membersDispatch))
         .catch(() =>
           setNotification({
             status: 400,
@@ -124,8 +99,8 @@ const ProjectSettings = ({
 
   const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
-      fetchProjectMembersVisibility(match.params.projectName)
-      fetchProjectOwnerVisibility(match.params.projectName)
+      fetchProjectMembersVisibility(params.projectName)
+      fetchProjectOwnerVisibility(params.projectName)
       fetchProjectIdAndOwner()
         .then(fetchProjectMembers)
         .finally(() =>
@@ -134,12 +109,7 @@ const ProjectSettings = ({
           })
         )
     }
-  }, [
-    fetchProjectIdAndOwner,
-    fetchProjectMembers,
-    match.params.projectName,
-    projectMembershipIsEnabled
-  ])
+  }, [fetchProjectIdAndOwner, fetchProjectMembers, params.projectName, projectMembershipIsEnabled])
 
   const changeMembersCallback = () => {
     fetchProjectMembers(membersState.projectInfo.id)
@@ -150,7 +120,7 @@ const ProjectSettings = ({
 
     fetchProjectIdAndOwner().then(() => {
       if (!membersState.members.some(member => member.id === prevOwner)) {
-        history.push('/projects/')
+        navigate('/projects/')
       }
     })
   }
@@ -173,52 +143,41 @@ const ProjectSettings = ({
   }, [fetchProjectUsersData, resetProjectData])
 
   useEffect(() => {
-    isProjectValid(
-      history,
-      projectStore.projectsNames.data,
-      match.params.projectName
-    )
-  }, [history, match.params.projectName, projectStore.projectsNames.data])
+    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
+  }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
-    if (!validTabs.includes(match.params.pageTab)) {
-      history.push(`/projects/${match.params.projectName}/settings/general`)
+    if (!validTabs.includes(params.pageTab)) {
+      navigate(`/projects/${params.projectName}/settings/general`)
     }
-  }, [history, match.params.pageTab, match.params.projectName])
+  }, [navigate, params.pageTab, params.projectName])
 
   return (
     <div className="settings">
       <div className="settings__header">
-        <Breadcrumbs match={match} />
+        <Breadcrumbs />
       </div>
       <div className="settings__content">
         <ContentMenu
-          activeTab={match.params.pageTab}
+          activeTab={params.pageTab}
           location={location}
-          match={match}
           screen={page}
           tabs={tabs(projectMembershipIsEnabled)}
         />
-        {match.params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB &&
-        projectMembershipIsEnabled ? (
+        {params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB && projectMembershipIsEnabled ? (
           <ProjectSettingsMembers
             changeMembersCallback={changeMembersCallback}
             loading={membersState.loading}
-            match={match}
             membersState={membersState}
             membersDispatch={membersDispatch}
             projectMembersIsShown={projectMembersIsShown}
             setNotification={setNotification}
           />
-        ) : match.params.pageTab === PROJECTS_SETTINGS_SECRETS_TAB ? (
-          <ProjectSettingsSecrets
-            match={match}
-            setNotification={setNotification}
-          />
+        ) : params.pageTab === PROJECTS_SETTINGS_SECRETS_TAB ? (
+          <ProjectSettingsSecrets setNotification={setNotification} />
         ) : (
           <ProjectSettingsGeneral
             changeOwnerCallback={changeOwnerCallback}
-            match={match}
             membersState={membersState}
             projectMembershipIsEnabled={projectMembershipIsEnabled}
             projectOwnerIsShown={projectOwnerIsShown}
@@ -228,10 +187,6 @@ const ProjectSettings = ({
       </div>
     </div>
   )
-}
-
-ProjectSettings.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

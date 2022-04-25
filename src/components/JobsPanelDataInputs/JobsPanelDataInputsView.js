@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
+import PanelSection from '../../elements/PanelSection/PanelSection'
 import Input from '../../common/Input/Input'
 import { JobsPanelDataInputsTable } from '../../elements/JobsPanelDataInputsTable/JobsPanelDataInputsTable'
 
@@ -19,7 +19,6 @@ const JobsPanelDataInputsView = ({
   inputsDispatch,
   inputsState,
   isArtifactPathValid,
-  match,
   panelDispatch,
   panelState,
   resetDataInputsData,
@@ -29,7 +28,7 @@ const JobsPanelDataInputsView = ({
 }) => {
   return (
     <div className="job-panel__item new-item-side-panel__item">
-      <JobsPanelSection title="Data inputs">
+      <PanelSection title="Data inputs">
         <JobsPanelDataInputsTable
           comboboxMatchesList={comboboxMatchesList}
           comboboxSelectList={comboboxSelectList}
@@ -40,14 +39,13 @@ const JobsPanelDataInputsView = ({
           handlePathTypeChange={handlePathTypeChange}
           inputsDispatch={inputsDispatch}
           inputsState={inputsState}
-          match={match}
           panelState={panelState}
           resetDataInputsData={resetDataInputsData}
           setValidation={setValidation}
           validation={validation}
         />
-      </JobsPanelSection>
-      <JobsPanelSection title="General">
+      </PanelSection>
+      <PanelSection title="General">
         <Input
           label="Default input path"
           wrapperClassName="default-input-wrapper"
@@ -81,7 +79,7 @@ const JobsPanelDataInputsView = ({
           value={panelState.outputPath}
           type="text"
         />
-      </JobsPanelSection>
+      </PanelSection>
     </div>
   )
 }
@@ -96,7 +94,6 @@ JobsPanelDataInputsView.propTypes = {
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   isArtifactPathValid: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   resetDataInputsData: PropTypes.func.isRequired,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import TagFilterDropdown from './TagFilterDropdown'
 
@@ -10,32 +10,23 @@ import { KEY_CODES, TAG_FILTER_LATEST } from '../../constants'
 
 import './tagFilter.scss'
 
-const TagFilter = ({
-  label,
-  match,
-  onChange,
-  page,
-  tagFilterOptions,
-  value
-}) => {
+const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false)
   const [tagFilter, setTagFilter] = useState(TAG_FILTER_LATEST)
-
-  const history = useHistory()
+  const params = useParams()
+  const navigate = useNavigate()
   const tagFilterRef = useRef()
 
   useEffect(() => {
     setTagFilter(value)
-  }, [setTagFilter, match.params.pageTab, value])
+  }, [setTagFilter, params.pageTab, value])
 
   const handlerOverall = useCallback(
     event => {
       if (!event.path.includes(tagFilterRef.current)) {
         if (tagFilter.length <= 0) {
           onChange(TAG_FILTER_LATEST)
-          setTagFilter(
-            tagFilterOptions.find(tag => tag.id === TAG_FILTER_LATEST).label
-          )
+          setTagFilter(tagFilterOptions.find(tag => tag.id === TAG_FILTER_LATEST).label)
         } else {
           const tag = tagFilterOptions.find(tag => tag.id === tagFilter)
 
@@ -57,10 +48,10 @@ const TagFilter = ({
         return tagFilter === tag.id
       })
 
-      if (match.params.jobId || match.params.name) {
-        history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}${
-            match.params.pageTab ? `/${match.params.pageTab}` : ''
+      if (params.jobId || params.name) {
+        navigate(
+          `/projects/${params.projectName}/${page.toLowerCase()}${
+            params.pageTab ? `/${params.pageTab}` : ''
           }`
         )
       }
@@ -74,10 +65,8 @@ const TagFilter = ({
 
   const handleSelectFilter = tag => {
     if (tag.id !== tagFilter) {
-      if (match.params.jobId || match.params.name) {
-        history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}`
-        )
+      if (params.jobId || params.name) {
+        navigate(`/projects/${params.projectName}/${page.toLowerCase()}`)
       }
 
       setTagFilter(tag.id)
@@ -137,7 +126,6 @@ const TagFilter = ({
 
 TagFilter.propTypes = {
   label: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   onChange: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired,
   tagFilterOptions: PropTypes.array.isRequired,

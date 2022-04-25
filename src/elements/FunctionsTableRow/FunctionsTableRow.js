@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { useParams } from 'react-router-dom'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
@@ -13,30 +14,26 @@ const FunctionsTableRow = ({
   content,
   handleExpandRow,
   handleSelectItem,
-  match,
   rowItem,
   selectedItem,
   tableContent
 }) => {
   const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
+  const params = useParams()
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    getFunctionIdentifier(selectedItem, true) ===
-      rowItem.name?.identifierUnique &&
+    getFunctionIdentifier(selectedItem, true) === rowItem.name?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
-    parent.current?.classList.value.includes('parent-row-expanded') &&
-      'parent-row-expanded'
+    parent.current?.classList.value.includes('parent-row-expanded') && 'parent-row-expanded'
   )
 
   const findCurrentItem = useCallback(
     rowItem => {
       return content.find(
-        contentItem =>
-          getFunctionIdentifier(contentItem, true) ===
-          rowItem.name?.identifierUnique
+        contentItem => getFunctionIdentifier(contentItem, true) === rowItem.name?.identifierUnique
       )
     },
     [content]
@@ -66,21 +63,13 @@ const FunctionsTableRow = ({
               const subRowCurrentItem =
                 content.length > 0 &&
                 content.find(item => {
-                  return (
-                    getFunctionIdentifier(item, true) ===
-                    func.name.identifierUnique
-                  )
+                  return getFunctionIdentifier(item, true) === func.name.identifierUnique
                 })
               const isActiveSubRow =
-                getFunctionIdentifier(selectedItem, true) ===
-                func.name.identifierUnique
+                getFunctionIdentifier(selectedItem, true) === func.name.identifierUnique
 
               return (
-                <div
-                  className={`table-body__row ${isActiveSubRow &&
-                    'row_active'}`}
-                  key={index}
-                >
+                <div className={`table-body__row ${isActiveSubRow && 'row_active'}`} key={index}>
                   {Object.values(func).map((value, i) => {
                     return (
                       !value.hidden && (
@@ -91,13 +80,9 @@ const FunctionsTableRow = ({
                             value.getLink
                               ? value.getLink(currentItem?.hash)
                               : i === 0 &&
-                                `/projects/${
-                                  match.params.projectName
-                                }/functions/${subRowCurrentItem?.hash}${
-                                  match.params.tab
-                                    ? `/${match.params.tab}`
-                                    : `/${detailsMenu[0].id}`
-                                }`
+                                `/projects/${params.projectName}/functions/${
+                                  subRowCurrentItem?.hash
+                                }${params.tab ? `/${params.tab}` : `/${detailsMenu[0].id}`}`
                           }
                           key={value.id}
                           selectItem={handleSelectItem}
@@ -107,10 +92,7 @@ const FunctionsTableRow = ({
                     )
                   })}
                   <div className="table-body__cell action_cell">
-                    <ActionsMenu
-                      dataItem={subRowCurrentItem}
-                      menu={actionsMenu}
-                    />
+                    <ActionsMenu dataItem={subRowCurrentItem} menu={actionsMenu} />
                   </div>
                 </div>
               )
@@ -133,16 +115,10 @@ const FunctionsTableRow = ({
                     rowItemProp.getLink
                       ? rowItemProp.getLink(currentItem?.hash)
                       : i === 0 &&
-                        `/projects/${
-                          match.params.projectName
-                        }/functions/${content.length > 0 &&
-                          currentItem?.hash}/${
-                          match.params.tab
-                            ? match.params.tab
-                            : `${detailsMenu[0].id}`
-                        }`
+                        `/projects/${params.projectName}/functions/${
+                          content.length > 0 && currentItem?.hash
+                        }/${params.tab ? params.tab : `${detailsMenu[0].id}`}`
                   }
-                  match={match}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
                 />
@@ -162,7 +138,6 @@ FunctionsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }

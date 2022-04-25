@@ -11,7 +11,7 @@ export const getFunctionLogs = (
   name,
   tag,
   offset,
-  history,
+  navigate,
   refreshFunctions,
   startedDeploying
 ) => {
@@ -33,7 +33,7 @@ export const getFunctionLogs = (
           name,
           tag,
           currentOffset,
-          history,
+          navigate,
           refreshFunctions,
           true
         )
@@ -51,7 +51,7 @@ export const getFunctionLogs = (
           ).hash
 
           if (hash) {
-            history.push(`/projects/${projectName}/functions/${hash}/build-log`)
+            navigate(`/projects/${projectName}/functions/${hash}/build-log`)
           }
         })
       }

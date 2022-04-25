@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
 
@@ -10,11 +9,9 @@ import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
-import {
-  generateCreateNewOptions,
-  handleFetchProjectError
-} from './project.utils'
+import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
   featureStore,
@@ -24,7 +21,6 @@ const ProjectMonitor = ({
   fetchProjectSummary,
   frontendSpec,
   functionsStore,
-  match,
   nuclioStore,
   projectStore,
   removeFeatureStoreError,
@@ -37,16 +33,15 @@ const ProjectMonitor = ({
   setNotification
 }) => {
   const [artifactKind, setArtifactKind] = useState('')
-  const [
-    createFeatureSetPanelIsOpen,
-    setCreateFeatureSetPanelIsOpen
-  ] = useState(false)
+  const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
+  const navigate = useNavigate()
+  const params = useParams()
+  const { isNuclioModeDisabled } = useNuclioMode()
 
-  const history = useHistory()
 
   const nuclioStreamsAreEnabled = useMemo(
     () => areNuclioStreamsEnabled(frontendSpec),
@@ -55,8 +50,8 @@ const ProjectMonitor = ({
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
-      history,
-      match,
+      navigate,
+      params,
       setArtifactKind,
       setIsPopupDialogOpen,
       setCreateFeatureSetPanelIsOpen,
@@ -66,13 +61,13 @@ const ProjectMonitor = ({
     return {
       createNewOptions
     }
-  }, [history, match])
+  }, [navigate, params])
 
   const fetchProjectData = useCallback(() => {
-    fetchProject(match.params.projectName).catch(error => {
-      handleFetchProjectError(error, history, setConfirmData)
+    fetchProject(params.projectName).catch(error => {
+      handleFetchProjectError(error, navigate, setConfirmData)
     })
-  }, [fetchProject, history, match.params.projectName])
+  }, [fetchProject, navigate, params.projectName])
 
   const resetProjectData = useCallback(() => {
     removeProjectData()
@@ -80,7 +75,7 @@ const ProjectMonitor = ({
 
   useEffect(() => {
     fetchProjectData()
-    fetchProjectSummary(match.params.projectName)
+    fetchProjectSummary(params.projectName)
 
     return () => {
       resetProjectData()
@@ -89,20 +84,21 @@ const ProjectMonitor = ({
   }, [
     fetchProjectSummary,
     fetchProjectData,
-    match.params.projectName,
+    params.projectName,
     removeProjectSummary,
     resetProjectData
   ])
 
   useEffect(() => {
-    if (nuclioStreamsAreEnabled) {
-      fetchNuclioV3ioStreams(match.params.projectName)
+    if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
+      fetchNuclioV3ioStreams(params.projectName)
 
       return () => removeV3ioStreams()
     }
   }, [
     fetchNuclioV3ioStreams,
-    match.params.projectName,
+    isNuclioModeDisabled,
+    params.projectName,
     nuclioStreamsAreEnabled,
     removeV3ioStreams
   ])
@@ -150,30 +146,26 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(match.params.projectName).catch(
-      () => {
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Function deployment initiated successfully'
-        })
+    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function deployment initiated successfully'
+      })
 
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to fetch functions'
-        })
-      }
-    )
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Failed to fetch functions'
+      })
+    })
 
     if (funcs) {
       const currentItem = funcs.find(func => {
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      history.push(
-        `/projects/${match.params.projectName}/functions/${currentItem.metadata.hash}/${tab}`
-      )
+      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
 
       return setNotification({
         status: 200,
@@ -189,30 +181,26 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(match.params.projectName).catch(
-      () => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Function deployment failed to initiate'
-        })
+    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Function deployment failed to initiate'
+      })
 
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to fetch functions'
-        })
-      }
-    )
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Failed to fetch functions'
+      })
+    })
 
     if (funcs) {
       const currentItem = funcs.find(func => {
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      history.push(
-        `/projects/${match.params.projectName}/functions/${currentItem.metadata.hash}/overview`
-      )
+      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
 
       return setNotification({
         status: 400,
@@ -228,42 +216,43 @@ const ProjectMonitor = ({
     removeProjectData()
     removeProjectSummary()
     fetchProjectData()
-    fetchProjectSummary(match.params.projectName)
-    nuclioStreamsAreEnabled && fetchNuclioV3ioStreams(match.params.projectName)
+    fetchProjectSummary(params.projectName)
+
+    if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
+      fetchNuclioV3ioStreams(params.projectName)
+    }
   }
 
   return (
-    <ProjectMonitorView
-      artifactKind={artifactKind}
-      closeFeatureSetPanel={closeFeatureSetPanel}
-      closeFunctionsPanel={closeFunctionsPanel}
-      confirmData={confirmData}
-      createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
-      createFeatureSetSuccess={createFeatureSetSuccess}
-      createFunctionSuccess={createFunctionSuccess}
-      createNewOptions={createNewOptions}
-      handleDeployFunctionFailure={handleDeployFunctionFailure}
-      handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-      handleLaunchIDE={handleLaunchIDE}
-      history={history}
-      isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
-      isPopupDialogOpen={isPopupDialogOpen}
-      match={match}
-      nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
-      project={projectStore.project}
-      projectSummary={projectStore.projectSummary}
-      refresh={handleRefresh}
-      setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
-      setIsPopupDialogOpen={setIsPopupDialogOpen}
-      setShowFunctionsPanel={setShowFunctionsPanel}
-      showFunctionsPanel={showFunctionsPanel}
-      v3ioStreams={nuclioStore.v3ioStreams}
-    />
+    <>
+      <ProjectMonitorView
+        artifactKind={artifactKind}
+        closeFeatureSetPanel={closeFeatureSetPanel}
+        closeFunctionsPanel={closeFunctionsPanel}
+        confirmData={confirmData}
+        createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
+        createFeatureSetSuccess={createFeatureSetSuccess}
+        createFunctionSuccess={createFunctionSuccess}
+        createNewOptions={createNewOptions}
+        handleDeployFunctionFailure={handleDeployFunctionFailure}
+        handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+        handleLaunchIDE={handleLaunchIDE}
+        isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
+        isNuclioModeDisabled={isNuclioModeDisabled}isPopupDialogOpen={isPopupDialogOpen}
+        navigate={navigate}
+        nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
+        params={params}
+        project={projectStore.project}
+        projectSummary={projectStore.projectSummary}
+        refresh={handleRefresh}
+        setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
+        setIsPopupDialogOpen={setIsPopupDialogOpen}
+        setShowFunctionsPanel={setShowFunctionsPanel}
+        showFunctionsPanel={showFunctionsPanel}
+        v3ioStreams={nuclioStore.v3ioStreams}
+      />
+    </>
   )
-}
-
-ProjectMonitor.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

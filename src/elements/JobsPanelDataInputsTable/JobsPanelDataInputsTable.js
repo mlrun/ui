@@ -31,7 +31,6 @@ export const JobsPanelDataInputsTable = ({
   handlePathTypeChange,
   inputsDispatch,
   inputsState,
-  match,
   panelState,
   resetDataInputsData,
   setValidation,
@@ -45,7 +44,6 @@ export const JobsPanelDataInputsTable = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       headers={panelData['data-inputs']['table-headers']}
-      match={match}
       section="data-inputs"
       sectionData={{ comboboxMatchesList }}
       sectionDispatch={inputsDispatch}
@@ -172,7 +170,6 @@ JobsPanelDataInputsTable.propTypes = {
   handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired,
   panelState: PropTypes.shape({}).isRequired,
   resetDataInputsData: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

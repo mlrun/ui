@@ -36,11 +36,12 @@ const ProjectMonitorView = ({
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   handleLaunchIDE,
-  history,
   isNewFunctionPopUpOpen,
+  isNuclioModeDisabled,
   isPopupDialogOpen,
-  match,
+  navigate,
   nuclioStreamsAreEnabled,
+  params,
   project,
   projectSummary,
   refresh,
@@ -50,18 +51,14 @@ const ProjectMonitorView = ({
   showFunctionsPanel,
   v3ioStreams
 }) => {
-  const registerArtifactLink = `/projects/${match.params.projectName}/${
-    artifactKind === 'model'
-      ? 'models'
-      : artifactKind === 'dataset'
-      ? DATASETS
-      : 'files'
+  const registerArtifactLink = `/projects/${params.projectName}/${
+    artifactKind === 'model' ? 'models' : artifactKind === 'dataset' ? DATASETS : 'files'
   }`
 
   return (
     <div className="project-wrapper">
       <div className="project__header">
-        <Breadcrumbs match={match} />
+        <Breadcrumbs />
       </div>
       {project.loading ? (
         <Loader />
@@ -93,9 +90,7 @@ const ProjectMonitorView = ({
                   <div className="general-info__row status-row">
                     <div className="row-value">
                       <span className="row-label">Status:</span>
-                      <span className="row-name">
-                        {project.data.status.state}
-                      </span>
+                      <span className="row-name">{project.data.status.state}</span>
                     </div>
                   </div>
                 )}
@@ -103,20 +98,12 @@ const ProjectMonitorView = ({
                   <div className="row-value">
                     <span className="row-label">Created at:</span>
                     <span className="row-name">
-                      {formatDatetime(
-                        new Date(project.data.metadata.created),
-                        '-'
-                      )}
+                      {formatDatetime(new Date(project.data.metadata.created), '-')}
                     </span>
                   </div>
                 </div>
               </div>
-              <RoundedIcon
-                onClick={refresh}
-                id="refresh"
-                tooltipText="Refresh"
-                className="refresh"
-              >
+              <RoundedIcon onClick={refresh} id="refresh" tooltipText="Refresh" className="refresh">
                 <RefreshIcon />
               </RoundedIcon>
               <Select
@@ -138,34 +125,45 @@ const ProjectMonitorView = ({
             <div className="main-info__statistics-section">
               <ProjectSummaryCard
                 counterValue={projectSummary.data.models_count ?? 0}
-                link={`/projects/${match.params.projectName}/models`}
+                link={`/projects/${params.projectName}/models`}
                 projectSummary={projectSummary}
                 title="Models"
               />
               <ProjectSummaryCard
                 counterValue={projectSummary.data.feature_sets_count ?? 0}
-                link={`/projects/${match.params.projectName}/feature-store`}
+                link={`/projects/${params.projectName}/feature-store`}
                 projectSummary={projectSummary}
                 title="Feature sets"
               />
               <ProjectSummaryCard
                 counterValue={projectSummary.data.files_count ?? 0}
-                link={`/projects/${match.params.projectName}/files`}
+                link={`/projects/${params.projectName}/files`}
                 projectSummary={projectSummary}
                 title="Artifacts"
               />
               {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
-                  counterValue={Object.keys(v3ioStreams.data).length ?? 0}
-                  link={`/projects/${match.params.projectName}/monitor/consumer-groups`}
+                  counterValue={
+                    isNuclioModeDisabled
+                      ? 'N/A'
+                      : Object.keys(v3ioStreams.data).length ?? 0
+                  }
+                  link={`/projects/${params.projectName}/monitor${
+                    !isNuclioModeDisabled ? '/consumer-groups' : ''
+                  }`}
                   projectSummary={v3ioStreams}
                   title="Consumer groups"
+                  tooltipText={
+                    isNuclioModeDisabled
+                      ? 'Consumer group feature works when Nuclio is deployed'
+                      : ''
+                  }
                 />
               )}
             </div>
             <div className="main-info__statistics-section">
-              <ProjectJobs match={match} />
-              <ProjectFunctions match={match} />
+              <ProjectJobs />
+              <ProjectFunctions />
             </div>
           </div>
         </div>
@@ -173,9 +171,8 @@ const ProjectMonitorView = ({
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactKind={artifactKind}
-          match={match}
           refresh={() => {
-            history.push(registerArtifactLink)
+            navigate(registerArtifactLink)
           }}
           setIsPopupOpen={setIsPopupDialogOpen}
           title={`Register ${artifactKind}`}
@@ -185,13 +182,13 @@ const ProjectMonitorView = ({
         <FeatureSetsPanel
           closePanel={closeFeatureSetPanel}
           createFeatureSetSuccess={createFeatureSetSuccess}
-          project={match.params.projectName}
+          project={params.projectName}
         />
       )}
       {isNewFunctionPopUpOpen && (
         <NewFunctionPopUp
           closePopUp={() => setIsNewFunctionPopUpOpen(false)}
-          currentProject={match.params.projectName}
+          currentProject={params.projectName}
           isOpened={isNewFunctionPopUpOpen}
           setFunctionsPanelIsOpen={setShowFunctionsPanel}
         />
@@ -202,9 +199,8 @@ const ProjectMonitorView = ({
           createFunctionSuccess={createFunctionSuccess}
           handleDeployFunctionFailure={handleDeployFunctionFailure}
           handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-          match={match}
           mode={PANEL_CREATE_MODE}
-          project={match.params.projectName}
+          project={params.projectName}
         />
       )}
     </div>
@@ -227,11 +223,12 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
-  history: PropTypes.shape({}).isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
+  isNuclioModeDisabled: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,

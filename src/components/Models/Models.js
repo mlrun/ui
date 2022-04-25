@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { isEmpty, orderBy } from 'lodash'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -37,10 +37,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import {
-  getArtifactIdentifier,
-  getFunctionIdentifier
-} from '../../utils/getUniqueIdentifier'
+import { getArtifactIdentifier, getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
 import { useOpenPanel } from '../../hooks/openPanel.hook'
@@ -57,8 +54,6 @@ const Models = ({
   fetchModelFeatureVector,
   fetchModels,
   filtersStore,
-  history,
-  match,
   removeModel,
   removeModels,
   setFilters,
@@ -70,11 +65,11 @@ const Models = ({
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const [deployModel, setDeployModel] = useState({})
-  const [
-    isRegisterArtifactPopupOpen,
-    setIsRegisterArtifactPopupOpen
-  ] = useState(false)
+  const [isRegisterArtifactPopupOpen, setIsRegisterArtifactPopupOpen] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
+  const params = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     if (openPanelByDefault) {
@@ -89,8 +84,8 @@ const Models = ({
         fetchModels,
         fetchFunctions,
         filters,
-        match.params.projectName,
-        match.params.pageTab
+        params.projectName,
+        params.pageTab
       )
 
       if (data.content) {
@@ -99,13 +94,7 @@ const Models = ({
 
       return data.originalContent
     },
-    [
-      fetchFunctions,
-      fetchModelEndpoints,
-      fetchModels,
-      match.params.pageTab,
-      match.params.projectName
-    ]
+    [fetchFunctions, fetchModelEndpoints, fetchModels, params.pageTab, params.projectName]
   )
 
   const closeDeployModelPopUp = () => {
@@ -134,11 +123,7 @@ const Models = ({
         selectedRowData: newPageDataSelectedRowData
       }))
     },
-    [
-      artifactsStore.models.selectedRowData.content,
-      pageData.selectedRowData,
-      removeModel
-    ]
+    [artifactsStore.models.selectedRowData.content, pageData.selectedRowData, removeModel]
   )
 
   const handleRequestOnExpand = useCallback(
@@ -157,12 +142,7 @@ const Models = ({
       }))
 
       try {
-        result = await fetchModel(
-          model.project,
-          model.db_key,
-          !filtersStore.iter,
-          filtersStore.tag
-        )
+        result = await fetchModel(model.project, model.db_key, !filtersStore.iter, filtersStore.tag)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -185,10 +165,7 @@ const Models = ({
               ...state.selectedRowData,
               [modelIdentifier]: {
                 content: [
-                  ...generateArtifacts(
-                    filterArtifacts(result),
-                    !filtersStore.iter
-                  )
+                  ...generateArtifacts(filterArtifacts(result), MODELS_TAB, !filtersStore.iter)
                 ],
                 error: null,
                 loading: false
@@ -210,13 +187,11 @@ const Models = ({
   }, [filtersStore.iter, filtersStore.tag, removeModel])
 
   useEffect(() => {
-    const filtersParams = urlTagOption
-      ? { tag: urlTagOption, iter: SHOW_ITERATIONS }
-      : {}
-    if (urlTagOption || match.params.pageTab !== MODELS_TAB) {
+    const filtersParams = urlTagOption ? { tag: urlTagOption, iter: SHOW_ITERATIONS } : {}
+    if (urlTagOption || params.pageTab !== MODELS_TAB) {
       fetchData(filtersParams)
     }
-  }, [fetchData, match.params.pageTab, urlTagOption])
+  }, [fetchData, params.pageTab, urlTagOption])
 
   useEffect(() => {
     return () => {
@@ -225,7 +200,7 @@ const Models = ({
       setSelectedModel({})
       setPageData(pageDataInitialState)
     }
-  }, [match.params.pageTab, removeModels])
+  }, [params.pageTab, removeModels])
 
   useEffect(() => {
     setPageData(state => ({
@@ -233,25 +208,19 @@ const Models = ({
       ...generatePageData(
         subPage,
         selectedModel,
-        match.params.pageTab,
+        params.pageTab,
         handleDeployModel,
         handleRequestOnExpand,
         !isEveryObjectValueEmpty(selectedModel)
       )
     }))
-  }, [
-    handleDeployModel,
-    handleRequestOnExpand,
-    match.params.pageTab,
-    selectedModel,
-    subPage
-  ])
+  }, [handleDeployModel, handleRequestOnExpand, params.pageTab, selectedModel, subPage])
 
   useEffect(() => {
-    if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
+    if (params.pageTab === MODEL_ENDPOINTS_TAB) {
       setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' })
     } else if (
-      match.params.pageTab === REAL_TIME_PIPELINES_TAB ||
+      params.pageTab === REAL_TIME_PIPELINES_TAB ||
       filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
       isEmpty(filtersStore.iter)
     ) {
@@ -260,9 +229,9 @@ const Models = ({
       setFilters({ groupBy: GROUP_BY_NONE })
     }
   }, [
-    match.params.pageTab,
-    match.params.projectName,
-    match.params.pipelineId,
+    params.pageTab,
+    params.projectName,
+    params.pipelineId,
     filtersStore.tag,
     filtersStore.iter,
     setFilters
@@ -270,38 +239,34 @@ const Models = ({
 
   useEffect(() => {
     if (
-      (match.params.name &&
-        ((match.params.pageTab === MODELS_TAB &&
-          artifactsStore.models.allData.length > 0) ||
-          (match.params.pageTab === MODEL_ENDPOINTS_TAB &&
-            artifactsStore.modelEndpoints.length > 0))) ||
-      (match.params.pipelineId &&
-        match.params.pageTab === REAL_TIME_PIPELINES_TAB &&
-        content.length > 0)
+      (params.name &&
+        ((params.pageTab === MODELS_TAB && artifactsStore.models.allData.length > 0) ||
+          (params.pageTab === MODEL_ENDPOINTS_TAB && artifactsStore.modelEndpoints.length > 0))) ||
+      (params.pipelineId && params.pageTab === REAL_TIME_PIPELINES_TAB && content.length > 0)
     ) {
-      const { name, tag, iter, pipelineId } = match.params
+      const { name, tag, iter, pipelineId } = params
 
-      if (match.params.pageTab === MODELS_TAB) {
+      if (params.pageTab === MODELS_TAB) {
         checkForSelectedModel(
-          history,
-          match,
+          navigate,
+          params,
           artifactsStore.models,
           name,
           setSelectedModel,
           tag,
           iter
         )
-      } else if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
+      } else if (params.pageTab === MODEL_ENDPOINTS_TAB) {
         checkForSelectedModelEndpoint(
           fetchModelEndpointWithAnalysis,
-          history,
-          match,
+          navigate,
+          params,
           artifactsStore.modelEndpoints,
           tag,
           setSelectedModel
         )
-      } else if (match.params.pageTab === REAL_TIME_PIPELINES_TAB) {
-        checkForSelectedRealTimePipelines(history, pipelineId, match, content)
+      } else if (params.pageTab === REAL_TIME_PIPELINES_TAB) {
+        checkForSelectedRealTimePipelines(navigate, pipelineId, params, content)
       }
     } else {
       setSelectedModel({})
@@ -311,54 +276,48 @@ const Models = ({
     artifactsStore.models,
     content,
     fetchModelEndpointWithAnalysis,
-    history,
-    match
+    navigate,
+    params
   ])
 
   useEffect(() => setContent([]), [filtersStore.tag])
 
   useEffect(() => {
-    if (
-      match.params.name &&
-      match.params.tag &&
-      pageData.details.menu.length > 0
-    ) {
-      isDetailsTabExists(MODELS_PAGE, match, pageData.details.menu, history)
+    if (params.name && params.tag && pageData.details.menu.length > 0) {
+      isDetailsTabExists(MODELS_PAGE, params, pageData.details.menu, navigate, location)
     }
-  }, [history, match, pageData.details.menu])
+  }, [navigate, location, params, pageData.details.menu])
 
   useEffect(() => {
     if (
-      match.params.pageTab === MODELS_TAB &&
+      params.pageTab === MODELS_TAB &&
       selectedModel.item?.feature_vector &&
       !detailsStore.modelFeatureVectorData.error &&
       isEmpty(detailsStore.modelFeatureVectorData)
     ) {
-      const { name, tag } = getFeatureVectorData(
-        selectedModel.item.feature_vector
-      )
-      fetchModelFeatureVector(match.params.projectName, name, tag)
+      const { name, tag } = getFeatureVectorData(selectedModel.item.feature_vector)
+      fetchModelFeatureVector(params.projectName, name, tag)
     }
   }, [
     detailsStore.modelFeatureVectorData,
     detailsStore.modelFeatureVectorData.error,
     fetchModelFeatureVector,
-    match.params.pageTab,
-    match.params.projectName,
+    params.pageTab,
+    params.projectName,
     selectedModel.item
   ])
 
   useEffect(() => {
     isPageTabValid(
-      match,
+      params.pageTab,
       tabs.map(tab => tab.id),
-      history
+      navigate,
+      location
     )
-  }, [history, match])
+  }, [navigate, location, params.pageTab])
 
   const sortedContent = useMemo(() => {
-    const path =
-      filtersStore.sortBy === 'function' ? 'spec.model_uri' : 'spec.model'
+    const path = filtersStore.sortBy === 'function' ? 'spec.model_uri' : 'spec.model'
 
     return orderBy(content, [path], ['asc'])
   }, [content, filtersStore.sortBy])
@@ -370,45 +329,30 @@ const Models = ({
         content={sortedContent}
         handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
         handleCancel={() => setSelectedModel({})}
-        handleRemoveRequestData={
-          match.params.pageTab === MODELS_TAB && handleRemoveModel
-        }
+        handleRemoveRequestData={params.pageTab === MODELS_TAB && handleRemoveModel}
         loading={artifactsStore.loading}
-        match={match}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
         getIdentifier={
-          match.params.pageTab === REAL_TIME_PIPELINES_TAB
-            ? getFunctionIdentifier
-            : getArtifactIdentifier
+          params.pageTab === REAL_TIME_PIPELINES_TAB ? getFunctionIdentifier : getArtifactIdentifier
         }
       >
-        {match.params.pipelineId ? (
-          <Pipeline content={content} match={match} />
-        ) : null}
+        {params.pipelineId ? <Pipeline content={content} /> : null}
       </Content>
       {isRegisterArtifactPopupOpen && (
         <RegisterArtifactPopup
           artifactKind={pageData.page.slice(0, -1)}
-          match={match}
           refresh={fetchData}
           setIsPopupOpen={setIsRegisterArtifactPopupOpen}
           title={pageData.actionsMenuHeader}
         />
       )}
       {isDeployPopupOpen && (
-        <DeployModelPopUp
-          closePopUp={closeDeployModelPopUp}
-          model={deployModel}
-        />
+        <DeployModelPopUp closePopUp={closeDeployModelPopUp} model={deployModel} />
       )}
     </div>
   )
-}
-
-Models.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

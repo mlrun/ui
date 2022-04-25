@@ -11,6 +11,8 @@
 
   &__item {
     .panel-section__body {
+      margin-bottom: 35px;
+
       .default-input-wrapper {
         margin-right: 15px;
       }
@@ -20,59 +22,35 @@
       padding: 0;
     }
 
-    &.resources {
-      .inputs {
-        display: flex;
+    .volume-toleration {
+      max-width: 150px;
+    }
+
+    .pods {
+      display: flex;
+      margin-bottom: 35px;
+
+      .panel-section__title {
+        margin-bottom: 10px;
       }
 
-      .memory,
-      .cpu {
-        margin-right: 20px;
-
-        .panel-section__body {
-          align-items: center;
-        }
-
-        .select__value {
-          min-width: 120px;
-        }
+      .panel-section__body {
+        margin: 0;
       }
 
       .select {
-        flex: 1 1;
-        max-width: 120px;
-        margin-right: 5px;
+        width: 150px;
+        max-width: 100%;
       }
 
-      .volume-toleration {
-        max-width: 150px;
-      }
-
-      .range {
-        max-width: 90px;
-
-        .input {
-          width: 100%;
-
-          &-wrapper {
-            width: 100%;
-          }
-        }
-      }
-
-      .pods-priority {
-        max-width: 150px;
+      &-priority {
+        margin-right: 20px;
       }
     }
+
 
     .node-selector {
       width: 100%;
-    }
-
-    .section-gpu {
-      .item-section__body {
-        justify-content: flex-end;
-      }
     }
 
     .parameters-additional-settings {

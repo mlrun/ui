@@ -44,7 +44,7 @@ export const getInitialCards = projectName => {
           id: 'registerDataset',
           label: 'Register Dataset',
           path: {
-            target: `${base_url}/feature-store/datasets?openPanel=true`
+            target: `${base_url}/datasets?openPanel=true`
             // target: 'dataset' // Phase 2
           },
           tooltip: ''
@@ -84,7 +84,7 @@ export const getInitialCards = projectName => {
         {
           id: 'dataset',
           label: 'Datasets',
-          path: { target: `${base_url}/feature-store/datasets` }
+          path: { target: `${base_url}/datasets` }
         },
         {
           id: 'featurevectors',
@@ -205,10 +205,10 @@ export const getInitialCards = projectName => {
   }
 }
 
-export const handlePath = (history, cb) => ({ target, externalLink }) => {
+export const handlePath = (navigate, cb) => ({ target, externalLink }) => {
   return target.indexOf('/') < 0
     ? cb(target.toLowerCase())
     : externalLink
     ? (window.top.location.href = target)
-    : history.push(target)
+    : navigate(target)
 }

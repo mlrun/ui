@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
@@ -52,7 +52,6 @@ const Content = ({
   handleSelectItem,
   header,
   loading,
-  match,
   pageData,
   projectStore,
   refresh,
@@ -64,12 +63,14 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
-  const history = useHistory()
+  const navigate = useNavigate()
+  const params = useParams()
+  const location = useLocation()
 
   const contentClassName = classnames(
     'content',
     [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
-      !match.path.includes(ADD_TO_FEATURE_VECTOR_TAB) &&
+      !location.pathname.includes(ADD_TO_FEATURE_VECTOR_TAB) &&
       'content_with-menu'
   )
   const filterMenuClassNames = classnames(
@@ -97,11 +98,11 @@ const Content = ({
 
   useEffect(() => {
     isProjectValid(
-      history,
+      navigate,
       projectStore.projectsNames.data,
-      match.params.projectName
+      params.projectName
     )
-  }, [history, match.params.projectName, projectStore.projectsNames.data])
+  }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
@@ -164,7 +165,7 @@ const Content = ({
     return () => {
       setExpandedItems(0)
     }
-  }, [match.params.jobId, match.params.pipelineId, groupedContent])
+  }, [params.jobId, params.pipelineId, groupedContent])
 
   useEffect(() => {
     if (Object.keys(groupedContent).length > 0) {
@@ -208,7 +209,7 @@ const Content = ({
   return (
     <>
       <div className="content__header">
-        {header ? header : <Breadcrumbs match={match} />}
+        {header ? header : <Breadcrumbs />}
         <PageActionsMenu
           actionsMenuHeader={pageData.actionsMenuHeader}
           onClick={handleActionsMenuClick}
@@ -217,10 +218,9 @@ const Content = ({
       </div>
       <div className={contentClassName}>
         {[JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
-          !match.path.includes(ADD_TO_FEATURE_VECTOR_TAB) && (
+          !location.pathname.includes(ADD_TO_FEATURE_VECTOR_TAB) && (
             <ContentMenu
-              activeTab={match.params.pageTab}
-              match={match}
+              activeTab={params.pageTab}
               screen={pageData.page}
               tabs={pageData.tabs}
             />
@@ -235,10 +235,10 @@ const Content = ({
           <div className={filterMenuClassNames}>
             <FilterMenu
               actionButton={pageData.filterMenuActionButton}
+              cancelRequest={cancelRequest}
               expand={expand}
               filters={pageData.filters}
               handleExpandAll={handleExpandAll}
-              match={match}
               onChange={filtersChangeCallback ?? refresh}
               page={pageData.page}
               withoutExpandButton={
@@ -256,7 +256,7 @@ const Content = ({
               message={getNoDataMessage(
                 filtersStore,
                 pageData.filters,
-                match.params.pageTab,
+                params.pageTab,
                 pageData.page
               )}
             />
@@ -265,13 +265,11 @@ const Content = ({
               <Table
                 actionsMenu={actionsMenu}
                 applyDetailsChanges={applyDetailsChanges}
-                cancelRequest={cancelRequest}
                 content={content}
                 groupedContent={groupedContent}
                 handleCancel={handleCancel}
                 handleExpandRow={handleExpandRow}
                 handleSelectItem={handleSelectItem}
-                match={match}
                 pageData={pageData}
                 retryRequest={refresh}
                 selectedItem={selectedItem}
@@ -295,6 +293,7 @@ const Content = ({
 
 Content.defaultProps = {
   activeScreenTab: '',
+  cancelRequest: () => {},
   filtersChangeCallback: null,
   handleActionsMenuClick: () => {},
   handleCancel: () => {},
@@ -304,6 +303,7 @@ Content.defaultProps = {
 }
 
 Content.propTypes = {
+  cancelRequest: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filtersChangeCallback: PropTypes.func,
   getIdentifier: PropTypes.func.isRequired,
@@ -311,7 +311,6 @@ Content.propTypes = {
   handleCancel: PropTypes.func,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),

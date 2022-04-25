@@ -197,7 +197,9 @@ export const generateJobsContent = selectedItem => ({
     value: selectedItem.outputPath
   },
   iterations: {
-    value: selectedItem.iterations?.length ? selectedItem.iterations : '0'
+    value: selectedItem.iterationStats?.length
+      ? selectedItem.iterationStats.length - 1
+      : 'N/A'
   }
 })
 
@@ -230,7 +232,7 @@ export const generateFunctionsContent = selectedItem => ({
 
 export const renderContent = (
   applyChangesRef,
-  match,
+  tab,
   detailsStore,
   selectedItem,
   pageData,
@@ -241,13 +243,12 @@ export const renderContent = (
   setChangesCounter,
   setIterationOption
 ) => {
-  switch (match.params.tab) {
+  switch (tab) {
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
           changes={detailsStore.changes}
           content={detailsStore.infoContent}
-          match={match}
           pageData={pageData}
           ref={applyChangesRef}
           selectedItem={selectedItem}
@@ -258,7 +259,7 @@ export const renderContent = (
     case DETAILS_DRIFT_ANALYSIS_TAB:
       return <DetailsDriftAnalysis />
     case DETAILS_PODS_TAB:
-      return <DetailsPods match={match} />
+      return <DetailsPods />
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
     case DETAILS_PREVIEW_TAB:
@@ -271,7 +272,6 @@ export const renderContent = (
       return (
         <DetailsArtifacts
           iteration={detailsStore.iteration}
-          match={match}
           selectedItem={selectedItem}
           setIterationOption={setIterationOption}
         />
@@ -283,7 +283,6 @@ export const renderContent = (
       return (
         <DetailsLogs
           item={selectedItem}
-          match={match}
           refreshLogs={pageData.details.refreshLogs}
           removeLogs={pageData.details.removeLogs}
           withLogsRefreshBtn={pageData.details.withLogsRefreshBtn}
@@ -351,7 +350,6 @@ export const renderContent = (
       return (
         <DetailsRequestedFeatures
           changes={detailsStore.changes}
-          match={match}
           selectedItem={selectedItem}
           handleEditInput={(value, field) => handleEditInput(value, field)}
           setChanges={setChanges}

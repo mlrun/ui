@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import { isNil } from 'lodash'
 
 import Input from '../Input/Input'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -21,6 +22,7 @@ const RangeInput = ({
   max,
   min,
   onChange,
+  step,
   tip,
   required,
   requiredText,
@@ -43,15 +45,21 @@ const RangeInput = ({
   const handleIncrease = () => {
     if (inputValue >= max) return
 
-    setInputValue(prev => ++prev)
-    onChange(+inputValue + 1)
+    const value = isCurrentValueEmpty() ? step : Number(inputValue) + step
+    const nextValue = isInteger(value) ? value : value.toFixed(3)
+
+    setInputValue(nextValue)
+    onChange(nextValue)
   }
 
   const handleDecrease = () => {
     if (inputValue <= 0 || inputValue <= min) return
 
-    setInputValue(prev => --prev)
-    onChange(+inputValue - 1)
+    const value = isCurrentValueEmpty() ? -step : Number(inputValue) - step
+    const nextValue = isInteger(value) ? value : value.toFixed(3)
+
+    setInputValue(nextValue)
+    onChange(nextValue)
   }
 
   const rangeOnFocus = () => {
@@ -62,6 +70,13 @@ const RangeInput = ({
     if (required && inputValue.length === 0) {
       setIsRequired(true)
     }
+  }
+  const isCurrentValueEmpty = () => {
+    return isNil(inputValue) || inputValue === ''
+  }
+
+  const isInteger = number => {
+    return Number(number) === number && number % 1 === 0
   }
 
   return (
@@ -84,12 +99,15 @@ const RangeInput = ({
         floatingLabel={labelType === 'floatingLabel'}
         infoLabel={labelType === 'infoLabel'}
         label={labelType !== 'labelAtTop' && labelType !== 'none' ? label : ''}
+        min={min}
+        max={max}
         onChange={value => {
           setInputValue(value)
           onChange(value)
         }}
         tip={tip}
         required={required}
+        step="any"
         type="number"
         value={inputValue}
       />
@@ -142,6 +160,7 @@ RangeInput.defaultProps = {
   labelType: 'labelAtTop',
   max: undefined,
   min: 0,
+  step: 1,
   tip: '',
   required: false,
   requiredText: 'This field is required'
@@ -162,6 +181,7 @@ RangeInput.propTypes = {
   max: PropTypes.number,
   min: PropTypes.number,
   onChange: PropTypes.func.isRequired,
+  step: PropTypes.number,
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   required: PropTypes.bool,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired

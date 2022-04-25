@@ -265,7 +265,7 @@ const jobsActions = {
         dispatch(
           jobsActions.runNewJobFailure(
             error.response.status === STATUS_CODE_FORBIDDEN
-              ? 'You are not permitted to run new job'
+              ? 'You are not permitted to run new job.'
               : error.message
           )
         )
