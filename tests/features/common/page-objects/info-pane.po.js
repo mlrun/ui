@@ -345,6 +345,7 @@ const crossCloseButton = By.css(
 const commonDownloadButton = By.css(
   '.table__item .item-header__buttons .download-container'
 )
+const commonArrowBack = By.css('a.link-back__icon')
 const commonInfoPaneTabSelector = commonTable(infoPaneTabSelector)
 
 module.exports = {
@@ -475,7 +476,7 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders)
   },
   jobsMonitorTabInfoPane: {
-    Arrow_Back: By.css('a.link-back__icon'),
+    Arrow_Back: commonArrowBack,
 
     Header: header,
     Updated: updated,
@@ -489,7 +490,7 @@ module.exports = {
     Logs_Refresh_Button: By.css('.table__item .logs_refresh')
   },
   workflowsMonitorTabInfoPane: {
-    Arrow_Back: By.css('.workflow-container a.link-back__icon'),
+    Arrow_Back: commonArrowBack,
     Header: By.css('.workflow-container .link-back__title .data-ellipsis'),
     Updated: updated,
     Action_Menu: commonActionMenu,
@@ -564,6 +565,7 @@ module.exports = {
     Info_Sources_Table: commonTable(filesInfoSourcesTable)
   },
   modelsRealTimePiplineInfoPane: {
+    Arrow_Back: commonArrowBack,
     Header: By.css('.graph-pane__title span'),
     Cross_Close_Button: By.css(
       '.graph-pane__title .round-icon-cp .round-icon-cp__circle'

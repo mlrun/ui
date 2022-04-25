@@ -25,6 +25,29 @@ Feature: Datasets Page
     Then verify "Feature_Datasets_Table" element visibility on "Feature_Store_Datasets_Tab" wizard
 
   @passive
+  Scenario: Verify behaviour of Show iterations checkbox on Datasets tab
+    Given open url
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then verify "Show_Iterations_Checkbox" element visibility on "Feature_Store_Datasets_Tab" wizard
+    Then check "expand_btn" not visible in "Feature_Datasets_Table" on "Feature_Store_Datasets_Tab" wizard
+    Then check "Show_Iterations_Checkbox" element on "Feature_Store_Datasets_Tab" wizard
+    And wait load page
+    Then "Show_Iterations_Checkbox" element should be checked on "Feature_Store_Datasets_Tab" wizard
+    Then check "expand_btn" visibility in "Feature_Datasets_Table" on "Feature_Store_Datasets_Tab" wizard
+    Then click on cell with row index 1 in "expand_btn" column in "Feature_Datasets_Table" table on "Feature_Store_Datasets_Tab" wizard
+    Then click on cell with row index 2 in "name" column in "Feature_Datasets_Table" table on "Feature_Store_Datasets_Tab" wizard
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "Feature_Store_Datasets_Tab" wizard
+    And wait load page
+    Then verify "Header" element not exists on "Datasets_Info_Pane" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "Feature_Store_Datasets_Tab" wizard
+    Then check "expand_btn" not visible in "Feature_Datasets_Table" on "Feature_Store_Datasets_Tab" wizard
+
+  @passive
   @inProgress
   Scenario: Check all mandatory components in Item infopane on Overview tab table on Datasets tab
     Given open url
@@ -34,7 +57,7 @@ Feature: Datasets Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+    When click on cell with row index 1 in "name" column in "Feature_Datasets_Table" table on "Feature_Store_Datasets_Tab" wizard
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
@@ -45,6 +68,29 @@ Feature: Datasets Page
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Hash_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
+
+  @passive
+  Scenario: Check Details panel still active on page refresh
+    * set tear-down property "dataset" created in "automation-test" project with "test-file" value
+    * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Files" wizard
+    And wait load page
+    When click on cell with value "test-dataset" in "name" column in "Feature_Datasets_Table" table on "Feature_Store_Datasets_Tab" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
+    Then refresh a page
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
 
   @passive
   Scenario: Check all mandatory components on Register Dataset form
@@ -71,6 +117,24 @@ Feature: Datasets Page
     Then "Cancel_Button" element on "Register_Dataset" should contains "Cancel" value
     Then verify "Register_Button" element visibility on "Register_Dataset" wizard
     Then "Register_Button" element on "Register_Dataset" should contains "Register" value
+
+  Scenario: Verify behaviour on Register new Dataset
+    * set tear-down property "dataset" created in "default" project with "test-dataset" value
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then click on "Register_Dataset_Button" element on "Feature_Store_Datasets_Tab" wizard
+    Then verify if "Register_Dataset" popup dialog appears
+    Then type value "test-dataset" to "Name_Input" field on "Register_Dataset" wizard
+    Then type value "test-path" to "Target_Path_Input" field on "Register_Dataset" wizard
+    Then click on "Register_Button" element on "Register_Dataset" wizard
+    And wait load page
+    Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test-dataset"
+    Then click on cell with value "test-dataset" in "name" column in "Files_Table" table on "Files" wizard
+    Then "Header" element on "Files_Info_Pane" should contains "test-dataset" value
 
   @passive
   Scenario: Check filtering by Name on Feature Store Datasets Tab

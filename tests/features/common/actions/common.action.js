@@ -12,6 +12,9 @@ const action = {
     await driver.get(baseURL)
     await driver.sleep(1000)
   },
+  refreshPage: async function(driver) {
+    await driver.navigate().refresh()
+  },
   waitPageLoad: async function(driver, loader) {
     await driver.wait(async function(driver) {
       const found = await driver.findElements(loader)

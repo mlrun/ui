@@ -4,6 +4,7 @@ import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
 import inputGroup from '../components/input-group.component'
 import labelComponent from '../components/label.component'
+import checkboxComponent from '../components/checkbox.component'
 import {
   generateInputGroup,
   generateDropdownGroup,
@@ -338,12 +339,35 @@ module.exports = {
     Table_Label_Filter_Input: commonLabelFilterInput,
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
-    Feature_Datasets_Table: commonTable(datasetsTable)
+    Feature_Datasets_Table: commonTable(datasetsTable),
+    Show_Iterations_Checkbox: checkboxComponent({
+      root: '.content .content__action-bar .filters .checkbox',
+      elements: {
+        checkbox: 'svg[class]',
+        name: '',
+        icon: ''
+      }
+    })
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Name_Filter_Input: commonNameFilterInput,
-    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Entity_Filter_Input: inputGroup(
+      generateInputGroup(
+        '.content .content__action-bar .input-wrapper:nth-of-type(3)',
+        true,
+        false,
+        true
+      )
+    ),
+    Table_Label_Filter_Input: inputGroup(
+      generateInputGroup(
+        '.content .content__action-bar .input-wrapper:nth-of-type(4)',
+        true,
+        false,
+        true
+      )
+    ),
     Table_Projects_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '.content .content__action-bar .filters .select',
