@@ -14,6 +14,8 @@ Feature: MLRun Projects Page
         Then verify "Projects_Sort_Dropdown" element visibility on "Projects" wizard
         Then verify "Projects_Sorter" element visibility on "Projects" wizard
         Then verify "Projects_Table" element visibility on "Projects" wizard
+        Then value in "running" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "ML jobs and Nuclio functions"
+        Then value in "failed" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "Failed ML jobs and nuclio functions in the last 24 hours"
 
     @passive
     Scenario: Verify filtering by project name

@@ -562,6 +562,14 @@ function getProjectsFeaturesEntities(req, res) {
         })
       }
     }
+
+    if (req.query['entity']) {
+      collectedArtifacts = collectedArtifacts.filter(feature => {
+        return feature.feature_set_digest.spec.entities.some(
+          item => item.name === req.query['entity']
+        )
+      })
+    }
   }
 
   let result = {}
@@ -614,8 +622,7 @@ function getArtifacts(req, res) {
     other: ['', 'table', 'link']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
-    artifact =>
-      artifact.project === '' || artifact.project === req.query['project']
+    artifact => artifact.project === req.query['project']
   )
 
   if (req.query['category']) {
@@ -1144,33 +1151,46 @@ function postSubmitJob(req, res) {
   res.send(respTemplate)
 }
 
-function postModel(req, res) {
+function postArtifact(req, res) {
   const currentDate = new Date()
-  const modelHash = makeUID(32)
+  const artifactHash = makeUID(32)
+  const artifactTag = req.body.tag || 'latest'
+  const tagObject = artifactTags.find(
+    artifact => artifact.project === req.body.project
+  )
 
-  const modelTemplate = {
-    key: 'model',
-    kind: 'model',
+  const artifactTemplate = {
+    key: req.body.key,
+    kind: req.body.kind,
     iter: 0,
     tree: req.body.tree,
-    target_path: '',
-    hash: modelHash,
+    target_path: req.body.target_path,
+    hash: artifactHash,
     size: null,
     db_key: req.body.db_key,
-    model_file: req.body.model_file,
+    description: req.body.description,
     framework: '',
     producer: {
       kind: req.body.producer.kind,
-      uri: req.body.producer.uri,
-      owner: 'admin'
+      uri: req.body.producer.uri
     },
     sources: [],
     project: req.body.project,
     updated: currentDate.toISOString(),
-    tag: 'latest'
+    tag: artifactTag
   }
 
-  artifacts.artifacts.push(modelTemplate)
+  artifacts.artifacts.push(artifactTemplate)
+
+  if (tagObject) {
+    tagObject.tags.push(artifactTag)
+  } else {
+    artifactTags.push({
+      project: req.body.project,
+      tags: [artifactTag]
+    })
+  }
+
   res.send()
 }
 
@@ -1390,16 +1410,12 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/pipelines/:pipelineID`, getPipeline)
 
 app.get(
-  `${mlrunAPIIngress}/projects/:project/:artifact`,
-  getProjectsFeaturesEntities
-)
-app.get(
   `${mlrunAPIIngress}/projects/:project/artifact-tags`,
   getProjectsArtifactTags
 )
 app.get(`${mlrunAPIIngress}/artifacts`, getArtifacts)
 
-app.post(`${mlrunAPIIngress}/artifact/:project/:uid/:artifact`, postModel)
+app.post(`${mlrunAPIIngress}/artifact/:project/:uid/:artifact`, postArtifact)
 app.get(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   getProjectsFeatureSets
@@ -1447,6 +1463,11 @@ app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 app.get(
   `${mlrunAPIIngress}/projects/:project/runtime-resources`,
   getRuntimeResources
+)
+
+app.get(
+  `${mlrunAPIIngress}/projects/:project/:artifact`,
+  getProjectsFeaturesEntities
 )
 
 app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)

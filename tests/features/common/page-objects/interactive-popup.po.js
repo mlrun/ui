@@ -14,14 +14,18 @@ import inputWithAutocomplete from '../components/input-with-autocomplete.compone
 const { By } = require('selenium-webdriver')
 
 const memberOverviewLabelsTable = {
-  root: '.settings__members-summary',
+  root: '.settings__members',
   header: {},
   body: {
-    root: 'members-overview',
     row: {
-      root: '.member-overview',
+      root: '.info-row',
       fields: {
-        name: ''
+        editors:
+          '.members-overview .member-overview:nth-of-type(1) .member-count',
+        viewers:
+          '.members-overview .member-overview:nth-of-type(2) .member-count',
+        admins:
+          '.members-overview .member-overview:nth-of-type(3) .member-count'
       }
     }
   }
@@ -337,11 +341,12 @@ module.exports = {
   changeProjectOwnerPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
     Title: commonTitle,
+    Owner_Name: By.css('.settings__owner .row-name'),
     Search_Input_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '.pop-up-dialog .owner-table',
+        '.pop-up-dialog .members-list',
         '.input-wrapper .input', //open component subLocator
-        '.members-list .member-row', // options sublocator
+        '.member-row', // options sublocator
         '.member-name' // option name subLocator
       )
     ),
@@ -367,6 +372,7 @@ module.exports = {
         true // for single hint
       )
     ),
+    Members_Summary: By.css('.settings__members-summary'),
     Invite_New_Members_Button: By.css('.info-row .invite-new-members-btn'),
     Invite_New_Members_Labels_Table: commonTable(inviteNewMemberLabelTable),
     New_Member_Name_Input: inputWithAutocomplete({

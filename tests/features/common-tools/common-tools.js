@@ -163,8 +163,10 @@ module.exports = {
           return deleteAPIFunction(item.project, item.name, 204)
         case 'schedule':
           return deleteAPISchedule(item.project, item.name, 204)
-        case 'artifact':
-          return deleteAPIArtifact(item.project, item.name, 204)
+        case 'dataset':
+        case 'file':
+        case 'model':
+          return deleteAPIArtifact(item.project, item.name, 200)
         default:
           return null
       }

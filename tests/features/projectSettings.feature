@@ -191,6 +191,9 @@ Feature: Project Settings page
         And wait load page
         And select "Members" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
+        Then "Members_Summary" element on "Project_Members_Popup" should contains "0members have access to this project" value
+        Then verify "Discard_Button" element on "Project_Members_Popup" wizard is disabled
+        Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
         Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
         Then type value "a" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
         Then searchable case "insensitive" fragment "a" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
@@ -216,6 +219,8 @@ Feature: Project Settings page
             | admin     |
         Then select "Admin" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
         Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
+        Then verify "Discard_Button" element on "Project_Members_Popup" wizard is enabled
+        Then verify "Apply_Button" element on "Project_Members_Popup" wizard is enabled
         Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
         Then type value "all" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
         Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
@@ -225,6 +230,9 @@ Feature: Project Settings page
             | name      | role   |
             | admin     | Admin  |
             | all_users | Viewer |
+        Then click on "Apply_Button" element on "Project_Members_Popup" wizard
+        And wait load page
+        Then "Members_Summary" element on "Project_Members_Popup" should contains "2members have access to this project" value
         When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
             | name  |
             | admin |
@@ -235,10 +243,20 @@ Feature: Project Settings page
         Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
             | name      | role   |
             | all_users | Viewer |
+        Then click on "Apply_Button" element on "Project_Members_Popup" wizard
+        And wait load page
+        Then "Members_Summary" element on "Project_Members_Popup" should contains "1member has access to this project" value
+        When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
+            | name      |
+            | all_users |
+        Then click on "Remove_Member_Button" element on "Remove_Member_Popup" wizard
         Then click on "Discard_Button" element on "Project_Members_Popup" wizard
         Then verify if "Discard_Changes_Popup" popup dialog appears
         Then "No_Button" element on "Discard_Changes_Popup" should contains "No" value
         Then "Discard_Button" element on "Discard_Changes_Popup" should contains "Discard" value
+        Then click on "Discard_Button" element on "Discard_Changes_Popup" wizard
+        Then verify "Discard_Button" element on "Project_Members_Popup" wizard is disabled
+        Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
         And remove "automation-test" MLRun Project with code 204
 
 #      TODO: need to add mock requests
