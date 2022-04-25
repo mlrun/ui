@@ -274,6 +274,8 @@ Feature: ML Functions
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
+        Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Priority"
         When select "Manual" option in "New_Function_Volume_Mount_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
@@ -478,6 +480,7 @@ Feature: ML Functions
 
     @inProgress
     Scenario: Save new ml-function
+        * set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -493,11 +496,19 @@ Feature: ML Functions
         When collapse "General_Accordion" on "New_Function" wizard
         Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
+        Then select "Low" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
         And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Then click on "Save_Button" element on "New_Function" wizard
+        And wait load page
+        Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
         Then check "new-aqa-function-00" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "new-aqa-function-00" value in "name" column
+        And wait load page
+        When collapse "General_Accordion" on "New_Function" wizard
+        When collapse "Code_Accordion" on "New_Function" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
 
     @inProgress
     Scenario: deploy new ml-function with build new image option
@@ -872,15 +883,18 @@ Feature: ML Functions
 
     @passive
     Scenario: Verify all mandatory component on Edit Function sidebar
+        * set tear-down property "project" created with "automation-test" value
+        * create "automation-test" MLRun Project with code 201
+        * create "test-function" Function in "automation-test" project with code 200
         Given open url
         And wait load page
-        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
+        Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-function" value in "name" column
         And wait load page
         Then verify "New_Function_Description_Text_Area" element visibility in "General_Accordion" on "New_Function" wizard
         Then verify "Labels_Table" element visibility in "General_Accordion" on "New_Function" wizard
@@ -895,6 +909,13 @@ Feature: ML Functions
         Then verify "New_Function_Base_Image_Input" element visibility in "Code_Accordion" on "New_Function" wizard
         Then verify "Force_Build_Checkbox" element visibility in "Code_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
+        Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Medium"
+        Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Priority"
+        Then select "Low" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
+        Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "High"
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
