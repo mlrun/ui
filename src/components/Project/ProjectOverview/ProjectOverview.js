@@ -45,7 +45,6 @@ const ProjectOverview = ({ fetchProject, project }) => {
   }
 
   const handleModalClose = modalName => {
-    console.log(modalName)
     setModals(oldModals => ({
       ...oldModals,
       [modalName]: {

@@ -1,3 +1,4 @@
+import lodash from 'lodash'
 import { FILES, SECONDARY_BUTTON, TABULAR, TERTIARY_BUTTON } from '../../constants'
 
 const modalAction = type => {
@@ -5,14 +6,12 @@ const modalAction = type => {
     case FILES:
       return [
         {
-          disabled: true,
           id: 'files_upload_and_view',
           label: 'Upload and view',
           onClick: () => {},
           variant: TERTIARY_BUTTON
         },
         {
-          disabled: true,
           id: 'files_upload',
           label: 'Upload',
           onClick: () => {},
@@ -29,7 +28,6 @@ const modalAction = type => {
         //   variant: TERTIARY_BUTTON
         // },
         {
-          disabled: true,
           id: 'tabular_create_feature_set',
           label: 'Create feature set',
           onClick: () => {},
@@ -60,21 +58,6 @@ const tabularConfig = {
   type: 'file'
 }
 
-export const initialPageData = {
-  actions: modalAction(FILES),
-  elements: [
-    {
-      label: 'Tabular',
-      value: TABULAR
-    },
-    {
-      label: 'Files',
-      value: FILES
-    }
-  ],
-  type: null
-}
-
 export const generatePageData = type => {
   const data = {
     actions: modalAction(type),
@@ -85,4 +68,32 @@ export const generatePageData = type => {
   }
 
   return data
+}
+
+export const initialPageData = {
+  elements: [
+    {
+      label: 'Files',
+      value: FILES
+    },
+    {
+      label: 'Tabular',
+      value: TABULAR
+    }
+  ],
+  ...generatePageData(FILES)
+}
+
+export const checkValidation = (path, value, setValidations, pageData) => {
+  let isValid = true
+  if (value && pageData.type === TABULAR && pageData.config.type === 'file') {
+    setValidations(oldState =>
+      lodash
+        .chain(oldState)
+        .cloneDeep()
+        .set(path, value.name.includes('.parquet'))
+        .value()
+    )
+  }
+  return isValid
 }

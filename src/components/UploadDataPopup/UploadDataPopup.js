@@ -7,17 +7,17 @@ import Button from '../../common/Button/Button'
 import Modal from '../../common/Modal/Modal'
 import UploadDataForm from '../../elements/UploadDataForm/UploadDataForm'
 
-import { generatePageData, initialPageData } from './UploadDataPopup_util'
-import { TABULAR } from '../../constants'
+import { checkValidation, initialPageData, generatePageData } from './UploadDataPopup_util'
+import { FILES } from '../../constants'
 
 const UploadDataPopup = ({ onClose, show, title }) => {
-  const [sourceType, setSourceType] = useState(null)
+  const [sourceType, setSourceType] = useState(FILES)
   const [formData, setFormData] = useState({
-    tabular: {
+    files: {
       file: null,
       store: null
     },
-    files: {
+    tabular: {
       file: null,
       store: null
     },
@@ -25,11 +25,11 @@ const UploadDataPopup = ({ onClose, show, title }) => {
   })
   const [pageData, setPageData] = useState(initialPageData)
   const [validation, setValidations] = useState({
-    tabular: {
+    files: {
       file: true,
       store: true
     },
-    files: {
+    tabular: {
       file: true,
       store: true
     }
@@ -40,16 +40,11 @@ const UploadDataPopup = ({ onClose, show, title }) => {
     projectStore: { project }
   } = useSelector(store => store)
 
+  const isFormInvalid = !Object.values(validation[sourceType]).every(value => value)
+
   const handleFormData = (path, value) => {
-    if (value && pageData.type === TABULAR && pageData.config.type === 'file') {
-      setValidations(oldState =>
-        lodash
-          .chain(oldState)
-          .cloneDeep()
-          .set(path, value.name.includes('.parquet'))
-          .value()
-      )
-    }
+    checkValidation(path, value, setValidations, pageData)
+
     setFormData(oldState =>
       lodash
         .chain(oldState)
@@ -70,24 +65,22 @@ const UploadDataPopup = ({ onClose, show, title }) => {
   }
 
   const handleCloseModal = useCallback(() => {
+    setSourceType(FILES)
     setPageData(initialPageData)
-    setSourceType(null)
     onClose()
   }, [onClose])
 
   useEffect(() => {
-    if (sourceType) {
-      setPageData(state => ({
-        ...state,
-        ...generatePageData(sourceType)
-      }))
-    }
+    setPageData(state => ({
+      ...state,
+      ...generatePageData(sourceType)
+    }))
   }, [sourceType])
 
   return (
     <Modal
       actions={pageData.actions.map(action => (
-        <Button key={action.value} {...action} />
+        <Button key={action.id} disabled={isFormInvalid} {...action} />
       ))}
       onClose={handleCloseModal}
       size="sm"

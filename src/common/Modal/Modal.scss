@@ -88,6 +88,10 @@
       flex: 1 0 auto;
       justify-content: flex-end;
       align-items: flex-end;
+
+      & > *:not(:last-child) {
+        margin-right: 15px;
+      }
     }
   }
 

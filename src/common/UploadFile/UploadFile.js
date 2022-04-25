@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import formatSize from 'pretty-bytes'
@@ -14,6 +14,9 @@ import './uploadFile.scss'
 const UploadFile = forwardRef(
   ({ changeFile, file, id, isValid, required, requiredText, variant }, ref) => {
     const [isDragFile, setIsDragFile] = useState(false)
+    const inputRef = useRef()
+
+    ref ??= inputRef
 
     const upLoadFileClassName = classnames(
       'uploadfile-container',
@@ -28,9 +31,10 @@ const UploadFile = forwardRef(
       file && !isValid && 'input-file__invalid'
     )
 
-    const handleChange = event => {
+    const onFileChange = event => {
       const file = event.target.files[0]
       changeFile(file)
+      inputRef.current.value = ''
     }
 
     const handleDragEnter = event => {
@@ -68,13 +72,14 @@ const UploadFile = forwardRef(
 
     if (variant === 'input') {
       return (
-        <div className={inputFileClassName} ref={ref}>
+        <div className={inputFileClassName}>
           <input
             type="file"
             name={id}
             id={id}
             className="input-file__input"
-            onChange={handleChange}
+            onInput={onFileChange}
+            ref={inputRef}
           />
           <label className="input-file__label" htmlFor={id}>
             <span className="input-file__label-placeholder">File Name</span>
@@ -129,10 +134,12 @@ UploadFile.defaultProps = {
 }
 
 UploadFile.propTypes = {
-  file: PropTypes.oneOfType([PropTypes.shape({})]),
   changeFile: PropTypes.func.isRequired,
+  file: PropTypes.oneOfType([PropTypes.shape({})]),
+  id: PropTypes.string,
   required: PropTypes.bool,
-  requiredText: PropTypes.string
+  requiredText: PropTypes.string,
+  variant: PropTypes.string
 }
 
 export default UploadFile
