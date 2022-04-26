@@ -317,7 +317,8 @@ const projectsAction = {
       'partition-by': 'name',
       'partition-sort-by': 'updated',
       'rows-per-partition': '5',
-      'max-partitions': '5'
+      'max-partitions': '5',
+      'iter': 'false'
     }
 
     return projectsApi
