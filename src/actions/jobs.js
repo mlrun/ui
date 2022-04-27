@@ -3,6 +3,7 @@ import {
   ABORT_JOB_BEGIN,
   ABORT_JOB_FAILURE,
   ABORT_JOB_SUCCESS,
+  CONFLICT_CODE,
   EDIT_JOB_FAILURE,
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
@@ -266,6 +267,8 @@ const jobsActions = {
           jobsActions.runNewJobFailure(
             error.response.status === STATUS_CODE_FORBIDDEN
               ? 'You are not permitted to run new job.'
+              : error.response.status === CONFLICT_CODE
+              ? 'This job is already scheduled'
               : error.message
           )
         )
