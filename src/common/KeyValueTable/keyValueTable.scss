@@ -28,6 +28,7 @@ $actionsBlockWidth: 72px;
     &__last {
       position: sticky;
       bottom: 0;
+      z-index: 3;
       background-color: inherit;
       border: 0;
     }
@@ -36,7 +37,7 @@ $actionsBlockWidth: 72px;
   .table-row__header {
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 3;
     font-weight: bold;
     font-size: 18px;
     background-color: inherit;

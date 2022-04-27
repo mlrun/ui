@@ -348,9 +348,11 @@ const Models = ({
           title={pageData.actionsMenuHeader}
         />
       )}
-      {isDeployPopupOpen && (
-        <DeployModelPopUp closePopUp={closeDeployModelPopUp} model={deployModel} />
-      )}
+      <DeployModelPopUp
+        closePopUp={closeDeployModelPopUp}
+        model={deployModel}
+        show={isDeployPopupOpen}
+      />
     </div>
   )
 }

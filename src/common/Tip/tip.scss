@@ -11,13 +11,13 @@ $arrowOffset: 20px;
 
 .tip {
   position: fixed;
-  z-index: 10;
   display: block;
   padding: 10px;
   color: $white;
   white-space: pre-line;
   background: $primary;
   border-radius: 4px;
+  z-index: 999;
 
   &_top {
     &::after {

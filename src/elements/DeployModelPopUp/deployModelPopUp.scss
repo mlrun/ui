@@ -1,36 +1,33 @@
-.deploy-model {
-  .pop-up-dialog {
-    width: 550px;
-    max-height: 100vh;
-    overflow: auto;
-  }
+@import '../../scss/mixins.scss';
 
-  .select-row {
+.deploy-model {
+  &__row {
     display: flex;
+    margin-bottom: 20px;
 
     .select {
-      width: 220px;
-      height: 56px;
+      flex: 1 0 0%;
       margin-right: 10px;
-      margin-bottom: 10px;
-    }
-  }
 
-  .input-row {
-    display: flex;
+      &-router {
+        flex: 2 0 0%;
+      }
+    }
 
     .input-wrapper {
-      width: 220px;
-      margin-right: 10px;
-      margin-bottom: 10px;
-
-      input {
-        width: 100%;
-      }
+      flex: 1 0 0%;
     }
   }
 
   .key-value-table {
-    margin: 10px 0;
+    @include fieldWrapper;
+
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: $white;
+
+    .table-row__header {
+      border-top: 0;
+    }
   }
 }

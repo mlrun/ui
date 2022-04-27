@@ -11,14 +11,10 @@ import { ReactComponent as CloseIcon } from '../../images/close.svg'
 
 import './Modal.scss'
 
-const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
+const JSX_MODAL = ({ actions, children, className, onClose, size, show, title }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const modalClassNames = classNames(
-    'modal',
-    className,
-    size && `modal-${size}`
-  )
+  const modalClassNames = classNames('modal', className, size && `modal-${size}`)
 
   const handleOnClose = () => {
     setIsModalOpen(false)
@@ -34,12 +30,7 @@ const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
   return (
     <>
       <Backdrop onClose={handleOnClose} show={isModalOpen} />
-      <CSSTransition
-        in={isModalOpen}
-        timeout={300}
-        classNames="modal-transition"
-        unmountOnExit
-      >
+      <CSSTransition in={isModalOpen} timeout={300} classNames="modal-transition" unmountOnExit>
         <div className={modalClassNames} data-testid="modal">
           <RoundedIcon
             className="modal__header-button"
@@ -54,7 +45,15 @@ const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
               <h5 className="modal__header-title">{title}</h5>
             </div>
             <div className="modal__body">{children}</div>
-            <div className="modal__footer"></div>
+            {actions && actions.length > 0 && (
+              <div className="modal__footer">
+                <div className="modal__footer-actions">
+                  {actions.map((action, idx) => (
+                    <div key={idx}>{action}</div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </CSSTransition>
@@ -62,24 +61,27 @@ const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
   )
 }
 const Modal = props => {
-  return createPortal(
-    <JSX_MODAL {...props} />,
-    document.getElementById('overlay_container')
-  )
+  return createPortal(<JSX_MODAL {...props} />, document.getElementById('overlay_container'))
 }
 
 Modal.defaultProps = {
+  actions: [],
   show: false,
-  size: 'normal',
+  size: 'md',
   title: ''
 }
 
 Modal.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
-    .isRequired,
+  actions: PropTypes.array,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.object,
+    PropTypes.node,
+    PropTypes.string
+  ]).isRequired,
   onClose: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
-  size: PropTypes.oneOf(['sm', 'normal', 'lg']),
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
   title: PropTypes.string
 }
 

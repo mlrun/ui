@@ -3,16 +3,16 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { chain, keyBy, mapValues } from 'lodash'
 
-import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Button from '../../common/Button/Button'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
+import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
+import Modal from '../../common/Modal/Modal'
+import Select from '../../common/Select/Select'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
-import { LABEL_BUTTON, MODELS_TAB, PRIMARY_BUTTON } from '../../constants'
+import { MODELS_TAB, SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import './deployModelPopUp.scss'
 
@@ -21,10 +21,11 @@ const DeployModelPopUp = ({
   closePopUp,
   fetchFunctions,
   model,
-  setNotification
+  setNotification,
+  show
 }) => {
   const [functionList, setFunctionList] = useState([])
-  const [modelName, setModelName] = useState(model.db_key)
+  const [modelName, setModelName] = useState('')
   const [className, setClassName] = useState('')
   const [classArgumentsList, setClassArgumentsList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
@@ -33,61 +34,85 @@ const DeployModelPopUp = ({
   const [selectedTag, setSelectedTag] = useState('')
 
   useEffect(() => {
-    if (functionOptionList.length === 0) {
-      fetchFunctions(model.project).then(functions => {
-        const functionOptions = chain(functions)
-          .filter(
-            func =>
-              func.kind === 'serving' && func?.spec?.graph?.kind === 'router'
-          )
-          .uniqBy('metadata.name')
-          .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
-          .value()
+    if (show) {
+      if (functionOptionList.length === 0) {
+        fetchFunctions(model.project).then(functions => {
+          const functionOptions = chain(functions)
+            .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
+            .uniqBy('metadata.name')
+            .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
+            .value()
 
-        if (functionOptions.length !== 0) {
-          setFunctionList(functions)
-          setFunctionOptionList(functionOptions)
-          setSelectedFunctionName(functionOptions[0].id)
-        }
-      })
+          if (functionOptions.length !== 0) {
+            setFunctionList(functions)
+            setFunctionOptionList(functionOptions)
+            setSelectedFunctionName(functionOptions[0].id)
+          }
+        })
+      }
+    } else {
+      return () => {
+        setFunctionList([])
+        setFunctionOptionList([])
+        setSelectedFunctionName('')
+      }
     }
-  }, [fetchFunctions, functionOptionList.length, model.project])
+  }, [fetchFunctions, functionOptionList.length, model.project, show])
 
   useEffect(() => {
-    const tags = chain(functionList)
-      .filter(
-        func =>
-          func.metadata.name === selectedFunctionName &&
-          func.metadata.tag !== ''
+    if (!show) {
+      return () => {
+        setClassArgumentsList([])
+      }
+    }
+  }, [show])
+
+  useEffect(() => {
+    if (show) {
+      setModelName(model?.db_key)
+    } else {
+      return () => setModelName('')
+    }
+  }, [model, show])
+
+  useEffect(() => {
+    if (show) {
+      const tags = chain(functionList)
+        .filter(func => func.metadata.name === selectedFunctionName && func.metadata.tag !== '')
+        .uniqBy('metadata.tag')
+        .map(func => ({
+          label: func.metadata.tag,
+          id: func.metadata.tag
+        }))
+        .value()
+
+      setTagOptionList(tags)
+      setSelectedTag(tags[0]?.id)
+    } else {
+      return () => {
+        setTagOptionList([])
+        setSelectedTag('')
+      }
+    }
+  }, [functionList, selectedFunctionName, show])
+
+  useEffect(() => {
+    if (show) {
+      const selectedFunction = functionList.find(
+        func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
       )
-      .uniqBy('metadata.tag')
-      .map(func => ({
-        label: func.metadata.tag,
-        id: func.metadata.tag
-      }))
-      .value()
 
-    setTagOptionList(tags)
-    setSelectedTag(tags[0]?.id)
-  }, [functionList, selectedFunctionName])
-
-  useEffect(() => {
-    const selectedFunction = functionList.find(
-      func =>
-        func.metadata.name === selectedFunctionName &&
-        func.metadata.tag === selectedTag
-    )
-
-    if (selectedFunction) {
-      setClassName(selectedFunction.spec.default_class)
+      if (selectedFunction) {
+        setClassName(selectedFunction.spec.default_class)
+      }
+    } else {
+      return () => setClassName('')
     }
-  }, [functionList, selectedFunctionName, selectedTag])
+  }, [functionList, selectedFunctionName, selectedTag, show])
 
   const deployModel = () => {
     const servingFunction = functionList.find(
-      func =>
-        func.metadata.name === selectedFunctionName &&
-        func.metadata.tag === selectedTag
+      func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
     )
     const classArguments = mapValues(keyBy(classArgumentsList, 'key'), 'value')
 
@@ -128,14 +153,38 @@ const DeployModelPopUp = ({
     setSelectedTag(tag)
   }
 
+  const handleEditClassArgument = updatedClassArg => {
+    const newClassArguments = classArgumentsList.map(classArg => {
+      if (classArg.key === updatedClassArg.key) {
+        classArg.key = updatedClassArg.newKey || updatedClassArg.key
+        classArg.value = updatedClassArg.value
+      }
+      return classArg
+    })
+
+    setClassArgumentsList(newClassArguments)
+  }
+
   return (
-    <PopUpDialog
+    <Modal
+      actions={[
+        <Button variant={TERTIARY_BUTTON} label="Cancel" onClick={closePopUp} />,
+        <Button
+          variant={SECONDARY_BUTTON}
+          disabled={[selectedFunctionName, selectedTag, modelName, className].includes('')}
+          label="Deploy"
+          onClick={deployModel}
+        />
+      ]}
       className="deploy-model"
-      closePopUp={closePopUp}
-      headerText="Deploy model"
+      onClose={closePopUp}
+      show={show}
+      size="sm"
+      title="Deploy model"
     >
-      <div className="select-row">
+      <div className="deploy-model__row">
         <Select
+          className="select-router"
           label="Serving function (router)"
           floatingLabel
           disabled={functionOptionList.length === 0}
@@ -152,8 +201,9 @@ const DeployModelPopUp = ({
           selectedId={selectedTag}
           onClick={handleTagSelect}
         />
+        <Input label="Class" type="text" floatingLabel onChange={setClassName} value={className} />
       </div>
-      <div className="input-row">
+      <div className="deploy-model__row">
         <Input
           label="Model name"
           floatingLabel
@@ -161,13 +211,6 @@ const DeployModelPopUp = ({
           tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
           onChange={setModelName}
           value={modelName}
-        />
-        <Input
-          label="Class"
-          type="text"
-          floatingLabel
-          onChange={setClassName}
-          value={className}
         />
       </div>
       <KeyValueTable
@@ -181,37 +224,19 @@ const DeployModelPopUp = ({
           setClassArgumentsList([...classArgumentsList, newItem])
         }}
         deleteItem={deleteIndex => {
-          setClassArgumentsList(
-            classArgumentsList.filter((item, index) => index !== deleteIndex)
-          )
+          setClassArgumentsList(classArgumentsList.filter((item, index) => index !== deleteIndex))
         }}
+        editItem={handleEditClassArgument}
+        withEditMode
       />
-      <div className="pop-up-dialog__footer-container">
-        <Button
-          variant={LABEL_BUTTON}
-          label="Cancel"
-          className="pop-up-dialog__btn_cancel"
-          onClick={closePopUp}
-        />
-        <Button
-          variant={PRIMARY_BUTTON}
-          disabled={[
-            selectedFunctionName,
-            selectedTag,
-            modelName,
-            className
-          ].includes('')}
-          label="Deploy"
-          onClick={deployModel}
-        />
-      </div>
-    </PopUpDialog>
+    </Modal>
   )
 }
 
 DeployModelPopUp.propTypes = {
   closePopUp: PropTypes.func.isRequired,
-  model: PropTypes.shape({}).isRequired
+  model: PropTypes.shape({}).isRequired,
+  show: PropTypes.bool.isRequired
 }
 
 export default connect(artifactsStore => artifactsStore, {
