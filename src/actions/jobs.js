@@ -268,7 +268,7 @@ const jobsActions = {
             error.response.status === STATUS_CODE_FORBIDDEN
               ? 'You are not permitted to run new job.'
               : error.response.status === CONFLICT_CODE
-              ? 'Conflict - Schedule already exists'
+              ? 'This job is already scheduled'
               : error.message
           )
         )
