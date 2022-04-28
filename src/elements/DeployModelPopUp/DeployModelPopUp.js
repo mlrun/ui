@@ -50,28 +50,12 @@ const DeployModelPopUp = ({
           }
         })
       }
-    } else {
-      return () => {
-        setFunctionList([])
-        setFunctionOptionList([])
-        setSelectedFunctionName('')
-      }
     }
   }, [fetchFunctions, functionOptionList.length, model.project, show])
 
   useEffect(() => {
-    if (!show) {
-      return () => {
-        setClassArgumentsList([])
-      }
-    }
-  }, [show])
-
-  useEffect(() => {
     if (show) {
       setModelName(model?.db_key)
-    } else {
-      return () => setModelName('')
     }
   }, [model, show])
 
@@ -88,11 +72,6 @@ const DeployModelPopUp = ({
 
       setTagOptionList(tags)
       setSelectedTag(tags[0]?.id)
-    } else {
-      return () => {
-        setTagOptionList([])
-        setSelectedTag('')
-      }
     }
   }, [functionList, selectedFunctionName, show])
 
@@ -105,10 +84,21 @@ const DeployModelPopUp = ({
       if (selectedFunction) {
         setClassName(selectedFunction.spec.default_class)
       }
-    } else {
-      return () => setClassName('')
     }
   }, [functionList, selectedFunctionName, selectedTag, show])
+
+  useEffect(() => {
+    return () => {
+      setClassArgumentsList([])
+      setClassName('')
+      setFunctionList([])
+      setFunctionOptionList([])
+      setModelName('')
+      setSelectedFunctionName('')
+      setSelectedTag('')
+      setTagOptionList([])
+    }
+  }, [show])
 
   const deployModel = () => {
     const servingFunction = functionList.find(
