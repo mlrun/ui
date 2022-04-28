@@ -20,8 +20,6 @@
   }
 
   .key-value-table {
-    @include fieldWrapper;
-
     padding-top: 0;
     padding-bottom: 0;
     background-color: $white;
