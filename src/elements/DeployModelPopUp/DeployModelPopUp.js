@@ -3,16 +3,16 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { chain, keyBy, mapValues } from 'lodash'
 
-import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
-import Button from '../../common/Button/Button'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
+import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
+import Select from '../../common/Select/Select'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
-import { LABEL_BUTTON, MODELS_TAB, PRIMARY_BUTTON } from '../../constants'
+import { MODELS_TAB } from '../../constants'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import './deployModelPopUp.scss'
 
@@ -36,10 +36,7 @@ const DeployModelPopUp = ({
     if (functionOptionList.length === 0) {
       fetchFunctions(model.project).then(functions => {
         const functionOptions = chain(functions)
-          .filter(
-            func =>
-              func.kind === 'serving' && func?.spec?.graph?.kind === 'router'
-          )
+          .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
           .uniqBy('metadata.name')
           .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
           .value()
@@ -55,11 +52,7 @@ const DeployModelPopUp = ({
 
   useEffect(() => {
     const tags = chain(functionList)
-      .filter(
-        func =>
-          func.metadata.name === selectedFunctionName &&
-          func.metadata.tag !== ''
-      )
+      .filter(func => func.metadata.name === selectedFunctionName && func.metadata.tag !== '')
       .uniqBy('metadata.tag')
       .map(func => ({
         label: func.metadata.tag,
@@ -73,9 +66,7 @@ const DeployModelPopUp = ({
 
   useEffect(() => {
     const selectedFunction = functionList.find(
-      func =>
-        func.metadata.name === selectedFunctionName &&
-        func.metadata.tag === selectedTag
+      func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
     )
 
     if (selectedFunction) {
@@ -85,9 +76,7 @@ const DeployModelPopUp = ({
 
   const deployModel = () => {
     const servingFunction = functionList.find(
-      func =>
-        func.metadata.name === selectedFunctionName &&
-        func.metadata.tag === selectedTag
+      func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
     )
     const classArguments = mapValues(keyBy(classArgumentsList, 'key'), 'value')
 
@@ -129,11 +118,7 @@ const DeployModelPopUp = ({
   }
 
   return (
-    <PopUpDialog
-      className="deploy-model"
-      closePopUp={closePopUp}
-      headerText="Deploy model"
-    >
+    <PopUpDialog className="deploy-model" closePopUp={closePopUp} headerText="Deploy model">
       <div className="select-row">
         <Select
           label="Serving function (router)"
@@ -162,13 +147,7 @@ const DeployModelPopUp = ({
           onChange={setModelName}
           value={modelName}
         />
-        <Input
-          label="Class"
-          type="text"
-          floatingLabel
-          onChange={setClassName}
-          value={className}
-        />
+        <Input label="Class" type="text" floatingLabel onChange={setClassName} value={className} />
       </div>
       <KeyValueTable
         keyHeader="Class argument name"
@@ -181,9 +160,7 @@ const DeployModelPopUp = ({
           setClassArgumentsList([...classArgumentsList, newItem])
         }}
         deleteItem={deleteIndex => {
-          setClassArgumentsList(
-            classArgumentsList.filter((item, index) => index !== deleteIndex)
-          )
+          setClassArgumentsList(classArgumentsList.filter((item, index) => index !== deleteIndex))
         }}
       />
       <div className="pop-up-dialog__footer-container">
@@ -195,12 +172,7 @@ const DeployModelPopUp = ({
         />
         <Button
           variant={PRIMARY_BUTTON}
-          disabled={[
-            selectedFunctionName,
-            selectedTag,
-            modelName,
-            className
-          ].includes('')}
+          disabled={[selectedFunctionName, selectedTag, modelName, className].includes('')}
           label="Deploy"
           onClick={deployModel}
         />

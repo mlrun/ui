@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 
-import PopUpDialog from '../PopUpDialog/PopUpDialog'
+import { PopUpDialog } from 'igz-controls/components'
 
 import './optionsMenu.scss'
 

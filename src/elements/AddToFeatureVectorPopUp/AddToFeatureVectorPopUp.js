@@ -4,17 +4,16 @@ import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { groupBy, uniqBy } from 'lodash'
 
-import Button from '../../common/Button/Button'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Select from '../../common/Select/Select'
 import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
+import Select from '../../common/Select/Select'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { generateProjectsList } from '../../utils/projects'
-import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { setFeaturesPanelData, setTablePanelOpen } from '../../reducers/tableReducer'
 
-import { ReactComponent as AddCircle } from '../../images/add-circle.svg'
+import { ReactComponent as AddCircle } from 'igz-controls/images/add-circle.svg'
 
 import './addToFeatureVectorPopUp.scss'
 

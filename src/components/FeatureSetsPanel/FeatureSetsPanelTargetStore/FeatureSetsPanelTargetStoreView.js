@@ -2,16 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 
-import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import CheckBox from '../../../common/CheckBox/CheckBox'
-import Select from '../../../common/Select/Select'
+import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
+import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import Input from '../../../common/Input/Input'
 import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
+import Select from '../../../common/Select/Select'
 import Tip from '../../../common/Tip/Tip'
-import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
-import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
-import Tooltip from '../../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import {
   EXTERNAL_OFFLINE,
@@ -21,12 +19,12 @@ import {
   checkboxModels
 } from './featureSetsPanelTargetStore.util'
 
-import { ReactComponent as Online } from '../../../images/nosql.svg'
-import { ReactComponent as Offline } from '../../../images/db-icon.svg'
-import { ReactComponent as ExternalOffline } from '../../../images/other.svg'
-import { ReactComponent as Edit } from '../../../images/edit.svg'
-import { ReactComponent as Checkmark } from '../../../images/checkmark.svg'
-import { ReactComponent as Close } from '../../../images/close.svg'
+import { ReactComponent as Online } from 'igz-controls/images/nosql.svg'
+import { ReactComponent as Offline } from 'igz-controls/images/db-icon.svg'
+import { ReactComponent as ExternalOffline } from 'igz-controls/images/other.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 
 import './featureSetsPanelTargetStore.scss'
 

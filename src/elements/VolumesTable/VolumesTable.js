@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import VolumesTableView from './VolumesTableView'
 import { CONFIG_MAP, PVC, SECRET, V3IO } from './volumesTable.util'
 
-import { ReactComponent as Edit } from '../../images/edit.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const VolumesTable = ({
   className,

@@ -3,14 +3,13 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { cloneDeep, debounce } from 'lodash'
 
-import Button from '../../common/Button/Button'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import ChipInput from '../../common/ChipInput/ChipInput'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Input from '../../common/Input/Input'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Select from '../../common/Select/Select'
 import Tip from '../../common/Tip/Tip'
+import { Button, RoundedIcon } from 'igz-controls/components'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
@@ -19,16 +18,16 @@ import {
   DANGER_BUTTON,
   LABEL_BUTTON,
   PRIMARY_BUTTON,
-  SECONDARY_BUTTON,
-  STATUS_CODE_FORBIDDEN
-} from '../../constants'
+  SECONDARY_BUTTON
+} from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
-import { ReactComponent as Add } from '../../images/add.svg'
-import { ReactComponent as Close } from '../../images/close.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
-import { ReactComponent as Filter } from '../../images/filter.svg'
-import { ReactComponent as User } from '../../images/user.svg'
-import { ReactComponent as Users } from '../../images/users.svg'
+import { ReactComponent as Add } from 'igz-controls/images/add.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Filter } from 'igz-controls/images/filter.svg'
+import { ReactComponent as User } from 'igz-controls/images/user.svg'
+import { ReactComponent as Users } from 'igz-controls/images/users.svg'
 
 import './membersPopUp.scss'
 
@@ -171,11 +170,11 @@ const MembersPopUp = ({
           status: error.response?.status || 400,
           id: Math.random(),
           message:
-            error.response?.status === STATUS_CODE_FORBIDDEN
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'Missing edit permission for the project.'
               : 'Failed to edit project data.',
           retry:
-            error.response?.status === STATUS_CODE_FORBIDDEN
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? null
               : () => applyMembersChanges(changesBody)
         })

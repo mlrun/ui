@@ -3,15 +3,14 @@ import { map } from 'lodash'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import EditableRouteRow from './EditableRouteRow'
 import AddRouteRow from './AddRouteRow'
+import EditableRouteRow from './EditableRouteRow'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { tableHeaders } from './functionPanelTopologyModelTable.util'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 import './functionPanelTopologyModelTable.scss'
 

@@ -11,7 +11,8 @@ import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
 import { deleteUnsafeHtml } from '../../utils/string'
-import { KEY_CODES, STATUS_CODE_FORBIDDEN } from '../../constants'
+import { KEY_CODES } from '../../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 import './projectSettingsGeneral.scss'
 
@@ -66,11 +67,11 @@ const ProjectSettingsGeneral = ({
             status: error.response?.status || 400,
             id: Math.random(),
             message:
-              error.response?.status === STATUS_CODE_FORBIDDEN
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? 'Missing edit permission for the project.'
                 : 'Failed to edit project data.',
             retry:
-              error.response?.status === STATUS_CODE_FORBIDDEN
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? null
                 : () => sendProjectSettingsData(type, data, labels)
           })

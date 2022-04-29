@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import { ReactComponent as Checkmark } from '../../images/success_done.svg'
-import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/success_done.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 
 import './ValidationTemplate.scss'
 

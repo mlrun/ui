@@ -16,7 +16,7 @@ import Jobs from './Jobs'
 import reducer from '../../reducers/reducers'
 import { mainHttpClient } from '../../httpClient'
 
-jest.mock('../../images/arrow.svg', () => ({
+jest.mock('igz-controls/images/arrow.svg', () => ({
   ReactComponent: 'arrow-icon'
 }))
 

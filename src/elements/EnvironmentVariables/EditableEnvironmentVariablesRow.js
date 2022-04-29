@@ -16,7 +16,7 @@ import {
   ENV_VARIABLE_TYPE_VALUE
 } from '../../constants'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 const EditableEnvironmentVariablesRow = ({
   editEnvVariable,

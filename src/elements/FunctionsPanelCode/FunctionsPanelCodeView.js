@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
 
-import PanelSection from '../PanelSection/PanelSection'
-import Select from '../../common/Select/Select'
-import Button from '../../common/Button/Button'
+import CheckBox from '../../common/CheckBox/CheckBox'
 import EditorModal from '../../common/EditorModal/EditorModal'
 import Input from '../../common/Input/Input'
-import TextArea from '../../common/TextArea/TextArea'
+import PanelSection from '../PanelSection/PanelSection'
 import RadioButtons from '../../common/RadioButtons/RadioButtons'
-import CheckBox from '../../common/CheckBox/CheckBox'
+import Select from '../../common/Select/Select'
+import TextArea from '../../common/TextArea/TextArea'
+import { Button } from 'igz-controls/components'
 
 import { trimSplit } from '../../utils'
 import {
@@ -21,11 +21,11 @@ import {
 } from './functionsPanelCode.util'
 import {
   FUNCTION_TYPE_SERVING,
-  LABEL_BUTTON,
   PANEL_EDIT_MODE
 } from '../../constants'
+import { LABEL_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Edit } from '../../images/edit.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 
 import './functionsPanelCode.scss'
 

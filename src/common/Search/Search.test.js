@@ -2,7 +2,7 @@ import React from 'react'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import Search from './Search'
 
-jest.mock('../../images/search.svg', () => ({
+jest.mock('igz-controls/images/search.svg', () => ({
   ReactComponent: 'search-icon'
 }))
 

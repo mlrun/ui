@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
 import { updateGroupedFeatures } from '../../reducers/tableReducer'
 
-import { ReactComponent as AddCircle } from '../../images/add-circle.svg'
-import { ReactComponent as AddCircleQuestion } from '../../images/add-circle-question.svg'
+import { ReactComponent as AddCircle } from 'igz-controls/images/add-circle.svg'
+import { ReactComponent as AddCircleQuestion } from 'igz-controls/images/add-circle-question.svg'
 
 import './addFeatureButton.scss'
 
