@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Input from '../../common/Input/Input'
-import Select from '../../common/Select/Select'
 import CheckBox from '../../common/CheckBox/CheckBox'
+import Input from '../../common/Input/Input'
 import RangeInput from '../../common/RangeInput/RangeInput'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Select from '../../common/Select/Select'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   BOOLEAN_TYPE,
@@ -15,8 +14,8 @@ import {
   parameterTypeOptions
 } from './functionsPanelParameters.util'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const AddFunctionParameterRow = ({
   discardChanges,

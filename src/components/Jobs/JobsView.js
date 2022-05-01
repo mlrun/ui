@@ -10,7 +10,8 @@ import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import YamlModal from '../../common/YamlModal/YamlModal'
 
-import { PANEL_EDIT_MODE, TERTIARY_BUTTON } from '../../constants'
+import { PANEL_EDIT_MODE } from '../../constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 
 const JobsView = ({

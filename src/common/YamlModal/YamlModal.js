@@ -2,7 +2,7 @@ import React from 'react'
 import Prism from 'prismjs'
 import PropTypes from 'prop-types'
 
-import PopUpDialog from '../PopUpDialog/PopUpDialog'
+import { PopUpDialog } from 'igz-controls/components'
 
 import './yamlmodal.scss'
 

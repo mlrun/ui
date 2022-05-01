@@ -11,8 +11,8 @@ import {
   validationInitialState
 } from './functionPanelTopologyModelTable.util'
 
-import { ReactComponent as Edit } from '../../images/edit.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const FunctionPanelTopologyModelTable = ({
   defaultData,

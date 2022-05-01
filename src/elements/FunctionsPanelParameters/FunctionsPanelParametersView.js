@@ -3,16 +3,15 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { map } from 'lodash'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import EditableFunctionParameterRow from './EditableFunctionParameterRow'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import PanelSection from '../PanelSection/PanelSection'
 import AddFunctionParameterRow from './AddFunctionParameterRow'
+import EditableFunctionParameterRow from './EditableFunctionParameterRow'
+import PanelSection from '../PanelSection/PanelSection'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { tableHeaders } from './functionsPanelParameters.util'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 import './functionsPanelParameters.scss'
 

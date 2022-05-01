@@ -4,8 +4,7 @@ import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import './projectTable.scss'
 

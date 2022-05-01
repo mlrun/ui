@@ -5,9 +5,7 @@ import { connect } from 'react-redux'
 
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 
 import artifactActions from '../../actions/artifacts'
 import { formatDatetime } from '../../utils'

@@ -2,16 +2,14 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import SelectOption from '../../elements/SelectOption/SelectOption'
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import PopUpDialog from '../PopUpDialog/PopUpDialog'
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
+import SelectOption from '../../elements/SelectOption/SelectOption'
+import { Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 
 import { SELECT_OPTIONS } from '../../types'
-import { TERTIARY_BUTTON } from '../../constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Caret } from '../../images/dropdown.svg'
+import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 
 import './select.scss'
 

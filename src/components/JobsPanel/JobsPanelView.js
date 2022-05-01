@@ -2,20 +2,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import JobsPanelAdvanced from '../JobsPanelAdvanced/JobsPanelAdvanced'
 import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
 import JobsPanelParameters from '../JobsPanelParameters/JobsPanelParameters'
 import JobsPanelResources from '../JobsPanelResources/JobsPanelResources'
 import JobsPanelTitle from '../../elements/JobsPanelTitle/JobsPanelTitle'
-import ScheduleJob from '../ScheduleJob/ScheduleJob'
-import JobsPanelAdvanced from '../JobsPanelAdvanced/JobsPanelAdvanced'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Loader from '../../common/Loader/Loader'
-import Button from '../../common/Button/Button'
+import ScheduleJob from '../ScheduleJob/ScheduleJob'
+import { Button } from 'igz-controls/components'
 
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
-import { ReactComponent as Run } from '../../images/run.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
+import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import JobsPanelCredentialsAccessKey from '../../elements/JobsPanelCredentialsAccessKey/JobsPanelCredentialsAccessKey'
 
 const JobsPanelView = ({

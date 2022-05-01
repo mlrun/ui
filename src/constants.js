@@ -504,14 +504,6 @@ export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
 export const TREE_FILTER = 'tree'
 
-/*=========== BUTTONS =============*/
-
-export const PRIMARY_BUTTON = 'primary'
-export const SECONDARY_BUTTON = 'secondary'
-export const TERTIARY_BUTTON = 'tertiary'
-export const DANGER_BUTTON = 'danger'
-export const LABEL_BUTTON = 'label'
-
 /*=========== PANEL =============*/
 
 export const PANEL_EDIT_MODE = 'EDIT'
@@ -539,12 +531,6 @@ export const validation = {
   REQUIRED: 'This field is required',
   VALID_CHARACTERS: 'Valid characters'
 }
-
-/*=========== STATUS CODES =============*/
-
-export const AMOUNT_LIMIT_CODE = 500
-export const CONFLICT_CODE = 409
-export const STATUS_CODE_FORBIDDEN = 403
 
 /*=========== ML REACT FLOW =============*/
 

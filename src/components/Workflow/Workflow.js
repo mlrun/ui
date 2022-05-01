@@ -7,10 +7,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Details from '../Details/Details'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
 import Table from '../Table/Table'
 import TableTop from '../../elements/TableTop/TableTop'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   getLayoutedElements,
@@ -23,8 +22,8 @@ import { ACTIONS_MENU } from '../../types'
 import { DEFAULT_EDGE, DETAILS_OVERVIEW_TAB, ML_EDGE, ML_NODE, PRIMARY_NODE } from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 
-import { ReactComponent as ListView } from '../../images/listview.svg'
-import { ReactComponent as Pipelines } from '../../images/pipelines.svg'
+import { ReactComponent as ListView } from 'igz-controls/images/listview.svg'
+import { ReactComponent as Pipelines } from 'igz-controls/images/pipelines.svg'
 
 import './workflow.scss'
 

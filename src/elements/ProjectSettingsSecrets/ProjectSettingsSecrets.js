@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import projectApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import ProjectSettingsSecretsView from './ProjectSettingsSecretsView'
-import { STATUS_CODE_FORBIDDEN } from '../../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import {
   ADD_PROJECT_SECRET,
   DELETE_PROJECT_SECRET,
@@ -25,7 +25,7 @@ const ProjectSettingsSecrets = ({
   const fetchSecrets = useCallback(() => {
     setIsUserAllowed(true)
     fetchProjectSecrets(params.projectName).catch(error => {
-      if (error.response?.status === STATUS_CODE_FORBIDDEN) {
+      if (error.response?.status === FORBIDDEN_ERROR_STATUS_CODE) {
         setIsUserAllowed(false)
         setNotification({
           status: error.response?.status || 400,

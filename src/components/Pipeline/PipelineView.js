@@ -3,14 +3,12 @@ import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import CodeBlock from '../../common/CodeBlock/CodeBlock'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as Back } from '../../images/back-arrow.svg'
-import { ReactComponent as CloseIcon } from '../../images/close.svg'
+import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
 const PipelineView = ({
   elements,

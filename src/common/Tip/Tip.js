@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
 import { createPortal } from 'react-dom'
 
-import { ReactComponent as QuestionMarkIcon } from '../../images/question-mark.svg'
+import { ReactComponent as QuestionMarkIcon } from 'igz-controls/images/question-mark.svg'
 
 import './tip.scss'
 import tipStyle from './tip.scss'

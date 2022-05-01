@@ -5,7 +5,7 @@ import classnames from 'classnames'
 
 import Tip from '../../common/Tip/Tip'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './detailsMenu.scss'
 

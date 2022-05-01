@@ -5,11 +5,11 @@ import { isEmpty } from 'lodash'
 import classnames from 'classnames'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
-import RoundedIcon from '../RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { ACTIONS_MENU } from '../../types'
 
-import { ReactComponent as ActionMenuIcon } from '../../images/elipsis.svg'
+import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.svg'
 
 import './actionsMenu.scss'
 

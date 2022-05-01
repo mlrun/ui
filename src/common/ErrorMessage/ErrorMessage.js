@@ -1,11 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as UnsuccessAlert } from '../../images/unsuccess_alert.svg'
-import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as UnsuccessAlert } from 'igz-controls/images/unsuccess_alert.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 
 import './errorMessage.scss'
 

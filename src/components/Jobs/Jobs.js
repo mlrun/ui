@@ -11,15 +11,14 @@ import { actionCreator, generateEditableItem, generatePageData } from './jobs.ut
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../utils/datePicker.util'
 import {
-  DANGER_BUTTON,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
-  SCHEDULE_TAB,
-  STATUS_CODE_FORBIDDEN
+  SCHEDULE_TAB
 } from '../../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE, DANGER_BUTTON } from 'igz-controls/constants'
 import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
@@ -27,7 +26,7 @@ import { isPageTabValid } from '../../utils/handleRedirect'
 import { generateContentActionsMenu } from '../../layout/Content/content.util'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const Jobs = ({
   abortJob,
@@ -177,7 +176,7 @@ const Jobs = ({
             id: Math.random(),
             retry: item => handleRunJob(item),
             message:
-              error.response.status === STATUS_CODE_FORBIDDEN
+              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? 'You are not permitted to run new job.'
                 : 'Job failed to start.'
           })
@@ -656,7 +655,7 @@ const Jobs = ({
       .catch(error => {
         dispatch(
           editJobFailure(
-            error.response.status === STATUS_CODE_FORBIDDEN
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'You are not permitted to run new job.'
               : error.message
           )

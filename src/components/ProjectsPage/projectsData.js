@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { DANGER_BUTTON } from '../../constants'
+import { DANGER_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const pageData = {
   page: 'PROJECTS'

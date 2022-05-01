@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Edit } from '../../images/edit.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 import JobsPanelTableView from './JobsPanelTableView'
 
