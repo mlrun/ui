@@ -4,7 +4,7 @@ import Select from './Select'
 
 import { render, cleanup, fireEvent } from '@testing-library/react'
 
-jest.mock('../../images/dropdown.svg', () => ({
+jest.mock('igz-controls/images/dropdown.svg', () => ({
   ReactComponent: 'caret-icon'
 }))
 

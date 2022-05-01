@@ -10,17 +10,17 @@ import {
   NAME_FILTER,
   PERIOD_FILTER,
   SCHEDULE_TAB,
-  STATUS_FILTER,
-  TERTIARY_BUTTON
+  STATUS_FILTER
 } from '../../constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { infoHeaders as functionsInfoHeaders } from '../FunctionsPage/functions.util'
 import { detailsMenu as functionsDetailsMenu } from '../FunctionsPage/functions.util'
 
-import { ReactComponent as Delete } from '../../images/delete.svg'
-import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
-import { ReactComponent as Edit } from '../../images/edit.svg'
-import { ReactComponent as Run } from '../../images/run.svg'
-import { ReactComponent as Cancel } from '../../images/close.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Dropdown } from 'igz-controls/images/dropdown.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Run } from 'igz-controls/images/run.svg'
+import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import jobsActions from '../../actions/jobs'
 import functionsActions from '../../actions/functions'

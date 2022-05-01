@@ -6,18 +6,17 @@ import { isEmpty } from 'lodash'
 import OptionsMenu from '../OptionsMenu/OptionsMenu'
 import ValidationTemplate from '../../elements/ValidationTemplate/ValidationTemplate'
 
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tip from '../Tip/Tip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { checkPatternsValidity } from '../../utils/validationService'
 import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
 import { INPUT_LINK } from '../../types'
 
-import { ReactComponent as InvalidIcon } from '../../images/invalid.svg'
-import { ReactComponent as Popout } from '../../images/popout.svg'
-import { ReactComponent as WarningIcon } from '../../images/warning.svg'
+import { ReactComponent as InvalidIcon } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
+import { ReactComponent as WarningIcon } from 'igz-controls/images/warning.svg'
 
 import './input.scss'
 

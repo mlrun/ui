@@ -4,11 +4,10 @@ import classNames from 'classnames'
 import { isNil } from 'lodash'
 
 import Input from '../Input/Input'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Arrow } from '../../images/range-arrow-small.svg'
-import { ReactComponent as Invalid } from '../../images/invalid.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/range-arrow-small.svg'
+import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
 import './rangeInput.scss'
 

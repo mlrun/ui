@@ -3,16 +3,16 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { debounce } from 'lodash'
 
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Button from '../../common/Button/Button'
 import Input from '../../common/Input/Input'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
-import { SECONDARY_BUTTON, LABEL_BUTTON, STATUS_CODE_FORBIDDEN } from '../../constants'
+import { SECONDARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
-import { ReactComponent as SearchIcon } from '../../images/search.svg'
+import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
 import './changeOwnerPopUp.scss'
 
@@ -86,11 +86,11 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId, setNotification }) =
             status: error.response?.status || 400,
             id: Math.random(),
             message:
-              error.response?.status === STATUS_CODE_FORBIDDEN
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? 'Missing edit permission for the project.'
                 : 'Failed to edit project data.',
             retry:
-              error.response?.status === STATUS_CODE_FORBIDDEN
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? null
                 : () => applyChanges(newOwnerId)
           })

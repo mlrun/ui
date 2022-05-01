@@ -2,7 +2,7 @@ import React from 'react'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import DatePicker from './DatePicker'
 
-jest.mock('../../images/back-arrow.svg', () => ({
+jest.mock('igz-controls/images/back-arrow.svg', () => ({
   ReactComponent: 'arrow-icon'
 }))
 

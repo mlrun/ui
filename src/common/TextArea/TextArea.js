@@ -2,11 +2,10 @@ import React, { useEffect, useState, useCallback } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tip from '../Tip/Tip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Invalid } from '../../images/invalid.svg'
+import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
 import './textArea.scss'
 

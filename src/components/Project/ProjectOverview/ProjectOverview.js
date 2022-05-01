@@ -8,8 +8,7 @@ import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
-import Tooltip from '../../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import UploadData from '../../UploadDataPopup/UploadDataPopup'
 
 import projectsAction from '../../../actions/projects'
@@ -18,7 +17,7 @@ import { handlePath, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
 import { getDateAndTimeByFormat } from '../../../utils/'
 
-import { ReactComponent as ArrowIcon } from '../../../images/arrow.svg'
+import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
 import './ProjectOverview.scss'
 

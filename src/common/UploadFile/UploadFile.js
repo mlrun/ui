@@ -3,11 +3,10 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import formatSize from 'pretty-bytes'
 
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as DropFileIcon } from '../../images/drop-file.svg'
-import { ReactComponent as Warning } from '../../images/warning.svg'
+import { ReactComponent as DropFileIcon } from 'igz-controls/images/drop-file.svg'
+import { ReactComponent as Warning } from 'igz-controls/images/warning.svg'
 
 import './uploadFile.scss'
 

@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 const ProjectSummaryCard = ({
   counterValue,

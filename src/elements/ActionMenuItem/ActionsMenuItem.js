@@ -4,8 +4,7 @@ import classnames from 'classnames'
 
 import './actionsMenuItem.scss'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 const ActionsMenuItem = ({ dataItem, isIconDisplayed, menuItem }) => {
   const iconClassNames = classnames(

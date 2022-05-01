@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as UnCheckBox } from '../../images/checkbox-unchecked.svg'
-import { ReactComponent as Checkbox } from '../../images/checkbox-checked.svg'
+import { ReactComponent as UnCheckBox } from 'igz-controls/images/checkbox-unchecked.svg'
+import { ReactComponent as Checkbox } from 'igz-controls/images/checkbox-checked.svg'
 
 import './checkBox.scss'
 

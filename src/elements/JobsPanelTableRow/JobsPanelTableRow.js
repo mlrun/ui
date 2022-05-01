@@ -3,16 +3,15 @@ import PropTypes from 'prop-types'
 import { has, map } from 'lodash'
 import classnames from 'classnames'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import Tip from '../../common/Tip/Tip'
 import CheckBox from '../../common/CheckBox/CheckBox'
+import Tip from '../../common/Tip/Tip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { joinDataOfArrayOrObject } from '../../utils'
 import { ACTIONS_MENU } from '../../types'
 
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 import './jobsPanelTableRow.scss'
 

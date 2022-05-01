@@ -1,16 +1,16 @@
 import React from 'react'
 
-import { ReactComponent as CreatFunctionIcon } from '../../../images/function2-icon.svg'
-// import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg'
-// import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
-// import { ReactComponent as RegisterArtifactIcon } from '../../../images/flow-icon.svg'
-import { ReactComponent as CreateJobIcon } from '../../../images/run2-icon.svg'
-import { ReactComponent as DeployModelIcon } from '../../../images/rocket-icon.svg'
-import { ReactComponent as FeatureVectorIcon } from '../../../images/vector-icon.svg'
-import { ReactComponent as RegisterModelIcon } from '../../../images/model-icon.svg'
-import { ReactComponent as RTFunctionIcon } from '../../../images/realtime-icon-b.svg'
-import { ReactComponent as ServingFunctionIcon } from '../../../images/serving-icon.svg'
-import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
+import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
+// import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
+// import { ReactComponent as FeatureSetIcon } from 'igz-controls/images/set-icon.svg'
+// import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/flow-icon.svg'
+import { ReactComponent as CreateJobIcon } from 'igz-controls/images/run2-icon.svg'
+import { ReactComponent as DeployModelIcon } from 'igz-controls/images/rocket-icon.svg'
+import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/vector-icon.svg'
+import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/model-icon.svg'
+import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/realtime-icon-b.svg'
+import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/serving-icon.svg'
+import { ReactComponent as UploadIcon } from 'igz-controls/images/upload-icon.svg'
 
 export const getInitialCards = projectName => {
   const base_url = `/projects/${projectName}`

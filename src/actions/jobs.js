@@ -46,9 +46,9 @@ import {
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
   SET_NEW_JOB_PREEMTION_MODE,
-  SET_NEW_JOB_PRIORITY_CLASS_NAME,
-  STATUS_CODE_FORBIDDEN
+  SET_NEW_JOB_PRIORITY_CLASS_NAME
 } from '../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE, CONFLICT_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 const jobsActions = {
   abortJob: (project, job) => dispatch => {
@@ -264,8 +264,10 @@ const jobsActions = {
       .catch(error => {
         dispatch(
           jobsActions.runNewJobFailure(
-            error.response.status === STATUS_CODE_FORBIDDEN
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'You are not permitted to run new job.'
+              : error.response.status === CONFLICT_ERROR_STATUS_CODE
+              ? 'This job is already scheduled'
               : error.message
           )
         )
