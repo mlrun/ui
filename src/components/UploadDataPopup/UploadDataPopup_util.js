@@ -1,5 +1,6 @@
 import lodash from 'lodash'
-import { FILES, SECONDARY_BUTTON, TABULAR, TERTIARY_BUTTON } from '../../constants'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { FILES, TABULAR } from '../../constants'
 
 const modalAction = type => {
   switch (type) {

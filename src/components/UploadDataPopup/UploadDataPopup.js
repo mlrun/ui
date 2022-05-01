@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import lodash from 'lodash'
 import PropTypes from 'prop-types'
 
-import Button from '../../common/Button/Button'
+import { Button } from 'igz-controls/components'
 import Modal from '../../common/Modal/Modal'
 import UploadDataForm from '../../elements/UploadDataForm/UploadDataForm'
 
