@@ -5,8 +5,7 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 
 import NoData from '../../common/NoData/NoData'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { generatePods } from './detailsPods.util'
 

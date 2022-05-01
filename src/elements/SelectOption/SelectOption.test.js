@@ -4,10 +4,10 @@ import SelectOption from './SelectOption'
 
 const renderComponent = props => render(<SelectOption {...props} />)
 
-jest.mock('../../images/checkbox-unchecked.svg', () => ({
+jest.mock('igz-controls/images/checkbox-unchecked.svg', () => ({
   ReactComponent: 'unchecked-icon'
 }))
-jest.mock('../../images/checkbox-checked.svg', () => ({
+jest.mock('igz-controls/images/checkbox-checked.svg', () => ({
   ReactComponent: 'unchecked-icon'
 }))
 

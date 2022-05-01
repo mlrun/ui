@@ -2,16 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/ConsumerGroupTableRow'
-import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
-import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
+import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/ConsumerGroupTableRow'
 import Details from '../Details/Details'
-import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import NoData from '../../common/NoData/NoData'
 import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
+import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
+import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
+import NoData from '../../common/NoData/NoData'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   ARTIFACTS_PAGE,

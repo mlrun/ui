@@ -14,7 +14,8 @@ import {
   EXISTING_IMAGE,
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
-import { LABEL_BUTTON, PANEL_CREATE_MODE, SECONDARY_BUTTON } from '../../constants'
+import { PANEL_CREATE_MODE } from '../../constants'
+import { LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const FunctionsPanel = ({
   appStore,

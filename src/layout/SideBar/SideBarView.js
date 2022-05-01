@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Projects } from '../../images/projects.svg'
+import { ReactComponent as Projects } from 'igz-controls/images/projects.svg'
 
 import './sidebar.scss'
 

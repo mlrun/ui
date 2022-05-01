@@ -3,10 +3,9 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Button from '../../common/Button/Button'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
+import Select from '../../common/Select/Select'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'

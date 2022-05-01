@@ -5,16 +5,15 @@ import { isEmpty } from 'lodash'
 import Prism from 'prismjs'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import Input from '../../common/Input/Input'
 import { CHIP_OPTIONS } from '../../types'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
-import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
 const DetailsInfoItem = React.forwardRef(
   (

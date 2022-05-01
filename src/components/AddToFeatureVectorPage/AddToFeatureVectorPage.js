@@ -16,9 +16,9 @@ import {
   FEATURES_TAB,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  STATUS_CODE_FORBIDDEN,
   TAG_FILTER_LATEST
 } from '../../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
@@ -160,13 +160,13 @@ const AddToFeatureVectorPage = ({
             status: error.response.status || 400,
             id: Math.random(),
             message:
-              error.response.status === STATUS_CODE_FORBIDDEN
+              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? 'You are not permitted to create new feature vector.'
                 : 'Feature vector creation failed.',
             retry: handleCreateFeatureVector
           })
 
-          if (error.response.status === STATUS_CODE_FORBIDDEN) {
+          if (error.response.status === FORBIDDEN_ERROR_STATUS_CODE) {
             dispatch(setTablePanelOpen(false))
             navigateToFeatureVectorsScreen()
           }

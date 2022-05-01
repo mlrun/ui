@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Input from '../../../common/Input/Input'
 import ChipCell from '../../../common/ChipCell/ChipCell'
+import Input from '../../../common/Input/Input'
 import TextArea from '../../../common/TextArea/TextArea'
-import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { getValidationRules } from '../../../utils/validationService'
 
-import { ReactComponent as CloseIcon } from '../../../images/close.svg'
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
 import './featureSetsPanelTitle.scss'
 

@@ -20,10 +20,10 @@ import {
 } from './getUniqueIdentifier'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
-import { ReactComponent as Nosql } from '../images/nosql.svg'
-import { ReactComponent as Stream } from '../images/stream.svg'
-import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
-import { ReactComponent as DbIcon } from '../images/db-icon.svg'
+import { ReactComponent as Nosql } from 'igz-controls/images/nosql.svg'
+import { ReactComponent as Stream } from 'igz-controls/images/stream.svg'
+import { ReactComponent as TsdbIcon } from 'igz-controls/images/tsdb-icon.svg'
+import { ReactComponent as DbIcon } from 'igz-controls/images/db-icon.svg'
 
 export const createFeatureStoreContent = (
   content,

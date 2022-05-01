@@ -2,13 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import PanelSection from '../../elements/PanelSection/PanelSection'
 import Input from '../../common/Input/Input'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import JobsPanelParametersTable from '../../elements/JobsPanelParametersTable/JobsPanelParametersTable'
+import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
+import PanelSection from '../../elements/PanelSection/PanelSection'
 import Select from '../../common/Select/Select'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import panelData from '../JobsPanel/panelData'
 import { parametersActions } from './jobsPanelParametersReducer'
@@ -16,8 +15,8 @@ import { selectOptions } from './jobsPanelParameters.util'
 import { isNameNotUnique } from '../JobsPanel/jobsPanel.util'
 import { SELECT_OPTIONS } from '../../types'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const JobsPanelParametersView = ({
   checkParameter,

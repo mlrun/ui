@@ -15,6 +15,7 @@ import {
   WORKFLOW_SUB_PAGE
 } from './constants'
 
+import 'igz-controls/scss/common.scss'
 import './scss/main.scss'
 
 const Page = React.lazy(() => import('./layout/Page/Page'))

@@ -57,9 +57,9 @@ import {
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_FORCE_BUILD,
   SET_NEW_FUNCTION_PREEMTION_MODE,
-  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
-  STATUS_CODE_FORBIDDEN
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
 } from '../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
 const functionsActions = {
@@ -75,7 +75,7 @@ const functionsActions = {
       })
       .catch(error => {
         const message =
-          error.response.status === STATUS_CODE_FORBIDDEN
+          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
             ? 'You are not permitted to create new function.'
             : error.message
 

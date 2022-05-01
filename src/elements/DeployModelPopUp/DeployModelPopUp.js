@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { chain, keyBy, mapValues } from 'lodash'
 
-import Button from '../../common/Button/Button'
+import { Button } from 'igz-controls/components'
 import Input from '../../common/Input/Input'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import Modal from '../../common/Modal/Modal'
@@ -12,7 +12,9 @@ import Select from '../../common/Select/Select'
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
-import { MODELS_TAB, SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { MODELS_TAB } from '../../constants'
 
 import './deployModelPopUp.scss'
 

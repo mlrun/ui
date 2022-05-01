@@ -1,11 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ChipCell from '../../common/ChipCell/ChipCell'
 import PanelSection from '../PanelSection/PanelSection'
 import TextArea from '../../common/TextArea/TextArea'
-import ChipCell from '../../common/ChipCell/ChipCell'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { TAG_LATEST } from '../../constants'
 
