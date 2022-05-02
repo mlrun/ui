@@ -55,7 +55,7 @@ const FunctionsPanelResourcesView = ({
             />
           </FunctionsPanelSection>
         )}
-        {mode === PANEL_CREATE_MODE && data.preemptionMode && (
+        {data.preemptionMode && (
           <FunctionsPanelSection title="Run On Spot Nodes">
             <Select
               className="pods-toleration"

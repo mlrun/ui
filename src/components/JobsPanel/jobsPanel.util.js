@@ -296,10 +296,10 @@ export const generateTableData = (
     })
   }
 
-  if (preemptionMode) {
+  if (frontendSpec.feature_flags.preemption_nodes === 'enabled') {
     panelDispatch({
       type: panelActions.SET_PREEMPTION_MODE,
-      payload: preemptionMode
+      payload: preemptionMode || frontendSpec.default_function_preemption_mode
     })
   }
 

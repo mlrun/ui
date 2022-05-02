@@ -75,7 +75,8 @@ const FunctionsPanelResources = ({
     },
     preemptionMode:
       frontendSpec.feature_flags.preemption_nodes === 'enabled'
-        ? frontendSpec.default_function_preemption_mode
+        ? defaultData.preemption_mode ??
+          frontendSpec.default_function_preemption_mode
         : '',
     requests: {
       cpu:
