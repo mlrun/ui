@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { createPortal } from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -12,29 +12,16 @@ import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 import './Modal.scss'
 
 const JSX_MODAL = ({ actions, children, className, onClose, size, show, title }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
   const modalClassNames = classNames('modal', className, size && `modal-${size}`)
 
-  const handleOnClose = () => {
-    setIsModalOpen(false)
-    onClose()
-  }
-
-  useEffect(() => {
-    setIsModalOpen(show)
-    return () => {
-      setIsModalOpen(false)
-    }
-  }, [show])
   return (
     <>
-      <Backdrop onClose={handleOnClose} show={isModalOpen} />
-      <CSSTransition in={isModalOpen} timeout={300} classNames="modal-transition" unmountOnExit>
+      <Backdrop onClose={onClose} show={show} />
+      <CSSTransition in={show} timeout={300} classNames="modal-transition" unmountOnExit>
         <div className={modalClassNames} data-testid="modal">
           <RoundedIcon
             className="modal__header-button"
-            onClick={handleOnClose}
+            onClick={onClose}
             tooltipText="Close"
             data-testid="pop-up-close-btn"
           >

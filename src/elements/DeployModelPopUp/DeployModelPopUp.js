@@ -99,6 +99,11 @@ const DeployModelPopUp = ({
     )
   })
 
+  const handleClosePopup = () => {
+    onReject && onReject()
+    closePopUp && closePopUp()
+  }
+
   const deployModel = () => {
     const servingFunction = functionList.find(
       func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
@@ -131,7 +136,7 @@ const DeployModelPopUp = ({
         })
       })
 
-    closePopUp()
+    handleClosePopup()
   }
 
   const onSelectFunction = functionName => {
@@ -157,7 +162,7 @@ const DeployModelPopUp = ({
   return (
     <Modal
       actions={[
-        <Button variant={TERTIARY_BUTTON} label="Cancel" onClick={closePopUp} />,
+        <Button variant={TERTIARY_BUTTON} label="Cancel" onClick={handleClosePopup} />,
         <Button
           variant={SECONDARY_BUTTON}
           disabled={[selectedFunctionName, selectedTag, modelName, className].includes('')}
@@ -166,7 +171,7 @@ const DeployModelPopUp = ({
         />
       ]}
       className="deploy-model"
-      onClose={closePopUp}
+      onClose={handleClosePopup}
       show={isOpen}
       size="sm"
       title="Deploy model"
@@ -223,7 +228,7 @@ const DeployModelPopUp = ({
 }
 
 DeployModelPopUp.propTypes = {
-  closePopUp: PropTypes.func.isRequired,
+  closePopUp: PropTypes.func,
   isOpen: PropTypes.bool.isRequired,
   model: PropTypes.shape({}).isRequired
 }

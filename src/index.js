@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import ModalContainer from 'react-modal-promise'
 
 import App from './App'
 import * as serviceWorker from './serviceWorker'
@@ -15,6 +16,7 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
     ReactDOM.render(
       <Provider store={toolkitStore}>
         <App />
+        <ModalContainer />
       </Provider>,
       document.getElementById('root')
     )

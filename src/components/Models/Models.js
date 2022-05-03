@@ -96,12 +96,8 @@ const Models = ({
     [fetchFunctions, fetchModelEndpoints, fetchModels, params.pageTab, params.projectName]
   )
 
-  const closeDeployModelPopUp = () => {
-    return
-  }
-
   const handleDeployModel = useCallback(model => {
-    openPopUp(DeployModelPopUp, { closePopUp: closeDeployModelPopUp, model })
+    openPopUp(DeployModelPopUp, { model })
   }, [])
 
   const handleRemoveModel = useCallback(
