@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
 import { createPortal } from 'react-dom'
 
 import Accordion from '../../common/Accordion/Accordion'
@@ -10,7 +9,6 @@ import Tip from '../../common/Tip/Tip'
 import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
-import { setTablePanelOpen } from '../../reducers/tableReducer'
 
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
@@ -27,8 +25,6 @@ function FeaturesTablePanelView({
   tableStore,
   toggleLabelFeature
 }) {
-  const dispatch = useDispatch()
-
   return (
     <div className="features-panel">
       <div className="features-panel__content">
@@ -150,13 +146,7 @@ function FeaturesTablePanelView({
         })}
       </div>
       <div className="features-panel__buttons">
-        <Button
-          label="Cancel"
-          variant={LABEL_BUTTON}
-          onClick={() => {
-            handleCancel ? handleCancel() : dispatch(setTablePanelOpen(false))
-          }}
-        />
+        <Button label="Cancel" variant={LABEL_BUTTON} onClick={handleCancel} />
         <Button variant={PRIMARY_BUTTON} label="Add" onClick={addFeatures} />
       </div>
     </div>
