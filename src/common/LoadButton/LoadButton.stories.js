@@ -2,7 +2,7 @@ import React from 'react'
 
 import LoadButton from './LoadButton'
 
-import { PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 export default {
   title: 'Example/LoadButton',

@@ -8,10 +8,10 @@ import Select from '../../../common/Select/Select'
 import TextArea from '../../../common/TextArea/TextArea'
 import RadioButtons from '../../../common/RadioButtons/RadioButtons'
 import { kindList } from '../detailsTransformations.util'
-// import { DANGER_BUTTON } from '../../../constants'
+// import { DANGER_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Arrow } from '../../../images/arrow.svg'
-// import { ReactComponent as Delete } from '../../../images/delete.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
+// import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 import './configSteps.scss'
 

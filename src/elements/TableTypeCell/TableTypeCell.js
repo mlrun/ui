@@ -1,17 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Code } from '../../images/code.svg'
-import { ReactComponent as Horovod } from '../../images/horovod.svg'
-import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
-import { ReactComponent as Nuclio } from '../../images/nuclio.svg'
-import { ReactComponent as Package } from '../../images/package.svg'
-import { ReactComponent as Remote } from '../../images/ic_remote.svg'
-import { ReactComponent as Spark } from '../../images/spark.svg'
-import { ReactComponent as Workflow } from '../../images/workflow-icon.svg'
+import { ReactComponent as Code } from 'igz-controls/images/code.svg'
+import { ReactComponent as Horovod } from 'igz-controls/images/horovod.svg'
+import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
+import { ReactComponent as Nuclio } from 'igz-controls/images/nuclio.svg'
+import { ReactComponent as Package } from 'igz-controls/images/package.svg'
+import { ReactComponent as Remote } from 'igz-controls/images/ic_remote.svg'
+import { ReactComponent as Spark } from 'igz-controls/images/spark.svg'
+import { ReactComponent as Workflow } from 'igz-controls/images/workflow-icon.svg'
 
 const TableTypeCell = ({ data }) => {
   const typesOfJob = {

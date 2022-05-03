@@ -1,6 +1,6 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
-@import '../../scss/mixins';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/mixins';
 
 .volumes-table {
   @include newItemSidePanelTable;

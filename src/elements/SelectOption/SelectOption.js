@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { SELECT_OPTION } from '../../types'
+
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 import './selectOption.scss'
-import { SELECT_OPTION } from '../../types'
 
 const SelectOption = ({
   item,

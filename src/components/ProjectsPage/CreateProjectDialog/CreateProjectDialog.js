@@ -2,16 +2,14 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import Input from '../../../common/Input/Input'
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
-import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
-import Button from '../../../common/Button/Button'
+import Input from '../../../common/Input/Input'
 import Loader from '../../../common/Loader/Loader'
 import ProjectLabels from '../../Project/ProjectLabels/ProjectLabels'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import { getValidationRules } from '../../../utils/validationService'
-
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../../constants'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import './createProjectDialog.scss'
 
@@ -88,11 +86,7 @@ const CreateProjectDialog = ({
             onClick={closeNewProjectPopUp}
           />
           <Button
-            disabled={
-              projectStore.loading ||
-              !isNameValid ||
-              !projectStore.newProject.name
-            }
+            disabled={projectStore.loading || !isNameValid || !projectStore.newProject.name}
             variant={SECONDARY_BUTTON}
             label="Create"
             onClick={handleCreateProject}

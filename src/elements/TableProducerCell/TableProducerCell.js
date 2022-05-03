@@ -2,8 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
+import { Tooltip } from 'igz-controls/components'
 
 import { DETAILS_OVERVIEW_TAB, MONITOR_JOBS_TAB } from '../../constants'
 import { detailsMenu } from '../../components/Jobs/jobs.util'

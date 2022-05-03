@@ -5,12 +5,11 @@ import { useNavigate } from 'react-router-dom'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import ProjectLabels from '../../components/Project/ProjectLabels/ProjectLabels'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { getTimeElapsedByDate } from '../../utils'
 
-import { ReactComponent as ClockIcon } from '../../images/clock.svg'
+import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 import './projectCard.scss'
 

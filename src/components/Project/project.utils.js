@@ -1,9 +1,10 @@
 import React from 'react'
 
-import { MONITOR_JOBS_TAB, PRIMARY_BUTTON, STATUS_CODE_FORBIDDEN } from '../../constants'
+import { MONITOR_JOBS_TAB } from '../../constants'
+import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
-import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
-import { ReactComponent as VSCode } from '../../images/vs-code.svg'
+import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
+import { ReactComponent as VSCode } from 'igz-controls/images/vs-code.svg'
 
 export const launchIDEOptions = [
   {
@@ -71,7 +72,7 @@ export const generateCreateNewOptions = (
 ]
 
 export const handleFetchProjectError = (error, navigate, setConfirmData) => {
-  if (error.response?.status === STATUS_CODE_FORBIDDEN) {
+  if (error.response?.status === FORBIDDEN_ERROR_STATUS_CODE) {
     setConfirmData({
       message: 'You are not permitted to view this project.',
       messageOnly: true,

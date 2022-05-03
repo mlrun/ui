@@ -1,13 +1,10 @@
 import PropTypes from 'prop-types'
 import {
-  DANGER_BUTTON,
-  LABEL_BUTTON,
   PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE,
-  PRIMARY_BUTTON,
-  SECONDARY_BUTTON,
-  TERTIARY_BUTTON
+  PANEL_EDIT_MODE
 } from './constants'
+
+import { BUTTON_VARIANTS } from 'igz-controls/types'
 
 export const COMBOBOX_MATCHES = PropTypes.arrayOf(
   PropTypes.shape({
@@ -65,16 +62,6 @@ export const FUNCTION_PANEL_MODE = PropTypes.oneOf([
   PANEL_CREATE_MODE
 ])
 
-export const POP_UP_CUSTOM_POSITION = PropTypes.shape({
-  element: PropTypes.shape({}),
-  position: PropTypes.oneOf([
-    'top-left',
-    'top-right',
-    'bottom-left',
-    'bottom-right'
-  ])
-})
-
 export const SELECT_OPTION = PropTypes.shape({
   disabled: PropTypes.bool,
   hidden: PropTypes.bool,
@@ -96,14 +83,6 @@ export const RADIO_BUTTONS_ELEMENT = PropTypes.shape({
 })
 
 export const RADIO_BUTTONS_ELEMENTS = PropTypes.arrayOf(RADIO_BUTTONS_ELEMENT)
-
-export const BUTTON_VARIANTS = PropTypes.oneOf([
-  PRIMARY_BUTTON,
-  SECONDARY_BUTTON,
-  TERTIARY_BUTTON,
-  DANGER_BUTTON,
-  LABEL_BUTTON
-])
 
 export const CONFIRM_DIALOG_BUTTON = PropTypes.shape({
   handler: PropTypes.func.isRequired,

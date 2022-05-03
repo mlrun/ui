@@ -4,15 +4,14 @@ import { connect } from 'react-redux'
 
 import MlChart from '../../common/Chart/MlChart'
 import Loader from '../../common/Loader/Loader'
-import Tooltip from '../../common/Tooltip/Tooltip'
 import NoData from '../../common/NoData/NoData'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { generateDriftAnalysis } from './detailsFeaturesAnalysis.util'
 import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
 
 import './detailsFeaturesAnalysis.scss'
-import colors from '../../scss/colors.scss'
+import colors from 'igz-controls/scss/colors.scss'
 
 const DetailsFeaturesAnalysis = ({ detailsStore }) => {
   const table = generateDriftAnalysis(detailsStore.modelEndpoint.data.status)

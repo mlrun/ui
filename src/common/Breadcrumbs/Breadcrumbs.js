@@ -5,14 +5,14 @@ import classnames from 'classnames'
 import { connect } from 'react-redux'
 
 import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
-import RoundedIcon from '../RoundedIcon/RoundedIcon'
-
-import { ReactComponent as ArrowIcon } from '../../images/arrow.svg'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { useMode } from '../../hooks/mode.hook'
 import { generateProjectScreens } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'
+
+import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
 import './breadcrums.scss'
 

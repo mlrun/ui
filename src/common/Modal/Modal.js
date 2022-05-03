@@ -5,9 +5,9 @@ import { CSSTransition } from 'react-transition-group'
 import classNames from 'classnames'
 
 import Backdrop from '../Backdrop.js/Backdrop'
-import RoundedIcon from '../RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as CloseIcon } from '../../images/close.svg'
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
 import './Modal.scss'
 

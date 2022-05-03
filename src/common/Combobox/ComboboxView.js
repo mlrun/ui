@@ -2,14 +2,13 @@ import React from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { COMBOBOX_MATCHES } from '../../types'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
-import { ReactComponent as SearchIcon } from '../../images/search.svg'
-import { ReactComponent as Invalid } from '../../images/invalid.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
+import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
+import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
 const ComboboxView = React.forwardRef(
   (

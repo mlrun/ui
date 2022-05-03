@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import Input from '../../common/Input/Input'
 import Combobox from '../../common/Combobox/Combobox'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Input from '../../common/Input/Input'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   comboboxSelectList,
@@ -20,7 +19,7 @@ import {
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 import { pathPlaceholders } from '../../utils/panelPathScheme'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 const EditableDataInputsRow = ({
   comboboxMatchesList,

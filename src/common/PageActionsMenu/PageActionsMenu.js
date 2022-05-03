@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Button from '../Button/Button'
+import { Button } from 'igz-controls/components'
 
-import { PRIMARY_BUTTON } from '../../constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
 const PageActionsMenu = ({
   actionsMenuHeader,

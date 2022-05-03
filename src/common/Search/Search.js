@@ -4,7 +4,7 @@ import classnames from 'classnames'
 
 import Input from '../Input/Input'
 
-import { ReactComponent as SearchIcon } from '../../images/search.svg'
+import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
 import './search.scss'
 
