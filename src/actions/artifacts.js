@@ -9,6 +9,9 @@ import {
   DATASETS,
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
+  FETCH_ARTIFACTS_FUNCTIONS_BEGIN,
+  FETCH_ARTIFACTS_FUNCTIONS_FAILURE,
+  FETCH_ARTIFACTS_FUNCTIONS_SUCCESS,
   FETCH_ARTIFACTS_SUCCESS,
   FETCH_DATA_SET_SUCCESS,
   FETCH_DATASETS_BEGIN,
@@ -18,9 +21,6 @@ import {
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
-  FETCH_FUNCTIONS_BEGIN,
-  FETCH_FUNCTIONS_FAILURE,
-  FETCH_FUNCTIONS_SUCCESS,
   FETCH_MODEL_ENDPOINTS_BEGIN,
   FETCH_MODEL_ENDPOINTS_FAILURE,
   FETCH_MODEL_ENDPOINTS_SUCCESS,
@@ -215,29 +215,32 @@ const artifactsAction = {
     type: FETCH_FILES_SUCCESS,
     payload: files
   }),
-  fetchFunctions: projectName => dispatch => {
-    dispatch(artifactsAction.fetchFunctionsBegin())
+  fetchFunctions:
+    (project, filters, showLoader = true) =>
+    dispatch => {
+      dispatch(artifactsAction.fetchFunctionsBegin(showLoader))
 
-    return functionsApi
-      .getFunctions(projectName)
-      .then(({ data }) => {
-        dispatch(artifactsAction.fetchFunctionsSuccess())
+      return functionsApi
+        .getFunctions(project, filters)
+        .then(({ data }) => {
+          dispatch(artifactsAction.fetchFunctionsSuccess())
 
-        return data.funcs
-      })
-      .catch(err => {
-        dispatch(artifactsAction.fetchFunctionsFailure(err))
-      })
-  },
-  fetchFunctionsBegin: () => ({
-    type: FETCH_FUNCTIONS_BEGIN
+          return data.funcs
+        })
+        .catch(err => {
+          dispatch(artifactsAction.fetchFunctionsFailure(err))
+        })
+    },
+  fetchFunctionsBegin: showLoader => ({
+    type: FETCH_ARTIFACTS_FUNCTIONS_BEGIN,
+    payload: showLoader
   }),
   fetchFunctionsFailure: error => ({
-    type: FETCH_FUNCTIONS_FAILURE,
+    type: FETCH_ARTIFACTS_FUNCTIONS_FAILURE,
     payload: error
   }),
   fetchFunctionsSuccess: () => ({
-    type: FETCH_FUNCTIONS_SUCCESS
+    type: FETCH_ARTIFACTS_FUNCTIONS_SUCCESS
   }),
   fetchModelEndpoints: (project, filters, params) => dispatch => {
     dispatch(artifactsAction.fetchModelEndpointsBegin())
