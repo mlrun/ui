@@ -23,6 +23,7 @@ import {
   pageDataInitialState,
   tabs
 } from './models.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -64,9 +65,7 @@ const Models = ({
   const openPanelByDefault = useOpenPanel()
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
-  const [deployModel, setDeployModel] = useState({})
   const [isRegisterArtifactPopupOpen, setIsRegisterArtifactPopupOpen] = useState(false)
-  const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -98,13 +97,11 @@ const Models = ({
   )
 
   const closeDeployModelPopUp = () => {
-    setDeployModel({})
-    setIsDeployPopupOpen(false)
+    return
   }
 
   const handleDeployModel = useCallback(model => {
-    setDeployModel(model)
-    setIsDeployPopupOpen(true)
+    openPopUp(DeployModelPopUp, { closePopUp: closeDeployModelPopUp, model })
   }, [])
 
   const handleRemoveModel = useCallback(
@@ -348,11 +345,6 @@ const Models = ({
           title={pageData.actionsMenuHeader}
         />
       )}
-      <DeployModelPopUp
-        closePopUp={closeDeployModelPopUp}
-        model={deployModel}
-        show={isDeployPopupOpen}
-      />
     </div>
   )
 }

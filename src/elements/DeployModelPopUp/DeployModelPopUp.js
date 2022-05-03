@@ -22,9 +22,11 @@ const DeployModelPopUp = ({
   buildFunction,
   closePopUp,
   fetchFunctions,
+  isOpen,
   model,
-  setNotification,
-  show
+  onResolve,
+  onReject,
+  setNotification
 }) => {
   const [functionList, setFunctionList] = useState([])
   const [modelName, setModelName] = useState('')
@@ -36,71 +38,66 @@ const DeployModelPopUp = ({
   const [selectedTag, setSelectedTag] = useState('')
 
   useEffect(() => {
-    if (show) {
-      if (functionOptionList.length === 0) {
-        fetchFunctions(model.project).then(functions => {
-          const functionOptions = chain(functions)
-            .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
-            .uniqBy('metadata.name')
-            .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
-            .value()
+    if (functionOptionList.length === 0) {
+      fetchFunctions(model.project).then(functions => {
+        const functionOptions = chain(functions)
+          .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
+          .uniqBy('metadata.name')
+          .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
+          .value()
 
-          if (functionOptions.length !== 0) {
-            setFunctionList(functions)
-            setFunctionOptionList(functionOptions)
-            setSelectedFunctionName(functionOptions[0].id)
-          }
-        })
-      }
+        if (functionOptions.length !== 0) {
+          setFunctionList(functions)
+          setFunctionOptionList(functionOptions)
+          setSelectedFunctionName(functionOptions[0].id)
+        }
+      })
     }
-  }, [fetchFunctions, functionOptionList.length, model.project, show])
+  }, [fetchFunctions, functionOptionList.length, model.project])
 
   useEffect(() => {
-    if (show) {
-      setModelName(model?.db_key)
-    }
-  }, [model, show])
+    setModelName(model?.db_key)
+  }, [model])
 
   useEffect(() => {
-    if (show) {
-      const tags = chain(functionList)
-        .filter(func => func.metadata.name === selectedFunctionName && func.metadata.tag !== '')
-        .uniqBy('metadata.tag')
-        .map(func => ({
-          label: func.metadata.tag,
-          id: func.metadata.tag
-        }))
-        .value()
+    const tags = chain(functionList)
+      .filter(func => func.metadata.name === selectedFunctionName && func.metadata.tag !== '')
+      .uniqBy('metadata.tag')
+      .map(func => ({
+        label: func.metadata.tag,
+        id: func.metadata.tag
+      }))
+      .value()
 
-      setTagOptionList(tags)
-      setSelectedTag(tags[0]?.id)
-    }
-  }, [functionList, selectedFunctionName, show])
+    setTagOptionList(tags)
+    setSelectedTag(tags[0]?.id)
+  }, [functionList, selectedFunctionName])
 
   useEffect(() => {
-    if (show) {
-      const selectedFunction = functionList.find(
-        func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
-      )
+    const selectedFunction = functionList.find(
+      func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
+    )
 
-      if (selectedFunction) {
-        setClassName(selectedFunction.spec.default_class)
-      }
+    if (selectedFunction) {
+      setClassName(selectedFunction.spec.default_class)
     }
-  }, [functionList, selectedFunctionName, selectedTag, show])
+  }, [functionList, selectedFunctionName, selectedTag])
 
   useEffect(() => {
-    return () => {
-      setClassArgumentsList([])
-      setClassName('')
-      setFunctionList([])
-      setFunctionOptionList([])
-      setModelName('')
-      setSelectedFunctionName('')
-      setSelectedTag('')
-      setTagOptionList([])
-    }
-  }, [show])
+    return (
+      () => {
+        setClassArgumentsList([])
+        setClassName('')
+        setFunctionList([])
+        setFunctionOptionList([])
+        setModelName('')
+        setSelectedFunctionName('')
+        setSelectedTag('')
+        setTagOptionList([])
+      },
+      []
+    )
+  })
 
   const deployModel = () => {
     const servingFunction = functionList.find(
@@ -170,7 +167,7 @@ const DeployModelPopUp = ({
       ]}
       className="deploy-model"
       onClose={closePopUp}
-      show={show}
+      show={isOpen}
       size="sm"
       title="Deploy model"
     >
@@ -227,8 +224,8 @@ const DeployModelPopUp = ({
 
 DeployModelPopUp.propTypes = {
   closePopUp: PropTypes.func.isRequired,
-  model: PropTypes.shape({}).isRequired,
-  show: PropTypes.bool.isRequired
+  isOpen: PropTypes.bool.isRequired,
+  model: PropTypes.shape({}).isRequired
 }
 
 export default connect(artifactsStore => artifactsStore, {
