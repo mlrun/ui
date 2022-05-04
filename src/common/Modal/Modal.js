@@ -21,14 +21,11 @@ const JSX_MODAL = ({ actions, children, className, onClose, size, show, title })
       <Backdrop onClose={onClose} show={show} />
       <CSSTransition in={show} timeout={300} classNames="modal-transition" unmountOnExit>
         <div className={modalClassNames} data-testid="modal">
-          <RoundedIcon
-            className="modal__header-button"
-            onClick={onClose}
-            tooltipText="Close"
-            data-testid="pop-up-close-btn"
-          >
-            <CloseIcon />
-          </RoundedIcon>
+          <div className="modal__header-button">
+            <RoundedIcon onClick={onClose} tooltipText="Close" data-testid="pop-up-close-btn">
+              <CloseIcon />
+            </RoundedIcon>
+          </div>
           <div className="modal__content">
             <div className="modal__header">
               <h5 className="modal__header-title">{title}</h5>
