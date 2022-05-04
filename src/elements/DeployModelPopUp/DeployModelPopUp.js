@@ -14,7 +14,7 @@ import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { MODELS_TAB } from '../../constants'
+import { MODAL_SM, MODELS_TAB } from '../../constants'
 
 import './deployModelPopUp.scss'
 
@@ -173,7 +173,7 @@ const DeployModelPopUp = ({
       className="deploy-model"
       onClose={handleClosePopup}
       show={isOpen}
-      size="sm"
+      size={MODAL_SM}
       title="Deploy model"
     >
       <div className="deploy-model__row">
@@ -227,10 +227,20 @@ const DeployModelPopUp = ({
   )
 }
 
+DeployModelPopUp.defaultProps = {
+  closePopUp: () => {},
+  isOpen: false,
+  model: {},
+  onResolve: () => {},
+  onReject: () => {}
+}
+
 DeployModelPopUp.propTypes = {
   closePopUp: PropTypes.func,
   isOpen: PropTypes.bool.isRequired,
-  model: PropTypes.shape({}).isRequired
+  model: PropTypes.shape({}).isRequired,
+  onResolve: PropTypes.func,
+  onReject: PropTypes.func
 }
 
 export default connect(artifactsStore => artifactsStore, {
