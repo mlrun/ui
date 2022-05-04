@@ -369,6 +369,7 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
         : name
     },
     functionName: {
+      id: `functionName.${identifierUnique}`,
       value: functionName,
       class: 'artifacts_small',
       link: `${generateLinkPath(functionUri)}/overview`,
