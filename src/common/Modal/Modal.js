@@ -7,6 +7,8 @@ import classNames from 'classnames'
 import Backdrop from '../Backdrop.js/Backdrop'
 import { RoundedIcon } from 'igz-controls/components'
 
+import { MODAL_LG, MODAL_MD, MODAL_SM } from '../../constants'
+
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
 import './Modal.scss'
@@ -54,7 +56,7 @@ const Modal = props => {
 Modal.defaultProps = {
   actions: [],
   show: false,
-  size: 'md',
+  size: MODAL_MD,
   title: ''
 }
 
@@ -68,7 +70,7 @@ Modal.propTypes = {
   ]).isRequired,
   onClose: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
-  size: PropTypes.oneOf(['sm', 'md', 'lg']),
+  size: PropTypes.oneOf([MODAL_SM, MODAL_MD, MODAL_LG]),
   title: PropTypes.string
 }
 
