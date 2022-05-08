@@ -26,7 +26,7 @@ const createJobsContent = (
 
       if (params.pageTab === SCHEDULE_TAB) {
         const [, , scheduleJobFunctionUid] =
-          contentItem.func?.match(/\w(?<!\d)[\w'-]*/g, '') || []
+          contentItem.func?.match(/\w[\w'-]*/g, '') || []
         const [, projectName, jobUid] =
           contentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
         const jobName = contentItem.name
