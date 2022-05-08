@@ -59,9 +59,7 @@ export const getFunctionParameters = (selectedFunction, method) => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.entry_points
-        ? func.spec.entry_points[method]?.parameters ?? []
-        : []
+      return func.spec.entry_points ? func.spec.entry_points[method]?.parameters ?? [] : []
     })
     .flatten()
     .unionBy('name')
@@ -153,9 +151,7 @@ export const getVolumeMounts = (selectedFunction, volumes, mode) => {
     .flatten()
     .unionBy('name')
     .map(volume_mounts => {
-      const currentVolume = volumes.find(
-        volume => volume.name === volume_mounts?.name
-      )
+      const currentVolume = volumes.find(volume => volume.name === volume_mounts?.name)
 
       return {
         data: {
@@ -196,27 +192,19 @@ export const getVersionOptions = selectedFunctions => {
   const versionOptions = unionBy(
     selectedFunctions.map(func => {
       return {
-        label:
-          (func.metadata.tag === TAG_LATEST ? '$' : '') +
-          (func.metadata.tag || '$latest'),
+        label: (func.metadata.tag === TAG_LATEST ? '$' : '') + (func.metadata.tag || '$latest'),
         id: func.metadata.tag || TAG_LATEST
       }
     }),
     'id'
   )
 
-  return versionOptions.length
-    ? versionOptions
-    : [{ label: '$latest', id: 'latest' }]
+  return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
 }
 
-export const getDefaultMethodAndVersion = (
-  versionOptions,
-  selectedFunctions
-) => {
-  const defaultMethod = selectedFunctions.find(
-    item => item.metadata.tag === 'latest'
-  )?.spec.default_handler
+export const getDefaultMethodAndVersion = (versionOptions, selectedFunctions) => {
+  const defaultMethod = selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec
+    .default_handler
 
   const defaultVersion =
     versionOptions.length === 1
@@ -247,8 +235,7 @@ export const generateTableData = (
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const [preemptionMode] = getPreemptionMode(selectedFunction)
   const jobPriorityClassName =
-    functionPriorityClassName ||
-    frontendSpec.default_function_priority_class_name
+    functionPriorityClassName || frontendSpec.default_function_priority_class_name
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
   const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
@@ -269,10 +256,10 @@ export const generateTableData = (
     memoryUnit: getDefaultMemoryUnit(requests ?? {}, defaultResources?.requests.memory)
   }
 
-  if (preemptionMode) {
+  if (frontendSpec.feature_flags.preemption_nodes === 'enabled') {
     panelDispatch({
       type: panelActions.SET_PREEMPTION_MODE,
-      payload: preemptionMode
+      payload: preemptionMode || frontendSpec.default_function_preemption_mode || 'prevent'
     })
   }
 
@@ -309,11 +296,9 @@ export const generateTableData = (
       parameters,
       volume_mounts: volumeMounts,
       volumes,
-      environmentVariables: parseEnvVariables(environmentVariables).map(
-        env => ({
-          data: generateEnvVariable(env)
-        })
-      ),
+      environmentVariables: parseEnvVariables(environmentVariables).map(env => ({
+        data: generateEnvVariable(env)
+      })),
       secretSources: [],
       node_selector
     }
@@ -400,9 +385,7 @@ export const generateTableDataFromDefaultData = (
   const parameters = generateDefaultParameters(
     Object.entries(defaultData.task.spec.parameters ?? {})
   )
-  const dataInputs = generateDefaultDataInputs(
-    Object.entries(defaultData.task.spec.inputs ?? {})
-  )
+  const dataInputs = generateDefaultDataInputs(Object.entries(defaultData.task.spec.inputs ?? {}))
   const funcSpec = defaultData.function?.spec
   const { limits, requests } = funcSpec.resources
     ? funcSpec.resources
@@ -413,19 +396,17 @@ export const generateTableDataFromDefaultData = (
   const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
     data: secret
   }))
-  const volumeMounts = defaultData.function?.spec.volume_mounts.map(
-    volume_mounts => {
-      return {
-        data: {
-          name: volume_mounts?.name,
-          mountPath: volume_mounts?.mountPath,
-          subPath: volume_mounts?.subPath
-        },
-        isDefault: true,
-        canBeModified: mode === PANEL_EDIT_MODE
-      }
+  const volumeMounts = defaultData.function?.spec.volume_mounts.map(volume_mounts => {
+    return {
+      data: {
+        name: volume_mounts?.name,
+        mountPath: volume_mounts?.mountPath,
+        subPath: volume_mounts?.subPath
+      },
+      isDefault: true,
+      canBeModified: mode === PANEL_EDIT_MODE
     }
-  )
+  })
 
   panelDispatch({
     type: panelActions.SET_TABLE_DATA,
@@ -439,12 +420,12 @@ export const generateTableDataFromDefaultData = (
           data: generateEnvVariable(env)
         })) ?? [],
       secretSources: secrets,
-      node_selector: Object.entries(
-        defaultData.function?.spec.node_selector ?? {}
-      ).map(([key, value]) => ({
-        key,
-        value
-      }))
+      node_selector: Object.entries(defaultData.function?.spec.node_selector ?? {}).map(
+        ([key, value]) => ({
+          key,
+          value
+        })
+      )
     }
   })
   panelDispatch({
@@ -485,10 +466,7 @@ export const generateTableDataFromDefaultData = (
       cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
       cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
       memory: limits?.memory ?? defaultResources.limits?.memory ?? '',
-      memoryUnit: getDefaultMemoryUnit(
-        limits ?? {},
-        defaultResources?.limits.memory
-      )
+      memoryUnit: getDefaultMemoryUnit(limits ?? {}, defaultResources?.limits.memory)
     }
   })
 
@@ -497,15 +475,9 @@ export const generateTableDataFromDefaultData = (
     payload: {
       ...panelRequests,
       cpu: requests?.cpu ?? defaultResources.requests?.cpu ?? '',
-      cpuUnit: getDefaultCpuUnit(
-        requests ?? {},
-        defaultResources?.requests.cpu
-      ),
+      cpuUnit: getDefaultCpuUnit(requests ?? {}, defaultResources?.requests.cpu),
       memory: requests?.memory ?? defaultResources.requests?.memory ?? '',
-      memoryUnit: getDefaultMemoryUnit(
-        requests ?? {},
-        defaultResources?.requests.memory
-      )
+      memoryUnit: getDefaultMemoryUnit(requests ?? {}, defaultResources?.requests.memory)
     }
   })
 
@@ -560,10 +532,7 @@ export const generateRequestData = (
   const taskSpec = {
     ...jobsStore.newJob.task.spec,
     function: func,
-    handler:
-      mode === PANEL_EDIT_MODE
-        ? defaultHandler
-        : panelState.currentFunctionInfo.method,
+    handler: mode === PANEL_EDIT_MODE ? defaultHandler : panelState.currentFunctionInfo.method,
     input_path: panelState.inputPath,
     output_path: panelState.outputPath
   }
