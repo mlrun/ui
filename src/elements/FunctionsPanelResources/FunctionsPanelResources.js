@@ -72,7 +72,7 @@ const FunctionsPanelResources = ({
     },
     preemptionMode:
       frontendSpec.feature_flags.preemption_nodes === 'enabled'
-        ? defaultData.preemption_mode ?? frontendSpec.default_function_preemption_mode
+        ? defaultData.preemption_mode || frontendSpec.default_function_preemption_mode || 'prevent'
         : '',
     requests: {
       cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests.cpu ?? '',
@@ -98,13 +98,13 @@ const FunctionsPanelResources = ({
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
-      setNewFunctionPreemtionMode(frontendSpec.default_function_preemption_mode ?? '')
+      setNewFunctionPreemtionMode(data.preemptionMode)
       setNewFunctionPriorityClassName(frontendSpec.default_function_priority_class_name ?? '')
 
       setNewFunctionDisableAutoMount(false)
     }
   }, [
-    frontendSpec.default_function_preemption_mode,
+    data.preemptionMode,
     frontendSpec.default_function_priority_class_name,
     mode,
     setNewFunctionDisableAutoMount,
