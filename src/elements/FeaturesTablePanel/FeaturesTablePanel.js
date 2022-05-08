@@ -143,7 +143,9 @@ const FeaturesTablePanel = ({
       addFeatures={addFeatures}
       createFeatureVector={createFeatureVector}
       deleteFeature={deleteFeature}
-      handleCancel={handleCancel}
+      handleCancel={() => {
+        handleCancel ? handleCancel() : dispatch(setTablePanelOpen(false))
+      }}
       isCreateFeaturePopUpOpen={isCreateFeaturePopUpOpen}
       setIsCreateFeaturePopUpOpen={setIsCreateFeaturePopUpOpen}
       tableStore={tableStore}
@@ -153,7 +155,7 @@ const FeaturesTablePanel = ({
 }
 
 FeaturesTablePanel.defaultProps = {
-  handleCancel: () => {},
+  handleCancel: null,
   onSubmit: null
 }
 

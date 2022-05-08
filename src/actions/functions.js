@@ -147,11 +147,11 @@ const functionsActions = {
     type: FETCH_FUNCTION_LOGS_SUCCESS,
     payload: logs
   }),
-  fetchFunctions: (project, name) => dispatch => {
+  fetchFunctions: (project, filters) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
 
     return functionsApi
-      .getFunctions(project, name)
+      .getFunctions(project, filters)
       .then(({ data }) => {
         dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
