@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
 import classNames from 'classnames'
 
-import Backdrop from '../Backdrop.js/Backdrop'
+import Backdrop from '../Backdrop/Backdrop'
 import { RoundedIcon } from 'igz-controls/components'
 
 import { MODAL_LG, MODAL_MD, MODAL_SM } from '../../constants'
