@@ -10,7 +10,6 @@ import DeployModelPopUp from '../../elements/DeployModelPopUp/DeployModelPopUp'
 import Pipeline from '../Pipeline/Pipeline'
 
 import artifactsAction from '../../actions/artifacts'
-import functionsAction from '../../actions/functions'
 import detailsActions from '../../actions/details'
 import filtersActions from '../../actions/filters'
 import {
@@ -346,15 +345,13 @@ const Models = ({
 }
 
 export default connect(
-  ({ artifactsStore, functionsStore, filtersStore, detailsStore }) => ({
+  ({ artifactsStore, filtersStore, detailsStore }) => ({
     artifactsStore,
-    functionsStore,
     filtersStore,
     detailsStore
   }),
   {
     ...artifactsAction,
-    ...functionsAction,
     ...detailsActions,
     ...filtersActions
   }
