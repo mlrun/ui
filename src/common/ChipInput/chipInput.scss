@@ -16,6 +16,7 @@
   .suggestion-list {
     position: absolute;
     top: calc(100% + 5px);
+    left: 0;
     z-index: 5;
     width: 100%;
     background-color: $white;
