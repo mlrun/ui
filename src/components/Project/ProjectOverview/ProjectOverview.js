@@ -8,7 +8,9 @@ import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, Wizard } from 'igz-controls/components'
+
+import Modal from '../../../common/Modal/Modal'
 
 import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
@@ -19,6 +21,7 @@ import { handleFetchProjectError } from '../project.utils'
 import { getDateAndTimeByFormat } from '../../../utils/'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import './ProjectOverview.scss'
 
@@ -112,36 +115,65 @@ const ProjectOverview = ({ fetchProject, project }) => {
     return <NoData />
   }
 
+  const steps = [
+    { name: 'Step 1', component: () => 'Step 1 content' },
+    { name: 'Step 2', component: () => 'Step 2 content' }
+  ]
+
+  const submitForm = val => console.log('submit', val)
+
+  const Test = ({ isOpen, onReject }) => (
+    <Wizard onSubmit={submitForm} steps={steps}>
+      {(
+        Steps,
+        { activeComponent, activeStep, handleSubmit, isLastPage, previousStep, submitting }
+      ) => {
+        const ActiveStep = activeComponent.component
+        return (
+          <Modal
+            actions={[
+              <button onClick={previousStep} disabled={activeStep === 0}>
+                Back
+              </button>,
+              <button type="submit" onClick={handleSubmit} disabled={submitting}>
+                {isLastPage ? 'Submit' : 'Next'}
+              </button>
+            ]}
+            onClose={onReject}
+            show={isOpen}
+          >
+            <form id="DeployModal" noValidate>
+              <Steps />
+              <ActiveStep />
+            </form>
+          </Modal>
+        )
+      }}
+    </Wizard>
+  )
+
+  const openModal = () => openPopUp(Test)
+
   return (
     <div className="project-overview">
+      <button onClick={openModal}>Open me</button>
       {modal.isOpen && renderPopupContent()}
       <div className="project-overview__header">
         <div className="project-overview__header-title">
           {project.data.metadata.name}
-          <Tooltip
-            template={<TextTooltipTemplate text={project.data.status.state} />}
-          >
-            <i
-              className={`state-${project.data.status.state}-job status-icon`}
-            />
+          <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>
+            <i className={`state-${project.data.status.state}-job status-icon`} />
           </Tooltip>
         </div>
         <div className="project-overview__header-subtitle">
           <div>
-            <span className="project-overview__header-subtitle-name">
-              Created:
-            </span>
+            <span className="project-overview__header-subtitle-name">Created:</span>
             <span>
-              {getDateAndTimeByFormat(
-                project.data.metadata.created,
-                'YYYY-MM-DD, HH:mm:ss A'
-              )}
+              {getDateAndTimeByFormat(project.data.metadata.created, 'YYYY-MM-DD, HH:mm:ss A')}
             </span>
           </div>
           <div>
-            <span className="project-overview__header-subtitle-name">
-              Owner:
-            </span>
+            <span className="project-overview__header-subtitle-name">Owner:</span>
             <span>{project.data.spec.owner}</span>
           </div>
         </div>
@@ -157,12 +189,8 @@ const ProjectOverview = ({ fetchProject, project }) => {
             <div className="project-overview-card" key={card}>
               <div className="project-overview-card__top">
                 <div className="project-overview-card__header">
-                  <h3 className="project-overview-card__header-title">
-                    {title}
-                  </h3>
-                  <p className="project-overview-card__header-subtitle">
-                    {subTitle ?? ''}
-                  </p>
+                  <h3 className="project-overview-card__header-title">{title}</h3>
+                  <p className="project-overview-card__header-subtitle">{subTitle ?? ''}</p>
                 </div>
                 <div className="project-overview-card__actions">
                   <ProjectAction
@@ -197,11 +225,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
                 <div className="additional-links">
                   {additionalLinks &&
                     additionalLinks.map(({ id, label, path }) => (
-                      <span
-                        key={id}
-                        className="link"
-                        onClick={() => handlePathExecution(path)}
-                      >
+                      <span key={id} className="link" onClick={() => handlePathExecution(path)}>
                         {label}
                       </span>
                     ))}
