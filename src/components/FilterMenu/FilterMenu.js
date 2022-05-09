@@ -4,17 +4,16 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
-import Select from '../../common/Select/Select'
-import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
-import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import Input from '../../common/Input/Input'
+import Select from '../../common/Select/Select'
 import TagFilter from '../../common/TagFilter/TagFilter'
+import { Button, RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
-import { ReactComponent as CollapseIcon } from '../../images/collapse.svg'
-import { ReactComponent as ExpandIcon } from '../../images/expand.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
+import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
+import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 
 import {
   DATE_RANGE_TIME_FILTER,
@@ -139,7 +138,7 @@ const FilterMenu = ({
         )
       }
 
-      handleExpandAll(true)
+      handleExpandAll && handleExpandAll(true)
       onChange(data)
     }
   }

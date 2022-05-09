@@ -1,10 +1,9 @@
-@import './variables';
-@import './button';
-@import './shadows';
-@import './colors';
-@import './mixins';
-@import './borders';
-@import './fonts';
+@import '~igz-controls/scss/variables';
+@import '~igz-controls/scss/shadows';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/mixins';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/fonts';
 
 *,
 ::after,
@@ -24,14 +23,6 @@ body {
   background: $gallery;
 
   @include resetSpaces;
-}
-
-#root {
-  z-index: 1;
-  display: flex;
-  flex: 1;
-  width: 100%;
-  isolation: isolate;
 }
 
 .ml-app {
@@ -139,39 +130,9 @@ main {
   }
 }
 
-#overlay_container {
-  position: fixed;
-  bottom: 0;
-  z-index: 2;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
 a {
   color: inherit;
   text-decoration: none;
-}
-
-button {
-  padding: 0;
-  font-family: Roboto, sans-serif;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-
-  &:active,
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-  }
 }
 
 [class^='state-completed'],
@@ -233,24 +194,6 @@ iframe {
   }
 }
 
-input,
-textarea {
-  overflow-x: hidden;
-  font-weight: normal;
-  font-size: 15px;
-  font-family: Roboto, sans-serif;
-  font-style: normal;
-  line-height: 18px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-  &:active,
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
-}
-
 .data-ellipsis {
   overflow: hidden;
   white-space: nowrap;
@@ -290,14 +233,6 @@ textarea {
       background-color: $mulledWineThree;
       border-radius: 20px;
     }
-  }
-}
-
-.link {
-  color: $cornflowerBlue;
-
-  &:hover {
-    text-decoration: underline;
   }
 }
 
@@ -391,6 +326,69 @@ textarea {
       padding: 25px;
       font-weight: bold;
       font-size: 20px;
+    }
+  }
+}
+
+.content {
+  position: relative;
+  flex-direction: column;
+  margin: 24px;
+  background-color: $white;
+  border-radius: $mainBorderRadius;
+  box-shadow: $jobsShadow;
+  min-width: 900px;
+
+  @include jobsFlex;
+
+  &__header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70px;
+    padding: 14px 24px;
+    background-color: $white;
+    box-shadow: $headerShadow;
+
+    .btn {
+      &_register {
+        text-transform: capitalize;
+      }
+    }
+  }
+
+  .table-container {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 620px;
+
+    .no_data {
+      margin: auto;
+      color: $mulledWine;
+    }
+  }
+
+  &-wrapper {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    min-width: 100%;
+  }
+
+  &_with-menu {
+    margin-top: 45px;
+  }
+
+  &__action-bar {
+    display: flex;
+    align-items: center;
+    padding: 4px 24px;
+
+    &_hidden {
+      display: none;
     }
   }
 }

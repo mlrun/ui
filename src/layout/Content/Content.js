@@ -15,27 +15,18 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import TableTop from '../../elements/TableTop/TableTop'
 
-import {
-  generateContentActionsMenu,
-  generateGroupedItems,
-  getNoDataMessage
-} from './content.util'
+import { generateContentActionsMenu, generateGroupedItems, getNoDataMessage } from './content.util'
 import { isProjectValid } from '../../utils/handleRedirect'
 import { useYaml } from '../../hooks/yaml.hook'
-
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  GROUP_BY_WORKFLOW,
-  JOBS_PAGE,
   MODELS_PAGE
 } from '../../constants'
 
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
-
-import './content.scss'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const Content = ({
   applyDetailsChanges,
@@ -69,7 +60,7 @@ const Content = ({
 
   const contentClassName = classnames(
     'content',
-    [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
+    [FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
       !location.pathname.includes(ADD_TO_FEATURE_VECTOR_TAB) &&
       'content_with-menu'
   )
@@ -97,17 +88,11 @@ const Content = ({
   }, [pageData.hidePageActionMenu, showActionsMenu])
 
   useEffect(() => {
-    isProjectValid(
-      navigate,
-      projectStore.projectsNames.data,
-      params.projectName
-    )
+    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
   }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   const handleGroupByName = useCallback(() => {
-    setGroupedContent(
-      generateGroupedItems(content, pageData.selectedRowData, getIdentifier)
-    )
+    setGroupedContent(generateGroupedItems(content, pageData.selectedRowData, getIdentifier))
   }, [content, getIdentifier, pageData.selectedRowData])
 
   const handleGroupByNone = useCallback(() => {
@@ -119,47 +104,18 @@ const Content = ({
     setGroupedContent({})
   }, [])
 
-  const handleGroupByWorkflow = useCallback(() => {
-    const groupedItems = {}
-
-    content.forEach(contentItem => {
-      contentItem.labels.length > 0 &&
-        contentItem.labels.forEach(label => {
-          let workflowLabel = label.match('workflow')
-
-          if (workflowLabel) {
-            let workflowId = workflowLabel.input.slice('workflow'.length + 2)
-
-            groupedItems[workflowId]
-              ? groupedItems[workflowId].push(contentItem)
-              : (groupedItems[workflowId] = [contentItem])
-          }
-        })
-    })
-
-    setGroupedContent(groupedItems)
-  }, [content])
-
   useEffect(() => {
     if (filtersStore.groupBy === GROUP_BY_NAME) {
       handleGroupByName()
     } else if (filtersStore.groupBy === GROUP_BY_NONE) {
       handleGroupByNone()
-    } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
-      handleGroupByWorkflow()
     }
 
     return () => {
       setGroupedContent({})
       toggleConvertedYaml()
     }
-  }, [
-    handleGroupByName,
-    handleGroupByWorkflow,
-    handleGroupByNone,
-    filtersStore.groupBy,
-    toggleConvertedYaml
-  ])
+  }, [handleGroupByName, handleGroupByNone, filtersStore.groupBy, toggleConvertedYaml])
 
   useEffect(() => {
     return () => {
@@ -217,13 +173,9 @@ const Content = ({
         />
       </div>
       <div className={contentClassName}>
-        {[JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
+        {[FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
           !location.pathname.includes(ADD_TO_FEATURE_VECTOR_TAB) && (
-            <ContentMenu
-              activeTab={params.pageTab}
-              screen={pageData.page}
-              tabs={pageData.tabs}
-            />
+            <ContentMenu activeTab={params.pageTab} screen={pageData.page} tabs={pageData.tabs} />
           )}
 
         <div className="table-container">
@@ -242,8 +194,7 @@ const Content = ({
               onChange={filtersChangeCallback ?? refresh}
               page={pageData.page}
               withoutExpandButton={
-                Boolean(pageData.handleRequestOnExpand) ||
-                pageData.withoutExpandButton
+                Boolean(pageData.handleRequestOnExpand) || pageData.withoutExpandButton
               }
             />
           </div>
@@ -278,10 +229,7 @@ const Content = ({
           )}
         </div>
         {convertedYaml.length > 0 && (
-          <YamlModal
-            convertedYaml={convertedYaml}
-            toggleConvertToYaml={toggleConvertedYaml}
-          />
+          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
       </div>
       {artifactsStore?.preview?.isPreview && (

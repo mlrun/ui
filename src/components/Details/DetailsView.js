@@ -4,18 +4,15 @@ import { Link, useLocation } from 'react-router-dom'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import DetailsMenu from '../../elements/DetailsMenu/DetailsMenu'
 import Download from '../../common/Download/Download'
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Select from '../../common/Select/Select'
-import Button from '../../common/Button/Button'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import LoadButton from '../../common/LoadButton/LoadButton'
 import Loader from '../../common/Loader/Loader'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import Select from '../../common/Select/Select'
+import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { formatDatetime } from '../../utils'
 import {
@@ -25,16 +22,14 @@ import {
   FEATURE_STORE_PAGE,
   FUNCTIONS_PAGE,
   FEATURE_VECTORS_TAB,
-  MODEL_ENDPOINTS_TAB,
-  TERTIARY_BUTTON,
-  PRIMARY_BUTTON,
-  LABEL_BUTTON
+  MODEL_ENDPOINTS_TAB
 } from '../../constants'
+import { TERTIARY_BUTTON, PRIMARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../types'
 
-import { ReactComponent as Close } from '../../images/close.svg'
-import { ReactComponent as Back } from '../../images/back-arrow.svg'
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
+import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
+import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
 
 const DetailsView = React.forwardRef(
   (
@@ -57,7 +52,8 @@ const DetailsView = React.forwardRef(
       selectedItem,
       setIteration,
       setRefreshWasHandled,
-      tabsContent
+      tabsContent,
+      tab
     },
     ref
   ) => {
@@ -215,7 +211,7 @@ const DetailsView = React.forwardRef(
                 getCloseDetailsLink
                   ? getCloseDetailsLink(selectedItem.name)
                   : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                      params.pageTab ? `/${params.pageTab}` : ''
+                      params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
                     }`
               }
               onClick={() => {
@@ -268,7 +264,8 @@ DetailsView.defaultProps = {
   detailsMenuClick: () => {},
   getCloseDetailsLink: null,
   handleRefresh: () => {},
-  tabsContent: null
+  tabsContent: null,
+  tab: ''
 }
 
 DetailsView.propTypes = {
@@ -289,7 +286,8 @@ DetailsView.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
   setRefreshWasHandled: PropTypes.func.isRequired,
-  tabsContent: PropTypes.element
+  tabsContent: PropTypes.element,
+  tab: PropTypes.string
 }
 
 export default DetailsView
