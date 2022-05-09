@@ -182,6 +182,15 @@ const requestedFeaturesTable = {
     row: {
       root: '.item-requested-features__table-row',
       fields: {
+        labelIcon: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+              '.item-requested-features__table-cel.cell_icon',
+              false,
+              false,
+              '.tooltip .tooltip__text span'
+          )
+        },
         projectName: '.cell_project-name',
         featureSet: '.item-requested-features__table-cell:nth-of-type(2)',
         feature: '.cell_feature',

@@ -9,8 +9,10 @@
   "feature_flags": {
     "project_membership": "enabled",
     "authentication": "iguazio",
-    "nuclio_streams": "enabled"
+    "nuclio_streams": "enabled",
+    "preemption_nodes": "enabled"
   },
+  "default_function_preemption_mode": "prevent",
   "default_function_priority_class_name": "igz-workload-medium",
   "valid_function_priority_class_names": [
     "igz-workload-low",

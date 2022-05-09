@@ -225,34 +225,63 @@ Feature: ML Functions
         Then type value "2" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
-        Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then select "KB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then increase value on 2 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then increase value on 1 points in "CPU_Limit_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then type value "2" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
         Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."GPU_Minimum_Value_Warning"
-        Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Unit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
         Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then decrease value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
         Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Unit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
         Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "3" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 15 points in "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 15 points in "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then increase value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
+        Then select "cpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Number_Input" input should contains "0.003" value in "Resources_Accordion" on "New_Function" wizard
+        Then increase value on 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value on 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
         Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "4" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 15 points in "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 15 points in "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then increase value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
+        Then select "cpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Number_Input" input should contains "0.004" value in "Resources_Accordion" on "New_Function" wizard
+        Then increase value on 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value on 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
         Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "5" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -276,6 +305,8 @@ Feature: ML Functions
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Priority"
+        Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Toleration"
         When select "Manual" option in "New_Function_Volume_Mount_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
@@ -497,6 +528,16 @@ Feature: ML Functions
         Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then select "Low" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then select "MB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "1000" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "10" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "50" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then type value "15" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
         And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Then click on "Save_Button" element on "New_Function" wizard
@@ -507,8 +548,29 @@ Feature: ML Functions
         Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "new-aqa-function-00" value in "name" column
         And wait load page
         When collapse "General_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Handler_Input" input should contains "demo" value in "Code_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow"
+        Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_Function" wizard
+        Then type value "" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "MB"
+        Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_Function" wizard
+        Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "KB"
+        Then verify "CPU_Request_Number_Input" input should contains "10" value in "Resources_Accordion" on "New_Function" wizard
+        Then type value "" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
+        Then verify "CPU_Limit_Number_Input" input should contains "50" value in "Resources_Accordion" on "New_Function" wizard
+        Then type value "" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
+        Then verify "GPU_Limit_Number_Input" input should contains "15" value in "Resources_Accordion" on "New_Function" wizard
+        Then type value "" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
 
     @inProgress
     Scenario: deploy new ml-function with build new image option
@@ -916,15 +978,23 @@ Feature: ML Functions
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
         Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "High"
+        Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Prevent"
+        Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Toleration"
+        Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow"
+        Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Constrain"
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
         Then verify "Function_Environment_Variables_Table" element visibility in "Environment_Variables_Accordion" on "New_Function" wizard
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
@@ -941,3 +1011,54 @@ Feature: ML Functions
         Then "Save_Button" element on "New_Function" should contains "Save" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
         Then "Deploy_Button" element on "New_Function" should contains "Deploy" value
+
+    Scenario: Verify Resources values on Function Deploy and Run
+        * set tear-down property "project" created with "automation-test" value
+        * set tear-down property "function" created in "automation-test" project with "new-aqa-function-00" value
+        * create "automation-test" MLRun Project with code 201
+        Given open url
+        And wait load page
+        And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then select "MB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "1000" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "6" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then type value "7" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then type value "99" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then click on "Deploy_Button" element on "New_Function" wizard
+        And wait load page
+        Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
+        Then select "tab" with "Jobs" value in breadcrumbs menu
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then value in "name" column with "text" in "Selected_Functions_Templates" in "Select_Functions_From_Accordion" on "Create_Job" wizard should contains "new-aqa-function-00"
+        Then click on row root with value "new-aqa-function-00" in "name" column in "Selected_Functions_Templates" table in "Select_Functions_From_Accordion" on "Create_Job" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "High"
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Constrain"
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow"
+        Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "MB"
+        Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "KB"
+        Then verify "CPU_Request_Number_Input" input should contains "6" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
+        Then verify "CPU_Limit_Number_Input" input should contains "7" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
+        Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "New_Function" wizard
