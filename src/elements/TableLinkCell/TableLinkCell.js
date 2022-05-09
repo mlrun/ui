@@ -23,16 +23,12 @@ const TableLinkCell = ({
 }) => {
   const tableCellClassNames = classnames('table-body__cell', data.class)
   const itemNameCLassNames = classnames('link', 'item-name')
-  const { value: stateValue, label: stateLabel, className: stateClassName } =
-    item.state ?? {}
+  const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 
   return (
     <div className={tableCellClassNames}>
       {data.showStatus && stateValue && stateLabel && (
-        <Tooltip
-          className="status"
-          template={<TextTooltipTemplate text={stateLabel} />}
-        >
+        <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
           <i className={stateClassName} />
         </Tooltip>
       )}
@@ -41,43 +37,31 @@ const TableLinkCell = ({
           <a href={link} className="link" target="blank">
             <Tooltip
               className={itemNameCLassNames}
-              template={
-                <TextTooltipTemplate text={data.tooltip || data.value} />
-              }
+              template={<TextTooltipTemplate text={data.tooltip || data.value} />}
             >
               {data.value}
             </Tooltip>
           </a>
         </span>
       ) : (
-        <Link
-          to={link}
-          onClick={() => selectItem(item)}
-          className="data-ellipsis"
-        >
+        <Link to={link} onClick={() => selectItem(item)} className="data-ellipsis">
           <div className="name-wrapper">
             <span className="link">
               <Tooltip
                 className={itemNameCLassNames}
-                template={
-                  <TextTooltipTemplate text={data.tooltip || data.value} />
-                }
+                template={<TextTooltipTemplate text={data.tooltip || data.value} />}
               >
                 {data.value}
               </Tooltip>
             </span>
             {data.showTag && data.value !== item.tag && (
-              <Tooltip
-                className="item-tag"
-                template={<TextTooltipTemplate text={item.tag} />}
-              >
+              <Tooltip className="item-tag" template={<TextTooltipTemplate text={item.tag} />}>
                 <span className="link-subtext">{item.tag}</span>
               </Tooltip>
             )}
           </div>
           {(link.match(/jobs/) ||
-            (link.match(/functions/) &&
-              Object.values(selectedItem).length !== 0)) && (
+            (link.match(/functions/) && Object.values(selectedItem).length !== 0)) && (
             <div className="date-uid-row">
               {(item.startTime || item.updated) && (
                 <span className="link-subtext">
@@ -91,9 +75,7 @@ const TableLinkCell = ({
                 </span>
               )}
               {data.value !== item.uid && data.value !== item.hash && (
-                <span className="link-subtext">
-                  {truncateUid(item.uid || item.hash)}
-                </span>
+                <span className="link-subtext">{truncateUid(item.uid || item.hash)}</span>
               )}
             </div>
           )}

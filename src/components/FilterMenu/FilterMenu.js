@@ -139,7 +139,7 @@ const FilterMenu = ({
         )
       }
 
-      handleExpandAll(true)
+      handleExpandAll && handleExpandAll(true)
       onChange(data)
     }
   }

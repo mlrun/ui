@@ -20,13 +20,21 @@ import { getWorkflowDetailsLink } from './workflow.util'
 import functionsActions from '../../actions/functions'
 import { page } from '../Jobs/jobs.util'
 import { ACTIONS_MENU } from '../../types'
-import { DEFAULT_EDGE, DETAILS_OVERVIEW_TAB, ML_EDGE, ML_NODE, PRIMARY_NODE } from '../../constants'
+import {
+  DEFAULT_EDGE,
+  DETAILS_OVERVIEW_TAB,
+  ML_EDGE,
+  ML_NODE,
+  MONITOR_WORKFLOWS_TAB,
+  PRIMARY_NODE
+} from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 
 import { ReactComponent as ListView } from '../../images/listview.svg'
 import { ReactComponent as Pipelines } from '../../images/pipelines.svg'
 
 import './workflow.scss'
+import JobsTable from '../../elements/JobTable/JobsTable'
 
 const Workflow = ({
   actionsMenu,
@@ -120,7 +128,15 @@ const Workflow = ({
 
   const onElementClick = (event, element) => {
     if (element.data?.customData?.run_uid) {
-      navigate(getWorkflowDetailsLink(params, null, element.data.customData.run_uid))
+      navigate(
+        getWorkflowDetailsLink(
+          params,
+          null,
+          element.data.customData.run_uid,
+          null,
+          MONITOR_WORKFLOWS_TAB
+        )
+      )
     } else if (
       (element.data?.customData?.run_type === 'deploy' ||
         element.data?.customData?.run_type === 'build') &&
@@ -132,9 +148,11 @@ const Workflow = ({
       const funcHash = element.data.customData.function.includes('@')
         ? element.data.customData.function.replace(/.*@/g, '')
         : 'latest'
-      const link = `/projects/${params.projectName}/${page.toLowerCase()}/${
-        params.pageTab
-      }/workflow/${params.workflowId}/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
+      const link = `/projects/${
+        params.projectName
+      }/${page.toLowerCase()}/${MONITOR_WORKFLOWS_TAB}/workflow/${
+        params.workflowId
+      }/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
 
       navigate(link)
     }
@@ -143,7 +161,7 @@ const Workflow = ({
   return (
     <div className="workflow-container">
       <TableTop
-        link={`/projects/${params.projectName}/jobs/${params.pageTab}`}
+        link={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
         text={workflow?.run?.name}
       >
         <div className="actions">
@@ -183,6 +201,7 @@ const Workflow = ({
                   pageData={pageData}
                   retryRequest={refreshJobs}
                   selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+                  tab={MONITOR_WORKFLOWS_TAB}
                 />
               )}
             </div>
@@ -197,7 +216,15 @@ const Workflow = ({
             pageData={pageData}
             retryRequest={refresh}
             selectedItem={selectedJob}
-          />
+          >
+            <JobsTable
+              actionsMenu={actionsMenu}
+              content={jobsContent}
+              handleSelectJob={handleSelectItem}
+              selectedJob={selectedJob}
+              tab={MONITOR_WORKFLOWS_TAB}
+            />
+          </Table>
         )}
       </div>
     </div>

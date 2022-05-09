@@ -266,6 +266,14 @@
           "css": true
         }
       ]
+    ],
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "useBuiltIns": "entry"
+        }
+      ]
     ]
   }
 }

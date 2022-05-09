@@ -77,7 +77,7 @@ const jobsActions = {
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
-  fetchAllJobRuns: (project, filters, jobName, scheduled) => dispatch => {
+  fetchAllJobRuns: (project, filters, jobName) => dispatch => {
     dispatch(jobsActions.fetchAllJobRunsBegin())
 
     return jobsApi
@@ -173,7 +173,7 @@ const jobsActions = {
     type: FETCH_JOB_LOGS_SUCCESS,
     payload: logs
   }),
-  fetchJobs: (project, filters, jobName, scheduled) => dispatch => {
+  fetchJobs: (project, filters, scheduled) => dispatch => {
     const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getAllJobs
 
     dispatch(jobsActions.fetchJobsBegin())

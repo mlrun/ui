@@ -57,7 +57,8 @@ const DetailsView = React.forwardRef(
       selectedItem,
       setIteration,
       setRefreshWasHandled,
-      tabsContent
+      tabsContent,
+      tab
     },
     ref
   ) => {
@@ -215,7 +216,7 @@ const DetailsView = React.forwardRef(
                 getCloseDetailsLink
                   ? getCloseDetailsLink(selectedItem.name)
                   : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                      params.pageTab ? `/${params.pageTab}` : ''
+                      params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
                     }`
               }
               onClick={() => {
@@ -268,7 +269,8 @@ DetailsView.defaultProps = {
   detailsMenuClick: () => {},
   getCloseDetailsLink: null,
   handleRefresh: () => {},
-  tabsContent: null
+  tabsContent: null,
+  tab: ''
 }
 
 DetailsView.propTypes = {
@@ -289,7 +291,8 @@ DetailsView.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
   setRefreshWasHandled: PropTypes.func.isRequired,
-  tabsContent: PropTypes.element
+  tabsContent: PropTypes.element,
+  tab: PropTypes.string
 }
 
 export default DetailsView

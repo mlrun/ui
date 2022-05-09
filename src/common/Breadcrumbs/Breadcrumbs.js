@@ -10,7 +10,7 @@ import RoundedIcon from '../RoundedIcon/RoundedIcon'
 import { ReactComponent as ArrowIcon } from '../../images/arrow.svg'
 
 import { useMode } from '../../hooks/mode.hook'
-import { generateProjectScreens } from './breadcrumbs.util'
+import { generateProjectScreens, generateTabsList } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'
 
@@ -27,6 +27,9 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   const projectScreens = useMemo(() => {
     return generateProjectScreens(params, isDemoMode)
   }, [isDemoMode, params])
+  const projectTabs = useMemo(() => {
+    return generateTabsList()
+  }, [])
 
   const projectsList = useMemo(() => {
     return generateProjectsList(projectStore.projectsNames.data)
@@ -35,12 +38,16 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   const urlItems = useMemo(() => {
     const pathItems = location.pathname.split('/').slice(1, 4)
     const screen = projectScreens.find(screen => pathItems.find(pathItem => pathItem === screen.id))
+    const tab = projectTabs.find(tab =>
+      location.pathname.split('/').find(pathItem => pathItem === tab.id)
+    )
 
     return {
       pathItems: pathItems.map(pathItem => (pathItem === screen?.id ? screen.label : pathItem)),
-      screen
+      screen,
+      tab
     }
-  }, [location.pathname, projectScreens])
+  }, [location.pathname, projectScreens, projectTabs])
 
   const handleCloseDropdown = useCallback(
     event => {
@@ -172,7 +179,7 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
                       onClick={() => handleSelectDropdownItem(separatorRef)}
                       screen={urlItems.screen?.id}
                       selectedItem={params.projectName}
-                      tab={params.pageTab}
+                      tab={urlItems.tab?.id}
                       withSearch
                     />
                   </>
