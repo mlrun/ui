@@ -239,7 +239,12 @@ const MembersPopUp = ({
   }
 
   const generateUsersSuggestionList = debounce(() => {
-    const getUsersPromise = projectsIguazioApi.getScrubbedUsers()
+    // temporary solution for v1.0.x
+    const getUsersPromise = projectsIguazioApi.getScrubbedUsers({
+      params: {
+        'page[size]': 200
+      }
+    })
     const getUserGroupsPromise = projectsIguazioApi.getScrubbedUserGroups()
     const suggestionList = []
 
