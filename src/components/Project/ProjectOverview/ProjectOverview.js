@@ -126,7 +126,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
     <Wizard onSubmit={submitForm} steps={steps}>
       {(
         Steps,
-        { activeComponent, activeStep, handleSubmit, isLastPage, previousStep, submitting }
+        { activeComponent, activeStep, handleSubmit, isLastStep, previousStep, submitting }
       ) => {
         const ActiveStep = activeComponent.component
         return (
@@ -136,14 +136,14 @@ const ProjectOverview = ({ fetchProject, project }) => {
                 Back
               </button>,
               <button type="submit" onClick={handleSubmit} disabled={submitting}>
-                {isLastPage ? 'Submit' : 'Next'}
+                {isLastStep ? 'Submit' : 'Next'}
               </button>
             ]}
             onClose={onReject}
             show={isOpen}
           >
             <form id="DeployModal" noValidate>
-              <Steps />
+              {Steps}
               <ActiveStep />
             </form>
           </Modal>
