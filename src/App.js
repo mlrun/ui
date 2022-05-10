@@ -18,8 +18,6 @@ import {
 
 import 'igz-controls/scss/common.scss'
 import './scss/main.scss'
-import ScheduledJobs from './components/Jobs/ScheduledJobs/ScheduledJobs'
-import MonitorWorkflows from './components/Jobs/MonitorWorkflows/MonitorWorkflows'
 
 const Page = React.lazy(() => import('./layout/Page/Page'))
 const CreateJobPage = React.lazy(() => import('./components/CreateJobPage/CreateJobPage'))
@@ -29,6 +27,8 @@ const Files = React.lazy(() => import('./components/Files/Files'))
 const Functions = React.lazy(() => import('./components/FunctionsPage/Functions'))
 const Jobs = React.lazy(() => import('./components/Jobs/Jobs'))
 const MonitorJobs = React.lazy(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
+const MonitorWorkflows = React.lazy(() => import('./components/Jobs/MonitorWorkflows/MonitorWorkflows'))
+const ScheduledJobs = React.lazy(() => import('./components/Jobs/ScheduledJobs/ScheduledJobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const ProjectMonitor = React.lazy(() => import('./components/Project/ProjectMonitor'))

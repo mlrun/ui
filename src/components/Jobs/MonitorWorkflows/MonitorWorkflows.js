@@ -23,6 +23,7 @@ import { rerunJob } from '../jobs.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { generateFilters } from './monitorWorkflows.util'
 import { generateActionsMenu, generatePageData } from '../MonitorJobs/monitorJobs.util'
+import { usePods } from '../../../hooks/usePods.hook'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -30,7 +31,6 @@ const MonitorWorkflows = ({
   fetchJob,
   fetchJobFunction,
   fetchJobLogs,
-  fetchJobPods,
   fetchJobs,
   fetchWorkflow,
   fetchWorkflows,
@@ -39,7 +39,6 @@ const MonitorWorkflows = ({
   removeFunctionLogs,
   removeJobLogs,
   removeNewJob,
-  removePods,
   resetWorkflow,
   setFilters,
   setNotification
@@ -60,6 +59,8 @@ const MonitorWorkflows = ({
   const location = useLocation()
   const { setConfirmData } = React.useContext(JobsContext)
   let fetchFunctionLogsTimeout = useRef(null)
+
+  usePods()
 
   const filters = useMemo(() => generateFilters(), [])
 
@@ -263,21 +264,6 @@ const MonitorWorkflows = ({
   )
 
   useEffect(() => {
-    if (!isEmpty(selectedJob)) {
-      fetchJobPods(params.projectName, selectedJob.uid)
-
-      const interval = setInterval(() => {
-        fetchJobPods(params.projectName, selectedJob.uid)
-      }, 30000)
-
-      return () => {
-        removePods()
-        clearInterval(interval)
-      }
-    }
-  }, [fetchJobPods, params.projectName, removePods, selectedJob])
-
-  useEffect(() => {
     if (params.jobId && pageData.details.menu.length > 0) {
       isDetailsTabExists(JOBS_PAGE, params, pageData.details.menu, navigate, location)
     }
@@ -384,7 +370,7 @@ const MonitorWorkflows = ({
 
   useEffect(() => {
     if (params.workflowId) {
-      refreshJobs({ iter: '' })
+      refreshJobs({ iter: 'false' })
     }
   }, [params.workflowId, refreshJobs])
 

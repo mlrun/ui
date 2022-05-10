@@ -227,22 +227,18 @@ const MonitorJobs = ({
           dates: {
             value: pastWeekOption.handler(),
             isPredefined: pastWeekOption.isPredefined
-          },
-          iter: ''
+          }
         }
       } else {
         filters = {
           dates: {
             value: dateFilter,
             isPredefined: false
-          },
-          iter: ''
+          }
         }
       }
 
-      if (params.jobName) {
-        filters.iter = 'false'
-      }
+      filters.iter = 'false'
 
       refreshJobs(filters)
       setFilters(filters)
