@@ -5,8 +5,8 @@ import { connect, useSelector } from 'react-redux'
 
 import MonitorJobsView from './MonitorJobsView'
 
-import { DANGER_BUTTON, GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
-
+import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
+import { DANGER_BUTTON } from 'igz-controls/constants'
 import { actionCreator, handleAbortJob, monitorJob } from '../jobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { useYaml } from '../../../hooks/yaml.hook'

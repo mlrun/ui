@@ -21,7 +21,7 @@ import {
 } from '../../constants'
 import { parseKeyValues } from '../../utils'
 
-import { ReactComponent as RightArrow } from '../../images/ic_arrow-right.svg'
+import { ReactComponent as RightArrow } from 'igz-controls/images/ic_arrow-right.svg'
 import { getChipOptions } from '../../utils/getChipOptions'
 
 const DetailsInfoView = React.forwardRef(

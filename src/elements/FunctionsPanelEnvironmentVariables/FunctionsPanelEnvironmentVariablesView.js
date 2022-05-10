@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import EnvironmentVariables from '../EnvironmentVariables/EnvironmentVariables'
 
@@ -23,7 +23,7 @@ const FunctionsPanelEnvironmentVariablesView = ({
     />
   ) : (
     <div className="functions-panel__item advanced new-item-side-panel__item">
-      <FunctionsPanelSection title="Environment Variables">
+      <PanelSection title="Environment Variables">
         <KeyValueTable
           addNewItem={handleAddNewEnv}
           addNewItemLabel="Add variable"
@@ -42,7 +42,7 @@ const FunctionsPanelEnvironmentVariablesView = ({
           valueLabel="Value"
           withEditMode
         />
-      </FunctionsPanelSection>
+      </PanelSection>
     </div>
   )
 }

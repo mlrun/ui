@@ -1,13 +1,12 @@
 import React from 'react'
 
 import FeatureValidator from '../../elements/FeatureValidator/FeatureValidator'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Primary } from '../../images/ic-key.svg'
-import { ReactComponent as Partition } from '../../images/partition.svg'
-import { ReactComponent as TimestampKey } from '../../images/ic-calendar.svg'
-import { ReactComponent as LabelColumn } from '../../images/ic_target-with-dart.svg'
+import { ReactComponent as Primary } from 'igz-controls/images/ic-key.svg'
+import { ReactComponent as Partition } from 'igz-controls/images/partition.svg'
+import { ReactComponent as TimestampKey } from 'igz-controls/images/ic-calendar.svg'
+import { ReactComponent as LabelColumn } from 'igz-controls/images/ic_target-with-dart.svg'
 
 import { parseKeyValues } from '../../utils'
 

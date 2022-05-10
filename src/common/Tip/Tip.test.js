@@ -6,7 +6,7 @@ import {
 } from '@testing-library/react'
 import Tip from './Tip'
 
-jest.mock('../../images/question-mark.svg', () => ({
+jest.mock('igz-controls/images/question-mark.svg', () => ({
   ReactComponent: 'Question-icon'
 }))
 

@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
 
@@ -10,7 +11,7 @@ import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
   featureStore,
@@ -39,6 +40,8 @@ const ProjectMonitor = ({
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
+  const { isNuclioModeDisabled } = useNuclioMode()
+
 
   const nuclioStreamsAreEnabled = useMemo(
     () => areNuclioStreamsEnabled(frontendSpec),
@@ -87,12 +90,18 @@ const ProjectMonitor = ({
   ])
 
   useEffect(() => {
-    if (nuclioStreamsAreEnabled) {
+    if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
       fetchNuclioV3ioStreams(params.projectName)
 
       return () => removeV3ioStreams()
     }
-  }, [fetchNuclioV3ioStreams, params.projectName, nuclioStreamsAreEnabled, removeV3ioStreams])
+  }, [
+    fetchNuclioV3ioStreams,
+    isNuclioModeDisabled,
+    params.projectName,
+    nuclioStreamsAreEnabled,
+    removeV3ioStreams
+  ])
 
   const closeFeatureSetPanel = () => {
     setCreateFeatureSetPanelIsOpen(false)
@@ -208,7 +217,10 @@ const ProjectMonitor = ({
     removeProjectSummary()
     fetchProjectData()
     fetchProjectSummary(params.projectName)
-    nuclioStreamsAreEnabled && fetchNuclioV3ioStreams(params.projectName)
+
+    if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
+      fetchNuclioV3ioStreams(params.projectName)
+    }
   }
 
   return (
@@ -226,7 +238,7 @@ const ProjectMonitor = ({
         handleDeployFunctionSuccess={handleDeployFunctionSuccess}
         handleLaunchIDE={handleLaunchIDE}
         isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
-        isPopupDialogOpen={isPopupDialogOpen}
+        isNuclioModeDisabled={isNuclioModeDisabled}isPopupDialogOpen={isPopupDialogOpen}
         navigate={navigate}
         nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
         params={params}

@@ -1,13 +1,13 @@
-@import '../../scss/variables';
-@import '../../scss/colors';
-@import '../../scss/mixins';
-@import '../../scss/shadows';
-@import '../../scss/borders';
+@import '~igz-controls/scss/variables';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/mixins';
+@import '~igz-controls/scss/shadows';
+@import '~igz-controls/scss/borders';
 
 .header {
   @include fixed;
 
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   width: 100%;

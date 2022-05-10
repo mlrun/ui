@@ -6,23 +6,22 @@ import { cloneDeep } from 'lodash'
 import ScheduledJobsView from './ScheduledJobsView'
 
 import {
-  DANGER_BUTTON,
   GROUP_BY_NONE,
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
-  SCHEDULE_TAB,
-  STATUS_CODE_FORBIDDEN
+  SCHEDULE_TAB
 } from '../../../constants'
 import { actionCreator } from '../jobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { useYaml } from '../../../hooks/yaml.hook'
 import { JobsContext } from '../Jobs'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
-import { ReactComponent as Yaml } from '../../../images/yaml.svg'
-import { ReactComponent as Dropdown } from '../../../images/dropdown.svg'
-import { ReactComponent as Edit } from '../../../images/edit.svg'
-import { ReactComponent as Delete } from '../../../images/delete.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as Dropdown } from 'igz-controls/images/dropdown.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const ScheduledJobs = ({
   editJob,
@@ -99,7 +98,7 @@ const ScheduledJobs = ({
             id: Math.random(),
             retry: item => handleRunJob(item),
             message:
-              error.response.status === STATUS_CODE_FORBIDDEN
+              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? 'You are not permitted to run new job.'
                 : 'Job failed to start.'
           })
@@ -142,7 +141,7 @@ const ScheduledJobs = ({
       .catch(error => {
         dispatch(
           editJobFailure(
-            error.response.status === STATUS_CODE_FORBIDDEN
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'You are not permitted to run new job.'
               : error.message
           )
@@ -251,7 +250,6 @@ const ScheduledJobs = ({
   }, [params.projectName])
 
   useEffect(() => {
-    //check
     setFilters({ groupBy: GROUP_BY_NONE })
   }, [setFilters])
 

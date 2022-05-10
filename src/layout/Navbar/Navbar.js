@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import NavbarLink from '../../elements/NavbarLink/NavbarLink'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
 
-import { ReactComponent as PinIcon } from '../../images/pin-icon.svg'
-import { ReactComponent as UnPinIcon } from '../../images/unpin-icon.svg'
-import { ReactComponent as SettingsIcon } from '../../images/pref-icon.svg'
+import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
+import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
+import { ReactComponent as SettingsIcon } from 'igz-controls/images/pref-icon.svg'
 
 import './Navbar.scss'
 

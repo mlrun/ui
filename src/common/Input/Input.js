@@ -5,19 +5,17 @@ import { isEmpty } from 'lodash'
 
 import OptionsMenu from '../OptionsMenu/OptionsMenu'
 import ValidationTemplate from '../../elements/ValidationTemplate/ValidationTemplate'
-
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tip from '../Tip/Tip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { checkPatternsValidity } from '../../utils/validationService'
 import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
 import { INPUT_LINK } from '../../types'
 
-import { ReactComponent as InvalidIcon } from '../../images/invalid.svg'
-import { ReactComponent as Popout } from '../../images/popout.svg'
-import { ReactComponent as WarningIcon } from '../../images/warning.svg'
+import { ReactComponent as InvalidIcon } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
+import { ReactComponent as WarningIcon } from 'igz-controls/images/warning.svg'
 
 import './input.scss'
 
@@ -36,7 +34,7 @@ const Input = React.forwardRef(
       invalidText,
       label,
       link,
-      suggestionList,
+      min,
       maxLength,
       onBlur,
       onChange,
@@ -46,6 +44,8 @@ const Input = React.forwardRef(
       required,
       requiredText,
       setInvalid,
+      step,
+      suggestionList,
       tip,
       type,
       validationRules: rules,
@@ -243,10 +243,12 @@ const Input = React.forwardRef(
           required={isInvalid}
           {...{
             disabled,
+            min,
             maxLength,
             onKeyDown,
             pattern,
             placeholder,
+            step,
             type,
             value: typedValue
           }}
@@ -360,6 +362,7 @@ Input.defaultProps = {
   link: { show: '', value: '' },
   label: '',
   maxLength: null,
+  min: null,
   onBlur: () => {},
   onChange: () => {},
   onKeyDown: () => {},
@@ -367,6 +370,7 @@ Input.defaultProps = {
   required: false,
   requiredText: 'This field is required',
   setInvalid: () => {},
+  step: '',
   tip: '',
   type: 'text',
   validationRules: [],
@@ -389,6 +393,7 @@ Input.propTypes = {
   label: PropTypes.string,
   link: INPUT_LINK,
   maxLength: PropTypes.number,
+  min: PropTypes.number,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
@@ -397,6 +402,7 @@ Input.propTypes = {
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   setInvalid: PropTypes.func,
+  step: PropTypes.string,
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

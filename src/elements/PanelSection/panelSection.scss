@@ -1,0 +1,10 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/mixins';
+
+.panel-section {
+  @include panelSection;
+
+  .panel-section__tip {
+    margin-left: 5px;
+  }
+}

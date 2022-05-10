@@ -27,7 +27,7 @@ const FeatureSetsPanelDataSource = ({
   featureStore,
   fetchArtifact,
   fetchArtifacts,
-  fetchProjects,
+  fetchProjectsNames,
   project,
   setDisableButtons,
   setNewFeatureSetDataSourceKind,
@@ -74,13 +74,13 @@ const FeatureSetsPanelDataSource = ({
       urlProjectItemTypeEntered &&
       projects.length === 0
     ) {
-      fetchProjects().then(projects => {
+      fetchProjectsNames().then(projects => {
         setProjects(generateProjectsList(projects, project))
       })
     }
   }, [
     data.url.pathType,
-    fetchProjects,
+    fetchProjectsNames,
     project,
     projects.length,
     urlProjectItemTypeEntered

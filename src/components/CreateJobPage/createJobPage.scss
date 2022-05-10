@@ -1,7 +1,8 @@
-@import '../../scss/colors';
+@import '~igz-controls/scss/colors';
 
 .create-container {
-  flex: 1;
+  flex: 1 0;
+  width: 100%;
 
   &__header {
     display: flex;

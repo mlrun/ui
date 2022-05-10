@@ -11,9 +11,9 @@ import {
 } from '../../../constants'
 import { detailsMenu, infoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
 
-import { ReactComponent as Run } from '../../../images/run.svg'
-import { ReactComponent as Cancel } from '../../../images/close.svg'
-import { ReactComponent as Yaml } from '../../../images/yaml.svg'
+import { ReactComponent as Run } from 'igz-controls/images/run.svg'
+import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 import {
   detailsMenu as functionsDetailsMenu,

@@ -3,24 +3,24 @@ import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
+import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import Loader from '../../common/Loader/Loader'
+import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
-import Select from '../../common/Select/Select'
 import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
-import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+import Select from '../../common/Select/Select'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { DATASETS, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
-import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 import './project.scss'
 
@@ -37,6 +37,7 @@ const ProjectMonitorView = ({
   handleDeployFunctionSuccess,
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
+  isNuclioModeDisabled,
   isPopupDialogOpen,
   navigate,
   nuclioStreamsAreEnabled,
@@ -142,10 +143,21 @@ const ProjectMonitorView = ({
               />
               {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
-                  counterValue={Object.keys(v3ioStreams.data).length ?? 0}
-                  link={`/projects/${params.projectName}/monitor/consumer-groups`}
+                  counterValue={
+                    isNuclioModeDisabled
+                      ? 'N/A'
+                      : Object.keys(v3ioStreams.data).length ?? 0
+                  }
+                  link={`/projects/${params.projectName}/monitor${
+                    !isNuclioModeDisabled ? '/consumer-groups' : ''
+                  }`}
                   projectSummary={v3ioStreams}
                   title="Consumer groups"
+                  tooltipText={
+                    isNuclioModeDisabled
+                      ? 'Consumer group feature works when Nuclio is deployed'
+                      : ''
+                  }
                 />
               )}
             </div>
@@ -212,6 +224,7 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
+  isNuclioModeDisabled: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,

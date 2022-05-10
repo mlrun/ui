@@ -3,16 +3,15 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { map } from 'lodash'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import EditableFunctionParameterRow from './EditableFunctionParameterRow'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
 import AddFunctionParameterRow from './AddFunctionParameterRow'
+import EditableFunctionParameterRow from './EditableFunctionParameterRow'
+import PanelSection from '../PanelSection/PanelSection'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { tableHeaders } from './functionsPanelParameters.util'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 import './functionsPanelParameters.scss'
 
@@ -38,10 +37,10 @@ const FunctionsPanelParametersView = ({
   )
 
   return (
-    <FunctionsPanelSection title="Parameters">
+    <PanelSection title="Parameters">
       <div className={tableClassNames}>
         <div className="table__header table__row no-hover">
-          {tableHeaders.map((header, index) => (
+          {tableHeaders.map((header) => (
             <div className="table__cell" key={header.id}>
               {header.label}
             </div>
@@ -104,7 +103,7 @@ const FunctionsPanelParametersView = ({
           </div>
         )}
       </div>
-    </FunctionsPanelSection>
+    </PanelSection>
   )
 }
 

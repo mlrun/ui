@@ -5,8 +5,8 @@ import JobsPanelParametersTableView from './JobsPanelParametersTableView'
 
 import { SELECT_OPTIONS } from '../../types'
 
-import { ReactComponent as Edit } from '../../images/edit.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const JobsPanelParametersTable = ({
   addNewItem,

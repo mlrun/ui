@@ -28,8 +28,14 @@ const tableSlice = createSlice({
       state.features.currentProject = action.payload
     },
     updateFeatureVector: (state, action) => {
-      state.features.featureVector.metadata = action.payload.metadata
-      state.features.featureVector.spec = action.payload.spec
+      state.features.featureVector.metadata = {
+        ...state.features.featureVector.metadata,
+        ...action.payload.metadata
+      }
+      state.features.featureVector.spec = {
+        ...state.features.featureVector.spec,
+        ...action.payload.spec
+      }
     },
     updateGroupedFeatures: (state, action) => {
       state.features.groupedFeatures[action.payload.project] = action.payload.groupedFeatures

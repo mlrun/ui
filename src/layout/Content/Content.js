@@ -26,7 +26,7 @@ import {
   MODELS_PAGE
 } from '../../constants'
 
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const Content = ({
   applyDetailsChanges,
@@ -88,7 +88,11 @@ const Content = ({
   }, [pageData.hidePageActionMenu, showActionsMenu])
 
   useEffect(() => {
-    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
+    isProjectValid(
+      navigate,
+      projectStore.projectsNames.data,
+      params.projectName
+    )
   }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   const handleGroupByName = useCallback(() => {

@@ -7,13 +7,13 @@ import MonitorWorkflowsView from './MonitorWorkflowsView'
 
 import { JobsContext } from '../Jobs'
 import {
-  DANGER_BUTTON,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB
 } from '../../../constants'
+import { DANGER_BUTTON } from 'igz-controls/constants'
 import { actionCreator, handleAbortJob, monitorJob } from '../jobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { useYaml } from '../../../hooks/yaml.hook'

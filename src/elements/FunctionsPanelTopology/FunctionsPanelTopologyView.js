@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import FunctionPanelTopologyModelTable from '../FunctionPanelTopologyModelTable/FunctionPanelTopologyModelTable'
 import Select from '../../common/Select/Select'
 import CheckBox from '../../common/CheckBox/CheckBox'
@@ -17,7 +17,7 @@ const FunctionsPanelTopologyView = ({
   selectRouterType
 }) => {
   return (
-    <FunctionsPanelSection className="topology" title="Topology">
+    <PanelSection className="topology" title="Topology">
       <div>
         <Select
           className="router-type"
@@ -36,7 +36,7 @@ const FunctionsPanelTopologyView = ({
         onChange={handleTrackModels}
         selectedId={data.track_models}
       />
-    </FunctionsPanelSection>
+    </PanelSection>
   )
 }
 

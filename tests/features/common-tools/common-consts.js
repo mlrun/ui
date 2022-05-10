@@ -117,6 +117,7 @@ module.exports = {
   },
   Models_Info_Pane: {
     Tab_List: ['Overview', 'Preview'],
+    Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
       'Hash',
       'Key',
@@ -373,7 +374,8 @@ module.exports = {
       'Day',
       'Month',
       'Year'
-    ]
+    ],
+    Pods_Priority: ['Low', 'Medium', 'High']
   },
   No_Data_Message: {
     Common_Message: 'No data to show',

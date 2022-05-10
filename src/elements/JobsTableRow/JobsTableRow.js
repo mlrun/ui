@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
 import classnames from 'classnames'
+import { useParams } from 'react-router-dom'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import TableCell from '../TableCell/TableCell'
@@ -15,7 +15,7 @@ const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) =>
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    getJobIdentifier(selectedJob, true)  === rowItem.data.ui.identifierUnique && 'row_active'
+    getJobIdentifier(selectedJob, true) === rowItem.data.ui.identifierUnique && 'row_active'
   )
 
   return (
@@ -45,10 +45,15 @@ const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) =>
   )
 }
 
+JobsTableRow.defaultProps = {
+  handleSelectJob: () => {},
+  selectedJob: {}
+}
+
 JobsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  handleSelectJob: PropTypes.func.isRequired,
+  handleSelectJob: PropTypes.func,
   rowItem: PropTypes.shape({}).isRequired,
-  selectedJob: PropTypes.shape({}).isRequired
+  selectedJob: PropTypes.shape({})
 }
 export default JobsTableRow

@@ -1,33 +1,23 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Button from '../../common/Button/Button'
+import ChipCell from '../../common/ChipCell/ChipCell'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
-import ChipCell from '../../common/ChipCell/ChipCell'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Button, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 
 import { getValidationRules } from '../../utils/validationService'
 import { generateKeyValues, parseKeyValues } from '../../utils'
-import { LABEL_BUTTON, PRIMARY_BUTTON, TAG_LATEST } from '../../constants'
+import { TAG_LATEST } from '../../constants'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import './createFeatureVectorPopUp.scss'
 
-const CreateFeatureVectorPopUp = ({
-  closePopUp,
-  createFeatureVector,
-  featureVectorData
-}) => {
+const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVectorData }) => {
   const [tagTooltipIsHidden, setTagTooltipIsHidden] = useState(false)
   const [nameIsValid, setNameIsValid] = useState(true)
-  const [featureVectorName, setFeatureVectorName] = useState(
-    featureVectorData.name
-  )
-  const [featureVectorTag, setFeatureVectorTag] = useState(
-    featureVectorData.tag || TAG_LATEST
-  )
+  const [featureVectorName, setFeatureVectorName] = useState(featureVectorData.name)
+  const [featureVectorTag, setFeatureVectorTag] = useState(featureVectorData.tag || TAG_LATEST)
   const [featureVectorDescription, setFeatureVectorDescription] = useState(
     featureVectorData.description
   )
@@ -38,9 +28,7 @@ const CreateFeatureVectorPopUp = ({
   return (
     <PopUpDialog
       className="new-feature-vector__pop-up"
-      headerText={`${
-        !featureVectorData.name ? 'Create' : 'Edit'
-      } feature vector`}
+      headerText={`${!featureVectorData.name ? 'Create' : 'Edit'} feature vector`}
       closePopUp={closePopUp}
     >
       <div className="new-feature-vector__row new-feature-vector__name-tag-row">
@@ -110,11 +98,7 @@ const CreateFeatureVectorPopUp = ({
         <Button
           variant={PRIMARY_BUTTON}
           label="Create"
-          disabled={
-            !featureVectorName.trim() ||
-            !featureVectorTag.trim() ||
-            !nameIsValid
-          }
+          disabled={!featureVectorName.trim() || !featureVectorTag.trim() || !nameIsValid}
           onClick={() =>
             createFeatureVector({
               name: featureVectorName,

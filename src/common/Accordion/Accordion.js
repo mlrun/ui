@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import RoundedIcon from '../RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
 import './accordion.scss'
 

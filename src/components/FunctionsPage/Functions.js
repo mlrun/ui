@@ -28,19 +28,17 @@ import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
 import {
-  DANGER_BUTTON,
   FUNCTIONS_PAGE,
-  LABEL_BUTTON,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
-  SECONDARY_BUTTON,
   TAG_LATEST
 } from '../../constants'
+import { DANGER_BUTTON, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
 import { useMode } from '../../hooks/mode.hook'
 
-import { ReactComponent as Delete } from '../../images/delete.svg'
-import { ReactComponent as Run } from '../../images/run.svg'
-import { ReactComponent as Edit } from '../../images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Run } from 'igz-controls/images/run.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 const Functions = ({

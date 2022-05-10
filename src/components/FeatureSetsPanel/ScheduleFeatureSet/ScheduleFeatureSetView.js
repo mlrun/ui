@@ -4,14 +4,13 @@ import classnames from 'classnames'
 
 import ScheduleFeatureSetSimple from '../ScheduleFeatureSetSimple/ScheduleFeatureSetSimple'
 import ScheduleCron from '../../ScheduleCron/ScheduleCron'
-import Button from '../../../common/Button/Button'
-import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
+import { Button, RoundedIcon } from 'igz-controls/components'
 
 import { tabs } from './scheduleFeatureSet.util'
-import { SECONDARY_BUTTON } from '../../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Schedule } from '../../../images/clock.svg'
-import { ReactComponent as CloseIcon } from '../../../images/close.svg'
+import { ReactComponent as Schedule } from 'igz-controls/images/clock.svg'
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
 import './scheduleFeatureSet.scss'
 

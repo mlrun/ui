@@ -7,6 +7,7 @@ import {
   waiteUntilComponent,
   clickOnComponent,
   componentIsPresent,
+  componentIsNotPresent,
   componentIsVisible,
   componentIsNotVisible,
   verifyText,
@@ -21,7 +22,8 @@ import {
   clickNearComponent,
   verifyElementDisabled,
   verifyElementEnabled,
-  hoverComponent
+  hoverComponent,
+  refreshPage
 } from '../common/actions/common.action'
 import {
   findRowIndexesByColumnValue,
@@ -125,6 +127,12 @@ Then('additionally redirect by INVALID-TAB', async function() {
 Then('wait load page', async function() {
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(500)
+})
+
+Then('refresh a page', async function() {
+  await refreshPage(this.driver)
+  await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
+  await this.driver.sleep(250)
 })
 
 Then('click on {string} element on {string} wizard', async function(
@@ -389,6 +397,17 @@ When(
   }
 )
 
+Then(
+  'verify {string} dropdown in {string} on {string} wizard selected option value {string}',
+  async function(dropdownName, accordionName, wizardName, optionValue) {
+    await checkDropdownSelectedOption(
+      this.driver,
+      pageObjects[wizardName][accordionName][dropdownName],
+      optionValue
+    )
+  }
+)
+
 When(
   'select {string} option in {string} filter dropdown on {string} wizard',
   async function(optionValue, dropdownName, wizardName) {
@@ -520,6 +539,13 @@ Then(
     )
   }
 )
+
+Then('verify {string} element not exists on {string} wizard', async function(
+  component,
+  wizard
+) {
+  await componentIsNotPresent(this.driver, pageObjects[wizard][component])
+})
 
 When('collapse {string} on {string} wizard', async function(accordion, wizard) {
   await collapseAccordionSection(
@@ -719,6 +745,13 @@ Then(
   }
 )
 
+When('check {string} element on {string} wizard', async function(
+  checkbox,
+  wizard
+) {
+  await checkCheckbox(this.driver, pageObjects[wizard][checkbox])
+})
+
 When('check {string} element in {string} on {string} wizard', async function(
   checkbox,
   accordion,
@@ -742,6 +775,13 @@ When('uncheck {string} element on {string} wizard', async function(
   await uncheckCheckbox(this.driver, pageObjects[wizard][checkbox])
 })
 
+Then('{string} element should be unchecked on {string} wizard', async function(
+  checkbox,
+  wizard
+) {
+  await isCheckboxUnchecked(this.driver, pageObjects[wizard][checkbox])
+})
+
 Then(
   '{string} element should be unchecked in {string} on {string} wizard',
   async function(checkbox, accordion, wizard) {
@@ -751,6 +791,13 @@ Then(
     )
   }
 )
+
+Then('{string} element should be checked on {string} wizard', async function(
+  checkbox,
+  wizard
+) {
+  await isCheckboxChecked(this.driver, pageObjects[wizard][checkbox])
+})
 
 Then(
   '{string} element should be checked in {string} on {string} wizard',
@@ -849,6 +896,18 @@ When(
     await selectOptionInDropdownWithoutCheck(
       this.driver,
       pageObjects[wizard][accordion][comboBox]['comboDropdown'],
+      option
+    )
+    await this.driver.sleep(200)
+  }
+)
+
+Then(
+  'select {string} option in {string} suggestions dropdown on {string} wizard',
+  async function(option, dropdown, wizard) {
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][dropdown],
       option
     )
     await this.driver.sleep(200)

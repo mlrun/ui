@@ -4,14 +4,14 @@ import { connect } from 'react-redux'
 
 import MlChart from '../../common/Chart/MlChart'
 import Loader from '../../common/Loader/Loader'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import NoData from '../../common/NoData/NoData'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { generateDriftAnalysis } from './detailsFeaturesAnalysis.util'
 import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
 
 import './detailsFeaturesAnalysis.scss'
-import colors from '../../scss/colors.scss'
+import colors from 'igz-controls/scss/colors.scss'
 
 const DetailsFeaturesAnalysis = ({ detailsStore }) => {
   const table = generateDriftAnalysis(detailsStore.modelEndpoint.data.status)
@@ -22,25 +22,19 @@ const DetailsFeaturesAnalysis = ({ detailsStore }) => {
       {detailsStore.modelEndpoint.loading && <Loader />}
       {detailsStore.modelEndpoint.error ? (
         <div className="features-analysis__error">
-          Failed to fetch data from model endpoint analysis. Please try again
-          later.
+          Failed to fetch data from model endpoint analysis. Please try again later.
         </div>
+      ) : table.body.length === 0 ? (
+        <NoData />
       ) : (
         <div className="features-analysis__table">
           <div className="features-analysis__table-header">
             {Object.values(table.header).map((headerCell, index) => (
-              <div
-                className={`features-analysis__table-cell ${headerCell.className}`}
-                key={index}
-              >
+              <div className={`features-analysis__table-cell ${headerCell.className}`} key={index}>
                 {headerCell.contentArray ? (
                   <>
                     <div className="features-analysis__table-cell_top">
-                      <Tooltip
-                        template={
-                          <TextTooltipTemplate text={headerCell.label} />
-                        }
-                      >
+                      <Tooltip template={<TextTooltipTemplate text={headerCell.label} />}>
                         {headerCell.label}
                       </Tooltip>
                     </div>
@@ -58,9 +52,7 @@ const DetailsFeaturesAnalysis = ({ detailsStore }) => {
                     </div>
                   </>
                 ) : (
-                  <Tooltip
-                    template={<TextTooltipTemplate text={headerCell.label} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={headerCell.label} />}>
                     {headerCell.label}
                   </Tooltip>
                 )}
@@ -71,15 +63,11 @@ const DetailsFeaturesAnalysis = ({ detailsStore }) => {
             {Object.values(table.body).map((row, rowIndex) => (
               <div className="features-analysis__table-row" key={rowIndex}>
                 {Object.values(row).map((cell, index) => (
-                  <div
-                    className={`features-analysis__table-cell ${cell.className}`}
-                    key={index}
-                  >
+                  <div className={`features-analysis__table-cell ${cell.className}`} key={index}>
                     {cell.contentArray ? (
                       cell.contentArray.map((item, index) => (
                         <div className={`${item.className}`} key={index}>
-                          {item.type === 'chart' &&
-                          item.value[1]?.length > 0 ? (
+                          {item.type === 'chart' && item.value[1]?.length > 0 ? (
                             <MlChart
                               config={{
                                 ...chartConfig,
@@ -96,14 +84,14 @@ const DetailsFeaturesAnalysis = ({ detailsStore }) => {
                               }}
                             />
                           ) : (
-                            <Tooltip
-                              className="data-ellipsis"
-                              template={
-                                <TextTooltipTemplate text={item.value} />
-                              }
-                            >
-                              {item.value}
-                            </Tooltip>
+                            item.type !== 'chart' && (
+                              <Tooltip
+                                className="data-ellipsis"
+                                template={<TextTooltipTemplate text={item.value} />}
+                              >
+                                {item.value}
+                              </Tooltip>
+                            )
                           )}
                         </div>
                       ))

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
+import PanelSection from '../PanelSection/PanelSection'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 
 import './functionsPanelSecrets.scss'
@@ -21,7 +21,7 @@ const FunctionsPanelSecretsView = ({
   ]
 
   return (
-    <FunctionsPanelSection className="secrets" title="Secrets">
+    <PanelSection className="secrets" title="Secrets">
       <KeyValueTable
         addNewItem={handleAddNewSecretSource}
         addNewItemLabel="Add secret"
@@ -39,7 +39,7 @@ const FunctionsPanelSecretsView = ({
         valueLabel="Value"
         withEditMode
       />
-    </FunctionsPanelSection>
+    </PanelSection>
   )
 }
 

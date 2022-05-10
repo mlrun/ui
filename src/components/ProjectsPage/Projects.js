@@ -18,9 +18,11 @@ import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
 import {
   DANGER_BUTTON,
-  PRIMARY_BUTTON,
-  STATUS_CODE_FORBIDDEN
-} from '../../constants'
+  PRIMARY_BUTTON
+} from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const Projects = ({
   changeProjectState,
@@ -52,6 +54,8 @@ const Projects = ({
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [source] = useState(axios.CancelToken.source())
   const urlParams = useParams()
+
+  const { isNuclioModeDisabled } = useNuclioMode()
 
   const isValidProjectState = useCallback(
     project => {
@@ -97,7 +101,7 @@ const Projects = ({
             id: Math.random(),
             retry: () => handleArchiveProject(project),
             message:
-              error.response?.status === STATUS_CODE_FORBIDDEN
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? `You are not allowed to archive ${project.metadata.name} project`
                 : `Failed to archive ${project.metadata.name} project`
           })
@@ -207,15 +211,19 @@ const Projects = ({
   ])
 
   useEffect(() => {
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions()
+    }
+
     fetchProjects()
     fetchProjectsNames()
-    fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
   }, [
     fetchNuclioFunctions,
     fetchProjects,
     fetchProjectsNames,
     fetchProjectsSummary,
+    isNuclioModeDisabled,
     source.token
   ])
 
@@ -248,10 +256,13 @@ const Projects = ({
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
   const refreshProjects = () => {
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions()
+    }
+
     removeProjects()
     fetchProjects()
     fetchProjectsNames()
-    fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
   }
 

@@ -90,7 +90,8 @@ const realTimePipelinesTable = {
     root: '.table-head',
     sorters: {
       name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      type: '.table-head__item:nth-of-type(2) .data-ellipsis'
+      type: '.table-head__item:nth-of-type(2) .data-ellipsis',
+      function: '.table-head__item:nth-of-type(3) .data-ellipsis'
     }
   },
   body: {
@@ -107,8 +108,9 @@ const realTimePipelinesTable = {
             '.tooltip .tooltip__text span'
           )
         },
-        name: '.table-body__cell:nth-of-type(1) a .link',
+        name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
+        function: '.table-body__cell:nth-of-type(3) a.data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure

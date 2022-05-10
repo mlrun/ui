@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ReactComponent as DB } from '../../../images/db-icon.svg'
+import { ReactComponent as DB } from 'igz-controls/images/db-icon.svg'
 
 export const EXTERNAL_OFFLINE = 'externalOffline'
 export const EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE = 'csv'

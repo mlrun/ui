@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 
 import {
@@ -79,11 +78,16 @@ const JobsTable = ({ actionsMenu, content, handleSelectJob, selectedJob, tab }) 
   )
 }
 
+JobsTable.defaultProps = {
+  handleSelectJob: () => {},
+  selectedJob: {}
+}
+
 JobsTable.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  handleSelectJob: PropTypes.func.isRequired,
-  selectedJob: PropTypes.shape({}).isRequired,
+  handleSelectJob: PropTypes.func,
+  selectedJob: PropTypes.shape({}),
   tab: PropTypes.string.isRequired
 }
 

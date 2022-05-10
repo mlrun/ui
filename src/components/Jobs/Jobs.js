@@ -14,9 +14,9 @@ import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
-  SCHEDULE_TAB,
-  TERTIARY_BUTTON
+  SCHEDULE_TAB
 } from '../../constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
 
 export const JobsContext = React.createContext({})

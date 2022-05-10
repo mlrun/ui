@@ -206,6 +206,9 @@ export const ARTIFACTS = 'artifacts'
 export const CLOSE_ARTIFACT_PREVIEW = 'CLOSE_ARTIFACT_PREVIEW'
 export const FETCH_ARTIFACTS_BEGIN = 'FETCH_ARTIFACTS_BEGIN'
 export const FETCH_ARTIFACTS_FAILURE = 'FETCH_ARTIFACTS_FAILURE'
+export const FETCH_ARTIFACTS_FUNCTIONS_BEGIN = 'FETCH_ARTIFACTS_FUNCTIONS_BEGIN'
+export const FETCH_ARTIFACTS_FUNCTIONS_FAILURE = 'FETCH_ARTIFACTS_FUNCTIONS_FAILURE'
+export const FETCH_ARTIFACTS_FUNCTIONS_SUCCESS = 'FETCH_ARTIFACTS_FUNCTIONS_SUCCESS'
 export const FETCH_ARTIFACTS_SUCCESS = 'FETCH_ARTIFACTS_SUCCESS'
 export const REMOVE_ARTIFACTS = 'REMOVE_ARTIFACTS'
 export const REMOVE_ARTIFACTS_ERROR = 'REMOVE_ARTIFACTS_ERROR'
@@ -504,14 +507,6 @@ export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
 export const TREE_FILTER = 'tree'
 
-/*=========== BUTTONS =============*/
-
-export const PRIMARY_BUTTON = 'primary'
-export const SECONDARY_BUTTON = 'secondary'
-export const TERTIARY_BUTTON = 'tertiary'
-export const DANGER_BUTTON = 'danger'
-export const LABEL_BUTTON = 'label'
-
 /*=========== PANEL =============*/
 
 export const PANEL_EDIT_MODE = 'EDIT'
@@ -539,12 +534,6 @@ export const validation = {
   REQUIRED: 'This field is required',
   VALID_CHARACTERS: 'Valid characters'
 }
-
-/*=========== STATUS CODES =============*/
-
-export const AMOUNT_LIMIT_CODE = 500
-export const CONFLICT_CODE = 409
-export const STATUS_CODE_FORBIDDEN = 403
 
 /*=========== ML REACT FLOW =============*/
 
