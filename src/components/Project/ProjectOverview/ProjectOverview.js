@@ -142,9 +142,11 @@ const ProjectOverview = ({ fetchProject, project }) => {
             onClose={onReject}
             show={isOpen}
           >
-            <form id="DeployModal" noValidate>
+            <form id="DeployModal" noValidate style={{ display: 'flex' }}>
               {Steps}
-              <ActiveStep />
+              <div style={{ flex: '1 1' }}>
+                <ActiveStep />
+              </div>
             </form>
           </Modal>
         )
