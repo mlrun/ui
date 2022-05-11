@@ -272,7 +272,7 @@ const KeyValueTableView = ({
               className="btn-add"
               disabled={isKeyNotUnique(keyValue, content)}
               onClick={saveItem}
-              tooltipText="Add item"
+              tooltipText="Apply"
             >
               <Checkmark />
             </RoundedIcon>
