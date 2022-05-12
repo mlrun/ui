@@ -37,14 +37,7 @@ module.exports = {
     ]
   },
   Feature_Sets_Info_Pane: {
-    Tab_List: [
-      'Overview',
-      'Features',
-      'Transformations',
-      'Preview',
-      'Statistics',
-      'Analysis'
-    ],
+    Tab_List: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
       'Description',
       'Labels',
@@ -146,14 +139,9 @@ module.exports = {
       'Go-ogle storage',
       'Google storage'
     ],
-    Target_Store_File_Type: [
-      'CSV',
-      'TSDB',
-      'Parquet',
-      'NoSql',
-      'Dataframe',
-      'Custom'
-    ]
+    Target_Store_File_Type: ['CSV', 'TSDB', 'Parquet', 'NoSql', 'Dataframe', 'Custom'],
+    Target_Store_Path_Annotation:
+      'Note that in order to keep the feature set versioning you need to keep the {run-id} as part of the path.'
   },
   Create_New_Job: {
     Combobox_Options: [
@@ -206,31 +194,28 @@ module.exports = {
     Resulting_Image_Hint: 'The name of the built container image',
     Base_Image_Hint:
       "The name of a base container image from which to build the function's processor image",
-    Limit_Number_Warning:
-      'Limit must be bigger than or equal to Request and not be less than 1',
+    Limit_Number_Warning: 'Limit must be bigger than or equal to Request and not be less than 1',
+    CPU_Limit_Number_Warning:
+      'Limit must be bigger than or equal to Request and not be less than 0.001',
     Limit_Number_Request_Warning:
       'Request must be less than or equal to Limit and not be less than 1',
+    CPU_Request_Number_Warning:
+      'Request must be less than or equal to Limit and not be less than 0.001',
     GPU_Minimum_Value_Warning: 'The minimum value should be 1',
     Mount_Path_Hint: 'A mount path for referencing the data from the function',
-    Data_Container_Hint:
-      'The name of the data container that contains the data',
+    Data_Container_Hint: 'The name of the data container that contains the data',
     DataAccess_Key_Hint: 'A platform data-access key',
     Name_Already_Exists: 'Name already exists',
     Volumes_Path_Already_Exists: 'Multiple volumes cannot share the same path',
-    Timestamp_Key_Hint:
-      'Used for specifying the time field when joining by time',
+    Timestamp_Key_Hint: 'Used for specifying the time field when joining by time',
     Timestamp_Key_Warning:
       'Timestamp Key is required for offline target when partitioning by time is enabled - see the Target Store section.',
-    Relative_Directory_Path_Hint:
-      'A relative directory path within the data container',
-    Stream_Path_Hint:
-      'Enables users to store the function error in a V3IO stream',
-    Add_Feature_Vector_Hint:
-      'Add features from the list on the left to this feature vector',
+    Relative_Directory_Path_Hint: 'A relative directory path within the data container',
+    Stream_Path_Hint: 'Enables users to store the function error in a V3IO stream',
+    Add_Feature_Vector_Hint: 'Add features from the list on the left to this feature vector',
     Deploy_Model_Name_Hint:
       'After the function is deployed, it will have a URL for calling the model that is based upon this name.',
-    MLRun_Store_Path_Hint:
-      'Field must be in "artifacts/my-project/my-artifact:my-tag" format',
+    MLRun_Store_Path_Hint: 'Field must be in "artifacts/my-project/my-artifact:my-tag" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
     V3IO_Path_Hint: 'Field must be in "container-name/file" format',
@@ -240,8 +225,7 @@ module.exports = {
     Start_Time_Input: 'Filter data by start date >= value',
     End_Time_Input: 'Filter data by start date <= value',
     Target_Store_Online: 'Store the feature set in Iguazio NoSQL database',
-    Target_Store_Offline:
-      'Store the feature set as a Parquet file in Iguazio object store',
+    Target_Store_Offline: 'Store the feature set as a Parquet file in Iguazio object store',
     Target_Store_External_Offline:
       'Store the feature set in a remote object store (e.g. AWS S3 or Azure storage)',
     Distinct_Keys: 'The partition is based on key.',
@@ -261,8 +245,7 @@ module.exports = {
     New_Job_Volumes:
       'Volumes that define data paths and the required information for accessing the data from the function',
     Members_Hint: 'Some of the members might be user groups',
-    Overview_Hash:
-      'Represents hash of the data. when the data changes the hash would change',
+    Overview_Hash: 'Represents hash of the data. when the data changes the hash would change',
     Overview_UID:
       'Unique identifier representing the job or the workflow that generated the artifact'
   },
@@ -271,20 +254,18 @@ module.exports = {
       "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that before " +
       "setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
     Delete_Project: /You try to delete project "[^"]+[$"]\. Deleted projects can not be restored\./,
-    Delete_Function: /You try to delete function "[^"]+[$"]\. Deleted functions cannot be restored\./,
-    Delete_Scheduled_Job: /You try to delete scheduled job "[^"]+[$"]\. Deleted scheduled jobs can not be restored\./,
-    Delete_Feature: /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./
+    Delete_Function:
+      /You try to delete function "[^"]+[$"]\. Deleted functions cannot be restored\./,
+    Delete_Scheduled_Job:
+      /You try to delete scheduled job "[^"]+[$"]\. Deleted scheduled jobs can not be restored\./,
+    Delete_Feature:
+      /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
     Job_Action_Menu_Options: ['View YAML', 'Re-run', 'Monitoring'],
     Workflows_Action_Menu_Options: ['View YAML'],
-    Pending_Job_Action_Menu_Options: [
-      'View YAML',
-      'Re-run',
-      'Monitoring',
-      'Abort'
-    ],
+    Pending_Job_Action_Menu_Options: ['View YAML', 'Re-run', 'Monitoring', 'Abort'],
     Schedule_Action_Menu_Options: ['View YAML', 'Run now', 'Edit', 'Delete']
   },
   Jobs_Monitor_Tab_Info_Pane: {
@@ -299,7 +280,7 @@ module.exports = {
       'Labels',
       'Log level',
       'Output path',
-      'Iterations'
+      'Total iterations'
     ]
   },
   Jobs_Monitor_Tab: {
@@ -321,14 +302,7 @@ module.exports = {
   },
   Dropdown_Options: {
     Tag_Filer_Options: ['All', 'latest'],
-    Status_Filter_Options: [
-      'All',
-      'Completed',
-      'Running',
-      'Pending',
-      'Error',
-      'Aborted'
-    ],
+    Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
     Group_By_Filter_Options: ['None', 'Name'],
     Start_Time_Filter_Options: [
       'Any time',
@@ -339,14 +313,7 @@ module.exports = {
       'Past year',
       'Custom range'
     ],
-    Parameters_Table_Type_Options: [
-      'str',
-      'int',
-      'float',
-      'bool',
-      'list',
-      'map'
-    ],
+    Parameters_Table_Type_Options: ['str', 'int', 'float', 'bool', 'list', 'map'],
     Parameter_Table_Simple_Hyper_Options: ['Simple', 'Hyper'],
     Turning_Strategy_Options: ['List', 'Grid', 'Random'],
     Criteria_Dropdown_Options: ['Max', 'Min'],
@@ -367,19 +334,13 @@ module.exports = {
       'EiB'
     ],
     CPU_Unit_Options: ['cpu', 'millicpu'],
-    Partition_Granularity_Options: [
-      'Second',
-      'Minute',
-      'Hour',
-      'Day',
-      'Month',
-      'Year'
-    ],
-    Pods_Priority: ['Low', 'Medium', 'High']
+    Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
+    Pods_Priority: ['Low', 'Medium', 'High'],
+    Pods_Toleration: ['Allow', 'Constrain', 'Prevent']
   },
   No_Data_Message: {
     Common_Message: 'No data to show',
-    No_Features_Yet:
-      'No features yet. Go to "Feature Sets" tab to create your first feature set.'
+    No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first feature set.',
+    No_Consumer_Group_Yet: 'You haven’t created any consumer group yet'
   }
 }
