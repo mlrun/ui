@@ -72,7 +72,6 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then verify "Show_Iterations_Checkbox" element visibility on "Models" wizard
-    Then check "expand_btn" not visible in "Models_Table" on "Models" wizard
     Then check "Show_Iterations_Checkbox" element on "Models" wizard
     And wait load page
     Then "Show_Iterations_Checkbox" element should be checked on "Models" wizard
@@ -85,7 +84,6 @@ Feature: Models Page
     And wait load page
     Then verify "Header" element not exists on "Models_Info_Pane" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "Models" wizard
-    Then check "expand_btn" not visible in "Models_Table" on "Models" wizard
 
   @passive
   Scenario: Verify filtering by name on Real-Time Pipelines tab
@@ -171,7 +169,6 @@ Feature: Models Page
     Then type value "test-path" to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
     Then click on "Register_Button" element on "Register_Model_Popup" wizard
     And wait load page
-    Then value in "name" column with "text" in "Models_Table" on "Models" wizard should contains "automation-model"
     Then click on cell with value "automation-model" in "name" column in "Models_Table" table on "Models" wizard
     Then "Header" element on "Models_Info_Pane" should contains "automation-model" value
 

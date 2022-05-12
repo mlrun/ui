@@ -32,6 +32,7 @@ import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
 
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
+import nuclioStreams from './data/nuclioStreams.json'
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -972,7 +973,7 @@ function deployMLFunction(req, res) {
   baseFunc.spec.affinity = null
   baseFunc.spec.command = ''
   baseFunc.spec.disable_auto_mount = false
-  baseFunc.spec.priority_class_name = ''
+  baseFunc.spec.priority_class_name = req.body.function.spec.priority_class_name
   baseFunc.verbose = false
   baseFunc.status = null
   funcs.funcs.push(baseFunc)
@@ -1284,7 +1285,7 @@ function getIguazioProject(req, res) {
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
         item => item.id === authID
-      ).relationships
+      )?.relationships
       if (tmp) {
         let tmpIDs = tmp.principal_users?.data.map(item => item.id)
         if (tmpIDs) {
@@ -1317,7 +1318,7 @@ function getIguazioProject(req, res) {
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
         item => item.id === authID
-      ).relationships
+      )?.relationships
       if (tmp) {
         let tmpIDs = tmp.principal_user_groups?.data.map(item => item.id)
         if (tmpIDs) {
@@ -1345,6 +1346,70 @@ function getIguazioProject(req, res) {
   })
 }
 
+function putIguazioProject(req, res) {
+  const prevOwner = req.params.id
+  const newOwner = req.body.data.relationships.owner.data.id
+  const filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
+  const keys = Object.keys(iguazioUserRelations)
+  const relationTemplate = {
+    type: 'project',
+    id: req.params.id,
+    relationships: null
+  }
+
+  for (let key of keys) {
+    iguazioUserRelations[key] = iguazioUserRelations[key].filter(
+      item => item.type === 'project' && item.id !== prevOwner
+    )
+  }
+
+  if (iguazioUserRelations[newOwner]) {
+    iguazioUserRelations[newOwner].push(relationTemplate)
+  } else {
+    iguazioUserRelations[newOwner] = [relationTemplate]
+  }
+
+  res.send({
+    data: filteredProject,
+    included: [],
+    meta: iguazioProjectAuthorizationRoles.meta
+  })
+}
+
+function postProjectMembers(req, res) {
+  const projectId = req.body.data.attributes.metadata.project_ids[0]
+  const items = req.body.data.attributes.requests
+  const projectRelations = cloneDeep(iguazioProjectsRelations[projectId])
+
+  items.forEach(item => {
+    const authRoleId = item.resource.split('/')[1]
+    const relationshipsTemplate = {
+      principal_users: item.body.data.relationships.principal_users,
+      principal_user_groups: item.body.data.relationships.principal_user_groups
+    }
+
+    if (projectRelations.some(relation => relation.id === authRoleId)) {
+      const index = projectRelations.findIndex(relation => {
+        return relation.id === authRoleId
+      })
+      projectRelations[index] = {
+        ...projectRelations[index],
+        relationships: relationshipsTemplate
+      }
+    } else {
+      projectRelations.push({
+        type: 'project_authorization_role',
+        id: authRoleId,
+        relationships: relationshipsTemplate
+      })
+    }
+  })
+
+  iguazioProjectsRelations[projectId] = projectRelations
+
+  res.send()
+}
+
 function getIguazioUserGrops(req, res) {
   console.log('requests log: ', req.method, req.url)
   console.log('debug: ', req.params, req.query, req.body)
@@ -1357,6 +1422,29 @@ function getIguazioUsers(req, res) {
   console.log('debug: ', req.params, req.query, req.body)
 
   res.send(iguazioUsers)
+}
+
+function getNuclioStreams(req, res) {
+  res.send(nuclioStreams[req.headers['x-nuclio-project-name']])
+}
+
+function getNuclioShardLags(req, res) {
+  res.send({
+    [`${req.body.containerName}${req.body.streamPath}`]: {
+      [req.body.consumerGroup]: {
+        'shard-id-0': {
+          committed: '0_123',
+          current: '0_456',
+          lag: '0_789'
+        },
+        'shard-id-1': {
+          committed: '1_123',
+          current: '1_456',
+          lag: '1_789'
+        }
+      }
+    }
+  })
 }
 
 // REQUESTS
@@ -1476,6 +1564,10 @@ app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)
 
 app.get(`${nuclioApiUrl}/api/api_gateways`, getNuclioAPIGateways)
 
+app.get(`${nuclioApiUrl}/api/v3io_streams`, getNuclioStreams)
+
+app.post(`${nuclioApiUrl}/api/v3io_streams/get_shard_lags`, getNuclioShardLags)
+
 app.get(`${iguazioApiUrl}/api/projects`, getIguazioProjects)
 
 app.get(
@@ -1484,6 +1576,10 @@ app.get(
 )
 
 app.get(`${iguazioApiUrl}/api/projects/:id`, getIguazioProject)
+
+app.put(`${iguazioApiUrl}/api/projects/:id`, putIguazioProject)
+
+app.post(`${iguazioApiUrl}/api/async_transactions`, postProjectMembers)
 
 app.get(`${iguazioApiUrl}/api/user_groups`, getIguazioUserGrops)
 

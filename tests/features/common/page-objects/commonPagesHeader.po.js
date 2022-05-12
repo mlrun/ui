@@ -37,5 +37,5 @@ module.exports = {
   Pin_Quick_Link_Button: By.css(
     '.navbar .navbar__body .tooltip-wrapper button.round-icon-cp__circle'
   ),
-  Navigation_Bar: By.css('.app .navbar')
+  Navigation_Bar: By.css('.ml-app .navbar')
 }
