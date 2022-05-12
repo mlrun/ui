@@ -1,30 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Loader from '../../common/Loader/Loader'
-import FunctionsPanelTitle from '../../elements/FunctionsPanelTitle/FunctionsPanelTitle'
 import Accordion from '../../common/Accordion/Accordion'
-import FunctionsPanelGeneral from '../../elements/FunctionsPanelGeneral/FunctionsPanelGeneral'
-import FunctionsPanelCode from '../../elements/FunctionsPanelCode/FunctionsPanelCode'
-import FunctionsPanelResources from '../../elements/FunctionsPanelResources/FunctionsPanelResources'
-import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnvironmentVariables/FunctionsPanelEnvironmentVariables'
-import Button from '../../common/Button/Button'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import FunctionsPanelRuntime from '../../elements/FunctionsPanelRuntime/FunctionsPanelRuntime'
-import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import FunctionsPanelCode from '../../elements/FunctionsPanelCode/FunctionsPanelCode'
+import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnvironmentVariables/FunctionsPanelEnvironmentVariables'
+import FunctionsPanelGeneral from '../../elements/FunctionsPanelGeneral/FunctionsPanelGeneral'
+import FunctionsPanelResources from '../../elements/FunctionsPanelResources/FunctionsPanelResources'
+import FunctionsPanelRuntime from '../../elements/FunctionsPanelRuntime/FunctionsPanelRuntime'
+import FunctionsPanelTitle from '../../elements/FunctionsPanelTitle/FunctionsPanelTitle'
+import Loader from '../../common/Loader/Loader'
+import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
+import { Button } from 'igz-controls/components'
 
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { runtimeSections } from './functionsPanel.util'
 
-import {
-  LABEL_BUTTON,
-  PANEL_DEFAULT_ACCESS_KEY,
-  SECONDARY_BUTTON,
-  TERTIARY_BUTTON
-} from '../../constants'
+import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
+import { LABEL_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './functionsPanel.scss'
 

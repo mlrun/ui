@@ -2,10 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Back } from '../../images/back-arrow.svg'
+import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 
 import './tableTop.scss'
 

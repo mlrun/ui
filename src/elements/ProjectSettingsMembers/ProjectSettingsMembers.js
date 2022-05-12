@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import MembersPopUp from '../MembersPopUp/MembersPopUp'
 import Loader from '../../common/Loader/Loader'
 
-import { ReactComponent as Users } from '../../images/users.svg'
+import { ReactComponent as Users } from 'igz-controls/images/users.svg'
 
 import './ProjectSettingsMembers.scss'
 

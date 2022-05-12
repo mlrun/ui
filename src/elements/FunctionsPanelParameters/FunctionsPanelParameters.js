@@ -15,8 +15,8 @@ import {
 import functionsActions from '../../actions/functions'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
-import { ReactComponent as Edit } from '../../images/edit.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const FunctionsPanelParameters = ({
   defaultData,

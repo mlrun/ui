@@ -3,9 +3,8 @@ import PropTypes from 'prop-types'
 import Prism from 'prismjs'
 
 import DetailsResults from '../DetailsResults/DetailsResults'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import PreviewError from './PreviewError/PreviewError'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { ARTIFACT_PREVIEW_TABLE_ROW_LIMIT } from '../../constants'
 

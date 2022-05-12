@@ -2,12 +2,11 @@ import React from 'react'
 import classnames from 'classnames'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 const DetailsInfoItemChip = ({
   changesData,

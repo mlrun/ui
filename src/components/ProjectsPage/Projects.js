@@ -18,9 +18,9 @@ import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
 import {
   DANGER_BUTTON,
-  PRIMARY_BUTTON,
-  STATUS_CODE_FORBIDDEN
-} from '../../constants'
+  PRIMARY_BUTTON
+} from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
@@ -101,7 +101,7 @@ const Projects = ({
             id: Math.random(),
             retry: () => handleArchiveProject(project),
             message:
-              error.response?.status === STATUS_CODE_FORBIDDEN
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? `You are not allowed to archive ${project.metadata.name} project`
                 : `Failed to archive ${project.metadata.name} project`
           })

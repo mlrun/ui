@@ -1,5 +1,6 @@
 import React from 'react'
 
+import 'igz-controls/scss/common.scss'
 import '../scss/main.scss'
 
 export default {

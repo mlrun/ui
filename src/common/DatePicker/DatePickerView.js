@@ -3,18 +3,16 @@ import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
 
-import Button from '../Button/Button'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
-import TimePicker from '../TimePicker/TimePicker'
 import SelectOption from '../../elements/SelectOption/SelectOption'
+import TimePicker from '../TimePicker/TimePicker'
 import Tip from '../Tip/Tip'
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { SECONDARY_BUTTON } from '../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
-import { ReactComponent as Invalid } from '../../images/invalid.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
+import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
 import './datePicker.scss'
 

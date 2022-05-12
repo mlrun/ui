@@ -5,13 +5,12 @@ import { Link, useParams } from 'react-router-dom'
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 import NoData from '../../common/NoData/NoData'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 
-import { ReactComponent as Popout } from '../../images/popout.svg'
-import { ReactComponent as DetailsIcon } from '../../images/view-details.svg'
+import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
+import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
 import './detailsArtifacts.scss'
 

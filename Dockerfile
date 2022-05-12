@@ -1,5 +1,5 @@
 # build stage
-FROM quay.io/mlrun/node:12-alpine as build-stage
+FROM quay.io/mlrun/node:14.18.1-alpine as build-stage
 
 WORKDIR /app
 

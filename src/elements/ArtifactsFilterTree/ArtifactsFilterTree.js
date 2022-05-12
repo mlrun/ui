@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
 import ArtifactFilterTreeDropDown from './ArtifactsFilterTreeDropDown'
-import { ReactComponent as Caret } from '../../images/dropdown.svg'
+import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 import { KEY_CODES } from '../../constants'
 
 import './artifactsFilterTree.scss'

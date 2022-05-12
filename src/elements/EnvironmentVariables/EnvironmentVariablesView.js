@@ -2,16 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import PanelSection from '../PanelSection/PanelSection'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import AddEnvironmentVariablesRow from './AddEnvironmentVariablesRow'
 import EditableEnvironmentVariablesRow from './EditableEnvironmentVariablesRow'
+import PanelSection from '../PanelSection/PanelSection'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { tableHeaders } from './environmentVariables.util'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 import './enviromnetVariables.scss'
 

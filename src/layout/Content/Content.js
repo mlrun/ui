@@ -33,7 +33,7 @@ import {
   MODELS_PAGE
 } from '../../constants'
 
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import './content.scss'
 

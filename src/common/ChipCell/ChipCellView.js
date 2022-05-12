@@ -3,11 +3,10 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Chip from '../Chip/Chip'
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import HiddenChipsBlock from '../../elements/HiddenChipsBlock/HiddenChipsBlock'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Add } from '../../images/add.svg'
+import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'

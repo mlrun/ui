@@ -14,7 +14,7 @@ import {
   updateFeatureVector,
   updateGroupedFeatures
 } from '../../reducers/tableReducer'
-import { STATUS_CODE_FORBIDDEN } from '../../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 const FeaturesTablePanel = ({
   createNewFeatureVector,
@@ -93,7 +93,7 @@ const FeaturesTablePanel = ({
             id: Math.random(),
             message:
               tableStore.features.isNewFeatureVector &&
-              error.response.status === STATUS_CODE_FORBIDDEN
+              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? 'You are not permitted to create new feature vector.'
                 : tableStore.features.isNewFeatureVector
                 ? 'Feature vector creation failed.'
@@ -143,7 +143,9 @@ const FeaturesTablePanel = ({
       addFeatures={addFeatures}
       createFeatureVector={createFeatureVector}
       deleteFeature={deleteFeature}
-      handleCancel={handleCancel}
+      handleCancel={() => {
+        handleCancel ? handleCancel() : dispatch(setTablePanelOpen(false))
+      }}
       isCreateFeaturePopUpOpen={isCreateFeaturePopUpOpen}
       setIsCreateFeaturePopUpOpen={setIsCreateFeaturePopUpOpen}
       tableStore={tableStore}
@@ -153,7 +155,7 @@ const FeaturesTablePanel = ({
 }
 
 FeaturesTablePanel.defaultProps = {
-  handleCancel: () => {},
+  handleCancel: null,
   onSubmit: null
 }
 

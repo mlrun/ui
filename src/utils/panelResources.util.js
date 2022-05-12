@@ -15,7 +15,7 @@ export const selectMemoryOptions = {
       onChange: function (value) {
         return (parseFloat(value) / 1000).toFixed(3) + this.unit
       },
-      convertValue: value => parseInt(value) * 1000
+      convertValue: value => parseFloat(value) * 1000
     },
     {
       id: 'millicpu',
@@ -26,7 +26,7 @@ export const selectMemoryOptions = {
       onChange: function (value) {
         return parseFloat(value) * 1000 + this.unit
       },
-      convertValue: value => parseInt(value)
+      convertValue: value => parseFloat(value)
     }
   ],
   unitMemory: [

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import TagFilterDropdown from './TagFilterDropdown'
 
-import { ReactComponent as Caret } from '../../images/dropdown.svg'
+import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 
 import { KEY_CODES, TAG_FILTER_LATEST } from '../../constants'
 
