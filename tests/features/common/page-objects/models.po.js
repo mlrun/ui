@@ -53,8 +53,8 @@ const modelsTable = {
     row: {
       root: '.table-body__row',
       fields: {
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper span.link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
@@ -99,6 +99,7 @@ const realTimePipelinesTable = {
     row: {
       root: '.table-body__row',
       fields: {
+        expand_btn: '.table-body__cell:nth-of-type(1) .expand-arrow',
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(

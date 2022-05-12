@@ -240,11 +240,7 @@ const consumerGroupsTable = {
       fields: {
         consumer_group_name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
         stream: '.table-body__cell:nth-of-type(2) .data-ellipsis',
-        function: '.table-body__cell:nth-of-type(3) a.data-ellipsis',
-        action_menu: {
-          componentType: actionMenu,
-          structure: actionMenuStructure
-        }
+        function: '.table-body__cell:nth-of-type(3) a.data-ellipsis'
       }
     }
   }

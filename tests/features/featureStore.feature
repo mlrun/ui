@@ -398,16 +398,17 @@ Feature: Feature Store Page
         When select "Artifacts" option in "URL_Combobox" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type searchable fragment "m" into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then searchable fragment "m" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        When select "mask-detection" option in "URL_Combobox" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
-        When type searchable fragment "train" into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then searchable fragment "train" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When type searchable fragment "churn" into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When select "churn-project-admin" option in "URL_Combobox" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type searchable fragment "clean" into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then searchable fragment "clean" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When type value "  " to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."MLRun_Store_Path_Hint"
         When type value "artifacts/stocks" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then searchable fragment "stocks" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        When type value "artifacts/stocks/train" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then searchable fragment "train" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When type value "artifacts/churn-project-admin/raw-data" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then searchable fragment "raw-data" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "  " to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -627,6 +628,74 @@ Feature: Feature Store Page
         And wait load page
 
     @passive
+    Scenario: Verify behaviour of Online and Offline Target store on Feature Store Feature Set new item wizard
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And wait load page
+        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When collapse "Schema_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/{name}/{run_id}/nosql/sets/{name}" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/{name}/{run_id}/parquet/sets/{name}.parquet" value
+        Then type value "test-fs" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs/{run_id}/nosql/sets/test-fs" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs/{run_id}/parquet/sets/test-fs.parquet" value
+        When uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then type value "test-fs1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When check "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When check "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs1/{run_id}/nosql/sets/test-fs1" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs1/{run_id}/parquet/sets/test-fs1.parquet" value
+        Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Edit_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then type value "test-fs2" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/{run_id}/nosql/sets/test-fs2" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/{run_id}/parquet/sets/test-fs2.parquet" value
+        Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then type value "v3io:///custom/path" to "Online_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Discard_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/{run_id}/nosql/sets/test-fs2" value
+        Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify "Online_Path_Annotation" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path_Annotation" component in "Target_Store_Accordion" on "New_Feature_Set" should contains "New_Feature_Store"."Target_Store_Path_Annotation"
+        Then type value "v3io:///custom/path" to "Online_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/path" value
+        Then type value "test-fs3" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/path" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/parquet/sets/test-fs3.parquet" value
+        Then click on "Edit_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify "Offline_Path_Annotation" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Offline_Path_Annotation" component in "Target_Store_Accordion" on "New_Feature_Set" should contains "New_Feature_Store"."Target_Store_Path_Annotation"
+        Then type value "v3io:///custom/offline/path" to "Offline_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Discard_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/parquet/sets/test-fs3.parquet" value
+        Then click on "Edit_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then type value "v3io:///custom/offline/path" to "Offline_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/offline/path" value
+        Then type value "test-fs3" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/path" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/offline/path" value
+        When uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When check "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When check "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/nosql/sets/test-fs3" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/parquet/sets/test-fs3.parquet" value
+
+    @passive
     Scenario: Check Partition part in Target Store Accordion components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -710,6 +779,11 @@ Feature: Feature Store Page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Save_Button" element on "New_Feature_Set" wizard
+        Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
+        Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
+        Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Entities_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "demo_feature_set" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then type value "latest" to "Version_Input" field on "New_Feature_Set" wizard
         Then type value "Some demo description" to "Description_Input" field on "New_Feature_Set" wizard
@@ -723,15 +797,15 @@ Feature: Feature Store Page
             | key1\n:\nvalue1 |
             | key2\n:\nvalue2 |
             | key3\n:\nvalue3 |
-        When select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
-        When select "Artifacts" option in "URL_Combobox" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
-        When select "Current project" option in "URL_Combobox" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
-        When select "train_model" option in "URL_Combobox" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
-        When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "entity1,entity2,entity3" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
         When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "artifacts/automation-test-name3/artifact" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Save_Button" element on "New_Feature_Set" wizard
+        Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
+        Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then click on "Cross_Close_Button" element on "Features_Info_Pane" wizard
@@ -753,6 +827,22 @@ Feature: Feature Store Page
         Then check "expand_btn" visibility in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
         Then check "expand_btn" not visible in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
+        When select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then check "expand_btn" not visible in "Features_Table" on "Feature_Store_Features_Tab" wizard
+        When select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
+        Then check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" wizard
+        When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
+        Then check "expand_btn" not visible in "Features_Table" on "Feature_Store_Features_Tab" wizard
+        When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then check "expand_btn" not visible in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
+        When select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
+        Then check "expand_btn" visibility in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
+        When select "test-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
+        Then check "expand_btn" not visible in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
 
     @passive
     Scenario: Check MLRun logo redirection
@@ -1142,6 +1232,37 @@ Feature: Feature Store Page
             | stocks-admin |      stocks\n: latest     |    price     |
             | stocks-admin |      stocks\n: latest     |   volume     |
             | stocks-admin |      stocks\n: latest     | last_updated |
+
+    Scenario: Verify Feature Label icon on Requested Features tab on Feature Vectors tab
+        And set tear-down property "featureVector" created in "default" project with "test_vector" value
+        Given open url
+        And turn on demo mode
+        And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then click on "Create_Vector_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then verify if "Create_Feature_Vector_Popup" popup dialog appears
+        Then type into "Name_Input" on "Create_Feature_Vector_Popup" popup dialog "test_vector" value
+        Then type into "Tag_Input" on "Create_Feature_Vector_Popup" popup dialog "latest" value
+        Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
+        And wait load page
+        Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard
+            | featureName |
+            | department  |
+        Then click on "set_as_label_btn" in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
+            | feature                              |
+            | patient_details : latest #department |
+        Then click on "Add_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        And wait load page
+        Then click on cell with value "test_vector" in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then select "Requested Features" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        And wait load page
+        Then value in "labelIcon" column with "tooltip" in "Requested_Features_Table" on "Requested_Features_Info_Pane" wizard should contains "Label column"
 
     Scenario: Verify No Data message on Feature Store tabs
         * set tear-down property "project" created with "automation-test-name001" value
