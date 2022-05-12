@@ -9,7 +9,7 @@ import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
-import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
 
 import './keyValueTable.scss'
 
