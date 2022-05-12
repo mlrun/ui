@@ -9,7 +9,7 @@ import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
-import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
 
 import './keyValueTable.scss'
 
@@ -60,9 +60,7 @@ const KeyValueTableView = ({
             <div className="table-row table-row_edit" key={index}>
               <div className="table-cell table-cell__key">
                 {!isKeyEditable ? (
-                  <Tooltip
-                    template={<TextTooltipTemplate text={contentItem.key} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={contentItem.key} />}>
                     {contentItem.key}
                   </Tooltip>
                 ) : keyType === 'select' ? (
@@ -132,9 +130,7 @@ const KeyValueTableView = ({
                   }
                   type={valueType}
                   value={
-                    valueType === 'password'
-                      ? ''
-                      : selectedItem.newValue ?? selectedItem.value
+                    valueType === 'password' ? '' : selectedItem.newValue ?? selectedItem.value
                   }
                 />
               </div>
@@ -183,16 +179,12 @@ const KeyValueTableView = ({
             >
               <div className="table-cell__inputs-wrapper">
                 <div className="table-cell table-cell__key">
-                  <Tooltip
-                    template={<TextTooltipTemplate text={contentItem.key} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={contentItem.key} />}>
                     {contentItem.key}
                   </Tooltip>
                 </div>
                 <div className="table-cell table-cell__value">
-                  <Tooltip
-                    template={<TextTooltipTemplate text={contentItem.value} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={contentItem.value} />}>
                     {contentItem.value}
                   </Tooltip>
                 </div>
@@ -239,9 +231,7 @@ const KeyValueTableView = ({
                   density="dense"
                   floatingLabel
                   label={keyLabel}
-                  invalid={
-                    isKeyNotUnique(keyValue, content) || !validation.isKeyValid
-                  }
+                  invalid={isKeyNotUnique(keyValue, content) || !validation.isKeyValid}
                   invalidText={
                     isKeyNotUnique(keyValue, content)
                       ? 'Name already exists'
@@ -282,9 +272,9 @@ const KeyValueTableView = ({
               className="btn-add"
               disabled={isKeyNotUnique(keyValue, content)}
               onClick={saveItem}
-              tooltipText="Add item"
+              tooltipText="Apply"
             >
-              <Plus />
+              <Checkmark />
             </RoundedIcon>
 
             <RoundedIcon
