@@ -10,8 +10,6 @@ import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
 import { Tooltip, TextTooltipTemplate, Wizard } from 'igz-controls/components'
 
-import Modal from '../../../common/Modal/Modal'
-
 import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
 import projectsAction from '../../../actions/projects'
@@ -115,42 +113,49 @@ const ProjectOverview = ({ fetchProject, project }) => {
     return <NoData />
   }
 
-  const steps = [
-    { name: 'Step 1', component: () => 'Step 1 content' },
-    { name: 'Step 2', component: () => 'Step 2 content' }
+  const stepsConfig = [
+    {
+      actions: [],
+      id: 'step1',
+      label: 'Step 1'
+    },
+    {
+      actions: [
+        {
+          handler: () => {},
+          defaultProps: {
+            icon: null,
+            label: 'Custom',
+            onClick: () => {}
+          }
+        },
+        {
+          handler: () => {},
+          defaultProps: {
+            label: 'Next',
+            onClick: () => {},
+            variant: 'primary'
+          }
+        }
+      ],
+      id: 'step2',
+      label: 'Step 2'
+    }
   ]
 
   const submitForm = val => console.log('submit', val)
 
-  const Test = ({ isOpen, onReject }) => (
-    <Wizard onSubmit={submitForm} steps={steps}>
-      {(
-        Steps,
-        { activeComponent, activeStep, handleSubmit, isLastStep, previousStep, submitting }
-      ) => {
-        const ActiveStep = activeComponent.component
-        return (
-          <Modal
-            actions={[
-              <button onClick={previousStep} disabled={activeStep === 0}>
-                Back
-              </button>,
-              <button type="submit" onClick={handleSubmit} disabled={submitting}>
-                {isLastStep ? 'Submit' : 'Next'}
-              </button>
-            ]}
-            onClose={onReject}
-            show={isOpen}
-          >
-            <form id="DeployModal" noValidate style={{ display: 'flex' }}>
-              {Steps}
-              <div style={{ flex: '1 1' }}>
-                <ActiveStep />
-              </div>
-            </form>
-          </Modal>
-        )
-      }}
+  const Test = modalProps => (
+    <Wizard
+      id="deployModal"
+      initialValues={{}}
+      onSubmit={submitForm}
+      steps={stepsConfig}
+      {...modalProps}
+    >
+      <Wizard.Step>Step1</Wizard.Step>
+      <Wizard.Step>Step2</Wizard.Step>
+      <Wizard.Step>Step3</Wizard.Step>
     </Wizard>
   )
 
