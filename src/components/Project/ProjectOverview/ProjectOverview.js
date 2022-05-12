@@ -115,31 +115,41 @@ const ProjectOverview = ({ fetchProject, project }) => {
 
   const stepsConfig = [
     {
-      actions: [],
+      actions: () => [],
       id: 'step1',
       label: 'Step 1'
     },
     {
-      actions: [
+      actions: actions => [
         {
-          handler: () => {},
-          defaultProps: {
-            icon: null,
-            label: 'Custom',
-            onClick: () => {}
-          }
+          icon: null,
+          label: 'Custom',
+          onClick: actions.previousStep
         },
         {
-          handler: () => {},
-          defaultProps: {
-            label: 'Next',
-            onClick: () => {},
-            variant: 'primary'
-          }
+          label: 'Next',
+          onClick: actions.handleSubmit,
+          variant: 'secondary'
         }
       ],
       id: 'step2',
       label: 'Step 2'
+    },
+    {
+      actions: actions => [
+        {
+          label: 'Cancel',
+          onClick: actions.onReject,
+          variant: 'danger'
+        },
+        {
+          label: 'Submit form',
+          onClick: actions.handleSubmit,
+          variant: 'secondary'
+        }
+      ],
+      id: 'step3',
+      label: 'Final Step'
     }
   ]
 
@@ -150,7 +160,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
       id="deployModal"
       initialValues={{}}
       onSubmit={submitForm}
-      steps={stepsConfig}
+      stepsConfig={stepsConfig}
       {...modalProps}
     >
       <Wizard.Step>Step1</Wizard.Step>
