@@ -25,7 +25,7 @@ const ConsumerGroups = ({ nuclioStore, setFilters }) => {
   useEffect(() => {
     setFilteredV3ioStreams(
       nuclioStore.v3ioStreams.parsedData.filter(v3ioStremData =>
-        filterByName ? v3ioStremData.consumerGroup.includes(filterByName) : true
+        filterByName ? v3ioStremData.consumerGroup.toLowerCase().includes(filterByName) : true
       )
     )
   }, [nuclioStore.v3ioStreams.parsedData, filterByName])
