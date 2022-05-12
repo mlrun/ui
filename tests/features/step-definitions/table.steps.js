@@ -649,6 +649,23 @@ When(
 )
 
 When(
+    'click on row root with value {string} in {string} column in {string} table in {string} on {string} wizard',
+    async function(value, columnName, table, accordion, wizard) {
+        const arr = await findRowIndexesByColumnValue(
+            this.driver,
+            pageObjects[wizard][accordion][table],
+            columnName,
+            value
+        )
+        const indx = arr[0]
+        await clickOnComponent(
+            this.driver,
+            pageObjects[wizard][accordion][table]['rowRoot'](indx)
+        )
+    }
+)
+
+When(
   'click on cell with row index {int} in {string} column in {string} table on {string} wizard',
   async function(indx, columnName, table, wizard) {
     await clickOnComponent(
