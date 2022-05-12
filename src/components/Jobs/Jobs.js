@@ -543,22 +543,18 @@ const Jobs = ({
           dates: {
             value: pastWeekOption.handler(),
             isPredefined: pastWeekOption.isPredefined
-          },
-          iter: ''
+          }
         }
       } else if (params.pageTab === MONITOR_JOBS_TAB) {
         filters = {
           dates: {
             value: dateFilter,
             isPredefined: false
-          },
-          iter: ''
+          }
         }
       }
 
-      if (params.jobName) {
-        filters.iter = 'false'
-      }
+      filters.iter = 'false'
 
       refreshJobs(filters)
       setFilters(filters)
