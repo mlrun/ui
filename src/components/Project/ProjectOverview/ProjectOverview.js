@@ -139,7 +139,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
       actions: actions => [
         {
           label: 'Cancel',
-          onClick: actions.onReject,
+          onClick: actions.handleOnReject,
           variant: 'danger'
         },
         {
@@ -169,7 +169,10 @@ const ProjectOverview = ({ fetchProject, project }) => {
     </Wizard>
   )
 
-  const openModal = () => openPopUp(Test)
+  const openModal = () =>
+    openPopUp(Test)
+      .then(() => {})
+      .catch(() => {})
 
   return (
     <div className="project-overview">
