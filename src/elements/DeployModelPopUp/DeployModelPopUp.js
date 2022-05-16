@@ -3,11 +3,10 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { chain, keyBy, mapValues } from 'lodash'
 
-import { Button } from 'igz-controls/components'
 import Input from '../../common/Input/Input'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
-import Modal from '../../common/Modal/Modal'
 import Select from '../../common/Select/Select'
+import { Wizard } from 'igz-controls/components'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
@@ -100,7 +99,7 @@ const DeployModelPopUp = ({
   })
 
   const handleClosePopup = () => {
-    onReject && onReject()
+    onResolve && onResolve()
     closePopUp && closePopUp()
   }
 
@@ -159,71 +158,93 @@ const DeployModelPopUp = ({
     setClassArgumentsList(newClassArguments)
   }
 
+  const wizardConfig = [
+    {
+      setActions: actions => [
+        {
+          icon: null,
+          label: 'Cancel',
+          onClick: handleClosePopup,
+          variant: TERTIARY_BUTTON
+        },
+        {
+          disabled: [selectedFunctionName, selectedTag, modelName, className].includes(''),
+          label: 'Deploy',
+          onClick: actions.handleSubmit,
+          variant: SECONDARY_BUTTON
+        }
+      ]
+    }
+  ]
+
   return (
-    <Modal
-      actions={[
-        <Button variant={TERTIARY_BUTTON} label="Cancel" onClick={handleClosePopup} />,
-        <Button
-          variant={SECONDARY_BUTTON}
-          disabled={[selectedFunctionName, selectedTag, modelName, className].includes('')}
-          label="Deploy"
-          onClick={deployModel}
-        />
-      ]}
+    <Wizard
       className="deploy-model"
-      onClose={handleClosePopup}
-      show={isOpen}
+      id="deployModal"
+      initialValues={{}}
+      isOpen={isOpen}
+      onResolve={onResolve}
+      onSubmit={deployModel}
       size={MODAL_SM}
       title="Deploy model"
+      wizardConfig={wizardConfig}
     >
-      <div className="deploy-model__row">
-        <Select
-          className="select-router"
-          label="Serving function (router)"
-          floatingLabel
-          disabled={functionOptionList.length === 0}
-          options={functionOptionList}
-          selectedId={selectedFunctionName}
-          onClick={onSelectFunction}
+      <Wizard.Step>
+        <div className="deploy-model__row">
+          <Select
+            className="select-router"
+            label="Serving function (router)"
+            floatingLabel
+            disabled={functionOptionList.length === 0}
+            options={functionOptionList}
+            selectedId={selectedFunctionName}
+            onClick={onSelectFunction}
+          />
+          <Select
+            label="Tag"
+            floatingLabel
+            search
+            disabled={tagOptionList.length === 0}
+            options={tagOptionList}
+            selectedId={selectedTag}
+            onClick={handleTagSelect}
+          />
+          <Input
+            label="Class"
+            type="text"
+            floatingLabel
+            onChange={setClassName}
+            value={className}
+          />
+        </div>
+        <div className="deploy-model__row">
+          <Input
+            label="Model name"
+            floatingLabel
+            type="text"
+            tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
+            onChange={setModelName}
+            value={modelName}
+          />
+        </div>
+        <KeyValueTable
+          keyHeader="Class argument name"
+          keyLabel="Class argument name"
+          valueHeader="Value"
+          valueLabel="Value"
+          addNewItemLabel="Add class argument"
+          content={classArgumentsList}
+          addNewItem={newItem => {
+            setClassArgumentsList([...classArgumentsList, newItem])
+          }}
+          deleteItem={deleteIndex => {
+            setClassArgumentsList(classArgumentsList.filter((item, index) => index !== deleteIndex))
+          }}
+          editItem={handleEditClassArgument}
+          withEditMode
         />
-        <Select
-          label="Tag"
-          floatingLabel
-          search
-          disabled={tagOptionList.length === 0}
-          options={tagOptionList}
-          selectedId={selectedTag}
-          onClick={handleTagSelect}
-        />
-        <Input label="Class" type="text" floatingLabel onChange={setClassName} value={className} />
-      </div>
-      <div className="deploy-model__row">
-        <Input
-          label="Model name"
-          floatingLabel
-          type="text"
-          tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
-          onChange={setModelName}
-          value={modelName}
-        />
-      </div>
-      <KeyValueTable
-        keyHeader="Class argument name"
-        keyLabel="Class argument name"
-        valueHeader="Value"
-        valueLabel="Value"
-        addNewItemLabel="Add class argument"
-        content={classArgumentsList}
-        addNewItem={newItem => {
-          setClassArgumentsList([...classArgumentsList, newItem])
-        }}
-        deleteItem={deleteIndex => {
-          setClassArgumentsList(classArgumentsList.filter((item, index) => index !== deleteIndex))
-        }}
-        editItem={handleEditClassArgument}
-        withEditMode
-      />
-    </Modal>
+      </Wizard.Step>
+    </Wizard>
   )
 }
 
