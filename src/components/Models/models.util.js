@@ -396,8 +396,6 @@ export const checkForSelectedModelEndpoint = (
   if (!searchItem) {
     navigate(`/projects/${params.projectName}/models/${params.pageTab}`, { replace: true })
   } else {
-    searchItem.name = searchItem.spec.model.split(':')[0]
-
     fetchModelEndpointWithAnalysis(params.projectName, searchItem.metadata.uid)
     setSelectedModel({ item: searchItem })
   }

@@ -3,13 +3,12 @@ import { find, has, map } from 'lodash'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import Tip from '../../common/Tip/Tip'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
+import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
+import Tip from '../../common/Tip/Tip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   getVolumeTypeInput,
@@ -21,8 +20,8 @@ import {
 import { joinDataOfArrayOrObject } from '../../utils'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 import './volumesTable.scss'
 

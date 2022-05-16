@@ -14,7 +14,8 @@ import {
   EXISTING_IMAGE,
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
-import { LABEL_BUTTON, PANEL_CREATE_MODE, SECONDARY_BUTTON } from '../../constants'
+import { PANEL_CREATE_MODE } from '../../constants'
+import { LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const FunctionsPanel = ({
   appStore,
@@ -85,7 +86,12 @@ const FunctionsPanel = ({
           env: defaultData.env,
           image: defaultData.image,
           priority_class_name: defaultData.priority_class_name,
-          volume_mounts: chain(defaultData.volume_mounts).flatten().unionBy('name').value() ?? [],
+          preemption_mode: defaultData.preemption_mode,
+          volume_mounts:
+            chain(defaultData.volume_mounts)
+              .flatten()
+              .unionBy('name')
+              .value() ?? [],
           volumes: defaultData.volumes,
           resources: {
             limits: defaultData.resources.limits ?? {},
@@ -148,10 +154,7 @@ const FunctionsPanel = ({
 
   const handleSave = deploy => {
     if (checkValidation()) {
-      if (
-        functionsStore.newFunction.spec.image.length === 0 &&
-        imageType === EXISTING_IMAGE
-      ) {
+      if (functionsStore.newFunction.spec.image.length === 0 && imageType === EXISTING_IMAGE) {
         return setValidation(state => ({
           ...state,
           isCodeImageValid: false

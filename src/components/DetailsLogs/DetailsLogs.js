@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import NoData from '../../common/NoData/NoData'
 import Loader from '../../common/Loader/Loader'
 
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
+import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
 
 const DetailsLogs = ({
   item,

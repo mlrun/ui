@@ -2,14 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { artifactInfoSourcesHeaders } from './artifactInfoSources.utils'
 
 import './artifactInfoSources.scss'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 const ArtifactInfoSources = ({ header, sources }) => {
   const [isExpanded, setIsExpanded] = useState(false)

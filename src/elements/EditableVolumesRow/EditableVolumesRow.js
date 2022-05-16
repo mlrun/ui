@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import { forEach } from 'lodash'
 
 import Input from '../../common/Input/Input'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 import {
@@ -13,7 +12,7 @@ import {
   V3IO
 } from '../VolumesTable/volumesTable.util'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 import './editableVolumesRow.scss'
 

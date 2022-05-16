@@ -6,9 +6,9 @@ import { useParams } from 'react-router-dom'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageHeader from '../../elements/PageHeader/PageHeader'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Search from '../../common/Search/Search'
 import Table from '../Table/Table'
+import { RoundedIcon } from 'igz-controls/components'
 
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
@@ -16,7 +16,7 @@ import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../layout/Content/content.util'
 
-import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const ConsumerGroup = ({
   fetchNuclioV3ioStreamShardLags,
@@ -66,7 +66,7 @@ const ConsumerGroup = ({
   useEffect(() => {
     setFilteredV3ioStreamShardLags(
       nuclioStore.v3ioStreamShardLags.parsedData.filter(shardLag =>
-        filterByName ? shardLag.shardLagId.includes(filterByName) : true
+        filterByName ? shardLag.shardLagId.toLowerCase().includes(filterByName) : true
       )
     )
   }, [nuclioStore.v3ioStreamShardLags.parsedData, filterByName])

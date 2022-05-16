@@ -58,6 +58,7 @@ Feature: Project Settings page
             | key4 | value4 |
             | key6 | value6 |
             | key8 | value8 |
+        And refresh a page
         When click on "remove_btn" in "Parameters_Table" table on "Project_Settings_General_Tab" wizard
             | key  |
             | key1 |
@@ -181,10 +182,8 @@ Feature: Project Settings page
 
     @enabledProjectMembership
     Scenario: Verify behaviour of Invite New Members on Project Member Popup
-        * set tear-down property "project" created with "automation-test" value
-        * create "automation-test" MLRun Project with code 201
         Given open url
-        And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
@@ -258,5 +257,3 @@ Feature: Project Settings page
         Then verify "Discard_Button" element on "Project_Members_Popup" wizard is disabled
         Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
         And remove "automation-test" MLRun Project with code 204
-
-#      TODO: need to add mock requests

@@ -18,9 +18,9 @@ import { generateLinkPath, parseUri, truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 
-import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
-import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
-import { ReactComponent as SeverityError } from '../images/severity-error.svg'
+import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
+import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
+import { ReactComponent as SeverityError } from 'igz-controls/images/severity-error.svg'
 
 export const createArtifactsContent = (
   artifacts,
@@ -369,6 +369,7 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
         : name
     },
     functionName: {
+      id: `functionName.${identifierUnique}`,
       value: functionName,
       class: 'artifacts_small',
       link: `${generateLinkPath(functionUri)}/overview`,

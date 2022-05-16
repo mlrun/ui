@@ -2,7 +2,7 @@ import React from 'react'
 import { render, cleanup } from '@testing-library/react'
 import YamlModal from './YamlModal'
 
-jest.mock('../../images/close.svg', () => ({
+jest.mock('igz-controls/images/close.svg', () => ({
   ReactComponent: 'close-icon'
 }))
 

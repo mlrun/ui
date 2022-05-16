@@ -155,7 +155,7 @@ const FeaturesTablePanel = ({
 }
 
 FeaturesTablePanel.defaultProps = {
-  handleCancel: () => {},
+  handleCancel: null,
   onSubmit: null
 }
 

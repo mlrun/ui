@@ -2,15 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   isEditableRouteValid,
   isNameNotUnique
 } from './functionPanelTopologyModelTable.util'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 const EditableRouteRow = ({
   editRoute,

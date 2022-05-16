@@ -57,22 +57,14 @@ const FunctionsPanelResources = ({
     volumeMount: VOLUME_MOUNT_AUTO_TYPE,
     volumes: defaultData.volumes ?? [],
     limits: {
-      cpu:
-        defaultData.resources?.limits?.cpu ??
-        defaultPodsResources?.limits.cpu ??
-        '',
+      cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits.cpu ?? '',
       cpuUnit: getDefaultCpuUnit(
         defaultData.resources?.limits ?? {},
         defaultPodsResources?.limits.cpu
       ),
-      memory:
-        defaultData.resources?.limits?.memory ??
-        defaultPodsResources?.limits.memory ??
-        '',
+      memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits.memory ?? '',
       'nvidia.com/gpu':
-        defaultData.resources?.limits?.['nvidia.com/gpu'] ??
-        defaultPodsResources?.limits.gpu ??
-        '',
+        defaultData.resources?.limits?.['nvidia.com/gpu'] ?? defaultPodsResources?.limits.gpu ?? '',
       memoryUnit: getDefaultMemoryUnit(
         defaultData.resources?.limits ?? {},
         defaultPodsResources?.limits.memory
@@ -80,21 +72,16 @@ const FunctionsPanelResources = ({
     },
     preemptionMode:
       frontendSpec.feature_flags.preemption_nodes === 'enabled'
-        ? frontendSpec.default_function_preemption_mode
+        ? defaultData.preemption_mode || frontendSpec.default_function_preemption_mode || 'prevent'
         : '',
     requests: {
-      cpu:
-        defaultData.resources?.requests?.cpu ??
-        defaultPodsResources?.requests.cpu ??
-        '',
+      cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests.cpu ?? '',
       cpuUnit: getDefaultCpuUnit(
         defaultData.resources?.requests ?? {},
         defaultPodsResources?.requests.cpu
       ),
       memory:
-        defaultData.resources?.requests?.memory ??
-        defaultPodsResources?.requests.memory ??
-        '',
+        defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests.memory ?? '',
       memoryUnit: getDefaultMemoryUnit(
         defaultData.resources?.requests ?? {},
         defaultPodsResources?.requests.memory
@@ -103,27 +90,21 @@ const FunctionsPanelResources = ({
   })
 
   const validFunctionPriorityClassNames = useMemo(() => {
-    return (frontendSpec.valid_function_priority_class_names ?? []).map(
-      className => ({
-        id: className,
-        label: generateFunctionPriorityLabel(className)
-      })
-    )
+    return (frontendSpec.valid_function_priority_class_names ?? []).map(className => ({
+      id: className,
+      label: generateFunctionPriorityLabel(className)
+    }))
   }, [frontendSpec.valid_function_priority_class_names])
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
-      setNewFunctionPreemtionMode(
-        frontendSpec.default_function_preemption_mode ?? ''
-      )
-      setNewFunctionPriorityClassName(
-        frontendSpec.default_function_priority_class_name ?? ''
-      )
+      setNewFunctionPreemtionMode(data.preemptionMode)
+      setNewFunctionPriorityClassName(frontendSpec.default_function_priority_class_name ?? '')
 
       setNewFunctionDisableAutoMount(false)
     }
   }, [
-    frontendSpec.default_function_preemption_mode,
+    data.preemptionMode,
     frontendSpec.default_function_priority_class_name,
     mode,
     setNewFunctionDisableAutoMount,
@@ -134,24 +115,13 @@ const FunctionsPanelResources = ({
   useEffect(() => {
     setNewFunctionResources({
       limits: {
-        cpu:
-          defaultData.resources?.limits?.cpu ??
-          defaultPodsResources?.limits.cpu ??
-          '',
-        memory:
-          defaultData.resources?.limits?.memory ??
-          defaultPodsResources?.limits.memory ??
-          ''
+        cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits.cpu ?? '',
+        memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits.memory ?? ''
       },
       requests: {
-        cpu:
-          defaultData.resources?.requests?.cpu ??
-          defaultPodsResources?.requests.cpu ??
-          '',
+        cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests.cpu ?? '',
         memory:
-          defaultData.resources?.requests?.memory ??
-          defaultPodsResources?.requests.memory ??
-          ''
+          defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests.memory ?? ''
       }
     })
   }, [
@@ -187,10 +157,7 @@ const FunctionsPanelResources = ({
         mountPath: generatedVolumeMount.data.mountPath
       }
     ])
-    setNewFunctionVolumes([
-      ...functionsStore.newFunction.spec.volumes,
-      generatedVolume
-    ])
+    setNewFunctionVolumes([...functionsStore.newFunction.spec.volumes, generatedVolume])
   }
 
   const handleEditVolume = (volumes, volumeMounts) => {
@@ -265,9 +232,7 @@ const FunctionsPanelResources = ({
   }
 
   const handleSelectMemoryUnit = (value, type) => {
-    const unit = value.match(/i/)
-      ? value.slice(0, value.match(/i/).index + 1)
-      : value.slice(0, 1)
+    const unit = value.match(/i/) ? value.slice(0, value.match(/i/).index + 1) : value.slice(0, 1)
 
     setData(state => ({
       ...state,
@@ -275,9 +240,7 @@ const FunctionsPanelResources = ({
         ...state[type],
         memory:
           state[type].memory.length > 0
-            ? `${Number.parseInt(state[type].memory)}${
-                value !== 'Bytes' ? unit : ''
-              }`
+            ? `${Number.parseInt(state[type].memory)}${value !== 'Bytes' ? unit : ''}`
             : state[type].memory,
         memoryUnit: value
       }
@@ -289,9 +252,7 @@ const FunctionsPanelResources = ({
           data[type].memory.length > 0
             ? {
                 ...functionsStore.newFunction.spec.resources[type],
-                memory: `${Number.parseInt(data[type].memory)}${
-                  value !== 'Bytes' ? unit : ''
-                }`
+                memory: `${Number.parseInt(data[type].memory)}${value !== 'Bytes' ? unit : ''}`
               }
             : functionsStore.newFunction.spec.resources[type]
       })
@@ -318,13 +279,7 @@ const FunctionsPanelResources = ({
         memory
       }
     })
-    setMemoryInputValidation(
-      data,
-      setValidation,
-      type,
-      validationField,
-      convertedMemoryValue
-    )
+    setMemoryInputValidation(data, setValidation, type, validationField, convertedMemoryValue)
   }
 
   const handleSelectCpuUnit = (value, type) => {

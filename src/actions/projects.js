@@ -71,10 +71,12 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS,
-  CONFLICT_CODE,
-  AMOUNT_LIMIT_CODE
+  SET_PROJECT_SECRETS
 } from '../constants'
+import {
+  CONFLICT_ERROR_STATUS_CODE,
+  INTERNAL_SERVER_ERROR_STATUS_CODE
+} from 'igz-controls/constants'
 
 const projectsAction = {
   addProjectLabel: (label, labels) => ({
@@ -107,9 +109,9 @@ const projectsAction = {
       })
       .catch(error => {
         const message =
-          error.response.status === CONFLICT_CODE
+          error.response.status === CONFLICT_ERROR_STATUS_CODE
             ? `Project name "${postData.metadata.name}" already exists`
-            : error.response.status === AMOUNT_LIMIT_CODE
+            : error.response.status === INTERNAL_SERVER_ERROR_STATUS_CODE
             ? 'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance'
             : error.message
 
@@ -178,9 +180,7 @@ const projectsAction = {
     return projectsApi
       .getProjectDataSets(project)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectDataSetsSuccess(response?.data.artifacts)
-        )
+        dispatch(projectsAction.fetchProjectDataSetsSuccess(response?.data.artifacts))
 
         return response?.data.artifacts
       })
@@ -205,9 +205,7 @@ const projectsAction = {
     return projectsApi
       .getProjectFailedJobs(project, cancelToken)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectFailedJobsSuccess(response?.data.runs)
-        )
+        dispatch(projectsAction.fetchProjectFailedJobsSuccess(response?.data.runs))
 
         return response?.data.runs
       })
@@ -234,9 +232,7 @@ const projectsAction = {
     projectsApi
       .getProjectFiles(project)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectFilesSuccess(response?.data.artifacts)
-        )
+        dispatch(projectsAction.fetchProjectFilesSuccess(response?.data.artifacts))
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFilesFailure(error.message))
@@ -248,11 +244,7 @@ const projectsAction = {
     return projectsApi
       .getProjectFeatureSets(project, cancelToken)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectFeatureSetsSuccess(
-            response.data?.feature_sets
-          )
-        )
+        dispatch(projectsAction.fetchProjectFeatureSetsSuccess(response.data?.feature_sets))
 
         return response.data?.feature_sets
       })
@@ -288,9 +280,7 @@ const projectsAction = {
     return projectsApi
       .getProjectFunctions(project, cancelToken)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectFunctionsSuccess(response?.data.funcs)
-        )
+        dispatch(projectsAction.fetchProjectFunctionsSuccess(response?.data.funcs))
 
         return response?.data.funcs
       })
@@ -317,7 +307,8 @@ const projectsAction = {
       'partition-by': 'name',
       'partition-sort-by': 'updated',
       'rows-per-partition': '5',
-      'max-partitions': '5'
+      'max-partitions': '5',
+      'iter': 'false'
     }
 
     return projectsApi
@@ -350,9 +341,7 @@ const projectsAction = {
     return projectsApi
       .getProjectModels(project, cancelToken)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectModelsSuccess(response?.data.artifacts)
-        )
+        dispatch(projectsAction.fetchProjectModelsSuccess(response?.data.artifacts))
 
         return response?.data.artifacts
       })
@@ -377,9 +366,7 @@ const projectsAction = {
     return projectsApi
       .getProjectRunningJobs(project, cancelToken)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectRunningJobsSuccess(response?.data.runs)
-        )
+        dispatch(projectsAction.fetchProjectRunningJobsSuccess(response?.data.runs))
 
         return response?.data.runs
       })
@@ -406,11 +393,7 @@ const projectsAction = {
     return projectsApi
       .getProjectScheduledJobs(project)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectScheduledJobsSuccess(
-            response.data.schedules
-          )
-        )
+        dispatch(projectsAction.fetchProjectScheduledJobsSuccess(response.data.schedules))
 
         return response.data.schedules
       })
@@ -556,9 +539,7 @@ const projectsAction = {
     return workflowsApi
       .getWorkflows(project)
       .then(response => {
-        dispatch(
-          projectsAction.fetchProjectWorkflowsSuccess(response.data.runs)
-        )
+        dispatch(projectsAction.fetchProjectWorkflowsSuccess(response.data.runs))
 
         return response.data.runs
       })

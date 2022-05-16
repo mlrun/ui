@@ -14,10 +14,10 @@ import {
   FEATURE_VECTORS_TAB,
   LABELS_FILTER,
   NAME_FILTER,
-  SECONDARY_BUTTON,
-  TAG_FILTER,
-  STATUS_CODE_FORBIDDEN
+  TAG_FILTER
 } from '../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureSets } from '../../utils/parseFeatureSets'
@@ -27,7 +27,7 @@ import {
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const pageDataInitialState = {
   actionsMenu: [],
@@ -447,7 +447,7 @@ export const handleApplyDetailsChanges = (
         status: error.response?.status || 400,
         id: Math.random(),
         message:
-          error.response?.status === STATUS_CODE_FORBIDDEN
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
             ? 'Permission denied.'
             : 'Failed to update.',
         retry: handleApplyDetailsChanges

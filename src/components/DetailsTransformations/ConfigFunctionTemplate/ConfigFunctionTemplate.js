@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Arrow } from '../../../images/arrow.svg'
 import Accordion from '../../../common/Accordion/Accordion'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 const ConfigFunctionTemplate = ({ selectedItem }) => {
   return (

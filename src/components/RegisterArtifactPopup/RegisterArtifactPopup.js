@@ -5,12 +5,11 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { messagesByKind } from './messagesByKind'
 
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import Button from '../../common/Button/Button'
+import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
-import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import artifactApi from '../../api/artifacts-api'
 import { useParams } from 'react-router-dom'
