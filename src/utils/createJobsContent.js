@@ -4,7 +4,7 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
-  SCHEDULE_TAB
+  MONITOR_WORKFLOWS_TAB
 } from '../constants'
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
@@ -13,264 +13,356 @@ import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getJobIdentifier } from './getUniqueIdentifier'
 import { getWorkflowDetailsLink } from '../components/Workflow/workflow.util'
 
-const createJobsContent = (
-  content,
-  isSelectedItem,
-  params,
-  isStagingMode,
-  groupedByWorkflow
-) => {
-  return content.map(contentItem => {
-    if (contentItem) {
-      const identifierUnique = getJobIdentifier(contentItem, true)
+export const createJobsMonitorTabContent = (jobs, params, isStagingMode) => {
+  return jobs.map(job => {
+    const identifierUnique = getJobIdentifier(job, true)
+    const type = job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
 
-      if (params.pageTab === SCHEDULE_TAB) {
-        const [, , scheduleJobFunctionUid] =
-          contentItem.func?.match(/\w[\w'-]*/g, '') || []
-        const [, projectName, jobUid] =
-          contentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
-        const jobName = contentItem.name
-        const lastRunLink = () =>
-          projectName &&
-          jobName &&
-          jobUid &&
-          `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
-
-        return {
-          name: {
-            id: `name.${identifierUnique}`,
-            value: contentItem.name,
-            class: 'jobs_big',
-            identifier: getJobIdentifier(contentItem),
-            identifierUnique: identifierUnique,
-            showStatus: true,
-            getLink: tab =>
-              generateLinkToDetailsPanel(
-                contentItem.project,
-                FUNCTIONS_PAGE,
-                null,
-                scheduleJobFunctionUid,
-                null,
-                tab
-              )
-          },
-          type: {
-            id: `type.${identifierUnique}`,
-            value: contentItem.type,
-            class: 'jobs_big',
-            type: 'type',
-            hidden: isSelectedItem
-          },
-          nextRun: {
-            id: `nextRun.${identifierUnique}`,
-            value: formatDatetime(contentItem.nextRun),
-            class: 'jobs_big',
-            type: 'date',
-            hidden: isSelectedItem
-          },
-          schedule: {
-            id: `schedule.${identifierUnique}`,
-            value: contentItem.scheduled_object
-              ? cronstrue.toString(contentItem.scheduled_object?.schedule)
-              : null,
-            class: 'jobs_big',
-            hidden: isSelectedItem
-          },
-          labels: {
-            id: `labels.${identifierUnique}`,
-            value: parseKeyValues(
-              contentItem.scheduled_object?.task.metadata.labels || {}
-            ),
-            class: 'jobs_big',
-            type: 'labels',
-            hidden: isSelectedItem
-          },
-          lastRun: {
-            id: `lastRun.${identifierUnique}`,
-            value: formatDatetime(contentItem.start_time),
-            class: 'jobs_big',
-            getLink: lastRunLink,
-            hidden: isSelectedItem
-          },
-          createdTime: {
-            id: `createdTime.${identifierUnique}`,
-            value: formatDatetime(contentItem.createdTime, 'Not yet started'),
-            class: 'jobs_medium',
-            type: 'date',
-            hidden: isSelectedItem
-          },
-          func: {
-            id: `func.${identifierUnique}`,
-            value: contentItem.func,
-            class: '',
-            type: 'hidden',
-            hidden: isSelectedItem
-          }
+    return {
+      data: {
+        ...job,
+        ui: {
+          ...job.ui,
+          identifier: getJobIdentifier(job),
+          identifierUnique: identifierUnique
         }
-      } else if (params.pageTab === MONITOR_JOBS_TAB || params.workflowId) {
-        const type =
-          contentItem.labels
-            ?.find(label => label.includes('kind:'))
-            ?.replace('kind: ', '') ??
-          (groupedByWorkflow && 'workflow') ??
-          ''
-
-        return {
-          name: {
-            id: `name.${identifierUnique}`,
-            value: params.jobName
-              ? contentItem.uid || contentItem?.id
-              : contentItem.name,
-            class: 'jobs_medium',
-            type: type === 'workflow' && !isStagingMode ? 'hidden' : '',
-            identifier: getJobIdentifier(contentItem),
-            identifierUnique: identifierUnique,
-            getLink: tab => {
-              return type === 'workflow' || params.workflowId
-                ? getWorkflowDetailsLink(
-                    params,
-                    contentItem.id,
-                    contentItem.uid,
-                    tab
-                  )
-                : params.jobName
-                ? generateLinkToDetailsPanel(
-                    contentItem.project,
-                    JOBS_PAGE,
-                    MONITOR_JOBS_TAB,
-                    contentItem.uid,
-                    null,
-                    tab,
-                    null,
-                    null,
-                    contentItem.name
-                  )
-                : `/projects/${
-                    contentItem.project
-                  }/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${
-                    contentItem.name
-                  }`
-            },
-            showStatus: true
+      },
+      content: [
+        {
+          header: 'Name',
+          id: `name.${identifierUnique}`,
+          value: params.jobName ? job.uid || job.id : job.name,
+          class: 'jobs_medium',
+          type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
+          getLink: tab => {
+            return params.jobName
+              ? generateLinkToDetailsPanel(
+                  job.project,
+                  JOBS_PAGE,
+                  MONITOR_JOBS_TAB,
+                  job.uid,
+                  null,
+                  tab,
+                  null,
+                  null,
+                  job.name
+                )
+              : `/projects/${job.project}/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${
+                  job.name
+                }`
           },
-          type: {
-            id: `type.${identifierUnique}`,
-            value: type,
-            class: 'jobs_extra-small',
-            type: 'type',
-            hidden: isSelectedItem
-          },
-          uid: {
-            id: `uid.${identifierUnique}`,
-            value: contentItem.uid || contentItem?.id,
-            class: 'jobs_small',
-            type: 'hidden',
-            hidden: isSelectedItem
-          },
-          duration: {
-            id: `duration.${identifierUnique}`,
-            value: measureTime(
-              contentItem.startTime || new Date(contentItem.created_at),
-              (contentItem.state?.value !== 'running' && contentItem.updated) ||
-                (contentItem.state?.value !== 'error' &&
-                  new Date(contentItem.finished_at))
-            ),
-            class: 'jobs_extra-small',
-            type: 'duration',
-            hidden: isSelectedItem
-          },
-          owner: {
-            id: `owner.${identifierUnique}`,
-            value: contentItem.owner,
-            class: 'jobs_extra-small',
-            hidden: isSelectedItem
-          },
-          labels: {
-            id: `labels.${identifierUnique}`,
-            value: contentItem.labels,
-            class: 'jobs_extra-small',
-            type: 'labels',
-            hidden: isSelectedItem
-          },
-          parameters: {
-            id: `parameters.${identifierUnique}`,
-            value: contentItem.parameters,
-            class: 'jobs_extra-small',
-            type: 'parameters',
-            hidden: isSelectedItem
-          },
-          resultsChips: {
-            id: `resultsChips.${identifierUnique}`,
-            value: contentItem.resultsChips,
-            class: 'jobs_big',
-            type: 'results',
-            hidden: isSelectedItem
-          },
-          updated: {
-            id: `updated.${identifierUnique}`,
-            value: contentItem.updated || new Date(contentItem.finished_at),
-            class: 'jobs_small',
-            type: 'hidden',
-            hidden: isSelectedItem
-          }
+          showStatus: true
+        },
+        {
+          header: 'Type',
+          id: `type.${identifierUnique}`,
+          value: type,
+          class: 'jobs_extra-small',
+          type: 'type'
+        },
+        {
+          id: `uid.${identifierUnique}`,
+          value: job.uid || job.id,
+          class: 'jobs_small',
+          type: 'hidden'
+        },
+        {
+          header: 'Duration',
+          id: `duration.${identifierUnique}`,
+          value: measureTime(
+            job.startTime || new Date(job.created_at),
+            (job.state?.value !== 'running' && job.updated) ||
+              (job.state?.value !== 'error' && new Date(job.finished_at))
+          ),
+          class: 'jobs_extra-small',
+          type: 'duration'
+        },
+        {
+          header: 'Owner',
+          id: `owner.${identifierUnique}`,
+          value: job.owner,
+          class: 'jobs_extra-small'
+        },
+        {
+          header: 'Labels',
+          id: `labels.${identifierUnique}`,
+          value: job.labels,
+          class: 'jobs_extra-small',
+          type: 'labels'
+        },
+        {
+          header: 'Parameters',
+          id: `parameters.${identifierUnique}`,
+          value: job.parameters,
+          class: 'jobs_extra-small',
+          type: 'parameters'
+        },
+        {
+          header: 'Results',
+          id: `resultsChips.${identifierUnique}`,
+          value: job.resultsChips,
+          class: 'jobs_big',
+          type: 'results'
+        },
+        {
+          id: `updated.${identifierUnique}`,
+          value: job.updated || new Date(job.finished_at),
+          class: 'jobs_small',
+          type: 'hidden'
         }
-      } else {
-        return {
-          name: {
-            id: `name.${identifierUnique}`,
-            value: contentItem.name,
-            class: 'jobs_big',
-            identifier: getJobIdentifier(contentItem),
-            identifierUnique: identifierUnique,
-            getLink: () => {
-              return getWorkflowDetailsLink(params, contentItem.id)
-            },
-            showStatus: true
-          },
-          uid: {
-            id: `uid.${identifierUnique}`,
-            value: contentItem?.id,
-            class: 'jobs_small',
-            type: 'hidden',
-            hidden: isSelectedItem
-          },
-          createdAt: {
-            id: `createdAt.${identifierUnique}`,
-            value: formatDatetime(new Date(contentItem.created_at), 'N/A'),
-            class: 'jobs_small',
-            hidden: isSelectedItem
-          },
-          finishedAt: {
-            id: `finishedAt.${identifierUnique}`,
-            value: formatDatetime(new Date(contentItem.finished_at), 'N/A'),
-            class: 'jobs_small',
-            hidden: isSelectedItem
-          },
-          duration: {
-            id: `duration.${identifierUnique}`,
-            value: measureTime(
-              contentItem.startTime || new Date(contentItem.created_at),
-              (contentItem.state?.value !== 'running' && contentItem.updated) ||
-                (contentItem.state?.value !== 'error' &&
-                  new Date(contentItem.finished_at))
-            ),
-            class: 'jobs_small',
-            type: 'duration',
-            hidden: isSelectedItem
-          },
-          updated: {
-            id: `updated.${identifierUnique}`,
-            value: contentItem.updated || new Date(contentItem.finished_at),
-            class: 'jobs_small',
-            type: 'hidden',
-            hidden: isSelectedItem
-          }
-        }
-      }
+      ]
     }
-
-    return []
   })
 }
 
-export default createJobsContent
+export const createJobsScheduleTabContent = (jobs, params, isStagingMode) => {
+  return jobs.map(job => {
+    const identifierUnique = getJobIdentifier(job, true)
+    const [, , scheduleJobFunctionUid] = job.func?.match(/\w(?<!\d)[\w'-]*/g, '') || []
+    const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
+    const jobName = job.name
+    const lastRunLink = () =>
+      projectName &&
+      jobName &&
+      jobUid &&
+      `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
+
+    return {
+      data: {
+        ...job,
+        ui: {
+          ...job.ui,
+          identifier: getJobIdentifier(job),
+          identifierUnique: identifierUnique
+        }
+      },
+      content: [
+        {
+          header: 'Name',
+          id: `name.${identifierUnique}`,
+          value: job.name,
+          class: 'jobs_big',
+          showStatus: true,
+          getLink: tab =>
+            generateLinkToDetailsPanel(
+              job.project,
+              FUNCTIONS_PAGE,
+              null,
+              scheduleJobFunctionUid,
+              null,
+              tab
+            ),
+          type: 'link'
+        },
+        {
+          header: 'Type',
+          id: `type.${identifierUnique}`,
+          value: job.type,
+          class: 'jobs_big',
+          type: 'type'
+        },
+        {
+          header: 'Next run (Local TZ)',
+          id: `nextRun.${identifierUnique}`,
+          value: formatDatetime(job.nextRun),
+          class: 'jobs_big',
+          type: 'date'
+        },
+        {
+          header: 'Schedule (UTC)',
+          id: `schedule.${identifierUnique}`,
+          value: job.scheduled_object ? cronstrue.toString(job.scheduled_object?.schedule) : null,
+          class: 'jobs_big'
+        },
+        {
+          header: 'Labels',
+          id: `labels.${identifierUnique}`,
+          value: parseKeyValues(job.scheduled_object?.task.metadata.labels || {}),
+          class: 'jobs_big',
+          type: 'labels'
+        },
+        {
+          header: 'Last run (Local TZ)',
+          id: `lastRun.${identifierUnique}`,
+          value: formatDatetime(job.start_time),
+          class: 'jobs_big',
+          getLink: lastRunLink
+        },
+        {
+          header: 'Created time (Local TZ)',
+          id: `createdTime.${identifierUnique}`,
+          value: formatDatetime(job.createdTime, 'Not yet started'),
+          class: 'jobs_medium',
+          type: 'date'
+        },
+        {
+          id: `func.${identifierUnique}`,
+          value: job.func,
+          class: '',
+          type: 'hidden'
+        }
+      ]
+    }
+  })
+}
+
+export const createJobsWorkflowsTabContent = (jobs, params, isStagingMode, isSelectedItem) => {
+  return jobs.map(job => {
+    const identifierUnique = getJobIdentifier(job, true)
+    const type =
+      job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? 'workflow'
+
+    return params.workflowId
+      ? {
+          data: {
+            ...job,
+            ui: {
+              ...job.ui,
+              identifier: getJobIdentifier(job),
+              identifierUnique: identifierUnique
+            }
+          },
+          content: [
+            {
+              header: 'Name',
+              id: `name.${identifierUnique}`,
+              value: job.name,
+              class: 'jobs_medium',
+              type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
+              getLink: tab => {
+                return getWorkflowDetailsLink(params, job.id, job.uid, tab, MONITOR_WORKFLOWS_TAB)
+              },
+              showStatus: true
+            },
+            {
+              header: 'Type',
+              id: `type.${identifierUnique}`,
+              value: type,
+              class: 'jobs_extra-small',
+              type: 'type',
+              hidden: isSelectedItem
+            },
+            {
+              id: `uid.${identifierUnique}`,
+              value: job.uid || job.id,
+              class: 'jobs_small',
+              type: 'hidden',
+              hidden: isSelectedItem
+            },
+            {
+              header: 'Duration',
+              id: `duration.${identifierUnique}`,
+              value: measureTime(
+                job.startTime || new Date(job.created_at),
+                (job.state?.value !== 'running' && job.updated) ||
+                  (job.state?.value !== 'error' && new Date(job.finished_at))
+              ),
+              class: 'jobs_extra-small',
+              type: 'duration',
+              hidden: isSelectedItem
+            },
+            {
+              header: 'Owner',
+              id: `owner.${identifierUnique}`,
+              value: job.owner,
+              class: 'jobs_extra-small',
+              hidden: isSelectedItem
+            },
+            {
+              header: 'Labels',
+              id: `labels.${identifierUnique}`,
+              value: job.labels,
+              class: 'jobs_extra-small',
+              type: 'labels',
+              hidden: isSelectedItem
+            },
+            {
+              header: 'Parameters',
+              id: `parameters.${identifierUnique}`,
+              value: job.parameters,
+              class: 'jobs_extra-small',
+              type: 'parameters',
+              hidden: isSelectedItem
+            },
+            {
+              header: 'Results',
+              id: `resultsChips.${identifierUnique}`,
+              value: job.resultsChips,
+              class: 'jobs_big',
+              type: 'results',
+              hidden: isSelectedItem
+            },
+            {
+              id: `updated.${identifierUnique}`,
+              value: job.updated || new Date(job.finished_at),
+              class: 'jobs_small',
+              type: 'hidden',
+              hidden: isSelectedItem
+            }
+          ]
+        }
+      : {
+          data: {
+            ...job,
+            ui: {
+              ...job.ui,
+              identifier: getJobIdentifier(job),
+              identifierUnique: identifierUnique
+            }
+          },
+          content: [
+            {
+              header: 'Name',
+              id: `name.${identifierUnique}`,
+              value: job.name,
+              class: 'jobs_big',
+              getLink: () => {
+                return getWorkflowDetailsLink(params, job.id, null, null, MONITOR_WORKFLOWS_TAB)
+              },
+              type: 'link',
+              showStatus: true
+            },
+            {
+              id: `uid.${identifierUnique}`,
+              value: job?.id,
+              class: 'jobs_small',
+              type: 'hidden',
+              hidden: isSelectedItem
+            },
+            {
+              header: 'Created at',
+              id: `createdAt.${identifierUnique}`,
+              value: formatDatetime(new Date(job.created_at), 'N/A'),
+              class: 'jobs_small',
+              hidden: isSelectedItem
+            },
+            {
+              header: 'Finished at',
+              id: `finishedAt.${identifierUnique}`,
+              value: formatDatetime(new Date(job.finished_at), 'N/A'),
+              class: 'jobs_small',
+              hidden: isSelectedItem
+            },
+            {
+              header: 'Duration',
+              id: `duration.${identifierUnique}`,
+              value: measureTime(
+                job.startTime || new Date(job.created_at),
+                (job.state?.value !== 'running' && job.updated) ||
+                  (job.state?.value !== 'error' && new Date(job.finished_at))
+              ),
+              class: 'jobs_small',
+              type: 'duration',
+              hidden: isSelectedItem
+            },
+            {
+              id: `updated.${identifierUnique}`,
+              value: job.updated || new Date(job.finished_at),
+              class: 'jobs_small',
+              type: 'hidden',
+              hidden: isSelectedItem
+            }
+          ]
+        }
+  })
+}
