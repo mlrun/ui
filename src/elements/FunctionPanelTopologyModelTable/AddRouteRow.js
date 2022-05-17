@@ -2,13 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { isNameNotUnique } from './functionPanelTopologyModelTable.util'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const AddRouteRow = ({
   addRoute,

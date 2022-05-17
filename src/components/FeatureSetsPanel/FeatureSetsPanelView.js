@@ -2,23 +2,23 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import Button from '../../common/Button/Button'
-import FeatureSetsPanelTitle from './FeatureSetsPanelTitle/FeatureSetsPanelTitle'
 import FeatureSetsPanelDataSource from './FeatureSetsPanelDataSource/FeatureSetsPanelDataSource'
 import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSchema'
 import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSetsPanelTargetStore'
+import FeatureSetsPanelTitle from './FeatureSetsPanelTitle/FeatureSetsPanelTitle'
 import Loader from '../../common/Loader/Loader'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
+import { Button } from 'igz-controls/components'
 
 import {
   PRIMARY_BUTTON,
   SECONDARY_BUTTON,
   TERTIARY_BUTTON
-} from '../../constants'
+} from 'igz-controls/constants'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './featureSetsPanel.scss'
 
@@ -83,10 +83,7 @@ const FeatureSetsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FeatureSetsPanelSchema
-              setValidation={setValidation}
-              validation={validation}
-            />
+            <FeatureSetsPanelSchema setValidation={setValidation} validation={validation} />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -102,9 +99,7 @@ const FeatureSetsPanelView = ({
             />
           </Accordion>
           <PanelCredentialsAccessKey
-            credentialsAccessKey={
-              featureStore.newFeatureSet.credentials.access_key
-            }
+            credentialsAccessKey={featureStore.newFeatureSet.credentials.access_key}
             required={accessKeyRequired}
             setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
             setValidation={setValidation}

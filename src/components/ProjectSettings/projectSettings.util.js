@@ -10,10 +10,10 @@ import {
   PROJECTS_SETTINGS_SECRETS_TAB
 } from '../../constants'
 
-import { ReactComponent as Settings } from '../../images/settings.svg'
-import { ReactComponent as Secrets } from '../../images/lock-icon.svg'
-import { ReactComponent as User } from '../../images/user.svg'
-import { ReactComponent as Users } from '../../images/users.svg'
+import { ReactComponent as Settings } from 'igz-controls/images/settings.svg'
+import { ReactComponent as Secrets } from 'igz-controls/images/lock-icon.svg'
+import { ReactComponent as User } from 'igz-controls/images/user.svg'
+import { ReactComponent as Users } from 'igz-controls/images/users.svg'
 
 export const tabs = projectMembershipIsEnabled => [
   {

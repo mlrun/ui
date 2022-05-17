@@ -8,7 +8,7 @@ import {
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
 
-export const getJobsStatistics = (projectCounter, match) => {
+export const getJobsStatistics = (projectCounter, projectName) => {
   return {
     running: {
       value: projectCounter.error
@@ -19,7 +19,7 @@ export const getJobsStatistics = (projectCounter, match) => {
         projectCounter.error || projectCounter.data.runs_running_count === 0
           ? 'default'
           : 'running',
-      link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     workflows: {
       value: projectCounter.error
@@ -31,7 +31,7 @@ export const getJobsStatistics = (projectCounter, match) => {
         projectCounter.data.pipelines_running_count === 0
           ? 'default'
           : 'running',
-      link: `/projects/${match.params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`
+      link: `/projects/${projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`
     },
     failed: {
       value: projectCounter.error
@@ -43,7 +43,7 @@ export const getJobsStatistics = (projectCounter, match) => {
         !projectCounter.error
           ? 'failed'
           : 'default',
-      link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     scheduled: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.schedules_count,
@@ -52,19 +52,19 @@ export const getJobsStatistics = (projectCounter, match) => {
         projectCounter.error || projectCounter.data.schedules_count === 0
           ? 'default'
           : 'scheduled',
-      link: `/projects/${match.params.projectName}/jobs/${SCHEDULE_TAB}`
+      link: `/projects/${projectName}/jobs/${SCHEDULE_TAB}`
     }
   }
 }
 
-export const getJobsTableData = (jobs, match) => {
+export const getJobsTableData = (jobs, projectName) => {
   if (jobs) {
     const tableBody = jobs.slice(0, 5).map(job => {
       return {
         name: {
           value: job[0].metadata.name,
           link:
-            `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}/${job[0].metadata.name}/` +
+            `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${job[0].metadata.name}/` +
             `${job[0].metadata.uid}/overview`,
           className: 'table-cell_big'
         },

@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Edit } from '../../images/edit.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 import JobsPanelTableView from './JobsPanelTableView'
 
@@ -16,7 +16,6 @@ const JobsPanelTable = ({
   handleDeleteItems,
   handleEditItems,
   headers,
-  match,
   section,
   sectionData,
   sectionDispatch,
@@ -78,7 +77,6 @@ const JobsPanelTable = ({
       handleDelete={handleDelete}
       handleEdit={handleEdit}
       headers={headers}
-      match={match}
       section={section}
       sectionData={sectionData}
       sectionDispatch={sectionDispatch}
@@ -115,7 +113,6 @@ JobsPanelTable.propTypes = {
   handleEditItems: PropTypes.func.isRequired,
   handleSetSelectedVolume: PropTypes.func,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
-  match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
   sectionData: PropTypes.shape({}),
   sectionDispatch: PropTypes.func,

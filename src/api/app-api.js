@@ -1,7 +1,9 @@
 import { mainHttpClient } from '../httpClient'
 
-export default {
+const appApi = {
   getFrontendSpec: () => {
     return mainHttpClient.get('/frontend-spec')
   }
 }
+
+export default appApi

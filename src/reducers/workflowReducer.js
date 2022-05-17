@@ -22,7 +22,7 @@ const initialState = {
   }
 }
 
-export default (state = initialState, { type, payload }) => {
+const workflowReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case FETCH_WORKFLOW_BEGIN:
       return {
@@ -95,3 +95,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default workflowReducer

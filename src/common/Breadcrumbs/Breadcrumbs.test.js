@@ -11,7 +11,7 @@ import reducer from '../../reducers/reducers'
 import { mainHttpClient } from '../../httpClient'
 import { fireEvent } from '@testing-library/dom'
 
-jest.mock('../../images/arrow.svg', () => ({
+jest.mock('igz-controls/images/arrow.svg', () => ({
   ReactComponent: 'arrow-icon'
 }))
 

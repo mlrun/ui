@@ -1,0 +1,46 @@
+.resources__inputs {
+  .range {
+    max-width: 120px;
+    margin-right: 5px;
+
+    .input {
+      width: 100%;
+
+      &-wrapper {
+        width: 100%;
+      }
+    }
+  }
+
+  .memory,
+  .cpu {
+    margin-bottom: 20px;
+
+    .panel-section__body {
+      align-items: center;
+    }
+
+    .select__value {
+      min-width: 120px;
+    }
+  }
+
+  .select {
+    flex: 1 1;
+    max-width: 120px;
+    margin-right: 5px;
+  }
+
+  .resources__input {
+    display: flex;
+    margin-right: 20px;
+  }
+
+  .section-gpu {
+    margin-bottom: 20px;
+
+    .item-section__body {
+      justify-content: flex-end;
+    }
+  }
+}

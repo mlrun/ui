@@ -2,17 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
+import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import Select from '../../common/Select/Select'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
-import { ReactComponent as Delete } from '../../images/delete.svg'
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 export const JobsPanelAdvancedTable = ({
   addNewItem,
@@ -23,7 +22,6 @@ export const JobsPanelAdvancedTable = ({
   handleEditItems,
   handleResetForm,
   headers,
-  match,
   newName,
   section,
   selectedId,
@@ -43,7 +41,6 @@ export const JobsPanelAdvancedTable = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       headers={headers}
-      match={match}
       section={section}
       selectedItem={selectedItem}
       setSelectedItem={setSelectedItem}
@@ -140,7 +137,6 @@ JobsPanelAdvancedTable.propTypes = {
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  match: PropTypes.shape({}).isRequired,
   newName: PropTypes.string,
   section: PropTypes.string.isRequired,
   selectedId: PropTypes.string,

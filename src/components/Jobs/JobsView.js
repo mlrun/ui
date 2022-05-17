@@ -10,7 +10,8 @@ import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import YamlModal from '../../common/YamlModal/YamlModal'
 
-import { PANEL_EDIT_MODE, TERTIARY_BUTTON } from '../../constants'
+import { PANEL_EDIT_MODE } from '../../constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 
 const JobsView = ({
@@ -27,12 +28,11 @@ const JobsView = ({
   handleCancel,
   handleSelectJob,
   handleSuccessRerunJob,
-  history,
   itemIsSelected,
   jobsStore,
-  match,
   onEditJob,
   pageData,
+  params,
   refreshJobs,
   removeNewJob,
   selectedFunction,
@@ -48,35 +48,32 @@ const JobsView = ({
   return (
     <div className="content-wrapper">
       <Content
-        content={match.params.jobName ? jobRuns : jobs}
+        content={params.jobName ? jobRuns : jobs}
         getCloseDetailsLink={getCloseDetailsLink}
         getIdentifier={getJobIdentifier}
         handleActionsMenuClick={handleActionsMenuClick}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectJob}
         loading={jobsStore.loading || workflowsStore.workflows.loading}
-        match={match}
         pageData={pageData}
         refresh={refreshJobs}
         selectedItem={selectedJob}
         tableTop={
-          match.params.jobName
+          params.jobName
             ? {
-                link: `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`,
-                text: match.params.jobName
+                link: `/projects/${params.projectName}/jobs/${params.pageTab}`,
+                text: params.jobName
               }
             : null
         }
       >
-        {match.params.workflowId ? (
+        {params.workflowId ? (
           <Workflow
             actionsMenu={actionsMenu}
             content={jobs}
             handleCancel={handleCancel}
             handleSelectItem={handleSelectJob}
-            history={history}
             itemIsSelected={itemIsSelected}
-            match={match}
             pageData={pageData}
             refresh={refreshJobs}
             refreshJobs={refreshJobs}
@@ -95,7 +92,6 @@ const JobsView = ({
             handleCancel={handleCancel}
             handleRefresh={fetchCurrentJob}
             isDetailsScreen
-            match={match}
             pageData={pageData}
             selectedItem={selectedJob}
           />
@@ -128,11 +124,8 @@ const JobsView = ({
             setEditableItem(null)
             removeNewJob()
           }}
-          defaultData={
-            editableItem.scheduled_object || editableItem.rerun_object
-          }
+          defaultData={editableItem.scheduled_object || editableItem.rerun_object}
           handleRunNewJob={{}}
-          match={match}
           mode={PANEL_EDIT_MODE}
           onEditJob={onEditJob}
           onSuccessRun={tab => {
@@ -140,16 +133,13 @@ const JobsView = ({
               handleSuccessRerunJob(tab)
             }
           }}
-          project={match.params.projectName}
+          project={params.projectName}
           withSaveChanges={Boolean(editableItem.scheduled_object)}
         />
       )}
 
       {convertedYaml.length > 0 && (
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={toggleConvertedYaml}
-        />
+        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
       )}
     </div>
   )
@@ -161,8 +151,7 @@ JobsView.defaultProps = {
 }
 
 JobsView.propTypes = {
-  actionsMenu: PropTypes.oneOfType([PropTypes.array, PropTypes.func])
-    .isRequired,
+  actionsMenu: PropTypes.oneOfType([PropTypes.array, PropTypes.func]).isRequired,
   confirmData: PropTypes.object,
   convertedYaml: PropTypes.string.isRequired,
   editableItem: PropTypes.object,
@@ -174,10 +163,8 @@ JobsView.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleSelectJob: PropTypes.func.isRequired,
   handleSuccessRerunJob: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
   jobsStore: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
   onEditJob: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   refreshJobs: PropTypes.func.isRequired,

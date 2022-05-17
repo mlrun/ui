@@ -24,8 +24,12 @@ const newJobTemplate = {
     }
   },
   function: {
-    metadata: {},
-    spec: {}
+    metadata: {
+      credentials: {
+        access_key: '$generate'
+      }
+    },
+    spec: { preemption_mode: '', priority_class_name: '' }
   }
 }
 
@@ -33,13 +37,31 @@ const action = {
   deleteAPIMLProject: async function(
     driver,
     mlProjectName,
-    expectedStatusCode
+    expectedStatusCode,
+    deleteNonEmpty = false
   ) {
     await driver.sleep(1000)
     await mainHttpClient
-      .delete(`${REACT_APP_MLRUN_API_URL}/projects/${mlProjectName}`)
+      .delete(
+        `${REACT_APP_MLRUN_API_URL}/projects/${mlProjectName}`,
+        deleteNonEmpty && {
+          headers: {
+            'x-mlrun-deletion-strategy': 'cascade'
+          }
+        }
+      )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
+      })
+      .catch(error => {
+        if (error.response?.status === 412) {
+          action.deleteAPIMLProject(
+            driver,
+            mlProjectName,
+            expectedStatusCode,
+            true
+          )
+        }
       })
   },
   deleteAPIFeatureSet: async function(
@@ -75,7 +97,7 @@ const action = {
   ) {
     await mainHttpClient
       .delete(
-        `${REACT_APP_MLRUN_API_URL}projects/${projectName}/functions/${functionName}`
+        `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/functions/${functionName}`
       )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
@@ -132,7 +154,7 @@ const action = {
     const data = newJobTemplate
     data.task.metadata.name = mlScheduleName
     data.task.metadata.project = mlProjectName
-    data.schedule = '0 0 * * *'
+    data.schedule = '0 0 1 * *'
     await mainHttpClient
       .post(`${REACT_APP_MLRUN_API_URL}/submit_job`, data)
       .then(res => {
@@ -155,7 +177,10 @@ const action = {
         tag: '',
         project: mlProjectName
       },
-      spec: {}
+      spec: {
+        priority_class_name: 'igz-workload-medium',
+        preemption_mode: 'prevent'
+      }
     }
 
     await mainHttpClient
@@ -224,6 +249,7 @@ const action = {
   createAPIArtifact: async function(
     mlProjectName,
     mlArtifactName,
+    mlArtifactTag,
     mlArtifactType,
     expectedStatusCode
   ) {
@@ -234,13 +260,33 @@ const action = {
       db_key: mlArtifactName,
       tree: uid,
       description: '',
-      kind: mlArtifactType,
+      kind: mlArtifactType === 'file' ? '' : mlArtifactType,
       project: mlProjectName,
       producer: {
         kind: 'api',
         uri: 'localhost:3000'
-      }
+      },
+      tag: mlArtifactTag
     }
+
+    if (mlArtifactType === 'model') {
+      data.feature_stats = {
+        amount_avg_2h: {
+          count: 7513,
+          mean: 37.78356759394827,
+          std: 89.9085313117771,
+          min: -52.58999999999999,
+          max: 3843.72
+        }
+      }
+      data.inputs = [
+        {
+          name: 'amount_max_2h',
+          value_type: 'float'
+        }
+      ]
+    }
+
     await mainHttpClient
       .post(
         `${REACT_APP_MLRUN_API_URL}/artifact/${mlProjectName}/${uid}/${mlArtifactName}`,

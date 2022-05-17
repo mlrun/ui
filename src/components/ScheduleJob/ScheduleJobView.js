@@ -4,12 +4,12 @@ import classnames from 'classnames'
 
 import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
-import Button from '../../common/Button/Button'
+import { Button } from 'igz-controls/components'
 
-import { SECONDARY_BUTTON } from '../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { tabs } from './scheduleJobData'
 
-import { ReactComponent as Schedule } from '../../images/clock.svg'
+import { ReactComponent as Schedule } from 'igz-controls/images/clock.svg'
 
 import './scheduleJob.scss'
 import JobsPanelCredentialsAccessKey from '../../elements/JobsPanelCredentialsAccessKey/JobsPanelCredentialsAccessKey'
@@ -21,7 +21,6 @@ const ScheduleJobView = ({
   daysOfWeek,
   handleDaysOfWeek,
   isRecurring,
-  match,
   onSchedule,
   panelDispatch,
   panelState,
@@ -67,7 +66,6 @@ const ScheduleJobView = ({
             daysOfWeek={daysOfWeek}
             handleDaysOfWeek={handleDaysOfWeek}
             isRecurring={isRecurring}
-            match={match}
             recurringDispatch={recurringDispatch}
             recurringState={recurringState}
             setDate={setDate}
@@ -109,7 +107,6 @@ ScheduleJobView.propTypes = {
   daysOfWeek: PropTypes.array.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   onSchedule: PropTypes.func.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,

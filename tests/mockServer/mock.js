@@ -32,6 +32,7 @@ import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
 
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
+import nuclioStreams from './data/nuclioStreams.json'
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -562,6 +563,14 @@ function getProjectsFeaturesEntities(req, res) {
         })
       }
     }
+
+    if (req.query['entity']) {
+      collectedArtifacts = collectedArtifacts.filter(feature => {
+        return feature.feature_set_digest.spec.entities.some(
+          item => item.name === req.query['entity']
+        )
+      })
+    }
   }
 
   let result = {}
@@ -614,8 +623,7 @@ function getArtifacts(req, res) {
     other: ['', 'table', 'link']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
-    artifact =>
-      artifact.project === '' || artifact.project === req.query['project']
+    artifact => artifact.project === req.query['project']
   )
 
   if (req.query['category']) {
@@ -965,7 +973,7 @@ function deployMLFunction(req, res) {
   baseFunc.spec.affinity = null
   baseFunc.spec.command = ''
   baseFunc.spec.disable_auto_mount = false
-  baseFunc.spec.priority_class_name = ''
+  baseFunc.spec.priority_class_name = req.body.function.spec.priority_class_name
   baseFunc.verbose = false
   baseFunc.status = null
   funcs.funcs.push(baseFunc)
@@ -1144,33 +1152,46 @@ function postSubmitJob(req, res) {
   res.send(respTemplate)
 }
 
-function postModel(req, res) {
+function postArtifact(req, res) {
   const currentDate = new Date()
-  const modelHash = makeUID(32)
+  const artifactHash = makeUID(32)
+  const artifactTag = req.body.tag || 'latest'
+  const tagObject = artifactTags.find(
+    artifact => artifact.project === req.body.project
+  )
 
-  const modelTemplate = {
-    key: 'model',
-    kind: 'model',
+  const artifactTemplate = {
+    key: req.body.key,
+    kind: req.body.kind,
     iter: 0,
     tree: req.body.tree,
-    target_path: '',
-    hash: modelHash,
+    target_path: req.body.target_path,
+    hash: artifactHash,
     size: null,
     db_key: req.body.db_key,
-    model_file: req.body.model_file,
+    description: req.body.description,
     framework: '',
     producer: {
       kind: req.body.producer.kind,
-      uri: req.body.producer.uri,
-      owner: 'admin'
+      uri: req.body.producer.uri
     },
     sources: [],
     project: req.body.project,
     updated: currentDate.toISOString(),
-    tag: 'latest'
+    tag: artifactTag
   }
 
-  artifacts.artifacts.push(modelTemplate)
+  artifacts.artifacts.push(artifactTemplate)
+
+  if (tagObject) {
+    tagObject.tags.push(artifactTag)
+  } else {
+    artifactTags.push({
+      project: req.body.project,
+      tags: [artifactTag]
+    })
+  }
+
   res.send()
 }
 
@@ -1264,7 +1285,7 @@ function getIguazioProject(req, res) {
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
         item => item.id === authID
-      ).relationships
+      )?.relationships
       if (tmp) {
         let tmpIDs = tmp.principal_users?.data.map(item => item.id)
         if (tmpIDs) {
@@ -1297,7 +1318,7 @@ function getIguazioProject(req, res) {
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
         item => item.id === authID
-      ).relationships
+      )?.relationships
       if (tmp) {
         let tmpIDs = tmp.principal_user_groups?.data.map(item => item.id)
         if (tmpIDs) {
@@ -1325,6 +1346,70 @@ function getIguazioProject(req, res) {
   })
 }
 
+function putIguazioProject(req, res) {
+  const prevOwner = req.params.id
+  const newOwner = req.body.data.relationships.owner.data.id
+  const filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
+  const keys = Object.keys(iguazioUserRelations)
+  const relationTemplate = {
+    type: 'project',
+    id: req.params.id,
+    relationships: null
+  }
+
+  for (let key of keys) {
+    iguazioUserRelations[key] = iguazioUserRelations[key].filter(
+      item => item.type === 'project' && item.id !== prevOwner
+    )
+  }
+
+  if (iguazioUserRelations[newOwner]) {
+    iguazioUserRelations[newOwner].push(relationTemplate)
+  } else {
+    iguazioUserRelations[newOwner] = [relationTemplate]
+  }
+
+  res.send({
+    data: filteredProject,
+    included: [],
+    meta: iguazioProjectAuthorizationRoles.meta
+  })
+}
+
+function postProjectMembers(req, res) {
+  const projectId = req.body.data.attributes.metadata.project_ids[0]
+  const items = req.body.data.attributes.requests
+  const projectRelations = cloneDeep(iguazioProjectsRelations[projectId])
+
+  items.forEach(item => {
+    const authRoleId = item.resource.split('/')[1]
+    const relationshipsTemplate = {
+      principal_users: item.body.data.relationships.principal_users,
+      principal_user_groups: item.body.data.relationships.principal_user_groups
+    }
+
+    if (projectRelations.some(relation => relation.id === authRoleId)) {
+      const index = projectRelations.findIndex(relation => {
+        return relation.id === authRoleId
+      })
+      projectRelations[index] = {
+        ...projectRelations[index],
+        relationships: relationshipsTemplate
+      }
+    } else {
+      projectRelations.push({
+        type: 'project_authorization_role',
+        id: authRoleId,
+        relationships: relationshipsTemplate
+      })
+    }
+  })
+
+  iguazioProjectsRelations[projectId] = projectRelations
+
+  res.send()
+}
+
 function getIguazioUserGrops(req, res) {
   console.log('requests log: ', req.method, req.url)
   console.log('debug: ', req.params, req.query, req.body)
@@ -1337,6 +1422,29 @@ function getIguazioUsers(req, res) {
   console.log('debug: ', req.params, req.query, req.body)
 
   res.send(iguazioUsers)
+}
+
+function getNuclioStreams(req, res) {
+  res.send(nuclioStreams[req.headers['x-nuclio-project-name']])
+}
+
+function getNuclioShardLags(req, res) {
+  res.send({
+    [`${req.body.containerName}${req.body.streamPath}`]: {
+      [req.body.consumerGroup]: {
+        'shard-id-0': {
+          committed: '0_123',
+          current: '0_456',
+          lag: '0_789'
+        },
+        'shard-id-1': {
+          committed: '1_123',
+          current: '1_456',
+          lag: '1_789'
+        }
+      }
+    }
+  })
 }
 
 // REQUESTS
@@ -1390,16 +1498,12 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/pipelines/:pipelineID`, getPipeline)
 
 app.get(
-  `${mlrunAPIIngress}/projects/:project/:artifact`,
-  getProjectsFeaturesEntities
-)
-app.get(
   `${mlrunAPIIngress}/projects/:project/artifact-tags`,
   getProjectsArtifactTags
 )
 app.get(`${mlrunAPIIngress}/artifacts`, getArtifacts)
 
-app.post(`${mlrunAPIIngress}/artifact/:project/:uid/:artifact`, postModel)
+app.post(`${mlrunAPIIngress}/artifact/:project/:uid/:artifact`, postArtifact)
 app.get(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   getProjectsFeatureSets
@@ -1449,11 +1553,20 @@ app.get(
   getRuntimeResources
 )
 
+app.get(
+  `${mlrunAPIIngress}/projects/:project/:artifact`,
+  getProjectsFeaturesEntities
+)
+
 app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)
 
 app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)
 
 app.get(`${nuclioApiUrl}/api/api_gateways`, getNuclioAPIGateways)
+
+app.get(`${nuclioApiUrl}/api/v3io_streams`, getNuclioStreams)
+
+app.post(`${nuclioApiUrl}/api/v3io_streams/get_shard_lags`, getNuclioShardLags)
 
 app.get(`${iguazioApiUrl}/api/projects`, getIguazioProjects)
 
@@ -1463,6 +1576,10 @@ app.get(
 )
 
 app.get(`${iguazioApiUrl}/api/projects/:id`, getIguazioProject)
+
+app.put(`${iguazioApiUrl}/api/projects/:id`, putIguazioProject)
+
+app.post(`${iguazioApiUrl}/api/async_transactions`, postProjectMembers)
 
 app.get(`${iguazioApiUrl}/api/user_groups`, getIguazioUserGrops)
 

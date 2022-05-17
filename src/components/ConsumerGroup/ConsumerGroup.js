@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageHeader from '../../elements/PageHeader/PageHeader'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Search from '../../common/Search/Search'
 import Table from '../Table/Table'
+import { RoundedIcon } from 'igz-controls/components'
 
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
@@ -16,11 +16,10 @@ import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../layout/Content/content.util'
 
-import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const ConsumerGroup = ({
   fetchNuclioV3ioStreamShardLags,
-  match,
   nuclioStore,
   resetV3ioStreamShardLagsError,
   setNotification
@@ -31,16 +30,17 @@ const ConsumerGroup = ({
     setFilteredV3ioStreamShardLags
   ] = useState([])
   const [filterByName, setFilterByName] = useState('')
+  const params = useParams()
 
   useEffect(() => {
     const v3ioStream = nuclioStore.v3ioStreams.parsedData.find(
-      stream => stream.consumerGroup === match.params.consumerGroupName
+      stream => stream.consumerGroup === params.consumerGroupName
     )
 
     if (v3ioStream) {
       setCurrentV3ioStream(v3ioStream)
     }
-  }, [match.params.consumerGroupName, nuclioStore.v3ioStreams])
+  }, [params.consumerGroupName, nuclioStore.v3ioStreams])
 
   const refreshConsumerGroup = useCallback(
     currentV3ioStream => {
@@ -50,11 +50,11 @@ const ConsumerGroup = ({
         streamPath: currentV3ioStream.streamPath
       }
       fetchNuclioV3ioStreamShardLags(
-        match.params.projectName,
+        params.projectName,
         fetchV3ioStreamBody
       )
     },
-    [fetchNuclioV3ioStreamShardLags, match.params.projectName]
+    [fetchNuclioV3ioStreamShardLags, params.projectName]
   )
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const ConsumerGroup = ({
   useEffect(() => {
     setFilteredV3ioStreamShardLags(
       nuclioStore.v3ioStreamShardLags.parsedData.filter(shardLag =>
-        filterByName ? shardLag.shardLagId.includes(filterByName) : true
+        filterByName ? shardLag.shardLagId.toLowerCase().includes(filterByName) : true
       )
     )
   }, [nuclioStore.v3ioStreamShardLags.parsedData, filterByName])
@@ -89,16 +89,16 @@ const ConsumerGroup = ({
     setNotification
   ])
 
-  const pageData = useCallback(generatePageData(), [])
+  const pageData = useMemo(() => generatePageData(), [])
 
   return (
     <>
       <PageHeader
         title={
-          match.params.consumerGroupName ?? currentV3ioStream.consumerGroup
+          params.consumerGroupName ?? currentV3ioStream.consumerGroup
         }
         description={currentV3ioStream.streamName}
-        backLink={`/projects/${match.params.projectName}/monitor/consumer-groups`}
+        backLink={`/projects/${params.projectName}/monitor/consumer-groups`}
       />
       <div className="page-actions">
         <Search
@@ -117,7 +117,6 @@ const ConsumerGroup = ({
       <Table
         actionsMenu={[]}
         content={filteredV3ioStreamShardLags}
-        match={match}
         pageData={pageData}
       />
       {!nuclioStore.v3ioStreams.loading &&
@@ -129,10 +128,6 @@ const ConsumerGroup = ({
         nuclioStore.v3ioStreamShardLags.loading) && <Loader />}
     </>
   )
-}
-
-ConsumerGroup.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

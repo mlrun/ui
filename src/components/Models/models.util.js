@@ -14,7 +14,6 @@ import {
 } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
 import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
@@ -29,18 +28,13 @@ export const pageDataInitialState = {
   tabs: []
 }
 
-export const validTabs = [
-  MODELS_TAB,
-  MODEL_ENDPOINTS_TAB,
-  REAL_TIME_PIPELINES_TAB
-]
+export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB]
 
 export const modelsInfoHeaders = [
   {
     label: 'Hash',
     id: 'hash',
-    tip:
-      'Represents hash of the data. when the data changes the hash would change'
+    tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
@@ -53,8 +47,7 @@ export const modelsInfoHeaders = [
   {
     label: 'UID',
     id: 'tree',
-    tip:
-      'Unique identifier representing the job or the workflow that generated the artifact'
+    tip: 'Unique identifier representing the job or the workflow that generated the artifact'
   },
   { label: 'Updated', id: 'updated' },
   { label: 'Framework', id: 'framework' },
@@ -126,10 +119,7 @@ export const modelEndpointsFilters = [
   {
     type: SORT_BY,
     label: 'Sort By:',
-    options: [
-      { label: 'Function', id: 'function' },
-      ...filterSelectOptions.sortBy
-    ]
+    options: [{ label: 'Function', id: 'function' }, ...filterSelectOptions.sortBy]
   }
 ]
 export const realTimePipelinesFilters = [{ type: NAME_FILTER, label: 'Name:' }]
@@ -294,7 +284,7 @@ export const handleFetchData = async (
     result = await fetchModels(project, filters)
 
     if (result) {
-      data.content = generateArtifacts(filterArtifacts(result))
+      data.content = generateArtifacts(filterArtifacts(result), MODELS_TAB)
       data.originalContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
@@ -312,9 +302,7 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = parseFunctions(
-        result.filter(
-          func => func.kind === 'serving' && func.metadata.tag?.length
-        )
+        result.filter(func => func.kind === 'serving' && func.metadata.tag?.length)
       )
       data.originalContent = result
     }
@@ -378,8 +366,8 @@ export const generateModelsActionMenu = handleDeployModel => {
 }
 
 export const checkForSelectedModel = (
-  history,
-  match,
+  navigate,
+  params,
   models,
   modelName,
   setSelectedModel,
@@ -390,51 +378,37 @@ export const checkForSelectedModel = (
   const searchItem = searchArtifactItem(artifacts, modelName, tag, iter)
 
   if (!searchItem) {
-    history.replace(
-      `/projects/${match.params.projectName}/models/${match.params.pageTab}`
-    )
+    navigate(`/projects/${params.projectName}/models/${params.pageTab}`, { replace: true })
   } else {
-    searchItem.URI = generateUri(searchItem, MODELS_TAB)
     setSelectedModel({ item: searchItem })
   }
 }
 
 export const checkForSelectedModelEndpoint = (
   fetchModelEndpointWithAnalysis,
-  history,
-  match,
+  navigate,
+  params,
   modelEndpoints,
   modelEndpointUid,
   setSelectedModel
 ) => {
-  const searchItem = modelEndpoints.find(
-    item => item.metadata?.uid === modelEndpointUid
-  )
+  const searchItem = modelEndpoints.find(item => item.metadata?.uid === modelEndpointUid)
   if (!searchItem) {
-    history.replace(
-      `/projects/${match.params.projectName}/models/${match.params.pageTab}`
-    )
+    navigate(`/projects/${params.projectName}/models/${params.pageTab}`, { replace: true })
   } else {
-    searchItem.name = searchItem.spec.model.split(':')[0]
-
-    fetchModelEndpointWithAnalysis(
-      match.params.projectName,
-      searchItem.metadata.uid
-    )
+    fetchModelEndpointWithAnalysis(params.projectName, searchItem.metadata.uid)
     setSelectedModel({ item: searchItem })
   }
 }
 
 export const checkForSelectedRealTimePipelines = (
-  history,
+  navigate,
   pipelineId,
-  match,
+  params,
   realTimePipelines
 ) => {
   if (!realTimePipelines.find(item => item.hash === pipelineId)) {
-    history.replace(
-      `/projects/${match.params.projectName}/models/${match.params.pageTab}`
-    )
+    navigate(`/projects/${params.projectName}/models/${params.pageTab}`, { replace: true })
   }
 }
 

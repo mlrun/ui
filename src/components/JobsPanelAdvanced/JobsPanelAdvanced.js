@@ -13,7 +13,6 @@ import {
 import { panelActions } from '../JobsPanel/panelReducer'
 
 const JobsPanelAdvanced = ({
-  match,
   panelDispatch,
   panelState,
   secretSources,
@@ -144,7 +143,6 @@ const JobsPanelAdvanced = ({
       handleEditItems={handleEditItems}
       handleResetForm={handleResetForm}
       isStagingMode={isStagingMode}
-      match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
       setValidation={setValidation}
@@ -154,7 +152,6 @@ const JobsPanelAdvanced = ({
 }
 
 JobsPanelAdvanced.propTypes = {
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   secretSources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

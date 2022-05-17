@@ -21,7 +21,6 @@ const ScheduleJob = ({
   defaultCron,
   handleEditJob,
   handleRunJob,
-  match,
   panelDispatch,
   panelState,
   setOpenScheduleJob,
@@ -181,7 +180,6 @@ const ScheduleJob = ({
       daysOfWeek={daysOfWeek}
       handleDaysOfWeek={handleDaysOfWeek}
       isRecurring={isRecurring}
-      match={match}
       onSchedule={onSchedule}
       panelDispatch={panelDispatch}
       panelState={panelState}
@@ -208,7 +206,6 @@ ScheduleJob.propTypes = {
   defaultCron: PropTypes.string,
   handleEditJob: PropTypes.func,
   handleRunJob: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired

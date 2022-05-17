@@ -14,22 +14,20 @@ import {
   FEATURE_VECTORS_TAB,
   LABELS_FILTER,
   NAME_FILTER,
-  SECONDARY_BUTTON,
-  TAG_FILTER,
-  STATUS_CODE_FORBIDDEN
+  TAG_FILTER
 } from '../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureSets } from '../../utils/parseFeatureSets'
-import { generateUri } from '../../utils/resources'
-import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 import {
   getFeatureIdentifier,
   getFeatureSetIdentifier,
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const pageDataInitialState = {
   actionsMenu: [],
@@ -275,10 +273,7 @@ export const generatePageData = (
     data.noDataMessage =
       'No features yet. Go to "Feature Sets" tab to create your first feature set.'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    data.actionsMenu = generateActionsMenu(
-      FEATURE_VECTORS_TAB,
-      onDeleteFeatureVector
-    )
+    data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB, onDeleteFeatureVector)
     data.hidePageActionMenu = !isStagingMode
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
@@ -356,40 +351,28 @@ export const navigateToDetailsPane = (
   features,
   entities,
   featureVectors,
-  history,
-  match,
+  navigate,
+  params,
   setSelectedItem
 ) => {
-  const { name, tag } = match.params
+  const { name, tag } = params
   let content = []
 
-  if (
-    match.params.pageTab === FEATURE_SETS_TAB &&
-    featureSets.allData.length > 0
-  ) {
+  if (params.pageTab === FEATURE_SETS_TAB && featureSets.allData.length > 0) {
     content = featureSets.selectedRowData.content[name] || featureSets.allData
-  } else if (match.params.pageTab === FEATURES_TAB && features?.length > 0) {
+  } else if (params.pageTab === FEATURES_TAB && features?.length > 0) {
     content = [...features, ...entities]
-  } else if (
-    match.params.pageTab === FEATURE_VECTORS_TAB &&
-    featureVectors.allData.length > 0
-  ) {
-    content =
-      featureVectors.selectedRowData.content[name] || featureVectors.allData
+  } else if (params.pageTab === FEATURE_VECTORS_TAB && featureVectors.allData.length > 0) {
+    content = featureVectors.selectedRowData.content[name] || featureVectors.allData
   }
 
-  if (match.params.name && content.length !== 0) {
-    const selectedItem = content.find(contentItem => {
+  if (params.name && content.length !== 0) {
+    const selectedItem = [...content].find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
-      if (
-        [FEATURES_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
-          match.params.pageTab
-        )
-      ) {
+      if ([FEATURES_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(params.pageTab)) {
         return (
-          contentItem[searchKey] === name &&
-          (contentItem.tag === tag || contentItem.uid === tag)
+          contentItem[searchKey] === name && (contentItem.tag === tag || contentItem.uid === tag)
         )
       } else {
         return contentItem[searchKey] === name
@@ -397,21 +380,8 @@ export const navigateToDetailsPane = (
     })
 
     if (!selectedItem) {
-      history.replace(
-        `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
-      )
+      navigate(`/projects/${params.projectName}/feature-store/${params.pageTab}`, { replace: true })
     } else {
-      if (
-        match.params.pageTab === FEATURE_SETS_TAB ||
-        match.params.pageTab === FEATURE_VECTORS_TAB
-      ) {
-        selectedItem.usage_example = generateUsageSnippets(
-          match.params.pageTab,
-          selectedItem
-        )
-      }
-
-      selectedItem.URI = generateUri(selectedItem, match.params.pageTab)
       setSelectedItem({ item: selectedItem })
     }
   } else {
@@ -422,7 +392,7 @@ export const navigateToDetailsPane = (
 export const handleApplyDetailsChanges = (
   changes,
   fetchData,
-  match,
+  params,
   selectedItem,
   setNotification,
   updateFeatureStoreData,
@@ -455,11 +425,11 @@ export const handleApplyDetailsChanges = (
   }
 
   return updateFeatureStoreData(
-    match.params.projectName,
-    match.params.name,
+    params.projectName,
+    params.name,
     selectedItem.item.tag,
     data,
-    match.params.pageTab
+    params.pageTab
   )
     .then(response => {
       return fetchData(filters).then(() => {
@@ -477,7 +447,7 @@ export const handleApplyDetailsChanges = (
         status: error.response?.status || 400,
         id: Math.random(),
         message:
-          error.response?.status === STATUS_CODE_FORBIDDEN
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
             ? 'Permission denied.'
             : 'Failed to update.',
         retry: handleApplyDetailsChanges
@@ -485,23 +455,21 @@ export const handleApplyDetailsChanges = (
     })
 }
 
-export const checkTabIsValid = (history, match, selectedItem) => {
+export const checkTabIsValid = (navigate, params, selectedItem) => {
   if (
-    (match.params.tab === DETAILS_METADATA_TAB &&
+    (params.tab === DETAILS_METADATA_TAB &&
       !selectedItem.item?.schema &&
       !selectedItem.item?.entities) ||
-    (match.params.tab === DETAILS_ANALYSIS_TAB &&
-      ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab) &&
+    (params.tab === DETAILS_ANALYSIS_TAB &&
+      ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(params.pageTab) &&
       !selectedItem.item?.extra_data) ||
-    (match.params.tab === DETAILS_STATISTICS_TAB &&
-      ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab) &&
+    (params.tab === DETAILS_STATISTICS_TAB &&
+      ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(params.pageTab) &&
       !selectedItem.item?.stats)
   ) {
-    return history.push(
-      `/projects/${match.params.projectName}/feature-store/${
-        match.params.pageTab
-      }/${match.params.name}${
-        match.params.tag ? `/${match.params.tag}` : ''
+    return navigate(
+      `/projects/${params.projectName}/feature-store/${params.pageTab}/${params.name}${
+        params.tag ? `/${params.tag}` : ''
       }/${DETAILS_OVERVIEW_TAB}`
     )
   }
@@ -613,12 +581,7 @@ export const fetchFeatureRowData = async (fetchData, feature, setPageData) => {
   }
 }
 
-export const fetchFeatureSetRowData = async (
-  fetchFeatureSet,
-  featureSet,
-  setPageData,
-  tag
-) => {
+export const fetchFeatureSetRowData = async (fetchFeatureSet, featureSet, setPageData, tag) => {
   const featureSetIdentifier = getFeatureSetIdentifier(featureSet)
 
   setPageData(state => ({
@@ -632,11 +595,7 @@ export const fetchFeatureSetRowData = async (
     }
   }))
 
-  const result = await fetchFeatureSet(
-    featureSet.project,
-    featureSet.name,
-    tag
-  ).catch(error => {
+  const result = await fetchFeatureSet(featureSet.project, featureSet.name, tag).catch(error => {
     setPageData(state => ({
       ...state,
       selectedRowData: {
@@ -683,23 +642,21 @@ export const fetchFeatureVectorRowData = async (
     }
   }))
 
-  const result = await fetchFeatureVector(
-    featureVector.project,
-    featureVector.name,
-    tag
-  ).catch(error => {
-    setPageData(state => ({
-      ...state,
-      selectedRowData: {
-        ...state.selectedRowData,
-        [featureVectorIdentifier]: {
-          ...state.selectedRowData[featureVectorIdentifier],
-          error,
-          loading: false
+  const result = await fetchFeatureVector(featureVector.project, featureVector.name, tag).catch(
+    error => {
+      setPageData(state => ({
+        ...state,
+        selectedRowData: {
+          ...state.selectedRowData,
+          [featureVectorIdentifier]: {
+            ...state.selectedRowData[featureVectorIdentifier],
+            error,
+            loading: false
+          }
         }
-      }
-    }))
-  })
+      }))
+    }
+  )
 
   if (result?.length > 0) {
     setPageData(state => ({

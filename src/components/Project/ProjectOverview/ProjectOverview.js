@@ -1,15 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
-import Tooltip from '../../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
@@ -19,20 +18,20 @@ import { handlePath, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
 import { getDateAndTimeByFormat } from '../../../utils/'
 
-import { ReactComponent as ArrowIcon } from '../../../images/arrow.svg'
+import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
 import './ProjectOverview.scss'
 
-const ProjectOverview = ({ fetchProject, history, match, project }) => {
+const ProjectOverview = ({ fetchProject, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
   const [modal, setModal] = useState({ isOpen: false, name: '' })
-
-  const { projectName } = match.params
+  const params = useParams()
+  const navigate = useNavigate()
 
   const cards = useMemo(() => {
-    return projectName ? getInitialCards(projectName) : {}
-  }, [projectName])
+    return params.projectName ? getInitialCards(params.projectName) : {}
+  }, [params])
 
   const renderPopupContent = () => {
     switch (modal.name) {
@@ -40,7 +39,6 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
         return (
           <RegisterArtifactPopup
             artifactKind="dataset"
-            match={match}
             refresh={() => {}}
             setIsPopupOpen={handleModalToggle}
             title="Register dataset"
@@ -50,7 +48,6 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
         return (
           <RegisterArtifactPopup
             artifactKind="artifact"
-            match={match}
             refresh={() => {}}
             setIsPopupOpen={handleModalToggle}
             title="Register artifact"
@@ -71,7 +68,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     })
   }
 
-  const handlePathExecution = handlePath(history, handleModalToggle)
+  const handlePathExecution = handlePath(navigate, handleModalToggle)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
@@ -81,10 +78,10 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
   }
 
   useEffect(() => {
-    fetchProject(match.params.projectName).catch(error =>
-      handleFetchProjectError(error, history, setConfirmData)
+    fetchProject(params.projectName).catch(error =>
+      handleFetchProjectError(error, navigate, setConfirmData)
     )
-  }, [fetchProject, history, match.params.projectName])
+  }, [fetchProject, navigate, params.projectName])
 
   if (project.loading) {
     return <Loader />
@@ -216,10 +213,6 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
       </div>
     </div>
   )
-}
-
-ProjectOverview.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 const actionCreators = {

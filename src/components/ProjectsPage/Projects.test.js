@@ -184,7 +184,7 @@ jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
 
 jest.spyOn(mainHttpClient, 'post').mockImplementation(() => Promise.resolve())
 
-jest.mock('../../images/close.svg', () => ({
+jest.mock('igz-controls/images/close.svg', () => ({
   ReactComponent: 'close-icon'
 }))
 

@@ -653,7 +653,7 @@ const parametersRuntimeConfigurationTable = {
 
 // common components
 const commonCrossCloseButton = By.css(
-  'div.new-item-side-panel button.round-icon-cp__circle'
+  'div.new-item-side-panel .panel-title__btn_close'
 )
 
 const commonVolumePathsTableTypeDropdown = dropdownComponent(
@@ -663,6 +663,24 @@ const commonVolumePathsTableTypeDropdown = dropdownComponent(
     '.select__body .select__item',
     '.data-ellipsis .data-ellipsis'
   )
+)
+
+const commonPodsPriorityDropdown = dropdownComponent(
+  generateDropdownGroup(
+    '.new-item-side-panel .accordion__container:nth-of-type(3) .pods-priority',
+    '.select__value',
+    '.select__body .select__item',
+    '.data-ellipsis .data-ellipsis'
+  )
+)
+
+const commonPodsTolerationDropdown = dropdownComponent(
+    generateDropdownGroup(
+        '.new-item-side-panel .accordion__container:nth-of-type(3) .pods-toleration',
+        '.select__value',
+        '.select__body .select__item',
+        '.data-ellipsis .data-ellipsis'
+    )
 )
 
 function resourcesTableCommonInput(accordionIndx, rowIndx, inputIndx) {
@@ -821,6 +839,7 @@ module.exports = {
           true
         )
       ),
+      Online_Path: By.css('.target-store__item:nth-of-type(1) .online-path'),
       Online_Path_Input: inputGroup(
         generateInputGroup(
           '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(1) .input-wrapper',
@@ -829,6 +848,10 @@ module.exports = {
           true
         )
       ),
+      Edit_Online_Path_Button: By.css('.target-store__item:nth-of-type(1) .target-store__path-actions .round-icon-cp'),
+      Apply_Online_Path_Button: By.css('.target-store__item:nth-of-type(1) .target-store__path-actions.editable .round-icon-cp:nth-of-type(1)'),
+      Discard_Online_Path_Button: By.css('.target-store__item:nth-of-type(1) .target-store__path-actions.editable .round-icon-cp:nth-of-type(2)'),
+      Online_Path_Annotation: By.css('.target-store__item:nth-of-type(1) .annotation'),
       // Offline group
       Offline_Checkbox: checkboxComponent(
         generateCheckboxGroup(
@@ -845,6 +868,7 @@ module.exports = {
           true
         )
       ),
+      Offline_Path: By.css('.target-store__item:nth-of-type(2) .offline-path'),
       Offline_Path_Input: inputGroup(
         generateInputGroup(
           '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .input-wrapper',
@@ -853,6 +877,10 @@ module.exports = {
           true
         )
       ),
+      Edit_Offline_Path_Button: By.css('.target-store__item:nth-of-type(2) .target-store__path-actions .round-icon-cp'),
+      Apply_Offline_Path_Button: By.css('.target-store__item:nth-of-type(2) .target-store__path-actions.editable .round-icon-cp:nth-of-type(1)'),
+      Discard_Offline_Path_Button: By.css('.target-store__item:nth-of-type(2) .target-store__path-actions.editable .round-icon-cp:nth-of-type(2)'),
+      Offline_Path_Annotation: By.css('.target-store__item:nth-of-type(2) .annotation'),
       Offline_Partition_Checkbox: checkboxComponent(
         generateCheckboxGroup(
           '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .checkbox',
@@ -1212,6 +1240,15 @@ module.exports = {
       Collapse_Button: By.css(
         '.new-item-side-panel__body .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon'
       ),
+      Pods_Priority_Dropdown: commonPodsPriorityDropdown,
+      Pods_Toleration_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.new-item-side-panel .accordion__container:nth-of-type(3) .volume-toleration',
+              '.select__value',
+              '.select__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3)',
@@ -1248,9 +1285,9 @@ module.exports = {
       Add_New_Row_Button: commonAddNewRowButton,
       Delete_New_Row_Button: commonDeleteNewRowButton,
       Volume_Paths_Table: commonTable(volumePathsTable),
-      Memory_Unit_Dropdown: dropdownComponent(
+      Memory_Request_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .memory .select',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .memory .resources__input:nth-of-type(1) .select',
           '.select__value',
           '.select__body .select__item',
           '.data-ellipsis .data-ellipsis'
@@ -1258,7 +1295,7 @@ module.exports = {
       ),
       Memory_Request_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .memory .range-dense:nth-of-type(2)',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .memory .resources__input:nth-of-type(1) .range-dense',
           {
             inc_btn: '.range__buttons button[class*=increase]',
             dec_btn: '.range__buttons button[class*=decrease]'
@@ -1268,18 +1305,26 @@ module.exports = {
           true
         )
       ),
+      Memory_Limit_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .memory .resources__input:nth-of-type(2) .select',
+              '.select__value',
+              '.select__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
       Memory_Limit_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .memory .range-dense:nth-of-type(3)',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .memory .resources__input:nth-of-type(2) .range-dense',
           false,
           true,
           false,
           true
         )
       ),
-      CPU_Unit_Dropdown: dropdownComponent(
+      CPU_Request_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .cpu .select',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .cpu .resources__input:nth-of-type(1) .select',
           '.select__value',
           '.select__body .select__item',
           '.data-ellipsis .data-ellipsis'
@@ -1287,16 +1332,24 @@ module.exports = {
       ),
       CPU_Request_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .cpu .range-dense:nth-of-type(2)',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .cpu .resources__input:nth-of-type(1) .range-dense',
           false,
           true,
           false,
           true
         )
       ),
+      CPU_Limit_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .cpu .resources__input:nth-of-type(2) .select',
+              '.select__value',
+              '.select__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
       CPU_Limit_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .cpu .range-dense:nth-of-type(3)',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .cpu .resources__input:nth-of-type(2) .range-dense',
           false,
           true,
           false,
@@ -1305,7 +1358,7 @@ module.exports = {
       ),
       GPU_Limit_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .section-gpu .range-dense',
+          '.new-item-side-panel__body .accordion__container:nth-of-type(3) .resources__inputs .section-gpu .range-dense',
           false,
           true,
           false,
@@ -1385,10 +1438,10 @@ module.exports = {
         )
       ),
       Add_Row_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .btn-add'
+        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .btn-add:nth-of-type(1)'
       ),
       Discard_Row_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .variables-table__btn:nth-of-type(2)'
+        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .btn-add:nth-of-type(2)'
       )
     },
     Access_Key_Checkbox: commonAccessKeyCheckbox,
@@ -1509,6 +1562,8 @@ module.exports = {
       Collapse_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(3) .new-item-side-panel__expand-icon'
       ),
+      Pods_Priority_Dropdown: commonPodsPriorityDropdown,
+      Pods_Toleration_Dropdown: commonPodsTolerationDropdown,
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(3)',
@@ -1554,9 +1609,9 @@ module.exports = {
       Add_New_Row_Button: commonAddNewRowButton,
       Delete_New_Row_Button: commonDeleteNewRowButton,
       // Number input groups
-      Memory_Unit_Dropdown: dropdownComponent(
+      Memory_Request_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .select',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .resources__input:nth-of-type(1) .select',
           '.select__value',
           '.select__body .select__item',
           '.data-ellipsis .data-ellipsis'
@@ -1564,7 +1619,7 @@ module.exports = {
       ),
       Memory_Request_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .range-dense:nth-of-type(2)',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .resources__input:nth-of-type(1) .range-dense',
           {
             inc_btn: '.range__buttons button[class*=increase]',
             dec_btn: '.range__buttons button[class*=decrease]'
@@ -1574,18 +1629,26 @@ module.exports = {
           true
         )
       ),
+      Memory_Limit_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .resources__input:nth-of-type(2) .select',
+              '.select__value',
+              '.select__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
       Memory_Limit_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .range-dense:nth-of-type(3)',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .resources__input:nth-of-type(2) .range-dense',
           false,
           true,
           false,
           true
         )
       ),
-      CPU_Unit_Dropdown: dropdownComponent(
+      CPU_Request_Dropdown: dropdownComponent(
         generateDropdownGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .select',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .resources__input:nth-of-type(1) .select',
           '.select__value',
           '.select__body .select__item',
           '.data-ellipsis .data-ellipsis'
@@ -1593,16 +1656,24 @@ module.exports = {
       ),
       CPU_Request_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .range-dense:nth-of-type(2)',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .resources__input:nth-of-type(1) .range-dense',
           false,
           true,
           false,
           true
         )
       ),
+      CPU_Limit_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .resources__input:nth-of-type(2) .select',
+              '.select__value',
+              '.select__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
       CPU_Limit_Number_Input: numberInputGroup(
         generateNumberInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .range-dense:nth-of-type(3)',
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .resources__input:nth-of-type(2) .range-dense',
           false,
           true,
           false,

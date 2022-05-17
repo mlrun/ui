@@ -1,20 +1,21 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Tip from '../../common/Tip/Tip'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './detailsMenu.scss'
 
-const DetailsMenu = ({ detailsMenu, match, onClick }) => {
+const DetailsMenu = ({ detailsMenu, onClick, params }) => {
   const [arrowsAreHidden, setArrowsAreHidden] = useState(true)
   const [scrolledWidth, setScrolledWidth] = useState(0)
   const [rightArrowDisabled, setRightArrowDisabled] = useState(false)
   const tabsWrapperRef = useRef()
   const tabsRef = useRef()
+  const location = useLocation()
   const menuOffsetHalfWidth = 2
   const tabOffset = 1.5
 
@@ -39,20 +40,16 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
         tabsRef.current?.scrollWidth <
         tabsWrapperRef.current?.offsetWidth * tabOffset + scrolledWidth
       ) {
-        scrollWidth =
-          tabsRef.current?.scrollWidth - tabsWrapperRef.current?.offsetWidth
+        scrollWidth = tabsRef.current?.scrollWidth - tabsWrapperRef.current?.offsetWidth
 
         setRightArrowDisabled(true)
       } else {
-        scrollWidth =
-          scrolledWidth +
-          tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth
+        scrollWidth = scrolledWidth + tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth
       }
     } else {
       scrollWidth = Math.max(
         0,
-        scrolledWidth -
-          tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth
+        scrolledWidth - tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth
       )
 
       setRightArrowDisabled(false)
@@ -62,15 +59,12 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
   }
 
   const handleHideArrows = useCallback(() => {
-    const scrollIsHidden =
-      tabsRef.current?.offsetWidth === tabsRef.current?.scrollWidth
+    const scrollIsHidden = tabsRef.current?.offsetWidth === tabsRef.current?.scrollWidth
 
     setArrowsAreHidden(scrollIsHidden)
 
     if (rightArrowDisabled) {
-      setScrolledWidth(
-        tabsRef.current?.scrollWidth - tabsWrapperRef.current?.offsetWidth
-      )
+      setScrolledWidth(tabsRef.current?.scrollWidth - tabsWrapperRef.current?.offsetWidth)
     }
 
     if (scrollIsHidden) {
@@ -80,9 +74,7 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
   }, [rightArrowDisabled, tabsRef, tabsWrapperRef])
 
   const moveToSelectedTab = useCallback(() => {
-    const selectedTab = document.querySelector(
-      `[data-tab='${match.params.tab}']`
-    )
+    const selectedTab = document.querySelector(`[data-tab='${params.tab}']`)
     const centeredTabPosition =
       selectedTab?.offsetLeft -
       tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth +
@@ -97,15 +89,13 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
         selectedTab?.offsetLeft +
         selectedTab?.offsetWidth
     ) {
-      setScrolledWidth(
-        tabsRef.current?.scrollWidth - tabsWrapperRef.current?.offsetWidth
-      )
+      setScrolledWidth(tabsRef.current?.scrollWidth - tabsWrapperRef.current?.offsetWidth)
       setRightArrowDisabled(true)
     } else {
       setScrolledWidth(centeredTabPosition)
       setRightArrowDisabled(false)
     }
-  }, [match.params.tab])
+  }, [params.tab])
 
   useEffect(() => {
     window.addEventListener('resize', handleHideArrows)
@@ -144,7 +134,7 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
           }}
         >
           {detailsMenu.map(tab => {
-            const tabLink = match.url?.replace(/^$|([^/]+$)/, tab.id)
+            const tabLink = location.pathname?.replace(/^$|([^/]+$)/, tab.id)
 
             return (
               !tab.hidden && (
@@ -153,13 +143,11 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
                     data-tab={tab.id}
                     className={classnames(
                       'details-menu__tab',
-                      match.params.tab === tab.id && 'details-menu__tab_active'
+                      params.tab === tab.id && 'details-menu__tab_active'
                     )}
                   >
                     {tab.label}
-                    {tab.tip && (
-                      <Tip className="details-menu__tab-tip" text={tab.tip} />
-                    )}
+                    {tab.tip && <Tip className="details-menu__tab-tip" text={tab.tip} />}
                   </li>
                 </Link>
               )
@@ -167,10 +155,7 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
           })}
         </div>
       </div>
-      <Arrow
-        className={rightArrowClassNames}
-        onClick={() => scrollTabs(true)}
-      />
+      <Arrow className={rightArrowClassNames} onClick={() => scrollTabs(true)} />
     </ul>
   )
 }
@@ -181,8 +166,8 @@ DetailsMenu.defaultProps = {
 
 DetailsMenu.propTypes = {
   detailsMenu: PropTypes.array.isRequired,
-  match: PropTypes.shape({}).isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  params: PropTypes.shape({}).isRequired
 }
 
 export default DetailsMenu

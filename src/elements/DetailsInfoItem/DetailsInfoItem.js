@@ -5,16 +5,15 @@ import { isEmpty } from 'lodash'
 import Prism from 'prismjs'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import Input from '../../common/Input/Input'
 import { CHIP_OPTIONS } from '../../types'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
-import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
 const DetailsInfoItem = React.forwardRef(
   (
@@ -32,8 +31,8 @@ const DetailsInfoItem = React.forwardRef(
       isFieldInEditMode,
       item,
       link,
-      match,
       onClick,
+      params,
       setChangesData,
       state,
       target_path
@@ -151,7 +150,7 @@ const DetailsInfoItem = React.forwardRef(
         >
           <Link
             className="link"
-            to={`/projects/${match.params.projectName}/functions/${funcStr}/overview`}
+            to={`/projects/${params.projectName}/functions/${funcStr}/overview`}
           >
             {funcStr}
           </Link>
@@ -186,9 +185,10 @@ const DetailsInfoItem = React.forwardRef(
           </Tooltip>
         )
       }
-
       return <div className="details-item__data">{info}</div>
     }
+
+    return null
   }
 )
 
@@ -208,8 +208,8 @@ DetailsInfoItem.defaultProps = {
   isFieldInEditMode: false,
   item: {},
   link: '',
-  match: {},
   onClick: null,
+  params: {},
   setChangesData: () => {},
   state: '',
   target_path: ''
@@ -232,8 +232,8 @@ DetailsInfoItem.propTypes = {
   isFieldInEditMode: PropTypes.bool,
   item: PropTypes.shape({}),
   link: PropTypes.string,
-  match: PropTypes.shape({}),
   onClick: PropTypes.func,
+  params: PropTypes.shape({}),
   setChangesData: PropTypes.func,
   state: PropTypes.string,
   target_path: PropTypes.string

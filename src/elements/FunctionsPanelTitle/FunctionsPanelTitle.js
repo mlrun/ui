@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as CloseIcon } from '../../images/close.svg'
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
 import './functinsPanelTitle.scss'
 

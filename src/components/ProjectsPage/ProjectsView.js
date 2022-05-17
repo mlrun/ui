@@ -2,24 +2,24 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import ContentMenu from '../../elements/ContentMenu/ContentMenu'
-import Loader from '../../common/Loader/Loader'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
+import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import Notification from '../../common/Notification/Notification'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
-import NoData from '../../common/NoData/NoData'
-import YamlModal from '../../common/YamlModal/YamlModal'
-import Notification from '../../common/Notification/Notification'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
-import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import YamlModal from '../../common/YamlModal/YamlModal'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
-import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
-import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 import './projects.scss'
 
@@ -36,7 +36,6 @@ const ProjectsView = ({
   handleCreateProject,
   isDescendingOrder,
   isNameValid,
-  match,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -51,7 +50,8 @@ const ProjectsView = ({
   setNewProjectName,
   setSelectedProjectsState,
   setSortProjectId,
-  sortProjectId
+  sortProjectId,
+  urlParams
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -91,7 +91,7 @@ const ProjectsView = ({
         />
       )}
       <div className="projects__header">
-        <Breadcrumbs match={match} />
+        <Breadcrumbs />
       </div>
       <div className="projects__wrapper">
         <div className="projects-content-header">
@@ -99,11 +99,10 @@ const ProjectsView = ({
             <div className="projects-content-header-item">
               <ContentMenu
                 activeTab={selectedProjectsState}
-                match={match}
                 screen="active"
-                tabs={projectsStates}
-                onClick={setSelectedProjectsState}
-              />
+              tabs={projectsStates}
+              onClick={setSelectedProjectsState}
+            />
 
               <Sort
                 isDescendingOrder={isDescendingOrder}
@@ -146,8 +145,7 @@ const ProjectsView = ({
             {filterByName.length > 0 &&
             (filterMatches.length === 0 || filteredProjects.length === 0) ? (
               <NoData />
-            ) : selectedProjectsState === 'archived' &&
-              filteredProjects.length === 0 ? (
+            ) : selectedProjectsState === 'archived' && filteredProjects.length === 0 ? (
               <div className="no-filtered-data">No archived projects.</div>
             ) : (
               filteredProjects.map(project => {
@@ -169,10 +167,7 @@ const ProjectsView = ({
         )}
       </div>
       {convertedYaml.length > 0 && (
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={convertToYaml}
-        />
+        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={convertToYaml} />
       )}
       <Notification />
     </div>
@@ -195,7 +190,6 @@ ProjectsView.propTypes = {
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
@@ -208,7 +202,8 @@ ProjectsView.propTypes = {
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
   setSortProjectId: PropTypes.func.isRequired,
-  sortProjectId: PropTypes.string.isRequired
+  sortProjectId: PropTypes.string.isRequired,
+  urlParams: PropTypes.shape({}).isRequired
 }
 
 export default ProjectsView

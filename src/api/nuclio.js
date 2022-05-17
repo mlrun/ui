@@ -1,6 +1,6 @@
 import { nuclioHttpClient } from '../httpClient'
 
-export default {
+const nuclioApi = {
   getApiGateways: project => {
     return nuclioHttpClient.get('/api_gateways', {
       headers: {
@@ -28,3 +28,5 @@ export default {
     return nuclioHttpClient.get('/functions', config)
   }
 }
+
+export default nuclioApi

@@ -1,20 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
-import Select from '../../common/Select/Select'
-import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
-import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import Input from '../../common/Input/Input'
+import Select from '../../common/Select/Select'
 import TagFilter from '../../common/TagFilter/TagFilter'
+import { Button, RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
-import { ReactComponent as CollapseIcon } from '../../images/collapse.svg'
-import { ReactComponent as ExpandIcon } from '../../images/expand.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
+import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
+import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 
 import {
   DATE_RANGE_TIME_FILTER,
@@ -43,11 +42,12 @@ import './filterMenu.scss'
 
 const FilterMenu = ({
   actionButton,
+  cancelRequest,
+  changes,
   expand,
   filters,
   filtersStore,
   handleExpandAll,
-  match,
   onChange,
   page,
   projectStore,
@@ -60,7 +60,8 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
-  const history = useHistory()
+  const navigate = useNavigate()
+  const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
 
   useEffect(() => {
@@ -71,13 +72,7 @@ const FilterMenu = ({
       setEntities('')
       setTagOptions(tagFilterOptions)
     }
-  }, [
-    removeFilters,
-    match.params.pageTab,
-    match.params.projectName,
-    page,
-    match.params.jobName
-  ])
+  }, [removeFilters, params.pageTab, params.projectName, page, params.jobName])
 
   useEffect(() => {
     setLabels(filtersStore.labels)
@@ -85,11 +80,7 @@ const FilterMenu = ({
   }, [filtersStore.labels, filtersStore.name])
 
   useEffect(() => {
-    if (
-      filters.find(
-        filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER
-      )
-    ) {
+    if (filters.find(filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER)) {
       if (filtersStore.tagOptions.length > 0) {
         setTagOptions(() => {
           const defaultOptionsTags = tagFilterOptions.map(option => option.id)
@@ -120,35 +111,36 @@ const FilterMenu = ({
       filters.some(filter => filter.type === PROJECT_FILTER)
     ) {
       setFilterProjectOptions(
-        generateProjectsList(
-          projectStore.projectsNames.data,
-          match.params.projectName
-        )
+        generateProjectsList(projectStore.projectsNames.data, params.projectName)
       )
       setFilters({
-        project: match.params.projectName
+        project: params.projectName
       })
     }
   }, [
     filters,
     filtersStore.projectOptions.length,
-    match.params.projectName,
+    params.projectName,
     projectStore.projectsNames.data,
     setFilterProjectOptions,
     setFilters
   ])
 
   const applyChanges = (data, isRefreshed) => {
-    if ((match.params.jobId || match.params.name) && !isRefreshed) {
-      history.push(
-        `/projects/${match.params.projectName}/${page.toLowerCase()}${
-          match.params.pageTab ? `/${match.params.pageTab}` : ''
-        }`
-      )
-    }
+    if (isRefreshed && changes.counter > 0) {
+      cancelRequest('cancel')
+    } else {
+      if ((params.jobId || params.name) && !isRefreshed) {
+        navigate(
+          `/projects/${params.projectName}/${page.toLowerCase()}${
+            params.pageTab ? `/${params.pageTab}` : ''
+          }`
+        )
+      }
 
-    handleExpandAll(true)
-    onChange(data)
+      handleExpandAll(true)
+      onChange(data)
+    }
   }
 
   const handleSelectOption = (item, filter) => {
@@ -241,8 +233,7 @@ const FilterMenu = ({
   }
 
   const handleShowUntagged = showUntagged => {
-    const showUntaggedValue =
-      filtersStore.showUntagged === showUntagged ? '' : showUntagged
+    const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
     setFilters({
       showUntagged: showUntaggedValue
     })
@@ -264,7 +255,6 @@ const FilterMenu = ({
                   <TagFilter
                     key={filter.type}
                     label={filter.label}
-                    match={match}
                     onChange={item => handleSelectOption(item, filter)}
                     page={page}
                     tagFilterOptions={tagOptions}
@@ -358,17 +348,14 @@ const FilterMenu = ({
                 return (
                   <Select
                     density="dense"
-                    className={
-                      filter.type === PERIOD_FILTER ? 'period-filter' : ''
-                    }
+                    className={filter.type === PERIOD_FILTER ? 'period-filter' : ''}
                     label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
                     key={filter.type}
                     onClick={item => handleSelectOption(item, filter)}
                     options={filter.options || selectOptions[filter.type]}
                     selectedId={
                       (filter.type === STATUS_FILTER && filtersStore.state) ||
-                      (filter.type === GROUP_BY_FILTER &&
-                        filtersStore.groupBy) ||
+                      (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
                       (filter.type === SORT_BY && filtersStore.sortBy)
                     }
                   />
@@ -426,7 +413,8 @@ FilterMenu.propTypes = {
 }
 
 export default connect(
-  ({ filtersStore, projectStore }) => ({
+  ({ detailsStore, filtersStore, projectStore }) => ({
+    changes: detailsStore.changes,
     filtersStore,
     projectStore
   }),

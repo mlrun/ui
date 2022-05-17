@@ -1,6 +1,7 @@
 import React, { useReducer, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { isNil } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import { handleFinishEdit } from '../Details/details.util'
 
@@ -20,7 +21,6 @@ const DetailsInfo = React.forwardRef(
     {
       changes,
       content,
-      match,
       pageData,
       selectedItem,
       setChangesData,
@@ -32,6 +32,7 @@ const DetailsInfo = React.forwardRef(
       detailsInfoReducer,
       initialState
     )
+    const params = useParams()
     const editItemRef = React.createRef()
 
     const onApplyChanges = useCallback(
@@ -54,7 +55,7 @@ const DetailsInfo = React.forwardRef(
           type: detailsInfoActions.RESET_EDIT_MODE
         })
       }
-    }, [detailsInfoDispatch, match.params.name])
+    }, [detailsInfoDispatch, params.name])
 
     useEffect(() => {
       window.addEventListener('click', onApplyChanges)
@@ -122,8 +123,8 @@ const DetailsInfo = React.forwardRef(
           )
         }
         handleInfoItemClick={handleInfoItemClick}
-        match={match}
         pageData={pageData}
+        params={params}
         ref={editItemRef}
         selectedItem={selectedItem}
         setChangesData={setChangesData}
@@ -136,7 +137,6 @@ const DetailsInfo = React.forwardRef(
 DetailsInfo.propTypes = {
   changes: PropTypes.shape({}).isRequired,
   content: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }

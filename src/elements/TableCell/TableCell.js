@@ -1,18 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
-import TableTypeCell from '../TableTypeCell/TableTypeCell'
 import TableProducerCell from '../TableProducerCell/TableProducerCell'
+import TableTypeCell from '../TableTypeCell/TableTypeCell'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as ArtifactView } from '../../images/eye.svg'
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
-import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
+import { ReactComponent as ArtifactView } from 'igz-controls/images/eye.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
 import artifactAction from '../../actions/artifacts'
 import { truncateUid } from '../../utils'
@@ -25,10 +25,10 @@ const TableCell = ({
   handleExpandRow,
   item,
   link,
-  match,
   selectItem,
   selectedItem
 }) => {
+  const params = useParams()
   const dispatch = useDispatch()
 
   if (link && data.type !== 'hidden') {
@@ -138,7 +138,7 @@ const TableCell = ({
   } else if (data.type === 'buttonCopyURI') {
     return (
       <div className={`table-body__cell ${data.class}`}>
-        <button onClick={() => data.actionHandler(item, match.params.pageTab)}>
+        <button onClick={() => data.actionHandler(item, params.pageTab)}>
           <Tooltip template={<TextTooltipTemplate text="Copy URI" />}>
             <Copy />
           </Tooltip>
@@ -192,7 +192,6 @@ TableCell.propTypes = {
   handleExpandRow: PropTypes.func,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.bool]),
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  match: PropTypes.shape({}),
   selectItem: PropTypes.func,
   selectedItem: PropTypes.shape({})
 }

@@ -29,7 +29,7 @@ When('create {string} MLRun Project with code {int}', async function(
   status
 ) {
   await createAPIMLProject(nameProject, status)
-  await this.driver.sleep(2000)
+  await this.driver.sleep(1000)
 })
 
 Then('remove {string} MLRun Project with code {int}', async function(
@@ -79,23 +79,22 @@ Then(
 )
 
 Then(
-  'create {string} Model in {string} project with code {int}',
-  async function(nameArtifact, nameProject, status) {
-    await createAPIArtifact(nameProject, nameArtifact, 'model', status)
+  'create {string} Model with {string} tag in {string} project with code {int}',
+  async function(nameArtifact, tag, nameProject, status) {
+    await createAPIArtifact(nameProject, nameArtifact, tag, 'model', status)
   }
 )
 
-Then('create {string} File in {string} project with code {int}', async function(
-  nameArtifact,
-  nameProject,
-  status
-) {
-  await createAPIArtifact(nameProject, nameArtifact, 'file', status)
-})
+Then(
+  'create {string} File with {string} tag in {string} project with code {int}',
+  async function(nameArtifact, tag, nameProject, status) {
+    await createAPIArtifact(nameProject, nameArtifact, tag, 'file', status)
+  }
+)
 
 Then(
-  'create {string} Dataset in {string} project with code {int}',
-  async function(nameArtifact, nameProject, status) {
-    await createAPIArtifact(nameProject, nameArtifact, 'dataset', status)
+  'create {string} Dataset with {string} tag in {string} project with code {int}',
+  async function(nameArtifact, tag, nameProject, status) {
+    await createAPIArtifact(nameProject, nameArtifact, tag, 'dataset', status)
   }
 )

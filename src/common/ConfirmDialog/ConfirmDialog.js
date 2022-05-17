@@ -2,8 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Button from '../Button/Button'
-import PopUpDialog from '../PopUpDialog/PopUpDialog'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import { CONFIRM_DIALOG_BUTTON } from '../../types'
 

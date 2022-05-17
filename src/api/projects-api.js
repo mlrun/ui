@@ -1,6 +1,6 @@
 import { mainHttpClient } from '../httpClient'
 
-export default {
+const projectsApi = {
   changeProjectState: (project, state) =>
     mainHttpClient.patch(`/projects/${project}`, {
       spec: { desired_state: state }
@@ -80,3 +80,5 @@ export default {
   updateProject: (project, data) =>
     mainHttpClient.patch(`/projects/${project}`, data)
 }
+
+export default projectsApi

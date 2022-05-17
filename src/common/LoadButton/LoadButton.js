@@ -6,7 +6,7 @@ import {
   PRIMARY_BUTTON,
   SECONDARY_BUTTON,
   TERTIARY_BUTTON
-} from '../../constants'
+} from 'igz-controls/constants'
 
 import './loadButton.scss'
 

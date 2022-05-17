@@ -159,7 +159,7 @@ const initialState = {
   }
 }
 
-export default (state = initialState, { type, payload }) => {
+const projectReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case ADD_PROJECT_LABEL:
       return {
@@ -945,3 +945,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default projectReducer

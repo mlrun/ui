@@ -1,57 +1,22 @@
 .resources {
   .volume-mount {
     width: 150px;
-    margin-bottom: 20px;
+    margin-bottom: 35px;
   }
 
   .volumes {
-    margin-bottom: 45px;
-  }
-
-  .memory,
-  .cpu {
-    margin-right: 20px;
-
-    .panel-section__body {
-      align-items: center;
-    }
-
-    .select__value {
-      min-width: 120px;
-    }
-  }
-
-  &__inputs {
-    display: flex;
-
-    .range {
-      max-width: 90px;
-      margin-right: 5px;
-
-      .input {
-        width: 100%;
-
-        &-wrapper {
-          width: 100%;
-        }
-      }
-    }
-
-    .select {
-      flex: 1 1;
-      max-width: 120px;
-      margin-right: 5px;
-    }
+    margin-bottom: 35px;
   }
 
   .pods {
+    margin-bottom: 35px;
+
     .panel-section__title {
       margin-bottom: 10px;
     }
 
     .select {
       width: 150px;
-      margin-bottom: 20px;
     }
 
     &-priority {

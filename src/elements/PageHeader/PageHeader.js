@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as Back } from '../../images/back-arrow.svg'
+import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 
 import './pageHeader.scss'
 

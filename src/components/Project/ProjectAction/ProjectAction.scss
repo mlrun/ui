@@ -1,20 +1,29 @@
-@import '../../../scss/colors';
+@import '~igz-controls/scss/colors';
 
 .project-overview-actions {
   display: inline-flex;
   flex-flow: row nowrap;
   align-items: flex-start;
   justify-content: flex-start;
+  height: 152px;
+  max-height: 256px;
   margin: 0;
   padding: 0;
   overflow: hidden;
   list-style-type: none;
+  transition: height 0.5s ease-in-out;
+
+  &_hidden {
+    height: 0;
+  }
 
   &__item {
     display: inline-flex;
     flex-flow: column nowrap;
     align-items: flex-start;
     justify-content: center;
+    flex: 1 0 0;
+    max-width: 28%;
     margin: 0 0.5em 1.5em;
     text-align: center;
 

@@ -1,6 +1,6 @@
 import { mainHttpClient } from '../httpClient'
 
-export default {
+const detailsApi = {
   getJobPods: project =>
     mainHttpClient.get(`/projects/${project}/runtime-resources?group-by=job`),
   getModelEndpoint: (project, uid) =>
@@ -12,3 +12,5 @@ export default {
       `/projects/${project}/feature-vectors/${name}/references/${reference}`
     )
 }
+
+export default detailsApi

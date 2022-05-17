@@ -4,7 +4,7 @@ import classnames from 'classnames'
 
 import ChipForm from '../ChipForm/ChipForm'
 
-import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import { CHIP, CHIP_OPTIONS } from '../../types'
