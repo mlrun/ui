@@ -19,7 +19,6 @@ import './deployModelPopUp.scss'
 
 const DeployModelPopUp = ({
   buildFunction,
-  closePopUp,
   fetchFunctions,
   isOpen,
   model,
@@ -98,11 +97,6 @@ const DeployModelPopUp = ({
     )
   })
 
-  const handleClosePopup = () => {
-    onResolve && onResolve()
-    closePopUp && closePopUp()
-  }
-
   const deployModel = () => {
     const servingFunction = functionList.find(
       func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
@@ -135,7 +129,7 @@ const DeployModelPopUp = ({
         })
       })
 
-    handleClosePopup()
+    onResolve()
   }
 
   const onSelectFunction = functionName => {
@@ -160,10 +154,10 @@ const DeployModelPopUp = ({
 
   const stepsConfig = [
     {
-      getActions: ({ FormState }) => [
+      getActions: ({ FormState, handleOnClose }) => [
         {
           label: 'Cancel',
-          onClick: handleClosePopup,
+          onClick: () => handleOnClose(FormState.dirty),
           variant: TERTIARY_BUTTON
         },
         {
@@ -179,6 +173,7 @@ const DeployModelPopUp = ({
   return (
     <Wizard
       className="deploy-model"
+      confirmClose
       id="deployModal"
       initialValues={{}}
       isOpen={isOpen}
