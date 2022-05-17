@@ -64,7 +64,7 @@ const MonitorJobs = ({
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
 
-      fetchData(params.projectName, filters, false)
+      fetchData(params.projectName, filters, params.jobName ?? false)
         .then(jobs => {
           const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
 
