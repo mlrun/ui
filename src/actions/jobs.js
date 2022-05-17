@@ -268,7 +268,7 @@ const jobsActions = {
               ? 'You are not permitted to run new job.'
               : error.response.status === CONFLICT_ERROR_STATUS_CODE
               ? 'This job is already scheduled'
-              : error.message
+              : 'Unable to create new job.'
           )
         )
 
