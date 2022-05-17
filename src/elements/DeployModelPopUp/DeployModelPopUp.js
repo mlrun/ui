@@ -158,11 +158,10 @@ const DeployModelPopUp = ({
     setClassArgumentsList(newClassArguments)
   }
 
-  const wizardConfig = [
+  const stepsConfig = [
     {
-      setActions: actions => [
+      getActions: ({ FormState }) => [
         {
-          icon: null,
           label: 'Cancel',
           onClick: handleClosePopup,
           variant: TERTIARY_BUTTON
@@ -170,7 +169,7 @@ const DeployModelPopUp = ({
         {
           disabled: [selectedFunctionName, selectedTag, modelName, className].includes(''),
           label: 'Deploy',
-          onClick: actions.handleSubmit,
+          onClick: FormState.handleSubmit,
           variant: SECONDARY_BUTTON
         }
       ]
@@ -187,7 +186,7 @@ const DeployModelPopUp = ({
       onSubmit={deployModel}
       size={MODAL_SM}
       title="Deploy model"
-      wizardConfig={wizardConfig}
+      stepsConfig={stepsConfig}
     >
       <Wizard.Step>
         <div className="deploy-model__row">
