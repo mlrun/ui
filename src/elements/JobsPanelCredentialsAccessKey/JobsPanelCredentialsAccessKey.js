@@ -40,6 +40,7 @@ const JobsPanelCredentialsAccessKey = ({
     <PanelCredentialsAccessKey
       className={accessKeyClassNames}
       credentialsAccessKey={panelState.access_key}
+      isPanelEditMode={panelState.editMode}
       required={panelState.access_key !== PANEL_DEFAULT_ACCESS_KEY}
       setCredentialsAccessKey={handleSetCredentialsAccessKey}
       setValidation={setValidation}
