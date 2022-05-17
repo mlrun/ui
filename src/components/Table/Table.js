@@ -7,18 +7,23 @@ import { useParams } from 'react-router-dom'
 import TableView from './TableView'
 
 import { useMode } from '../../hooks/mode.hook'
-import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
-import { GROUP_BY_NAME, GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../constants'
+import {
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  MONITOR_JOBS_TAB,
+  SCHEDULE_TAB
+} from '../../constants'
 
 import './table.scss'
 
 const Table = ({
   actionsMenu,
   applyDetailsChanges,
+  children,
   content,
   filtersStore,
   getCloseDetailsLink,
@@ -28,7 +33,8 @@ const Table = ({
   handleSelectItem,
   pageData,
   retryRequest,
-  selectedItem
+  selectedItem,
+  tab
 }) => {
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
@@ -42,10 +48,6 @@ const Table = ({
   const { isStagingMode } = useMode()
   const params = useParams()
   const tableStore = useSelector(store => store.tableStore)
-
-  const workflows = useSelector(state => {
-    return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
-  })
 
   useEffect(() => {
     const calculatePanelHeight = () => {
@@ -96,19 +98,6 @@ const Table = ({
         groupWorkflowItems: [],
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
-    } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
-      setTableContent(state => ({
-        ...state,
-        content: generatedTableContent,
-        groupLatestItem: [],
-        groupWorkflowItems: createJobsContent(
-          workflows,
-          !isEveryObjectValueEmpty(selectedItem),
-          params,
-          isStagingMode,
-          true
-        )
-      }))
     } else if (filtersStore.groupBy === GROUP_BY_NONE) {
       setTableContent(state => ({
         ...state,
@@ -126,8 +115,7 @@ const Table = ({
     pageData.mainRowItemsCount,
     pageData.page,
     selectedItem,
-    tableStore.isTablePanelOpen,
-    workflows
+    tableStore.isTablePanelOpen
   ])
 
   return (
@@ -152,25 +140,27 @@ const Table = ({
       params={params}
       retryRequest={retryRequest}
       selectedItem={selectedItem}
-      tableContent={tableContent.content}
+      tableContent={
+        tab === MONITOR_JOBS_TAB || tab === SCHEDULE_TAB ? content : tableContent.content
+      }
       tableContentRef={tableContentRef}
       tableHeadRef={tableHeadRef}
       tablePanelRef={tablePanelRef}
-      workflows={workflows}
-    />
+    >
+      {children}
+    </TableView>
   )
 }
 
 Table.defaultProps = {
   applyDetailsChanges: () => {},
   getCloseDetailsLink: null,
-  groupLatestJob: [],
   groupedContent: {},
   handleCancel: () => {},
   handleExpandRow: () => {},
   handleSelectItem: () => {},
-  retryRequest: () => {},
-  selectedItem: {}
+  selectedItem: {},
+  tab: ''
 }
 
 Table.propTypes = {
@@ -184,7 +174,8 @@ Table.propTypes = {
   handleSelectItem: PropTypes.func,
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
-  selectedItem: PropTypes.shape({})
+  selectedItem: PropTypes.shape({}),
+  tab: PropTypes.string
 }
 
 export default connect(
