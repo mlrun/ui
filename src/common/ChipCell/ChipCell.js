@@ -71,7 +71,7 @@ const ChipCell = ({
 
   const handleResize = useCallback(() => {
     if (!isEditMode && !isEveryObjectValueEmpty(chipsSizes)) {
-      const parentSize = chipsCellRef.current.getBoundingClientRect().width
+      const parentSize = chipsCellRef.current?.getBoundingClientRect().width
       let maxLength = 0
       let chipIndex = 0
       const padding = 65
