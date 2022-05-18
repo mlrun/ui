@@ -143,7 +143,7 @@
     "file-loader": "^6.2.0",
     "geckodriver": "^1.22.2",
     "html-webpack-plugin": "^5.5.0",
-    "http-proxy-middleware": "^2.0.3",
+    "http-proxy-middleware": "^2.0.6",
     "jest": "^27.4.3",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-resolve": "^27.4.2",

@@ -115,20 +115,23 @@ const ProjectOverview = ({ fetchProject, project }) => {
 
   const stepsConfig = [
     {
-      actions: () => [],
       id: 'step1',
       label: 'Step 1'
     },
     {
-      actions: actions => [
+      getActions: ({ FormState, goToNextStep, goToPreviousStep }) => [
         {
-          icon: null,
           label: 'Custom',
-          onClick: actions.previousStep
+          onClick: goToPreviousStep
         },
         {
           label: 'Next',
-          onClick: actions.handleSubmit,
+          onClick: goToNextStep,
+          variant: 'secondary'
+        },
+        {
+          label: 'Custom 2',
+          onClick: goToNextStep,
           variant: 'secondary'
         }
       ],
@@ -136,15 +139,15 @@ const ProjectOverview = ({ fetchProject, project }) => {
       label: 'Step 2'
     },
     {
-      actions: actions => [
+      getActions: ({ FormState, handleOnClose }) => [
         {
           label: 'Cancel',
-          onClick: actions.handleOnReject,
+          onClick: handleOnClose,
           variant: 'danger'
         },
         {
           label: 'Submit form',
-          onClick: actions.handleSubmit,
+          onClick: FormState.handleSubmit,
           variant: 'secondary'
         }
       ],
@@ -160,6 +163,8 @@ const ProjectOverview = ({ fetchProject, project }) => {
       id="deployModal"
       initialValues={{}}
       onSubmit={submitForm}
+      size="md"
+      title="Test modal"
       stepsConfig={stepsConfig}
       {...modalProps}
     >
