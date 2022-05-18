@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
-import { Button, PopUpDialog } from 'igz-controls/components'
+import { Button, PopUpDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { getValidationRules } from '../../utils/validationService'
 import { generateKeyValues, parseKeyValues } from '../../utils'
@@ -22,6 +22,7 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
   const [featureVectorLabels, setFeatureVectorLabels] = useState(
     parseKeyValues(featureVectorData.labels)
   )
+  const [tagTooltipIsHidden, setTagTooltipIsHidden] = useState(false)
   const [validation, setValidation] = useState({
     isNameValid: true,
     isTagValid: true
@@ -47,18 +48,28 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
           wrapperClassName="vector-name-wrapper"
           validationRules={getValidationRules('feature.vector.name')}
         />
-        <Input
-          className="vector-tag"
-          floatingLabel
-          invalid={!validation.isTagValid}
-          label="Tag"
-          onChange={setFeatureVectorTag}
-          required
-          setInvalid={value => setValidation(state => ({ ...state, isTagValid: value }))}
-          type="text"
-          validationRules={getValidationRules('common.tag')}
-          value={featureVectorTag}
-        />
+        <Tooltip
+          className="vector-tag-wrapper"
+          hidden={tagTooltipIsHidden || featureVectorTag.length === 0}
+          template={<TextTooltipTemplate text={featureVectorTag} />}
+        >
+          <Input
+            className="vector-tag"
+            floatingLabel
+            invalid={!validation.isTagValid}
+            label="Tag"
+            onBlur={() => setTagTooltipIsHidden(false)}
+            onChange={value => {
+              setTagTooltipIsHidden(true)
+              setFeatureVectorTag(value)
+            }}
+            required
+            setInvalid={value => setValidation(state => ({ ...state, isTagValid: value }))}
+            type="text"
+            validationRules={getValidationRules('common.tag')}
+            value={featureVectorTag}
+          />
+        </Tooltip>
       </div>
       <div className="new-feature-vector__row new-feature-vector__description-row">
         <TextArea
