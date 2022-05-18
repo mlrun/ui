@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
-import { Button, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import { getValidationRules } from '../../utils/validationService'
 import { generateKeyValues, parseKeyValues } from '../../utils'
@@ -14,8 +14,6 @@ import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import './createFeatureVectorPopUp.scss'
 
 const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVectorData }) => {
-  const [tagTooltipIsHidden, setTagTooltipIsHidden] = useState(false)
-  const [nameIsValid, setNameIsValid] = useState(true)
   const [featureVectorName, setFeatureVectorName] = useState(featureVectorData.name)
   const [featureVectorTag, setFeatureVectorTag] = useState(featureVectorData.tag || TAG_LATEST)
   const [featureVectorDescription, setFeatureVectorDescription] = useState(
@@ -24,6 +22,10 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
   const [featureVectorLabels, setFeatureVectorLabels] = useState(
     parseKeyValues(featureVectorData.labels)
   )
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isTagValid: true
+  })
 
   return (
     <PopUpDialog
@@ -35,36 +37,28 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
         <Input
           className="vector-name"
           floatingLabel
-          invalid={!nameIsValid}
+          invalid={!validation.isNameValid}
           label="Vector name"
           onChange={setFeatureVectorName}
           required
-          setInvalid={value => setNameIsValid(value)}
+          setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
           type="text"
           value={featureVectorName}
           wrapperClassName="vector-name-wrapper"
           validationRules={getValidationRules('feature.vector.name')}
         />
-        <Tooltip
-          className="vector-tag-wrapper"
-          hidden={tagTooltipIsHidden || featureVectorTag.length === 0}
-          template={<TextTooltipTemplate text={featureVectorTag} />}
-        >
-          <Input
-            className="vector-tag"
-            floatingLabel
-            label="Tag"
-            onBlur={() => setTagTooltipIsHidden(false)}
-            onChange={value => {
-              setTagTooltipIsHidden(true)
-              setFeatureVectorTag(value)
-            }}
-            required
-            type="text"
-            validationRules={getValidationRules('common.tag')}
-            value={featureVectorTag}
-          />
-        </Tooltip>
+        <Input
+          className="vector-tag"
+          floatingLabel
+          invalid={!validation.isTagValid}
+          label="Tag"
+          onChange={setFeatureVectorTag}
+          required
+          setInvalid={value => setValidation(state => ({ ...state, isTagValid: value }))}
+          type="text"
+          validationRules={getValidationRules('common.tag')}
+          value={featureVectorTag}
+        />
       </div>
       <div className="new-feature-vector__row new-feature-vector__description-row">
         <TextArea
@@ -98,7 +92,12 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
         <Button
           variant={PRIMARY_BUTTON}
           label="Create"
-          disabled={!featureVectorName.trim() || !featureVectorTag.trim() || !nameIsValid}
+          disabled={
+            !featureVectorName.trim() ||
+            !featureVectorTag.trim() ||
+            !validation.isNameValid ||
+            !validation.isTagValid
+          }
           onClick={() =>
             createFeatureVector({
               name: featureVectorName,
