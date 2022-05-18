@@ -2,12 +2,18 @@ import React from 'react'
 
 import {
   DATE_RANGE_TIME_FILTER,
+  FUNCTIONS_PAGE,
   JOBS_PAGE,
   NAME_FILTER,
   PERIOD_FILTER,
   STATUS_FILTER
 } from '../../../constants'
 import { detailsMenu, infoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import {
+  detailsMenu as functionsDetailsMenu,
+  infoHeaders as functionsInfoHeaders
+} from '../../FunctionsPage/functions.util'
+import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
@@ -20,16 +26,26 @@ export const generateFilters = () => [
   { type: DATE_RANGE_TIME_FILTER, label: 'Created at:' }
 ]
 
-export const generatePageData = (fetchJobLogs, removeJobLogs) => {
+export const generatePageData = (
+  selectedFunction,
+  handleFetchFunctionLogs,
+  fetchJobLogs,
+  handleRemoveFunctionLogs,
+  removeJobLogs
+) => {
   return {
     page: JOBS_PAGE,
     details: {
-      menu: detailsMenu,
-      type: JOBS_PAGE,
-      infoHeaders,
-      refreshLogs: fetchJobLogs,
-      removeLogs: removeJobLogs,
-      withLogsRefreshBtn: true
+      type: !isEveryObjectValueEmpty(selectedFunction) ? FUNCTIONS_PAGE : JOBS_PAGE,
+      menu: !isEveryObjectValueEmpty(selectedFunction) ? functionsDetailsMenu : detailsMenu,
+      infoHeaders: !isEveryObjectValueEmpty(selectedFunction) ? functionsInfoHeaders : infoHeaders,
+      refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
+        ? handleFetchFunctionLogs
+        : fetchJobLogs,
+      removeLogs: !isEveryObjectValueEmpty(selectedFunction)
+        ? handleRemoveFunctionLogs
+        : removeJobLogs,
+      withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
     }
   }
 }
