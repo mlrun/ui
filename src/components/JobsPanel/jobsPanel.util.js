@@ -243,6 +243,7 @@ export const generateTableData = (
   let dataInputs = []
   const currentLimits = {
     ...stateLimits,
+    ...limits,
     cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
     cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
     memory: limits?.memory ?? defaultResources.limits?.memory ?? '',
@@ -463,6 +464,7 @@ export const generateTableDataFromDefaultData = (
     type: panelActions.SET_LIMITS,
     payload: {
       ...panelLimits,
+      ...limits,
       cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
       cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
       memory: limits?.memory ?? defaultResources.limits?.memory ?? '',

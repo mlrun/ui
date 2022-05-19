@@ -276,8 +276,8 @@ const Functions = ({
   }
 
   const createFunctionSuccess = () => {
-    setFunctionsPanelIsOpen(false)
     setEditableItem(null)
+    setFunctionsPanelIsOpen(false)
     removeNewFunction()
 
     return refreshFunctions().then(() => {

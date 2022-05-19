@@ -19,6 +19,7 @@ import './panelResourcesUnits.scss'
 
 const PanelResourcesUnits = ({
   data,
+  gpuType,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
   setCpuValue,
@@ -135,7 +136,7 @@ const PanelResourcesUnits = ({
           labelType="labelAtTop"
           min={1}
           onChange={setGpuValue}
-          value={data.limits['nvidia.com/gpu']}
+          value={data.limits[gpuType] || ''}
         />
       </PanelSection>
     </div>
@@ -144,6 +145,7 @@ const PanelResourcesUnits = ({
 
 PanelResourcesUnits.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  gpuType: PropTypes.string.isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   setCpuValue: PropTypes.func.isRequired,

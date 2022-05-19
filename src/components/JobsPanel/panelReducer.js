@@ -16,7 +16,6 @@ export const initialState = {
     cpuUnit: '',
     memory: '',
     memoryUnit: '',
-    'nvidia.com/gpu': ''
   },
   outputPath: JOB_DEFAULT_OUTPUT_PATH,
   previousPanelData: {
@@ -72,7 +71,6 @@ export const panelActions = {
   SET_LIMITS_CPU_UNIT: 'SET_LIMITS_CPU_UNIT',
   SET_LIMITS_MEMORY: 'SET_LIMITS_MEMORY',
   SET_LIMITS_MEMORY_UNIT: 'SET_LIMITS_MEMORY_UNIT',
-  SET_LIMITS_NVIDIA_GPU: 'SET_LIMITS_NVIDIA_GPU',
   SET_OUTPUT_PATH: 'SET_OUTPUT_PATH',
   SET_PREEMPTION_MODE: 'SET_PREEMPTION_MODE',
   SET_PREVIOUS_PANEL_DATA: 'SET_PREVIOUS_PANEL_DATA',
@@ -228,14 +226,6 @@ export const panelReducer = (state, { type, payload }) => {
         limits: {
           ...state.limits,
           memoryUnit: payload
-        }
-      }
-    case panelActions.SET_LIMITS_NVIDIA_GPU:
-      return {
-        ...state,
-        limits: {
-          ...state.limits,
-          'nvidia.com/gpu': payload
         }
       }
     case panelActions.SET_OUTPUT_PATH:

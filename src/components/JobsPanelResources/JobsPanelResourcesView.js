@@ -11,6 +11,7 @@ import PanelResourcesUnits from '../../elements/PanelResourcesUnits/PanelResourc
 
 const JobsPanelResourcesView = ({
   data,
+  gpuType,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
   handleSelectPreemptionMode,
@@ -54,13 +55,11 @@ const JobsPanelResourcesView = ({
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
       >
-        <JobsPanelVolumes
-          panelDispatch={panelDispatch}
-          panelState={panelState}
-        />
+        <JobsPanelVolumes panelDispatch={panelDispatch} panelState={panelState} />
       </PanelSection>
       <PanelResourcesUnits
         data={data}
+        gpuType={gpuType}
         handleSelectCpuUnit={handleSelectCpuUnit}
         handleSelectMemoryUnit={handleSelectMemoryUnit}
         setCpuValue={setCpuValue}
@@ -69,10 +68,7 @@ const JobsPanelResourcesView = ({
         validation={validation}
       />
       <PanelSection title="Node selector">
-        <JobsPanelNodeSelector
-          panelDispatch={panelDispatch}
-          panelState={panelState}
-        />
+        <JobsPanelNodeSelector panelDispatch={panelDispatch} panelState={panelState} />
       </PanelSection>
     </div>
   )
@@ -80,6 +76,7 @@ const JobsPanelResourcesView = ({
 
 JobsPanelResourcesView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  gpuType: PropTypes.string.isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   handleSelectPreemptionMode: PropTypes.func.isRequired,
@@ -90,8 +87,7 @@ JobsPanelResourcesView.propTypes = {
   setMemoryValue: PropTypes.func.isRequired,
   setPriorityClassName: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired,
-  validFunctionPriorityClassNames: PropTypes.arrayOf(PropTypes.object)
-    .isRequired
+  validFunctionPriorityClassNames: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default JobsPanelResourcesView
