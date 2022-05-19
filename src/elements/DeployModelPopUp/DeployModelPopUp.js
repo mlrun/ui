@@ -157,7 +157,7 @@ const DeployModelPopUp = ({
       getActions: ({ FormState, handleOnClose }) => [
         {
           label: 'Cancel',
-          onClick: () => handleOnClose(FormState.dirty),
+          onClick: handleOnClose,
           variant: TERTIARY_BUTTON
         },
         {
@@ -174,16 +174,14 @@ const DeployModelPopUp = ({
     <Wizard
       className="deploy-model"
       confirmClose
-      id="deployModal"
-      initialValues={{}}
-      isOpen={isOpen}
-      onResolve={onResolve}
-      onSubmit={deployModel}
+      isWizardOpen={isOpen}
+      onWizardResolve={onResolve}
+      onWizardSubmit={deployModel}
       size={MODAL_SM}
       title="Deploy model"
       stepsConfig={stepsConfig}
     >
-      <Wizard.Step>
+      <>
         <div className="deploy-model__row">
           <Select
             className="select-router"
@@ -237,7 +235,7 @@ const DeployModelPopUp = ({
           editItem={handleEditClassArgument}
           withEditMode
         />
-      </Wizard.Step>
+      </>
     </Wizard>
   )
 }
