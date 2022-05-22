@@ -8,6 +8,7 @@ import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../common/Loader/Loader'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import { actionsMenuHeader, tabs } from './jobs.util'
 import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
@@ -16,7 +17,7 @@ import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
 
 export const JobsContext = React.createContext({})
 
-const Jobs = ({ functionsStore, jobsStore, projectStore, workflowsStore }) => {
+const Jobs = ({ artifactsStore, functionsStore, jobsStore, projectStore, workflowsStore }) => {
   const [confirmData, setConfirmData] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
@@ -57,7 +58,11 @@ const Jobs = ({ functionsStore, jobsStore, projectStore, workflowsStore }) => {
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
-          <PageActionsMenu actionsMenuHeader={actionsMenuHeader} onClick={handleActionsMenuClick} />
+          <PageActionsMenu
+            actionsMenuHeader={actionsMenuHeader}
+            onClick={handleActionsMenuClick}
+            showActionsMenu={true}
+          />
         </div>
         <div className={contentClassName}>
           <ContentMenu
@@ -99,12 +104,16 @@ const Jobs = ({ functionsStore, jobsStore, projectStore, workflowsStore }) => {
           message={confirmData.message}
         />
       )}
+      {artifactsStore?.preview?.isPreview && (
+        <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+      )}
     </>
   )
 }
 
 export default connect(
-  ({ functionsStore, jobsStore, projectStore, workflowsStore }) => ({
+  ({ artifactsStore, functionsStore, jobsStore, projectStore, workflowsStore }) => ({
+    artifactsStore,
     functionsStore,
     jobsStore,
     projectStore,
