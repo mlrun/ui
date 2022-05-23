@@ -451,7 +451,15 @@ const FeatureStore = ({
         return { ...state }
       })
     }
-  }, [navigate, selectedItem.item, selectedItem.entities, params, selectedItem])
+  }, [
+    navigate,
+    selectedItem.item,
+    selectedItem.entities,
+    params,
+    selectedItem,
+    filtersStore.name,
+    filtersStore.labels
+  ])
 
   useEffect(() => setContent([]), [filtersStore.tag])
 

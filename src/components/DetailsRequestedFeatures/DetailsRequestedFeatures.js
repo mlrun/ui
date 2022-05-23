@@ -32,11 +32,13 @@ const DetailsRequestedFeatures = ({
   const [editableItemIndex, setEditableItemIndex] = useState(null)
   const [labelFeatureIsEditable, setLabelFeatureIsEditable] = useState(false)
   const [isAliasNameValid, setIsAliasNameValid] = useState(true)
+  const [generatedFeaturesArray, setGeneratedFeaturesArray] = useState([])
 
   useEffect(() => {
     return () => {
       setEditableItemIndex(null)
       setLabelFeatureIsEditable(false)
+      setGeneratedFeaturesArray([])
     }
   }, [selectedItem])
 
@@ -76,15 +78,14 @@ const DetailsRequestedFeatures = ({
   ])
 
   const handleAliasChange = (index, alias) => {
-    const generatedFeaturesArray = generateChangedArray(index, alias)
-
-    handleEditInput(generatedFeaturesArray, 'features')
+    setGeneratedFeaturesArray(generateChangedArray(index, alias))
   }
 
   const handleItemClick = (field, fieldType, info, index, featureTemplate) => {
     if (isNil(editableItemIndex) || editableItemIndex !== index) {
       setIsAliasNameValid(true)
       setEditableItemIndex(index)
+      setGeneratedFeaturesArray(currentData)
       detailsRequestedFeaturesDispatch({
         type: detailsRequestedFeaturesActions.SET_EDIT_MODE,
         payload: {
@@ -133,17 +134,20 @@ const DetailsRequestedFeatures = ({
   }
 
   const onFinishEdit = fields => {
-    setEditableItemIndex(null)
-    setLabelFeatureIsEditable(false)
+    const changesData = cloneDeep(changes)
+    changesData.data.features.currentFieldValue = generatedFeaturesArray
 
     const changesCounter = countChanges(
-      changes.data.features.initialFieldValue,
-      changes.data.features.currentFieldValue
+        changesData.data.features.initialFieldValue,
+        changesData.data.features.currentFieldValue
     )
 
+    setEditableItemIndex(null)
+    setLabelFeatureIsEditable(false)
+    setCurrentData(changesData.data.features.currentFieldValue)
     handleFinishEdit(
       fields,
-      changes,
+      changesData,
       detailsRequestedFeaturesActions,
       detailsRequestedFeaturesDispatch,
       detailsRequestedFeaturesState,
@@ -205,7 +209,9 @@ const DetailsRequestedFeatures = ({
       }
     }
 
-    if (labelFeatureIsEditable) setLabelFeatureIsEditable(false)
+    if (labelFeatureIsEditable) {
+      setLabelFeatureIsEditable(false)
+    }
     setEditableItemIndex(null)
     setIsAliasNameValid(true)
     setCurrentData(changesData.features.currentFieldValue)
