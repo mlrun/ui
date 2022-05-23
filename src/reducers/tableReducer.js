@@ -1,14 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-// import {
-//   SET_FEATURES_PANEL_DATA,
-//   SET_LABEL_FEATURE,
-//   SET_TABLE_PANEL_OPEN,
-//   UPDATE_CURRENT_PROJECT_NAME,
-//   UPDATE_FEATURE_VECTOR,
-//   UPDATE_GROUPED_FEATURES
-// } from '../constants'
-
 const initialState = {
   isTablePanelOpen: false,
   features: {

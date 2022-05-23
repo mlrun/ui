@@ -66,7 +66,7 @@ const ConsumerGroup = ({
   useEffect(() => {
     setFilteredV3ioStreamShardLags(
       nuclioStore.v3ioStreamShardLags.parsedData.filter(shardLag =>
-        filterByName ? shardLag.shardLagId.includes(filterByName) : true
+        filterByName ? shardLag.shardLagId.toLowerCase().includes(filterByName) : true
       )
     )
   }, [nuclioStore.v3ioStreamShardLags.parsedData, filterByName])

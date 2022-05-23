@@ -26,7 +26,7 @@ import {
   FEATURE_VECTORS_TAB,
   FILES_PAGE,
   MODEL_ENDPOINTS_TAB,
-  MODELS_PAGE
+  MODELS_TAB
 } from '../../constants'
 import { formatDatetime, generateLinkPath } from '../../utils'
 
@@ -124,7 +124,7 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
         value: formatDatetime(new Date(selectedItem.updated), 'N/A')
       },
       framework: {
-        value: detailsType === MODELS_PAGE ? selectedItem.framework ?? '' : null
+        value: detailsType === MODELS_TAB ? selectedItem.framework ?? '' : null
       },
       algorithm: {
         value: selectedItem.algorithm
