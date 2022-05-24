@@ -21,8 +21,7 @@ import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { rerunJob } from '../jobs.util'
 import { parseFunction } from '../../../utils/parseFunction'
-import { generateFilters } from './monitorWorkflows.util'
-import { generateActionsMenu, generatePageData } from '../MonitorJobs/monitorJobs.util'
+import { generateActionsMenu, generateFilters, generatePageData } from './monitorWorkflows.util'
 import { usePods } from '../../../hooks/usePods.hook'
 
 const MonitorWorkflows = ({

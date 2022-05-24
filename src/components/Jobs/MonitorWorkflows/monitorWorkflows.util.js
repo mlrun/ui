@@ -58,34 +58,45 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   toggleConvertedYaml
-) => [
-  {
-    label: 'Re-run',
-    icon: <Run />,
-    hidden: ['local', ''].includes(job?.ui?.originalContent.metadata.labels.kind),
-    onClick: handleRerunJob
-  },
-  {
-    label: 'Monitoring',
-    tooltip: !jobs_dashboard_url
-      ? 'Grafana service unavailable'
-      : job.labels?.includes('kind: dask')
-      ? 'Unavailable for Dask jobs'
-      : '',
-    disabled: !jobs_dashboard_url || job.labels?.includes('kind: dask'),
-    onClick: handleMonitoring
-  },
-  {
-    label: 'Abort',
-    icon: <Cancel />,
-    onClick: handleConfirmAbortJob,
-    tooltip: isJobAbortable(job, abortable_function_kinds) ? '' : 'Cannot abort jobs of this kind',
-    disabled: !isJobAbortable(job, abortable_function_kinds),
-    hidden: JOB_STEADY_STATES.includes(job?.state?.value)
-  },
-  {
-    label: 'View YAML',
-    icon: <Yaml />,
-    onClick: toggleConvertedYaml
-  }
-]
+) =>
+  job?.uid
+    ? [
+        {
+          label: 'Re-run',
+          icon: <Run />,
+          hidden: ['local', ''].includes(job?.ui?.originalContent.metadata.labels.kind),
+          onClick: handleRerunJob
+        },
+        {
+          label: 'Monitoring',
+          tooltip: !jobs_dashboard_url
+            ? 'Grafana service unavailable'
+            : job?.labels?.includes('kind: dask')
+            ? 'Unavailable for Dask jobs'
+            : '',
+          disabled: !jobs_dashboard_url || job?.labels?.includes('kind: dask'),
+          onClick: handleMonitoring
+        },
+        {
+          label: 'Abort',
+          icon: <Cancel />,
+          onClick: handleConfirmAbortJob,
+          tooltip: isJobAbortable(job, abortable_function_kinds)
+            ? ''
+            : 'Cannot abort jobs of this kind',
+          disabled: !isJobAbortable(job, abortable_function_kinds),
+          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
+        },
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ]
+    : [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ]
