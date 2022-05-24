@@ -2,6 +2,7 @@ import { iguazioHttpClient } from '../httpClient'
 
 const projectsIguazioApi = {
   editProject: (projectId, data) => iguazioHttpClient.put(`/projects/${projectId}`, data),
+  getProjectJob: jobId => iguazioHttpClient.get(`/jobs/${jobId}`),
   getProjects: config => {
     return iguazioHttpClient.get('/projects', config)
   },
