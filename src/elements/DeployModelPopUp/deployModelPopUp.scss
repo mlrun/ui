@@ -3,13 +3,15 @@
 .deploy-model {
   &__row {
     display: flex;
+    align-items: flex-end;
     margin-bottom: 20px;
 
-    .select {
-      flex: 1 0 0%;
-      margin-right: 10px;
+    .form-field {
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
 
-      &-router {
+      &__router {
         flex: 2 0 0%;
       }
     }

@@ -3,17 +3,15 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { chain, keyBy, mapValues } from 'lodash'
 
-import Input from '../../common/Input/Input'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
-import Select from '../../common/Select/Select'
-import { Wizard } from 'igz-controls/components'
+import { FormInput, FormSelect, Wizard } from 'igz-controls/components'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
 
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { MODAL_SM, MODELS_TAB } from '../../constants'
+import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { MODELS_TAB } from '../../constants'
 
 import './deployModelPopUp.scss'
 
@@ -27,13 +25,15 @@ const DeployModelPopUp = ({
   setNotification
 }) => {
   const [functionList, setFunctionList] = useState([])
-  const [modelName, setModelName] = useState('')
-  const [className, setClassName] = useState('')
+  const [initialValues, setInitialValues] = useState({
+    className: '',
+    modelName: '',
+    selectedFunctionName: '',
+    selectedTag: ''
+  })
   const [classArgumentsList, setClassArgumentsList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
-  const [selectedFunctionName, setSelectedFunctionName] = useState('')
-  const [selectedTag, setSelectedTag] = useState('')
 
   useEffect(() => {
     if (functionOptionList.length === 0) {
@@ -47,19 +47,22 @@ const DeployModelPopUp = ({
         if (functionOptions.length !== 0) {
           setFunctionList(functions)
           setFunctionOptionList(functionOptions)
-          setSelectedFunctionName(functionOptions[0].id)
+          setInitialValues(prev => ({ ...prev, selectedFunctionName: functionOptions[0].id }))
         }
       })
     }
   }, [fetchFunctions, functionOptionList.length, model.project])
 
   useEffect(() => {
-    setModelName(model?.db_key)
+    setInitialValues(prev => ({ ...prev, modelName: model?.db_key }))
   }, [model])
 
   useEffect(() => {
     const tags = chain(functionList)
-      .filter(func => func.metadata.name === selectedFunctionName && func.metadata.tag !== '')
+      .filter(
+        func =>
+          func.metadata.name === initialValues.selectedFunctionName && func.metadata.tag !== ''
+      )
       .uniqBy('metadata.tag')
       .map(func => ({
         label: func.metadata.tag,
@@ -68,47 +71,53 @@ const DeployModelPopUp = ({
       .value()
 
     setTagOptionList(tags)
-    setSelectedTag(tags[0]?.id)
-  }, [functionList, selectedFunctionName])
+    setInitialValues(prev => ({ ...prev, selectedTag: tags[0]?.id }))
+  }, [functionList, initialValues.selectedFunctionName])
 
   useEffect(() => {
     const selectedFunction = functionList.find(
-      func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
+      func =>
+        func.metadata.name === initialValues.selectedFunctionName &&
+        func.metadata.tag === initialValues.selectedTag
     )
 
-    if (selectedFunction) {
-      setClassName(selectedFunction.spec.default_class)
-    }
-  }, [functionList, selectedFunctionName, selectedTag])
+    setInitialValues(prev => ({
+      ...prev,
+      className: selectedFunction ? selectedFunction.spec.default_class : ''
+    }))
+  }, [functionList, initialValues.selectedFunctionName, initialValues.selectedTag])
 
   useEffect(() => {
     return (
       () => {
         setClassArgumentsList([])
-        setClassName('')
+        setInitialValues({})
         setFunctionList([])
         setFunctionOptionList([])
-        setModelName('')
-        setSelectedFunctionName('')
-        setSelectedTag('')
         setTagOptionList([])
       },
       []
     )
   })
 
-  const deployModel = () => {
+  const deployModel = values => {
+    if (values) {
+      console.log(values)
+      return
+    }
     const servingFunction = functionList.find(
-      func => func.metadata.name === selectedFunctionName && func.metadata.tag === selectedTag
+      func =>
+        func.metadata.name === values.selectedFunctionName &&
+        func.metadata.tag === initialValues.selectedTag
     )
     const classArguments = mapValues(keyBy(classArgumentsList, 'key'), 'value')
 
-    servingFunction.spec.graph.routes[modelName] = {
+    servingFunction.spec.graph.routes[values.modelName] = {
       class_args: {
         model_path: generateUri(model, MODELS_TAB),
         ...classArguments
       },
-      class_name: className,
+      class_name: values.className,
       kind: 'task'
     }
 
@@ -133,11 +142,11 @@ const DeployModelPopUp = ({
   }
 
   const onSelectFunction = functionName => {
-    setSelectedFunctionName(functionName)
+    setInitialValues(prev => ({ ...prev, selectedFunctionName: functionName }))
   }
 
   const handleTagSelect = tag => {
-    setSelectedTag(tag)
+    setInitialValues(prev => ({ ...prev, selectedTag: tag }))
   }
 
   const handleEditClassArgument = updatedClassArg => {
@@ -154,19 +163,21 @@ const DeployModelPopUp = ({
 
   const stepsConfig = [
     {
-      getActions: ({ FormState, handleOnClose }) => [
-        {
-          label: 'Cancel',
-          onClick: handleOnClose,
-          variant: TERTIARY_BUTTON
-        },
-        {
-          disabled: [selectedFunctionName, selectedTag, modelName, className].includes(''),
-          label: 'Deploy',
-          onClick: FormState.handleSubmit,
-          variant: SECONDARY_BUTTON
-        }
-      ]
+      getActions: ({ FormState, handleOnClose }) => {
+        return [
+          {
+            label: 'Cancel',
+            onClick: handleOnClose,
+            variant: TERTIARY_BUTTON
+          },
+          {
+            disabled: FormState.invalid,
+            label: 'Deploy',
+            onClick: FormState.handleSubmit,
+            variant: SECONDARY_BUTTON
+          }
+        ]
+      }
     }
   ]
 
@@ -174,6 +185,7 @@ const DeployModelPopUp = ({
     <Wizard
       className="deploy-model"
       confirmClose
+      initialValues={initialValues}
       isWizardOpen={isOpen}
       onWizardResolve={onResolve}
       onWizardSubmit={deployModel}
@@ -183,40 +195,33 @@ const DeployModelPopUp = ({
     >
       <>
         <div className="deploy-model__row">
-          <Select
-            className="select-router"
-            label="Serving function (router)"
-            floatingLabel
+          <FormSelect
+            className="form-field__router"
             disabled={functionOptionList.length === 0}
+            label="Serving function (router)"
+            name="selectedFunctionName"
+            onChange={onSelectFunction}
             options={functionOptionList}
-            selectedId={selectedFunctionName}
-            onClick={onSelectFunction}
           />
-          <Select
+
+          <FormSelect
             label="Tag"
-            floatingLabel
+            name="selectedTag"
             search
             disabled={tagOptionList.length === 0}
+            onChange={handleTagSelect}
             options={tagOptionList}
-            selectedId={selectedTag}
-            onClick={handleTagSelect}
           />
-          <Input
-            label="Class"
-            type="text"
-            floatingLabel
-            onChange={setClassName}
-            value={className}
-          />
+
+          <FormInput name="className" label="Class" required />
         </div>
         <div className="deploy-model__row">
-          <Input
+          <FormInput
+            name="modelName"
             label="Model name"
-            floatingLabel
-            type="text"
+            required
+            type="textarea"
             tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
-            onChange={setModelName}
-            value={modelName}
           />
         </div>
         <KeyValueTable
