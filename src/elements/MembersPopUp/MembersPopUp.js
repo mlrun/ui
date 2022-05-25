@@ -149,13 +149,8 @@ const MembersPopUp = ({
 
     projectsIguazioApi
       .updateProjectMembers(changesBody)
-      .then(() => {
-        changeMembersCallback()
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Members updated successfully'
-        })
+      .then(response => {
+        changeMembersCallback(response.data.data.id)
       })
       .catch(error => {
         setNotification({
