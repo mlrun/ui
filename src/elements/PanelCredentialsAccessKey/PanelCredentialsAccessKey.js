@@ -12,6 +12,7 @@ import './panelCredentialsAccessKey.scss'
 const PanelCredentialsAccessKey = ({
   className,
   credentialsAccessKey,
+  isPanelEditMode,
   required,
   setCredentialsAccessKey,
   setValidation,
@@ -19,11 +20,7 @@ const PanelCredentialsAccessKey = ({
 }) => {
   const [inputValue, setInputValue] = useState('')
 
-  const accessKeyClassNames = classnames(
-    className,
-    'new-item-side-panel__item',
-    'access-key'
-  )
+  const accessKeyClassNames = classnames(className, 'new-item-side-panel__item', 'access-key')
 
   useEffect(() => {
     if (credentialsAccessKey !== PANEL_DEFAULT_ACCESS_KEY) {
@@ -34,6 +31,7 @@ const PanelCredentialsAccessKey = ({
   return (
     <div className={accessKeyClassNames}>
       <CheckBox
+        disabled={isPanelEditMode}
         item={{
           id: PANEL_DEFAULT_ACCESS_KEY,
           label: 'Auto-generate access key'
@@ -79,12 +77,14 @@ const PanelCredentialsAccessKey = ({
 
 PanelCredentialsAccessKey.defaultProps = {
   className: '',
+  isPanelEditMode: false,
   required: false
 }
 
 PanelCredentialsAccessKey.propTypes = {
   className: PropTypes.string,
   credentialsAccessKey: PropTypes.string.isRequired,
+  isPanelEditMode: PropTypes.bool,
   required: PropTypes.bool,
   setCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

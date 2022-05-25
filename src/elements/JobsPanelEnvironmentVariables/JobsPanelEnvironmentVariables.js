@@ -19,6 +19,7 @@ const JobsPanelEnvironmentVariables = ({
   panelDispatch,
   panelEnvData,
   previousPanelEnvData,
+  isPanelEditMode,
   setNewJobEnvironmentVariables
 }) => {
   const { isStagingMode } = useMode()
@@ -111,6 +112,7 @@ const JobsPanelEnvironmentVariables = ({
           handleAddNewEnv={handleAddNewEnv}
           handleDeleteEnv={handleDeleteEnv}
           handleEditEnv={handleEditEnv}
+          isPanelEditMode={isPanelEditMode}
         />
       ) : (
         <KeyValueTable
@@ -127,6 +129,7 @@ const JobsPanelEnvironmentVariables = ({
             }
           )}
           deleteItem={handleDeleteEnv}
+          disabled={isPanelEditMode}
           editItem={handleEditEnv}
           isKeyRequired={true}
           isValueRequired={true}
@@ -141,7 +144,12 @@ const JobsPanelEnvironmentVariables = ({
   )
 }
 
+JobsPanelEnvironmentVariables.defaultProps = {
+  isPanelEditMode: false
+}
+
 JobsPanelEnvironmentVariables.propTypes = {
+  isPanelEditMode: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelEnvData: PropTypes.arrayOf(PropTypes.shape).isRequired,
   previousPanelEnvData: PropTypes.arrayOf(PropTypes.shape).isRequired
