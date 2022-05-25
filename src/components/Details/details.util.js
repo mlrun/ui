@@ -60,18 +60,13 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
         value: selectedItem?.spec?.stream_path ?? '-'
       },
       model_artifact: {
-        value: selectedItem?.spec?.model_uri?.replace(
-          /^store:\/\/artifacts\//,
-          ''
-        ),
+        value: selectedItem?.spec?.model_uri?.replace(/^store:\/\/artifacts\//, ''),
         link: `${generateLinkPath(selectedItem?.spec?.model_uri)}/overview`
       },
       function_uri: {
         value: selectedItem?.spec?.function_uri,
         link: selectedItem?.spec?.function_uri
-          ? `${generateLinkPath(
-              `store://functions/${selectedItem?.spec?.function_uri}`
-            )}/overview`
+          ? `${generateLinkPath(`store://functions/${selectedItem?.spec?.function_uri}`)}/overview`
           : ''
       },
       last_prediction: {
@@ -197,9 +192,7 @@ export const generateJobsContent = selectedItem => ({
     value: selectedItem.outputPath
   },
   iterations: {
-    value: selectedItem.iterationStats?.length
-      ? selectedItem.iterationStats.length - 1
-      : 'N/A'
+    value: selectedItem.iterationStats?.length ? selectedItem.iterationStats.length - 1 : 'N/A'
   }
 })
 
@@ -263,9 +256,7 @@ export const renderContent = (
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
     case DETAILS_PREVIEW_TAB:
-      return (
-        <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
-      )
+      return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:
       return <DetailsInputs inputs={selectedItem.inputs} />
     case DETAILS_ARTIFACTS_TAB:
@@ -322,10 +313,7 @@ export const renderContent = (
     case DETAILS_TRANSFORMATIONS_TAB:
       return <DetailsTransformations selectedItem={selectedItem} />
     case DETAILS_ANALYSIS_TAB:
-      if (
-        (selectedItem.kind === 'dataset' && selectedItem.extra_data) ||
-        selectedItem.analysis
-      ) {
+      if ((selectedItem.kind === 'dataset' && selectedItem.extra_data) || selectedItem.analysis) {
         return <DetailsAnalysis artifact={selectedItem} />
       } else return <NoData />
     case DETAILS_STATISTICS_TAB:
@@ -443,7 +431,8 @@ export const handleFinishEdit = (
   detailsTabDispatch,
   detailsTabState,
   setChangesData,
-  setChangesCounter
+  setChangesCounter,
+  changesCounter
 ) => {
   detailsTabDispatch({
     type: detailsTabActions.RESET_EDIT_MODE
@@ -453,12 +442,7 @@ export const handleFinishEdit = (
 
   fields.forEach(field => {
     if (changes.data[field]) {
-      if (
-        isEqual(
-          changesData[field]?.initialFieldValue,
-          changesData[field]?.currentFieldValue
-        )
-      ) {
+      if (isEqual(changesData[field]?.initialFieldValue, changesData[field]?.currentFieldValue)) {
         delete changesData[field]
       } else {
         changesData[field] = {
@@ -470,6 +454,6 @@ export const handleFinishEdit = (
     }
   })
 
-  setChangesCounter(Object.keys(changesData).length)
+  setChangesCounter(changesCounter || Object.keys(changesData).length)
   setChangesData({ ...changesData })
 }
