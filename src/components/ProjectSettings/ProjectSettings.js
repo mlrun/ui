@@ -11,7 +11,7 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import notificationActions from '../../actions/notification'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
-import { generateMembers, page, tabs, validTabs } from './projectSettings.util'
+import { COMPLETED_STATE, generateMembers, page, tabs, validTabs } from './projectSettings.util'
 import { isProjectValid } from '../../utils/handleRedirect'
 import {
   initialMembersState,
@@ -111,8 +111,31 @@ const ProjectSettings = ({ frontendSpec, projectStore, setNotification }) => {
     }
   }, [fetchProjectIdAndOwner, fetchProjectMembers, params.projectName, projectMembershipIsEnabled])
 
-  const changeMembersCallback = () => {
-    fetchProjectMembers(membersState.projectInfo.id)
+  const changeMembersCallback = jobId => {
+    const fetchJob = () => {
+      projectsIguazioApi.getProjectJob(jobId).then(response => {
+        if (response.data.data.attributes.state !== COMPLETED_STATE) {
+            setTimeout(fetchJob, 1000)
+        } else {
+          fetchProjectMembers(membersState.projectInfo.id).then(() => {
+            membersDispatch({
+              type: membersActions.GET_PROJECT_USERS_DATA_END
+            })
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Members updated successfully'
+            })
+          })
+        }
+      })
+    }
+
+    membersDispatch({
+      type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
+    })
+
+    fetchJob()
   }
 
   const changeOwnerCallback = () => {

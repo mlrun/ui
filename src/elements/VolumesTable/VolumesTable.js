@@ -13,6 +13,7 @@ export const VolumesTable = ({
   handleAddNewVolume,
   handleEdit,
   handleDelete,
+  isPanelEditMode,
   volumeMounts,
   volumes
 }) => {
@@ -230,6 +231,7 @@ export const VolumesTable = ({
       className={className}
       editVolume={editVolume}
       generateActionsMenu={generateActionsMenu}
+      isPanelEditMode={isPanelEditMode}
       newVolume={newVolume}
       volumeMounts={volumeMounts}
       resetVolumesData={resetVolumesData}
@@ -245,7 +247,8 @@ export const VolumesTable = ({
 }
 
 VolumesTable.defaultProps = {
-  className: ''
+  className: '',
+  isPanelEditMode: false
 }
 
 VolumesTable.propTypes = {
@@ -253,6 +256,7 @@ VolumesTable.propTypes = {
   handleAddNewVolume: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  isPanelEditMode: PropTypes.bool,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})),
   volumes: PropTypes.arrayOf(PropTypes.shape({}))
 }

@@ -491,7 +491,7 @@ export const validation = {
   END_WITH: 'Must end with',
   MUST_CONTAIN_EXACTLY_ONE: 'Must contain exactly one',
   MUST_HAVE_DOT_AFTER_AT: 'Must have at least one . after @',
-  MUST_NOT_BE: 'Must not be',
+  MUST_NOT_CONTAIN: 'Must not contain',
   NO_CONSECUTIVE_CHARACTER: 'No consecutive characters',
   ONLY_AT_THE_BEGINNING: 'Only at the beginning',
   REQUIRED: 'This field is required',

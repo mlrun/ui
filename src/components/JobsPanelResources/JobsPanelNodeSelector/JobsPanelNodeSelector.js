@@ -92,6 +92,7 @@ const JobsPanelNodeSelector = ({
       className="node-selector"
       content={panelState.tableData.node_selector}
       deleteItem={handleDeleteNodeSelector}
+      disabled={panelState.editMode}
       editItem={handleEditNodeSelector}
       isKeyRequired
       keyHeader="Key"

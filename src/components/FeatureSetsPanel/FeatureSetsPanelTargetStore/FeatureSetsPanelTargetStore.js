@@ -107,37 +107,23 @@ const FeatureSetsPanelTargetStore = ({
     if (
       (onlineTarget &&
         onlineTarget.path !== data.online.path &&
-        !targetsPathEditData.online.isEditMode) ||
+        !targetsPathEditData.online.isEditMode &&
+        !targetsPathEditData.online.isModified) ||
       (selectedTargetKind.includes(PARQUET) &&
         offlineTarget &&
         offlineTarget.path !== data.parquet.path &&
-        !targetsPathEditData.parquet.isEditMode)
+        !targetsPathEditData.parquet.isEditMode &&
+        !targetsPathEditData.parquet.isModified)
     ) {
-      const targets = cloneDeep(featureStore.newFeatureSet.spec.targets).map(
-        target => {
-          if (
-            target.kind === PARQUET &&
-            !targetsPathEditData.parquet.isModified
-          ) {
-            target.path = generatePath(
-              project,
-              featureStore.newFeatureSet.metadata.name,
-              PARQUET
-            )
-          } else if (
-            target.kind === NOSQL &&
-            !targetsPathEditData.online.isModified
-          ) {
-            target.path = generatePath(
-              project,
-              featureStore.newFeatureSet.metadata.name,
-              NOSQL
-            )
-          }
-
-          return target
+      const targets = cloneDeep(featureStore.newFeatureSet.spec.targets).map(target => {
+        if (target.kind === PARQUET && !targetsPathEditData.parquet.isModified) {
+          target.path = generatePath(project, featureStore.newFeatureSet.metadata.name, PARQUET)
+        } else if (target.kind === NOSQL && !targetsPathEditData.online.isModified) {
+          target.path = generatePath(project, featureStore.newFeatureSet.metadata.name, NOSQL)
         }
-      )
+
+        return target
+      })
       setNewFeatureSetTarget(targets)
     }
   }, [
@@ -175,7 +161,7 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
-          targetKind.key_bucketing_number = key_bucketing_number
+          return { ...targetKind, key_bucketing_number: key_bucketing_number }
         }
 
         return targetKind
@@ -184,10 +170,7 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleOfflineKindPathChange = () => {
-    if (
-      targetsPathEditData.parquet.isEditMode &&
-      validation.isOfflineTargetPathValid
-    ) {
+    if (targetsPathEditData.parquet.isEditMode && validation.isOfflineTargetPathValid) {
       setTargetsPathEditData(state => ({
         ...state,
         parquet: {
@@ -206,7 +189,7 @@ const FeatureSetsPanelTargetStore = ({
         setNewFeatureSetTarget(
           featureStore.newFeatureSet.spec.targets.map(targetKind => {
             if (targetKind.name === PARQUET) {
-              targetKind.path = data.parquet.path
+              return { ...targetKind, path: data.parquet.path }
             }
 
             return targetKind
@@ -229,10 +212,7 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleOnlineKindPathChange = () => {
-    if (
-      targetsPathEditData.online.isEditMode &&
-      validation.isOnlineTargetPathValid
-    ) {
+    if (targetsPathEditData.online.isEditMode && validation.isOnlineTargetPathValid) {
       setTargetsPathEditData(state => ({
         ...state,
         online: {
@@ -251,7 +231,7 @@ const FeatureSetsPanelTargetStore = ({
         setNewFeatureSetTarget(
           featureStore.newFeatureSet.spec.targets.map(targetKind => {
             if (targetKind.name === NOSQL) {
-              targetKind.path = data.online.path
+              return { ...targetKind, path: data.online.path }
             }
 
             return targetKind
@@ -282,7 +262,7 @@ const FeatureSetsPanelTargetStore = ({
       setNewFeatureSetTarget(
         featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === EXTERNAL_OFFLINE) {
-            targetKind.path = event.target.value
+            return { ...targetKind, path: event.target.value }
           }
 
           return targetKind
@@ -332,14 +312,16 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === EXTERNAL_OFFLINE) {
-          targetKind.kind = kind
+          const target = { ...targetKind, kind }
 
           if (kind === EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE) {
-            delete targetKind.partitioned
-            delete targetKind.key_bucketing_number
-            delete targetKind.partition_cols
-            delete targetKind.time_partitioning_granularity
+            delete target.partitioned
+            delete target.key_bucketing_number
+            delete target.partition_cols
+            delete target.time_partitioning_granularity
           }
+
+          return target
         }
 
         return targetKind
@@ -357,9 +339,10 @@ const FeatureSetsPanelTargetStore = ({
       setNewFeatureSetTarget(
         featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === kind) {
-            targetKind.partition_cols = partition_cols
-              .split(',')
-              .map(partition_col => partition_col.trim())
+            return {
+              ...targetKind,
+              partition_cols: partition_cols.split(',').map(partition_col => partition_col.trim())
+            }
           }
 
           return targetKind
@@ -422,10 +405,10 @@ const FeatureSetsPanelTargetStore = ({
           ...state,
           [kindId]: { ...dataInitialState[kindId] }
         }))
-        setShowAdvanced({
-          ...isShowAdvancedInitialState,
+        setShowAdvanced(prev => ({
+          ...prev,
           [kindId]: false
-        })
+        }))
         setPartitionRadioButtonsState(state => ({
           ...state,
           [kindId]: 'districtKeys'
@@ -460,27 +443,27 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(newTargets)
   }
 
-  const handlePartitionRadioButtonClick = (value, targetKind) => {
+  const handlePartitionRadioButtonClick = (value, target) => {
     const keyBucketingNumber = value === 'districtKeys' ? 0 : 1
 
     setPartitionRadioButtonsState(state => ({
       ...state,
-      [targetKind]: value
+      [target]: value
     }))
     setData(state => ({
       ...state,
-      [targetKind]: {
-        ...state[targetKind],
+      [target]: {
+        ...state[target],
         key_bucketing_number: keyBucketingNumber
       }
     }))
     setNewFeatureSetTarget(
-      featureStore.newFeatureSet.spec.targets.map(target => {
-        if (target.name === targetKind) {
-          target.key_bucketing_number = keyBucketingNumber
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
+        if (targetKind.name === target) {
+          return { ...target, key_bucketing_number: keyBucketingNumber }
         }
 
-        return target
+        return targetKind
       })
     )
   }
@@ -493,7 +476,7 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
-          targetKind.time_partitioning_granularity = time
+          return { ...targetKind, time_partitioning_granularity: time }
         }
 
         return targetKind
@@ -552,29 +535,32 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
+          const target = { ...targetKind }
           if (typeId === 'byKey') {
             if (!selectedPartitionKind[kind].includes(typeId)) {
-              targetKind.key_bucketing_number = 0
+              target.key_bucketing_number = 0
             } else {
-              delete targetKind.key_bucketing_number
+              delete target.key_bucketing_number
             }
           }
 
           if (typeId === 'byTime') {
             if (!selectedPartitionKind[kind].includes(typeId)) {
-              targetKind.time_partitioning_granularity = 'hour'
+              target.time_partitioning_granularity = 'hour'
             } else {
-              delete targetKind.time_partitioning_granularity
+              delete target.time_partitioning_granularity
             }
           }
 
           if (typeId === 'byColumns') {
             if (!selectedPartitionKind[kind].includes(typeId)) {
-              targetKind.partition_cols = ''
+              target.partition_cols = ''
             } else {
-              delete targetKind.partition_cols
+              delete target.partition_cols
             }
           }
+
+          return target
         }
 
         return targetKind

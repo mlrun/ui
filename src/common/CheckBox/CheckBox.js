@@ -1,18 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import { ReactComponent as UnCheckBox } from 'igz-controls/images/checkbox-unchecked.svg'
 import { ReactComponent as Checkbox } from 'igz-controls/images/checkbox-checked.svg'
 
 import './checkBox.scss'
 
-const CheckBox = ({ children, className, item, onChange, selectedId }) => {
+const CheckBox = ({ children, className, disabled, item, onChange, selectedId }) => {
+  const checkboxClassName = classnames('checkbox', className, disabled && 'checkbox_disabled')
+
   return (
     <span
-      className={`checkbox ${className}`}
-      onClick={() => {
-        onChange(item.id)
-      }}
+      className={checkboxClassName}
+      onClick={() => !disabled && onChange(item.id)
+      }
     >
       {item.id === selectedId ? (
         <Checkbox className="checked" />
@@ -26,11 +28,13 @@ const CheckBox = ({ children, className, item, onChange, selectedId }) => {
 
 CheckBox.defaultProps = {
   className: '',
+  disabled: false,
   selectedId: ''
 }
 
 CheckBox.propTypes = {
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   item: PropTypes.shape({
     id: PropTypes.string.isRequired,
     label: PropTypes.string
