@@ -61,17 +61,31 @@ const JobsPanelResources = ({
         panelDispatch({
           type: panelActions.SET_LIMITS_MEMORY,
           payload: memory
+        })
 
+        panelDispatch({
+          type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
+          payload: {
+            memory,
+            memoryUnit: value
+          }
         })
       } else {
         panelDispatch({
           type: panelActions.SET_REQUESTS_MEMORY_UNIT,
           payload: value
         })
-
         panelDispatch({
           type: panelActions.SET_REQUESTS_MEMORY,
           payload: memory
+        })
+
+        panelDispatch({
+          type: panelActions.SET_PREVIOUS_PANEL_DATA_REQUESTS,
+          payload: {
+            memory,
+            memoryUnit: value
+          }
         })
       }
     }
@@ -92,6 +106,14 @@ const JobsPanelResources = ({
         type: panelActions.SET_LIMITS_CPU,
         payload: selectedOption.onChange(panelState[type].cpu)
       })
+
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
+        payload: {
+          cpu: selectedOption.onChange(panelState[type].cpu),
+          cpuUnit: value
+        }
+      })
     } else {
       panelDispatch({
         type: panelActions.SET_REQUESTS_CPU_UNIT,
@@ -102,12 +124,24 @@ const JobsPanelResources = ({
         type: panelActions.SET_REQUESTS_CPU,
         payload: selectedOption.onChange(panelState[type].cpu)
       })
+
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_REQUESTS,
+        payload: {
+          cpu: selectedOption.onChange(panelState[type].cpu),
+          cpuUnit: value
+        }
+      })
     }
   }
 
   const handleSelectPreemptionMode = value => {
     panelDispatch({
       type: panelActions.SET_PREEMPTION_MODE,
+      payload: value
+    })
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE,
       payload: value
     })
     setNewJobPreemtionMode(value)
@@ -122,10 +156,24 @@ const JobsPanelResources = ({
         type: panelActions.SET_LIMITS_CPU,
         payload: cpu
       })
+
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
+        payload: {
+          cpu
+        }
+      })
     } else {
       panelDispatch({
         type: panelActions.SET_REQUESTS_CPU,
         payload: cpu
+      })
+
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_REQUESTS,
+        payload: {
+          cpu
+        }
       })
     }
 
@@ -147,10 +195,24 @@ const JobsPanelResources = ({
         type: panelActions.SET_LIMITS_MEMORY,
         payload: memory
       })
+
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
+        payload: {
+          memory
+        }
+      })
     } else {
       panelDispatch({
         type: panelActions.SET_REQUESTS_MEMORY,
         payload: memory
+      })
+
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_REQUESTS,
+        payload: {
+          memory
+        }
       })
     }
 
@@ -177,12 +239,22 @@ const JobsPanelResources = ({
         [gpuType]: `${value}`
       }
     })
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
+      payload: {
+        'nvidia.com/gpu': value
+      }
+    })
     setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
   }
 
   const setPriorityClassName = value => {
     panelDispatch({
       type: panelActions.SET_PRIORITY_CLASS_NAME,
+      payload: value
+    })
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME,
       payload: value
     })
     setNewJobPriorityClassName(value)

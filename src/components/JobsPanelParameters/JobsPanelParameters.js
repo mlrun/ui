@@ -46,65 +46,68 @@ const JobsPanelParameters = ({
 
   const checkParameter = useCallback(
     item => {
-      const parameters = panelState.tableData.parameters.map(parameter => {
-        if (parameter.data.name === item && !parameter.isChecked) {
-          parameter.isChecked = true
+      if (!panelState.editMode) {
+        const parameters = panelState.tableData.parameters.map(parameter => {
+          if (parameter.data.name === item && !parameter.isChecked) {
+            parameter.isChecked = true
 
-          if (
-            parameter.data.parameterType !== panelData.newParameterType[0].id
-          ) {
-            setHyperParams(
-              parameter.data,
-              jobsStore.newJob.task.spec.hyperparams,
-              setNewJobHyperParameters
-            )
-          }
+            if (
+              parameter.data.parameterType !== panelData.newParameterType[0].id
+            ) {
+              setHyperParams(
+                parameter.data,
+                jobsStore.newJob.task.spec.hyperparams,
+                setNewJobHyperParameters
+              )
+            }
 
-          setNewJobParameters({
-            ...jobsStore.newJob.task.spec.parameters,
-            [parameter.data.name]: parameter.data.value
-          })
-        } else if (parameter.isChecked && parameter.data.name === item) {
-          parameter.isChecked = false
-
-          const params = { ...jobsStore.newJob.task.spec.parameters }
-
-          delete params[parameter.data.name]
-
-          setNewJobParameters({
-            ...params
-          })
-
-          if (
-            parameter.data.parameterType !== panelData.newParameterType[0].id
-          ) {
-            const hyperParams = { ...jobsStore.newJob.task.spec.hyperparams }
-
-            delete hyperParams[parameter.data.name]
-
-            setNewJobHyperParameters({
-              ...hyperParams
+            setNewJobParameters({
+              ...jobsStore.newJob.task.spec.parameters,
+              [parameter.data.name]: parameter.data.value
             })
+          } else if (parameter.isChecked && parameter.data.name === item) {
+            parameter.isChecked = false
+
+            const params = { ...jobsStore.newJob.task.spec.parameters }
+
+            delete params[parameter.data.name]
+
+            setNewJobParameters({
+              ...params
+            })
+
+            if (
+              parameter.data.parameterType !== panelData.newParameterType[0].id
+            ) {
+              const hyperParams = { ...jobsStore.newJob.task.spec.hyperparams }
+
+              delete hyperParams[parameter.data.name]
+
+              setNewJobHyperParameters({
+                ...hyperParams
+              })
+            }
           }
-        }
 
-        return parameter
-      })
+          return parameter
+        })
 
-      panelDispatch({
-        type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
-        payload: parameters
-      })
-      panelDispatch({
-        type: panelActions.SET_TABLE_DATA_PARAMETERS,
-        payload: parameters
-      })
+        panelDispatch({
+          type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
+          payload: parameters
+        })
+        panelDispatch({
+          type: panelActions.SET_TABLE_DATA_PARAMETERS,
+          payload: parameters
+        })
+      }
     },
     [
       jobsStore.newJob.task.spec.hyperparams,
       jobsStore.newJob.task.spec.parameters,
       panelDispatch,
       panelState.tableData.parameters,
+      panelState.editMode,
       setNewJobHyperParameters,
       setNewJobParameters
     ]
@@ -284,6 +287,7 @@ const JobsPanelParameters = ({
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
       isHyperTypeExist={isHyperTypeExist}
+      isPanelEditMode={panelState.editMode}
       parameterTypeOptions={parameterTypeOptions}
       parameters={panelState.tableData.parameters}
       parametersDispatch={parametersDispatch}

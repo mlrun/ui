@@ -222,6 +222,7 @@ const Details = ({
       blockRootChange()
     } else if (detailsStore.changes.counter === 0 && unblockRootChange.current) {
       unblockRootChange.current()
+      unblockRootChange.current = null
     }
   })
 

@@ -116,10 +116,11 @@ const JobsPanelVolumes = ({
 
   return (
     <VolumesTable
+      className={'data-inputs volumes'}
       handleAddNewVolume={handleAddNewVolume}
       handleDelete={handleDeleteVolume}
       handleEdit={handleEditVolume}
-      className={'data-inputs volumes'}
+      isPanelEditMode={panelState.editMode}
       volumeMounts={panelState.tableData.volume_mounts}
       volumes={panelState.tableData.volumes}
     />

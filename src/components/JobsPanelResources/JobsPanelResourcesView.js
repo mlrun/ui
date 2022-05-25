@@ -31,6 +31,7 @@ const JobsPanelResourcesView = ({
         {validFunctionPriorityClassNames.length > 0 && (
           <PanelSection title="Pods priority">
             <Select
+              disabled={panelState.editMode}
               className="pods-priority"
               onClick={setPriorityClassName}
               options={validFunctionPriorityClassNames}
@@ -43,6 +44,7 @@ const JobsPanelResourcesView = ({
           <PanelSection title="Run On Spot Nodes">
             <Select
               className="volume-toleration"
+              disabled={panelState.editMode}
               options={volumePreemptionModeOptions}
               onClick={handleSelectPreemptionMode}
               selectedId={panelState.preemption_mode}
@@ -62,6 +64,7 @@ const JobsPanelResourcesView = ({
         gpuType={gpuType}
         handleSelectCpuUnit={handleSelectCpuUnit}
         handleSelectMemoryUnit={handleSelectMemoryUnit}
+        isPanelEditMode={panelState.editMode}
         setCpuValue={setCpuValue}
         setGpuValue={setGpuValue}
         setMemoryValue={setMemoryValue}
