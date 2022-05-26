@@ -242,7 +242,7 @@ const JobsPanelResources = ({
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
       payload: {
-        'nvidia.com/gpu': value
+        [gpuType]: `${value}`
       }
     })
     setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))

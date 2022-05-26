@@ -24,8 +24,7 @@ export const initialState = {
       cpu: '',
       cpuUnit: '',
       memory: '',
-      memoryUnit: '',
-      'nvidia.com/gpu': ''
+      memoryUnit: ''
     },
     preemption_mode: '',
     priority_class_name: '',

@@ -5,7 +5,8 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   getDefaultCpuUnit,
   getDefaultMemoryUnit,
-  getVolumeType
+  getLimitsGpuType,
+  getVolumeType,
 } from '../../utils/panelResources.util'
 import {
   JOB_DEFAULT_OUTPUT_PATH,
@@ -239,6 +240,7 @@ export const generateTableData = (
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
   const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
+  const gpuType = getLimitsGpuType(limits)
   let parameters = []
   let dataInputs = []
   const currentLimits = {
@@ -247,7 +249,8 @@ export const generateTableData = (
     cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
     cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
     memory: limits?.memory ?? defaultResources.limits?.memory ?? '',
-    memoryUnit: getDefaultMemoryUnit(limits ?? {}, defaultResources?.limits.memory)
+    memoryUnit: getDefaultMemoryUnit(limits ?? {}, defaultResources?.limits.memory),
+    [gpuType]: limits?.[gpuType] ?? defaultResources?.limits.gpu ?? ''
   }
   const currentRequest = {
     ...stateRequests,
