@@ -1,4 +1,5 @@
 import React from 'react'
+import { isNil } from 'lodash'
 
 import {
   DATE_RANGE_TIME_FILTER,
@@ -8,7 +9,7 @@ import {
   PERIOD_FILTER,
   STATUS_FILTER
 } from '../../../constants'
-import { detailsMenu, infoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
 
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
@@ -22,13 +23,13 @@ export const generateFilters = jobName => [
   { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
 ]
 
-export const generatePageData = (fetchJobLogs, removeJobLogs) => {
+export const generatePageData = (fetchJobLogs, removeJobLogs, selectedJob) => {
   return {
     page: JOBS_PAGE,
     details: {
       menu: detailsMenu,
       type: JOBS_PAGE,
-      infoHeaders,
+      infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
       refreshLogs: fetchJobLogs,
       removeLogs: removeJobLogs,
       withLogsRefreshBtn: true
