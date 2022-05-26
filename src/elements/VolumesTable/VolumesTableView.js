@@ -30,6 +30,7 @@ const VolumesTableView = ({
   className,
   editVolume,
   generateActionsMenu,
+  isPanelEditMode,
   newVolume,
   volumeMounts,
   resetVolumesData,
@@ -55,6 +56,8 @@ const VolumesTableView = ({
     newVolume.type === V3IO && 'no-border'
   )
 
+  const addVolumeButtonClassNames = classnames(isPanelEditMode && 'disabled', 'add-input')
+
   return (
     <div className={tableClassNames}>
       <div className="table__header table__row no-hover">
@@ -69,6 +72,7 @@ const VolumesTableView = ({
         if (
           selectedVolume &&
           selectedVolume.data.name === contentItem.data.name
+          && !isPanelEditMode
         ) {
           return (
             <EditableVolumesRow
@@ -112,17 +116,21 @@ const VolumesTableView = ({
                   </div>
                 )
               })}
-              <div className="table__cell table__cell-actions">
-                <ActionsMenu
-                  menu={generateActionsMenu(contentItem)}
-                  dataItem={contentItem}
-                />
-              </div>
+              {
+                !isPanelEditMode && (
+                  <div className="table__cell table__cell-actions">
+                    <ActionsMenu
+                      menu={generateActionsMenu(contentItem)}
+                      dataItem={contentItem}
+                    />
+                  </div>
+                )
+              }
             </div>
           )
         }
       })}
-      {showAddNewVolumeRow ? (
+      {showAddNewVolumeRow && !isPanelEditMode ? (
         <div className="table__body">
           <div className="table__body-column">
             <div className="input-row-wrapper no-border">
@@ -262,9 +270,9 @@ const VolumesTableView = ({
         <div className="table__row no-hover">
           <div
             className="table__cell"
-            onClick={() => setShowAddNewVolumeRow(true)}
+            onClick={() => !isPanelEditMode && setShowAddNewVolumeRow(true)}
           >
-            <button className="add-input">
+            <button className={addVolumeButtonClassNames}>
               <Plus />
               Add volume
             </button>
@@ -280,6 +288,7 @@ VolumesTableView.propTypes = {
   className: PropTypes.string.isRequired,
   editVolume: PropTypes.func.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
+  isPanelEditMode: PropTypes.bool.isRequired,
   newVolume: PropTypes.shape({}).isRequired,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   resetVolumesData: PropTypes.func.isRequired,

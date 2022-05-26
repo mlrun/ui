@@ -51,7 +51,8 @@ const Details = ({
   setIteration,
   setIterationOption,
   setRefreshWasHandled,
-  showWarning
+  showWarning,
+  tab
 }) => {
   const { navigator } = useContext(NavigationContext)
   const applyChangesRef = useRef()
@@ -221,6 +222,7 @@ const Details = ({
       blockRootChange()
     } else if (detailsStore.changes.counter === 0 && unblockRootChange.current) {
       unblockRootChange.current()
+      unblockRootChange.current = null
     }
   })
 
@@ -334,6 +336,7 @@ const Details = ({
       setIteration={setIteration}
       setRefreshWasHandled={setRefreshWasHandled}
       tabsContent={tabsContent}
+      tab={tab}
     />
   )
 }
@@ -346,7 +349,8 @@ Details.defaultProps = {
   isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
-  removeModelFeatureVector: () => {}
+  removeModelFeatureVector: () => {},
+  tab: ''
 }
 
 Details.propTypes = {
@@ -367,7 +371,8 @@ Details.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   removeModelFeatureVector: PropTypes.func,
   retryRequest: PropTypes.func,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  tab: PropTypes.string,
 }
 
 export default connect(

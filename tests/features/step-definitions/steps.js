@@ -271,6 +271,28 @@ Then(
 )
 
 Then(
+    'increase value on {int} points in {string} field with {string} on {string} on {string} wizard',
+    async function(value, inputField, unit, accordion, wizard) {
+        const txt = await getInputValue(
+            this.driver,
+            pageObjects[wizard][accordion][inputField]
+        )
+        const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
+        const result = Number.parseFloat(txt || '0') + unitValue
+        await incrementValue(
+            this.driver,
+            pageObjects[wizard][accordion][inputField],
+            value
+        )
+        await verifyTypedValue(
+            this.driver,
+            pageObjects[wizard][accordion][inputField],
+            result.toString()
+        )
+    }
+)
+
+Then(
   'decrease value on {int} points in {string} field on {string} on {string} wizard',
   async function(value, inputField, accordion, wizard) {
     const txt = await getInputValue(
@@ -289,6 +311,31 @@ Then(
       result.toString()
     )
   }
+)
+
+Then(
+    'decrease value on {int} points in {string} field with {string} on {string} on {string} wizard',
+    async function(value, inputField, unit, accordion, wizard) {
+        const txt = await getInputValue(
+            this.driver,
+            pageObjects[wizard][accordion][inputField]
+        )
+        const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
+        const result =
+          unit === 'cpu'
+            ? (Number.parseFloat(txt) - unitValue).toFixed(3)
+            : Number.parseFloat(txt) - unitValue
+        await decrementValue(
+            this.driver,
+            pageObjects[wizard][accordion][inputField],
+            value
+        )
+        await verifyTypedValue(
+            this.driver,
+            pageObjects[wizard][accordion][inputField],
+            result.toString()
+        )
+    }
 )
 
 Then(
@@ -967,6 +1014,13 @@ Then(
       pageObjects[wizardName][componentName]['label'],
       value
     )
+  }
+)
+
+Then(
+  'verify {string} input should contains {string} value in {string} on {string} wizard',
+  async function (component, value, accordion, wizard) {
+    await verifyTypedValue(this.driver, pageObjects[wizard][accordion][component], value)
   }
 )
 

@@ -184,15 +184,13 @@ const generateRule = {
       }
     }
   },
-  mustNotBe: words => {
-    const wordsArray = words.split(' ')
+  mustNotContain: bannedWords => {
+    const bannedWordsList = bannedWords.split(' ')
 
     return {
-      name: 'mustNotBe',
-      label: ValidationConstants.MUST_NOT_BE + ': ' + convertToLabel(words),
-      pattern: function(value) {
-        return !lodash.includes(wordsArray, value)
-      }
+      name: 'mustNotContain',
+      label: ValidationConstants.MUST_NOT_CONTAIN + ': ' + convertToLabel(bannedWords),
+      pattern: inputValue => bannedWordsList.every(word => !lodash.includes(inputValue, word))
     }
   },
   length: options => {
@@ -259,6 +257,9 @@ const validationRules = {
         generateRule.beginEndWith('a-z A-Z 0-9'),
         generateRule.length({ max: 56 }),
         generateRule.required()
+      ],
+      alias: [
+        generateRule.mustNotContain('.')
       ]
     }
   },

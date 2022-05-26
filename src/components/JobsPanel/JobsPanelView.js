@@ -122,7 +122,7 @@ const JobsPanelView = ({
               <div className="job-panel__buttons-wrapper">
                 <Button
                   className="pop-up-dialog__btn_cancel"
-                  disabled={!checkValidation}
+                  disabled={!checkValidation || panelState.editMode}
                   label="Schedule for later"
                   onClick={() => setOpenScheduleJob(true)}
                   variant={TERTIARY_BUTTON}
@@ -140,7 +140,7 @@ const JobsPanelView = ({
                         <Run /> <span> Run now </span>
                       </>
                     }
-                    disabled={!checkValidation}
+                    disabled={!checkValidation || panelState.editMode}
                     onClick={() => handleRunJob()}
                     variant={SECONDARY_BUTTON}
                   />

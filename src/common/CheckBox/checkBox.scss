@@ -30,4 +30,9 @@
       }
     }
   }
+
+  &_disabled {
+    color: $doveGray;
+    cursor: not-allowed;
+  }
 }

@@ -1,14 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-// import {
-//   SET_FEATURES_PANEL_DATA,
-//   SET_LABEL_FEATURE,
-//   SET_TABLE_PANEL_OPEN,
-//   UPDATE_CURRENT_PROJECT_NAME,
-//   UPDATE_FEATURE_VECTOR,
-//   UPDATE_GROUPED_FEATURES
-// } from '../constants'
-
 const initialState = {
   isTablePanelOpen: false,
   features: {
@@ -37,8 +28,14 @@ const tableSlice = createSlice({
       state.features.currentProject = action.payload
     },
     updateFeatureVector: (state, action) => {
-      state.features.featureVector.metadata = action.payload.metadata
-      state.features.featureVector.spec = action.payload.spec
+      state.features.featureVector.metadata = {
+        ...state.features.featureVector.metadata,
+        ...action.payload.metadata
+      }
+      state.features.featureVector.spec = {
+        ...state.features.featureVector.spec,
+        ...action.payload.spec
+      }
     },
     updateGroupedFeatures: (state, action) => {
       state.features.groupedFeatures[action.payload.project] = action.payload.groupedFeatures

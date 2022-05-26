@@ -97,7 +97,7 @@ const action = {
   ) {
     await mainHttpClient
       .delete(
-        `${REACT_APP_MLRUN_API_URL}projects/${projectName}/functions/${functionName}`
+        `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/functions/${functionName}`
       )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
@@ -177,7 +177,10 @@ const action = {
         tag: '',
         project: mlProjectName
       },
-      spec: {}
+      spec: {
+        priority_class_name: 'igz-workload-medium',
+        preemption_mode: 'prevent'
+      }
     }
 
     await mainHttpClient

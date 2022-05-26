@@ -9,11 +9,11 @@
 
   &__icon {
     display: flex;
+    flex: 0 0 15px;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
     margin-right: 0.5rem;
+    min-height: 17px;
 
     &_valid {
       width: 14px;

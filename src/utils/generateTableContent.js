@@ -11,7 +11,6 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
-  JOBS_PAGE,
   MODELS_PAGE,
   REAL_TIME_PIPELINES_TAB
 } from '../constants'
@@ -19,7 +18,6 @@ import createArtifactsContent from './createArtifactsContent'
 import createConsumerGroupContent from './createConsumerGroupContent'
 import createConsumerGroupsContent from './createConsumerGroupsContent'
 import createFunctionsContent from './createFunctionsContent'
-import createJobsContent from './createJobsContent'
 import { createFeatureStoreContent } from './createFeatureStoreContent'
 
 export const generateTableContent = (
@@ -37,16 +35,8 @@ export const generateTableContent = (
     (groupFilter === GROUP_BY_NAME || groupFilter === GROUP_BY_WORKFLOW)
   ) {
     return map(groupedContent, group =>
-      page === JOBS_PAGE
-        ? createJobsContent(
-            group,
-            isSelectedItem,
-            params,
-            isStagingMode,
-            groupFilter === GROUP_BY_WORKFLOW
-          )
-        : page === FUNCTIONS_PAGE ||
-          (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
+      page === FUNCTIONS_PAGE ||
+      (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
         ? createFunctionsContent(group, isSelectedItem, params)
         : page === FEATURE_STORE_PAGE
         ? createFeatureStoreContent(
@@ -56,32 +46,18 @@ export const generateTableContent = (
             isTablePanelOpen,
             isSelectedItem
           )
-        : createArtifactsContent(
-            group,
-            page,
-            params.pageTab,
-            params.projectName,
-            isSelectedItem
-          )
+        : createArtifactsContent(group, page, params.pageTab, params.projectName, isSelectedItem)
     )
   } else if (groupFilter === GROUP_BY_NONE || !groupFilter) {
     return page === CONSUMER_GROUP_PAGE
       ? createConsumerGroupContent(content)
       : page === CONSUMER_GROUPS_PAGE
       ? createConsumerGroupsContent(content, params)
-      : page === JOBS_PAGE
-      ? createJobsContent(content, isSelectedItem, params, isStagingMode, false)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
         page === DATASETS_PAGE ||
         (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB)
-      ? createArtifactsContent(
-          content,
-          page,
-          params.pageTab,
-          params.projectName,
-          isSelectedItem
-        )
+      ? createArtifactsContent(content, page, params.pageTab, params.projectName, isSelectedItem)
       : page === FEATURE_STORE_PAGE
       ? createFeatureStoreContent(
           content,
