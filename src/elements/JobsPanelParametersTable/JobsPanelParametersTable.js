@@ -10,13 +10,14 @@ import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const JobsPanelParametersTable = ({
   addNewItem,
-  children,
   checkParameter,
+  children,
   className,
   content,
   handleDeleteParameter,
   handleEditParameter,
   headers,
+  isPanelEditMode,
   parameterTypeOptions,
   selectedItem,
   setSelectedItem,
@@ -26,15 +27,17 @@ const JobsPanelParametersTable = ({
 
   const handleEdit = useCallback(
     item => {
-      if (editItem) {
-        setEditItem(false)
-        handleEditParameter()
-      } else {
-        setSelectedItem(item)
-        setEditItem(true)
+      if (!isPanelEditMode) {
+        if (editItem) {
+          setEditItem(false)
+          handleEditParameter()
+        } else {
+          setSelectedItem(item)
+          setEditItem(true)
+        }
       }
     },
-    [editItem, handleEditParameter, setSelectedItem]
+    [editItem, handleEditParameter, setSelectedItem, isPanelEditMode]
   )
 
   const generateActionsMenu = useCallback(
@@ -68,6 +71,7 @@ const JobsPanelParametersTable = ({
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEdit}
       headers={headers}
+      isPanelEditMode={isPanelEditMode}
       parameterTypeOptions={parameterTypeOptions}
       selectedItem={selectedItem}
       setEditItem={setEditItem}
@@ -79,9 +83,9 @@ const JobsPanelParametersTable = ({
 
 JobsPanelParametersTable.defaultProps = {
   className: '',
-  headers: [],
   handleDeleteItems: null,
-  handleSetSelectedVolume: null
+  handleSetSelectedVolume: null,
+  headers: []
 }
 
 JobsPanelParametersTable.propTypes = {
@@ -95,6 +99,7 @@ JobsPanelParametersTable.propTypes = {
   handleDeleteParameter: PropTypes.func,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
+  isPanelEditMode: PropTypes.bool.isRequired,
   parameterTypeOptions: SELECT_OPTIONS.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired,

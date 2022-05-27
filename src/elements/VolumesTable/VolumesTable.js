@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import VolumesTableView from './VolumesTableView'
 import { CONFIG_MAP, PVC, SECRET, V3IO } from './volumesTable.util'
+import { cloneDeep } from 'lodash'
 
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -12,6 +13,7 @@ export const VolumesTable = ({
   handleAddNewVolume,
   handleEdit,
   handleDelete,
+  isPanelEditMode,
   volumeMounts,
   volumes
 }) => {
@@ -51,9 +53,7 @@ export const VolumesTable = ({
 
   const handleSetSelectedVolume = useCallback(
     selectedVolume => {
-      const searchItem = volumes.find(
-        volume => volume.name === selectedVolume.data.name
-      )
+      const searchItem = volumes.find(volume => volume.name === selectedVolume.data.name)
 
       if (searchItem.configMap) {
         return setSelectedVolume({
@@ -98,9 +98,7 @@ export const VolumesTable = ({
     selectedItem => {
       handleDelete(
         volumes.filter(volume => volume.name !== selectedItem.data.name),
-        volumeMounts.filter(
-          volume => volume.data.name !== selectedItem.data.name
-        )
+        volumeMounts.filter(volume => volume.data.name !== selectedItem.data.name)
       )
     },
     [handleDelete, volumeMounts, volumes]
@@ -156,14 +154,10 @@ export const VolumesTable = ({
         isNameValid: newVolume.name.length > 0 && state.isNameValid,
         isTypeValid: newVolume.type.length > 0 && state.isTypeValid,
         isTypeNameValid:
-          newVolume.type === V3IO
-            ? true
-            : newVolume.typeName.length > 0 && state.isTypeNameValid,
+          newVolume.type === V3IO ? true : newVolume.typeName.length > 0 && state.isTypeNameValid,
         isPathValid: newVolume.path.length > 0 && state.isPathValid,
         isAccessKeyValid:
-          newVolume.type === V3IO
-            ? newVolume.accessKey.length > 0 && state.isAccessKeyValid
-            : true
+          newVolume.type === V3IO ? newVolume.accessKey.length > 0 && state.isAccessKeyValid : true
       }))
     }
   }
@@ -188,7 +182,10 @@ export const VolumesTable = ({
   }
 
   const editVolume = () => {
-    const generatedVolumes = volumes.map(volume => {
+    const volumesData = cloneDeep(volumes)
+    const volumeMountsData = cloneDeep(volumeMounts)
+
+    const generatedVolumes = volumesData.map(volume => {
       if (volume.name === selectedVolume.data.name) {
         volume.name = selectedVolume.newName || selectedVolume.data.name
 
@@ -213,7 +210,7 @@ export const VolumesTable = ({
 
       return volume
     })
-    const generatedVolumeMounts = volumeMounts.map(volumeMount => {
+    const generatedVolumeMounts = volumeMountsData.map(volumeMount => {
       if (volumeMount.data.name === selectedVolume.data.name) {
         volumeMount.data.name =
           selectedVolume.newName || selectedVolume.data.name
@@ -234,6 +231,7 @@ export const VolumesTable = ({
       className={className}
       editVolume={editVolume}
       generateActionsMenu={generateActionsMenu}
+      isPanelEditMode={isPanelEditMode}
       newVolume={newVolume}
       volumeMounts={volumeMounts}
       resetVolumesData={resetVolumesData}
@@ -249,7 +247,8 @@ export const VolumesTable = ({
 }
 
 VolumesTable.defaultProps = {
-  className: ''
+  className: '',
+  isPanelEditMode: false
 }
 
 VolumesTable.propTypes = {
@@ -257,6 +256,7 @@ VolumesTable.propTypes = {
   handleAddNewVolume: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  isPanelEditMode: PropTypes.bool,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})),
   volumes: PropTypes.arrayOf(PropTypes.shape({}))
 }

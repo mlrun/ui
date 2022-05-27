@@ -40,6 +40,7 @@ export const parseJob = (job, tab) => {
       resultsChips: parseKeyValues(job.status.results || {}),
       startTime: new Date(job.status.start_time),
       state: getState(job.status.state, JOBS_PAGE, 'job'),
+      ui_run: job.status.ui_url,
       uid: job.metadata.uid,
       updated: new Date(job.status.last_update),
       ui: {

@@ -1,3 +1,11 @@
+import {
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB, FEATURES_TAB, MODEL_ENDPOINTS_TAB, MODELS_TAB,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  SCHEDULE_TAB
+} from '../../constants'
+
 export const generateProjectScreens = params => [
   {
     label: 'Project Monitoring',
@@ -22,5 +30,40 @@ export const generateProjectScreens = params => [
   {
     label: 'Settings',
     id: 'settings'
+  }
+]
+
+export const generateTabsList = () => [
+  {
+    label: MONITOR_JOBS_TAB,
+    id: MONITOR_JOBS_TAB
+  },
+  {
+    label: MONITOR_WORKFLOWS_TAB,
+    id: MONITOR_WORKFLOWS_TAB
+  },
+  {
+    label: SCHEDULE_TAB,
+    id: SCHEDULE_TAB
+  },
+  {
+    label: FEATURE_SETS_TAB,
+    id: FEATURE_SETS_TAB
+  },
+  {
+    label: FEATURE_VECTORS_TAB,
+    id: FEATURE_VECTORS_TAB
+  },
+  {
+    label: FEATURES_TAB,
+    id: FEATURES_TAB
+  },
+  {
+    label: MODELS_TAB,
+    id: MODELS_TAB
+  },
+  {
+    label: MODEL_ENDPOINTS_TAB,
+    id: MODEL_ENDPOINTS_TAB
   }
 ]

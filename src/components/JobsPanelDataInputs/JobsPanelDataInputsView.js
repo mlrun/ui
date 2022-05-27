@@ -39,6 +39,7 @@ const JobsPanelDataInputsView = ({
           handlePathTypeChange={handlePathTypeChange}
           inputsDispatch={inputsDispatch}
           inputsState={inputsState}
+          isPanelEditMode={panelState.editMode}
           panelState={panelState}
           resetDataInputsData={resetDataInputsData}
           setValidation={setValidation}
@@ -47,6 +48,7 @@ const JobsPanelDataInputsView = ({
       </PanelSection>
       <PanelSection title="General">
         <Input
+          disabled={panelState.editMode}
           label="Default input path"
           wrapperClassName="default-input-wrapper"
           onChange={inputValue => {
@@ -59,6 +61,7 @@ const JobsPanelDataInputsView = ({
           type="text"
         />
         <Input
+          disabled={panelState.editMode}
           label="Default artifact path"
           floatingLabel
           invalid={!isArtifactPathValid}

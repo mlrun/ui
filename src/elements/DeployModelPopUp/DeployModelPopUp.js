@@ -34,7 +34,7 @@ const DeployModelPopUp = ({
 
   useEffect(() => {
     if (functionOptionList.length === 0) {
-      fetchFunctions(model.project).then(functions => {
+      fetchFunctions(model.project, {}, false).then(functions => {
         const functionOptions = chain(functions)
           .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
           .uniqBy('metadata.name')

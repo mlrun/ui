@@ -245,11 +245,13 @@ Feature: MLRun Project Page
         When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Resources_Node_Selector_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
@@ -299,10 +301,12 @@ Feature: MLRun Project Page
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
@@ -357,11 +361,13 @@ Feature: MLRun Project Page
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Unit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
@@ -967,11 +973,6 @@ Feature: MLRun Project Page
         Then verify "Arrow_Back" element visibility on "Consumer_Groups" wizard
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
-        Then select "View YAML" option in action menu on "Consumer_Groups" wizard in "Consumer_Groups_Table" table at row with "ConsumerGroup1" value in "consumer_group_name" column
-        Then verify if "View_YAML" popup dialog appears
-        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
-        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
-        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
         Then click on "Arrow_Back" element on "Consumer_Groups" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
@@ -995,7 +996,7 @@ Feature: MLRun Project Page
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
         Then type value "C" to "Search_Input" field on "Consumer_Groups" wizard
         Then value in "consumer_group_name" column with "text" in "Consumer_Groups_Table" on "Consumer_Groups" wizard should contains "C"
-        Then type value "Consumer" to "Search_Input" field on "Consumer_Groups" wizard
+        Then type value "CONSUMER" to "Search_Input" field on "Consumer_Groups" wizard
         Then value in "consumer_group_name" column with "text" in "Consumer_Groups_Table" on "Consumer_Groups" wizard should contains "Consumer"
         Then type value "randomText" to "Search_Input" field on "Consumer_Groups" wizard
         Then check "ConsumerGroup1" value not in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
@@ -1004,17 +1005,21 @@ Feature: MLRun Project Page
     Scenario: Verify all mandatory components on Consumer Groups drill-down
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Consumer_Group_Yet"
+        Then select "project" with "default" value in breadcrumbs menu
         And wait load page
         Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
         And save to context "consumer_group_name" column and "href" attribute on 1 row from "Consumer_Groups_Table" table on "Consumer_Groups" wizard
-        And save to context "stream" column on 1 row from "Consumer_Groups_Table" table on "Consumer_Groups" wizard
         And click on cell with row index 1 in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
         And wait load page
         Then compare current browser URL with test "href" context value
         Then compare "Title" element value on "Consumer_Groups" wizard with test "consumer_group_name" context value
-        Then compare "Description" element value on "Consumer_Groups" wizard with test "stream" context value
         Then verify "Arrow_Back" element visibility on "Consumer_Groups" wizard
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Refresh_Button" element visibility on "Consumer_Groups" wizard
@@ -1036,7 +1041,7 @@ Feature: MLRun Project Page
         And wait load page
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Shard_Lags_Table" element visibility on "Consumer_Groups" wizard
-        Then type value "shard" to "Search_Input" field on "Consumer_Groups" wizard
+        Then type value "SHARD" to "Search_Input" field on "Consumer_Groups" wizard
         Then click on "Refresh_Button" element on "Consumer_Groups" wizard
         Then value in "shard_name" column with "text" in "Shard_Lags_Table" on "Consumer_Groups" wizard should contains "shard"
         Then type value "shard-id-0" to "Search_Input" field on "Consumer_Groups" wizard
