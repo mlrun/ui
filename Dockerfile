@@ -1,6 +1,10 @@
 # build stage
 FROM quay.io/mlrun/node:12-alpine as build-stage
 
+RUN apk update && \
+	apk upgrade && \
+	rm -rf /var/cache/apk/*
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -16,6 +20,10 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
 
 # production stage
 FROM quay.io/mlrun/nginx:stable-alpine as production-stage
+
+RUN apk update && \
+	apk upgrade && \
+	rm -rf /var/cache/apk/*
 
 COPY --from=build-stage /app/build /usr/share/nginx/html
 COPY config.json.tmpl /usr/share/nginx/html/
