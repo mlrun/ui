@@ -371,7 +371,7 @@ Details.propTypes = {
   removeModelFeatureVector: PropTypes.func,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}).isRequired,
-  tab: PropTypes.string,
+  tab: PropTypes.string
 }
 
 export default connect(

@@ -43,30 +43,6 @@
       font-weight: 500;
     }
 
-    .jobs {
-      &_medium {
-        max-width: 250px;
-
-        @include tableColumnFlex(0.6, 240px);
-      }
-
-      &_small {
-        max-width: 150px;
-
-        @include tableColumnFlex(0.5, 75px);
-      }
-
-      &_big {
-        @include tableColumnFlex(2, 80px);
-      }
-
-      &_extra-small {
-        max-width: 85px;
-
-        @include tableColumnFlex(0.2, 65px);
-      }
-    }
-
     .artifacts {
       &_medium {
         max-width: 240px;

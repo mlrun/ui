@@ -1,9 +1,5 @@
 import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
 import jobsActions from '../../actions/jobs'
-import functionsActions from '../../actions/functions'
-import detailsActions from '../../actions/details'
-import workflowsActions from '../../actions/workflow'
-import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
 import { generateKeyValues } from '../../utils'
 
@@ -63,31 +59,7 @@ export const isJobAbortable = (job, abortableFunctionKinds) =>
     .some(kindLabel => job?.labels?.includes(kindLabel))
 
 export const actionCreator = {
-  abortJob: jobsActions.abortJob,
-  editJob: jobsActions.editJob,
-  editJobFailure: jobsActions.editJobFailure,
-  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
-  fetchFunctionLogs: functionsActions.fetchFunctionLogs,
-  fetchJob: jobsActions.fetchJob,
   fetchJobFunction: jobsActions.fetchJobFunction,
-  fetchJobLogs: jobsActions.fetchJobLogs,
-  fetchJobPods: detailsActions.fetchJobPods,
-  fetchJobs: jobsActions.fetchJobs,
-  fetchScheduledJobAccessKey: jobsActions.fetchScheduledJobAccessKey,
-  fetchWorkflow: workflowsActions.fetchWorkflow,
-  fetchWorkflows: workflowsActions.fetchWorkflows,
-  getFunction: functionsActions.getFunction,
-  getFunctionWithHash: functionsActions.getFunctionWithHash,
-  handleRunScheduledJob: jobsActions.handleRunScheduledJob,
-  removeFunction: functionsActions.removeFunction,
-  removeFunctionLogs: functionsActions.removeFunctionLogs,
-  removeJob: jobsActions.removeJob,
-  removeJobLogs: jobsActions.removeJobLogs,
-  removeNewJob: jobsActions.removeNewJob,
-  removePods: detailsActions.removePods,
-  removeScheduledJob: jobsActions.removeScheduledJob,
-  resetWorkflow: workflowsActions.resetWorkflow,
-  setFilters: filtersActions.setFilters,
   setNotification: notificationActions.setNotification
 }
 

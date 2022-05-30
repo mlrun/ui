@@ -6,9 +6,9 @@ import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Workflow from '../../Workflow/Workflow'
 import Table from '../../Table/Table'
-import JobsTable from '../../../elements/JobTable/JobsTable'
 import YamlModal from '../../../common/YamlModal/YamlModal'
 import JobsPanel from '../../JobsPanel/JobsPanel'
+import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 
 import {
   JOBS_PAGE,
@@ -38,6 +38,7 @@ const MonitorWorkflowsView = ({
   selectedJob,
   setEditableItem,
   setWorkflowsViewMode,
+  tableContent,
   toggleConvertedYaml,
   workflowsStore,
   workflowsViewMode
@@ -89,14 +90,17 @@ const MonitorWorkflowsView = ({
               retryRequest={getWorkflows}
               selectedItem={selectedJob}
               tab={MONITOR_JOBS_TAB}
+              tableHeaders={tableContent[0]?.content ?? []}
             >
-              <JobsTable
-                actionsMenu={actionsMenu}
-                content={workflowsStore.workflows.data}
-                handleSelectJob={handleSelectJob}
-                selectedJob={selectedJob}
-                tab={MONITOR_WORKFLOWS_TAB}
-              />
+              {tableContent.map((tableItem, index) => (
+                <JobsTableRow
+                  actionsMenu={actionsMenu}
+                  handleSelectJob={handleSelectJob}
+                  key={index}
+                  rowItem={tableItem}
+                  selectedJob={selectedJob}
+                />
+              ))}
             </Table>
           )}
         </>
@@ -110,7 +114,7 @@ const MonitorWorkflowsView = ({
             setEditableItem(null)
             removeNewJob()
           }}
-          defaultData={editableItem.scheduled_object || editableItem.rerun_object}
+          defaultData={editableItem.scheduled_object}
           handleRunNewJob={{}}
           mode={PANEL_EDIT_MODE}
           onSuccessRun={tab => {
@@ -119,7 +123,6 @@ const MonitorWorkflowsView = ({
             }
           }}
           project={params.projectName}
-          withSaveChanges={Boolean(editableItem.scheduled_object)}
         />
       )}
     </>
@@ -152,6 +155,7 @@ MonitorWorkflowsView.propTypes = {
   setEditableItem: PropTypes.func.isRequired,
   setWorkflowsViewMode: PropTypes.func.isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   workflowsStore: PropTypes.object.isRequired,
   workflowsViewMode: PropTypes.string.isRequired
 }

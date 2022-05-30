@@ -8,6 +8,11 @@ import {
   STATUS_FILTER
 } from '../../../constants'
 import { detailsMenu, infoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import jobsActions from '../../../actions/jobs'
+import functionsActions from '../../../actions/functions'
+import workflowsActions from '../../../actions/workflow'
+import filtersActions from '../../../actions/filters'
+import notificationActions from '../../../actions/notification'
 
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
@@ -73,3 +78,23 @@ export const generateActionsMenu = (
     onClick: toggleConvertedYaml
   }
 ]
+
+export const monitorWorkflowsActionCreator = {
+  abortJob: jobsActions.abortJob,
+  fetchFunctionLogs: functionsActions.fetchFunctionLogs,
+  fetchJob: jobsActions.fetchJob,
+  fetchJobFunction: jobsActions.fetchJobFunction,
+  fetchJobLogs: jobsActions.fetchJobLogs,
+  fetchJobs: jobsActions.fetchJobs,
+  fetchWorkflow: workflowsActions.fetchWorkflow,
+  fetchWorkflows: workflowsActions.fetchWorkflows,
+  getFunction: functionsActions.getFunction,
+  getFunctionWithHash: functionsActions.getFunctionWithHash,
+  removeFunction: functionsActions.removeFunction,
+  removeFunctionLogs: functionsActions.removeFunctionLogs,
+  removeJobLogs: jobsActions.removeJobLogs,
+  removeNewJob: jobsActions.removeNewJob,
+  resetWorkflow: workflowsActions.resetWorkflow,
+  setFilters: filtersActions.setFilters,
+  setNotification: notificationActions.setNotification
+}
