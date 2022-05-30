@@ -118,7 +118,7 @@ export const createJobsMonitorTabContent = (jobs, params, isStagingMode) => {
 export const createJobsScheduleTabContent = (jobs, params, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const [, , scheduleJobFunctionUid] = job.func?.match(/\w(?<!\d)[\w'-]*/g, '') || []
+    const [, , scheduleJobFunctionUid] = job.func?.match(/\w[\w'-]*/g, '') || []
     const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
     const jobName = job.name
     const lastRunLink = () =>
