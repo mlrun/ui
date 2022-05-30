@@ -8,7 +8,7 @@ import {
   PERIOD_FILTER,
   STATUS_FILTER
 } from '../../../constants'
-import { detailsMenu, infoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
 import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
@@ -38,7 +38,7 @@ export const generatePageData = (
     details: {
       type: !isEveryObjectValueEmpty(selectedFunction) ? FUNCTIONS_PAGE : JOBS_PAGE,
       menu: !isEveryObjectValueEmpty(selectedFunction) ? functionsDetailsMenu : detailsMenu,
-      infoHeaders: !isEveryObjectValueEmpty(selectedFunction) ? functionsInfoHeaders : infoHeaders,
+      infoHeaders: !isEveryObjectValueEmpty(selectedFunction) ? functionsInfoHeaders : getInfoHeaders(false),
       refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
         ? handleFetchFunctionLogs
         : fetchJobLogs,

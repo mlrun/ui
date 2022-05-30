@@ -8,7 +8,19 @@ import notificationActions from '../../actions/notification'
 import { generateKeyValues } from '../../utils'
 
 export const page = JOBS_PAGE
-export const infoHeaders = [
+export const getInfoHeaders = isSpark => isSpark ? [
+  { label: 'UID', id: 'uid' },
+  { label: 'Start time', id: 'startTime' },
+  { label: 'Last Updated', id: 'updated' },
+  { label: 'Parameters', id: 'parameters' },
+  { label: 'Function', id: 'function' },
+  { label: 'Results', id: 'resultsChips' },
+  { label: 'Labels', id: 'labels' },
+  { label: 'SPARK UI URL', id: 'sparkUiUrl' },
+  { label: 'Log level', id: 'logLevel' },
+  { label: 'Output path', id: 'outputPath' },
+  { label: 'Total iterations', id: 'iterations' }
+] : [
   { label: 'UID', id: 'uid' },
   { label: 'Start time', id: 'startTime' },
   { label: 'Last Updated', id: 'updated' },

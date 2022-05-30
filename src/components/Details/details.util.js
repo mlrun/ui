@@ -160,41 +160,46 @@ export const generateFeatureStoreContent = (
   }
 }
 
-export const generateJobsContent = selectedItem => ({
-  uid: {
-    value: selectedItem.uid
-  },
-  startTime: {
-    value: formatDatetime(
-      selectedItem.startTime,
-      selectedItem.state?.value === 'aborted' ? 'N/A' : 'Not yet started'
-    )
-  },
-  updated: {
-    value: formatDatetime(selectedItem.updated, 'N/A')
-  },
-  parameters: {
-    value: selectedItem.parameters
-  },
-  function: {
-    value: selectedItem.function
-  },
-  resultsChips: {
-    value: selectedItem.resultsChips
-  },
-  labels: {
-    value: selectedItem.labels
-  },
-  logLevel: {
-    value: selectedItem.logLevel
-  },
-  outputPath: {
-    value: selectedItem.outputPath
-  },
-  iterations: {
-    value: selectedItem.iterationStats?.length ? selectedItem.iterationStats.length - 1 : 'N/A'
+export const generateJobsContent = selectedItem => {
+  const sparkUiUrl = selectedItem.ui_run ? { sparkUiUrl: { value: selectedItem.ui_run } } : {}
+
+  return {
+    ...sparkUiUrl,
+    uid: {
+      value: selectedItem.uid
+    },
+    startTime: {
+      value: formatDatetime(
+        selectedItem.startTime,
+        selectedItem.state?.value === 'aborted' ? 'N/A' : 'Not yet started'
+      )
+    },
+    updated: {
+      value: formatDatetime(selectedItem.updated, 'N/A')
+    },
+    parameters: {
+      value: selectedItem.parameters
+    },
+    function: {
+      value: selectedItem.function
+    },
+    resultsChips: {
+      value: selectedItem.resultsChips
+    },
+    labels: {
+      value: selectedItem.labels
+    },
+    logLevel: {
+      value: selectedItem.logLevel
+    },
+    outputPath: {
+      value: selectedItem.outputPath
+    },
+    iterations: {
+      value: selectedItem.iterationStats?.length ? selectedItem.iterationStats.length - 1 : 'N/A'
+    }
   }
-})
+}
 
 export const generateFunctionsContent = selectedItem => ({
   name: {

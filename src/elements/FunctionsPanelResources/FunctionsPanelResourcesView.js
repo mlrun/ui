@@ -14,6 +14,7 @@ import './functionsPanelResources.scss'
 
 const FunctionsPanelResourcesView = ({
   data,
+  gpuType,
   handleAddNewVolume,
   handleDeleteVolume,
   handleEditVolume,
@@ -86,6 +87,7 @@ const FunctionsPanelResourcesView = ({
       </PanelSection>
       <PanelResourcesUnits
         data={data}
+        gpuType={gpuType}
         handleSelectCpuUnit={handleSelectCpuUnit}
         handleSelectMemoryUnit={handleSelectMemoryUnit}
         setCpuValue={setCpuValue}
@@ -99,6 +101,7 @@ const FunctionsPanelResourcesView = ({
 
 FunctionsPanelResourcesView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  gpuType: PropTypes.string.isRequired,
   handleAddNewVolume: PropTypes.func.isRequired,
   handleDeleteVolume: PropTypes.func.isRequired,
   handleEditVolume: PropTypes.func.isRequired,
