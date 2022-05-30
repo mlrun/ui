@@ -16,6 +16,7 @@ import {
   generateFullMemoryValue,
   getDefaultCpuUnit,
   getDefaultMemoryUnit,
+  getLimitsGpuType,
   getSelectedCpuOption,
   setCpuValidation,
   setMemoryDropdownValidation,
@@ -39,6 +40,11 @@ const FunctionsPanelResources = ({
   setValidation,
   validation
 }) => {
+  const gpuType = useMemo(
+    () => getLimitsGpuType(defaultData.resources?.limits),
+    [defaultData.resources?.limits]
+  )
+
   const [podsPriorityClassName, setPodsPriorityClassName] = useState(
     defaultData.priority_class_name ||
       functionsStore.newFunction.spec.priority_class_name ||
@@ -63,8 +69,7 @@ const FunctionsPanelResources = ({
         defaultPodsResources?.limits.cpu
       ),
       memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits.memory ?? '',
-      'nvidia.com/gpu':
-        defaultData.resources?.limits?.['nvidia.com/gpu'] ?? defaultPodsResources?.limits.gpu ?? '',
+      [gpuType]: defaultData.resources?.limits?.[gpuType] ?? defaultPodsResources?.limits.gpu ?? '',
       memoryUnit: getDefaultMemoryUnit(
         defaultData.resources?.limits ?? {},
         defaultPodsResources?.limits.memory
@@ -345,14 +350,14 @@ const FunctionsPanelResources = ({
       ...state,
       limits: {
         ...state.limits,
-        'nvidia.com/gpu': String(value)
+        [gpuType]: String(value)
       }
     }))
     setNewFunctionResources({
       ...functionsStore.newFunction.spec.resources,
       limits: {
         ...functionsStore.newFunction.spec.resources.limits,
-        'nvidia.com/gpu': String(value)
+        [gpuType]: String(value)
       }
     })
     setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
@@ -361,6 +366,7 @@ const FunctionsPanelResources = ({
   return (
     <FunctionsPanelResourcesView
       data={data}
+      gpuType={gpuType}
       handleAddNewVolume={handleAddNewVolume}
       handleDeleteVolume={handleDeleteVolume}
       handleEditVolume={handleEditVolume}
