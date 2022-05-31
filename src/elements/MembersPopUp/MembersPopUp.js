@@ -49,10 +49,7 @@ const MembersPopUp = ({
     role: 'All'
   })
 
-  const membersTableRowClassNames = classnames(
-    'table-row',
-    inviteNewMembers && 'inactive'
-  )
+  const membersTableRowClassNames = classnames('table-row', inviteNewMembers && 'inactive')
 
   const handleOnClose = () => {
     setConfirmDiscard(false)
@@ -64,13 +61,10 @@ const MembersPopUp = ({
     const membersCopy = cloneDeep(membersState.members)
 
     newMembers.forEach(newMember => {
-      const existingMember = membersCopy.find(
-        member => member.id === newMember.id
-      )
+      const existingMember = membersCopy.find(member => member.id === newMember.id)
 
       if (existingMember) {
-        existingMember.modification =
-          newMembersRole !== existingMember.initialRole ? 'put' : ''
+        existingMember.modification = newMembersRole !== existingMember.initialRole ? 'put' : ''
         existingMember.role = newMembersRole
       } else {
         membersCopy.push({
@@ -113,57 +107,50 @@ const MembersPopUp = ({
       rolesData[roleData.attributes.name] = roleData
     })
 
-    changesBody.data.attributes.requests = membersState.modifiedRoles.map(
-      modifiedRole => {
-        const members = membersState.groupedVisibleMembers[modifiedRole] ?? []
+    changesBody.data.attributes.requests = membersState.modifiedRoles.map(modifiedRole => {
+      const members = membersState.groupedVisibleMembers[modifiedRole] ?? []
 
-        return {
-          method: 'put',
-          resource: `project_authorization_roles/${rolesData[modifiedRole].id}`,
-          body: {
-            data: {
-              type: rolesData[modifiedRole].type,
-              attributes: {
-                name: modifiedRole,
-                permissions: rolesData[modifiedRole].attributes.permissions
-              },
-              relationships: {
-                project: {
-                  data: {
-                    type: 'project',
-                    id: membersState.projectInfo.id
-                  }
-                },
-                principal_users: {
-                  data: members
-                    .filter(member => member.type === 'user')
-                    .map(member => {
-                      return { id: member.id, type: member.type }
-                    })
-                },
-                principal_user_groups: {
-                  data: members
-                    .filter(member => member.type === 'user_group')
-                    .map(member => {
-                      return { id: member.id, type: member.type }
-                    })
+      return {
+        method: 'put',
+        resource: `project_authorization_roles/${rolesData[modifiedRole].id}`,
+        body: {
+          data: {
+            type: rolesData[modifiedRole].type,
+            attributes: {
+              name: modifiedRole,
+              permissions: rolesData[modifiedRole].attributes.permissions
+            },
+            relationships: {
+              project: {
+                data: {
+                  type: 'project',
+                  id: membersState.projectInfo.id
                 }
+              },
+              principal_users: {
+                data: members
+                  .filter(member => member.type === 'user')
+                  .map(member => {
+                    return { id: member.id, type: member.type }
+                  })
+              },
+              principal_user_groups: {
+                data: members
+                  .filter(member => member.type === 'user_group')
+                  .map(member => {
+                    return { id: member.id, type: member.type }
+                  })
               }
             }
           }
         }
       }
-    )
+    })
 
     projectsIguazioApi
       .updateProjectMembers(changesBody)
-      .then(() => {
-        changeMembersCallback()
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Members updated successfully'
-        })
+      .then(response => {
+        changeMembersCallback(response.data.data.id)
       })
       .catch(error => {
         setNotification({
@@ -213,12 +200,9 @@ const MembersPopUp = ({
     let membersCopy = cloneDeep(membersState.members)
 
     if (memberToDelete.initialRole) {
-      membersCopy.find(member => member.id === memberToDelete.id).modification =
-        'delete'
+      membersCopy.find(member => member.id === memberToDelete.id).modification = 'delete'
     } else {
-      membersCopy = membersCopy.filter(
-        member => member.id !== memberToDelete.id
-      )
+      membersCopy = membersCopy.filter(member => member.id !== memberToDelete.id)
     }
 
     membersDispatch({
@@ -237,24 +221,31 @@ const MembersPopUp = ({
     handleOnClose()
   }
 
-  const generateUsersSuggestionList = debounce(() => {
-    const getUsersPromise = projectsIguazioApi.getScrubbedUsers()
-    const getUserGroupsPromise = projectsIguazioApi.getScrubbedUserGroups()
+  const generateUsersSuggestionList = debounce(searchQuery => {
+    const getUsersPromise = projectsIguazioApi.getScrubbedUsers({
+      params: {
+        'filter[username]': `[$match-i]^.*${searchQuery}.*$`,
+        'page[size]': 200
+      }
+    })
+    const getUserGroupsPromise = projectsIguazioApi.getScrubbedUserGroups({
+      params: {
+        'filter[name]': `[$match-i]^.*${searchQuery}.*$`,
+        'page[size]': 200
+      }
+    })
     const suggestionList = []
 
     Promise.all([getUsersPromise, getUserGroupsPromise]).then(response => {
       response.forEach(identityResponse => {
         identityResponse.data.data.forEach(identity => {
           const existingMember = membersState.members.find(
-            member =>
-              member.id === identity.id && member.modification !== 'delete'
+            member => member.id === identity.id && member.modification !== 'delete'
           )
 
           suggestionList.push({
             label:
-              identity.type === 'user'
-                ? identity.attributes.username
-                : identity.attributes.name,
+              identity.type === 'user' ? identity.attributes.username : identity.attributes.name,
             id: identity.id,
             subLabel: existingMember?.role ?? '',
             disabled: Boolean(existingMember),
@@ -277,7 +268,7 @@ const MembersPopUp = ({
 
       setNewMembersSuggestionList(suggestionList)
     })
-  }, 200)
+  }, 400)
 
   return (
     <div className="settings__members">
@@ -303,10 +294,7 @@ const MembersPopUp = ({
           </span>
           <Tip text="Some of the members might be user groups" />
         </div>
-        <div
-          className="invite-new-members-btn"
-          onClick={() => setInviteNewMembers(true)}
-        >
+        <div className="invite-new-members-btn" onClick={() => setInviteNewMembers(true)}>
           <Add className="add-icon" />
           Invite new members
         </div>
@@ -316,10 +304,7 @@ const MembersPopUp = ({
           <div className="new-members-title">
             <span>Invite new members</span>
             <div className="close-icon">
-              <RoundedIcon
-                onClick={() => setInviteNewMembers(false)}
-                tooltipText="Close"
-              >
+              <RoundedIcon onClick={() => setInviteNewMembers(false)} tooltipText="Close">
                 <Close data-testid="pop-up-close-btn" />
               </RoundedIcon>
             </div>
@@ -332,9 +317,7 @@ const MembersPopUp = ({
                 setNewMembers([...newMembers, suggestionItem])
               }}
               removeChip={chipIndex => {
-                setNewMembers(
-                  newMembers.filter((member, index) => index !== chipIndex)
-                )
+                setNewMembers(newMembers.filter((member, index) => index !== chipIndex))
               }}
               onInputChange={generateUsersSuggestionList}
               elements={newMembers}
@@ -402,31 +385,17 @@ const MembersPopUp = ({
           {membersState.members
             .filter(member => {
               return (
-                (!filters.name ||
-                  member.name
-                    .toLowerCase()
-                    .includes(filters.name.toLowerCase())) &&
+                (!filters.name || member.name.toLowerCase().includes(filters.name.toLowerCase())) &&
                 (filters.role === 'All' || member.role === filters.role) &&
                 member.modification !== 'delete'
               )
             })
             .map(member => (
-              <div
-                className={membersTableRowClassNames}
-                key={`${member.name}${member.role}`}
-              >
+              <div className={membersTableRowClassNames} key={`${member.name}${member.role}`}>
                 <div className="member-info">
-                  <div
-                    className={`member-status ${
-                      member.modification ? 'visible' : ''
-                    }`}
-                  />
-                  <div className="member-symbol">
-                    {member.name[0].toUpperCase()}
-                  </div>
-                  <div className={`member-icon ${member.type}`}>
-                    {member.icon}
-                  </div>
+                  <div className={`member-status ${member.modification ? 'visible' : ''}`} />
+                  <div className="member-symbol">{member.name[0].toUpperCase()}</div>
+                  <div className={`member-icon ${member.type}`}>{member.icon}</div>
                   <div className="member-name">{member.name}</div>
                 </div>
                 <div className="member-roles">
@@ -471,9 +440,8 @@ const MembersPopUp = ({
         </div>
       </div>
       <p className="footer-annotation">
-        Note that adding users to the project doesn't mean they can access the
-        project data. In order to access the project data they need to set
-        access permission for the project folder.{' '}
+        Note that adding users to the project doesn't mean they can access the project data. In
+        order to access the project data they need to set access permission for the project folder.{' '}
         <a
           href="https://www.iguazio.com/docs/latest-release/users-and-security/security/#data-access-policy-rules"
           className="link"

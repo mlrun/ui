@@ -64,8 +64,8 @@ const MonitorJobs = ({
   )
 
   const pageData = useMemo(
-    () => generatePageData(fetchJobLogs, removeJobLogs),
-    [fetchJobLogs, removeJobLogs]
+    () => generatePageData(fetchJobLogs, removeJobLogs, selectedJob),
+    [fetchJobLogs, removeJobLogs, selectedJob]
   )
 
   const refreshJobs = useCallback(

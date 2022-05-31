@@ -25,6 +25,7 @@ const JobsPanelAdvancedView = ({
     <div className="job-panel__item advanced new-item-side-panel__item">
       <PanelSection title="Advanced">
         <JobsPanelEnvironmentVariables
+          isPanelEditMode={panelState.editMode}
           panelDispatch={panelDispatch}
           panelEnvData={panelState.tableData.environmentVariables}
           previousPanelEnvData={
@@ -44,6 +45,7 @@ const JobsPanelAdvancedView = ({
             handleDeleteItems={handleDeleteItems}
             handleResetForm={handleResetForm}
             headers={panelData['secrets']['table-headers']}
+            isPanelEditMode={panelState.editMode}
             panelState={panelState}
             section="advanced secrets"
             selectedId={advancedState.newSecret.kind}

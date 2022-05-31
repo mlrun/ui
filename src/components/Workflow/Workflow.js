@@ -159,7 +159,7 @@ const Workflow = ({
     ) {
       const funcName = element.data.customData.function.includes('@')
         ? element.data.customData.function.match(/\/(.*?)@/i)[1]
-        : element.data.customData.function.match(/\/(.*)/i)[1]
+        : element.data.customData.function.match(/\/([^:]*)/i)[1]
       const funcHash = element.data.customData.function.includes('@')
         ? element.data.customData.function.replace(/.*@/g, '')
         : 'latest'

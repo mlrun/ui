@@ -46,44 +46,38 @@ const MonitorJobsView = ({
 
   return (
     <>
-      {params.jobName && (
-        <TableTop
-          link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
-          text={params.jobName}
-        />
+      {!params.jobId && (
+        <>
+          {params.jobName && (
+            <TableTop
+              link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+              text={params.jobName}
+            />
+          )}
+          <div className="content__action-bar">
+            <FilterMenu
+              actionButton={{
+                label: 'Resource monitoring',
+                tooltip: !appStore.frontendSpec.jobs_dashboard_url
+                  ? 'Grafana service unavailable'
+                  : '',
+                variant: TERTIARY_BUTTON,
+                disabled: !appStore.frontendSpec.jobs_dashboard_url,
+                onClick: () => handleMonitoring()
+              }}
+              filters={filters}
+              onChange={refreshJobs}
+              page={JOBS_PAGE}
+              withoutExpandButton
+            />
+          </div>
+        </>
       )}
-      <div className="content__action-bar">
-        <FilterMenu
-          actionButton={{
-            label: 'Resource monitoring',
-            tooltip: !appStore.frontendSpec.jobs_dashboard_url ? 'Grafana service unavailable' : '',
-            variant: TERTIARY_BUTTON,
-            disabled: !appStore.frontendSpec.jobs_dashboard_url,
-            onClick: () => handleMonitoring()
-          }}
-          filters={filters}
-          onChange={refreshJobs}
-          page={JOBS_PAGE}
-          withoutExpandButton
-        />
-      </div>
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
         (jobs.length === 0 && !params.jobName) ? (
         <NoData message={getNoDataMessage(filtersStore, filters, MONITOR_JOBS_TAB, JOBS_PAGE)} />
-      ) : !isEmpty(selectedJob) ? (
-        <Details
-          actionsMenu={actionsMenu}
-          detailsMenu={pageData.details.menu}
-          getCloseDetailsLink={() => getCloseDetailsLink(location, params.jobName)}
-          handleCancel={() => setSelectedJob({})}
-          handleRefresh={fetchCurrentJob}
-          isDetailsScreen
-          pageData={pageData}
-          selectedItem={selectedJob}
-          tab={MONITOR_JOBS_TAB}
-        />
       ) : (
-        <>
+        isEmpty(selectedJob) && (
           <Table
             actionsMenu={actionsMenu}
             content={params.jobName ? jobRuns : jobs}
@@ -105,7 +99,20 @@ const MonitorJobsView = ({
                 />
               ))}
           </Table>
-        </>
+        )
+      )}
+      {!isEmpty(selectedJob) && (
+        <Details
+          actionsMenu={actionsMenu}
+          detailsMenu={pageData.details.menu}
+          getCloseDetailsLink={() => getCloseDetailsLink(location, params.jobName)}
+          handleCancel={() => setSelectedJob({})}
+          handleRefresh={fetchCurrentJob}
+          isDetailsScreen
+          pageData={pageData}
+          selectedItem={selectedJob}
+          tab={MONITOR_JOBS_TAB}
+        />
       )}
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />

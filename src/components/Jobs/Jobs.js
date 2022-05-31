@@ -7,6 +7,7 @@ import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../common/Loader/Loader'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
@@ -26,6 +27,7 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
   const jobsStore = useSelector(store => store.jobsStore)
   const workflowsStore = useSelector(store => store.workflowsStore)
   const appStore = useSelector(store => store.appStore)
+  const artifactsStore = useSelector(store => store.artifactsStore)
 
   const handleActionsMenuClick = () => {
     const tab = location.pathname.includes(MONITOR_JOBS_TAB)
@@ -73,7 +75,11 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
-          <PageActionsMenu actionsMenuHeader={actionsMenuHeader} onClick={handleActionsMenuClick} />
+          <PageActionsMenu
+            actionsMenuHeader={actionsMenuHeader}
+            onClick={handleActionsMenuClick}
+            showActionsMenu={true}
+          />
         </div>
         <div className="content content_with-menu">
           <ContentMenu
@@ -122,6 +128,9 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
           header={confirmData.header}
           message={confirmData.message}
         />
+      )}
+      {artifactsStore?.preview?.isPreview && (
+        <PreviewModal item={artifactsStore?.preview?.selectedItem} />
       )}
     </>
   )

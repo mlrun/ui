@@ -6,3 +6,15 @@ export const headers = [
   { label: 'Alias', id: 'alias' },
   { label: '', id: 'actions' }
 ]
+
+export const countChanges = (initialFieldValue, currentFieldValue) => {
+    let counter = 0
+
+    initialFieldValue.forEach(item => {
+        if (!currentFieldValue.includes(item)) {
+            counter++
+        }
+    })
+
+    return counter
+}

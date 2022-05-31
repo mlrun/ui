@@ -34,11 +34,16 @@ const JobsPanelTitle = ({
       panelDispatch({
         type: panelActions.SET_PREVIOUS_PANEL_DATA,
         payload: {
+          access_key: panelState.access_key,
+          limits: panelState.limits,
+          preemption_mode: panelState.preemption_mode,
+          priority_class_name: panelState.priority_class_name,
+          requests: panelState.requests,
           tableData: panelState.tableData,
           titleInfo: {
             method: panelState.currentFunctionInfo.method,
             version: panelState.currentFunctionInfo.version
-          }
+          },
         }
       })
     } else {
@@ -57,6 +62,22 @@ const JobsPanelTitle = ({
       panelDispatch({
         type: panelActions.SET_ACCESS_KEY,
         payload: panelState.previousPanelData.access_key
+      })
+      panelDispatch({
+        type: panelActions.SET_PREEMPTION_MODE,
+        payload: panelState.previousPanelData.preemption_mode
+      })
+      panelDispatch({
+        type: panelActions.SET_PRIORITY_CLASS_NAME,
+        payload: panelState.previousPanelData.priority_class_name
+      })
+      panelDispatch({
+        type: panelActions.SET_LIMITS,
+        payload: panelState.previousPanelData.limits
+      })
+      panelDispatch({
+        type: panelActions.SET_REQUESTS,
+        payload: panelState.previousPanelData.requests
       })
     }
   }
