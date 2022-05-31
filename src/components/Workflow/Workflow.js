@@ -233,7 +233,7 @@ const Workflow = ({
             selectedItem={selectedJob}
             tableHeaders={tableContent[0]?.content ?? []}
           >
-            {jobsContent.map((tableItem, index) => (
+            {tableContent.map((tableItem, index) => (
               <JobsTableRow
                 actionsMenu={actionsMenu}
                 handleSelectJob={handleSelectItem}
