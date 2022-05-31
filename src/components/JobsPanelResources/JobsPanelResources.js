@@ -8,6 +8,7 @@ import { panelActions } from '../JobsPanel/panelReducer'
 import {
   generateFullCpuValue,
   generateFullMemoryValue,
+  getLimitsGpuType,
   getSelectedCpuOption,
   LIMITS,
   setCpuValidation,
@@ -34,6 +35,10 @@ const JobsPanelResources = ({
       })
     )
   }, [frontendSpec.valid_function_priority_class_names])
+  const gpuType = useMemo(
+      () => getLimitsGpuType(panelState.limits),
+      [panelState.limits]
+  )
 
   const handleSelectMemoryUnit = (value, type) => {
     const unit = value.match(/i/)
@@ -228,13 +233,16 @@ const JobsPanelResources = ({
     }
 
     panelDispatch({
-      type: panelActions.SET_LIMITS_NVIDIA_GPU,
-      payload: `${value}`
+      type: panelActions.SET_LIMITS,
+      payload: {
+        ...panelState.limits,
+        [gpuType]: `${value}`
+      }
     })
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
       payload: {
-        'nvidia.com/gpu': value
+        [gpuType]: `${value}`
       }
     })
     setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
@@ -255,6 +263,7 @@ const JobsPanelResources = ({
   return (
     <JobsPanelResourcesView
       data={panelState}
+      gpuType={gpuType}
       handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
       handleSelectPreemptionMode={handleSelectPreemptionMode}

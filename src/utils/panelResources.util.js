@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash'
 
 export const REQUESTS = 'requests'
 export const LIMITS = 'limits'
+export const LIMITS_NVIDIA_GPU = 'nvidia.com/gpu'
 
 export const selectMemoryOptions = {
   unitCpu: [
@@ -49,7 +50,11 @@ export const getSelectedMemoryOption = id =>
   selectMemoryOptions.unitMemory.find(option => option.id === id)
 
 export const generateCpuValue = (cpu = '') =>
-  cpu.toString().match(/m/) ? cpu.toString().slice(0, cpu.toString().length - 1) : cpu ? parseFloat(cpu).toFixed(3) : ''
+  cpu.toString().match(/m/)
+    ? cpu.toString().slice(0, cpu.toString().length - 1)
+    : cpu
+    ? parseFloat(cpu).toFixed(3)
+    : ''
 
 export const generateMemoryValue = (memory = '') =>
   memory.toString().match(/[a-zA-Z]/)
@@ -131,7 +136,8 @@ const validateMemory = (
   const requests = Number.parseInt(requestsValue)
   const selectedLimitsOption = getSelectedMemoryOption(selectedLimitsUnit)
   const selectedRequestsOption = getSelectedMemoryOption(selectedRequestsUnit)
-  const isValid = convertToBites(limits, selectedLimitsOption) >= convertToBites(requests, selectedRequestsOption)
+  const isValid =
+    convertToBites(limits, selectedLimitsOption) >= convertToBites(requests, selectedRequestsOption)
 
   setValidation(prevState => ({
     ...prevState,
@@ -148,7 +154,8 @@ export const setCpuValidation = (data, setValidation, type, validationField, val
 
   if (value > 0) {
     const isValid =
-      selectedRequestsOption.convertValue(requestsValue) <= selectedLimitsOption.convertValue(limitsValue)
+      selectedRequestsOption.convertValue(requestsValue) <=
+      selectedLimitsOption.convertValue(limitsValue)
 
     setValidation(prevState => ({
       ...prevState,
@@ -193,9 +200,19 @@ export const generateFullMemoryValue = (value, type, data) => {
 }
 
 export const generateFullCpuValue = (value, type, data) => {
-  return isEmpty(value)
-    ? ''
-    : `${value}${
-      getSelectedCpuOption(data[type].cpuUnit).unit
-    }`
+  return isEmpty(value) ? '' : `${value}${getSelectedCpuOption(data[type].cpuUnit).unit}`
+}
+
+export const getLimitsGpuType = limits => {
+  const reservedWords = ['cpu', 'cpuUnit', 'memory', 'memoryUnit']
+
+  if (!limits || limits[LIMITS_NVIDIA_GPU]) {
+    return LIMITS_NVIDIA_GPU
+  } else {
+    return (
+      Object.keys(limits).find(key => key.includes('/gpu')) ||
+      Object.keys(limits).find(key => !reservedWords.includes(key)) ||
+      LIMITS_NVIDIA_GPU
+    )
+  }
 }
