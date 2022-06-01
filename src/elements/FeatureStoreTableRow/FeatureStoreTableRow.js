@@ -157,7 +157,7 @@ FeatureStoreTableRow.propTypes = {
   pageTab: PropTypes.string.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
-  selectedRowData: PropTypes.arrayOf(PropTypes.shape({}))
+  selectedRowData: PropTypes.shape({}).isRequired
 }
 
 export default React.memo(FeatureStoreTableRow)

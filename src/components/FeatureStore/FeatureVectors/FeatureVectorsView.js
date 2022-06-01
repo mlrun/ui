@@ -33,7 +33,7 @@ const FeatureVectorsView = React.forwardRef(
     ref
   ) => {
     return (
-      <div className="feature-sets" ref={ref}>
+      <div className="feature-store" ref={ref}>
         <div className="content__action-bar">
           <FilterMenu
             filters={featureVectorsFilters}

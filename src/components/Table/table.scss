@@ -36,7 +36,11 @@
     }
 
     [class*='table-cell-'] {
-      min-width: 50px;
+      min-width: 70px;
+    }
+
+    [class*='icon'] {
+      flex-wrap: nowrap;
     }
 
     .text-bold {

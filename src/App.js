@@ -143,6 +143,10 @@ const App = () => {
                 path="projects/:projectName/feature-store"
                 element={<Navigate to={`${FEATURE_SETS_TAB}`} replace />}
               />
+              <Route
+                path="projects/:projectName/feature-store/add-to-feature-vector"
+                element={<AddToFeatureVectorPage />}
+              />
               <Route path="projects/:projectName/feature-store/*" element={<FeatureStore />}>
                 {[`${FEATURE_SETS_TAB}`, `${FEATURE_SETS_TAB}/:name/:tag/:tab`].map(
                   (path, index) => (
@@ -159,7 +163,6 @@ const App = () => {
                   )
                 )}
                 <Route path={`${FEATURES_TAB}`} element={<Features />} />
-                <Route path="add-to-feature-vector" element={<AddToFeatureVectorPage />} />
               </Route>
               <Route
                 path="projects/:projectName/models"

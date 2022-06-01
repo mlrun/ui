@@ -373,12 +373,12 @@ const FeatureVectors = ({
     return () => {
       setFeatureVectors([])
       removeFeatureVectors()
-      removeFeatureVector()
       setSelectedFeatureVector({})
       setSelectedRowData({})
       cancelRequest('cancel')
+      setCreateVectorPopUpIsOpen(false)
     }
-  }, [removeFeatureVector, removeFeatureVectors])
+  }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen])
 
   return (
     <FeatureVectorsView

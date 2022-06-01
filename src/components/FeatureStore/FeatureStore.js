@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -17,7 +17,6 @@ import {
   FEATURES_TAB
 } from '../../constants'
 import { createFeatureSetTitle, createFeatureVectorTitle, tabs } from './featureStore.util'
-import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import './featureStore.scss'
@@ -29,17 +28,8 @@ const FeatureStore = () => {
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const openPanelByDefault = useOpenPanel()
   const location = useLocation()
   const featureStore = useSelector(store => store.featureStore)
-
-  useEffect(() => {
-    if (openPanelByDefault) {
-      location.pathname.includes(FEATURE_SETS_TAB)
-        ? setFeatureSetsPanelIsOpen(true)
-        : setCreateVectorPopUpIsOpen(true)
-    }
-  }, [location.pathname, openPanelByDefault])
 
   const handleActionsMenuClick = () => {
     return location.pathname.includes(FEATURE_SETS_TAB)
