@@ -6,18 +6,16 @@
     align-items: flex-end;
     margin-bottom: 20px;
 
-    .form-field {
+    .col {
+      flex: 1;
+
       &:not(:last-child) {
         margin-right: 10px;
       }
 
-      &__router {
+      &-2 {
         flex: 2 0 0%;
       }
-    }
-
-    .input-wrapper {
-      flex: 1 0 0%;
     }
   }
 

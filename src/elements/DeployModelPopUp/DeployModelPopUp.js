@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { Form } from 'react-final-form'
 import { chain, keyBy, mapValues } from 'lodash'
 
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
@@ -9,6 +10,8 @@ import { FormInput, FormSelect, Wizard } from 'igz-controls/components'
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
+
+import { getValidationRules } from 'igz-controls/utils/validationService'
 
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { MODELS_TAB } from '../../constants'
@@ -25,15 +28,11 @@ const DeployModelPopUp = ({
   setNotification
 }) => {
   const [functionList, setFunctionList] = useState([])
-  const [initialValues, setInitialValues] = useState({
-    className: '',
-    modelName: '',
-    selectedFunctionName: '',
-    selectedTag: ''
-  })
   const [classArgumentsList, setClassArgumentsList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
+
+  const [initialValues, setInitialValues] = useState({})
 
   useEffect(() => {
     if (functionOptionList.length === 0) {
@@ -88,27 +87,19 @@ const DeployModelPopUp = ({
   }, [functionList, initialValues.selectedFunctionName, initialValues.selectedTag])
 
   useEffect(() => {
-    return (
-      () => {
-        setClassArgumentsList([])
-        setInitialValues({})
-        setFunctionList([])
-        setFunctionOptionList([])
-        setTagOptionList([])
-      },
-      []
-    )
-  })
+    return () => {
+      setClassArgumentsList([])
+      setFunctionList([])
+      setFunctionOptionList([])
+      setTagOptionList([])
+    }
+  }, [])
 
   const deployModel = values => {
-    if (values) {
-      console.log(values)
-      return
-    }
     const servingFunction = functionList.find(
       func =>
         func.metadata.name === values.selectedFunctionName &&
-        func.metadata.tag === initialValues.selectedTag
+        func.metadata.tag === values.selectedTag
     )
     const classArguments = mapValues(keyBy(classArgumentsList, 'key'), 'value')
 
@@ -163,7 +154,7 @@ const DeployModelPopUp = ({
 
   const stepsConfig = [
     {
-      getActions: ({ FormState, handleOnClose }) => {
+      getActions: ({ FormState, handleOnClose, handleSubmit }) => {
         return [
           {
             label: 'Cancel',
@@ -171,9 +162,9 @@ const DeployModelPopUp = ({
             variant: TERTIARY_BUTTON
           },
           {
-            disabled: FormState.invalid,
+            disabled: FormState.submitting || (FormState.invalid && FormState.submitFailed),
             label: 'Deploy',
-            onClick: FormState.handleSubmit,
+            onClick: handleSubmit,
             variant: SECONDARY_BUTTON
           }
         ]
@@ -182,66 +173,78 @@ const DeployModelPopUp = ({
   ]
 
   return (
-    <Wizard
-      className="deploy-model"
-      confirmClose
-      initialValues={initialValues}
-      isWizardOpen={isOpen}
-      onWizardResolve={onResolve}
-      onWizardSubmit={deployModel}
-      size={MODAL_SM}
-      title="Deploy model"
-      stepsConfig={stepsConfig}
-    >
-      <>
-        <div className="deploy-model__row">
-          <FormSelect
-            className="form-field__router"
-            disabled={functionOptionList.length === 0}
-            label="Serving function (router)"
-            name="selectedFunctionName"
-            onChange={onSelectFunction}
-            options={functionOptionList}
-          />
-
-          <FormSelect
-            label="Tag"
-            name="selectedTag"
-            search
-            disabled={tagOptionList.length === 0}
-            onChange={handleTagSelect}
-            options={tagOptionList}
-          />
-
-          <FormInput name="className" label="Class" required />
-        </div>
-        <div className="deploy-model__row">
-          <FormInput
-            name="modelName"
-            label="Model name"
-            required
-            type="textarea"
-            tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
-          />
-        </div>
-        <KeyValueTable
-          keyHeader="Class argument name"
-          keyLabel="Class argument name"
-          valueHeader="Value"
-          valueLabel="Value"
-          addNewItemLabel="Add class argument"
-          content={classArgumentsList}
-          addNewItem={newItem => {
-            setClassArgumentsList([...classArgumentsList, newItem])
-          }}
-          deleteItem={deleteIndex => {
-            setClassArgumentsList(classArgumentsList.filter((item, index) => index !== deleteIndex))
-          }}
-          editItem={handleEditClassArgument}
-          withEditMode
-        />
-      </>
-    </Wizard>
+    <Form initialValues={initialValues} onSubmit={() => {}}>
+      {FormState => {
+        return (
+          <Wizard
+            className="deploy-model"
+            confirmClose
+            isWizardOpen={isOpen}
+            FormState={FormState}
+            onWizardResolve={onResolve}
+            onWizardSubmit={deployModel}
+            size={MODAL_SM}
+            title="Deploy model"
+            stepsConfig={stepsConfig}
+          >
+            <>
+              <div className="deploy-model__row">
+                <div className="col col-2">
+                  <FormSelect
+                    className="form-field__router"
+                    disabled={functionOptionList.length === 0}
+                    label="Serving function (router)"
+                    name="selectedFunctionName"
+                    onChange={onSelectFunction}
+                    options={functionOptionList}
+                  />
+                </div>
+                <div className="col">
+                  <FormSelect
+                    label="Tag"
+                    name="selectedTag"
+                    search
+                    disabled={tagOptionList.length === 0}
+                    onChange={handleTagSelect}
+                    options={tagOptionList}
+                  />
+                </div>
+                <div className="col">
+                  <FormInput name="className" label="Class" required />
+                </div>
+              </div>
+              <div className="deploy-model__row">
+                <FormInput
+                  name="modelName"
+                  label="Model name"
+                  required
+                  // validationRules={getValidationRules('common.name')}
+                  tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
+                />
+              </div>
+              <KeyValueTable
+                keyHeader="Class argument name"
+                keyLabel="Class argument name"
+                valueHeader="Value"
+                valueLabel="Value"
+                addNewItemLabel="Add class argument"
+                content={classArgumentsList}
+                addNewItem={newItem => {
+                  setClassArgumentsList([...classArgumentsList, newItem])
+                }}
+                deleteItem={deleteIndex => {
+                  setClassArgumentsList(
+                    classArgumentsList.filter((item, index) => index !== deleteIndex)
+                  )
+                }}
+                editItem={handleEditClassArgument}
+                withEditMode
+              />
+            </>
+          </Wizard>
+        )
+      }}
+    </Form>
   )
 }
 

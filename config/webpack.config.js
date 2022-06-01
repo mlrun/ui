@@ -295,6 +295,7 @@ module.exports = function (webpackEnv) {
         .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
         react: path.resolve('node_modules/react'),
+        'react-final-form': path.resolve('node_modules/react-final-form'),
         'igz-controls': path.resolve('node_modules/iguazio.dashboard-react-controls/dist'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
