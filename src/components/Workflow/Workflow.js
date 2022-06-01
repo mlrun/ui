@@ -79,29 +79,31 @@ const Workflow = ({
     const nodes = []
 
     forEach(workflow.graph, job => {
+      const sourceHandle = getWorkflowSourceHandle(job.phase)
+
       if (job.type === 'DAG') return
 
       let nodeItem = {
         id: job.id,
         type: ML_NODE,
         data: {
-          subType: PRIMARY_NODE,
-          label: job.name,
-          isSelectable: Boolean(
-            job.run_uid || ((job.run_type === 'deploy' || job.run_type === 'build') && job.function)
-          ),
-          sourceHandle: getWorkflowSourceHandle(job.phase),
           customData: {
             function: job.function,
             run_uid: job.run_uid,
             run_type: job.run_type
-          }
+          },
+          isSelectable: Boolean(
+            job.run_uid || ((job.run_type === 'deploy' || job.run_type === 'build') && job.function)
+          ),
+          label: job.name,
+          sourceHandle,
+          subType: PRIMARY_NODE
         },
         className: classnames(
           ((job.run_uid && selectedJob.uid === job.run_uid) ||
             (job.run_type === 'deploy' && job.function.includes(selectedFunction.hash)) ||
             (job.run_type === 'build' && job.function.includes(selectedFunction.name))) &&
-            'selected'
+            `${sourceHandle.className} selected`
         ),
         position: { x: 0, y: 0 }
       }
