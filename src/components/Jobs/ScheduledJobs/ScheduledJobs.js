@@ -19,7 +19,7 @@ import { JobsContext } from '../Jobs'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
-import { ReactComponent as Dropdown } from 'igz-controls/images/dropdown.svg'
+import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
@@ -211,10 +211,10 @@ const ScheduledJobs = ({
   )
 
   const actionsMenu = useMemo(() => {
-    return job => [
+    return [
       {
         label: 'Run now',
-        icon: <Dropdown className="action_cell__run-icon" />,
+        icon: <Run />,
         onClick: handleRunJob
       },
       {
