@@ -40,6 +40,7 @@ const FeaturesView = React.forwardRef(
             filters={featuresFilters}
             onChange={handleRefresh}
             page={FEATURE_STORE_PAGE}
+            tab={FEATURES_TAB}
             withoutExpandButton
           />
         </div>

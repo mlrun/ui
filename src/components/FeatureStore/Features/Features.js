@@ -234,7 +234,7 @@ const Features = ({
       setSelectedRowData({})
       cancelRequest('cancel')
     }
-  }, [removeEntities, removeEntity, removeFeature, removeFeatures])
+  }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName])
 
   return (
     <FeaturesView

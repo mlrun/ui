@@ -378,7 +378,7 @@ const FeatureVectors = ({
       cancelRequest('cancel')
       setCreateVectorPopUpIsOpen(false)
     }
-  }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen])
+  }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName])
 
   return (
     <FeatureVectorsView

@@ -300,7 +300,7 @@ const FeatureSets = ({
       setSelectedRowData({})
       cancelRequest('cancel')
     }
-  }, [removeFeatureSet, removeFeatureSets])
+  }, [removeFeatureSet, removeFeatureSets, params.projectName])
 
   return (
     <FeatureSetsView

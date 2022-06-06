@@ -41,6 +41,7 @@ const FeatureSetsView = React.forwardRef(
             filters={featureSetsFilters}
             onChange={handleRefresh}
             page={FEATURE_STORE_PAGE}
+            tab={FEATURE_SETS_TAB}
             withoutExpandButton
           />
         </div>

@@ -39,6 +39,7 @@ const FeatureVectorsView = React.forwardRef(
             filters={featureVectorsFilters}
             onChange={handleRefresh}
             page={FEATURE_STORE_PAGE}
+            tab={FEATURE_VECTORS_TAB}
             withoutExpandButton
           />
         </div>
