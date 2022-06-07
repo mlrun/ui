@@ -9,7 +9,7 @@ import { ConfirmDialog, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-co
 import { headers } from './detailsRequestedFeatures.utils'
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getValidationRules } from '../../utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validationService'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'

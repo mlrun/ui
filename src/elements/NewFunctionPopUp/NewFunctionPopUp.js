@@ -11,7 +11,7 @@ import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
-import { getValidationRules } from '../../utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validationService'
 
 import './newFunctionPopUp.scss'
 
@@ -119,9 +119,7 @@ const NewFunctionPopUp = ({
               onChange={name => setData(state => ({ ...state, name }))}
               onBlur={handleNameOnBlur}
               required
-              setInvalid={value =>
-                setValidation(state => ({ ...state, isNameValid: value }))
-              }
+              setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
               validationRules={getValidationRules('common.name')}
               value={data.name}
               wrapperClassName="name"
@@ -133,9 +131,7 @@ const NewFunctionPopUp = ({
               onChange={tag => setData(state => ({ ...state, tag }))}
               onBlur={handleTagOnBlur}
               placeholder="latest"
-              setInvalid={value =>
-                setValidation(state => ({ ...state, isTagValid: value }))
-              }
+              setInvalid={value => setValidation(state => ({ ...state, isTagValid: value }))}
               validationRules={getValidationRules('common.tag')}
               value={data.tag}
               wrapperClassName="tag"
