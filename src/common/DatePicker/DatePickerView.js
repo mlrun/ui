@@ -4,9 +4,9 @@ import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
 
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
-import SelectOption from '../../elements/SelectOption/SelectOption'
 import TimePicker from '../TimePicker/TimePicker'
 import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { SelectOption } from 'igz-controls/elements'
 
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 

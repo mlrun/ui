@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import OptionsMenu from '../OptionsMenu/OptionsMenu'
 import ValidationTemplate from '../../elements/ValidationTemplate/ValidationTemplate'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { OptionsMenu } from 'igz-controls/elements'
 
 import { checkPatternsValidity } from '../../utils/validationService'
 import { useDetectOutsideClick } from 'igz-controls/hooks'

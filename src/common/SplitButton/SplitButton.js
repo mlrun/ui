@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { isEmpty } from 'lodash'
 
-import OptionsMenu from '../OptionsMenu/OptionsMenu'
-import SelectOption from '../../elements/SelectOption/SelectOption'
 import { Button } from 'igz-controls/components'
+import { OptionsMenu, SelectOption } from 'igz-controls/elements'
 
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 

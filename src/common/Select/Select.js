@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import SelectOption from '../../elements/SelectOption/SelectOption'
 import { ConfirmDialog, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
+import { SelectOption } from 'igz-controls/elements'
 
 import { SELECT_OPTIONS } from '../../types'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
