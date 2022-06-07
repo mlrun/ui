@@ -11,7 +11,8 @@ import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
 
-import { MODAL_SM, MODELS_TAB, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { MODELS_TAB } from '../../constants'
+import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import './deployModelPopUp.scss'
 

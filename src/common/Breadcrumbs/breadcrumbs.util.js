@@ -8,7 +8,6 @@ import {
   MONITOR_WORKFLOWS_TAB,
   SCHEDULE_TAB
 } from '../../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
 
 export const generateProjectScreens = params => [
   {

@@ -22,17 +22,16 @@ import {
   pageDataInitialState,
   tabs
 } from './models.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
+  MODELS_TAB,
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -64,7 +63,9 @@ const Models = ({
   const openPanelByDefault = useOpenPanel()
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
+  const [deployModel, setDeployModel] = useState({})
   const [isRegisterArtifactPopupOpen, setIsRegisterArtifactPopupOpen] = useState(false)
+  const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -95,8 +96,14 @@ const Models = ({
     [fetchFunctions, fetchModelEndpoints, fetchModels, params.pageTab, params.projectName]
   )
 
+  const closeDeployModelPopUp = () => {
+    setDeployModel({})
+    setIsDeployPopupOpen(false)
+  }
+
   const handleDeployModel = useCallback(model => {
-    openPopUp(DeployModelPopUp, { model })
+    setDeployModel(model)
+    setIsDeployPopupOpen(true)
   }, [])
 
   const handleRemoveModel = useCallback(
@@ -339,6 +346,9 @@ const Models = ({
           setIsPopupOpen={setIsRegisterArtifactPopupOpen}
           title={pageData.actionsMenuHeader}
         />
+      )}
+      {isDeployPopupOpen && (
+        <DeployModelPopUp closePopUp={closeDeployModelPopUp} model={deployModel} />
       )}
     </div>
   )

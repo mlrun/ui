@@ -13,9 +13,9 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  MODELS_TAB
 } from '../../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../types'
 import {
   generateArtifactsContent,

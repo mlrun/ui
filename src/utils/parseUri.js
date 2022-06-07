@@ -1,5 +1,10 @@
-import { DATASETS, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, MONITOR_JOBS_TAB } from '../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
+import {
+  DATASETS,
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  MODELS_TAB,
+  MONITOR_JOBS_TAB
+} from '../constants'
 
 /**
  * Parses a URI of MLRun store and returns an object with the different URI parts, all as strings.
