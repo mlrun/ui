@@ -6,9 +6,9 @@ import {
   DATASETS_PAGE,
   FILES_PAGE,
   MODELS_PAGE,
+  MODELS_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'

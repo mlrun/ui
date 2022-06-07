@@ -11,7 +11,8 @@ import { Button, PopUpDialog } from 'igz-controls/components'
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
-import { LABEL_BUTTON, MODELS_TAB, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { MODELS_TAB } from '../../constants'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import './deployModelPopUp.scss'
 

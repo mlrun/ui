@@ -4,10 +4,10 @@ import {
   FEATURES_TAB,
   MODEL_ENDPOINTS_TAB,
   MONITOR_JOBS_TAB,
+  MODELS_TAB,
   MONITOR_WORKFLOWS_TAB,
   SCHEDULE_TAB
 } from '../../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
 
 export const generateProjectScreens = params => [
   {

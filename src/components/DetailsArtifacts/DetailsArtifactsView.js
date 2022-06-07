@@ -7,8 +7,7 @@ import Download from '../../common/Download/Download'
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { DATASETS, TAG_FILTER_LATEST } from '../../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
+import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'

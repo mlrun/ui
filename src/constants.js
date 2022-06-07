@@ -39,6 +39,7 @@ export const MONITOR_WORKFLOWS_TAB = 'monitor-workflows'
 export const WORKFLOW_SUB_PAGE = 'workflow'
 
 export const MODELS_PAGE = 'MODELS'
+export const MODELS_TAB = 'models'
 export const MODEL_ENDPOINTS_TAB = 'model-endpoints'
 export const REAL_TIME_PIPELINES_TAB = 'real-time-pipelines'
 export const PIPELINE_SUB_PAGE = 'pipeline'

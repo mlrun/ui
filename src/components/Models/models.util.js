@@ -5,13 +5,13 @@ import {
   LABELS_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
+  MODELS_TAB,
   NAME_FILTER,
   PIPELINE_SUB_PAGE,
   REAL_TIME_PIPELINES_TAB,
   SORT_BY,
   TREE_FILTER
 } from '../../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'

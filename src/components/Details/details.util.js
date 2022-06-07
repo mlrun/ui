@@ -25,9 +25,9 @@ import {
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
   FILES_PAGE,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  MODELS_TAB
 } from '../../constants'
-import { MODELS_TAB } from 'igz-controls/constants'
 import { formatDatetime, generateLinkPath } from '../../utils'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
