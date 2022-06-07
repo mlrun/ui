@@ -1,10 +1,5 @@
-import {
-  DATASETS,
-  ARTIFACTS,
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  MODELS_TAB
-} from '../constants'
+import { DATASETS, ARTIFACTS, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
+import { MODELS_TAB } from 'igz-controls/constants'
 import { isNil } from 'lodash'
 
 export const generateUri = (item, tab) => {

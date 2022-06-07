@@ -1,10 +1,5 @@
-import {
-  DATASETS,
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  MODELS_TAB,
-  MONITOR_JOBS_TAB
-} from '../constants'
+import { DATASETS, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, MONITOR_JOBS_TAB } from '../constants'
+import { MODELS_TAB } from 'igz-controls/constants'
 
 /**
  * Parses a URI of MLRun store and returns an object with the different URI parts, all as strings.
@@ -76,9 +71,7 @@ const generateLinkPath = (uri = '') => {
   const { kind, project, key, tag, uid } = parseUri(uri)
   const screen = kindToScreen[kind] ?? 'files'
   const reference = tag ?? uid
-  return `/projects/${project}/${screen}/${key}${
-    reference ? `/${reference}` : ''
-  }`
+  return `/projects/${project}/${screen}/${key}${reference ? `/${reference}` : ''}`
 }
 
 export { generateLinkPath, parseUri }

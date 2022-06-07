@@ -28,11 +28,11 @@ import {
   GROUP_BY_NONE,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
-  MODELS_TAB,
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
+import { MODELS_TAB } from 'igz-controls/constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'

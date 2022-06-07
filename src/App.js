@@ -10,13 +10,14 @@ import {
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
-  MODELS_TAB,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
   SCHEDULE_TAB
 } from './constants'
+
+import { MODELS_TAB } from 'igz-controls/constants'
 
 import 'igz-controls/scss/common.scss'
 import './scss/main.scss'
