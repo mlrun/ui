@@ -55,7 +55,7 @@ export const JobsPanelDataInputsTable = ({
         })
       }}
     >
-      {inputsState.addNewInput ? (
+      {inputsState.addNewInput && !panelState.editMode ? (
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
             <Input
@@ -153,6 +153,7 @@ export const JobsPanelDataInputsTable = ({
             })
           }
           text="input"
+          isPanelEditMode={panelState.editMode}
         />
       )}
     </JobsPanelTable>

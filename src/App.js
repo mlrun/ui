@@ -8,11 +8,14 @@ import { useMode } from './hooks/mode.hook'
 import { useNuclioMode } from './hooks/nuclioMode.hook'
 import {
   FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
   PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
-  WORKFLOW_SUB_PAGE
+  SCHEDULE_TAB
 } from './constants'
 
 import 'igz-controls/scss/common.scss'
@@ -25,6 +28,11 @@ const FeatureStore = React.lazy(() => import('./components/FeatureStore/FeatureS
 const Files = React.lazy(() => import('./components/Files/Files'))
 const Functions = React.lazy(() => import('./components/FunctionsPage/Functions'))
 const Jobs = React.lazy(() => import('./components/Jobs/Jobs'))
+const MonitorJobs = React.lazy(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
+const MonitorWorkflows = React.lazy(() =>
+  import('./components/Jobs/MonitorWorkflows/MonitorWorkflows')
+)
+const ScheduledJobs = React.lazy(() => import('./components/Jobs/ScheduledJobs/ScheduledJobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const ProjectMonitor = React.lazy(() => import('./components/Project/ProjectMonitor'))
@@ -39,6 +47,11 @@ const ProjectOverview = React.lazy(() =>
 const ProjectSettings = React.lazy(() => import('./components/ProjectSettings/ProjectSettings'))
 const AddToFeatureVectorPage = React.lazy(() =>
   import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
+)
+const FeatureSets = React.lazy(() => import('./components/FeatureStore/FeatureSets/FeatureSets'))
+const Features = React.lazy(() => import('./components/FeatureStore/Features/Features'))
+const FeatureVectors = React.lazy(() =>
+  import('./components/FeatureStore/FeatureVectors/FeatureVectors')
 )
 
 const App = () => {
@@ -86,25 +99,31 @@ const App = () => {
                 path="projects/:projectName/jobs/:pageTab/create-new-job"
                 element={<CreateJobPage />}
               />
-              {[
-                `projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:functionName/:functionHash/:tab`,
-                `projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:jobId/:tab`,
-                `projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId`
-              ].map((path, index) => (
-                <Fragment key={index}>
-                  <Route path={path} element={<Jobs subPage={WORKFLOW_SUB_PAGE} />} />
-                </Fragment>
-              ))}
-              {[
-                'projects/:projectName/jobs/:pageTab/:jobName/:jobId/:tab',
-                'projects/:projectName/jobs/:pageTab/:jobId/:tab',
-                'projects/:projectName/jobs/:pageTab/:jobName',
-                'projects/:projectName/jobs/:pageTab'
-              ].map((path, index) => (
-                <Fragment key={index}>
-                  <Route path={path} element={<Jobs />} />
-                </Fragment>
-              ))}
+              <Route path="projects/:projectName/jobs/*" element={<Jobs />}>
+                {[
+                  `${MONITOR_JOBS_TAB}/:jobName/:jobId/:tab`,
+                  `${MONITOR_JOBS_TAB}/:jobId/:tab`,
+                  `${MONITOR_JOBS_TAB}/:jobName`,
+                  `${MONITOR_JOBS_TAB}`
+                ].map((path, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <Route path={path} element={<MonitorJobs />} />
+                    </Fragment>
+                  )
+                })}
+                {[
+                  `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId/:functionName/:functionHash/:tab`,
+                  `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId/:jobId/:tab`,
+                  `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId`,
+                  `${MONITOR_WORKFLOWS_TAB}`
+                ].map((path, index) => (
+                  <Fragment key={index}>
+                    <Route path={path} element={<MonitorWorkflows />} />
+                  </Fragment>
+                ))}
+                <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
+              </Route>
               <Route path="projects/:projectName/functions" element={<Functions />} />
               <Route path="projects/:projectName/functions/:hash/:tab" element={<Functions />} />
               <Route
@@ -121,23 +140,30 @@ const App = () => {
                 </Fragment>
               ))}
               <Route
-                path="projects/:projectName/feature-store/add-to-feature-vector"
-                element={<AddToFeatureVectorPage />}
-              />
-              <Route
                 path="projects/:projectName/feature-store"
                 element={<Navigate to={`${FEATURE_SETS_TAB}`} replace />}
               />
-              {[
-                'projects/:projectName/feature-store/:pageTab',
-                'projects/:projectName/feature-store/:pageTab/:name/:tab',
-                'projects/:projectName/feature-store/:pageTab/:name/:tag/:tab',
-                'projects/:projectName/feature-store/:pageTab/:name/:tag/:iter/:tab'
-              ].map((path, index) => (
-                <Fragment key={index}>
-                  <Route path={path} element={<FeatureStore />} />
-                </Fragment>
-              ))}
+              <Route
+                path="projects/:projectName/feature-store/add-to-feature-vector"
+                element={<AddToFeatureVectorPage />}
+              />
+              <Route path="projects/:projectName/feature-store/*" element={<FeatureStore />}>
+                {[`${FEATURE_SETS_TAB}`, `${FEATURE_SETS_TAB}/:name/:tag/:tab`].map(
+                  (path, index) => (
+                    <Fragment key={index}>
+                      <Route path={path} element={<FeatureSets />} />
+                    </Fragment>
+                  )
+                )}
+                {[`${FEATURE_VECTORS_TAB}`, `${FEATURE_VECTORS_TAB}/:name/:tag/:tab`].map(
+                  (path, index) => (
+                    <Fragment key={index}>
+                      <Route path={path} element={<FeatureVectors />} />
+                    </Fragment>
+                  )
+                )}
+                <Route path={`${FEATURES_TAB}`} element={<Features />} />
+              </Route>
               <Route
                 path="projects/:projectName/models"
                 element={<Navigate to={`${MODELS_TAB}`} replace />}

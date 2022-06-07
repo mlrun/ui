@@ -21,6 +21,7 @@ const JobsPanelTableRow = ({
   className,
   contentItem,
   index,
+  isPanelEditMode,
   editItem,
   handleDelete,
   handleEdit,
@@ -35,6 +36,7 @@ const JobsPanelTableRow = ({
         {withCheckbox && (
           <CheckBox
             className=" table__cell table__cell-checkbox"
+            disabled={isPanelEditMode}
             item={{
               id: contentItem.data.name
             }}
@@ -119,6 +121,7 @@ const JobsPanelTableRow = ({
 JobsPanelTableRow.defaultProps = {
   checkboxOnChange: () => {},
   className: '',
+  isPanelEditMode: false,
   withCheckbox: false
 }
 
@@ -129,6 +132,7 @@ JobsPanelTableRow.propTypes = {
   handleDelete: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
+  isPanelEditMode: PropTypes.bool,
   section: PropTypes.string.isRequired,
   withCheckbox: PropTypes.bool
 }

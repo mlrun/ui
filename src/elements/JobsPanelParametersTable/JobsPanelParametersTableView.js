@@ -20,6 +20,7 @@ const JobsPanelParametersTableView = ({
   handleDeleteParameter,
   handleEditParameter,
   headers,
+  isPanelEditMode,
   parameterTypeOptions,
   selectedItem,
   setEditItem,
@@ -82,6 +83,7 @@ const JobsPanelParametersTableView = ({
                     handleDelete={handleDeleteParameter}
                     handleEdit={handleEditParameter}
                     index={index}
+                    isPanelEditMode={isPanelEditMode}
                     key={`${contentItem.data.name}${index}`}
                     section="parameters"
                     withCheckbox
@@ -107,6 +109,7 @@ JobsPanelParametersTableView.propTypes = {
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
+  isPanelEditMode: PropTypes.bool.isRequired,
   parameterTypeOptions: SELECT_OPTIONS.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setEditItem: PropTypes.func.isRequired,
