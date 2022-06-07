@@ -21,6 +21,7 @@ const EnvironmentVariablesView = ({
   editEnvVariable,
   envVariables,
   generateActionsMenu,
+  isPanelEditMode,
   newEnvVariable,
   selectedEnvVariable,
   setNewEnvVariable,
@@ -35,6 +36,7 @@ const EnvironmentVariablesView = ({
     showAddNewEnvVariableRow && 'no-border',
     className
   )
+  const addBtnClassNames = classnames('add-input', isPanelEditMode && 'disabled')
 
   return (
     <div className="new-item-side-panel__item">
@@ -56,7 +58,7 @@ const EnvironmentVariablesView = ({
             <div className="table__cell-actions" />
           </div>
           {envVariables.map((envVariable, index) =>
-            selectedEnvVariable &&
+            selectedEnvVariable && !isPanelEditMode &&
             selectedEnvVariable.name === envVariable.name ? (
               <EditableEnvironmentVariablesRow
                 editEnvVariable={editEnvVariable}
@@ -88,16 +90,20 @@ const EnvironmentVariablesView = ({
                     {envVariable.value}
                   </Tooltip>
                 </div>
-                <div className="table__cell table__cell-actions">
-                  <ActionsMenu
-                    dataItem={envVariable}
-                    menu={generateActionsMenu(envVariable)}
-                  />
-                </div>
+                {
+                  !isPanelEditMode && (
+                    <div className="table__cell table__cell-actions">
+                      <ActionsMenu
+                        dataItem={envVariable}
+                        menu={generateActionsMenu(envVariable)}
+                      />
+                    </div>
+                  )
+                }
               </div>
             )
           )}
-          {showAddNewEnvVariableRow ? (
+          {showAddNewEnvVariableRow && !isPanelEditMode ? (
             <AddEnvironmentVariablesRow
               addEnvVariable={addEnvVariable}
               discardChanges={discardChanges}
@@ -111,9 +117,9 @@ const EnvironmentVariablesView = ({
             <div className="table__row no-hover">
               <div
                 className="table__cell"
-                onClick={() => setShowAddNewEnvVariableRow(true)}
+                onClick={() => !isPanelEditMode && setShowAddNewEnvVariableRow(true)}
               >
-                <button className="add-input">
+                <button className={addBtnClassNames}>
                   <Plus />
                   Add variable
                 </button>
@@ -128,6 +134,7 @@ const EnvironmentVariablesView = ({
 
 EnvironmentVariablesView.defaultProps = {
   className: '',
+  isPanelEditMode: false,
   selectedEnvVariable: null
 }
 
@@ -138,6 +145,7 @@ EnvironmentVariablesView.propTypes = {
   editEnvVariable: PropTypes.func.isRequired,
   envVariables: PropTypes.array.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
+  isPanelEditMode: PropTypes.bool,
   newEnvVariable: PropTypes.object.isRequired,
   selectedEnvVariable: PropTypes.object,
   setNewEnvVariable: PropTypes.func.isRequired,

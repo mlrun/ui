@@ -43,7 +43,7 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
       if (reactFlowInstance) {
         handleFitGraphView()
       }
-    }, 0)
+    }, 100)
   }, [reactFlowInstance, alignTriggerItem, handleFitGraphView])
 
   useEffect(() => {

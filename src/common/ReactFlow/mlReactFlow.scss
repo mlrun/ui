@@ -60,8 +60,8 @@
     .react-flow__node-label {
       position: relative;
       width: 100%;
-      text-align: center;
       font-size: 1.5rem;
+      text-align: center;
     }
 
     .react-flow__node-sub-label {
@@ -114,8 +114,22 @@
     }
 
     &.selected {
-      border-color: $brightTurquoise;
-      box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
+      &.status-succeeded,
+      &.status-skipped {
+        border-color: $brightTurquoise;
+        box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
+      }
+
+      &.status-error,
+      &.status-failed {
+        border-color: $burntSienna;
+        box-shadow: 0 4px 20px rgba($burntSienna, 0.5);
+      }
+
+      &.status-running {
+        border-color: $pictonBlue;
+        box-shadow: 0 4px 20px rgba($pictonBlue, 0.5);
+      }
     }
 
     .react-flow__handle {
@@ -183,12 +197,12 @@
     &.selected {
       path,
       polyline {
-        stroke: $brightTurquoise;
+        stroke: $saltbox;
       }
 
       .react-flow__arrowhead_closed {
         polyline {
-          fill: $brightTurquoise;
+          fill: $saltbox;
         }
       }
     }

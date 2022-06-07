@@ -222,6 +222,7 @@ const Details = ({
       blockRootChange()
     } else if (detailsStore.changes.counter === 0 && unblockRootChange.current) {
       unblockRootChange.current()
+      unblockRootChange.current = null
     }
   })
 
@@ -371,7 +372,7 @@ Details.propTypes = {
   removeModelFeatureVector: PropTypes.func,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}).isRequired,
-  tab: PropTypes.string,
+  tab: PropTypes.string
 }
 
 export default connect(

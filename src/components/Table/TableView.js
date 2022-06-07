@@ -24,6 +24,7 @@ import {
   REAL_TIME_PIPELINES_TAB
 } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
+import TableHead from './TableHead'
 
 const TableView = ({
   actionsMenu,
@@ -43,8 +44,10 @@ const TableView = ({
   params,
   retryRequest,
   selectedItem,
+  tab,
   tableContent,
   tableContentRef,
+  tableHeaders,
   tableHeadRef,
   tablePanelRef
 }) => {
@@ -194,7 +197,8 @@ const TableView = ({
             </div>
           </>
         )}
-        {children}
+        {tableHeaders?.length > 0 && <TableHead content={tableHeaders} ref={tableHeadRef} />}
+        {!pageData.tableHeaders && <div className="table-body">{children}</div>}
       </div>
       {isTablePanelOpen && (
         <div className="table__panel-container" ref={tablePanelRef}>
@@ -211,6 +215,7 @@ const TableView = ({
           pageData={pageData}
           retryRequest={retryRequest}
           selectedItem={selectedItem}
+          tab={tab}
         />
       )}
     </div>
@@ -235,10 +240,12 @@ TableView.propTypes = {
   params: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  tab: PropTypes.string,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
   ]).isRequired,
+  tableHeaders: PropTypes.array,
   tableHeadRef: PropTypes.shape({}),
   tablePanelRef: PropTypes.shape({})
 }

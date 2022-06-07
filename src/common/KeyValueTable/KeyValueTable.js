@@ -11,6 +11,7 @@ const KeyValueTable = ({
   content,
   deleteItem,
   defaultKeyValue,
+  disabled,
   editItem,
   isKeyEditable,
   isKeyRequired,
@@ -164,6 +165,7 @@ const KeyValueTable = ({
       addNewItemLabel={addNewItemLabel}
       content={content}
       deleteItem={deleteItem}
+      disabled={disabled}
       handleEditItem={handleEditItem}
       handleResetForm={handleResetForm}
       isAddNewItem={isAddNewItem}
@@ -198,6 +200,7 @@ const KeyValueTable = ({
 KeyValueTable.defaultProps = {
   className: '',
   defaultKeyValue: '',
+  disabled: false,
   editItem: () => {},
   isKeyRequired: false,
   isValueRequired: false,
@@ -221,6 +224,7 @@ KeyValueTable.propTypes = {
   ).isRequired,
   defaultKeyValue: PropTypes.string,
   deleteItem: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
   editItem: PropTypes.func,
   isKeyRequired: PropTypes.bool,
   isValueRequired: PropTypes.bool,

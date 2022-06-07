@@ -16,11 +16,24 @@ export const initialState = {
     cpuUnit: '',
     memory: '',
     memoryUnit: '',
-    'nvidia.com/gpu': ''
   },
   outputPath: JOB_DEFAULT_OUTPUT_PATH,
   previousPanelData: {
     access_key: '',
+    limits: {
+      cpu: '',
+      cpuUnit: '',
+      memory: '',
+      memoryUnit: ''
+    },
+    preemption_mode: '',
+    priority_class_name: '',
+    requests: {
+      cpu: '',
+      cpuUnit: '',
+      memory: '',
+      memoryUnit: '',
+    },
     tableData: {
       dataInputs: [],
       parameters: [],
@@ -72,7 +85,6 @@ export const panelActions = {
   SET_LIMITS_CPU_UNIT: 'SET_LIMITS_CPU_UNIT',
   SET_LIMITS_MEMORY: 'SET_LIMITS_MEMORY',
   SET_LIMITS_MEMORY_UNIT: 'SET_LIMITS_MEMORY_UNIT',
-  SET_LIMITS_NVIDIA_GPU: 'SET_LIMITS_NVIDIA_GPU',
   SET_OUTPUT_PATH: 'SET_OUTPUT_PATH',
   SET_PREEMPTION_MODE: 'SET_PREEMPTION_MODE',
   SET_PREVIOUS_PANEL_DATA: 'SET_PREVIOUS_PANEL_DATA',
@@ -80,10 +92,14 @@ export const panelActions = {
   SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
     'SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES',
   SET_PREVIOUS_PANEL_DATA_INPUTS: 'SET_PREVIOUS_PANEL_DATA_INPUTS',
+  SET_PREVIOUS_PANEL_DATA_LIMITS: 'SET_PREVIOUS_PANEL_DATA_LIMITS',
   SET_PREVIOUS_PANEL_DATA_METHOD: 'SET_PREVIOUS_PANEL_DATA_METHOD',
   SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR:
     'SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR',
   SET_PREVIOUS_PANEL_DATA_PARAMETERS: 'SET_PREVIOUS_PANEL_DATA_PARAMETERS',
+  SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE: 'SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE',
+  SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME: 'SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME',
+  SET_PREVIOUS_PANEL_DATA_REQUESTS: 'SET_PREVIOUS_PANEL_DATA_REQUESTS',
   SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES:
     'SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES',
   SET_PREVIOUS_PANEL_DATA_TABLE_DATA: 'SET_PREVIOUS_PANEL_DATA_TABLE_DATA',
@@ -230,14 +246,6 @@ export const panelReducer = (state, { type, payload }) => {
           memoryUnit: payload
         }
       }
-    case panelActions.SET_LIMITS_NVIDIA_GPU:
-      return {
-        ...state,
-        limits: {
-          ...state.limits,
-          'nvidia.com/gpu': payload
-        }
-      }
     case panelActions.SET_OUTPUT_PATH:
       return {
         ...state,
@@ -294,6 +302,17 @@ export const panelReducer = (state, { type, payload }) => {
           }
         }
       }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          limits: {
+            ...state.previousPanelData.limits,
+            ...payload
+          }
+        }
+      }
     case panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR:
       return {
         ...state,
@@ -313,6 +332,33 @@ export const panelReducer = (state, { type, payload }) => {
           tableData: {
             ...state.previousPanelData.tableData,
             parameters: payload
+          }
+        }
+      }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          preemption_mode: payload
+        }
+      }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          priority_class_name: payload
+        }
+      }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_REQUESTS:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          requests: {
+            ...state.previousPanelData.requests,
+            ...payload
           }
         }
       }

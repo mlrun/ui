@@ -366,6 +366,28 @@ Feature: Jobs and workflows
         Then "Logs_Refresh_Button" element on "Jobs_Monitor_Tab_Info_Pane" should contains "Refresh" value
 
     @passive
+    Scenario: Check all mandatory components in Item infopane on Artifacts tab on Jobs Monitor Page
+        Given open url
+        And wait load page
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When click on cell with value "test-m_ingest" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
+        Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
+        Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
+        Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+        Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
+
+    @passive
     Scenario: Check all mandatory components in Item infopane on Overview tab table on Schedule Page
         Given open url
         And wait load page
@@ -568,6 +590,22 @@ Feature: Jobs and workflows
             | input_name_label  | path_label                               |
             | name2             | store://artifacts/my-project/my-artifact |
             | name3             | s3://bucket/path                         |
+        When click on "input_name_label" in "Data_Source_Input_Sources_Table" table in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | input_name_label  |
+            | name2             |
+        Then type value "edited_name2" to "Edit_Data_Inputs_Table_Name_Input" field on "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "artifacts/my-project/edited-artifact" to "URL_Combobox" field on "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Apply_Edit_Button" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When click on "input_name_label" in "Data_Source_Input_Sources_Table" table in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | input_name_label  |
+            | name3             |
+        Then type value "edited_name3" to "Edit_Data_Inputs_Table_Name_Input" field on "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "artifacts/my-project/edited-artifact3" to "URL_Combobox" field on "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Apply_Edit_Button" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify values in "Data_Source_Input_Sources_Table" table in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+            | input_name_label         | path_label                                    |
+            | edited_name2             | store://artifacts/my-project/edited-artifact  |
+            | edited_name3             | s3://artifacts/my-project/edited-artifact3    |
 
     @passive
     Scenario: verify mandatory elements in Parameters Accordion on Create New Jobs side panel
@@ -650,6 +688,26 @@ Feature: Jobs and workflows
             | name3 | map   | Simple       | value3  |
             | name6 | float | Simple       | value6  |
             | name7 | map   | Hyper        | value7  |
+        When click on "name" in "Job_Custom_Parameters_Table" table in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | name  |
+            | name1 |
+        Then type value "edited_name1" to "Edit_Parameters_Table_Name_Input" field on "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "Hyper" option in "Edit_Parameter_Table_Simple_Hyper_Dropdown" dropdown on "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "editedValue1" to "Edit_Parameters_Table_Value_Input" field on "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Apply_Edit_Button" element in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When click on "name" in "Job_Custom_Parameters_Table" table in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | name  |
+            | name7 |
+        Then type value "edited_name7" to "Edit_Parameters_Table_Name_Input" field on "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "Simple" option in "Edit_Parameter_Table_Simple_Hyper_Dropdown" dropdown on "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "editedValue7" to "Edit_Parameters_Table_Value_Input" field on "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Apply_Edit_Button" element in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify values in "Job_Custom_Parameters_Table" table in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+            | name         | type  | simple_hyper | values        |
+            | edited_name1 | str   | Hyper        | editedValue1  |
+            | name3        | map   | Simple       | value3        |
+            | name6        | float | Simple       | value6        |
+            | edited_name7 | map   | Simple       | editedValue7  |
 
     @passive
     Scenario: Verify behaviour of Volume Paths Table in Resources Accordion on create New JobTemplate edit wizard
@@ -732,6 +790,23 @@ Feature: Jobs and workflows
             | Volume_Name_1 | /path/to/happines1 |
             | Volume_Name_5 | /path/to/happines5 |
             | Volume_Name_7 | /path/to/happines7 |
+        When click on "Edit" in action menu in "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            |  volume_name  |
+            | Volume_Name_1 |
+        Then type value "Edited_Name_1" to "Edit_Volume_Name_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "/newPath/to/happines1" to "Edit_Volume_Path_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Apply_Edit_Button" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        When click on "Edit" in action menu in "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            |  volume_name  |
+            | Volume_Name_5 |
+        Then type value "Edited_Name_5" to "Edit_Volume_Name_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "/newPath/to/happines5" to "Edit_Volume_Path_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Apply_Edit_Button" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+            |  volume_name  |        path           |
+            | Edited_Name_1 | /newPath/to/happines1 |
+            | Edited_Name_5 | /newPath/to/happines5 |
+            | Volume_Name_7 | /path/to/happines7    |
 
     @passive
     Scenario: Verify behaviour of Node Selector Table in Resources Accordion on create New JobTemplate edit wizard
@@ -772,6 +847,16 @@ Feature: Jobs and workflows
             | key  | value  |
             | key2 | value2 |
             | key4 | value4 |
+        Then edit 1 row in "Resources_Node_Selector_Table" key-value table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+            | key_input        | value_input      |
+            | edited           | edited           |
+        Then edit 2 row in "Resources_Node_Selector_Table" key-value table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+            | key_input        | value_input      |
+            | edited           | edited           |
+        Then verify values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+            | key        | value        |
+            | key2edited | value2edited |
+            | key4edited | value4edited |
 
     @passive
     Scenario: verify mandatory elements in Resources Accordion on Create New Jobs side panel
@@ -794,6 +879,13 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Pods_Priority"
+        Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent"
+        Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Pods_Toleration"
+        Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Allow"
+        Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Constrain"
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
@@ -807,18 +899,18 @@ Feature: Jobs and workflows
         Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then type value "2" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then select "KB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
         Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
@@ -830,7 +922,7 @@ Feature: Jobs and workflows
         Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then type value "2" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."GPU_Minimum_Value_Warning"
         Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
@@ -962,6 +1054,16 @@ Feature: Jobs and workflows
             | name  |    value    |
             | name0 | value0      |
             | name5 | value5      |
+        Then edit 1 row in "Advanced_Environment_Variables_Table" key-value table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | name_input        | value_input      |
+            | edited            | edited           |
+        Then edit 2 row in "Advanced_Environment_Variables_Table" key-value table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | name_input        | value_input      |
+            | edited            | edited           |
+        Then verify values in "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | name        |    value          |
+            | name0edited | value0edited      |
+            | name5edited | value5edited      |
 
     @passive
     @inProgress
@@ -989,7 +1091,7 @@ Feature: Jobs and workflows
             |                                  |               Value                 |                                   |       yes      |
         Then verify "Environment_Variables_Demo_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Environment_Variables_Demo_Value_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        When click on "Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When click on "Demo_Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
             | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button |
             |                                  |              Secret                 |                                        |                 @#$                   |       yes      |
@@ -998,31 +1100,31 @@ Feature: Jobs and workflows
         Then verify "Environment_Variables_Seret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
         Then verify "Environment_Variables_Seret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Environment_Variables_Seret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
-        When click on "Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When click on "Demo_Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
-            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Demo_Value_Input | Add_Row_Button | Discard_Row_Button |
-            |              name0               |                Value                |              value0               |       yes      |                    |
-            |              name1               |                Value                |              value1               |                |        yes         |
-            |              name2               |                Value                |              value2               |       yes      |                    |
-            |              name3               |                Value                |              value3               |                |        yes         |
-            |              name4               |                Value                |              value4               |       yes      |                    |
-            |              name5               |                Value                |              value5               |       yes      |                    |
-            |              name6               |                Value                |              value6               |                |        yes         |
-            |              name7               |                Value                |              value7               |                |        yes         |
-            |              name8               |                Value                |              value8               |       yes      |                    |
-            |              name9               |                Value                |              value9               |                |        yes         |
+            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Demo_Value_Input | Add_Row_Button | Demo_Discard_Row_Button |
+            |              name0                    |                Value                |              value0                    |       yes      |                         |
+            |              name1                    |                Value                |              value1                    |                |        yes              |
+            |              name2                    |                Value                |              value2                    |       yes      |                         |
+            |              name3                    |                Value                |              value3                    |                |        yes              |
+            |              name4                    |                Value                |              value4                    |       yes      |                         |
+            |              name5                    |                Value                |              value5                    |       yes      |                         |
+            |              name6                    |                Value                |              value6                    |                |        yes              |
+            |              name7                    |                Value                |              value7                    |                |        yes              |
+            |              name8                    |                Value                |              value8                    |       yes      |                         |
+            |              name9                    |                Value                |              value9                    |                |        yes              |
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
-            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button | Discard_Row_Button |
-            |            name0                 |             Secret                  |               value0                   |                key0                   |                |        yes         |
-            |            name1                 |             Secret                  |               value1                   |                key1                   |       yes      |                    |
-            |            name2                 |             Secret                  |               value2                   |                key2                   |                |        yes         |
-            |            name3                 |             Secret                  |               value3                   |                key3                   |       yes      |                    |
-            |            name4                 |             Secret                  |               value4                   |                key4                   |                |        yes         |
-            |            name5                 |             Secret                  |               value5                   |                key5                   |                |        yes         |
-            |            name6                 |             Secret                  |               value6                   |                key6                   |       yes      |                    |
-            |            name7                 |             Secret                  |               value7                   |                key7                   |       yes      |                    |
-            |            name8                 |             Secret                  |               value8                   |                key8                   |                |        yes         |
-            |            name9                 |             Secret                  |               value9                   |                key9                   |       yes      |                    |
+            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button | Demo_Discard_Row_Button |
+            |            name0                      |             Secret                  |               value0                   |                key0                   |                |        yes              |
+            |            name1                      |             Secret                  |               value1                   |                key1                   |       yes      |                         |
+            |            name2                      |             Secret                  |               value2                   |                key2                   |                |        yes              |
+            |            name3                      |             Secret                  |               value3                   |                key3                   |       yes      |                         |
+            |            name4                      |             Secret                  |               value4                   |                key4                   |                |        yes              |
+            |            name5                      |             Secret                  |               value5                   |                key5                   |                |        yes              |
+            |            name6                      |             Secret                  |               value6                   |                key6                   |       yes      |                         |
+            |            name7                      |             Secret                  |               value7                   |                key7                   |       yes      |                         |
+            |            name8                      |             Secret                  |               value8                   |                key8                   |                |        yes              |
+            |            name9                      |             Secret                  |               value9                   |                key9                   |       yes      |                         |
         Then verify values in "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
             | name  |  type  |    value    |
             | name0 | value  | value0      |
@@ -1035,19 +1137,39 @@ Feature: Jobs and workflows
             | name6 | secret | value6:key6 |
             | name7 | secret | value7:key7 |
             | name9 | secret | value9:key9 |
-        When click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
+        When click on "Remove" in action menu in "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
             | name  |
             | name2 |
             | name4 |
             | name8 |
             | name1 |
             | name9 |
-        Then verify values in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
+        Then verify values in "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
             | name  |  type  |    value    |
             | name0 | value  | value0      |
             | name5 | value  | value5      |
             | name3 | secret | value3:key3 |
             | name6 | secret | value6:key6 |
+        When click on "Edit" in action menu in "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | name  |
+            | name5 |
+        Then type value "Edited_Name_5" to "Edit_Environment_Variables_Demo_Name_Input" field on "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "Edited_Value_5" to "Edit_Environment_Variables_Demo_Value_Input" field on "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Apply_Edit_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When click on "Edit" in action menu in "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | name  |
+            | name0 |
+        Then type value "Edited_Name_0" to "Edit_Environment_Variables_Demo_Name_Input" field on "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "Secret" option in "Edit_Environment_Variables_Type_Dropdown" dropdown on "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "editedValue0" to "Edit_Environment_Variables_Secret_Name_Input" field on "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "editedKey0" to "Edit_Environment_Variables_Secret_Key_Input" field on "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then click on "Apply_Edit_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify values in "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | name          |  type  |    value                 |
+            | Edited_Name_0 | secret | editedValue0:editedKey0  |
+            | Edited_Name_5 | value  | Edited_Value_5           |
+            | name3         | secret | value3:key3              |
+            | name6         | secret | value6:key6              |
         When add rows to "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
             | value_input |
             |    value1   |
@@ -1065,6 +1187,12 @@ Feature: Jobs and workflows
         Then verify values in "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
             | kind | value  |
             | file | value2 |
+        Then edit 1 row in "Advanced_Secrets_Table" key-value table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | value_input       |
+            | edited            |
+        Then verify values in "Advanced_Secrets_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | kind        |    value          |
+            | file        | value2edited      |
 
     @passive
     @inProgress
@@ -1580,3 +1708,70 @@ Feature: Jobs and workflows
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
         And select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+
+    Scenario: Check redirection to Function details from Schedules tab
+        * set tear-down property "function" created in "automation-test" project with "schedule-function" value
+        * set tear-down property "schedule" created in "automation-test" project with "schedule-function" value
+        * set tear-down property "project" created with "automation-test" value
+        * create "automation-test" MLRun Project with code 201
+        Given open url
+        And wait load page
+        And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "schedule-function" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        Then collapse "General_Accordion" on "New_Function" wizard
+        Then collapse "General_Accordion" on "New_Function" wizard
+        Then collapse "Resources_Accordion" on "New_Function" wizard
+        Then click on "Save_Button" element on "New_Function" wizard
+        And wait load page
+        And select "tab" with "Jobs" value in breadcrumbs menu
+        And click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then click on row root with value "schedule-function" in "name" column in "Selected_Functions_Templates" table in "Select_Functions_From_Accordion" on "Create_Job" wizard
+        Then click on "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" wizard
+        Then select "Monthly" option in "Schedule_Days_Dropdown" dropdown on "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        Then click on "Schedule_Button" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        And wait load page
+        Then save to context "name" column and "href" attribute on 1 row from "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        Then click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        And wait load page
+        Then compare current browser URL with test "href" context value
+
+    Scenario: Check all mandatory components on Create new Schedule
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        Then verify "Schedule_For_Later_Button" element visibility on "New_JobTemplate_Edit" wizard
+        Then click on "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" wizard
+        Then verify "Schedule_Button" element visibility in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        Then verify "Schedule_Days_Dropdown" element visibility in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        Then verify "Schedule_Time_Dropdown" element visibility in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        Then verify "Schedule_Days_Dropdown" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Schedule_Variants"
+        Then verify "Schedule_Time_Dropdown" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Schedule_Minutes_Variants"
+        Then select "Hourly" option in "Schedule_Days_Dropdown" dropdown on "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        Then verify "Schedule_Time_Dropdown" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Schedule_Hours_Variants"
+        * set tear-down property "schedule" created in "default" project with "aggregate" value
+        Then click on "Schedule_Button" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        Then click on "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" wizard
+        Then click on "Schedule_Button" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        Then "Error_Message" component on "New_JobTemplate_Edit" should contains "Error_Messages"."Already_Scheduled"

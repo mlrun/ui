@@ -1,27 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useEffect, useState, useCallback } from 'react'
+import { connect, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
-import classnames from 'classnames'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../common/Loader/Loader'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import { ConfirmDialog } from 'igz-controls/components'
 
-import { actionsMenuHeader, tabs } from './jobs.util'
+import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
 
 export const JobsContext = React.createContext({})
 
-const Jobs = ({ functionsStore, jobsStore, projectStore, workflowsStore }) => {
+const Jobs = ({ fetchJobFunction, setNotification }) => {
   const [confirmData, setConfirmData] = useState(null)
+  const [editableItem, setEditableItem] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const contentClassName = classnames('content', 'content_with-menu')
+  const functionsStore = useSelector(store => store.functionsStore)
+  const projectStore = useSelector(store => store.projectStore)
+  const jobsStore = useSelector(store => store.jobsStore)
+  const workflowsStore = useSelector(store => store.workflowsStore)
+  const appStore = useSelector(store => store.appStore)
+  const artifactsStore = useSelector(store => store.artifactsStore)
 
   const handleActionsMenuClick = () => {
     const tab = location.pathname.includes(MONITOR_JOBS_TAB)
@@ -32,6 +38,18 @@ const Jobs = ({ functionsStore, jobsStore, projectStore, workflowsStore }) => {
 
     navigate(`/projects/${params.projectName}/jobs/${tab}/create-new-job`)
   }
+
+  const handleRerunJob = useCallback(
+    async job => await rerunJob(job, fetchJobFunction, setNotification, setEditableItem),
+    [fetchJobFunction, setNotification]
+  )
+
+  const handleMonitoring = useCallback(
+    item => {
+      monitorJob(appStore.frontendSpec.jobs_dashboard_url, item, params.projectName)
+    },
+    [appStore.frontendSpec.jobs_dashboard_url, params.projectName]
+  )
 
   useEffect(() => {
     if (location.pathname.includes('monitor') && !location.pathname.includes(MONITOR_JOBS_TAB)) {
@@ -62,9 +80,13 @@ const Jobs = ({ functionsStore, jobsStore, projectStore, workflowsStore }) => {
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
-          <PageActionsMenu actionsMenuHeader={actionsMenuHeader} onClick={handleActionsMenuClick} />
+          <PageActionsMenu
+            actionsMenuHeader={actionsMenuHeader}
+            onClick={handleActionsMenuClick}
+            showActionsMenu={true}
+          />
         </div>
-        <div className={contentClassName}>
+        <div className="content content_with-menu">
           <ContentMenu
             activeTab={
               location.pathname.includes(MONITOR_JOBS_TAB)
@@ -77,7 +99,15 @@ const Jobs = ({ functionsStore, jobsStore, projectStore, workflowsStore }) => {
             tabs={tabs}
           />
           <div className="table-container">
-            <JobsContext.Provider value={{ setConfirmData }}>
+            <JobsContext.Provider
+              value={{
+                editableItem,
+                handleMonitoring,
+                handleRerunJob,
+                setConfirmData,
+                setEditableItem
+              }}
+            >
               <Outlet />
             </JobsContext.Provider>
             {(jobsStore.loading ||
@@ -104,16 +134,13 @@ const Jobs = ({ functionsStore, jobsStore, projectStore, workflowsStore }) => {
           message={confirmData.message}
         />
       )}
+      {artifactsStore?.preview?.isPreview && (
+        <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+      )}
     </>
   )
 }
 
-export default connect(
-  ({ functionsStore, jobsStore, projectStore, workflowsStore }) => ({
-    functionsStore,
-    jobsStore,
-    projectStore,
-    workflowsStore
-  }),
-  null
-)(React.memo(Jobs))
+export default connect(null, {
+  ...actionCreator
+})(React.memo(Jobs))

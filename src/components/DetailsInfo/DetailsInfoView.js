@@ -5,7 +5,7 @@ import classnames from 'classnames'
 
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
-import Tip from '../../common/Tip/Tip'
+import { Tip } from 'igz-controls/components'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {

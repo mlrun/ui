@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
@@ -14,7 +13,7 @@ import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import { RoundedIcon } from 'igz-controls/components'
+import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -100,9 +99,9 @@ const ProjectsView = ({
               <ContentMenu
                 activeTab={selectedProjectsState}
                 screen="active"
-              tabs={projectsStates}
-              onClick={setSelectedProjectsState}
-            />
+                tabs={projectsStates}
+                onClick={setSelectedProjectsState}
+              />
 
               <Sort
                 isDescendingOrder={isDescendingOrder}

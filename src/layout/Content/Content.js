@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -15,16 +15,16 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import TableTop from '../../elements/TableTop/TableTop'
 
-import { generateContentActionsMenu, generateGroupedItems, getNoDataMessage } from './content.util'
+import { generateContentActionsMenu, getNoDataMessage } from './content.util'
 import { isProjectValid } from '../../utils/handleRedirect'
 import { useYaml } from '../../hooks/yaml.hook'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   FEATURE_STORE_PAGE,
-  GROUP_BY_NAME,
   GROUP_BY_NONE,
   MODELS_PAGE
 } from '../../constants'
+import { useGroupContent } from '../../hooks/groupContent.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -50,13 +50,18 @@ const Content = ({
   tableTop
 }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [expandedItems, setExpandedItems] = useState(0)
-  const [expand, setExpand] = useState(false)
-  const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
   const navigate = useNavigate()
   const params = useParams()
   const location = useLocation()
+  const { groupedContent, expand, handleExpandRow, handleExpandAll } = useGroupContent(
+    content,
+    getIdentifier,
+    handleRemoveRequestData,
+    pageData.handleRequestOnExpand,
+    pageData.page,
+    params.pageTab
+  )
 
   const contentClassName = classnames(
     'content',
@@ -90,77 +95,6 @@ const Content = ({
   useEffect(() => {
     isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
   }, [navigate, params.projectName, projectStore.projectsNames.data])
-
-  const handleGroupByName = useCallback(() => {
-    setGroupedContent(generateGroupedItems(content, pageData.selectedRowData, getIdentifier))
-  }, [content, getIdentifier, pageData.selectedRowData])
-
-  const handleGroupByNone = useCallback(() => {
-    const rows = [...document.getElementsByClassName('parent-row')]
-
-    rows.forEach(row => row.classList.remove('parent-row-expanded'))
-
-    setExpand(false)
-    setGroupedContent({})
-  }, [])
-
-  useEffect(() => {
-    if (filtersStore.groupBy === GROUP_BY_NAME) {
-      handleGroupByName()
-    } else if (filtersStore.groupBy === GROUP_BY_NONE) {
-      handleGroupByNone()
-    }
-
-    return () => {
-      setGroupedContent({})
-      toggleConvertedYaml()
-    }
-  }, [handleGroupByName, handleGroupByNone, filtersStore.groupBy, toggleConvertedYaml])
-
-  useEffect(() => {
-    return () => {
-      setExpandedItems(0)
-    }
-  }, [params.jobId, params.pipelineId, groupedContent])
-
-  useEffect(() => {
-    if (Object.keys(groupedContent).length > 0) {
-      setExpand(expandedItems === Object.keys(groupedContent).length)
-    }
-  }, [expandedItems, groupedContent])
-
-  const handleExpandRow = (e, item) => {
-    const parentRow = e.target.closest('.parent-row')
-
-    if (parentRow.classList.contains('parent-row-expanded')) {
-      parentRow.classList.remove('parent-row-expanded')
-      handleRemoveRequestData && handleRemoveRequestData(item)
-
-      setExpandedItems(prev => --prev)
-    } else {
-      parentRow.classList.remove('row_active')
-      parentRow.classList.add('parent-row-expanded')
-      pageData.handleRequestOnExpand && pageData.handleRequestOnExpand(item)
-
-      setExpandedItems(prev => ++prev)
-    }
-  }
-
-  const handleExpandAll = collapseRows => {
-    if (filtersStore.groupBy !== GROUP_BY_NONE) {
-      const rows = [...document.getElementsByClassName('parent-row')]
-
-      if (collapseRows || expand) {
-        rows.forEach(row => row.classList.remove('parent-row-expanded'))
-
-        setExpandedItems(0)
-      } else {
-        rows.forEach(row => row.classList.add('parent-row-expanded'))
-
-        setExpandedItems(Object.keys(groupedContent).length)
-      }
-    }
-  }
 
   return (
     <>

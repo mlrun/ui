@@ -8,9 +8,8 @@ import { Button, PopUpDialog } from 'igz-controls/components'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
-import { SECONDARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
+import { FORBIDDEN_ERROR_STATUS_CODE, SECONDARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
+import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 

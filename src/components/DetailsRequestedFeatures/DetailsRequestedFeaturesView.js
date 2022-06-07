@@ -2,13 +2,14 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Input from '../../common/Input/Input'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import NoData from '../../common/NoData/NoData'
+import { ConfirmDialog, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { headers } from './detailsRequestedFeatures.utils'
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { getValidationRules } from 'igz-controls/utils/validationService'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -25,11 +26,13 @@ const DetailsRequestedFeaturesView = ({
   editableItemIndex,
   handleAliasChange,
   handleDelete,
+  handleDiscardChanges,
   handleItemClick,
+  isAliasNameValid,
   onFinishEdit,
   setConfirmDialogData,
-  selectedItem,
-  setEditableItemIndex
+  setIsAliasNameValid,
+  selectedItem
 }) => {
   const params = useParams()
   const labelFeature = useMemo(
@@ -37,7 +40,9 @@ const DetailsRequestedFeaturesView = ({
     [selectedItem]
   )
 
-  return (
+  return currentData.length === 0 ? (
+    <NoData />
+  ) : (
     <div className="item-requested-features">
       <div className="item-requested-features__table">
         <div className="item-requested-features__table-header">
@@ -88,21 +93,25 @@ const DetailsRequestedFeaturesView = ({
                 <div className="item-requested-features__table-cell cell_feature">
                   <Tooltip template={<TextTooltipTemplate text={feature} />}>{feature}</Tooltip>
                 </div>
-                {editableItemIndex === index ? (
+                {editableItemIndex === index && (
                   <>
                     <div className="item-requested-features__table-cell cell_alias">
                       <div className="cell_alias__input-wrapper">
                         <Input
                           className="input"
                           focused
+                          invalid={!isAliasNameValid}
                           onChange={alias => handleAliasChange(index, alias)}
+                          setInvalid={value => setIsAliasNameValid(value)}
                           type="text"
+                          validationRules={getValidationRules('feature.vector.alias')}
                           value={alias}
                         />
                       </div>
                     </div>
                     <div className="cell_actions cell_actions-visible">
                       <RoundedIcon
+                        disabled={!isAliasNameValid}
                         onClick={() => onFinishEdit(['features', 'label_feature'])}
                         tooltipText="Apply"
                       >
@@ -110,14 +119,15 @@ const DetailsRequestedFeaturesView = ({
                       </RoundedIcon>
 
                       <RoundedIcon
-                        onClick={() => setEditableItemIndex(null)}
+                        onClick={() => handleDiscardChanges(index)}
                         tooltipText="Discard changes"
                       >
                         <Close />
                       </RoundedIcon>
                     </div>
                   </>
-                ) : (
+                )}
+                {editableItemIndex !== index && (
                   <>
                     <div className="item-requested-features__table-cell cell_alias">
                       {alias && (
@@ -204,11 +214,13 @@ DetailsRequestedFeaturesView.propTypes = {
   editableItemIndex: PropTypes.number,
   handleAliasChange: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  handleDiscardChanges: PropTypes.func.isRequired,
   handleItemClick: PropTypes.func.isRequired,
+  isAliasNameValid: PropTypes.bool.isRequired,
   onFinishEdit: PropTypes.func.isRequired,
   setConfirmDialogData: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  setEditableItemIndex: PropTypes.func.isRequired
+  setIsAliasNameValid: PropTypes.func.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default DetailsRequestedFeaturesView

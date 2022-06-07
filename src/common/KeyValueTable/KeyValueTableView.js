@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import Input from '../Input/Input'
 import Select from '../Select/Select'
@@ -17,6 +18,7 @@ const KeyValueTableView = ({
   addNewItemLabel,
   content,
   deleteItem,
+  disabled,
   handleEditItem,
   handleResetForm,
   isAddNewItem,
@@ -45,6 +47,8 @@ const KeyValueTableView = ({
   valueType,
   withEditMode
 }) => {
+  const addBtnClassNames = classnames('add-new-item-btn', disabled && 'disabled')
+
   return (
     <div className={tableClassNames}>
       <div className="table-row table-row__header no-hover">
@@ -56,7 +60,7 @@ const KeyValueTableView = ({
       </div>
       <div className="key-value-table__body">
         {content.map((contentItem, index) => {
-          return isEditMode && index === selectedItem.index ? (
+          return isEditMode && index === selectedItem.index && !disabled ? (
             <div className="table-row table-row_edit" key={index}>
               <div className="table-cell table-cell__key">
                 {!isKeyEditable ? (
@@ -215,7 +219,7 @@ const KeyValueTableView = ({
           )
         })}
       </div>
-      {isAddNewItem ? (
+      {isAddNewItem && !disabled ? (
         <div className="table-row table-row__last no-hover">
           <div className="table-cell__inputs-wrapper">
             <div className="table-cell table-cell__key">
@@ -289,10 +293,12 @@ const KeyValueTableView = ({
       ) : (
         <div className="table-row table-row__last no-hover">
           <button
-            className="add-new-item-btn"
+            className={addBtnClassNames}
             onClick={() => {
-              handleResetForm()
-              setIsAddNewItem(true)
+              if (!disabled) {
+                handleResetForm()
+                setIsAddNewItem(true)
+              }
             }}
           >
             <Plus />
@@ -324,6 +330,7 @@ KeyValueTableView.propTypes = {
     })
   ).isRequired,
   deleteItem: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
   handleEditItem: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
   isAddNewItem: PropTypes.bool.isRequired,

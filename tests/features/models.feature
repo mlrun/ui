@@ -27,6 +27,26 @@ Feature: Models Page
     Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Models" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
 
   @passive
+  Scenario: Check all mandatory components on Model Endpoints tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    Then verify breadcrumbs "project" label should be equal "default" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Models" value
+    And select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify "Model Endpoints (Beta)" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "Model_Endpoints" wizard
+    Then verify "Table_Sort_By_Filter" element visibility on "Model_Endpoints" wizard
+    Then verify "Table_Refresh_Button" element visibility on "Model_Endpoints" wizard
+    Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
+
+  @passive
   Scenario: Check all mandatory components on Real-Time Pipelines tab
     Given open url
     And wait load page
@@ -125,6 +145,24 @@ Feature: Models Page
     Then type value "class=sklearn.linear_model.LogisticRegression" to "Table_Labels_Filter_Input" field on "Models" wizard
     Then click on "Table_Refresh_Button" element on "Models" wizard
     Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "class=sklearn.linear_model.LogisticRegression"
+
+  @passive
+  Scenario: Verify filtering by label on Model Endpoints tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify "Model Endpoints (Beta)" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "Model_Endpoints" wizard
+    Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
+    Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
+    And wait load page
+    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value"
 
   @passive
   Scenario: Check all mandatory components on Register Model Popup
@@ -239,6 +277,27 @@ Feature: Models Page
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Hash_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
+
+  @passive
+  Scenario: Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then save to context "name" column and "href" attribute on 1 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then compare current browser URL with test "href" context value
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_General_Headers"
 
   @passive
   Scenario: Check Details panel still active on page refresh
