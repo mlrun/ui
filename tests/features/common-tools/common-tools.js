@@ -127,6 +127,15 @@ module.exports = {
 
     return structure
   },
+  generateTextAreaGroup: function(root) {
+    return {
+      root,
+      elements: {
+        input: 'textarea',
+        label: 'label'
+      }
+    }
+  },
   parseString: function(string) {
     const rulesArray = string.split('\n')
     const lengthRule = getLength(rulesArray)

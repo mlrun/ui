@@ -960,6 +960,9 @@ Feature: Feature Store Page
         Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" options rules on "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" element visibility on "Create_Feature_Vector_Popup" wizard
+        Then verify "Tag_Input" input should contains "latest" value on "Create_Feature_Vector_Popup" wizard
+        Then type value "   " to "Tag_Input" field on "Create_Feature_Vector_Popup" wizard
+        Then verify "Tag_Input" options rules on "Create_Feature_Vector_Popup" wizard
         Then verify "Description_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
         When add rows to "Labels_Table" table on "Create_Feature_Vector_Popup" wizard
@@ -1004,23 +1007,30 @@ Feature: Feature Store Page
         And wait load page
         Then click on "Create_Vector_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify if "Create_Feature_Vector_Popup" popup dialog appears
-        Then type into "Name_Input" on "Create_Feature_Vector_Popup" popup dialog "test" value
-        Then type into "Tag_Input" on "Create_Feature_Vector_Popup" popup dialog "latest" value
+        Then type into "Name_Input" on "Create_Feature_Vector_Popup" popup dialog "automation-fv-01" value
+        Then type into "Tag_Input" on "Create_Feature_Vector_Popup" popup dialog "v1" value
         Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
         And wait load page
+        Then "Feature_Vector_Name" element on "Add_To_Feature_Vector_Tab" should contains "automation-fv-01" value
+        Then "Feature_Vector_Tag" element on "Add_To_Feature_Vector_Tab" should contains "v1" value
         Then click on "Edit_Feature_Vector_Button" element on "Add_To_Feature_Vector_Tab" wizard
         Then "Title" element on "Create_Feature_Vector_Popup" should contains "Edit feature vector" value
         Then verify "Cross_Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" options rules on "Create_Feature_Vector_Popup" wizard
+        Then type value "automation-fv-02" to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" element visibility on "Create_Feature_Vector_Popup" wizard
+        Then type value "v2" to "Tag_Input" field on "Create_Feature_Vector_Popup" wizard
         Then verify "Description_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then "Cancel_Button" element on "Create_Feature_Vector_Popup" should contains "Cancel" value
         Then verify "Create_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then "Create_Button" element on "Create_Feature_Vector_Popup" should contains "Create" value
+        Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
+        Then "Feature_Vector_Name" element on "Add_To_Feature_Vector_Tab" should contains "automation-fv-02" value
+        Then "Feature_Vector_Tag" element on "Add_To_Feature_Vector_Tab" should contains "v2" value
 
     @passive
     Scenario: Check all mandatory components on Add to feature vector tab
@@ -1105,6 +1115,7 @@ Feature: Feature Store Page
         Then verify if "Create_Feature_Vector_Popup" popup dialog appears
         Then type into "Name_Input" on "Create_Feature_Vector_Popup" popup dialog "temp_vector01" value
         Then type into "Tag_Input" on "Create_Feature_Vector_Popup" popup dialog "temp_tag" value
+        Then type into "Description_Input" on "Create_Feature_Vector_Popup" popup dialog "Automation test description" value
         Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
         And wait load page
         Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard
@@ -1158,6 +1169,7 @@ Feature: Feature Store Page
         And set tear-down property "featureVector" created in "fsdemo-admin" project with "temp_vector01" value
         When select "temp_tag" option in "Table_Tree_Filter_Dropdown" filter dropdown on "Add_To_Feature_Vector_Tab" wizard
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "temp_vector"
+        Then value in "description" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Automation test description"
 
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Requested Features tab on Feature Vectors tab
