@@ -28,7 +28,6 @@ import {
   FETCH_MODELS_BEGIN,
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
-  MODELS_TAB,
   REMOVE_ARTIFACTS,
   REMOVE_ARTIFACTS_ERROR,
   REMOVE_DATASET,
@@ -39,6 +38,7 @@ import {
   REMOVE_MODELS,
   SHOW_ARTIFACT_PREVIEW
 } from '../constants'
+import { MODELS_TAB } from 'igz-controls/constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'

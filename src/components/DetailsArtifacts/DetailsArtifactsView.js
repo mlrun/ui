@@ -7,7 +7,8 @@ import Download from '../../common/Download/Download'
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
+import { DATASETS, TAG_FILTER_LATEST } from '../../constants'
+import { MODELS_TAB } from 'igz-controls/constants'
 
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
@@ -74,9 +75,9 @@ const DetailsArtifactsView = ({
                       target="_blank"
                       to={
                         artifactScreenLinks[artifact.kind] ??
-                        `/projects/${params.projectName}/files/${
-                          artifact.db_key || artifact.key
-                        }/${artifact.tag ?? TAG_FILTER_LATEST}/${iteration}/overview`
+                        `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
+                          artifact.tag ?? TAG_FILTER_LATEST
+                        }/${iteration}/overview`
                       }
                     >
                       <DetailsIcon />

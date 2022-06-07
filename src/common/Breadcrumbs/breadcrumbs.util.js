@@ -1,10 +1,13 @@
 import {
   FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB, FEATURES_TAB, MODEL_ENDPOINTS_TAB, MODELS_TAB,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB,
+  MODEL_ENDPOINTS_TAB,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   SCHEDULE_TAB
 } from '../../constants'
+import { MODELS_TAB } from 'igz-controls/constants'
 
 export const generateProjectScreens = params => [
   {

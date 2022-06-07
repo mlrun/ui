@@ -6,9 +6,9 @@ import {
   DATASETS_PAGE,
   FILES_PAGE,
   MODELS_PAGE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_TAB
+  MODEL_ENDPOINTS_TAB
 } from '../constants'
+import { MODELS_TAB } from 'igz-controls/constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
@@ -22,30 +22,22 @@ import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.sv
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as SeverityError } from 'igz-controls/images/severity-error.svg'
 
-export const createArtifactsContent = (
-  artifacts,
-  page,
-  pageTab,
-  project,
-  isSelectedItem
-) => {
-  return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(
-    artifact => {
-      if (page === ARTIFACTS_PAGE) {
-        return createArtifactsRowData(artifact)
-      } else if (page === MODELS_PAGE) {
-        if (pageTab === MODELS_TAB) {
-          return createModelsRowData(artifact, project, isSelectedItem)
-        } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-          return createModelEndpointsRowData(artifact, project, isSelectedItem)
-        }
-      } else if (page === FILES_PAGE) {
-        return createFilesRowData(artifact, project, isSelectedItem)
+export const createArtifactsContent = (artifacts, page, pageTab, project, isSelectedItem) => {
+  return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
+    if (page === ARTIFACTS_PAGE) {
+      return createArtifactsRowData(artifact)
+    } else if (page === MODELS_PAGE) {
+      if (pageTab === MODELS_TAB) {
+        return createModelsRowData(artifact, project, isSelectedItem)
+      } else if (pageTab === MODEL_ENDPOINTS_TAB) {
+        return createModelEndpointsRowData(artifact, project, isSelectedItem)
       }
-
-      return createDatasetsRowData(artifact, project, isSelectedItem)
+    } else if (page === FILES_PAGE) {
+      return createFilesRowData(artifact, project, isSelectedItem)
     }
-  )
+
+    return createDatasetsRowData(artifact, project, isSelectedItem)
+  })
 }
 
 const createArtifactsRowData = artifact => {
@@ -75,9 +67,7 @@ const createArtifactsRowData = artifact => {
       type: 'owner'
     },
     updated: {
-      value: artifact.updated
-        ? formatDatetime(new Date(artifact.updated), 'N/A')
-        : 'N/A',
+      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
       class: 'artifacts_small'
     },
     buttonPopout: {
@@ -117,12 +107,8 @@ const createModelsRowData = (artifact, project, isSelectedItem) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value: artifact.tag
-          ? `${artifact.tag}${iter}`
-          : `${truncateUid(artifact.tree)}${iter}`,
-        tooltip: artifact.tag
-          ? `${artifact.tag}${iter}`
-          : `${artifact.tree}${iter}`
+        value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
@@ -151,9 +137,7 @@ const createModelsRowData = (artifact, project, isSelectedItem) => {
     },
     updated: {
       id: `updated.${identifierUnique}`,
-      value: artifact.updated
-        ? formatDatetime(new Date(artifact.updated), 'N/A')
-        : 'N/A',
+      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
@@ -235,12 +219,8 @@ const createFilesRowData = (artifact, project, isSelectedItem) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value: artifact.tag
-          ? `${artifact.tag}${iter}`
-          : `${truncateUid(artifact.tree)}${iter}`,
-        tooltip: artifact.tag
-          ? `${artifact.tag}${iter}`
-          : `${artifact.tree}${iter}`
+        value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
@@ -282,9 +262,7 @@ const createFilesRowData = (artifact, project, isSelectedItem) => {
     },
     updated: {
       id: `updated.${identifierUnique}`,
-      value: artifact.updated
-        ? formatDatetime(new Date(artifact.updated), 'N/A')
-        : 'N/A',
+      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
@@ -313,8 +291,7 @@ const createFilesRowData = (artifact, project, isSelectedItem) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',
-      actionHandler: (item, tab) =>
-        copyToClipboard(generateUri(item, tab ?? 'artifacts')),
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? 'artifacts')),
       hidden: isSelectedItem
     }
   }
@@ -337,14 +314,12 @@ const driftStatusIcons = {
 
 const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
   const { name, tag = '-' } =
-    (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)
-      ?.groups ?? {}
+    (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)?.groups ?? {}
   const functionUri = artifact.spec?.function_uri
     ? `store://functions/${artifact.spec.function_uri}`
     : ''
   const { key: functionName } = parseUri(functionUri)
-  const averageLatency =
-    artifact.status?.metrics?.latency_avg_1h?.values?.[0]?.[1]
+  const averageLatency = artifact.status?.metrics?.latency_avg_1h?.values?.[0]?.[1]
   const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
@@ -364,9 +339,7 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
           tab
         ),
       showStatus: true,
-      tooltip: artifact.spec?.model_uri
-        ? `${name} - ${artifact.spec?.model_uri}`
-        : name
+      tooltip: artifact.spec?.model_uri ? `${name} - ${artifact.spec?.model_uri}` : name
     },
     functionName: {
       id: `functionName.${identifierUnique}`,
@@ -460,12 +433,8 @@ const createDatasetsRowData = (artifact, project, isSelectedItem) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value: artifact.tag
-          ? `${artifact.tag}${iter}`
-          : `${truncateUid(artifact.tree)}${iter}`,
-        tooltip: artifact.tag
-          ? `${artifact.tag}${iter}`
-          : `${artifact.tree}${iter}`
+        value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
@@ -494,9 +463,7 @@ const createDatasetsRowData = (artifact, project, isSelectedItem) => {
     },
     updated: {
       id: `updated.${identifierUnique}`,
-      value: artifact.updated
-        ? formatDatetime(new Date(artifact.updated), 'N/A')
-        : 'N/A',
+      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
@@ -532,8 +499,7 @@ const createDatasetsRowData = (artifact, project, isSelectedItem) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',
-      actionHandler: (item, tab) =>
-        copyToClipboard(generateUri(item, tab ?? DATASETS)),
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? DATASETS)),
       hidden: isSelectedItem
     }
   }
