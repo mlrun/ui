@@ -7,8 +7,7 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
-import Tip from '../../common/Tip/Tip'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   getVolumeTypeInput,
@@ -42,9 +41,7 @@ const VolumesTableView = ({
   showAddNewVolumeRow,
   validation
 }) => {
-  const volumeTypeInput = useMemo(() => getVolumeTypeInput(newVolume.type), [
-    newVolume.type
-  ])
+  const volumeTypeInput = useMemo(() => getVolumeTypeInput(newVolume.type), [newVolume.type])
   const tableClassNames = classnames(
     'new-item-side-panel__table',
     'volumes-table',
@@ -71,8 +68,8 @@ const VolumesTableView = ({
       {volumeMounts?.map((contentItem, index) => {
         if (
           selectedVolume &&
-          selectedVolume.data.name === contentItem.data.name
-          && !isPanelEditMode
+          selectedVolume.data.name === contentItem.data.name &&
+          !isPanelEditMode
         ) {
           return (
             <EditableVolumesRow
@@ -94,38 +91,25 @@ const VolumesTableView = ({
                     contentItem.isDefault &&
                     'table__cell_disabled'
                 )
-                const tooltipClassNames = classnames(
-                  property === 'name' && 'parameter-name'
-                )
+                const tooltipClassNames = classnames(property === 'name' && 'parameter-name')
 
                 return (
                   <div className={tableCellClassName} key={property}>
                     <Tooltip
                       className={tooltipClassNames}
-                      template={
-                        <TextTooltipTemplate
-                          text={joinDataOfArrayOrObject(value, ', ')}
-                        />
-                      }
+                      template={<TextTooltipTemplate text={joinDataOfArrayOrObject(value, ', ')} />}
                     >
                       {joinDataOfArrayOrObject(value, ', ')}
                     </Tooltip>
-                    {property === 'name' && contentItem.doc && (
-                      <Tip text={contentItem.doc} />
-                    )}
+                    {property === 'name' && contentItem.doc && <Tip text={contentItem.doc} />}
                   </div>
                 )
               })}
-              {
-                !isPanelEditMode && (
-                  <div className="table__cell table__cell-actions">
-                    <ActionsMenu
-                      menu={generateActionsMenu(contentItem)}
-                      dataItem={contentItem}
-                    />
-                  </div>
-                )
-              }
+              {!isPanelEditMode && (
+                <div className="table__cell table__cell-actions">
+                  <ActionsMenu menu={generateActionsMenu(contentItem)} dataItem={contentItem} />
+                </div>
+              )}
             </div>
           )
         }
@@ -152,10 +136,7 @@ const VolumesTableView = ({
               <Input
                 className="input-row__item"
                 floatingLabel
-                invalid={
-                  isNameNotUnique(newVolume.name, volumeMounts) ||
-                  !validation.isNameValid
-                }
+                invalid={isNameNotUnique(newVolume.name, volumeMounts) || !validation.isNameValid}
                 invalidText={
                   isNameNotUnique(newVolume.name, volumeMounts)
                     ? 'Name already exists'
@@ -165,18 +146,13 @@ const VolumesTableView = ({
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
                 required
                 requiredText="This field is required"
-                setInvalid={value =>
-                  setValidation(state => ({ ...state, isNameValid: value }))
-                }
+                setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
                 type="text"
               />
               <Input
                 className="input-row__item input-row__item_edit"
                 floatingLabel
-                invalid={
-                  isPathNotUnique(newVolume.path, volumeMounts) ||
-                  !validation.isPathValid
-                }
+                invalid={isPathNotUnique(newVolume.path, volumeMounts) || !validation.isPathValid}
                 invalidText={
                   isPathNotUnique(newVolume.path, volumeMounts)
                     ? 'Multiple volumes cannot share the same path'
@@ -186,9 +162,7 @@ const VolumesTableView = ({
                 onChange={path => setNewVolume(state => ({ ...state, path }))}
                 required
                 requiredText="This field is required"
-                setInvalid={value =>
-                  setValidation(state => ({ ...state, isPathValid: value }))
-                }
+                setInvalid={value => setValidation(state => ({ ...state, isPathValid: value }))}
                 tip="A mount path for referencing the data from the function"
                 type="text"
               />
@@ -200,14 +174,10 @@ const VolumesTableView = ({
                 floatingLabel
                 invalid={!validation.isTypeNameValid}
                 label={volumeTypeInput.label}
-                onChange={typeName =>
-                  setNewVolume(state => ({ ...state, typeName }))
-                }
+                onChange={typeName => setNewVolume(state => ({ ...state, typeName }))}
                 required={newVolume.type !== V3IO}
                 requiredText="This field is required"
-                setInvalid={value =>
-                  setValidation(state => ({ ...state, isTypeNameValid: value }))
-                }
+                setInvalid={value => setValidation(state => ({ ...state, isTypeNameValid: value }))}
                 tip={volumeTypeInput.tip}
                 type="text"
               />
@@ -217,9 +187,7 @@ const VolumesTableView = ({
                   floatingLabel
                   invalid={!validation.isAccessKeyValid}
                   label="Access Key"
-                  onChange={accessKey =>
-                    setNewVolume(state => ({ ...state, accessKey }))
-                  }
+                  onChange={accessKey => setNewVolume(state => ({ ...state, accessKey }))}
                   required
                   requiredText="This field is required"
                   setInvalid={value =>
@@ -239,9 +207,7 @@ const VolumesTableView = ({
                   className="input-row__item"
                   floatingLabel
                   label="Resource path"
-                  onChange={subPath =>
-                    setNewVolume(state => ({ ...state, subPath }))
-                  }
+                  onChange={subPath => setNewVolume(state => ({ ...state, subPath }))}
                   tip="A relative directory path within the data container"
                   type="text"
                 />

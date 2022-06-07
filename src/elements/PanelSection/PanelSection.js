@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Tip from '../../common/Tip/Tip'
+import { Tip } from 'igz-controls/components'
 
 import './panelSection.scss'
 

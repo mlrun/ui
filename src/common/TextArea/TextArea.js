@@ -2,8 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import Tip from '../Tip/Tip'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
@@ -147,9 +146,7 @@ const TextArea = React.forwardRef(
             className="text-area__warning"
             template={
               <TextTooltipTemplate
-                text={
-                  required && value.length === 0 ? requiredText : invalidText
-                }
+                text={required && value.length === 0 ? requiredText : invalidText}
                 warning
               />
             }
