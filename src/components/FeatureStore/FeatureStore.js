@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import YamlModal from '../../common/YamlModal/YamlModal'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import {
   FEATURE_SETS_TAB,

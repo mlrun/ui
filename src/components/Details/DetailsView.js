@@ -5,14 +5,19 @@ import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import DetailsMenu from '../../elements/DetailsMenu/DetailsMenu'
 import Download from '../../common/Download/Download'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import LoadButton from '../../common/LoadButton/LoadButton'
 import Loader from '../../common/Loader/Loader'
 import Select from '../../common/Select/Select'
-import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import {
+  Button,
+  ConfirmDialog,
+  Tooltip,
+  TextTooltipTemplate,
+  RoundedIcon
+} from 'igz-controls/components'
 
 import { formatDatetime } from '../../utils'
 import {
