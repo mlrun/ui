@@ -2,10 +2,9 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Input from '../../common/Input/Input'
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import { ConfirmDialog, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { headers } from './detailsRequestedFeatures.utils'
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'

@@ -3,12 +3,11 @@ import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { ConfirmDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
@@ -118,30 +117,19 @@ const ProjectOverview = ({ fetchProject, project }) => {
       <div className="project-overview__header">
         <div className="project-overview__header-title">
           {project.data.metadata.name}
-          <Tooltip
-            template={<TextTooltipTemplate text={project.data.status.state} />}
-          >
-            <i
-              className={`state-${project.data.status.state}-job status-icon`}
-            />
+          <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>
+            <i className={`state-${project.data.status.state}-job status-icon`} />
           </Tooltip>
         </div>
         <div className="project-overview__header-subtitle">
           <div>
-            <span className="project-overview__header-subtitle-name">
-              Created:
-            </span>
+            <span className="project-overview__header-subtitle-name">Created:</span>
             <span>
-              {getDateAndTimeByFormat(
-                project.data.metadata.created,
-                'YYYY-MM-DD, HH:mm:ss A'
-              )}
+              {getDateAndTimeByFormat(project.data.metadata.created, 'YYYY-MM-DD, HH:mm:ss A')}
             </span>
           </div>
           <div>
-            <span className="project-overview__header-subtitle-name">
-              Owner:
-            </span>
+            <span className="project-overview__header-subtitle-name">Owner:</span>
             <span>{project.data.spec.owner}</span>
           </div>
         </div>
@@ -157,12 +145,8 @@ const ProjectOverview = ({ fetchProject, project }) => {
             <div className="project-overview-card" key={card}>
               <div className="project-overview-card__top">
                 <div className="project-overview-card__header">
-                  <h3 className="project-overview-card__header-title">
-                    {title}
-                  </h3>
-                  <p className="project-overview-card__header-subtitle">
-                    {subTitle ?? ''}
-                  </p>
+                  <h3 className="project-overview-card__header-title">{title}</h3>
+                  <p className="project-overview-card__header-subtitle">{subTitle ?? ''}</p>
                 </div>
                 <div className="project-overview-card__actions">
                   <ProjectAction
@@ -197,11 +181,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
                 <div className="additional-links">
                   {additionalLinks &&
                     additionalLinks.map(({ id, label, path }) => (
-                      <span
-                        key={id}
-                        className="link"
-                        onClick={() => handlePathExecution(path)}
-                      >
+                      <span key={id} className="link" onClick={() => handlePathExecution(path)}>
                         {label}
                       </span>
                     ))}
