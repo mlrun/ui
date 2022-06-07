@@ -11,8 +11,6 @@ import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
 
-import { getValidationRules } from 'igz-controls/utils/validationService'
-
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { MODELS_TAB } from '../../constants'
 
@@ -218,7 +216,6 @@ const DeployModelPopUp = ({
                   name="modelName"
                   label="Model name"
                   required
-                  // validationRules={getValidationRules('common.name')}
                   tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
                 />
               </div>
