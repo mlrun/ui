@@ -485,7 +485,7 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders)
   },
   jobsMonitorTabInfoPane: {
-    Arrow_Back: commonArrowBack,
+    Arrow_Back: By.css('a.item-header__back-btn'),
 
     Header: header,
     Updated: updated,

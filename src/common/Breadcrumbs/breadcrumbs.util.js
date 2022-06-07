@@ -4,6 +4,7 @@ import {
   FEATURES_TAB,
   MODEL_ENDPOINTS_TAB,
   MONITOR_JOBS_TAB,
+  MODELS_TAB,
   MONITOR_WORKFLOWS_TAB,
   SCHEDULE_TAB
 } from '../../constants'

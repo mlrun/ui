@@ -5,8 +5,7 @@ import { createPortal } from 'react-dom'
 import Accordion from '../../common/Accordion/Accordion'
 import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 import FeaturesTablePanelRow from './FeatureTablePanleRow/FeaturesTablePanelRow'
-import Tip from '../../common/Tip/Tip'
-import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 

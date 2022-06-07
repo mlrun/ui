@@ -8,8 +8,7 @@ import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanel
 import Input from '../../../common/Input/Input'
 import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
 import Select from '../../../common/Select/Select'
-import Tip from '../../../common/Tip/Tip'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import {
   EXTERNAL_OFFLINE,
@@ -61,9 +60,7 @@ const FeatureSetsPanelTargetStoreView = ({
             <CheckBox
               item={checkboxModels.online}
               onChange={handleSelectTargetKind}
-              selectedId={selectedTargetKind.find(
-                kind => checkboxModels.online.id === kind
-              )}
+              selectedId={selectedTargetKind.find(kind => checkboxModels.online.id === kind)}
             >
               <Online /> Online
               <Tip
@@ -72,9 +69,7 @@ const FeatureSetsPanelTargetStoreView = ({
               />
             </CheckBox>
           </div>
-          {selectedTargetKind.find(
-            kind => checkboxModels.online.id === kind
-          ) && (
+          {selectedTargetKind.find(kind => checkboxModels.online.id === kind) && (
             <div className="target-store__inputs-container">
               <div className="target-store__path-wrapper">
                 {targetsPathEditData.online.isEditMode && (
@@ -130,10 +125,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       {data.online.path}
                     </Tooltip>
                     <div className="target-store__path-actions">
-                      <RoundedIcon
-                        tooltipText="Edit"
-                        onClick={handleOnlineKindPathChange}
-                      >
+                      <RoundedIcon tooltipText="Edit" onClick={handleOnlineKindPathChange}>
                         <Edit />
                       </RoundedIcon>
                     </div>
@@ -155,9 +147,7 @@ const FeatureSetsPanelTargetStoreView = ({
             <CheckBox
               item={checkboxModels.parquet}
               onChange={handleSelectTargetKind}
-              selectedId={selectedTargetKind.find(
-                kind => checkboxModels.parquet.id === kind
-              )}
+              selectedId={selectedTargetKind.find(kind => checkboxModels.parquet.id === kind)}
             >
               <Offline /> Offline
               <Tip
@@ -166,9 +156,7 @@ const FeatureSetsPanelTargetStoreView = ({
               />
             </CheckBox>
           </div>
-          {selectedTargetKind.find(
-            kind => checkboxModels.parquet.id === kind
-          ) && (
+          {selectedTargetKind.find(kind => checkboxModels.parquet.id === kind) && (
             <div className="target-store__inputs-container">
               <div className="target-store__path-wrapper">
                 {targetsPathEditData.parquet.isEditMode && (
@@ -200,10 +188,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       wrapperClassName="offline-path"
                     />
                     <div className="target-store__path-actions editable">
-                      <RoundedIcon
-                        onClick={handleOfflineKindPathChange}
-                        tooltipText="Apply"
-                      >
+                      <RoundedIcon onClick={handleOfflineKindPathChange} tooltipText="Apply">
                         <Checkmark className="target-store__apply-btn" />
                       </RoundedIcon>
                       <RoundedIcon
@@ -219,17 +204,12 @@ const FeatureSetsPanelTargetStoreView = ({
                   <>
                     <Tooltip
                       className="path-data offline-path"
-                      template={
-                        <TextTooltipTemplate text={data.parquet.path} />
-                      }
+                      template={<TextTooltipTemplate text={data.parquet.path} />}
                     >
                       {data.parquet.path}
                     </Tooltip>
                     <div className="target-store__path-actions">
-                      <RoundedIcon
-                        onClick={handleOfflineKindPathChange}
-                        tooltipText="Edit"
-                      >
+                      <RoundedIcon onClick={handleOfflineKindPathChange} tooltipText="Edit">
                         <Edit />
                       </RoundedIcon>
                     </div>
@@ -267,18 +247,10 @@ const FeatureSetsPanelTargetStoreView = ({
                       handlePartitionRadioButtonClick={value =>
                         handlePartitionRadioButtonClick(value, PARQUET)
                       }
-                      partitionColsOnBlur={() =>
-                        handlePartitionColsOnBlur(PARQUET)
-                      }
-                      partitionColsOnChange={value =>
-                        handlePartitionColsOnChange(value, PARQUET)
-                      }
-                      partitionRadioButtonsState={
-                        partitionRadioButtonsState.parquet
-                      }
-                      rangeOnChange={value =>
-                        handleKeyBucketingNumberChange(value, PARQUET)
-                      }
+                      partitionColsOnBlur={() => handlePartitionColsOnBlur(PARQUET)}
+                      partitionColsOnChange={value => handlePartitionColsOnChange(value, PARQUET)}
+                      partitionRadioButtonsState={partitionRadioButtonsState.parquet}
+                      rangeOnChange={value => handleKeyBucketingNumberChange(value, PARQUET)}
                       selectedPartitionKind={selectedPartitionKind.parquet}
                       setValidation={value =>
                         setValidation(state => ({
@@ -317,9 +289,7 @@ const FeatureSetsPanelTargetStoreView = ({
               />
             </CheckBox>
           </div>
-          {selectedTargetKind.find(
-            kind => checkboxModels.externalOffline.id === kind
-          ) && (
+          {selectedTargetKind.find(kind => checkboxModels.externalOffline.id === kind) && (
             <div className="target-store__inputs-container">
               <div className="target-store__item v-center">
                 <Select
@@ -357,9 +327,7 @@ const FeatureSetsPanelTargetStoreView = ({
                 {data.externalOffline.kind === PARQUET && (
                   <CheckBox
                     item={{ id: 'partitioned', label: 'Partition' }}
-                    onChange={id =>
-                      triggerPartitionCheckbox(id, EXTERNAL_OFFLINE)
-                    }
+                    onChange={id => triggerPartitionCheckbox(id, EXTERNAL_OFFLINE)}
                     selectedId={data.externalOffline.partitioned}
                   />
                 )}
@@ -370,9 +338,7 @@ const FeatureSetsPanelTargetStoreView = ({
                     className="link show-advanced"
                     onClick={() => handleAdvancedLinkClick(EXTERNAL_OFFLINE)}
                   >
-                    {showAdvanced.externalOffline
-                      ? 'Hide advanced'
-                      : 'Show advanced'}
+                    {showAdvanced.externalOffline ? 'Hide advanced' : 'Show advanced'}
                   </span>
                   <CSSTransition
                     in={showAdvanced.externalOffline}
@@ -385,21 +351,15 @@ const FeatureSetsPanelTargetStoreView = ({
                       handlePartitionRadioButtonClick={value =>
                         handlePartitionRadioButtonClick(value, EXTERNAL_OFFLINE)
                       }
-                      partitionColsOnBlur={() =>
-                        handlePartitionColsOnBlur(EXTERNAL_OFFLINE)
-                      }
+                      partitionColsOnBlur={() => handlePartitionColsOnBlur(EXTERNAL_OFFLINE)}
                       partitionColsOnChange={value =>
                         handlePartitionColsOnChange(value, EXTERNAL_OFFLINE)
                       }
-                      partitionRadioButtonsState={
-                        partitionRadioButtonsState.externalOffline
-                      }
+                      partitionRadioButtonsState={partitionRadioButtonsState.externalOffline}
                       rangeOnChange={value =>
                         handleKeyBucketingNumberChange(value, EXTERNAL_OFFLINE)
                       }
-                      selectedPartitionKind={
-                        selectedPartitionKind.externalOffline
-                      }
+                      selectedPartitionKind={selectedPartitionKind.externalOffline}
                       setValidation={value =>
                         setValidation(state => ({
                           ...state,
@@ -407,20 +367,12 @@ const FeatureSetsPanelTargetStoreView = ({
                         }))
                       }
                       timePartitioningGranularityChange={value =>
-                        handleTimePartitioningGranularityChange(
-                          value,
-                          EXTERNAL_OFFLINE
-                        )
+                        handleTimePartitioningGranularityChange(value, EXTERNAL_OFFLINE)
                       }
                       triggerPartitionAdvancedCheckboxes={value =>
-                        triggerPartitionAdvancedCheckboxes(
-                          value,
-                          EXTERNAL_OFFLINE
-                        )
+                        triggerPartitionAdvancedCheckboxes(value, EXTERNAL_OFFLINE)
                       }
-                      validation={
-                        validation.isExternalOfflinePartitionColumnsValid
-                      }
+                      validation={validation.isExternalOfflinePartitionColumnsValid}
                     />
                   </CSSTransition>
                 </div>
@@ -428,9 +380,7 @@ const FeatureSetsPanelTargetStoreView = ({
             </div>
           )}
         </div>
-        {!selectedTargetKind.length && (
-          <ErrorMessage message="Must select at least one" />
-        )}
+        {!selectedTargetKind.length && <ErrorMessage message="Must select at least one" />}
       </FeatureSetsPanelSection>
     </div>
   )

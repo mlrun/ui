@@ -398,6 +398,8 @@ module.exports = {
         '.table__panel-container .features-panel__content .accordion__container:nth-of-type(6) .round-icon-cp__circle'
       ),
       Features_By_Projects_Table: commonTable(featuresByProjectsTable)
-    }
+    },
+    Feature_Vector_Name: By.css('.features-panel__header-vector .features-panel__header-vector-name'),
+    Feature_Vector_Tag: By.css('.features-panel__header-vector .features-panel__header-vector-tag')
   }
 }
