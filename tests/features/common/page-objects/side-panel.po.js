@@ -8,12 +8,14 @@ import labelComponent from '../components/label.component'
 import actionMenu from '../components/action-menu.component'
 import comboBox from '../components/combo-box.component'
 import singleDatepicker from '../components/single-date-picker.component'
+import textAreaGroup from '../components/text-area.component'
 import {
   generateInputGroup,
   generateNumberInputGroup,
   generateLabelGroup,
   generateDropdownGroup,
-  generateCheckboxGroup
+  generateCheckboxGroup,
+  generateTextAreaGroup
 } from '../../common-tools/common-tools'
 const { By } = require('selenium-webdriver')
 
@@ -310,6 +312,8 @@ const resourcesNodeSelectorTable = {
         key: '.table-cell__key .data-ellipsis',
         value: '.table-cell__value .data-ellipsis',
         delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
+        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
+        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
         key_input: {
           componentType: inputGroup,
           structure: generateInputGroup('.table-cell__key', true, false, false)
@@ -345,11 +349,13 @@ const advancedEnvironmentVariablesTable = {
       fields: {
         name: '.table-cell:nth-of-type(1) .data-ellipsis',
         value: '.table-cell:nth-of-type(2) .data-ellipsis',
+        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
+        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
         delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
         name_input: {
           componentType: inputGroup,
           structure: generateInputGroup(
-            '.input-wrapper:nth-of-type(1)',
+            '.table-cell__key',
             true,
             false,
             false
@@ -358,7 +364,7 @@ const advancedEnvironmentVariablesTable = {
         value_input: {
           componentType: inputGroup,
           structure: generateInputGroup(
-            '.input-wrapper:nth-of-type(2)',
+            '.table-cell__value',
             true,
             false,
             false
@@ -416,6 +422,8 @@ const advancedSecretsTable = {
       fields: {
         kind: '.table__cell:nth-of-type(1) .data-ellipsis',
         value: '.table__cell:nth-of-type(2) .data-ellipsis',
+        edit_btn: '.table__cell:nth-of-type(2) .data-ellipsis',
+        apply_edit_btn: '.apply-edit-btn',
         delete_btn: '.table__cell:nth-of-type(3) .btn_delete',
         kind_dropdown: {
           componentType: dropdownComponent,
@@ -503,6 +511,8 @@ const functionEnvironmentVariablesTable = {
       fields: {
         name: '.table-cell__key .data-ellipsis',
         value: '.table-cell__value .data-ellipsis',
+        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
+        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
         delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
         name_input: {
           componentType: inputGroup,
@@ -603,6 +613,8 @@ const secretRuntimeConfigurationTable = {
       fields: {
         kind: '.table-cell__key',
         value: '.table-cell__value',
+        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
+        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
         delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
         kind_dropdown: {
           componentType: dropdownComponent,
@@ -730,13 +742,7 @@ module.exports = {
         true
       )
     ),
-    Description_Input: inputGroup({
-      root: '.feature-set-panel .panel-title .text-area-wrapper',
-      elements: {
-        input: 'textarea',
-        label: 'label'
-      }
-    }),
+    Description_Input: textAreaGroup(generateTextAreaGroup('.feature-set-panel .panel-title .text-area-wrapper')),
     Labels_Table: commonTable(labelsTable),
     Data_Source_Accordion: {
       Accordion_Header: By.css(
@@ -1138,12 +1144,16 @@ module.exports = {
           true
         )
       ),
+      Edit_Data_Inputs_Table_Name_Input: inputGroup(
+          generateInputGroup('.new-item-side-panel__body .accordion__container:nth-of-type(1) .edit-row .table__cell_edit:nth-of-type(1)')
+      ),
       Add_Input_Button: By.css(
         '.new-item-side-panel__body .accordion__container:nth-of-type(1) .add-input'
       ),
       Add_Row_Button: By.css(
         '.new-item-side-panel__body .accordion__container:nth-of-type(1) .table__row-add-item .btn-add'
       ),
+      Apply_Edit_Button: By.css('.new-item-side-panel__body .accordion__container:nth-of-type(1) .apply-edit-btn'),
       URL_Combobox: comboBox(
         '.new-item-side-panel__body .accordion__container:nth-of-type(1) .combobox'
       )
@@ -1199,6 +1209,7 @@ module.exports = {
           true
         )
       ),
+      Edit_Parameters_Table_Name_Input: inputGroup(generateInputGroup('.job-panel__parameters-table .edit-row .table__cell_edit:nth-of-type(1)')),
       Parameters_Table_Type_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .select:nth-of-type(2)',
@@ -1215,6 +1226,14 @@ module.exports = {
           '.data-ellipsis > .data-ellipsis'
         )
       ),
+      Edit_Parameter_Table_Simple_Hyper_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.job-panel__parameters-table .edit-row .table__cell_edit:nth-of-type(3) .select',
+              '.select__label',
+              false,
+              '.data-ellipsis > .data-ellipsis'
+          )
+      ),
       Parameters_Table_Value_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .input-wrapper:nth-of-type(4)',
@@ -1222,6 +1241,9 @@ module.exports = {
           false,
           true
         )
+      ),
+      Edit_Parameters_Table_Value_Input: inputGroup(
+          generateInputGroup('.job-panel__parameters-table .edit-row .table__cell_edit:nth-of-type(4)')
       ),
       Add_New_Row_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section .panel-section__body button.add-input'
@@ -1231,7 +1253,8 @@ module.exports = {
       ),
       Discard_New_Row_Button: By.css(
         '.new-item-side-panel__body .accordion__container .table__row-add-item .table__cell-actions button:not([class])'
-      )
+      ),
+      Apply_Edit_Button: By.css('.job-panel__parameters-table .apply-edit-btn'),
     },
     Resources_Accordion: {
       Accordion_Header: By.css(
@@ -1282,8 +1305,11 @@ module.exports = {
       Volume_Paths_Table_Resource_Path_Input: inputGroup(
         resourcesTableCommonInput(3, 3, 1)
       ),
+      Edit_Volume_Name_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(2)')),
+      Edit_Volume_Path_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(3)')),
       Add_New_Row_Button: commonAddNewRowButton,
       Delete_New_Row_Button: commonDeleteNewRowButton,
+      Apply_Edit_Button: By.css('.volumes-table .apply-edit-btn'),
       Volume_Paths_Table: commonTable(volumePathsTable),
       Memory_Request_Dropdown: dropdownComponent(
         generateDropdownGroup(
@@ -1397,6 +1423,9 @@ module.exports = {
           true
         )
       ),
+      Edit_Environment_Variables_Demo_Name_Input: inputGroup(
+          generateInputGroup('.env-variables-table .edit-row .table-cell__key')
+      ),
       Environment_Variables_Type_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row-wrapper .select',
@@ -1404,6 +1433,10 @@ module.exports = {
           false,
           false
         )
+      ),
+      Edit_Environment_Variables_Type_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.env-variables-table .edit-row .table-cell__type .select')
       ),
       Environment_Variables_Value_Input: inputGroup(
         generateInputGroup(
@@ -1421,6 +1454,10 @@ module.exports = {
           true
         )
       ),
+      Edit_Environment_Variables_Demo_Value_Input: inputGroup(
+          generateInputGroup(
+              '.env-variables-table .edit-row .table-cell__value')
+      ),
       Environment_Variables_Seret_Name_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(1)',
@@ -1428,6 +1465,11 @@ module.exports = {
           true,
           true
         )
+      ),
+      Edit_Environment_Variables_Secret_Name_Input: inputGroup(
+          generateInputGroup(
+              '.env-variables-table .edit-row .table-cell__secret .input-wrapper:nth-of-type(1)',
+          )
       ),
       Environment_Variables_Seret_Key_Input: inputGroup(
         generateInputGroup(
@@ -1437,12 +1479,26 @@ module.exports = {
           true
         )
       ),
+      Edit_Environment_Variables_Secret_Key_Input: inputGroup(
+          generateInputGroup(
+              '.env-variables-table .edit-row .table-cell__secret .input-wrapper:nth-of-type(2)',
+          )
+      ),
       Add_Row_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .btn-add:nth-of-type(1)'
       ),
       Discard_Row_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .btn-add:nth-of-type(2)'
-      )
+      ),
+      Demo_Discard_Row_Button: By.css(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .variables-table__btn:nth-of-type(2)'
+      ),
+      Apply_Edit_Button: By.css('.env-variables-table .apply-edit-btn')
+    },
+    Schedule_For_Later: {
+      Schedule_Button: By.css('.jobs-panel__schedule .btn__schedule'),
+      Schedule_Days_Dropdown: dropdownComponent(generateDropdownGroup('.repeat_container .select:nth-of-type(1)')),
+      Schedule_Time_Dropdown: dropdownComponent(generateDropdownGroup('.schedule-repeat .select')),
     },
     Access_Key_Checkbox: commonAccessKeyCheckbox,
     Access_Key_Input: commonAccessKeyInput,
@@ -1451,7 +1507,8 @@ module.exports = {
     ),
     Run_Now_Button: By.css(
       '.new-item-side-panel__body .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(2) button'
-    )
+    ),
+    Error_Message: By.css('.new-item-side-panel__buttons-container .error')
   },
   newFunction: {
     Cross_Close_Button: By.css('.new-item-side-panel .panel-title__btn_close'),
@@ -1462,9 +1519,13 @@ module.exports = {
       Collapse_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(1) .new-item-side-panel__expand-icon'
       ),
-      // TODO: add labels for name, tag and runtime
-      New_Function_Description_Text_Area: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(1) .accordion__body .panel-section__body .description .text-area'
+      Function_Name: By.css('.general__required-info .name span'),
+      Function_Tag: By.css('.general__required-info .tag span'),
+      Function_Runtime: By.css('.general__required-info .runtime span'),
+      Function_Description_Input: textAreaGroup(
+          generateTextAreaGroup(
+              '.new-item-side-panel .accordion__container:nth-of-type(1) .accordion__body .panel-section__body .description'
+          )
       ),
       Labels_Table: commonTable(newFunctionLabelsTable)
     },
@@ -1606,8 +1667,11 @@ module.exports = {
       Volume_Paths_Table_Resource_Path_Input: inputGroup(
         resourcesTableCommonInput(3, 3, 1)
       ),
+      Edit_Volume_Name_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(2)')),
+      Edit_Volume_Path_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(3)')),
       Add_New_Row_Button: commonAddNewRowButton,
       Delete_New_Row_Button: commonDeleteNewRowButton,
+      Apply_Edit_Button: By.css('.volumes-table .apply-edit-btn'),
       // Number input groups
       Memory_Request_Dropdown: dropdownComponent(
         generateDropdownGroup(
@@ -1711,6 +1775,11 @@ module.exports = {
           true
         )
       ),
+      Edit_Function_Environment_Variables_Name_Input: inputGroup(
+          generateInputGroup(
+              '.env-variables-table .edit-row .table-cell__key'
+          )
+      ),
       Function_Environment_Variables_Type_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row-wrapper .select',
@@ -1718,6 +1787,11 @@ module.exports = {
           false,
           false
         )
+      ),
+      Edit_Function_Environment_Variables_Type_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.env-variables-table .edit-row .table-cell__type .select',
+          )
       ),
       Function_Environment_Variables_Value_Input: inputGroup(
         generateInputGroup(
@@ -1727,6 +1801,11 @@ module.exports = {
           true
         )
       ),
+      Edit_Function_Environment_Variables_Value_Input: inputGroup(
+          generateInputGroup(
+              '.env-variables-table .edit-row .table-cell__value',
+          )
+      ),
       Function_Environment_Variables_Seret_Name_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(1)',
@@ -1734,6 +1813,11 @@ module.exports = {
           true,
           true
         )
+      ),
+      Edit_Function_Environment_Variables_Secret_Name_Input: inputGroup(
+          generateInputGroup(
+              '.env-variables-table .edit-row .table-cell__secret .input-wrapper:nth-of-type(1)',
+          )
       ),
       Function_Environment_Variables_Seret_Key_Input: inputGroup(
         generateInputGroup(
@@ -1743,12 +1827,18 @@ module.exports = {
           true
         )
       ),
+      Edit_Function_Environment_Variables_Secret_Key_Input: inputGroup(
+          generateInputGroup(
+              '.env-variables-table .edit-row .table-cell__secret .input-wrapper:nth-of-type(2)',
+          )
+      ),
       Add_Row_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .variables-table__btn.btn-add'
       ),
       Discard_Row_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body button[class=variables-table__btn]'
-      )
+      ),
+      Apply_Edit_Button: By.css('.env-variables-table .apply-edit-btn'),
     },
     Serving_Runtime_Configuration_Accordion: {
       Accordion_Header: By.css(
@@ -1776,6 +1866,11 @@ module.exports = {
           true
         )
       ),
+      Edit_Model_Table_Name_Input: inputGroup(
+          generateInputGroup(
+              '.model-table .edit-row .table__cell:nth-of-type(1)'
+          )
+      ),
       Model_Table_Class_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table .table__body-column .input-wrapper:nth-of-type(2)',
@@ -1783,6 +1878,11 @@ module.exports = {
           false,
           true
         )
+      ),
+      Edit_Model_Table_Class_Input: inputGroup(
+          generateInputGroup(
+              '.model-table .edit-row .table__cell:nth-of-type(2)'
+          )
       ),
       Model_Table_Path_Input: inputGroup(
         generateInputGroup(
@@ -1792,12 +1892,18 @@ module.exports = {
           true
         )
       ),
+      Edit_Model_Table_Path_Input: inputGroup(
+          generateInputGroup(
+              '.model-table .edit-row .table__cell:nth-of-type(3)'
+          )
+      ),
       Add_Model_Table_Row_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table .btn-add'
       ),
       Discard_Model_Table_Row_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table button:nth-of-type(2)'
       ),
+      Apply_Edit_Button: By.css('.new-item-side-panel .accordion__container:nth-of-type(5) .apply-edit-btn'),
       Model_Tracking_Checkbox: checkboxComponent(
         generateCheckboxGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .checkbox.topology__model-tracking',
@@ -1828,6 +1934,12 @@ module.exports = {
           true
         )
       ),
+      Edit_Parameters_Table_Name_Input: inputGroup(
+          generateInputGroup(
+              '.parameters-table .edit-row .table__cell:nth-of-type(1)',
+
+          )
+      ),
       Parameters_Table_Type_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body .input-row-wrapper .select',
@@ -1836,6 +1948,11 @@ module.exports = {
           false
         )
       ),
+      Edit_Parameters_Table_Type_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.parameters-table .edit-row .table__cell:nth-of-type(2) .select'
+          )
+      ),
       Parameters_Table_Value_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body .input-row-wrapper .input-wrapper:nth-of-type(3)',
@@ -1843,6 +1960,11 @@ module.exports = {
           false,
           true
         )
+      ),
+      Edit_Parameters_Table_Value_Input: inputGroup(
+          generateInputGroup(
+              '.parameters-table .edit-row .table__cell:nth-of-type(3)'
+          )
       ),
       Parameters_Table_Value_Number_Input: numberInputGroup(
         generateNumberInputGroup(
