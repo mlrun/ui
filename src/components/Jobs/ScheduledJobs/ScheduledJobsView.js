@@ -5,9 +5,9 @@ import PropTypes from 'prop-types'
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
-import JobsTable from '../../../elements/JobTable/JobsTable'
 import JobsPanel from '../../JobsPanel/JobsPanel'
 import YamlModal from '../../../common/YamlModal/YamlModal'
+import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 
 import { JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../../constants'
 import { getNoDataMessage } from '../../../layout/Content/content.util'
@@ -27,6 +27,7 @@ const ScheduledJobsView = ({
   refreshJobs,
   removeNewJob,
   setEditableItem,
+  tableContent,
   toggleConvertedYaml
 }) => {
   const params = useParams()
@@ -46,8 +47,13 @@ const ScheduledJobsView = ({
             pageData={pageData}
             retryRequest={refreshJobs}
             tab={SCHEDULE_TAB}
+            tableHeaders={tableContent[0]?.content ?? []}
           >
-            <JobsTable actionsMenu={actionsMenu} content={jobs} tab={SCHEDULE_TAB} />
+            <div className="table-body">
+              {tableContent.map((tableItem, index) => (
+                <JobsTableRow actionsMenu={actionsMenu} key={index} rowItem={tableItem} />
+              ))}
+            </div>
           </Table>
         </>
       )}
@@ -57,8 +63,7 @@ const ScheduledJobsView = ({
             setEditableItem(null)
             removeNewJob()
           }}
-          defaultData={editableItem.scheduled_object || editableItem.rerun_object}
-          handleRunNewJob={{}}
+          defaultData={editableItem.scheduled_object}
           mode={PANEL_EDIT_MODE}
           onEditJob={onEditJob}
           onSuccessRun={tab => {
@@ -67,7 +72,7 @@ const ScheduledJobsView = ({
             }
           }}
           project={params.projectName}
-          withSaveChanges={Boolean(editableItem.scheduled_object)}
+          withSaveChanges
         />
       )}
       {convertedYaml.length > 0 && (
@@ -92,6 +97,7 @@ ScheduledJobsView.propTypes = {
   pageData: PropTypes.object.isRequired,
   refreshJobs: PropTypes.func.isRequired,
   removeNewJob: PropTypes.func.isRequired,
+  tableContent: PropTypes.array.isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired
 }
 

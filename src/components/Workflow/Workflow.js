@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -10,6 +10,7 @@ import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import Table from '../Table/Table'
 import TableTop from '../../elements/TableTop/TableTop'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 
 import {
   getLayoutedElements,
@@ -28,12 +29,13 @@ import {
   PRIMARY_NODE
 } from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
+import { createJobsWorkflowsTabContent } from '../../utils/createJobsContent'
+import { useMode } from '../../hooks/mode.hook'
 
 import { ReactComponent as ListView } from 'igz-controls/images/listview.svg'
 import { ReactComponent as Pipelines } from 'igz-controls/images/pipelines.svg'
 
 import './workflow.scss'
-import JobsTable from '../../elements/JobTable/JobsTable'
 
 const Workflow = ({
   actionsMenu,
@@ -56,10 +58,23 @@ const Workflow = ({
   const params = useParams()
   const location = useLocation()
   const navigate = useNavigate()
+  const { isStagingMode } = useMode()
 
   const graphViewClassNames = classnames(
     'graph-view',
     (selectedJob?.uid || selectedFunction?.hash) && 'with-selected-job'
+  )
+
+  const tableContent = useMemo(
+    () =>
+      createJobsWorkflowsTabContent(
+        jobsContent,
+        params.projectName,
+        params.workflowId,
+        isStagingMode,
+        !isEmpty(selectedJob)
+      ),
+    [isStagingMode, jobsContent, params.projectName, params.workflowId, selectedJob]
   )
 
   useEffect(() => {
@@ -131,7 +146,8 @@ const Workflow = ({
     if (element.data?.customData?.run_uid) {
       navigate(
         getWorkflowDetailsLink(
-          params,
+          params.projectName,
+          params.workflowId,
           null,
           element.data.customData.run_uid,
           null,
@@ -217,14 +233,17 @@ const Workflow = ({
             pageData={pageData}
             retryRequest={refresh}
             selectedItem={selectedJob}
+            tableHeaders={tableContent[0]?.content ?? []}
           >
-            <JobsTable
-              actionsMenu={actionsMenu}
-              content={jobsContent}
-              handleSelectJob={handleSelectItem}
-              selectedJob={selectedJob}
-              tab={MONITOR_WORKFLOWS_TAB}
-            />
+            {tableContent.map((tableItem, index) => (
+              <JobsTableRow
+                actionsMenu={actionsMenu}
+                handleSelectJob={handleSelectItem}
+                key={index}
+                rowItem={tableItem}
+                selectedJob={selectedJob}
+              />
+            ))}
           </Table>
         )}
       </div>

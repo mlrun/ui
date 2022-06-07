@@ -43,10 +43,7 @@ const featureStoreApi = {
       data
     ),
   createFeatureVector: data =>
-    mainHttpClient.post(
-      `/projects/${data.metadata.project}/feature-vectors`,
-      data
-    ),
+    mainHttpClient.post(`/projects/${data.metadata.project}/feature-vectors`, data),
   deleteFeatureVector: (project, featureVector) =>
     mainHttpClient.delete(`/projects/${project}/feature-vectors/${featureVector}`),
   fetchFeatureSetsTags: project => mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`),

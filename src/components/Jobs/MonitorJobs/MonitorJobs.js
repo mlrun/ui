@@ -7,26 +7,29 @@ import MonitorJobsView from './MonitorJobsView'
 
 import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
 import { DANGER_BUTTON } from 'igz-controls/constants'
-import { actionCreator, handleAbortJob, monitorJob } from '../jobs.util'
+import { handleAbortJob } from '../jobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { useYaml } from '../../../hooks/yaml.hook'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { JobsContext } from '../Jobs'
-import { generateActionsMenu, generateFilters, generatePageData } from './monitorJobs.util'
-import { rerunJob } from '../jobs.util'
+import {
+  generateActionsMenu,
+  generateFilters,
+  generatePageData,
+  monitorJobsActionCreator
+} from './monitorJobs.util'
 import { usePods } from '../../../hooks/usePods.hook'
+import { useMode } from '../../../hooks/mode.hook'
+import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 
 const MonitorJobs = ({
   abortJob,
   fetchAllJobRuns,
   fetchJob,
-  fetchJobFunction,
   fetchJobLogs,
   fetchJobPods,
   fetchJobs,
-  filtersStore,
-  jobsStore,
   removeJobLogs,
   removeNewJob,
   removePods,
@@ -39,17 +42,26 @@ const MonitorJobs = ({
   const [selectedJob, setSelectedJob] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [dateFilter, setDateFilter] = useState(['', ''])
-  const [editableItem, setEditableItem] = useState(null)
   const appStore = useSelector(store => store.appStore)
+  const jobsStore = useSelector(store => store.jobsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { setConfirmData } = React.useContext(JobsContext)
+  const { isStagingMode } = useMode()
+  const { editableItem, handleMonitoring, handleRerunJob, setConfirmData, setEditableItem } =
+    React.useContext(JobsContext)
   const filters = useMemo(() => {
     return generateFilters(params.jobName)
   }, [params.jobName])
 
   usePods(fetchJobPods, removePods, selectedJob)
+
+  const tableContent = useMemo(
+    () =>
+      createJobsMonitorTabContent(params.jobName ? jobRuns : jobs, params.jobName, isStagingMode),
+    [isStagingMode, jobRuns, jobs, params.jobName]
+  )
 
   const pageData = useMemo(
     () => generatePageData(fetchJobLogs, removeJobLogs, selectedJob),
@@ -86,11 +98,6 @@ const MonitorJobs = ({
     [fetchAllJobRuns, fetchJobs, params.jobName, params.projectName, setNotification]
   )
 
-  const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setNotification, setEditableItem),
-    [fetchJobFunction, setNotification]
-  )
-
   const onAbortJob = useCallback(
     job => {
       handleAbortJob(
@@ -123,13 +130,6 @@ const MonitorJobs = ({
       })
     },
     [onAbortJob, setConfirmData]
-  )
-
-  const handleMonitoring = useCallback(
-    item => {
-      monitorJob(appStore.frontendSpec.jobs_dashboard_url, item, params.projectName)
-    },
-    [appStore.frontendSpec.jobs_dashboard_url, params.projectName]
   )
 
   const actionsMenu = useMemo(() => {
@@ -195,7 +195,7 @@ const MonitorJobs = ({
         message: 'Job started successfully'
       })
     },
-    [filtersStore, refreshJobs, setNotification]
+    [filtersStore, refreshJobs, setEditableItem, setNotification]
   )
 
   useEffect(() => {
@@ -294,18 +294,12 @@ const MonitorJobs = ({
       selectedJob={selectedJob}
       setEditableItem={setEditableItem}
       setSelectedJob={setSelectedJob}
+      tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
     />
   )
 }
 
-export default connect(
-  ({ appStore, filtersStore, jobsStore }) => ({
-    appStore,
-    filtersStore,
-    jobsStore
-  }),
-  {
-    ...actionCreator
-  }
-)(React.memo(MonitorJobs))
+export default connect(null, {
+  ...monitorJobsActionCreator
+})(React.memo(MonitorJobs))

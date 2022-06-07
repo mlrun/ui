@@ -1,9 +1,4 @@
-import {
-  DATASETS,
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  FEATURES_TAB
-} from '../constants'
+import { DATASETS, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, FEATURES_TAB } from '../constants'
 
 export const getArtifactIdentifier = (artifact, unique) => {
   let identifier = `${artifact?.db_key || artifact?.spec?.model || ''}`
