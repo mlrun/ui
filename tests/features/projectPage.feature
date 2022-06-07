@@ -287,7 +287,7 @@ Feature: MLRun Project Page
         And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Description_Text_Area" element visibility in "General_Accordion" on "New_Function" wizard
+        Then verify "Function_Description_Input" element visibility in "General_Accordion" on "New_Function" wizard
         Then verify "Labels_Table" element visibility in "General_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then verify "New_Function_Code_Entry_Dropdown" element visibility in "Code_Accordion" on "New_Function" wizard
@@ -347,7 +347,7 @@ Feature: MLRun Project Page
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And select "Serving" option in "New_Function_Runtime_Dropdown" dropdown on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
-        Then verify "New_Function_Description_Text_Area" element visibility in "General_Accordion" on "New_Function" wizard
+        Then verify "Function_Description_Input" element visibility in "General_Accordion" on "New_Function" wizard
         Then verify "Labels_Table" element visibility in "General_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then verify "New_Function_Code_Entry_Dropdown" element visibility in "Code_Accordion" on "New_Function" wizard

@@ -226,7 +226,7 @@ const scheduleMonitorTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .link .link',
+        name: '.table-body__cell:nth-of-type(1) a',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(

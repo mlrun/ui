@@ -129,6 +129,19 @@ module.exports = {
       'Metrics'
     ]
   },
+  Models_Endpoints_Info_Pane: {
+    Tab_List: ['Overview', 'Drift Analysis', 'Features Analysis'],
+    Overview_General_Headers: [
+      'UID',
+      'Model class',
+      'Model artifact',
+      'Function URI',
+      'Last prediction',
+      'Error count',
+      'Accuracy',
+      'Stream path'
+    ]
+  },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
     Combobox_Options: [
@@ -197,7 +210,7 @@ module.exports = {
     Limit_Number_Warning: 'Limit must be bigger than or equal to Request and not be less than 1',
     CPU_Limit_Number_Warning:
       'Limit must be bigger than or equal to Request and not be less than 0.001',
-    Limit_Number_Request_Warning:
+    Request_Number_Warning:
       'Request must be less than or equal to Limit and not be less than 1',
     CPU_Request_Number_Warning:
       'Request must be less than or equal to Limit and not be less than 0.001',
@@ -298,7 +311,8 @@ module.exports = {
     Project_Already_Exists: /Project name "[^"]+[$"] already exists/,
     Projects_Limit_Reached:
       'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance',
-    Must_Select_One: 'Must select at least one'
+    Must_Select_One: 'Must select at least one',
+    Already_Scheduled: 'This job is already scheduled'
   },
   Dropdown_Options: {
     Tag_Filer_Options: ['All', 'latest'],
@@ -336,7 +350,10 @@ module.exports = {
     CPU_Unit_Options: ['cpu', 'millicpu'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
-    Pods_Toleration: ['Allow', 'Constrain', 'Prevent']
+    Pods_Toleration: ['Allow', 'Constrain', 'Prevent'],
+    Schedule_Variants: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
+    Schedule_Minutes_Variants: ['10', '15', '20', '30'],
+    Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
     Common_Message: 'No data to show',
