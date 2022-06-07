@@ -5,7 +5,7 @@ import OptionsMenu from '../OptionsMenu/OptionsMenu'
 import SelectOption from '../../elements/SelectOption/SelectOption'
 import { Button } from 'igz-controls/components'
 
-import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
+import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import { MAIN_SPLIT_BUTTON, ADDITIONAL_SPLIT_BUTTON } from '../../types'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -16,13 +16,7 @@ import './splitButton.scss'
 
 const SplitButton = ({ mainButton, additionalButton }) => {
   const { onClick: mainAction, ...mainProps } = mainButton
-  const {
-    icon,
-    options,
-    onSelectOption,
-    selectedOption,
-    ...additionalProps
-  } = additionalButton
+  const { icon, options, onSelectOption, selectedOption, ...additionalProps } = additionalButton
 
   const [isBodyOpen, setIsBodyOpen] = useState(false)
   const mainRef = useRef()

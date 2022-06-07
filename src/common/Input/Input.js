@@ -8,7 +8,7 @@ import ValidationTemplate from '../../elements/ValidationTemplate/ValidationTemp
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { checkPatternsValidity } from '../../utils/validationService'
-import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
+import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import { INPUT_LINK } from '../../types'
 
