@@ -5,7 +5,7 @@ import { Form } from 'react-final-form'
 import { chain, keyBy, mapValues } from 'lodash'
 
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
-import { Button, FormInput, FormSelect, Modal } from 'igz-controls/components'
+import { Button, ConfirmDialog, FormInput, FormSelect, Modal } from 'igz-controls/components'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
@@ -13,6 +13,8 @@ import { generateUri } from '../../utils/resources'
 
 import { MODELS_TAB } from '../../constants'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import './deployModelPopUp.scss'
 
@@ -149,11 +151,31 @@ const DeployModelPopUp = ({
     setClassArgumentsList(newClassArguments)
   }
 
+  const handleCloseModal = FormState => {
+    if (FormState && FormState.dirty) {
+      openPopUp(ConfirmDialog, {
+        cancelButton: {
+          label: 'Cancel',
+          variant: TERTIARY_BUTTON
+        },
+        confirmButton: {
+          handler: onResolve,
+          label: 'OK',
+          variant: SECONDARY_BUTTON
+        },
+        header: 'Are you sure?',
+        message: 'All changes will be lost'
+      })
+    } else {
+      onResolve()
+    }
+  }
+
   const getModalActions = FormState => {
     const actions = [
       {
         label: 'Cancel',
-        onClick: onResolve,
+        onClick: () => handleCloseModal(FormState),
         variant: TERTIARY_BUTTON
       },
       {
@@ -173,7 +195,7 @@ const DeployModelPopUp = ({
           <Modal
             actions={getModalActions(FormState)}
             className="deploy-model"
-            onClose={onResolve}
+            onClose={() => handleCloseModal(FormState)}
             show={isOpen}
             size={MODAL_SM}
             title="Deploy model"
@@ -240,16 +262,14 @@ DeployModelPopUp.defaultProps = {
   closePopUp: () => {},
   isOpen: false,
   model: {},
-  onResolve: () => {},
-  onReject: () => {}
+  onResolve: () => {}
 }
 
 DeployModelPopUp.propTypes = {
   closePopUp: PropTypes.func,
   isOpen: PropTypes.bool.isRequired,
   model: PropTypes.shape({}).isRequired,
-  onResolve: PropTypes.func,
-  onReject: PropTypes.func
+  onResolve: PropTypes.func
 }
 
 export default connect(artifactsStore => artifactsStore, {
