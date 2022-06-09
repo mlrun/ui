@@ -52,7 +52,7 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
   )
 
   useEffect(() => {
-    if (location.pathname.includes('monitor') && !location.pathname.includes(MONITOR_JOBS_TAB)) {
+    if (location.pathname.match('\\b\\monitor(?!-)\\b')) {
       /*/!* Adding the next redirect for backwards compatability *!/*/
       navigate(location.pathname.replace('monitor', MONITOR_JOBS_TAB), { replace: true })
     } else {
