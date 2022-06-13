@@ -21,7 +21,7 @@ const TableLinkCell = ({
   showExpandButton
 }) => {
   const tableCellClassNames = classnames('table-body__cell', data.class)
-  const itemNameCLassNames = classnames('link', 'item-name')
+  const itemNameClassNames = classnames('link', 'item-name')
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 
   return (
@@ -35,7 +35,7 @@ const TableLinkCell = ({
         <span className="data-ellipsis">
           <a href={link} className="link" target="blank">
             <Tooltip
-              className={itemNameCLassNames}
+              className={itemNameClassNames}
               template={<TextTooltipTemplate text={data.tooltip || data.value} />}
             >
               {data.value}
@@ -47,7 +47,7 @@ const TableLinkCell = ({
           <div className="name-wrapper">
             <span className="link">
               <Tooltip
-                className={itemNameCLassNames}
+                className={itemNameClassNames}
                 template={<TextTooltipTemplate text={data.tooltip || data.value} />}
               >
                 {data.value}

@@ -16,7 +16,6 @@
 
       &-tag {
         max-width: 150px;
-        margin-left: 10px;
 
         span {
           display: inline;
@@ -36,7 +35,7 @@
     font-size: 12px;
     font-family: Roboto, sans-serif;
     font-style: normal;
-    line-height: 14px;
+    line-height: 18px;
 
     span:last-child {
       margin-left: 10px;
@@ -45,5 +44,11 @@
     span {
       width: auto;
     }
+  }
+
+  .status {
+    margin-top: 3px;
+    margin-right: 5px;
+    align-self: flex-start;
   }
 }
