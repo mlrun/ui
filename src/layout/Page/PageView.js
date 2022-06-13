@@ -28,7 +28,8 @@ export default function PageView() {
 
   useEffect(() => {
     if (mainRef) {
-      mainRef.current.addEventListener(transitionEndEventName, () => {
+      mainRef.current.addEventListener(transitionEndEventName, event => {
+        if (event.target !== mainRef.current) return
         window.dispatchEvent(new CustomEvent('mainResize'))
       })
     }
