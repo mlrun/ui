@@ -1,6 +1,7 @@
 import React from 'react'
 import { isEmpty } from 'lodash'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import TableTop from '../../../elements/TableTop/TableTop'
 import FilterMenu from '../../FilterMenu/FilterMenu'
@@ -44,35 +45,35 @@ const MonitorJobsView = ({
   const params = useParams()
   const location = useLocation()
 
+  const filterMenuClassNames = classnames(
+    'content__action-bar',
+    params.jobId && 'content__action-bar_hidden'
+  )
+
   return (
     <>
-      {!params.jobId && (
-        <>
-          {params.jobName && (
-            <TableTop
-              link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
-              text={params.jobName}
-            />
-          )}
-          <div className="content__action-bar">
-            <FilterMenu
-              actionButton={{
-                label: 'Resource monitoring',
-                tooltip: !appStore.frontendSpec.jobs_dashboard_url
-                  ? 'Grafana service unavailable'
-                  : '',
-                variant: TERTIARY_BUTTON,
-                disabled: !appStore.frontendSpec.jobs_dashboard_url,
-                onClick: () => handleMonitoring()
-              }}
-              filters={filters}
-              onChange={refreshJobs}
-              page={JOBS_PAGE}
-              withoutExpandButton
-            />
-          </div>
-        </>
+      {params.jobName && (
+        <TableTop
+          link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+          text={params.jobName}
+        />
       )}
+      <div className={filterMenuClassNames}>
+        <FilterMenu
+          actionButton={{
+            label: 'Resource monitoring',
+            tooltip: !appStore.frontendSpec.jobs_dashboard_url ? 'Grafana service unavailable' : '',
+            variant: TERTIARY_BUTTON,
+            disabled: !appStore.frontendSpec.jobs_dashboard_url,
+            onClick: () => handleMonitoring()
+          }}
+          filters={filters}
+          onChange={refreshJobs}
+          page={JOBS_PAGE}
+          withoutExpandButton
+        />
+      </div>
+
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
         (jobs.length === 0 && !params.jobName) ? (
         <NoData message={getNoDataMessage(filtersStore, filters, MONITOR_JOBS_TAB, JOBS_PAGE)} />
@@ -89,15 +90,15 @@ const MonitorJobsView = ({
             tab={MONITOR_JOBS_TAB}
             tableHeaders={tableContent[0]?.content ?? []}
           >
-              {tableContent.map((tableItem, index) => (
-                <JobsTableRow
-                  actionsMenu={actionsMenu}
-                  handleSelectJob={handleSelectJob}
-                  key={index}
-                  rowItem={tableItem}
-                  selectedJob={selectedJob}
-                />
-              ))}
+            {tableContent.map((tableItem, index) => (
+              <JobsTableRow
+                actionsMenu={actionsMenu}
+                handleSelectJob={handleSelectJob}
+                key={index}
+                rowItem={tableItem}
+                selectedJob={selectedJob}
+              />
+            ))}
           </Table>
         )
       )}
