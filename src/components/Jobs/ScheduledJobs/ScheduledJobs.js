@@ -20,7 +20,7 @@ import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
-import { ReactComponent as Dropdown } from 'igz-controls/images/dropdown.svg'
+import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
@@ -217,7 +217,7 @@ const ScheduledJobs = ({
     return job => [
       {
         label: 'Run now',
-        icon: <Dropdown className="action_cell__run-icon" />,
+        icon: <Run className="action_cell__run-icon" />,
         onClick: handleRunJob
       },
       {
