@@ -37,8 +37,8 @@
     font-style: normal;
     line-height: 18px;
 
-    span:last-child {
-      margin-left: 10px;
+    & > span:not(:last-child) {
+      margin-right: 10px;
     }
 
     span {
