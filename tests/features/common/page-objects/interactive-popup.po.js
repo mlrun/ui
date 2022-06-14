@@ -3,11 +3,13 @@ import dropdownComponent from '../components/dropdown.component'
 import commonTable from '../components/table.component'
 import labelComponent from '../components/label.component'
 import checkboxComponent from '../components/checkbox.component'
+import textAreaGroup from '../components/text-area.component'
 
 import {
   generateLabelGroup,
   generateInputGroup,
-  generateDropdownGroup
+  generateDropdownGroup,
+  generateTextAreaGroup
 } from '../../common-tools/common-tools'
 import inputWithAutocomplete from '../components/input-with-autocomplete.component'
 
@@ -487,11 +489,11 @@ module.exports = {
       generateInputGroup(
         '.pop-up-dialog .vector-tag-wrapper',
         true,
-        false,
+        '.input__warning svg',
         true
       )
     ),
-    Description_Input: By.css('.pop-up-dialog .text-area-wrapper textarea'),
+    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .text-area-wrapper')),
     Labels_Table: commonTable(createFeatureVectorLabelsTable),
     Cancel_Button: commonCancelButton,
     Create_Button: commonConfirmButton

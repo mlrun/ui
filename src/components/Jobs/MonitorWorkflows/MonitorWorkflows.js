@@ -14,21 +14,21 @@ import {
   MONITOR_WORKFLOWS_TAB
 } from '../../../constants'
 import { DANGER_BUTTON } from 'igz-controls/constants'
-import { actionCreator, handleAbortJob, monitorJob } from '../jobs.util'
+import { handleAbortJob } from '../jobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { useYaml } from '../../../hooks/yaml.hook'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
-import { rerunJob } from '../jobs.util'
 import { parseFunction } from '../../../utils/parseFunction'
-import { generateActionsMenu, generateFilters, generatePageData } from './monitorWorkflows.util'
+import { generateActionsMenu, generateFilters, generatePageData, monitorWorkflowsActionCreator } from './monitorWorkflows.util'
 import { usePods } from '../../../hooks/usePods.hook'
+import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
+import { useMode } from '../../../hooks/mode.hook'
 
 const MonitorWorkflows = ({
   abortJob,
   fetchFunctionLogs,
   fetchJob,
-  fetchJobFunction,
   fetchJobLogs,
   fetchJobs,
   fetchWorkflow,
@@ -49,19 +49,38 @@ const MonitorWorkflows = ({
   const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [editableItem, setEditableItem] = useState(null)
   const appStore = useSelector(store => store.appStore)
   const workflowsStore = useSelector(state => state.workflowsStore)
   const filtersStore = useSelector(state => state.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { setConfirmData } = React.useContext(JobsContext)
+  const { isStagingMode } = useMode()
+  const { setConfirmData, handleMonitoring, handleRerunJob, editableItem, setEditableItem } =
+    React.useContext(JobsContext)
   let fetchFunctionLogsTimeout = useRef(null)
 
   usePods()
 
   const filters = useMemo(() => generateFilters(), [])
+
+  const tableContent = useMemo(
+    () =>
+      createJobsWorkflowsTabContent(
+        workflowsStore.workflows.data,
+        params.projectName,
+        params.workflowId,
+        isStagingMode,
+        !isEmpty(selectedJob)
+      ),
+    [
+      isStagingMode,
+      params.projectName,
+      params.workflowId,
+      selectedJob,
+      workflowsStore.workflows.data
+    ]
+  )
 
   const handleFetchFunctionLogs = useCallback(
     (projectName, name, tag, offset) => {
@@ -120,13 +139,6 @@ const MonitorWorkflows = ({
     [fetchJobs, params.projectName, setNotification]
   )
 
-  const handleRerunJob = useCallback(
-    async job => {
-      await rerunJob(job, fetchJobFunction, setNotification, setEditableItem)
-    },
-    [fetchJobFunction, setNotification]
-  )
-
   const onAbortJob = useCallback(
     job => {
       handleAbortJob(
@@ -159,13 +171,6 @@ const MonitorWorkflows = ({
       })
     },
     [onAbortJob, setConfirmData]
-  )
-
-  const handleMonitoring = useCallback(
-    item => {
-      monitorJob(appStore.frontendSpec.jobs_dashboard_url, item, params.projectName)
-    },
-    [appStore.frontendSpec.jobs_dashboard_url, params.projectName]
   )
 
   const handleCatchRequest = useCallback(
@@ -235,7 +240,7 @@ const MonitorWorkflows = ({
         return job
       })
       .catch(() =>
-        navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`, { replace: true })
+        navigate(`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`, { replace: true })
       )
   }, [fetchJob, navigate, params.jobId, params.projectName])
 
@@ -252,7 +257,7 @@ const MonitorWorkflows = ({
         message: 'Job started successfully'
       })
     },
-    [filtersStore, refreshJobs, setNotification]
+    [filtersStore, refreshJobs, setEditableItem, setNotification]
   )
 
   const getWorkflows = useCallback(
@@ -412,6 +417,7 @@ const MonitorWorkflows = ({
       selectedJob={selectedJob}
       setEditableItem={setEditableItem}
       setWorkflowsViewMode={setWorkflowsViewMode}
+      tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
       workflowsStore={workflowsStore}
       workflowsViewMode={workflowsViewMode}
@@ -422,5 +428,5 @@ const MonitorWorkflows = ({
 MonitorWorkflows.propTypes = {}
 
 export default connect(null, {
-  ...actionCreator
+  ...monitorWorkflowsActionCreator
 })(React.memo(MonitorWorkflows))

@@ -8,6 +8,8 @@ import { useMode } from './hooks/mode.hook'
 import { useNuclioMode } from './hooks/nuclioMode.hook'
 import {
   FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -45,6 +47,11 @@ const ProjectOverview = React.lazy(() =>
 const ProjectSettings = React.lazy(() => import('./components/ProjectSettings/ProjectSettings'))
 const AddToFeatureVectorPage = React.lazy(() =>
   import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
+)
+const FeatureSets = React.lazy(() => import('./components/FeatureStore/FeatureSets/FeatureSets'))
+const Features = React.lazy(() => import('./components/FeatureStore/Features/Features'))
+const FeatureVectors = React.lazy(() =>
+  import('./components/FeatureStore/FeatureVectors/FeatureVectors')
 )
 
 const App = () => {
@@ -133,23 +140,30 @@ const App = () => {
                 </Fragment>
               ))}
               <Route
-                path="projects/:projectName/feature-store/add-to-feature-vector"
-                element={<AddToFeatureVectorPage />}
-              />
-              <Route
                 path="projects/:projectName/feature-store"
                 element={<Navigate to={`${FEATURE_SETS_TAB}`} replace />}
               />
-              {[
-                'projects/:projectName/feature-store/:pageTab',
-                'projects/:projectName/feature-store/:pageTab/:name/:tab',
-                'projects/:projectName/feature-store/:pageTab/:name/:tag/:tab',
-                'projects/:projectName/feature-store/:pageTab/:name/:tag/:iter/:tab'
-              ].map((path, index) => (
-                <Fragment key={index}>
-                  <Route path={path} element={<FeatureStore />} />
-                </Fragment>
-              ))}
+              <Route
+                path="projects/:projectName/feature-store/add-to-feature-vector"
+                element={<AddToFeatureVectorPage />}
+              />
+              <Route path="projects/:projectName/feature-store/*" element={<FeatureStore />}>
+                {[`${FEATURE_SETS_TAB}`, `${FEATURE_SETS_TAB}/:name/:tag/:tab`].map(
+                  (path, index) => (
+                    <Fragment key={index}>
+                      <Route path={path} element={<FeatureSets />} />
+                    </Fragment>
+                  )
+                )}
+                {[`${FEATURE_VECTORS_TAB}`, `${FEATURE_VECTORS_TAB}/:name/:tag/:tab`].map(
+                  (path, index) => (
+                    <Fragment key={index}>
+                      <Route path={path} element={<FeatureVectors />} />
+                    </Fragment>
+                  )
+                )}
+                <Route path={`${FEATURES_TAB}`} element={<Features />} />
+              </Route>
               <Route
                 path="projects/:projectName/models"
                 element={<Navigate to={`${MODELS_TAB}`} replace />}

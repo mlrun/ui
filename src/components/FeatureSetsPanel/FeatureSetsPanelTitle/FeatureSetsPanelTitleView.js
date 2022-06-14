@@ -7,7 +7,7 @@ import Input from '../../../common/Input/Input'
 import TextArea from '../../../common/TextArea/TextArea'
 import { RoundedIcon } from 'igz-controls/components'
 
-import { getValidationRules } from '../../../utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validationService'
 
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
@@ -40,9 +40,7 @@ const FeatureSetsPanelTitleView = ({
             onBlur={handleNameOnBlur}
             required
             requiredText="This field is required"
-            setInvalid={value =>
-              setValidation(state => ({ ...state, isNameValid: value }))
-            }
+            setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
             type="text"
             validationRules={getValidationRules('feature.vector.name')}
             value={data.name}
@@ -60,16 +58,12 @@ const FeatureSetsPanelTitleView = ({
               }))
             }
             onBlur={event => {
-              if (
-                featureStore.newFeatureSet.metadata.tag !== event.target.value
-              ) {
+              if (featureStore.newFeatureSet.metadata.tag !== event.target.value) {
                 setNewFeatureSetVersion(event.target.value)
               }
             }}
             placeholder="latest"
-            setInvalid={value =>
-              setValidation(state => ({ ...state, isTagValid: value }))
-            }
+            setInvalid={value => setValidation(state => ({ ...state, isTagValid: value }))}
             type="text"
             value={data.version}
             validationRules={getValidationRules('feature.sets.tag')}
@@ -87,9 +81,7 @@ const FeatureSetsPanelTitleView = ({
             }))
           }
           onBlur={event => {
-            if (
-              featureStore.newFeatureSet.spec.description !== event.target.value
-            ) {
+            if (featureStore.newFeatureSet.spec.description !== event.target.value) {
               setNewFeatureSetDescription(event.target.value)
             }
           }}

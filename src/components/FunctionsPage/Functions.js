@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { isEqual, isEmpty } from 'lodash'
 
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import {
   detailsMenu,
@@ -27,12 +27,7 @@ import { parseFunctions } from '../../utils/parseFunctions'
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
-import {
-  FUNCTIONS_PAGE,
-  PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE,
-  TAG_LATEST
-} from '../../constants'
+import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE, TAG_LATEST } from '../../constants'
 import { DANGER_BUTTON, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
 import { useMode } from '../../hooks/mode.hook'
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
 import ScheduledJobsView from './ScheduledJobsView'
@@ -12,11 +12,12 @@ import {
   NAME_FILTER,
   SCHEDULE_TAB
 } from '../../../constants'
-import { actionCreator } from '../jobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { useYaml } from '../../../hooks/yaml.hook'
 import { JobsContext } from '../Jobs'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
+import { scheduledJobsActionCreator } from './scheduledJobs.util'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -28,9 +29,7 @@ const ScheduledJobs = ({
   editJobFailure,
   fetchJobs,
   fetchScheduledJobAccessKey,
-  filtersStore,
   handleRunScheduledJob,
-  jobsStore,
   removeNewJob,
   removeScheduledJob,
   setFilters,
@@ -43,7 +42,11 @@ const ScheduledJobs = ({
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const params = useParams()
+  const filtersStore = useSelector(store => store.filtersStore)
+  const jobsStore = useSelector(store => store.jobsStore)
   const { setConfirmData } = React.useContext(JobsContext)
+
+  const tableContent = useMemo(() => createJobsScheduleTabContent(jobs), [jobs])
 
   const filters = useMemo(
     () => [
@@ -214,7 +217,7 @@ const ScheduledJobs = ({
     return [
       {
         label: 'Run now',
-        icon: <Run />,
+        icon: <Run className="action_cell__run-icon" />,
         onClick: handleRunJob
       },
       {
@@ -268,6 +271,7 @@ const ScheduledJobs = ({
       refreshJobs={refreshJobs}
       removeNewJob={removeNewJob}
       setEditableItem={setEditableItem}
+      tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
     />
   )
@@ -275,16 +279,6 @@ const ScheduledJobs = ({
 
 ScheduledJobs.propTypes = {}
 
-export default connect(
-  ({ appStore, filtersStore, functionsStore, jobsStore, detailsStore, workflowsStore }) => ({
-    appStore,
-    detailsStore,
-    filtersStore,
-    functionsStore,
-    jobsStore,
-    workflowsStore
-  }),
-  {
-    ...actionCreator
-  }
-)(React.memo(ScheduledJobs))
+export default connect(null, {
+  ...scheduledJobsActionCreator
+})(React.memo(ScheduledJobs))

@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FunctionsPanelCode from '../../elements/FunctionsPanelCode/FunctionsPanelCode'
 import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnvironmentVariables/FunctionsPanelEnvironmentVariables'
@@ -12,7 +11,7 @@ import FunctionsPanelRuntime from '../../elements/FunctionsPanelRuntime/Function
 import FunctionsPanelTitle from '../../elements/FunctionsPanelTitle/FunctionsPanelTitle'
 import Loader from '../../common/Loader/Loader'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
-import { Button } from 'igz-controls/components'
+import { Button, ConfirmDialog } from 'igz-controls/components'
 
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { runtimeSections } from './functionsPanel.util'

@@ -1,27 +1,33 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import Loader from '../../common/Loader/Loader'
-import Content from '../../layout/Content/Content'
-import AddToFeatureVectorPageHeader from '../../elements/AddToFeatureVectorPageHeader/AddToFeatureVectorPageHeader'
+import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
+import AddToFeatureVectorView from './AddToFeatureVectorView'
 
 import featureStoreActions from '../../actions/featureStore'
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
-import { generatePageData, pageDataInitialState } from './addToFeatureVectorPage.util'
-import { getFeatureIdentifier, getIdentifierMethod } from '../../utils/getUniqueIdentifier'
+import { filters } from './addToFeatureVectorPage.util'
+import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import {
+  FEATURE_STORE_PAGE,
   FEATURES_TAB,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
+import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
+import { useYaml } from '../../hooks/yaml.hook'
+import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const AddToFeatureVectorPage = ({
   createNewFeatureVector,
@@ -30,109 +36,20 @@ const AddToFeatureVectorPage = ({
   fetchFeatures,
   filtersStore,
   fetchFeatureSetsTags,
-  getFilterTagOptions,
-  removeDataSet,
   removeFeature,
   removeFeatures,
   setFilters,
   setNotification
 }) => {
   const [content, setContent] = useState([])
-  const [pageData, setPageData] = useState(pageDataInitialState)
+  const [selectedRowData, setSelectedRowData] = useState({})
+  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const addToFeatureVectorPageRef = useRef(null)
   const params = useParams()
   const navigate = useNavigate()
   const tableStore = useSelector(store => store.tableStore)
   const dispatch = useDispatch()
-
-  const cancelRequest = message => {
-    addToFeatureVectorPageRef.current?.cancel && addToFeatureVectorPageRef.current.cancel(message)
-  }
-
-  const fetchData = useCallback(
-    async filters => {
-      const config = {
-        cancelToken: new axios.CancelToken(cancel => {
-          addToFeatureVectorPageRef.current.cancel = cancel
-        })
-      }
-
-      fetchFeatures(filters.project, filters, config).then(result => {
-        if (result) {
-          setContent(parseFeatures(result))
-        }
-
-        return result
-      })
-    },
-    [fetchFeatures]
-  )
-
-  const handleRemoveFeature = useCallback(
-    feature => {
-      const newStoreSelectedRowData = {
-        ...featureStore.features.selectedRowData.content
-      }
-      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
-
-      delete newStoreSelectedRowData[feature.key.identifier]
-      delete newPageDataSelectedRowData[feature.key.identifier]
-
-      removeFeature(newStoreSelectedRowData)
-      setPageData(state => ({
-        ...state,
-        selectedRowData: newPageDataSelectedRowData
-      }))
-    },
-    [featureStore.features.selectedRowData.content, pageData.selectedRowData, removeFeature]
-  )
-
-  const handleRequestOnExpand = useCallback(
-    async feature => {
-      const featureIdentifier = getFeatureIdentifier(feature)
-
-      setPageData(state => ({
-        ...state,
-        selectedRowData: {
-          ...state.selectedRowData,
-          [featureIdentifier]: {
-            loading: true
-          }
-        }
-      }))
-
-      fetchFeature(feature.metadata.project, feature.name, feature.metadata.name)
-        .then(result => {
-          if (result?.length > 0) {
-            setPageData(state => ({
-              ...state,
-              selectedRowData: {
-                ...state.selectedRowData,
-                [featureIdentifier]: {
-                  content: [...parseFeatures(result)],
-                  error: null,
-                  loading: false
-                }
-              }
-            }))
-          }
-        })
-        .catch(error => {
-          setPageData(state => ({
-            ...state,
-            selectedRowData: {
-              ...state.selectedRowData,
-              [featureIdentifier]: {
-                ...state.selectedRowData[featureIdentifier],
-                error,
-                loading: false
-              }
-            }
-          }))
-        })
-    },
-    [fetchFeature]
-  )
+  const urlTagOption = useGetTagOptions(fetchFeatureSetsTags, filters)
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
     navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
@@ -175,68 +92,154 @@ const AddToFeatureVectorPage = ({
     [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen, setNotification]
   )
 
-  useEffect(() => {
-    setPageData(state => ({
-      ...state,
-      selectedRowData: {}
-    }))
-  }, [filtersStore.iter, removeDataSet])
+  const pageData = useMemo(
+    () => ({
+      page: FEATURE_STORE_PAGE,
+      tablePanel: (
+        <FeaturesTablePanel
+          onSubmit={handleCreateFeatureVector}
+          handleCancel={handleCancelCreateFeatureVector}
+        />
+      )
+    }),
+    [handleCancelCreateFeatureVector, handleCreateFeatureVector]
+  )
+
+  const actionsMenu = useMemo(
+    () => [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      }
+    ],
+    [toggleConvertedYaml]
+  )
+
+  const cancelRequest = message => {
+    addToFeatureVectorPageRef.current?.cancel && addToFeatureVectorPageRef.current.cancel(message)
+  }
+
+  const fetchData = useCallback(
+    async filters => {
+      const config = {
+        cancelToken: new axios.CancelToken(cancel => {
+          addToFeatureVectorPageRef.current.cancel = cancel
+        })
+      }
+
+      fetchFeatures(filters.project, filters, config).then(result => {
+        if (result) {
+          setContent(parseFeatures(result))
+        }
+
+        return result
+      })
+    },
+    [fetchFeatures]
+  )
+
+  const handleRemoveFeature = useCallback(
+    feature => {
+      const newStoreSelectedRowData = {
+        ...featureStore.features.selectedRowData.content
+      }
+      const newSelectedRowData = { ...selectedRowData }
+
+      delete newStoreSelectedRowData[feature.ui.identifier]
+      delete newSelectedRowData[feature.ui.identifier]
+
+      removeFeature(newStoreSelectedRowData)
+      setSelectedRowData(newSelectedRowData)
+    },
+    [featureStore.features.selectedRowData.content, removeFeature, selectedRowData]
+  )
+
+  const handleRequestOnExpand = useCallback(
+    async feature => {
+      const featureIdentifier = getFeatureIdentifier(feature)
+
+      setSelectedRowData(state => ({
+        ...state,
+        [featureIdentifier]: {
+          loading: true
+        }
+      }))
+
+      fetchFeature(feature.metadata.project, feature.name, feature.metadata.name)
+        .then(result => {
+          if (result?.length > 0) {
+            const content = [...parseFeatures(result)].map(contentItem =>
+              createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
+            )
+            setSelectedRowData(state => ({
+              ...state,
+              [featureIdentifier]: {
+                content,
+                error: null,
+                loading: false
+              }
+            }))
+          }
+        })
+        .catch(error => {
+          setSelectedRowData(state => ({
+            ...state,
+            [featureIdentifier]: {
+              ...state.selectedRowData[featureIdentifier],
+              error,
+              loading: false
+            }
+          }))
+        })
+    },
+    [fetchFeature, tableStore.isTablePanelOpen]
+  )
+
+  const { latestItems, handleExpandRow } = useGroupContent(
+    content,
+    getFeatureIdentifier,
+    handleRemoveFeature,
+    handleRequestOnExpand,
+    FEATURE_STORE_PAGE,
+    FEATURES_TAB
+  )
+
+  const tableContent = useMemo(() => {
+    return filtersStore.groupBy === GROUP_BY_NAME
+      ? latestItems.map(contentItem => {
+          return createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, true)
+        })
+      : content.map(contentItem => createFeaturesRowData(contentItem, tableStore.isTablePanelOpen))
+  }, [content, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
 
   useEffect(() => {
-    fetchData({
-      tag: TAG_FILTER_LATEST,
-      project: params.projectName
-    })
+    if (urlTagOption) {
+      fetchData({
+        tag: urlTagOption,
+        iter: '',
+        project: params.projectName
+      })
+    }
+  }, [fetchData, params.projectName, urlTagOption])
 
+  useEffect(() => {
     return () => {
       setContent([])
+      removeFeature()
       removeFeatures()
-      setPageData(pageDataInitialState)
+      setSelectedRowData({})
       cancelRequest('cancel')
     }
-  }, [fetchData, params.projectName, removeFeatures])
+  }, [removeFeature, removeFeatures])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_LATEST) {
+    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
     }
-  }, [filtersStore.groupBy, filtersStore.tag, params.pageTab, setFilters])
-
-  useEffect(() => {
-    setPageData(state => {
-      return {
-        ...state,
-        ...generatePageData(
-          tableStore.isTablePanelOpen,
-          handleRemoveFeature,
-          handleRequestOnExpand,
-          handleCreateFeatureVector,
-          handleCancelCreateFeatureVector
-        )
-      }
-    })
-  }, [
-    handleCancelCreateFeatureVector,
-    handleCreateFeatureVector,
-    handleRemoveFeature,
-    handleRequestOnExpand,
-    tableStore.isTablePanelOpen
-  ])
-
-  useEffect(() => setContent([]), [filtersStore.tag])
-
-  useEffect(() => {
-    if (filtersStore.tagOptions.length === 0) {
-      getFilterTagOptions(fetchFeatureSetsTags, params.projectName)
-    }
-  }, [
-    fetchFeatureSetsTags,
-    filtersStore.tagOptions.length,
-    getFilterTagOptions,
-    params.projectName
-  ])
+  }, [filtersStore.groupBy, filtersStore.tag, setFilters])
 
   useEffect(() => {
     if (isEveryObjectValueEmpty(tableStore.features.featureVector)) {
@@ -252,17 +255,21 @@ const AddToFeatureVectorPage = ({
   }, [dispatch, navigateToFeatureVectorsScreen, setNotification, tableStore.features.featureVector])
 
   return (
-    <div ref={addToFeatureVectorPageRef} className="add-to-feature-vector content-wrapper">
-      {(featureStore.loading || featureStore.features.loading) && <Loader />}
-      <Content
-        content={content}
-        header={<AddToFeatureVectorPageHeader params={params} />}
-        loading={featureStore.loading || featureStore.features.loading}
-        pageData={pageData}
-        refresh={fetchData}
-        getIdentifier={getIdentifierMethod(FEATURES_TAB)}
-      />
-    </div>
+    <AddToFeatureVectorView
+      actionsMenu={actionsMenu}
+      content={content}
+      convertedYaml={convertedYaml}
+      featureStore={featureStore}
+      fetchData={fetchFeature}
+      filtersStore={filtersStore}
+      handleExpandRow={handleExpandRow}
+      pageData={pageData}
+      ref={addToFeatureVectorPageRef}
+      selectedRowData={selectedRowData}
+      tableContent={tableContent}
+      tableStore={tableStore}
+      toggleConvertedYaml={toggleConvertedYaml}
+    />
   )
 }
 

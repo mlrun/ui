@@ -13,12 +13,12 @@ import './tableLinkCell.scss'
 
 const TableLinkCell = ({
   data,
-  expandLink,
   handleExpandRow,
   item,
   link,
   selectItem,
-  selectedItem
+  selectedItem,
+  showExpandButton
 }) => {
   const tableCellClassNames = classnames('table-body__cell', data.class)
   const itemNameCLassNames = classnames('link', 'item-name')
@@ -80,12 +80,10 @@ const TableLinkCell = ({
           )}
         </Link>
       )}
-      {expandLink && (
+      {showExpandButton && (
         <Arrow
           onClick={e => {
-            if (expandLink) {
-              handleExpandRow(e, item)
-            }
+            handleExpandRow(e, item)
           }}
           className="expand-arrow"
         />
@@ -97,16 +95,18 @@ const TableLinkCell = ({
 TableLinkCell.defaultProps = {
   data: {},
   expandLink: false,
-  selectedItem: {}
+  selectedItem: {},
+  showExpandButton: false
 }
 
 TableLinkCell.propTypes = {
   data: PropTypes.shape({}),
-  expandLink: PropTypes.bool,
+
   item: PropTypes.shape({}).isRequired,
   link: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({})
+  selectedItem: PropTypes.shape({}),
+  showExpandButton: PropTypes.bool
 }
 
 export default TableLinkCell

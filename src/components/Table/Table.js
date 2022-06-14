@@ -11,12 +11,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
-import {
-  GROUP_BY_NAME,
-  GROUP_BY_NONE,
-  MONITOR_JOBS_TAB,
-  SCHEDULE_TAB
-} from '../../constants'
+import { GROUP_BY_NAME, GROUP_BY_NONE, MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
 
 import './table.scss'
 
@@ -34,7 +29,8 @@ const Table = ({
   pageData,
   retryRequest,
   selectedItem,
-  tab
+  tab,
+  tableHeaders
 }) => {
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
@@ -143,7 +139,9 @@ const Table = ({
       tableContent={
         tab === MONITOR_JOBS_TAB || tab === SCHEDULE_TAB ? content : tableContent.content
       }
+      tab={tab}
       tableContentRef={tableContentRef}
+      tableHeaders={tableHeaders}
       tableHeadRef={tableHeadRef}
       tablePanelRef={tablePanelRef}
     >
@@ -160,7 +158,8 @@ Table.defaultProps = {
   handleExpandRow: () => {},
   handleSelectItem: () => {},
   selectedItem: {},
-  tab: ''
+  tab: '',
+  tableHeaders: []
 }
 
 Table.propTypes = {
@@ -175,7 +174,8 @@ Table.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}),
-  tab: PropTypes.string
+  tab: PropTypes.string,
+  tableHeaders: PropTypes.array
 }
 
 export default connect(
