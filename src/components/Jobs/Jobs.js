@@ -52,18 +52,23 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
   )
 
   useEffect(() => {
-    const pageTab = location.pathname.includes(MONITOR_JOBS_TAB)
-      ? MONITOR_JOBS_TAB
-      : location.pathname.includes(SCHEDULE_TAB)
-      ? SCHEDULE_TAB
-      : MONITOR_WORKFLOWS_TAB
+    if (location.pathname.match('\\b\\monitor(?!-)\\b')) {
+      /*/!* Adding the next redirect for backwards compatability *!/*/
+      navigate(location.pathname.replace('monitor', MONITOR_JOBS_TAB), { replace: true })
+    } else {
+      const pageTab = location.pathname.includes(MONITOR_WORKFLOWS_TAB)
+        ? MONITOR_WORKFLOWS_TAB
+        : location.pathname.includes(SCHEDULE_TAB)
+        ? SCHEDULE_TAB
+        : MONITOR_JOBS_TAB
 
-    isPageTabValid(
-      pageTab,
-      tabs.map(tab => tab.id),
-      navigate,
-      location
-    )
+      isPageTabValid(
+        pageTab,
+        tabs.map(tab => tab.id),
+        navigate,
+        location
+      )
+    }
   }, [navigate, params.pageTab, location])
 
   useEffect(() => {

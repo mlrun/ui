@@ -48,7 +48,7 @@ export const generateContent = selectedJob => {
       return {
         ...generatedArtifact,
         header: artifact.header || artifact.spec.header,
-        preview: artifact.preview || artifact.spec.preview,
+        preview: artifact.preview || artifact.status.preview,
         schema: artifactSchema
       }
     }
