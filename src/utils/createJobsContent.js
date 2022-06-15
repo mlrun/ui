@@ -27,7 +27,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           header: 'Name',
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
-          class: 'table-cell-2',
+          class: 'table-cell-2  table-cell-medium',
           type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
           getLink: tab => {
             return jobName
@@ -52,7 +52,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           header: 'Type',
           id: `type.${identifierUnique}`,
           value: type,
-          class: 'table-cell-small',
+          class: 'table-cell-1',
           type: 'type'
         },
         {
@@ -82,14 +82,14 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           header: 'Labels',
           id: `labels.${identifierUnique}`,
           value: job.labels,
-          class: 'table-cell-small',
+          class: 'table-cell-1 table-cell-small',
           type: 'labels'
         },
         {
           header: 'Parameters',
           id: `parameters.${identifierUnique}`,
           value: job.parameters,
-          class: 'table-cell-small',
+          class: 'table-cell-1 table-cell-small',
           type: 'parameters'
         },
         {
