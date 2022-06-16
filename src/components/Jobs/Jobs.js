@@ -117,22 +117,24 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
           </div>
         </div>
       </div>
-      <ConfirmDialog
-        cancelButton={{
-          handler: confirmData.rejectHandler,
-          label: 'Cancel',
-          variant: TERTIARY_BUTTON
-        }}
-        closePopUp={confirmData.rejectHandler}
-        confirmButton={{
-          handler: () => confirmData.confirmHandler(confirmData.item),
-          label: confirmData.btnConfirmLabel,
-          variant: confirmData.btnConfirmType
-        }}
-        header={confirmData.header}
-        isOpen={confirmData}
-        message={confirmData.message}
-      />
+      {confirmData && (
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: 'Cancel',
+            variant: TERTIARY_BUTTON
+          }}
+          closePopUp={confirmData.rejectHandler}
+          confirmButton={{
+            handler: () => confirmData.confirmHandler(confirmData.item),
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmType
+          }}
+          header={confirmData.header}
+          isOpen={confirmData}
+          message={confirmData.message}
+        />
+      )}
       {artifactsStore?.preview?.isPreview && (
         <PreviewModal item={artifactsStore?.preview?.selectedItem} />
       )}

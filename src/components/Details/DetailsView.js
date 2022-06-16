@@ -235,30 +235,32 @@ const DetailsView = React.forwardRef(
         </div>
         <DetailsMenu detailsMenu={detailsMenu} onClick={detailsMenuClick} params={params} />
         {tabsContent}
-        <ConfirmDialog
-          cancelButton={{
-            handler: () => {
+        {detailsStore.showWarning && (
+          <ConfirmDialog
+            cancelButton={{
+              handler: () => {
+                handleShowWarning(false)
+                setRefreshWasHandled(false)
+              },
+              label: detailsStore.refreshWasHandled ? "Don't refresh" : "Don't Leave",
+              variant: TERTIARY_BUTTON
+            }}
+            closePopUp={() => {
               handleShowWarning(false)
               setRefreshWasHandled(false)
-            },
-            label: detailsStore.refreshWasHandled ? "Don't refresh" : "Don't Leave",
-            variant: TERTIARY_BUTTON
-          }}
-          closePopUp={() => {
-            handleShowWarning(false)
-            setRefreshWasHandled(false)
-          }}
-          confirmButton={{
-            handler: leavePage,
-            label: detailsStore.refreshWasHandled ? 'Refresh' : 'Leave',
-            variant: PRIMARY_BUTTON
-          }}
-          header="You have unsaved changes."
-          isOpen={detailsStore.showWarning}
-          message={`${
-            detailsStore.refreshWasHandled ? 'Refreshing the list' : 'Leaving this page'
-          } will discard your changes.`}
-        />
+            }}
+            confirmButton={{
+              handler: leavePage,
+              label: detailsStore.refreshWasHandled ? 'Refresh' : 'Leave',
+              variant: PRIMARY_BUTTON
+            }}
+            header="You have unsaved changes."
+            isOpen={detailsStore.showWarning}
+            message={`${
+              detailsStore.refreshWasHandled ? 'Refreshing the list' : 'Leaving this page'
+            } will discard your changes.`}
+          />
+        )}
       </div>
     )
   }

@@ -147,29 +147,31 @@ const Select = ({
         )}
         <Caret className="select__caret" />
       </div>
-      <ConfirmDialog
-        cancelButton={{
-          handler: () => {
+      {isConfirmDialogOpen && (
+        <ConfirmDialog
+          cancelButton={{
+            handler: () => {
+              setConfirmDialogOpen(false)
+            },
+            label: 'Cancel',
+            variant: TERTIARY_BUTTON
+          }}
+          closePopUp={() => {
             setConfirmDialogOpen(false)
-          },
-          label: 'Cancel',
-          variant: TERTIARY_BUTTON
-        }}
-        closePopUp={() => {
-          setConfirmDialogOpen(false)
-        }}
-        confirmButton={{
-          handler: () => {
-            selectedItemAction.handler(selectedId)
-            setConfirmDialogOpen(false)
-          },
-          label: selectedItemAction.confirm.btnConfirmLabel,
-          variant: selectedItemAction.confirm.btnConfirmType
-        }}
-        isOpen={isConfirmDialogOpen}
-        header={selectedItemAction.confirm.title}
-        message={selectedItemAction.confirm.message}
-      />
+          }}
+          confirmButton={{
+            handler: () => {
+              selectedItemAction.handler(selectedId)
+              setConfirmDialogOpen(false)
+            },
+            label: selectedItemAction.confirm.btnConfirmLabel,
+            variant: selectedItemAction.confirm.btnConfirmType
+          }}
+          isOpen={isConfirmDialogOpen}
+          header={selectedItemAction.confirm.title}
+          message={selectedItemAction.confirm.message}
+        />
+      )}
       {isOpen && (
         <PopUpDialog
           className="select__options-list"

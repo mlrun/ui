@@ -326,23 +326,24 @@ const Functions = ({
 
   return (
     <div className="content-wrapper">
-      <ConfirmDialog
-        cancelButton={{
-          handler: confirmData.rejectHandler,
-          label: confirmData.btnCancelLabel,
-          variant: confirmData.btnCancelVariant
-        }}
-        closePopUp={confirmData.rejectHandler}
-        confirmButton={{
-          handler: () => confirmData.confirmHandler(confirmData.item),
-          label: confirmData.btnConfirmLabel,
-          variant: confirmData.btnConfirmVariant
-        }}
-        header={confirmData.header}
-        isOpen={confirmData}
-        message={confirmData.message}
-      />
-
+      {confirmData && (
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: confirmData.btnCancelLabel,
+            variant: confirmData.btnCancelVariant
+          }}
+          closePopUp={confirmData.rejectHandler}
+          confirmButton={{
+            handler: () => confirmData.confirmHandler(confirmData.item),
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmVariant
+          }}
+          header={confirmData.header}
+          isOpen={confirmData}
+          message={confirmData.message}
+        />
+      )}
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}

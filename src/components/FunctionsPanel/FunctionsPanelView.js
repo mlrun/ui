@@ -43,23 +43,24 @@ const FunctionsPanelView = ({
 }) => {
   return (
     <>
-      <ConfirmDialog
-        cancelButton={{
-          handler: confirmData.rejectHandler,
-          label: confirmData.btnCancelLabel,
-          variant: confirmData.btnCancelVariant
-        }}
-        closePopUp={confirmData.rejectHandler}
-        confirmButton={{
-          handler: confirmData.confirmHandler,
-          label: confirmData.btnConfirmLabel,
-          variant: confirmData.btnConfirmVariant
-        }}
-        header={confirmData.header}
-        isOpen={confirmData}
-        message={confirmData.message}
-      />
-
+      {confirmData && (
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: confirmData.btnCancelLabel,
+            variant: confirmData.btnCancelVariant
+          }}
+          closePopUp={confirmData.rejectHandler}
+          confirmButton={{
+            handler: confirmData.confirmHandler,
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmVariant
+          }}
+          header={confirmData.header}
+          isOpen={confirmData}
+          message={confirmData.message}
+        />
+      )}
       <div className="new-item-side-panel-container">
         <div className="functions-panel new-item-side-panel">
           {loading && <Loader />}
