@@ -152,7 +152,7 @@
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
     "mini-css-extract-plugin": "^2.4.5",
-    "node": "^14.18.0",
+    "node": "^14.19.0",
     "pandas-js": "^0.2.4",
     "pnp-webpack-plugin": "1.5.0",
     "postcss": "^8.4.4",
