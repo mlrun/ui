@@ -430,6 +430,7 @@ const MembersPopUp = ({
                       position: 'top-right'
                     }}
                     header="Are you sure?"
+                    isOpen={deleteMemberId === member.id}
                     message="Removing a member will provoke all access."
                   />
                 )}
@@ -494,6 +495,7 @@ const MembersPopUp = ({
             variant: PRIMARY_BUTTON
           }}
           header="Discard all pending changes?"
+          isOpen={confirmDiscard}
         />
       )}
     </div>

@@ -57,6 +57,7 @@ const FunctionsPanelView = ({
             variant: confirmData.btnConfirmVariant
           }}
           header={confirmData.header}
+          isOpen={confirmData}
           message={confirmData.message}
         />
       )}

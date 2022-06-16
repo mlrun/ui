@@ -71,6 +71,7 @@ const ProjectMonitorView = ({
                 label: confirmData.btnConfirmLabel,
                 variant: confirmData.btnConfirmType
               }}
+              isOpen={confirmData}
               message={confirmData.message}
               messageOnly={confirmData.messageOnly}
             />
