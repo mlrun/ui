@@ -83,24 +83,23 @@ const FeatureStore = () => {
           </div>
         </div>
       </div>
-      {confirmData && (
-        <ConfirmDialog
-          cancelButton={{
-            handler: confirmData.rejectHandler,
-            label: confirmData.btnCancelLabel,
-            variant: confirmData.btnCancelVariant
-          }}
-          closePopUp={confirmData.rejectHandler}
-          confirmButton={{
-            handler: () => confirmData.confirmHandler(confirmData.item),
-            label: confirmData.btnConfirmLabel,
-            variant: confirmData.btnConfirmVariant
-          }}
-          header={confirmData.header}
-          isOpen={confirmData}
-          message={confirmData.message}
-        />
-      )}
+      <ConfirmDialog
+        cancelButton={{
+          handler: confirmData.rejectHandler,
+          label: confirmData.btnCancelLabel,
+          variant: confirmData.btnCancelVariant
+        }}
+        closePopUp={confirmData.rejectHandler}
+        confirmButton={{
+          handler: () => confirmData.confirmHandler(confirmData.item),
+          label: confirmData.btnConfirmLabel,
+          variant: confirmData.btnConfirmVariant
+        }}
+        header={confirmData.header}
+        isOpen={confirmData}
+        message={confirmData.message}
+      />
+
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
       )}

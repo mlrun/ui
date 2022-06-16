@@ -176,31 +176,29 @@ const DetailsRequestedFeaturesView = ({
           })}
         </div>
       </div>
-      {confirmDialogData.feature && (
-        <ConfirmDialog
-          cancelButton={{
-            handler: () => {
-              setConfirmDialogData({
-                index: null,
-                feature: null
-              })
-            },
-            label: 'Cancel',
-            variant: TERTIARY_BUTTON
-          }}
-          closePopUp={() => {
-            setConfirmDialogData({ index: null, feature: null })
-          }}
-          confirmButton={{
-            handler: () => handleDelete(confirmDialogData.index),
-            label: 'Delete',
-            variant: DANGER_BUTTON
-          }}
-          header="Delete feature?"
-          isOpen={confirmDialogData.feature}
-          message={`You try to delete feature "${confirmDialogData.feature}" from vector "${params.name}". The feature could be added back later.`}
-        />
-      )}
+      <ConfirmDialog
+        cancelButton={{
+          handler: () => {
+            setConfirmDialogData({
+              index: null,
+              feature: null
+            })
+          },
+          label: 'Cancel',
+          variant: TERTIARY_BUTTON
+        }}
+        closePopUp={() => {
+          setConfirmDialogData({ index: null, feature: null })
+        }}
+        confirmButton={{
+          handler: () => handleDelete(confirmDialogData.index),
+          label: 'Delete',
+          variant: DANGER_BUTTON
+        }}
+        header="Delete feature?"
+        isOpen={confirmDialogData.feature}
+        message={`You try to delete feature "${confirmDialogData.feature}" from vector "${params.name}". The feature could be added back later.`}
+      />
     </div>
   )
 }

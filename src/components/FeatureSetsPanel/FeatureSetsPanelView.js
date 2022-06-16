@@ -42,18 +42,16 @@ const FeatureSetsPanelView = ({
     <div className="new-item-side-panel-container">
       <div className="feature-set-panel new-item-side-panel">
         {loading && <Loader />}
-        {confirmDialog && (
-          <ConfirmDialog
-            closePopUp={() => setConfirmDialog(null)}
-            confirmButton={{
-              handler: handleSave,
-              label: 'Okay',
-              variant: PRIMARY_BUTTON
-            }}
-            isOpen={confirmDialog}
-            message="Note that data will be ingested to the feature set without any transformation and therefore you won't be able to add a transformation graph unless you delete the data first."
-          />
-        )}
+        <ConfirmDialog
+          closePopUp={() => setConfirmDialog(null)}
+          confirmButton={{
+            handler: handleSave,
+            label: 'Okay',
+            variant: PRIMARY_BUTTON
+          }}
+          isOpen={confirmDialog}
+          message="Note that data will be ingested to the feature set without any transformation and therefore you won't be able to add a transformation graph unless you delete the data first."
+        />
         <FeatureSetsPanelTitle
           closePanel={closePanel}
           setValidation={setValidation}

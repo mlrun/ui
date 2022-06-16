@@ -416,24 +416,22 @@ const MembersPopUp = ({
                     <Delete />
                   </button>
                 </div>
-                {deleteMemberId === member.id && (
-                  <ConfirmDialog
-                    className="delete-member__pop-up"
-                    closePopUp={() => setDeleteMemberId('')}
-                    confirmButton={{
-                      handler: () => deleteMember(member),
-                      label: 'Remove member',
-                      variant: DANGER_BUTTON
-                    }}
-                    customPosition={{
-                      element: member.actionElement,
-                      position: 'top-right'
-                    }}
-                    header="Are you sure?"
-                    isOpen={deleteMemberId === member.id}
-                    message="Removing a member will provoke all access."
-                  />
-                )}
+                <ConfirmDialog
+                  className="delete-member__pop-up"
+                  closePopUp={() => setDeleteMemberId('')}
+                  confirmButton={{
+                    handler: () => deleteMember(member),
+                    label: 'Remove member',
+                    variant: DANGER_BUTTON
+                  }}
+                  customPosition={{
+                    element: member.actionElement,
+                    position: 'top-right'
+                  }}
+                  header="Are you sure?"
+                  isOpen={deleteMemberId === member.id}
+                  message="Removing a member will provoke all access."
+                />
               </div>
             ))}
         </div>
@@ -479,25 +477,23 @@ const MembersPopUp = ({
         </div>
       </div>
 
-      {confirmDiscard && (
-        <ConfirmDialog
-          cancelButton={{
-            handler: () => {
-              setConfirmDiscard(false)
-            },
-            label: 'No',
-            variant: LABEL_BUTTON
-          }}
-          closePopUp={() => setConfirmDiscard(false)}
-          confirmButton={{
-            handler: discardChanges,
-            label: 'Discard',
-            variant: PRIMARY_BUTTON
-          }}
-          header="Discard all pending changes?"
-          isOpen={confirmDiscard}
-        />
-      )}
+      <ConfirmDialog
+        cancelButton={{
+          handler: () => {
+            setConfirmDiscard(false)
+          },
+          label: 'No',
+          variant: LABEL_BUTTON
+        }}
+        closePopUp={() => setConfirmDiscard(false)}
+        confirmButton={{
+          handler: discardChanges,
+          label: 'Discard',
+          variant: PRIMARY_BUTTON
+        }}
+        header="Discard all pending changes?"
+        isOpen={confirmDiscard}
+      />
     </div>
   )
 }

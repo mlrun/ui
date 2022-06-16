@@ -72,24 +72,22 @@ const ProjectsView = ({
           setNewProjectName={setNewProjectName}
         />
       )}
-      {confirmData && (
-        <ConfirmDialog
-          cancelButton={{
-            handler: confirmData.rejectHandler,
-            label: 'Cancel',
-            variant: TERTIARY_BUTTON
-          }}
-          closePopUp={confirmData.rejectHandler}
-          confirmButton={{
-            handler: () => confirmData.confirmHandler(confirmData.item),
-            label: confirmData.btnConfirmLabel,
-            variant: confirmData.btnConfirmType
-          }}
-          isOpen={confirmData}
-          header={confirmData.header}
-          message={confirmData.message}
-        />
-      )}
+      <ConfirmDialog
+        cancelButton={{
+          handler: confirmData.rejectHandler,
+          label: 'Cancel',
+          variant: TERTIARY_BUTTON
+        }}
+        closePopUp={confirmData.rejectHandler}
+        confirmButton={{
+          handler: () => confirmData.confirmHandler(confirmData.item),
+          label: confirmData.btnConfirmLabel,
+          variant: confirmData.btnConfirmType
+        }}
+        isOpen={confirmData}
+        header={confirmData.header}
+        message={confirmData.message}
+      />
       <div className="projects__header">
         <Breadcrumbs />
       </div>
