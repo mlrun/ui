@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Form } from 'react-final-form'
+import { createForm } from 'final-form'
 import { chain, keyBy, mapValues } from 'lodash'
+import { OnChange } from 'react-final-form-listeners'
 
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import { Button, ConfirmDialog, FormInput, FormSelect, Modal } from 'igz-controls/components'
@@ -10,10 +12,8 @@ import { Button, ConfirmDialog, FormInput, FormSelect, Modal } from 'igz-control
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
-
 import { MODELS_TAB } from '../../constants'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-
 import { openPopUp } from 'igz-controls/utils/common.util'
 
 import './deployModelPopUp.scss'
@@ -32,6 +32,22 @@ const DeployModelPopUp = ({
   const [tagOptionList, setTagOptionList] = useState([])
 
   const [initialValues, setInitialValues] = useState({})
+  const formRef = React.useRef(
+    createForm({
+      onSubmit: () => {}
+    })
+  )
+
+  const getTagOptions = useCallback((functionList, selectedFunctionName) => {
+    return chain(functionList)
+      .filter(func => func.metadata.name === selectedFunctionName && func.metadata.tag !== '')
+      .uniqBy('metadata.tag')
+      .map(func => ({
+        label: func.metadata.tag,
+        id: func.metadata.tag
+      }))
+      .value()
+  }, [])
 
   useEffect(() => {
     if (functionOptionList.length === 0) {
@@ -49,40 +65,34 @@ const DeployModelPopUp = ({
         }
       })
     }
-  }, [fetchFunctions, functionOptionList.length, model.project])
+  }, [fetchFunctions, functionOptionList.length, initialValues.selectedFunctionName, model.project])
 
   useEffect(() => {
     setInitialValues(prev => ({ ...prev, modelName: model?.db_key }))
   }, [model])
 
   useEffect(() => {
-    const tags = chain(functionList)
-      .filter(
-        func =>
-          func.metadata.name === initialValues.selectedFunctionName && func.metadata.tag !== ''
-      )
-      .uniqBy('metadata.tag')
-      .map(func => ({
-        label: func.metadata.tag,
-        id: func.metadata.tag
-      }))
-      .value()
+    if (!initialValues.selectedTag && functionList.length > 0) {
+      const tags = getTagOptions(functionList, initialValues.selectedFunctionName)
 
-    setTagOptionList(tags)
-    setInitialValues(prev => ({ ...prev, selectedTag: tags[0]?.id }))
-  }, [functionList, initialValues.selectedFunctionName])
+      setTagOptionList(tags)
+      setInitialValues(prev => ({ ...prev, selectedTag: tags[0]?.id }))
+    }
+  }, [functionList, getTagOptions, initialValues.selectedFunctionName, initialValues.selectedTag])
 
   useEffect(() => {
-    const selectedFunction = functionList.find(
-      func =>
-        func.metadata.name === initialValues.selectedFunctionName &&
-        func.metadata.tag === initialValues.selectedTag
-    )
+    if (!initialValues.className) {
+      const selectedFunction = functionList.find(
+        func =>
+          func.metadata.name === initialValues.selectedFunctionName &&
+          func.metadata.tag === initialValues.selectedTag
+      )
 
-    setInitialValues(prev => ({
-      ...prev,
-      className: selectedFunction ? selectedFunction.spec.default_class : ''
-    }))
+      setInitialValues(prev => ({
+        ...prev,
+        className: selectedFunction ? selectedFunction.spec.default_class : ''
+      }))
+    }
   }, [functionList, initialValues.selectedFunctionName, initialValues.selectedTag])
 
   useEffect(() => {
@@ -132,11 +142,11 @@ const DeployModelPopUp = ({
   }
 
   const onSelectFunction = functionName => {
-    setInitialValues(prev => ({ ...prev, selectedFunctionName: functionName }))
+    formRef.current.change('selectedFunctionName', functionName)
   }
 
   const handleTagSelect = tag => {
-    setInitialValues(prev => ({ ...prev, selectedTag: tag }))
+    formRef.current.change('selectedTag', tag)
   }
 
   const handleEditClassArgument = updatedClassArg => {
@@ -189,7 +199,7 @@ const DeployModelPopUp = ({
   }
 
   return (
-    <Form initialValues={initialValues} onSubmit={deployModel}>
+    <Form form={formRef.current} initialValues={initialValues} onSubmit={deployModel}>
       {FormState => {
         return (
           <Modal
@@ -210,6 +220,21 @@ const DeployModelPopUp = ({
                   onChange={onSelectFunction}
                   options={functionOptionList}
                 />
+                <OnChange name="selectedFunctionName">
+                  {currentValue => {
+                    const tags = getTagOptions(functionList, currentValue)
+
+                    setTagOptionList(tags)
+                    formRef.current.change('selectedTag', tags[0].id)
+                    formRef.current.change(
+                      'className',
+                      functionList.find(
+                        func =>
+                          func.metadata.name === currentValue && func.metadata.tag === tags[0].id
+                      )?.spec?.default_class ?? ''
+                    )
+                  }}
+                </OnChange>
               </div>
               <div className="col">
                 <FormSelect
