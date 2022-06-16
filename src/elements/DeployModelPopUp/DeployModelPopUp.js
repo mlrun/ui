@@ -30,8 +30,8 @@ const DeployModelPopUp = ({
   const [classArgumentsList, setClassArgumentsList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
-
   const [initialValues, setInitialValues] = useState({})
+
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {}
@@ -289,20 +289,23 @@ const DeployModelPopUp = ({
 }
 
 DeployModelPopUp.defaultProps = {
-  closePopUp: () => {},
   isOpen: false,
   model: {},
   onResolve: () => {}
 }
 
 DeployModelPopUp.propTypes = {
-  closePopUp: PropTypes.func,
   isOpen: PropTypes.bool.isRequired,
   model: PropTypes.shape({}).isRequired,
   onResolve: PropTypes.func
 }
 
-export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction,
-  ...notificationActions
+const actionCreators = {
+  buildFunction: artifactsAction.buildFunction,
+  fetchFunctions: artifactsAction.fetchFunctions,
+  setNotification: notificationActions.setNotification
+}
+
+export default connect(null, {
+  ...actionCreators
 })(DeployModelPopUp)
