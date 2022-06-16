@@ -255,6 +255,7 @@ const DetailsView = React.forwardRef(
               variant: PRIMARY_BUTTON
             }}
             header="You have unsaved changes."
+            isOpen={detailsStore.showWarning}
             message={`${
               detailsStore.refreshWasHandled ? 'Refreshing the list' : 'Leaving this page'
             } will discard your changes.`}
