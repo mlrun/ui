@@ -167,6 +167,7 @@ const Select = ({
             label: selectedItemAction.confirm.btnConfirmLabel,
             variant: selectedItemAction.confirm.btnConfirmType
           }}
+          isOpen={isConfirmDialogOpen}
           header={selectedItemAction.confirm.title}
           message={selectedItemAction.confirm.message}
         />

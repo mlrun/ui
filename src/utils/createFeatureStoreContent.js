@@ -56,7 +56,7 @@ export const createFeatureSetsRowData = (featureSet, project, isSelectedItem, sh
         id: `key.${identifierUnique}`,
         header: 'Name',
         value: featureSet.name,
-        class: 'table-cell-3',
+        class: 'table-cell-2',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -70,7 +70,7 @@ export const createFeatureSetsRowData = (featureSet, project, isSelectedItem, sh
         showTag: true,
         showStatus: true,
         expandedCellContent: {
-          class: 'table-cell-3',
+          class: 'table-cell-2',
           value: featureSet.tag || truncateUid(featureSet.uid),
           tooltip: featureSet.tag || featureSet.uid,
           showTag: true,
@@ -82,7 +82,7 @@ export const createFeatureSetsRowData = (featureSet, project, isSelectedItem, sh
         id: `description.${identifierUnique}`,
         header: 'Description',
         value: featureSet.description,
-        class: 'table-cell-3',
+        class: 'table-cell-2',
         hidden: isSelectedItem
       },
       {
@@ -108,14 +108,14 @@ export const createFeatureSetsRowData = (featureSet, project, isSelectedItem, sh
             ?.slice(0, 2)
             .map(entity => entity.name)
             .join(', ') ?? '',
-        class: 'table-cell-2',
+        class: 'table-cell-1',
         hidden: isSelectedItem
       },
       { ...getFeatureSetTargetCellValue(featureSet.targets, isSelectedItem) },
       {
         id: `buttonCopy.${identifierUnique}`,
         value: '',
-        class: 'table-cell-1 artifacts__icon',
+        class: 'table-cell-small artifacts__icon',
         type: 'buttonCopyURI',
         actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
         hidden: isSelectedItem

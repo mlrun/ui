@@ -214,7 +214,7 @@ const ScheduledJobs = ({
   )
 
   const actionsMenu = useMemo(() => {
-    return job => [
+    return [
       {
         label: 'Run now',
         icon: <Run className="action_cell__run-icon" />,

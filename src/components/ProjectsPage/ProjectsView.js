@@ -85,6 +85,7 @@ const ProjectsView = ({
             label: confirmData.btnConfirmLabel,
             variant: confirmData.btnConfirmType
           }}
+          isOpen={confirmData}
           header={confirmData.header}
           message={confirmData.message}
         />
