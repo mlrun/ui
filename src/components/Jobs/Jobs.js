@@ -131,6 +131,7 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
             variant: confirmData.btnConfirmType
           }}
           header={confirmData.header}
+          isOpen={confirmData}
           message={confirmData.message}
         />
       )}

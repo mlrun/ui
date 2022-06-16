@@ -97,6 +97,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
               label: confirmData.btnConfirmLabel,
               variant: confirmData.btnConfirmType
             }}
+            isOpen={confirmData}
             message={confirmData.message}
             messageOnly={confirmData.messageOnly}
           />

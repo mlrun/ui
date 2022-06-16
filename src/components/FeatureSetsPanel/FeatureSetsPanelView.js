@@ -50,6 +50,7 @@ const FeatureSetsPanelView = ({
               label: 'Okay',
               variant: PRIMARY_BUTTON
             }}
+            isOpen={confirmDialog}
             message="Note that data will be ingested to the feature set without any transformation and therefore you won't be able to add a transformation graph unless you delete the data first."
           />
         )}
