@@ -6,15 +6,15 @@ export const generatePageData = () => {
     tableHeaders: [
       {
         header: 'Consumer group name',
-        class: 'table-cell-2'
+        class: 'table-cell-1'
       },
       {
         header: 'Stream Path',
-        class: 'table-cell-2'
+        class: 'table-cell-1'
       },
       {
         header: 'Real time functions',
-        class: 'table-cell-2'
+        class: 'table-cell-1'
       }
     ]
   }
