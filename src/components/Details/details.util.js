@@ -247,6 +247,7 @@ export const renderContent = (
         <DetailsInfo
           changes={detailsStore.changes}
           content={detailsStore.infoContent}
+          modelEndpoint={detailsStore.modelEndpoint.data}
           pageData={pageData}
           ref={applyChangesRef}
           selectedItem={selectedItem}

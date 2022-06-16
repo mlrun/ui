@@ -114,11 +114,8 @@
     }
 
     &.selected {
-      &.status-succeeded,
-      &.status-skipped {
-        border-color: $brightTurquoise;
-        box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
-      }
+      border-color: $brightTurquoise;
+      box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
 
       &.status-error,
       &.status-failed {

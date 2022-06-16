@@ -1,11 +1,19 @@
 import { roundFloats } from '../../utils/roundFloats'
 
-export const generateDriftAnalysis = (measures = {}) => {
-  const currentStats = measures?.current_stats ?? {}
-  const driftMeasures = measures?.drift_measures ?? {}
-  const featureStats = measures?.feature_stats ?? {}
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { ReactComponent as LabelColumn } from 'igz-controls/images/ic_target-with-dart.svg'
+
+export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
+  const currentStats = modelEndpoint?.status?.current_stats ?? {}
+  const driftMeasures = modelEndpoint?.status?.drift_measures ?? {}
+  const featureStats = modelEndpoint?.status?.feature_stats ?? {}
+  const labelNames = modelEndpoint?.spec?.label_names ?? []
 
   const tableHeaders = [
+    {
+      label: '',
+      className: 'features-analysis__table-cell_icon'
+    },
     {
       label: 'Feature',
       className: 'features-analysis__table-cell_big'
@@ -62,6 +70,15 @@ export const generateDriftAnalysis = (measures = {}) => {
 
   const tableBody = Object.entries(featureStats).map(([key, value]) => {
     return {
+      labelColumn: {
+        value: labelNames.includes(key) && (
+            <Tooltip template={<TextTooltipTemplate text="Label column" />}>
+              <LabelColumn />
+            </Tooltip>
+        ),
+        type: 'icon',
+        className: 'features-analysis__table-cell_icon'
+      },
       feature: {
         value: key,
         type: 'text',

@@ -21,6 +21,7 @@ const DetailsInfo = React.forwardRef(
     {
       changes,
       content,
+      modelEndpoint,
       pageData,
       selectedItem,
       setChangesData,
@@ -123,6 +124,7 @@ const DetailsInfo = React.forwardRef(
           )
         }
         handleInfoItemClick={handleInfoItemClick}
+        modelEndpoint={modelEndpoint}
         pageData={pageData}
         params={params}
         ref={editItemRef}
@@ -137,6 +139,7 @@ const DetailsInfo = React.forwardRef(
 DetailsInfo.propTypes = {
   changes: PropTypes.shape({}).isRequired,
   content: PropTypes.shape({}).isRequired,
+  modelEndpoint: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }

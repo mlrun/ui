@@ -66,6 +66,11 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Accuracy', id: 'accuracy' },
   { label: 'Stream path', id: 'stream_path' }
 ]
+export const modelEndpointsDriftHeaders = [
+  { label: 'Mean TVD', id: 'tvd_mean' },
+  { label: 'Mean Hellinger', id: 'hellinger_mean' },
+  { label: 'Mean KLD', id: 'kld_mean' },
+]
 export const generateModelsDetailsMenu = selectedModel => [
   {
     label: 'overview',
@@ -100,12 +105,9 @@ export const modelEndpointsDetailsMenu = [
     id: 'overview'
   },
   {
-    label: 'drift analysis',
-    id: 'drift-analysis'
-  },
-  {
     label: 'features analysis',
-    id: 'features-analysis'
+    id: 'features-analysis',
+    tip: 'The statistics are calculated on the last rolling hour of data'
   }
 ]
 export const modelsFilters = [
@@ -345,6 +347,7 @@ export const generatePageData = (
     data.filters = modelEndpointsFilters
     data.tableHeaders = modelEndpointsTableHeaders(isSelectedModel)
     data.details.infoHeaders = modelEndpointsInfoHeaders
+    data.details.driftHeaders = modelEndpointsDriftHeaders
   } else if (pageTab === REAL_TIME_PIPELINES_TAB) {
     data.filters = realTimePipelinesFilters
     data.hideFilterMenu = subPage === PIPELINE_SUB_PAGE

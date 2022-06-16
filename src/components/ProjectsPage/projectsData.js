@@ -65,7 +65,7 @@ export const projectsSortOptions = [
   },
   {
     id: 'byDate',
-    label: 'By date',
+    label: 'By created date',
     path: 'metadata.created'
   }
 ]

@@ -3,26 +3,27 @@ import PropTypes from 'prop-types'
 import { capitalize, isNil } from 'lodash'
 import classnames from 'classnames'
 
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import {
+    ARTIFACTS_PAGE,
+    DATASETS_PAGE,
+    FEATURE_SETS_TAB,
+    FEATURE_STORE_PAGE,
+    FILES_PAGE,
+    FUNCTIONS_PAGE,
+    JOBS_PAGE,
+    MODEL_ENDPOINTS_TAB,
+    MODELS_PAGE,
+    MONITOR_JOBS_TAB
+} from '../../constants'
+import { parseKeyValues } from '../../utils'
+import { getChipOptions } from '../../utils/getChipOptions'
+import { roundFloats } from '../../utils/roundFloats'
+
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 import { Tip } from 'igz-controls/components'
-
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import {
-  ARTIFACTS_PAGE,
-  DATASETS_PAGE,
-  FEATURE_SETS_TAB,
-  FEATURE_STORE_PAGE,
-  FILES_PAGE,
-  FUNCTIONS_PAGE,
-  JOBS_PAGE,
-  MODELS_PAGE,
-  MONITOR_JOBS_TAB
-} from '../../constants'
-import { parseKeyValues } from '../../utils'
-
 import { ReactComponent as RightArrow } from 'igz-controls/images/ic_arrow-right.svg'
-import { getChipOptions } from '../../utils/getChipOptions'
 
 const DetailsInfoView = React.forwardRef(
   (
@@ -33,6 +34,7 @@ const DetailsInfoView = React.forwardRef(
       detailsInfoState,
       handleFinishEdit,
       handleInfoItemClick,
+      modelEndpoint,
       pageData,
       params,
       selectedItem,
@@ -190,6 +192,25 @@ const DetailsInfoView = React.forwardRef(
                 </ul>
               </>
             )}
+          {params.pageTab === MODEL_ENDPOINTS_TAB && (
+            <>
+              <h3 className="item-info__header">Drift</h3>
+              <ul className="item-info__details">
+                {pageData.details.driftHeaders?.map(header => {
+                  return (
+                    <li className="details-item" key={header.id}>
+                      <div className="details-item__header">{header.label}</div>
+                      <DetailsInfoItem
+                        info={
+                          roundFloats(modelEndpoint.status?.drift_measures?.[header.id], 2) ?? '-'
+                        }
+                      />
+                    </li>
+                  )
+                })}
+              </ul>
+            </>
+          )}
         </div>
       )
     )
@@ -207,6 +228,7 @@ DetailsInfoView.propTypes = {
   detailsInfoState: PropTypes.shape({}).isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleInfoItemClick: PropTypes.func.isRequired,
+  modelEndpoint: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
