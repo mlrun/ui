@@ -93,7 +93,12 @@ const DeployModelPopUp = ({
         className: selectedFunction ? selectedFunction.spec.default_class : ''
       }))
     }
-  }, [functionList, initialValues.selectedFunctionName, initialValues.selectedTag])
+  }, [
+    functionList,
+    initialValues.className,
+    initialValues.selectedFunctionName,
+    initialValues.selectedTag
+  ])
 
   useEffect(() => {
     return () => {
