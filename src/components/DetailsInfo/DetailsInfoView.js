@@ -1,24 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { capitalize, isNil } from 'lodash'
+import { isNil } from 'lodash'
 import classnames from 'classnames'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
-    ARTIFACTS_PAGE,
-    DATASETS_PAGE,
-    FEATURE_SETS_TAB,
-    FEATURE_STORE_PAGE,
-    FILES_PAGE,
-    FUNCTIONS_PAGE,
-    JOBS_PAGE,
-    MODEL_ENDPOINTS_TAB,
-    MODELS_PAGE,
-    MONITOR_JOBS_TAB
+  ARTIFACTS_PAGE,
+  DATASETS_PAGE,
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  FUNCTIONS_PAGE,
+  JOBS_PAGE,
+  MODELS_PAGE
 } from '../../constants'
 import { parseKeyValues } from '../../utils'
 import { getChipOptions } from '../../utils/getChipOptions'
-import { roundFloats } from '../../utils/roundFloats'
 
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
@@ -28,13 +25,11 @@ import { ReactComponent as RightArrow } from 'igz-controls/images/ic_arrow-right
 const DetailsInfoView = React.forwardRef(
   (
     {
-      changes,
-      content,
       detailsInfoDispatch,
       detailsInfoState,
+      detailsStore,
       handleFinishEdit,
       handleInfoItemClick,
-      modelEndpoint,
       pageData,
       params,
       selectedItem,
@@ -44,7 +39,7 @@ const DetailsInfoView = React.forwardRef(
     ref
   ) => {
     return (
-      !isEveryObjectValueEmpty(content) && (
+      !isEveryObjectValueEmpty(detailsStore.infoContent) && (
         <div className="item-info">
           {(pageData.page === ARTIFACTS_PAGE ||
             pageData.page === DATASETS_PAGE ||
@@ -70,24 +65,28 @@ const DetailsInfoView = React.forwardRef(
               let target_path = null
 
               if (pageData.page === JOBS_PAGE) {
-                if (content[header.id]?.value === selectedItem.parameters) {
+                if (detailsStore.infoContent[header.id]?.value === selectedItem.parameters) {
                   chipsData.chips = selectedItem.parameters
                   chipsData.chipOptions = getChipOptions('parameters')
-                } else if (content[header.id]?.value === selectedItem.resultsChips) {
+                } else if (
+                  detailsStore.infoContent[header.id]?.value === selectedItem.resultsChips
+                ) {
                   chipsData.chips = selectedItem.resultsChips
                   chipsData.chipOptions = getChipOptions('results')
-                } else if (content[header.id]?.value === selectedItem.labels) {
+                } else if (detailsStore.infoContent[header.id]?.value === selectedItem.labels) {
                   chipsData.chips = selectedItem.labels
                   chipsData.chipOptions = getChipOptions('labels')
                 }
 
                 func =
-                  content[header.id]?.value === selectedItem.function ? selectedItem.function : ''
+                  detailsStore.infoContent[header.id]?.value === selectedItem.function
+                    ? selectedItem.function
+                    : ''
                 state =
-                  content[header.id]?.value === selectedItem.state?.value
+                  detailsStore.infoContent[header.id]?.value === selectedItem.state?.value
                     ? selectedItem.state?.value
                     : ''
-                info = content[header.id]?.value
+                info = detailsStore.infoContent[header.id]?.value
               } else if (
                 pageData.page === ARTIFACTS_PAGE ||
                 pageData.page === DATASETS_PAGE ||
@@ -96,32 +95,32 @@ const DetailsInfoView = React.forwardRef(
                 pageData.page === FEATURE_STORE_PAGE
               ) {
                 if (header.id === 'labels') {
-                  chipsData.chips = !isNil(changes.data[header.id])
-                    ? changes.data[header.id].currentFieldValue
-                    : parseKeyValues(content[header.id]?.value)
+                  chipsData.chips = !isNil(detailsStore.changes.data[header.id])
+                    ? detailsStore.changes.data[header.id].currentFieldValue
+                    : parseKeyValues(detailsStore.infoContent[header.id]?.value)
                   chipsData.chipOptions = getChipOptions(header.id)
                 }
                 if (header.id === 'metrics') {
-                  chipsData.chips = parseKeyValues(content[header.id]?.value)
+                  chipsData.chips = parseKeyValues(detailsStore.infoContent[header.id]?.value)
                   chipsData.chipOptions = getChipOptions(header.id)
                 } else if (header.id === 'relations') {
-                  chipsData.chips = parseKeyValues(content[header.id]?.value)
+                  chipsData.chips = parseKeyValues(detailsStore.infoContent[header.id]?.value)
                   chipsData.chipOptions = getChipOptions(header.id)
                   chipsData.delimiter = <RightArrow />
                 }
 
-                info = !isNil(changes.data[header.id])
-                  ? changes.data[header.id].currentFieldValue
-                  : selectedItem && content[header.id]?.value
+                info = !isNil(detailsStore.changes.data[header.id])
+                  ? detailsStore.changes.data[header.id].currentFieldValue
+                  : selectedItem && detailsStore.infoContent[header.id]?.value
                 target_path =
-                  content[header.id]?.value === selectedItem.target_path
+                  detailsStore.infoContent[header.id]?.value === selectedItem.target_path
                     ? selectedItem.target_path
                     : ''
               } else if (pageData.page === FUNCTIONS_PAGE) {
                 info =
                   header.id === 'kind'
-                    ? content[header.id]?.value || 'Local'
-                    : content[header.id]?.value || ''
+                    ? detailsStore.infoContent[header.id]?.value || 'Local'
+                    : detailsStore.infoContent[header.id]?.value || ''
               }
 
               return (
@@ -135,7 +134,7 @@ const DetailsInfoView = React.forwardRef(
                         {header.tip && <Tip className="details-item__tip" text={header.tip} />}
                       </div>
                       <DetailsInfoItem
-                        changesData={changes.data}
+                        changesData={detailsStore.changes.data}
                         chipsClassName={chipsClassName}
                         chipsData={chipsData}
                         chipOptions={chipsData.chipOptions}
@@ -146,8 +145,8 @@ const DetailsInfoView = React.forwardRef(
                         handleFinishEdit={handleFinishEdit}
                         info={info}
                         isFieldInEditMode={detailsInfoState.editMode.field === header.id}
-                        item={content[header.id]}
-                        link={content[header.id]?.link}
+                        item={detailsStore.infoContent[header.id]}
+                        link={detailsStore.infoContent[header.id]?.link}
                         onClick={handleInfoItemClick}
                         params={params}
                         ref={ref}
@@ -161,54 +160,10 @@ const DetailsInfoView = React.forwardRef(
               )
             })}
           </ul>
-          {(pageData.page === ARTIFACTS_PAGE ||
-            pageData.page === DATASETS_PAGE ||
-            pageData.page === FILES_PAGE ||
-            pageData.page === MODELS_PAGE ||
-            pageData.page === FEATURE_STORE_PAGE) &&
-            selectedItem.producer && (
-              <>
-                <h3 className="item-info__header">Producer</h3>
-                <ul className="item-info__details">
-                  {Object.entries(selectedItem.producer).map(([key, value]) => {
-                    let url = ''
-
-                    if (key === 'uri') {
-                      // value is in the form of: project/uid-iteration
-                      const [project, rest] = value.split('/')
-                      const [uid] = rest?.split('-') ?? []
-                      if (uid) {
-                        url = `/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${uid}/overview`
-                      }
-                    }
-
-                    return (
-                      <li className="details-item" key={key}>
-                        <div className="details-item__header">{capitalize(key)}</div>
-                        <DetailsInfoItem link={url} info={value} />
-                      </li>
-                    )
-                  })}
-                </ul>
-              </>
-            )}
-          {params.pageTab === MODEL_ENDPOINTS_TAB && (
+          {pageData.details.additionalInfo && !pageData.details.additionalInfo.hidden && (
             <>
-              <h3 className="item-info__header">Drift</h3>
-              <ul className="item-info__details">
-                {pageData.details.driftHeaders?.map(header => {
-                  return (
-                    <li className="details-item" key={header.id}>
-                      <div className="details-item__header">{header.label}</div>
-                      <DetailsInfoItem
-                        info={
-                          roundFloats(modelEndpoint.status?.drift_measures?.[header.id], 2) ?? '-'
-                        }
-                      />
-                    </li>
-                  )
-                })}
-              </ul>
+              <h3 className="item-info__header">{pageData.details.additionalInfo.header}</h3>
+              <ul className="item-info__details">{pageData.details.additionalInfo.body}</ul>
             </>
           )}
         </div>
@@ -222,13 +177,11 @@ DetailsInfoView.defaultProps = {
 }
 
 DetailsInfoView.propTypes = {
-  changes: PropTypes.shape({}).isRequired,
-  content: PropTypes.shape({}).isRequired,
   detailsInfoDispatch: PropTypes.func.isRequired,
   detailsInfoState: PropTypes.shape({}).isRequired,
+  detailsStore: PropTypes.shape({}).isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleInfoItemClick: PropTypes.func.isRequired,
-  modelEndpoint: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

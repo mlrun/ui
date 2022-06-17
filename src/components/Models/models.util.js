@@ -18,6 +18,11 @@ import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
 import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 import { parseFunctions } from '../../utils/parseFunctions'
+import { roundFloats } from '../../utils/roundFloats'
+import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+
+import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 
 export const page = MODELS_PAGE
 export const pageDataInitialState = {
@@ -69,7 +74,7 @@ export const modelEndpointsInfoHeaders = [
 export const modelEndpointsDriftHeaders = [
   { label: 'Mean TVD', id: 'tvd_mean' },
   { label: 'Mean Hellinger', id: 'hellinger_mean' },
-  { label: 'Mean KLD', id: 'kld_mean' },
+  { label: 'Mean KLD', id: 'kld_mean' }
 ]
 export const generateModelsDetailsMenu = selectedModel => [
   {
@@ -319,8 +324,9 @@ export const generatePageData = (
   pageTab,
   handleDeployModel,
   handleRequestOnExpand,
-  isSelectedModel
+  detailsStore
 ) => {
+  const isSelectedModel = !isEveryObjectValueEmpty(selectedModel)
   const data = {
     details: {
       menu: [],
@@ -338,6 +344,11 @@ export const generatePageData = (
     data.filters = modelsFilters
     data.tableHeaders = modelsTableHeaders(isSelectedModel)
     data.details.infoHeaders = modelsInfoHeaders
+    data.details.additionalInfo = {
+      header: 'Producer',
+      body: generateProducerDetailsInfo(selectedModel),
+      hidden: !selectedModel.item?.producer
+    }
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)
     data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
@@ -347,7 +358,11 @@ export const generatePageData = (
     data.filters = modelEndpointsFilters
     data.tableHeaders = modelEndpointsTableHeaders(isSelectedModel)
     data.details.infoHeaders = modelEndpointsInfoHeaders
-    data.details.driftHeaders = modelEndpointsDriftHeaders
+    data.details.additionalInfo = {
+      header: 'Drift',
+      body: generateDriftDetailsInfo(detailsStore.modelEndpoint.data),
+      hidden: !detailsStore.modelEndpoint.data?.status?.drift_measures
+    }
   } else if (pageTab === REAL_TIME_PIPELINES_TAB) {
     data.filters = realTimePipelinesFilters
     data.hideFilterMenu = subPage === PIPELINE_SUB_PAGE
@@ -421,4 +436,17 @@ export const getFeatureVectorData = uri => {
   const tag = uri.slice(uri.lastIndexOf(separator) + 1)
 
   return { tag, name }
+}
+
+export const generateDriftDetailsInfo = modelEndpoint => {
+  return modelEndpointsDriftHeaders?.map(header => {
+    return (
+      <li className="details-item" key={header.id}>
+        <div className="details-item__header">{header.label}</div>
+        <DetailsInfoItem
+          info={roundFloats(modelEndpoint.status?.drift_measures?.[header.id], 2) ?? '-'}
+        />
+      </li>
+    )
+  })
 }
