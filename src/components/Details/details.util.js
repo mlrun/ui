@@ -245,8 +245,7 @@ export const renderContent = (
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
-          changes={detailsStore.changes}
-          content={detailsStore.infoContent}
+          detailsStore={detailsStore}
           pageData={pageData}
           ref={applyChangesRef}
           selectedItem={selectedItem}
