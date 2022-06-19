@@ -8,7 +8,7 @@ import Loader from '../../../common/Loader/Loader'
 import ProjectLabels from '../../Project/ProjectLabels/ProjectLabels'
 import { Button, PopUpDialog } from 'igz-controls/components'
 
-import { getValidationRules } from 'igz-controls/utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import './createProjectDialog.scss'

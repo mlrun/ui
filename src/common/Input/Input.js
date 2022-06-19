@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
 
-import { checkPatternsValidity } from 'igz-controls/utils/validationService'
+import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import { INPUT_LINK } from '../../types'

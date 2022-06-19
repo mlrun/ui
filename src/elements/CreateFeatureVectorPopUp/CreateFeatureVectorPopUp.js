@@ -6,7 +6,7 @@ import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
 import { Button, PopUpDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { getValidationRules } from 'igz-controls/utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { TAG_LATEST } from '../../constants'
 import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'

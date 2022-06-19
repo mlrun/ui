@@ -16,7 +16,7 @@ import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getValidationRules } from 'igz-controls/utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 const JobsPanelTitleView = ({
   closePanel,
