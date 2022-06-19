@@ -22,6 +22,7 @@ export const parseJob = (job, tab) => {
   } else {
     return {
       artifacts: job.status.artifacts || [],
+      error: job.status.error ?? '',
       function: job?.spec?.function ?? '',
       handler: job.spec?.handler ?? '',
       hyperparams: job.spec?.hyperparams || {},

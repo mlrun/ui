@@ -99,7 +99,7 @@ const AddEnvironmentVariablesRow = ({
                 onChange={secretKey =>
                   setNewEnvVariable(state => ({ ...state, secretKey }))
                 }
-                pattern="^(?=[\S\s]{1,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]+$"
+                pattern="^(?=[\S\s]{0,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]*$"
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,

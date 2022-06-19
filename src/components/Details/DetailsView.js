@@ -122,23 +122,33 @@ const DetailsView = React.forwardRef(
             <span className="left-margin">
               {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
             The job contains startTime property.*/}
-              {Object.keys(selectedItem).length > 0 &&
-              pageData.page === JOBS_PAGE &&
-              !selectedItem?.updated
-                ? formatDatetime(
-                    selectedItem?.startTime,
-                    stateValue === 'aborted' ? 'N/A' : 'Not yet started'
-                  )
-                : selectedItem?.updated
-                ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
-                : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
-                ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
-                : selectedItem?.spec?.model
-                ? selectedItem?.metadata?.uid
-                : ''}
+              <span className="updated">
+                {Object.keys(selectedItem).length > 0 &&
+                pageData.page === JOBS_PAGE &&
+                !selectedItem?.updated
+                  ? formatDatetime(
+                      selectedItem?.startTime,
+                      stateValue === 'aborted' ? 'N/A' : 'Not yet started'
+                    )
+                  : selectedItem?.updated
+                  ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
+                  : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
+                  ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
+                  : selectedItem?.spec?.model
+                  ? selectedItem?.metadata?.uid
+                  : ''}
+              </span>
               {stateValue && stateLabel && (
-                <Tooltip template={<TextTooltipTemplate text={stateLabel} />}>
+                <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
                   <i className={stateClassName} />
+                </Tooltip>
+              )}
+              {selectedItem.error && (
+                <Tooltip
+                  className="error-container"
+                  template={<TextTooltipTemplate text={`Error - ${selectedItem.error}`} />}
+                >
+                  Error - {selectedItem.error}
                 </Tooltip>
               )}
               {!isEmpty(detailsStore.pods.podsPending) && (

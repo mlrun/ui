@@ -1,9 +1,6 @@
 import React from 'react'
 import { isNil } from 'lodash'
-import {
-  ENV_VARIABLE_TYPE_SECRET,
-  ENV_VARIABLE_TYPE_VALUE
-} from '../../constants'
+import { ENV_VARIABLE_TYPE_SECRET, ENV_VARIABLE_TYPE_VALUE } from '../../constants'
 
 export const SECRET_KEY = 'secretKey'
 export const SECRET_NAME = 'secretName'
@@ -38,25 +35,44 @@ export const isNameNotUnique = (name, variables) => {
   return variables.some(variable => variable.name === name)
 }
 
-export const isEditableEnvVariableValid = (
-  envVariable,
-  envVariables,
-  validation
-) => {
-  if (!isNil(envVariable.newName) && envVariable.newName !== envVariable.name) {
-    return (
-      envVariable.newName.length > 0 &&
-      !isNameNotUnique(envVariable.newName, envVariables) &&
-      (envVariable.value.length > 0 || envVariable.secretName.length > 0)
-    )
-  } else {
-    return envVariable.type === ENV_VARIABLE_TYPE_VALUE ||
-      (envVariable.type === ENV_VARIABLE_TYPE_SECRET && !envVariable.secretName)
-      ? validation.isValueValid && envVariable.value.length > 0
-      : validation.isSecretNameValid &&
-          envVariable.secretName.length > 0 &&
-          validation.isSecretKeyValid
+export const isEditableEnvVariableValid = (envVariable, envVariables, validation) => {
+  let isValid = true
+
+  if (
+    !isNil(envVariable.newName) &&
+    (!validation.isNameValid || envVariable.newName.length === 0)
+  ) {
+    isValid = false
   }
+
+  if (
+    !isNil(envVariable.newName) &&
+    envVariable.newName !== envVariable.name &&
+    isNameNotUnique(envVariable.newName, envVariables)
+  ) {
+    isValid = false
+  }
+
+  if (
+    (envVariable.type === ENV_VARIABLE_TYPE_VALUE || isNil(envVariable.secretName)) &&
+    (!validation.isValueValid || envVariable.value.length === 0)
+  ) {
+    isValid = false
+  }
+
+  if (!isNil(envVariable.secretKey) && !validation.isSecretKeyValid) {
+    isValid = false
+  }
+
+  if (
+    envVariable.type === ENV_VARIABLE_TYPE_SECRET &&
+    !isNil(envVariable.secretName) &&
+    (!validation.isSecretNameValid || envVariable.secretName.length === 0)
+  ) {
+    isValid = false
+  }
+
+  return isValid
 }
 
 export const secretNameValidationTip = (

@@ -14,7 +14,6 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
@@ -147,7 +146,10 @@ const Files = ({
   useEffect(() => {
     setPageData(state => ({
       ...state,
-      ...generatePageData(handleRequestOnExpand, !isEveryObjectValueEmpty(selectedFile))
+      ...generatePageData(
+        handleRequestOnExpand,
+        selectedFile
+      )
     }))
   }, [handleRequestOnExpand, selectedFile])
 

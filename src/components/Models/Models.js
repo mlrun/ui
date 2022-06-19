@@ -36,7 +36,6 @@ import {
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getArtifactIdentifier, getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
@@ -203,10 +202,17 @@ const Models = ({
         params.pageTab,
         handleDeployModel,
         handleRequestOnExpand,
-        !isEveryObjectValueEmpty(selectedModel)
+        detailsStore
       )
     }))
-  }, [handleDeployModel, handleRequestOnExpand, params.pageTab, selectedModel, subPage])
+  }, [
+    detailsStore,
+    handleDeployModel,
+    handleRequestOnExpand,
+    params.pageTab,
+    selectedModel,
+    subPage
+  ])
 
   useEffect(() => {
     if (params.pageTab === MODEL_ENDPOINTS_TAB) {
