@@ -7,7 +7,7 @@ import Input from '../../../common/Input/Input'
 import TextArea from '../../../common/TextArea/TextArea'
 import { RoundedIcon } from 'igz-controls/components'
 
-import { getValidationRules } from 'igz-controls/utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 

@@ -1,20 +1,29 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { chain, keyBy, mapValues } from 'lodash'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
-import { chain, keyBy, mapValues } from 'lodash'
+import arrayMutators from 'final-form-arrays'
 import { OnChange } from 'react-final-form-listeners'
 
-import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
-import { Button, ConfirmDialog, FormInput, FormSelect, Modal } from 'igz-controls/components'
+import {
+  Button,
+  ConfirmDialog,
+  FormInput,
+  FormKeyValueTable,
+  FormSelect,
+  Modal
+} from 'igz-controls/components'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
-import { generateUri } from '../../utils/resources'
-import { MODELS_TAB } from '../../constants'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { MODELS_TAB } from '../../constants'
+import { generateUri } from '../../utils/resources'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { setFieldState } from 'igz-controls/utils/form.util'
 
 import './deployModelPopUp.scss'
 
@@ -27,11 +36,16 @@ const DeployModelPopUp = ({
   setNotification
 }) => {
   const [functionList, setFunctionList] = useState([])
-  const [classArgumentsList, setClassArgumentsList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
-  const [initialValues, setInitialValues] = useState({})
 
+  const [initialValues, setInitialValues] = useState({
+    modelName: '',
+    className: '',
+    selectedTag: '',
+    selectedFunctionName: '',
+    arguments: []
+  })
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {}
@@ -102,7 +116,6 @@ const DeployModelPopUp = ({
 
   useEffect(() => {
     return () => {
-      setClassArgumentsList([])
       setFunctionList([])
       setFunctionOptionList([])
       setTagOptionList([])
@@ -115,7 +128,7 @@ const DeployModelPopUp = ({
         func.metadata.name === values.selectedFunctionName &&
         func.metadata.tag === values.selectedTag
     )
-    const classArguments = mapValues(keyBy(classArgumentsList, 'key'), 'value')
+    const classArguments = mapValues(keyBy(values.arguments, 'key'), 'value')
 
     servingFunction.spec.graph.routes[values.modelName] = {
       class_args: {
@@ -146,28 +159,8 @@ const DeployModelPopUp = ({
     onResolve()
   }
 
-  const onSelectFunction = functionName => {
-    formRef.current.change('selectedFunctionName', functionName)
-  }
-
-  const handleTagSelect = tag => {
-    formRef.current.change('selectedTag', tag)
-  }
-
-  const handleEditClassArgument = updatedClassArg => {
-    const newClassArguments = classArgumentsList.map(classArg => {
-      if (classArg.key === updatedClassArg.key) {
-        classArg.key = updatedClassArg.newKey || updatedClassArg.key
-        classArg.value = updatedClassArg.value
-      }
-      return classArg
-    })
-
-    setClassArgumentsList(newClassArguments)
-  }
-
-  const handleCloseModal = FormState => {
-    if (FormState && FormState.dirty) {
+  const handleCloseModal = formState => {
+    if (formState && formState.dirty) {
       openPopUp(ConfirmDialog, {
         cancelButton: {
           label: 'Cancel',
@@ -186,31 +179,47 @@ const DeployModelPopUp = ({
     }
   }
 
-  const getModalActions = FormState => {
+  const getModalActions = formState => {
     const actions = [
       {
         label: 'Cancel',
-        onClick: () => handleCloseModal(FormState),
+        onClick: () => handleCloseModal(formState),
         variant: TERTIARY_BUTTON
       },
       {
-        disabled: FormState.submitting || (FormState.invalid && FormState.submitFailed),
+        disabled: formState.submitting || (formState.invalid && formState.submitFailed),
         label: 'Deploy',
-        onClick: FormState.handleSubmit,
+        onClick: formState.handleSubmit,
         variant: SECONDARY_BUTTON
       }
     ]
     return actions.map(action => <Button {...action} />)
   }
 
+  const onSelectedFuncionNameChange = currentValue => {
+    const tags = getTagOptions(functionList, currentValue)
+    const defaultClass = functionList.find(
+      func => func.metadata.name === currentValue && func.metadata.tag === tags[0].id
+    )?.spec?.default_class
+
+    setTagOptionList(tags)
+    formRef.current.change('selectedTag', tags[0]?.id ?? '')
+    formRef.current.change('className', defaultClass ?? '')
+  }
+
   return (
-    <Form form={formRef.current} initialValues={initialValues} onSubmit={deployModel}>
-      {FormState => {
+    <Form
+      form={formRef.current}
+      initialValues={initialValues}
+      mutators={{ ...arrayMutators, setFieldState }}
+      onSubmit={deployModel}
+    >
+      {formState => {
         return (
           <Modal
-            actions={getModalActions(FormState)}
+            actions={getModalActions(formState)}
             className="deploy-model"
-            onClose={() => handleCloseModal(FormState)}
+            onClose={() => handleCloseModal(formState)}
             show={isOpen}
             size={MODAL_SM}
             title="Deploy model"
@@ -222,24 +231,9 @@ const DeployModelPopUp = ({
                   disabled={functionOptionList.length === 0}
                   label="Serving function (router)"
                   name="selectedFunctionName"
-                  onChange={onSelectFunction}
                   options={functionOptionList}
                 />
-                <OnChange name="selectedFunctionName">
-                  {currentValue => {
-                    const tags = getTagOptions(functionList, currentValue)
-
-                    setTagOptionList(tags)
-                    formRef.current.change('selectedTag', tags[0].id)
-                    formRef.current.change(
-                      'className',
-                      functionList.find(
-                        func =>
-                          func.metadata.name === currentValue && func.metadata.tag === tags[0].id
-                      )?.spec?.default_class ?? ''
-                    )
-                  }}
-                </OnChange>
+                <OnChange name="selectedFunctionName">{onSelectedFuncionNameChange}</OnChange>
               </div>
               <div className="col">
                 <FormSelect
@@ -247,7 +241,6 @@ const DeployModelPopUp = ({
                   name="selectedTag"
                   search
                   disabled={tagOptionList.length === 0}
-                  onChange={handleTagSelect}
                   options={tagOptionList}
                 />
               </div>
@@ -260,26 +253,16 @@ const DeployModelPopUp = ({
                 name="modelName"
                 label="Model name"
                 required
+                validationRules={getValidationRules('artifact.name')}
                 tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
               />
             </div>
-            <KeyValueTable
+            <FormKeyValueTable
               keyHeader="Class argument name"
               keyLabel="Class argument name"
-              valueHeader="Value"
-              valueLabel="Value"
               addNewItemLabel="Add class argument"
-              content={classArgumentsList}
-              addNewItem={newItem => {
-                setClassArgumentsList([...classArgumentsList, newItem])
-              }}
-              deleteItem={deleteIndex => {
-                setClassArgumentsList(
-                  classArgumentsList.filter((item, index) => index !== deleteIndex)
-                )
-              }}
-              editItem={handleEditClassArgument}
-              withEditMode
+              name="arguments"
+              formState={formState}
             />
           </Modal>
         )

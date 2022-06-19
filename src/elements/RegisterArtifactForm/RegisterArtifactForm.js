@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
-import { getValidationRules } from 'igz-controls/utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import './registerArtifactForm.scss'
 
