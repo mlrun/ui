@@ -11,7 +11,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        tab: 'a'
+        key: 'a'
       }
     }
   }
@@ -27,31 +27,40 @@ const parametersTable = {
     }
   },
   body: {
-    offset: 1,
+    root: '.key-value-table__body',
     add_row_btn: '.table-row .add-new-item-btn',
     row: {
       root: '.table-row',
       fields: {
         key: '.table-cell__key',
         value: '.table-cell__value',
-        remove_btn: '.table-cell__actions .key-value-table__btn'
+        remove_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)'
       }
     }
   }
 }
 
 const secretsTable = {
-  root: '.settings__card-content',
-  header: {},
+  root: '.settings__secrets',
+  header: {
+    root: '.table-row__header',
+    sorters: {
+      key: '.table-cell__key',
+      value: '.table-cell__value'
+    }
+  },
   body: {
+    add_row_btn: '.add-new-item-btn',
+    save_row_btn: '.btn-add',
     row: {
-      root: '.secret__row',
+      root: '.table-row:not(.table-row__header)',
       fields: {
-        key: '.secret__cell:nth-of-type(1)',
-        edit_btn:
-          '.secret__actions .data-ellipsis:nth-of-type(1) .action__button',
-        remove_btn:
-          '.secret__actions .data-ellipsis:nth-of-type(2) .action__button'
+        key: '.table-cell__key',
+        value: '.table-cell__value',
+        key_input: '.table-cell__key input',
+        value_input: '.table-cell__value input',
+        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
+        remove_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)'
       }
     }
   }
@@ -80,7 +89,7 @@ module.exports = {
     Parameters_Table: commonTable(parametersTable),
     Parameters_Table_Key_Input: inputGroup(
       generateInputGroup(
-        '.key-value-table.settings__params .table-row .table-cell__key.input-wrapper',
+        '.key-value-table.settings__params .table-row__last .table-cell__key .input-wrapper',
         true,
         false,
         true
@@ -88,21 +97,21 @@ module.exports = {
     ),
     Parameters_Table_Value_Input: inputGroup(
       generateInputGroup(
-        '.key-value-table.settings__params .table-row .table-cell__value.input-wrapper',
+        '.key-value-table.settings__params .table-row__last .table-cell__value .input-wrapper',
         true,
         false,
         true
       )
     ),
     Parameters_Table_Add_Row_Button: By.css(
-      '.key-value-table.settings__params .table-row.no-hover button:nth-of-type(1)'
+      '.key-value-table.settings__params .table-cell__actions .btn-add:nth-of-type(1)'
     ),
     Parameters_Table_Discard_Row_Button: By.css(
-      '.key-value-table.settings__params .table-row.no-hover button:nth-of-type(2)'
+      '.key-value-table.settings__params .table-cell__actions .btn-add:nth-of-type(2)'
     )
   },
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),
-    Add_Secret_Button: By.css('.secret__row .new-secret__button')
+    Add_Secret_Button: By.css('.table-row__last .add-new-item-btn')
   }
 }

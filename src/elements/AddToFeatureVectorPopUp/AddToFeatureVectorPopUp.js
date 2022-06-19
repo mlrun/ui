@@ -1,20 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { groupBy, uniqBy } from 'lodash'
 
-import Button from '../../common/Button/Button'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Select from '../../common/Select/Select'
 import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
+import Select from '../../common/Select/Select'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { generateProjectsList } from '../../utils/projects'
-import tableActions from '../../actions/table'
-import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { setFeaturesPanelData, setTablePanelOpen } from '../../reducers/tableReducer'
 
-import { ReactComponent as AddCircle } from '../../images/add-circle.svg'
+import { ReactComponent as AddCircle } from 'igz-controls/images/add-circle.svg'
 
 import './addToFeatureVectorPopUp.scss'
 
@@ -23,14 +22,10 @@ const AddToFeatureVectorPopUp = ({
   currentProject,
   fetchFeatureVectors,
   featureStore,
-  projectStore,
-  setFeaturesPanelData,
-  setTablePanelOpen
+  projectStore
 }) => {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false)
-  const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(
-    false
-  )
+  const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState('')
   const [selectedFeatureVector, setSelectedFeatureVector] = useState('')
   const [selectedFeatureVectorTag, setSelectedFeatureVectorTag] = useState('')
@@ -41,12 +36,11 @@ const AddToFeatureVectorPopUp = ({
     generateProjectsList(projectStore.projectsNames.data)
   )
   const addToFeatureVectorBtn = useRef(null)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (projectsList.length === 0) {
-      setProjectsList(
-        generateProjectsList(projectStore.projectsNames.data, currentProject)
-      )
+      setProjectsList(generateProjectsList(projectStore.projectsNames.data, currentProject))
     }
   }, [currentProject, projectStore.projectsNames.data, projectsList.length])
 
@@ -80,8 +74,7 @@ const AddToFeatureVectorPopUp = ({
       featureVectors
         .filter(featureVector => {
           return (
-            featureVector.metadata.name === featureVectorName &&
-            Boolean(featureVector.metadata.tag)
+            featureVector.metadata.name === featureVectorName && Boolean(featureVector.metadata.tag)
           )
         })
         .map(featureVector => {
@@ -96,29 +89,31 @@ const AddToFeatureVectorPopUp = ({
   const createFeatureVector = featureVectorData => {
     setIsPopUpOpen(false)
     setIsCreateFeaturePopUpOpen(false)
-    setFeaturesPanelData({
-      currentProject: currentProject,
-      featureVector: {
-        kind: 'FeatureVector',
-        metadata: {
-          name: featureVectorData.name,
-          project: currentProject,
-          tag: featureVectorData.tag,
-          labels: featureVectorData.labels
+    dispatch(
+      setFeaturesPanelData({
+        currentProject: currentProject,
+        featureVector: {
+          kind: 'FeatureVector',
+          metadata: {
+            name: featureVectorData.name,
+            project: currentProject,
+            tag: featureVectorData.tag,
+            labels: featureVectorData.labels
+          },
+          spec: {
+            description: featureVectorData.description,
+            features: [],
+            label_feature: ''
+          },
+          status: {}
         },
-        spec: {
-          description: featureVectorData.description,
-          features: [],
-          label_feature: ''
+        groupedFeatures: {
+          [currentProject]: []
         },
-        status: {}
-      },
-      groupedFeatures: {
-        [currentProject]: []
-      },
-      isNewFeatureVector: true
-    })
-    setTablePanelOpen(true)
+        isNewFeatureVector: true
+      })
+    )
+    dispatch(setTablePanelOpen(true))
   }
 
   const resetData = () => {
@@ -146,13 +141,15 @@ const AddToFeatureVectorPopUp = ({
         feature => feature.project || currentProject
       )
 
-      setFeaturesPanelData({
-        currentProject: currentProject,
-        featureVector: featureVector,
-        groupedFeatures: groupedFeatures,
-        isNewFeatureVector: false
-      })
-      setTablePanelOpen(true)
+      dispatch(
+        setFeaturesPanelData({
+          currentProject: currentProject,
+          featureVector: featureVector,
+          groupedFeatures: groupedFeatures,
+          isNewFeatureVector: false
+        })
+      )
+      dispatch(setTablePanelOpen(true))
       resetData()
     }
   }
@@ -175,11 +172,9 @@ const AddToFeatureVectorPopUp = ({
         label={action.label}
         tooltip={
           action.tooltip ||
-          (featureStore.features?.allData.length === 0
-            ? ''
-            : 'No features in the project.')
+          (featureStore.features?.allData?.length === 0 ? 'No features in the project.' : '')
         }
-        disabled={action.disabled || !featureStore.features?.allData.length}
+        disabled={action.disabled || !featureStore.features?.allData?.length}
         onClick={handleAddToFeatureVector}
       />
       {isPopUpOpen && (
@@ -235,11 +230,9 @@ const AddToFeatureVectorPopUp = ({
             />
             <Button
               variant={PRIMARY_BUTTON}
-              disabled={[
-                selectedProject,
-                selectedFeatureVector,
-                selectedFeatureVectorTag
-              ].includes('')}
+              disabled={[selectedProject, selectedFeatureVector, selectedFeatureVectorTag].includes(
+                ''
+              )}
               label="Select"
               onClick={selectFeatureVector}
             />
@@ -279,5 +272,5 @@ export default connect(
     ...projectStore,
     ...featureStore
   }),
-  { ...tableActions }
+  {}
 )(AddToFeatureVectorPopUp)

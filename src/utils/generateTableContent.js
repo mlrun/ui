@@ -2,20 +2,22 @@ import { isEmpty, map } from 'lodash'
 
 import {
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
+  CONSUMER_GROUPS_PAGE,
+  CONSUMER_GROUP_PAGE,
+  DATASETS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
-  JOBS_PAGE,
   MODELS_PAGE,
   REAL_TIME_PIPELINES_TAB
 } from '../constants'
-import createJobsContent from './createJobsContent'
-import createFunctionsContent from './createFunctionsContent'
 import createArtifactsContent from './createArtifactsContent'
+import createConsumerGroupContent from './createConsumerGroupContent'
+import createConsumerGroupsContent from './createConsumerGroupsContent'
+import createFunctionsContent from './createFunctionsContent'
 import { createFeatureStoreContent } from './createFeatureStoreContent'
 
 export const generateTableContent = (
@@ -25,7 +27,7 @@ export const generateTableContent = (
   page,
   isTablePanelOpen,
   params,
-  isDemoMode,
+  isStagingMode,
   isSelectedItem
 ) => {
   if (
@@ -33,18 +35,10 @@ export const generateTableContent = (
     (groupFilter === GROUP_BY_NAME || groupFilter === GROUP_BY_WORKFLOW)
   ) {
     return map(groupedContent, group =>
-      page === JOBS_PAGE
-        ? createJobsContent(
-            group,
-            isSelectedItem,
-            params,
-            isDemoMode,
-            groupFilter === GROUP_BY_WORKFLOW
-          )
-        : page === FUNCTIONS_PAGE ||
-          (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
+      page === FUNCTIONS_PAGE ||
+      (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
         ? createFunctionsContent(group, isSelectedItem, params)
-        : page === FEATURE_STORE_PAGE && params.pageTab !== DATASETS_TAB
+        : page === FEATURE_STORE_PAGE
         ? createFeatureStoreContent(
             group,
             params.pageTab,
@@ -52,28 +46,18 @@ export const generateTableContent = (
             isTablePanelOpen,
             isSelectedItem
           )
-        : createArtifactsContent(
-            group,
-            page,
-            params.pageTab,
-            params.projectName,
-            isSelectedItem
-          )
+        : createArtifactsContent(group, page, params.pageTab, params.projectName, isSelectedItem)
     )
   } else if (groupFilter === GROUP_BY_NONE || !groupFilter) {
-    return page === JOBS_PAGE
-      ? createJobsContent(content, isSelectedItem, params, isDemoMode, false)
+    return page === CONSUMER_GROUP_PAGE
+      ? createConsumerGroupContent(content)
+      : page === CONSUMER_GROUPS_PAGE
+      ? createConsumerGroupsContent(content, params)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
-        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB) ||
-        params.pageTab === DATASETS_TAB
-      ? createArtifactsContent(
-          content,
-          page,
-          params.pageTab,
-          params.projectName,
-          isSelectedItem
-        )
+        page === DATASETS_PAGE ||
+        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB)
+      ? createArtifactsContent(content, page, params.pageTab, params.projectName, isSelectedItem)
       : page === FEATURE_STORE_PAGE
       ? createFeatureStoreContent(
           content,

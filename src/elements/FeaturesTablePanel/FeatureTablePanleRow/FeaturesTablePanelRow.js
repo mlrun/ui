@@ -2,12 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Tooltip from '../../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Delete } from '../../../images/delete.svg'
-import { ReactComponent as Target } from '../../../images/ic_target-with-dart.svg'
-import { ReactComponent as CrossedTarget } from '../../../images/ic_target-with-arrow-unset.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Target } from 'igz-controls/images/ic_target-with-dart.svg'
+import { ReactComponent as CrossedTarget } from 'igz-controls/images/ic_target-with-arrow-unset.svg'
 
 import './featuresTablePanelRow.scss'
 

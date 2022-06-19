@@ -1,4 +1,5 @@
-@import '../../scss/mixins';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/mixins';
 
 .env-variables-table {
   @include newItemSidePanelTable;

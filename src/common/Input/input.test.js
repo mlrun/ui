@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import Input from './Input'
 
-jest.mock('../../images/warning.svg', () => ({
+jest.mock('igz-controls/images/warning.svg', () => ({
   ReactComponent: 'warning-icon'
 }))
 

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import { map } from 'lodash'
 import cronstrue from 'cronstrue'
 
-import { ReactComponent as Arrow } from '../../../images/arrow.svg'
 import Accordion from '../../../common/Accordion/Accordion'
 import ChipCell from '../../../common/ChipCell/ChipCell'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 const ConfigSource = ({ selectedItem }) => {
   return (

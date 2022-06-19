@@ -18,10 +18,11 @@ import {
   findRowIndexesByColumnValue,
   getCellByIndexColumn,
   isContainsSubstringInColumnCells,
-  isContainsSubstringInColumnDropdownCels,
+  isContainsSubstringInColumnDropdownCells,
   isContainsSubstringInColumnTooltipCells,
   isDatetimeCelsValueInRange,
-  findRowIndexesByColumnTooltipsValue
+  findRowIndexesByColumnTooltipsValue,
+  putToTestContextCellParameters
 } from '../common/actions/table.action'
 import {
   openActionMenu,
@@ -35,6 +36,7 @@ import {
   checkDropdownSelectedOption
 } from '../common/actions/dropdown.action'
 import pageObjectsConsts from '../common-tools/common-consts'
+import { expect } from 'chai'
 
 Then(
   'check {string} value in {string} column in {string} table on {string} wizard',
@@ -136,6 +138,35 @@ When('add rows to {string} table on {string} wizard', async function(
   }
 })
 
+When('add rows to {string} key-value table on {string} wizard', async function(
+  table,
+  wizard,
+  dataTable
+) {
+  const inputFields = dataTable['rawTable'][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['add_row_btn']
+    )
+    await this.driver.sleep(100)
+    for (const i in inputFields) {
+      await typeIntoInputField(
+        this.driver,
+        pageObjects[wizard][table]['tableFields'][inputFields[i]](3),
+        rows[row_indx][i]
+      )
+    }
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['save_row_btn']
+    )
+    await clickNearComponent(this.driver, pageObjects[wizard][table]['root'])
+    await this.driver.sleep(100)
+  }
+})
+
 Then('verify values in {string} table on {string} wizard', async function(
   table,
   wizard,
@@ -223,6 +254,76 @@ When(
     }
   }
 )
+
+When(
+  'add rows to {string} key-value table in {string} on {string} wizard',
+  async function(table, accordion, wizard, dataTable) {
+    const inputFields = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+    for (const row_indx in rows) {
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizard][accordion][table]['add_row_btn']
+      )
+      await this.driver.sleep(100)
+      for (const i in inputFields) {
+        const component = pageObjects[wizard][accordion][table]['tableFields'][
+          inputFields[i]
+        ](3)
+        const inputField = component.inputField ?? component
+        await typeIntoInputField(this.driver, inputField, rows[row_indx][i])
+      }
+
+      if (pageObjects[wizard][accordion][table]['save_row_btn']) {
+        await clickOnComponent(
+          this.driver,
+          pageObjects[wizard][accordion][table]['save_row_btn']
+        )
+      } else {
+        await clickNearComponent(
+          this.driver,
+          pageObjects[wizard][accordion][table]['root']
+        )
+      }
+
+      await this.driver.sleep(100)
+    }
+  }
+)
+
+When(
+    'edit {int} row in {string} key-value table in {string} on {string} wizard',
+    async function(index, table, accordion, wizard, dataTable) {
+        const inputFields = dataTable['rawTable'][0]
+        const row = dataTable.rows()[0]
+
+        await hoverComponent(
+            this.driver,
+            pageObjects[wizard][accordion][table]['tableFields'][
+                'edit_btn'
+                ](index)
+        )
+        await clickOnComponent(
+            this.driver,
+            pageObjects[wizard][accordion][table]['tableFields']['edit_btn'](
+                index
+            )
+        )
+            for (const i in inputFields) {
+                const component = pageObjects[wizard][accordion][table]['tableFields'][
+                    inputFields[i]
+                    ](index)
+                await typeIntoInputField(this.driver, component.inputField, row[i])
+            }
+
+        await clickOnComponent(
+            this.driver,
+            pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](
+                index
+            )
+        )
+        await this.driver.sleep(100)
+})
 
 Then(
   'verify values in {string} table in {string} on {string} wizard',
@@ -353,7 +454,7 @@ Then(
       )
     }
     if (type === 'dropdowns') {
-      await isContainsSubstringInColumnDropdownCels(
+      await isContainsSubstringInColumnDropdownCells(
         this.driver,
         pageObjects[wizard][table],
         column,
@@ -384,7 +485,7 @@ Then(
       )
     }
     if (type === 'dropdowns') {
-      await isContainsSubstringInColumnDropdownCels(
+      await isContainsSubstringInColumnDropdownCells(
         this.driver,
         pageObjects[wizard][accordion][table],
         column,
@@ -579,6 +680,23 @@ When(
       pageObjects[wizard][table]['rowRoot'](indx)
     )
   }
+)
+
+When(
+    'click on row root with value {string} in {string} column in {string} table in {string} on {string} wizard',
+    async function(value, columnName, table, accordion, wizard) {
+        const arr = await findRowIndexesByColumnValue(
+            this.driver,
+            pageObjects[wizard][accordion][table],
+            columnName,
+            value
+        )
+        const indx = arr[0]
+        await clickOnComponent(
+            this.driver,
+            pageObjects[wizard][accordion][table]['rowRoot'](indx)
+        )
+    }
 )
 
 When(
@@ -826,5 +944,105 @@ When(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
     )
+  }
+)
+
+When(
+  'save to context {string} column and {string} attribute on {int} row from {string} table on {string} wizard',
+  async function(columnName, attributeName, rowIndex, tableName, wizardName) {
+    await putToTestContextCellParameters(
+      this.driver,
+      this.testContext,
+      pageObjects[wizardName][tableName],
+      rowIndex,
+      columnName,
+      attributeName
+    )
+  }
+)
+
+When(
+  'save to context {string} column on {int} row from {string} table on {string} wizard',
+  async function(columnName, rowIndex, tableName, wizardName) {
+    await putToTestContextCellParameters(
+      this.driver,
+      this.testContext,
+      pageObjects[wizardName][tableName],
+      rowIndex,
+      columnName
+    )
+  }
+)
+
+When(
+  'save to context {string} column and {string} attributes row where header {string} is {string} from {string} table on {string} wizard',
+  async function(
+    valueColumnName,
+    attributeName,
+    keyName,
+    keyValue,
+    overviewTable,
+    wizardName
+  ) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizardName][overviewTable],
+      keyName,
+      keyValue
+    )
+    const index = arr[0]
+
+    await putToTestContextCellParameters(
+      this.driver,
+      this.testContext,
+      pageObjects[wizardName][overviewTable],
+      index,
+      valueColumnName,
+      attributeName
+    )
+  }
+)
+
+When(
+  'click on {string} value where option is {string} in {string} on {string} wizard',
+  async function(fieldType, nameValue, overviewTable, wizardName) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizardName][overviewTable],
+      'key',
+      nameValue
+    )
+    const index = arr[0]
+
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizardName][overviewTable].tableFields[fieldType](index)
+    )
+  }
+)
+
+Then(
+  'verify {string} values {string} values from {string} on {string} with {string} context value',
+  async function(keyColumn, keys, overviewTable, wizardName, contextContainer) {
+    const keysArr = keys.split(',')
+
+    for (let key of keysArr) {
+      const arr = await findRowIndexesByColumnValue(
+        this.driver,
+        pageObjects[wizardName][overviewTable],
+        keyColumn,
+        key
+      )
+      const cellComponent = await this.driver.findElement(
+        pageObjects[wizardName][overviewTable].tableFields['value'](arr[0])
+      )
+      const cellValue = await cellComponent.getText()
+      expect(this.testContext[contextContainer].includes(cellValue)).equal(
+        true,
+        `"${key}" value "${cellValue}" is not in link "${this.testContext[
+          contextContainer
+        ].includes(cellValue)}"`
+      )
+    }
   }
 )

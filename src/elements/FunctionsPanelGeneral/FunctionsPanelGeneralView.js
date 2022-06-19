@@ -1,9 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
-import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
+import PanelSection from '../PanelSection/PanelSection'
+import TextArea from '../../common/TextArea/TextArea'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
+import { TAG_LATEST } from '../../constants'
 
 import './functionsPanelGeneral.scss'
 
@@ -16,13 +19,19 @@ const FunctionsPanelGeneralView = ({
 }) => {
   return (
     <div className="functions-panel__item new-item-side-panel__item general">
-      <FunctionsPanelSection title="General">
+      <PanelSection title="General">
         <div className="general__required-info">
           <div className="name">
-            Name: <span>{data.name}</span>
+            <Tooltip template={<TextTooltipTemplate text={data.name} />}>
+              Name: <span>{data.name}</span>
+            </Tooltip>
           </div>
-          <div className="tag">
-            Tag: <span>{data.tag || 'latest'}</span>
+          <div className="tag data-ellipsis">
+            <Tooltip
+              template={<TextTooltipTemplate text={data.tag || TAG_LATEST} />}
+            >
+              Tag: <span>{data.tag || TAG_LATEST}</span>
+            </Tooltip>
           </div>
           <div className="runtime">
             Runtime: <span>{data.kind}</span>
@@ -55,7 +64,7 @@ const FunctionsPanelGeneralView = ({
             />
           </div>
         </div>
-      </FunctionsPanelSection>
+      </PanelSection>
     </div>
   )
 }

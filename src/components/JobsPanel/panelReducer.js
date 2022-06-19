@@ -1,6 +1,7 @@
+import { JOB_DEFAULT_OUTPUT_PATH } from '../../constants'
+
 export const initialState = {
   access_key: '',
-  cpuUnit: 'cpu',
   currentFunctionInfo: {
     labels: [],
     method: '',
@@ -12,13 +13,27 @@ export const initialState = {
   inputPath: '',
   limits: {
     cpu: '',
+    cpuUnit: '',
     memory: '',
-    'nvidia.com/gpu': ''
+    memoryUnit: '',
   },
-  memoryUnit: 'Bytes',
-  outputPath: 'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}',
+  outputPath: JOB_DEFAULT_OUTPUT_PATH,
   previousPanelData: {
     access_key: '',
+    limits: {
+      cpu: '',
+      cpuUnit: '',
+      memory: '',
+      memoryUnit: ''
+    },
+    preemption_mode: '',
+    priority_class_name: '',
+    requests: {
+      cpu: '',
+      cpuUnit: '',
+      memory: '',
+      memoryUnit: '',
+    },
     tableData: {
       dataInputs: [],
       parameters: [],
@@ -33,9 +48,13 @@ export const initialState = {
       version: ''
     }
   },
+  preemption_mode: '',
+  priority_class_name: '',
   requests: {
     cpu: '',
-    memory: ''
+    cpuUnit: '',
+    memory: '',
+    memoryUnit: ''
   },
   tableData: {
     parameters: [],
@@ -53,7 +72,6 @@ export const panelActions = {
   REMOVE_JOB_LABEL: 'REMOVE_JOB_LABEL',
   REMOVE_PREVIOUS_PANEL_DATA: 'REMOVE_PREVIOUS_PANEL_DATA',
   SET_ACCESS_KEY: 'SET_ACCESS_KEY',
-  SET_CPU_UNIT: 'SET_CPU_UNIT',
   SET_CURRENT_FUNCTION_INFO: 'SET_CURRENT_FUNCTION_INFO',
   SET_CURRENT_FUNCTION_INFO_LABELS: 'SET_CURRENT_FUNCTION_INFO_LABELS',
   SET_CURRENT_FUNCTION_INFO_METHOD: 'SET_CURRENT_FUNCTION_INFO_METHOD',
@@ -64,19 +82,24 @@ export const panelActions = {
   SET_JOB_LABELS: 'SET_JOB_LABELS',
   SET_LIMITS: 'SET_LIMITS',
   SET_LIMITS_CPU: 'SET_LIMITS_CPU',
+  SET_LIMITS_CPU_UNIT: 'SET_LIMITS_CPU_UNIT',
   SET_LIMITS_MEMORY: 'SET_LIMITS_MEMORY',
-  SET_LIMITS_NVIDIA_GPU: 'SET_LIMITS_NVIDIA_GPU',
-  SET_MEMORY_UNIT: 'SET_MEMORY_UNIT',
+  SET_LIMITS_MEMORY_UNIT: 'SET_LIMITS_MEMORY_UNIT',
   SET_OUTPUT_PATH: 'SET_OUTPUT_PATH',
+  SET_PREEMPTION_MODE: 'SET_PREEMPTION_MODE',
   SET_PREVIOUS_PANEL_DATA: 'SET_PREVIOUS_PANEL_DATA',
   SET_PREVIOUS_PANEL_DATA_ACCESS_KEY: 'SET_PREVIOUS_PANEL_DATA_ACCESS_KEY',
   SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
     'SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES',
   SET_PREVIOUS_PANEL_DATA_INPUTS: 'SET_PREVIOUS_PANEL_DATA_INPUTS',
+  SET_PREVIOUS_PANEL_DATA_LIMITS: 'SET_PREVIOUS_PANEL_DATA_LIMITS',
   SET_PREVIOUS_PANEL_DATA_METHOD: 'SET_PREVIOUS_PANEL_DATA_METHOD',
   SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR:
     'SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR',
   SET_PREVIOUS_PANEL_DATA_PARAMETERS: 'SET_PREVIOUS_PANEL_DATA_PARAMETERS',
+  SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE: 'SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE',
+  SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME: 'SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME',
+  SET_PREVIOUS_PANEL_DATA_REQUESTS: 'SET_PREVIOUS_PANEL_DATA_REQUESTS',
   SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES:
     'SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES',
   SET_PREVIOUS_PANEL_DATA_TABLE_DATA: 'SET_PREVIOUS_PANEL_DATA_TABLE_DATA',
@@ -85,9 +108,12 @@ export const panelActions = {
   SET_PREVIOUS_PANEL_DATA_VOLUMES: 'SET_PREVIOUS_PANEL_DATA_VOLUMES',
   SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS:
     'SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS',
+  SET_PRIORITY_CLASS_NAME: 'SET_PRIORITY_CLASS_NAME',
   SET_REQUESTS: 'SET_REQUESTS',
   SET_REQUESTS_CPU: 'SET_REQUESTS_CPU',
+  SET_REQUESTS_CPU_UNIT: 'SET_REQUESTS_CPU_UNIT',
   SET_REQUESTS_MEMORY: 'SET_REQUESTS_MEMORY',
+  SET_REQUESTS_MEMORY_UNIT: 'SET_REQUESTS_MEMORY_UNIT',
   SET_TABLE_DATA: 'SET_TABLE_DATA',
   SET_TABLE_DATA_ENVIRONMENT_VARIABLES: 'SET_TABLE_DATA_ENVIRONMENT_VARIABLES',
   SET_TABLE_DATA_INPUTS: 'SET_TABLE_DATA_INPUTS',
@@ -134,11 +160,6 @@ export const panelReducer = (state, { type, payload }) => {
           ...state.currentFunctionInfo,
           labels: payload
         }
-      }
-    case panelActions.SET_CPU_UNIT:
-      return {
-        ...state,
-        cpuUnit: payload
       }
     case panelActions.SET_CURRENT_FUNCTION_INFO:
       return {
@@ -201,6 +222,14 @@ export const panelReducer = (state, { type, payload }) => {
           cpu: payload
         }
       }
+    case panelActions.SET_LIMITS_CPU_UNIT:
+      return {
+        ...state,
+        limits: {
+          ...state.limits,
+          cpuUnit: payload
+        }
+      }
     case panelActions.SET_LIMITS_MEMORY:
       return {
         ...state,
@@ -209,23 +238,23 @@ export const panelReducer = (state, { type, payload }) => {
           memory: payload
         }
       }
-    case panelActions.SET_LIMITS_NVIDIA_GPU:
+    case panelActions.SET_LIMITS_MEMORY_UNIT:
       return {
         ...state,
         limits: {
           ...state.limits,
-          'nvidia.com/gpu': payload
+          memoryUnit: payload
         }
-      }
-    case panelActions.SET_MEMORY_UNIT:
-      return {
-        ...state,
-        memoryUnit: payload
       }
     case panelActions.SET_OUTPUT_PATH:
       return {
         ...state,
         outputPath: payload
+      }
+    case panelActions.SET_PREEMPTION_MODE:
+      return {
+        ...state,
+        preemption_mode: payload
       }
     case panelActions.SET_PREVIOUS_PANEL_DATA:
       return {
@@ -273,6 +302,17 @@ export const panelReducer = (state, { type, payload }) => {
           }
         }
       }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          limits: {
+            ...state.previousPanelData.limits,
+            ...payload
+          }
+        }
+      }
     case panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR:
       return {
         ...state,
@@ -292,6 +332,33 @@ export const panelReducer = (state, { type, payload }) => {
           tableData: {
             ...state.previousPanelData.tableData,
             parameters: payload
+          }
+        }
+      }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          preemption_mode: payload
+        }
+      }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          priority_class_name: payload
+        }
+      }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_REQUESTS:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          requests: {
+            ...state.previousPanelData.requests,
+            ...payload
           }
         }
       }
@@ -358,6 +425,11 @@ export const panelReducer = (state, { type, payload }) => {
           }
         }
       }
+    case panelActions.SET_PRIORITY_CLASS_NAME:
+      return {
+        ...state,
+        priority_class_name: payload
+      }
     case panelActions.SET_REQUESTS:
       return {
         ...state,
@@ -371,12 +443,28 @@ export const panelReducer = (state, { type, payload }) => {
           cpu: payload
         }
       }
+    case panelActions.SET_REQUESTS_CPU_UNIT:
+      return {
+        ...state,
+        requests: {
+          ...state.requests,
+          cpuUnit: payload
+        }
+      }
     case panelActions.SET_REQUESTS_MEMORY:
       return {
         ...state,
         requests: {
           ...state.requests,
           memory: payload
+        }
+      }
+    case panelActions.SET_REQUESTS_MEMORY_UNIT:
+      return {
+        ...state,
+        requests: {
+          ...state.requests,
+          memoryUnit: payload
         }
       }
     case panelActions.SET_TABLE_DATA:

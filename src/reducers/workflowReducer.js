@@ -4,7 +4,8 @@ import {
   FETCH_WORKFLOW_SUCCESS,
   FETCH_WORKFLOWS_BEGIN,
   FETCH_WORKFLOWS_FAILURE,
-  FETCH_WORKFLOWS_SUCCESS
+  FETCH_WORKFLOWS_SUCCESS,
+  RESET_WORKFLOW
 } from '../constants'
 
 const initialState = {
@@ -16,11 +17,12 @@ const initialState = {
   activeWorkflow: {
     data: {},
     loading: false,
-    error: null
+    error: null,
+    workflowJobsIds: []
   }
 }
 
-export default (state = initialState, { type, payload }) => {
+const workflowReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case FETCH_WORKFLOW_BEGIN:
       return {
@@ -37,7 +39,10 @@ export default (state = initialState, { type, payload }) => {
           ...state.activeWorkflow,
           data: payload,
           loading: false,
-          error: null
+          error: null,
+          workflowJobsIds: Object.values(payload.graph).map(
+            jobData => jobData.run_uid
+          )
         }
       }
     case FETCH_WORKFLOW_FAILURE:
@@ -78,7 +83,17 @@ export default (state = initialState, { type, payload }) => {
           error: payload
         }
       }
+    case RESET_WORKFLOW:
+      return {
+        ...state,
+        activeWorkflow: {
+          ...state.activeWorkflow,
+          data: {}
+        }
+      }
     default:
       return state
   }
 }
+
+export default workflowReducer

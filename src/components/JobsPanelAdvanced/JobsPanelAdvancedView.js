@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
+import PanelSection from '../../elements/PanelSection/PanelSection'
 import { JobsPanelAdvancedTable } from '../../elements/JobsPanelAdvancedTable/JobsPanelAdvancedTable'
 import JobsPanelEnvironmentVariables from '../../elements/JobsPanelEnvironmentVariables/JobsPanelEnvironmentVariables'
 
@@ -15,8 +15,7 @@ const JobsPanelAdvancedView = ({
   handleDeleteItems,
   handleEditItems,
   handleResetForm,
-  isDemoMode,
-  match,
+  isStagingMode,
   panelDispatch,
   panelState,
   setValidation,
@@ -24,18 +23,19 @@ const JobsPanelAdvancedView = ({
 }) => {
   return (
     <div className="job-panel__item advanced new-item-side-panel__item">
-      <JobsPanelSection title="Advanced">
+      <PanelSection title="Advanced">
         <JobsPanelEnvironmentVariables
+          isPanelEditMode={panelState.editMode}
           panelDispatch={panelDispatch}
           panelEnvData={panelState.tableData.environmentVariables}
           previousPanelEnvData={
             panelState.previousPanelData.tableData.environmentVariables
           }
         />
-      </JobsPanelSection>
+      </PanelSection>
 
-      {isDemoMode && (
-        <JobsPanelSection title="Secrets">
+      {isStagingMode && (
+        <PanelSection title="Secrets">
           <JobsPanelAdvancedTable
             addNewItem={advancedState.addNewSecret}
             className="advanced secrets"
@@ -45,7 +45,7 @@ const JobsPanelAdvancedView = ({
             handleDeleteItems={handleDeleteItems}
             handleResetForm={handleResetForm}
             headers={panelData['secrets']['table-headers']}
-            match={match}
+            isPanelEditMode={panelState.editMode}
             panelState={panelState}
             section="advanced secrets"
             selectedId={advancedState.newSecret.kind}
@@ -77,7 +77,7 @@ const JobsPanelAdvancedView = ({
             setValidation={setValidation}
             validation={validation}
           />
-        </JobsPanelSection>
+        </PanelSection>
       )}
     </div>
   )
@@ -90,8 +90,7 @@ JobsPanelAdvancedView.propTypes = {
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
-  isDemoMode: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
+  isStagingMode: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   setValidation: PropTypes.func.isRequired,

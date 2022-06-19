@@ -2,11 +2,11 @@ import { cleanup, fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import ErrorMessage from './ErrorMessage'
 
-jest.mock('../../images/unsuccess_alert.svg', () => ({
+jest.mock('igz-controls/images/unsuccess_alert.svg', () => ({
   ReactComponent: 'unsuccess_alert-icon'
 }))
 
-jest.mock('../../images/close.svg', () => ({
+jest.mock('igz-controls/images/close.svg', () => ({
   ReactComponent: 'close-icon'
 }))
 

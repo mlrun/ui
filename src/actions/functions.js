@@ -55,8 +55,11 @@ import {
   GET_FUNCTION_WITH_HASH_FAILURE,
   GET_FUNCTION_WITH_HASH_SUCCESS,
   REMOVE_FUNCTION,
-  SET_NEW_FUNCTION_FORCE_BUILD
+  SET_NEW_FUNCTION_FORCE_BUILD,
+  SET_NEW_FUNCTION_PREEMTION_MODE,
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
 } from '../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
 const functionsActions = {
@@ -71,7 +74,12 @@ const functionsActions = {
         return result
       })
       .catch(error => {
-        dispatch(functionsActions.createNewFunctionFailure(error.message))
+        const message =
+          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You are not permitted to create new function.'
+            : error.message
+
+        dispatch(functionsActions.createNewFunctionFailure(message))
 
         throw error
       })
@@ -139,11 +147,11 @@ const functionsActions = {
     type: FETCH_FUNCTION_LOGS_SUCCESS,
     payload: logs
   }),
-  fetchFunctions: (project, name) => dispatch => {
+  fetchFunctions: (project, filters) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
 
     return functionsApi
-      .getFunctions(project, name)
+      .getFunctions(project, filters)
       .then(({ data }) => {
         dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
@@ -231,7 +239,6 @@ const functionsActions = {
         return result.data.func
       })
       .catch(error => {
-        dispatch(functionsActions.getFunctionFailure(error.message))
         throw error
       })
   },
@@ -369,6 +376,14 @@ const functionsActions = {
   setNewFunctionParameters: parameters => ({
     type: SET_NEW_FUNCTION_PARAMETERS,
     payload: parameters
+  }),
+  setNewFunctionPriorityClassName: className => ({
+    type: SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
+    payload: className
+  }),
+  setNewFunctionPreemtionMode: mode => ({
+    type: SET_NEW_FUNCTION_PREEMTION_MODE,
+    payload: mode
   }),
   setNewFunctionProject: project => ({
     type: SET_NEW_FUNCTION_PROJECT,

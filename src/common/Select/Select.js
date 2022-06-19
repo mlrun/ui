@@ -2,16 +2,13 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import SelectOption from '../../elements/SelectOption/SelectOption'
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import PopUpDialog from '../PopUpDialog/PopUpDialog'
-import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
+import { ConfirmDialog, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
+import { SelectOption } from 'igz-controls/elements'
 
 import { SELECT_OPTIONS } from '../../types'
-import { TERTIARY_BUTTON } from '../../constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Caret } from '../../images/dropdown.svg'
+import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 
 import './select.scss'
 
@@ -29,14 +26,14 @@ const Select = ({
   selectType,
   selectedId,
   selectedItemAction,
-  withoutBorder
+  withoutBorder,
+  withSelectedIcon
 }) => {
   const selectRef = useRef()
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const { width: dropdownWidth } =
-    selectRef?.current?.getBoundingClientRect() || {}
+  const { width: dropdownWidth } = selectRef?.current?.getBoundingClientRect() || {}
   const selectClassName = classNames(
     'select',
     className,
@@ -89,10 +86,7 @@ const Select = ({
   const handleCloseSelectBody = useCallback(event => {
     event.stopPropagation()
 
-    if (
-      !event.target.classList.contains('disabled') &&
-      !event.target.closest('.select__search')
-    ) {
+    if (!event.target.classList.contains('disabled') && !event.target.closest('.select__search')) {
       setOpen(false)
       setSearchValue('')
     }
@@ -131,11 +125,7 @@ const Select = ({
         {selectedId && selectedItemAction && (
           <div className="actions">
             {selectedItemAction.handler ? (
-              <Tooltip
-                template={
-                  <TextTooltipTemplate text={selectedItemAction.tooltip} />
-                }
-              >
+              <Tooltip template={<TextTooltipTemplate text={selectedItemAction.tooltip} />}>
                 <button
                   onClick={event => {
                     if (selectedItemAction.confirm) {
@@ -177,6 +167,7 @@ const Select = ({
             label: selectedItemAction.confirm.btnConfirmLabel,
             variant: selectedItemAction.confirm.btnConfirmType
           }}
+          isOpen={isConfirmDialogOpen}
           header={selectedItemAction.confirm.title}
           message={selectedItemAction.confirm.message}
         />
@@ -190,11 +181,7 @@ const Select = ({
           }}
           style={{ width: `${dropdownWidth}px` }}
         >
-          <div
-            data-testid="select-body"
-            className="select__body"
-            onClick={handleCloseSelectBody}
-          >
+          <div data-testid="select-body" className="select__body" onClick={handleCloseSelectBody}>
             {search && (
               <div className="select__search">
                 <input
@@ -207,10 +194,7 @@ const Select = ({
             )}
             {options
               .filter(option => {
-                return (
-                  !search ||
-                  option.label.toLowerCase().includes(searchValue.toLowerCase())
-                )
+                return !search || option.label.toLowerCase().includes(searchValue.toLowerCase())
               })
               .map(option => {
                 return (
@@ -222,6 +206,7 @@ const Select = ({
                     }}
                     selectType={selectType}
                     selectedId={selectedId}
+                    withSelectedIcon={withSelectedIcon}
                   />
                 )
               })}
@@ -243,7 +228,8 @@ Select.defaultProps = {
   search: false,
   selectType: '',
   selectedId: '',
-  withoutBorder: false
+  withoutBorder: false,
+  withSelectedIcon: false
 }
 
 Select.propTypes = {
@@ -259,7 +245,8 @@ Select.propTypes = {
   search: PropTypes.bool,
   selectType: PropTypes.string,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  withoutBorder: PropTypes.bool
+  withoutBorder: PropTypes.bool,
+  withSelectedIcon: PropTypes.bool
 }
 
 export default React.memo(Select)

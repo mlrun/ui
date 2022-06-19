@@ -1,20 +1,20 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
-@import '../../scss/shadows';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/shadows';
 
 .project {
   &-wrapper {
     display: flex;
     flex: 1 1;
     flex-direction: column;
-    min-width: 1100px;
+    min-width: 100%;
   }
 
   &__header {
+    min-height: 70px;
     padding: 20px 24px;
     background-color: $white;
     box-shadow: $headerShadow;
-    min-height: 70px;
   }
 
   &__content {
@@ -30,75 +30,11 @@
       width: 250px;
       padding-right: 64px;
 
-      &__main-data {
-        &-wrapper {
-          display: flex;
-          align-items: center;
-        }
-      }
-
-      &__name {
-        display: flex;
-        flex: 2;
-        width: 100%;
-        color: rgba($mulledWine, 0.88);
-        font-weight: 300;
-        font-size: 36px;
-        line-height: 42px;
-
-        .input {
-          width: 100%;
-          font-weight: 300;
-          font-size: 36px;
-        }
-      }
-
-      &__settings {
-        cursor: pointer;
-      }
-
-      &__labels {
-        .chips-wrapper {
-          flex-wrap: wrap;
-        }
-      }
-
-      &__description {
-        margin-top: 16px;
-        color: rgba($mulledWine, 0.88);
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 16px;
-        cursor: pointer;
-
-        &-info {
-          padding: 17px 9px;
-          border: $primaryBorder;
-          border-radius: 4px;
-        }
-
-        .text-area {
-          width: 100%;
-          height: 150px;
-          white-space: normal;
-        }
-
-        &-title {
-          color: $topaz;
-          font-size: 12px;
-        }
-
-        &-text {
-          max-width: 185px;
-          margin: 3px 0;
-        }
-      }
-
       &__row {
         display: flex;
         justify-content: space-between;
-        margin: 5px 0;
         color: $primary;
+        margin-top: 5px;
 
         .row-label {
           display: inline-block;
@@ -113,11 +49,6 @@
           .row-name {
             text-transform: capitalize;
           }
-        }
-
-        &.owner-row,
-        &.members-row {
-          color: $topaz;
         }
       }
 
@@ -135,11 +66,6 @@
           margin-bottom: 15px;
         }
       }
-
-      &__divider {
-        margin: 17px 0;
-        border-top: $secondaryBorder;
-      }
     }
 
     .main-info {
@@ -150,6 +76,7 @@
       &__toolbar {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 15px;
 
         &-menu {
@@ -173,7 +100,7 @@
           }
 
           &.create-new-menu {
-            background-color: $malibu;
+            background-color: $brightTurquoise;
             border: none;
 
             .select {

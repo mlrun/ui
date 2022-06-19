@@ -1,19 +1,20 @@
-@import '../../scss/variables.scss';
-@import '../../scss/colors.scss';
-@import '../../scss/borders.scss';
+@import '~igz-controls/scss/variables';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
 
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
   display: flex;
   flex: 1 0 $navbarWidth;
+  max-width: $navbarWidth;
+  width: $navbarWidth;
   height: 100%;
-  position: fixed;
   border-right: $tertiaryBorder;
   transform: translateX(-100%);
   transition: transform 0.5s ease-in-out;
-  top: 0;
-  left: 0;
-  width: $navbarWidth;
-  z-index: 2;
 
   &:hover {
     transform: translateX(0);
@@ -21,46 +22,46 @@
 
   &__toggler {
     position: absolute;
-    width: $navbarTogglerWidth;
-    height: 100%;
     top: 0;
     right: -$navbarTogglerWidth + 1;
+    z-index: 1;
+    width: $navbarTogglerWidth;
+    height: 100%;
     opacity: 1;
     transition: opacity 0.5s ease-in-out, right 0.5s ease-in-out;
-    z-index: 1;
 
     &-button {
       position: relative;
-      background-color: $wildSand;
+      z-index: 2;
       width: $navbarTogglerWidth;
       height: $navbarTogglerWidth;
+      margin-top: 70px;
+      padding: 7px;
+      background-color: $wildSand;
       border: $tertiaryBorder;
       border-left: 0;
-      border-radius: 0px 8px 8px 0px;
-      padding: 7px;
-      margin-top: 70px;
-      z-index: 2;
+      border-radius: 0 8px 8px 0;
     }
 
     &-icon {
+      position: relative;
       display: block;
-      background-color: $topaz;
-      border-radius: 5px;
       width: 100%;
       height: 3px;
-      position: relative;
+      background-color: $topaz;
+      border-radius: 5px;
 
       &::before,
       &::after {
-        content: '';
-        display: block;
-        background-color: $topaz;
-        border-radius: 5px;
-        width: 100%;
-        height: 3px;
         position: absolute;
         left: 0;
         z-index: 1;
+        display: block;
+        width: 100%;
+        height: 3px;
+        background-color: $topaz;
+        border-radius: 5px;
+        content: '';
       }
 
       &::before {
@@ -74,23 +75,23 @@
   }
 
   &__body {
-    background-color: $wildSand;
-    padding: 0.5rem 1rem 0;
     position: relative;
+    z-index: 2;
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
     width: 100%;
     height: 100%;
+    padding: 0.5rem 1rem 0;
     overflow: hidden;
     overflow-y: auto;
-    z-index: 2;
+    background-color: $wildSand;
   }
 
   &__content {
     display: flex;
-    flex-flow: column nowrap;
     flex: 1 0 auto;
+    flex-flow: column nowrap;
     width: 100%;
   }
 
@@ -101,17 +102,17 @@
   }
 
   &-links {
-    list-style-type: none;
-    padding: 0;
     width: 100%;
+    padding: 0;
+    list-style-type: none;
   }
 
   &__pin {
     &-icon {
-      align-self: flex-end;
-      padding: 0;
       position: relative;
       right: -10px;
+      align-self: flex-end;
+      padding: 0;
     }
   }
 }

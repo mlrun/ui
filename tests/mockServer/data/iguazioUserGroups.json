@@ -1,1 +1,64 @@
-{}
+{
+  "data": [
+    {
+      "type": "user_group",
+      "id": "7a55aec9-b7bd-4800-979a-eed6ba5fdd58",
+      "attributes": {
+        "name": "iguazio",
+        "data_access_mode": "enabled",
+        "gid": 1000,
+        "kind": "local",
+        "assigned_policies": [
+          "Application Admin",
+          "Data"
+        ],
+        "system_provided": false
+      }
+    },
+    {
+      "type": "user_group",
+      "id": "c3d22f46-f547-4029-b695-df41f7fe038e",
+      "attributes": {
+        "name": "all_users",
+        "description": "All Users",
+        "data_access_mode": "disabled",
+        "gid": -1,
+        "kind": "local",
+        "assigned_policies": [],
+        "system_provided": true
+      }
+    },
+    {
+      "type": "user_group",
+      "id": "e6eb3a46-d6d2-4552-8fac-ac3617e31d03",
+      "attributes": {
+        "name": "admins",
+        "description": "Administrators",
+        "data_access_mode": "disabled",
+        "gid": 0,
+        "kind": "local",
+        "assigned_policies": [],
+        "system_provided": false
+      }
+    },
+    {
+      "type": "user_group",
+      "id": "f87edb6e-7229-4887-9f31-e27a50874723",
+      "attributes": {
+        "name": "normal-group",
+        "data_access_mode": "enabled",
+        "gid": 50,
+        "kind": "local",
+        "assigned_policies": [
+          "Application Admin",
+          "Data"
+        ],
+        "system_provided": false
+      }
+    }
+  ],
+  "included": [],
+  "meta": {
+    "ctx": "12551672947703462485"
+  }
+}

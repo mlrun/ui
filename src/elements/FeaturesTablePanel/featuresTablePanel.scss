@@ -1,5 +1,5 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
 
 .features-panel {
   display: flex;
@@ -61,6 +61,7 @@
     justify-content: flex-end;
     width: 100%;
     padding: 10px 15px;
+    background-color: $white;
   }
 
   .features-panel__divider {

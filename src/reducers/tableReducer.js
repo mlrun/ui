@@ -1,11 +1,4 @@
-import {
-  SET_FEATURES_PANEL_DATA,
-  SET_LABEL_FEATURE,
-  SET_TABLE_PANEL_OPEN,
-  UPDATE_CURRENT_PROJECT_NAME,
-  UPDATE_FEATURE_VECTOR,
-  UPDATE_GROUPED_FEATURES
-} from '../constants'
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   isTablePanelOpen: false,
@@ -14,71 +7,49 @@ const initialState = {
     featureVector: {},
     groupedFeatures: {},
     isNewFeatureVector: false,
-    labelFeature: {}
+    labelFeature: null
   }
 }
 
-export default (state = initialState, { type, payload }) => {
-  switch (type) {
-    case SET_FEATURES_PANEL_DATA:
-      return {
-        ...state,
-        features: { ...payload }
+const tableSlice = createSlice({
+  name: 'table',
+  initialState,
+  reducers: {
+    setFeaturesPanelData(state, action) {
+      state.features = action.payload
+    },
+    setLabelFeature: (state, action) => {
+      state.features.labelFeature = action.payload
+    },
+    setTablePanelOpen: (state, action) => {
+      state.isTablePanelOpen = action.payload
+    },
+    updateCurrentProjectName: (state, action) => {
+      state.features.currentProject = action.payload
+    },
+    updateFeatureVector: (state, action) => {
+      state.features.featureVector.metadata = {
+        ...state.features.featureVector.metadata,
+        ...action.payload.metadata
       }
-    case SET_LABEL_FEATURE:
-      return {
-        ...state,
-        features: {
-          ...state.features,
-          labelFeature: {
-            ...state.features.labelFeature,
-            ...payload
-          }
-        }
+      state.features.featureVector.spec = {
+        ...state.features.featureVector.spec,
+        ...action.payload.spec
       }
-    case SET_TABLE_PANEL_OPEN:
-      return {
-        ...state,
-        isTablePanelOpen: payload
-      }
-    case UPDATE_CURRENT_PROJECT_NAME:
-      return {
-        ...state,
-        features: {
-          ...state.features,
-          currentProject: payload
-        }
-      }
-    case UPDATE_FEATURE_VECTOR:
-      return {
-        ...state,
-        features: {
-          ...state.features,
-          featureVector: {
-            ...state.features.featureVector,
-            metadata: {
-              ...state.features.featureVector.metadata,
-              ...payload.metadata
-            },
-            spec: {
-              ...state.features.featureVector.spec,
-              ...payload.spec
-            }
-          }
-        }
-      }
-    case UPDATE_GROUPED_FEATURES:
-      return {
-        ...state,
-        features: {
-          ...state.features,
-          groupedFeatures: {
-            ...state.features.groupedFeatures,
-            [state.features.currentProject]: payload
-          }
-        }
-      }
-    default:
-      return state
+    },
+    updateGroupedFeatures: (state, action) => {
+      state.features.groupedFeatures[action.payload.project] = action.payload.groupedFeatures
+    }
   }
-}
+})
+
+export const {
+  setFeaturesPanelData,
+  setLabelFeature,
+  setTablePanelOpen,
+  updateCurrentProjectName,
+  updateFeatureVector,
+  updateGroupedFeatures
+} = tableSlice.actions
+
+export default tableSlice.reducer

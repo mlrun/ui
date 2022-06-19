@@ -19,18 +19,15 @@ const getState = (state, page, kind) => {
 const commonStateLabels = {
   aborted: 'Aborted',
   active: 'Active',
-  broken: 'Broken',
   completed: 'Completed',
   created: 'Created',
   error: 'Error',
-  fail: 'Fail',
+  fail: 'Error',
   failed: 'Error',
-  info: 'Info',
   pending: 'Pending',
   ready: 'Ready',
-  running: 'Deploying',
-  succeeded: 'Succeeded',
-  warn: 'Warn'
+  running: 'Running',
+  succeeded: 'Completed'
 }
 
 const functionStateLabels = {
@@ -40,7 +37,7 @@ const functionStateLabels = {
   failed: 'Error',
   pending: 'Deploying',
   ready: 'Ready',
-  running: 'Deploying',
+  running: 'Running',
   succeeded: 'Succeeded'
 }
 

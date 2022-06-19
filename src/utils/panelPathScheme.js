@@ -10,11 +10,8 @@ import {
 export const generateProjectsList = (projectsList, currentProject) =>
   projectsList
     .map(projectItem => ({
-      label:
-        projectItem.metadata.name === currentProject
-          ? 'Current project'
-          : projectItem.metadata.name,
-      id: projectItem.metadata.name
+      label: projectItem === currentProject ? 'Current project' : projectItem,
+      id: projectItem
     }))
     .sort((prevProject, nextProject) => {
       return prevProject.id === currentProject

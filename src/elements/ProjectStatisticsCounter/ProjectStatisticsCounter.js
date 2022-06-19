@@ -2,11 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import Loader from '../../common/Loader/Loader'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 const ProjectStatisticsCounter = ({ counterObject }) => {
   const dataCardStatisticsValueClassNames = classnames(

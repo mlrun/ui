@@ -4,16 +4,17 @@ const yaml = require('js-yaml')
 const lodash = require('lodash')
 
 const baseMlRunUrl =
-  'http://mlrun-api-ingress.dashboard.default-tenant.app.yh41.iguazio-cd1.com/api/'
+  'http://mlrun-api-ingress.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
 
 const baseNuclioUrl =
-  'http://nuclio-ingress.dashboard.default-tenant.app.yh41.iguazio-cd1.com/api/'
+  'http://nuclio-ingress.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
+
 const githubFunctionsUrl = 'https://github.com/mlrun/functions/tree/master'
 const githubYamlUrl =
   'https://raw.githubusercontent.com/mlrun/functions/master/'
 const saveFolder = 'data'
 const igzApiUrl =
-  'http://platform-api.dashboard.default-tenant.app.yh41.iguazio-cd1.com/api/'
+  'http://platform-api.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
 
 const fetchData = async (host, endpoint = '') => {
   try {
@@ -156,23 +157,22 @@ const getPipelineIds = data => {
 
 const getIgzRelations = (users, relations = {}) => {
   const result = lodash.cloneDeep(relations)
-  if (users.every(item => Boolean(item))) {
-    users.forEach(user => {
-      const tmpItem = Array.isArray(user.data) ? user.data[0] : user.data
 
-      const data = user.included.map(item => ({
-        type: item.type,
-        id: item.id,
-        relationships: item.relationships || null
-      }))
+  users.forEach(user => {
+    const tmpItem = Array.isArray(user.data) ? user.data[0] : user.data
 
-      if (result[tmpItem.id]) {
-        result[tmpItem.id] = [...result[tmpItem.id], ...data]
-      } else {
-        result[tmpItem.id] = data
-      }
-    })
-  }
+    const data = user.included.map(item => ({
+      type: item.type,
+      id: item.id,
+      relationships: item.relationships || null
+    }))
+
+    if (result[tmpItem.id]) {
+      result[tmpItem.id] = [...result[tmpItem.id], ...data]
+    } else {
+      result[tmpItem.id] = data
+    }
+  })
 
   return result
 }
@@ -309,6 +309,14 @@ const synchronizeBackend = async () => {
     '/secret-keys?provider=kubernetes'
   )
 
+  const modelEndpointsArr = await fetchJsons(
+    projectNames,
+    baseMlRunUrl,
+    'projects/',
+    '/model-endpoints'
+  )
+  const modelEndpoints = convertFromArrayToJson(modelEndpointsArr)
+
   const artifactsLogs = await fetchArtifactsLogs(runs.runs)
   const logs = await fetchAllLogs(artifactsLogs)
 
@@ -331,6 +339,7 @@ const synchronizeBackend = async () => {
   saveDataToJson('./data/artifactsTags.json', artifactTags)
   saveDataToJson('./data/run.json', runProjectUid)
   saveDataToJson('./data/piplineIDs.json', pipelineIdsData)
+  saveDataToJson('./data/modelEndpoints.json', modelEndpoints)
 
   // backend temporary 403 error
   // const filteredData = await filterData(featureSets.feature_sets)
@@ -352,8 +361,7 @@ const synchronizeBackend = async () => {
     )
     const igzUserGroups = await fetchData(igzApiUrl, 'user_groups')
     const igzUsers = await fetchData(igzApiUrl, 'users')
-    const igzUserNames =
-      igzUsers?.data.map(item => item.attributes.username) || []
+    const igzUserNames = igzUsers.data.map(item => item.attributes.username)
 
     const igzUserGroupsEndpoints = igzUserNames.map(
       name => `?filter${name}=username&include=user_groups`
@@ -376,7 +384,7 @@ const synchronizeBackend = async () => {
     const relations = getIgzRelations(igzUsersWithProjects)
     const igzRelations = getIgzRelations(igzUsersWithGroups, relations)
 
-    const igzProjectIds = igzProjects?.data.map(project => project.id) || [{}]
+    const igzProjectIds = igzProjects.data.map(project => project.id)
     const projectsWithOtherRelations = await fetchJsons(
       igzProjectIds,
       igzApiUrl,
@@ -385,14 +393,13 @@ const synchronizeBackend = async () => {
     )
     const projectsRelations = getIgzRelations(projectsWithOtherRelations)
 
-    console.log('debug: ', igzProjects)
-    saveDataToJson('./data/iguazioProjects.json', igzProjects || {})
+    saveDataToJson('./data/iguazioProjects.json', igzProjects)
     saveDataToJson(
       './data/iguazioProjectAuthorizationRoles.json',
-      igzProjectAuthRoles || {}
+      igzProjectAuthRoles
     )
-    saveDataToJson('./data/iguazioUserGroups.json', igzUserGroups || {})
-    saveDataToJson('./data/iguazioUsers.json', igzUsers || {})
+    saveDataToJson('./data/iguazioUserGroups.json', igzUserGroups)
+    saveDataToJson('./data/iguazioUsers.json', igzUsers)
     saveDataToJson('./data/iguazioUserRelations.json', igzRelations)
     saveDataToJson('./data/iguazioProjectsRelations.json', projectsRelations)
   } else {

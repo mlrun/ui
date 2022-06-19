@@ -3,32 +3,38 @@ import dropdownComponent from '../components/dropdown.component'
 import commonTable from '../components/table.component'
 import labelComponent from '../components/label.component'
 import checkboxComponent from '../components/checkbox.component'
+import textAreaGroup from '../components/text-area.component'
 
 import {
   generateLabelGroup,
   generateInputGroup,
-  generateDropdownGroup
+  generateDropdownGroup,
+  generateTextAreaGroup
 } from '../../common-tools/common-tools'
 import inputWithAutocomplete from '../components/input-with-autocomplete.component'
 
 const { By } = require('selenium-webdriver')
 
 const memberOverviewLabelsTable = {
-  root: '#overlay_container .pop-up-dialog .info-row',
+  root: '.settings__members',
   header: {},
   body: {
-    root: 'members-overview',
     row: {
-      root: '.member-overview',
+      root: '.info-row',
       fields: {
-        name: ''
+        editors:
+          '.members-overview .member-overview:nth-of-type(1) .member-count',
+        viewers:
+          '.members-overview .member-overview:nth-of-type(2) .member-count',
+        admins:
+          '.members-overview .member-overview:nth-of-type(3) .member-count'
       }
     }
   }
 }
 
 const membersTable = {
-  root: ' #overlay_container .pop-up-dialog .members-table',
+  root: '.members-table',
   header: {},
   body: {
     root: '.table-body',
@@ -54,7 +60,7 @@ const membersTable = {
 }
 
 const inviteNewMemberLabelTable = {
-  root: '#overlay_container .pop-up-dialog .invite-new-members',
+  root: '.invite-new-members',
   header: {},
   body: {
     root: '.chips-input-container',
@@ -79,14 +85,14 @@ const deployModelTable = {
     }
   },
   body: {
-    offset: 1,
+    offset: 0,
     add_row_btn: 'button.add-new-item-btn',
     row: {
       root: '.table-row',
       fields: {
         name: '.table-cell__key .data-ellipsis',
         value: '.table-cell__value .data-ellipsis',
-        delete_btn: '.key-value-table__btn'
+        delete_btn: '.key-value-table__btn:nth-of-type(2)'
       }
     }
   }
@@ -175,7 +181,7 @@ module.exports = {
       generateInputGroup(
         '.pop-up-dialog .input-wrapper:nth-of-type(1)',
         true,
-        true,
+        '.input__warning svg',
         true
       )
     ),
@@ -190,7 +196,7 @@ module.exports = {
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
     Create_Button: By.css('.pop-up-dialog .btn-secondary'),
-    Error_Message: By.css('.pop-up-dialog .error-message')
+    Error_Message: By.css('.pop-up-dialog .error__message')
   },
   commonPopup: {
     Title: commonTitle,
@@ -216,7 +222,7 @@ module.exports = {
       generateInputGroup(
         '.pop-up-dialog .new-function__pop-up-inputs .name.input-wrapper',
         true,
-        true,
+        '.input__warning svg',
         true
       )
     ),
@@ -224,7 +230,7 @@ module.exports = {
       generateInputGroup(
         '.pop-up-dialog .new-function__pop-up-inputs .tag.input-wrapper',
         true,
-        false,
+        '.input__warning svg',
         true
       )
     ),
@@ -305,7 +311,7 @@ module.exports = {
       Key_Value_Table: commonTable(deployModelTable),
       Class_Argument_Name_Input: inputGroup(
         generateInputGroup(
-          '.deploy-model .key-value-table .input-wrapper:nth-of-type(1)',
+          '.deploy-model .key-value-table .table-cell__key .input-wrapper',
           true,
           false,
           true
@@ -313,7 +319,7 @@ module.exports = {
       ),
       Class_Argument_Value_Input: inputGroup(
         generateInputGroup(
-          '.deploy-model .key-value-table .input-wrapper:nth-of-type(2)',
+          '.deploy-model .key-value-table .table-cell__value .input-wrapper',
           true,
           false,
           true
@@ -323,7 +329,7 @@ module.exports = {
         '.deploy-model .key-value-table .table-cell__actions .btn-add'
       ),
       Delete_New_Row_Button: By.css(
-        '.deploy-model .key-value-table .table-cell__actions button:nth-of-type(2)'
+        '.deploy-model .key-value-table .table-cell__actions .btn-add:nth-of-type(2)'
       )
     },
     Cancel_Button: commonCancelButton,
@@ -337,28 +343,25 @@ module.exports = {
   changeProjectOwnerPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
     Title: commonTitle,
+    Owner_Name: By.css('.settings__owner .row-name'),
     Search_Input_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '.pop-up-dialog .owner-table',
+        '.pop-up-dialog .members-list',
         '.input-wrapper .input', //open component subLocator
-        '.members-list .member-row', // options sublocator
+        '.member-row', // options sublocator
         '.member-name' // option name subLocator
       )
     ),
     Search_Input: inputWithAutocomplete({
-      root: 'body #overlay_container',
+      root: '.owner-table .search-input',
       elements: {
         input: '.input-wrapper .input',
-        options:
-          '.search-dropdown.pop-up-dialog__overlay.custom-position .member-row',
+        options: '.search-dropdown',
         option_name: '.member-name'
       }
     }),
-    Discard_Button: commonCancelButton,
-    Apply_Button: By.css('.pop-up-dialog .data-ellipsis button.btn-secondary'),
-    Footer_Annotation_Label: By.css(
-      '.change-owner__pop-up > .pop-up-dialog .footer-annotation'
-    )
+    Discard_Button: By.css('.apply-discard-buttons .pop-up-dialog__btn_cancel'),
+    Apply_Button: By.css('.apply-discard-buttons button.btn-secondary')
   },
   projectMembersPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -366,17 +369,16 @@ module.exports = {
     Member_Overview_Labels_Table: commonTable(memberOverviewLabelsTable),
     Member_Overview_Tooltip: labelComponent(
       generateLabelGroup(
-        '#overlay_container .pop-up-dialog .info-row', // root
+        '.members-overview', // root
         '', // empty sublocator
         true // for single hint
       )
     ),
-    Invite_New_Members_Button: By.css(
-      ' #overlay_container .pop-up-dialog .info-row .invite-new-members-btn'
-    ),
+    Members_Summary: By.css('.settings__members-summary'),
+    Invite_New_Members_Button: By.css('.info-row .invite-new-members-btn'),
     Invite_New_Members_Labels_Table: commonTable(inviteNewMemberLabelTable),
     New_Member_Name_Input: inputWithAutocomplete({
-      root: '#overlay_container .pop-up-dialog .invite-new-members',
+      root: '.invite-new-members',
       elements: {
         input: 'input',
         options: '.suggestion-list .suggestion-row',
@@ -385,27 +387,26 @@ module.exports = {
     }),
     New_Member_Name_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '#overlay_container .pop-up-dialog .invite-new-members .new-member-name',
+        '.invite-new-members .new-member-name',
         'input',
         '.suggestion-row',
-        '.suggestion-row-label'
+        '.suggestion-row-label',
+        true
       )
     ),
     New_Member_Role_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '#overlay_container .pop-up-dialog .invite-new-members .new-member-role',
+        '.invite-new-members .new-member-role',
         false,
         '.select__item',
         '.data-ellipsis'
       )
     ),
-    New_Member_Add_Button: By.css(
-      '#overlay_container .pop-up-dialog .invite-new-members .new-member-btn'
-    ),
+    New_Member_Add_Button: By.css('.invite-new-members .new-member-btn'),
     Members_Table: commonTable(membersTable),
     Members_Filter_Input: inputGroup(
       generateInputGroup(
-        ' #overlay_container .pop-up-dialog .members-table .table-header .input-wrapper',
+        '.members-table .table-header .input-wrapper',
         true,
         false,
         false
@@ -419,29 +420,24 @@ module.exports = {
         false // option name default subLocator
       )
     ),
-    Notify_by_Email_Checbox: checkboxComponent({
-      root:
-        '#overlay_container .pop-up-dialog .footer-actions .notify-by-email',
+    Notify_by_Email_Checkbox: checkboxComponent({
+      root: '.footer-actions .notify-by-email',
       elements: {
         checkbox: 'svg[class]',
         name: '',
         icon: ''
       }
     }),
-    Discard_Button: commonCancelButton,
-    Apply_Button: By.css(
-      ' #overlay_container .pop-up-dialog .data-ellipsis button.btn-secondary'
-    ),
-    Footer_Annotation_Label: By.css(
-      ' #overlay_container .pop-up-dialog .footer-annotation'
-    )
+    Discard_Button: By.css('.apply-discard-buttons .pop-up-dialog__btn_cancel'),
+    Apply_Button: By.css('.apply-discard-buttons button.btn-secondary'),
+    Footer_Annotation_Label: By.css('.footer-annotation')
   },
   createNewSecretPopup: {
     Title: commonTitle,
     Cross_Cancel_Button: commonCrossCancelButton,
     New_Secret_Key_Input: inputGroup(
       generateInputGroup(
-        '.secrets__form-input:nth-of-type(2) .input-wrapper',
+        '.settings__secrets .table-cell__key .input-wrapper',
         true,
         false,
         true
@@ -449,7 +445,7 @@ module.exports = {
     ),
     New_Secret_Value_Input: inputGroup(
       generateInputGroup(
-        '.secrets__form-input:nth-of-type(3) .input-wrapper',
+        '.settings__secrets .table-cell__value .input-wrapper',
         true,
         false,
         true
@@ -485,7 +481,7 @@ module.exports = {
       generateInputGroup(
         '.pop-up-dialog .vector-name-wrapper',
         true,
-        true,
+        '.input__warning svg',
         true
       )
     ),
@@ -493,11 +489,11 @@ module.exports = {
       generateInputGroup(
         '.pop-up-dialog .vector-tag-wrapper',
         true,
-        false,
+        '.input__warning svg',
         true
       )
     ),
-    Description_Input: By.css('.pop-up-dialog .text-area-wrapper textarea'),
+    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .text-area-wrapper')),
     Labels_Table: commonTable(createFeatureVectorLabelsTable),
     Cancel_Button: commonCancelButton,
     Create_Button: commonConfirmButton
@@ -532,12 +528,8 @@ module.exports = {
     Remove_Member_Button: By.css('.delete-member__pop-up .btn-danger')
   },
   discardChangesPopup: {
-    Title: By.css(
-      '.pop-up-dialog__overlay:nth-of-type(2) .pop-up-dialog__header-text'
-    ),
-    No_Button: By.css(
-      '.pop-up-dialog__overlay:nth-of-type(2) .pop-up-dialog__btn_cancel'
-    ),
+    Title: By.css('.pop-up-dialog .pop-up-dialog__header-text'),
+    No_Button: By.css('.pop-up-dialog .pop-up-dialog__btn_cancel'),
     Discard_Button: commonConfirmButton
   }
 }

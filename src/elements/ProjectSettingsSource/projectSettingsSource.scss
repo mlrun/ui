@@ -1,48 +1,12 @@
-@import '../../scss/colors';
+@import '~igz-controls/scss/colors';
 
 .settings {
   &__source {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 26px;
-
-    &-icons {
-      display: flex;
-      align-items: center;
-    }
-
     .input {
       width: 100%;
 
       &-wrapper {
         width: 100%;
-      }
-    }
-
-    &-link {
-      width: 97%;
-    }
-
-    &-edit {
-      position: relative;
-      display: none;
-      margin: 0 10px;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    &-text {
-      max-width: 230px;
-      padding-left: 16px;
-      color: $cornflowerBlue;
-    }
-
-    &:hover {
-      .settings {
-        &__source-edit {
-          display: block;
-        }
       }
     }
   }

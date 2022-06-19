@@ -1,16 +1,23 @@
-@import '../../scss/borders';
+@import '~igz-controls/scss/borders';
 
 .error {
-  &-message {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  color: $amaranth;
+  background-color: rgba($amaranth, 0.1);
+  border: $errorBorder;
+
+  &__data {
     display: flex;
     align-items: center;
-    padding: 10px 14px;
-    color: $amaranth;
-    background-color: rgba($amaranth, 0.1);
-    border: $errorBorder;
   }
 
-  &-icon {
+  &__message {
+    margin-right: 10px;
+  }
+
+  &__icon {
     width: 22px;
     height: 22px;
     margin-right: 10px;

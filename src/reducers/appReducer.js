@@ -1,17 +1,26 @@
-import { FETCH_FRONTEND_SPEC_SUCCESS } from '../constants'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import appApi from '../api/app-api'
 
 const initialState = {
   frontendSpec: {}
 }
 
-export default (state = initialState, { type, payload }) => {
-  switch (type) {
-    case FETCH_FRONTEND_SPEC_SUCCESS:
-      return {
-        ...state,
-        frontendSpec: payload
-      }
-    default:
-      return state
+export const fetchFrontendSpec = createAsyncThunk('fetchFrontendSpec', () => {
+  return appApi.getFrontendSpec().then(({ data }) => {
+    return data
+  })
+})
+
+const appSlice = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {},
+  extraReducers: builder => {
+    builder.addCase(fetchFrontendSpec.fulfilled, (state, { type, payload }) => {
+      state.frontendSpec = payload
+    })
   }
-}
+})
+export const { fetchFrontendSpecSuccess } = appSlice.actions
+
+export default appSlice.reducer

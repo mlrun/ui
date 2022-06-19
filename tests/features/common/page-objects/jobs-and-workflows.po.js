@@ -22,7 +22,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        tab: 'a'
+        key: 'a'
       }
     }
   }
@@ -69,7 +69,7 @@ const jobsMonitorTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg',
+        name: '.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -79,11 +79,10 @@ const jobsMonitorTable = {
             '.tooltip .tooltip__text span'
           )
         },
-        name: '.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
         datetime:
-          '.table-body__cell:nth-of-type(1) a .date__uid_row span:nth-of-type(1)',
+          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
         uid:
-          '.table-body__cell:nth-of-type(1) a .date__uid_row span:nth-of-type(2)',
+          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(2)',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -227,7 +226,7 @@ const scheduleMonitorTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .link .link',
+        name: '.table-body__cell:nth-of-type(1) a',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -249,8 +248,8 @@ const scheduleMonitorTable = {
             true // options_in_root ?
           )
         },
-        lastRun: '.table-head__item:nth-of-type(6) .data-ellipsis',
-        createdTime: '.table-head__item:nth-of-type(7) .data-ellipsis',
+        lastRun: '.table-body__cell:nth-of-type(6) .data-ellipsis',
+        createdTime: '.table-body__cell:nth-of-type(7) .data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -295,7 +294,7 @@ const calendarTable = {
 const dateTimePickerCalendars = {
   root: '.date-picker-container',
   apply_button: 'button.date-picker__apply-btn',
-  error_message: '.error-message',
+  error_message: '.error',
   fromDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
     elements: {
@@ -395,6 +394,30 @@ const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
   '.content__action-bar .data-ellipsis:nth-of-type(1) button[id=refresh]'
 )
+const commonStatusFilter = dropdownComponent(
+  generateDropdownGroup(
+    '.content__action-bar .filters .select:nth-of-type(2)',
+    '.select__header', // Open Component
+    '.select__body .select__item', // Options
+    '.data-ellipsis .data-ellipsis' // Option value
+  )
+)
+const commonNameFilter = inputGroup(
+  generateInputGroup(
+    '.content__action-bar .filters > .input-wrapper:nth-of-type(3)',
+    true,
+    false
+  )
+)
+const commonStartTimeFilter = dropdownComponent(
+  generateDropdownGroup(
+    '.content__action-bar .filters .date-picker-container',
+    'input.date-picker__input',
+    '.date-picker__pop-up .select__item',
+    '.data-ellipsis .data-ellipsis',
+    true // options_in_root ?
+  )
+)
 
 module.exports = {
   JobsMonitorTab: {
@@ -404,56 +427,35 @@ module.exports = {
       '.content__action-bar > .data-ellipsis:nth-of-type(2) button'
     ),
     Table_Refresh_Button: tableRefreshButton,
-    Table_Expand_Rows_Button: By.css(
-      '.content__action-bar .actions .round-icon-cp:nth-of-type(2) button'
-    ),
-    Status_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content__action-bar .filters .select:nth-of-type(2)',
-        '.select__header', // Open Component
-        '.select__body .select__item', // Options
-        '.data-ellipsis .data-ellipsis' // Option value
-      )
-    ),
-    Group_By_Name_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content__action-bar .filters .select:nth-of-type(3)',
-        '.select__header', // Open Component
-        '.select__body .select__item', // Options
-        '.data-ellipsis .data-ellipsis' // Option value
-      )
-    ),
+    Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(4)',
+        '.content__action-bar .filters > .input-wrapper:nth-of-type(3)',
         true,
         false
       )
     ),
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(5)',
+        '.content__action-bar .filters > .input-wrapper:nth-of-type(4)',
         true,
         false
       )
     ),
-    Start_Time_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content__action-bar .filters .date-picker-container',
-        'input.date-picker__input',
-        '.date-picker__pop-up .select__item',
-        '.data-ellipsis .data-ellipsis',
-        true // options_in_root ?
-      )
-    ),
+    Start_Time_Filter_Dropdown: commonStartTimeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Jobs_Monitor_Table: commonTable(jobsMonitorTable)
   },
   WorkflowsMonitorTab: {
+    Status_Filter_Dropdown: commonStatusFilter,
+    Table_Name_Filter_Input: commonNameFilter,
+    Start_Time_Filter_Dropdown: commonStartTimeFilter,
+    Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
-    Toggle_View_Button: By.css('.workflow-header .actions .toggle-view-btn'),
+    Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
     Workflow_List_View_Table: commonTable(jobsMonitorTable),
-    Workflow_Graph: graph(monitorWorkflowGraph)
+    Workflow_Graph: graph(monitorWorkflowGraph),
+    Table_Refresh_Button: tableRefreshButton
   },
   ScheduleMonitorTab: {
     Table_Name_Filter_Input: inputGroup(

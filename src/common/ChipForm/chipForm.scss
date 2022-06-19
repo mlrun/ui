@@ -1,12 +1,12 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
-@import '../../scss/mixins';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/mixins';
 
 .edit-chip {
   &-container {
     display: inline-flex;
     max-width: 100%;
-    margin: 2px 4px;
+    margin: 2px 8px 2px 0;
     padding: 0 8px;
     font-size: 14px;
     line-height: 22px;

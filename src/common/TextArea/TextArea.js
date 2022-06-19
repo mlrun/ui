@@ -2,11 +2,9 @@ import React, { useEffect, useState, useCallback } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tip from '../Tip/Tip'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Invalid } from '../../images/invalid.svg'
+import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
 import './textArea.scss'
 
@@ -27,6 +25,7 @@ const TextArea = React.forwardRef(
       placeholder,
       required,
       requiredText,
+      rows,
       setInvalid,
       textAreaIcon,
       tip,
@@ -131,6 +130,7 @@ const TextArea = React.forwardRef(
           onChange={handleClick}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
+          rows={rows}
           required={isInvalid}
           ref={textArea}
           value={value && value}
@@ -146,9 +146,7 @@ const TextArea = React.forwardRef(
             className="text-area__warning"
             template={
               <TextTooltipTemplate
-                text={
-                  required && value.length === 0 ? requiredText : invalidText
-                }
+                text={required && value.length === 0 ? requiredText : invalidText}
                 warning
               />
             }
@@ -183,6 +181,7 @@ TextArea.defaultProps = {
   placeholder: '',
   required: false,
   requiredText: 'This field is required',
+  rows: 2,
   setInvalid: () => {},
   tip: '',
   value: '',
@@ -205,6 +204,7 @@ TextArea.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
+  rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setInvalid: PropTypes.func,
   tip: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

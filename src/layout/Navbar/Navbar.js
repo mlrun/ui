@@ -3,20 +3,18 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import NavbarLink from '../../elements/NavbarLink/NavbarLink'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
 
-import { PROJECTS_SETTINGS_GENERAL_TAB } from '../../constants'
-
-import { ReactComponent as PinIcon } from '../../images/pin-icon.svg'
-import { ReactComponent as UnPinIcon } from '../../images/unpin-icon.svg'
-import { ReactComponent as SettingsIcon } from '../../images/pref-icon.svg'
+import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
+import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
+import { ReactComponent as SettingsIcon } from 'igz-controls/images/pref-icon.svg'
 
 import './Navbar.scss'
 
-const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
+const Navbar = ({ headerShown, isPinned, projectName, setIsPinned }) => {
   const navbarClasses = classNames(
     'navbar',
     isPinned && 'pinned',
@@ -24,11 +22,11 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
   )
 
   const { links } = useMemo(() => {
-    let links = match ? getLinks(match) : []
+    let links = projectName ? getLinks(projectName) : []
     return {
       links
     }
-  }, [match])
+  }, [projectName])
 
   const handlePinClick = () => {
     setIsPinned(!isPinned)
@@ -62,7 +60,7 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
             <NavbarLink
               icon={<SettingsIcon />}
               label="Project settings"
-              link={`/projects/${match.params.projectName}/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
+              link={`/projects/${projectName}/settings`}
             />
           </ul>
         </div>
@@ -73,7 +71,7 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
 
 Navbar.propTypes = {
   isPinned: PropTypes.bool.isRequired,
-  match: PropTypes.object.isRequired,
+  projectName: PropTypes.string.isRequired,
   setIsPinned: PropTypes.func.isRequired
 }
 

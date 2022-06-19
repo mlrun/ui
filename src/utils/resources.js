@@ -1,5 +1,5 @@
 import {
-  DATASETS_TAB,
+  DATASETS,
   ARTIFACTS,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
@@ -10,7 +10,7 @@ import { isNil } from 'lodash'
 export const generateUri = (item, tab) => {
   let uri = `store://${tab}/${item.project}/`
 
-  if (tab === MODELS_TAB || tab === DATASETS_TAB || tab === ARTIFACTS) {
+  if (tab === MODELS_TAB || tab === DATASETS || tab === ARTIFACTS) {
     uri += item.db_key
     uri += getArtifactReference(item)
   } else if (tab === FEATURE_SETS_TAB || tab === FEATURE_VECTORS_TAB) {
@@ -22,11 +22,15 @@ export const generateUri = (item, tab) => {
 }
 
 export const getArtifactReference = item => {
-  let reference = ''
+  let reference = `#${item.iter || 0}`
 
-  if (!isNil(item.iter)) reference += `#${item.iter}`
-  if (!isNil(item.tag)) reference += `:${item.tag}`
-  if (!isNil(item.tree)) reference += `@${item.tree}`
+  if (!isNil(item.tag)) {
+    reference += `:${item.tag}`
+  } else if (!isNil(item.tree)) {
+    reference += `@${item.tree}`
+  } else {
+    reference += ':latest'
+  }
 
   return reference
 }

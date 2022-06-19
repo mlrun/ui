@@ -1,6 +1,6 @@
-@import '../../../scss/colors';
-@import '../../../scss/borders';
-@import '../../../scss/mixins';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/mixins';
 
 .feature-sets-panel__title {
   @include panelTitle;
@@ -40,7 +40,7 @@
 
     &.version {
       display: flex;
-      flex: 0.2;
+      flex: 0.5;
     }
   }
 }

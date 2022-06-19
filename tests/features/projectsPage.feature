@@ -14,6 +14,8 @@ Feature: MLRun Projects Page
         Then verify "Projects_Sort_Dropdown" element visibility on "Projects" wizard
         Then verify "Projects_Sorter" element visibility on "Projects" wizard
         Then verify "Projects_Table" element visibility on "Projects" wizard
+        Then value in "running" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "ML jobs and Nuclio functions"
+        Then value in "failed" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "Failed ML jobs and nuclio functions in the last 24 hours"
 
     @passive
     Scenario: Verify filtering by project name
@@ -42,8 +44,9 @@ Feature: MLRun Projects Page
         Then click on "New_Project_Button" element on "Projects" wizard
         Then verify if "Create_New_Project" popup dialog appears
         Then verify "Name_Input" element visibility on "Create_New_Project" wizard
-        Then verify "Name_Input" on "Create_New_Project" wizard should display "Input_Hint"."Project_Name_Hint"
-        Then verify "Name_Input" according hint rules on "Create_New_Project" wizard
+        Then type value "   " to "Name_Input" field on "Create_New_Project" wizard
+        Then verify "Name_Input" on "Create_New_Project" wizard should display options "Input_Hint"."Project_Name_Hint"
+        Then verify "Name_Input" options rules on "Create_New_Project" wizard
         Then verify "Description_Input" element visibility on "Create_New_Project" wizard
         Then verify "Cancel_Button" element visibility on "Create_New_Project" wizard
         Then "Cancel_Button" element on "Create_New_Project" should contains "Cancel" value

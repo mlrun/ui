@@ -3,22 +3,17 @@ import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import Button from '../../common/Button/Button'
-import FeatureSetsPanelTitle from './FeatureSetsPanelTitle/FeatureSetsPanelTitle'
 import FeatureSetsPanelDataSource from './FeatureSetsPanelDataSource/FeatureSetsPanelDataSource'
 import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSchema'
 import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSetsPanelTargetStore'
+import FeatureSetsPanelTitle from './FeatureSetsPanelTitle/FeatureSetsPanelTitle'
 import Loader from '../../common/Loader/Loader'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
+import { Button, ConfirmDialog } from 'igz-controls/components'
 
-import {
-  PRIMARY_BUTTON,
-  SECONDARY_BUTTON,
-  TERTIARY_BUTTON
-} from '../../constants'
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './featureSetsPanel.scss'
 
@@ -26,6 +21,7 @@ const FeatureSetsPanelView = ({
   accessKeyRequired,
   closePanel,
   confirmDialog,
+  disableButtons,
   error,
   featureStore,
   handleSave,
@@ -34,11 +30,13 @@ const FeatureSetsPanelView = ({
   project,
   removeFeatureStoreError,
   setConfirmDialog,
+  setDisableButtons,
   setNewFeatureSetCredentialsAccessKey,
   setValidation,
   validation
 }) => {
   const validationIsFailed = !Object.values(validation).every(value => value)
+  const buttonsIsDisabled = !Object.values(disableButtons).every(value => value)
 
   return (
     <div className="new-item-side-panel-container">
@@ -52,6 +50,7 @@ const FeatureSetsPanelView = ({
               label: 'Okay',
               variant: PRIMARY_BUTTON
             }}
+            isOpen={confirmDialog}
             message="Note that data will be ingested to the feature set without any transformation and therefore you won't be able to add a transformation graph unless you delete the data first."
           />
         )}
@@ -69,6 +68,7 @@ const FeatureSetsPanelView = ({
           >
             <FeatureSetsPanelDataSource
               project={project}
+              setDisableButtons={setDisableButtons}
               setValidation={setValidation}
               validation={validation}
             />
@@ -79,10 +79,7 @@ const FeatureSetsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FeatureSetsPanelSchema
-              setValidation={setValidation}
-              validation={validation}
-            />
+            <FeatureSetsPanelSchema setValidation={setValidation} validation={validation} />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -91,14 +88,14 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelTargetStore
+              project={project}
+              setDisableButtons={setDisableButtons}
               setValidation={setValidation}
               validation={validation}
             />
           </Accordion>
           <PanelCredentialsAccessKey
-            credentialsAccessKey={
-              featureStore.newFeatureSet.credentials.access_key
-            }
+            credentialsAccessKey={featureStore.newFeatureSet.credentials.access_key}
             required={accessKeyRequired}
             setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
             setValidation={setValidation}
@@ -122,14 +119,14 @@ const FeatureSetsPanelView = ({
               onClick={closePanel}
             />
             <Button
-              disabled={validationIsFailed}
+              disabled={validationIsFailed || buttonsIsDisabled}
               variant={SECONDARY_BUTTON}
               label="Save"
               onClick={() => handleSaveOnClick(false)}
             />
             <Button
               className="btn_start-ingestion"
-              disabled={validationIsFailed}
+              disabled={validationIsFailed || buttonsIsDisabled}
               label="Save and ingest"
               onClick={() => handleSaveOnClick(true)}
               variant={SECONDARY_BUTTON}
@@ -151,6 +148,7 @@ FeatureSetsPanelView.propTypes = {
   accessKeyRequired: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   confirmDialog: PropTypes.shape({ action: PropTypes.string.isRequired }),
+  disableButtons: PropTypes.shape({}).isRequired,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   featureStore: PropTypes.shape({}).isRequired,
   handleSave: PropTypes.func.isRequired,
@@ -159,6 +157,7 @@ FeatureSetsPanelView.propTypes = {
   project: PropTypes.string.isRequired,
   removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
+  setDisableButtons: PropTypes.func.isRequired,
   setNewFeatureSetCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired

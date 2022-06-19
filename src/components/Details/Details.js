@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useCallback, useRef } from 'react'
+import React, { useEffect, useMemo, useCallback, useRef, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { UNSAFE_NavigationContext as NavigationContext, useParams } from 'react-router-dom'
 import { connect, useDispatch } from 'react-redux'
 
 import DetailsView from './DetailsView'
@@ -9,7 +9,7 @@ import artifactActions from '../../actions/artifacts'
 import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
+  DATASETS,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -31,7 +31,6 @@ import './details.scss'
 const Details = ({
   actionsMenu,
   applyDetailsChanges,
-  cancelRequest,
   detailsMenu,
   detailsStore,
   filtersStore,
@@ -39,7 +38,6 @@ const Details = ({
   handleCancel,
   handleRefresh,
   isDetailsScreen,
-  match,
   pageData,
   removeInfoContent,
   removeModelFeatureVector,
@@ -53,14 +51,16 @@ const Details = ({
   setIteration,
   setIterationOption,
   setRefreshWasHandled,
-  showWarning
+  showWarning,
+  tab
 }) => {
+  const { navigator } = useContext(NavigationContext)
   const applyChangesRef = useRef()
-  const history = useHistory()
   const dispatch = useDispatch()
   let unblockRootChange = useRef()
-  let pathname = useRef()
+  let retryNavigate = useRef()
   const detailsRef = useRef()
+  const params = useParams()
 
   const handlePreview = useCallback(() => {
     dispatch(
@@ -115,6 +115,7 @@ const Details = ({
   useEffect(() => {
     return () => {
       if (pageData.details.type === JOBS_PAGE) {
+        //TODO
         setIteration('0')
       }
 
@@ -131,11 +132,9 @@ const Details = ({
         pageData.details.type === FILES_PAGE ||
         pageData.details.type === MODELS_TAB ||
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
-        pageData.details.type === DATASETS_TAB
+        pageData.details.type === DATASETS
       ) {
-        setInfoContent(
-          generateArtifactsContent(pageData.details.type, selectedItem)
-        )
+        setInfoContent(generateArtifactsContent(pageData.details.type, selectedItem))
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
         setInfoContent(generateFunctionsContent(selectedItem))
       } else {
@@ -163,6 +162,7 @@ const Details = ({
 
   useEffect(() => {
     return () => {
+      //TODO
       if (pageData.details.type === MODELS_TAB) {
         removeModelFeatureVector()
       }
@@ -191,17 +191,11 @@ const Details = ({
         detailsStore.changes.counter > 0 &&
         document.getElementById('refresh')?.contains(event.target)
       ) {
-        cancelRequest('cancel')
         handleShowWarning(true)
         setRefreshWasHandled(true)
       }
     },
-    [
-      cancelRequest,
-      detailsStore.changes.counter,
-      handleShowWarning,
-      setRefreshWasHandled
-    ]
+    [detailsStore.changes.counter, handleShowWarning, setRefreshWasHandled]
   )
 
   useEffect(() => {
@@ -214,23 +208,21 @@ const Details = ({
 
   const blockRootChange = useCallback(() => {
     if (!unblockRootChange.current) {
-      unblockRootChange.current = history.block(tx => {
+      unblockRootChange.current = navigator.block(tx => {
         handleShowWarning(true)
-        pathname.current = tx.pathname
+        retryNavigate.current = tx.retry
 
         return false
       })
     }
-  }, [handleShowWarning, history])
+  }, [handleShowWarning, navigator])
 
   useEffect(() => {
     if (detailsStore.changes.counter > 0 && !unblockRootChange.current) {
       blockRootChange()
-    } else if (
-      detailsStore.changes.counter === 0 &&
-      unblockRootChange.current
-    ) {
+    } else if (detailsStore.changes.counter === 0 && unblockRootChange.current) {
       unblockRootChange.current()
+      unblockRootChange.current = null
     }
   })
 
@@ -287,18 +279,18 @@ const Details = ({
       unblockRootChange.current = null
     }
 
-    history.push(pathname.current)
-
     if (detailsStore.refreshWasHandled) {
       retryRequest(filtersStore)
       setRefreshWasHandled(false)
+    } else {
+      retryNavigate.current()
     }
   }
 
   const tabsContent = useMemo(() => {
     return renderContent(
       applyChangesRef,
-      match,
+      params.tab,
       detailsStore,
       selectedItem,
       pageData,
@@ -313,7 +305,7 @@ const Details = ({
     detailsStore,
     handleEditInput,
     handlePreview,
-    match,
+    params.tab,
     pageData,
     selectedItem,
     setChanges,
@@ -337,13 +329,14 @@ const Details = ({
       handleShowWarning={handleShowWarning}
       isDetailsScreen={isDetailsScreen}
       leavePage={leavePage}
-      match={match}
       pageData={pageData}
+      params={params}
       ref={detailsRef}
       selectedItem={selectedItem}
       setIteration={setIteration}
       setRefreshWasHandled={setRefreshWasHandled}
       tabsContent={tabsContent}
+      tab={tab}
     />
   )
 }
@@ -356,7 +349,8 @@ Details.defaultProps = {
   isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
-  removeModelFeatureVector: () => {}
+  removeModelFeatureVector: () => {},
+  tab: ''
 }
 
 Details.propTypes = {
@@ -374,11 +368,11 @@ Details.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func,
   isDetailsScreen: PropTypes.bool,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   removeModelFeatureVector: PropTypes.func,
   retryRequest: PropTypes.func,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  tab: PropTypes.string
 }
 
 export default connect(

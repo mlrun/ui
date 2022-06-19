@@ -1,46 +1,56 @@
-import React, { useState } from 'react'
-import { useRouteMatch } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { useParams, Outlet } from 'react-router-dom'
 
-import Header from '../Header/Header'
 import Navbar from '../Navbar/Navbar'
 import Notification from '../../common/Notification/Notification'
 
 import localStorageService from '../../utils/localStorageService'
+import { getTransitionEndEventName } from '../../utils/getTransitionEndEventName'
 
 import './PageView.scss'
 
-export default function PageView({ children }) {
+export default function PageView() {
   const [isPinned, setIsPinned] = useState(
     localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
+  const params = useParams()
+  const mainRef = useRef()
 
-  const match = useRouteMatch('/projects/:projectName')
-
-  const headerShown =
-    window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
+  const projectName = params.projectName
+  const headerShown = window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
+  const transitionEndEventName = getTransitionEndEventName()
 
   const pinnedClasses = classNames(
-    isPinned && match ? 'pinned' : 'unpinned',
+    isPinned && projectName ? 'pinned' : 'unpinned',
     headerShown && 'has-header'
   )
 
+  useEffect(() => {
+    if (mainRef) {
+      mainRef.current.addEventListener(transitionEndEventName, event => {
+        if (event.target !== mainRef.current) return
+        window.dispatchEvent(new CustomEvent('mainResize'))
+      })
+    }
+  }, [isPinned, transitionEndEventName])
+
   return (
-    <div className="app">
-      {headerShown && <Header />}
-      {match && (
+    <>
+      {projectName && (
         <Navbar
-          match={match}
           isPinned={isPinned}
           headerShown={headerShown}
+          projectName={projectName}
           setIsPinned={setIsPinned}
         />
       )}
-      <main id="main" className={pinnedClasses}>
-        {children}
+      <main id="main" className={pinnedClasses} ref={mainRef}>
+        <div id="main-wrapper">
+          <Outlet />
+        </div>
       </main>
-
       <Notification />
-    </div>
+    </>
   )
 }

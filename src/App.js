@@ -1,204 +1,203 @@
-import React, { Suspense } from 'react'
-import {
-  Redirect,
-  BrowserRouter as Router,
-  Route,
-  Switch
-} from 'react-router-dom'
+import React, { Fragment, Suspense } from 'react'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
-import Page from './layout/Page/Page'
+import Header from './layout/Header/Header'
 import Loader from './common/Loader/Loader'
 
+import { useMode } from './hooks/mode.hook'
+import { useNuclioMode } from './hooks/nuclioMode.hook'
 import {
   FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
   PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
-  WORKFLOW_SUB_PAGE
+  SCHEDULE_TAB
 } from './constants'
 
+import 'igz-controls/scss/common.scss'
 import './scss/main.scss'
 
-const CreateJobPage = React.lazy(() =>
-  import('./components/CreateJobPage/CreateJobPage')
-)
-const FeatureStore = React.lazy(() =>
-  import('./components/FeatureStore/FeatureStore')
-)
+const Page = React.lazy(() => import('./layout/Page/Page'))
+const CreateJobPage = React.lazy(() => import('./components/CreateJobPage/CreateJobPage'))
+const Datasets = React.lazy(() => import('./components/Datasets/Datasets'))
+const FeatureStore = React.lazy(() => import('./components/FeatureStore/FeatureStore'))
 const Files = React.lazy(() => import('./components/Files/Files'))
-const Functions = React.lazy(() =>
-  import('./components/FunctionsPage/Functions')
+const Functions = React.lazy(() => import('./components/FunctionsPage/Functions'))
+const Jobs = React.lazy(() => import('./components/Jobs/Jobs'))
+const MonitorJobs = React.lazy(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
+const MonitorWorkflows = React.lazy(() =>
+  import('./components/Jobs/MonitorWorkflows/MonitorWorkflows')
 )
-const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
+const ScheduledJobs = React.lazy(() => import('./components/Jobs/ScheduledJobs/ScheduledJobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
-const ProjectMonitor = React.lazy(() =>
-  import('./components/Project/ProjectMonitor')
+const ProjectMonitor = React.lazy(() => import('./components/Project/ProjectMonitor'))
+const ConsumerGroupsWrapper = React.lazy(() =>
+  import('./components/ConsumerGroupsWrapper/ConsumerGroupsWrapper')
 )
+const ConsumerGroup = React.lazy(() => import('./components/ConsumerGroup/ConsumerGroup'))
+const ConsumerGroups = React.lazy(() => import('./components/ConsumerGroups/ConsumerGroups'))
 const ProjectOverview = React.lazy(() =>
   import('./components/Project/ProjectOverview/ProjectOverview')
 )
-const ProjectSettings = React.lazy(() =>
-  import('./components/ProjectSettings/ProjectSettings')
-)
+const ProjectSettings = React.lazy(() => import('./components/ProjectSettings/ProjectSettings'))
 const AddToFeatureVectorPage = React.lazy(() =>
   import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
 )
+const FeatureSets = React.lazy(() => import('./components/FeatureStore/FeatureSets/FeatureSets'))
+const Features = React.lazy(() => import('./components/FeatureStore/Features/Features'))
+const FeatureVectors = React.lazy(() =>
+  import('./components/FeatureStore/FeatureVectors/FeatureVectors')
+)
 
 const App = () => {
-  // TODO: Remove after ProjectOverview is Done.
-  const search = window.location.search
-  const isDemo =
-    new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
+  const { isDemoMode } = useMode()
+  const { isNuclioModeDisabled } = useNuclioMode()
+
+  const headerShown = window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
+
   return (
-    <Router basename={process.env.PUBLIC_URL}>
-      <Page>
+    <div className="ml-app">
+      <Router basename={process.env.PUBLIC_URL}>
+        {headerShown && <Header />}
         <Suspense fallback={<Loader />}>
-          <Switch>
-            <Route
-              path="/projects"
-              exact
-              render={routeProps => <Projects {...routeProps} />}
-            />
-            {!isDemo && (
-              <Redirect
-                exact
-                from="/projects/:projectName"
-                to="/projects/:projectName/monitor"
+          <Routes>
+            <Route path="" element={<Page />}>
+              <Route path="projects" element={<Projects />} />
+              <Route path="projects/:projectName/monitor" element={<ProjectMonitor />} />
+              <Route
+                path="projects/:projectName"
+                element={!isDemoMode ? <Navigate to="monitor" replace /> : <ProjectOverview />}
               />
-            )}
-            <Route
-              path="/projects/:projectName"
-              exact
-              render={routeProps => <ProjectOverview {...routeProps} />}
-            />
-            <Route
-              path="/projects/:projectName/monitor"
-              exact
-              render={routeProps => <ProjectMonitor {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/settings/:pageTab"
-              render={routeProps => <ProjectSettings {...routeProps} />}
-            />
-            <Redirect
-              exact
-              from="/projects/:projectName/settings"
-              to={`/projects/:projectName/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
-            />
-            {/* Adding the next redirect for backwards compatability */}
-            <Redirect
-              from="/projects/:projectName/jobs/monitor/*"
-              to={'/projects/:projectName/jobs/monitor-jobs/*'}
-            />
-            <Route
-              path="/projects/:projectName/jobs/:pageTab/create-new-job"
-              render={routeProps => <CreateJobPage {...routeProps} />}
-            />
-            <Route
-              path={[
-                `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:functionName/:functionHash/:tab`,
-                `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:jobId/:tab`,
-                `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId`
-              ]}
-              exact
-              render={routeProps => (
-                <Jobs {...routeProps} subPage={WORKFLOW_SUB_PAGE} />
+              {!isNuclioModeDisabled && (
+                <Route
+                  path="projects/:projectName/monitor/consumer-groups/*"
+                  element={<ConsumerGroupsWrapper />}
+                >
+                  <Route path="" exact element={<ConsumerGroups />} />
+                  <Route path=":consumerGroupName" exact element={<ConsumerGroup />} />
+                </Route>
               )}
-            />
-            <Route
-              path={[
-                '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
-                '/projects/:projectName/jobs/:pageTab'
-              ]}
-              exact
-              render={routeProps => <Jobs {...routeProps} />}
-            />
-            <Redirect
-              exact
-              from="/projects/:projectName/jobs"
-              to={`/projects/:projectName/jobs/${MONITOR_JOBS_TAB}`}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/functions"
-              render={routeProps => <Functions {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/functions/:hash/:tab"
-              render={routeProps => <Functions {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/feature-store/add-to-feature-vector"
-              render={routeProps => <AddToFeatureVectorPage {...routeProps} />}
-            />
-            <Redirect
-              exact
-              from="/projects/:projectName/feature-store"
-              to={`/projects/:projectName/feature-store/${FEATURE_SETS_TAB}`}
-            />
-            <Route
-              exact
-              path={[
-                '/projects/:projectName/feature-store/:pageTab',
-                '/projects/:projectName/feature-store/:pageTab/:name/:tab',
-                '/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab',
-                '/projects/:projectName/feature-store/:pageTab/:name/:tag/:iter/:tab'
-              ]}
-              render={routeProps => <FeatureStore {...routeProps} />}
-            />
-            <Redirect
-              exact
-              from="/projects/:projectName/models"
-              to={`/projects/:projectName/models/${MODELS_TAB}`}
-            />
-            <Route
-              exact
-              path={[
-                `/projects/:projectName/models/:pageTab/${PIPELINE_SUB_PAGE}/:pipelineId`
-              ]}
-              render={routeProps => (
-                <Models {...routeProps} subPage={PIPELINE_SUB_PAGE} />
-              )}
-            />
-            <Route
-              exact
-              path={[
-                '/projects/:projectName/models/:pageTab',
-                '/projects/:projectName/models/:pageTab/:name/:tab',
-                '/projects/:projectName/models/:pageTab/:name/:tag/:tab'
-              ]}
-              render={routeProps => <Models {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/models/:pageTab/:name/:tag/:iter/:tab"
-              render={routeProps => <Models {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/files"
-              render={routeProps => <Files {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/files/:name/:tag/:tab"
-              render={routeProps => <Files {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/files/:name/:tag/:iter/:tab"
-              render={routeProps => <Files {...routeProps} />}
-            />
-            <Redirect to="/projects" />
-          </Switch>
+              <Route
+                path="projects/:projectName/settings"
+                element={<Navigate to={`${PROJECTS_SETTINGS_GENERAL_TAB}`} replace />}
+              />
+              <Route
+                path="/projects/:projectName/settings/:pageTab"
+                element={<ProjectSettings />}
+              />
+              {/*/!* Adding the next redirect for backwards compatability *!/*/}
+              <Route
+                path="projects/:projectName/jobs"
+                element={<Navigate to={`${MONITOR_JOBS_TAB}`} replace />}
+              />
+              <Route
+                path="projects/:projectName/jobs/:pageTab/create-new-job"
+                element={<CreateJobPage />}
+              />
+              <Route path="projects/:projectName/jobs/*" element={<Jobs />}>
+                {[
+                  `${MONITOR_JOBS_TAB}/:jobName/:jobId/:tab`,
+                  `${MONITOR_JOBS_TAB}/:jobId/:tab`,
+                  `${MONITOR_JOBS_TAB}/:jobName`,
+                  `${MONITOR_JOBS_TAB}`
+                ].map((path, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <Route path={path} element={<MonitorJobs />} />
+                    </Fragment>
+                  )
+                })}
+                {[
+                  `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId/:functionName/:functionHash/:tab`,
+                  `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId/:jobId/:tab`,
+                  `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId`,
+                  `${MONITOR_WORKFLOWS_TAB}`
+                ].map((path, index) => (
+                  <Fragment key={index}>
+                    <Route path={path} element={<MonitorWorkflows />} />
+                  </Fragment>
+                ))}
+                <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
+              </Route>
+              <Route path="projects/:projectName/functions" element={<Functions />} />
+              <Route path="projects/:projectName/functions/:hash/:tab" element={<Functions />} />
+              <Route
+                path="projects/:projectName/feature-store/datasets/*"
+                element={<Navigate to=":name/:tag/:iter/:tab" replace />}
+              />
+              {[
+                'projects/:projectName/datasets',
+                'projects/:projectName/datasets/:name/:tag/:tab',
+                'projects/:projectName/datasets/:name/:tag/:iter/:tab'
+              ].map((path, index) => (
+                <Fragment key={index}>
+                  <Route path={path} element={<Datasets />} />
+                </Fragment>
+              ))}
+              <Route
+                path="projects/:projectName/feature-store"
+                element={<Navigate to={`${FEATURE_SETS_TAB}`} replace />}
+              />
+              <Route
+                path="projects/:projectName/feature-store/add-to-feature-vector"
+                element={<AddToFeatureVectorPage />}
+              />
+              <Route path="projects/:projectName/feature-store/*" element={<FeatureStore />}>
+                {[`${FEATURE_SETS_TAB}`, `${FEATURE_SETS_TAB}/:name/:tag/:tab`].map(
+                  (path, index) => (
+                    <Fragment key={index}>
+                      <Route path={path} element={<FeatureSets />} />
+                    </Fragment>
+                  )
+                )}
+                {[`${FEATURE_VECTORS_TAB}`, `${FEATURE_VECTORS_TAB}/:name/:tag/:tab`].map(
+                  (path, index) => (
+                    <Fragment key={index}>
+                      <Route path={path} element={<FeatureVectors />} />
+                    </Fragment>
+                  )
+                )}
+                <Route path={`${FEATURES_TAB}`} element={<Features />} />
+              </Route>
+              <Route
+                path="projects/:projectName/models"
+                element={<Navigate to={`${MODELS_TAB}`} replace />}
+              />
+              <Route
+                path={`projects/:projectName/models/:pageTab/${PIPELINE_SUB_PAGE}/:pipelineId`}
+                element={<Models subPage={PIPELINE_SUB_PAGE} />}
+              />
+              {[
+                'projects/:projectName/models/:pageTab',
+                'projects/:projectName/models/:pageTab/:name/:tab',
+                'projects/:projectName/models/:pageTab/:name/:tag/:tab',
+                'projects/:projectName/models/:pageTab/:name/:tag/:iter/:tab'
+              ].map((path, index) => (
+                <Fragment key={index}>
+                  <Route path={path} element={<Models />} />
+                </Fragment>
+              ))}
+              {[
+                'projects/:projectName/files',
+                'projects/:projectName/files/:name/:tag/:tab',
+                'projects/:projectName/files/:name/:tag/:iter/:tab'
+              ].map((path, index) => (
+                <Fragment key={index}>
+                  <Route path={path} element={<Files />} />
+                </Fragment>
+              ))}
+              <Route path="*" element={<Navigate replace to="projects" />} />
+              <Route path="/" element={<Navigate replace to="projects" />} />
+            </Route>
+          </Routes>
         </Suspense>
-      </Page>
-    </Router>
+      </Router>
+    </div>
   )
 }
 

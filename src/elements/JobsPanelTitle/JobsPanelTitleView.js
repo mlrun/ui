@@ -2,24 +2,21 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import MethodDescription from '../MethodDescription/MethodDescription'
 import Accordion from '../../common/Accordion/Accordion'
-import Select from '../../common/Select/Select'
-import Input from '../../common/Input/Input'
 import ChipCell from '../../common/ChipCell/ChipCell'
-import Button from '../../common/Button/Button'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import Input from '../../common/Input/Input'
+import MethodDescription from '../MethodDescription/MethodDescription'
+import Select from '../../common/Select/Select'
+import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
-import { ReactComponent as CloseIcon } from '../../images/close.svg'
-import { ReactComponent as Edit } from '../../images/edit.svg'
+import { ReactComponent as BackArrow } from 'igz-controls/images/back-arrow.svg'
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 import { getChipOptions } from '../../utils/getChipOptions'
-import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
-import { getValidationRules } from '../../utils/validationService'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { getValidationRules } from 'igz-controls/utils/validationService'
 
 const JobsPanelTitleView = ({
   closePanel,
@@ -86,15 +83,11 @@ const JobsPanelTitleView = ({
                     payload: name
                   })
                 }
-                validationRules={getValidationRules('job.name')}
-                setInvalid={value =>
-                  setNameValid(state => ({ ...state, isNameValid: value }))
-                }
+                validationRules={getValidationRules('common.name')}
+                setInvalid={value => setNameValid(state => ({ ...state, isNameValid: value }))}
                 type="text"
                 value={currentFunctionInfo.name}
-                wrapperClassName={
-                  !editTitle ? 'panel-title__input-wrapper' : ''
-                }
+                wrapperClassName={!editTitle ? 'panel-title__input-wrapper' : ''}
               />
               {editTitle && (
                 <div className="panel-title__labels-container">
@@ -155,9 +148,7 @@ const JobsPanelTitleView = ({
         </div>
       )}
       {currentFunctionInfo.methodDescription && (
-        <MethodDescription
-          description={currentFunctionInfo.methodDescription}
-        />
+        <MethodDescription description={currentFunctionInfo.methodDescription} />
       )}
       {editMode && (
         <div className="job-panel__title-buttons-container">
@@ -166,11 +157,7 @@ const JobsPanelTitleView = ({
             onClick={event => handleFinishEdit(event, true)}
             variant={TERTIARY_BUTTON}
           />
-          <Button
-            variant={PRIMARY_BUTTON}
-            label="Done"
-            onClick={handleFinishEdit}
-          />
+          <Button variant={PRIMARY_BUTTON} label="Done" onClick={handleFinishEdit} />
         </div>
       )}
       <RoundedIcon

@@ -3,11 +3,7 @@ import React from 'react'
 import AddFeatureButton from '../elements/AddFeatureButton/AddFeatureButton'
 import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
 
-import {
-  FEATURE_STORE_PAGE,
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB
-} from '../constants'
+import { FEATURE_STORE_PAGE, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { copyToClipboard } from './copyToClipboard'
@@ -20,10 +16,10 @@ import {
 } from './getUniqueIdentifier'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
-import { ReactComponent as Nosql } from '../images/nosql.svg'
-import { ReactComponent as Stream } from '../images/stream.svg'
-import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
-import { ReactComponent as DbIcon } from '../images/db-icon.svg'
+import { ReactComponent as Nosql } from 'igz-controls/images/nosql.svg'
+import { ReactComponent as Stream } from 'igz-controls/images/stream.svg'
+import { ReactComponent as TsdbIcon } from 'igz-controls/images/tsdb-icon.svg'
+import { ReactComponent as DbIcon } from 'igz-controls/images/db-icon.svg'
 
 export const createFeatureStoreContent = (
   content,
@@ -43,108 +39,121 @@ export const createFeatureStoreContent = (
   })
 }
 
-const createFeatureSetsRowData = (featureSet, project, isSelectedItem) => {
+export const createFeatureSetsRowData = (featureSet, project, isSelectedItem, showExpandButton) => {
   const identifierUnique = getFeatureSetIdentifier(featureSet, true)
 
   return {
-    key: {
-      id: `key.${identifierUnique}`,
-      identifier: getFeatureSetIdentifier(featureSet),
-      identifierUnique: identifierUnique,
-      value: featureSet.name,
-      class: 'artifacts_medium',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          project,
-          FEATURE_STORE_PAGE,
-          FEATURE_SETS_TAB,
-          featureSet.name,
-          featureSet.tag,
-          tab,
-          featureSet.uid
-        ),
-      expandedCellContent: {
-        class: 'artifacts_medium',
-        value: featureSet.tag || truncateUid(featureSet.uid),
-        tooltip: featureSet.tag || featureSet.uid
+    data: {
+      ...featureSet,
+      ui: {
+        ...featureSet.ui,
+        identifier: getFeatureSetIdentifier(featureSet),
+        identifierUnique: identifierUnique
       }
     },
-    description: {
-      id: `description.${identifierUnique}`,
-      value: featureSet.description,
-      class: 'artifacts_medium',
-      hidden: isSelectedItem
-    },
-    labels: {
-      id: `labels.${identifierUnique}`,
-      value: parseKeyValues(featureSet.labels),
-      class: 'artifacts_big',
-      type: 'labels',
-      hidden: isSelectedItem
-    },
-    version: {
-      id: `version.${identifierUnique}`,
-      value: featureSet.tag,
-      class: 'artifacts_small',
-      type: 'hidden',
-      hidden: isSelectedItem
-    },
-    entity: {
-      id: `entity.${identifierUnique}`,
-      value:
-        featureSet.entities
-          ?.slice(0, 2)
-          .map(entity => entity.name)
-          .join(', ') ?? '',
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    targets: getFeatureSetTargetCellValue(featureSet.targets, isSelectedItem),
-    buttonCopy: {
-      id: `buttonCopy.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonCopyURI',
-      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
-      hidden: isSelectedItem
-    }
+    content: [
+      {
+        id: `key.${identifierUnique}`,
+        header: 'Name',
+        value: featureSet.name,
+        class: 'table-cell-2',
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            project,
+            FEATURE_STORE_PAGE,
+            FEATURE_SETS_TAB,
+            featureSet.name,
+            featureSet.tag,
+            tab,
+            featureSet.uid
+          ),
+        showTag: true,
+        showStatus: true,
+        expandedCellContent: {
+          class: 'table-cell-2',
+          value: featureSet.tag || truncateUid(featureSet.uid),
+          tooltip: featureSet.tag || featureSet.uid,
+          showTag: true,
+          showStatus: true
+        },
+        showExpandButton
+      },
+      {
+        id: `description.${identifierUnique}`,
+        header: 'Description',
+        value: featureSet.description,
+        class: 'table-cell-2',
+        hidden: isSelectedItem
+      },
+      {
+        id: `labels.${identifierUnique}`,
+        header: 'Labels',
+        value: parseKeyValues(featureSet.labels),
+        class: 'table-cell-4',
+        type: 'labels',
+        hidden: isSelectedItem
+      },
+      {
+        id: `version.${identifierUnique}`,
+        value: featureSet.tag,
+        class: 'table-cell-2',
+        type: 'hidden',
+        hidden: isSelectedItem
+      },
+      {
+        id: `entity.${identifierUnique}`,
+        header: 'Entities',
+        value:
+          featureSet.entities
+            ?.slice(0, 2)
+            .map(entity => entity.name)
+            .join(', ') ?? '',
+        class: 'table-cell-1',
+        hidden: isSelectedItem
+      },
+      { ...getFeatureSetTargetCellValue(featureSet.targets, isSelectedItem) },
+      {
+        id: `buttonCopy.${identifierUnique}`,
+        value: '',
+        class: 'table-cell-small artifacts__icon',
+        type: 'buttonCopyURI',
+        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
+        hidden: isSelectedItem
+      }
+    ]
   }
 }
 
-const createFeaturesRowData = (feature, isTablePanelOpen) => {
+export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButton) => {
   const identifierUnique = getFeatureIdentifier(feature, true)
 
   return {
-    key: {
-      id: `key.${identifierUnique}`,
-      identifier: getFeatureIdentifier(feature),
-      identifierUnique: identifierUnique,
-      type: feature.ui.type,
-      value: feature.name,
-      class: 'artifacts_medium',
-      expandedCellContent: {
-        class: 'artifacts_medium',
-        value: feature.metadata?.tag
+    data: {
+      ...feature,
+      ui: {
+        ...feature.ui,
+        identifier: getFeatureIdentifier(feature),
+        identifierUnique: identifierUnique
       }
     },
-    feature_set: {
-      id: `feature_set.${identifierUnique}`,
-      value: feature.metadata?.name,
-      class: 'artifacts_small',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          feature.metadata?.project,
-          FEATURE_STORE_PAGE,
-          FEATURE_SETS_TAB,
-          feature.metadata?.name,
-          feature.metadata?.tag,
-          tab
-        ),
-      expandedCellContent: {
-        class: 'artifacts_small',
-        value: ''
+    content: [
+      {
+        id: `key.${identifierUnique}`,
+        header: 'Feature Name',
+        type: feature.ui.type,
+        value: feature.name,
+        class: 'table-cell-3',
+        expandedCellContent: {
+          class: 'table-cell-3',
+          value: feature.metadata?.tag
+        },
+        showExpandButton
       },
-      rowExpanded: {
+      {
+        id: `feature_set.${identifierUnique}`,
+        header: 'Feature set',
+        value: feature.metadata?.name,
+        class: 'table-cell-2',
         getLink: tab =>
           generateLinkToDetailsPanel(
             feature.metadata?.project,
@@ -153,51 +162,71 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
             feature.metadata?.name,
             feature.metadata?.tag,
             tab
-          )
+          ),
+        expandedCellContent: {
+          class: 'table-cell-2',
+          value: ''
+        },
+        rowExpanded: {
+          getLink: tab =>
+            generateLinkToDetailsPanel(
+              feature.metadata?.project,
+              FEATURE_STORE_PAGE,
+              FEATURE_SETS_TAB,
+              feature.metadata?.name,
+              feature.metadata?.tag,
+              tab
+            )
+        }
+      },
+      {
+        id: `type.${identifierUnique}`,
+        header: 'Type',
+        value: feature.value_type,
+        class: 'table-cell-1'
+      },
+      {
+        id: `entity.${identifierUnique}`,
+        header: 'Entities',
+        type: 'labels',
+        value: feature.spec?.entities.map(entity => entity.name),
+        class: 'table-cell-4'
+      },
+      {
+        id: `description.${identifierUnique}`,
+        header: 'Description',
+        value: feature.description,
+        class: 'table-cell-3',
+        hidden: isTablePanelOpen
+      },
+      {
+        id: `labels.${identifierUnique}`,
+        header: 'Labels',
+        value: parseKeyValues(feature.labels),
+        class: 'table-cell-4',
+        type: 'labels',
+        hidden: isTablePanelOpen
+      },
+      {
+        ...getFeatureSetTargetCellValue(feature.targets),
+        hidden: isTablePanelOpen
+      },
+      {
+        id: `validator.${identifierUnique}`,
+        header: 'Validator',
+        value: <FeatureValidator validator={feature.validator} />,
+        class: 'table-cell-3',
+        type: 'component',
+        hidden: isTablePanelOpen
+      },
+      {
+        id: `addFeature.${identifierUnique}`,
+        value: feature.ui.type === 'feature' && <AddFeatureButton feature={feature} />,
+        class: 'table-cell-2 align-right',
+        type: 'component',
+        hidden: !isTablePanelOpen
       }
-    },
-    type: {
-      id: `type.${identifierUnique}`,
-      value: feature.value_type,
-      class: 'artifacts_extra-small'
-    },
-    entity: {
-      id: `entity.${identifierUnique}`,
-      type: 'labels',
-      value: feature.spec?.entities.map(entity => entity.name),
-      class: 'artifacts_big'
-    },
-    description: {
-      id: `description.${identifierUnique}`,
-      value: feature.description,
-      class: 'artifacts_medium',
-      hidden: isTablePanelOpen
-    },
-    labels: {
-      id: `labels.${identifierUnique}`,
-      value: parseKeyValues(feature.labels),
-      class: 'artifacts_big',
-      type: 'labels',
-      hidden: isTablePanelOpen
-    },
-    targets: {
-      ...getFeatureSetTargetCellValue(feature.targets),
-      hidden: isTablePanelOpen
-    },
-    validator: {
-      id: `validator.${identifierUnique}`,
-      value: <FeatureValidator validator={feature.validator} />,
-      class: 'artifacts_medium',
-      type: 'component',
-      hidden: isTablePanelOpen
-    },
-    addFeature: {
-      id: `addFeature.${identifierUnique}`,
-      value: <AddFeatureButton feature={feature} />,
-      class: 'artifacts_small align-right',
-      type: 'component',
-      hidden: !isTablePanelOpen
-    }
+    ]
   }
 }
 
@@ -216,11 +245,8 @@ const kindToIcon = {
   }
 }
 
-const getFeatureSetTargetCellValue = (
-  targets,
-  isSelectedItem,
-  identifierUnique
-) => ({
+const getFeatureSetTargetCellValue = (targets, isSelectedItem, identifierUnique) => ({
+  header: 'Targets',
   value: (targets ?? [])
     .map(
       target =>
@@ -231,83 +257,110 @@ const getFeatureSetTargetCellValue = (
     )
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   id: `targets.${identifierUnique}`,
-  class: 'artifacts_small artifacts__targets-icon',
+  class: 'table-cell-1 artifacts__targets-icon',
   type: 'icons',
   hidden: isSelectedItem
 })
 
-const createFeatureVectorsRowData = (
+export const createFeatureVectorsRowData = (
   featureVector,
   project,
-  isSelectedItem
+  isSelectedItem,
+  showExpandButton
 ) => {
   const identifierUnique = getFeatureVectorIdentifier(featureVector, true)
 
   return {
-    key: {
-      id: `key.${identifierUnique}`,
-      identifier: getFeatureVectorIdentifier(featureVector),
-      identifierUnique: identifierUnique,
-      value: featureVector.name,
-      class: 'artifacts_medium',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          project,
-          FEATURE_STORE_PAGE,
-          FEATURE_VECTORS_TAB,
-          featureVector.name,
-          featureVector.tag,
-          tab,
-          featureVector.uid
-        ),
-      expandedCellContent: {
-        class: 'artifacts_medium',
-        value: featureVector.tag || truncateUid(featureVector.uid),
-        tooltip: featureVector.tag || featureVector.uid
+    data: {
+      ...featureVector,
+      ui: {
+        ...featureVector.ui,
+        identifier: getFeatureVectorIdentifier(featureVector),
+        identifierUnique: identifierUnique
       }
     },
-    description: {
-      id: `description.${identifierUnique}`,
-      value: featureVector.description,
-      class: 'artifacts_medium',
-      hidden: isSelectedItem
-    },
-    labels: {
-      id: `labels.${identifierUnique}`,
-      value: parseKeyValues(featureVector.labels),
-      class: 'artifacts_big',
-      type: 'labels',
-      hidden: isSelectedItem
-    },
-    version: {
-      id: `version.${identifierUnique}`,
-      value: featureVector.tag,
-      class: 'artifacts_small',
-      type: 'hidden',
-      hidden: isSelectedItem
-    },
-    updated: {
-      id: `updated.${identifierUnique}`,
-      value: featureVector.updated
-        ? formatDatetime(new Date(featureVector.updated), 'N/A')
-        : 'N/A',
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    buttonCopy: {
-      id: `buttonCopy.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonCopyURI',
-      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
-      hidden: isSelectedItem
-    },
-    uid: {
-      id: `uid.${identifierUnique}`,
-      value: featureVector.uid,
-      class: 'artifacts_small',
-      type: 'hidden',
-      hidden: isSelectedItem
-    }
+    content: [
+      {
+        id: `key.${identifierUnique}`,
+        header: 'Name',
+        value: featureVector.name,
+        class: 'table-cell-3',
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            project,
+            FEATURE_STORE_PAGE,
+            FEATURE_VECTORS_TAB,
+            featureVector.name,
+            featureVector.tag,
+            tab,
+            featureVector.uid
+          ),
+        showTag: true,
+        showStatus: true,
+        expandedCellContent: {
+          class: 'table-cell-3',
+          value: featureVector.tag || truncateUid(featureVector.uid),
+          tooltip: featureVector.tag || featureVector.uid,
+          showTag: true,
+          showStatus: true
+        },
+        showExpandButton
+      },
+      {
+        id: `description.${identifierUnique}`,
+        header: 'Description',
+        value: featureVector.description,
+        class: 'table-cell-3',
+        hidden: isSelectedItem
+      },
+      {
+        id: `labels.${identifierUnique}`,
+        header: 'Labels',
+        value: parseKeyValues(featureVector.labels),
+        class: 'table-cell-4',
+        type: 'labels',
+        hidden: isSelectedItem
+      },
+      {
+        id: `version.${identifierUnique}`,
+        value: featureVector.tag,
+        class: 'table-cell-2',
+        type: 'hidden',
+        hidden: isSelectedItem
+      },
+      {
+        id: `entity.${identifierUnique}`,
+        header: 'Entities',
+        value: featureVector.index_keys?.join(', ') ?? '',
+        class: 'table-cell-2',
+        hidden: isSelectedItem
+      },
+      {
+        id: `updated.${identifierUnique}`,
+        header: 'Updated',
+        value: featureVector.updated
+          ? formatDatetime(new Date(featureVector.updated), 'N/A')
+          : 'N/A',
+        class: 'table-cell-2',
+        showTag: true,
+        showStatus: true,
+        hidden: isSelectedItem
+      },
+      {
+        id: `buttonCopy.${identifierUnique}`,
+        value: '',
+        class: 'table-cell-1 artifacts__icon',
+        type: 'buttonCopyURI',
+        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
+        hidden: isSelectedItem
+      },
+      {
+        id: `uid.${identifierUnique}`,
+        value: featureVector.uid,
+        class: 'table-cell-2',
+        type: 'hidden',
+        hidden: isSelectedItem
+      }
+    ]
   }
 }

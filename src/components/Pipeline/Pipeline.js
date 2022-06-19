@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { Link } from 'react-router-dom'
 import { groupBy, forEach, map, concat } from 'lodash'
+import { useParams } from 'react-router-dom'
 
-import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import CodeBlock from '../../common/CodeBlock/CodeBlock'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import PipelineView from './PipelineView'
 
 import {
   DEFAULT_EDGE,
@@ -21,24 +17,21 @@ import {
 } from '../../constants'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 
-import { ReactComponent as Back } from '../../images/back-arrow.svg'
-import { ReactComponent as CloseIcon } from '../../images/close.svg'
-
 import './pipeline.scss'
 
-const Pipeline = ({ content, match }) => {
-  const graphViewClassNames = classnames('graph-view')
+const Pipeline = ({ content }) => {
   const [elements, setElements] = useState([])
   const [pipeline, setPipeline] = useState({})
   const [selectedStep, setSelectedStep] = useState({})
   const [selectedStepData, setSelectedStepData] = useState([])
   const [stepIsSelected, setStepIsSelected] = useState(false)
+  const params = useParams()
 
   useEffect(() => {
     setPipeline(
-      content.find(contentItem => contentItem.hash === match.params.pipelineId)
+      content.find(contentItem => contentItem.hash === params.pipelineId)
     )
-  }, [content, match.params.pipelineId])
+  }, [content, params.pipelineId])
 
   useEffect(() => {
     if (selectedStep.data) {
@@ -103,8 +96,13 @@ const Pipeline = ({ content, match }) => {
           data: {
             subType: PRIMARY_NODE,
             label: graph.class_args?.name ?? '',
-            subLabel: '« router »'
+            subLabel: '« router »',
+            isSelectable: true,
+            customData: graph
           },
+          className: classnames(
+            selectedStep.id === mainRouterStepId && 'selected'
+          ),
           position: { x: 0, y: 0 }
         })
       }
@@ -246,72 +244,21 @@ const Pipeline = ({ content, match }) => {
     }
   }, [pipeline, selectedStep])
 
-  const linkBackTitle = pipeline?.nuclio_name || pipeline?.name
-
   return (
-    <div className="pipeline-container">
-      <div className="pipeline-header">
-        <div className="link-back">
-          <Link
-            to={`/projects/${match.params.projectName}/models/${match.params.pageTab}`}
-            className="link-back__icon"
-          >
-            <Tooltip template={<TextTooltipTemplate text="Back" />}>
-              <Back />
-            </Tooltip>
-          </Link>
-          <div className="link-back__title">
-            <Tooltip template={<TextTooltipTemplate text={linkBackTitle} />}>
-              {linkBackTitle}
-            </Tooltip>
-          </div>
-        </div>
-      </div>
-      <div className="graph-container pipeline-content">
-        <div className={graphViewClassNames}>
-          <MlReactFlow
-            elements={elements}
-            alignTriggerItem={stepIsSelected}
-            onElementClick={(event, element) => {
-              if (element.data?.customData) {
-                setSelectedStep(element)
-              }
-            }}
-          />
-        </div>
-        {stepIsSelected && (
-          <div className="graph-pane">
-            <div className="graph-pane__title">
-              <span>{selectedStep.id}</span>
-              <RoundedIcon
-                onClick={() => setSelectedStep({})}
-                tooltipText="Close"
-              >
-                <CloseIcon />
-              </RoundedIcon>
-            </div>
-            {selectedStepData.map(rowData => (
-              <div className="graph-pane__row" key={rowData.label}>
-                {rowData.type === 'codeblock' ? (
-                  <CodeBlock label="Arguments" codeData={rowData.value} />
-                ) : (
-                  <>
-                    <div className="graph-pane__row-label">{rowData.label}</div>
-                    <div className="graph-pane__row-value">{rowData.value}</div>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+    <PipelineView
+      elements={elements}
+      params={params}
+      pipeline={pipeline}
+      selectedStep={selectedStep}
+      selectedStepData={selectedStepData}
+      setSelectedStep={setSelectedStep}
+      stepIsSelected={stepIsSelected}
+    />
   )
 }
 
 Pipeline.propTypes = {
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  match: PropTypes.shape({}).isRequired
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default React.memo(Pipeline)

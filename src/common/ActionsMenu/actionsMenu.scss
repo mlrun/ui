@@ -1,11 +1,15 @@
-@import '../../scss/variables';
-@import '../../scss/borders';
-@import '../../scss/shadows';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/variables';
+@import '~igz-controls/scss/shadows';
 
 .actions-menu {
   &__container {
     position: relative;
     display: none;
+
+    &-active {
+      display: block;
+    }
   }
 
   &__body {

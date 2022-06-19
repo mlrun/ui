@@ -1,18 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import Input from '../../common/Input/Input'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
+import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import Select from '../../common/Select/Select'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
-import { ReactComponent as Delete } from '../../images/delete.svg'
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 export const JobsPanelAdvancedTable = ({
   addNewItem,
@@ -23,7 +23,7 @@ export const JobsPanelAdvancedTable = ({
   handleEditItems,
   handleResetForm,
   headers,
-  match,
+  isPanelEditMode,
   newName,
   section,
   selectedId,
@@ -35,6 +35,8 @@ export const JobsPanelAdvancedTable = ({
   setValidation,
   validation
 }) => {
+  const addBtnClassNames = classnames('add-new-item-btn', isPanelEditMode && 'disabled')
+
   return (
     <JobsPanelTable
       addNewItem={addNewItem}
@@ -43,14 +45,13 @@ export const JobsPanelAdvancedTable = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       headers={headers}
-      match={match}
       section={section}
       selectedItem={selectedItem}
       setSelectedItem={setSelectedItem}
       setValidation={setValidation}
       validation={validation}
     >
-      {addNewItem ? (
+      {addNewItem && !isPanelEditMode ? (
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
             {section.includes('secrets') ? (
@@ -65,10 +66,7 @@ export const JobsPanelAdvancedTable = ({
                 className="input-row__item"
                 density="medium"
                 floatingLabel
-                invalid={
-                  isNameNotUnique(newName, content) ||
-                  !validation.envVariablesName
-                }
+                invalid={isNameNotUnique(newName, content) || !validation.envVariablesName}
                 invalidText={
                   isNameNotUnique(newName, content)
                     ? 'Name already exists'
@@ -104,22 +102,26 @@ export const JobsPanelAdvancedTable = ({
             />
           </div>
           <button
-            className="btn-add"
-            disabled={isNameNotUnique(newName, content)}
+            className={addBtnClassNames}
+            disabled={isNameNotUnique(newName, content) || isPanelEditMode}
             onClick={handleAddNewItem}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
             </Tooltip>
           </button>
-          <button onClick={handleResetForm}>
+          <button disabled={isPanelEditMode} onClick={handleResetForm}>
             <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
               <Delete />
             </Tooltip>
           </button>
         </div>
       ) : (
-        <JobsPanelTableAddItemRow onClick={setAddNewItem} text="secret" />
+        <JobsPanelTableAddItemRow
+          isPanelEditMode={isPanelEditMode}
+          onClick={setAddNewItem}
+          text="secret"
+        />
       )}
     </JobsPanelTable>
   )
@@ -140,7 +142,7 @@ JobsPanelAdvancedTable.propTypes = {
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  match: PropTypes.shape({}).isRequired,
+  isPanelEditMode: PropTypes.bool.isRequired,
   newName: PropTypes.string,
   section: PropTypes.string.isRequired,
   selectedId: PropTypes.string,

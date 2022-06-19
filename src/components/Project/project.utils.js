@@ -1,13 +1,10 @@
 import React from 'react'
 
-import {
-  MONITOR_JOBS_TAB,
-  PRIMARY_BUTTON,
-  STATUS_CODE_FORBIDDEN
-} from '../../constants'
+import { MONITOR_JOBS_TAB } from '../../constants'
+import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
-import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
-import { ReactComponent as VSCode } from '../../images/vs-code.svg'
+import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
+import { ReactComponent as VSCode } from 'igz-controls/images/vs-code.svg'
 
 export const launchIDEOptions = [
   {
@@ -23,8 +20,8 @@ export const launchIDEOptions = [
 ]
 
 export const generateCreateNewOptions = (
-  history,
-  match,
+  navigate,
+  params,
   setArtifactKind,
   setIsPopupDialogOpen,
   setCreateFeatureSetsPanelIsOpen,
@@ -34,9 +31,7 @@ export const generateCreateNewOptions = (
     label: 'Job',
     id: 'job',
     handler: () =>
-      history.push(
-        `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`
-      )
+      navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`)
   },
   {
     label: 'ML Function',
@@ -76,18 +71,18 @@ export const generateCreateNewOptions = (
   }
 ]
 
-export const handleFetchProjectError = (error, history, setConfirmData) => {
-  if (error.response?.status === STATUS_CODE_FORBIDDEN) {
+export const handleFetchProjectError = (error, navigate, setConfirmData) => {
+  if (error.response?.status === FORBIDDEN_ERROR_STATUS_CODE) {
     setConfirmData({
       message: 'You are not permitted to view this project.',
       messageOnly: true,
       btnConfirmLabel: 'Okay',
       btnConfirmType: PRIMARY_BUTTON,
       confirmHandler: () => {
-        history.push('/projects/')
+        navigate('/projects/')
       }
     })
   } else {
-    history.push('/projects/')
+    navigate('/projects/')
   }
 }

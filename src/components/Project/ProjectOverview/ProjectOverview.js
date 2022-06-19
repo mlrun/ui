@@ -1,15 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
-import Tooltip from '../../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
+import { ConfirmDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
@@ -19,23 +17,20 @@ import { handlePath, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
 import { getDateAndTimeByFormat } from '../../../utils/'
 
-import { useDemoMode } from '../../../hooks/demoMode.hook'
-
-import { ReactComponent as ArrowIcon } from '../../../images/arrow.svg'
+import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
 import './ProjectOverview.scss'
 
-const ProjectOverview = ({ fetchProject, history, match, project }) => {
+const ProjectOverview = ({ fetchProject, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
   const [modal, setModal] = useState({ isOpen: false, name: '' })
-
-  const isDemoMode = useDemoMode()
-  const { projectName } = match.params
+  const params = useParams()
+  const navigate = useNavigate()
 
   const cards = useMemo(() => {
-    return projectName ? getInitialCards(projectName) : {}
-  }, [projectName])
+    return params.projectName ? getInitialCards(params.projectName) : {}
+  }, [params])
 
   const renderPopupContent = () => {
     switch (modal.name) {
@@ -43,7 +38,6 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
         return (
           <RegisterArtifactPopup
             artifactKind="dataset"
-            match={match}
             refresh={() => {}}
             setIsPopupOpen={handleModalToggle}
             title="Register dataset"
@@ -53,7 +47,6 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
         return (
           <RegisterArtifactPopup
             artifactKind="artifact"
-            match={match}
             refresh={() => {}}
             setIsPopupOpen={handleModalToggle}
             title="Register artifact"
@@ -74,7 +67,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     })
   }
 
-  const handlePathExecution = handlePath(history, handleModalToggle, isDemoMode)
+  const handlePathExecution = handlePath(navigate, handleModalToggle)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
@@ -84,10 +77,10 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
   }
 
   useEffect(() => {
-    fetchProject(match.params.projectName).catch(error =>
-      handleFetchProjectError(error, history, setConfirmData)
+    fetchProject(params.projectName).catch(error =>
+      handleFetchProjectError(error, navigate, setConfirmData)
     )
-  }, [fetchProject, history, match.params.projectName])
+  }, [fetchProject, navigate, params.projectName])
 
   if (project.loading) {
     return <Loader />
@@ -104,6 +97,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
               label: confirmData.btnConfirmLabel,
               variant: confirmData.btnConfirmType
             }}
+            isOpen={confirmData}
             message={confirmData.message}
             messageOnly={confirmData.messageOnly}
           />
@@ -124,30 +118,19 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
       <div className="project-overview__header">
         <div className="project-overview__header-title">
           {project.data.metadata.name}
-          <Tooltip
-            template={<TextTooltipTemplate text={project.data.status.state} />}
-          >
-            <i
-              className={`state-${project.data.status.state}-job status-icon`}
-            />
+          <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>
+            <i className={`state-${project.data.status.state}-job status-icon`} />
           </Tooltip>
         </div>
         <div className="project-overview__header-subtitle">
           <div>
-            <span className="project-overview__header-subtitle-name">
-              Created:
-            </span>
+            <span className="project-overview__header-subtitle-name">Created:</span>
             <span>
-              {getDateAndTimeByFormat(
-                project.data.metadata.created,
-                'YYYY-MM-DD, HH:mm:ss A'
-              )}
+              {getDateAndTimeByFormat(project.data.metadata.created, 'YYYY-MM-DD, HH:mm:ss A')}
             </span>
           </div>
           <div>
-            <span className="project-overview__header-subtitle-name">
-              Owner:
-            </span>
+            <span className="project-overview__header-subtitle-name">Owner:</span>
             <span>{project.data.spec.owner}</span>
           </div>
         </div>
@@ -163,12 +146,8 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
             <div className="project-overview-card" key={card}>
               <div className="project-overview-card__top">
                 <div className="project-overview-card__header">
-                  <h3 className="project-overview-card__header-title">
-                    {title}
-                  </h3>
-                  <p className="project-overview-card__header-subtitle">
-                    {subTitle ?? ''}
-                  </p>
+                  <h3 className="project-overview-card__header-title">{title}</h3>
+                  <p className="project-overview-card__header-subtitle">{subTitle ?? ''}</p>
                 </div>
                 <div className="project-overview-card__actions">
                   <ProjectAction
@@ -203,11 +182,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
                 <div className="additional-links">
                   {additionalLinks &&
                     additionalLinks.map(({ id, label, path }) => (
-                      <span
-                        key={id}
-                        className="link"
-                        onClick={() => handlePathExecution(path)}
-                      >
+                      <span key={id} className="link" onClick={() => handlePathExecution(path)}>
                         {label}
                       </span>
                     ))}
@@ -219,10 +194,6 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
       </div>
     </div>
   )
-}
-
-ProjectOverview.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 const actionCreators = {

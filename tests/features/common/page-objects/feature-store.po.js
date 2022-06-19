@@ -4,6 +4,7 @@ import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
 import inputGroup from '../components/input-group.component'
 import labelComponent from '../components/label.component'
+import checkboxComponent from '../components/checkbox.component'
 import {
   generateInputGroup,
   generateDropdownGroup,
@@ -19,7 +20,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        tab: 'a'
+        key: 'a'
       }
     }
   }
@@ -147,7 +148,8 @@ const featureVectorTable = {
       name: '.table-head__item:nth-of-type(1) .data-ellipsis',
       description: '.table-head__item:nth-of-type(2) .data-ellipsis',
       labels: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      updated: '.table-head__item:nth-of-type(4) .data-ellipsis'
+      entities: '.table-head__item:nth-of-type(4) .data-ellipsis',
+      updated: '.table-head__item:nth-of-type(5) .data-ellipsis'
     }
   },
   body: {
@@ -224,7 +226,9 @@ const featuresByProjectsTable = {
     row: {
       root: '.feature-row',
       fields: {
-        feature: '.feature-row__feature-template'
+        feature: '.feature-row__feature-template',
+        set_label_btn: '.feature-row__actions .label-actions',
+        delete_feature_btn: '.feature-row__actions .label-actions'
       }
     }
   }
@@ -335,12 +339,35 @@ module.exports = {
     Table_Label_Filter_Input: commonLabelFilterInput,
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
-    Feature_Datasets_Table: commonTable(datasetsTable)
+    Feature_Datasets_Table: commonTable(datasetsTable),
+    Show_Iterations_Checkbox: checkboxComponent({
+      root: '.content .content__action-bar .filters .checkbox',
+      elements: {
+        checkbox: 'svg[class]',
+        name: '',
+        icon: ''
+      }
+    })
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Name_Filter_Input: commonNameFilterInput,
-    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Entity_Filter_Input: inputGroup(
+      generateInputGroup(
+        '.content .content__action-bar .input-wrapper:nth-of-type(3)',
+        true,
+        false,
+        true
+      )
+    ),
+    Table_Label_Filter_Input: inputGroup(
+      generateInputGroup(
+        '.content .content__action-bar .input-wrapper:nth-of-type(4)',
+        true,
+        false,
+        true
+      )
+    ),
     Table_Projects_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '.content .content__action-bar .filters .select',
@@ -371,6 +398,8 @@ module.exports = {
         '.table__panel-container .features-panel__content .accordion__container:nth-of-type(6) .round-icon-cp__circle'
       ),
       Features_By_Projects_Table: commonTable(featuresByProjectsTable)
-    }
+    },
+    Feature_Vector_Name: By.css('.features-panel__header-vector .features-panel__header-vector-name'),
+    Feature_Vector_Tag: By.css('.features-panel__header-vector .features-panel__header-vector-tag')
   }
 }

@@ -1,5 +1,5 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
 
 .general {
   &__required-info {
@@ -10,6 +10,14 @@
 
     span {
       font-weight: bold;
+    }
+
+    .name {
+      max-width: 70%;
+    }
+
+    .tag {
+      max-width: 10%;
     }
   }
 

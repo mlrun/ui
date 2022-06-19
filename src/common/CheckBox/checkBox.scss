@@ -1,4 +1,4 @@
-@import '../../scss/colors';
+@import '~igz-controls/scss/colors';
 
 .checkbox {
   display: flex;
@@ -29,5 +29,10 @@
         fill: $spunPearl;
       }
     }
+  }
+
+  &_disabled {
+    color: $doveGray;
+    cursor: not-allowed;
   }
 }

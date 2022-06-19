@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Prism from 'prismjs'
 import classnames from 'classnames'
+import { useParams } from 'react-router-dom'
 
 import NoData from '../../common/NoData/NoData'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { generatePods } from './detailsPods.util'
 
 import './detailsPods.scss'
 
-const DetailsPods = ({ detailsStore, match }) => {
+const DetailsPods = ({ detailsStore }) => {
   const [selectedPod, setSelectedPod] = useState(null)
   const [table, setTable] = useState([])
+  const params = useParams()
 
   useEffect(() => {
     setTable(generatePods(detailsStore.pods))
@@ -22,7 +22,7 @@ const DetailsPods = ({ detailsStore, match }) => {
     return () => {
       setSelectedPod(null)
     }
-  }, [detailsStore.pods, match.params.jobId])
+  }, [detailsStore.pods, params.jobId])
 
   useEffect(() => {
     if (!selectedPod) {
@@ -33,9 +33,7 @@ const DetailsPods = ({ detailsStore, match }) => {
   return (
     <div className="pods">
       {detailsStore.pods.error ? (
-        <div className="pods__error">
-          Failed to fetch data. Please try again later.
-        </div>
+        <div className="pods__error">Failed to fetch data. Please try again later.</div>
       ) : table.length ? (
         <>
           <div className="pods__table">
@@ -47,11 +45,7 @@ const DetailsPods = ({ detailsStore, match }) => {
                 )
 
                 return (
-                  <div
-                    className={rowClassNames}
-                    key={rowIndex}
-                    onClick={() => setSelectedPod(row)}
-                  >
+                  <div className={rowClassNames} key={rowIndex} onClick={() => setSelectedPod(row)}>
                     <Tooltip
                       className="data-ellipsis link"
                       template={<TextTooltipTemplate text={row.value} />}
@@ -96,10 +90,6 @@ const DetailsPods = ({ detailsStore, match }) => {
       )}
     </div>
   )
-}
-
-DetailsPods.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(({ detailsStore }) => ({

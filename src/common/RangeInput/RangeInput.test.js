@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import RangeInput from './RangeInput'
 
-jest.mock('../../images/range-arrow-small.svg', () => ({
+jest.mock('igz-controls/images/range-arrow-small.svg', () => ({
   ReactComponent: 'range-arrow'
 }))
 

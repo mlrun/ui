@@ -1,13 +1,14 @@
 import React from 'react'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Primary } from '../../images/ic-key.svg'
-import { ReactComponent as LabelColumn } from '../../images/ic_target-with-dart.svg'
+import { ReactComponent as Primary } from 'igz-controls/images/ic-key.svg'
+import { ReactComponent as LabelColumn } from 'igz-controls/images/ic_target-with-dart.svg'
 
 export const generateStatistics = selectedItem => {
-  return Object.entries(selectedItem?.stats ?? {}).map(([name, metrics]) => {
+  return Object.entries(
+    (selectedItem?.stats || selectedItem.feature_stats) ?? {}
+  ).map(([name, metrics]) => {
     return {
       entityIcon: {
         value: (

@@ -1,14 +1,11 @@
 import React, { useReducer, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { isNil } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import { handleFinishEdit } from '../Details/details.util'
 
-import {
-  detailsInfoActions,
-  detailsInfoReducer,
-  initialState
-} from './detailsInfoReducer'
+import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import DetailsInfoView from './DetailsInfoView'
@@ -17,29 +14,16 @@ import './detailsInfo.scss'
 
 const DetailsInfo = React.forwardRef(
   (
-    {
-      changes,
-      content,
-      match,
-      pageData,
-      selectedItem,
-      setChangesData,
-      setChangesCounter
-    },
+    { detailsStore, pageData, selectedItem, setChangesData, setChangesCounter },
     applyChangesRef
   ) => {
-    const [detailsInfoState, detailsInfoDispatch] = useReducer(
-      detailsInfoReducer,
-      initialState
-    )
+    const [detailsInfoState, detailsInfoDispatch] = useReducer(detailsInfoReducer, initialState)
+    const params = useParams()
     const editItemRef = React.createRef()
 
     const onApplyChanges = useCallback(
       event => {
-        if (
-          applyChangesRef.current &&
-          applyChangesRef.current.contains(event.target)
-        ) {
+        if (applyChangesRef.current && applyChangesRef.current.contains(event.target)) {
           detailsInfoDispatch({
             type: detailsInfoActions.RESET_EDIT_MODE
           })
@@ -54,7 +38,7 @@ const DetailsInfo = React.forwardRef(
           type: detailsInfoActions.RESET_EDIT_MODE
         })
       }
-    }, [detailsInfoDispatch, match.params.name])
+    }, [detailsInfoDispatch, params.name])
 
     useEffect(() => {
       window.addEventListener('click', onApplyChanges)
@@ -74,9 +58,9 @@ const DetailsInfo = React.forwardRef(
           }
         })
 
-        if (isNil(changes.data[field]?.initialFieldValue)) {
+        if (isNil(detailsStore.changes.data[field]?.initialFieldValue)) {
           setChangesData({
-            ...changes.data,
+            ...detailsStore.changes.data,
             [field]: {
               initialFieldValue: info,
               currentFieldValue: info,
@@ -85,9 +69,9 @@ const DetailsInfo = React.forwardRef(
           })
         } else {
           setChangesData({
-            ...changes.data,
+            ...detailsStore.changes.data,
             [field]: {
-              ...changes.data[field],
+              ...detailsStore.changes.data[field],
               currentFieldValue: info
             }
           })
@@ -106,14 +90,13 @@ const DetailsInfo = React.forwardRef(
 
     return (
       <DetailsInfoView
-        changes={changes}
-        content={content}
         detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
+        detailsStore={detailsStore}
         handleFinishEdit={() =>
           handleFinishEdit(
-            Object.keys(changes.data),
-            changes,
+            Object.keys(detailsStore.changes.data),
+            detailsStore.changes,
             detailsInfoActions,
             detailsInfoDispatch,
             detailsInfoState,
@@ -122,8 +105,8 @@ const DetailsInfo = React.forwardRef(
           )
         }
         handleInfoItemClick={handleInfoItemClick}
-        match={match}
         pageData={pageData}
+        params={params}
         ref={editItemRef}
         selectedItem={selectedItem}
         setChangesData={setChangesData}
@@ -134,9 +117,7 @@ const DetailsInfo = React.forwardRef(
 )
 
 DetailsInfo.propTypes = {
-  changes: PropTypes.shape({}).isRequired,
-  content: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired,
+  detailsStore: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }

@@ -3,15 +3,15 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Button from '../../common/Button/Button'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
+import Select from '../../common/Select/Select'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
 import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
+import { getValidationRules } from 'igz-controls/utils/validationService'
 
 import './newFunctionPopUp.scss'
 
@@ -36,7 +36,7 @@ const NewFunctionPopUp = ({
     isNameValid: true,
     isTagValid: true
   })
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
   const openPanelByDefault = useOpenPanel()
   const newFunctionBtn = useRef(null)
   const popUpClassNames = classnames(
@@ -118,20 +118,9 @@ const NewFunctionPopUp = ({
               maxLength={63}
               onChange={name => setData(state => ({ ...state, name }))}
               onBlur={handleNameOnBlur}
-              pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
               required
-              setInvalid={value =>
-                setValidation(state => ({ ...state, isNameValid: value }))
-              }
-              tip={
-                <>
-                  <span>&bull; Valid characters: a-z, 0-9, -</span>
-                  <br />
-                  <span>&bull; Must begin and end with: a-z, 0-9</span>
-                  <br />
-                  <span>&bull; Length - max: 63</span>
-                </>
-              }
+              setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
+              validationRules={getValidationRules('common.name')}
               value={data.name}
               wrapperClassName="name"
             />
@@ -142,9 +131,8 @@ const NewFunctionPopUp = ({
               onChange={tag => setData(state => ({ ...state, tag }))}
               onBlur={handleTagOnBlur}
               placeholder="latest"
-              setInvalid={value =>
-                setValidation(state => ({ ...state, isTagValid: value }))
-              }
+              setInvalid={value => setValidation(state => ({ ...state, isTagValid: value }))}
+              validationRules={getValidationRules('common.tag')}
               value={data.tag}
               wrapperClassName="tag"
             />
@@ -155,7 +143,7 @@ const NewFunctionPopUp = ({
             floatingLabel
             label="Runtime"
             onClick={selectRuntime}
-            options={runtimeOptions(isDemoMode)}
+            options={runtimeOptions(isStagingMode)}
             selectedId={data.runtime}
           />
           <div className="pop-up-dialog__footer-container">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { cloneDeep } from 'lodash'
@@ -7,19 +7,24 @@ import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 
 import featureStoreActions from '../../../actions/featureStore'
 import {
-  checkboxModels,
+  EXTERNAL_OFFLINE,
   EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
-  selectedPartitionKindInitialState,
+  NOSQL,
+  PARQUET,
+  checkboxModels,
+  dataInitialState,
+  generatePath,
   isShowAdvancedInitialState,
   partitionRadioButtonsInitialState,
+  selectedPartitionKindInitialState,
   selectedTargetKindInitialState,
-  PARQUET,
-  EXTERNAL_OFFLINE,
-  dataInitialState
+  targetsPathEditDataInitialState
 } from './featureSetsPanelTargetStore.util'
 
 const FeatureSetsPanelTargetStore = ({
   featureStore,
+  project,
+  setDisableButtons,
   setNewFeatureSetTarget,
   setValidation,
   validation
@@ -35,6 +40,107 @@ const FeatureSetsPanelTargetStore = ({
   const [partitionRadioButtonsState, setPartitionRadioButtonsState] = useState(
     partitionRadioButtonsInitialState
   )
+  const [targetsPathEditData, setTargetsPathEditData] = useState(
+    targetsPathEditDataInitialState
+  )
+
+  const onlineTarget = useMemo(
+    () =>
+      featureStore.newFeatureSet.spec.targets.find(
+        targetKind => targetKind.name === NOSQL
+      ),
+    [featureStore.newFeatureSet.spec.targets]
+  )
+
+  const offlineTarget = useMemo(
+    () =>
+      featureStore.newFeatureSet.spec.targets.find(
+        targetKind => targetKind.name === PARQUET
+      ),
+    [featureStore.newFeatureSet.spec.targets]
+  )
+
+  useEffect(() => {
+    if (
+      !targetsPathEditData.online.isModified &&
+      !targetsPathEditData.online.isEditMode
+    ) {
+      setData(state => ({
+        ...state,
+        online: {
+          ...state.online,
+          path: generatePath(
+            project,
+            featureStore.newFeatureSet.metadata.name,
+            NOSQL
+          )
+        }
+      }))
+    }
+
+    if (
+      !targetsPathEditData.parquet.isModified &&
+      !targetsPathEditData.parquet.isEditMode
+    ) {
+      setData(state => ({
+        ...state,
+        parquet: {
+          ...state.parquet,
+          path: generatePath(
+            project,
+            featureStore.newFeatureSet.metadata.name,
+            PARQUET
+          )
+        }
+      }))
+    }
+  }, [
+    featureStore.newFeatureSet.metadata.name,
+    project,
+    targetsPathEditData.online.isEditMode,
+    targetsPathEditData.online.isModified,
+    targetsPathEditData.parquet.isEditMode,
+    targetsPathEditData.parquet.isModified
+  ])
+
+  useEffect(() => {
+    if (
+      (onlineTarget &&
+        onlineTarget.path !== data.online.path &&
+        !targetsPathEditData.online.isEditMode &&
+        !targetsPathEditData.online.isModified) ||
+      (selectedTargetKind.includes(PARQUET) &&
+        offlineTarget &&
+        offlineTarget.path !== data.parquet.path &&
+        !targetsPathEditData.parquet.isEditMode &&
+        !targetsPathEditData.parquet.isModified)
+    ) {
+      const targets = cloneDeep(featureStore.newFeatureSet.spec.targets).map(target => {
+        if (target.kind === PARQUET && !targetsPathEditData.parquet.isModified) {
+          target.path = generatePath(project, featureStore.newFeatureSet.metadata.name, PARQUET)
+        } else if (target.kind === NOSQL && !targetsPathEditData.online.isModified) {
+          target.path = generatePath(project, featureStore.newFeatureSet.metadata.name, NOSQL)
+        }
+
+        return target
+      })
+      setNewFeatureSetTarget(targets)
+    }
+  }, [
+    data.online.path,
+    data.parquet.path,
+    featureStore.newFeatureSet.metadata.name,
+    featureStore.newFeatureSet.spec.targets,
+    offlineTarget,
+    onlineTarget,
+    project,
+    selectedTargetKind,
+    setNewFeatureSetTarget,
+    targetsPathEditData.online.isEditMode,
+    targetsPathEditData.online.isModified,
+    targetsPathEditData.parquet.isEditMode,
+    targetsPathEditData.parquet.isModified
+  ])
 
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
@@ -55,7 +161,7 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
-          targetKind.key_bucketing_number = key_bucketing_number
+          return { ...targetKind, key_bucketing_number: key_bucketing_number }
         }
 
         return targetKind
@@ -63,39 +169,87 @@ const FeatureSetsPanelTargetStore = ({
     )
   }
 
-  const handleOfflineKindPathOnBlur = () => {
-    const offlineTarget = featureStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === PARQUET
-    )
+  const handleOfflineKindPathChange = () => {
+    if (targetsPathEditData.parquet.isEditMode && validation.isOfflineTargetPathValid) {
+      setTargetsPathEditData(state => ({
+        ...state,
+        parquet: {
+          isEditMode: false,
+          isModified: targetsPathEditData.parquet.isModified
+            ? state.parquet.isModified
+            : offlineTarget.path !== data.parquet.path
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOfflineTargetPathEditModeClosed: true
+      }))
 
-    if (offlineTarget.path !== data.parquet.path) {
-      setNewFeatureSetTarget(
-        featureStore.newFeatureSet.spec.targets.map(targetKind => {
-          if (targetKind.name === PARQUET) {
-            targetKind.path = data.parquet.path
-          }
+      if (offlineTarget.path !== data.parquet.path) {
+        setNewFeatureSetTarget(
+          featureStore.newFeatureSet.spec.targets.map(targetKind => {
+            if (targetKind.name === PARQUET) {
+              return { ...targetKind, path: data.parquet.path }
+            }
 
-          return targetKind
-        })
-      )
+            return targetKind
+          })
+        )
+      }
+    } else {
+      setTargetsPathEditData(state => ({
+        ...state,
+        parquet: {
+          ...state.parquet,
+          isEditMode: true
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOfflineTargetPathEditModeClosed: false
+      }))
     }
   }
 
-  const handleOnlineKindPathOnBlur = () => {
-    const onlineTarget = featureStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'nosql'
-    )
+  const handleOnlineKindPathChange = () => {
+    if (targetsPathEditData.online.isEditMode && validation.isOnlineTargetPathValid) {
+      setTargetsPathEditData(state => ({
+        ...state,
+        online: {
+          isEditMode: false,
+          isModified: targetsPathEditData.online.isModified
+            ? state.online.isModified
+            : onlineTarget.path !== data.online.path
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOnlineTargetPathEditModeClosed: true
+      }))
 
-    if (onlineTarget.path !== data.online.path) {
-      setNewFeatureSetTarget(
-        featureStore.newFeatureSet.spec.targets.map(targetKind => {
-          if (targetKind.name === 'nosql') {
-            targetKind.path = data.online.path
-          }
+      if (onlineTarget.path !== data.online.path) {
+        setNewFeatureSetTarget(
+          featureStore.newFeatureSet.spec.targets.map(targetKind => {
+            if (targetKind.name === NOSQL) {
+              return { ...targetKind, path: data.online.path }
+            }
 
-          return targetKind
-        })
-      )
+            return targetKind
+          })
+        )
+      }
+    } else {
+      setTargetsPathEditData(state => ({
+        ...state,
+        online: {
+          ...state.online,
+          isEditMode: true
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOnlineTargetPathEditModeClosed: false
+      }))
     }
   }
 
@@ -108,13 +262,42 @@ const FeatureSetsPanelTargetStore = ({
       setNewFeatureSetTarget(
         featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === EXTERNAL_OFFLINE) {
-            targetKind.path = event.target.value
+            return { ...targetKind, path: event.target.value }
           }
 
           return targetKind
         })
       )
     }
+  }
+
+  const handleDiscardPathChange = kind => {
+    setData(state => ({
+      ...state,
+      [kind]: {
+        ...state[kind],
+        path: kind === PARQUET ? offlineTarget.path : onlineTarget.path
+      }
+    }))
+    setTargetsPathEditData(state => ({
+      ...state,
+      [kind]: {
+        ...state[kind],
+        isEditMode: false
+      }
+    }))
+    setDisableButtons(state => ({
+      ...state,
+      [kind === PARQUET
+        ? 'isOfflineTargetPathEditModeClosed'
+        : 'isOnlineTargetPathEditModeClosed']: true
+    }))
+    setValidation(state => ({
+      ...state,
+      [kind === PARQUET
+        ? 'isOfflineTargetPathValid'
+        : 'isOnlineTargetPathValid']: true
+    }))
   }
 
   const handleExternalOfflineKindTypeChange = kind => {
@@ -129,14 +312,16 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === EXTERNAL_OFFLINE) {
-          targetKind.kind = kind
+          const target = { ...targetKind, kind }
 
           if (kind === EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE) {
-            delete targetKind.partitioned
-            delete targetKind.key_bucketing_number
-            delete targetKind.partition_cols
-            delete targetKind.time_partitioning_granularity
+            delete target.partitioned
+            delete target.key_bucketing_number
+            delete target.partition_cols
+            delete target.time_partitioning_granularity
           }
+
+          return target
         }
 
         return targetKind
@@ -154,9 +339,10 @@ const FeatureSetsPanelTargetStore = ({
       setNewFeatureSetTarget(
         featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === kind) {
-            targetKind.partition_cols = partition_cols
-              .split(',')
-              .map(partition_col => partition_col.trim())
+            return {
+              ...targetKind,
+              partition_cols: partition_cols.split(',').map(partition_col => partition_col.trim())
+            }
           }
 
           return targetKind
@@ -181,6 +367,25 @@ const FeatureSetsPanelTargetStore = ({
       )
 
       setSelectedTargetKind(state => state.filter(kind => kind !== kindId))
+      setTargetsPathEditData(state => ({
+        ...state,
+        [kindId]: {
+          isEditMode: false,
+          isModified: false
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        [kindId === PARQUET
+          ? 'isOfflineTargetPathEditModeClosed'
+          : 'isOnlineTargetPathEditModeClosed']: true
+      }))
+      setValidation(state => ({
+        ...state,
+        [kindId === PARQUET
+          ? 'isOfflineTargetPathValid'
+          : 'isOnlineTargetPathValid']: true
+      }))
 
       if (
         kindId === checkboxModels.externalOffline.id &&
@@ -200,10 +405,10 @@ const FeatureSetsPanelTargetStore = ({
           ...state,
           [kindId]: { ...dataInitialState[kindId] }
         }))
-        setShowAdvanced({
-          ...isShowAdvancedInitialState,
+        setShowAdvanced(prev => ({
+          ...prev,
           [kindId]: false
-        })
+        }))
         setPartitionRadioButtonsState(state => ({
           ...state,
           [kindId]: 'districtKeys'
@@ -216,41 +421,49 @@ const FeatureSetsPanelTargetStore = ({
         })
       }
     } else {
+      const path =
+        kindId === EXTERNAL_OFFLINE
+          ? ''
+          : generatePath(
+              project,
+              featureStore.newFeatureSet.metadata.name,
+              dataInitialState[kindId].kind
+            )
       if (kindId === checkboxModels[kindId].id) {
         setData(state => ({
           ...state,
-          [kindId]: { ...dataInitialState[kindId] }
+          [kindId]: { ...dataInitialState[kindId], path }
         }))
       }
 
-      newTargets.push({ ...dataInitialState[kindId] })
+      newTargets.push({ ...dataInitialState[kindId], path })
       setSelectedTargetKind(state => [...state, kindId])
     }
 
     setNewFeatureSetTarget(newTargets)
   }
 
-  const handlePartitionRadioButtonClick = (value, targetKind) => {
+  const handlePartitionRadioButtonClick = (value, target) => {
     const keyBucketingNumber = value === 'districtKeys' ? 0 : 1
 
     setPartitionRadioButtonsState(state => ({
       ...state,
-      [targetKind]: value
+      [target]: value
     }))
     setData(state => ({
       ...state,
-      [targetKind]: {
-        ...state[targetKind],
+      [target]: {
+        ...state[target],
         key_bucketing_number: keyBucketingNumber
       }
     }))
     setNewFeatureSetTarget(
-      featureStore.newFeatureSet.spec.targets.map(target => {
-        if (target.name === targetKind) {
-          target.key_bucketing_number = keyBucketingNumber
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
+        if (targetKind.name === target) {
+          return { ...target, key_bucketing_number: keyBucketingNumber }
         }
 
-        return target
+        return targetKind
       })
     )
   }
@@ -263,7 +476,7 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
-          targetKind.time_partitioning_granularity = time
+          return { ...targetKind, time_partitioning_granularity: time }
         }
 
         return targetKind
@@ -322,29 +535,32 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
+          const target = { ...targetKind }
           if (typeId === 'byKey') {
             if (!selectedPartitionKind[kind].includes(typeId)) {
-              targetKind.key_bucketing_number = 0
+              target.key_bucketing_number = 0
             } else {
-              delete targetKind.key_bucketing_number
+              delete target.key_bucketing_number
             }
           }
 
           if (typeId === 'byTime') {
             if (!selectedPartitionKind[kind].includes(typeId)) {
-              targetKind.time_partitioning_granularity = 'hour'
+              target.time_partitioning_granularity = 'hour'
             } else {
-              delete targetKind.time_partitioning_granularity
+              delete target.time_partitioning_granularity
             }
           }
 
           if (typeId === 'byColumns') {
             if (!selectedPartitionKind[kind].includes(typeId)) {
-              targetKind.partition_cols = ''
+              target.partition_cols = ''
             } else {
-              delete targetKind.partition_cols
+              delete target.partition_cols
             }
           }
+
+          return target
         }
 
         return targetKind
@@ -435,11 +651,12 @@ const FeatureSetsPanelTargetStore = ({
     <FeatureSetsPanelTargetStoreView
       data={data}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
+      handleDiscardPathChange={handleDiscardPathChange}
       handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
       handleExternalOfflineKindTypeChange={handleExternalOfflineKindTypeChange}
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
-      handleOfflineKindPathOnBlur={handleOfflineKindPathOnBlur}
-      handleOnlineKindPathOnBlur={handleOnlineKindPathOnBlur}
+      handleOfflineKindPathChange={handleOfflineKindPathChange}
+      handleOnlineKindPathChange={handleOnlineKindPathChange}
       handlePartitionColsOnChange={handlePartitionColsOnChange}
       handlePartitionColsOnBlur={handlePartitionColsOnBlur}
       handlePartitionRadioButtonClick={handlePartitionRadioButtonClick}
@@ -453,6 +670,7 @@ const FeatureSetsPanelTargetStore = ({
       setData={setData}
       setValidation={setValidation}
       showAdvanced={showAdvanced}
+      targetsPathEditData={targetsPathEditData}
       triggerPartitionAdvancedCheckboxes={triggerPartitionAdvancedCheckboxes}
       triggerPartitionCheckbox={triggerPartitionCheckbox}
       validation={validation}
@@ -461,6 +679,8 @@ const FeatureSetsPanelTargetStore = ({
 }
 
 FeatureSetsPanelTargetStore.propTypes = {
+  project: PropTypes.string.isRequired,
+  setDisableButtons: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }

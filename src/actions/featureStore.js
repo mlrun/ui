@@ -13,6 +13,7 @@ import {
   FETCH_FEATURE_SETS_BEGIN,
   FETCH_FEATURE_SETS_FAILURE,
   FETCH_FEATURE_SETS_SUCCESS,
+  FETCH_FEATURE_SET_SUCCESS,
   FETCH_FEATURE_SUCCESS,
   FETCH_FEATURE_VECTORS_BEGIN,
   FETCH_FEATURE_VECTORS_FAILURE,
@@ -28,11 +29,16 @@ import {
   REMOVE_FEATURE_VECTOR,
   REMOVE_FEATURE_VECTORS,
   REMOVE_NEW_FEATURE_SET,
+  SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_KEY,
   SET_NEW_FEATURE_SET_DATA_SOURCE_KIND,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_TIME,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
   SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
   SET_NEW_FEATURE_SET_DESCRIPTION,
   SET_NEW_FEATURE_SET_LABELS,
@@ -42,15 +48,9 @@ import {
   SET_NEW_FEATURE_SET_TARGET,
   SET_NEW_FEATURE_SET_VERSION,
   START_FEATURE_SET_INGEST_BEGIN,
-  START_FEATURE_SET_INGEST_SUCCESS,
-  SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
-  SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
-  SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
-  SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
-  FETCH_FEATURE_SET_SUCCESS,
-  SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY,
-  CONFLICT_CODE
+  START_FEATURE_SET_INGEST_SUCCESS
 } from '../constants'
+import { CONFLICT_ERROR_STATUS_CODE, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
 import {
@@ -73,8 +73,10 @@ const featureStoreActions = {
       })
       .catch(error => {
         const message =
-          error.response.status === CONFLICT_CODE
+          error.response.status === CONFLICT_ERROR_STATUS_CODE
             ? 'Adding an already-existing FeatureSet'
+            : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You are not permitted to create new feature set.'
             : error.message
 
         dispatch(featureStoreActions.createNewFeatureSetFailure(message))
@@ -92,8 +94,7 @@ const featureStoreActions = {
   createNewFeatureSetSuccess: () => ({
     type: CREATE_NEW_FEATURE_SET_SUCCESS
   }),
-  createNewFeatureVector: data => () =>
-    featureStoreApi.createFeatureVector(data),
+  createNewFeatureVector: data => () => featureStoreApi.createFeatureVector(data),
   deleteFeatureVector: (project, featureVector) => () => {
     return featureStoreApi.deleteFeatureVector(project, featureVector)
   },
@@ -102,8 +103,7 @@ const featureStoreActions = {
       .getEntity(project, entityName)
       .then(response => {
         const filteredEntities = response.data.entities.filter(
-          responseItem =>
-            responseItem.feature_set_digest.metadata.name === entityMetadataName
+          responseItem => responseItem.feature_set_digest.metadata.name === entityMetadataName
         )
         const parsedEntities = parseFeatures(filteredEntities)
 
@@ -129,9 +129,7 @@ const featureStoreActions = {
     return featureStoreApi
       .getEntities(project, filters, config)
       .then(response => {
-        dispatch(
-          featureStoreActions.fetchEntitiesSuccess(response.data.entities)
-        )
+        dispatch(featureStoreActions.fetchEntitiesSuccess(response.data.entities))
 
         return response.data.entities
       })
@@ -157,9 +155,7 @@ const featureStoreActions = {
       .getFeatureSets(project, filters, config)
       .then(response => {
         dispatch(
-          featureStoreActions.fetchFeatureSetsSuccess(
-            parseFeatureSets(response.data?.feature_sets)
-          )
+          featureStoreActions.fetchFeatureSetsSuccess(parseFeatureSets(response.data?.feature_sets))
         )
 
         return response.data?.feature_sets
@@ -183,15 +179,11 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeatureSet(project, featureSet, tag)
       .then(response => {
-        const generatedFeatureSets = parseFeatureSets(
-          response.data?.feature_sets
-        )
+        const generatedFeatureSets = parseFeatureSets(response.data?.feature_sets)
 
         dispatch(
           featureStoreActions.fetchFeatureSetSuccess({
-            [getFeatureSetIdentifier(
-              generatedFeatureSets[0]
-            )]: generatedFeatureSets
+            [getFeatureSetIdentifier(generatedFeatureSets[0])]: generatedFeatureSets
           })
         )
 
@@ -209,15 +201,11 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeatureVector(project, featureVector, tag)
       .then(response => {
-        const generatedFeatureVectors = parseFeatureVectors(
-          response.data?.feature_vectors
-        )
+        const generatedFeatureVectors = parseFeatureVectors(response.data?.feature_vectors)
 
         dispatch(
           featureStoreActions.fetchFeatureVectorSuccess({
-            [getFeatureVectorIdentifier(
-              generatedFeatureVectors[0]
-            )]: generatedFeatureVectors
+            [getFeatureVectorIdentifier(generatedFeatureVectors[0])]: generatedFeatureVectors
           })
         )
 
@@ -265,9 +253,7 @@ const featureStoreActions = {
       .getFeature(project, featureName)
       .then(response => {
         const filteredFeatures = response.data.features.filter(
-          responseItem =>
-            responseItem.feature_set_digest.metadata.name ===
-            featureMetadataName
+          responseItem => responseItem.feature_set_digest.metadata.name === featureMetadataName
         )
         const parsedFeatures = parseFeatures(filteredFeatures)
 
@@ -293,9 +279,7 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeatures(project, filters, config)
       .then(response => {
-        dispatch(
-          featureStoreActions.fetchFeaturesSuccess(response.data.features)
-        )
+        dispatch(featureStoreActions.fetchFeaturesSuccess(response.data.features))
 
         return response.data.features
       })
@@ -314,10 +298,8 @@ const featureStoreActions = {
     type: FETCH_FEATURES_SUCCESS,
     payload: features
   }),
-  fetchFeatureSetsTags: project => () =>
-    featureStoreApi.fetchFeatureSetsTags(project),
-  fetchFeatureVectorsTags: project => () =>
-    featureStoreApi.fetchFeatureVectorsTags(project),
+  fetchFeatureSetsTags: project => () => featureStoreApi.fetchFeatureSetsTags(project),
+  fetchFeatureVectorsTags: project => () => featureStoreApi.fetchFeatureVectorsTags(project),
   removeEntity: entities => ({
     type: REMOVE_ENTITY,
     payload: entities
@@ -436,7 +418,7 @@ const featureStoreActions = {
       })
       .catch(error => {
         const message =
-          error.response.status === CONFLICT_CODE
+          error.response.status === CONFLICT_ERROR_STATUS_CODE
             ? 'Adding an already-existing FeatureSet'
             : error.message
 
@@ -451,20 +433,8 @@ const featureStoreActions = {
   startFeatureSetIngestSuccess: () => ({
     type: START_FEATURE_SET_INGEST_SUCCESS
   }),
-  updateFeatureStoreData: (
-    projectName,
-    featureData,
-    tag,
-    data,
-    pageTab
-  ) => () => {
-    return featureStoreApi.updateFeatureStoreData(
-      projectName,
-      featureData,
-      tag,
-      data,
-      pageTab
-    )
+  updateFeatureStoreData: (projectName, featureData, tag, data, pageTab) => () => {
+    return featureStoreApi.updateFeatureStoreData(projectName, featureData, tag, data, pageTab)
   },
   updateFeatureVectorData: data => () => {
     return featureStoreApi.updateFeatureVectorData(data)

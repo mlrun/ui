@@ -1,7 +1,14 @@
 import { By } from 'selenium-webdriver'
+import actionMenu from '../components/action-menu.component'
 import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
-import { generateDropdownGroup } from '../../common-tools/common-tools'
+import labelComponent from '../components/label.component'
+import {
+  generateInputGroup,
+  generateLabelGroup,
+  generateDropdownGroup
+} from '../../common-tools/common-tools'
+import inputGroup from '../components/input-group.component'
 
 const createNewObject = dropdownComponent(
   generateDropdownGroup(
@@ -11,6 +18,14 @@ const createNewObject = dropdownComponent(
     false
   )
 )
+
+const actionMenuStructure = {
+  root: '.actions-menu__container',
+  menuElements: {
+    open_button: 'button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
 
 const projectDashboardRealtimeFunctionsTable = {
   root: '.project-data-card:nth-of-type(2) .project-data-card__table',
@@ -50,7 +65,7 @@ const projectJobsAndWorkflows = {
     row: {
       root: '.project-data-card__table-row',
       fields: {
-        name: '.project-data-card__table-cell:nth-of-type(1) .data-ellipsis',
+        name: '.project-data-card__table-cell:nth-of-type(1) .link',
         type: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis',
         status: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis',
         started_at:
@@ -105,39 +120,259 @@ const generalInfoRealTimeFunctionsCardStat = {
   }
 }
 
-const generalInfoQuickLinks = {
-  root: '.navbar .navbar__body .navbar-links',
+const DataCollectionActionsTable = {
+  root:
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-actions:nth-of-type(1)',
   header: {},
   body: {
     row: {
-      root: '.nav-link',
+      root: '.project-overview-actions__item',
       fields: {
-        link: '.nav-link__button'
+        name: '.link'
+      }
+    }
+  }
+}
+
+const DataCollectionAdditionalActionsTable = {
+  root:
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-actions:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.project-overview-actions__item',
+      fields: {
+        name: '.link'
+      }
+    }
+  }
+}
+
+const DevelopmentActionsTable = {
+  root:
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__actions',
+  header: {},
+  body: {
+    root: '.project-overview-actions',
+    row: {
+      root: '.project-overview-actions__item',
+      fields: {
+        name: '.link'
+      }
+    }
+  }
+}
+
+const DeploymetActionsTable = {
+  root:
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__actions',
+  header: {},
+  body: {
+    root: '.project-overview-actions',
+    row: {
+      root: '.project-overview-actions__item',
+      fields: {
+        name: '.link'
+      }
+    }
+  }
+}
+
+const DataCollectionLinksTable = {
+  root:
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__bottom',
+  header: {},
+  body: {
+    root: '.additional-links',
+    row: {
+      root: '.link',
+      fields: {
+        name: ''
+      }
+    }
+  }
+}
+
+const DevelopmentLinksTable = {
+  root:
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__bottom',
+  header: {},
+  body: {
+    root: '.additional-links',
+    row: {
+      root: '.link',
+      fields: {
+        name: ''
+      }
+    }
+  }
+}
+
+const DeploymetLinksTable = {
+  root:
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__bottom',
+  header: {},
+  body: {
+    root: '.additional-links',
+    row: {
+      root: '.link',
+      fields: {
+        name: ''
+      }
+    }
+  }
+}
+
+const consumerGroupsTable = {
+  root: '.page-content .table',
+  header: {
+    root: '.table-head',
+    sorters: {
+      consumer_group_name: '.table-head__item:nth-of-type(1) .data-ellipsis',
+      stream: '.table-head__item:nth-of-type(2) .data-ellipsis',
+      function: '.table-head__item:nth-of-type(3) .data-ellipsis'
+    }
+  },
+  body: {
+    root: '.table-body',
+    row: {
+      root: '.table-body__row',
+      fields: {
+        consumer_group_name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
+        stream: '.table-body__cell:nth-of-type(2) .data-ellipsis',
+        function: '.table-body__cell:nth-of-type(3) a.data-ellipsis'
+      }
+    }
+  }
+}
+
+const shardLagsTable = {
+  root: '.page-content .table',
+  header: {
+    root: '.table-head',
+    sorters: {
+      shard_name: '.table-head__item:nth-of-type(1) .data-ellipsis',
+      lag: '.table-head__item:nth-of-type(2) .data-ellipsis',
+      last_sequence: '.table-head__item:nth-of-type(3) .data-ellipsis',
+      committed_offset: '.table-head__item:nth-of-type(4) .data-ellipsis'
+    }
+  },
+  body: {
+    root: '.table-body',
+    row: {
+      root: '.table-body__row',
+      fields: {
+        shard_name: '.table-body__cell:nth-of-type(1) .data-ellipsis',
+        lag: '.table-body__cell:nth-of-type(2) .data-ellipsis',
+        last_sequence: '.table-body__cell:nth-of-type(3) .data-ellipsis',
+        committed_offset: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
       }
     }
   }
 }
 
 module.exports = {
-  Project_Navigation_Toggler: By.css(
-    '.navbar .navbar__toggler-button .navbar__toggler-icon'
-  ),
-  Project_Settings_Button: By.css(
-    '.navbar .navbar__body .navbar__additional .navbar-links .nav-link__button'
-  ),
-  Create_New: createNewObject,
-  Refresh_Button: By.css('.main-info__toolbar .refresh button[id=refresh]'),
-  Dashboard_Realtime_Functions_Table: commonTable(
-    projectDashboardRealtimeFunctionsTable
-  ),
-  Jobs_And_Workflows: commonTable(projectJobsAndWorkflows),
-  Mono_Values_Cards: commonTable(generalInfoMonoValueCards),
-  Jobs_Info_Card_Statistics: commonTable(generalInfoJobsCardStat),
-  Real_Time_Functions_Card_Statistics: commonTable(
-    generalInfoRealTimeFunctionsCardStat
-  ),
-  Add_Source_URL_Label: By.css('.general-info .general-info__source'),
-  General_Info_Quick_Links: commonTable(generalInfoQuickLinks),
-  Owner_Link: By.css('.project__content .general-info .owner-row .link'),
-  Members_Link: By.css('.project__content .general-info .members-row .link')
+  project: {
+    Create_New: createNewObject,
+    Refresh_Button: By.css('.main-info__toolbar .refresh button[id=refresh]'),
+    Dashboard_Realtime_Functions_Table: commonTable(
+      projectDashboardRealtimeFunctionsTable
+    ),
+    Jobs_And_Workflows: commonTable(projectJobsAndWorkflows),
+    See_All_Jobs_Link: By.css(
+      '.project-data-card:nth-of-type(1) .project-data-card__see-all-link'
+    ),
+    Mono_Values_Cards: commonTable(generalInfoMonoValueCards),
+    Jobs_Info_Card_Statistics: commonTable(generalInfoJobsCardStat),
+    Real_Time_Functions_Card_Statistics: commonTable(
+      generalInfoRealTimeFunctionsCardStat
+    ),
+    Add_Source_URL_Label: By.css('.general-info .general-info__source')
+  },
+  demoProject: {
+    Header_Name_Label: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__header .project-overview__header-title',
+        ' ',
+        '.status-icon'
+      )
+    ),
+    Header_Created_Time: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__header .project-overview__header-subtitle',
+        'div:nth-of-type(1)'
+      )
+    ),
+    Header_Project_Description: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__header .project-overview__header-description',
+        ' '
+      )
+    ),
+    Data_Collection_Header: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__header',
+        'h3'
+      )
+    ),
+    Data_Collection_Description: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__header',
+        '.project-overview-card__header-subtitle'
+      )
+    ),
+    Data_Collection_Actions_Table: commonTable(DataCollectionActionsTable),
+    Data_Collection_Additional_Actions_Table: commonTable(
+      DataCollectionAdditionalActionsTable
+    ),
+    Data_Collection_Links_Table: commonTable(DataCollectionLinksTable),
+    Data_Collection_Additional_Actions_Button: By.css(
+      '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__actions .project-overview-card__actions-toogler'
+    ),
+    Development_Header: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__header',
+        'h3'
+      )
+    ),
+    Development_Description: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__header',
+        '.project-overview-card__header-subtitle'
+      )
+    ),
+    Development_Actions_Table: commonTable(DevelopmentActionsTable),
+    Development_Links_Table: commonTable(DevelopmentLinksTable),
+    Deployment_Header: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__header',
+        'h3'
+      )
+    ),
+    Deployment_Description: labelComponent(
+      generateLabelGroup(
+        '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__header',
+        '.project-overview-card__header-subtitle'
+      )
+    ),
+    Deployment_Actions_Table: commonTable(DeploymetActionsTable),
+    Deployment_Links_Table: commonTable(DeploymetLinksTable)
+  },
+  consumerGroups: {
+    Arrow_Back: By.css('button > .page-header__back-btn'),
+    Title: By.css('.page-header__title-wrapper .page-header__title'),
+    Description: By.css(
+      '.page-header__title-wrapper .page-header__description'
+    ),
+    Search_Input: inputGroup(
+      generateInputGroup('.page-actions .search-container')
+    ),
+    Consumer_Groups_Table: commonTable(consumerGroupsTable),
+    Shard_Lags_Table: commonTable(shardLagsTable),
+    Refresh_Button: By.css('.page-actions .round-icon-cp')
+  }
 }

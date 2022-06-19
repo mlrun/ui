@@ -2,24 +2,23 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import ContentMenu from '../../elements/ContentMenu/ContentMenu'
-import Loader from '../../common/Loader/Loader'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
+import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import Notification from '../../common/Notification/Notification'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
-import NoData from '../../common/NoData/NoData'
-import YamlModal from '../../common/YamlModal/YamlModal'
-import Notification from '../../common/Notification/Notification'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
-import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import YamlModal from '../../common/YamlModal/YamlModal'
+import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
-import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 import './projects.scss'
 
@@ -34,9 +33,9 @@ const ProjectsView = ({
   filteredProjects,
   filterMatches,
   handleCreateProject,
+  handleSelectSortOption,
   isDescendingOrder,
   isNameValid,
-  match,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -50,8 +49,8 @@ const ProjectsView = ({
   setNewProjectLabels,
   setNewProjectName,
   setSelectedProjectsState,
-  setSortProjectId,
-  sortProjectId
+  sortProjectId,
+  urlParams
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -86,55 +85,59 @@ const ProjectsView = ({
             label: confirmData.btnConfirmLabel,
             variant: confirmData.btnConfirmType
           }}
+          isOpen={confirmData}
           header={confirmData.header}
           message={confirmData.message}
         />
       )}
       <div className="projects__header">
-        <Breadcrumbs match={match} />
+        <Breadcrumbs />
       </div>
       <div className="projects__wrapper">
         <div className="projects-content-header">
-          <div className="projects-content-header-item">
-            <ContentMenu
-              activeTab={selectedProjectsState}
-              match={match}
-              screen="active"
-              tabs={projectsStates}
-              onClick={setSelectedProjectsState}
-            />
+          <div className="projects-content-header__col">
+            <div className="projects-content-header-item">
+              <ContentMenu
+                activeTab={selectedProjectsState}
+                screen="active"
+                tabs={projectsStates}
+                onClick={setSelectedProjectsState}
+              />
 
-            <Sort
-              isDescendingOrder={isDescendingOrder}
-              onSelectOption={setSortProjectId}
-              options={projectsSortOptions}
-              selectedId={sortProjectId}
-              setIsDescendingOrder={setIsDescendingOrder}
-            />
+              <Sort
+                isDescendingOrder={isDescendingOrder}
+                onSelectOption={handleSelectSortOption}
+                options={projectsSortOptions}
+                selectedId={sortProjectId}
+                setIsDescendingOrder={setIsDescendingOrder}
+              />
+            </div>
           </div>
-          <div className="projects-content-header-item">
-            <Search
-              className="projects-search"
-              matches={filterMatches}
-              onChange={setFilterByName}
-              placeholder="Search projects..."
-              setMatches={setFilterMatches}
-              value={filterByName}
-            />
-            <PageActionsMenu
-              actionsMenuHeader={'New Project'}
-              onClick={() => setCreateProject(true)}
-              showActionsMenu
-              variant={SECONDARY_BUTTON}
-            />
-            <RoundedIcon
-              onClick={refreshProjects}
-              className="panel-title__btn_close"
-              tooltipText="Refresh"
-              data-testid="pop-up-close-btn"
-            >
-              <RefreshIcon />
-            </RoundedIcon>
+          <div className="projects-content-header__col projects-content-header__col-right">
+            <div className="projects-content-header-item">
+              <Search
+                className="projects-search"
+                matches={filterMatches}
+                onChange={setFilterByName}
+                placeholder="Search projects..."
+                setMatches={setFilterMatches}
+                value={filterByName}
+              />
+              <PageActionsMenu
+                actionsMenuHeader={'New Project'}
+                onClick={() => setCreateProject(true)}
+                showActionsMenu
+                variant={PRIMARY_BUTTON}
+              />
+              <RoundedIcon
+                onClick={refreshProjects}
+                className="panel-title__btn_close"
+                tooltipText="Refresh"
+                data-testid="pop-up-close-btn"
+              >
+                <RefreshIcon />
+              </RoundedIcon>
+            </div>
           </div>
         </div>
         {projectStore.projects.length > 0 && !projectStore.error ? (
@@ -142,8 +145,7 @@ const ProjectsView = ({
             {filterByName.length > 0 &&
             (filterMatches.length === 0 || filteredProjects.length === 0) ? (
               <NoData />
-            ) : selectedProjectsState === 'archived' &&
-              filteredProjects.length === 0 ? (
+            ) : selectedProjectsState === 'archived' && filteredProjects.length === 0 ? (
               <div className="no-filtered-data">No archived projects.</div>
             ) : (
               filteredProjects.map(project => {
@@ -165,10 +167,7 @@ const ProjectsView = ({
         )}
       </div>
       {convertedYaml.length > 0 && (
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={convertToYaml}
-        />
+        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={convertToYaml} />
       )}
       <Notification />
     </div>
@@ -190,8 +189,8 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
+  handleSelectSortOption: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
@@ -203,8 +202,8 @@ ProjectsView.propTypes = {
   setNameValid: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
-  setSortProjectId: PropTypes.func.isRequired,
-  sortProjectId: PropTypes.string.isRequired
+  sortProjectId: PropTypes.string.isRequired,
+  urlParams: PropTypes.shape({}).isRequired
 }
 
 export default ProjectsView

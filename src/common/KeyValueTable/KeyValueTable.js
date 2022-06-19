@@ -11,7 +11,9 @@ const KeyValueTable = ({
   content,
   deleteItem,
   defaultKeyValue,
+  disabled,
   editItem,
+  isKeyEditable,
   isKeyRequired,
   isValueRequired,
   keyHeader,
@@ -20,6 +22,7 @@ const KeyValueTable = ({
   keyType,
   valueHeader,
   valueLabel,
+  valueType,
   withEditMode
 }) => {
   const [isAddNewItem, setIsAddNewItem] = useState(false)
@@ -143,6 +146,8 @@ const KeyValueTable = ({
     setKey(defaultKeyValue || '')
     setValue('')
     setIsAddNewItem(false)
+    setEditMode(false)
+
     setValidation({
       isKeyValid: true,
       isValueValid: true,
@@ -160,10 +165,12 @@ const KeyValueTable = ({
       addNewItemLabel={addNewItemLabel}
       content={content}
       deleteItem={deleteItem}
+      disabled={disabled}
       handleEditItem={handleEditItem}
       handleResetForm={handleResetForm}
       isAddNewItem={isAddNewItem}
       isEditMode={isEditMode}
+      isKeyEditable={isKeyEditable}
       isKeyNotUnique={isKeyNotUnique}
       isKeyRequired={isKeyRequired}
       isValueRequired={isValueRequired}
@@ -184,6 +191,7 @@ const KeyValueTable = ({
       validation={validation}
       valueHeader={valueHeader}
       valueLabel={valueLabel}
+      valueType={valueType}
       withEditMode={withEditMode}
     />
   )
@@ -192,6 +200,7 @@ const KeyValueTable = ({
 KeyValueTable.defaultProps = {
   className: '',
   defaultKeyValue: '',
+  disabled: false,
   editItem: () => {},
   isKeyRequired: false,
   isValueRequired: false,
@@ -199,6 +208,7 @@ KeyValueTable.defaultProps = {
   keyOptions: [],
   keyType: 'input',
   valueLabel: 'Value',
+  valueType: 'text',
   withEditMode: false
 }
 
@@ -214,6 +224,7 @@ KeyValueTable.propTypes = {
   ).isRequired,
   defaultKeyValue: PropTypes.string,
   deleteItem: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
   editItem: PropTypes.func,
   isKeyRequired: PropTypes.bool,
   isValueRequired: PropTypes.bool,
@@ -228,6 +239,7 @@ KeyValueTable.propTypes = {
   keyType: PropTypes.string,
   valueHeader: PropTypes.string.isRequired,
   valueLabel: PropTypes.string,
+  valueType: PropTypes.string,
   withEditMode: PropTypes.bool
 }
 

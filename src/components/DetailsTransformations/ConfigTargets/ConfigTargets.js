@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Arrow } from '../../../images/arrow.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import Accordion from '../../../common/Accordion/Accordion'
 import Select from '../../../common/Select/Select'
 import './configTargets.scss'

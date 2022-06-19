@@ -1,11 +1,11 @@
 import { expect } from 'chai'
 import { differenceWith, isEqual } from 'lodash'
 import {
+  getOptionValues,
   openDropdown,
-  selectOptionInDropdownWithoutCheck,
-  getOptionValues
+  selectOptionInDropdownWithoutCheck
 } from './dropdown.action'
-import { hoverComponent, getElementText } from './common.action'
+import { getElementText, hoverComponent } from './common.action'
 
 import { DataFrame } from 'pandas-js'
 
@@ -51,7 +51,7 @@ const action = {
       `Value "${value}" does not includes in all values: [${arr}]`
     )
   },
-  isContainsSubstringInColumnDropdownCels: async function(
+  isContainsSubstringInColumnDropdownCells: async function(
     driver,
     table,
     column,
@@ -106,13 +106,29 @@ const action = {
   isDatetimeCelsValueInRange: async function(
     driver,
     table,
-    column,
+    columnName,
     fromDateTime,
     toDateTime
   ) {
-    // const arr = await getColumnValues(driver, table, column)
-    // TODO: wait while defect with year will be fixed
-    console.log('TODO: Should be implemented')
+    const arr = await getColumnValues(driver, table, columnName)
+
+    const minDate = new Date(fromDateTime)
+    const maxDate = new Date(toDateTime)
+
+    const minStamp = Date.parse(
+      minDate.toString().slice(0, 11) + minDate.toString().slice(16, 24)
+    )
+    const maxStamp = Date.parse(
+      maxDate.toString().slice(0, 11) + maxDate.toString().slice(16, 24)
+    )
+
+    const flag = arr.every(
+      item => minStamp < Date.parse(item) && maxStamp > Date.parse(item)
+    )
+    expect(flag).equal(
+      true,
+      `values "${arr}" is not in range: (${fromDateTime}..${toDateTime})`
+    )
   },
   findRowIndexesByColumnValue: async function(
     driver,
@@ -122,6 +138,7 @@ const action = {
   ) {
     const arr = await getColumnValues(driver, table, columnName)
     const indexes = []
+
     for (let indx in arr) {
       if (arr[indx] === value) {
         indexes.push(parseInt(indx) + 1)
@@ -204,7 +221,10 @@ const action = {
     const arr = await getColumnValues(driver, table, columnName)
     const diff = differenceWith(arr, values, isEqual)
 
-    expect(diff.length).equal(0, 'Diff arrays: ' + diff)
+    expect(diff.length).equal(
+      0,
+      `Arrays not equal: web "${arr}" vs. const "${values} diff "${diff}"`
+    )
   },
   getAllCellsWithAttribute: async function(driver, table, attribute) {
     const result = []
@@ -283,6 +303,24 @@ const action = {
     }
 
     return new DataFrame(result)
+  },
+  putToTestContextCellParameters: async function(
+    driver,
+    testContext,
+    table,
+    index,
+    column,
+    attribute
+  ) {
+    const cellElement = await driver.findElement(
+      table.tableFields[column](index)
+    )
+
+    testContext[column] = await cellElement.getText()
+
+    if (attribute) {
+      testContext[attribute] = await cellElement.getAttribute(attribute)
+    }
   }
 }
 

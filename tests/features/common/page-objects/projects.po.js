@@ -4,9 +4,11 @@ import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
 import {
   generateDropdownGroup,
-  generateInputGroup
+  generateInputGroup,
+  generateLabelGroup
 } from '../../common-tools/common-tools'
 import inputGroup from '../components/input-group.component'
+import labelComponent from '../components/label.component'
 
 const ProjectsTableSelector = {
   root: '.projects .projects-content',
@@ -19,10 +21,24 @@ const ProjectsTableSelector = {
           '.project-card__general-info .project-card__header .project-card__header-title .data-ellipsis.tooltip-wrapper.project-card__title',
         description:
           '.project-card__general-info .project-card__content .project-card__description .data-ellipsis',
-        running:
-          '.project-card__content .project-card__statistic .statistics_running',
-        failed:
-          '.project-card__content .project-data-card__statistics-item .statistics_default',
+        running: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '.project-card__content .project-card__statistic .project-data-card__statistics-item:nth-of-type(1)',
+            false,
+            false,
+            '.tooltip .tooltip__text span'
+          )
+        },
+        failed: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '.project-card__content .project-card__statistic .project-data-card__statistics-item:nth-of-type(2)',
+            false,
+            false,
+            '.tooltip .tooltip__text span'
+          )
+        },
         creation: '.project-card__header-title .project-card__info span',
         action_menu: {
           componentType: actionMenu,
@@ -41,7 +57,7 @@ const ProjectsTableSelector = {
 
 module.exports = {
   New_Project_Button: By.css(
-    '.projects__wrapper .projects-content-header-item .page-actions-container .btn-secondary'
+    '.projects__wrapper .projects-content-header-item .page-actions-container .btn_register'
   ),
   Refresh_Projects_Button: By.css(
     '.projects-content-header .data-ellipsis button'

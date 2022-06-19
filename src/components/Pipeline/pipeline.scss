@@ -1,4 +1,4 @@
-@import '../../scss/borders';
+@import '~igz-controls/scss/borders';
 
 .pipeline-container {
   display: flex;
@@ -47,7 +47,7 @@
         }
 
         &-value {
-          width: 100%;
+          overflow: hidden;
         }
       }
     }

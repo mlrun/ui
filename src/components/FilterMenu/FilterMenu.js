@@ -1,23 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
-import Select from '../../common/Select/Select'
-import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
-import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import Input from '../../common/Input/Input'
+import Select from '../../common/Select/Select'
 import TagFilter from '../../common/TagFilter/TagFilter'
+import { Button, RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
-import { ReactComponent as CollapseIcon } from '../../images/collapse.svg'
-import { ReactComponent as ExpandIcon } from '../../images/expand.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
+import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
+import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 
 import {
   DATE_RANGE_TIME_FILTER,
+  ENTITIES_FILTER,
   GROUP_BY_FILTER,
   GROUP_BY_NONE,
   ITERATIONS_FILTER,
@@ -42,23 +42,27 @@ import './filterMenu.scss'
 
 const FilterMenu = ({
   actionButton,
+  cancelRequest,
+  changes,
   expand,
   filters,
   filtersStore,
   handleExpandAll,
-  match,
   onChange,
   page,
   projectStore,
   removeFilters,
   setFilterProjectOptions,
   setFilters,
+  tab,
   withoutExpandButton
 }) => {
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
+  const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
-  const history = useHistory()
+  const navigate = useNavigate()
+  const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
 
   useEffect(() => {
@@ -66,16 +70,18 @@ const FilterMenu = ({
       removeFilters()
       setLabels('')
       setName('')
+      setEntities('')
       setTagOptions(tagFilterOptions)
     }
-  }, [removeFilters, match.params.pageTab, match.params.projectName, page])
+  }, [removeFilters, params.pageTab, params.projectName, page, params.jobName])
 
   useEffect(() => {
-    if (
-      filters.find(
-        filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER
-      )
-    ) {
+    setLabels(filtersStore.labels)
+    setName(filtersStore.name)
+  }, [filtersStore.labels, filtersStore.name])
+
+  useEffect(() => {
+    if (filters.find(filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER)) {
       if (filtersStore.tagOptions.length > 0) {
         setTagOptions(() => {
           const defaultOptionsTags = tagFilterOptions.map(option => option.id)
@@ -106,35 +112,36 @@ const FilterMenu = ({
       filters.some(filter => filter.type === PROJECT_FILTER)
     ) {
       setFilterProjectOptions(
-        generateProjectsList(
-          projectStore.projectsNames.data,
-          match.params.projectName
-        )
+        generateProjectsList(projectStore.projectsNames.data, params.projectName)
       )
       setFilters({
-        project: match.params.projectName
+        project: params.projectName
       })
     }
   }, [
     filters,
     filtersStore.projectOptions.length,
-    match.params.projectName,
+    params.projectName,
     projectStore.projectsNames.data,
     setFilterProjectOptions,
     setFilters
   ])
 
   const applyChanges = (data, isRefreshed) => {
-    if ((match.params.jobId || match.params.name) && !isRefreshed) {
-      history.push(
-        `/projects/${match.params.projectName}/${page.toLowerCase()}${
-          match.params.pageTab ? `/${match.params.pageTab}` : ''
-        }`
-      )
-    }
+    if (isRefreshed && changes.counter > 0) {
+      cancelRequest('cancel')
+    } else {
+      if ((params.jobId || params.name) && !isRefreshed) {
+        navigate(
+          `/projects/${params.projectName}/${page.toLowerCase()}${
+            params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+          }`
+        )
+      }
 
-    handleExpandAll(true)
-    onChange(data)
+      handleExpandAll && handleExpandAll(true)
+      onChange(data)
+    }
   }
 
   const handleSelectOption = (item, filter) => {
@@ -172,12 +179,14 @@ const FilterMenu = ({
     if (event.keyCode === KEY_CODES.ENTER) {
       setFilters({
         labels,
-        name
+        name,
+        entities
       })
       applyChanges({
         ...filtersStore,
         labels,
-        name
+        name,
+        entities
       })
     }
   }
@@ -185,7 +194,8 @@ const FilterMenu = ({
   const onBlur = () => {
     setFilters({
       labels,
-      name
+      name,
+      entities
     })
   }
 
@@ -224,8 +234,7 @@ const FilterMenu = ({
   }
 
   const handleShowUntagged = showUntagged => {
-    const showUntaggedValue =
-      filtersStore.showUntagged === showUntagged ? '' : showUntagged
+    const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
     setFilters({
       showUntagged: showUntaggedValue
     })
@@ -239,108 +248,122 @@ const FilterMenu = ({
     <>
       <div className="filters">
         {filters.map(filter => {
-          switch (filter.type) {
-            case TREE_FILTER:
-            case TAG_FILTER:
-              return (
-                <TagFilter
-                  key={filter.type}
-                  label={filter.label}
-                  match={match}
-                  onChange={item => handleSelectOption(item, filter)}
-                  page={page}
-                  tagFilterOptions={tagOptions}
-                  value={filtersStore[TAG_FILTER]}
-                />
-              )
-            case LABELS_FILTER:
-              return (
-                <Input
-                  density="dense"
-                  key={filter.type}
-                  label={filter.label}
-                  onChange={setLabels}
-                  onBlur={onBlur}
-                  onKeyDown={onKeyDown}
-                  placeholder="key1,key2=value,..."
-                  type="text"
-                  value={labels}
-                />
-              )
-            case NAME_FILTER:
-              return (
-                <Input
-                  density="dense"
-                  key={filter.type}
-                  label={filter.label}
-                  onChange={setName}
-                  onBlur={onBlur}
-                  onKeyDown={onKeyDown}
-                  type="text"
-                  value={name}
-                />
-              )
-            case DATE_RANGE_TIME_FILTER:
-              return (
-                <DatePicker
-                  date={filtersStore.dates.value[0]}
-                  dateTo={filtersStore.dates.value[1]}
-                  key={filter.type}
-                  label={filter.label}
-                  onChange={handleChangeDates}
-                  type="date-range-time"
-                  withOptions
-                />
-              )
-            case ITERATIONS_FILTER:
-              return (
-                <CheckBox
-                  key={filter.type}
-                  item={{ label: filter.label, id: '' }}
-                  onChange={handleIter}
-                  selectedId={filtersStore.iter}
-                />
-              )
-            case SHOW_UNTAGGED_FILTER:
-              return (
-                <CheckBox
-                  key={filter.type}
-                  className="filters-checkbox"
-                  item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
-                  onChange={handleShowUntagged}
-                  selectedId={filtersStore.showUntagged}
-                />
-              )
-            case PROJECT_FILTER:
-              return (
-                <Select
-                  density="dense"
-                  className={''}
-                  label={filter.label}
-                  key={filter.type}
-                  onClick={project => handleSelectOption(project, filter)}
-                  options={filtersStore.projectOptions}
-                  selectedId={filtersStore.project}
-                />
-              )
-            default:
-              return (
-                <Select
-                  density="dense"
-                  className={
-                    filter.type === PERIOD_FILTER ? 'period-filter' : ''
-                  }
-                  label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
-                  key={filter.type}
-                  onClick={item => handleSelectOption(item, filter)}
-                  options={filter.options || selectOptions[filter.type]}
-                  selectedId={
-                    (filter.type === STATUS_FILTER && filtersStore.state) ||
-                    (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
-                    (filter.type === SORT_BY && filtersStore.sortBy)
-                  }
-                />
-              )
+          if (!filter.hidden) {
+            switch (filter.type) {
+              case TREE_FILTER:
+              case TAG_FILTER:
+                return (
+                  <TagFilter
+                    key={filter.type}
+                    label={filter.label}
+                    onChange={item => handleSelectOption(item, filter)}
+                    page={page}
+                    tagFilterOptions={tagOptions}
+                    value={filtersStore[TAG_FILTER]}
+                  />
+                )
+              case LABELS_FILTER:
+                return (
+                  <Input
+                    density="dense"
+                    key={filter.type}
+                    label={filter.label}
+                    onChange={setLabels}
+                    onBlur={onBlur}
+                    onKeyDown={onKeyDown}
+                    placeholder="key1,key2=value,..."
+                    type="text"
+                    value={labels}
+                  />
+                )
+              case NAME_FILTER:
+                return (
+                  <Input
+                    density="dense"
+                    key={filter.type}
+                    label={filter.label}
+                    onChange={setName}
+                    onBlur={onBlur}
+                    onKeyDown={onKeyDown}
+                    type="text"
+                    value={name}
+                  />
+                )
+              case ENTITIES_FILTER:
+                return (
+                  <Input
+                    density="dense"
+                    key={filter.type}
+                    label={filter.label}
+                    onChange={setEntities}
+                    onBlur={onBlur}
+                    onKeyDown={onKeyDown}
+                    type="text"
+                    value={entities}
+                  />
+                )
+              case DATE_RANGE_TIME_FILTER:
+                return (
+                  <DatePicker
+                    date={filtersStore.dates.value[0]}
+                    dateTo={filtersStore.dates.value[1]}
+                    key={filter.type}
+                    label={filter.label}
+                    onChange={handleChangeDates}
+                    type="date-range-time"
+                    withOptions
+                  />
+                )
+              case ITERATIONS_FILTER:
+                return (
+                  <CheckBox
+                    key={filter.type}
+                    item={{ label: filter.label, id: '' }}
+                    onChange={handleIter}
+                    selectedId={filtersStore.iter}
+                  />
+                )
+              case SHOW_UNTAGGED_FILTER:
+                return (
+                  <CheckBox
+                    key={filter.type}
+                    className="filters-checkbox"
+                    item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
+                    onChange={handleShowUntagged}
+                    selectedId={filtersStore.showUntagged}
+                  />
+                )
+              case PROJECT_FILTER:
+                return (
+                  <Select
+                    density="dense"
+                    className={''}
+                    label={filter.label}
+                    key={filter.type}
+                    onClick={project => handleSelectOption(project, filter)}
+                    options={filtersStore.projectOptions}
+                    selectedId={filtersStore.project}
+                  />
+                )
+              default:
+                return (
+                  <Select
+                    density="dense"
+                    className={filter.type === PERIOD_FILTER ? 'period-filter' : ''}
+                    label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
+                    key={filter.type}
+                    onClick={item => handleSelectOption(item, filter)}
+                    options={filter.options || selectOptions[filter.type]}
+                    selectedId={
+                      (filter.type === STATUS_FILTER && filtersStore.state) ||
+                      (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
+                      (filter.type === SORT_BY && filtersStore.sortBy)
+                    }
+                  />
+                )
+            }
+          } else {
+            return null
           }
         })}
       </div>
@@ -381,17 +404,30 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   actionButton: null,
+  cancelRequest: () => {},
+  changes: {},
+  expand: false,
+  handleExpandAll: () => {},
+  tab: '',
   withoutExpandButton: false
 }
 
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
+  cancelRequest: PropTypes.func,
+  changes: PropTypes.shape({}),
+  expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  handleExpandAll: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
+  page: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   withoutExpandButton: PropTypes.bool
 }
 
 export default connect(
-  ({ filtersStore, projectStore }) => ({
+  ({ detailsStore, filtersStore, projectStore }) => ({
+    changes: detailsStore.changes,
     filtersStore,
     projectStore
   }),

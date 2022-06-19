@@ -3,13 +3,12 @@ import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 const EditableAdvancedRow = ({
   content,
@@ -142,7 +141,6 @@ EditableAdvancedRow.propTypes = {
   content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
-  match: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setEditItem: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,

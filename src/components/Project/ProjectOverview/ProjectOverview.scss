@@ -1,18 +1,18 @@
-@import '../../../scss/colors';
-@import '../../../scss/borders';
-@import '../../../scss/mixins';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/mixins';
 
 .project-overview {
-  background-color: $white;
   width: 100%;
+  background-color: $white;
 
   &__header {
     display: flex;
     flex-flow: column nowrap;
+    min-height: 300px;
+    padding: 2.2em 4em 5em;
     color: $white;
     line-height: 1.4;
-    padding: 2.2em 4em 5em;
-    min-height: 300px;
 
     @include gradient('page');
 
@@ -20,29 +20,29 @@
       display: flex;
       flex-flow: row wrap;
       align-items: center;
-      font-size: 3.2em;
-      font-weight: 300;
-      line-height: 1.3;
       margin: 0;
+      font-weight: 300;
+      font-size: 3.2em;
+      line-height: 1.3;
     }
 
     &-description {
-      margin: 0;
       max-width: 75%;
+      margin: 0;
     }
 
     &-subtitle {
       display: flex;
-      margin-bottom: 1.5em;
       width: 100%;
+      margin-bottom: 1.5em;
 
       & > * {
         margin-right: 25px;
       }
 
       &-name {
-        font-weight: 700;
         margin-right: 5px;
+        font-weight: 700;
       }
     }
 
@@ -53,14 +53,14 @@
   }
 
   &__content {
+    position: relative;
     display: flex;
     flex-flow: row wrap;
-    justify-content: center;
     align-items: stretch;
-    background: inherit;
+    justify-content: center;
     width: 100%;
-    position: relative;
     padding: 0 2em;
+    background: inherit;
   }
 
   &-card {
@@ -78,16 +78,16 @@
     &__top {
       position: relative;
       display: flex;
-      flex-flow: column;
       flex: 1 0 auto;
+      flex-flow: column;
       padding-bottom: 50px;
     }
 
     &__center {
       display: flex;
       flex-flow: column nowrap;
-      padding: 20px 1em 0;
       height: 220px;
+      padding: 20px 1em 0;
       overflow: hidden;
       transition: height 0.5s ease-in-out;
 
@@ -98,8 +98,8 @@
 
     &__bottom {
       display: flex;
-      justify-content: flex-end;
       align-items: center;
+      justify-content: flex-end;
       min-height: 66px;
       max-height: 66px;
     }
@@ -111,16 +111,16 @@
     .additional-links {
       & > * {
         padding: 5px 0;
-        cursor: pointer;
         text-transform: capitalize;
+        cursor: pointer;
 
         &:not(:last-child) {
           margin: 0 10px 0 0;
 
           &::after {
-            content: '';
             margin-left: 10px;
             border-right: $dividerBorder;
+            content: '';
           }
         }
       }
@@ -132,14 +132,14 @@
       padding: 0 1.6em;
 
       &-toogler {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
         position: absolute;
+        right: 0;
         bottom: 0;
         left: 0;
-        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
 
         svg {
           transform: rotate(90deg);
@@ -155,21 +155,6 @@
     }
   }
 
-  &-actions {
-    height: 0;
-    max-height: 256px;
-    transition: height 0.5s ease-in-out;
-
-    &[aria-expanded='true'] {
-      height: 152px;
-    }
-
-    &__item {
-      flex: 1 0 0%;
-      max-width: 28%;
-    }
-  }
-
   .link {
     font-size: 0.75rem;
   }
@@ -178,13 +163,13 @@
 .project-overview-card {
   display: flex;
   flex-flow: column nowrap;
+  width: 100%;
+  overflow: hidden;
   color: $primary;
   background-color: $white;
   border: 1px solid $mercury;
-  box-shadow: 7px 8px 25px rgba(0, 0, 0, 0.04);
   border-radius: 12px;
-  width: 100%;
-  overflow: hidden;
+  box-shadow: 7px 8px 25px rgba(0, 0, 0, 0.04);
 
   &__top {
     background-color: $zircon;
@@ -192,22 +177,22 @@
   }
 
   &__bottom {
-    border-top: 1px solid $athensGray;
     padding: 1em;
+    border-top: 1px solid $athensGray;
   }
 
   &__header {
     padding: 1em 1.6em;
 
     &-title {
-      font-size: 2em;
-      font-weight: 300;
       margin: 0 0 0.3em;
+      font-weight: 300;
+      font-size: 2em;
     }
 
     &-subtitle {
-      line-height: 1.4;
       margin: 0;
+      line-height: 1.4;
     }
   }
 }

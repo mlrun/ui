@@ -25,7 +25,7 @@ const infoPaneTabSelector = {
     row: {
       root: 'a',
       fields: {
-        tab: '.details-menu__tab'
+        key: '.details-menu__tab'
       }
     }
   }
@@ -38,7 +38,9 @@ const infoPaneOverviewHeaders = {
     row: {
       root: 'li:not(li.details-item_hidden)',
       fields: {
-        tab: '.details-item__header'
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
       }
     }
   }
@@ -180,11 +182,22 @@ const requestedFeaturesTable = {
     row: {
       root: '.item-requested-features__table-row',
       fields: {
+        labelIcon: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+              '.item-requested-features__table-cel.cell_icon',
+              false,
+              false,
+              '.tooltip .tooltip__text span'
+          )
+        },
         projectName: '.cell_project-name',
         featureSet: '.item-requested-features__table-cell:nth-of-type(2)',
         feature: '.cell_feature',
         alias: '.cell_alias',
-        delete_btn: '.cell_delete svg'
+        add_alias: '.cell_actions .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.cell_actions-visible .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.cell_actions .round-icon-cp:nth-of-type(2)'
       }
     }
   }
@@ -277,7 +290,7 @@ const modelsRealTimeinfoPaneOverviewHeaders = {
     row: {
       root: '.graph-pane__row',
       fields: {
-        tab: ' .graph-pane__row-label'
+        key: '.graph-pane__row-label'
       }
     }
   }
@@ -341,6 +354,7 @@ const crossCloseButton = By.css(
 const commonDownloadButton = By.css(
   '.table__item .item-header__buttons .download-container'
 )
+const commonArrowBack = By.css('a.link-back__icon')
 const commonInfoPaneTabSelector = commonTable(infoPaneTabSelector)
 
 module.exports = {
@@ -457,7 +471,10 @@ module.exports = {
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector
   },
   requestedFeaturesInfoPane: {
-    Requested_Features_Table: commonTable(requestedFeaturesTable)
+    Requested_Features_Table: commonTable(requestedFeaturesTable),
+    Alias_Input: inputGroup(
+      generateInputGroup('.cell_alias__input-wrapper', false, false, false)
+    )
   },
   mlFunctionInfoPane: {
     Header: header,
@@ -468,22 +485,31 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders)
   },
   jobsMonitorTabInfoPane: {
-    Arrow_Back: By.css('.table__item a.item-header__back-btn'),
+    Arrow_Back: By.css('a.item-header__back-btn'),
+
     Header: header,
     Updated: updated,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Overview_Headers: commonTable(infoPaneOverviewHeaders)
+    Overview_Headers: commonTable(infoPaneOverviewHeaders),
+
+    // Logs tab.
+    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
+    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
   },
   workflowsMonitorTabInfoPane: {
-    Arrow_Back: By.css('.workflow-header a.link-back__icon'),
-    Header: By.css('.workflow-header .link-back__title .data-ellipsis'),
+    Arrow_Back: commonArrowBack,
+    Header: By.css('.workflow-container .link-back__title .data-ellipsis'),
     Updated: updated,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Overview_Headers: commonTable(infoPaneOverviewHeaders)
+    Overview_Headers: commonTable(infoPaneOverviewHeaders),
+
+    // Logs tab.
+    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
+    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
   },
   inputsInfoPane: {
     Inputs_Table: commonTable(inputsTable)
@@ -548,6 +574,7 @@ module.exports = {
     Info_Sources_Table: commonTable(filesInfoSourcesTable)
   },
   modelsRealTimePiplineInfoPane: {
+    Arrow_Back: commonArrowBack,
     Header: By.css('.graph-pane__title span'),
     Cross_Close_Button: By.css(
       '.graph-pane__title .round-icon-cp .round-icon-cp__circle'

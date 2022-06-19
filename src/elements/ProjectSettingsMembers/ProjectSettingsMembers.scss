@@ -1,0 +1,21 @@
+@import '~igz-controls/scss/colors';
+
+.settings {
+  &__members {
+    &-summary {
+      margin-bottom: 30px;
+      padding: 19px 0 19px 25px;
+      color: $primary;
+      background-color: $wildSand;
+
+      &_icon {
+        margin-right: 10px;
+      }
+
+      &_amount {
+        margin-right: 5px;
+        font-weight: 700;
+      }
+    }
+  }
+}

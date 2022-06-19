@@ -1,0 +1,65 @@
+@import '~igz-controls/scss/variables';
+@import '~igz-controls/scss/mixins';
+@import '~igz-controls/scss/borders';
+
+.jobs {
+  &__parameters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 23px 24px;
+
+    &__filters {
+      display: flex;
+      align-items: center;
+    }
+
+    &__select {
+      position: relative;
+      padding: 10px 50px 10px 69px;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 18px;
+      background-color: transparent;
+      border: $primaryBorder;
+      border-radius: $mainBorderRadius;
+      appearance: none;
+
+      &:active,
+      &:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+
+    .group {
+      padding-left: 88px;
+    }
+
+    .status {
+      padding-left: 107px;
+    }
+
+    &__button {
+      &_search {
+        padding: 8px 13px;
+        text-align: center;
+        background-color: transparent;
+        border: $primaryBorder;
+        border-radius: $mainBorderRadius;
+      }
+
+      &_refresh {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+        &:focus,
+        &:active {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}

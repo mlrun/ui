@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Input from '../../common/Input/Input'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
-import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
 import Combobox from '../../common/Combobox/Combobox'
+import Input from '../../common/Input/Input'
+import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
+import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
@@ -18,8 +17,8 @@ import {
   pathTips
 } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
@@ -31,7 +30,6 @@ export const JobsPanelDataInputsTable = ({
   handlePathTypeChange,
   inputsDispatch,
   inputsState,
-  match,
   panelState,
   resetDataInputsData,
   setValidation,
@@ -45,7 +43,6 @@ export const JobsPanelDataInputsTable = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       headers={panelData['data-inputs']['table-headers']}
-      match={match}
       section="data-inputs"
       sectionData={{ comboboxMatchesList }}
       sectionDispatch={inputsDispatch}
@@ -58,7 +55,7 @@ export const JobsPanelDataInputsTable = ({
         })
       }}
     >
-      {inputsState.addNewInput ? (
+      {inputsState.addNewInput && !panelState.editMode ? (
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
             <Input
@@ -156,6 +153,7 @@ export const JobsPanelDataInputsTable = ({
             })
           }
           text="input"
+          isPanelEditMode={panelState.editMode}
         />
       )}
     </JobsPanelTable>
@@ -172,7 +170,6 @@ JobsPanelDataInputsTable.propTypes = {
   handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired,
   panelState: PropTypes.shape({}).isRequired,
   resetDataInputsData: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

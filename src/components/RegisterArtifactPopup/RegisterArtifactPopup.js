@@ -1,27 +1,20 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 
 import { messagesByKind } from './messagesByKind'
 
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import Button from '../../common/Button/Button'
+import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
+import { Button, PopUpDialog } from 'igz-controls/components'
 
-import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import artifactApi from '../../api/artifacts-api'
 
-const RegisterArtifactPopup = ({
-  artifactKind,
-  filtersStore,
-  match,
-  refresh,
-  setIsPopupOpen,
-  title
-}) => {
+const RegisterArtifactPopup = ({ artifactKind, filtersStore, refresh, setIsPopupOpen, title }) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
     description: '',
     kind: 'general',
@@ -33,6 +26,7 @@ const RegisterArtifactPopup = ({
     isNameValid: true,
     isTargetPathValid: true
   })
+  const params = useParams()
 
   useEffect(() => {
     if (artifactKind !== 'artifact') {
@@ -54,19 +48,16 @@ const RegisterArtifactPopup = ({
   }, [])
 
   const registerArtifact = useCallback(() => {
-    if (
-      registerArtifactData.key.trim().length === 0 ||
-      registerArtifactData.key.trim().length === 0
-    ) {
+    const name = registerArtifactData.key.trim()
+    const path = registerArtifactData.target_path.trim()
+
+    if (name.length === 0 || path.length === 0) {
       return setValidation(state => ({
         ...state,
-        isNameValid: false,
-        isTargetPathValid: false
+        isNameValid: name.length !== 0,
+        isTargetPathValid: path.length !== 0
       }))
-    } else if (
-      registerArtifactData.key.trim().length === 0 ||
-      !validation.isNameValid
-    ) {
+    } else if (registerArtifactData.key.trim().length === 0 || !validation.isNameValid) {
       return setValidation(state => ({ ...state, isNameValid: false }))
     } else if (
       registerArtifactData.target_path.trim().length === 0 ||
@@ -87,31 +78,23 @@ const RegisterArtifactPopup = ({
       tree: uid,
       target_path: registerArtifactData.target_path,
       description: registerArtifactData.description,
-      kind:
-        registerArtifactData.kind === 'general'
-          ? ''
-          : registerArtifactData.kind,
-      project: match.params.projectName,
+      kind: registerArtifactData.kind === 'general' ? '' : registerArtifactData.kind,
+      project: params.projectName,
       producer: {
         kind: 'api',
         uri: window.location.host
       }
     }
 
-    if (registerArtifactData.kind === 'model') {
-      const {
-        target_path,
-        model_file
-      } = registerArtifactData.target_path.match(
-        /^(?:(?<target_path>.+\/))?(?<model_file>.+)$/
-      )?.groups
+    if (registerArtifactData.kind === 'model' && registerArtifactData.target_path.includes('/')) {
+      const path = registerArtifactData.target_path.split(/([^/]*)$/)
 
-      data.target_path = target_path
-      data.model_file = model_file
+      data.target_path = path[0]
+      data.model_file = path[1]
     }
 
     artifactApi
-      .registerArtifact(match.params.projectName, data)
+      .registerArtifact(params.projectName, data)
       .then(() => {
         resetRegisterArtifactForm()
         setIsPopupOpen(false)
@@ -125,7 +108,7 @@ const RegisterArtifactPopup = ({
       })
   }, [
     filtersStore,
-    match.params.projectName,
+    params.projectName,
     refresh,
     registerArtifactData.description,
     registerArtifactData.error.length,
@@ -148,11 +131,7 @@ const RegisterArtifactPopup = ({
   }, [])
 
   return (
-    <PopUpDialog
-      data-testid="register-artifact"
-      headerText={title}
-      closePopUp={closePopupDialog}
-    >
+    <PopUpDialog data-testid="register-artifact" headerText={title} closePopUp={closePopupDialog}>
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
@@ -161,13 +140,10 @@ const RegisterArtifactPopup = ({
         validation={validation}
         messageByKind={messagesByKind[artifactKind.toLowerCase()]}
       />
+      {registerArtifactData.error && (
+        <ErrorMessage closeError={closeErrorMessage} message={registerArtifactData.error} />
+      )}
       <div className="pop-up-dialog__footer-container">
-        {registerArtifactData.error && (
-          <ErrorMessage
-            closeError={closeErrorMessage}
-            message={registerArtifactData.error}
-          />
-        )}
         <Button
           variant={TERTIARY_BUTTON}
           label="Cancel"
@@ -178,6 +154,7 @@ const RegisterArtifactPopup = ({
           variant={PRIMARY_BUTTON}
           label="Register"
           onClick={registerArtifact}
+          disabled={!validation.isNameValid || !validation.isTargetPathValid}
         />
       </div>
     </PopUpDialog>
@@ -190,7 +167,6 @@ RegisterArtifactPopup.defaultProps = {
 
 RegisterArtifactPopup.propTypes = {
   artifactKind: PropTypes.string.isRequired,
-  match: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   setIsPopupOpen: PropTypes.func.isRequired,
   title: PropTypes.string
