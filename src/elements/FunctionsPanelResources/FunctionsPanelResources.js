@@ -173,6 +173,11 @@ const FunctionsPanelResources = ({
   }
 
   const handleEditVolume = (volumes, volumeMounts) => {
+    setData(state => ({
+      ...state,
+      volumeMounts,
+      volumes
+    }))
     setNewFunctionVolumes([...volumes])
     setNewFunctionVolumeMounts(
       volumeMounts.map(volume => ({
