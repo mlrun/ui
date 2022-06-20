@@ -1,5 +1,5 @@
-import React, { Fragment, Suspense } from 'react'
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
+import React, { Fragment, Suspense, useState } from 'react'
+import { Route, Routes, Navigate } from 'react-router-dom'
 
 import Header from './layout/Header/Header'
 import Loader from './common/Loader/Loader'
@@ -7,7 +7,7 @@ import Navbar from './layout/Navbar/Navbar'
 
 import { useMode } from './hooks/mode.hook'
 import { useNuclioMode } from './hooks/nuclioMode.hook'
-import { useNavbar } from './hooks/useNavbar'
+import localStorageService from './utils/localStorageService'
 
 import {
   FEATURE_SETS_TAB,
@@ -58,14 +58,15 @@ const FeatureVectors = React.lazy(() =>
 )
 
 const App = () => {
+  const [projectName, setProjectName] = useState('')
+  const [isNavbarPinned, setIsNavbarPinned] = useState(
+    localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
+  )
+
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
-  const { pathname } = useLocation()
-  const [isNavbarPinned, setIsNavbarPinned] = useNavbar()
 
   const isHeaderShown = window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
-
-  const projectName = pathname.split('/').slice(2, 3).toString()
 
   return (
     <div className="ml-app">
@@ -82,7 +83,13 @@ const App = () => {
         <Routes>
           <Route
             path=""
-            element={<Page isHeaderShown={isHeaderShown} isNavbarPinned={isNavbarPinned} />}
+            element={
+              <Page
+                isHeaderShown={isHeaderShown}
+                isNavbarPinned={isNavbarPinned}
+                setProjectName={setProjectName}
+              />
+            }
           >
             <Route path="projects" element={<Projects />} />
 

@@ -11,18 +11,23 @@ import { fetchFrontendSpec } from '../../reducers/appReducer'
 
 import './Page.scss'
 
-const Page = ({ isHeaderShown, isNavbarPinned }) => {
+const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
   const params = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
 
   const projectName = params.projectName
+
   const transitionEndEventName = getTransitionEndEventName()
 
   const pinnedClasses = classNames(
     isNavbarPinned && projectName ? 'pinned' : 'unpinned',
     isHeaderShown && 'has-header'
   )
+
+  useEffect(() => {
+    setProjectName(projectName)
+  }, [projectName, setProjectName])
 
   useEffect(() => {
     if (mainRef) {
