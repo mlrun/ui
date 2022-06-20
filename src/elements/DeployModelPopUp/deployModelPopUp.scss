@@ -1,36 +1,21 @@
+@import '~igz-controls/scss/colors';
+
 .deploy-model {
-  .pop-up-dialog {
-    width: 550px;
-    max-height: 100vh;
-    overflow: auto;
-  }
-
-  .select-row {
+  &__row {
     display: flex;
+    align-items: stretch;
+    margin-bottom: 20px;
 
-    .select {
-      width: 220px;
-      height: 56px;
-      margin-right: 10px;
-      margin-bottom: 10px;
-    }
-  }
+    .col {
+      flex: 1;
 
-  .input-row {
-    display: flex;
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
 
-    .input-wrapper {
-      width: 220px;
-      margin-right: 10px;
-      margin-bottom: 10px;
-
-      input {
-        width: 100%;
+      &-2 {
+        flex: 2 0 0%;
       }
     }
-  }
-
-  .key-value-table {
-    margin: 10px 0;
   }
 }
