@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 import App from './App'
 import * as serviceWorker from './serviceWorker'
@@ -14,7 +15,9 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
   .then(() => {
     ReactDOM.render(
       <Provider store={toolkitStore}>
-        <App />
+        <Router basename={process.env.PUBLIC_URL}>
+          <App />
+        </Router>
       </Provider>,
       document.getElementById('root')
     )
