@@ -14,11 +14,11 @@ import { ReactComponent as SettingsIcon } from 'igz-controls/images/pref-icon.sv
 
 import './Navbar.scss'
 
-const Navbar = ({ headerShown, isPinned, projectName, setIsPinned }) => {
+const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned }) => {
   const navbarClasses = classNames(
     'navbar',
-    isPinned && 'pinned',
-    headerShown && 'has-header'
+    isNavbarPinned && 'pinned',
+    isHeaderShown && 'has-header'
   )
 
   const { links } = useMemo(() => {
@@ -29,8 +29,8 @@ const Navbar = ({ headerShown, isPinned, projectName, setIsPinned }) => {
   }, [projectName])
 
   const handlePinClick = () => {
-    setIsPinned(!isPinned)
-    localStorageService.setStorageValue('mlrunUi.navbarStatic', !isPinned)
+    setIsNavbarPinned(!isNavbarPinned)
+    localStorageService.setStorageValue('mlrunUi.navbarStatic', !isNavbarPinned)
   }
 
   return (
@@ -45,14 +45,12 @@ const Navbar = ({ headerShown, isPinned, projectName, setIsPinned }) => {
           <RoundedIcon
             onClick={handlePinClick}
             className="navbar__pin-icon"
-            tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
+            tooltipText={`${isNavbarPinned ? 'Unpin' : 'Pin'} Menu`}
           >
-            {isPinned ? <UnPinIcon /> : <PinIcon />}
+            {isNavbarPinned ? <UnPinIcon /> : <PinIcon />}
           </RoundedIcon>
           <ul className="navbar-links">
-            {links.map(
-              link => !link.hidden && <NavbarLink key={link.label} {...link} />
-            )}
+            {links.map(link => !link.hidden && <NavbarLink key={link.label} {...link} />)}
           </ul>
         </div>
         <div className="navbar__additional">
@@ -70,9 +68,10 @@ const Navbar = ({ headerShown, isPinned, projectName, setIsPinned }) => {
 }
 
 Navbar.propTypes = {
-  isPinned: PropTypes.bool.isRequired,
+  isHeaderShown: PropTypes.bool.isRequired,
+  isNavbarPinned: PropTypes.bool.isRequired,
   projectName: PropTypes.string.isRequired,
-  setIsPinned: PropTypes.func.isRequired
+  setIsNavbarPinned: PropTypes.func.isRequired
 }
 
-export default Navbar
+export default React.memo(Navbar)
