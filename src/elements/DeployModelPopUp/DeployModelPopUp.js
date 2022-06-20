@@ -272,8 +272,6 @@ const DeployModelPopUp = ({
 }
 
 DeployModelPopUp.defaultProps = {
-  isOpen: false,
-  model: {},
   onResolve: () => {}
 }
 
