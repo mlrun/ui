@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
+import { Form } from 'react-final-form'
+import { createForm } from 'final-form'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../../common/Loader/Loader'
@@ -28,6 +30,12 @@ const ProjectOverview = ({ fetchProject, project }) => {
   const [modal, setModal] = useState({ isOpen: false, name: '' })
   const params = useParams()
   const navigate = useNavigate()
+
+  const formRef = React.useRef(
+    createForm({
+      onSubmit: () => {}
+    })
+  )
 
   const cards = useMemo(() => {
     return params.projectName ? getInitialCards(params.projectName) : {}
@@ -119,7 +127,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
       label: 'Step 1'
     },
     {
-      getActions: ({ FormState, goToNextStep, goToPreviousStep }) => [
+      getActions: ({ goToNextStep, goToPreviousStep }) => [
         {
           label: 'Custom',
           onClick: goToPreviousStep
@@ -139,7 +147,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
       label: 'Step 2'
     },
     {
-      getActions: ({ FormState, handleOnClose }) => [
+      getActions: ({ formState, handleOnClose }) => [
         {
           label: 'Cancel',
           onClick: handleOnClose,
@@ -147,7 +155,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
         },
         {
           label: 'Submit form',
-          onClick: FormState.handleSubmit,
+          onClick: formState.handleSubmit,
           variant: 'secondary'
         }
       ],
@@ -156,23 +164,35 @@ const ProjectOverview = ({ fetchProject, project }) => {
     }
   ]
 
-  const submitForm = val => console.log('submit', val)
-
-  const Test = modalProps => (
-    <Wizard
-      id="deployModal"
-      initialValues={{}}
-      onSubmit={submitForm}
-      size="md"
-      title="Test modal"
-      stepsConfig={stepsConfig}
-      {...modalProps}
-    >
-      <Wizard.Step>Step1</Wizard.Step>
-      <Wizard.Step>Step2</Wizard.Step>
-      <Wizard.Step>Step3</Wizard.Step>
-    </Wizard>
-  )
+  const Test = ({ isOpen, onResolve }) => {
+    const submitForm = val => {
+      console.log('submit', val)
+    }
+    return (
+      <Form form={formRef.current} initialValues={{}} onSubmit={submitForm}>
+        {formState => {
+          return (
+            <Wizard
+              confirmClose
+              id="deployModal"
+              initialValues={{}}
+              isWizardOpen={isOpen}
+              formState={formState}
+              onWizardResolve={onResolve}
+              onWizardSubmit={formState.handleSubmit}
+              size="md"
+              title="Test modal"
+              stepsConfig={stepsConfig}
+            >
+              <Wizard.Step>Step1</Wizard.Step>
+              <Wizard.Step>Step2</Wizard.Step>
+              <Wizard.Step>Step3</Wizard.Step>
+            </Wizard>
+          )
+        }}
+      </Form>
+    )
+  }
 
   const openModal = () =>
     openPopUp(Test)
