@@ -51,7 +51,7 @@ const action = {
       `Value "${value}" does not includes in all values: [${arr}]`
     )
   },
-  isContainsSubstringInColumnDropdownCels: async function(
+  isContainsSubstringInColumnDropdownCells: async function(
     driver,
     table,
     column,

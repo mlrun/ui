@@ -19,8 +19,10 @@ import './panelResourcesUnits.scss'
 
 const PanelResourcesUnits = ({
   data,
+  gpuType,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
+  isPanelEditMode,
   setCpuValue,
   setGpuValue,
   setMemoryValue,
@@ -33,6 +35,7 @@ const PanelResourcesUnits = ({
           <RangeInput
             className="resources__range"
             density="dense"
+            disabled={isPanelEditMode}
             invalid={!validation.isMemoryRequestValid}
             invalidText="Request must be less than or equal to Limit and not be less than 1"
             label="Request"
@@ -44,6 +47,7 @@ const PanelResourcesUnits = ({
           />
           <Select
             density="dense"
+            disabled={isPanelEditMode}
             label="Unit"
             labelAtTop
             options={selectMemoryOptions.unitMemory}
@@ -55,6 +59,7 @@ const PanelResourcesUnits = ({
           <RangeInput
             className="resources__range"
             density="dense"
+            disabled={isPanelEditMode}
             invalid={!validation.isMemoryLimitValid}
             invalidText="Limit must be bigger than or equal to Request and not be less than 1"
             label="Limit"
@@ -66,6 +71,7 @@ const PanelResourcesUnits = ({
           />
           <Select
             density="dense"
+            disabled={isPanelEditMode}
             label="Unit"
             labelAtTop
             options={selectMemoryOptions.unitMemory}
@@ -79,6 +85,7 @@ const PanelResourcesUnits = ({
           <RangeInput
             className="resources__range"
             density="dense"
+            disabled={isPanelEditMode}
             invalid={!validation.isCpuRequestValid}
             invalidText={`Request must be less than or equal to Limit and not be less than ${
               getSelectedCpuOption(data.requests.cpuUnit)?.minValue
@@ -93,6 +100,7 @@ const PanelResourcesUnits = ({
           />
           <Select
             density="dense"
+            disabled={isPanelEditMode}
             label="Unit"
             labelAtTop
             options={selectMemoryOptions.unitCpu}
@@ -104,6 +112,7 @@ const PanelResourcesUnits = ({
           <RangeInput
             className="resources__range"
             density="dense"
+            disabled={isPanelEditMode}
             invalid={!validation.isCpuLimitValid}
             invalidText={`Limit must be bigger than or equal to Request and not be less than ${
               getSelectedCpuOption(data.limits.cpuUnit)?.minValue
@@ -118,6 +127,7 @@ const PanelResourcesUnits = ({
           />
           <Select
             density="dense"
+            disabled={isPanelEditMode}
             label="Unit"
             labelAtTop
             options={selectMemoryOptions.unitCpu}
@@ -129,23 +139,30 @@ const PanelResourcesUnits = ({
       <PanelSection title="Gpu" className="section-gpu">
         <RangeInput
           density="dense"
+          disabled={isPanelEditMode}
           invalid={!validation.isGpuLimitValid}
           invalidText="The minimum value should be 1"
           label="Limit"
           labelType="labelAtTop"
           min={1}
           onChange={setGpuValue}
-          value={data.limits['nvidia.com/gpu']}
+          value={data.limits[gpuType] || ''}
         />
       </PanelSection>
     </div>
   )
 }
 
+PanelResourcesUnits.defaultProps = {
+  isPanelEditMode: false
+}
+
 PanelResourcesUnits.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  gpuType: PropTypes.string.isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
+  isPanelEditMode: PropTypes.bool,
   setCpuValue: PropTypes.func.isRequired,
   setGpuValue: PropTypes.func.isRequired,
   setMemoryValue: PropTypes.func.isRequired,

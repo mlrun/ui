@@ -139,7 +139,13 @@ Feature: ML Functions
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Function" wizard
-        Then verify "New_Function_Description_Text_Area" element visibility in "General_Accordion" on "New_Function" wizard
+        Then verify "Function_Name" element visibility in "General_Accordion" on "New_Function" wizard
+        Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "demo-function-00" value
+        Then verify "Function_Tag" element visibility in "General_Accordion" on "New_Function" wizard
+        Then "Function_Tag" element in "General_Accordion" on "New_Function" should contains "latest" value
+        Then verify "Function_Runtime" element visibility in "General_Accordion" on "New_Function" wizard
+        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contains "job" value
+        Then verify "Function_Description_Input" element visibility in "General_Accordion" on "New_Function" wizard
         Then verify "Labels_Table" element visibility in "General_Accordion" on "New_Function" wizard
         When add rows to "Labels_Table" table in "General_Accordion" on "New_Function" wizard
             | key_input | value_input |
@@ -224,22 +230,22 @@ Feature: ML Functions
         Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then type value "2" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then select "KB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then increase value on 2 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 1 points in "CPU_Limit_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."CPU_Request_Number_Warning"
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."CPU_Limit_Number_Warning"
         Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -247,7 +253,7 @@ Feature: ML Functions
         Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then type value "2" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Request_Warning"
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."GPU_Minimum_Value_Warning"
         Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
@@ -371,6 +377,23 @@ Feature: ML Functions
             | Volume_Name_1 | /path/to/happines1 |
             | Volume_Name_5 | /path/to/happines5 |
             | Volume_Name_7 | /path/to/happines7 |
+        When click on "Edit" in action menu in "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard with offset "false"
+            |  volume_name  |
+            | Volume_Name_1 |
+        Then type value "Edited_Name_1" to "Edit_Volume_Name_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then type value "/newPath/to/happines1" to "Edit_Volume_Path_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then click on "Apply_Edit_Button" element in "Resources_Accordion" on "New_Function" wizard
+        When click on "Edit" in action menu in "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard with offset "false"
+            |  volume_name  |
+            | Volume_Name_7 |
+        Then type value "Edited_Name_7" to "Edit_Volume_Name_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then type value "/newPath/to/happines7" to "Edit_Volume_Path_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then click on "Apply_Edit_Button" element in "Resources_Accordion" on "New_Function" wizard
+        Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard
+            |  volume_name  |        path           |
+            | Edited_Name_1 | /newPath/to/happines1 |
+            | Volume_Name_5 | /path/to/happines5    |
+            | Edited_Name_7 | /newPath/to/happines7 |
 
     @passive
     Scenario: Check all mandatory components in Resources Accordion on create New Function page
@@ -406,6 +429,12 @@ Feature: ML Functions
         Then verify values in "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
             | name  | value  |
             | name2 | value2 |
+        Then edit 1 row in "Function_Environment_Variables_Table" key-value table in "Environment_Variables_Accordion" on "New_Function" wizard
+            | name_input        | value_input      |
+            | edited            | edited           |
+        Then verify values in "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
+            | name        |    value          |
+            | name2edited | value2edited      |
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
         Then verify "Access_Key_Checkbox" element visibility on "New_Function" wizard
         Then uncheck "Access_Key_Checkbox" element on "New_Function" wizard
@@ -508,6 +537,27 @@ Feature: ML Functions
             | name5 | value  | value5      |
             | name3 | secret | value3:key3 |
             | name6 | secret | value6:key6 |
+        When click on "Edit" in action menu in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
+            | name  |
+            | name5 |
+        Then type value "Edited_Name_5" to "Edit_Function_Environment_Variables_Name_Input" field on "Environment_Variables_Accordion" on "New_Function" wizard
+        Then select "Secret" option in "Edit_Function_Environment_Variables_Type_Dropdown" dropdown on "Environment_Variables_Accordion" on "New_Function" wizard
+        Then type value "secret" to "Edit_Function_Environment_Variables_Secret_Name_Input" field on "Environment_Variables_Accordion" on "New_Function" wizard
+        Then type value "123" to "Edit_Function_Environment_Variables_Secret_Key_Input" field on "Environment_Variables_Accordion" on "New_Function" wizard
+        Then click on "Apply_Edit_Button" element in "Environment_Variables_Accordion" on "New_Function" wizard
+        When click on "Edit" in action menu in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
+            | name  |
+            | name6 |
+        Then type value "Edited_Name_6" to "Edit_Function_Environment_Variables_Name_Input" field on "Environment_Variables_Accordion" on "New_Function" wizard
+        Then select "Value" option in "Edit_Function_Environment_Variables_Type_Dropdown" dropdown on "Environment_Variables_Accordion" on "New_Function" wizard
+        Then type value "Edited_Value6" to "Edit_Function_Environment_Variables_Value_Input" field on "Environment_Variables_Accordion" on "New_Function" wizard
+        Then click on "Apply_Edit_Button" element in "Environment_Variables_Accordion" on "New_Function" wizard
+        Then verify values in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
+            | name          |  type  |    value      |
+            | name0         | value  | value0        |
+            | Edited_Name_5 | secret | secret:123    |
+            | name3         | secret | value3:key3   |
+            | Edited_Name_6 | value  | Edited_Value6 |
 
     @inProgress
     Scenario: Save new ml-function
@@ -524,6 +574,10 @@ Feature: ML Functions
         And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "new-aqa-function-00" value
+        Then "Function_Tag" element in "General_Accordion" on "New_Function" should contains "latest" value
+        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contains "job" value
+        Then type value "Some function description" to "Function_Description_Input" field on "General_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
@@ -631,6 +685,8 @@ Feature: ML Functions
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And select "Serving" option in "New_Function_Runtime_Dropdown" dropdown on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        Then verify "Function_Runtime" element visibility in "General_Accordion" on "New_Function" wizard
+        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contains "serving" value
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
@@ -688,14 +744,31 @@ Feature: ML Functions
         When click on "Remove" in action menu in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  |
             | name0 |
-            # | name2 | do not able remove second first element !!!!!!
+            | name2 |
             | name9 |
             | name5 |
         Then verify values in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  | class  |  path   |
-            | name2 | class2 | /path/2 |
             | name4 | class4 | /path/4 |
             | name8 | class8 | /path/8 |
+        When click on "Edit" in action menu in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  |
+            | name4 |
+        Then type value "editedName4" to "Edit_Model_Table_Name_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then type value "edited_class4" to "Edit_Model_Table_Class_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then type value "edited/path/4" to "Edit_Model_Table_Path_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then click on "Apply_Edit_Button" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        When click on "Edit" in action menu in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  |
+            | name8 |
+        Then type value "editedName8" to "Edit_Model_Table_Name_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then type value "edited_class8" to "Edit_Model_Table_Class_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then type value "edited/path/8" to "Edit_Model_Table_Path_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then click on "Apply_Edit_Button" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify values in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name        | class         |  path         |
+            | editedName4 | edited_class4 | edited/path/4 |
+            | editedName8 | edited_class8 | edited/path/8 |
 
     @passive
     @demo
@@ -742,6 +815,16 @@ Feature: ML Functions
             | kind | value  |
             | file | value1 |
             | file | value3 |
+        Then edit 1 row in "Secrets_Runtime_Configuration_Table" key-value table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | value_input |
+            | edited      |
+        Then edit 2 row in "Secrets_Runtime_Configuration_Table" key-value table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | value_input |
+            | edited      |
+        Then verify values in "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | kind | value        |
+            | file | value1edited |
+            | file | value3edited |
 
     @passive
     @demo
@@ -767,27 +850,48 @@ Feature: ML Functions
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
         When add new volume rows to "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
             | Parameters_Table_Name_Input | Parameters_Table_Type_Dropdown | Parameters_Table_Value_Input | Add_Parameter_Table_Row_Button | Remove_Parameter_Table_Row_Button |
-            |            name0            |             String             |            valueA            |                yes             |                                   |
+            |            name0            |             String             |            valueA            |                                |               yes                 |
             |            name1            |             String             |            valueB            |                yes             |                                   |
             |            name2            |             String             |            valueC            |                yes             |                                   |
-            |            name3            |             String             |            valueD            |                yes             |                                   |
+            |            name3            |             JSON               |            {"a": "b"}        |                yes             |                                   |
             |            name4            |             String             |            valueE            |                yes             |                                   |
+        When add new volume rows to "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
+            | Parameters_Table_Name_Input | Parameters_Table_Type_Dropdown | Parameters_Table_Value_Number_Input | Add_Parameter_Table_Row_Button |
+            |            name5            |             Number             |            123                      |                yes             |
         Then verify values in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
-            | name  |  type  | value  |
-            | name0 | string | valueA |
-            | name1 | string | valueB |
-            | name2 | string | valueC |
-            | name3 | string | valueD |
-            | name4 | string | valueE |
+            | name  |  type  | value      |
+            | name1 | string | valueB     |
+            | name2 | string | valueC     |
+            | name3 | json   | {"a": "b"} |
+            | name4 | string | valueE     |
+            | name5 | number | 123        |
         When click on "Remove" in action menu in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  |
-            | name0 |
             | name3 |
             | name2 |
             | name4 |
         Then verify values in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  |  type  | value  |
             | name1 | string | valueB |
+            | name5 | number | 123    |
+        When click on "Edit" in action menu in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  |
+            | name1 |
+        Then type value "editedName1" to "Edit_Parameters_Table_Name_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then select "JSON" option in "Edit_Parameters_Table_Type_Dropdown" dropdown on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then type value "{\"key\":\"value\"}" to "Edit_Parameters_Table_Value_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then click on "Apply_Edit_Button" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        When click on "Edit" in action menu in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  |
+            | name5 |
+        Then type value "editedName5" to "Edit_Parameters_Table_Name_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then select "String" option in "Edit_Parameters_Table_Type_Dropdown" dropdown on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then type value "editedValue" to "Edit_Parameters_Table_Value_Input" field on "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then click on "Apply_Edit_Button" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify values in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name        |  type  | value           |
+            | editedName1 | json   | {"key":"value"} |
+            | editedName5 | string | editedValue     |
 
     @passive
     @inProgress
@@ -956,9 +1060,13 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        And save to context "name" column on 1 row from "Functions_Table" table on "ML_Functions" wizard
+        And save to context "tag" column on 1 row from "Functions_Table" table on "ML_Functions" wizard
         Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-function" value in "name" column
         And wait load page
-        Then verify "New_Function_Description_Text_Area" element visibility in "General_Accordion" on "New_Function" wizard
+        Then compare "Function_Name" element value in "General_Accordion" on "New_Function" wizard with test "name" context value
+        Then compare "Function_Tag" element value in "General_Accordion" on "New_Function" wizard with test "tag" context value
+        Then verify "Function_Description_Input" element visibility in "General_Accordion" on "New_Function" wizard
         Then verify "Labels_Table" element visibility in "General_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then verify "New_Function_Code_Entry_Dropdown" element visibility in "Code_Accordion" on "New_Function" wizard

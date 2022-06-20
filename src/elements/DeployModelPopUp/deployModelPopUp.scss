@@ -3,29 +3,19 @@
 .deploy-model {
   &__row {
     display: flex;
+    align-items: stretch;
     margin-bottom: 20px;
 
-    .select {
-      flex: 1 0 0%;
-      margin-right: 10px;
+    .col {
+      flex: 1;
 
-      &-router {
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+
+      &-2 {
         flex: 2 0 0%;
       }
-    }
-
-    .input-wrapper {
-      flex: 1 0 0%;
-    }
-  }
-
-  .key-value-table {
-    padding-top: 0;
-    padding-bottom: 0;
-    background-color: $white;
-
-    .table-row__header {
-      border-top: 0;
     }
   }
 }

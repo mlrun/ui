@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
@@ -12,15 +13,8 @@ import { Button, PopUpDialog } from 'igz-controls/components'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import artifactApi from '../../api/artifacts-api'
-import { useParams } from 'react-router-dom'
 
-const RegisterArtifactPopup = ({
-  artifactKind,
-  filtersStore,
-  refresh,
-  setIsPopupOpen,
-  title
-}) => {
+const RegisterArtifactPopup = ({ artifactKind, filtersStore, refresh, setIsPopupOpen, title }) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
     description: '',
     kind: 'general',
@@ -63,10 +57,7 @@ const RegisterArtifactPopup = ({
         isNameValid: name.length !== 0,
         isTargetPathValid: path.length !== 0
       }))
-    } else if (
-      registerArtifactData.key.trim().length === 0 ||
-      !validation.isNameValid
-    ) {
+    } else if (registerArtifactData.key.trim().length === 0 || !validation.isNameValid) {
       return setValidation(state => ({ ...state, isNameValid: false }))
     } else if (
       registerArtifactData.target_path.trim().length === 0 ||
@@ -87,10 +78,7 @@ const RegisterArtifactPopup = ({
       tree: uid,
       target_path: registerArtifactData.target_path,
       description: registerArtifactData.description,
-      kind:
-        registerArtifactData.kind === 'general'
-          ? ''
-          : registerArtifactData.kind,
+      kind: registerArtifactData.kind === 'general' ? '' : registerArtifactData.kind,
       project: params.projectName,
       producer: {
         kind: 'api',
@@ -98,13 +86,11 @@ const RegisterArtifactPopup = ({
       }
     }
 
-    if (registerArtifactData.kind === 'model') {
-      const groups = registerArtifactData.target_path.match(
-        /^(?:(?<target_path>.+\/))?(?<model_file>.+)$/
-      )
+    if (registerArtifactData.kind === 'model' && registerArtifactData.target_path.includes('/')) {
+      const path = registerArtifactData.target_path.split(/([^/]*)$/)
 
-      data.target_path = groups?.target_path
-      data.model_file = groups?.model_file
+      data.target_path = path[0]
+      data.model_file = path[1]
     }
 
     artifactApi
@@ -145,11 +131,7 @@ const RegisterArtifactPopup = ({
   }, [])
 
   return (
-    <PopUpDialog
-      data-testid="register-artifact"
-      headerText={title}
-      closePopUp={closePopupDialog}
-    >
+    <PopUpDialog data-testid="register-artifact" headerText={title} closePopUp={closePopupDialog}>
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
@@ -159,10 +141,7 @@ const RegisterArtifactPopup = ({
         messageByKind={messagesByKind[artifactKind.toLowerCase()]}
       />
       {registerArtifactData.error && (
-        <ErrorMessage
-          closeError={closeErrorMessage}
-          message={registerArtifactData.error}
-        />
+        <ErrorMessage closeError={closeErrorMessage} message={registerArtifactData.error} />
       )}
       <div className="pop-up-dialog__footer-container">
         <Button

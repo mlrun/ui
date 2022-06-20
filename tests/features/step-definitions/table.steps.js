@@ -18,7 +18,7 @@ import {
   findRowIndexesByColumnValue,
   getCellByIndexColumn,
   isContainsSubstringInColumnCells,
-  isContainsSubstringInColumnDropdownCels,
+  isContainsSubstringInColumnDropdownCells,
   isContainsSubstringInColumnTooltipCells,
   isDatetimeCelsValueInRange,
   findRowIndexesByColumnTooltipsValue,
@@ -291,6 +291,40 @@ When(
   }
 )
 
+When(
+    'edit {int} row in {string} key-value table in {string} on {string} wizard',
+    async function(index, table, accordion, wizard, dataTable) {
+        const inputFields = dataTable['rawTable'][0]
+        const row = dataTable.rows()[0]
+
+        await hoverComponent(
+            this.driver,
+            pageObjects[wizard][accordion][table]['tableFields'][
+                'edit_btn'
+                ](index)
+        )
+        await clickOnComponent(
+            this.driver,
+            pageObjects[wizard][accordion][table]['tableFields']['edit_btn'](
+                index
+            )
+        )
+            for (const i in inputFields) {
+                const component = pageObjects[wizard][accordion][table]['tableFields'][
+                    inputFields[i]
+                    ](index)
+                await typeIntoInputField(this.driver, component.inputField, row[i])
+            }
+
+        await clickOnComponent(
+            this.driver,
+            pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](
+                index
+            )
+        )
+        await this.driver.sleep(100)
+})
+
 Then(
   'verify values in {string} table in {string} on {string} wizard',
   async function(table, accordion, wizard, dataTable) {
@@ -420,7 +454,7 @@ Then(
       )
     }
     if (type === 'dropdowns') {
-      await isContainsSubstringInColumnDropdownCels(
+      await isContainsSubstringInColumnDropdownCells(
         this.driver,
         pageObjects[wizard][table],
         column,
@@ -451,7 +485,7 @@ Then(
       )
     }
     if (type === 'dropdowns') {
-      await isContainsSubstringInColumnDropdownCels(
+      await isContainsSubstringInColumnDropdownCells(
         this.driver,
         pageObjects[wizard][accordion][table],
         column,

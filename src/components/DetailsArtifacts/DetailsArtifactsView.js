@@ -74,9 +74,9 @@ const DetailsArtifactsView = ({
                       target="_blank"
                       to={
                         artifactScreenLinks[artifact.kind] ??
-                        `/projects/${params.projectName}/files/${
-                          artifact.db_key || artifact.key
-                        }/${artifact.tag ?? TAG_FILTER_LATEST}/${iteration}/overview`
+                        `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
+                          artifact.tag ?? TAG_FILTER_LATEST
+                        }/${iteration}/overview`
                       }
                     >
                       <DetailsIcon />

@@ -2,7 +2,7 @@ import React from 'react'
 
 import Input from './Input'
 
-import { getValidationRules } from '../../utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 export default {
   title: 'Example/Input',

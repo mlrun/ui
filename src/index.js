@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import ModalContainer from 'react-modal-promise'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 import App from './App'
 import * as serviceWorker from './serviceWorker'
@@ -15,8 +16,10 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
   .then(() => {
     ReactDOM.render(
       <Provider store={toolkitStore}>
-        <App />
-        <ModalContainer />
+        <Router basename={process.env.PUBLIC_URL}>
+          <App />
+          <ModalContainer />
+        </Router>
       </Provider>,
       document.getElementById('root')
     )

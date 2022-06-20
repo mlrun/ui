@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FeatureSetsPanelDataSource from './FeatureSetsPanelDataSource/FeatureSetsPanelDataSource'
 import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSchema'
@@ -10,13 +9,9 @@ import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSe
 import FeatureSetsPanelTitle from './FeatureSetsPanelTitle/FeatureSetsPanelTitle'
 import Loader from '../../common/Loader/Loader'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
-import { Button } from 'igz-controls/components'
+import { Button, ConfirmDialog } from 'igz-controls/components'
 
-import {
-  PRIMARY_BUTTON,
-  SECONDARY_BUTTON,
-  TERTIARY_BUTTON
-} from 'igz-controls/constants'
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
@@ -55,6 +50,7 @@ const FeatureSetsPanelView = ({
               label: 'Okay',
               variant: PRIMARY_BUTTON
             }}
+            isOpen={confirmDialog}
             message="Note that data will be ingested to the feature set without any transformation and therefore you won't be able to add a transformation graph unless you delete the data first."
           />
         )}

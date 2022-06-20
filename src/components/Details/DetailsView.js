@@ -5,14 +5,19 @@ import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import DetailsMenu from '../../elements/DetailsMenu/DetailsMenu'
 import Download from '../../common/Download/Download'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import LoadButton from '../../common/LoadButton/LoadButton'
 import Loader from '../../common/Loader/Loader'
 import Select from '../../common/Select/Select'
-import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import {
+  Button,
+  ConfirmDialog,
+  Tooltip,
+  TextTooltipTemplate,
+  RoundedIcon
+} from 'igz-controls/components'
 
 import { formatDatetime } from '../../utils'
 import {
@@ -117,23 +122,33 @@ const DetailsView = React.forwardRef(
             <span className="left-margin">
               {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
             The job contains startTime property.*/}
-              {Object.keys(selectedItem).length > 0 &&
-              pageData.page === JOBS_PAGE &&
-              !selectedItem?.updated
-                ? formatDatetime(
-                    selectedItem?.startTime,
-                    stateValue === 'aborted' ? 'N/A' : 'Not yet started'
-                  )
-                : selectedItem?.updated
-                ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
-                : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
-                ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
-                : selectedItem?.spec?.model
-                ? selectedItem?.metadata?.uid
-                : ''}
+              <span className="updated">
+                {Object.keys(selectedItem).length > 0 &&
+                pageData.page === JOBS_PAGE &&
+                !selectedItem?.updated
+                  ? formatDatetime(
+                      selectedItem?.startTime,
+                      stateValue === 'aborted' ? 'N/A' : 'Not yet started'
+                    )
+                  : selectedItem?.updated
+                  ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
+                  : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
+                  ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
+                  : selectedItem?.spec?.model
+                  ? selectedItem?.metadata?.uid
+                  : ''}
+              </span>
               {stateValue && stateLabel && (
-                <Tooltip template={<TextTooltipTemplate text={stateLabel} />}>
+                <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
                   <i className={stateClassName} />
+                </Tooltip>
+              )}
+              {selectedItem.error && (
+                <Tooltip
+                  className="error-container"
+                  template={<TextTooltipTemplate text={`Error - ${selectedItem.error}`} />}
+                >
+                  Error - {selectedItem.error}
                 </Tooltip>
               )}
               {!isEmpty(detailsStore.pods.podsPending) && (
@@ -250,6 +265,7 @@ const DetailsView = React.forwardRef(
               variant: PRIMARY_BUTTON
             }}
             header="You have unsaved changes."
+            isOpen={detailsStore.showWarning}
             message={`${
               detailsStore.refreshWasHandled ? 'Refreshing the list' : 'Leaving this page'
             } will discard your changes.`}

@@ -54,6 +54,7 @@ const FilterMenu = ({
   removeFilters,
   setFilterProjectOptions,
   setFilters,
+  tab,
   withoutExpandButton
 }) => {
   const [labels, setLabels] = useState('')
@@ -133,7 +134,7 @@ const FilterMenu = ({
       if ((params.jobId || params.name) && !isRefreshed) {
         navigate(
           `/projects/${params.projectName}/${page.toLowerCase()}${
-            params.pageTab ? `/${params.pageTab}` : ''
+            params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
           }`
         )
       }
@@ -403,12 +404,24 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   actionButton: null,
+  cancelRequest: () => {},
+  changes: {},
+  expand: false,
+  handleExpandAll: () => {},
+  tab: '',
   withoutExpandButton: false
 }
 
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
+  cancelRequest: PropTypes.func,
+  changes: PropTypes.shape({}),
+  expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  handleExpandAll: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
+  page: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   withoutExpandButton: PropTypes.bool
 }
 

@@ -62,8 +62,20 @@
             margin-left: 24px;
           }
 
-          i {
-            margin-left: 10px;
+          .updated {
+            min-width: 140px;
+          }
+
+          .state {
+            min-width: 18px;
+
+            i {
+              margin-left: 10px;
+            }
+          }
+
+          .error-container {
+            margin-left: 20px;
           }
         }
 

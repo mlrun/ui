@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
-import { getValidationRules } from '../../utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import './registerArtifactForm.scss'
 
@@ -42,8 +42,8 @@ const RegisterArtifactForm = ({
           <p>{messageByKind}</p>
           <div>
             <p>
-              All you need to do is enter the name of the artifact and the URL
-              (e.g. s3://my-bucket/path).
+              All you need to do is enter the name of the artifact and the URL (e.g.
+              s3://my-bucket/path).
             </p>
             <a
               href="https://docs.mlrun.org/en/latest/store/artifacts.html"
@@ -66,9 +66,7 @@ const RegisterArtifactForm = ({
         onChange={value => onChange(prevData => ({ ...prevData, key: value }))}
         required
         requiredText="This field is required"
-        setInvalid={value =>
-          setValidation(state => ({ ...state, isNameValid: value }))
-        }
+        setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
         tip="Artifact names in the same project must be unique"
         type="text"
         validationRules={getValidationRules('artifact.name')}
@@ -81,14 +79,10 @@ const RegisterArtifactForm = ({
         invalid={!validation.isTargetPathValid}
         invalidText="This field is invalid"
         label="Target Path"
-        onChange={value =>
-          onChange(prevData => ({ ...prevData, target_path: value }))
-        }
+        onChange={value => onChange(prevData => ({ ...prevData, target_path: value }))}
         required
         requiredText="This field is required"
-        setInvalid={value =>
-          setValidation(state => ({ ...state, isTargetPathValid: value }))
-        }
+        setInvalid={value => setValidation(state => ({ ...state, isTargetPathValid: value }))}
         type="text"
         value={target_path}
       />
@@ -97,9 +91,7 @@ const RegisterArtifactForm = ({
         density="chunky"
         floatingLabel
         label="Description"
-        onChange={value =>
-          onChange(prevData => ({ ...prevData, description: value }))
-        }
+        onChange={value => onChange(prevData => ({ ...prevData, description: value }))}
         type="text"
         value={description}
       />
@@ -107,9 +99,7 @@ const RegisterArtifactForm = ({
         <Select
           density="chunky"
           label="Type:"
-          onClick={value =>
-            onChange(prevData => ({ ...prevData, kind: value }))
-          }
+          onClick={value => onChange(prevData => ({ ...prevData, kind: value }))}
           options={kindOptions}
           selectedId={kind}
         />

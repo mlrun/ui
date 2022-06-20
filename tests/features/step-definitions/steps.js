@@ -1018,6 +1018,13 @@ Then(
 )
 
 Then(
+    'verify {string} input should contains {string} value on {string} wizard',
+    async function (component, value, wizard) {
+        await verifyTypedValue(this.driver, pageObjects[wizard][component], value)
+    }
+)
+
+Then(
   'verify {string} input should contains {string} value in {string} on {string} wizard',
   async function (component, value, accordion, wizard) {
     await verifyTypedValue(this.driver, pageObjects[wizard][accordion][component], value)
@@ -1146,6 +1153,17 @@ Then(
       this.testContext[fieldName]
     )
   }
+)
+
+Then(
+    'compare {string} element value in {string} on {string} wizard with test {string} context value',
+    async function(componentName, accordionName, wizardName, fieldName) {
+        await verifyText(
+            this.driver,
+            pageObjects[wizardName][accordionName][componentName],
+            this.testContext[fieldName]
+        )
+    }
 )
 
 Then(

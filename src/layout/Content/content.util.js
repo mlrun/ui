@@ -1,5 +1,6 @@
 import { isEqual } from 'lodash'
 import {
+  ADD_TO_FEATURE_VECTOR_TAB,
   DATE_FILTER_ANY_TIME,
   DATE_RANGE_TIME_FILTER,
   FEATURES_TAB,
@@ -18,11 +19,7 @@ import {
   TREE_FILTER
 } from '../../constants'
 
-export const generateGroupedItems = (
-  content,
-  selectedRowData,
-  getIdentifier
-) => {
+export const generateGroupedItems = (content, selectedRowData, getIdentifier) => {
   const groupedItems = {}
 
   content.forEach(contentItem => {
@@ -46,14 +43,13 @@ export const generateContentActionsMenu = (actionsMenu, predefinedActions) => {
 }
 
 const noDataMessages = {
-  [FEATURES_TAB]:
+  [FEATURES_TAB || ADD_TO_FEATURE_VECTOR_TAB]:
     'No features yet. Go to "Feature Sets" tab to create your first feature set.',
   default: 'No data to show'
 }
 
 export const getNoDataMessage = (filtersStore, filters, tab, page) => {
-  let message =
-    noDataMessages[tab] || noDataMessages[page] || noDataMessages.default
+  let message = noDataMessages[tab] || noDataMessages[page] || noDataMessages.default
 
   if (
     (noDataMessages[tab] || noDataMessages[page]) &&
@@ -61,15 +57,12 @@ export const getNoDataMessage = (filtersStore, filters, tab, page) => {
       return (
         ((type === TAG_FILTER || type === TREE_FILTER) &&
           filtersStore.tag !== TAG_FILTER_ALL_ITEMS) ||
-        ((type === NAME_FILTER || type === LABELS_FILTER) &&
-          filtersStore[type].length > 0) ||
-        (type === STATUS_FILTER &&
-          filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||
+        ((type === NAME_FILTER || type === LABELS_FILTER) && filtersStore[type].length > 0) ||
+        (type === STATUS_FILTER && filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||
         (type === DATE_RANGE_TIME_FILTER &&
           !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
         (type === ITERATIONS_FILTER && filtersStore.iter === SHOW_ITERATIONS) ||
-        (type === SHOW_UNTAGGED_FILTER &&
-          filtersStore.showUntagged !== SHOW_UNTAGGED_ITEMS) ||
+        (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged !== SHOW_UNTAGGED_ITEMS) ||
         (type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE)
       )
     })

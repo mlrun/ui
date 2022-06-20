@@ -27,18 +27,18 @@ const FunctionsPanelSecrets = ({
       setNewFunctionSecretSources(
         functionsStore.newFunction.spec.secret_sources.map((item, index) => {
           if (index === secretSource.index) {
-            item.kind = secretSource.newKey || secretSource.key
-            item.source = secretSource.value
+            return {
+              ...item,
+              kind: secretSource.newKey || secretSource.key,
+              source: secretSource.value
+            }
           }
 
           return item
         })
       )
     },
-    [
-      functionsStore.newFunction.spec.secret_sources,
-      setNewFunctionSecretSources
-    ]
+    [functionsStore.newFunction.spec.secret_sources, setNewFunctionSecretSources]
   )
 
   const handleDeleteSecretSource = useCallback(

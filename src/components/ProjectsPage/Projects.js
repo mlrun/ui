@@ -89,6 +89,14 @@ const Projects = ({
     [isDescendingOrder, sortProjectId]
   )
 
+  const handleSelectSortOption = option => {
+    setSortProjectId(option)
+
+    if (option === 'byDate' && sortProjectId !== 'byDate') {
+      setIsDescendingOrder(true)
+    }
+  }
+
   const handleArchiveProject = useCallback(
     project => {
       changeProjectState(project.metadata.name, 'archived')
@@ -307,6 +315,7 @@ const Projects = ({
       filteredProjects={filteredProjects}
       filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
+      handleSelectSortOption={handleSelectSortOption}
       isDescendingOrder={isDescendingOrder}
       isNameValid={isNameValid}
       projectStore={projectStore}
@@ -322,7 +331,6 @@ const Projects = ({
       setNewProjectName={setNewProjectName}
       setNewProjectLabels={setNewProjectLabels}
       setSelectedProjectsState={setSelectedProjectsState}
-      setSortProjectId={setSortProjectId}
       sortProjectId={sortProjectId}
       urlParams={urlParams}
     />

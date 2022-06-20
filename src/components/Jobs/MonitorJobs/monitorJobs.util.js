@@ -1,24 +1,24 @@
 import React from 'react'
+import { isNil } from 'lodash'
 
 import {
   DATE_RANGE_TIME_FILTER,
-  FUNCTIONS_PAGE,
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
   PERIOD_FILTER,
   STATUS_FILTER
 } from '../../../constants'
-import { detailsMenu, infoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
 
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
-import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
-import {
-  detailsMenu as functionsDetailsMenu,
-  infoHeaders as functionsInfoHeaders
-} from '../../FunctionsPage/functions.util'
+
+import jobsActions from '../../../actions/jobs'
+import detailsActions from '../../../actions/details'
+import filtersActions from '../../../actions/filters'
+import notificationActions from '../../../actions/notification'
 
 export const generateFilters = jobName => [
   { type: PERIOD_FILTER, label: 'Period:' },
@@ -28,26 +28,16 @@ export const generateFilters = jobName => [
   { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
 ]
 
-export const generatePageData = (
-  selectedFunction,
-  handleFetchFunctionLogs,
-  fetchJobLogs,
-  handleRemoveFunctionLogs,
-  removeJobLogs
-) => {
+export const generatePageData = (fetchJobLogs, removeJobLogs, selectedJob) => {
   return {
     page: JOBS_PAGE,
     details: {
-      type: !isEveryObjectValueEmpty(selectedFunction) ? FUNCTIONS_PAGE : JOBS_PAGE,
-      menu: !isEveryObjectValueEmpty(selectedFunction) ? functionsDetailsMenu : detailsMenu,
-      infoHeaders: !isEveryObjectValueEmpty(selectedFunction) ? functionsInfoHeaders : infoHeaders,
-      refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
-        ? handleFetchFunctionLogs
-        : fetchJobLogs,
-      removeLogs: !isEveryObjectValueEmpty(selectedFunction)
-        ? handleRemoveFunctionLogs
-        : removeJobLogs,
-      withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
+      menu: detailsMenu,
+      type: JOBS_PAGE,
+      infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
+      refreshLogs: fetchJobLogs,
+      removeLogs: removeJobLogs,
+      withLogsRefreshBtn: true
     }
   }
 }
@@ -102,4 +92,18 @@ export const generateActionsMenu = (
           onClick: toggleConvertedYaml
         }
       ]
+}
+
+export const monitorJobsActionCreator = {
+  abortJob: jobsActions.abortJob,
+  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
+  fetchJob: jobsActions.fetchJob,
+  fetchJobLogs: jobsActions.fetchJobLogs,
+  fetchJobPods: detailsActions.fetchJobPods,
+  fetchJobs: jobsActions.fetchJobs,
+  removeJobLogs: jobsActions.removeJobLogs,
+  removeNewJob: jobsActions.removeNewJob,
+  removePods: detailsActions.removePods,
+  setFilters: filtersActions.setFilters,
+  setNotification: notificationActions.setNotification
 }

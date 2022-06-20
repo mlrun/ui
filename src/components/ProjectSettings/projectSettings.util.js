@@ -15,6 +15,8 @@ import { ReactComponent as Secrets } from 'igz-controls/images/lock-icon.svg'
 import { ReactComponent as User } from 'igz-controls/images/user.svg'
 import { ReactComponent as Users } from 'igz-controls/images/users.svg'
 
+export const COMPLETED_STATE = 'completed'
+
 export const tabs = projectMembershipIsEnabled => [
   {
     id: PROJECTS_SETTINGS_GENERAL_TAB,

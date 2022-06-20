@@ -3,12 +3,11 @@ import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
-import { Tooltip, TextTooltipTemplate, Wizard } from 'igz-controls/components'
+import { ConfirmDialog, Tooltip, TextTooltipTemplate, Wizard } from 'igz-controls/components'
 
 import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
@@ -99,6 +98,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
               label: confirmData.btnConfirmLabel,
               variant: confirmData.btnConfirmType
             }}
+            isOpen={confirmData}
             message={confirmData.message}
             messageOnly={confirmData.messageOnly}
           />

@@ -19,7 +19,6 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   DATASETS,
   DATASETS_PAGE,
@@ -155,7 +154,10 @@ const Datasets = ({
     setPageData(state => {
       return {
         ...state,
-        ...generatePageData(handleRequestOnExpand, !isEveryObjectValueEmpty(selectedItem))
+        ...generatePageData(
+          handleRequestOnExpand,
+          selectedItem
+        )
       }
     })
   }, [handleRequestOnExpand, selectedItem])

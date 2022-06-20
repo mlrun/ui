@@ -16,6 +16,7 @@ import {
   generateFullMemoryValue,
   getDefaultCpuUnit,
   getDefaultMemoryUnit,
+  getLimitsGpuType,
   getSelectedCpuOption,
   setCpuValidation,
   setMemoryDropdownValidation,
@@ -39,6 +40,11 @@ const FunctionsPanelResources = ({
   setValidation,
   validation
 }) => {
+  const gpuType = useMemo(
+    () => getLimitsGpuType(defaultData.resources?.limits),
+    [defaultData.resources?.limits]
+  )
+
   const [podsPriorityClassName, setPodsPriorityClassName] = useState(
     defaultData.priority_class_name ||
       functionsStore.newFunction.spec.priority_class_name ||
@@ -47,6 +53,16 @@ const FunctionsPanelResources = ({
   const defaultPodsResources = useMemo(() => {
     return frontendSpec?.default_function_pod_resources
   }, [frontendSpec.default_function_pod_resources])
+
+  const preemptionMode = useMemo(() => {
+    return frontendSpec.feature_flags.preemption_nodes === 'enabled'
+      ? defaultData.preemption_mode || frontendSpec.default_function_preemption_mode || 'prevent'
+      : ''
+  }, [
+    defaultData.preemption_mode,
+    frontendSpec.default_function_preemption_mode,
+    frontendSpec.feature_flags.preemption_nodes
+  ])
 
   const [data, setData] = useState({
     volumeMounts: getDefaultVolumeMounts(
@@ -63,17 +79,13 @@ const FunctionsPanelResources = ({
         defaultPodsResources?.limits.cpu
       ),
       memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits.memory ?? '',
-      'nvidia.com/gpu':
-        defaultData.resources?.limits?.['nvidia.com/gpu'] ?? defaultPodsResources?.limits.gpu ?? '',
+      [gpuType]: defaultData.resources?.limits?.[gpuType] ?? defaultPodsResources?.limits.gpu ?? '',
       memoryUnit: getDefaultMemoryUnit(
         defaultData.resources?.limits ?? {},
         defaultPodsResources?.limits.memory
       )
     },
-    preemptionMode:
-      frontendSpec.feature_flags.preemption_nodes === 'enabled'
-        ? defaultData.preemption_mode || frontendSpec.default_function_preemption_mode || 'prevent'
-        : '',
+    preemptionMode,
     requests: {
       cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests.cpu ?? '',
       cpuUnit: getDefaultCpuUnit(
@@ -98,15 +110,15 @@ const FunctionsPanelResources = ({
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
-      setNewFunctionPreemtionMode(data.preemptionMode)
+      setNewFunctionPreemtionMode(preemptionMode)
       setNewFunctionPriorityClassName(frontendSpec.default_function_priority_class_name ?? '')
 
       setNewFunctionDisableAutoMount(false)
     }
   }, [
-    data.preemptionMode,
     frontendSpec.default_function_priority_class_name,
     mode,
+    preemptionMode,
     setNewFunctionDisableAutoMount,
     setNewFunctionPreemtionMode,
     setNewFunctionPriorityClassName
@@ -161,6 +173,11 @@ const FunctionsPanelResources = ({
   }
 
   const handleEditVolume = (volumes, volumeMounts) => {
+    setData(state => ({
+      ...state,
+      volumeMounts,
+      volumes
+    }))
     setNewFunctionVolumes([...volumes])
     setNewFunctionVolumeMounts(
       volumeMounts.map(volume => ({
@@ -345,14 +362,14 @@ const FunctionsPanelResources = ({
       ...state,
       limits: {
         ...state.limits,
-        'nvidia.com/gpu': String(value)
+        [gpuType]: String(value)
       }
     }))
     setNewFunctionResources({
       ...functionsStore.newFunction.spec.resources,
       limits: {
         ...functionsStore.newFunction.spec.resources.limits,
-        'nvidia.com/gpu': String(value)
+        [gpuType]: String(value)
       }
     })
     setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
@@ -361,6 +378,7 @@ const FunctionsPanelResources = ({
   return (
     <FunctionsPanelResourcesView
       data={data}
+      gpuType={gpuType}
       handleAddNewVolume={handleAddNewVolume}
       handleDeleteVolume={handleDeleteVolume}
       handleEditVolume={handleEditVolume}

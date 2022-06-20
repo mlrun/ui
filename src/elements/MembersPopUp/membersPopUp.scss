@@ -103,13 +103,14 @@
       & > *,
       .btn {
         height: 100%;
+        max-height: 40px;
       }
     }
   }
 
   .members-table {
     position: relative;
-    min-height: 250px;
+    min-height: auto;
     max-height: 315px;
     margin: 20px 0;
     padding: 0 20px;
@@ -261,10 +262,15 @@
       font-weight: normal;
     }
 
-    &__header-close {
+    &__header-close,
+    &__btn_close {
       path {
         fill: $white;
       }
+    }
+
+    .confirm-dialog__message {
+      color: $white;
     }
   }
 

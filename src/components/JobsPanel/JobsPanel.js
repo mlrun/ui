@@ -213,6 +213,22 @@ const JobsPanel = ({
         type: panelActions.SET_PREVIOUS_PANEL_DATA_ACCESS_KEY,
         payload: PANEL_DEFAULT_ACCESS_KEY
       })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE,
+        payload: panelState.preemption_mode
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME,
+        payload: panelState.priority_class_name
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
+        payload: panelState.limits
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_REQUESTS,
+        payload: panelState.requests
+      })
     }
 
     return () => {
@@ -222,6 +238,10 @@ const JobsPanel = ({
     jobsStore.error,
     panelState.previousPanelData.tableData,
     panelState.tableData,
+    panelState.preemption_mode,
+    panelState.priority_class_name,
+    panelState.limits,
+    panelState.requests,
     removeJobError
   ])
 

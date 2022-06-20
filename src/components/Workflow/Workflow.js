@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -10,6 +10,7 @@ import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import Table from '../Table/Table'
 import TableTop from '../../elements/TableTop/TableTop'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 
 import {
   getLayoutedElements,
@@ -28,12 +29,13 @@ import {
   PRIMARY_NODE
 } from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
+import { createJobsWorkflowsTabContent } from '../../utils/createJobsContent'
+import { useMode } from '../../hooks/mode.hook'
 
 import { ReactComponent as ListView } from 'igz-controls/images/listview.svg'
 import { ReactComponent as Pipelines } from 'igz-controls/images/pipelines.svg'
 
 import './workflow.scss'
-import JobsTable from '../../elements/JobTable/JobsTable'
 
 const Workflow = ({
   actionsMenu,
@@ -56,10 +58,23 @@ const Workflow = ({
   const params = useParams()
   const location = useLocation()
   const navigate = useNavigate()
+  const { isStagingMode } = useMode()
 
   const graphViewClassNames = classnames(
     'graph-view',
     (selectedJob?.uid || selectedFunction?.hash) && 'with-selected-job'
+  )
+
+  const tableContent = useMemo(
+    () =>
+      createJobsWorkflowsTabContent(
+        jobsContent,
+        params.projectName,
+        params.workflowId,
+        isStagingMode,
+        !isEmpty(selectedJob)
+      ),
+    [isStagingMode, jobsContent, params.projectName, params.workflowId, selectedJob]
   )
 
   useEffect(() => {
@@ -79,29 +94,31 @@ const Workflow = ({
     const nodes = []
 
     forEach(workflow.graph, job => {
+      const sourceHandle = getWorkflowSourceHandle(job.phase)
+
       if (job.type === 'DAG') return
 
       let nodeItem = {
         id: job.id,
         type: ML_NODE,
         data: {
-          subType: PRIMARY_NODE,
-          label: job.name,
-          isSelectable: Boolean(
-            job.run_uid || ((job.run_type === 'deploy' || job.run_type === 'build') && job.function)
-          ),
-          sourceHandle: getWorkflowSourceHandle(job.phase),
           customData: {
             function: job.function,
             run_uid: job.run_uid,
             run_type: job.run_type
-          }
+          },
+          isSelectable: Boolean(
+            job.run_uid || ((job.run_type === 'deploy' || job.run_type === 'build') && job.function)
+          ),
+          label: job.name,
+          sourceHandle,
+          subType: PRIMARY_NODE
         },
         className: classnames(
           ((job.run_uid && selectedJob.uid === job.run_uid) ||
             (job.run_type === 'deploy' && job.function.includes(selectedFunction.hash)) ||
             (job.run_type === 'build' && job.function.includes(selectedFunction.name))) &&
-            'selected'
+            `${sourceHandle.className} selected`
         ),
         position: { x: 0, y: 0 }
       }
@@ -129,7 +146,8 @@ const Workflow = ({
     if (element.data?.customData?.run_uid) {
       navigate(
         getWorkflowDetailsLink(
-          params,
+          params.projectName,
+          params.workflowId,
           null,
           element.data.customData.run_uid,
           null,
@@ -143,7 +161,7 @@ const Workflow = ({
     ) {
       const funcName = element.data.customData.function.includes('@')
         ? element.data.customData.function.match(/\/(.*?)@/i)[1]
-        : element.data.customData.function.match(/\/(.*)/i)[1]
+        : element.data.customData.function.match(/\/([^:]*)/i)[1]
       const funcHash = element.data.customData.function.includes('@')
         ? element.data.customData.function.replace(/.*@/g, '')
         : 'latest'
@@ -215,14 +233,17 @@ const Workflow = ({
             pageData={pageData}
             retryRequest={refresh}
             selectedItem={selectedJob}
+            tableHeaders={tableContent[0]?.content ?? []}
           >
-            <JobsTable
-              actionsMenu={actionsMenu}
-              content={jobsContent}
-              handleSelectJob={handleSelectItem}
-              selectedJob={selectedJob}
-              tab={MONITOR_WORKFLOWS_TAB}
-            />
+            {tableContent.map((tableItem, index) => (
+              <JobsTableRow
+                actionsMenu={actionsMenu}
+                handleSelectJob={handleSelectItem}
+                key={index}
+                rowItem={tableItem}
+                selectedJob={selectedJob}
+              />
+            ))}
           </Table>
         )}
       </div>

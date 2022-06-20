@@ -60,18 +60,13 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
         value: selectedItem?.spec?.stream_path ?? '-'
       },
       model_artifact: {
-        value: selectedItem?.spec?.model_uri?.replace(
-          /^store:\/\/artifacts\//,
-          ''
-        ),
+        value: selectedItem?.spec?.model_uri?.replace(/^store:\/\/artifacts\//, ''),
         link: `${generateLinkPath(selectedItem?.spec?.model_uri)}/overview`
       },
       function_uri: {
         value: selectedItem?.spec?.function_uri,
         link: selectedItem?.spec?.function_uri
-          ? `${generateLinkPath(
-              `store://functions/${selectedItem?.spec?.function_uri}`
-            )}/overview`
+          ? `${generateLinkPath(`store://functions/${selectedItem?.spec?.function_uri}`)}/overview`
           : ''
       },
       last_prediction: {
@@ -165,43 +160,46 @@ export const generateFeatureStoreContent = (
   }
 }
 
-export const generateJobsContent = selectedItem => ({
-  uid: {
-    value: selectedItem.uid
-  },
-  startTime: {
-    value: formatDatetime(
-      selectedItem.startTime,
-      selectedItem.state?.value === 'aborted' ? 'N/A' : 'Not yet started'
-    )
-  },
-  updated: {
-    value: formatDatetime(selectedItem.updated, 'N/A')
-  },
-  parameters: {
-    value: selectedItem.parameters
-  },
-  function: {
-    value: selectedItem.function
-  },
-  resultsChips: {
-    value: selectedItem.resultsChips
-  },
-  labels: {
-    value: selectedItem.labels
-  },
-  logLevel: {
-    value: selectedItem.logLevel
-  },
-  outputPath: {
-    value: selectedItem.outputPath
-  },
-  iterations: {
-    value: selectedItem.iterationStats?.length
-      ? selectedItem.iterationStats.length - 1
-      : 'N/A'
+export const generateJobsContent = selectedItem => {
+  const sparkUiUrl = selectedItem.ui_run ? { sparkUiUrl: { value: selectedItem.ui_run } } : {}
+
+  return {
+    ...sparkUiUrl,
+    uid: {
+      value: selectedItem.uid
+    },
+    startTime: {
+      value: formatDatetime(
+        selectedItem.startTime,
+        selectedItem.state?.value === 'aborted' ? 'N/A' : 'Not yet started'
+      )
+    },
+    updated: {
+      value: formatDatetime(selectedItem.updated, 'N/A')
+    },
+    parameters: {
+      value: selectedItem.parameters
+    },
+    function: {
+      value: selectedItem.function
+    },
+    resultsChips: {
+      value: selectedItem.resultsChips
+    },
+    labels: {
+      value: selectedItem.labels
+    },
+    logLevel: {
+      value: selectedItem.logLevel
+    },
+    outputPath: {
+      value: selectedItem.outputPath
+    },
+    iterations: {
+      value: selectedItem.iterationStats?.length ? selectedItem.iterationStats.length - 1 : 'N/A'
+    }
   }
-})
+}
 
 export const generateFunctionsContent = selectedItem => ({
   name: {
@@ -247,8 +245,7 @@ export const renderContent = (
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
-          changes={detailsStore.changes}
-          content={detailsStore.infoContent}
+          detailsStore={detailsStore}
           pageData={pageData}
           ref={applyChangesRef}
           selectedItem={selectedItem}
@@ -263,9 +260,7 @@ export const renderContent = (
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
     case DETAILS_PREVIEW_TAB:
-      return (
-        <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
-      )
+      return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:
       return <DetailsInputs inputs={selectedItem.inputs} />
     case DETAILS_ARTIFACTS_TAB:
@@ -322,10 +317,7 @@ export const renderContent = (
     case DETAILS_TRANSFORMATIONS_TAB:
       return <DetailsTransformations selectedItem={selectedItem} />
     case DETAILS_ANALYSIS_TAB:
-      if (
-        (selectedItem.kind === 'dataset' && selectedItem.extra_data) ||
-        selectedItem.analysis
-      ) {
+      if ((selectedItem.kind === 'dataset' && selectedItem.extra_data) || selectedItem.analysis) {
         return <DetailsAnalysis artifact={selectedItem} />
       } else return <NoData />
     case DETAILS_STATISTICS_TAB:
@@ -443,7 +435,8 @@ export const handleFinishEdit = (
   detailsTabDispatch,
   detailsTabState,
   setChangesData,
-  setChangesCounter
+  setChangesCounter,
+  changesCounter
 ) => {
   detailsTabDispatch({
     type: detailsTabActions.RESET_EDIT_MODE
@@ -453,12 +446,7 @@ export const handleFinishEdit = (
 
   fields.forEach(field => {
     if (changes.data[field]) {
-      if (
-        isEqual(
-          changesData[field]?.initialFieldValue,
-          changesData[field]?.currentFieldValue
-        )
-      ) {
+      if (isEqual(changesData[field]?.initialFieldValue, changesData[field]?.currentFieldValue)) {
         delete changesData[field]
       } else {
         changesData[field] = {
@@ -470,6 +458,6 @@ export const handleFinishEdit = (
     }
   })
 
-  setChangesCounter(Object.keys(changesData).length)
+  setChangesCounter(changesCounter || Object.keys(changesData).length)
   setChangesData({ ...changesData })
 }

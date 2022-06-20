@@ -1,13 +1,13 @@
 import React from 'react'
 import { isEmpty } from 'lodash'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import TableTop from '../../../elements/TableTop/TableTop'
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Details from '../../Details/Details'
 import Table from '../../Table/Table'
-import JobsTable from '../../../elements/JobTable/JobsTable'
 import YamlModal from '../../../common/YamlModal/YamlModal'
 import JobsPanel from '../../JobsPanel/JobsPanel'
 
@@ -17,6 +17,7 @@ import { getNoDataMessage } from '../../../layout/Content/content.util'
 import { useLocation, useParams } from 'react-router-dom'
 import { ACTIONS_MENU } from '../../../types'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
+import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 
 const MonitorJobsView = ({
   actionsMenu,
@@ -38,10 +39,16 @@ const MonitorJobsView = ({
   selectedJob,
   setEditableItem,
   setSelectedJob,
+  tableContent,
   toggleConvertedYaml
 }) => {
   const params = useParams()
   const location = useLocation()
+
+  const filterMenuClassNames = classnames(
+    'content__action-bar',
+    params.jobId && 'content__action-bar_hidden'
+  )
 
   return (
     <>
@@ -51,7 +58,7 @@ const MonitorJobsView = ({
           text={params.jobName}
         />
       )}
-      <div className="content__action-bar">
+      <div className={filterMenuClassNames}>
         <FilterMenu
           actionButton={{
             label: 'Resource monitoring',
@@ -66,10 +73,36 @@ const MonitorJobsView = ({
           withoutExpandButton
         />
       </div>
+
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
         (jobs.length === 0 && !params.jobName) ? (
         <NoData message={getNoDataMessage(filtersStore, filters, MONITOR_JOBS_TAB, JOBS_PAGE)} />
-      ) : !isEmpty(selectedJob) ? (
+      ) : (
+        isEmpty(selectedJob) && (
+          <Table
+            actionsMenu={actionsMenu}
+            content={params.jobName ? jobRuns : jobs}
+            handleCancel={() => setSelectedJob({})}
+            handleSelectItem={handleSelectJob}
+            pageData={pageData}
+            retryRequest={refreshJobs}
+            selectedItem={selectedJob}
+            tab={MONITOR_JOBS_TAB}
+            tableHeaders={tableContent[0]?.content ?? []}
+          >
+            {tableContent.map((tableItem, index) => (
+              <JobsTableRow
+                actionsMenu={actionsMenu}
+                handleSelectJob={handleSelectJob}
+                key={index}
+                rowItem={tableItem}
+                selectedJob={selectedJob}
+              />
+            ))}
+          </Table>
+        )
+      )}
+      {!isEmpty(selectedJob) && (
         <Details
           actionsMenu={actionsMenu}
           detailsMenu={pageData.details.menu}
@@ -81,27 +114,6 @@ const MonitorJobsView = ({
           selectedItem={selectedJob}
           tab={MONITOR_JOBS_TAB}
         />
-      ) : (
-        <>
-          <Table
-            actionsMenu={actionsMenu}
-            content={params.jobName ? jobRuns : jobs}
-            handleCancel={() => setSelectedJob({})}
-            handleSelectItem={handleSelectJob}
-            pageData={pageData}
-            retryRequest={refreshJobs}
-            selectedItem={selectedJob}
-            tab={MONITOR_JOBS_TAB}
-          >
-            <JobsTable
-              actionsMenu={actionsMenu}
-              content={params.jobName ? jobRuns : jobs}
-              handleSelectJob={handleSelectJob}
-              selectedJob={selectedJob}
-              tab={MONITOR_JOBS_TAB}
-            />
-          </Table>
-        </>
       )}
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
@@ -112,7 +124,7 @@ const MonitorJobsView = ({
             setEditableItem(null)
             removeNewJob()
           }}
-          defaultData={editableItem.scheduled_object || editableItem.rerun_object}
+          defaultData={editableItem.rerun_object}
           mode={PANEL_EDIT_MODE}
           onSuccessRun={tab => {
             if (editableItem) {
@@ -120,7 +132,6 @@ const MonitorJobsView = ({
             }
           }}
           project={params.projectName}
-          withSaveChanges={Boolean(editableItem.scheduled_object)}
         />
       )}
     </>
@@ -153,6 +164,7 @@ MonitorJobsView.propTypes = {
   selectedJob: PropTypes.object.isRequired,
   setEditableItem: PropTypes.func.isRequired,
   setSelectedJob: PropTypes.func.isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired
 }
 

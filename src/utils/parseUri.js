@@ -76,9 +76,7 @@ const generateLinkPath = (uri = '') => {
   const { kind, project, key, tag, uid } = parseUri(uri)
   const screen = kindToScreen[kind] ?? 'files'
   const reference = tag ?? uid
-  return `/projects/${project}/${screen}/${key}${
-    reference ? `/${reference}` : ''
-  }`
+  return `/projects/${project}/${screen}/${key}${reference ? `/${reference}` : ''}`
 }
 
 export { generateLinkPath, parseUri }
