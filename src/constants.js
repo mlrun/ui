@@ -507,9 +507,3 @@ export const GOALS = 'goals'
 export const DATA = 'data'
 export const LABELS = 'labels'
 export const PARAMS = 'params'
-
-/*=========== MODAL =============*/
-
-export const MODAL_SM = 'sm'
-export const MODAL_MD = 'md'
-export const MODAL_LG = 'lg'
