@@ -297,15 +297,15 @@ const Models = ({
     if (
       params.pageTab === MODELS_TAB &&
       selectedModel.item?.feature_vector &&
-      !detailsStore.modelFeatureVectorData.error &&
+      !detailsStore.error &&
       isEmpty(detailsStore.modelFeatureVectorData)
     ) {
       const { name, tag } = getFeatureVectorData(selectedModel.item.feature_vector)
       fetchModelFeatureVector(params.projectName, name, tag)
     }
   }, [
+    detailsStore.error,
     detailsStore.modelFeatureVectorData,
-    detailsStore.modelFeatureVectorData.error,
     fetchModelFeatureVector,
     params.pageTab,
     params.projectName,

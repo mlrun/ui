@@ -10,6 +10,7 @@ import {
   PIPELINE_SUB_PAGE,
   REAL_TIME_PIPELINES_TAB,
   SORT_BY,
+  TAG_LATEST,
   TREE_FILTER
 } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -431,11 +432,9 @@ export const checkForSelectedRealTimePipelines = (
 }
 
 export const getFeatureVectorData = uri => {
-  const separator = uri?.indexOf('@') > 0 ? '@' : ':'
-  const name = uri.slice(uri.lastIndexOf('/') + 1, uri.lastIndexOf(separator))
-  const tag = uri.slice(uri.lastIndexOf(separator) + 1)
+  const [name, tag = TAG_LATEST] = uri.slice(uri.lastIndexOf('/') + 1).split(/[@:]/)
 
-  return { tag, name }
+  return { name, tag }
 }
 
 export const generateDriftDetailsInfo = modelEndpoint => {
