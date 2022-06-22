@@ -66,7 +66,7 @@ const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
         />
       </div>
       <div className="form-row">
-        <FormTextarea label="Description" name="description" required />
+        <FormTextarea label="Description" name="description" />
       </div>
       {showType && <FormSelect label="Type:" name="kind" options={kindOptions} />}
     </div>
