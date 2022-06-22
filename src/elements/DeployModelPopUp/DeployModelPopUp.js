@@ -226,7 +226,7 @@ const DeployModelPopUp = ({
           >
             <div className="form">
               <div className="form-row">
-                <div className="form-col form-col-2">
+                <div className="form-col-2">
                   <FormSelect
                     className="form-field__router"
                     disabled={functionOptionList.length === 0}
@@ -236,7 +236,7 @@ const DeployModelPopUp = ({
                   />
                   <OnChange name="selectedFunctionName">{onSelectedFuncionNameChange}</OnChange>
                 </div>
-                <div className="form-col">
+                <div className="form-col-1">
                   <FormSelect
                     label="Tag"
                     name="selectedTag"
@@ -245,7 +245,7 @@ const DeployModelPopUp = ({
                     options={tagOptionList}
                   />
                 </div>
-                <div className="form-col">
+                <div className="form-col-1">
                   <FormInput name="className" label="Class" required />
                 </div>
               </div>

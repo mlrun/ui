@@ -399,15 +399,26 @@ iframe {
     align-items: stretch;
     margin-bottom: 20px;
   }
-  &-col {
-    flex: 1;
+
+  & [class*='form-col-'] {
+    flex: 1 0 0%;
 
     &:not(:last-child) {
       margin-right: 10px;
     }
+  }
+
+  .form-col {
+    &-1 {
+      flex-grow: 1;
+    }
 
     &-2 {
-      flex: 2 0 0%;
+      flex-grow: 2;
+    }
+
+    &-3 {
+      flex-grow: 3;
     }
   }
 

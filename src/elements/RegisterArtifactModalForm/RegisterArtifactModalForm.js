@@ -49,7 +49,6 @@ const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
       </div>
       <div className="form-row">
         <FormInput
-          invalidText="This field is invalid"
           label="Name"
           name="key"
           required
@@ -58,12 +57,7 @@ const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
         />
       </div>
       <div className="form-row">
-        <FormInput
-          invalidText="This field is invalid"
-          label="Target Path"
-          name="target_path"
-          required
-        />
+        <FormInput label="Target Path" name="target_path" required />
       </div>
       <div className="form-row">
         <FormTextarea label="Description" name="description" />
@@ -74,7 +68,8 @@ const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
 }
 
 RegisterArtifactModalForm.defaultProps = {
-  showType: true
+  showType: true,
+  messageByKind: ''
 }
 
 RegisterArtifactModalForm.propTypes = {
