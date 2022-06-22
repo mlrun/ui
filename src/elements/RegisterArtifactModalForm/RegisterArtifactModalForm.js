@@ -48,13 +48,20 @@ const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
         )}
       </div>
       <div className="form-row">
-        <FormInput
-          label="Name"
-          name="key"
-          required
-          tip="Artifact names in the same project must be unique"
-          validationRules={getValidationRules('artifact.name')}
-        />
+        <div className="form-col-2">
+          <FormInput
+            label="Name"
+            name="key"
+            required
+            tip="Artifact names in the same project must be unique"
+            validationRules={getValidationRules('artifact.name')}
+          />
+        </div>
+        {showType && (
+          <div className="form-col-1">
+            <FormSelect label="Type:" name="kind" options={kindOptions} />
+          </div>
+        )}
       </div>
       <div className="form-row">
         <FormInput label="Target Path" name="target_path" required />
@@ -62,7 +69,6 @@ const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
       <div className="form-row">
         <FormTextarea label="Description" name="description" />
       </div>
-      {showType && <FormSelect label="Type:" name="kind" options={kindOptions} />}
     </div>
   )
 }
