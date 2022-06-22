@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import { FormInput, FormSelect, FormTextarea } from 'igz-controls/components'
@@ -6,24 +6,28 @@ import { FormInput, FormSelect, FormTextarea } from 'igz-controls/components'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
-  const kindOptions = [
-    {
-      label: 'General',
-      id: 'general'
-    },
-    {
-      label: 'Chart',
-      id: 'chart'
-    },
-    {
-      label: 'Plot',
-      id: 'plot'
-    },
-    {
-      label: 'Table',
-      id: 'table'
-    }
-  ]
+  const kindOptions = useMemo(
+    () => [
+      {
+        label: 'General',
+        id: 'general'
+      },
+      {
+        label: 'Chart',
+        id: 'chart'
+      },
+      {
+        label: 'Plot',
+        id: 'plot'
+      },
+      {
+        label: 'Table',
+        id: 'table'
+      }
+    ],
+    []
+  )
+
   return (
     <div className="form">
       <div className="form-row">

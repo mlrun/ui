@@ -4,12 +4,11 @@ import { connect } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
 
-import { messagesByKind } from '../RegisterArtifactPopup/messagesByKind'
-
-import notificationActions from '../../actions/notification'
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
 import { Button, ConfirmDialog, Modal } from 'igz-controls/components'
 
+import { messagesByKind } from '../RegisterArtifactPopup/messagesByKind'
+import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
