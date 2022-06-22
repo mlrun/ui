@@ -28,7 +28,7 @@ const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
     <div className="form">
       <div className="form-row">
         {messageByKind && (
-          <div className="msg">
+          <div className="form-text">
             <span>{messageByKind}</span>
             <div>
               <p>
