@@ -224,46 +224,48 @@ const DeployModelPopUp = ({
             size={MODAL_SM}
             title="Deploy model"
           >
-            <div className="deploy-model__row">
-              <div className="col col-2">
-                <FormSelect
-                  className="form-field__router"
-                  disabled={functionOptionList.length === 0}
-                  label="Serving function (router)"
-                  name="selectedFunctionName"
-                  options={functionOptionList}
+            <div className="form">
+              <div className="form-row">
+                <div className="form-col form-col-2">
+                  <FormSelect
+                    className="form-field__router"
+                    disabled={functionOptionList.length === 0}
+                    label="Serving function (router)"
+                    name="selectedFunctionName"
+                    options={functionOptionList}
+                  />
+                  <OnChange name="selectedFunctionName">{onSelectedFuncionNameChange}</OnChange>
+                </div>
+                <div className="form-col">
+                  <FormSelect
+                    label="Tag"
+                    name="selectedTag"
+                    search
+                    disabled={tagOptionList.length === 0}
+                    options={tagOptionList}
+                  />
+                </div>
+                <div className="form-col">
+                  <FormInput name="className" label="Class" required />
+                </div>
+              </div>
+              <div className="form-row">
+                <FormInput
+                  name="modelName"
+                  label="Model name"
+                  required
+                  validationRules={getValidationRules('artifact.name')}
+                  tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
                 />
-                <OnChange name="selectedFunctionName">{onSelectedFuncionNameChange}</OnChange>
               </div>
-              <div className="col">
-                <FormSelect
-                  label="Tag"
-                  name="selectedTag"
-                  search
-                  disabled={tagOptionList.length === 0}
-                  options={tagOptionList}
-                />
-              </div>
-              <div className="col">
-                <FormInput name="className" label="Class" required />
-              </div>
-            </div>
-            <div className="deploy-model__row">
-              <FormInput
-                name="modelName"
-                label="Model name"
-                required
-                validationRules={getValidationRules('artifact.name')}
-                tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
+              <FormKeyValueTable
+                keyHeader="Class argument name"
+                keyLabel="Class argument name"
+                addNewItemLabel="Add class argument"
+                name="arguments"
+                formState={formState}
               />
             </div>
-            <FormKeyValueTable
-              keyHeader="Class argument name"
-              keyLabel="Class argument name"
-              addNewItemLabel="Add class argument"
-              name="arguments"
-              formState={formState}
-            />
           </Modal>
         )
       }}

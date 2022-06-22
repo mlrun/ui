@@ -392,3 +392,27 @@ iframe {
     }
   }
 }
+
+.form {
+  &-row {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 20px;
+  }
+  &-col {
+    flex: 1;
+
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+
+    &-2 {
+      flex: 2 0 0%;
+    }
+  }
+
+  .msg {
+    color: $primary;
+    font-size: 12px;
+  }
+}
