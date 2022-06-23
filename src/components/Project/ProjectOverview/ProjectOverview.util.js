@@ -17,7 +17,7 @@ export const getInitialCards = projectName => {
 
   return {
     collection: {
-      title: 'Data collection',
+      title: 'Data',
       subTitle:
         'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
       actions: [
@@ -94,7 +94,7 @@ export const getInitialCards = projectName => {
       ]
     },
     development: {
-      title: 'Development',
+      title: 'Jobs and Workflows',
       subTitle:
         'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more. This is not the final version.',
       actions: [
@@ -205,10 +205,12 @@ export const getInitialCards = projectName => {
   }
 }
 
-export const handlePath = (navigate, cb) => ({ target, externalLink }) => {
-  return target.indexOf('/') < 0
-    ? cb(target.toLowerCase())
-    : externalLink
-    ? (window.top.location.href = target)
-    : navigate(target)
-}
+export const handlePath =
+  (navigate, cb) =>
+  ({ target, externalLink }) => {
+    return target.indexOf('/') < 0
+      ? cb(target.toLowerCase())
+      : externalLink
+      ? (window.top.location.href = target)
+      : navigate(target)
+  }
