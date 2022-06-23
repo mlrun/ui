@@ -124,7 +124,7 @@ const MonitorJobsView = ({
             setEditableItem(null)
             removeNewJob()
           }}
-          defaultData={editableItem.rerun_object}
+          defaultData={editableItem?.rerun_object}
           mode={PANEL_EDIT_MODE}
           onSuccessRun={tab => {
             if (editableItem) {

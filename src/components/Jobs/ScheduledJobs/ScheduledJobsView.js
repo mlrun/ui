@@ -63,7 +63,7 @@ const ScheduledJobsView = ({
             setEditableItem(null)
             removeNewJob()
           }}
-          defaultData={editableItem.scheduled_object}
+          defaultData={editableItem?.scheduled_object}
           mode={PANEL_EDIT_MODE}
           onEditJob={onEditJob}
           onSuccessRun={tab => {
