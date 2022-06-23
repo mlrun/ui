@@ -22,6 +22,7 @@ import schedules from './data/schedules.json'
 import artifactTags from './data/artifactsTags.json'
 import funcs from './data/funcs.json'
 import logs from './data/logs.json'
+import modelEndpoints from './data/modelEndpoints.json'
 
 import iguazioProjects from './data/iguazioProjects.json'
 import iguazioUserGrops from './data/iguazioUserGroups.json'
@@ -711,7 +712,7 @@ function postProjectsFeatureVectors(req, res) {
 
     res.send(newFeatureVector)
   } else {
-    res.status = 409
+    res.statusCode = 409
     res.send({
       detail: {
         reason: `MLRunConflictError('Adding an already-existing FeatureVector - ${req.body.metadata.project}/${req.body.metadata.name}:${req.body.metadata.tag}')`
@@ -1074,12 +1075,27 @@ function postSubmitJob(req, res) {
   respTemplate.data.spec.parameters = req.body.task.spec.parameters
 
   if (req.body.schedule) {
+    if (
+        schedules.schedules.find(
+            schedule =>
+                schedule.name === runName &&
+                schedule.scheduled_object.task.metadata.project === runProject
+        )
+    ) {
+      res.statusCode = 409
+      return res.send({
+        detail: {
+          reason: `MLRunConflictError('Conflict - Schedule already exists: ${runProject}/${runName}')`
+        }
+      })
+    }
     let schedule = { ...scheduleTemplate }
     schedule.name = runName
     schedule.project = runProject
     schedule.scheduled_object.task.metadata.name = runName
     schedule.scheduled_object.task.metadata.project = runProject
     schedule.scheduled_object.task.metadata.labels.author = runAuthor
+    schedule.scheduled_object.task.spec.function = req.body.task.spec.function
     schedule.creation_time = currentDate.toISOString()
 
     schedules.schedules.push(schedule)
@@ -1193,6 +1209,31 @@ function postArtifact(req, res) {
   }
 
   res.send()
+}
+
+function getModelEndpoints(req, res) {
+  let collectedEndpoints = modelEndpoints.endpoints.filter(
+      item => item.metadata.project === req.params.project
+  )
+  if (req.query['label']) {
+    let [key, value] = req.query['label'].split('=')
+
+    collectedEndpoints = collectedEndpoints.filter(endpoint =>
+        req.query['label'].includes('=')
+            ? endpoint.metadata.labels[key] === value
+            : endpoint.metadata.labels[key]
+    )
+  }
+
+  res.send({ endpoints: collectedEndpoints })
+}
+
+function getModelEndpoint(req, res) {
+  const endpoint = modelEndpoints.endpoints.find(
+      item => item.metadata.project === req.params.project && item.metadata.uid === req.params.uid
+  )
+
+  res.send(endpoint)
 }
 
 function getNuclioFunctions(req, res) {
@@ -1552,6 +1593,9 @@ app.get(
   `${mlrunAPIIngress}/projects/:project/runtime-resources`,
   getRuntimeResources
 )
+
+app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints`, getModelEndpoints)
+app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints/:uid`, getModelEndpoint)
 
 app.get(
   `${mlrunAPIIngress}/projects/:project/:artifact`,

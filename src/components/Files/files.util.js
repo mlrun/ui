@@ -5,6 +5,8 @@ import {
   NAME_FILTER,
   TREE_FILTER
 } from '../../constants'
+import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 export const pageDataInitialState = {
   details: {
@@ -21,8 +23,7 @@ export const infoHeaders = [
   {
     label: 'Hash',
     id: 'hash',
-    tip:
-      'Represents hash of the data. when the data changes the hash would change'
+    tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
@@ -32,8 +33,7 @@ export const infoHeaders = [
   {
     label: 'UID',
     id: 'tree',
-    tip:
-      'Unique identifier representing the job or the workflow that generated the artifact'
+    tip: 'Unique identifier representing the job or the workflow that generated the artifact'
   },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' },
@@ -114,11 +114,20 @@ export const tableHeaders = isSelectedFile => [
   }
 ]
 
-export const generatePageData = (handleRequestOnExpand, isSelectedFile) => ({
+export const generatePageData = (handleRequestOnExpand, selectedFile) => ({
   actionsMenuHeader,
-  details: { menu: detailsMenu, infoHeaders, type: FILES_PAGE },
+  details: {
+    menu: detailsMenu,
+    infoHeaders,
+    type: FILES_PAGE,
+    additionalInfo: {
+      header: 'Producer',
+      body: generateProducerDetailsInfo(selectedFile),
+      hidden: !selectedFile.item?.producer
+    }
+  },
   filters,
   handleRequestOnExpand,
   page,
-  tableHeaders: tableHeaders(isSelectedFile)
+  tableHeaders: tableHeaders(!isEveryObjectValueEmpty(selectedFile))
 })

@@ -54,6 +54,16 @@ const FunctionsPanelResources = ({
     return frontendSpec?.default_function_pod_resources
   }, [frontendSpec.default_function_pod_resources])
 
+  const preemptionMode = useMemo(() => {
+    return frontendSpec.feature_flags.preemption_nodes === 'enabled'
+      ? defaultData.preemption_mode || frontendSpec.default_function_preemption_mode || 'prevent'
+      : ''
+  }, [
+    defaultData.preemption_mode,
+    frontendSpec.default_function_preemption_mode,
+    frontendSpec.feature_flags.preemption_nodes
+  ])
+
   const [data, setData] = useState({
     volumeMounts: getDefaultVolumeMounts(
       defaultData.volume_mounts ?? [],
@@ -75,10 +85,7 @@ const FunctionsPanelResources = ({
         defaultPodsResources?.limits.memory
       )
     },
-    preemptionMode:
-      frontendSpec.feature_flags.preemption_nodes === 'enabled'
-        ? defaultData.preemption_mode || frontendSpec.default_function_preemption_mode || 'prevent'
-        : '',
+    preemptionMode,
     requests: {
       cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests.cpu ?? '',
       cpuUnit: getDefaultCpuUnit(
@@ -103,15 +110,15 @@ const FunctionsPanelResources = ({
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
-      setNewFunctionPreemtionMode(data.preemptionMode)
+      setNewFunctionPreemtionMode(preemptionMode)
       setNewFunctionPriorityClassName(frontendSpec.default_function_priority_class_name ?? '')
 
       setNewFunctionDisableAutoMount(false)
     }
   }, [
-    data.preemptionMode,
     frontendSpec.default_function_priority_class_name,
     mode,
+    preemptionMode,
     setNewFunctionDisableAutoMount,
     setNewFunctionPreemtionMode,
     setNewFunctionPriorityClassName
@@ -166,6 +173,11 @@ const FunctionsPanelResources = ({
   }
 
   const handleEditVolume = (volumes, volumeMounts) => {
+    setData(state => ({
+      ...state,
+      volumeMounts,
+      volumes
+    }))
     setNewFunctionVolumes([...volumes])
     setNewFunctionVolumeMounts(
       volumeMounts.map(volume => ({

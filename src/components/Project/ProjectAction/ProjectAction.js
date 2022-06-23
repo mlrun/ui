@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Tip from '../../../common/Tip/Tip'
+import { Tip } from 'igz-controls/components'
 
 import './ProjectAction.scss'
 

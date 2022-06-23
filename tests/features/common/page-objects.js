@@ -59,6 +59,7 @@ module.exports = {
   Register_File_Popup: interactivePopup['registerFilePopup'],
   Files_Info_Pane: infoPane['filesInfoPane'],
   Models: models['modelsTab'],
+  Model_Endpoints: models['modelEndpoints'],
   Real_Time_Pipelines: models['realTimePipelinesTab'],
   Models_Info_Pane: infoPane['modelsInfoPane'],
   Deploy_Model_Popup: interactivePopup['deployModelPopup'],

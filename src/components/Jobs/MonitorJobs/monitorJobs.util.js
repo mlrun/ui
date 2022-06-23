@@ -15,6 +15,11 @@ import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
+import jobsActions from '../../../actions/jobs'
+import detailsActions from '../../../actions/details'
+import filtersActions from '../../../actions/filters'
+import notificationActions from '../../../actions/notification'
+
 export const generateFilters = jobName => [
   { type: PERIOD_FILTER, label: 'Period:' },
   { type: STATUS_FILTER, label: 'Status:' },
@@ -87,4 +92,18 @@ export const generateActionsMenu = (
           onClick: toggleConvertedYaml
         }
       ]
+}
+
+export const monitorJobsActionCreator = {
+  abortJob: jobsActions.abortJob,
+  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
+  fetchJob: jobsActions.fetchJob,
+  fetchJobLogs: jobsActions.fetchJobLogs,
+  fetchJobPods: detailsActions.fetchJobPods,
+  fetchJobs: jobsActions.fetchJobs,
+  removeJobLogs: jobsActions.removeJobLogs,
+  removeNewJob: jobsActions.removeNewJob,
+  removePods: detailsActions.removePods,
+  setFilters: filtersActions.setFilters,
+  setNotification: notificationActions.setNotification
 }

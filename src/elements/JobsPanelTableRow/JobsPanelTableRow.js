@@ -5,8 +5,7 @@ import classnames from 'classnames'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import CheckBox from '../../common/CheckBox/CheckBox'
-import Tip from '../../common/Tip/Tip'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { joinDataOfArrayOrObject } from '../../utils'
 import { ACTIONS_MENU } from '../../types'
@@ -53,25 +52,18 @@ const JobsPanelTableRow = ({
               section !== 'volumes')
           const tableCellClassName = classnames(
             'table__cell',
-            ((property === 'name' && has(contentItem.data, 'value')) ||
-              property === 'valueType') &&
+            ((property === 'name' && has(contentItem.data, 'value')) || property === 'valueType') &&
               contentItem.isDefault &&
               'table__cell_disabled',
             isEditable && 'cursor-pointer'
           )
-          const tooltipClassNames = classnames(
-            property === 'name' && 'parameter-name'
-          )
+          const tooltipClassNames = classnames(property === 'name' && 'parameter-name')
 
           return (
             <div
               className={tableCellClassName}
               key={property}
-              onClick={
-                isEditable && !editItem
-                  ? () => handleEdit(contentItem, index)
-                  : null
-              }
+              onClick={isEditable && !editItem ? () => handleEdit(contentItem, index) : null}
             >
               <Tooltip
                 className={tooltipClassNames}
@@ -84,14 +76,9 @@ const JobsPanelTableRow = ({
                   />
                 }
               >
-                {joinDataOfArrayOrObject(
-                  value,
-                  section.includes('data-inputs') ? '' : ', '
-                )}
+                {joinDataOfArrayOrObject(value, section.includes('data-inputs') ? '' : ', ')}
               </Tooltip>
-              {property === 'name' && contentItem.doc && (
-                <Tip text={contentItem.doc} />
-              )}
+              {property === 'name' && contentItem.doc && <Tip text={contentItem.doc} />}
             </div>
           )
         })}

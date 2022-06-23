@@ -49,13 +49,13 @@ const FunctionsTableRow = ({
         <div className="row_grouped-by">
           <div className="table-body__row">
             <TableCell
-              handleExpandRow={handleExpandRow}
               data={rowItem.name}
+              firstCell
+              handleExpandRow={handleExpandRow}
               item={rowItem}
               selectItem={handleSelectItem}
               selectedItem={selectedItem}
-              expandLink
-              firstRow
+              showExpandButton
             />
           </div>
           <>
@@ -107,7 +107,7 @@ const FunctionsTableRow = ({
               !rowItemProp.hidden && (
                 <TableCell
                   data={rowItemProp}
-                  expandLink={Array.isArray(tableContent)}
+                  firstCell={i === 0}
                   handleExpandRow={handleExpandRow}
                   item={currentItem}
                   key={rowItemProp.id}
@@ -121,6 +121,7 @@ const FunctionsTableRow = ({
                   }
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
+                  showExpandButton={Array.isArray(tableContent)}
                 />
               )
             )

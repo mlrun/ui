@@ -85,6 +85,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
+        loading: false,
         modelFeatureVectorData: {
           ...initialState.modelFeatureVectorData
         }

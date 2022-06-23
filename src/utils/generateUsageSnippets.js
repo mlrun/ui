@@ -11,7 +11,9 @@ export const generateUsageSnippets = (pageTab, selectedItem) => {
 ]
 
 vector = fs.FeatureVector("<vector-name>",features=features,description="this is my vector")
-resp = fs.get_offline_features(vector)`
+resp = fs.get_offline_features(vector)
+#Preview the dataset
+resp.to_dataframe().tail(5)`
       },
       {
         title: 'Getting online features:',
@@ -28,6 +30,8 @@ resp = svc.get([{"${selectedItem.entities[0]?.name ?? ''}": <value>}])`
       {
         title: 'Getting offline & online features:',
         code: `resp = fs.get_offline_features("${uri}")
+#Preview the dataset
+resp.to_dataframe().tail(5)
 
 svc = fs.get_online_feature_service("${uri}")
 resp = svc.get([{"customer_id": "42"}, {"customer_id": "50"}])`

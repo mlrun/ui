@@ -309,6 +309,14 @@ const synchronizeBackend = async () => {
     '/secret-keys?provider=kubernetes'
   )
 
+  const modelEndpointsArr = await fetchJsons(
+    projectNames,
+    baseMlRunUrl,
+    'projects/',
+    '/model-endpoints'
+  )
+  const modelEndpoints = convertFromArrayToJson(modelEndpointsArr)
+
   const artifactsLogs = await fetchArtifactsLogs(runs.runs)
   const logs = await fetchAllLogs(artifactsLogs)
 
@@ -331,6 +339,7 @@ const synchronizeBackend = async () => {
   saveDataToJson('./data/artifactsTags.json', artifactTags)
   saveDataToJson('./data/run.json', runProjectUid)
   saveDataToJson('./data/piplineIDs.json', pipelineIdsData)
+  saveDataToJson('./data/modelEndpoints.json', modelEndpoints)
 
   // backend temporary 403 error
   // const filteredData = await filterData(featureSets.feature_sets)
