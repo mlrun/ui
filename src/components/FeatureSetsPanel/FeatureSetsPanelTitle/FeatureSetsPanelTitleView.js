@@ -2,12 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Input from '../../../common/Input/Input'
 import ChipCell from '../../../common/ChipCell/ChipCell'
+import Input from '../../../common/Input/Input'
 import TextArea from '../../../common/TextArea/TextArea'
-import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
-import { ReactComponent as CloseIcon } from '../../../images/close.svg'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
 import './featureSetsPanelTitle.scss'
 
@@ -24,16 +26,6 @@ const FeatureSetsPanelTitleView = ({
   setValidation,
   validation
 }) => {
-  const titleValidationTip = (
-    <>
-      <span>&bull; Valid characters: A-Z, a-z, 0-9, -, _, .</span>
-      <br />
-      <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
-      <br />
-      <span>&bull; Length - max: 56</span>
-    </>
-  )
-
   return (
     <div className="panel-title feature-sets-panel__title">
       <div className="panel-title__container">
@@ -44,17 +36,13 @@ const FeatureSetsPanelTitleView = ({
             invalid={!validation.isNameValid}
             invalidText="This field is invalid"
             label="Feature Set Name"
-            maxLength={56}
             onChange={name => setData(state => ({ ...state, name }))}
             onBlur={handleNameOnBlur}
-            pattern="^(?=[\S\s]{1,56}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
             required
             requiredText="This field is required"
-            setInvalid={value =>
-              setValidation(state => ({ ...state, isNameValid: value }))
-            }
-            tip={titleValidationTip}
+            setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
             type="text"
+            validationRules={getValidationRules('feature.vector.name')}
             value={data.name}
             wrapperClassName="name"
           />
@@ -70,18 +58,15 @@ const FeatureSetsPanelTitleView = ({
               }))
             }
             onBlur={event => {
-              if (
-                featureStore.newFeatureSet.metadata.tag !== event.target.value
-              ) {
+              if (featureStore.newFeatureSet.metadata.tag !== event.target.value) {
                 setNewFeatureSetVersion(event.target.value)
               }
             }}
             placeholder="latest"
-            setInvalid={value =>
-              setValidation(state => ({ ...state, isTagValid: value }))
-            }
+            setInvalid={value => setValidation(state => ({ ...state, isTagValid: value }))}
             type="text"
             value={data.version}
+            validationRules={getValidationRules('feature.sets.tag')}
             wrapperClassName="version"
           />
         </div>
@@ -96,9 +81,7 @@ const FeatureSetsPanelTitleView = ({
             }))
           }
           onBlur={event => {
-            if (
-              featureStore.newFeatureSet.spec.description !== event.target.value
-            ) {
+            if (featureStore.newFeatureSet.spec.description !== event.target.value) {
               setNewFeatureSetDescription(event.target.value)
             }
           }}

@@ -9,7 +9,7 @@ import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
 import jobsActions from '../../actions/jobs'
 import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { ENV_VARIABLE_TYPE_VALUE } from '../../constants'
 
 import './jobsPanelEnviromnetVariables.scss'
@@ -19,13 +19,14 @@ const JobsPanelEnvironmentVariables = ({
   panelDispatch,
   panelEnvData,
   previousPanelEnvData,
+  isPanelEditMode,
   setNewJobEnvironmentVariables
 }) => {
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const handleAddNewEnv = env => {
     const generatedVariable = generateEnvVariable(
-      isDemoMode
+      isStagingMode
         ? env
         : {
             name: env.key,
@@ -51,7 +52,7 @@ const JobsPanelEnvironmentVariables = ({
   const handleEditEnv = env => {
     let variables = []
 
-    if (isDemoMode) {
+    if (isStagingMode) {
       variables = env.map(item => generateEnvVariable(item))
     } else {
       const parsedEnv = parseEnvVariables(panelEnvData.map(env => env.data))
@@ -81,7 +82,7 @@ const JobsPanelEnvironmentVariables = ({
   const handleDeleteEnv = env => {
     let variables = []
 
-    if (isDemoMode) {
+    if (isStagingMode) {
       variables = env.map(item => generateEnvVariable(item))
     } else {
       const parsedEnv = parseEnvVariables(panelEnvData.map(env => env.data))
@@ -105,12 +106,13 @@ const JobsPanelEnvironmentVariables = ({
 
   return (
     <>
-      {isDemoMode ? (
+      {isStagingMode ? (
         <EnvironmentVariables
           envVariables={parseEnvVariables(panelEnvData.map(env => env.data))}
           handleAddNewEnv={handleAddNewEnv}
           handleDeleteEnv={handleDeleteEnv}
           handleEditEnv={handleEditEnv}
+          isPanelEditMode={isPanelEditMode}
         />
       ) : (
         <KeyValueTable
@@ -127,6 +129,7 @@ const JobsPanelEnvironmentVariables = ({
             }
           )}
           deleteItem={handleDeleteEnv}
+          disabled={isPanelEditMode}
           editItem={handleEditEnv}
           isKeyRequired={true}
           isValueRequired={true}
@@ -141,7 +144,12 @@ const JobsPanelEnvironmentVariables = ({
   )
 }
 
+JobsPanelEnvironmentVariables.defaultProps = {
+  isPanelEditMode: false
+}
+
 JobsPanelEnvironmentVariables.propTypes = {
+  isPanelEditMode: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelEnvData: PropTypes.arrayOf(PropTypes.shape).isRequired,
   previousPanelEnvData: PropTypes.arrayOf(PropTypes.shape).isRequired

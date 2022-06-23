@@ -41,8 +41,14 @@ import {
   SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
-  REMOVE_JOB
+  REMOVE_JOB,
+  FETCH_ALL_JOB_RUNS_BEGIN,
+  FETCH_ALL_JOB_RUNS_FAILURE,
+  FETCH_ALL_JOB_RUNS_SUCCESS,
+  SET_NEW_JOB_PREEMTION_MODE,
+  SET_NEW_JOB_PRIORITY_CLASS_NAME
 } from '../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE, CONFLICT_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 const jobsActions = {
   abortJob: (project, job) => dispatch => {
@@ -70,6 +76,33 @@ const jobsActions = {
   editJobFailure: error => ({
     type: EDIT_JOB_FAILURE,
     payload: error
+  }),
+  fetchAllJobRuns: (project, filters, jobName) => dispatch => {
+    dispatch(jobsActions.fetchAllJobRunsBegin())
+
+    return jobsApi
+      .getAllJobRuns(project, jobName, filters)
+      .then(({ data }) => {
+        dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
+
+        return data.runs
+      })
+      .catch(error => {
+        dispatch(jobsActions.fetchAllJobRunsFailure(error))
+
+        throw error
+      })
+  },
+  fetchAllJobRunsBegin: () => ({
+    type: FETCH_ALL_JOB_RUNS_BEGIN
+  }),
+  fetchAllJobRunsFailure: error => ({
+    type: FETCH_ALL_JOB_RUNS_FAILURE,
+    payload: error
+  }),
+  fetchAllJobRunsSuccess: jobsList => ({
+    type: FETCH_ALL_JOB_RUNS_SUCCESS,
+    payload: jobsList
   }),
   fetchJob: (project, jobId) => dispatch => {
     dispatch(jobsActions.fetchJobBegin())
@@ -152,7 +185,7 @@ const jobsActions = {
           : (data || {}).runs.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
-        dispatch(jobsActions.setAllJobsData(data.runs || {}))
+        dispatch(jobsActions.setAllJobsData(data.runs || []))
 
         return newJobs
       })
@@ -229,7 +262,15 @@ const jobsActions = {
         return result
       })
       .catch(error => {
-        dispatch(jobsActions.runNewJobFailure(error.message))
+        dispatch(
+          jobsActions.runNewJobFailure(
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You are not permitted to run new job.'
+              : error.response.status === CONFLICT_ERROR_STATUS_CODE
+              ? 'This job is already scheduled'
+              : 'Unable to create new job.'
+          )
+        )
 
         throw error
       })
@@ -279,6 +320,14 @@ const jobsActions = {
   setNewJobParameters: parameters => ({
     type: SET_NEW_JOB_PARAMETERS,
     payload: parameters
+  }),
+  setNewJobPreemtionMode: mode => ({
+    type: SET_NEW_JOB_PREEMTION_MODE,
+    payload: mode
+  }),
+  setNewJobPriorityClassName: className => ({
+    type: SET_NEW_JOB_PRIORITY_CLASS_NAME,
+    payload: className
   }),
   setNewJobSecretSources: secretSources => ({
     type: SET_NEW_JOB_SECRET_SOURCES,

@@ -3,14 +3,13 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import MlChart from '../../common/Chart/MlChart'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { generateStatistics } from './detailsStatistics.util'
 import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
 
 import './detailsStatistics.scss'
-import colors from '../../scss/colors.scss'
+import colors from 'igz-controls/scss/colors.scss'
 
 const DetailsStatistics = ({ selectedItem }) => {
   const statistics = generateStatistics(selectedItem)

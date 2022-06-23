@@ -1,0 +1,29 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/variables';
+
+.page-header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+
+  &__title-wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+  }
+
+  &__back-btn {
+    margin-right: 5px;
+  }
+
+  &__title {
+    color: $primaryTextColor;
+    font-weight: 300;
+    font-size: 48px;
+  }
+
+  &__description {
+    display: flex;
+    color: $secondaryTextColor;
+  }
+}

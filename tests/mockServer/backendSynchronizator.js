@@ -4,22 +4,17 @@ const yaml = require('js-yaml')
 const lodash = require('lodash')
 
 const baseMlRunUrl =
-  'http://mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/'
-// const baseMlRunUrl =
-//   'http://mlrun-api-ingress.default-tenant.app.dev35.lab.iguazeng.com/api/'
+  'http://mlrun-api-ingress.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
 
 const baseNuclioUrl =
-  'http://nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/'
-// const baseNuclioUrl =
-//   'http://nuclio-ingress.default-tenant.app.dev35.lab.iguazeng.com/api/'
+  'http://nuclio-ingress.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
+
 const githubFunctionsUrl = 'https://github.com/mlrun/functions/tree/master'
 const githubYamlUrl =
   'https://raw.githubusercontent.com/mlrun/functions/master/'
 const saveFolder = 'data'
 const igzApiUrl =
-  'platform-api.default-tenant.app.vmdev36.lab.iguazeng.com/api/'
-// const igzApiUrl =
-//   'http://platform-api.default-tenant.app.dev35.lab.iguazeng.com/api/'
+  'http://platform-api.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
 
 const fetchData = async (host, endpoint = '') => {
   try {
@@ -314,6 +309,14 @@ const synchronizeBackend = async () => {
     '/secret-keys?provider=kubernetes'
   )
 
+  const modelEndpointsArr = await fetchJsons(
+    projectNames,
+    baseMlRunUrl,
+    'projects/',
+    '/model-endpoints'
+  )
+  const modelEndpoints = convertFromArrayToJson(modelEndpointsArr)
+
   const artifactsLogs = await fetchArtifactsLogs(runs.runs)
   const logs = await fetchAllLogs(artifactsLogs)
 
@@ -336,6 +339,7 @@ const synchronizeBackend = async () => {
   saveDataToJson('./data/artifactsTags.json', artifactTags)
   saveDataToJson('./data/run.json', runProjectUid)
   saveDataToJson('./data/piplineIDs.json', pipelineIdsData)
+  saveDataToJson('./data/modelEndpoints.json', modelEndpoints)
 
   // backend temporary 403 error
   // const filteredData = await filterData(featureSets.feature_sets)

@@ -1,0 +1,22 @@
+@import '~igz-controls/scss/variables';
+
+.page-view {
+  &__container {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    // transform: translateX($navbarTogglerWidth);
+    transition: all 0.3s ease-in-out;
+  }
+}
+
+#main-wrapper {
+  display: flex;
+  flex: 1;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  overflow: auto;
+  width: 100%;
+}

@@ -5,6 +5,9 @@ import {
   CLOSE_ARTIFACT_PREVIEW,
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
+  FETCH_ARTIFACTS_FUNCTIONS_BEGIN,
+  FETCH_ARTIFACTS_FUNCTIONS_FAILURE,
+  FETCH_ARTIFACTS_FUNCTIONS_SUCCESS,
   FETCH_ARTIFACTS_SUCCESS,
   FETCH_DATA_SET_SUCCESS,
   FETCH_DATASETS_BEGIN,
@@ -14,9 +17,6 @@ import {
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
-  FETCH_FUNCTIONS_BEGIN,
-  FETCH_FUNCTIONS_FAILURE,
-  FETCH_FUNCTIONS_SUCCESS,
   FETCH_MODEL_ENDPOINTS_BEGIN,
   FETCH_MODEL_ENDPOINTS_FAILURE,
   FETCH_MODEL_ENDPOINTS_SUCCESS,
@@ -61,7 +61,7 @@ const initialState = {
   preview: {}
 }
 
-export default (state = initialState, { type, payload }) => {
+const artifactReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case BUILD_FUNCTION_BEGIN:
       return {
@@ -173,18 +173,18 @@ export default (state = initialState, { type, payload }) => {
         },
         loading: false
       }
-    case FETCH_FUNCTIONS_BEGIN:
+    case FETCH_ARTIFACTS_FUNCTIONS_BEGIN:
       return {
         ...state,
-        loading: true
+        loading: payload
       }
-    case FETCH_FUNCTIONS_FAILURE:
+    case FETCH_ARTIFACTS_FUNCTIONS_FAILURE:
       return {
         ...state,
         error: payload,
         loading: false
       }
-    case FETCH_FUNCTIONS_SUCCESS:
+    case FETCH_ARTIFACTS_FUNCTIONS_SUCCESS:
       return {
         ...state,
         error: null,
@@ -318,3 +318,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default artifactReducer

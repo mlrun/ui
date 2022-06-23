@@ -14,15 +14,16 @@ import {
   ENV_VARIABLE_TYPE_VALUE
 } from '../../constants'
 
-import { ReactComponent as Edit } from '../../images/edit.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const EnvironmentVariables = ({
   className,
   envVariables,
   handleAddNewEnv,
   handleDeleteEnv,
-  handleEditEnv
+  handleEditEnv,
+  isPanelEditMode
 }) => {
   const [newEnvVariable, setNewEnvVariable] = useState(newVariableInitialState)
   const [validation, setValidation] = useState(validationInitialState)
@@ -148,6 +149,7 @@ const EnvironmentVariables = ({
       discardChanges={discardChanges}
       editEnvVariable={editEnvVariable}
       envVariables={envVariables}
+      isPanelEditMode={isPanelEditMode}
       generateActionsMenu={generateActionsMenu}
       newEnvVariable={newEnvVariable}
       selectedEnvVariable={selectedEnvVariable}
@@ -162,7 +164,8 @@ const EnvironmentVariables = ({
 }
 
 EnvironmentVariables.defaultProps = {
-  className: ''
+  className: '',
+  isPanelEditMode: false
 }
 
 EnvironmentVariables.propTypes = {
@@ -170,7 +173,8 @@ EnvironmentVariables.propTypes = {
   envVariables: PropTypes.array.isRequired,
   handleAddNewEnv: PropTypes.func.isRequired,
   handleDeleteEnv: PropTypes.func.isRequired,
-  handleEditEnv: PropTypes.func.isRequired
+  handleEditEnv: PropTypes.func.isRequired,
+  isPanelEditMode: PropTypes.bool
 }
 
 export default EnvironmentVariables

@@ -11,10 +11,10 @@ import {
 import labelComponent from '../components/label.component'
 
 const actionMenuStructure = {
-  root: 'div.actions-menu__container',
+  root: '.actions-menu__container',
   menuElements: {
     open_button: 'button',
-    options: 'div.actions-menu__body div.actions-menu__option'
+    options: '.actions-menu__body .actions-menu__option'
   }
 }
 

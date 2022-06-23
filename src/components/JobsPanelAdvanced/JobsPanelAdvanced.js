@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import JobsPanelAdvancedView from './JobsPanelAdvancedView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 import {
   initialState,
@@ -13,7 +13,6 @@ import {
 import { panelActions } from '../JobsPanel/panelReducer'
 
 const JobsPanelAdvanced = ({
-  match,
   panelDispatch,
   panelState,
   secretSources,
@@ -26,7 +25,7 @@ const JobsPanelAdvanced = ({
   const [validation, setValidation] = useState({
     secretsSourceValue: true
   })
-  const isDemoMode = useDemoMode()
+  const { isStagingMode } = useMode()
 
   const handleAddNewItem = () => {
     let data = {}
@@ -143,8 +142,7 @@ const JobsPanelAdvanced = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handleResetForm={handleResetForm}
-      isDemoMode={isDemoMode}
-      match={match}
+      isStagingMode={isStagingMode}
       panelDispatch={panelDispatch}
       panelState={panelState}
       setValidation={setValidation}
@@ -154,7 +152,6 @@ const JobsPanelAdvanced = ({
 }
 
 JobsPanelAdvanced.propTypes = {
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   secretSources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

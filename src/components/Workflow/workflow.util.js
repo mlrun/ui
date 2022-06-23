@@ -1,10 +1,15 @@
-import { page } from '../JobsPage/jobsData'
+import { page } from '../Jobs/jobs.util'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
-export const getWorkflowDetailsLink = (params, workflowId, jobId, tab) => {
-  return `/projects/${params.projectName}/${page.toLowerCase()}/${
-    params.pageTab
-  }/workflow/${workflowId ?? params.workflowId}${
-    jobId ? `/${jobId}/${tab ?? DETAILS_OVERVIEW_TAB}` : ''
-  }`
+export const getWorkflowDetailsLink = (
+  projectName,
+  paramsWorkflowId,
+  workflowId,
+  jobId,
+  tab,
+  pageTab
+) => {
+  return `/projects/${projectName}/${page.toLowerCase()}/${pageTab}/workflow/${
+    workflowId ?? paramsWorkflowId
+  }${jobId ? `/${jobId}/${tab ?? DETAILS_OVERVIEW_TAB}` : ''}`
 }

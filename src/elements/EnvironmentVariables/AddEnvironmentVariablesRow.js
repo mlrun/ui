@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   isNameNotUnique,
@@ -14,8 +13,8 @@ import {
 } from './environmentVariables.util'
 import { ENV_VARIABLE_TYPE_SECRET } from '../../constants'
 
-import { ReactComponent as Delete } from '../../images/delete.svg'
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 const AddEnvironmentVariablesRow = ({
   addEnvVariable,
@@ -100,7 +99,7 @@ const AddEnvironmentVariablesRow = ({
                 onChange={secretKey =>
                   setNewEnvVariable(state => ({ ...state, secretKey }))
                 }
-                pattern="^(?=[\S\s]{1,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]+$"
+                pattern="^(?=[\S\s]{0,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]*$"
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,

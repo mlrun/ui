@@ -1,7 +1,8 @@
 import { formatDatetime } from './datetime'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
-import { REAL_TIME_PIPELINES_TAB } from '../constants'
+import { FUNCTIONS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 import { page } from '../components/Models/models.util'
+import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 const createFunctionsContent = (functions, isSelectedItem, params) =>
   functions.map(func => {
@@ -11,7 +12,7 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
       ? {
           name: {
             id: `name.${identifierUnique}`,
-            value: func.nuclio_name || func.name,
+            value: func.name,
             class: 'functions_medium',
             identifier: getFunctionIdentifier(func),
             identifierUnique: getFunctionIdentifier(func, true),
@@ -19,13 +20,38 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
               return `/projects/${params.projectName}/${page.toLowerCase()}/${
                 params.pageTab
               }/pipeline/${hash}`
-            }
+            },
+            showTag: true,
+            showStatus: true
           },
           kind: {
             id: `kind.${identifierUnique}`,
             value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
-            class: 'functions_big',
+            class: 'functions_medium',
             type: 'type'
+          },
+          function: {
+            id: `function.${identifierUnique}`,
+            value: func.name,
+            class: 'functions_big',
+            getLink: tab =>
+              generateLinkToDetailsPanel(
+                func.project,
+                FUNCTIONS_PAGE,
+                null,
+                func.hash,
+                null,
+                tab
+              )
+          },
+          updated: {
+            id: `updated.${identifierUnique}`,
+            value: formatDatetime(new Date(func.updated), 'N/A'),
+            class: 'functions_medium',
+            type: 'date',
+            showTag: true,
+            showStatus: true,
+            hidden: true
           }
         }
       : {
@@ -33,6 +59,8 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
             id: `name.${identifierUnique}`,
             value: func.name,
             class: 'functions_medium',
+            showTag: true,
+            showStatus: true,
             identifier: getFunctionIdentifier(func),
             identifierUnique: identifierUnique
           },
@@ -55,6 +83,8 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
             value: formatDatetime(new Date(func.updated), 'N/A'),
             class: 'functions_small',
             type: 'date',
+            showTag: true,
+            showStatus: true,
             hidden: isSelectedItem
           },
           command: {

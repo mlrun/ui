@@ -1,13 +1,12 @@
 import React from 'react'
 
 import FeatureValidator from '../../elements/FeatureValidator/FeatureValidator'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { ReactComponent as Primary } from '../../images/ic-key.svg'
-import { ReactComponent as Partition } from '../../images/partition.svg'
-import { ReactComponent as TimestampKey } from '../../images/ic-calendar.svg'
-import { ReactComponent as LabelColumn } from '../../images/ic_target-with-dart.svg'
+import { ReactComponent as Primary } from 'igz-controls/images/ic-key.svg'
+import { ReactComponent as Partition } from 'igz-controls/images/partition.svg'
+import { ReactComponent as TimestampKey } from 'igz-controls/images/ic-calendar.svg'
+import { ReactComponent as LabelColumn } from 'igz-controls/images/ic_target-with-dart.svg'
 
 import { parseKeyValues } from '../../utils'
 
@@ -18,6 +17,8 @@ export const generateMetadata = (selectedItem, primaryKey) => {
     ? generateArtifactMetadataFromEntities(selectedItem)
     : selectedItem.features
     ? generateArtifactMetadataFromFeatures(selectedItem)
+    : selectedItem.inputs || selectedItem.outputs
+    ? generateArtifactMetadataFromInputsAndOutputs(selectedItem)
     : []
 }
 
@@ -194,3 +195,56 @@ export const generateArtifactMetadataFromFeatures = selectedItem =>
       }
     }
   })
+
+export const generateArtifactMetadataFromInputsAndOutputs = selectedItem =>
+  (selectedItem.outputs ?? [])
+    .map(item => ({ ...item, output: 'output' }))
+    .concat(selectedItem.inputs ?? [])
+    .map(item => {
+      return {
+        timestampKeyIcon: {
+          value: (
+            <Tooltip template={<TextTooltipTemplate text="Timestamp key" />}>
+              <TimestampKey />
+            </Tooltip>
+          ),
+          type: 'icon',
+          hidden:
+            selectedItem.timestamp_key !== item.name &&
+            selectedItem.timestamp_field !== item.name
+        },
+        labelColumnIcon: {
+          value: (
+            <Tooltip template={<TextTooltipTemplate text="Output" />}>
+              <LabelColumn />
+            </Tooltip>
+          ),
+          type: 'icon',
+          hidden: !item.output
+        },
+        name: {
+          value: item.name,
+          type: 'text'
+        },
+        type: {
+          value: item.value_type,
+          type: 'text'
+        },
+        description: {
+          value: item.description,
+          type: 'text'
+        },
+        labels: {
+          value: parseKeyValues(item.labels),
+          type: 'chip',
+          className: 'table-body__labels'
+        },
+        validators: {
+          value: item.validator && (
+            <FeatureValidator validator={item.validator} />
+          ),
+          type: 'html',
+          hidden: !item.validator
+        }
+      }
+    })

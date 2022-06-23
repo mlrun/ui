@@ -15,6 +15,7 @@ const initialState = {
     value: DATE_FILTER_ANY_TIME,
     isPredefined: false
   },
+  entities: '',
   groupBy: GROUP_BY_NAME,
   iter: SHOW_ITERATIONS,
   labels: '',
@@ -28,7 +29,7 @@ const initialState = {
   projectOptions: []
 }
 
-export default (state = initialState, { type, payload }) => {
+const filtersReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case REMOVE_FILTERS:
       return initialState
@@ -51,3 +52,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default filtersReducer

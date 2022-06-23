@@ -27,8 +27,9 @@ const FeatureSetsPanelDataSource = ({
   featureStore,
   fetchArtifact,
   fetchArtifacts,
-  fetchProjects,
+  fetchProjectsNames,
   project,
+  setDisableButtons,
   setNewFeatureSetDataSourceKind,
   setNewFeatureSetDataSourceParseDates,
   setNewFeatureSetDataSourceUrl,
@@ -73,13 +74,13 @@ const FeatureSetsPanelDataSource = ({
       urlProjectItemTypeEntered &&
       projects.length === 0
     ) {
-      fetchProjects().then(projects => {
+      fetchProjectsNames().then(projects => {
         setProjects(generateProjectsList(projects, project))
       })
     }
   }, [
     data.url.pathType,
-    fetchProjects,
+    fetchProjectsNames,
     project,
     projects.length,
     urlProjectItemTypeEntered
@@ -291,6 +292,17 @@ const FeatureSetsPanelDataSource = ({
         fullPath: `${selectValue}${inputValue}`
       }
     }))
+    setDisableButtons(state => ({
+      ...state,
+      isUrlEditModeClosed: true
+    }))
+  }
+
+  const handleUrlOnFocus = () => {
+    setDisableButtons(state => ({
+      ...state,
+      isUrlEditModeClosed: false
+    }))
   }
 
   return (
@@ -304,6 +316,7 @@ const FeatureSetsPanelDataSource = ({
       featureStore={featureStore}
       handleKindOnChange={handleKindOnChange}
       handleUrlOnBlur={handleUrlOnBlur}
+      handleUrlOnFocus={handleUrlOnFocus}
       handleUrlPathTypeChange={handleUrlPathTypeChange}
       handleUrlPathChange={handleUrlPathChange}
       setData={setData}
@@ -322,6 +335,7 @@ const FeatureSetsPanelDataSource = ({
 
 FeatureSetsPanelDataSource.propTypes = {
   project: PropTypes.string.isRequired,
+  setDisableButtons: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }

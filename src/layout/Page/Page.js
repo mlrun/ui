@@ -1,41 +1,61 @@
-import React, { useLayoutEffect, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import { useDemoMode } from '../../hooks/demoMode.hook'
+import React, { useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { useParams, Outlet } from 'react-router-dom'
+import classNames from 'classnames'
 
-import PageView from './PageView'
-import appActions from '../../actions/app'
+import Notification from '../../common/Notification/Notification'
 
-const Page = ({ children, fetchFrontendSpec, history }) => {
-  const isDemoMode = useDemoMode()
+import { getTransitionEndEventName } from '../../utils/getTransitionEndEventName'
 
-  const [savedDemoMode, setSavedDemoMode] = useState(isDemoMode)
+import { fetchFrontendSpec } from '../../reducers/appReducer'
+
+import './Page.scss'
+
+const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
+  const params = useParams()
+  const mainRef = useRef()
+  const dispatch = useDispatch()
+
+  const projectName = params.projectName
+
+  const transitionEndEventName = getTransitionEndEventName()
+
+  const pinnedClasses = classNames(
+    isNavbarPinned && projectName ? 'pinned' : 'unpinned',
+    isHeaderShown && 'has-header'
+  )
 
   useEffect(() => {
-    fetchFrontendSpec()
-
-    const interval = setInterval(fetchFrontendSpec, 60000)
-
-    return () => clearInterval(interval)
-  }, [fetchFrontendSpec])
+    setProjectName(projectName)
+  }, [projectName, setProjectName])
 
   useEffect(() => {
-    if (isDemoMode) {
-      setSavedDemoMode(true)
-    }
-  }, [isDemoMode])
-
-  useLayoutEffect(() => {
-    if (savedDemoMode && !isDemoMode) {
-      history.replace({
-        search: '?demo=true'
+    if (mainRef) {
+      mainRef.current.addEventListener(transitionEndEventName, event => {
+        if (event.target !== mainRef.current) return
+        window.dispatchEvent(new CustomEvent('mainResize'))
       })
     }
-  }, [history, isDemoMode, savedDemoMode])
+  }, [isNavbarPinned, transitionEndEventName])
 
-  return <PageView>{children}</PageView>
+  useEffect(() => {
+    dispatch(fetchFrontendSpec())
+
+    const interval = setInterval(() => dispatch(fetchFrontendSpec()), 60000)
+
+    return () => clearInterval(interval)
+  }, [dispatch])
+
+  return (
+    <>
+      <main id="main" className={pinnedClasses} ref={mainRef}>
+        <div id="main-wrapper">
+          <Outlet />
+        </div>
+      </main>
+      <Notification />
+    </>
+  )
 }
 
-export default connect(({ appStore }) => ({ appStore }), { ...appActions })(
-  withRouter(Page)
-)
+export default Page

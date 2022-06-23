@@ -1,34 +1,47 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-
-import notificationAction from '../../actions/notification'
+import { useParams } from 'react-router-dom'
 
 import projectApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import ProjectSettingsSecretsView from './ProjectSettingsSecretsView'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import {
+  ADD_PROJECT_SECRET,
+  DELETE_PROJECT_SECRET,
+  EDIT_PROJECT_SECRET
+} from './ProjectSettingsSecrets.utils'
 
 const ProjectSettingsSecrets = ({
   fetchProjectSecrets,
-  match,
   projectStore,
   removeProjectData,
   setNotification,
   setProjectSecrets
 }) => {
-  const [isCreateNewSecretDialogOpen, setCreateNewSecretDialogOpen] = useState(
-    false
-  )
-  const [editableSecret, setEditableSecret] = useState('')
-
-  const handleEditClick = secret => {
-    setEditableSecret(secret)
-    setCreateNewSecretDialogOpen(true)
-  }
+  const [isUserAllowed, setIsUserAllowed] = useState(true)
+  const params = useParams()
 
   const fetchSecrets = useCallback(() => {
-    fetchProjectSecrets(match.params.projectName)
-  }, [fetchProjectSecrets, match.params.projectName])
+    setIsUserAllowed(true)
+    fetchProjectSecrets(params.projectName).catch(error => {
+      if (error.response?.status === FORBIDDEN_ERROR_STATUS_CODE) {
+        setIsUserAllowed(false)
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: 'Permission denied.'
+        })
+      } else {
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch project data.',
+          retry: () => fetchSecrets()
+        })
+      }
+    })
+  }, [fetchProjectSecrets, params.projectName, setNotification])
 
   useEffect(() => {
     fetchSecrets()
@@ -36,58 +49,107 @@ const ProjectSettingsSecrets = ({
     return () => {
       removeProjectData()
     }
-  }, [fetchSecrets, removeProjectData, match.params.projectName])
+  }, [fetchSecrets, removeProjectData, params.projectName])
 
-  const handleSecretDelete = (secret, index) => {
+  const generalSecrets = useMemo(
+    () =>
+      projectStore.project.secrets?.data['secret_keys']
+        ? projectStore.project.secrets.data['secret_keys'].map(secret => ({
+            key: secret,
+            value: '*****'
+          }))
+        : [],
+    [projectStore.project.secrets.data]
+  )
+
+  const handleProjectSecret = useCallback(
+    (type, data) => {
+      const updateSecret =
+        type === ADD_PROJECT_SECRET || type === EDIT_PROJECT_SECRET
+          ? projectApi.setProjectSecret
+          : projectApi.deleteSecret
+
+      updateSecret(params.projectName, data)
+        .then(() => {
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: `Secret ${
+              type === DELETE_PROJECT_SECRET
+                ? 'deleted'
+                : type === EDIT_PROJECT_SECRET
+                ? 'edited'
+                : 'added'
+            } successfully`
+          })
+        })
+        .catch(err => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            message: err.message
+          })
+        })
+    },
+    [params.projectName, setNotification]
+  )
+
+  const handleAddNewSecret = useCallback(
+    createSecretData => {
+      const data = {
+        provider: 'kubernetes',
+        secrets: {
+          [createSecretData.key]: createSecretData.value
+        }
+      }
+
+      const secretKeys = [
+        ...(projectStore.project.secrets.data?.secret_keys ?? []),
+        createSecretData.key
+      ]
+
+      setProjectSecrets(secretKeys) // redux
+      handleProjectSecret(ADD_PROJECT_SECRET, data) // api
+    },
+    [handleProjectSecret, projectStore.project.secrets.data, setProjectSecrets]
+  )
+
+  const handleSecretDelete = (index, secret) => {
     const filteredArray = projectStore.project.secrets?.data[
       'secret_keys'
-    ].filter((element, elementIndex) => elementIndex !== index)
+    ].filter((_, elementIndex) => elementIndex !== index)
 
     setProjectSecrets(filteredArray)
+    handleProjectSecret(DELETE_PROJECT_SECRET, secret.key) // api
+  }
 
-    projectApi
-      .deleteSecret(match.params.projectName, secret)
-      .then(() => {
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Secret deleted successfully'
-        })
-      })
-      .catch(err => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: err.message
-        })
-      })
+  const handleSecretEdit = editedSecretData => {
+    const data = {
+      provider: 'kubernetes',
+      secrets: {
+        [editedSecretData.key]: editedSecretData.value
+      }
+    }
+
+    handleProjectSecret(EDIT_PROJECT_SECRET, data) // api
   }
 
   return (
     <ProjectSettingsSecretsView
-      editableSecret={editableSecret}
       error={projectStore.project.secrets?.error}
-      handleEditClick={handleEditClick}
+      handleAddNewSecret={handleAddNewSecret}
       handleSecretDelete={handleSecretDelete}
-      isCreateNewSecretDialogOpen={isCreateNewSecretDialogOpen}
+      handleSecretEdit={handleSecretEdit}
+      isUserAllowed={isUserAllowed}
       loading={projectStore.project.secrets?.loading}
-      match={match}
-      secrets={projectStore.project.secrets?.data ?? {}}
-      setCreateNewSecretDialogOpen={setCreateNewSecretDialogOpen}
-      setEditableSecret={setEditableSecret}
-      setNotification={setNotification}
-      setProjectSecrets={setProjectSecrets}
+      secrets={generalSecrets}
     />
   )
-}
-
-ProjectSettingsSecrets.propTypes = {
-  match: PropTypes.object.isRequired
 }
 
 export default connect(
   ({ projectStore }) => ({
     projectStore
   }),
-  { ...notificationAction, ...projectsAction }
+  { ...projectsAction }
 )(ProjectSettingsSecrets)

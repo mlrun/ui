@@ -2,8 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { truncateUid } from '../../utils'
 
@@ -22,7 +21,13 @@ const CreateJobCardTemplate = ({
       onClick={() => handleSelectGroupFunctions(func)}
     >
       <h6 className="card-template__header">
-        {func.name || func?.metadata.name}
+        <Tooltip
+          template={
+            <TextTooltipTemplate text={func.name || func?.metadata.name} />
+          }
+        >
+          {func.name || func?.metadata.name}
+        </Tooltip>
       </h6>
       {func.metadata && (
         <>

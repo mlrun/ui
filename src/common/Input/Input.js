@@ -3,18 +3,17 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import OptionsMenu from '../OptionsMenu/OptionsMenu'
-import ValidationTemplate from '../OptionsMenu/ValidationTemplate/ValidationTemplate'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
 
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tip from '../Tip/Tip'
+import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
+import { useDetectOutsideClick } from 'igz-controls/hooks'
 
-import { checkPatternsValidity } from '../../utils/validationService'
-import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
+import { INPUT_LINK } from '../../types'
 
-import { ReactComponent as InvalidIcon } from '../../images/invalid.svg'
-import { ReactComponent as WarningIcon } from '../../images/warning.svg'
+import { ReactComponent as InvalidIcon } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
+import { ReactComponent as WarningIcon } from 'igz-controls/images/warning.svg'
 
 import './input.scss'
 
@@ -32,7 +31,8 @@ const Input = React.forwardRef(
       invalid,
       invalidText,
       label,
-      suggestionList,
+      link,
+      min,
       maxLength,
       onBlur,
       onChange,
@@ -42,6 +42,8 @@ const Input = React.forwardRef(
       required,
       requiredText,
       setInvalid,
+      step,
+      suggestionList,
       tip,
       type,
       validationRules: rules,
@@ -58,7 +60,8 @@ const Input = React.forwardRef(
     const [validationPattern] = useState(RegExp(pattern))
     const [validationRules, setValidationRules] = useState(rules)
     const [showValidationRules, setShowValidationRules] = useState(false)
-    ref ??= useRef()
+    const wrapperRef = useRef()
+    ref ??= wrapperRef
     const inputRef = useRef()
     const inputLabelRef = useRef(null)
     useDetectOutsideClick(ref, () => setShowValidationRules(false))
@@ -67,9 +70,7 @@ const Input = React.forwardRef(
       'input',
       className,
       `input-${density}`,
-      (inputIsFocused || placeholder || typedValue.length > 0) &&
-        floatingLabel &&
-        'active-input',
+      (inputIsFocused || placeholder || typedValue.length > 0) && floatingLabel && 'active-input',
       isInvalid && 'input_invalid',
       tip && 'input-short',
       !isEmpty(validationRules) && isInvalid && 'input_rules-invalid',
@@ -79,9 +80,7 @@ const Input = React.forwardRef(
       'input__label',
       disabled && 'input__label_disabled',
       floatingLabel && 'input__label-floating',
-      (inputIsFocused || placeholder || typedValue.length > 0) &&
-        floatingLabel &&
-        'active-label',
+      (inputIsFocused || placeholder || typedValue.length > 0) && floatingLabel && 'active-label',
       infoLabel && 'input__label_info'
     )
     const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
@@ -116,15 +115,7 @@ const Input = React.forwardRef(
           setIsInvalid(invalid)
         }
       }
-    }, [
-      invalid,
-      isInvalid,
-      pattern,
-      required,
-      setInvalid,
-      typedValue,
-      validationPattern
-    ])
+    }, [invalid, isInvalid, pattern, required, setInvalid, typedValue, validationPattern])
 
     useEffect(() => {
       if (focused) {
@@ -134,8 +125,8 @@ const Input = React.forwardRef(
     }, [inputRef, focused])
 
     useEffect(() => {
-      if (inputLabelRef) {
-        setLabelWidth(inputLabelRef.current?.clientWidth)
+      if (inputLabelRef.current) {
+        setLabelWidth(inputLabelRef.current?.getBoundingClientRect().width)
       }
     }, [label])
 
@@ -146,19 +137,13 @@ const Input = React.forwardRef(
     }
 
     const handleScroll = event => {
-      if (
-        !event.target.closest('.options-menu') &&
-        !event.target.classList.contains('input')
-      ) {
+      if (!event.target.closest('.options-menu') && !event.target.classList.contains('input')) {
         setShowValidationRules(false)
       }
     }
 
     const handleInputBlur = event => {
-      if (
-        !event.relatedTarget ||
-        !event.relatedTarget?.closest('.suggestion-list')
-      ) {
+      if (!event.relatedTarget || !event.relatedTarget?.closest('.suggestion-list')) {
         setInputIsFocused(false)
 
         onBlur(event)
@@ -169,17 +154,11 @@ const Input = React.forwardRef(
       let isFieldValidByPattern = true
 
       if (!isEmpty(validationRules)) {
-        const [newRules, isValidField] = checkPatternsValidity(
-          validationRules,
-          value
-        )
+        const [newRules, isValidField] = checkPatternsValidity(validationRules, value)
         isFieldValidByPattern = isValidField
         setValidationRules(newRules)
 
-        if (
-          (isFieldValidByPattern && showValidationRules) ||
-          value.trim() === ''
-        ) {
+        if ((isFieldValidByPattern && showValidationRules) || value.trim() === '') {
           setShowValidationRules(false)
         }
       }
@@ -200,21 +179,13 @@ const Input = React.forwardRef(
       validateField(value)
     }
 
-    const handleInputChange = ({ target: { value } }) => {
-      changeValue(value)
+    const handleInputChange = event => {
+      changeValue(event.target.value)
     }
 
-    const renderValidationRules = validationRules.map(
-      ({ isValid = false, label, name }) => {
-        return (
-          <ValidationTemplate
-            valid={isValid}
-            validationMessage={label}
-            key={name}
-          />
-        )
-      }
-    )
+    const renderValidationRules = validationRules.map(({ isValid = false, label, name }) => {
+      return <ValidationTemplate valid={isValid} validationMessage={label} key={name} />
+    })
 
     const handleInputFocus = () => {
       setInputIsFocused(true)
@@ -238,34 +209,50 @@ const Input = React.forwardRef(
           required={isInvalid}
           {...{
             disabled,
+            min,
             maxLength,
             onKeyDown,
             pattern,
             placeholder,
+            step,
             type,
             value: typedValue
           }}
           style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px` }}
         />
         {label && (
-          <label
-            data-testid="label"
-            className={labelClassNames}
-            ref={inputLabelRef}
-            style={
-              infoLabel
-                ? {
-                    left: (value ? value.length + 2 : 2) * 10
-                  }
-                : {}
-            }
-          >
-            {label}
-            {required && (
-              <span className={inputLabelMandatoryClassNames}> *</span>
+          <div className={labelClassNames}>
+            <label
+              data-testid="label"
+              ref={inputLabelRef}
+              style={
+                infoLabel
+                  ? {
+                      left: (value ? value.length + 2 : 2) * 10
+                    }
+                  : {}
+              }
+            >
+              {label}
+              {required && <span className={inputLabelMandatoryClassNames}> *</span>}
+            </label>
+            {floatingLabel && link && link.show && typedValue.trim() && (
+              <div className="input__link-icon">
+                <Tooltip template={<TextTooltipTemplate text={link.url || typedValue} />}>
+                  <a
+                    href={link.url || typedValue}
+                    onClick={event => event.stopPropagation()}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Popout />
+                  </a>
+                </Tooltip>
+              </div>
             )}
-          </label>
+          </div>
         )}
+
         {isInvalid && !isEmpty(validationRules) && (
           <i className="input__warning" onClick={toggleValidationRulesMenu}>
             <WarningIcon />
@@ -332,8 +319,10 @@ Input.defaultProps = {
   inputIcon: null,
   invalid: false,
   invalidText: 'This field is invalid',
+  link: { show: '', value: '' },
   label: '',
   maxLength: null,
+  min: null,
   onBlur: () => {},
   onChange: () => {},
   onKeyDown: () => {},
@@ -341,6 +330,7 @@ Input.defaultProps = {
   required: false,
   requiredText: 'This field is required',
   setInvalid: () => {},
+  step: '',
   tip: '',
   type: 'text',
   validationRules: [],
@@ -361,7 +351,9 @@ Input.propTypes = {
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,
   label: PropTypes.string,
+  link: INPUT_LINK,
   maxLength: PropTypes.number,
+  min: PropTypes.number,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
@@ -370,6 +362,7 @@ Input.propTypes = {
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   setInvalid: PropTypes.func,
+  step: PropTypes.string,
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

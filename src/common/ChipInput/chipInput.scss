@@ -1,6 +1,6 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
-@import '../../scss/variables';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/variables';
 
 .chips-input-container {
   position: relative;
@@ -16,11 +16,14 @@
   .suggestion-list {
     position: absolute;
     top: calc(100% + 5px);
+    left: 0;
     z-index: 5;
     width: 100%;
     background-color: $white;
     border: $primaryBorder;
     border-radius: $mainBorderRadius;
+    max-height: 200px;
+    overflow-y: auto;
 
     .suggestion-row {
       display: flex;

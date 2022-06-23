@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 import { orderBy } from 'lodash'
 import axios from 'axios'
+import { useParams } from 'react-router-dom'
 
 import ProjectsView from './ProjectsView'
 
@@ -16,7 +16,13 @@ import {
 import nuclioActions from '../../actions/nuclio'
 import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
-import { DANGER_BUTTON, PRIMARY_BUTTON } from '../../constants'
+import {
+  DANGER_BUTTON,
+  PRIMARY_BUTTON
+} from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const Projects = ({
   changeProjectState,
@@ -26,7 +32,6 @@ const Projects = ({
   fetchProjects,
   fetchProjectsNames,
   fetchProjectsSummary,
-  match,
   projectStore,
   removeNewProject,
   removeNewProjectError,
@@ -48,6 +53,9 @@ const Projects = ({
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [source] = useState(axios.CancelToken.source())
+  const urlParams = useParams()
+
+  const { isNuclioModeDisabled } = useNuclioMode()
 
   const isValidProjectState = useCallback(
     project => {
@@ -81,14 +89,34 @@ const Projects = ({
     [isDescendingOrder, sortProjectId]
   )
 
+  const handleSelectSortOption = option => {
+    setSortProjectId(option)
+
+    if (option === 'byDate' && sortProjectId !== 'byDate') {
+      setIsDescendingOrder(true)
+    }
+  }
+
   const handleArchiveProject = useCallback(
     project => {
-      changeProjectState(project.metadata.name, 'archived').then(() => {
-        fetchProjects()
-      })
+      changeProjectState(project.metadata.name, 'archived')
+        .then(() => {
+          fetchProjects()
+        })
+        .catch(error => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: () => handleArchiveProject(project),
+            message:
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? `You are not allowed to archive ${project.metadata.name} project`
+                : `Failed to archive ${project.metadata.name} project`
+          })
+        })
       setConfirmData(null)
     },
-    [changeProjectState, fetchProjects]
+    [changeProjectState, fetchProjects, setNotification]
   )
 
   const handleDeleteProject = useCallback(
@@ -191,15 +219,19 @@ const Projects = ({
   ])
 
   useEffect(() => {
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions()
+    }
+
     fetchProjects()
     fetchProjectsNames()
-    fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
   }, [
     fetchNuclioFunctions,
     fetchProjects,
     fetchProjectsNames,
     fetchProjectsSummary,
+    isNuclioModeDisabled,
     source.token
   ])
 
@@ -232,10 +264,13 @@ const Projects = ({
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
   const refreshProjects = () => {
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions()
+    }
+
     removeProjects()
     fetchProjects()
     fetchProjectsNames()
-    fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
   }
 
@@ -280,9 +315,9 @@ const Projects = ({
       filteredProjects={filteredProjects}
       filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
+      handleSelectSortOption={handleSelectSortOption}
       isDescendingOrder={isDescendingOrder}
       isNameValid={isNameValid}
-      match={match}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}
@@ -296,14 +331,10 @@ const Projects = ({
       setNewProjectName={setNewProjectName}
       setNewProjectLabels={setNewProjectLabels}
       setSelectedProjectsState={setSelectedProjectsState}
-      setSortProjectId={setSortProjectId}
       sortProjectId={sortProjectId}
+      urlParams={urlParams}
     />
   )
-}
-
-Projects.propTypes = {
-  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

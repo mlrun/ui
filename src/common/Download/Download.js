@@ -10,7 +10,7 @@ import notificationActions from '../../actions/notification'
 import downloadFile from '../../utils/downloadFile'
 
 import './download.scss'
-import colors from '../../scss/colors.scss'
+import colors from 'igz-controls/scss/colors.scss'
 
 const DEFAULT_FILE_NAME = 'mlrun-file'
 
@@ -65,7 +65,8 @@ const Download = ({ fileName, path, setNotification, user }) => {
         cancelToken: new axios.CancelToken(cancel => {
           downloadRef.current.cancel = cancel
         }),
-        params: { path }
+        params: { path },
+        responseType: 'arraybuffer'
       }
 
       if (path.startsWith('/User')) {

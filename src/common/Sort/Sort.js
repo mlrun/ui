@@ -4,7 +4,7 @@ import classNames from 'classnames'
 
 import SplitButton from '../SplitButton/SplitButton'
 
-import { ReactComponent as ArrowIcon } from '../../images/back-arrow.svg'
+import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
 import './sort.scss'
 

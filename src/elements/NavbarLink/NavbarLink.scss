@@ -1,34 +1,35 @@
-@import '../../scss/colors.scss';
+@import '~igz-controls/scss/colors';
 
 .nav-link {
   margin-bottom: 10px;
 
   &__button {
     &.btn {
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      width: 100%;
+      min-height: 48px;
+      color: $poloBlue;
+      font-weight: normal;
       background-color: transparent;
       border: 2px solid transparent;
       border-radius: 8px;
-      color: $poloBlue;
       cursor: pointer;
-      font-weight: normal;
-      flex-flow: row nowrap;
-      justify-content: flex-start;
-      min-height: 48px;
-      width: 100%;
       transition: border-color 0.3s ease-in-out;
 
       svg {
         flex: 0 0 20px;
         width: 20px;
         height: 20px;
+
         & * {
           fill: $poloBlue;
         }
       }
 
       &.active {
-        background-color: $malibu;
         color: $white;
+        background-color: $malibu;
         cursor: default;
 
         svg {
@@ -43,8 +44,8 @@
     &:focus-visible {
       &.btn {
         &:not(:disabled):not([class*='active']) {
-          background-color: transparent;
           color: $poloBlue;
+          background-color: transparent;
           border-color: $poloBlue;
           outline: none;
           transition: border-color 0.3s ease-in-out;
@@ -57,6 +58,7 @@
         }
       }
     }
+
     &:focus,
     &:active {
       &.btn {

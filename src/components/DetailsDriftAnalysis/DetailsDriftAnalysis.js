@@ -5,8 +5,7 @@ import { connect } from 'react-redux'
 import { generateDriftAnalysis } from './detailsDriftAnalysis.util'
 
 import Loader from '../../common/Loader/Loader'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import './detailsDriftAnalysis.scss'
 

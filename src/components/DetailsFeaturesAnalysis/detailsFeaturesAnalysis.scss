@@ -1,5 +1,5 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
 
 .features-analysis {
   padding: 20px;
@@ -78,6 +78,10 @@
         flex: 0.5;
         min-width: 50px;
         text-align: center;
+      }
+
+      &_icon {
+        flex: 0.1;
       }
     }
   }

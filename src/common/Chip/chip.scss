@@ -1,11 +1,11 @@
-@import '../../scss/variables';
-@import '../../scss/colors';
-@import '../../scss/borders';
-@import '../../scss/mixins';
+@import '~igz-controls/scss/variables';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/mixins';
 
 .chip {
   position: relative;
-  margin: 2px 4px;
+  margin: 2px 8px 2px 0;
   padding: 4px 8px;
   font-size: 14px;
   line-height: 16px;

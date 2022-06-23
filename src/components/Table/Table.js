@@ -1,25 +1,24 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
-import { isEmpty, map } from 'lodash'
+import { isEmpty } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import TableView from './TableView'
 
-import { useDemoMode } from '../../hooks/demoMode.hook'
-import createJobsContent from '../../utils/createJobsContent'
+import { useMode } from '../../hooks/mode.hook'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
-import { GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../constants'
-import tableActions from '../../actions/table'
+import { GROUP_BY_NAME, GROUP_BY_NONE, MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
 
 import './table.scss'
 
 const Table = ({
   actionsMenu,
   applyDetailsChanges,
-  cancelRequest,
+  children,
   content,
   filtersStore,
   getCloseDetailsLink,
@@ -27,11 +26,11 @@ const Table = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
-  match,
   pageData,
   retryRequest,
   selectedItem,
-  tableStore
+  tab,
+  tableHeaders
 }) => {
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
@@ -42,17 +41,14 @@ const Table = ({
   const tableContentRef = useRef(null)
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
-  const isDemoMode = useDemoMode()
-
-  const workflows = useSelector(state => {
-    return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
-  })
+  const { isStagingMode } = useMode()
+  const params = useParams()
+  const tableStore = useSelector(store => store.tableStore)
 
   useEffect(() => {
     const calculatePanelHeight = () => {
       if (tableHeadRef && tableContentRef && tablePanelRef.current) {
-        const tableContentHeight = tableContentRef.current.getBoundingClientRect()
-          .height
+        const tableContentHeight = tableContentRef.current.getBoundingClientRect().height
         const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
         const panelHeight = window.innerHeight - tableHeadCords.top
 
@@ -66,9 +62,7 @@ const Table = ({
     if (tableStore.isTablePanelOpen && tablePanelRef.current) {
       calculatePanelHeight()
 
-      document
-        .getElementById('main')
-        .addEventListener('scroll', calculatePanelHeight)
+      document.getElementById('main-wrapper').addEventListener('scroll', calculatePanelHeight)
       window.addEventListener('resize', calculatePanelHeight)
     }
     return () => {
@@ -84,39 +78,22 @@ const Table = ({
       filtersStore.groupBy,
       pageData.page,
       tableStore.isTablePanelOpen,
-      match.params,
-      isDemoMode,
+      params,
+      isStagingMode,
       !isEveryObjectValueEmpty(selectedItem)
     )
 
-    if (filtersStore.groupBy === 'name') {
+    if (filtersStore.groupBy === GROUP_BY_NAME) {
       setTableContent({
         content: generatedTableContent,
         groupLatestItem: generateGroupLatestItem(
           pageData.page,
           generatedTableContent,
-          match.params.pageTab
+          params.pageTab
         ),
         groupWorkflowItems: [],
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
-    } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
-      let groupWorkflowItem = map(groupedContent, (jobs, workflowId) =>
-        workflows.find(workflow => workflow.id === workflowId)
-      )
-
-      setTableContent(state => ({
-        ...state,
-        content: generatedTableContent,
-        groupLatestItem: [],
-        groupWorkflowItems: createJobsContent(
-          groupWorkflowItem,
-          !isEveryObjectValueEmpty(selectedItem),
-          match.params,
-          isDemoMode,
-          true
-        )
-      }))
     } else if (filtersStore.groupBy === GROUP_BY_NONE) {
       setTableContent(state => ({
         ...state,
@@ -129,20 +106,18 @@ const Table = ({
     content,
     filtersStore.groupBy,
     groupedContent,
-    isDemoMode,
-    match.params,
+    isStagingMode,
+    params,
     pageData.mainRowItemsCount,
     pageData.page,
     selectedItem,
-    tableStore.isTablePanelOpen,
-    workflows
+    tableStore.isTablePanelOpen
   ])
 
   return (
     <TableView
       actionsMenu={actionsMenu}
       applyDetailsChanges={applyDetailsChanges}
-      cancelRequest={cancelRequest}
       content={content}
       getCloseDetailsLink={getCloseDetailsLink}
       groupFilter={filtersStore.groupBy}
@@ -157,16 +132,21 @@ const Table = ({
       handleSelectItem={handleSelectItem}
       isTablePanelOpen={tableStore.isTablePanelOpen}
       mainRowItemsCount={tableContent.mainRowItemsCount}
-      match={match}
       pageData={pageData}
+      params={params}
       retryRequest={retryRequest}
       selectedItem={selectedItem}
-      tableContent={tableContent.content}
+      tableContent={
+        tab === MONITOR_JOBS_TAB || tab === SCHEDULE_TAB ? content : tableContent.content
+      }
+      tab={tab}
       tableContentRef={tableContentRef}
+      tableHeaders={tableHeaders}
       tableHeadRef={tableHeadRef}
       tablePanelRef={tablePanelRef}
-      workflows={workflows}
-    />
+    >
+      {children}
+    </TableView>
   )
 }
 
@@ -174,9 +154,12 @@ Table.defaultProps = {
   applyDetailsChanges: () => {},
   getCloseDetailsLink: null,
   groupedContent: {},
-  groupLatestJob: [],
+  handleCancel: () => {},
   handleExpandRow: () => {},
-  selectedItem: {}
+  handleSelectItem: () => {},
+  selectedItem: {},
+  tab: '',
+  tableHeaders: []
 }
 
 Table.propTypes = {
@@ -185,21 +168,19 @@ Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),
-  handleCancel: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
-  handleSelectItem: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
-  retryRequest: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func,
   pageData: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({})
+  retryRequest: PropTypes.func,
+  selectedItem: PropTypes.shape({}),
+  tab: PropTypes.string,
+  tableHeaders: PropTypes.array
 }
 
 export default connect(
-  ({ tableStore, filtersStore }) => ({
-    tableStore,
+  ({ filtersStore }) => ({
     filtersStore
   }),
-  {
-    ...tableActions
-  }
+  {}
 )(Table)

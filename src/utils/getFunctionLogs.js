@@ -1,4 +1,8 @@
-import { TRANSIENT_FUNCTION_STATUSES } from '../components/FunctionsPage/functions.util'
+import {
+  FUNCTIONS_READY_STATES,
+  TRANSIENT_FUNCTION_STATUSES
+} from '../components/FunctionsPage/functions.util'
+import { TAG_LATEST } from '../constants'
 
 export const getFunctionLogs = (
   fetchFunctionLogs,
@@ -6,7 +10,10 @@ export const getFunctionLogs = (
   projectName,
   name,
   tag,
-  offset
+  offset,
+  navigate,
+  refreshFunctions,
+  startedDeploying
 ) => {
   fetchFunctionLogs(projectName, name, tag, offset).then(result => {
     if (
@@ -25,10 +32,30 @@ export const getFunctionLogs = (
           projectName,
           name,
           tag,
-          currentOffset
+          currentOffset,
+          navigate,
+          refreshFunctions,
+          true
         )
       }, 2000)
     } else {
+      if (
+        FUNCTIONS_READY_STATES.includes(
+          result.headers?.['x-mlrun-function-status']
+        ) &&
+        startedDeploying
+      ) {
+        refreshFunctions().then(response => {
+          const hash = response.find(
+            item => item.name === name && item.tag === TAG_LATEST
+          ).hash
+
+          if (hash) {
+            navigate(`/projects/${projectName}/functions/${hash}/build-log`)
+          }
+        })
+      }
+
       clearTimeout(fetchFunctionLogsTimeout.current)
     }
   })

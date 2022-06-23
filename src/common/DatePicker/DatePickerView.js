@@ -3,18 +3,15 @@ import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
 
-import Button from '../Button/Button'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import TimePicker from '../TimePicker/TimePicker'
-import SelectOption from '../../elements/SelectOption/SelectOption'
-import Tip from '../Tip/Tip'
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { SelectOption } from 'igz-controls/elements'
 
-import { SECONDARY_BUTTON } from '../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
-import { ReactComponent as Invalid } from '../../images/invalid.svg'
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
+import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
 import './datePicker.scss'
 
@@ -94,9 +91,7 @@ const DatePickerView = React.forwardRef(
           />
           <span className={inputLabelClassNames}>
             {label}
-            {isValueEmpty && (
-              <span className="input__label-value">&nbsp;Any time</span>
-            )}
+            {isValueEmpty && <span className="input__label-value">&nbsp;Any time</span>}
             {required && <span className="input__label-mandatory"> *</span>}
           </span>
           {isInvalid && (
@@ -120,9 +115,7 @@ const DatePickerView = React.forwardRef(
         {isDatePickerOptionsOpened && (
           <div
             ref={ref.datePickerViewRef}
-            className={`date-picker__pop-up ${
-              isTopPosition ? 'positionTop' : 'positionBottom'
-            }`}
+            className={`date-picker__pop-up ${isTopPosition ? 'positionTop' : 'positionBottom'}`}
           >
             {datePickerOptions.map(option => (
               <SelectOption
@@ -143,21 +136,14 @@ const DatePickerView = React.forwardRef(
           >
             <div className="date-picker__calendars">
               {config.map(item => (
-                <div
-                  className={classnames('date-picker__calendar')}
-                  key={item.id}
-                >
+                <div className={classnames('date-picker__calendar')} key={item.id}>
                   <div className="date-picker__header">
                     <Arrow
                       data-testid="btn-previous-month"
                       className="date-picker__header-previous-month"
                       onClick={() => onPreviousMonth(item.id)}
                     />
-                    {isRange && (
-                      <span className="date-picker__header-label">
-                        {item.label}
-                      </span>
-                    )}
+                    {isRange && <span className="date-picker__header-label">{item.label}</span>}
                     <div>
                       <span className="date-picker__header-month">
                         {months[item.visibleDate.getMonth()]}
@@ -175,36 +161,25 @@ const DatePickerView = React.forwardRef(
                   <div className="date-picker__weeks">
                     {weekDay.map((day, index) => {
                       return (
-                        <div
-                          key={`${day}${index}`}
-                          className="date-picker__weeks-day"
-                        >
+                        <div key={`${day}${index}`} className="date-picker__weeks-day">
                           {day.label}
                         </div>
                       )
                     })}
                   </div>
                   {item.calendar.map(({ week }, index) => (
-                    <div
-                      key={`${week[0].day.getMonth()}${index}`}
-                      className="date-picker__week"
-                    >
+                    <div key={`${week[0].day.getMonth()}${index}`} className="date-picker__week">
                       {week.map(({ day }) => (
                         <div
                           key={`${day.getMonth()}${day.getDate()}${day.getFullYear()}`}
                           className={classnames(
                             'date-picker__week-day-wrapper',
-                            item.id === 'configFrom'
-                              ? 'calendar-from'
-                              : 'calendar-to',
+                            item.id === 'configFrom' ? 'calendar-from' : 'calendar-to',
                             item.visibleDate.getMonth() === day.getMonth()
                               ? 'current-month'
                               : 'not-current-month',
-                            isSameDate(config[0].selectedDate, day) &&
-                              'selected-from',
-                            isRange &&
-                              isSameDate(config[1].selectedDate, day) &&
-                              'selected-to',
+                            isSameDate(config[0].selectedDate, day) && 'selected-from',
+                            isRange && isSameDate(config[1].selectedDate, day) && 'selected-to',
                             isRangeDateValid(day) && 'in-range',
                             isCalendarInvalid && 'invalid'
                           )}
@@ -213,9 +188,7 @@ const DatePickerView = React.forwardRef(
                               setSelectedDate(item.id, day, item.selectedDate)
                           }}
                         >
-                          <div className="date-picker__week-day">
-                            {day.getDate()}
-                          </div>
+                          <div className="date-picker__week-day">{day.getDate()}</div>
                         </div>
                       ))}
                     </div>
@@ -223,16 +196,10 @@ const DatePickerView = React.forwardRef(
                   {isTime && (
                     <div className="date-picker__time">
                       <TimePicker
-                        onChange={time =>
-                          onTimeChange(item.id, time, item.selectedDate)
-                        }
-                        value={`${String(item.selectedDate.getHours()).padStart(
-                          2,
-                          '0'
-                        )}:${String(item.selectedDate.getMinutes()).padStart(
-                          2,
-                          '0'
-                        )}`}
+                        onChange={time => onTimeChange(item.id, time, item.selectedDate)}
+                        value={`${String(item.selectedDate.getHours()).padStart(2, '0')}:${String(
+                          item.selectedDate.getMinutes()
+                        ).padStart(2, '0')}`}
                       />
                     </div>
                   )}
@@ -240,9 +207,7 @@ const DatePickerView = React.forwardRef(
               ))}
             </div>
             <div className="date-picker__footer">
-              {isCalendarInvalid && (
-                <ErrorMessage message="“To” must be later than “From”" />
-              )}
+              {isCalendarInvalid && <ErrorMessage message="“To” must be later than “From”" />}
               <Button
                 variant={SECONDARY_BUTTON}
                 label="Apply"

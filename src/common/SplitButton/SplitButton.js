@@ -1,28 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { isEmpty } from 'lodash'
 
-import Button from '../Button/Button'
-import OptionsMenu from '../OptionsMenu/OptionsMenu'
-import SelectOption from '../../elements/SelectOption/SelectOption'
+import { Button } from 'igz-controls/components'
+import { OptionsMenu, SelectOption } from 'igz-controls/elements'
 
-import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
+import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import { MAIN_SPLIT_BUTTON, ADDITIONAL_SPLIT_BUTTON } from '../../types'
-import { TERTIARY_BUTTON } from '../../constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 
-import { ReactComponent as CaretIcon } from '../../images/dropdown.svg'
+import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
 
 import './splitButton.scss'
 
 const SplitButton = ({ mainButton, additionalButton }) => {
   const { onClick: mainAction, ...mainProps } = mainButton
-  const {
-    icon,
-    options,
-    onSelectOption,
-    selectedOption,
-    ...additionalProps
-  } = additionalButton
+  const { icon, options, onSelectOption, selectedOption, ...additionalProps } = additionalButton
 
   const [isBodyOpen, setIsBodyOpen] = useState(false)
   const mainRef = useRef()

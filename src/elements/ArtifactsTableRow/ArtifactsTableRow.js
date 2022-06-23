@@ -1,17 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { useParams } from 'react-router-dom'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
-import {
-  ACTION_CELL_ID,
-  DETAILS_OVERVIEW_TAB,
-  MODEL_ENDPOINTS_TAB
-} from '../../constants'
+import { ACTION_CELL_ID, DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
@@ -21,7 +18,6 @@ const ArtifactsTableRow = ({
   handleExpandRow,
   handleSelectItem,
   mainRowItemsCount,
-  match,
   rowItem,
   pageData,
   selectedItem,
@@ -29,29 +25,25 @@ const ArtifactsTableRow = ({
 }) => {
   const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
+  const params = useParams()
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
     (selectedItem.db_key || selectedItem?.spec?.model) &&
-      getArtifactIdentifier(selectedItem, true) ===
-        rowItem.key?.identifierUnique &&
+      getArtifactIdentifier(selectedItem, true) === rowItem.key?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
-    parent.current?.classList.value.includes('parent-row-expanded') &&
-      'parent-row-expanded'
+    parent.current?.classList.value.includes('parent-row-expanded') && 'parent-row-expanded'
   )
   const mainRowData = Object.values(rowItem ?? {})
 
   const findCurrentItem = useCallback(
     artifact => {
-      const currentContent =
-        pageData.selectedRowData?.[artifact.key?.value]?.content || content
+      const currentContent = pageData.selectedRowData?.[artifact.key?.value]?.content || content
 
       return (
         currentContent.find(
-          contentItem =>
-            getArtifactIdentifier(contentItem, true) ===
-            artifact.key?.identifierUnique
+          contentItem => getArtifactIdentifier(contentItem, true) === artifact.key?.identifierUnique
         ) ?? {}
       )
     },
@@ -70,21 +62,19 @@ const ArtifactsTableRow = ({
             {mainRowData.map((data, index) => {
               return index < mainRowItemsCount ? (
                 <TableCell
-                  key={data.id}
-                  handleExpandRow={handleExpandRow}
                   data={data}
+                  firstCell={index === 0}
+                  handleExpandRow={handleExpandRow}
                   item={rowItem}
-                  selectItem={handleSelectItem}
-                  selectedItem={selectedItem}
-                  expandLink={index === 0}
-                  firstRow={index === 0}
+                  key={data.id}
                   link={
                     data.rowExpanded?.getLink
-                      ? data.rowExpanded.getLink(
-                          match.params.tab ?? DETAILS_OVERVIEW_TAB
-                        )
+                      ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
                       : ''
                   }
+                  selectItem={handleSelectItem}
+                  selectedItem={selectedItem}
+                  showExpandButton
                 />
               ) : null
             })}
@@ -95,10 +85,7 @@ const ArtifactsTableRow = ({
             </div>
           ) : pageData.selectedRowData[rowItem.key?.identifier].error ? (
             <ErrorMessage
-              message={
-                pageData.selectedRowData[rowItem.key?.identifier]?.error
-                  ?.message
-              }
+              message={pageData.selectedRowData[rowItem.key?.identifier]?.error?.message}
             />
           ) : (
             tableContent.map((artifact, index) => {
@@ -117,16 +104,9 @@ const ArtifactsTableRow = ({
                         return (
                           !value.hidden && (
                             <TableCell
-                              data={
-                                value.expandedCellContent
-                                  ? value.expandedCellContent
-                                  : value
-                              }
+                              data={value.expandedCellContent ? value.expandedCellContent : value}
                               item={subRowCurrentItem}
-                              link={value.getLink?.(
-                                match.params.tab ?? DETAILS_OVERVIEW_TAB
-                              )}
-                              match={match}
+                              link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                               key={value.id}
                               selectItem={handleSelectItem}
                               selectedItem={selectedItem}
@@ -134,14 +114,10 @@ const ArtifactsTableRow = ({
                           )
                         )
                       })}
-                      {!pageData.tableHeaders.find(
-                        header => header.id === ACTION_CELL_ID
-                      )?.hidden && (
+                      {!pageData.tableHeaders.find(header => header.id === ACTION_CELL_ID)
+                        ?.hidden && (
                         <div className="table-body__cell action_cell">
-                          <ActionsMenu
-                            dataItem={subRowCurrentItem}
-                            menu={actionsMenu}
-                          />
+                          <ActionsMenu dataItem={subRowCurrentItem} menu={actionsMenu} />
                         </div>
                       )}
                     </>
@@ -153,31 +129,29 @@ const ArtifactsTableRow = ({
         </div>
       ) : (
         <>
-          {mainRowData.map(value => {
+          {mainRowData.map((value, index) => {
             return (
               currentItem &&
               !value.hidden && (
                 <TableCell
-                  expandLink={
-                    Array.isArray(tableContent) &&
-                    match.params.pageTab !== MODEL_ENDPOINTS_TAB
-                  }
-                  handleExpandRow={handleExpandRow}
                   data={value}
+                  handleExpandRow={handleExpandRow}
+                  firstCell={index === 0 && params.pageTab !== MODEL_ENDPOINTS_TAB}
                   item={currentItem}
                   key={value.id}
-                  link={value.getLink?.(
-                    match.params.tab ?? DETAILS_OVERVIEW_TAB
-                  )}
-                  match={match}
+                  link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
+                  showExpandButton={
+                    index === 0 &&
+                    Array.isArray(tableContent) &&
+                    params.pageTab !== MODEL_ENDPOINTS_TAB
+                  }
                 />
               )
             )
           })}
-          {!pageData.tableHeaders.find(header => header.id === ACTION_CELL_ID)
-            ?.hidden && (
+          {!pageData.tableHeaders.find(header => header.id === ACTION_CELL_ID)?.hidden && (
             <div className="table-body__cell action_cell">
               <ActionsMenu dataItem={currentItem} menu={actionsMenu} />
             </div>
@@ -200,7 +174,6 @@ ArtifactsTableRow.propTypes = {
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   mainRowItemsCount: PropTypes.number,
-  match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.shape({}))

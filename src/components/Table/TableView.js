@@ -2,33 +2,34 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
+import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/ConsumerGroupTableRow'
 import Details from '../Details/Details'
-import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import NoData from '../../common/NoData/NoData'
 import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
+import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
+import NoData from '../../common/NoData/NoData'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
+  CONSUMER_GROUPS_PAGE,
+  CONSUMER_GROUP_PAGE,
+  DATASETS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   GROUP_BY_NONE,
-  GROUP_BY_WORKFLOW,
-  JOBS_PAGE,
   MODELS_PAGE,
   REAL_TIME_PIPELINES_TAB
 } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
+import TableHead from './TableHead'
 
 const TableView = ({
   actionsMenu,
   applyDetailsChanges,
-  cancelRequest,
+  children,
   content,
   getCloseDetailsLink,
   groupFilter,
@@ -39,206 +40,165 @@ const TableView = ({
   handleSelectItem,
   isTablePanelOpen,
   mainRowItemsCount,
-  match,
   pageData,
+  params,
   retryRequest,
   selectedItem,
+  tab,
   tableContent,
   tableContentRef,
+  tableHeaders,
   tableHeadRef,
-  tablePanelRef,
-  workflows
+  tablePanelRef
 }) => {
   return (
     <div className="table">
       <div className="table__content" ref={tableContentRef}>
-        <div className="table-head" ref={tableHeadRef}>
-          {pageData.tableHeaders.map(
-            (item, index) =>
-              !item.hidden && (
-                <div
-                  className={`table-head__item ${item.class}`}
-                  key={`${item.header}${index}`}
-                >
-                  <Tooltip
-                    template={<TextTooltipTemplate text={item.header} />}
-                  >
-                    {item.header}
-                  </Tooltip>
-                </div>
-              )
-          )}
-        </div>
-        <div className="table-body">
-          {!groupFilter ||
-          isEmpty(groupedContent) ||
-          (groupFilter === GROUP_BY_NONE && isEmpty(groupLatestItem)) ? (
-            tableContent.map((rowItem, i) => {
-              switch (pageData.page) {
-                case ARTIFACTS_PAGE:
-                case FILES_PAGE:
-                case MODELS_PAGE:
-                  return match.params.pageTab !== REAL_TIME_PIPELINES_TAB ? (
-                    <ArtifactsTableRow
-                      actionsMenu={actionsMenu}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      key={i}
-                      match={match}
-                      rowItem={rowItem}
-                      pageData={pageData}
-                      selectedItem={selectedItem}
-                    />
-                  ) : (
-                    <FunctionsTableRow
-                      actionsMenu={actionsMenu}
-                      key={i}
-                      content={content}
-                      match={match}
-                      rowItem={rowItem}
-                      selectedItem={selectedItem}
-                      handleSelectItem={handleSelectItem}
-                    />
+        {pageData.tableHeaders && (
+          <>
+            <div className="table-head" ref={tableHeadRef}>
+              {pageData.tableHeaders?.map(
+                (item, index) =>
+                  !item.hidden && (
+                    <div
+                      className={`table-head__item ${item.class}`}
+                      key={`${item.header}${index}`}
+                    >
+                      <Tooltip template={<TextTooltipTemplate text={item.header} />}>
+                        {item.header}
+                      </Tooltip>
+                    </div>
                   )
-                case FEATURE_STORE_PAGE:
-                  return match.params.pageTab === DATASETS_TAB ? (
-                    <ArtifactsTableRow
-                      actionsMenu={actionsMenu}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      key={i}
-                      match={match}
-                      rowItem={rowItem}
-                      pageData={pageData}
-                      selectedItem={selectedItem}
-                    />
-                  ) : (
-                    <FeatureStoreTableRow
-                      actionsMenu={actionsMenu}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      key={i}
-                      match={match}
-                      rowItem={rowItem}
-                      pageData={pageData}
-                      selectedItem={selectedItem}
-                    />
-                  )
-                case FUNCTIONS_PAGE:
-                  return (
-                    <FunctionsTableRow
-                      actionsMenu={actionsMenu}
-                      key={i}
-                      content={content}
-                      match={match}
-                      rowItem={rowItem}
-                      selectedItem={selectedItem}
-                      handleSelectItem={handleSelectItem}
-                    />
-                  )
-                case JOBS_PAGE:
-                  return (
-                    <JobsTableRow
-                      actionsMenu={actionsMenu}
-                      key={i}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      match={match}
-                      rowItem={rowItem}
-                      selectedItem={selectedItem}
-                    />
-                  )
-                default:
-                  return null
-              }
-            })
-          ) : groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
-            tableContent.map((group, i) => {
-              switch (pageData.page) {
-                case ARTIFACTS_PAGE:
-                case FILES_PAGE:
-                case MODELS_PAGE:
-                  return (
-                    <ArtifactsTableRow
-                      actionsMenu={actionsMenu}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      handleExpandRow={handleExpandRow}
-                      key={i}
-                      mainRowItemsCount={mainRowItemsCount}
-                      match={match}
-                      rowItem={groupLatestItem[i]}
-                      pageData={pageData}
-                      selectedItem={selectedItem}
-                      tableContent={group}
-                    />
-                  )
-                case FUNCTIONS_PAGE:
-                  return (
-                    <FunctionsTableRow
-                      actionsMenu={actionsMenu}
-                      key={i}
-                      content={content}
-                      handleExpandRow={handleExpandRow}
-                      handleSelectItem={handleSelectItem}
-                      match={match}
-                      rowItem={groupLatestItem[i]}
-                      selectedItem={selectedItem}
-                      tableContent={group}
-                    />
-                  )
-                case FEATURE_STORE_PAGE:
-                  return match.params.pageTab === DATASETS_TAB ? (
-                    <ArtifactsTableRow
-                      actionsMenu={actionsMenu}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      handleExpandRow={handleExpandRow}
-                      key={i}
-                      mainRowItemsCount={mainRowItemsCount}
-                      match={match}
-                      rowItem={groupLatestItem[i]}
-                      pageData={pageData}
-                      selectedItem={selectedItem}
-                      tableContent={group}
-                    />
-                  ) : (
-                    <FeatureStoreTableRow
-                      actionsMenu={actionsMenu}
-                      content={content}
-                      handleSelectItem={handleSelectItem}
-                      handleExpandRow={handleExpandRow}
-                      key={i}
-                      mainRowItemsCount={mainRowItemsCount}
-                      match={match}
-                      rowItem={groupLatestItem[i]}
-                      pageData={pageData}
-                      selectedItem={selectedItem}
-                      tableContent={group}
-                    />
-                  )
-                default:
-                  return (
-                    <JobsTableRow
-                      actionsMenu={actionsMenu}
-                      key={i}
-                      content={content}
-                      handleExpandRow={handleExpandRow}
-                      handleSelectItem={handleSelectItem}
-                      isGroupedByWorkflow={groupFilter === GROUP_BY_WORKFLOW}
-                      match={match}
-                      rowItem={groupLatestItem[i]}
-                      selectedItem={selectedItem}
-                      tableContent={group}
-                      workflows={workflows}
-                    />
-                  )
-              }
-            })
-          ) : (
-            <NoData />
-          )}
-        </div>
+              )}
+            </div>
+            <div className="table-body">
+              {!groupFilter ||
+              isEmpty(groupedContent) ||
+              (groupFilter === GROUP_BY_NONE && isEmpty(groupLatestItem)) ? (
+                tableContent.map((rowItem, i) => {
+                  switch (pageData.page) {
+                    case CONSUMER_GROUPS_PAGE:
+                      return <ConsumerGroupTableRow key={i} content={content} rowItem={rowItem} />
+                    case CONSUMER_GROUP_PAGE:
+                      return (
+                        <ConsumerGroupShardLagTableRow
+                          key={i}
+                          content={content}
+                          rowItem={rowItem}
+                        />
+                      )
+                    case ARTIFACTS_PAGE:
+                    case DATASETS_PAGE:
+                    case FILES_PAGE:
+                    case MODELS_PAGE:
+                      return (
+                        <ArtifactsTableRow
+                          actionsMenu={actionsMenu}
+                          content={content}
+                          handleSelectItem={handleSelectItem}
+                          key={i}
+                          rowItem={rowItem}
+                          pageData={pageData}
+                          selectedItem={selectedItem}
+                        />
+                      )
+                    case FEATURE_STORE_PAGE:
+                      return (
+                        <FeatureStoreTableRow
+                          actionsMenu={actionsMenu}
+                          content={content}
+                          handleSelectItem={handleSelectItem}
+                          key={i}
+                          rowItem={rowItem}
+                          pageData={pageData}
+                          selectedItem={selectedItem}
+                        />
+                      )
+                    case FUNCTIONS_PAGE:
+                      return (
+                        <FunctionsTableRow
+                          actionsMenu={actionsMenu}
+                          key={i}
+                          content={content}
+                          rowItem={rowItem}
+                          selectedItem={selectedItem}
+                          handleSelectItem={handleSelectItem}
+                        />
+                      )
+                    default:
+                      return null
+                  }
+                })
+              ) : groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
+                tableContent.map((group, i) => {
+                  switch (pageData.page) {
+                    case ARTIFACTS_PAGE:
+                    case DATASETS_PAGE:
+                    case FILES_PAGE:
+                    case MODELS_PAGE:
+                      return params.pageTab === REAL_TIME_PIPELINES_TAB ? (
+                        <FunctionsTableRow
+                          actionsMenu={actionsMenu}
+                          key={i}
+                          content={content}
+                          handleExpandRow={handleExpandRow}
+                          handleSelectItem={handleSelectItem}
+                          rowItem={groupLatestItem[i]}
+                          selectedItem={selectedItem}
+                          tableContent={group}
+                        />
+                      ) : (
+                        <ArtifactsTableRow
+                          actionsMenu={actionsMenu}
+                          content={content}
+                          handleSelectItem={handleSelectItem}
+                          handleExpandRow={handleExpandRow}
+                          key={i}
+                          mainRowItemsCount={mainRowItemsCount}
+                          rowItem={groupLatestItem[i]}
+                          pageData={pageData}
+                          selectedItem={selectedItem}
+                          tableContent={group}
+                        />
+                      )
+                    case FUNCTIONS_PAGE:
+                      return (
+                        <FunctionsTableRow
+                          actionsMenu={actionsMenu}
+                          key={i}
+                          content={content}
+                          handleExpandRow={handleExpandRow}
+                          handleSelectItem={handleSelectItem}
+                          rowItem={groupLatestItem[i]}
+                          selectedItem={selectedItem}
+                          tableContent={group}
+                        />
+                      )
+                    default:
+                      return (
+                        <FeatureStoreTableRow
+                          actionsMenu={actionsMenu}
+                          content={content}
+                          handleSelectItem={handleSelectItem}
+                          handleExpandRow={handleExpandRow}
+                          key={i}
+                          mainRowItemsCount={mainRowItemsCount}
+                          rowItem={groupLatestItem[i]}
+                          pageData={pageData}
+                          selectedItem={selectedItem}
+                          tableContent={group}
+                        />
+                      )
+                  }
+                })
+              ) : (
+                <NoData />
+              )}
+            </div>
+          </>
+        )}
+        {tableHeaders?.length > 0 && <TableHead content={tableHeaders} ref={tableHeadRef} />}
+        {!pageData.tableHeaders && <div className="table-body">{children}</div>}
       </div>
       {isTablePanelOpen && (
         <div className="table__panel-container" ref={tablePanelRef}>
@@ -249,14 +209,13 @@ const TableView = ({
         <Details
           actionsMenu={actionsMenu}
           applyDetailsChanges={applyDetailsChanges}
-          cancelRequest={cancelRequest}
           getCloseDetailsLink={getCloseDetailsLink}
           detailsMenu={pageData.details.menu}
           handleCancel={handleCancel}
-          match={match}
           pageData={pageData}
           retryRequest={retryRequest}
           selectedItem={selectedItem}
+          tab={tab}
         />
       )}
     </div>
@@ -277,13 +236,16 @@ TableView.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   isTablePanelOpen: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
+  retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  tab: PropTypes.string,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
   ]).isRequired,
+  tableHeaders: PropTypes.array,
   tableHeadRef: PropTypes.shape({}),
   tablePanelRef: PropTypes.shape({})
 }

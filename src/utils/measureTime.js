@@ -1,4 +1,4 @@
-export default (startTime, endTime) => {
+const measureTime = (startTime, endTime) => {
   let d, h, m, s
   let now = new Date()
   let time = null
@@ -24,3 +24,5 @@ export default (startTime, endTime) => {
 const generateTime = (...args) => {
   return args.map(el => (el < 10 ? '0' + el : el)).join(':')
 }
+
+export default measureTime

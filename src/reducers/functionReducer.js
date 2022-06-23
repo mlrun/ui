@@ -53,7 +53,9 @@ import {
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
   PANEL_DEFAULT_ACCESS_KEY,
-  SET_NEW_FUNCTION_FORCE_BUILD
+  SET_NEW_FUNCTION_FORCE_BUILD,
+  SET_NEW_FUNCTION_PREEMTION_MODE,
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
 } from '../constants'
 
 const initialState = {
@@ -89,7 +91,9 @@ const initialState = {
       description: '',
       env: [],
       image: '',
+      priority_class_name: '',
       secret_sources: [],
+      preemption_mode: '',
       volume_mounts: [],
       volumes: [],
       resources: {
@@ -102,7 +106,7 @@ const initialState = {
   template: {}
 }
 
-export default (state = initialState, { type, payload }) => {
+const functionReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case CREATE_NEW_FUNCTION_BEGIN:
       return {
@@ -481,6 +485,17 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case SET_NEW_FUNCTION_PRIORITY_CLASS_NAME:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            priority_class_name: payload
+          }
+        }
+      }
     case SET_NEW_FUNCTION_PROJECT:
       return {
         ...state,
@@ -492,6 +507,17 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case SET_NEW_FUNCTION_PREEMTION_MODE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            preemption_mode: payload
+          }
+        }
+      }
     case SET_NEW_FUNCTION_RESOURCES:
       return {
         ...state,
@@ -499,7 +525,10 @@ export default (state = initialState, { type, payload }) => {
           ...state.newFunction,
           spec: {
             ...state.newFunction.spec,
-            resources: payload
+            resources: {
+              ...state.newFunction.spec.resources,
+              ...payload
+            }
           }
         }
       }
@@ -576,3 +605,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default functionReducer

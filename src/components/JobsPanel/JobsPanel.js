@@ -1,23 +1,13 @@
-import React, {
-  useState,
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-  useEffect
-} from 'react'
+import React, { useState, useLayoutEffect, useMemo, useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
 
-import {
-  MONITOR_JOBS_TAB,
-  PANEL_DEFAULT_ACCESS_KEY,
-  SCHEDULE_TAB
-} from '../../constants'
+import { MONITOR_JOBS_TAB, PANEL_DEFAULT_ACCESS_KEY, SCHEDULE_TAB } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
 import {
@@ -39,10 +29,10 @@ const JobsPanel = ({
   closePanel,
   defaultData,
   fetchFunctionTemplate,
+  frontendSpec,
   functionsStore,
   groupedFunctions,
   jobsStore,
-  match,
   mode,
   onEditJob,
   onSuccessRun,
@@ -78,7 +68,8 @@ const JobsPanel = ({
     isGpuLimitValid: true,
     isAccessKeyValid: true
   })
-  const history = useHistory()
+  const navigate = useNavigate()
+  const params = useParams()
 
   useLayoutEffect(() => {
     if (
@@ -87,13 +78,11 @@ const JobsPanel = ({
       !defaultData &&
       !functionsStore.error
     ) {
-      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest).then(
-        result => {
-          if (result) {
-            setSelectedFunction(result.functions)
-          }
+      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest).then(result => {
+        if (result) {
+          setSelectedFunction(result.functions)
         }
-      )
+      })
     }
 
     return () => functionsStore.template.name && removeFunctionTemplate()
@@ -127,10 +116,7 @@ const JobsPanel = ({
 
   useEffect(() => {
     if (panelState.editMode) {
-      if (
-        panelState.previousPanelData.titleInfo.method !==
-        panelState.currentFunctionInfo.method
-      ) {
+      if (panelState.previousPanelData.titleInfo.method !== panelState.currentFunctionInfo.method) {
         generateTableData(
           panelState.currentFunctionInfo.method,
           selectedFunction,
@@ -138,7 +124,8 @@ const JobsPanel = ({
           setNewJob,
           panelState.limits,
           panelState.requests,
-          mode
+          mode,
+          frontendSpec
         )
       } else {
         panelDispatch({
@@ -148,6 +135,7 @@ const JobsPanel = ({
       }
     }
   }, [
+    frontendSpec,
     mode,
     panelState.currentFunctionInfo.method,
     panelState.editMode,
@@ -165,7 +153,7 @@ const JobsPanel = ({
       isEveryObjectValueEmpty(panelState.tableData) &&
       isEveryObjectValueEmpty(panelState.requests) &&
       isEveryObjectValueEmpty(panelState.limits) &&
-      !isEveryObjectValueEmpty(selectedFunction) &&
+      (!selectedFunction || !isEveryObjectValueEmpty(selectedFunction)) &&
       !tableDataIsLoaded
     ) {
       generateTableData(
@@ -175,7 +163,8 @@ const JobsPanel = ({
         setNewJob,
         panelState.limits,
         panelState.requests,
-        mode
+        mode,
+        frontendSpec
       )
       setTableDataIsLoaded(true)
     } else if (
@@ -191,12 +180,14 @@ const JobsPanel = ({
         panelState.requests,
         setNewJob,
         setDefaultDataIsLoaded,
-        mode
+        mode,
+        frontendSpec?.default_function_pod_resources
       )
     }
   }, [
     defaultData,
     defaultDataIsLoaded,
+    frontendSpec,
     mode,
     panelState.currentFunctionInfo,
     panelState.currentFunctionInfo.method,
@@ -222,6 +213,22 @@ const JobsPanel = ({
         type: panelActions.SET_PREVIOUS_PANEL_DATA_ACCESS_KEY,
         payload: PANEL_DEFAULT_ACCESS_KEY
       })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_PREEMPTION_MODE,
+        payload: panelState.preemption_mode
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_PRIORITY_CLASS_NAME,
+        payload: panelState.priority_class_name
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_LIMITS,
+        payload: panelState.limits
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_REQUESTS,
+        payload: panelState.requests
+      })
     }
 
     return () => {
@@ -231,6 +238,10 @@ const JobsPanel = ({
     jobsStore.error,
     panelState.previousPanelData.tableData,
     panelState.tableData,
+    panelState.preemption_mode,
+    panelState.priority_class_name,
+    panelState.limits,
+    panelState.requests,
     removeJobError
   ])
 
@@ -332,7 +343,7 @@ const JobsPanel = ({
       panelState,
       project,
       labels,
-      match,
+      params,
       selectedFunction,
       isFunctionTemplate,
       defaultData?.task.spec.function,
@@ -349,22 +360,17 @@ const JobsPanel = ({
         removeNewJob()
 
         if (redirectToDetailsPane) {
-          return history.push(
-            `/projects/${project}/jobs/${
-              cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
+          return navigate(
+            `/projects/${project}/jobs/${cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB}/${
+              result.data.data.metadata.name
             }/${result.data.data.metadata.uid}/overview`
           )
         }
 
-        return history.push(
-          `/projects/${project}/jobs/${
-            cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
-          }`
-        )
+        return navigate(`/projects/${project}/jobs/${cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`)
       })
       .then(() => {
-        onSuccessRun &&
-          onSuccessRun(cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB)
+        onSuccessRun && onSuccessRun(cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB)
       })
   }
 
@@ -385,7 +391,7 @@ const JobsPanel = ({
       panelState,
       project,
       defaultData.task.metadata.labels,
-      match,
+      params,
       selectedFunction,
       false,
       defaultData.task.spec.function
@@ -408,7 +414,6 @@ const JobsPanel = ({
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
       loading={jobsStore.loading || functionsStore.loading}
-      match={match}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}
       panelState={panelState}
@@ -436,7 +441,6 @@ JobsPanel.propTypes = {
   closePanel: PropTypes.func.isRequired,
   defaultData: PropTypes.shape({}),
   groupedFunctions: PropTypes.shape({}),
-  match: PropTypes.shape({}).isRequired,
   mode: PropTypes.string.isRequired,
   onEditJob: PropTypes.func,
   project: PropTypes.string.isRequired,
@@ -446,9 +450,10 @@ JobsPanel.propTypes = {
 }
 
 export default connect(
-  ({ jobsStore, functionsStore }) => ({
+  ({ jobsStore, functionsStore, appStore }) => ({
     jobsStore,
-    functionsStore
+    functionsStore,
+    frontendSpec: appStore.frontendSpec
   }),
   { ...jobsActions, ...functionActions, ...notificationActions }
 )(JobsPanel)

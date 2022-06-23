@@ -1,11 +1,6 @@
 module.exports = {
-  extends: [
-    'react-app',
-    'eslint:recommended',
-    'plugin:prettier/recommended',
-    'prettier/react'
-  ],
-  parser: 'babel-eslint',
+  extends: ['react-app', 'eslint:recommended', 'prettier'],
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true
@@ -13,9 +8,10 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  plugins: ['react'],
+  plugins: ['prettier'],
   rules: {
-    quotes: ['error', 'single', { 'avoidEscape': true, 'allowTemplateLiterals': false }],
+    quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
+    semi: ['error', 'never'],
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 0
   }

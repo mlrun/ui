@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { map } from 'lodash'
 import classnames from 'classnames'
 
-import Tooltip from '../../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
 import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
 import { ACTIONS_MENU } from '../../../types'
 
 const FeatureSetsPanelTableRow = ({

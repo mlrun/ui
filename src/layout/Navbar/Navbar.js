@@ -3,36 +3,34 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import NavbarLink from '../../elements/NavbarLink/NavbarLink'
-import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
 
-import { PROJECTS_SETTINGS_GENERAL_TAB } from '../../constants'
-
-import { ReactComponent as PinIcon } from '../../images/pin-icon.svg'
-import { ReactComponent as UnPinIcon } from '../../images/unpin-icon.svg'
-import { ReactComponent as SettingsIcon } from '../../images/pref-icon.svg'
+import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
+import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
+import { ReactComponent as SettingsIcon } from 'igz-controls/images/pref-icon.svg'
 
 import './Navbar.scss'
 
-const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
+const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned }) => {
   const navbarClasses = classNames(
     'navbar',
-    isPinned && 'pinned',
-    headerShown && 'has-header'
+    isNavbarPinned && 'pinned',
+    isHeaderShown && 'has-header'
   )
 
   const { links } = useMemo(() => {
-    let links = match ? getLinks(match) : []
+    let links = projectName ? getLinks(projectName) : []
     return {
       links
     }
-  }, [match])
+  }, [projectName])
 
   const handlePinClick = () => {
-    setIsPinned(!isPinned)
-    localStorageService.setStorageValue('mlrunUi.navbarStatic', !isPinned)
+    setIsNavbarPinned(!isNavbarPinned)
+    localStorageService.setStorageValue('mlrunUi.navbarStatic', !isNavbarPinned)
   }
 
   return (
@@ -47,14 +45,12 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
           <RoundedIcon
             onClick={handlePinClick}
             className="navbar__pin-icon"
-            tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
+            tooltipText={`${isNavbarPinned ? 'Unpin' : 'Pin'} Menu`}
           >
-            {isPinned ? <UnPinIcon /> : <PinIcon />}
+            {isNavbarPinned ? <UnPinIcon /> : <PinIcon />}
           </RoundedIcon>
           <ul className="navbar-links">
-            {links.map(
-              link => !link.hidden && <NavbarLink key={link.label} {...link} />
-            )}
+            {links.map(link => !link.hidden && <NavbarLink key={link.label} {...link} />)}
           </ul>
         </div>
         <div className="navbar__additional">
@@ -62,7 +58,7 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
             <NavbarLink
               icon={<SettingsIcon />}
               label="Project settings"
-              link={`/projects/${match.params.projectName}/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
+              link={`/projects/${projectName}/settings`}
             />
           </ul>
         </div>
@@ -72,9 +68,10 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
 }
 
 Navbar.propTypes = {
-  isPinned: PropTypes.bool.isRequired,
-  match: PropTypes.object.isRequired,
-  setIsPinned: PropTypes.func.isRequired
+  isHeaderShown: PropTypes.bool.isRequired,
+  isNavbarPinned: PropTypes.bool.isRequired,
+  projectName: PropTypes.string.isRequired,
+  setIsNavbarPinned: PropTypes.func.isRequired
 }
 
-export default Navbar
+export default React.memo(Navbar)

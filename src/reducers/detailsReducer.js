@@ -49,7 +49,7 @@ const initialState = {
   showWarning: false
 }
 
-export default (state = initialState, { type, payload }) => {
+const detailsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case FETCH_JOB_PODS_SUCCESS:
       return {
@@ -85,6 +85,7 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
+        loading: false,
         modelFeatureVectorData: {
           ...initialState.modelFeatureVectorData
         }
@@ -182,3 +183,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default detailsReducer

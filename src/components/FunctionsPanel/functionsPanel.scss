@@ -1,6 +1,6 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
-@import '../../scss/mixins';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/mixins';
 
 @include newItemSidePanel;
 
@@ -23,9 +23,19 @@
     }
   }
 
+  &__buttons-wrapper {
+    display: flex;
+  }
+
   .access-key {
     height: 64px;
     padding: 22px 40px;
+  }
+
+  .panel-section {
+    &__body {
+      margin-bottom: 0;
+    }
   }
 }
 

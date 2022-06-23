@@ -2,13 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import cronstrue from 'cronstrue'
 
-import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
-import Select from '../../../common/Select/Select'
-import Input from '../../../common/Input/Input'
-import Button from '../../../common/Button/Button'
-import ScheduleFeatureSet from '../ScheduleFeatureSet/ScheduleFeatureSet'
 import Combobox from '../../../common/Combobox/Combobox'
+import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import FilterParameters from './FilterParameters'
+import Input from '../../../common/Input/Input'
+import ScheduleFeatureSet from '../ScheduleFeatureSet/ScheduleFeatureSet'
+import Select from '../../../common/Select/Select'
+import { Button } from 'igz-controls/components'
 
 import {
   comboboxSelectList,
@@ -16,13 +16,11 @@ import {
   kindOptions,
   PARQUET
 } from './featureSetsPanelDataSource.util'
-import {
-  MLRUN_STORAGE_INPUT_PATH_SCHEME,
-  SECONDARY_BUTTON
-} from '../../../constants'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { pathPlaceholders } from '../../../utils/panelPathScheme'
 
-import { ReactComponent as Pencil } from '../../../images/edit.svg'
+import { ReactComponent as Pencil } from 'igz-controls/images/edit.svg'
 
 import './featureSetsPanelDataSource.scss'
 
@@ -32,6 +30,7 @@ const FeatureSetsPanelDataSourceView = ({
   featureStore,
   handleKindOnChange,
   handleUrlOnBlur,
+  handleUrlOnFocus,
   handleUrlPathTypeChange,
   handleUrlPathChange,
   setData,
@@ -75,6 +74,7 @@ const FeatureSetsPanelDataSourceView = ({
             matches={comboboxMatches}
             maxSuggestedMatches={3}
             onBlur={handleUrlOnBlur}
+            onFocus={handleUrlOnFocus}
             required
             requiredText="This field is required"
             selectDropdownList={comboboxSelectList}
@@ -154,6 +154,7 @@ FeatureSetsPanelDataSourceView.propTypes = {
   featureStore: PropTypes.shape({}).isRequired,
   handleKindOnChange: PropTypes.func.isRequired,
   handleUrlOnBlur: PropTypes.func.isRequired,
+  handleUrlOnFocus: PropTypes.func.isRequired,
   handleUrlPathTypeChange: PropTypes.func.isRequired,
   handleUrlPathChange: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,

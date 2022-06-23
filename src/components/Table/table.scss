@@ -1,8 +1,8 @@
-@import '../../scss/variables';
-@import '../../scss/colors';
-@import '../../scss/mixins';
-@import '../../scss/borders';
-@import '../../scss/shadows';
+@import '~igz-controls/scss/variables';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/mixins';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/shadows';
 
 .table {
   @include jobsFlex;
@@ -11,32 +11,52 @@
   width: 100%;
   border-top: $secondaryBorder;
 
+  & [class*='table-cell-'] {
+    flex: 1 0 0%;
+    min-width: 70px;
+    width: 100%;
+  }
+
+  .table-cell {
+    &-1 {
+      flex-grow: 1;
+    }
+
+    &-2 {
+      flex-grow: 2;
+    }
+
+    &-3 {
+      flex-grow: 3;
+    }
+
+    &-4 {
+      flex-grow: 4;
+    }
+
+    &-5 {
+      flex-grow: 5;
+    }
+
+    &-small {
+      max-width: 150px;
+    }
+
+    &-medium {
+      max-width: 250px;
+    }
+  }
+
   &__content {
     width: 100%;
     height: 100%;
 
-    .jobs {
-      &_medium {
-        max-width: 250px;
+    [class*='icon'] {
+      flex-wrap: nowrap;
+    }
 
-        @include tableColumnFlex(0.6, 240px);
-      }
-
-      &_small {
-        max-width: 150px;
-
-        @include tableColumnFlex(0.5, 75px);
-      }
-
-      &_big {
-        @include tableColumnFlex(2, 80px);
-      }
-
-      &_extra-small {
-        max-width: 85px;
-
-        @include tableColumnFlex(0.2, 65px);
-      }
+    .text-bold {
+      font-weight: 500;
     }
 
     .artifacts {
@@ -79,6 +99,8 @@
 
     .functions {
       &_medium {
+        max-width: 240px;
+
         @include tableColumnFlex(1, 240px);
       }
 
@@ -121,7 +143,6 @@
       @include tableDet;
       @include tableHeader(5px);
 
-      flex: 1;
       height: 50px;
       line-height: 18px;
 
@@ -137,6 +158,7 @@
   }
 
   .action_cell {
+    flex: 1 0 40px;
     width: 40px;
     max-width: 40px;
     padding: 0;

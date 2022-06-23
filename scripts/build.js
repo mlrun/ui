@@ -14,10 +14,10 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-
 const path = require('path');
 const chalk = require('react-dev-utils/chalk');
 const fs = require('fs-extra');
+const bfj = require('bfj');
 const webpack = require('webpack');
 const configFactory = require('../config/webpack.config');
 const paths = require('../config/paths');
@@ -42,6 +42,9 @@ const isInteractive = process.stdout.isTTY;
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
 }
+
+const argv = process.argv.slice(2);
+const writeStatsJson = argv.indexOf('--stats') !== -1;
 
 // Generate configuration
 const config = configFactory('production');
@@ -71,13 +74,13 @@ checkBrowsers(paths.appPath, isInteractive)
         console.log(warnings.join('\n\n'));
         console.log(
           '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
-            ' to learn more about each warning.'
+          chalk.underline(chalk.yellow('keywords')) +
+          ' to learn more about each warning.'
         );
         console.log(
           'To ignore, add ' +
-            chalk.cyan('// eslint-disable-next-line') +
-            ' to the line before.\n'
+          chalk.cyan('// eslint-disable-next-line') +
+          ' to the line before.\n'
         );
       } else {
         console.log(chalk.green('Compiled successfully.\n'));
@@ -94,7 +97,7 @@ checkBrowsers(paths.appPath, isInteractive)
       console.log();
 
       const appPackage = require(paths.appPackageJson);
-      const publicUrl = paths.publicUrl;
+      const publicUrl = paths.publicUrlOrPath;
       const publicPath = config.output.publicPath;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
       printHostingInstructions(
@@ -108,9 +111,11 @@ checkBrowsers(paths.appPath, isInteractive)
     err => {
       const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
       if (tscCompileOnError) {
-        console.log(chalk.yellow(
-          'Compiled with the following type errors (you may want to check these before deploying your app):\n'
-        ));
+        console.log(
+          chalk.yellow(
+            'Compiled with the following type errors (you may want to check these before deploying your app):\n'
+          )
+        );
         printBuildError(err);
       } else {
         console.log(chalk.red('Failed to compile.\n'));
@@ -128,18 +133,6 @@ checkBrowsers(paths.appPath, isInteractive)
 
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {
-  // We used to support resolving modules according to `NODE_PATH`.
-  // This now has been deprecated in favor of jsconfig/tsconfig.json
-  // This lets you use absolute paths in imports inside large monorepos:
-  if (process.env.NODE_PATH) {
-    console.log(
-      chalk.yellow(
-        'Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'
-      )
-    );
-    console.log();
-  }
-
   console.log('Creating an optimized production build...');
 
   const compiler = webpack(config);
@@ -150,8 +143,18 @@ function build(previousFileSizes) {
         if (!err.message) {
           return reject(err);
         }
+
+        let errMessage = err.message;
+
+        // Add additional information for postcss errors
+        if (Object.prototype.hasOwnProperty.call(err, 'postcssNode')) {
+          errMessage +=
+            '\nCompileError: Begins at CSS selector ' +
+            err['postcssNode'].selector;
+        }
+
         messages = formatWebpackMessages({
-          errors: [err.message],
+          errors: [errMessage],
           warnings: [],
         });
       } else {
@@ -173,20 +176,35 @@ function build(previousFileSizes) {
           process.env.CI.toLowerCase() !== 'false') &&
         messages.warnings.length
       ) {
-        console.log(
-          chalk.yellow(
-            '\nTreating warnings as errors because process.env.CI = true.\n' +
-              'Most CI servers set it automatically.\n'
-          )
+        // Ignore sourcemap warnings in CI builds. See #8227 for more info.
+        const filteredWarnings = messages.warnings.filter(
+          w => !/Failed to parse source map/.test(w)
         );
-        return reject(new Error(messages.warnings.join('\n\n')));
+        if (filteredWarnings.length) {
+          console.log(
+            chalk.yellow(
+              '\nTreating warnings as errors because process.env.CI = true.\n' +
+              'Most CI servers set it automatically.\n'
+            )
+          );
+          return reject(new Error(filteredWarnings.join('\n\n')));
+        }
       }
 
-      return resolve({
+      const resolveArgs = {
         stats,
         previousFileSizes,
         warnings: messages.warnings,
-      });
+      };
+
+      if (writeStatsJson) {
+        return bfj
+          .write(paths.appBuild + '/bundle-stats.json', stats.toJson())
+          .then(() => resolve(resolveArgs))
+          .catch(error => reject(new Error(error)));
+      }
+
+      return resolve(resolveArgs);
     });
   });
 }

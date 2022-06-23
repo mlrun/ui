@@ -5,11 +5,11 @@ import { isEmpty } from 'lodash'
 import classnames from 'classnames'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
-import RoundedIcon from '../RoundedIcon/RoundedIcon'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { ACTIONS_MENU } from '../../types'
 
-import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
+import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.svg'
 
 import './actionsMenu.scss'
 
@@ -20,6 +20,11 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
   const [renderMenu, setRenderMenu] = useState(false)
   const actionMenuRef = useRef()
   const dropDownMenuRef = useRef()
+
+  const actionMenuClassNames = classnames(
+    'actions-menu__container',
+    isShowMenu && 'actions-menu__container-active'
+  )
   const dropDownMenuClassNames = classnames(
     'actions-menu__body',
     isShowMenu && 'show'
@@ -61,7 +66,7 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
     }
   }
 
-  const handleMouseLeave = () => {
+  const onMouseOut = () => {
     if (isShowMenu) {
       idTimeout = setTimeout(() => {
         setIsShowMenu(false)
@@ -90,13 +95,13 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
 
   return (
     <div
-      className="actions-menu__container"
-      onMouseLeave={handleMouseLeave}
+      className={actionMenuClassNames}
+      onMouseOut={onMouseOut}
       onMouseOver={handleMouseOver}
       ref={actionMenuRef}
     >
-      <RoundedIcon onClick={showActionsList}>
-        <ActionMenu />
+      <RoundedIcon isActive={isShowMenu} onClick={showActionsList}>
+        <ActionMenuIcon />
       </RoundedIcon>
 
       {renderMenu &&

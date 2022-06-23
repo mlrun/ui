@@ -1,8 +1,8 @@
 import { iguazioHttpClient } from '../httpClient'
 
-export default {
-  editProject: (projectId, data) =>
-    iguazioHttpClient.put(`/projects/${projectId}`, data),
+const projectsIguazioApi = {
+  editProject: (projectId, data) => iguazioHttpClient.put(`/projects/${projectId}`, data),
+  getProjectJob: jobId => iguazioHttpClient.get(`/jobs/${jobId}`),
   getProjects: config => {
     return iguazioHttpClient.get('/projects', config)
   },
@@ -15,30 +15,26 @@ export default {
     })
   },
   getProjectMembersVisibility: project => {
-    return iguazioHttpClient.get(
-      `/projects/__name__/${project}/authorization`,
-      {
-        params: {
-          action: 'authorization/roles',
-          sub_resource: 'authorization/roles'
-        }
+    return iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
+      params: {
+        action: 'authorization/roles',
+        sub_resource: 'authorization/roles'
       }
-    )
+    })
   },
   getProjectOwnerVisibility: project => {
-    return iguazioHttpClient.get(
-      `/projects/__name__/${project}/authorization`,
-      {
-        params: {
-          action: 'update',
-          sub_resource: 'authorization/owner'
-        }
+    return iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
+      params: {
+        action: 'update',
+        sub_resource: 'authorization/owner'
       }
-    )
+    })
   },
   updateProjectMembers: data => {
     return iguazioHttpClient.post('/async_transactions', data)
   },
   getScrubbedUsers: config => iguazioHttpClient.get('/scrubbed_users', config),
-  getScrubbedUserGroups: () => iguazioHttpClient.get('/scrubbed_user_groups')
+  getScrubbedUserGroups: config => iguazioHttpClient.get('/scrubbed_user_groups', config)
 }
+
+export default projectsIguazioApi

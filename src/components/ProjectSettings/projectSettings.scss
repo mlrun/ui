@@ -1,20 +1,21 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
-@import '../../scss/shadows';
-@import '../../scss/variables';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/shadows';
+@import '~igz-controls/scss/variables';
 
 .settings {
   display: flex;
   flex: 1;
   flex-direction: column;
-  min-width: 600px;
+  min-width: 100%;
+  background-color: $white;
 
   &__content {
     position: relative;
     display: flex;
     flex: 1 1;
     flex-direction: row;
-    margin: 45px 25px 25px;
+    margin: 45px 60px 25px 25px;
   }
 
   &__header {
@@ -25,44 +26,36 @@
 
   &__card {
     &-content {
-      max-width: 800px;
+      display: flex;
+      flex-flow: row nowrap;
+      margin: 0 -15px;
+
+      &-col {
+        padding: 0 15px;
+        flex: 0 0 auto;
+        width: 50%;
+        min-width: 500px;
+      }
     }
 
     width: 100%;
-    padding: 40px;
+    padding: 24px 0;
     background-color: $white;
-    border-radius: $mainBorderRadius;
-    box-shadow: $jobsShadow;
-
-    &-header {
-      margin-bottom: 25px;
-      color: $primary;
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 23px;
-    }
 
     &-divider {
       margin: 16px 0;
       border-top: $primaryBorder;
     }
 
-    &-subtitle {
-      margin: 0 0 5px;
-      color: rgba($mulledWine, 0.88);
+    &-title {
+      margin: 0 0 15px;
       font-weight: 500;
-      font-size: 14px;
-      line-height: 16px;
+      font-size: 20px;
     }
-  }
-
-  &__description {
-    margin-top: 16px;
-    color: rgba($mulledWine, 0.88);
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-    cursor: pointer;
+    &-subtitle {
+      margin: 0 0 15px;
+      font-weight: 400;
+    }
   }
 }
 

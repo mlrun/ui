@@ -16,7 +16,7 @@ import {
   ENV_VARIABLE_TYPE_VALUE
 } from '../../constants'
 
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 const EditableEnvironmentVariablesRow = ({
   editEnvVariable,
@@ -119,7 +119,7 @@ const EditableEnvironmentVariablesRow = ({
               onChange={secretKey =>
                 setSelectedEnvVariable(state => ({ ...state, secretKey }))
               }
-              pattern="^(?=[\S\s]{1,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]+$"
+              pattern="^(?=[\S\s]{0,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]*$"
               setInvalid={value =>
                 setValidation(state => ({ ...state, isSecretKeyValid: value }))
               }

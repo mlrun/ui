@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import './NavbarLink.scss'
 
-const NavbarLink = ({ externalLink, icon, label, link, rootPath }) => {
+const NavbarLink = ({ externalLink, icon, label, link }) => {
   return (
     <li className="nav-link">
       {externalLink ? (
@@ -21,7 +21,7 @@ const NavbarLink = ({ externalLink, icon, label, link, rootPath }) => {
         <NavLink
           to={link}
           className="nav-link__button btn btn-secondary"
-          activeClassName="active"
+          activeclassname="active"
         >
           {icon}
           <span>{label}</span>

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Plus } from '../../../images/plus.svg'
+import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 const FeatureSetsPanelTableAddItemRow = ({ onClick, text }) => {
   return (

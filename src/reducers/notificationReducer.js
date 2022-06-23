@@ -4,7 +4,7 @@ const initialState = {
   notification: []
 }
 
-export default (state = initialState, { type, payload }) => {
+const notificationReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case SET_NOTIFICATION:
       return {
@@ -20,3 +20,5 @@ export default (state = initialState, { type, payload }) => {
       return state
   }
 }
+
+export default notificationReducer

@@ -1,6 +1,6 @@
 import { mainHttpClient } from '../httpClient'
 
-export default {
+const projectsApi = {
   changeProjectState: (project, state) =>
     mainHttpClient.patch(`/projects/${project}`, {
       spec: { desired_state: state }
@@ -21,8 +21,8 @@ export default {
     ),
   editProject: (project, data) =>
     mainHttpClient.put(`/projects/${project}`, data),
-  getJobsAndWorkflows: project =>
-    mainHttpClient.get(`/runs?project=${project}`),
+  getJobsAndWorkflows: (project, params) =>
+    mainHttpClient.get('/runs', { params }),
   getProject: project => mainHttpClient.get(`/projects/${project}`),
   getProjectDataSets: project =>
     mainHttpClient.get(`/artifacts?project=${project}&category=dataset`),
@@ -80,3 +80,5 @@ export default {
   updateProject: (project, data) =>
     mainHttpClient.patch(`/projects/${project}`, data)
 }
+
+export default projectsApi

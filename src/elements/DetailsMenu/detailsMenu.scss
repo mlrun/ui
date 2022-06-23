@@ -1,5 +1,5 @@
-@import '../../scss/colors';
-@import '../../scss/borders';
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
 
 .details-menu {
   position: sticky;
@@ -7,7 +7,7 @@
   z-index: 6;
   display: flex;
   align-items: center;
-  margin: 29px 0 0;
+  margin: 9px 0 0;
   padding: 7px 0 0;
   list-style-type: none;
   background-color: $white;
@@ -23,6 +23,8 @@
   }
 
   &__tab {
+    display: inline-flex;
+    align-items: center;
     padding: 8px 24px;
     color: $topaz;
     font-weight: bold;
@@ -33,6 +35,10 @@
     &_active {
       color: $cornflowerBlue;
       border-bottom-color: $cornflowerBlue;
+    }
+
+    &-tip {
+      margin-left: 5px;
     }
   }
 
