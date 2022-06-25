@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+
 import ModalContainer from 'react-modal-promise'
 import { BrowserRouter as Router } from 'react-router-dom'
 
@@ -18,7 +19,7 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
       <Provider store={toolkitStore}>
         <Router basename={process.env.PUBLIC_URL}>
           <App />
-          <ModalContainer />
+          {ReactDOM.createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
         </Router>
       </Provider>,
       document.getElementById('root')
