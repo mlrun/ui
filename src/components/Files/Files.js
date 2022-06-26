@@ -14,8 +14,8 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { openPopUp } from 'igz-controls/utils/common.util'
 
+import { useModal } from '../../hooks/useModal'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
@@ -47,6 +47,7 @@ const Files = ({
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { createModal } = useModal()
 
   const fetchData = useCallback(
     filters => {
@@ -139,14 +140,15 @@ const Files = ({
 
   useEffect(() => {
     if (openPanelByDefault) {
-      openPopUp(RegisterArtifactModal, {
+      createModal(RegisterArtifactModal, {
+        instanceId: 'RegisterArtifactModal',
         artifactKind: 'artifact',
         projectName: params.projectName,
         refresh: fetchData,
         title: pageData.actionsMenuHeader
       })
     }
-  }, [fetchData, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
+  }, [createModal, fetchData, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
 
   useEffect(() => {
     setPageData(state => ({
@@ -223,7 +225,8 @@ const Files = ({
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
         handleActionsMenuClick={() =>
-          openPopUp(RegisterArtifactModal, {
+          createModal(RegisterArtifactModal, {
+            instanceId: 'RegisterArtifactModal',
             artifactKind: 'artifact',
             projectName: params.projectName,
             refresh: fetchData,

@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import ModalContainer from 'react-modal-promise'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 import App from './App'
+import ModalProvider from './utils/ModalContext.util'
+
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import toolkitStore from './store/toolkitStore'
@@ -18,8 +19,9 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
     ReactDOM.render(
       <Provider store={toolkitStore}>
         <Router basename={process.env.PUBLIC_URL}>
-          <App />
-          {ReactDOM.createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
+          <ModalProvider>
+            <App />
+          </ModalProvider>
         </Router>
       </Provider>,
       document.getElementById('root')

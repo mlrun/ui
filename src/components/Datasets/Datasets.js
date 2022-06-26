@@ -19,7 +19,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { openPopUp } from 'igz-controls/utils/common.util'
+
 import {
   DATASETS,
   DATASETS_PAGE,
@@ -29,6 +29,7 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 
+import { useModal } from '../../hooks/useModal'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
@@ -53,6 +54,7 @@ const Datasets = ({
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { createModal } = useModal()
 
   const fetchData = useCallback(
     filters => {
@@ -149,14 +151,21 @@ const Datasets = ({
 
   useEffect(() => {
     if (openPanelByDefault) {
-      openPopUp(RegisterArtifactModal, {
+      createModal(RegisterArtifactModal, {
+        instanceId: 'RegisterDatasetModal',
         artifactKind: 'dataset',
         projectName: params.projectName,
         refresh: handleRefresh,
         title: pageData.actionsMenuHeader
       })
     }
-  }, [handleRefresh, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
+  }, [
+    createModal,
+    handleRefresh,
+    openPanelByDefault,
+    pageData.actionsMenuHeader,
+    params.projectName
+  ])
 
   useEffect(() => {
     setPageData(state => {
@@ -232,7 +241,8 @@ const Datasets = ({
         getIdentifier={getArtifactIdentifier}
         handleCancel={() => setSelectedItem({})}
         handleActionsMenuClick={() =>
-          openPopUp(RegisterArtifactModal, {
+          createModal(RegisterArtifactModal, {
+            instanceId: 'RegisterDatasetModal',
             artifactKind: 'dataset',
             projectName: params.projectName,
             refresh: handleRefresh,
