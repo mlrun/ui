@@ -67,6 +67,6 @@ jobs:
             MLRUN_DOCKER_REGISTRY=$registry \
             MLRUN_DOCKER_REPO=${{ steps.computed_params.outputs.mlrun_docker_repo }} \
             MLRUN_DOCKER_TAG=${{ steps.computed_params.outputs.mlrun_version }} \
-            npm run docker;
-            docker push $registry${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }};
+            npm run docker; \
+            docker push $registry${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}; \
           done;
