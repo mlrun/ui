@@ -1,5 +1,6 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/mixins';
+@import '../../scss/main.scss';
 
 .settings {
   &__artifact-path,
@@ -26,7 +27,7 @@
   }
 
   &__labels {
-    @include fieldWrapper;
+    @include fieldWrapperOld;
 
     padding: 25px 16px 11px;
 

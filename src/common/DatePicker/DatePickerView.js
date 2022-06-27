@@ -65,7 +65,7 @@ const DatePickerView = React.forwardRef(
       disabled && 'date-picker__input_disabled',
       isInvalid && 'input_invalid'
     )
-    const inputLabelClassNames = classnames('input__label', 'active-label')
+    const inputLabelClassNames = classnames('input__label')
 
     return (
       <div
@@ -91,9 +91,9 @@ const DatePickerView = React.forwardRef(
           />
           <span className={inputLabelClassNames}>
             {label}
-            {isValueEmpty && <span className="input__label-value">&nbsp;Any time</span>}
             {required && <span className="input__label-mandatory"> *</span>}
           </span>
+          {isValueEmpty && <span className="input__label input__label-empty">&nbsp;Any time</span>}
           {isInvalid && (
             <Tooltip
               className="input__warning"

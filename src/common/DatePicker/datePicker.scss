@@ -21,6 +21,7 @@
 
       &.long-input {
         width: 300px;
+        margin-left: 5px;
       }
     }
 
@@ -30,12 +31,14 @@
   }
 
   .input__label {
-    top: 13px;
     font-weight: normal;
+    font-size: 10px;
+  }
 
-    .input__label-value {
-      font-size: 14px;
-    }
+  .input__label-empty {
+    top: 12px;
+    left: 65px;
+    font-size: 14px;
   }
 
   .date-picker__pop-up {

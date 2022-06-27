@@ -427,3 +427,14 @@ iframe {
     font-size: 12px;
   }
 }
+
+//TODO: Delete after removing Textarea and Input and using DRC conponents
+@mixin fieldWrapperOld {
+  position: relative;
+  width: 100%;
+  padding: 18px 16px;
+  color: #4b4760;
+  background-color: transparent;
+  border: $primaryBorder;
+  border-radius: 4px;
+}
