@@ -20,7 +20,7 @@ const ModalProvider = ({ children }) => {
   const rejectInstance = id => ref.current.reject(id)
 
   const onOpen = (id, instance) => {
-    if (instance.props.controlled || instance.props.instanceId) {
+    if (!router.query[id] && (instance.props.controlled || instance.props.instanceId)) {
       navigate({
         pathname: router.pathname,
         search: qs.stringify({

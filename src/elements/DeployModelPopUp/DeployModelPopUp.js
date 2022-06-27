@@ -22,8 +22,8 @@ import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/consta
 import { MODELS_TAB } from '../../constants'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { useModal } from '../../hooks/useModal'
 
 import './deployModelPopUp.scss'
 
@@ -46,6 +46,9 @@ const DeployModelPopUp = ({
     selectedFunctionName: '',
     arguments: []
   })
+
+  const { createModal, resolveModal } = useModal()
+
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {}
@@ -161,13 +164,14 @@ const DeployModelPopUp = ({
 
   const handleCloseModal = formState => {
     if (formState && formState.dirty) {
-      openPopUp(ConfirmDialog, {
+      createModal(ConfirmDialog, {
+        instanceId: 'ConfirmDialog',
         cancelButton: {
           label: 'Cancel',
           variant: TERTIARY_BUTTON
         },
         confirmButton: {
-          handler: onResolve,
+          handler: () => resolveModal().then(onResolve),
           label: 'OK',
           variant: SECONDARY_BUTTON
         },
