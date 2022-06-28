@@ -193,7 +193,7 @@ const addToFeatureVectorTable = {
       root: '.table-body__row',
       fields: {
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        featureName: '.table-body__cell:nth-of-type(1) .data-ellipsis',
+        featureName: '.table-body__cell:nth-of-type(1) div.data-ellipsis',
         featureSet: '.table-body__cell:nth-of-type(2) a .link',
         type: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         entities: '.table-body__cell:nth-of-type(4) .chips-wrapper',

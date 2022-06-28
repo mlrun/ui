@@ -12,6 +12,7 @@ import {
   scrollToElement
 } from '../common/actions/common.action'
 import {
+  checkCellHintText,
   getTableRows,
   isContainsValueInColumn,
   isNotContainsValueInColumn,
@@ -1045,4 +1046,25 @@ Then(
       )
     }
   }
+)
+
+Then(
+    'verify cell with {string} value in {string} column in {string} table on {string} wizard should display {string}.{string}',
+    async function (fieldName, columnName, tableName, wizardName, constStorage, constValue) {
+        const arr = await findRowIndexesByColumnValue(
+            this.driver,
+            pageObjects[wizardName][tableName],
+            columnName,
+            fieldName
+        )
+        const indx = arr[0]
+
+        await checkCellHintText(
+            this.driver,
+            pageObjects[wizardName][tableName],
+            pageObjects['commonPagesHeader']['Common_Hint'],
+            pageObjectsConsts[constStorage][constValue],
+            indx
+        )
+    }
 )

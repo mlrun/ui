@@ -445,6 +445,17 @@ When(
 )
 
 Then(
+  'verify {string} dropdown on {string} wizard selected option value {string}',
+  async function(dropdownName, wizardName, optionValue) {
+    await checkDropdownSelectedOption(
+      this.driver,
+      pageObjects[wizardName][dropdownName],
+      optionValue
+    )
+  }
+)
+
+Then(
   'verify {string} dropdown in {string} on {string} wizard selected option value {string}',
   async function(dropdownName, accordionName, wizardName, optionValue) {
     await checkDropdownSelectedOption(
@@ -627,6 +638,12 @@ Then('sort projects in ascending order', async function() {
     'class',
     'sort_up'
   )
+  if (!upSorted) {
+        await clickOnComponent(
+            this.driver,
+            pageObjects['Projects']['Projects_Sorter']
+        )
+  }
   if (upSorted) {
     await isTableColumnSorted(
       this.driver,
@@ -735,6 +752,18 @@ Then(
       pageObjectsConsts[constStorage][constValue]
     )
   }
+)
+
+Then(
+    'verify {string} in {string} on {string} wizard should display options {string}.{string}',
+    async function(inputField, accordion, wizard, constStorage, constValue) {
+        await checkWarningHintText(
+            this.driver,
+            pageObjects[wizard][accordion][inputField],
+            pageObjects['commonPagesHeader']['Common_Options'],
+            pageObjectsConsts[constStorage][constValue]
+        )
+    }
 )
 
 Then(
@@ -992,6 +1021,19 @@ Then('verify {string} options rules on {string} wizard', async function(
     this.attach,
     pageObjects[wizardName][inputField],
     pageObjects['commonPagesHeader']['Common_Options']
+  )
+})
+
+Then('verify {string} options rules on form {string} wizard', async function(
+  inputField,
+  wizardName
+) {
+  await checkInputAccordingHintText(
+    this.driver,
+    this.attach,
+    pageObjects[wizardName][inputField],
+    pageObjects['commonPagesHeader']['Common_Options'],
+    true
   )
 })
 

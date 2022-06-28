@@ -266,7 +266,7 @@ Feature: Feature Store Page
 
     @passive
     @inProgress
-    Scenario: Check all mandatory components in Item infopane on Statistics tab table
+    Scenario: Check all mandatory components in Item infopane on Analysis tab table
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -306,11 +306,12 @@ Feature: Feature Store Page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         And wait load page
         Then value in "feature_name" column with "text" in "Features_Table" on "Feature_Store_Features_Tab" wizard should contains "ea"
-        Then type value "zzzzz" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Tab" wizard
+        Then type value "ccccc" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
 
@@ -322,6 +323,7 @@ Feature: Feature Store Page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then type value "io" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
@@ -721,8 +723,8 @@ Feature: Feature Store Page
         Then "Offline_Partition_By_Time_Checkbox" element should be checked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Offline_Partition_By_Columns_Checkbox" element should be checked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then is "Offline_Partition_Number_Of_Buckets_Radiobutton" in "Target_Store_Accordion" on "New_Feature_Set" selected
-        When uncheck "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When uncheck "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When click on "External_Offline_Partition_ShowHide_Link" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -1221,6 +1223,20 @@ Feature: Feature Store Page
         Then click on "apply_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature    |
             | price      |
+        Then click on "add_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature      |
+            | last_updated |
+        Then type value "last_updated_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
+        Then click on "discard_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature      |
+            | last_updated |
+        Then click on "add_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature |
+            | room    |
+        Then type value "room_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
+        Then click on "discard_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature    |
+            | room       |
         Then verify values in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | projectName  |        featureSet         |    feature   |  alias      |
             | fsdemo-admin | patient_details\n: latest |  department  |             |

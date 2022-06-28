@@ -1,9 +1,6 @@
 import actionMenu from '../components/action-menu.component'
 import commonTable from '../components/table.component'
-import {
-  generateInputGroup,
-  generateLabelGroup
-} from '../../common-tools/common-tools'
+import { generateInputGroup, generateLabelGroup } from '../../common-tools/common-tools'
 import labelComponent from '../components/label.component'
 import inputGroup from '../components/input-group.component'
 import graph from '../components/graph.component'
@@ -25,7 +22,8 @@ const infoPaneTabSelector = {
     row: {
       root: 'a',
       fields: {
-        key: '.details-menu__tab'
+        key: '.details-menu__tab',
+        hintButton: '.tip-container'
       }
     }
   }
@@ -33,6 +31,69 @@ const infoPaneTabSelector = {
 
 const infoPaneOverviewHeaders = {
   root: '.table__item .item-info__details:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: 'li:not(li.details-item_hidden)',
+      fields: {
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
+      }
+    }
+  }
+}
+
+const artifactOverviewTable = {
+  root: '.table__item .item-info__details:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: '',
+      fields: {
+        hash: '.details-item:nth-of-type(1) .details-item__data',
+        key: '.details-item:nth-of-type(2) .details-item__data',
+        iter: '.details-item:nth-of-type(3) .details-item__data',
+        size: '.details-item:nth-of-type(4) .details-item__data',
+        path: '.details-item:nth-of-type(5) .details-item__data',
+        uri: '.details-item:nth-of-type(6) .details-item__data',
+        uid: '.details-item:nth-of-type(7) .details-item__data',
+        updated: '.details-item:nth-of-type(8) .details-item__data',
+        labels: '.details-item:nth-of-type(9) .details-item__data',
+      }
+    }
+  }
+}
+
+const modelsOverviewTable = {
+  root: '.table__item .item-info__details:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: '',
+      fields: {
+        hash: '.details-item:nth-of-type(1) .details-item__data',
+        key: '.details-item:nth-of-type(2) .details-item__data',
+        iter: '.details-item:nth-of-type(3) .details-item__data',
+        kind: '.details-item:nth-of-type(4) .details-item__data',
+        size: '.details-item:nth-of-type(5) .details-item__data',
+        path: '.details-item:nth-of-type(6) .details-item__data',
+        uri: '.details-item:nth-of-type(7) .details-item__data',
+        model_file: '.details-item:nth-of-type(8) .details-item__data',
+        feature_vector: '.details-item:nth-of-type(9) .details-item__data',
+        uid: '.details-item:nth-of-type(10) .details-item__data',
+        updated: '.details-item:nth-of-type(11) .details-item__data',
+        framework: '.details-item:nth-of-type(12) .details-item__data',
+        algorithm: '.details-item:nth-of-type(13) .details-item__data',
+        labels: '.details-item:nth-of-type(14) .details-item__data',
+        metrics: '.details-item:nth-of-type(15) .details-item__data',
+      }
+    }
+  }
+}
+
+const infoPaneDriftHeaders = {
+  root: '.table__item .item-info__details:nth-of-type(2)',
   header: {},
   body: {
     row: {
@@ -102,10 +163,8 @@ const previewInfoPaneTable = {
   header: {
     root: '.artifact-preview__table-header',
     sorters: {
-      department:
-        '.artifact-preview__table-content:nth-of-type(1) .data-ellipsis',
-      parent_id:
-        '.artifact-preview__table-content:nth-of-type(2) .data-ellipsis',
+      department: '.artifact-preview__table-content:nth-of-type(1) .data-ellipsis',
+      parent_id: '.artifact-preview__table-content:nth-of-type(2) .data-ellipsis',
       room: '.artifact-preview__table-content:nth-of-type(3) .data-ellipsis',
       bad: '.artifact-preview__table-content:nth-of-type(4) .data-ellipsis',
       gender: '.artifact-preview__table-content:nth-of-type(5) .data-ellipsis',
@@ -185,10 +244,10 @@ const requestedFeaturesTable = {
         labelIcon: {
           componentType: labelComponent,
           structure: generateLabelGroup(
-              '.item-requested-features__table-cel.cell_icon',
-              false,
-              false,
-              '.tooltip .tooltip__text span'
+            '.item-requested-features__table-cel.cell_icon',
+            false,
+            false,
+            '.tooltip .tooltip__text span'
           )
         },
         projectName: '.cell_project-name',
@@ -197,6 +256,7 @@ const requestedFeaturesTable = {
         alias: '.cell_alias',
         add_alias: '.cell_actions .round-icon-cp:nth-of-type(1)',
         apply_btn: '.cell_actions-visible .round-icon-cp:nth-of-type(1)',
+        discard_btn: '.cell_actions-visible .round-icon-cp:nth-of-type(2)',
         delete_btn: '.cell_actions .round-icon-cp:nth-of-type(2)'
       }
     }
@@ -235,10 +295,8 @@ const artifactsTable = {
         path: '.item-artifacts__row-item:nth-of-type(2) .data-ellipsis',
         size: '.item-artifacts__row-item:nth-of-type(3) .data-ellipsis',
         updated: '.item-artifacts__row-item:nth-of-type(4) .data-ellipsis',
-        show_details:
-          '.item-artifacts__row-item:nth-of-type(5) .data-ellipsis a',
-        download:
-          '.item-artifacts__row-item:nth-of-type(6) .download-container svg'
+        show_details: '.item-artifacts__row-item:nth-of-type(5) .data-ellipsis a',
+        download: '.item-artifacts__row-item:nth-of-type(6) .download-container svg'
       }
     }
   }
@@ -348,12 +406,8 @@ const applyChangesButton = By.css(
   '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(2) button'
 )
 const commonActionMenu = actionMenu(actionMenuStructure)
-const crossCloseButton = By.css(
-  '.table__item .item-header__buttons a .data-ellipsis'
-)
-const commonDownloadButton = By.css(
-  '.table__item .item-header__buttons .download-container'
-)
+const crossCloseButton = By.css('.table__item .item-header__buttons a .data-ellipsis')
+const commonDownloadButton = By.css('.table__item .item-header__buttons .download-container')
 const commonArrowBack = By.css('a.link-back__icon')
 const commonInfoPaneTabSelector = commonTable(infoPaneTabSelector)
 
@@ -367,9 +421,7 @@ module.exports = {
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Description_Field: By.css(
-      '.item-info__details .details-item:nth-of-type(1) .data-ellipsis'
-    ),
+    Description_Field: By.css('.item-info__details .details-item:nth-of-type(1) .data-ellipsis'),
     Description_Input: inputGroup(
       generateInputGroup(
         '.item-info__details .details-item:nth-of-type(1) .input-wrapper',
@@ -429,7 +481,8 @@ module.exports = {
       )
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
-    Info_Sources_Table: commonTable(filesInfoSourcesTable)
+    Info_Sources_Table: commonTable(filesInfoSourcesTable),
+    Overview_Table: commonTable(artifactOverviewTable)
   },
   transformationsInfoPane: {
     Header: header,
@@ -472,9 +525,7 @@ module.exports = {
   },
   requestedFeaturesInfoPane: {
     Requested_Features_Table: commonTable(requestedFeaturesTable),
-    Alias_Input: inputGroup(
-      generateInputGroup('.cell_alias__input-wrapper', false, false, false)
-    )
+    Alias_Input: inputGroup(generateInputGroup('.cell_alias__input-wrapper', false, false, false))
   },
   mlFunctionInfoPane: {
     Header: header,
@@ -486,7 +537,6 @@ module.exports = {
   },
   jobsMonitorTabInfoPane: {
     Arrow_Back: By.css('a.item-header__back-btn'),
-
     Header: header,
     Updated: updated,
     Action_Menu: commonActionMenu,
@@ -516,9 +566,7 @@ module.exports = {
   },
   artifactsInfoPane: {
     Artifacts_Table: commonTable(artifactsTable),
-    Artifact_Preview_Button: By.css(
-      '.item-artifacts .item-artifacts__preview .data-ellipsis svg'
-    )
+    Artifact_Preview_Button: By.css('.item-artifacts .item-artifacts__preview .data-ellipsis svg')
   },
   resultsInfoPane: {
     Results_Table: commonTable(resultsTable)
@@ -546,7 +594,8 @@ module.exports = {
       )
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
-    Info_Sources_Table: commonTable(filesInfoSourcesTable)
+    Info_Sources_Table: commonTable(filesInfoSourcesTable),
+    Overview_Table: commonTable(artifactOverviewTable)
   },
   modelsInfoPane: {
     Header: header,
@@ -556,6 +605,7 @@ module.exports = {
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -571,14 +621,13 @@ module.exports = {
       )
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
+    Overview_Table: commonTable(modelsOverviewTable),
     Info_Sources_Table: commonTable(filesInfoSourcesTable)
   },
   modelsRealTimePiplineInfoPane: {
     Arrow_Back: commonArrowBack,
     Header: By.css('.graph-pane__title span'),
-    Cross_Close_Button: By.css(
-      '.graph-pane__title .round-icon-cp .round-icon-cp__circle'
-    ),
+    Cross_Close_Button: By.css('.graph-pane__title .round-icon-cp .round-icon-cp__circle'),
     Overview_Headers: commonTable(modelsRealTimeinfoPaneOverviewHeaders)
   }
 }
