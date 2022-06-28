@@ -22,6 +22,7 @@ import {
   pageDataInitialState,
   tabs
 } from './models.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -35,7 +36,6 @@ import {
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getArtifactIdentifier, getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
@@ -63,9 +63,7 @@ const Models = ({
   const openPanelByDefault = useOpenPanel()
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
-  const [deployModel, setDeployModel] = useState({})
   const [isRegisterArtifactPopupOpen, setIsRegisterArtifactPopupOpen] = useState(false)
-  const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -96,14 +94,8 @@ const Models = ({
     [fetchFunctions, fetchModelEndpoints, fetchModels, params.pageTab, params.projectName]
   )
 
-  const closeDeployModelPopUp = () => {
-    setDeployModel({})
-    setIsDeployPopupOpen(false)
-  }
-
   const handleDeployModel = useCallback(model => {
-    setDeployModel(model)
-    setIsDeployPopupOpen(true)
+    openPopUp(DeployModelPopUp, { model })
   }, [])
 
   const handleRemoveModel = useCallback(
@@ -210,10 +202,17 @@ const Models = ({
         params.pageTab,
         handleDeployModel,
         handleRequestOnExpand,
-        !isEveryObjectValueEmpty(selectedModel)
+        detailsStore
       )
     }))
-  }, [handleDeployModel, handleRequestOnExpand, params.pageTab, selectedModel, subPage])
+  }, [
+    detailsStore,
+    handleDeployModel,
+    handleRequestOnExpand,
+    params.pageTab,
+    selectedModel,
+    subPage
+  ])
 
   useEffect(() => {
     if (params.pageTab === MODEL_ENDPOINTS_TAB) {
@@ -291,15 +290,15 @@ const Models = ({
     if (
       params.pageTab === MODELS_TAB &&
       selectedModel.item?.feature_vector &&
-      !detailsStore.modelFeatureVectorData.error &&
+      !detailsStore.error &&
       isEmpty(detailsStore.modelFeatureVectorData)
     ) {
       const { name, tag } = getFeatureVectorData(selectedModel.item.feature_vector)
       fetchModelFeatureVector(params.projectName, name, tag)
     }
   }, [
+    detailsStore.error,
     detailsStore.modelFeatureVectorData,
-    detailsStore.modelFeatureVectorData.error,
     fetchModelFeatureVector,
     params.pageTab,
     params.projectName,
@@ -346,9 +345,6 @@ const Models = ({
           setIsPopupOpen={setIsRegisterArtifactPopupOpen}
           title={pageData.actionsMenuHeader}
         />
-      )}
-      {isDeployPopupOpen && (
-        <DeployModelPopUp closePopUp={closeDeployModelPopUp} model={deployModel} />
       )}
     </div>
   )

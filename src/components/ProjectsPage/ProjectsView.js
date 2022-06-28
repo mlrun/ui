@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
@@ -14,7 +13,7 @@ import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import { RoundedIcon } from 'igz-controls/components'
+import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -34,6 +33,7 @@ const ProjectsView = ({
   filteredProjects,
   filterMatches,
   handleCreateProject,
+  handleSelectSortOption,
   isDescendingOrder,
   isNameValid,
   projectStore,
@@ -49,7 +49,6 @@ const ProjectsView = ({
   setNewProjectLabels,
   setNewProjectName,
   setSelectedProjectsState,
-  setSortProjectId,
   sortProjectId,
   urlParams
 }) => {
@@ -86,6 +85,7 @@ const ProjectsView = ({
             label: confirmData.btnConfirmLabel,
             variant: confirmData.btnConfirmType
           }}
+          isOpen={confirmData}
           header={confirmData.header}
           message={confirmData.message}
         />
@@ -100,13 +100,13 @@ const ProjectsView = ({
               <ContentMenu
                 activeTab={selectedProjectsState}
                 screen="active"
-              tabs={projectsStates}
-              onClick={setSelectedProjectsState}
-            />
+                tabs={projectsStates}
+                onClick={setSelectedProjectsState}
+              />
 
               <Sort
                 isDescendingOrder={isDescendingOrder}
-                onSelectOption={setSortProjectId}
+                onSelectOption={handleSelectSortOption}
                 options={projectsSortOptions}
                 selectedId={sortProjectId}
                 setIsDescendingOrder={setIsDescendingOrder}
@@ -189,6 +189,7 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
+  handleSelectSortOption: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
@@ -201,7 +202,6 @@ ProjectsView.propTypes = {
   setNameValid: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
-  setSortProjectId: PropTypes.func.isRequired,
   sortProjectId: PropTypes.string.isRequired,
   urlParams: PropTypes.shape({}).isRequired
 }

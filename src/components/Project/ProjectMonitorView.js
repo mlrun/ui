@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import Loader from '../../common/Loader/Loader'
@@ -14,7 +13,7 @@ import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import Select from '../../common/Select/Select'
-import { RoundedIcon } from 'igz-controls/components'
+import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
 import { DATASETS, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
@@ -72,6 +71,7 @@ const ProjectMonitorView = ({
                 label: confirmData.btnConfirmLabel,
                 variant: confirmData.btnConfirmType
               }}
+              isOpen={confirmData}
               message={confirmData.message}
               messageOnly={confirmData.messageOnly}
             />
@@ -144,9 +144,7 @@ const ProjectMonitorView = ({
               {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
                   counterValue={
-                    isNuclioModeDisabled
-                      ? 'N/A'
-                      : Object.keys(v3ioStreams.data).length ?? 0
+                    isNuclioModeDisabled ? 'N/A' : Object.keys(v3ioStreams.data).length ?? 0
                   }
                   link={`/projects/${params.projectName}/monitor${
                     !isNuclioModeDisabled ? '/consumer-groups' : ''

@@ -1,6 +1,8 @@
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { generateArtifacts } from '../../utils/generateArtifacts'
+import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import {
   DATASETS,
@@ -128,18 +130,23 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   }
 ]
 
-export const generatePageData = (handleRequestOnExpand, isSelectedItem) => ({
+export const generatePageData = (handleRequestOnExpand, selectedItem) => ({
   actionsMenuHeader,
   details: {
     menu: [],
     infoHeaders,
-    type: DATASETS
+    type: DATASETS,
+    additionalInfo: {
+      header: 'Producer',
+      body: generateProducerDetailsInfo(selectedItem),
+      hidden: !selectedItem.item?.producer
+    }
   },
   filters,
   filterMenuActionButton: null,
   handleRequestOnExpand,
   page,
-  tableHeaders: tableHeaders(isSelectedItem)
+  tableHeaders: tableHeaders(!isEveryObjectValueEmpty(selectedItem))
 })
 
 export const fetchDataSetRowData = async (fetchDataSet, dataSet, setPageData, iter, tag) => {

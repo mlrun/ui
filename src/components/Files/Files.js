@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import artifactsAction from '../../actions/artifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
@@ -14,7 +14,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
@@ -44,7 +44,6 @@ const Files = ({
   const openPanelByDefault = useOpenPanel()
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
-  const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -140,14 +139,19 @@ const Files = ({
 
   useEffect(() => {
     if (openPanelByDefault) {
-      setIsPopupDialogOpen(true)
+      openPopUp(RegisterArtifactModal, {
+        artifactKind: 'artifact',
+        projectName: params.projectName,
+        refresh: fetchData,
+        title: pageData.actionsMenuHeader
+      })
     }
-  }, [openPanelByDefault])
+  }, [fetchData, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
 
   useEffect(() => {
     setPageData(state => ({
       ...state,
-      ...generatePageData(handleRequestOnExpand, !isEveryObjectValueEmpty(selectedFile))
+      ...generatePageData(handleRequestOnExpand, selectedFile)
     }))
   }, [handleRequestOnExpand, selectedFile])
 
@@ -218,20 +222,19 @@ const Files = ({
         handleRemoveRequestData={handleRemoveFile}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
-        handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
+        handleActionsMenuClick={() =>
+          openPopUp(RegisterArtifactModal, {
+            artifactKind: 'artifact',
+            projectName: params.projectName,
+            refresh: fetchData,
+            title: pageData.actionsMenuHeader
+          })
+        }
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
         getIdentifier={getArtifactIdentifier}
       />
-      {isPopupDialogOpen && (
-        <RegisterArtifactPopup
-          artifactKind="artifact"
-          refresh={fetchData}
-          setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.actionsMenuHeader}
-        />
-      )}
     </div>
   )
 }

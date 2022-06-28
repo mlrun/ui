@@ -5,11 +5,9 @@ import { cloneDeep, debounce } from 'lodash'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
 import ChipInput from '../../common/ChipInput/ChipInput'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
-import Tip from '../../common/Tip/Tip'
-import { Button, RoundedIcon } from 'igz-controls/components'
+import { Button, ConfirmDialog, RoundedIcon, Tip } from 'igz-controls/components'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
@@ -432,6 +430,7 @@ const MembersPopUp = ({
                       position: 'top-right'
                     }}
                     header="Are you sure?"
+                    isOpen={deleteMemberId === member.id}
                     message="Removing a member will provoke all access."
                   />
                 )}
@@ -496,6 +495,7 @@ const MembersPopUp = ({
             variant: PRIMARY_BUTTON
           }}
           header="Discard all pending changes?"
+          isOpen={confirmDiscard}
         />
       )}
     </div>

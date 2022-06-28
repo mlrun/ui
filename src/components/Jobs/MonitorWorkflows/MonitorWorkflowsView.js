@@ -115,7 +115,7 @@ const MonitorWorkflowsView = ({
             setEditableItem(null)
             removeNewJob()
           }}
-          defaultData={editableItem.scheduled_object}
+          defaultData={editableItem?.rerun_object}
           handleRunNewJob={{}}
           mode={PANEL_EDIT_MODE}
           onSuccessRun={tab => {

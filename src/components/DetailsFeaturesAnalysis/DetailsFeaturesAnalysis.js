@@ -7,14 +7,14 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { generateDriftAnalysis } from './detailsFeaturesAnalysis.util'
+import { generateFeaturesAnalysis } from './detailsFeaturesAnalysis.util'
 import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
 
 import './detailsFeaturesAnalysis.scss'
 import colors from 'igz-controls/scss/colors.scss'
 
 const DetailsFeaturesAnalysis = ({ detailsStore }) => {
-  const table = generateDriftAnalysis(detailsStore.modelEndpoint.data.status)
+  const table = generateFeaturesAnalysis(detailsStore.modelEndpoint.data)
   const chartConfig = useMemo(getHistogramChartConfig, [])
 
   return (
@@ -95,6 +95,8 @@ const DetailsFeaturesAnalysis = ({ detailsStore }) => {
                           )}
                         </div>
                       ))
+                    ) : cell.type === 'icon' ? (
+                      cell.value
                     ) : (
                       <Tooltip
                         className="data-ellipsis"

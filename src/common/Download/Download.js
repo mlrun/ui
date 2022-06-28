@@ -65,7 +65,8 @@ const Download = ({ fileName, path, setNotification, user }) => {
         cancelToken: new axios.CancelToken(cancel => {
           downloadRef.current.cancel = cancel
         }),
-        params: { path }
+        params: { path },
+        responseType: 'arraybuffer'
       }
 
       if (path.startsWith('/User')) {

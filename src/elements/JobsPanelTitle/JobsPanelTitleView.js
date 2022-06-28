@@ -16,7 +16,7 @@ import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getValidationRules } from '../../utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 const JobsPanelTitleView = ({
   closePanel,
@@ -84,14 +84,10 @@ const JobsPanelTitleView = ({
                   })
                 }
                 validationRules={getValidationRules('common.name')}
-                setInvalid={value =>
-                  setNameValid(state => ({ ...state, isNameValid: value }))
-                }
+                setInvalid={value => setNameValid(state => ({ ...state, isNameValid: value }))}
                 type="text"
                 value={currentFunctionInfo.name}
-                wrapperClassName={
-                  !editTitle ? 'panel-title__input-wrapper' : ''
-                }
+                wrapperClassName={!editTitle ? 'panel-title__input-wrapper' : ''}
               />
               {editTitle && (
                 <div className="panel-title__labels-container">
@@ -152,9 +148,7 @@ const JobsPanelTitleView = ({
         </div>
       )}
       {currentFunctionInfo.methodDescription && (
-        <MethodDescription
-          description={currentFunctionInfo.methodDescription}
-        />
+        <MethodDescription description={currentFunctionInfo.methodDescription} />
       )}
       {editMode && (
         <div className="job-panel__title-buttons-container">
@@ -163,11 +157,7 @@ const JobsPanelTitleView = ({
             onClick={event => handleFinishEdit(event, true)}
             variant={TERTIARY_BUTTON}
           />
-          <Button
-            variant={PRIMARY_BUTTON}
-            label="Done"
-            onClick={handleFinishEdit}
-          />
+          <Button variant={PRIMARY_BUTTON} label="Done" onClick={handleFinishEdit} />
         </div>
       )}
       <RoundedIcon

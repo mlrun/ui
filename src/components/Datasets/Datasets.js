@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+import RegisterArtifactModal from '..//RegisterArtifactModal/RegisterArtifactModal'
 
 import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
@@ -19,7 +19,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   DATASETS,
   DATASETS_PAGE,
@@ -47,7 +47,6 @@ const Datasets = ({
   const [pageData, setPageData] = useState(pageDataInitialState)
   const [datasets, setDatasets] = useState([])
   const [selectedItem, setSelectedItem] = useState({})
-  const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const datasetsRef = useRef(null)
   const openPanelByDefault = useOpenPanel()
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
@@ -111,11 +110,14 @@ const Datasets = ({
     [dataSets.selectedRowData.content, handleRemoveRowData, removeDataSet]
   )
 
-  const handleRefresh = filters => {
-    getFilterTagOptions(fetchArtifactTags, params.projectName)
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName)
 
-    return fetchData(filters)
-  }
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
 
   const navigateToDetailsPane = () => {
     const { name, tag, iter } = params
@@ -147,15 +149,20 @@ const Datasets = ({
 
   useEffect(() => {
     if (openPanelByDefault) {
-      setIsPopupDialogOpen(true)
+      openPopUp(RegisterArtifactModal, {
+        artifactKind: 'dataset',
+        projectName: params.projectName,
+        refresh: handleRefresh,
+        title: pageData.actionsMenuHeader
+      })
     }
-  }, [openPanelByDefault])
+  }, [handleRefresh, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
 
   useEffect(() => {
     setPageData(state => {
       return {
         ...state,
-        ...generatePageData(handleRequestOnExpand, !isEveryObjectValueEmpty(selectedItem))
+        ...generatePageData(handleRequestOnExpand, selectedItem)
       }
     })
   }, [handleRequestOnExpand, selectedItem])
@@ -224,21 +231,20 @@ const Datasets = ({
         content={datasets}
         getIdentifier={getArtifactIdentifier}
         handleCancel={() => setSelectedItem({})}
-        handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
+        handleActionsMenuClick={() =>
+          openPopUp(RegisterArtifactModal, {
+            artifactKind: 'dataset',
+            projectName: params.projectName,
+            refresh: handleRefresh,
+            title: pageData.actionsMenuHeader
+          })
+        }
         handleRemoveRequestData={handleRemoveDataSet}
         loading={loading}
         pageData={pageData}
         refresh={handleRefresh}
         selectedItem={selectedItem.item}
       />
-      {isPopupDialogOpen && (
-        <RegisterArtifactPopup
-          artifactKind="dataset"
-          refresh={handleRefresh}
-          setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.actionsMenuHeader}
-        />
-      )}
     </div>
   )
 }

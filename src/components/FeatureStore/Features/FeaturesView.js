@@ -44,7 +44,8 @@ const FeaturesView = React.forwardRef(
             withoutExpandButton
           />
         </div>
-        {featureStore.loading ? null : features.length === 0 ? (
+        {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
+          0 ? (
           <NoData
             message={getNoDataMessage(
               filtersStore,

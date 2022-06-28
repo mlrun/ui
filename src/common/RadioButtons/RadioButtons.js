@@ -2,26 +2,16 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Tip from '../Tip/Tip'
+import { Tip } from 'igz-controls/components'
 
 import { RADIO_BUTTONS_ELEMENTS } from '../../types'
 
 import './radioButtons.scss'
 
-const RadioButtons = ({
-  className,
-  disabled,
-  elements,
-  onChangeCallback,
-  selectedValue
-}) => {
+const RadioButtons = ({ className, disabled, elements, onChangeCallback, selectedValue }) => {
   const [checked, setChecked] = useState('')
 
-  const radioButtonsClassNames = classnames(
-    'radio-buttons',
-    disabled && 'disabled',
-    className
-  )
+  const radioButtonsClassNames = classnames('radio-buttons', disabled && 'disabled', className)
 
   const onChange = event => {
     setChecked(event.currentTarget.value)
@@ -53,9 +43,7 @@ const RadioButtons = ({
                 </span>
               </label>
 
-              {element.info && (
-                <span className="radio-button__info">{element.info}</span>
-              )}
+              {element.info && <span className="radio-button__info">{element.info}</span>}
             </div>
           )
       )}

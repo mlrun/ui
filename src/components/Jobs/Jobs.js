@@ -3,11 +3,11 @@ import { connect, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../common/Loader/Loader'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
@@ -52,18 +52,23 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
   )
 
   useEffect(() => {
-    const pageTab = location.pathname.includes(MONITOR_JOBS_TAB)
-      ? MONITOR_JOBS_TAB
-      : location.pathname.includes(SCHEDULE_TAB)
-      ? SCHEDULE_TAB
-      : MONITOR_WORKFLOWS_TAB
+    if (location.pathname.match('\\b\\monitor(?!-)\\b')) {
+      /*/!* Adding the next redirect for backwards compatability *!/*/
+      navigate(location.pathname.replace('monitor', MONITOR_JOBS_TAB), { replace: true })
+    } else {
+      const pageTab = location.pathname.includes(MONITOR_WORKFLOWS_TAB)
+        ? MONITOR_WORKFLOWS_TAB
+        : location.pathname.includes(SCHEDULE_TAB)
+        ? SCHEDULE_TAB
+        : MONITOR_JOBS_TAB
 
-    isPageTabValid(
-      pageTab,
-      tabs.map(tab => tab.id),
-      navigate,
-      location
-    )
+      isPageTabValid(
+        pageTab,
+        tabs.map(tab => tab.id),
+        navigate,
+        location
+      )
+    }
   }, [navigate, params.pageTab, location])
 
   useEffect(() => {
@@ -126,6 +131,7 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
             variant: confirmData.btnConfirmType
           }}
           header={confirmData.header}
+          isOpen={confirmData}
           message={confirmData.message}
         />
       )}

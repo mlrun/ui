@@ -392,3 +392,49 @@ iframe {
     }
   }
 }
+
+.form {
+  &-row {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 20px;
+  }
+
+  & [class*='form-col-'] {
+    flex: 1 0 0%;
+
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+
+  .form-col {
+    &-1 {
+      flex-grow: 1;
+    }
+
+    &-2 {
+      flex-grow: 2;
+    }
+
+    &-3 {
+      flex-grow: 3;
+    }
+  }
+
+  .text {
+    color: $primary;
+    font-size: 12px;
+  }
+}
+
+//TODO: Delete after removing Textarea and Input and using DRC conponents
+@mixin fieldWrapperOld {
+  position: relative;
+  width: 100%;
+  padding: 18px 16px;
+  color: #4b4760;
+  background-color: transparent;
+  border: $primaryBorder;
+  border-radius: 4px;
+}

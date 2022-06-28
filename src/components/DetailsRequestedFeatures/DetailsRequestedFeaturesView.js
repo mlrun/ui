@@ -2,15 +2,14 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 
-import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Input from '../../common/Input/Input'
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import { ConfirmDialog, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { headers } from './detailsRequestedFeatures.utils'
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getValidationRules } from '../../utils/validationService'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -198,6 +197,7 @@ const DetailsRequestedFeaturesView = ({
             variant: DANGER_BUTTON
           }}
           header="Delete feature?"
+          isOpen={confirmDialogData.feature}
           message={`You try to delete feature "${confirmDialogData.feature}" from vector "${params.name}". The feature could be added back later.`}
         />
       )}

@@ -9,11 +9,16 @@
 
   .results-table {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     width: 100%;
+    overflow-x: auto;
     text-align: left;
 
     &__row {
       display: flex;
+      min-width: 100%;
       border-bottom: $secondaryBorder;
 
       &:hover {
@@ -31,7 +36,7 @@
         display: flex;
         flex: 1;
         flex-direction: column;
-        width: 55px;
+        width: 150px;
 
         @include tableHeader(16px);
       }
@@ -45,8 +50,8 @@
       display: flex;
       flex: 1;
       flex-direction: column;
-      width: 55px;
-      padding: 19px 16px;
+      width: 150px;
+      padding: 19px 20px;
     }
 
     i {
@@ -62,7 +67,7 @@
       svg {
         position: absolute;
         top: 15px;
-        left: -10px;
+        left: -5px;
       }
     }
   }

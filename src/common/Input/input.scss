@@ -2,9 +2,10 @@
 @import '~igz-controls/scss/borders';
 @import '~igz-controls/scss/shadows';
 @import '~igz-controls/scss/mixins';
+@import '../../scss/main.scss';
 
 .input {
-  @include fieldWrapper;
+  @include fieldWrapperOld;
 
   &::placeholder {
     color: $spunPearl;
@@ -64,10 +65,10 @@
   }
 
   &-short {
-    margin-right: 22px;
+    padding-right: 33px;
 
     & ~ .input__warning {
-      right: 30px;
+      right: 35px;
     }
   }
 
@@ -115,12 +116,12 @@
   &__tip {
     position: absolute;
     top: 50%;
-    right: 0;
+    right: 10px;
     transform: translateY(-50%);
   }
 
   &.active-input {
-    padding: 25px 16px 11px;
+    padding: 25px 33px 11px 16px;
   }
 
   &__label {

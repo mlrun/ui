@@ -27,7 +27,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           header: 'Name',
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
-          class: 'table-cell-3',
+          class: 'table-cell-2',
           type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
           getLink: tab => {
             return jobName
@@ -58,7 +58,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
         {
           id: `uid.${identifierUnique}`,
           value: job.uid || job.id,
-          class: 'table-cell-2',
+          class: 'table-cell-1',
           type: 'hidden'
         },
         {
@@ -82,27 +82,27 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           header: 'Labels',
           id: `labels.${identifierUnique}`,
           value: job.labels,
-          class: 'table-cell-1',
+          class: 'table-cell-1 table-cell-small',
           type: 'labels'
         },
         {
           header: 'Parameters',
           id: `parameters.${identifierUnique}`,
           value: job.parameters,
-          class: 'table-cell-1',
+          class: 'table-cell-1 table-cell-small',
           type: 'parameters'
         },
         {
           header: 'Results',
           id: `resultsChips.${identifierUnique}`,
           value: job.resultsChips,
-          class: 'table-cell-4',
+          class: 'table-cell-3',
           type: 'results'
         },
         {
           id: `updated.${identifierUnique}`,
           value: job.updated || new Date(job.finished_at),
-          class: 'table-cell-2',
+          class: 'table-cell-1',
           type: 'hidden'
         }
       ]
@@ -136,7 +136,7 @@ export const createJobsScheduleTabContent = jobs => {
           header: 'Name',
           id: `name.${identifierUnique}`,
           value: job.name,
-          class: 'table-cell-4',
+          class: 'table-cell-1',
           showStatus: true,
           getLink: tab =>
             generateLinkToDetailsPanel(
@@ -153,41 +153,41 @@ export const createJobsScheduleTabContent = jobs => {
           header: 'Type',
           id: `type.${identifierUnique}`,
           value: job.type,
-          class: 'table-cell-4',
+          class: 'table-cell-1',
           type: 'type'
         },
         {
           header: 'Next run (Local TZ)',
           id: `nextRun.${identifierUnique}`,
           value: formatDatetime(job.nextRun),
-          class: 'table-cell-4',
+          class: 'table-cell-1',
           type: 'date'
         },
         {
           header: 'Schedule (UTC)',
           id: `schedule.${identifierUnique}`,
           value: job.scheduled_object ? cronstrue.toString(job.scheduled_object?.schedule) : null,
-          class: 'table-cell-4'
+          class: 'table-cell-1'
         },
         {
           header: 'Labels',
           id: `labels.${identifierUnique}`,
           value: parseKeyValues(job.scheduled_object?.task.metadata.labels || {}),
-          class: 'table-cell-4',
+          class: 'table-cell-1',
           type: 'labels'
         },
         {
           header: 'Last run (Local TZ)',
           id: `lastRun.${identifierUnique}`,
           value: formatDatetime(job.start_time),
-          class: 'table-cell-4',
+          class: 'table-cell-1',
           getLink: lastRunLink
         },
         {
           header: 'Created time (Local TZ)',
           id: `createdTime.${identifierUnique}`,
           value: formatDatetime(job.createdTime, 'Not yet started'),
-          class: 'table-cell-3',
+          class: 'table-cell-1',
           type: 'date'
         },
         {
@@ -253,7 +253,7 @@ export const createJobsWorkflowsTabContent = (
             {
               id: `uid.${identifierUnique}`,
               value: job.uid || job.id,
-              class: 'table-cell-2',
+              class: 'table-cell-1',
               type: 'hidden',
               hidden: isSelectedItem
             },
@@ -303,7 +303,7 @@ export const createJobsWorkflowsTabContent = (
             {
               id: `updated.${identifierUnique}`,
               value: job.updated || new Date(job.finished_at),
-              class: 'table-cell-2',
+              class: 'table-cell-1',
               type: 'hidden',
               hidden: isSelectedItem
             }
@@ -323,7 +323,7 @@ export const createJobsWorkflowsTabContent = (
               header: 'Name',
               id: `name.${identifierUnique}`,
               value: job.name,
-              class: 'table-cell-4',
+              class: 'table-cell-1',
               getLink: () => {
                 return getWorkflowDetailsLink(
                   projectName,
@@ -340,7 +340,7 @@ export const createJobsWorkflowsTabContent = (
             {
               id: `uid.${identifierUnique}`,
               value: job?.id,
-              class: 'table-cell-2',
+              class: 'table-cell-1',
               type: 'hidden',
               hidden: isSelectedItem
             },
@@ -348,14 +348,14 @@ export const createJobsWorkflowsTabContent = (
               header: 'Created at',
               id: `createdAt.${identifierUnique}`,
               value: formatDatetime(new Date(job.created_at), 'N/A'),
-              class: 'table-cell-2',
+              class: 'table-cell-1',
               hidden: isSelectedItem
             },
             {
               header: 'Finished at',
               id: `finishedAt.${identifierUnique}`,
               value: formatDatetime(new Date(job.finished_at), 'N/A'),
-              class: 'table-cell-2',
+              class: 'table-cell-1',
               hidden: isSelectedItem
             },
             {
@@ -366,14 +366,14 @@ export const createJobsWorkflowsTabContent = (
                 (job.state?.value !== 'running' && job.updated) ||
                   (job.state?.value !== 'error' && new Date(job.finished_at))
               ),
-              class: 'table-cell-2',
+              class: 'table-cell-1',
               type: 'duration',
               hidden: isSelectedItem
             },
             {
               id: `updated.${identifierUnique}`,
               value: job.updated || new Date(job.finished_at),
-              class: 'table-cell-2',
+              class: 'table-cell-1',
               type: 'hidden',
               hidden: isSelectedItem
             }
