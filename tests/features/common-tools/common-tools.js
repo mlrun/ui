@@ -36,7 +36,7 @@ module.exports = {
         typeof hint === 'string' ? hint : '.tip-container svg'
     }
     if (warning) {
-      structure.elements.warningHint = '.input__warning svg'
+      structure.elements.warningHint = typeof warning === 'string' ? warning : '.input__warning svg'
       structure.elements.warningText = '.tooltip .tooltip__text'
     }
 
@@ -132,7 +132,9 @@ module.exports = {
       root,
       elements: {
         input: 'textarea',
-        label: 'label'
+        label: 'label',
+        warningHint: '.form-field__warning',
+        warningText: '.tooltip__warning'
       }
     }
   },

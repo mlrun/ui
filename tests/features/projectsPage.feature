@@ -32,9 +32,11 @@ Feature: MLRun Projects Page
     Scenario: Sort projects in ascending and descending order
         Given open url
         And wait load page
-        When select "By name" option in "Projects_Sort_Dropdown" dropdown on "Projects" wizard
+        When select "By name" option in "Projects_Sort_Dropdown" filter dropdown on "Projects" wizard
         Then sort projects in ascending order
         Then sort projects in descending order
+        When select "By created date" option in "Projects_Sort_Dropdown" filter dropdown on "Projects" wizard
+        Then sort projects in ascending order
 
     @passive
     Scenario: Verify all mandatory components on Create new ML Project

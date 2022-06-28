@@ -169,7 +169,7 @@ Feature: MLRun Project Page
         Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_File"."Type_Options"
+        Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_Artifact"."Type_Options"
 
     @passive
     Scenario: Check all mandatory components on Register Model Popup
@@ -649,21 +649,37 @@ Feature: MLRun Project Page
             |          name           |
             |     Register Dataset    |
         And wait load page
-        Then "Title" element on "Register_Dataset" should contains "Register dataset" value
+        Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
+        Then "Form_Text" component on "Register_Dataset" should be equal "Register_Artifact"."Form_Text"
+        Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Artifact"."Form_Subtext"
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Artifact_Names_Unique"
-        Then verify "Target_Path_Input" element visibility on "Register_Dataset" wizard
-        Then verify "Description_Input" element visibility on "Register_Dataset" wizard
-        Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
-        Then verify "Register_Button" element visibility on "Register_Dataset" wizard
-        Then click on "Register_Button" element on "Register_Dataset" wizard
         Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
-        Then verify "Name_Input" options rules on "Register_Dataset" wizard
+        Then verify "Name_Input" options rules on form "Register_Dataset" wizard
+        Then verify "Target_Path_Input" element visibility on "Register_Dataset" wizard
         Then type value "   " to "Target_Path_Input" field on "Register_Dataset" wizard
         Then verify "Target_Path_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Description_Input" element visibility on "Register_Dataset" wizard
         Then type value "   " to "Description_Input" field on "Register_Dataset" wizard
         Then verify "Description_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
+        Then "Cancel_Button" element on "Register_Dataset" should contains "Cancel" value
+        Then verify "Register_Button" element visibility on "Register_Dataset" wizard
+        Then "Register_Button" element on "Register_Dataset" should contains "Register" value
+        Then click on "Register_Button" element on "Register_Dataset" wizard
+        Then verify "Register_Button" element on "Register_Dataset" wizard is disabled
+        Then type value "dataset" to "Name_Input" field on "Register_Dataset" wizard
+        Then type value "target/path" to "Target_Path_Input" field on "Register_Dataset" wizard
+        Then type value "new dataset description" to "Description_Input" field on "Register_Dataset" wizard
+        Then verify "Register_Button" element on "Register_Dataset" wizard is enabled
+        Then click on "Cancel_Button" element on "Register_Dataset" wizard
+        Then verify if "Common_Popup" popup dialog appears
+        Then click on "Cancel_Button" element on "Common_Popup" wizard
+        Then verify if "Register_Dataset" popup dialog appears
+        Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
+        Then verify "Target_Path_Input" input should contains "target/path" value on "Register_Dataset" wizard
+        Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
 
     @passive
     @demo
@@ -676,25 +692,42 @@ Feature: MLRun Project Page
             |          name           |
             |    Register Artifact    |
         And wait load page
-        Then "Title" element on "Register_File_Popup" should contains "Register artifact" value
+        Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
+        Then "Form_Text" component on "Register_File_Popup" should be equal "Register_Artifact"."Form_Text"
+        Then "Form_Subtext" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Subtext"
         Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
-        Then verify "New_File_Target_Path_Input" element visibility on "Register_File_Popup" wizard
-        Then verify "New_File_Description_Input" element visibility on "Register_File_Popup" wizard
-        Then verify "New_File_Type_Dropdown" element visibility on "Register_File_Popup" wizard
-        Then verify "Cancel_Button" element visibility on "Register_File_Popup" wizard
-        Then verify "Register_Button" element visibility on "Register_File_Popup" wizard
-        Then click on "Register_Button" element on "Register_File_Popup" wizard
-        Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
-        Then verify "New_File_Name_Input" options rules on "Register_File_Popup" wizard
+        Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
+        Then verify "New_File_Target_Path_Input" element visibility on "Register_File_Popup" wizard
         Then type value "   " to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_File_Description_Input" element visibility on "Register_File_Popup" wizard
         Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_File"."Type_Options"
+        Then verify "New_File_Type_Dropdown" element visibility on "Register_File_Popup" wizard
+        Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_Artifact"."Type_Options"
+        Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
+        Then verify "Cancel_Button" element visibility on "Register_File_Popup" wizard
+        Then "Cancel_Button" element on "Register_File_Popup" should contains "Cancel" value
+        Then verify "Register_Button" element visibility on "Register_File_Popup" wizard
+        Then "Register_Button" element on "Register_File_Popup" should contains "Register" value
+        Then click on "Register_Button" element on "Register_File_Popup" wizard
+        Then verify "Register_Button" element on "Register_File_Popup" wizard is disabled
+        Then type value "artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
+        Then type value "target/path" to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
+        Then type value "new artifact description" to "New_File_Description_Input" field on "Register_File_Popup" wizard
+        Then verify "Register_Button" element on "Register_File_Popup" wizard is enabled
+        Then click on "Cancel_Button" element on "Register_File_Popup" wizard
+        Then verify if "Common_Popup" popup dialog appears
+        Then click on "Cancel_Button" element on "Common_Popup" wizard
+        Then verify if "Register_Dataset" popup dialog appears
+        Then verify "New_File_Name_Input" input should contains "artifact" value on "Register_File_Popup" wizard
+        Then verify "New_File_Target_Path_Input" input should contains "target/path" value on "Register_File_Popup" wizard
+        Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
+        Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
 
     @passive
     @demo
@@ -704,6 +737,7 @@ Feature: MLRun Project Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on "Data_Collection_Additional_Actions_Button" element on "Demo_Project" wizard
+        And wait load page
         When click on "name" in "Data_Collection_Additional_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
             | Create a Feature Vector |

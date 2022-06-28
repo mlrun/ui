@@ -79,12 +79,15 @@ Feature: Files Page
     And wait load page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
+    Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
+    Then "Form_Text" component on "Register_File_Popup" should be equal "Register_Artifact"."Form_Text"
+    Then "Form_Subtext" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Subtext"
     Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
     Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
-    Then verify "New_File_Name_Input" options rules on "Register_File_Popup" wizard
+    Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
     Then verify "New_File_Target_Path_Input" element visibility on "Register_File_Popup" wizard
     Then type value "   " to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
@@ -92,11 +95,26 @@ Feature: Files Page
     Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
     Then verify "New_File_Type_Dropdown" element visibility on "Register_File_Popup" wizard
-    Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_File"."Type_Options"
+    Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_Artifact"."Type_Options"
+    Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
     Then verify "Cancel_Button" element visibility on "Register_File_Popup" wizard
     Then "Cancel_Button" element on "Register_File_Popup" should contains "Cancel" value
     Then verify "Register_Button" element visibility on "Register_File_Popup" wizard
     Then "Register_Button" element on "Register_File_Popup" should contains "Register" value
+    Then click on "Register_Button" element on "Register_File_Popup" wizard
+    Then verify "Register_Button" element on "Register_File_Popup" wizard is disabled
+    Then type value "artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
+    Then type value "target/path" to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
+    Then type value "new artifact description" to "New_File_Description_Input" field on "Register_File_Popup" wizard
+    Then verify "Register_Button" element on "Register_File_Popup" wizard is enabled
+    Then click on "Cancel_Button" element on "Register_File_Popup" wizard
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
+    Then verify if "Register_Dataset" popup dialog appears
+    Then verify "New_File_Name_Input" input should contains "artifact" value on "Register_File_Popup" wizard
+    Then verify "New_File_Target_Path_Input" input should contains "target/path" value on "Register_File_Popup" wizard
+    Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
+    Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
 
   Scenario: Verify behaviour on Register new Artifact
     * set tear-down property "project" created with "automation-test" value
@@ -118,6 +136,8 @@ Feature: Files Page
     Then value in "type" column with "text" in "Files_Table" on "Files" wizard should contains "table"
     Then click on cell with value "test-artifact" in "name" column in "Files_Table" table on "Files" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-artifact" value
+    Then check "test-artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then check "test-path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
 
   @passive
   @inProgress
