@@ -163,23 +163,28 @@ const action = {
   },
   createAPIFunction: async function(
     mlProjectName,
+    mlFunctionKind,
+    mlFunctionTag,
     mlFunctionName,
     expectedStatusCode
   ) {
     const data = {
-      kind: 'job',
+      kind: mlFunctionKind,
       metadata: {
         credentials: {
           access_key: '$generate'
         },
         labels: {},
         name: mlFunctionName,
-        tag: '',
+        tag: mlFunctionTag,
         project: mlProjectName
       },
       spec: {
         priority_class_name: 'igz-workload-medium',
-        preemption_mode: 'prevent'
+        preemption_mode: 'prevent',
+        graph: {
+          kind: 'router'
+        }
       }
     }
 

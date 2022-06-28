@@ -326,9 +326,10 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "01/01/2021 00:00" to "01/01/2023 00:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -340,6 +341,12 @@ Feature: Jobs and workflows
         Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
 
     @passive
     Scenario: Check all mandatory components in Item infopane on Logs tab table on Jobs Monitor Page
@@ -1775,3 +1782,74 @@ Feature: Jobs and workflows
         Then click on "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" wizard
         Then click on "Schedule_Button" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
         Then "Error_Message" component on "New_JobTemplate_Edit" should contains "Error_Messages"."Already_Scheduled"
+
+    @passive
+    Scenario: Verify behaviour of Method changing on Create New Job panel
+        Given open url
+        And wait load page
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "feature-selection" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        Then collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "5" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "10" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "100" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "1000" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "10" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then select "plot_stat" option in "Job_Method_Dropdown" dropdown on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Medium"
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is disabled
+        Then verify "Memory_Request_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is disabled
+        Then verify "Memory_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is disabled
+        Then verify "CPU_Request_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is disabled
+        Then verify "CPU_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is disabled
+        Then verify "GPU_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" wizard is disabled
+        Then verify "Run_Now_Button" element on "New_JobTemplate_Edit" wizard is disabled
+        Then click on "Job_Method_Cancel" element on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "High"
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Allow"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is enabled
+        Then verify "Memory_Request_Number_Input" input should contains "5" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is enabled
+        Then verify "Memory_Limit_Number_Input" input should contains "10" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is enabled
+        Then verify "CPU_Request_Number_Input" input should contains "100" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is enabled
+        Then verify "CPU_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is enabled
+        Then verify "GPU_Limit_Number_Input" input should contains "10" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" wizard is enabled
+        Then verify "Run_Now_Button" element on "New_JobTemplate_Edit" wizard is enabled
+        Then select "plot_stat" option in "Job_Method_Dropdown" dropdown on "New_JobTemplate_Edit" wizard
+        Then click on "Job_Method_Apply" element on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Medium"
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent"
+        Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "cpu"
+        Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "cpu"
+        Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "MiB"
+        Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "MiB"
+        Then verify "Memory_Request_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Request_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "GPU_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard

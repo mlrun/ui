@@ -51,9 +51,9 @@ Then('create up to limit projects with code {int}', async function(status) {
 })
 
 Then(
-  'create {string} Function in {string} project with code {int}',
-  async function(nameFunction, nameProject, status) {
-    await createAPIFunction(nameProject, nameFunction, status)
+  'create {string} Function with {string} kind and {string} tag in {string} project with code {int}',
+  async function (nameFunction, kindName, tagName, nameProject, status) {
+    await createAPIFunction(nameProject, kindName, tagName, nameFunction, status)
   }
 )
 
