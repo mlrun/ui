@@ -16,7 +16,6 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
-import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 import {
@@ -41,7 +40,6 @@ const Files = ({
 }) => {
   const [pageData, setPageData] = useState(pageDataInitialState)
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
-  const openPanelByDefault = useOpenPanel()
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const params = useParams()
@@ -136,17 +134,6 @@ const Files = ({
     },
     [fetchFile, filtersStore.iter, filtersStore.tag, params.projectName]
   )
-
-  useEffect(() => {
-    if (openPanelByDefault) {
-      openPopUp(RegisterArtifactModal, {
-        artifactKind: 'artifact',
-        projectName: params.projectName,
-        refresh: fetchData,
-        title: pageData.actionsMenuHeader
-      })
-    }
-  }, [fetchData, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
 
   useEffect(() => {
     setPageData(state => ({
