@@ -208,176 +208,179 @@ export const createJobsWorkflowsTabContent = (
   isStagingMode,
   isSelectedItem
 ) => {
-  return jobs.map(job => {
-    const identifierUnique = getJobIdentifier(job, true)
-    const type =
-      job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? 'workflow'
+  return jobs
+    .map(job => {
+      const identifierUnique = getJobIdentifier(job, true)
+      const type =
+        job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? 'workflow'
+      job.name = job.name.replace(`${projectName}-`, '')
 
-    return workflowId
-      ? {
-          data: {
-            ...job,
-            ui: {
-              ...job.ui,
-              identifier: getJobIdentifier(job),
-              identifierUnique: identifierUnique
-            }
-          },
-          content: [
-            {
-              header: 'Name',
-              id: `name.${identifierUnique}`,
-              value: job.name,
-              class: 'table-cell-3',
-              type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
-              getLink: tab => {
-                return getWorkflowDetailsLink(
-                  projectName,
-                  workflowId,
-                  job.id,
-                  job.uid,
-                  tab,
-                  MONITOR_WORKFLOWS_TAB
-                )
+      return workflowId
+        ? {
+            data: {
+              ...job,
+              ui: {
+                ...job.ui,
+                identifier: getJobIdentifier(job),
+                identifierUnique: identifierUnique
+              }
+            },
+            content: [
+              {
+                header: 'Name',
+                id: `name.${identifierUnique}`,
+                value: job.name,
+                class: 'table-cell-3',
+                type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
+                getLink: tab => {
+                  return getWorkflowDetailsLink(
+                    projectName,
+                    workflowId,
+                    job.id,
+                    job.uid,
+                    tab,
+                    MONITOR_WORKFLOWS_TAB
+                  )
+                },
+                showStatus: true
               },
-              showStatus: true
-            },
-            {
-              header: 'Type',
-              id: `type.${identifierUnique}`,
-              value: type,
-              class: 'table-cell-1',
-              type: 'type',
-              hidden: isSelectedItem
-            },
-            {
-              id: `uid.${identifierUnique}`,
-              value: job.uid || job.id,
-              class: 'table-cell-1',
-              type: 'hidden',
-              hidden: isSelectedItem
-            },
-            {
-              header: 'Duration',
-              id: `duration.${identifierUnique}`,
-              value: measureTime(
-                job.startTime || new Date(job.created_at),
-                (job.state?.value !== 'running' && job.updated) ||
-                  (job.state?.value !== 'error' && new Date(job.finished_at))
-              ),
-              class: 'table-cell-1',
-              type: 'duration',
-              hidden: isSelectedItem
-            },
-            {
-              header: 'Owner',
-              id: `owner.${identifierUnique}`,
-              value: job.owner,
-              class: 'table-cell-1',
-              hidden: isSelectedItem
-            },
-            {
-              header: 'Labels',
-              id: `labels.${identifierUnique}`,
-              value: job.labels,
-              class: 'table-cell-1',
-              type: 'labels',
-              hidden: isSelectedItem
-            },
-            {
-              header: 'Parameters',
-              id: `parameters.${identifierUnique}`,
-              value: job.parameters,
-              class: 'table-cell-1',
-              type: 'parameters',
-              hidden: isSelectedItem
-            },
-            {
-              header: 'Results',
-              id: `resultsChips.${identifierUnique}`,
-              value: job.resultsChips,
-              class: 'table-cell-4',
-              type: 'results',
-              hidden: isSelectedItem
-            },
-            {
-              id: `updated.${identifierUnique}`,
-              value: job.updated || new Date(job.finished_at),
-              class: 'table-cell-1',
-              type: 'hidden',
-              hidden: isSelectedItem
-            }
-          ]
-        }
-      : {
-          data: {
-            ...job,
-            ui: {
-              ...job.ui,
-              identifier: getJobIdentifier(job),
-              identifierUnique: identifierUnique
-            }
-          },
-          content: [
-            {
-              header: 'Name',
-              id: `name.${identifierUnique}`,
-              value: job.name,
-              class: 'table-cell-1',
-              getLink: () => {
-                return getWorkflowDetailsLink(
-                  projectName,
-                  workflowId,
-                  job.id,
-                  null,
-                  null,
-                  MONITOR_WORKFLOWS_TAB
-                )
+              {
+                header: 'Type',
+                id: `type.${identifierUnique}`,
+                value: type,
+                class: 'table-cell-1',
+                type: 'type',
+                hidden: isSelectedItem
               },
-              type: 'link',
-              showStatus: true
+              {
+                id: `uid.${identifierUnique}`,
+                value: job.uid || job.id,
+                class: 'table-cell-1',
+                type: 'hidden',
+                hidden: isSelectedItem
+              },
+              {
+                header: 'Duration',
+                id: `duration.${identifierUnique}`,
+                value: measureTime(
+                  job.startTime || new Date(job.created_at),
+                  (job.state?.value !== 'running' && job.updated) ||
+                    (job.state?.value !== 'error' && new Date(job.finished_at))
+                ),
+                class: 'table-cell-1',
+                type: 'duration',
+                hidden: isSelectedItem
+              },
+              {
+                header: 'Owner',
+                id: `owner.${identifierUnique}`,
+                value: job.owner,
+                class: 'table-cell-1',
+                hidden: isSelectedItem
+              },
+              {
+                header: 'Labels',
+                id: `labels.${identifierUnique}`,
+                value: job.labels,
+                class: 'table-cell-1',
+                type: 'labels',
+                hidden: isSelectedItem
+              },
+              {
+                header: 'Parameters',
+                id: `parameters.${identifierUnique}`,
+                value: job.parameters,
+                class: 'table-cell-1',
+                type: 'parameters',
+                hidden: isSelectedItem
+              },
+              {
+                header: 'Results',
+                id: `resultsChips.${identifierUnique}`,
+                value: job.resultsChips,
+                class: 'table-cell-4',
+                type: 'results',
+                hidden: isSelectedItem
+              },
+              {
+                id: `updated.${identifierUnique}`,
+                value: job.updated || new Date(job.finished_at),
+                class: 'table-cell-1',
+                type: 'hidden',
+                hidden: isSelectedItem
+              }
+            ]
+          }
+        : {
+            data: {
+              ...job,
+              ui: {
+                ...job.ui,
+                identifier: getJobIdentifier(job),
+                identifierUnique: identifierUnique
+              }
             },
-            {
-              id: `uid.${identifierUnique}`,
-              value: job?.id,
-              class: 'table-cell-1',
-              type: 'hidden',
-              hidden: isSelectedItem
-            },
-            {
-              header: 'Created at',
-              id: `createdAt.${identifierUnique}`,
-              value: formatDatetime(new Date(job.created_at), 'N/A'),
-              class: 'table-cell-1',
-              hidden: isSelectedItem
-            },
-            {
-              header: 'Finished at',
-              id: `finishedAt.${identifierUnique}`,
-              value: formatDatetime(new Date(job.finished_at), 'N/A'),
-              class: 'table-cell-1',
-              hidden: isSelectedItem
-            },
-            {
-              header: 'Duration',
-              id: `duration.${identifierUnique}`,
-              value: measureTime(
-                job.startTime || new Date(job.created_at),
-                (job.state?.value !== 'running' && job.updated) ||
-                  (job.state?.value !== 'error' && new Date(job.finished_at))
-              ),
-              class: 'table-cell-1',
-              type: 'duration',
-              hidden: isSelectedItem
-            },
-            {
-              id: `updated.${identifierUnique}`,
-              value: job.updated || new Date(job.finished_at),
-              class: 'table-cell-1',
-              type: 'hidden',
-              hidden: isSelectedItem
-            }
-          ]
-        }
-  })
+            content: [
+              {
+                header: 'Name',
+                id: `name.${identifierUnique}`,
+                value: job.name,
+                class: 'table-cell-1',
+                getLink: () => {
+                  return getWorkflowDetailsLink(
+                    projectName,
+                    workflowId,
+                    job.id,
+                    null,
+                    null,
+                    MONITOR_WORKFLOWS_TAB
+                  )
+                },
+                type: 'link',
+                showStatus: true
+              },
+              {
+                id: `uid.${identifierUnique}`,
+                value: job?.id,
+                class: 'table-cell-1',
+                type: 'hidden',
+                hidden: isSelectedItem
+              },
+              {
+                header: 'Created at',
+                id: `createdAt.${identifierUnique}`,
+                value: formatDatetime(new Date(job.created_at), 'N/A'),
+                class: 'table-cell-1',
+                hidden: isSelectedItem
+              },
+              {
+                header: 'Finished at',
+                id: `finishedAt.${identifierUnique}`,
+                value: formatDatetime(new Date(job.finished_at), 'N/A'),
+                class: 'table-cell-1',
+                hidden: isSelectedItem
+              },
+              {
+                header: 'Duration',
+                id: `duration.${identifierUnique}`,
+                value: measureTime(
+                  job.startTime || new Date(job.created_at),
+                  (job.state?.value !== 'running' && job.updated) ||
+                    (job.state?.value !== 'error' && new Date(job.finished_at))
+                ),
+                class: 'table-cell-1',
+                type: 'duration',
+                hidden: isSelectedItem
+              },
+              {
+                id: `updated.${identifierUnique}`,
+                value: job.updated || new Date(job.finished_at),
+                class: 'table-cell-1',
+                type: 'hidden',
+                hidden: isSelectedItem
+              }
+            ]
+          }
+    })
+    .sort((job, nextJob) => new Date(nextJob.data?.created_at) - new Date(job.data?.created_at))
 }
