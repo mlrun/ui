@@ -145,6 +145,7 @@ const App = () => {
                 </Fragment>
               ))}
               <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
+              <Route path="*" element={<Navigate to={MONITOR_JOBS_TAB} />} replace />
             </Route>
             <Route path="projects/:projectName/functions" element={<Functions />} />
             <Route path="projects/:projectName/functions/:hash/:tab" element={<Functions />} />
@@ -183,6 +184,7 @@ const App = () => {
                 )
               )}
               <Route path={`${FEATURES_TAB}`} element={<Features />} />
+              <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} />} replace />
             </Route>
             <Route
               path="projects/:projectName/models"
