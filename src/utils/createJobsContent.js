@@ -213,7 +213,7 @@ export const createJobsWorkflowsTabContent = (
       const identifierUnique = getJobIdentifier(job, true)
       const type =
         job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? 'workflow'
-      job.name = job.name.replace(`${projectName}-`, '')
+      const jobName = job.name.replace(`${projectName}-`, '')
 
       return workflowId
         ? {
@@ -229,7 +229,7 @@ export const createJobsWorkflowsTabContent = (
               {
                 header: 'Name',
                 id: `name.${identifierUnique}`,
-                value: job.name,
+                value: jobName,
                 class: 'table-cell-3',
                 type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
                 getLink: tab => {
@@ -324,7 +324,7 @@ export const createJobsWorkflowsTabContent = (
               {
                 header: 'Name',
                 id: `name.${identifierUnique}`,
-                value: job.name,
+                value: jobName,
                 class: 'table-cell-1',
                 getLink: () => {
                   return getWorkflowDetailsLink(
