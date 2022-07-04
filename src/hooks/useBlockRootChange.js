@@ -7,11 +7,18 @@ export const useBlockRootChange = () => {
   const retryNavigate = useRef()
 
   const blockRootChange = useCallback(
-    unblockHandler => {
+    (unblockHandler, removeUnblockHandler) => {
       if (!unblockRootChange.current) {
         unblockRootChange.current = navigator.block(tx => {
           retryNavigate.current = tx.retry
           unblockHandler()
+
+          return false
+        })
+      } else if (removeUnblockHandler) {
+        unblockRootChange.current()
+        unblockRootChange.current = navigator.block(tx => {
+          retryNavigate.current = tx.retry
 
           return false
         })

@@ -35,6 +35,7 @@ const DeployModelPopUp = ({
   const [tagOptionList, setTagOptionList] = useState([])
   const location = useLocation()
   const { blockRootChange, handleUnblockRootChange } = useBlockRootChange()
+  const [confirmationIsOpened, setConfirmationIsOpened] = useState(false)
 
   const resolve = useCallback(
     retryRootChange => {
@@ -44,15 +45,32 @@ const DeployModelPopUp = ({
     [handleUnblockRootChange, onResolve]
   )
 
-  const unblockHandler = useCallback(() => {
-    defaultCloseModalHandler(formRef.current.getState(), () => resolve(true))
-  }, [resolve])
+  const unblockHandler = useCallback(
+    () => {
+      const showConfirmation = formRef.current && formRef.current.getState().dirty
+
+      const handleResolve = () => resolve(true)
+
+      const handleReject = () => {
+        setConfirmationIsOpened(false)
+        handleUnblockRootChange(false)
+      }
+
+      defaultCloseModalHandler(
+        showConfirmation,
+        handleResolve,
+        handleReject,
+        setConfirmationIsOpened
+      )
+    },
+    [handleUnblockRootChange, resolve]
+  )
 
   useEffect(() => {
     if (formRef.current) {
-      blockRootChange(unblockHandler)
+      blockRootChange(unblockHandler, confirmationIsOpened)
     }
-  }, [blockRootChange, unblockHandler])
+  }, [confirmationIsOpened, blockRootChange, unblockHandler])
 
   const [initialValues, setInitialValues] = useState({
     modelName: '',
@@ -176,7 +194,11 @@ const DeployModelPopUp = ({
 
   const handleCloseModal = useCallback(
     formState => {
-      defaultCloseModalHandler(formState, () => resolve(false))
+      const showConfirmation = formState && formState.dirty
+
+      const handleResolve = () => resolve(false)
+
+      defaultCloseModalHandler(showConfirmation, handleResolve, null, setConfirmationIsOpened)
     },
     [resolve]
   )

@@ -5,8 +5,14 @@ import {
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { ConfirmDialog } from 'igz-controls/components'
 
-export const defaultCloseModalHandler = (formState, onResolve, onReject) => {
-  if (formState && formState.dirty) {
+export const defaultCloseModalHandler = (
+  showConfirmation,
+  onResolve,
+  onReject,
+  setConfirmationIsOpened
+) => {
+  if (showConfirmation) {
+    setConfirmationIsOpened && setConfirmationIsOpened(true)
     openPopUp(ConfirmDialog, {
       cancelButton: {
         label: 'Cancel',
