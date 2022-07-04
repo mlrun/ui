@@ -347,7 +347,7 @@ export const generatePageData = (
     data.details.infoHeaders = modelsInfoHeaders
     data.details.additionalInfo = {
       header: 'Producer',
-      body: generateProducerDetailsInfo(selectedModel),
+      body: generateProducerDetailsInfo(selectedModel, MODELS_TAB),
       hidden: !selectedModel.item?.producer
     }
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)
