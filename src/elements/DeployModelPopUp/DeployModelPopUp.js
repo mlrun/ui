@@ -17,7 +17,7 @@ import { MODELS_TAB } from '../../constants'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { useCloseModal } from '../../hooks/useCloseModal.hook'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import './deployModelPopUp.scss'
 
@@ -45,7 +45,7 @@ const DeployModelPopUp = ({
     })
   )
   const location = useLocation()
-  const { resolveModal, handleCloseModal } = useCloseModal(onResolve, formRef.current)
+  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const getTagOptions = useCallback((functionList, selectedFunctionName) => {
     return chain(functionList)
@@ -151,7 +151,7 @@ const DeployModelPopUp = ({
         })
       })
 
-    resolveModal()
+    onResolve()
   }
 
   const getModalActions = formState => {
@@ -195,11 +195,10 @@ const DeployModelPopUp = ({
             actions={getModalActions(formState)}
             className="deploy-model"
             location={location.pathname}
-            onClose={() => handleCloseModal(formState)}
+            onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
             title="Deploy model"
-            onResolve={onResolve}
           >
             <div className="form">
               <div className="form-row">
