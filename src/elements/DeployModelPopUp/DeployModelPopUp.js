@@ -17,8 +17,7 @@ import { MODELS_TAB } from '../../constants'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { useBlockRootChange } from '../../hooks/useBlockRootChange'
-import { defaultCloseModalHandler } from '../../utils/defaultCloseModalHandler'
+import { useCloseModal } from '../../hooks/useCloseModal.hook'
 
 import './deployModelPopUp.scss'
 
@@ -33,45 +32,6 @@ const DeployModelPopUp = ({
   const [functionList, setFunctionList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
-  const location = useLocation()
-  const { blockRootChange, handleUnblockRootChange } = useBlockRootChange()
-  const [confirmationIsOpened, setConfirmationIsOpened] = useState(false)
-
-  const resolve = useCallback(
-    retryRootChange => {
-      onResolve()
-      handleUnblockRootChange(retryRootChange)
-    },
-    [handleUnblockRootChange, onResolve]
-  )
-
-  const unblockHandler = useCallback(
-    () => {
-      const showConfirmation = formRef.current && formRef.current.getState().dirty
-
-      const handleResolve = () => resolve(true)
-
-      const handleReject = () => {
-        setConfirmationIsOpened(false)
-        handleUnblockRootChange(false)
-      }
-
-      defaultCloseModalHandler(
-        showConfirmation,
-        handleResolve,
-        handleReject,
-        setConfirmationIsOpened
-      )
-    },
-    [handleUnblockRootChange, resolve]
-  )
-
-  useEffect(() => {
-    if (formRef.current) {
-      blockRootChange(unblockHandler, confirmationIsOpened)
-    }
-  }, [confirmationIsOpened, blockRootChange, unblockHandler])
-
   const [initialValues, setInitialValues] = useState({
     modelName: '',
     className: '',
@@ -84,6 +44,8 @@ const DeployModelPopUp = ({
       onSubmit: () => {}
     })
   )
+  const location = useLocation()
+  const { resolveModal, handleCloseModal } = useCloseModal(onResolve, formRef.current)
 
   const getTagOptions = useCallback((functionList, selectedFunctionName) => {
     return chain(functionList)
@@ -189,19 +151,8 @@ const DeployModelPopUp = ({
         })
       })
 
-    resolve(false)
+    resolveModal()
   }
-
-  const handleCloseModal = useCallback(
-    formState => {
-      const showConfirmation = formState && formState.dirty
-
-      const handleResolve = () => resolve(false)
-
-      defaultCloseModalHandler(showConfirmation, handleResolve, null, setConfirmationIsOpened)
-    },
-    [resolve]
-  )
 
   const getModalActions = formState => {
     const actions = [
