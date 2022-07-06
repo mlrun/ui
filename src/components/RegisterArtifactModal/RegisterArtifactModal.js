@@ -9,7 +9,7 @@ import { createForm } from 'final-form'
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
 import { Button, Modal } from 'igz-controls/components'
 
-import { messagesByKind } from '../RegisterArtifactPopup/messagesByKind'
+import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
@@ -145,6 +145,7 @@ RegisterArtifactModal.defaultProps = {
 
 RegisterArtifactModal.propTypes = {
   artifactKind: PropTypes.string.isRequired,
+  projectName: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,
   title: PropTypes.string
 }
