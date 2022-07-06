@@ -87,6 +87,9 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
       db_key: {
         value: selectedItem.db_key
       },
+      tag: {
+        value: selectedItem.tag ?? ''
+      },
       iter: {
         value: selectedItem.iter || '0'
       },

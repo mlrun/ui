@@ -159,6 +159,10 @@ Feature: Models Page
     And wait load page
     Then verify "Model Endpoints (Beta)" tab is active in "Models_Tab_Selector" on "Models" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "Model_Endpoints" wizard
+    Then type value "my-key" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
+    Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
+    And wait load page
+    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value"
     Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
     And wait load page
@@ -204,11 +208,15 @@ Feature: Models Page
     Then click on "Register_Model_Button" element on "Models" wizard
     Then verify if "Register_Model_Popup" popup dialog appears
     Then type value "automation-model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-    Then type value "test-path" to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
+    Then type value "path/to/model.txt" to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
     Then click on "Register_Button" element on "Register_Model_Popup" wizard
     And wait load page
     Then click on cell with value "automation-model" in "name" column in "Models_Table" table on "Models" wizard
     Then "Header" element on "Models_Info_Pane" should contains "automation-model" value
+    Then check "automation-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then check "model" value in "kind" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then check "path/to/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then check "model.txt" value in "model_file" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
   @passive
   Scenario: Check MLRun logo redirection
@@ -294,10 +302,12 @@ Feature: Models Page
     Then compare current browser URL with test "href" context value
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
+    Then verify cell with "Features Analysis" value in "key" column in "Info_Pane_Tab_Selector" table on "Models_Info_Pane" wizard should display "Label_Hint"."Feature_Analysis"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_Drift_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_Drift_Headers"
 
   @passive
   Scenario: Check Details panel still active on page refresh
@@ -341,7 +351,11 @@ Feature: Models Page
 
   @passive
   Scenario: Check all mandatory components on Deploy Model Popup
+    * set tear-down property "function" created in "default" project with "automation-test-function-1" value
+    * set tear-down property "function" created in "default" project with "automation-test-function-2" value
     * set tear-down property "model" created in "default" project with "automation-test-model" value
+    * create "automation-test-function-1" Function with "serving" kind and "latest" tag in "default" project with code 200
+    * create "automation-test-function-2" Function with "serving" kind and "non-latest" tag in "default" project with code 200
     * create "automation-test-model" Model with "latest" tag in "default" project with code 200
     Given open url
     And wait load page
@@ -349,52 +363,105 @@ Feature: Models Page
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
     Then verify if "Deploy_Model_Popup" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
     Then verify "Serving_Function_Dropdown" element visibility on "Deploy_Model_Popup" wizard
+    Then select "automation-test-function-2" option in "Serving_Function_Dropdown" dropdown on "Deploy_Model_Popup" wizard
     Then verify "Tag_Dropdown" element visibility on "Deploy_Model_Popup" wizard
+    Then select "non-latest" option in "Tag_Dropdown" dropdown on "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" element visibility on "Deploy_Model_Popup" wizard
+    Then verify "Model_Name_Input" input should contains "automation-test-model" value on "Deploy_Model_Popup" wizard
+    Then type value "  " to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
+    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then verify "Model_Name_Input" options rules on form "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display "Input_Hint"."Deploy_Model_Name_Hint"
     Then verify "Class_Name_Input" element visibility on "Deploy_Model_Popup" wizard
-    When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
-      | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
-      |           \n name0        |            \n value0       | yes                |                       |
-    Then verify "Class_Argument_Name_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-    Then verify "Class_Argument_Value_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-    Then click on "Delete_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-    When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
-      | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
-      | name1                     | value1                     | yes                |                       |
-      | name2                     | value2                     | yes                |                       |
-      | name3                     | value3                     |                    | yes                   |
-      | name4                     | value4                     | yes                |                       |
-      | name5                     | value5                     |                    | yes                   |
-      | name6                     | value6                     | yes                |                       |
-    Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-      | name  | value  |
-      | name1 | value1 |
-      | name2 | value2 |
-      | name4 | value4 |
-      | name6 | value6 |
-    When click on "delete_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
-      | name  |
-      | name6 |
-      | name1 |
-    Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-      | name  | value  |
-      | name2 | value2 |
-      | name4 | value4 |
-    When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
-      | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
-      |           name2           |            value2          | yes                |                       |
-    Then verify "Class_Argument_Name_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Name_Already_Exists"
+    Then type value "  " to "Class_Name_Input" field on "Deploy_Model_Popup" wizard
+    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
     Then verify "Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
     Then "Cancel_Button" element on "Deploy_Model_Popup" should contains "Cancel" value
     Then verify "Deploy_Button" element visibility on "Deploy_Model_Popup" wizard
     Then "Deploy_Button" element on "Deploy_Model_Popup" should contains "Deploy" value
+    Then click on "Deploy_Button" element on "Deploy_Model_Popup" wizard
+    Then verify "Deploy_Button" element on "Deploy_Model_Popup" wizard is disabled
+    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then type value "automation-test-model" to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
+    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then type value "Class" to "Class_Name_Input" field on "Deploy_Model_Popup" wizard
+    Then verify "Deploy_Button" element on "Deploy_Model_Popup" wizard is enabled
+    Then click on "Cancel_Button" element on "Deploy_Model_Popup" wizard
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
+    Then verify if "Deploy_Model_Popup" popup dialog appears
+    Then verify "Model_Name_Input" input should contains "automation-test-model" value on "Deploy_Model_Popup" wizard
+    Then verify "Class_Name_Input" input should contains "Class" value on "Deploy_Model_Popup" wizard
+    Then verify "Serving_Function_Dropdown" dropdown on "Deploy_Model_Popup" wizard selected option value "automation-test-function-2"
+    Then verify "Tag_Dropdown" dropdown on "Deploy_Model_Popup" wizard selected option value "non-latest"
+
+    Scenario: Verify behaviour of key-value table on Deploy Model Popup
+      * set tear-down property "model" created in "default" project with "automation-test-model" value
+      * create "automation-test-model" Model with "latest" tag in "default" project with code 200
+      Given open url
+      And wait load page
+      And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+      And wait load page
+      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+      And wait load page
+      Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
+      Then verify if "Deploy_Model_Popup" popup dialog appears
+      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
+        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
+        |           \n name0        |            \n value0       | yes                |                       |
+      Then verify "Class_Argument_Name_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+      Then verify "Class_Argument_Value_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+      Then click on "Delete_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
+        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
+        | name1                     | value1                     | yes                |                       |
+        | name2                     | value2                     | yes                |                       |
+        | name3                     | value3                     |                    | yes                   |
+        | name4                     | value4                     | yes                |                       |
+        | name5                     | value5                     |                    | yes                   |
+        | name6                     | value6                     | yes                |                       |
+      Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+        | name  | value  |
+        | name1 | value1 |
+        | name2 | value2 |
+        | name4 | value4 |
+        | name6 | value6 |
+      When click on "delete_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
+        | name  |
+        | name6 |
+        | name1 |
+      Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+        | name  | value  |
+        | name2 | value2 |
+        | name4 | value4 |
+      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
+        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
+        |           name2           |            value2          | yes                |                       |
+      Then verify "Class_Argument_Name_Input" in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Input_Field_Unique"
+      When click on "edit_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
+        | name  |
+        | name2 |
+      Then type value "edited_name2" to "Class_Argument_Name_Input" field on "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+      Then type value "edited_value2" to "Class_Argument_Value_Input" field on "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+      Then click on "Add_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+      Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+        | name         | value         |
+        | edited_name2 | edited_value2 |
+        | name4        | value4        |
+      Then click on "Cancel_Button" element on "Deploy_Model_Popup" wizard
+      Then verify if "Common_Popup" popup dialog appears
+      Then click on "Cancel_Button" element on "Common_Popup" wizard
+      Then verify if "Deploy_Model_Popup" popup dialog appears
+      Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+        | name         | value         |
+        | edited_name2 | edited_value2 |
+        | name4        | value4        |
 
   @passive
   Scenario: Verify behaviour of Real-Time Pipelines table

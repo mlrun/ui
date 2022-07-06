@@ -22,7 +22,10 @@ const workflowActions = {
 
         return workflow
       })
-      .catch(error => dispatch(workflowActions.fetchWorkflowFailure(error)))
+      .catch(error => {
+        dispatch(workflowActions.fetchWorkflowFailure(error))
+        throw error
+      })
   },
   fetchWorkflowBegin: () => ({
     type: FETCH_WORKFLOW_BEGIN

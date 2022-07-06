@@ -394,13 +394,7 @@ iframe {
 }
 
 .form {
-  &-row {
-    display: flex;
-    align-items: stretch;
-    margin-bottom: 20px;
-  }
-
-  & [class*='form-col-'] {
+  [class*='form-col-'] {
     flex: 1 0 0%;
 
     &:not(:last-child) {
@@ -408,23 +402,31 @@ iframe {
     }
   }
 
-  .form-col {
-    &-1 {
-      flex-grow: 1;
+  .form {
+    &-row {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 20px;
     }
 
-    &-2 {
-      flex-grow: 2;
+    &-col {
+      &-1 {
+        flex-grow: 1;
+      }
+
+      &-2 {
+        flex-grow: 2;
+      }
+
+      &-3 {
+        flex-grow: 3;
+      }
     }
 
-    &-3 {
-      flex-grow: 3;
+    &-text {
+      color: $primary;
+      font-size: 12px;
     }
-  }
-
-  .text {
-    color: $primary;
-    font-size: 12px;
   }
 }
 

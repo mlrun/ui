@@ -1,16 +1,18 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
+import { createForm } from 'final-form'
 
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
-import { Button, ConfirmDialog, Modal } from 'igz-controls/components'
+import { Button, Modal } from 'igz-controls/components'
 
 import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import artifactApi from '../../api/artifacts-api'
 
@@ -30,6 +32,13 @@ const RegisterArtifactModal = ({
     key: '',
     target_path: ''
   })
+  const formRef = React.useRef(
+    createForm({
+      onSubmit: () => {}
+    })
+  )
+  const location = useLocation()
+  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   useEffect(() => {
     if (artifactKind !== 'artifact') {
@@ -88,26 +97,6 @@ const RegisterArtifactModal = ({
     [filtersStore, onResolve, projectName, refresh, setNotification, title]
   )
 
-  const handleCloseModal = formState => {
-    if (formState && formState.dirty) {
-      openPopUp(ConfirmDialog, {
-        cancelButton: {
-          label: 'Cancel',
-          variant: TERTIARY_BUTTON
-        },
-        confirmButton: {
-          handler: onResolve,
-          label: 'OK',
-          variant: SECONDARY_BUTTON
-        },
-        header: 'Are you sure?',
-        message: 'All changes will be lost'
-      })
-    } else {
-      onResolve()
-    }
-  }
-
   const getModalActions = formState => {
     const actions = [
       {
@@ -126,14 +115,15 @@ const RegisterArtifactModal = ({
   }
 
   return (
-    <Form initialValues={initialValues} onSubmit={registerArtifact}>
+    <Form form={formRef.current} initialValues={initialValues} onSubmit={registerArtifact}>
       {formState => {
         return (
           <Modal
             data-testid="register-artifact"
             actions={getModalActions(formState)}
             className="artifact-register-form"
-            onClose={() => handleCloseModal(formState)}
+            location={location.pathname}
+            onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
             title={title}

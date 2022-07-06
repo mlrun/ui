@@ -76,7 +76,7 @@ module.exports = {
     generateDropdownGroup(
       '.projects-content-header-item .sort .split-btn__button:nth-of-type(2)',
       'button > svg', // Open Component
-      '.sort__body .select__item', // Options
+      '.select__item', // Options
       '.data-ellipsis > .tooltip-wrapper' // Option value
     )
   ),

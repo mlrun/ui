@@ -32,7 +32,7 @@ const action = {
   getTableRows: getTableRows,
   isContainsValueInColumn: async function(driver, table, columnName, value) {
     const arr = await getColumnValues(driver, table, columnName)
-    expect(arr.includes(value)).equal(true)
+    expect(arr.includes(value)).equal(true, `Column values [${arr}] is not equal with "${value}" `)
   },
   isNotContainsValueInColumn: async function(driver, table, columnName, value) {
     const arr = await getColumnValues(driver, table, columnName)
@@ -321,6 +321,14 @@ const action = {
     if (attribute) {
       testContext[attribute] = await cellElement.getAttribute(attribute)
     }
+  },
+  checkCellHintText: async function (driver, table, hintComponent, hintValue, index) {
+    await hoverComponent(driver, table.tableFields['hintButton'](index))
+    await driver.sleep(250)
+    const hint = await driver.findElement(hintComponent)
+    const text = await hint.getText(hint)
+
+    expect(text).equal(hintValue)
   }
 }
 
