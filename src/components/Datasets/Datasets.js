@@ -20,6 +20,7 @@ import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+
 import {
   DATASETS,
   DATASETS_PAGE,

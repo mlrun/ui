@@ -6,7 +6,7 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 
-import { SECONDARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { featuresFilters } from './features.util'
 import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
 import { getNoDataMessage } from '../../../layout/Content/content.util'

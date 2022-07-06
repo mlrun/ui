@@ -423,6 +423,7 @@ module.exports = {
   JobsMonitorTab: {
     Jobs_Tab_Selector: jobsTabSelector,
     New_Job_Button: pageHeaderButton,
+    Arrow_Back: By.css('.link-back__icon'),
     Resource_Monitoring_Button: By.css(
       '.content__action-bar > .data-ellipsis:nth-of-type(2) button'
     ),

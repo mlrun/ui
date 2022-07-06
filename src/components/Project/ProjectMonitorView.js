@@ -15,7 +15,7 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import Select from '../../common/Select/Select'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
-import { DATASETS, PANEL_CREATE_MODE } from '../../constants'
+import { PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
@@ -24,7 +24,6 @@ import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 import './project.scss'
 
 const ProjectMonitorView = ({
-  artifactKind,
   closeFeatureSetPanel,
   closeFunctionsPanel,
   confirmData,
@@ -44,16 +43,13 @@ const ProjectMonitorView = ({
   project,
   projectSummary,
   refresh,
+  registerArtifactLink,
   setIsNewFunctionPopUpOpen,
   setIsPopupDialogOpen,
   setShowFunctionsPanel,
   showFunctionsPanel,
   v3ioStreams
 }) => {
-  const registerArtifactLink = `/projects/${params.projectName}/${
-    artifactKind === 'model' ? 'models' : artifactKind === 'dataset' ? DATASETS : 'files'
-  }`
-
   return (
     <div className="project-wrapper">
       <div className="project__header">
@@ -168,12 +164,12 @@ const ProjectMonitorView = ({
       )}
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
-          artifactKind={artifactKind}
+          artifactKind={'model'}
           refresh={() => {
-            navigate(registerArtifactLink)
+            navigate(registerArtifactLink('model'))
           }}
           setIsPopupOpen={setIsPopupDialogOpen}
-          title={`Register ${artifactKind}`}
+          title="Register model"
         />
       )}
       {createFeatureSetPanelIsOpen && (
@@ -210,7 +206,6 @@ ProjectMonitorView.defaultProps = {
 }
 
 ProjectMonitorView.propTypes = {
-  artifactKind: PropTypes.string.isRequired,
   closeFeatureSetPanel: PropTypes.func.isRequired,
   closeFunctionsPanel: PropTypes.func.isRequired,
   confirmData: PropTypes.object,

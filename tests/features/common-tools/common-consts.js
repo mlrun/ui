@@ -55,10 +55,11 @@ module.exports = {
     Overview_General_Headers: [
       'Description',
       'Labels',
-      'Version',
-      'URI',
+      'Version tag',
       'Last updated',
       'Entities',
+      'URI',
+      'Timestamp key',
       'Label column',
       'Usage example'
     ]
@@ -130,7 +131,7 @@ module.exports = {
     ]
   },
   Models_Endpoints_Info_Pane: {
-    Tab_List: ['Overview', 'Drift Analysis', 'Features Analysis'],
+    Tab_List: ['Overview', 'Features Analysis'],
     Overview_General_Headers: [
       'UID',
       'Model class',
@@ -140,7 +141,8 @@ module.exports = {
       'Error count',
       'Accuracy',
       'Stream path'
-    ]
+    ],
+    Overview_Drift_Headers: ['Mean TVD', 'Mean Hellinger', 'Mean KLD']
   },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
@@ -167,8 +169,12 @@ module.exports = {
       'Google storage'
     ]
   },
-  Register_File: {
-    Type_Options: ['General', 'Chart', 'Plot', 'Table']
+  Register_Artifact: {
+    Type_Options: ['General', 'Chart', 'Plot', 'Table'],
+    Form_Text:
+      /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
+    Form_Subtext:
+      'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).'
   },
   Project_Settings: {
     Tab_List: ['General', 'Members', 'Secrets']
@@ -191,6 +197,7 @@ module.exports = {
       'This field is required',
     Input_Field_Require: 'This field is required',
     Input_Field_Invalid: 'This field is invalid',
+    Input_Field_Unique: 'Name should be unique',
     URL_Field_Require: 'URL is required',
     Key_Bucketing_Number_Hint:
       'If you partition by key and the number of unique keys is very high it is recommended to use buckets for ' +
@@ -210,8 +217,7 @@ module.exports = {
     Limit_Number_Warning: 'Limit must be bigger than or equal to Request and not be less than 1',
     CPU_Limit_Number_Warning:
       'Limit must be bigger than or equal to Request and not be less than 0.001',
-    Request_Number_Warning:
-      'Request must be less than or equal to Limit and not be less than 1',
+    Request_Number_Warning: 'Request must be less than or equal to Limit and not be less than 1',
     CPU_Request_Number_Warning:
       'Request must be less than or equal to Limit and not be less than 0.001',
     GPU_Minimum_Value_Warning: 'The minimum value should be 1',
@@ -260,7 +266,8 @@ module.exports = {
     Members_Hint: 'Some of the members might be user groups',
     Overview_Hash: 'Represents hash of the data. when the data changes the hash would change',
     Overview_UID:
-      'Unique identifier representing the job or the workflow that generated the artifact'
+      'Unique identifier representing the job or the workflow that generated the artifact',
+    Feature_Analysis: 'The statistics are calculated on the last rolling hour of data'
   },
   Descriptions: {
     Archive_Project:

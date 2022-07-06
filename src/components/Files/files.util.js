@@ -26,6 +26,7 @@ export const infoHeaders = [
     tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
+  { label: 'Tag', id: 'tag' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },

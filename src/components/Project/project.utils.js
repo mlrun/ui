@@ -22,7 +22,7 @@ export const launchIDEOptions = [
 export const generateCreateNewOptions = (
   navigate,
   params,
-  setArtifactKind,
+  openPopupDialog,
   setIsPopupDialogOpen,
   setCreateFeatureSetsPanelIsOpen,
   setIsNewFunctionPopUpOpen
@@ -49,24 +49,21 @@ export const generateCreateNewOptions = (
     label: 'Register Artifact',
     id: 'registerFile',
     handler: () => {
-      setIsPopupDialogOpen(true)
-      setArtifactKind('artifact')
+      openPopupDialog('artifact')
     }
   },
   {
     label: 'Register Model',
     id: 'registerModel',
     handler: () => {
-      setIsPopupDialogOpen(true)
-      setArtifactKind('model')
+      setIsPopupDialogOpen(true) //TODO: remove after Register Modal ready
     }
   },
   {
     label: 'Register Dataset',
     id: 'registerDataset',
     handler: () => {
-      setIsPopupDialogOpen(true)
-      setArtifactKind('dataset')
+      openPopupDialog('dataset')
     }
   }
 ]
