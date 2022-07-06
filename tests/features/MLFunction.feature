@@ -623,8 +623,6 @@ Feature: ML Functions
         Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
         Then verify "GPU_Limit_Number_Input" input should contains "15" value in "Resources_Accordion" on "New_Function" wizard
-        Then type value "" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
 
     @inProgress
     Scenario: deploy new ml-function with build new image option
@@ -651,9 +649,10 @@ Feature: ML Functions
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     Scenario: Delete ml-function
+         * set tear-down property "function" created with "new-aqa-function-01" value
+         * set tear-down property "project" created with "automation-test-name07" value
         * create "automation-test-name07" MLRun Project with code 201
-        And set tear-down property "project" created with "automation-test-name07" value
-        * create "new-aqa-function-01" Function in "automation-test-name07" project with code 200
+        * create "new-aqa-function-01" Function with "job" kind and "latest" tag in "automation-test-name07" project with code 200
         And set tear-down property "function" created in "automation-test-name07" project with "new-aqa-function-01" value
         Given open url
         And wait load page
@@ -1051,7 +1050,7 @@ Feature: ML Functions
     Scenario: Verify all mandatory component on Edit Function sidebar
         * set tear-down property "project" created with "automation-test" value
         * create "automation-test" MLRun Project with code 201
-        * create "test-function" Function in "automation-test" project with code 200
+        * create "test-function" Function with "job" kind and "latest" tag in "automation-test" project with code 200
         Given open url
         And wait load page
         And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1160,13 +1159,12 @@ Feature: ML Functions
         When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "High"
         Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Constrain"
-        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow"
-        Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "MB"
-        Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "KB"
-        Then verify "CPU_Request_Number_Input" input should contains "6" value in "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
-        Then verify "CPU_Limit_Number_Input" input should contains "7" value in "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
-        Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "MB"
+        Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "KB"
+        Then verify "CPU_Request_Number_Input" input should contains "6" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "millicpu"
+        Then verify "CPU_Limit_Number_Input" input should contains "7" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "millicpu"
+        Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard

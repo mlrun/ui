@@ -6,15 +6,9 @@ import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { OnChange } from 'react-final-form-listeners'
+import { useLocation } from 'react-router-dom'
 
-import {
-  Button,
-  ConfirmDialog,
-  FormInput,
-  FormKeyValueTable,
-  FormSelect,
-  Modal
-} from 'igz-controls/components'
+import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
@@ -23,7 +17,7 @@ import { MODELS_TAB } from '../../constants'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { useModal } from '../../hooks/useModal'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import './deployModelPopUp.scss'
 
@@ -38,7 +32,6 @@ const DeployModelPopUp = ({
   const [functionList, setFunctionList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
-
   const [initialValues, setInitialValues] = useState({
     modelName: '',
     className: '',
@@ -54,6 +47,8 @@ const DeployModelPopUp = ({
       onSubmit: () => {}
     })
   )
+  const location = useLocation()
+  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const getTagOptions = useCallback((functionList, selectedFunctionName) => {
     return chain(functionList)
@@ -162,27 +157,6 @@ const DeployModelPopUp = ({
     onResolve()
   }
 
-  const handleCloseModal = formState => {
-    if (formState && formState.dirty) {
-      createModal(ConfirmDialog, {
-        instanceId: 'ConfirmDialog',
-        cancelButton: {
-          label: 'Cancel',
-          variant: TERTIARY_BUTTON
-        },
-        confirmButton: {
-          handler: () => resolveModal().then(onResolve),
-          label: 'OK',
-          variant: SECONDARY_BUTTON
-        },
-        header: 'Are you sure?',
-        message: 'All changes will be lost'
-      })
-    } else {
-      onResolve()
-    }
-  }
-
   const getModalActions = formState => {
     const actions = [
       {
@@ -200,7 +174,7 @@ const DeployModelPopUp = ({
     return actions.map(action => <Button {...action} />)
   }
 
-  const onSelectedFuncionNameChange = currentValue => {
+  const onSelectedFunctionNameChange = currentValue => {
     const tags = getTagOptions(functionList, currentValue)
     const defaultClass = functionList.find(
       func => func.metadata.name === currentValue && func.metadata.tag === tags[0].id
@@ -223,7 +197,8 @@ const DeployModelPopUp = ({
           <Modal
             actions={getModalActions(formState)}
             className="deploy-model"
-            onClose={() => handleCloseModal(formState)}
+            location={location.pathname}
+            onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
             title="Deploy model"
@@ -238,7 +213,7 @@ const DeployModelPopUp = ({
                     name="selectedFunctionName"
                     options={functionOptionList}
                   />
-                  <OnChange name="selectedFunctionName">{onSelectedFuncionNameChange}</OnChange>
+                  <OnChange name="selectedFunctionName">{onSelectedFunctionNameChange}</OnChange>
                 </div>
                 <div className="form-col-1">
                   <FormSelect

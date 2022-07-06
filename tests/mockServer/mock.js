@@ -621,7 +621,7 @@ function getArtifacts(req, res) {
   const categories = {
     dataset: ['dataset'],
     model: ['model'],
-    other: ['', 'table', 'link']
+    other: ['', 'table', 'link', 'plot', 'chart']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
     artifact => artifact.project === req.query['project']
@@ -883,7 +883,6 @@ function postFunc(req, res) {
   let baseFunc = req.body
   baseFunc.metadata.updated = new Date(dt0).toISOString()
   baseFunc.metadata.hash = hashPwd
-  baseFunc.metadata.tag = 'latest'
   baseFunc.status = {}
 
   funcs.funcs.push(baseFunc)
@@ -1146,7 +1145,8 @@ function postSubmitJob(req, res) {
     funcObject.metadata.tag = 'latest'
     funcObject.metadata.updated = currentDate.toISOString()
     funcObject.spec.disable_auto_mount = false
-    funcObject.spec.priority_class_name = ''
+    funcObject.spec.priority_class_name = req.body.function.spec.priority_class_name
+    funcObject.spec.preemption_mode = req.body.function.spec.preemption_mode
     funcObject.spec.volume_mounts = req.body.function.spec.volume_mounts
     funcObject.spec.volumes = req.body.function.spec.volumes
     funcObject.status = {}
@@ -1197,6 +1197,10 @@ function postArtifact(req, res) {
     tag: artifactTag
   }
 
+  if (req.body.kind === 'model') {
+    artifactTemplate.model_file = req.body.model_file
+  }
+
   artifacts.artifacts.push(artifactTemplate)
 
   if (tagObject) {
@@ -1212,9 +1216,16 @@ function postArtifact(req, res) {
 }
 
 function getModelEndpoints(req, res) {
-  let collectedEndpoints = modelEndpoints.endpoints.filter(
-      item => item.metadata.project === req.params.project
-  )
+  let collectedEndpoints = modelEndpoints.endpoints
+      .filter(endpoint => endpoint.metadata.project === req.params.project)
+      .map(endpoint => ({
+        ...endpoint,
+        status: {
+          ...endpoint.status,
+          drift_measures: null,
+          features: null
+        }
+      }))
   if (req.query['label']) {
     let [key, value] = req.query['label'].split('=')
 
@@ -1448,7 +1459,15 @@ function postProjectMembers(req, res) {
 
   iguazioProjectsRelations[projectId] = projectRelations
 
-  res.send()
+  res.send({
+    data: {
+      type: 'job',
+      id: '2f9e2b29-edfc-4107-a4c7-9f6579e69a76'
+    },
+    meta: {
+      ctx: '09778294116375957090'
+    }
+  })
 }
 
 function getIguazioUserGrops(req, res) {
@@ -1483,6 +1502,16 @@ function getNuclioShardLags(req, res) {
           current: '1_456',
           lag: '1_789'
         }
+      }
+    }
+  })
+}
+
+function getIguazioJob(req, res) {
+  res.send({
+    data: {
+      attributes: {
+        state: 'completed'
       }
     }
   })
@@ -1632,6 +1661,8 @@ app.get(`${iguazioApiUrl}/api/scrubbed_user_groups`, getIguazioUserGrops)
 app.get(`${iguazioApiUrl}/api/users`, getIguazioUsers)
 
 app.get(`${iguazioApiUrl}/api/scrubbed_users`, getIguazioUsers)
+
+app.get(`${iguazioApiUrl}/api/jobs/:id`, getIguazioJob)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

@@ -8,10 +8,22 @@ async function verifyInputInvalid(driver, inputGroup) {
   expect(flag.includes('invalid')).equal(true)
 }
 
+async function verifyFormInputInvalid(driver, inputGroup) {
+  const inputField = await driver.findElement(inputGroup.root)
+  const flag = await inputField.getAttribute('class')
+  expect(flag.includes('form-field__wrapper-invalid')).equal(true)
+}
+
 async function verifyInputValid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.inputField)
   const flag = await inputField.getAttribute('class')
   expect(flag.includes('invalid')).equal(false)
+}
+
+async function verifyFormInputValid(driver, inputGroup) {
+  const inputField = await driver.findElement(inputGroup.root)
+  const flag = await inputField.getAttribute('class')
+  expect(flag.includes('form-field__wrapper-invalid')).equal(false)
 }
 
 async function clearManually(inputField) {
@@ -38,7 +50,7 @@ const action = {
   typeValue,
   verifyInputValid,
   verifyInputInvalid,
-  checkHintText: async function(driver, inputGroup, hintComponent, text) {
+  checkHintText: async function (driver, inputGroup, hintComponent, text) {
     const hintButton = await driver.findElement(inputGroup.hintButton)
     await hintButton.click()
     await driver.sleep(250)
@@ -46,11 +58,12 @@ const action = {
     const hintText = await hint.getText()
     expect(hintText).equal(text)
   },
-  checkInputAccordingHintText: async function(
+  checkInputAccordingHintText: async function (
     driver,
     attach,
     inputGroup,
-    hintComponent
+    hintComponent,
+    isForm = false
   ) {
     const hintButton = await driver.findElement(inputGroup.hintButton)
     await hintButton.click()
@@ -65,23 +78,30 @@ const action = {
     for (let string of validStrings) {
       await typeValue(driver, inputGroup, string)
       await driver.sleep(250)
-      await verifyInputValid(driver, inputGroup)
+
+      if (isForm) {
+        await verifyFormInputValid(driver, inputGroup)
+      } else {
+        await verifyInputValid(driver, inputGroup)
+      }
+
       await clearManually(input)
     }
 
     for (let string of invalidStrings) {
       await typeValue(driver, inputGroup, string)
       await driver.sleep(250)
-      await verifyInputInvalid(driver, inputGroup)
+
+      if (isForm) {
+        await verifyFormInputInvalid(driver, inputGroup)
+      } else {
+        await verifyInputInvalid(driver, inputGroup)
+      }
+
       await clearManually(input)
     }
   },
-  checkWarningHintText: async function(
-    driver,
-    inputGroup,
-    hintComponent,
-    text
-  ) {
+  checkWarningHintText: async function (driver, inputGroup, hintComponent, text) {
     const hintButton = await driver.findElement(inputGroup.warningHint)
     await hintButton.click()
     // await hoverComponent(driver, inputGroup.warningHint)
@@ -90,16 +110,16 @@ const action = {
     const hintText = await hint.getText()
     expect(hintText).equal(text)
   },
-  verifyTypedValue: async function(driver, inputGroup, value) {
+  verifyTypedValue: async function (driver, inputGroup, value) {
     const txt = await getInputValue(driver, inputGroup)
     expect(txt).equal(value)
   },
-  verifyInputDisabled: async function(driver, inputGroup) {
+  verifyInputDisabled: async function (driver, inputGroup) {
     const inputField = await driver.findElement(inputGroup.inputField)
     const flag = await inputField.getAttribute('disabled')
     expect(flag).equal('true')
   },
-  verifyInputEnabled: async function(driver, inputGroup) {
+  verifyInputEnabled: async function (driver, inputGroup) {
     const inputField = await driver.findElement(inputGroup.inputField)
     const flag = await inputField.getAttribute('disabled')
     expect(flag).equal(null)

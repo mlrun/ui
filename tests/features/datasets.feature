@@ -102,11 +102,14 @@ Feature: Datasets Page
     Then "Register_Dataset_Button" element on "Feature_Store_Datasets_Tab" should contains "Register Dataset" value
     Then click on "Register_Dataset_Button" element on "Feature_Store_Datasets_Tab" wizard
     Then verify if "Register_Dataset" popup dialog appears
+    Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
+    Then "Form_Text" component on "Register_Dataset" should be equal "Register_Artifact"."Form_Text"
+    Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Artifact"."Form_Subtext"
     Then verify "Name_Input" element visibility on "Register_Dataset" wizard
     Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Artifact_Names_Unique"
     Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
     Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
-    Then verify "Name_Input" options rules on "Register_Dataset" wizard
+    Then verify "Name_Input" options rules on form "Register_Dataset" wizard
     Then verify "Target_Path_Input" element visibility on "Register_Dataset" wizard
     Then type value "   " to "Target_Path_Input" field on "Register_Dataset" wizard
     Then verify "Target_Path_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
@@ -117,6 +120,19 @@ Feature: Datasets Page
     Then "Cancel_Button" element on "Register_Dataset" should contains "Cancel" value
     Then verify "Register_Button" element visibility on "Register_Dataset" wizard
     Then "Register_Button" element on "Register_Dataset" should contains "Register" value
+    Then click on "Register_Button" element on "Register_Dataset" wizard
+    Then verify "Register_Button" element on "Register_Dataset" wizard is disabled
+    Then type value "dataset" to "Name_Input" field on "Register_Dataset" wizard
+    Then type value "target/path" to "Target_Path_Input" field on "Register_Dataset" wizard
+    Then type value "new dataset description" to "Description_Input" field on "Register_Dataset" wizard
+    Then verify "Register_Button" element on "Register_Dataset" wizard is enabled
+    Then click on "Cancel_Button" element on "Register_Dataset" wizard
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
+    Then verify if "Register_Dataset" popup dialog appears
+    Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
+    Then verify "Target_Path_Input" input should contains "target/path" value on "Register_Dataset" wizard
+    Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
 
   Scenario: Verify behaviour on Register new Dataset
     * set tear-down property "dataset" created in "default" project with "test-dataset" value
@@ -135,6 +151,8 @@ Feature: Datasets Page
     Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test-dataset"
     Then click on cell with value "test-dataset" in "name" column in "Files_Table" table on "Files" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-dataset" value
+    Then check "test-dataset" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then check "test-path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
 
   @passive
   Scenario: Check filtering by Name on Feature Store Datasets Tab

@@ -1093,7 +1093,7 @@ module.exports = {
       '.feature-set-panel .new-item-side-panel__buttons-container .pop-up-dialog__btn_cancel'
     ),
     Save_Button: By.css(
-      '.feature-set-panel .new-item-side-panel__buttons-container button[class="btn btn-secondary"]'
+      '.feature-set-panel .new-item-side-panel__buttons-container div:nth-of-type(2) .btn-secondary'
     ),
     Save_And_Ingest_Button: By.css(
       '.feature-set-panel .new-item-side-panel__buttons-container .btn_start-ingestion'
@@ -1112,6 +1112,11 @@ module.exports = {
         true
       )
     ),
+    Job_Method_Dropdown: dropdownComponent(
+        generateDropdownGroup('.new-item-side-panel .job-panel__title-select-container .job-methods')
+    ),
+    Job_Method_Apply: By.css('.job-panel__title-buttons-container .btn-primary'),
+    Job_Method_Cancel: By.css('.job-panel__title-buttons-container .btn-tertiary'),
     Data_Inputs_Accordion: {
       Accordion_Header: By.css(
         '.new-item-side-panel__body .accordion__container:nth-of-type(1) h5'
