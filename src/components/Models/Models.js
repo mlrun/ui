@@ -96,7 +96,7 @@ const Models = ({
   )
 
   const handleDeployModel = useCallback(model => {
-    openPopUp(DeployModelPopUp, { instanceId: 'DeployModel', model })
+    openPopUp(DeployModelPopUp, { model })
   }, [])
 
   const handleRemoveModel = useCallback(

@@ -97,7 +97,7 @@ const RegisterArtifactModal = ({
           variant: TERTIARY_BUTTON
         },
         confirmButton: {
-          handler: () => onResolve(),
+          handler: onResolve,
           label: 'OK',
           variant: SECONDARY_BUTTON
         },

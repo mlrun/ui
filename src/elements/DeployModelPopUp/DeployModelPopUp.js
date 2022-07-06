@@ -40,8 +40,6 @@ const DeployModelPopUp = ({
     arguments: []
   })
 
-  const { createModal, resolveModal } = useModal()
-
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {}

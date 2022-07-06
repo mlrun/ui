@@ -140,14 +140,13 @@ const Files = ({
   useEffect(() => {
     if (openPanelByDefault) {
       openPopUp(RegisterArtifactModal, {
-        instanceId: 'RegisterArtifactModal',
         artifactKind: 'artifact',
         projectName: params.projectName,
         refresh: fetchData,
         title: pageData.actionsMenuHeader
       })
     }
-  }, [createModal, fetchData, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
+  }, [fetchData, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
 
   useEffect(() => {
     setPageData(state => ({
@@ -225,7 +224,6 @@ const Files = ({
         loading={artifactsStore.loading}
         handleActionsMenuClick={() =>
           openPopUp(RegisterArtifactModal, {
-            instanceId: 'RegisterArtifactModal',
             artifactKind: 'artifact',
             projectName: params.projectName,
             refresh: fetchData,

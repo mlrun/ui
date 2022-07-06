@@ -151,7 +151,6 @@ const Datasets = ({
   useEffect(() => {
     if (openPanelByDefault) {
       openPopUp(RegisterArtifactModal, {
-        instanceId: 'RegisterDatasetModal',
         artifactKind: 'dataset',
         projectName: params.projectName,
         refresh: handleRefresh,
@@ -235,7 +234,6 @@ const Datasets = ({
         handleCancel={() => setSelectedItem({})}
         handleActionsMenuClick={() =>
           openPopUp(RegisterArtifactModal, {
-            instanceId: 'RegisterDatasetModal',
             artifactKind: 'dataset',
             projectName: params.projectName,
             refresh: handleRefresh,

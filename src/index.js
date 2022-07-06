@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
+import ModalContainer from 'react-modal-promise'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 import App from './App'
-import ModalProvider from './utils/ModalContext.util'
 
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
@@ -19,9 +18,8 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
     ReactDOM.render(
       <Provider store={toolkitStore}>
         <Router basename={process.env.PUBLIC_URL}>
-          <ModalProvider>
-            <App />
-          </ModalProvider>
+          <App />
+          <ModalContainer />
         </Router>
       </Provider>,
       document.getElementById('root')
