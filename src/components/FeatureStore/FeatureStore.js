@@ -49,15 +49,15 @@ const FeatureStore = () => {
                 : createFeatureVectorTitle
             }
             onClick={handleActionsMenuClick}
-            showActionsMenu={!location.pathname.includes(FEATURES_TAB)}
+            showActionsMenu={!location.pathname.includes(`/${FEATURES_TAB}`)}
           />
         </div>
         <div className="content content_with-menu">
           <ContentMenu
             activeTab={
-              location.pathname.includes(FEATURE_SETS_TAB)
+              location.pathname.includes(`/${FEATURE_SETS_TAB}`)
                 ? FEATURE_SETS_TAB
-                : location.pathname.includes(FEATURES_TAB)
+                : location.pathname.includes(`/${FEATURES_TAB}`)
                 ? FEATURES_TAB
                 : FEATURE_VECTORS_TAB
             }
