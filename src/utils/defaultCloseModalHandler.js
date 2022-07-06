@@ -1,7 +1,4 @@
-import {
-  SECONDARY_BUTTON,
-  TERTIARY_BUTTON
-} from '../../../dashboard-react-controls/src/lib/constants'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { ConfirmDialog } from 'igz-controls/components'
 
