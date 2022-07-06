@@ -22,6 +22,7 @@ import {
   pageDataInitialState,
   tabs
 } from './models.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import {
   GROUP_BY_NAME,
@@ -39,7 +40,6 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier, getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
-import { useModal } from '../../hooks/useModal'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
@@ -68,7 +68,6 @@ const Models = ({
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { createModal } = useModal()
 
   useEffect(() => {
     if (openPanelByDefault) {
@@ -96,12 +95,9 @@ const Models = ({
     [fetchFunctions, fetchModelEndpoints, fetchModels, params.pageTab, params.projectName]
   )
 
-  const handleDeployModel = useCallback(
-    model => {
-      createModal(DeployModelPopUp, { instanceId: 'DeployModel', model })
-    },
-    [createModal]
-  )
+  const handleDeployModel = useCallback(model => {
+    openPopUp(DeployModelPopUp, { instanceId: 'DeployModel', model })
+  }, [])
 
   const handleRemoveModel = useCallback(
     model => {

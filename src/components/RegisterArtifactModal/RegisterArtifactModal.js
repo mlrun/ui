@@ -10,7 +10,7 @@ import { Button, ConfirmDialog, Modal } from 'igz-controls/components'
 import { messagesByKind } from '../RegisterArtifactPopup/messagesByKind'
 import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { useModal } from '../../hooks/useModal'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import artifactApi from '../../api/artifacts-api'
 
@@ -30,8 +30,6 @@ const RegisterArtifactModal = ({
     key: '',
     target_path: ''
   })
-
-  const { createModal, resolveModal } = useModal()
 
   useEffect(() => {
     if (artifactKind !== 'artifact') {
@@ -92,14 +90,14 @@ const RegisterArtifactModal = ({
 
   const handleCloseModal = formState => {
     if (formState && formState.dirty) {
-      createModal(ConfirmDialog, {
+      openPopUp(ConfirmDialog, {
         instanceId: 'ConfirmDialog',
         cancelButton: {
           label: 'Cancel',
           variant: TERTIARY_BUTTON
         },
         confirmButton: {
-          handler: () => resolveModal().then(onResolve),
+          handler: () => onResolve(),
           label: 'OK',
           variant: SECONDARY_BUTTON
         },
