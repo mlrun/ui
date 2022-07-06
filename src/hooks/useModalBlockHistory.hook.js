@@ -9,7 +9,7 @@ export const useModalBlockHistory = (closeModal, form) => {
   const resolveModal = useCallback(() => {
     closeModal()
     unblockHistory(false)
-  }, [unblockHistory, closeModal])
+  }, [closeModal, unblockHistory])
 
   const handleRejectConfirmation = useCallback(() => {
     setConfirmationIsOpened(false)
@@ -32,12 +32,6 @@ export const useModalBlockHistory = (closeModal, form) => {
       blockHistory(handleCloseModal, confirmationIsOpened)
     }
   }, [confirmationIsOpened, blockHistory, handleCloseModal, form])
-
-  useEffect(() => {
-    return () => {
-      resolveModal()
-    }
-  }, [resolveModal])
 
   return { handleCloseModal }
 }
