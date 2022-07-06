@@ -28,7 +28,7 @@ import {
   generateActionsMenu,
   generatePageData
 } from './featureVectors.util'
-import { DANGER_BUTTON, LABEL_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
+import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 
