@@ -39,6 +39,7 @@ const DeployModelPopUp = ({
     selectedFunctionName: '',
     arguments: []
   })
+
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {}
