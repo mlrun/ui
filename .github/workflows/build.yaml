@@ -8,12 +8,16 @@ on:
 
   workflow_dispatch:
     inputs:
-      docker_registry:
-        description: 'Docker registry to push images to (default: ghcr.io/, use registry.hub.docker.com/ for docker hub)'
+      docker_registries:
+        description: 'Comma separated list of docker registries to push images to (default: ghcr.io/, use registry.hub.docker.com/ for docker hub)'
         required: true
         default: 'ghcr.io/'
       docker_repo:
         description: 'Docker repo to push images to (default: lowercase github repository owner name)'
+        required: false
+        default: ''
+      version:
+        description: 'The version to build, without prefix v (e.g. 1.1.0), if not provided version will be <latest-release>-<commit-hash>'
         required: false
         default: ''
 
@@ -37,25 +41,39 @@ jobs:
     - name: Set computed versions params
       id: computed_params
       run: |
-        echo "::set-output name=mlrun_version::${{ steps.git_info.outputs.latest_version }}-${{ steps.git_info.outputs.mlrun_commit_hash }}"
+        echo "::set-output name=mlrun_version::$( \
+          input_mlrun_version=${{ github.event.inputs.version }} && \
+          default_mlrun_version=$(echo ${{ steps.git_info.outputs.latest_version }}-${{ steps.git_info.outputs.mlrun_commit_hash }}) && \
+          echo ${input_mlrun_version:-`echo $default_mlrun_version`})"
         echo "::set-output name=mlrun_docker_repo::$( \
           input_docker_repo=${{ github.event.inputs.docker_repo }} && \
           default_docker_repo=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]') && \
           echo ${input_docker_repo:-`echo $default_docker_repo`})"
-        echo "::set-output name=mlrun_docker_registry::$( \
-          input_docker_registry=${{ github.event.inputs.docker_registry }} && \
-          echo ${input_docker_registry:-ghcr.io/})"
+        echo "::set-output name=mlrun_docker_registries::$( \
+          input_docker_registries=${{ github.event.inputs.docker_registries }} && \
+          echo ${input_docker_registries:-ghcr.io/})"
     - name: Setup Node.js 12
       uses: actions/setup-node@v1
       with:
         node-version: '12'
     - name: Docker login
-      run: echo ${{ secrets.CR_PAT }} | docker login ${{ steps.computed_params.outputs.mlrun_docker_registry }} -u ${{ secrets.CR_USERNAME }} --password-stdin
-    - name: Build image
+      # all suffixed with "| true" to allow failures if secrets are not defined (fork)
       run: |
-        MLRUN_DOCKER_REGISTRY=${{ steps.computed_params.outputs.mlrun_docker_registry }} \
-        MLRUN_DOCKER_REPO=${{ steps.computed_params.outputs.mlrun_docker_repo }} \
-        MLRUN_DOCKER_TAG=${{ steps.computed_params.outputs.mlrun_version }} \
-        npm run docker
-    - name: Push image
-      run: docker push ${{ steps.computed_params.outputs.mlrun_docker_registry }}${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}
+        echo ${{ secrets.GHCR_DOCKER_REGISTRY_PASSWORD }} | \
+          docker login ghcr.io -u ${{ secrets.GHCR_DOCKER_REGISTRY_USERNAME }} --password-stdin | true
+        echo ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_PASSWORD }} | \
+          docker login registry.hub.docker.com -u ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_USERNAME }} \
+          --password-stdin | true
+        echo ${{ secrets.QUAY_IO_DOCKER_REGISTRY_PASSWORD }} | \
+          docker login quay.io -u ${{ secrets.QUAY_IO_DOCKER_REGISTRY_USERNAME }} \
+          --password-stdin | true
+    - name: Build & push image
+      run: |
+        for registry in $(echo ${{ steps.computed_params.outputs.mlrun_docker_registries }} | sed "s/,/ /g"); \
+          do \
+            MLRUN_DOCKER_REGISTRY=$registry \
+            MLRUN_DOCKER_REPO=${{ steps.computed_params.outputs.mlrun_docker_repo }} \
+            MLRUN_DOCKER_TAG=${{ steps.computed_params.outputs.mlrun_version }} \
+            npm run docker; \
+            docker push ${registry}${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}; \
+          done;
