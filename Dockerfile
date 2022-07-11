@@ -21,9 +21,6 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
 # production stage
 FROM gcr.io/iguazio/nginx-unprivileged:1.21-alpine as production-stage
 
-ARG UID=101
-ARG GID=101
-
 USER root
 # needs permissions to run these updates
 RUN apk update --no-cache && apk upgrade --no-cache
