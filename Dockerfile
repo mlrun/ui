@@ -22,8 +22,10 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
 FROM gcr.io/iguazio/nginx-unprivileged:1.21-alpine as production-stage
 
 USER root
-# needs permissions to run these updates
+# escalate permissions to update packages
 RUN apk update --no-cache && apk upgrade --no-cache
+# we are inheriting $UID and $GID from the base image, you can find more information here:
+# https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/Dockerfile-alpine.template
 USER $UID
 
 COPY --from=build-stage /app/build /usr/share/nginx/html
@@ -33,7 +35,7 @@ COPY nginx/nginx.conf.tmpl /etc/nginx/conf.d/
 COPY nginx/run_nginx /etc/nginx/
 
 USER root
-# because we are generating files at runtime, we need access to write and execute to the folders and files listed below
+# update build files file permissions so they would be accessible to the running user
 RUN chown -R $UID:0 /usr/share/nginx/html && chmod -R g+w /usr/share/nginx/html && chmod 777 /etc/nginx/run_nginx
 USER $UID
 
