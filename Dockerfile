@@ -35,7 +35,7 @@ COPY nginx/nginx.conf.tmpl /etc/nginx/conf.d/
 COPY nginx/run_nginx /etc/nginx/
 
 USER root
-# update build files file permissions so they would be accessible to the running user
+# update build files permissions so they would be accessible to the running user
 RUN chown -R $UID:0 /usr/share/nginx/html && chmod -R g+w /usr/share/nginx/html && chmod 777 /etc/nginx/run_nginx
 USER $UID
 
