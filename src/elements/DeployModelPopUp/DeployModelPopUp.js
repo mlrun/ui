@@ -137,6 +137,7 @@ const DeployModelPopUp = ({
 
     return buildFunction({ function: servingFunction })
       .then(response => {
+        formRef.current = null
         setNotification({
           status: response.status,
           id: Math.random(),
@@ -153,7 +154,6 @@ const DeployModelPopUp = ({
       })
       .finally(() => {
         onResolve()
-        formRef.current = null
       })
   }
 

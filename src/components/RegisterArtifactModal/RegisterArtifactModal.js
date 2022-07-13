@@ -74,6 +74,7 @@ const RegisterArtifactModal = ({
     return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
+        formRef.current = null
         refresh(filtersStore)
         return setNotification({
           status: response.status,
@@ -91,7 +92,6 @@ const RegisterArtifactModal = ({
       })
       .finally(() => {
         onResolve()
-        formRef.current = null
       })
   }
 
