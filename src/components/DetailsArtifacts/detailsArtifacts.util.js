@@ -3,16 +3,12 @@ import prettyBytes from 'pretty-bytes'
 import { formatDatetime, parseKeyValues } from '../../utils'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 
-export const getJobAccordingIteration = (iteration, allJobsData, selectedItem) => {
-  const selectedJob =
-    allJobsData.find(
-      job => job.metadata.uid === selectedItem.uid && job.metadata.iteration === +iteration
-    ) || {}
-  selectedJob.artifacts = selectedJob.status?.artifacts || []
-  selectedJob.startTime = formatDatetime(new Date(selectedJob.status?.start_time))
-  selectedJob.labels = parseKeyValues(selectedJob.metadata?.labels || {})
-
-  return selectedJob
+export const getJobAccordingIteration = (selectedJob) => {
+  return {
+    artifacts: selectedJob.status?.artifacts || [],
+    startTime: new Date(selectedJob.status?.start_time),
+    labels: parseKeyValues(selectedJob.metadata?.labels || {})
+  }
 }
 
 export const generateContent = selectedJob => {

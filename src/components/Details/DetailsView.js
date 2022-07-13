@@ -21,11 +21,11 @@ import {
 
 import { formatDatetime } from '../../utils'
 import {
-  JOBS_PAGE,
+  DATASETS_PAGE,
   DETAILS_ARTIFACTS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
-  DATASETS_PAGE,
+  JOBS_PAGE,
   MODELS_PAGE,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
@@ -190,18 +190,19 @@ const DetailsView = React.forwardRef(
                 </Tooltip>
               </>
             )}
-            {params.tab === DETAILS_ARTIFACTS_TAB && (
-              <Select
-                density="dense"
-                key="Iteration"
-                label="Iteration:"
-                onClick={option => {
-                  setIteration(option)
-                }}
-                options={detailsStore.iterationOptions}
-                selectedId={detailsStore.iteration}
-              />
-            )}
+            {params.tab === DETAILS_ARTIFACTS_TAB &&
+              detailsStore.iteration && (
+                <Select
+                  density="dense"
+                  key="Iteration"
+                  label="Iteration:"
+                  onClick={option => {
+                    setIteration(option)
+                  }}
+                  options={detailsStore.iterationOptions}
+                  selectedId={detailsStore.iteration}
+                />
+              )}
             {[FILES_PAGE, DATASETS_PAGE, MODELS_PAGE].includes(pageData.page) &&
               pageData.details.type !== MODEL_ENDPOINTS_TAB && (
                 <Tooltip template={<TextTooltipTemplate text="Download" />}>
