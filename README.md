@@ -23,7 +23,7 @@ Examples:
 
 ### `docker run` environment variables
 
-The Docker container runs an Nginx server, which listens on exposed port number 80, serves the web-app, and proxies to the backend API.
+The Docker container runs an Nginx server, which listens on exposed port number 8090, serves the web-app, and proxies to the backend API.
 
 You can pass the following environment variables to the `docker run` command to configure it:
 
