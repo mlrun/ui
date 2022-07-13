@@ -135,7 +135,7 @@ const DeployModelPopUp = ({
       kind: 'task'
     }
 
-    buildFunction({ function: servingFunction })
+    return buildFunction({ function: servingFunction })
       .then(response => {
         setNotification({
           status: response.status,
@@ -151,15 +151,17 @@ const DeployModelPopUp = ({
           retry: deployModel
         })
       })
-
-    onResolve()
+      .finally(() => {
+        onResolve()
+        formRef.current = null
+      })
   }
 
   const getModalActions = formState => {
     const actions = [
       {
         label: 'Cancel',
-        onClick: () => handleCloseModal(formState),
+        onClick: () => handleCloseModal(),
         variant: TERTIARY_BUTTON
       },
       {
