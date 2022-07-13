@@ -28,7 +28,7 @@ const RegisterArtifactModal = ({
 }) => {
   const [initialValues, setInitialValues] = useState({
     description: '',
-    kind: 'general',
+    kind: '',
     key: '',
     target_path: ''
   })
@@ -41,12 +41,10 @@ const RegisterArtifactModal = ({
   const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   useEffect(() => {
-    if (artifactKind !== 'artifact') {
-      setInitialValues(state => ({
-        ...state,
-        kind: artifactKind.toLowerCase()
-      }))
-    }
+    setInitialValues(state => ({
+      ...state,
+      kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general'
+    }))
   }, [artifactKind])
 
   const registerArtifact = values => {
