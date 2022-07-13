@@ -71,32 +71,35 @@ const RegisterArtifactModal = ({
       data.model_file = path[1]
     }
 
-    artifactApi
+    return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
+        formRef.current = null
         refresh(filtersStore)
-        setNotification({
+        return setNotification({
           status: response.status,
           id: Math.random(),
           message: `${title} initiated successfully`
         })
       })
       .catch(err => {
-        setNotification({
+        return setNotification({
           status: 400,
           id: Math.random(),
           message: `${title} failed to initiate`,
           retry: registerArtifact
         })
       })
-      .finally(() => onResolve())
+      .finally(() => {
+        onResolve()
+      })
   }
 
   const getModalActions = formState => {
     const actions = [
       {
         label: 'Cancel',
-        onClick: () => handleCloseModal(formState),
+        onClick: () => handleCloseModal(),
         variant: TERTIARY_BUTTON
       },
       {
