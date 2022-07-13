@@ -1,9 +1,5 @@
 import { mainHttpClient } from '../httpClient'
-import {
-  SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
-} from '../constants'
+import { SHOW_ITERATIONS, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
 
 const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
   const params = {}
@@ -16,12 +12,8 @@ const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
     params['best-iteration'] = true
   }
 
-  if (
-    filters?.tag &&
-    (withLatestTag || filters.tag !== TAG_FILTER_LATEST) &&
-    filters.tag !== TAG_FILTER_ALL_ITEMS
-  ) {
-    params.tag = filters.tag
+  if (filters?.tag && (withLatestTag || filters.tag !== TAG_FILTER_LATEST)) {
+    params.tag = filters.tag === TAG_FILTER_ALL_ITEMS ? '*' : filters.tag
   }
 
   if (filters?.name) {
@@ -51,8 +43,7 @@ const artifactsApi = {
 
     return mainHttpClient.get('/files', config)
   },
-  getArtifactTag: project =>
-    mainHttpClient.get(`/projects/${project}/artifact-tags`),
+  getArtifactTag: project => mainHttpClient.get(`/projects/${project}/artifact-tags`),
   getArtifact: (project, artifact) => {
     return mainHttpClient.get('/artifacts', {
       params: { project, name: artifact }
@@ -98,12 +89,7 @@ const artifactsApi = {
     )
   },
   getFiles: (project, filters) => {
-    return fetchArtifacts(
-      '/artifacts',
-      filters,
-      { params: { project, category: 'other' } },
-      true
-    )
+    return fetchArtifacts('/artifacts', filters, { params: { project, category: 'other' } }, true)
   },
   getModel: (project, model, tag) => {
     return fetchArtifacts(
@@ -128,12 +114,7 @@ const artifactsApi = {
     })
   },
   getModels: (project, filters) => {
-    return fetchArtifacts(
-      '/artifacts',
-      filters,
-      { params: { project, category: 'model' } },
-      true
-    )
+    return fetchArtifacts('/artifacts', filters, { params: { project, category: 'model' } }, true)
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)

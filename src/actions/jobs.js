@@ -104,11 +104,11 @@ const jobsActions = {
     type: FETCH_ALL_JOB_RUNS_SUCCESS,
     payload: jobsList
   }),
-  fetchJob: (project, jobId) => dispatch => {
+  fetchJob: (project, jobId, iter) => dispatch => {
     dispatch(jobsActions.fetchJobBegin())
 
     return jobsApi
-      .getJob(project, jobId)
+      .getJob(project, jobId, iter)
       .then(res => {
         dispatch(jobsActions.fetchJobSuccess(res.data.data))
 

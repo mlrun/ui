@@ -242,6 +242,7 @@ export const renderContent = (
   setChanges,
   setChangesData,
   setChangesCounter,
+  setIteration,
   setIterationOption
 ) => {
   switch (tab) {
@@ -271,6 +272,7 @@ export const renderContent = (
         <DetailsArtifacts
           iteration={detailsStore.iteration}
           selectedItem={selectedItem}
+          setIteration={setIteration}
           setIterationOption={setIterationOption}
         />
       )

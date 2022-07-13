@@ -23,13 +23,13 @@ Examples:
 
 ### `docker run` environment variables
 
-The Docker container runs an Nginx server, which listens on exposed port number 80, serves the web-app, and proxies to the backend API.
+The Docker container runs an Nginx server, which listens on exposed port number 8090, serves the web-app, and proxies to the backend API.
 
 You can pass the following environment variables to the `docker run` command to configure it:
 
 | Name  | Description |
 | ----- | ----------- |
-| `MLRUN_API_PROXY_URL` | Sets the base URL of the backend API<br />Default: `http://localhost:80`<br />Example: `http://17.220.101.245:30080` |
+| `MLRUN_API_PROXY_URL` | Sets the base URL of the backend API<br />Default: `http://localhost:8090`<br />Example: `http://17.220.101.245:30080` |
 | `MLRUN_NUCLIO_MODE` | Sets the MLRun Nuclio integration mode<br />Default: `disabled`<br />Example: `enabled` |
 | `MLRUN_NUCLIO_API_URL` | Sets the base URL of the Nuclio API<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070` |
 | `MLRUN_NUCLIO_UI_URL` | Sets the base URL of the Nuclio UI<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070` |
@@ -39,7 +39,7 @@ You can pass the following environment variables to the `docker run` command to 
 
 Example:
 
-`docker run -it -d -p 4000:80 --rm --name mlrun-ui -e MLRUN_API_PROXY_URL=http://17.220.101.245:30080 -e MLRUN_NUCLIO_MODE=enabled -e MLRUN_NUCLIO_API_URL=http://17.220.101.245:30070 -e MLRUN_NUCLIO_UI_URL=http://17.220.101.245:30070 -e MLRUN_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com -e MLRUN_FUNCTION_CATALOG_PATH=/mlrun/functions/master -e MLRUN_V3IO_ACCESS_KEY=a7097c94-6e8f-436d-9717-a84abe2861d1 quay.io/mlrun/mlrun-ui:0.4.9`
+`docker run -it -d -p 8090:8090 --rm --name mlrun-ui -e MLRUN_API_PROXY_URL=http://17.220.101.245:30080 -e MLRUN_NUCLIO_MODE=enabled -e MLRUN_NUCLIO_API_URL=http://17.220.101.245:30070 -e MLRUN_NUCLIO_UI_URL=http://17.220.101.245:30070 -e MLRUN_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com -e MLRUN_FUNCTION_CATALOG_PATH=/mlrun/functions/master -e MLRUN_V3IO_ACCESS_KEY=a7097c94-6e8f-436d-9717-a84abe2861d1 quay.io/mlrun/mlrun-ui:0.4.9`
 
 ### Docker container contents
 

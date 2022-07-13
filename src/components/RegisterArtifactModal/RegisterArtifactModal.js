@@ -29,7 +29,7 @@ const RegisterArtifactModal = ({
 }) => {
   const [initialValues, setInitialValues] = useState({
     description: '',
-    kind: 'general',
+    kind: '',
     key: '',
     target_path: ''
   })
@@ -42,12 +42,10 @@ const RegisterArtifactModal = ({
   const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   useEffect(() => {
-    if (artifactKind !== 'artifact') {
-      setInitialValues(state => ({
-        ...state,
-        kind: artifactKind.toLowerCase()
-      }))
-    }
+    setInitialValues(state => ({
+      ...state,
+      kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general'
+    }))
   }, [artifactKind])
 
   const registerArtifact = values => {
@@ -74,25 +72,28 @@ const RegisterArtifactModal = ({
       data.model_file = path[1]
     }
 
-    artifactApi
+    return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
+        formRef.current = null
         refresh(filtersStore)
-        setNotification({
+        return setNotification({
           status: response.status,
           id: Math.random(),
           message: `${title} initiated successfully`
         })
       })
       .catch(err => {
-        setNotification({
+        return setNotification({
           status: 400,
           id: Math.random(),
           message: `${title} failed to initiate`,
           retry: registerArtifact
         })
       })
-      .finally(() => onResolve())
+      .finally(() => {
+        onResolve()
+      })
   }
 
   const getModalActions = formState => {
@@ -101,7 +102,7 @@ const RegisterArtifactModal = ({
       : [
           {
             label: 'Cancel',
-            onClick: () => handleCloseModal(formState),
+            onClick: () => handleCloseModal(),
             variant: TERTIARY_BUTTON
           },
           {

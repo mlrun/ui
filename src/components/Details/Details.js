@@ -114,14 +114,10 @@ const Details = ({
 
   useEffect(() => {
     return () => {
-      if (pageData.details.type === JOBS_PAGE) {
         //TODO
-        setIteration('0')
-      }
-
       resetChanges()
     }
-  }, [pageData.details.type, resetChanges, setIteration])
+  }, [resetChanges])
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(selectedItem)) {
@@ -299,18 +295,20 @@ const Details = ({
       setChanges,
       setChangesData,
       setChangesCounter,
+      setIteration,
       setIterationOption
     )
   }, [
     detailsStore,
     handleEditInput,
     handlePreview,
-    params.tab,
     pageData,
+    params.tab,
     selectedItem,
     setChanges,
     setChangesCounter,
     setChangesData,
+    setIteration,
     setIterationOption
   ])
 

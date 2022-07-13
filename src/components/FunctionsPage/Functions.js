@@ -24,10 +24,17 @@ import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { parseFunctions } from '../../utils/parseFunctions'
+import filtersActions from '../../actions/filters'
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
-import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE, TAG_LATEST } from '../../constants'
+import {
+  FUNCTIONS_PAGE,
+  GROUP_BY_NAME,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE,
+  TAG_LATEST
+} from '../../constants'
 import { DANGER_BUTTON, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
 import { useMode } from '../../hooks/mode.hook'
 
@@ -46,6 +53,7 @@ const Functions = ({
   removeFunctionsError,
   removeNewFunction,
   removeNewJob,
+  setFilters,
   setNotification
 }) => {
   const [confirmData, setConfirmData] = useState(null)
@@ -194,6 +202,10 @@ const Functions = ({
 
     setSelectedFunction(item)
   }, [functions, navigate, params.hash, params.projectName])
+
+  useEffect(() => {
+    setFilters({ groupBy: GROUP_BY_NAME })
+  }, [setFilters])
 
   const filtersChangeCallback = filters => {
     if (
@@ -391,6 +403,7 @@ const Functions = ({
 }
 
 export default connect(({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }), {
+  ...filtersActions,
   ...functionsActions,
   ...notificationActions,
   ...jobsActions
