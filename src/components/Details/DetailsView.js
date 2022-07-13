@@ -21,12 +21,12 @@ import {
 
 import { formatDatetime } from '../../utils'
 import {
-  JOBS_PAGE,
+  DATASETS_PAGE,
   DETAILS_ARTIFACTS_TAB,
-  FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  FUNCTIONS_PAGE,
-  FEATURE_VECTORS_TAB,
+  FILES_PAGE,
+  JOBS_PAGE,
+  MODELS_PAGE,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
@@ -203,10 +203,8 @@ const DetailsView = React.forwardRef(
                   selectedId={detailsStore.iteration}
                 />
               )}
-            {![JOBS_PAGE, FUNCTIONS_PAGE].includes(pageData.page) &&
-              ![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, MODEL_ENDPOINTS_TAB].includes(
-                params.pageTab
-              ) && (
+            {[FILES_PAGE, DATASETS_PAGE, MODELS_PAGE].includes(pageData.page) &&
+              pageData.details.type !== MODEL_ENDPOINTS_TAB && (
                 <Tooltip template={<TextTooltipTemplate text="Download" />}>
                   <Download
                     path={`${selectedItem.target_path}${selectedItem.model_file || ''}`}

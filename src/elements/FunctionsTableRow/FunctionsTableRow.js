@@ -71,10 +71,12 @@ const FunctionsTableRow = ({
               return (
                 <div className={`table-body__row ${isActiveSubRow && 'row_active'}`} key={index}>
                   {Object.values(func).map((value, i) => {
+                    const funcUpdated = { ...func.updated, class: 'functions_medium' }
+
                     return (
                       !value.hidden && (
                         <TableCell
-                          data={i === 0 && func.updated ? func.updated : value}
+                          data={i === 0 && func.updated ? funcUpdated : value}
                           item={subRowCurrentItem}
                           link={
                             value.getLink
