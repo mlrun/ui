@@ -190,18 +190,19 @@ const DetailsView = React.forwardRef(
                 </Tooltip>
               </>
             )}
-            {params.tab === DETAILS_ARTIFACTS_TAB && (
-              <Select
-                density="dense"
-                key="Iteration"
-                label="Iteration:"
-                onClick={option => {
-                  setIteration(option)
-                }}
-                options={detailsStore.iterationOptions}
-                selectedId={detailsStore.iteration}
-              />
-            )}
+            {params.tab === DETAILS_ARTIFACTS_TAB &&
+              detailsStore.iteration && (
+                <Select
+                  density="dense"
+                  key="Iteration"
+                  label="Iteration:"
+                  onClick={option => {
+                    setIteration(option)
+                  }}
+                  options={detailsStore.iterationOptions}
+                  selectedId={detailsStore.iteration}
+                />
+              )}
             {![JOBS_PAGE, FUNCTIONS_PAGE].includes(pageData.page) &&
               ![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, MODEL_ENDPOINTS_TAB].includes(
                 params.pageTab

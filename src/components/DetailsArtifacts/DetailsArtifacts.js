@@ -1,69 +1,85 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useDispatch } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
 
 import artifactAction from '../../actions/artifacts'
 import jobsActions from '../../actions/jobs'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
-import {
-  generateContent,
-  getJobAccordingIteration
-} from './detailsArtifacts.util'
+import { generateContent, getJobAccordingIteration } from './detailsArtifacts.util'
 
 const DetailsArtifacts = ({
+  fetchJob,
   iteration,
   jobsStore,
   selectedItem,
+  setIteration,
   setIterationOption
 }) => {
   const [content, setContent] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
   const [preview, setPreview] = useState({})
   const [noData, setNoData] = useState(false)
+  const params = useParams()
 
   const dispatch = useDispatch()
 
+  const bestIteration = useMemo(
+    () => selectedItem.results?.best_iteration,
+    [selectedItem.results?.best_iteration]
+  )
+
   useEffect(() => {
-    let selectedJob = selectedItem
-
-    setArtifactsIndexes([])
-
-    if (iteration !== '0') {
-      selectedJob = getJobAccordingIteration(
-        iteration,
-        jobsStore.allJobsData,
-        selectedItem
-      )
+    if (!isNaN(parseInt(bestIteration))) {
+      setIteration(`${bestIteration}`)
     }
 
-    setContent(generateContent(selectedJob))
+    return () => {
+      setIteration('')
+    }
+  }, [bestIteration, setIteration])
+
+  useEffect(() => {
+    if (selectedItem.iterationStats.length > 0) {
+      const iterIndex = selectedItem.iterationStats[0].indexOf('iter')
+      const iterationsList = []
+
+      selectedItem.iterationStats.forEach((item, index) => {
+        if (index !== 0) {
+          iterationsList.push(item[iterIndex])
+        }
+      })
+
+      setIterationOption(
+        iterationsList
+          .sort((a, b) => a - b)
+          .map(iteration => ({
+            label:
+              iteration === bestIteration ? `${bestIteration} (Best iteration)` : `${iteration}`,
+            id: `${iteration}`
+          }))
+      )
+    }
+  }, [bestIteration, selectedItem.iterationStats, setIterationOption])
+
+  useEffect(() => {
+    if (selectedItem.iterationStats.length > 0 && iteration) {
+      fetchJob(params.projectName, params.jobId, iteration).then(job => {
+        const selectedJob = getJobAccordingIteration(job)
+
+        setContent(generateContent(selectedJob))
+      })
+    } else if (selectedItem.iterationStats.length === 0) {
+      setContent(generateContent(selectedItem))
+    }
 
     return () => {
       setContent([])
       setPreview({})
     }
-  }, [iteration, jobsStore.allJobsData, selectedItem])
-
-  useEffect(() => {
-    const iterationsList = [0, 1]
-
-    jobsStore.allJobsData.forEach(job => {
-      if (job.metadata.uid === selectedItem.uid) {
-        if (!iterationsList.includes(job.metadata.iteration)) {
-          iterationsList.push(job.metadata.iteration)
-        }
-      }
-    })
-
-    setIterationOption(
-      iterationsList.sort().map(iteration => ({
-        label: iteration === 0 ? 'Main' : `${iteration}`,
-        id: `${iteration}`
-      }))
-    )
-  }, [dispatch, jobsStore.allJobsData, selectedItem.uid, setIterationOption])
+  }, [fetchJob, iteration, params.jobId, params.projectName, selectedItem])
 
   useEffect(() => {
     if (artifactsIndexes.length > 0) {
@@ -93,9 +109,7 @@ const DetailsArtifacts = ({
 
   const showArtifact = useCallback(
     index => {
-      const newArtifactsIndexes = artifactsIndexes.filter(
-        artifactIndex => artifactIndex !== index
-      )
+      const newArtifactsIndexes = artifactsIndexes.filter(artifactIndex => artifactIndex !== index)
 
       if (!artifactsIndexes.includes(index)) {
         newArtifactsIndexes.push(index)
@@ -111,6 +125,7 @@ const DetailsArtifacts = ({
       artifactsIndexes={artifactsIndexes}
       content={content}
       iteration={iteration}
+      loading={jobsStore.loading}
       noData={noData}
       preview={preview}
       showArtifact={showArtifact}
@@ -125,6 +140,4 @@ DetailsArtifacts.propTypes = {
   setIterationOption: PropTypes.func.isRequired
 }
 
-export default connect(({ jobsStore }) => ({ jobsStore }), { ...jobsActions })(
-  DetailsArtifacts
-)
+export default connect(({ jobsStore }) => ({ jobsStore }), { ...jobsActions })(DetailsArtifacts)
