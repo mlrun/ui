@@ -24,6 +24,10 @@
       &:hover {
         background-color: $alabaster;
       }
+
+      & > *:first-child {
+        padding-left: 40px;
+      }
     }
 
     &__body {
@@ -32,7 +36,6 @@
 
     &__body,
     &__header {
-      padding: 0 24px;
       min-width: 100%;
     }
 
@@ -79,7 +82,7 @@
       svg {
         position: absolute;
         top: 15px;
-        left: 0;
+        left: 8px;
       }
     }
   }
