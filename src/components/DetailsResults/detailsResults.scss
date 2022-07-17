@@ -3,9 +3,10 @@
 @import '~igz-controls/scss/mixins';
 
 .table__item-results {
+  flex: 1;
   position: relative;
+  overflow: auto;
   width: 100%;
-  padding: 0 24px;
 
   .results-table {
     position: relative;
@@ -13,7 +14,6 @@
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    overflow-x: auto;
     text-align: left;
 
     &__row {
@@ -26,6 +26,16 @@
       }
     }
 
+    &__body {
+      flex: 1;
+    }
+
+    &__body,
+    &__header {
+      padding: 0 24px;
+      min-width: 100%;
+    }
+
     &__header {
       position: sticky;
       top: 0;
@@ -34,11 +44,13 @@
 
       &-item {
         display: flex;
-        flex: 1;
+        flex: 0 0 150px;
         flex-direction: column;
         width: 150px;
 
         @include tableHeader(16px);
+
+        padding: 5px 15px 5px 25px;
       }
 
       .results-table__row:hover {
@@ -48,10 +60,10 @@
 
     &__cell {
       display: flex;
-      flex: 1;
+      flex: 0 0 150px;
       flex-direction: column;
       width: 150px;
-      padding: 19px 20px;
+      padding: 19px 15px 19px 25px;
     }
 
     i {
@@ -67,7 +79,7 @@
       svg {
         position: absolute;
         top: 15px;
-        left: -5px;
+        left: 0;
       }
     }
   }
