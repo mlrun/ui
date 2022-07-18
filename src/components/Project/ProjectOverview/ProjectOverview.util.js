@@ -2,7 +2,7 @@ import React from 'react'
 
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
 
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+// import { SECONDARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
 import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
@@ -34,6 +34,7 @@ export const getInitialCards = (projectName, navigate) => {
       subTitle:
         'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
       actions: [
+        //TODO: un-comment after wizard ready
         // {
         //   icon: <UploadIcon />,
         //   id: 'uploadData',
@@ -58,24 +59,25 @@ export const getInitialCards = (projectName, navigate) => {
           handleClick: () => ({
             component: RegisterArtifactModal,
             props: {
-              actions: formState => [
-                {
-                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-                  label: 'Register and view',
-                  onClick: () => {
-                    formState.handleSubmit()
-                    if (!formState.invalid) {
-                      navigate(`${base_url}/datasets`)
-                    }
-                  }
-                },
-                {
-                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-                  label: 'Register',
-                  onClick: formState.handleSubmit,
-                  variant: SECONDARY_BUTTON
-                }
-              ],
+              //TODO: un-comment for 1.3
+              // actions: formState => [
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register and view',
+              //     onClick: () => {
+              //       formState.handleSubmit()
+              //       if (!formState.invalid) {
+              //         navigate(`${base_url}/datasets`)
+              //       }
+              //     }
+              //   },
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register',
+              //     onClick: formState.handleSubmit,
+              //     variant: SECONDARY_BUTTON
+              //   }
+              // ],
               artifactKind: 'dataset',
               projectName,
               refresh: () => {},
@@ -92,25 +94,26 @@ export const getInitialCards = (projectName, navigate) => {
           handleClick: () => ({
             component: RegisterArtifactModal,
             props: {
-              actions: formState => [
-                {
-                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-                  label: 'Register and view',
-                  onClick: () => {
-                    formState.handleSubmit()
+              //TODO: un-comment for 1.3
+              // actions: formState => [
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register and view',
+              //     onClick: () => {
+              //       formState.handleSubmit()
 
-                    if (!formState.invalid) {
-                      navigate(`${base_url}/files`)
-                    }
-                  }
-                },
-                {
-                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-                  label: 'Register',
-                  onClick: formState.handleSubmit,
-                  variant: SECONDARY_BUTTON
-                }
-              ],
+              //       if (!formState.invalid) {
+              //         navigate(`${base_url}/files`)
+              //       }
+              //     }
+              //   },
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register',
+              //     onClick: formState.handleSubmit,
+              //     variant: SECONDARY_BUTTON
+              //   }
+              // ],
               artifactKind: 'artifact',
               projectName,
               refresh: () => {},
