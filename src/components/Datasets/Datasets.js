@@ -30,7 +30,6 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 
-import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 const Datasets = ({
@@ -49,7 +48,6 @@ const Datasets = ({
   const [datasets, setDatasets] = useState([])
   const [selectedItem, setSelectedItem] = useState({})
   const datasetsRef = useRef(null)
-  const openPanelByDefault = useOpenPanel()
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
   const params = useParams()
   const navigate = useNavigate()
@@ -147,17 +145,6 @@ const Datasets = ({
       setSelectedItem({})
     }
   }
-
-  useEffect(() => {
-    if (openPanelByDefault) {
-      openPopUp(RegisterArtifactModal, {
-        artifactKind: 'dataset',
-        projectName: params.projectName,
-        refresh: handleRefresh,
-        title: pageData.actionsMenuHeader
-      })
-    }
-  }, [handleRefresh, openPanelByDefault, pageData.actionsMenuHeader, params.projectName])
 
   useEffect(() => {
     setPageData(state => {

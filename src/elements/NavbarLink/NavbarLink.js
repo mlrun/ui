@@ -8,21 +8,12 @@ const NavbarLink = ({ externalLink, icon, label, link }) => {
   return (
     <li className="nav-link">
       {externalLink ? (
-        <a
-          href={link}
-          target="_top"
-          key={label}
-          className="nav-link__button btn btn-secondary"
-        >
+        <a href={link} target="_top" className="nav-link__button btn btn-secondary">
           {icon}
           <span>{label}</span>
         </a>
       ) : (
-        <NavLink
-          to={link}
-          className="nav-link__button btn btn-secondary"
-          activeclassname="active"
-        >
+        <NavLink to={link} className="nav-link__button btn btn-secondary" activeclassname="active">
           {icon}
           <span>{label}</span>
         </NavLink>
@@ -35,16 +26,14 @@ NavbarLink.defaultProps = {
   externalLink: false,
   icon: {},
   label: '',
-  link: '',
-  rootPath: ''
+  link: ''
 }
 
 NavbarLink.propTypes = {
   externalLink: PropTypes.bool,
   icon: PropTypes.object,
   label: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
-  rootPath: PropTypes.string
+  link: PropTypes.string.isRequired
 }
 
 export default NavbarLink

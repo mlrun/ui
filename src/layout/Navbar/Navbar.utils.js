@@ -14,20 +14,20 @@ import { ReactComponent as NuclioIcon } from 'igz-controls/images/realtime-icon.
 import { ReactComponent as PackageIcon } from 'igz-controls/images/package.svg'
 // import { ReactComponent as RTPiplinesIcon } from 'igz-controls/images/timer-outline-icon.svg'
 
-export const getLinks = projectName => {
+export const getLinks = (projectName, isDemoMode) => {
   const base_url = `/projects/${projectName}`
 
   return [
     {
       icon: <DashboardIcon />,
-      label: 'Project overview',
-      link: base_url,
-      rootPath: '/',
-      hidden: true
+      id: 'home',
+      label: 'Project home',
+      link: `${base_url}/`,
+      hidden: !isDemoMode
     },
     {
       icon: <EyeIcon />,
-      id: 'monitor',
+      id: PROJECT_MONITOR,
       label: 'Project monitoring',
       link: `${base_url}/${PROJECT_MONITOR}`
     },

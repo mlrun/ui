@@ -17,6 +17,7 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import artifactApi from '../../api/artifacts-api'
 
 const RegisterArtifactModal = ({
+  actions,
   artifactKind,
   filtersStore,
   isOpen,
@@ -96,20 +97,22 @@ const RegisterArtifactModal = ({
   }
 
   const getModalActions = formState => {
-    const actions = [
-      {
-        label: 'Cancel',
-        onClick: () => handleCloseModal(),
-        variant: TERTIARY_BUTTON
-      },
-      {
-        disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-        label: 'Register',
-        onClick: formState.handleSubmit,
-        variant: SECONDARY_BUTTON
-      }
-    ]
-    return actions.map(action => <Button {...action} />)
+    const defaultActions = actions
+      ? actions(formState)
+      : [
+          {
+            label: 'Cancel',
+            onClick: () => handleCloseModal(),
+            variant: TERTIARY_BUTTON
+          },
+          {
+            disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+            label: 'Register',
+            onClick: formState.handleSubmit,
+            variant: SECONDARY_BUTTON
+          }
+        ]
+    return defaultActions.map(action => <Button {...action} />)
   }
 
   return (
