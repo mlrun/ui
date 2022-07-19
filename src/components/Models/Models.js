@@ -93,7 +93,7 @@ const Models = ({
   }, [])
 
   const handleRegisterModel = useCallback(model => {
-    openPopUp(RegisterModelPopUp, { model, params, refresh: fetchData })
+    openPopUp(RegisterModelPopUp, { model, projectName: params.projectName, refresh: fetchData })
   }, [params, fetchData])
 
   const handleRemoveModel = useCallback(

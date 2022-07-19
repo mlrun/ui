@@ -2,31 +2,40 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import { createForm } from 'final-form'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
 
-import { Button, ConfirmDialog, Modal, FormInput, FormTextarea } from 'igz-controls/components'
+import { Button, Modal, FormInput, FormTextarea } from 'igz-controls/components'
+import FormChipCell from '../../common/FormChipCell/FormChipCell'
 
 import { getChipOptions } from '../../utils/getChipOptions'
-import FormChipCell from '../../common/FormChipCell/FormChipCell'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import artifactApi from '../../api/artifacts-api'
-
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import notificationActions from '../../actions/notification'
+
+import artifactApi from '../../api/artifacts-api'
 
 import './registerModelPopUp.scss'
 
-function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }) {
+function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refresh, setNotification }) {
   const initialValues = {
+    description: '',
     labels: [],
     modelName: '',
-    description: '',
     targetPath: ''
   }
-
+  const formRef = React.useRef(
+    createForm({
+      onSubmit: () => {},
+      mutators: { ...arrayMutators, setFieldState },
+      initialValues: initialValues
+    })
+  )
   const location = useLocation()
+  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const registerModel = value => {
     const labelsList = value.labels.reduce((list, label) => {
@@ -44,7 +53,7 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }
       target_path: value.targetPath,
       description: value.description,
       kind: 'model',
-      project: params.projectName,
+      project: projectName,
       producer: {
         kind: 'api',
         uri: window.location.host
@@ -59,9 +68,25 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }
     }
 
     artifactApi
-      .registerArtifact(params.projectName, data)
-      .then(() => {
+      .registerArtifact(projectName, data)
+      .then(response => {
+        formRef.current = null
         refresh(filtersStore)
+        return setNotification({
+          status: response.status,
+          id: Math.random(),
+          message: 'Model initiated successfully'
+        })
+      })
+      .catch(() => {
+        return setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Model failed to initiate',
+          retry: registerModel
+        })
+      })
+      .finally(() => {
         onResolve()
       })
   }
@@ -70,7 +95,7 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }
     const actions = [
       {
         label: 'Cancel',
-        onClick: () => handleCloseModal(formState),
+        onClick: handleCloseModal,
         variant: TERTIARY_BUTTON
       },
       {
@@ -83,30 +108,9 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }
     return actions.map(action => <Button {...action} />)
   }
 
-  const handleCloseModal = formState => {
-    if (formState && formState.dirty) {
-      openPopUp(ConfirmDialog, {
-        cancelButton: {
-          label: 'Cancel',
-          variant: TERTIARY_BUTTON
-        },
-        confirmButton: {
-          handler: onResolve,
-          label: 'OK',
-          variant: SECONDARY_BUTTON
-        },
-        header: 'Are you sure?',
-        message: 'All changes will be lost'
-      })
-    } else {
-      onResolve()
-    }
-  }
-
   return (
     <Form
-      initialValues={initialValues}
-      mutators={{ ...arrayMutators, setFieldState }}
+      form={formRef.current}
       onSubmit={registerModel}
     >
       {formState => {
@@ -115,7 +119,7 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }
             actions={getModalActions(formState)}
             className="register-model"
             location={location.pathname}
-            onClose={() => handleCloseModal(formState)}
+            onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
             title="Register model"
@@ -129,6 +133,12 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }
               />
             </div>
             <div className="register-model__row">
+              <FormInput name="targetPath" label="Target path" required />
+            </div>
+            <div className="register-model__row">
+              <FormTextarea name="description" label="Description" />
+            </div>
+            <div className="register-model__row">
               <FormChipCell
                 chipOptions={getChipOptions('metrics')}
                 formState={formState}
@@ -138,12 +148,6 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }
                 visibleChipsMaxLength="all"
               />
             </div>
-            <div className="register-model__row">
-              <FormTextarea name="description" label="Description" />
-            </div>
-            <div className="register-model__row">
-              <FormInput name="targetPath" label="Target path" required />
-            </div>
           </Modal>
         )
       }}
@@ -151,14 +155,12 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, params, refresh }
   )
 }
 
-RegisterModelPopUp.defaultProps = {
-  onResolve: () => {}
-}
+RegisterModelPopUp.defaultProps = {}
 
 RegisterModelPopUp.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   model: PropTypes.shape({}).isRequired,
-  onResolve: PropTypes.func,
+  projectName: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired
 }
 
@@ -166,5 +168,5 @@ export default connect(
   ({ filtersStore }) => ({
     filtersStore
   }),
-  null
+  { setNotification: notificationActions.setNotification }
 )(RegisterModelPopUp)
