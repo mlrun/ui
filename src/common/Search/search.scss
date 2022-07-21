@@ -19,15 +19,15 @@
   &-input {
     z-index: 2;
     width: 100%;
-    height: inherit;
-    padding: 10px 25px 10px;
+    // todo: delete `!important` after replacing `Input` with `FormInput`
+    padding: 10px 20px 10px 35px !important;
     color: $topaz;
   }
 
   &-label {
     position: absolute;
     top: 11px;
-    left: 17px;
+    left: 36px;
     z-index: 1;
     color: $spunPearl;
     user-select: none;
@@ -36,8 +36,8 @@
   &-matches {
     position: absolute;
     top: 100%;
-    left: 0;
-    z-index: 5;
+    left: 20px;
+    z-index: 7;
     margin: 5px 0 0 0;
     padding: 7px 0;
     background-color: $white;
@@ -69,7 +69,7 @@
   &-icon {
     position: absolute;
     top: 50%;
-    right: 5px;
+    left: 5px;
     transform: translateY(-45%);
 
     & * {

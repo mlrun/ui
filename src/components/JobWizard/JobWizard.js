@@ -1,0 +1,178 @@
+import React, { useMemo, useState } from 'react'
+// import PropTypes from 'prop-types'
+import arrayMutators from 'final-form-arrays'
+import { Form } from 'react-final-form'
+import { connect } from 'react-redux'
+import { isEmpty } from 'lodash'
+
+import FormDirtySpy from '../../common/FormDirtySpy/FormDirtySpy'
+import JobWizardDataInputs from './JobWizardSteps/JobWizardDataInputs/JobWizardDataInputs'
+import JobWizardFunctionSelection from './JobWizardSteps/JobWizardFunctionSelection/JobWizardFunctionSelection'
+import JobWizardJobDetails from './JobWizardSteps/JobWizardJobDetails/JobWizardJobDetails'
+import JobWizardParameters from './JobWizardSteps/JobWizardParameters/JobWizardParameters'
+import { Wizard } from 'igz-controls/components'
+
+import functionsActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
+import projectsAction from '../../actions/projects'
+import { MODAL_FULL } from 'igz-controls/constants'
+import { setFieldState } from 'igz-controls/utils/form.util'
+
+import './jobWizard.scss'
+
+const JobWizard = ({
+  defaultData,
+  frontendSpec,
+  functionsStore,
+  isEditMode,
+  isOpen,
+  onResolve,
+  params
+}) => {
+  const [selectedFunctionData, setSelectedFunctionData] = useState({})
+  const [filteredFunctions, setFilteredFunctions] = useState([])
+  const [filteredTemplates, setFilteredTemplates] = useState({})
+  const [functions, setFunctions] = useState([])
+  const [templatesCategories, setTemplatesCategories] = useState(functionsStore.templatesCatalog)
+  const [templates, setTemplates] = useState(functionsStore.templates)
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [jobAdditionalData, setJobAdditionalData] = useState({})
+
+  const stepsConfig = useMemo(() => {
+    return [
+      {
+        id: 'functionSelection',
+        label: 'Function Selection',
+        getActions: ({ formState, handleOnClose, handleSubmit }) => [
+          {
+            label: 'Back',
+            disabled: true,
+            onClick: () => {}
+          },
+          {
+            label: 'Next',
+            disabled: isEmpty(selectedFunctionData),
+            onClick: handleSubmit,
+            variant: 'secondary'
+          }
+        ]
+      },
+      {
+        id: 'jobDetails',
+        label: 'Job Details'
+      },
+      {
+        id: 'dataInputs',
+        label: 'Data Inputs'
+      },
+      {
+        id: 'parameters',
+        label: 'Parameters'
+      },
+      {
+        id: 'resources',
+        label: 'Resources'
+      },
+      {
+        id: 'advanced',
+        label: 'Advanced',
+        getActions: ({ formState, handleOnClose }) => [
+          {
+            label: 'Schedule',
+            onClick: () => {},
+            variant: 'danger'
+          },
+          {
+            label: 'Run',
+            onClick: formState.handleSubmit,
+            variant: 'secondary'
+          }
+        ]
+      }
+    ]
+  }, [selectedFunctionData])
+
+  const submitForm = () => {}
+  const onWizardSubmit = () => {}
+
+  return (
+    <Form
+      mutators={{ ...arrayMutators, setFieldState }}
+      initialValues={{}}
+      onSubmit={submitForm}
+    >
+      {formState => {
+        return (
+          <>
+            <Wizard
+              formState={formState}
+              id="jobWizard"
+              isWizardOpen={isOpen}
+              onWizardResolve={onResolve}
+              onWizardSubmit={onWizardSubmit}
+              size={MODAL_FULL}
+              stepsConfig={stepsConfig}
+              title="New job"
+            >
+              <JobWizardFunctionSelection
+                defaultData={defaultData}
+                filteredFunctions={filteredFunctions}
+                filteredTemplates={filteredTemplates}
+                formState={formState}
+                frontendSpec={frontendSpec}
+                functions={functions}
+                isEditMode={isEditMode}
+                params={params}
+                selectedCategory={selectedCategory}
+                selectedFunctionData={selectedFunctionData}
+                setFilteredFunctions={setFilteredFunctions}
+                setFilteredTemplates={setFilteredTemplates}
+                setFunctions={setFunctions}
+                setJobAdditionalData={setJobAdditionalData}
+                setSelectedCategory={setSelectedCategory}
+                setSelectedFunctionData={setSelectedFunctionData}
+                setTemplates={setTemplates}
+                setTemplatesCategories={setTemplatesCategories}
+                templates={templates}
+                templatesCategories={templatesCategories}
+              />
+              <JobWizardJobDetails formState={formState} jobAdditionalData={jobAdditionalData} />
+              <JobWizardDataInputs formState={formState} />
+              <JobWizardParameters formState={formState} />
+              <div>Resources</div>
+              <div>Advanced</div>
+            </Wizard>
+            <FormDirtySpy />
+          </>
+        )
+      }}
+    </Form>
+  )
+}
+
+JobWizard.defaultProps = {
+  // defaultData: {},
+  // isEditMode: false
+}
+
+JobWizard.propTypes = {
+  // isOpen: PropTypes.bool.isRequired,
+  // onResolve: PropTypes.func.isRequired,
+  // defaultData: PropTypes.shape({}),
+  // frontendSpec: PropTypes.shape({}).isRequired,
+  // isEditMode: PropTypes.bool,
+  // params: PropTypes.shape({}).isRequired
+}
+
+export default connect(
+  ({ appStore, functionsStore, projectStore }) => ({
+    frontendSpec: appStore.frontendSpec,
+    functionsStore,
+    projectStore
+  }),
+  {
+    ...functionsActions,
+    ...jobsActions,
+    ...projectsAction
+  }
+)(JobWizard)

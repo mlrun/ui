@@ -311,6 +311,7 @@ export const generateTableData = (
     type: panelActions.SET_ACCESS_KEY,
     payload: PANEL_DEFAULT_ACCESS_KEY
   })
+
   setNewJob({
     access_key: PANEL_DEFAULT_ACCESS_KEY,
     inputs: parseDefaultDataInputsContent(dataInputs),

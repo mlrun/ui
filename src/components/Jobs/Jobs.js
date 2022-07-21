@@ -2,17 +2,19 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { connect, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+import JobWizard from '../JobWizard/JobWizard'
 import Loader from '../../common/Loader/Loader'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
-import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
+import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 export const JobsContext = React.createContext({})
 
@@ -30,13 +32,7 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   const handleActionsMenuClick = () => {
-    const tab = location.pathname.includes(MONITOR_JOBS_TAB)
-      ? MONITOR_JOBS_TAB
-      : location.pathname.includes(SCHEDULE_TAB)
-      ? SCHEDULE_TAB
-      : MONITOR_WORKFLOWS_TAB
-
-    navigate(`/projects/${params.projectName}/jobs/${tab}/create-new-job`)
+    openPopUp(JobWizard, { params })
   }
 
   const handleRerunJob = useCallback(

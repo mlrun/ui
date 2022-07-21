@@ -1,0 +1,75 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+
+.job-card-template {
+  position: relative;
+  width: 250px;
+  height: 150px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: $white;
+  border: $primaryBorder;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &.selected {
+    border: 1px solid $malibu;
+    outline: 1px solid $malibu;
+
+    .job-card-template__header,
+    .job-card-template__sub-header {
+      color: $malibu;
+    }
+  }
+
+  &__header {
+    display: inline-block;
+    width: 100%;
+    padding-right: 15px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  &__sub-header {
+    display: inline-block;
+    margin-bottom: 8px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  &__counter {
+    position: absolute;
+    top: 15px;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 20px;
+    width: 28px;
+    border-radius: 4px 0 0 4px;
+    color: $amethyst;
+    background-color: $frenchLilac;
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  &__hash,
+  &__tag {
+    display: inline-block;
+    margin-right: 5px;
+    color: $primary;
+  }
+
+  &__description {
+    color: $topaz;
+    font-size: 13px;
+    line-height: 21px;
+  }
+
+  &.small {
+    height: 110px;
+  }
+}

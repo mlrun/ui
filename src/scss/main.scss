@@ -11,6 +11,30 @@
   box-sizing: border-box;
 }
 
+* {
+  scrollbar-color: rgba($black, 0.25) rgba($black, 0.1);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba($black, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba($black, 0.25);
+  border-radius: 10px;
+
+  &:hover {
+    background-color: rgba($black, 0.4);
+  }
+}
+
 body {
   display: flex;
   flex: 1;
@@ -334,9 +358,6 @@ iframe {
   position: relative;
   flex-direction: column;
   margin: 24px;
-  background-color: $white;
-  border-radius: $mainBorderRadius;
-  box-shadow: $jobsShadow;
   min-width: 900px;
 
   @include jobsFlex;
@@ -364,6 +385,9 @@ iframe {
     flex: 1;
     flex-direction: column;
     min-height: 620px;
+    background-color: $white;
+    border-radius: $mainBorderRadius;
+    box-shadow: $jobsShadow;
 
     .no_data {
       margin: auto;
@@ -376,10 +400,6 @@ iframe {
     flex: 1 1;
     flex-direction: column;
     min-width: 100%;
-  }
-
-  &_with-menu {
-    margin-top: 45px;
   }
 
   &__action-bar {
@@ -395,7 +415,7 @@ iframe {
 
 .form {
   [class*='form-col-'] {
-    flex: 1 0 0%;
+    flex: 1 0 0;
 
     &:not(:last-child) {
       margin-right: 10px;
@@ -430,7 +450,7 @@ iframe {
   }
 }
 
-//TODO: Delete after removing Textarea and Input and using DRC conponents
+//TODO: Delete after removing Textarea and Input and using DRC components
 @mixin fieldWrapperOld {
   position: relative;
   width: 100%;

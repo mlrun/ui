@@ -76,6 +76,7 @@ const Search = ({
       <Input
         className="search-input"
         wrapperClassName={wrapperClassName}
+        density="dense"
         placeholder={placeholder}
         inputIcon={<SearchIcon />}
         iconClass="search-icon"

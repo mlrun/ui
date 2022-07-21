@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types'
-import {
-  PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE
-} from './constants'
+import { PANEL_CREATE_MODE, PANEL_EDIT_MODE } from './constants'
 
 import { BUTTON_VARIANTS } from 'igz-controls/types'
 
@@ -43,13 +40,7 @@ export const CHIP_OPTIONS = PropTypes.shape({
     'amethyst'
   ]),
   boldValue: PropTypes.bool,
-  borderColor: PropTypes.oneOf([
-    'transparent',
-    'orange',
-    'green',
-    'purple',
-    'grey'
-  ]),
+  borderColor: PropTypes.oneOf(['transparent', 'orange', 'green', 'purple', 'grey']),
   density: PropTypes.oneOf(['dense', 'normal', 'medium']),
   font: PropTypes.oneOf(['primary', 'white', 'green', 'purple', 'orange']),
   borderRadius: PropTypes.oneOf(['primary', 'secondary'])
@@ -57,10 +48,7 @@ export const CHIP_OPTIONS = PropTypes.shape({
 
 export const CHIPS = PropTypes.arrayOf(CHIP)
 
-export const FUNCTION_PANEL_MODE = PropTypes.oneOf([
-  PANEL_EDIT_MODE,
-  PANEL_CREATE_MODE
-])
+export const FUNCTION_PANEL_MODE = PropTypes.oneOf([PANEL_EDIT_MODE, PANEL_CREATE_MODE])
 
 export const SELECT_OPTION = PropTypes.shape({
   disabled: PropTypes.bool,
@@ -116,3 +104,23 @@ export const INPUT_LINK = PropTypes.shape({
   show: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   url: PropTypes.string
 })
+
+export const CONTENT_MENU_TABS = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    hidden: PropTypes.bool,
+    preview: PropTypes.bool,
+    icon: PropTypes.element
+  })
+)
+
+export const SLIDER_TABS = PropTypes.arrayOf(PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  tip: PropTypes.string,
+  hidden: PropTypes.bool
+}))
+
+export const SLIDER_STYLE_1 = 'style1'
+export const SLIDER_STYLE_2 = 'style2'

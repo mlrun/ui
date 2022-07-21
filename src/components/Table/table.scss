@@ -12,7 +12,7 @@
   border-top: $secondaryBorder;
 
   & [class*='table-cell-'] {
-    flex: 1 0 0%;
+    flex: 1 0 0;
     min-width: 70px;
     width: 100%;
   }
@@ -40,10 +40,6 @@
 
     &-small {
       max-width: 150px;
-    }
-
-    &-medium {
-      max-width: 250px;
     }
   }
 
