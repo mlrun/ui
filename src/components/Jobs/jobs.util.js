@@ -107,7 +107,7 @@ export const generateEditableItem = (functionData, job) => {
           inputs: job.inputs ?? {},
           output_path: job.outputPath,
           param_file: job.param_file ?? '',
-          parameters: generateKeyValues(job.parameters ?? {}),
+          parameters: generateKeyValues(job.parametersChips ?? {}),
           secret_sources: job.secret_sources ?? [],
           selector: job.selector ?? 'max.',
           tuning_strategy: job.tuning_strategy ?? 'list'
