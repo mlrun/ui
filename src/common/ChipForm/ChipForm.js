@@ -7,6 +7,7 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { TAB, TAB_SHIFT } from '../../constants'
 
 import { CHIP_OPTIONS } from '../../types'
 
@@ -130,16 +131,16 @@ const ChipForm = React.forwardRef(
 
         if (
           !event.shiftKey &&
-          event.key === 'Tab' &&
+          event.key === TAB &&
           editConfig.isValueFocused
         ) {
-          onChange(event, chip, 'Tab')
+          onChange(event, chip, TAB)
         } else if (
           event.shiftKey &&
-          event.key === 'Tab' &&
+          event.key === TAB &&
           editConfig.isKeyFocused
         ) {
-          onChange(event, chip, 'Tab+Shift')
+          onChange(event, chip, TAB_SHIFT)
         }
 
         if (event.key === 'Backspace' || event.key === 'Delete') {

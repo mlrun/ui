@@ -22,10 +22,10 @@ import './registerModelPopUp.scss'
 
 function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refresh, setNotification }) {
   const initialValues = {
-    description: '',
+    description: undefined,
     labels: [],
-    modelName: '',
-    targetPath: ''
+    modelName: undefined,
+    targetPath: undefined
   }
   const formRef = React.useRef(
     createForm({
@@ -142,6 +142,7 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refr
               <FormChipCell
                 chipOptions={getChipOptions('metrics')}
                 formState={formState}
+                initialValues={initialValues}
                 isEditMode
                 name="labels"
                 shortChips

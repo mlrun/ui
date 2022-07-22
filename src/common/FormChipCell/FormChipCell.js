@@ -1,17 +1,20 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
+import { isEqual } from 'lodash'
 
 import FormChipCellView from './FormChipCellView'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateVisibleAndHiddenChipsList } from '../../utils/cutChips'
 import { CHIP_OPTIONS } from '../../types'
+import { CLICK, TAB, TAB_SHIFT } from '../../constants'
 
 const FormChipCell = ({
   chipOptions,
   className,
   delimiter,
   formState,
+  initialValues,
   isEditMode,
   name,
   onClick,
@@ -108,6 +111,18 @@ const FormChipCell = ({
     }
   }, [showHiddenChips, handleShowElements])
 
+  const checkChipsList = useCallback(
+    arr => {
+      if (isEqual(initialValues[name], arr)) {
+        formState.initialValues[name] = arr
+      }
+
+      formState.form.mutators.setFieldState(name, { modified: true })
+      formState.form.mutators.setFieldState(name, { touched: true })
+    },
+    [initialValues, name, formState]
+  )
+
   const handleAddNewChip = useCallback(
     (event, fields) => {
       if (!editConfig.isEdit && !editConfig.chipIndex) {
@@ -134,17 +149,21 @@ const FormChipCell = ({
     [editConfig.isEdit, editConfig.chipIndex, showHiddenChips, formState, name, delimiter]
   )
 
-  const handleRemoveChip = useCallback((event, fields, chipIndex) => {
-    fields.remove(chipIndex)
-    event && event.stopPropagation()
-  }, [])
+  const handleRemoveChip = useCallback(
+    (event, fields, chipIndex) => {
+      checkChipsList(formState.values[name].filter((_, index) => index !== chipIndex))
+      fields.remove(chipIndex)
+      event && event.stopPropagation()
+    },
+    [checkChipsList, formState.values, name]
+  )
 
   const handleEditChip = useCallback(
     (event, fields, nameEvent) => {
       const chip = formState.values[name][editConfig.chipIndex]
       const isChipNotEmpty = !!(chip.key && chip.value)
 
-      if (nameEvent === 'Click') {
+      if (nameEvent === CLICK) {
         if (editConfig.isNewChip && !isChipNotEmpty) {
           handleRemoveChip(event, fields, editConfig.chipIndex)
         }
@@ -156,7 +175,7 @@ const FormChipCell = ({
           isValueFocused: false,
           isNewChip: false
         })
-      } else if (nameEvent === 'Tab') {
+      } else if (nameEvent === TAB) {
         if (editConfig.isNewChip && !isChipNotEmpty) {
           handleRemoveChip(event, fields, editConfig.chipIndex)
         }
@@ -172,7 +191,7 @@ const FormChipCell = ({
             isNewChip: false
           }
         })
-      } else if (nameEvent === 'Tab+Shift') {
+      } else if (nameEvent === TAB_SHIFT) {
         if (editConfig.isNewChip && !isChipNotEmpty) {
           handleRemoveChip(event, fields, editConfig.chipIndex)
         }
@@ -191,8 +210,9 @@ const FormChipCell = ({
       }
 
       event && event.preventDefault()
+      checkChipsList(formState.values[name])
     },
-    [editConfig.chipIndex, editConfig.isNewChip, handleRemoveChip, name, formState]
+    [editConfig.chipIndex, editConfig.isNewChip, handleRemoveChip, name, formState, checkChipsList]
   )
 
   const handleIsEdit = useCallback(
@@ -260,6 +280,7 @@ FormChipCell.propTypes = {
   shortChips: PropTypes.bool,
   name: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  initialValues: PropTypes.object.isRequired,
   isEditMode: PropTypes.bool,
   visibleChipsMaxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }

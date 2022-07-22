@@ -5,6 +5,7 @@ import classnames from 'classnames'
 import NewChipInput from '../NewChipInput/NewChipInput'
 
 import { CHIP_OPTIONS } from '../../types'
+import { TAB, TAB_SHIFT } from '../../constants'
 
 import './newChipForm.scss'
 
@@ -118,10 +119,10 @@ const NewChipForm = React.forwardRef(
       event => {
         event.stopPropagation()
 
-        if (!event.shiftKey && event.key === 'Tab' && editConfig.isValueFocused) {
-          onChange(event, 'Tab')
-        } else if (event.shiftKey && event.key === 'Tab' && editConfig.isKeyFocused) {
-          onChange(event, 'Tab+Shift')
+        if (!event.shiftKey && event.key === TAB && editConfig.isValueFocused) {
+          onChange(event, TAB)
+        } else if (event.shiftKey && event.key === TAB && editConfig.isKeyFocused) {
+          onChange(event, TAB_SHIFT)
         }
 
         if (event.key === 'Backspace' || event.key === 'Delete') {
