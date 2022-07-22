@@ -174,10 +174,10 @@ Feature: Jobs and workflows
         Then click on "Table_Refresh_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then value in "name" column with "text" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "kfpipeline"
-        Then type value "cat-vs-dog" to "Table_Name_Filter_Input" field on "Workflows_Monitor_Tab" wizard
+        Then type value "main" to "Table_Name_Filter_Input" field on "Workflows_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
-        Then value in "name" column with "text" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "cat-vs-dog"
+        Then value in "name" column with "text" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "main"
 
     @passive
     Scenario: verify filtering by job label with key on Jobs Monitor tab
@@ -197,7 +197,12 @@ Feature: Jobs and workflows
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "author"
         Then type value "mlrun/schedule-name=tf2-serving" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "mlrun/schedule-name=tf2-serving"
+        Then type value "123456" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
     @passive
     @inProgress
@@ -1100,13 +1105,13 @@ Feature: Jobs and workflows
         Then verify "Environment_Variables_Demo_Value_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
         When click on "Demo_Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
-            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button |
+            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Secret_Name_Input | Environment_Variables_Secret_Key_Input | Add_Row_Button |
             |                                  |              Secret                 |                                        |                 @#$                   |       yes      |
         Then verify "Environment_Variables_Demo_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Environment_Variables_Seret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Environment_Variables_Seret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
-        Then verify "Environment_Variables_Seret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "Environment_Variables_Seret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
+        Then verify "Environment_Variables_Secret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Environment_Variables_Secret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
+        Then verify "Environment_Variables_Secret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Environment_Variables_Secret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
         When click on "Demo_Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
             | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Demo_Value_Input | Add_Row_Button | Demo_Discard_Row_Button |
@@ -1121,7 +1126,7 @@ Feature: Jobs and workflows
             |              name8                    |                Value                |              value8                    |       yes      |                         |
             |              name9                    |                Value                |              value9                    |                |        yes              |
         When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
-            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button | Demo_Discard_Row_Button |
+            | Environment_Variables_Demo_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Secret_Name_Input | Environment_Variables_Secret_Key_Input | Add_Row_Button | Demo_Discard_Row_Button |
             |            name0                      |             Secret                  |               value0                   |                key0                   |                |        yes              |
             |            name1                      |             Secret                  |               value1                   |                key1                   |       yes      |                         |
             |            name2                      |             Secret                  |               value2                   |                key2                   |                |        yes              |
@@ -1656,7 +1661,7 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then verify "Workflow_Graph" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify arrow lines position on "Workflow_Graph" on "Workflows_Monitor_Tab" wizard
@@ -1853,3 +1858,86 @@ Feature: Jobs and workflows
         Then verify "CPU_Request_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "CPU_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "GPU_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+
+    Scenario: Check broken link redirection on Monitor Jobs and Schedules screens
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "Jobs" value in breadcrumbs menu
+        And wait load page
+        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
+        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
+        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then select "Logs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then select "Pods" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/INVALID/overview" to "projects/default/jobs/monitor-jobs"
+        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
+        Then verify redirection from "projects/default/INVALID/monitor-jobs" to "projects"
+
+    Scenario: Check broken link redirection on Monitor Jobs and Schedules screens
+        Given open url
+        And wait load page
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "Jobs" value in breadcrumbs menu
+        And wait load page
+        Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/churn-project-admin/jobs/INVALID" to "projects/churn-project-admin/jobs/monitor-jobs"
+        Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows"
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/INVALID/eaae138e-439a-47fa-93c6-ba0fe1dc3b79" to "projects/churn-project-admin/jobs/monitor-jobs"
+        Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        When click on node with name "clean-data" in "Workflow_Graph" graph on "Workflows_Monitor_Tab" wizard
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview"
+        Then select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview"
+        Then select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview"
+        Then select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview"
+        Then select "Logs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview"
+        Then select "Pods" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview"
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/INVALID/e3195358eaed416f8469451d8390ba19/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/INVALID/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
+        Then verify redirection from "projects/INVALID/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview" to "projects"

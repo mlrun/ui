@@ -467,7 +467,12 @@
       "entity": {
         "name": "ent1",
         "value_type": "str",
-        "labels": null
+        "labels": {
+          "my-key": "my-value",
+          "v3io_user": "admin",
+          "owner": "admin",
+          "type": "entity"
+        }
       },
       "feature_set_digest": {
         "metadata": {
@@ -3196,7 +3201,12 @@
       "entity": {
         "name": "entitry1",
         "value_type": "str",
-        "labels": null
+        "labels": {
+          "my-key": "my-value",
+          "a1324": "b567",
+          "owner": "admin",
+          "type": "entity"
+        }
       },
       "feature_set_digest": {
         "metadata": {
