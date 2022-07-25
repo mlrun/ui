@@ -98,7 +98,7 @@ const RegisterArtifactModal = ({
 
   const getModalActions = formState => {
     const defaultActions = actions
-      ? actions(formState)
+      ? actions(formState, handleCloseModal)
       : [
           {
             label: 'Cancel',
@@ -140,15 +140,11 @@ const RegisterArtifactModal = ({
   )
 }
 
-RegisterArtifactModal.defaultProps = {
-  title: ''
-}
-
 RegisterArtifactModal.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   projectName: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,
-  title: PropTypes.string
+  title: PropTypes.string.isRequired
 }
 
 export default connect(
