@@ -103,19 +103,16 @@ export const createFeatureSetsRowData = (featureSet, project, isSelectedItem, sh
       {
         id: `entity.${identifierUnique}`,
         header: 'Entities',
-        value:
-          featureSet.entities
-            ?.slice(0, 2)
-            .map(entity => entity.name)
-            .join(', ') ?? '',
-        class: 'table-cell-1',
+        value: featureSet.entities?.slice(0, 2).map(entity => entity.name) || '',
+        type: 'labels',
+        class: 'table-cell-2',
         hidden: isSelectedItem
       },
       { ...getFeatureSetTargetCellValue(featureSet.targets, isSelectedItem) },
       {
         id: `buttonCopy.${identifierUnique}`,
         value: '',
-        class: 'table-cell-small artifacts__icon',
+        class: 'table-cell-1 artifacts__icon',
         type: 'buttonCopyURI',
         actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
         hidden: isSelectedItem
@@ -142,9 +139,9 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         header: 'Feature Name',
         type: feature.ui.type,
         value: feature.name,
-        class: 'table-cell-3',
+        class: 'table-cell-2',
         expandedCellContent: {
-          class: 'table-cell-3',
+          class: 'table-cell-2',
           value: feature.metadata?.tag
         },
         showExpandButton
@@ -153,7 +150,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         id: `feature_set.${identifierUnique}`,
         header: 'Feature set',
         value: feature.metadata?.name,
-        class: 'table-cell-2',
+        class: 'table-cell-1',
         getLink: tab =>
           generateLinkToDetailsPanel(
             feature.metadata?.project,
@@ -164,7 +161,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
             tab
           ),
         expandedCellContent: {
-          class: 'table-cell-2',
+          class: 'table-cell-1',
           value: ''
         },
         rowExpanded: {
@@ -189,14 +186,14 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         id: `entity.${identifierUnique}`,
         header: 'Entities',
         type: 'labels',
-        value: feature.spec?.entities.map(entity => entity.name),
-        class: 'table-cell-4'
+        value: feature.spec?.entities.map(entity => entity.name) || '',
+        class: 'table-cell-2'
       },
       {
         id: `description.${identifierUnique}`,
         header: 'Description',
         value: feature.description,
-        class: 'table-cell-3',
+        class: 'table-cell-2',
         hidden: isTablePanelOpen
       },
       {
@@ -215,7 +212,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         id: `validator.${identifierUnique}`,
         header: 'Validator',
         value: <FeatureValidator validator={feature.validator} />,
-        class: 'table-cell-3',
+        class: 'table-cell-2',
         type: 'component',
         hidden: isTablePanelOpen
       },
@@ -257,7 +254,7 @@ const getFeatureSetTargetCellValue = (targets, isSelectedItem, identifierUnique)
     )
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   id: `targets.${identifierUnique}`,
-  class: 'table-cell-1 artifacts__targets-icon',
+  class: 'table-cell-2 artifacts__targets-icon',
   type: 'icons',
   hidden: isSelectedItem
 })

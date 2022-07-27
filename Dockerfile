@@ -19,20 +19,33 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
     echo ${DATE} > ./build/BUILD_DATE
 
 # production stage
-FROM quay.io/mlrun/nginx:stable-alpine as production-stage
+FROM gcr.io/iguazio/nginx-unprivileged:1.21-alpine as production-stage
 
-RUN apk update && \
-	apk upgrade && \
-	rm -rf /var/cache/apk/*
+# align UID & GID with nginx-unprivileged image UID & GID
+ARG UID=101
+ARG GID=101
+
+USER root
+# escalate permissions to update packages
+RUN apk update --no-cache && apk upgrade --no-cache
+# we are inheriting $UID and $GID from the base image, you can find more information here:
+# https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/Dockerfile-alpine.template
+USER $UID
 
 COPY --from=build-stage /app/build /usr/share/nginx/html
 COPY config.json.tmpl /usr/share/nginx/html/
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf.tmpl /etc/nginx/conf.d/
 COPY nginx/run_nginx /etc/nginx/
-EXPOSE 80
 
-ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:80}" \
+USER root
+# update build files permissions so they would be accessible to the running user
+RUN chown -R $UID:0 /usr/share/nginx/html && chmod -R g+w /usr/share/nginx/html && chmod 777 /etc/nginx/run_nginx
+USER $UID
+
+EXPOSE 8090
+
+ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:8090}" \
     MLRUN_BETA_MODE="${MLRUN_BETA_MODE:-enabled}" \
     MLRUN_FUNCTION_CATALOG_URL="${MLRUN_FUNCTION_CATALOG_URL:-https://raw.githubusercontent.com}" \
     MLRUN_FUNCTION_CATALOG_PATH="${MLRUN_FUNCTION_CATALOG_PATH:-/mlrun/functions/master}" \

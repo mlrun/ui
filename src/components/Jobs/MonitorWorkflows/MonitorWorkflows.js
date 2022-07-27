@@ -268,7 +268,7 @@ const MonitorWorkflows = ({
   )
 
   useEffect(() => {
-    if (params.jobId && pageData.details.menu.length > 0) {
+    if ((params.jobId || params.functionHash) && pageData.details.menu.length > 0) {
       isDetailsTabExists(JOBS_PAGE, params, pageData.details.menu, navigate, location)
     }
   }, [navigate, pageData.details.menu, params, location])

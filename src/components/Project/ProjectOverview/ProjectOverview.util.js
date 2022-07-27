@@ -1,26 +1,40 @@
 import React from 'react'
 
+import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
+
+// import { SECONDARY_BUTTON } from 'igz-controls/constants'
+
 import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
 import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
 import { ReactComponent as FeatureSetIcon } from 'igz-controls/images/set-icon.svg'
 import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/flow-icon.svg'
 import { ReactComponent as CreateJobIcon } from 'igz-controls/images/run2-icon.svg'
-import { ReactComponent as DeployModelIcon } from 'igz-controls/images/rocket-icon.svg'
+// import { ReactComponent as DeployModelIcon } from 'igz-controls/images/rocket-icon.svg'
 import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/vector-icon.svg'
 import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/model-icon.svg'
 import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/realtime-icon-b.svg'
 import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/serving-icon.svg'
 // import { ReactComponent as UploadIcon } from 'igz-controls/images/upload-icon.svg'
 
-export const getInitialCards = projectName => {
+export const handleClick = (navigate, openPopUp) => handler => {
+  const target = handler()
+  return target.type && target.type === 'modal'
+    ? openPopUp(target.component, target.props)
+    : target.externalLink
+    ? (window.top.location.href = target.path)
+    : navigate(target.path)
+}
+
+export const getInitialCards = (projectName, navigate) => {
   const base_url = `/projects/${projectName}`
 
   return {
     collection: {
-      title: 'Data collection',
+      title: 'Data',
       subTitle:
         'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
       actions: [
+        //TODO: un-comment after wizard ready
         // {
         //   icon: <UploadIcon />,
         //   id: 'uploadData',
@@ -33,116 +47,185 @@ export const getInitialCards = projectName => {
         {
           icon: <FeatureSetIcon />,
           id: 'createFeatureSet',
+          handleClick: () => ({
+            path: `${base_url}/feature-store/feature-sets?openPanel=true`
+          }),
           label: 'Create Features Set',
-          path: {
-            target: `${base_url}/feature-store/feature-sets?openPanel=true`
-          },
           tooltip: ''
         },
         {
           icon: <DataSetIcon />,
           id: 'registerDataset',
+          handleClick: () => ({
+            component: RegisterArtifactModal,
+            props: {
+              //TODO: un-comment for 1.3
+              // actions: formState => [
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register and view',
+              //     onClick: () => {
+              //       formState.handleSubmit()
+              //       if (!formState.invalid) {
+              //         navigate(`${base_url}/datasets`)
+              //       }
+              //     }
+              //   },
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register',
+              //     onClick: formState.handleSubmit,
+              //     variant: SECONDARY_BUTTON
+              //   }
+              // ],
+              artifactKind: 'dataset',
+              projectName,
+              refresh: () => {},
+              title: 'Register dataset'
+            },
+            type: 'modal'
+          }),
           label: 'Register Dataset',
-          path: {
-            target: `${base_url}/datasets?openPanel=true`
-            // target: 'dataset' // Phase 2
-          },
           tooltip: ''
         },
         {
           icon: <RegisterArtifactIcon />,
           id: 'registerArtifact',
+          handleClick: () => ({
+            component: RegisterArtifactModal,
+            props: {
+              //TODO: un-comment for 1.3
+              // actions: formState => [
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register and view',
+              //     onClick: () => {
+              //       formState.handleSubmit()
+
+              //       if (!formState.invalid) {
+              //         navigate(`${base_url}/files`)
+              //       }
+              //     }
+              //   },
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register',
+              //     onClick: formState.handleSubmit,
+              //     variant: SECONDARY_BUTTON
+              //   }
+              // ],
+              artifactKind: 'artifact',
+              projectName,
+              refresh: () => {},
+              title: 'Register artifact'
+            },
+            type: 'modal'
+          }),
           label: 'Register Artifact',
-          path: {
-            target: `${base_url}/files?openPanel=true`
-            // target: 'artifact' // Phase 2
-          },
           tooltip: ''
         },
         {
           icon: <FeatureVectorIcon />,
           id: 'createFeatureVector',
+          handleClick: () => ({
+            path: `${base_url}/feature-store/feature-vectors?openPanel=true`
+          }),
           label: 'Create a Feature Vector',
-          path: {
-            target: `${base_url}/feature-store/feature-vectors?openPanel=true`
-            // target: 'featureVector' //  Phase 2
-          },
           tooltip: ''
         }
       ],
       additionalLinks: [
         {
           id: 'featureset',
-          label: 'Feature Sets',
-          path: { target: `${base_url}/feature-store/feature-sets` }
+          handleClick: () => ({
+            path: `${base_url}/feature-store/feature-sets`
+          }),
+          label: 'Feature Sets'
         },
         {
           id: 'artifacts',
-          label: 'Artifacts',
-          path: { target: `${base_url}/files` }
+          handleClick: () => ({
+            path: `${base_url}/files`
+          }),
+          label: 'Artifacts'
         },
         {
           id: 'dataset',
-          label: 'Datasets',
-          path: { target: `${base_url}/datasets` }
+          handleClick: () => ({
+            path: `${base_url}/datasets`
+          }),
+          label: 'Datasets'
         },
         {
           id: 'featurevectors',
-          label: 'Feature Vectors',
-          path: { target: `${base_url}/feature-store/feature-vectors` }
+          handleClick: () => ({
+            path: `${base_url}/feature-store/feature-vectors`
+          }),
+          label: 'Feature Vectors'
         }
       ]
     },
     development: {
-      title: 'Development',
+      title: 'Jobs and Workflows',
       subTitle:
         'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more. This is not the final version.',
       actions: [
         {
           id: 'createnewfunction',
           icon: <CreatFunctionIcon />,
+          handleClick: () => ({
+            path: `${base_url}/functions?openPanel=true`
+          }),
           label: 'Create New Function',
-          path: { target: `${base_url}/functions?openPanel=true` },
           tooltip: ''
         },
         {
           id: 'createnewjob',
           icon: <CreateJobIcon />,
+          handleClick: () => ({
+            path: `${base_url}/jobs/monitor-jobs/create-new-job`
+          }),
           label: 'Create New Job',
-          path: { target: `${base_url}/jobs/monitor-jobs/create-new-job` },
           tooltip: ''
         },
         {
           id: 'registeramodel',
           icon: <RegisterModelIcon />,
+          handleClick: () => ({
+            path: `${base_url}/models/models?openPanel=true`
+          }),
           label: 'Register Model',
-          path: {
-            target: `${base_url}/models/models?openPanel=true`
-            // target: 'model'
-          },
           tooltip: ''
         }
       ],
       additionalLinks: [
         {
           id: 'functions',
-          label: 'ML Functions',
-          path: { target: `${base_url}/functions` }
+          handleClick: () => ({
+            path: `${base_url}/functions`
+          }),
+          label: 'ML Functions'
         },
         {
           id: 'jobs',
-          label: 'Jobs',
-          path: { target: `${base_url}/jobs` }
+          handleClick: () => ({
+            path: `${base_url}/jobs`
+          }),
+          label: 'Jobs'
         },
         {
           id: 'models',
-          label: 'Models',
-          path: { target: `${base_url}/models/models` }
+          handleClick: () => ({
+            path: `${base_url}/models/models`
+          }),
+          label: 'Models'
         },
         {
           id: 'workflow',
-          label: 'Workflow',
-          path: { target: `${base_url}/jobs/monitor-workflows` }
+          handleClick: () => ({
+            path: `${base_url}/jobs/monitor-workflows`
+          }),
+          label: 'Workflow'
         }
       ]
     },
@@ -155,60 +238,62 @@ export const getInitialCards = projectName => {
           id: 'createRealTimeFunction',
           icon: <RTFunctionIcon />,
           label: 'Create RT function',
-          path: {
-            target: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
+          handleClick: () => ({
+            path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
             externalLink: true
-          },
+          }),
           tooltip: ''
         },
         {
           id: 'deployServingFunction',
           icon: <ServingFunctionIcon />,
+          handleClick: () => ({
+            path: `${base_url}/functions?openPanel=true`
+          }),
           label: 'Deploy serving function',
-          path: { target: `${base_url}/functions?openPanel=true` },
-          tooltip: ''
-        },
-        {
-          id: 'deployModel',
-          icon: <DeployModelIcon />,
-          label: 'Deploy Model',
-          path: { target: `${base_url}/models/models` },
           tooltip: ''
         }
+        // {
+        //   id: 'deployModel',
+        //   icon: <DeployModelIcon />,
+        //   handleClick: () => ({
+        //     path: `${base_url}/models/models`
+        //   }),
+        //   label: 'Deploy Model',
+        //   tooltip: ''
+        // }
       ],
       additionalLinks: [
         {
           id: 'modelEndpoints',
-          label: 'Model Endpoints',
-          path: { target: `${base_url}/models/model-endpoints` }
+          handleClick: () => ({
+            path: `${base_url}/models/model-endpoints`
+          }),
+          label: 'Model Endpoints'
         },
         {
           id: 'realTimePipelines',
-          label: 'Real Time Pipelines',
-          path: { target: `${base_url}/models/real-time-pipelines` }
+          handleClick: () => ({
+            path: `${base_url}/models/real-time-pipelines`
+          }),
+          label: 'Real Time Pipelines'
         },
         {
           id: 'nuclioFunctions',
-          label: 'Nuclio Functions',
-          path: {
-            target: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
+          handleClick: () => ({
+            path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
             externalLink: true
-          }
+          }),
+          label: 'Nuclio Functions'
         },
         {
           id: 'monitor',
-          label: 'Monitoring',
-          path: { target: `${base_url}/monitor` }
+          handleClick: () => ({
+            path: `${base_url}/monitor`
+          }),
+          label: 'Monitoring'
         }
       ]
     }
   }
-}
-
-export const handlePath = (navigate, cb) => ({ target, externalLink }) => {
-  return target.indexOf('/') < 0
-    ? cb(target.toLowerCase())
-    : externalLink
-    ? (window.top.location.href = target)
-    : navigate(target)
 }

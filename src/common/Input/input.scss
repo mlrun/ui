@@ -2,9 +2,10 @@
 @import '~igz-controls/scss/borders';
 @import '~igz-controls/scss/shadows';
 @import '~igz-controls/scss/mixins';
+@import '../../scss/main.scss';
 
 .input {
-  @include fieldWrapper;
+  @include fieldWrapperOld;
 
   &::placeholder {
     color: $spunPearl;

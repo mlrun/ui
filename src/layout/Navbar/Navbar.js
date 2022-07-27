@@ -7,6 +7,7 @@ import { RoundedIcon } from 'igz-controls/components'
 
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
+import { useMode } from '../../hooks/mode.hook'
 
 import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
@@ -15,6 +16,8 @@ import { ReactComponent as SettingsIcon } from 'igz-controls/images/pref-icon.sv
 import './Navbar.scss'
 
 const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned }) => {
+  const { isDemoMode } = useMode()
+
   const navbarClasses = classNames(
     'navbar',
     isNavbarPinned && 'pinned',
@@ -22,11 +25,11 @@ const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned 
   )
 
   const { links } = useMemo(() => {
-    let links = projectName ? getLinks(projectName) : []
+    let links = projectName ? getLinks(projectName, isDemoMode) : []
     return {
       links
     }
-  }, [projectName])
+  }, [projectName, isDemoMode])
 
   const handlePinClick = () => {
     setIsNavbarPinned(!isNavbarPinned)
@@ -50,7 +53,7 @@ const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned 
             {isNavbarPinned ? <UnPinIcon /> : <PinIcon />}
           </RoundedIcon>
           <ul className="navbar-links">
-            {links.map(link => !link.hidden && <NavbarLink key={link.label} {...link} />)}
+            {links.map(link => !link.hidden && <NavbarLink key={link.id} {...link} />)}
           </ul>
         </div>
         <div className="navbar__additional">

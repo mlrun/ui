@@ -18,6 +18,7 @@ const DetailsArtifactsView = ({
   artifactsIndexes,
   content,
   iteration,
+  loading,
   noData,
   preview,
   showArtifact,
@@ -27,7 +28,7 @@ const DetailsArtifactsView = ({
 
   return (
     <div className="item-artifacts">
-      {content.length === 0 ? (
+      {loading ? null : content.length === 0 ? (
         <NoData />
       ) : (
         content.map((artifact, index) => {

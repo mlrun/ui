@@ -6,15 +6,9 @@ import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { OnChange } from 'react-final-form-listeners'
+import { useLocation } from 'react-router-dom'
 
-import {
-  Button,
-  ConfirmDialog,
-  FormInput,
-  FormKeyValueTable,
-  FormSelect,
-  Modal
-} from 'igz-controls/components'
+import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
@@ -22,8 +16,8 @@ import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/consta
 import { MODELS_TAB } from '../../constants'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import './deployModelPopUp.scss'
 
@@ -38,7 +32,6 @@ const DeployModelPopUp = ({
   const [functionList, setFunctionList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
-
   const [initialValues, setInitialValues] = useState({
     modelName: '',
     className: '',
@@ -46,11 +39,14 @@ const DeployModelPopUp = ({
     selectedFunctionName: '',
     arguments: []
   })
+
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {}
     })
   )
+  const location = useLocation()
+  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const getTagOptions = useCallback((functionList, selectedFunctionName) => {
     return chain(functionList)
@@ -139,8 +135,9 @@ const DeployModelPopUp = ({
       kind: 'task'
     }
 
-    buildFunction({ function: servingFunction })
+    return buildFunction({ function: servingFunction })
       .then(response => {
+        formRef.current = null
         setNotification({
           status: response.status,
           id: Math.random(),
@@ -155,35 +152,16 @@ const DeployModelPopUp = ({
           retry: deployModel
         })
       })
-
-    onResolve()
-  }
-
-  const handleCloseModal = formState => {
-    if (formState && formState.dirty) {
-      openPopUp(ConfirmDialog, {
-        cancelButton: {
-          label: 'Cancel',
-          variant: TERTIARY_BUTTON
-        },
-        confirmButton: {
-          handler: onResolve,
-          label: 'OK',
-          variant: SECONDARY_BUTTON
-        },
-        header: 'Are you sure?',
-        message: 'All changes will be lost'
+      .finally(() => {
+        onResolve()
       })
-    } else {
-      onResolve()
-    }
   }
 
   const getModalActions = formState => {
     const actions = [
       {
         label: 'Cancel',
-        onClick: () => handleCloseModal(formState),
+        onClick: () => handleCloseModal(),
         variant: TERTIARY_BUTTON
       },
       {
@@ -196,7 +174,7 @@ const DeployModelPopUp = ({
     return actions.map(action => <Button {...action} />)
   }
 
-  const onSelectedFuncionNameChange = currentValue => {
+  const onSelectedFunctionNameChange = currentValue => {
     const tags = getTagOptions(functionList, currentValue)
     const defaultClass = functionList.find(
       func => func.metadata.name === currentValue && func.metadata.tag === tags[0].id
@@ -219,51 +197,54 @@ const DeployModelPopUp = ({
           <Modal
             actions={getModalActions(formState)}
             className="deploy-model"
-            onClose={() => handleCloseModal(formState)}
+            location={location.pathname}
+            onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
             title="Deploy model"
           >
-            <div className="deploy-model__row">
-              <div className="col col-2">
-                <FormSelect
-                  className="form-field__router"
-                  disabled={functionOptionList.length === 0}
-                  label="Serving function (router)"
-                  name="selectedFunctionName"
-                  options={functionOptionList}
+            <div className="form">
+              <div className="form-row">
+                <div className="form-col-2">
+                  <FormSelect
+                    className="form-field__router"
+                    disabled={functionOptionList.length === 0}
+                    label="Serving function (router)"
+                    name="selectedFunctionName"
+                    options={functionOptionList}
+                  />
+                  <OnChange name="selectedFunctionName">{onSelectedFunctionNameChange}</OnChange>
+                </div>
+                <div className="form-col-1">
+                  <FormSelect
+                    label="Tag"
+                    name="selectedTag"
+                    search
+                    disabled={tagOptionList.length === 0}
+                    options={tagOptionList}
+                  />
+                </div>
+                <div className="form-col-1">
+                  <FormInput name="className" label="Class" required />
+                </div>
+              </div>
+              <div className="form-row">
+                <FormInput
+                  name="modelName"
+                  label="Model name"
+                  required
+                  validationRules={getValidationRules('artifact.name')}
+                  tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
                 />
-                <OnChange name="selectedFunctionName">{onSelectedFuncionNameChange}</OnChange>
               </div>
-              <div className="col">
-                <FormSelect
-                  label="Tag"
-                  name="selectedTag"
-                  search
-                  disabled={tagOptionList.length === 0}
-                  options={tagOptionList}
-                />
-              </div>
-              <div className="col">
-                <FormInput name="className" label="Class" required />
-              </div>
-            </div>
-            <div className="deploy-model__row">
-              <FormInput
-                name="modelName"
-                label="Model name"
-                required
-                validationRules={getValidationRules('artifact.name')}
-                tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
+              <FormKeyValueTable
+                keyHeader="Class argument name"
+                keyLabel="Class argument name"
+                addNewItemLabel="Add class argument"
+                name="arguments"
+                formState={formState}
               />
             </div>
-            <FormKeyValueTable
-              keyHeader="Class argument name"
-              keyLabel="Class argument name"
-              addNewItemLabel="Add class argument"
-              name="arguments"
-              formState={formState}
-            />
           </Modal>
         )
       }}

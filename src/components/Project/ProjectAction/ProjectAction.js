@@ -14,12 +14,12 @@ const ProjectAction = ({ actions, onClick, showActions }) => {
 
   return (
     <ul className={projectActionsClassNames}>
-      {actions.map(({ icon, id, label, path, tooltip }) => {
+      {actions.map(({ icon, id, label, handleClick, tooltip }) => {
         return (
           <li key={id} className="project-overview-actions__item" title={label}>
             <button
               className="project-overview-actions__item-wrapper"
-              onClick={() => onClick(path)}
+              onClick={() => onClick(handleClick)}
             >
               <i className="project-overview-actions__item-icon">{icon}</i>
               <span className="link">{label}</span>

@@ -87,6 +87,9 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
       db_key: {
         value: selectedItem.db_key
       },
+      tag: {
+        value: selectedItem.tag ?? ''
+      },
       iter: {
         value: selectedItem.iter || '0'
       },
@@ -239,6 +242,7 @@ export const renderContent = (
   setChanges,
   setChangesData,
   setChangesCounter,
+  setIteration,
   setIterationOption
 ) => {
   switch (tab) {
@@ -268,6 +272,7 @@ export const renderContent = (
         <DetailsArtifacts
           iteration={detailsStore.iteration}
           selectedItem={selectedItem}
+          setIteration={setIteration}
           setIterationOption={setIterationOption}
         />
       )

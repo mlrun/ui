@@ -157,6 +157,7 @@ Table.defaultProps = {
   handleCancel: () => {},
   handleExpandRow: () => {},
   handleSelectItem: () => {},
+  retryRequest: () => {},
   selectedItem: {},
   tab: '',
   tableHeaders: []
