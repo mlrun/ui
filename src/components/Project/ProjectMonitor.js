@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
+import NewFunctionModal from '../NewFunctionModal/NewFunctionModal'
 import RegisterArtifactModal from '..//RegisterArtifactModal/RegisterArtifactModal'
 
 import { DATASETS } from '../../constants'
@@ -38,7 +39,6 @@ const ProjectMonitor = ({
 }) => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false) //TODO: remove after Register Modal ready
-  const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
@@ -58,7 +58,7 @@ const ProjectMonitor = ({
     [frontendSpec]
   )
 
-  const openPopupDialog = useCallback(
+  const openRegisterArtifactModal = useCallback(
     artifactKind => {
       openPopUp(RegisterArtifactModal, {
         artifactKind,
@@ -70,20 +70,22 @@ const ProjectMonitor = ({
     [navigate, params.projectName, registerArtifactLink]
   )
 
+  const openNewFunctionModal = useCallback(() => openPopUp(NewFunctionModal), [])
+
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,
       params,
-      openPopupDialog,
+      openRegisterArtifactModal,
+      openNewFunctionModal,
       setIsPopupDialogOpen,
-      setCreateFeatureSetPanelIsOpen,
-      setIsNewFunctionPopUpOpen
+      setCreateFeatureSetPanelIsOpen
     )
 
     return {
       createNewOptions
     }
-  }, [navigate, openPopupDialog, params])
+  }, [navigate, openRegisterArtifactModal, openNewFunctionModal, params])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {
@@ -258,7 +260,6 @@ const ProjectMonitor = ({
         handleDeployFunctionFailure={handleDeployFunctionFailure}
         handleDeployFunctionSuccess={handleDeployFunctionSuccess}
         handleLaunchIDE={handleLaunchIDE}
-        isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
         isNuclioModeDisabled={isNuclioModeDisabled}
         isPopupDialogOpen={isPopupDialogOpen}
         navigate={navigate}
@@ -268,7 +269,6 @@ const ProjectMonitor = ({
         projectSummary={projectStore.projectSummary}
         refresh={handleRefresh}
         registerArtifactLink={registerArtifactLink} //TODO: remove after Register Modal ready
-        setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
         setIsPopupDialogOpen={setIsPopupDialogOpen}
         setShowFunctionsPanel={setShowFunctionsPanel}
         showFunctionsPanel={showFunctionsPanel}

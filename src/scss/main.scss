@@ -394,7 +394,9 @@ iframe {
 }
 
 .form {
-  [class*='form-col-'] {
+  color: $primary;
+
+  [class*='form-col'] {
     flex: 1 0 0%;
 
     &:not(:last-child) {
@@ -421,11 +423,20 @@ iframe {
       &-3 {
         flex-grow: 3;
       }
+
+      &-4 {
+        flex-grow: 4;
+      }
     }
 
     &-text {
-      color: $primary;
-      font-size: 12px;
+      font-size: 15px;
+    }
+
+    &__step-title {
+      display: block;
+      font-size: 24px;
+      margin: 0;
     }
   }
 }

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { isEqual, isEmpty } from 'lodash'
 
@@ -6,8 +7,9 @@ import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
+import NewFunctionModal from '../NewFunctionModal/NewFunctionModal'
 import { ConfirmDialog } from 'igz-controls/components'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import {
   detailsMenu,
@@ -41,7 +43,6 @@ import { useMode } from '../../hooks/mode.hook'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 const Functions = ({
   deleteFunction,
@@ -102,20 +103,6 @@ const Functions = ({
     removeFunctionLogs()
   }, [fetchFunctionLogsTimeout, removeFunctionLogs])
 
-  const getPopUpTemplate = useCallback(
-    action => {
-      return (
-        <NewFunctionPopUp
-          action={action}
-          currentProject={params.projectName}
-          isCustomPosition
-          setFunctionsPanelIsOpen={setFunctionsPanelIsOpen}
-        />
-      )
-    },
-    [params.projectName]
-  )
-
   const pageData = {
     actionsMenu: item => [
       {
@@ -154,7 +141,7 @@ const Functions = ({
     tableHeaders: getTableHeaders(!isEveryObjectValueEmpty(selectedFunction)),
     hidePageActionMenu: true,
     filterMenuActionButton: {
-      getCustomTemplate: getPopUpTemplate,
+      onClick: () => openPopUp(NewFunctionModal),
       label: 'New',
       variant: SECONDARY_BUTTON
     }

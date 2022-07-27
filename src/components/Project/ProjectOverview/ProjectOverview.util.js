@@ -1,8 +1,10 @@
 import React from 'react'
 
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
+import NewFunctionModal from '../../NewFunctionModal/NewFunctionModal'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING } from '../../../constants'
 
 import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
 import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
@@ -208,7 +210,32 @@ export const getInitialCards = (projectName, navigate) => {
           id: 'createnewfunction',
           icon: <CreatFunctionIcon />,
           handleClick: () => ({
-            path: `${base_url}/functions?openPanel=true`
+            component: NewFunctionModal,
+            props: {
+              //TODO: un-comment for 1.3
+              // actions: formState => [
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register and view',
+              //     onClick: () => {
+              //       formState.handleSubmit()
+
+              //       if (!formState.invalid) {
+              //         navigate(`${base_url}/files`)
+              //       }
+              //     }
+              //   },
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register',
+              //     onClick: formState.handleSubmit,
+              //     variant: SECONDARY_BUTTON
+              //   }
+              // ],
+              isStandAlone: true,
+              runtime: FUNCTION_TYPE_JOB
+            },
+            type: 'modal'
           }),
           label: 'Create New Function',
           tooltip: ''
@@ -282,7 +309,32 @@ export const getInitialCards = (projectName, navigate) => {
           id: 'deployServingFunction',
           icon: <ServingFunctionIcon />,
           handleClick: () => ({
-            path: `${base_url}/functions?openPanel=true`
+            component: NewFunctionModal,
+            props: {
+              //TODO: un-comment for 1.3
+              // actions: formState => [
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register and view',
+              //     onClick: () => {
+              //       formState.handleSubmit()
+
+              //       if (!formState.invalid) {
+              //         navigate(`${base_url}/files`)
+              //       }
+              //     }
+              //   },
+              //   {
+              //     disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //     label: 'Register',
+              //     onClick: formState.handleSubmit,
+              //     variant: SECONDARY_BUTTON
+              //   }
+              // ],
+              isStandAlone: true,
+              runtime: FUNCTION_TYPE_SERVING
+            },
+            type: 'modal'
           }),
           label: 'Deploy serving function',
           tooltip: ''

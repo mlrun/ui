@@ -22,10 +22,10 @@ export const launchIDEOptions = [
 export const generateCreateNewOptions = (
   navigate,
   params,
-  openPopupDialog,
+  openRegisterArtifactModal,
+  openNewFunctionModal,
   setIsPopupDialogOpen,
-  setCreateFeatureSetsPanelIsOpen,
-  setIsNewFunctionPopUpOpen
+  setCreateFeatureSetsPanelIsOpen
 ) => [
   {
     label: 'Job',
@@ -36,9 +36,7 @@ export const generateCreateNewOptions = (
   {
     label: 'ML Function',
     id: 'mlFunction',
-    handler: () => {
-      setIsNewFunctionPopUpOpen(true)
-    }
+    handler: () => openNewFunctionModal()
   },
   {
     label: 'Feature Set',
@@ -49,7 +47,7 @@ export const generateCreateNewOptions = (
     label: 'Register Artifact',
     id: 'registerFile',
     handler: () => {
-      openPopupDialog('artifact')
+      openRegisterArtifactModal('artifact')
     }
   },
   {
@@ -63,7 +61,7 @@ export const generateCreateNewOptions = (
     label: 'Register Dataset',
     id: 'registerDataset',
     handler: () => {
-      openPopupDialog('dataset')
+      openRegisterArtifactModal('dataset')
     }
   }
 ]

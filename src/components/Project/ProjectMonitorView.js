@@ -6,7 +6,6 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import Loader from '../../common/Loader/Loader'
-import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
@@ -34,7 +33,6 @@ const ProjectMonitorView = ({
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   handleLaunchIDE,
-  isNewFunctionPopUpOpen,
   isNuclioModeDisabled,
   isPopupDialogOpen,
   navigate,
@@ -44,9 +42,7 @@ const ProjectMonitorView = ({
   projectSummary,
   refresh,
   registerArtifactLink,
-  setIsNewFunctionPopUpOpen,
   setIsPopupDialogOpen,
-  setShowFunctionsPanel,
   showFunctionsPanel,
   v3ioStreams
 }) => {
@@ -179,14 +175,6 @@ const ProjectMonitorView = ({
           project={params.projectName}
         />
       )}
-      {isNewFunctionPopUpOpen && (
-        <NewFunctionPopUp
-          closePopUp={() => setIsNewFunctionPopUpOpen(false)}
-          currentProject={params.projectName}
-          isOpened={isNewFunctionPopUpOpen}
-          setFunctionsPanelIsOpen={setShowFunctionsPanel}
-        />
-      )}
       {showFunctionsPanel && (
         <FunctionsPanel
           closePanel={closeFunctionsPanel}
@@ -216,7 +204,6 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
-  isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isNuclioModeDisabled: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
@@ -224,7 +211,6 @@ ProjectMonitorView.propTypes = {
   navigate: PropTypes.func.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
-  setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
   showFunctionsPanel: PropTypes.bool.isRequired,

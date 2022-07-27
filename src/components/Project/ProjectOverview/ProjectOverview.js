@@ -10,9 +10,11 @@ import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewT
 import { ConfirmDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import projectActions from '../../../actions/projects'
+import functionsActions from '../../../actions/functions'
 
 import { handleClick, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
+import { parseFunctions } from '../../../utils/parseFunctions'
 import { getDateAndTimeByFormat } from '../../../utils/'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
@@ -20,16 +22,15 @@ import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
 import './ProjectOverview.scss'
 
-const ProjectOverview = ({ fetchProject, project }) => {
+const ProjectOverview = ({ fetchProject, fetchFunctions, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
-  // const [modal, setModal] = useState({ isOpen: false, name: '' })
   const params = useParams()
   const navigate = useNavigate()
 
   const cards = useMemo(() => {
     return params.projectName ? getInitialCards(params.projectName, navigate) : {}
-  }, [navigate, params])
+  }, [params, navigate])
 
   const handlePathExecution = handleClick(navigate, openPopUp)
 
@@ -45,6 +46,13 @@ const ProjectOverview = ({ fetchProject, project }) => {
       handleFetchProjectError(error, navigate, setConfirmData)
     )
   }, [fetchProject, navigate, params.projectName])
+
+  useEffect(() => {
+    fetchFunctions(params.projectName).then(functions => {
+      const newFunctions = parseFunctions(functions, params.projectName)
+      return newFunctions
+    })
+  }, [fetchFunctions, params.projectName])
 
   if (project.loading) {
     return <Loader />
@@ -164,7 +172,8 @@ const ProjectOverview = ({ fetchProject, project }) => {
 }
 
 const actionCreators = {
-  fetchProject: projectActions.fetchProject
+  fetchProject: projectActions.fetchProject,
+  fetchFunctions: functionsActions.fetchFunctions
 }
 
 export default connect(
