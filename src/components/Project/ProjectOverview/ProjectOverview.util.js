@@ -70,12 +70,11 @@ export const getInitialCards = (projectName, navigate) => {
                 {
                   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
                   label: 'Register',
-                  onClick: () => {
-                    formState.handleSubmit().then(() => {
-                      if (!formState.invalid) {
-                        navigate(`${base_url}/datasets`)
-                      }
-                    })
+                  onClick: async () => {
+                    await formState.handleSubmit()
+                    if (!formState.invalid) {
+                      navigate(`${base_url}/datasets`)
+                    }
                   },
                   variant: SECONDARY_BUTTON
                 }
@@ -84,12 +83,11 @@ export const getInitialCards = (projectName, navigate) => {
               // [{
               //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
               //   label: 'Register and view',
-              //   onClick: () => {
-              //    formState.handleSubmit().then(() => {
-              //         if (!formState.invalid) {
-              //           navigate(`${base_url}/datasets`)
-              //         }
-              //       })
+              //   onClick: async () => {
+              //   await formState.handleSubmit()
+              //   if (!formState.invalid) {
+              //     navigate(`${base_url}/datasets`)
+              //   }
               // },
               // {
               //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
@@ -123,12 +121,11 @@ export const getInitialCards = (projectName, navigate) => {
                 {
                   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
                   label: 'Register',
-                  onClick: () => {
-                    formState.handleSubmit().then(() => {
-                      if (!formState.invalid) {
-                        navigate(`${base_url}/files`)
-                      }
-                    })
+                  onClick: async () => {
+                    await formState.handleSubmit()
+                    if (!formState.invalid) {
+                      navigate(`${base_url}/files`)
+                    }
                   },
                   variant: SECONDARY_BUTTON
                 }
@@ -136,12 +133,11 @@ export const getInitialCards = (projectName, navigate) => {
               // [{
               //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
               //   label: 'Register and view',
-              // onClick: () => {
-              //   formState.handleSubmit().then(() => {
-              //     if (!formState.invalid) {
-              //       navigate(`${base_url}/files`)
-              //     }
-              //   })
+              // onClick: async () => {
+              //   await formState.handleSubmit()
+              //   if (!formState.invalid) {
+              //     navigate(`${base_url}/files`)
+              //   }
               // },
               // {
               //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
