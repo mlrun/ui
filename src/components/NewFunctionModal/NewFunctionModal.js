@@ -1,46 +1,41 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 
 // import FunctionsPanelTitle from '../../elements/FunctionsPanelTitle/FunctionsPanelTitle'
-import { FormInput, FormSelect, FormTextarea, Wizard } from 'igz-controls/components'
+import NewFunctionModalStep1 from './NewFunctionModalStep1/NewFunctionModalStep1'
+
+import { Wizard } from 'igz-controls/components'
 
 import { MODAL_LG } from 'igz-controls/constants'
 import { FUNCTION_TYPE_JOB } from '../../constants'
-import { getModalTitle, runtimeOptions } from './newFunctionModal.util'
+import { getModalTitle } from './newFunctionModal.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { useMode } from '../../hooks/mode.hook'
+import { parseKeyValues } from '../../utils'
+import { FUNCTION_PANEL_MODE } from '../../types'
 
-const NewFunctionModal = ({ isOpen, isStandAlone, onResolve, runtime }) => {
+const NewFunctionModal = ({ defaultData, isOpen, isStandAlone, mode, onResolve, runtime }) => {
+  const { functionsStore } = useSelector(state => state)
   const formRef = React.useRef(
     createForm({
-      initialValues: { runtime },
+      initialValues: {
+        description: defaultData.description ?? '',
+        kind: defaultData.type ?? runtime ?? functionsStore.newFunction.kind,
+        labels: parseKeyValues(defaultData.labels) ?? [],
+        name: defaultData.name ?? functionsStore.newFunction.metadata.name,
+        tag: defaultData.tag ?? functionsStore.newFunction.metadata.tag
+      },
       onSubmit: () => {}
     })
   )
 
-  const { functions, newFunction } = useSelector(state => state.functionsStore)
   const location = useLocation()
   const { isStagingMode } = useMode()
   const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
-
-  const handleNameValidation = value => {
-    if (
-      functions.some(func => func.metadata.name === value || newFunction.metadata.name === value)
-    ) {
-      return { name: 'nameExists', label: 'Function name already exists' }
-    }
-  }
-
-  const handleTagValidation = value => {
-    if (newFunction.metadata.tag === value) {
-      return { name: 'tagExists', label: 'Tag already exists' }
-    }
-  }
 
   const stepsConfig = formState => [
     {
@@ -77,8 +72,7 @@ const NewFunctionModal = ({ isOpen, isStandAlone, onResolve, runtime }) => {
       {formState => {
         return (
           <Wizard
-            data-testid="new-function-modal"
-            className="new-function-form form"
+            className="form"
             formState={formState}
             isWizardOpen={isOpen}
             onWizardResolve={handleCloseModal}
@@ -89,67 +83,19 @@ const NewFunctionModal = ({ isOpen, isStandAlone, onResolve, runtime }) => {
             title={getModalTitle(formState.values.runtime)}
           >
             <Wizard.Step>
-              <div className="form-row">
-                {/* <FunctionsPanelTitle />  to be used after FunctionPanel is deprecated */}
-                <div className="form-col">
-                  <h5 className="form__step-title">General</h5>
-                  <p>
-                    This wizard takes you through the process of deploying a new MLRun function in
-                    your project. <br />
-                    Functions can be used for data preparation, model training, model serving,
-                    notification & alerts and etc.
-                  </p>
-                  <a
-                    href="https://docs.mlrun.org/en/latest/tutorial/01-mlrun-basics.html#gs-tutorial-1-step-create-basic-function"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="link"
-                  >
-                    Read more about MLRun functions
-                  </a>
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-col-4">
-                  <FormInput
-                    label="Name"
-                    name="name"
-                    required
-                    validator={handleNameValidation}
-                    validationRules={getValidationRules('common.name')}
-                  />
-                </div>
-                <div className="form-col">
-                  <FormInput
-                    label="Tag"
-                    name="tag"
-                    placeholder="latest"
-                    validator={handleTagValidation}
-                    validationRules={getValidationRules('common.tag')}
-                  />
-                </div>
-                <div className="form-col">
-                  <FormSelect
-                    disabled={isStandAlone}
-                    label="Runtime"
-                    name="runtime"
-                    options={runtimeOptions(isStagingMode)}
-                  />
-                </div>
-              </div>
-              <div className="form-row">
-                <FormTextarea label="Description" name="description" />
-              </div>
-              <div className="form-row">Labels</div>
-              <pre>{JSON.stringify(formState, null, 2)}</pre>
+              <NewFunctionModalStep1
+                formState={formState}
+                functionsStore={functionsStore}
+                isStandAlone={isStandAlone}
+                isStagingMode={isStagingMode}
+                mode={mode}
+              />
             </Wizard.Step>
             <Wizard.Step>
-              <div className="form">
-                <div className="form-row">
-                  <h5 className="form__step-title">Code</h5>
-                </div>
-                <div className="form-row"></div>
+              <div className="form-row">
+                <h5 className="form__step-title">Code</h5>
               </div>
+              <div className="form-row"></div>
             </Wizard.Step>
           </Wizard>
         )
@@ -159,11 +105,14 @@ const NewFunctionModal = ({ isOpen, isStandAlone, onResolve, runtime }) => {
 }
 
 NewFunctionModal.defaultProps = {
+  defaultData: {},
   isStandAlone: false,
   runtime: FUNCTION_TYPE_JOB
 }
 
 NewFunctionModal.propTypes = {
+  defaultData: PropTypes.shape({}),
+  mode: FUNCTION_PANEL_MODE.isRequired,
   isStandAlone: PropTypes.bool,
   runtime: PropTypes.string
 }

@@ -23,7 +23,6 @@ const Select = ({
   onClick,
   options,
   search,
-  selectType,
   selectedId,
   selectedItemAction,
   withoutBorder,
@@ -201,11 +200,10 @@ const Select = ({
                   <SelectOption
                     item={option}
                     key={option.id}
-                    name={label}
+                    name={option.id}
                     onClick={selectedOption => {
                       handleSelectOptionClick(selectedOption, option)
                     }}
-                    selectType={selectType}
                     selectedId={selectedId}
                     withSelectedIcon={withSelectedIcon}
                   />
@@ -227,7 +225,6 @@ Select.defaultProps = {
   labelAtTop: false,
   onClick: null,
   search: false,
-  selectType: '',
   selectedId: '',
   withoutBorder: false,
   withSelectedIcon: false
@@ -244,7 +241,6 @@ Select.propTypes = {
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   options: SELECT_OPTIONS.isRequired,
   search: PropTypes.bool,
-  selectType: PropTypes.string,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   withoutBorder: PropTypes.bool,
   withSelectedIcon: PropTypes.bool

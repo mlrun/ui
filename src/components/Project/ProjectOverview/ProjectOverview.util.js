@@ -4,7 +4,7 @@ import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactM
 import NewFunctionModal from '../../NewFunctionModal/NewFunctionModal'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING } from '../../../constants'
+import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE } from '../../../constants'
 
 import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
 import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
@@ -97,7 +97,6 @@ export const getInitialCards = (projectName, navigate) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-
               artifactKind: 'dataset',
               projectName,
               refresh: () => {},
@@ -233,6 +232,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   }
               // ],
               isStandAlone: true,
+              mode: PANEL_CREATE_MODE,
               runtime: FUNCTION_TYPE_JOB
             },
             type: 'modal'
@@ -331,6 +331,7 @@ export const getInitialCards = (projectName, navigate) => {
               //     variant: SECONDARY_BUTTON
               //   }
               // ],
+              mode: PANEL_CREATE_MODE,
               isStandAlone: true,
               runtime: FUNCTION_TYPE_SERVING
             },

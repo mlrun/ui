@@ -48,10 +48,9 @@ const ProjectOverview = ({ fetchProject, fetchFunctions, project }) => {
   }, [fetchProject, navigate, params.projectName])
 
   useEffect(() => {
-    fetchFunctions(params.projectName).then(functions => {
-      const newFunctions = parseFunctions(functions, params.projectName)
-      return newFunctions
-    })
+    fetchFunctions(params.projectName).then(functions =>
+      parseFunctions(functions, params.projectName)
+    )
   }, [fetchFunctions, params.projectName])
 
   if (project.loading) {

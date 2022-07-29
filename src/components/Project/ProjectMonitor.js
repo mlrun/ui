@@ -6,7 +6,7 @@ import ProjectMonitorView from './ProjectMonitorView'
 import NewFunctionModal from '../NewFunctionModal/NewFunctionModal'
 import RegisterArtifactModal from '..//RegisterArtifactModal/RegisterArtifactModal'
 
-import { DATASETS } from '../../constants'
+import { DATASETS, PANEL_CREATE_MODE } from '../../constants'
 
 import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
@@ -70,7 +70,10 @@ const ProjectMonitor = ({
     [navigate, params.projectName, registerArtifactLink]
   )
 
-  const openNewFunctionModal = useCallback(() => openPopUp(NewFunctionModal), [])
+  const openNewFunctionModal = useCallback(
+    () => openPopUp(NewFunctionModal, { mode: PANEL_CREATE_MODE }),
+    []
+  )
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
