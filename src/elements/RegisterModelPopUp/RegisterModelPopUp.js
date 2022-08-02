@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { createForm } from 'final-form'
 import { Form } from 'react-final-form'
@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
 
 import { getChipOptions } from '../../utils/getChipOptions'
+import { convertChipsData } from '../../utils/convertChipsData'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -19,7 +20,7 @@ import artifactApi from '../../api/artifacts-api'
 
 import './registerModelPopUp.scss'
 
-function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refresh, setNotification }) {
+function RegisterModelPopUp({ isOpen, onResolve, projectName, refresh }) {
   const initialValues = {
     description: undefined,
     labels: [],
@@ -35,19 +36,16 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refr
   )
   const location = useLocation()
   const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
+  const filtersStore = useSelector(store => store.filtersStore)
+  const dispatch = useDispatch()
 
   const registerModel = value => {
-    const labelsList = value.labels.reduce((list, label) => {
-      list[label.key] = label.value
-      return list
-    }, {})
-
     const uid = uuidv4()
     const data = {
       uid: uid,
       key: value.modelName,
       db_key: value.modelName,
-      labels: labelsList,
+      labels: convertChipsData(value.labels),
       tree: uid,
       target_path: value.targetPath,
       description: value.description,
@@ -71,19 +69,20 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refr
       .then(response => {
         formRef.current = null
         refresh(filtersStore)
-        return setNotification({
+
+        return dispatch(notificationActions.setNotification({
           status: response.status,
           id: Math.random(),
           message: 'Model initiated successfully'
-        })
+        }))
       })
       .catch(() => {
-        return setNotification({
+        return dispatch(notificationActions.setNotification({
           status: 400,
           id: Math.random(),
           message: 'Model failed to initiate',
           retry: registerModel
-        })
+        }))
       })
       .finally(() => {
         onResolve()
@@ -94,7 +93,7 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refr
     const actions = [
       {
         label: 'Cancel',
-        onClick: handleCloseModal,
+        onClick: () => handleCloseModal(),
         variant: TERTIARY_BUTTON
       },
       {
@@ -108,10 +107,7 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refr
   }
 
   return (
-    <Form
-      form={formRef.current}
-      onSubmit={registerModel}
-    >
+    <Form form={formRef.current} onSubmit={registerModel}>
       {formState => {
         return (
           <Modal
@@ -155,18 +151,10 @@ function RegisterModelPopUp({ filtersStore, isOpen, onResolve, projectName, refr
   )
 }
 
-RegisterModelPopUp.defaultProps = {}
-
 RegisterModelPopUp.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  model: PropTypes.shape({}).isRequired,
   projectName: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired
 }
 
-export default connect(
-  ({ filtersStore }) => ({
-    filtersStore
-  }),
-  { setNotification: notificationActions.setNotification }
-)(RegisterModelPopUp)
+export default RegisterModelPopUp

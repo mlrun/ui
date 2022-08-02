@@ -1,8 +1,3 @@
-/*=========== EVENT KEYS =============*/
-export const CLICK = 'Click'
-export const TAB = 'Tab'
-export const TAB_SHIFT = 'Tab+Shift'
-
 /*=========== GENERAL =============*/
 
 export const SET_NOTIFICATION = 'SET_NOTIFICATION'

@@ -8,7 +8,7 @@ import React, {
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import { TAB, TAB_SHIFT } from '../../constants'
+import { TAB, TAB_SHIFT } from 'igz-controls/constants'
 import { CHIP_OPTIONS } from '../../types'
 
 import './chipForm.scss'

@@ -6,7 +6,7 @@ import ChipCellView from './ChipCellView'
 import { cutChips } from '../../utils/cutChips'
 import { CHIP_OPTIONS } from '../../types'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { CLICK, TAB, TAB_SHIFT } from '../../constants'
+import { CLICK, TAB, TAB_SHIFT } from 'igz-controls/constants'
 
 const ChipCell = ({
   addChip,

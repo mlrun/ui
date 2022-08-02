@@ -11,7 +11,6 @@ import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import Select from '../../common/Select/Select'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
@@ -36,16 +35,12 @@ const ProjectMonitorView = ({
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
   isNuclioModeDisabled,
-  isPopupDialogOpen,
-  navigate,
   nuclioStreamsAreEnabled,
   params,
   project,
   projectSummary,
   refresh,
-  registerArtifactLink,
   setIsNewFunctionPopUpOpen,
-  setIsPopupDialogOpen,
   setShowFunctionsPanel,
   showFunctionsPanel,
   v3ioStreams
@@ -162,16 +157,6 @@ const ProjectMonitorView = ({
           </div>
         </div>
       )}
-      {isPopupDialogOpen && (
-        <RegisterArtifactPopup
-          artifactKind={'model'}
-          refresh={() => {
-            navigate(registerArtifactLink('model'))
-          }}
-          setIsPopupOpen={setIsPopupDialogOpen}
-          title="Register model"
-        />
-      )}
       {createFeatureSetPanelIsOpen && (
         <FeatureSetsPanel
           closePanel={closeFeatureSetPanel}
@@ -218,14 +203,11 @@ ProjectMonitorView.propTypes = {
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isNuclioModeDisabled: PropTypes.bool.isRequired,
-  isPopupDialogOpen: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
-  navigate: PropTypes.func.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
-  setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
   showFunctionsPanel: PropTypes.bool.isRequired,
   v3ioStreams: PropTypes.shape({}).isRequired
