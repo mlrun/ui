@@ -63,6 +63,7 @@ const SplitButton = ({ mainButton, additionalButton }) => {
                 withSelectedIcon
                 item={option}
                 key={option.id}
+                name={option.id}
                 onClick={onSelectOption}
                 selectType=""
                 selectedId={selectedOption?.id}
