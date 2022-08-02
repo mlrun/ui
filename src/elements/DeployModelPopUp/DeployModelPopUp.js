@@ -197,7 +197,7 @@ const DeployModelPopUp = ({
           <Modal
             actions={getModalActions(formState)}
             className="deploy-model"
-            location={location.pathname}
+            location={location}
             onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
