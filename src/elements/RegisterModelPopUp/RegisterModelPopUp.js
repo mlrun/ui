@@ -7,8 +7,7 @@ import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
 
-import { Button, Modal, FormInput, FormTextarea } from 'igz-controls/components'
-import FormChipCell from '../../common/FormChipCell/FormChipCell'
+import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
 
 import { getChipOptions } from '../../utils/getChipOptions'
 import { setFieldState } from 'igz-controls/utils/form.util'
