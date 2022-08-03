@@ -113,7 +113,7 @@ function RegisterModelPopUp({ isOpen, onResolve, projectName, refresh }) {
           <Modal
             actions={getModalActions(formState)}
             className="register-model"
-            location={location.pathname}
+            location={location}
             onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
