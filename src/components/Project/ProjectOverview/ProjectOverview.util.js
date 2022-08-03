@@ -229,6 +229,7 @@ export const getInitialCards = (projectName, navigate) => {
               // ],
               isStandAlone: true,
               mode: PANEL_CREATE_MODE,
+              projectName,
               runtime: FUNCTION_TYPE_JOB
             },
             type: 'modal'
@@ -327,8 +328,9 @@ export const getInitialCards = (projectName, navigate) => {
               //     variant: SECONDARY_BUTTON
               //   }
               // ],
-              mode: PANEL_CREATE_MODE,
               isStandAlone: true,
+              mode: PANEL_CREATE_MODE,
+              projectName,
               runtime: FUNCTION_TYPE_SERVING
             },
             type: 'modal'

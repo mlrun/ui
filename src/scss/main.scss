@@ -407,7 +407,7 @@ iframe {
   .form {
     &-row {
       display: flex;
-      align-items: stretch;
+      align-items: flex-end;
       margin-bottom: 20px;
     }
 
@@ -426,6 +426,10 @@ iframe {
 
       &-4 {
         flex-grow: 4;
+      }
+
+      &-auto {
+        flex-grow: 0;
       }
     }
 

@@ -71,8 +71,8 @@ const ProjectMonitor = ({
   )
 
   const openNewFunctionModal = useCallback(
-    () => openPopUp(NewFunctionModal, { mode: PANEL_CREATE_MODE }),
-    []
+    () => openPopUp(NewFunctionModal, { mode: PANEL_CREATE_MODE, projectName: params.projectName }),
+    [params.projectName]
   )
 
   const { createNewOptions } = useMemo(() => {

@@ -1,43 +1,31 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { OnChange } from 'react-final-form-listeners'
 
 import { FormInput, FormSelect, FormTextarea } from 'igz-controls/components'
 
-import { PANEL_CREATE_MODE } from '../../../constants'
-import functionsActions from '../../../actions/functions'
-import { runtimeOptions } from '../newFunctionModal.util'
+import { PANEL_CREATE_MODE, TAG_LATEST } from '../../../constants'
+
+import { runtimeOptions, sourceCodeInBase64 } from '../newFunctionModal.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 const NewFunctionModalStep1 = ({
   formState,
-  functionsStore: { functions, newFunction },
+  formRef,
+  functionsStore,
   isStandAlone,
   isStagingMode,
   mode
 }) => {
-  const dispatch = useDispatch()
-
   const handleNameValidation = value => {
-    if (functions.some(func => func.metadata.name === value)) {
+    if (functionsStore.functions.some(func => func.metadata.name === value)) {
       return { name: 'nameExists', label: 'Function name already exists' }
     }
-    dispatch(functionsActions.setNewFunctionName(value))
   }
 
-  const handleTagValidation = tag => {
-    if (tag !== newFunction.metadata.tag) {
-      dispatch(functionsActions.setNewFunctionTag(tag))
-    }
+  const onSelectedFunctionKindChange = kind => {
+    formRef.current.change('spec.build.functionSourceCode', sourceCodeInBase64[kind])
   }
-
-  const handleDescriptionValidation = description => {
-    if (newFunction.spec.description !== description) {
-      functionsActions.setNewFunctionDescription(description)
-    }
-  }
-
-  const selectRuntime = runtime => dispatch(newFunction.setNewFunctionKind(runtime))
 
   return (
     <>
@@ -66,7 +54,7 @@ const NewFunctionModalStep1 = ({
           <FormInput
             disabled={mode !== PANEL_CREATE_MODE}
             label="Name"
-            name="name"
+            name="metadata.name"
             required
             validator={handleNameValidation}
             validationRules={getValidationRules('common.name')}
@@ -76,9 +64,8 @@ const NewFunctionModalStep1 = ({
           <FormInput
             disabled={mode !== PANEL_CREATE_MODE}
             label="Tag"
-            name="tag"
-            placeholder="latest"
-            validator={handleTagValidation}
+            name="metadata.tag"
+            placeholder={TAG_LATEST}
             validationRules={getValidationRules('common.tag')}
           />
         </div>
@@ -87,17 +74,13 @@ const NewFunctionModalStep1 = ({
             disabled={isStandAlone || mode !== PANEL_CREATE_MODE}
             label="Runtime"
             name="kind"
-            onChange={selectRuntime}
             options={runtimeOptions(isStagingMode)}
           />
+          <OnChange name="kind">{onSelectedFunctionKindChange}</OnChange>
         </div>
       </div>
       <div className="form-row">
-        <FormTextarea
-          label="Description"
-          name="description"
-          onChange={handleDescriptionValidation}
-        />
+        <FormTextarea label="Description" name="spec.description" />
       </div>
       <div className="form-row">PlaceHolder: Labels component</div>
       <pre>{JSON.stringify(formState, null, 2)}</pre>
@@ -107,7 +90,6 @@ const NewFunctionModalStep1 = ({
 
 NewFunctionModalStep1.propTypes = {
   functionsStore: PropTypes.object.isRequired,
-  isStandAlone: PropTypes.bool,
   isStagingMode: PropTypes.bool
 }
 

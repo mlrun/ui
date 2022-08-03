@@ -117,7 +117,8 @@ const Functions = ({
         onClick: func => {
           openPopUp(NewFunctionModal, {
             defaultData: func,
-            mode: func ? PANEL_EDIT_MODE : PANEL_CREATE_MODE
+            mode: func ? PANEL_EDIT_MODE : PANEL_CREATE_MODE,
+            projectName: params.projectName
           })
           setFunctionsPanelIsOpen(true)
           setEditableItem(func)
@@ -145,7 +146,8 @@ const Functions = ({
     tableHeaders: getTableHeaders(!isEveryObjectValueEmpty(selectedFunction)),
     hidePageActionMenu: true,
     filterMenuActionButton: {
-      onClick: () => openPopUp(NewFunctionModal, { mode: PANEL_CREATE_MODE }),
+      onClick: () =>
+        openPopUp(NewFunctionModal, { mode: PANEL_CREATE_MODE, projectName: params.projectName }),
       label: 'New',
       variant: SECONDARY_BUTTON
     }

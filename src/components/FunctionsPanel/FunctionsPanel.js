@@ -58,6 +58,7 @@ const FunctionsPanel = ({
       ? NEW_IMAGE
       : ''
   )
+
   const params = useParams()
   const navigate = useNavigate()
 
