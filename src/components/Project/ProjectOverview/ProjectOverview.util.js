@@ -2,6 +2,7 @@ import React from 'react'
 
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
 import NewFunctionModal from '../../NewFunctionModal/NewFunctionModal'
+import RegisterModelPopUp from '../../../elements/RegisterModelPopUp/RegisterModelPopUp'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE } from '../../../constants'
@@ -250,7 +251,46 @@ export const getInitialCards = (projectName, navigate) => {
           id: 'registeramodel',
           icon: <RegisterModelIcon />,
           handleClick: () => ({
-            path: `${base_url}/models/models?openPanel=true`
+            component: RegisterModelPopUp,
+            props: {
+              actions: (formState, handleCloseModal) => [
+                {
+                  label: 'Cancel',
+                  onClick: () => handleCloseModal(),
+                  variant: TERTIARY_BUTTON
+                },
+                {
+                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+                  label: 'Register',
+                  onClick: async () => {
+                    await formState.handleSubmit()
+                    if (!formState.invalid) {
+                      navigate(`${base_url}/models/models`)
+                    }
+                  },
+                  variant: SECONDARY_BUTTON
+                }
+              ],
+              // TODO: un-comment for 1.3
+              // [{
+              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //   label: 'Register and view',
+              //   onClick: async () => {
+              //   await formState.handleSubmit()
+              //   if (!formState.invalid) {
+              //     navigate(`${base_url}/datasets`)
+              //   }
+              // },
+              // {
+              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //   label: 'Register',
+              //   onClick: formState.handleSubmit,
+              //   variant: SECONDARY_BUTTON
+              // }],
+              projectName,
+              refresh: () => {}
+            },
+            type: 'modal'
           }),
           label: 'Register Model',
           tooltip: ''

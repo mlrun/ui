@@ -65,13 +65,6 @@ const RegisterArtifactModal = ({
       }
     }
 
-    if (values.kind === 'model' && values.target_path.includes('/')) {
-      const path = values.target_path.split(/([^/]*)$/)
-
-      data.target_path = path[0]
-      data.model_file = path[1]
-    }
-
     return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {

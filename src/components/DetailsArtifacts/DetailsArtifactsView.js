@@ -35,10 +35,10 @@ const DetailsArtifactsView = ({
           const artifactScreenLinks = {
             model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
               artifact.db_key || artifact.key
-            }/${artifact.tag ?? TAG_FILTER_LATEST}/${iteration}/overview`,
+            }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`,
             dataset: `/projects/${params.projectName}/${DATASETS}/${
               artifact.db_key || artifact.key
-            }/${artifact.tag ?? TAG_FILTER_LATEST}/${iteration}/overview`
+            }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`
           }
 
           return (
@@ -77,7 +77,7 @@ const DetailsArtifactsView = ({
                         artifactScreenLinks[artifact.kind] ??
                         `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
                           artifact.tag ?? TAG_FILTER_LATEST
-                        }/${iteration}/overview`
+                        }${iteration ? `/${iteration}` : ''}/overview`
                       }
                     >
                       <DetailsIcon />

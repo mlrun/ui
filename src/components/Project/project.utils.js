@@ -22,10 +22,10 @@ export const launchIDEOptions = [
 export const generateCreateNewOptions = (
   navigate,
   params,
+  handleRegisterModel,
   openRegisterArtifactModal,
   openNewFunctionModal,
-  setIsPopupDialogOpen,
-  setCreateFeatureSetsPanelIsOpen
+  setCreateFeatureSetPanelIsOpen
 ) => [
   {
     label: 'Job',
@@ -36,12 +36,12 @@ export const generateCreateNewOptions = (
   {
     label: 'ML Function',
     id: 'mlFunction',
-    handler: () => openNewFunctionModal()
+    handler: openNewFunctionModal
   },
   {
     label: 'Feature Set',
     id: 'featureSet',
-    handler: () => setCreateFeatureSetsPanelIsOpen(true)
+    handler: () => setCreateFeatureSetPanelIsOpen(true)
   },
   {
     label: 'Register Artifact',
@@ -53,9 +53,7 @@ export const generateCreateNewOptions = (
   {
     label: 'Register Model',
     id: 'registerModel',
-    handler: () => {
-      setIsPopupDialogOpen(true) //TODO: remove after Register Modal ready
-    }
+    handler: handleRegisterModel
   },
   {
     label: 'Register Dataset',

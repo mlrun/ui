@@ -6,6 +6,7 @@ import ChipCellView from './ChipCellView'
 import { cutChips } from '../../utils/cutChips'
 import { CHIP_OPTIONS } from '../../types'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { CLICK, TAB, TAB_SHIFT } from 'igz-controls/constants'
 
 const ChipCell = ({
   addChip,
@@ -171,7 +172,7 @@ const ChipCell = ({
         editChip(newChips)
       }
 
-      if (nameEvent === 'Click') {
+      if (nameEvent === CLICK) {
         if (editConfig.isNewChip && !isChipNotEmpty) {
           handleRemoveChip(event, editConfig.chipIndex)
         }
@@ -183,7 +184,7 @@ const ChipCell = ({
           isValueFocused: false,
           isNewChip: false
         })
-      } else if (nameEvent === 'Tab') {
+      } else if (nameEvent === TAB) {
         if (editConfig.isNewChip && !isChipNotEmpty) {
           handleRemoveChip(event, editConfig.chipIndex)
         }
@@ -200,7 +201,7 @@ const ChipCell = ({
             isNewChip: false
           }
         })
-      } else if (nameEvent === 'Tab+Shift') {
+      } else if (nameEvent === TAB_SHIFT) {
         if (editConfig.isNewChip && !isChipNotEmpty) {
           handleRemoveChip(event, editConfig.chipIndex)
         }
