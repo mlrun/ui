@@ -23,7 +23,6 @@ import './ProjectOverview.scss'
 const ProjectOverview = ({ fetchProject, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
-  // const [modal, setModal] = useState({ isOpen: false, name: '' })
   const params = useParams()
   const navigate = useNavigate()
 

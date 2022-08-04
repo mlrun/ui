@@ -20,7 +20,7 @@ import artifactApi from '../../api/artifacts-api'
 
 import './registerModelPopUp.scss'
 
-function RegisterModelPopUp({ isOpen, onResolve, projectName, refresh }) {
+function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }) {
   const initialValues = {
     description: undefined,
     labels: [],
@@ -64,25 +64,29 @@ function RegisterModelPopUp({ isOpen, onResolve, projectName, refresh }) {
       data.model_file = path[1]
     }
 
-    artifactApi
+    return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
         formRef.current = null
         refresh(filtersStore)
 
-        return dispatch(notificationActions.setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Model initiated successfully'
-        }))
+        return dispatch(
+          notificationActions.setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Model initiated successfully'
+          })
+        )
       })
       .catch(() => {
-        return dispatch(notificationActions.setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Model failed to initiate',
-          retry: registerModel
-        }))
+        return dispatch(
+          notificationActions.setNotification({
+            status: 400,
+            id: Math.random(),
+            message: 'Model failed to initiate',
+            retry: registerModel
+          })
+        )
       })
       .finally(() => {
         onResolve()
@@ -90,20 +94,22 @@ function RegisterModelPopUp({ isOpen, onResolve, projectName, refresh }) {
   }
 
   const getModalActions = formState => {
-    const actions = [
-      {
-        label: 'Cancel',
-        onClick: () => handleCloseModal(),
-        variant: TERTIARY_BUTTON
-      },
-      {
-        disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-        label: 'Register',
-        onClick: formState.handleSubmit,
-        variant: SECONDARY_BUTTON
-      }
-    ]
-    return actions.map(action => <Button {...action} />)
+    const defaultActions = actions
+      ? actions(formState, handleCloseModal)
+      : [
+          {
+            label: 'Cancel',
+            onClick: () => handleCloseModal(),
+            variant: TERTIARY_BUTTON
+          },
+          {
+            disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+            label: 'Register',
+            onClick: formState.handleSubmit,
+            variant: SECONDARY_BUTTON
+          }
+        ]
+    return defaultActions.map(action => <Button {...action} />)
   }
 
   return (
