@@ -238,7 +238,7 @@ const NewFunctionModal = ({
             location={location}
             size={MODAL_LG}
             stepsConfig={stepsConfig(formState)}
-            title={getModalTitle(formState.values.runtime)}
+            title={getModalTitle(formState.values.kind)}
           >
             <Wizard.Step>
               <NewFunctionModalStep1
