@@ -10,7 +10,7 @@ export const getJobAccordingIteration = (
 ) => {
   const selectedJob =
     allJobsData.find(
-      (job) =>
+      job =>
         job.metadata.uid === selectedItem.uid &&
         job.metadata.iteration === +iteration
     ) || {}
@@ -23,10 +23,10 @@ export const getJobAccordingIteration = (
   return selectedJob
 }
 
-export const generateContent = (selectedJob) => {
-  return selectedJob.artifacts.map((artifact) => {
+export const generateContent = selectedJob => {
+  return selectedJob.artifacts.map(artifact => {
     let generatedPreviewData = {
-      preview: [],
+      preview: []
     }
 
     if (artifact.extra_data) {
@@ -45,8 +45,8 @@ export const generateContent = (selectedJob) => {
       tag: artifact.tag,
       tree: artifact.tree,
       user: selectedJob?.labels
-        ?.find((item) => item.match(/v3io_user|owner/g))
-        ?.replace(/(v3io_user|owner): /, ''),
+        ?.find(item => item.match(/v3io_user|owner/g))
+        ?.replace(/(v3io_user|owner): /, '')
     }
 
     if (artifact.schema) {
@@ -54,7 +54,7 @@ export const generateContent = (selectedJob) => {
         ...generatedArtifact,
         header: artifact.header,
         preview: artifact.preview,
-        schema: artifact.schema,
+        schema: artifact.schema
       }
     }
 

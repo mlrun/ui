@@ -23,7 +23,7 @@ const DetailsArtifactsView = ({
   noData,
   preview,
   showArtifact,
-  showPreview,
+  showPreview
 }) => {
   return (
     <div className="item-artifacts">
@@ -34,14 +34,14 @@ const DetailsArtifactsView = ({
           const artifactScreenLinks = {
             model: `/projects/${
               match.params.projectName
-            }/models/${MODELS_TAB}/${artifact.db_key || artifact.key}/${
-              artifact.tag ?? TAG_FILTER_LATEST
-            }${iteration ? `/${iteration}` : ''}/overview`,
-            dataset: `/projects/${match.params.projectName}/${DATASETS}/${
-              artifact.db_key || artifact.key
-            }/${artifact.tag ?? TAG_FILTER_LATEST}${
+            }/models/${MODELS_TAB}/${artifact.db_key ||
+              artifact.key}/${artifact.tag ?? TAG_FILTER_LATEST}${
               iteration ? `/${iteration}` : ''
             }/overview`,
+            dataset: `/projects/${
+              match.params.projectName
+            }/${DATASETS}/${artifact.db_key || artifact.key}/${artifact.tag ??
+              TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`
           }
 
           return (
@@ -88,9 +88,10 @@ const DetailsArtifactsView = ({
                       target="_blank"
                       to={
                         artifactScreenLinks[artifact.kind] ??
-                        `/projects/${match.params.projectName}/files/${
-                          artifact.db_key || artifact.key
-                        }/${artifact.tag ?? TAG_FILTER_LATEST}${
+                        `/projects/${
+                          match.params.projectName
+                        }/files/${artifact.db_key ||
+                          artifact.key}/${artifact.tag ?? TAG_FILTER_LATEST}${
                           iteration ? `/${iteration}` : ''
                         }/overview`
                       }
@@ -141,7 +142,7 @@ DetailsArtifactsView.propTypes = {
   noData: PropTypes.bool.isRequired,
   preview: PropTypes.shape({}).isRequired,
   showArtifact: PropTypes.func.isRequired,
-  showPreview: PropTypes.func.isRequired,
+  showPreview: PropTypes.func.isRequired
 }
 
 export default DetailsArtifactsView

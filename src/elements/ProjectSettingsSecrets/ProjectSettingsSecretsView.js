@@ -13,7 +13,7 @@ const ProjectSettingsSecretsView = ({
   handleSecretEdit,
   isUserAllowed,
   loading,
-  secrets,
+  secrets
 }) => {
   return (
     <>
@@ -68,7 +68,7 @@ const ProjectSettingsSecretsView = ({
 ProjectSettingsSecretsView.defaultProps = {
   error: null,
   isUserAllowed: true,
-  loading: null,
+  loading: null
 }
 
 ProjectSettingsSecretsView.propTypes = {
@@ -78,7 +78,7 @@ ProjectSettingsSecretsView.propTypes = {
   handleSecretEdit: PropTypes.func.isRequired,
   isUserAllowed: PropTypes.bool.isRequired,
   loading: PropTypes.bool,
-  secrets: PropTypes.array.isRequired,
+  secrets: PropTypes.array.isRequired
 }
 
 export default ProjectSettingsSecretsView
