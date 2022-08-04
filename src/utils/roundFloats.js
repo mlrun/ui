@@ -1,2 +1,7 @@
-export const roundFloats = (value, precision) =>
-  Number.isNaN(+value) || Number.isInteger(+value) ? value : (+value).toFixed(precision ?? 2)
+export const roundFloats = (value, precision) => {
+  const floatNumber = parseFloat(value)
+
+  if (isNaN(floatNumber)) return ''
+
+  return parseFloat(floatNumber.toFixed(precision ?? 2))
+}
