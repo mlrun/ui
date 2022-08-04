@@ -28,8 +28,16 @@ const ProjectSettingsSecretsView = ({
           <div className="settings__card-content">
             <div className="settings__card-content-col">
               <p className="settings__card-subtitle">
-                These secrets will automatically be available to all jobs
-                belonging to this project.
+                These secrets are automatically available to all jobs belonging to this project that
+                are not executed locally. See{' '}
+                <a
+                  href="https://docs.mlrun.org/en/latest/secrets.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link"
+                >
+                  Secrets
+                </a>
               </p>
               <KeyValueTable
                 addNewItem={handleAddNewSecret}
