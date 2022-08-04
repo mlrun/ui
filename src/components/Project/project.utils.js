@@ -23,7 +23,7 @@ export const generateCreateNewOptions = (
   navigate,
   params,
   openPopupDialog,
-  setIsPopupDialogOpen,
+  handleRegisterModel,
   setCreateFeatureSetsPanelIsOpen,
   setIsNewFunctionPopUpOpen
 ) => [
@@ -56,7 +56,7 @@ export const generateCreateNewOptions = (
     label: 'Register Model',
     id: 'registerModel',
     handler: () => {
-      setIsPopupDialogOpen(true) //TODO: remove after Register Modal ready
+      handleRegisterModel('model')
     }
   },
   {

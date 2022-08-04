@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '..//RegisterArtifactModal/RegisterArtifactModal'
+import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
 
 import { DATASETS } from '../../constants'
 
@@ -37,7 +38,6 @@ const ProjectMonitor = ({
   setNotification
 }) => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
-  const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false) //TODO: remove after Register Modal ready
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
@@ -70,12 +70,22 @@ const ProjectMonitor = ({
     [navigate, params.projectName, registerArtifactLink]
   )
 
+  const handleRegisterModel = useCallback(
+    () => {
+      openPopUp(RegisterModelPopUp, {
+        projectName: params.projectName,
+        refresh: () => navigate(registerArtifactLink('model'))
+      })
+    },
+    [params.projectName, navigate, registerArtifactLink]
+  )
+
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,
       params,
       openPopupDialog,
-      setIsPopupDialogOpen,
+      handleRegisterModel,
       setCreateFeatureSetPanelIsOpen,
       setIsNewFunctionPopUpOpen
     )
@@ -83,7 +93,7 @@ const ProjectMonitor = ({
     return {
       createNewOptions
     }
-  }, [navigate, openPopupDialog, params])
+  }, [navigate, openPopupDialog, params, handleRegisterModel])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {
@@ -260,16 +270,13 @@ const ProjectMonitor = ({
         handleLaunchIDE={handleLaunchIDE}
         isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
         isNuclioModeDisabled={isNuclioModeDisabled}
-        isPopupDialogOpen={isPopupDialogOpen}
         navigate={navigate}
         nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
         params={params}
         project={projectStore.project}
         projectSummary={projectStore.projectSummary}
         refresh={handleRefresh}
-        registerArtifactLink={registerArtifactLink} //TODO: remove after Register Modal ready
         setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
-        setIsPopupDialogOpen={setIsPopupDialogOpen}
         setShowFunctionsPanel={setShowFunctionsPanel}
         showFunctionsPanel={showFunctionsPanel}
         v3ioStreams={nuclioStore.v3ioStreams}
