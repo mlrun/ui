@@ -40,7 +40,6 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier, getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
-import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 const Models = ({
@@ -61,7 +60,6 @@ const Models = ({
 }) => {
   const [pageData, setPageData] = useState(pageDataInitialState)
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
-  const openPanelByDefault = useOpenPanel()
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const params = useParams()
@@ -166,12 +164,6 @@ const Models = ({
     },
     [fetchModel, filtersStore.iter, filtersStore.tag]
   )
-
-  useEffect(() => {
-    if (openPanelByDefault) {
-      handleRegisterModel()
-    }
-  }, [openPanelByDefault, handleRegisterModel])
 
   useEffect(() => {
     removeModel({})
