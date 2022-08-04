@@ -2,8 +2,6 @@ import React from 'react'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { roundFloats } from '../../utils/roundFloats'
-
 import { ReactComponent as Primary } from 'igz-controls/images/ic-key.svg'
 import { ReactComponent as LabelColumn } from 'igz-controls/images/ic_target-with-dart.svg'
 
@@ -42,7 +40,7 @@ export const generateStatistics = selectedItem => {
           type: 'text'
         },
         std: {
-          value: roundFloats(metrics.std ?? metrics.stddev, 8),
+          value: metrics?.std?.toFixed(8) ?? '',
           type: 'text'
         },
         min: {
