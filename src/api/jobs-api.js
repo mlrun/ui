@@ -26,9 +26,7 @@ const generateRequestParams = filters => {
     }
   }
 
-  if (filters?.iter) {
-    params.iter = filters.iter
-  }
+  params.iter = filters.iter && !isNaN(filters.iter) ? filters.iter : false
 
   return params
 }
@@ -86,9 +84,7 @@ const jobsApi = {
     mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
   getScheduledJobAccessKey: (project, job) =>
-    mainHttpClient.get(
-      `/projects/${project}/schedules/${job}?include-credentials=true`
-    ),
+    mainHttpClient.get(`/projects/${project}/schedules/${job}?include-credentials=true`),
   getScheduledJobs: (project, filters) => {
     const params = {
       include_last_run: 'yes'
@@ -112,10 +108,7 @@ const jobsApi = {
     mainHttpClient.delete(`/projects/${project}/schedules/${scheduleName}`),
   runJob: postData => mainHttpClient.post('/submit_job', postData),
   runScheduledJob: (postData, project, job) =>
-    mainHttpClient.post(
-      `/projects/${project}/schedules/${job}/invoke`,
-      postData
-    )
+    mainHttpClient.post(`/projects/${project}/schedules/${job}/invoke`, postData)
 }
 
 export default jobsApi
