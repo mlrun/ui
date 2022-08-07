@@ -26,9 +26,7 @@ const generateRequestParams = filters => {
     }
   }
 
-  if (filters?.iter) {
-    params.iter = filters.iter
-  }
+  params.iter = filters.iter && !isNaN(filters.iter) ? filters.iter : false
 
   return params
 }
