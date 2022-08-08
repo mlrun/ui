@@ -78,6 +78,7 @@ const DetailsArtifacts = ({
     return () => {
       setContent([])
       setPreview({})
+      setArtifactsIndexes([])
     }
   }, [fetchJob, iteration, params.jobId, params.projectName, selectedItem])
 
