@@ -422,31 +422,29 @@ iframe {
     }
   }
 
-  .form {
-    &-row {
-      display: flex;
-      align-items: stretch;
-      margin-bottom: 20px;
+  &-row {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 20px;
+  }
+
+  &-col {
+    &-1 {
+      flex-grow: 1;
     }
 
-    &-col {
-      &-1 {
-        flex-grow: 1;
-      }
-
-      &-2 {
-        flex-grow: 2;
-      }
-
-      &-3 {
-        flex-grow: 3;
-      }
+    &-2 {
+      flex-grow: 2;
     }
 
-    &-text {
-      color: $primary;
-      font-size: 12px;
+    &-3 {
+      flex-grow: 3;
     }
+  }
+
+  &-text {
+    color: $primary;
+    font-size: 12px;
   }
 }
 

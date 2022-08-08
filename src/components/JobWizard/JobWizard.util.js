@@ -87,7 +87,10 @@ export const generateJobWizardData = (
   }
 
   if (!isEmpty(functionParameters)) {
-    jobFormData.parameters.parametersTable = getParameters(functionParameters)
+    jobFormData.parameters.parametersTable = {
+      predefined: getPredefinedParameters(functionParameters),
+      custom: []
+    }
     jobFormData.dataInputs.dataInputsTable = getDataInputs(functionParameters)
   }
 
@@ -325,17 +328,20 @@ export const getDataInputs = functionParameters => {
     })
 }
 
-export const getParameters = functionParameters => {
+export const getPredefinedParameters = functionParameters => {
   return functionParameters
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
+      data: {
+        name: parameter.name ?? '',
+        type: parameter.type ?? '',
+        parameterType: 'Simple',
+        value: parseParameterValue(parameter.default),
+        isChecked: true,
+      },
       doc: parameter.doc,
-      isChecked: true,
+      isHidden: parameter.name === 'context',
       isDefault: true,
-      name: parameter.name ?? '',
-      type: parameter.type ?? '',
-      parameterType: 'Simple',
-      value: parseParameterValue(parameter.default)
     }))
 }
 

@@ -1,9 +1,9 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/borders';
 @import '~igz-controls/scss/mixins';
-@import '../../scss/main.scss';
 
 .text-area {
+  @import '../../scss/main.scss';
   @include fieldWrapperOld;
 
   white-space: pre-wrap;

@@ -217,11 +217,11 @@ const DeployModelPopUp = ({
                 </div>
                 <div className="form-col-1">
                   <FormSelect
+                    disabled={tagOptionList.length === 0}
                     label="Tag"
                     name="selectedTag"
-                    search
-                    disabled={tagOptionList.length === 0}
                     options={tagOptionList}
+                    search
                   />
                 </div>
                 <div className="form-col-1">
@@ -238,11 +238,11 @@ const DeployModelPopUp = ({
                 />
               </div>
               <FormKeyValueTable
+                addNewItemLabel="Add class argument"
+                fieldsPath="arguments"
+                formState={formState}
                 keyHeader="Class argument name"
                 keyLabel="Class argument name"
-                addNewItemLabel="Add class argument"
-                name="arguments"
-                formState={formState}
               />
             </div>
           </Modal>

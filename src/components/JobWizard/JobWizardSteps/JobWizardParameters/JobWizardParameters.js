@@ -1,6 +1,6 @@
 import React from 'react'
 
-// import FormParametersTable from '../../../../elements/FormParametersTable/FormParametersTable'
+import FormParametersTable from '../../../../common/FormParametersTable/FormParametersTable'
 
 import './jobWizardParameters.scss'
 
@@ -12,7 +12,7 @@ const JobWizardParameters = ({ formState }) => {
         This is a paragraph explaining what the user will find here and what he or she should do
         next, here we can throw in all the jargon words that normal people would glaze over.
       </div>
-      {/*<FormParametersTable formState={formState} name="parameters.parametersTable" />*/}
+      <FormParametersTable formState={formState} fieldsPath="parameters.parametersTable" />
     </div>
   )
 }

@@ -11,14 +11,16 @@ import Loader from '../../../../common/Loader/Loader'
 import NoData from '../../../../common/NoData/NoData'
 import Search from '../../../../common/Search/Search'
 import TabsSlider from '../../../../common/TabsSlider/TabsSlider'
-import { FormSelect } from 'igz-controls/components'
+import { FormSelect, ConfirmDialog } from 'igz-controls/components'
 
 import functionsActions from '../../../../actions/functions'
 import jobsActions from '../../../../actions/jobs'
 import projectsAction from '../../../../actions/projects'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { SLIDER_STYLE_2 } from '../../../../types'
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import './jobWizardFunctionSelection.scss'
 
@@ -233,6 +235,59 @@ const JobWizardFunctionSelection = ({
     }
   }
 
+  const handleSelectProjectFunction = (groupedFunctions, funcData) => {
+    const selectNewFunction = () => {
+      setSelectedFunctionData(groupedFunctions)
+      generateData(groupedFunctions)
+    }
+
+    if (
+      selectedFunctionData?.functions?.[0].metadata.hash !== funcData?.functions?.[0].metadata?.hash
+    ) {
+      if (formState.dirty) {
+        openResetConfirm(selectNewFunction)
+      } else {
+        selectNewFunction()
+      }
+    }
+  }
+
+  const handleSelectTemplateFunction = funcData => {
+    const selectNewFunction = () => {
+      fetchFunctionTemplate(funcData.metadata.versions.latest).then(result => {
+        setSelectedFunctionData(result)
+        generateData(result)
+      })
+    }
+
+    if (
+      selectedFunctionData?.functions?.[0].metadata.name !== funcData?.metadata?.name ||
+      selectedFunctionData?.functions?.[0].metadata.project
+    ) {
+      if (formState.dirty) {
+        openResetConfirm(selectNewFunction)
+      } else {
+        selectNewFunction()
+      }
+    }
+  }
+
+  const openResetConfirm = (confirmHandler) => {
+    return openPopUp(ConfirmDialog, {
+      cancelButton: {
+        label: 'Cancel',
+        variant: TERTIARY_BUTTON
+      },
+      confirmButton: {
+        label: 'OK',
+        variant: SECONDARY_BUTTON,
+        handler: confirmHandler
+      },
+      header: 'Are you sure?',
+      message: 'All changes will be lost'
+    })
+  }
+
   return (
     <div className="job-wizard__function-selection form">
       <div className="form-row job-wizard__step-title">Function selection</div>
@@ -261,11 +316,7 @@ const JobWizardFunctionSelection = ({
           </div>
           <div className="form-row">
             <div className="form-row__project-name">
-              <FormSelect
-                name="functionSelection.projectName"
-                withoutBorder
-                options={projects}
-              />
+              <FormSelect name="functionSelection.projectName" withoutBorder options={projects} />
             </div>
           </div>
           <div className="functions-list">
@@ -283,10 +334,9 @@ const JobWizardFunctionSelection = ({
                         selectedFunctionData?.functions?.[0].metadata.hash && 'selected'
                     )}
                     functionData={funcData}
-                    handleSelectGroupFunctions={groupedFunctions => {
-                      setSelectedFunctionData(groupedFunctions)
-                      generateData(groupedFunctions)
-                    }}
+                    handleSelectGroupFunctions={groupedFunctions =>
+                      handleSelectProjectFunction(groupedFunctions, funcData)
+                    }
                     key={funcData.name}
                   />
                 )
@@ -330,15 +380,12 @@ const JobWizardFunctionSelection = ({
                   <JobWizardCardTemplate
                     className={classnames(
                       funcData?.metadata?.name ===
-                        selectedFunctionData?.functions?.[0].metadata.name && 'selected'
+                        selectedFunctionData?.functions?.[0].metadata.name &&
+                        !selectedFunctionData?.functions?.[0].metadata.project &&
+                        'selected'
                     )}
                     functionData={funcData}
-                    handleSelectGroupFunctions={() => {
-                      fetchFunctionTemplate(funcData.metadata.versions.latest).then(result => {
-                        setSelectedFunctionData(result)
-                        generateData(result)
-                      })
-                    }}
+                    handleSelectGroupFunctions={() => handleSelectTemplateFunction(funcData)}
                     key={funcData.metadata.name}
                   />
                 )
