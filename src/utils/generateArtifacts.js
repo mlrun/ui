@@ -2,6 +2,7 @@ import { maxBy, flatten } from 'lodash'
 
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { generateUri } from './resources'
+import { TAG_LATEST } from '../constants'
 
 export const generateArtifacts = (artifacts, tab, iter) => {
   return flatten(
@@ -42,6 +43,16 @@ export const generateArtifacts = (artifacts, tab, iter) => {
 
             item.ui = {
               originalContent: generatedArtifact
+            }
+
+            if (item.feature_vector) {
+              const [, tag] = item.feature_vector
+                .slice(item.feature_vector.lastIndexOf('/') + 1)
+                .split(':')
+
+              if (!tag) {
+                item.feature_vector += `:${TAG_LATEST}`
+              }
             }
 
             return item
