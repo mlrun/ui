@@ -49,8 +49,13 @@ const MonitorJobs = ({
   const navigate = useNavigate()
   const location = useLocation()
   const { isStagingMode } = useMode()
-  const { editableItem, handleMonitoring, handleRerunJob, setConfirmData, setEditableItem } =
-    React.useContext(JobsContext)
+  const {
+    editableItem,
+    handleMonitoring,
+    handleRerunJob,
+    setConfirmData,
+    setEditableItem
+  } = React.useContext(JobsContext)
   const filters = useMemo(() => {
     return generateFilters(params.jobName)
   }, [params.jobName])
@@ -63,10 +68,11 @@ const MonitorJobs = ({
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const pageData = useMemo(
-    () => generatePageData(fetchJobLogs, removeJobLogs, selectedJob),
-    [fetchJobLogs, removeJobLogs, selectedJob]
-  )
+  const pageData = useMemo(() => generatePageData(fetchJobLogs, removeJobLogs, selectedJob), [
+    fetchJobLogs,
+    removeJobLogs,
+    selectedJob
+  ])
 
   const refreshJobs = useCallback(
     filters => {
@@ -237,8 +243,6 @@ const MonitorJobs = ({
           }
         }
       }
-
-      filters.iter = 'false'
 
       refreshJobs(filters)
       setFilters(filters)

@@ -2,7 +2,9 @@ import { mainHttpClient } from '../httpClient'
 import { STATE_FILTER_ALL_ITEMS } from '../constants'
 
 const generateRequestParams = filters => {
-  const params = {}
+  const params = {
+    iter: false
+  }
 
   if (filters?.labels) {
     params.label = filters.labels.split(',')
@@ -25,8 +27,6 @@ const generateRequestParams = filters => {
       params.start_time_to = filters.dates.value[1].toISOString()
     }
   }
-
-  params.iter = filters.iter && !isNaN(filters.iter) ? filters.iter : false
 
   return params
 }
