@@ -2,7 +2,9 @@ import { mainHttpClient } from '../httpClient'
 import { STATE_FILTER_ALL_ITEMS } from '../constants'
 
 const generateRequestParams = filters => {
-  const params = {}
+  const params = {
+    iter: false
+  }
 
   if (filters?.labels) {
     params.label = filters.labels.split(',')
@@ -26,14 +28,10 @@ const generateRequestParams = filters => {
     }
   }
 
-  if (filters?.iter) {
-    params.iter = filters.iter
-  }
-
   return params
 }
 
-export default {
+const jobsApi = {
   abortJob: (project, jobId, iter) => {
     const params = {}
 
@@ -73,7 +71,15 @@ export default {
 
     return mainHttpClient.get('/runs', { params })
   },
-  getJob: (project, jobId) => mainHttpClient.get(`/run/${project}/${jobId}`),
+  getJob: (project, jobId, iter) => {
+    const params = {}
+
+    if (!isNaN(iter)) {
+      params.iter = iter
+    }
+
+    return mainHttpClient.get(`/run/${project}/${jobId}`, { params })
+  },
   getJobFunction: (project, functionName, hash) =>
     mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
@@ -109,3 +115,5 @@ export default {
       postData
     )
 }
+
+export default jobsApi
