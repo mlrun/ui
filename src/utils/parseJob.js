@@ -35,7 +35,11 @@ export const parseJob = (job, tab) => {
       name: job.metadata.name,
       outputPath: job.spec.output_path,
       owner: job.metadata.labels?.owner,
-      parameters: parseKeyValues(job.spec.parameters || {}),
+      parameters: job.spec.parameters || {},
+      parametersChips: [
+        ...parseKeyValues(job.spec.parameters || {}),
+        ...parseKeyValues(job.spec.hyperparams || {})
+      ],
       project: job.metadata.project,
       results: job.status.results || {},
       resultsChips: parseKeyValues(job.status.results || {}),

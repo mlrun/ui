@@ -88,7 +88,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
         {
           header: 'Parameters',
           id: `parameters.${identifierUnique}`,
-          value: job.parameters,
+          value: job.parametersChips,
           class: 'table-cell-1 table-cell-small',
           type: 'parameters'
         },
@@ -289,7 +289,7 @@ export const createJobsWorkflowsTabContent = (
               {
                 header: 'Parameters',
                 id: `parameters.${identifierUnique}`,
-                value: job.parameters,
+                value: job.parametersChips,
                 class: 'table-cell-1',
                 type: 'parameters',
                 hidden: isSelectedItem

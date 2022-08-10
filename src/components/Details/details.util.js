@@ -181,7 +181,7 @@ export const generateJobsContent = selectedItem => {
       value: formatDatetime(selectedItem.updated, 'N/A')
     },
     parameters: {
-      value: selectedItem.parameters
+      value: selectedItem.parametersChips
     },
     function: {
       value: selectedItem.function
