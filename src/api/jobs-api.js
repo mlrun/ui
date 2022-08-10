@@ -2,7 +2,9 @@ import { mainHttpClient } from '../httpClient'
 import { STATE_FILTER_ALL_ITEMS } from '../constants'
 
 const generateRequestParams = filters => {
-  const params = {}
+  const params = {
+    iter: false
+  }
 
   if (filters?.labels) {
     params.label = filters.labels.split(',')
@@ -24,10 +26,6 @@ const generateRequestParams = filters => {
     if (filters.dates.value[1] && !filters.dates.isPredefined) {
       params.start_time_to = filters.dates.value[1].toISOString()
     }
-  }
-
-  if (filters?.iter) {
-    params.iter = filters.iter
   }
 
   return params
@@ -86,9 +84,7 @@ const jobsApi = {
     mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
   getScheduledJobAccessKey: (project, job) =>
-    mainHttpClient.get(
-      `/projects/${project}/schedules/${job}?include-credentials=true`
-    ),
+    mainHttpClient.get(`/projects/${project}/schedules/${job}?include-credentials=true`),
   getScheduledJobs: (project, filters) => {
     const params = {
       include_last_run: 'yes'
@@ -112,10 +108,7 @@ const jobsApi = {
     mainHttpClient.delete(`/projects/${project}/schedules/${scheduleName}`),
   runJob: postData => mainHttpClient.post('/submit_job', postData),
   runScheduledJob: (postData, project, job) =>
-    mainHttpClient.post(
-      `/projects/${project}/schedules/${job}/invoke`,
-      postData
-    )
+    mainHttpClient.post(`/projects/${project}/schedules/${job}/invoke`, postData)
 }
 
 export default jobsApi
