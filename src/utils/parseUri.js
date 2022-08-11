@@ -79,4 +79,14 @@ const generateLinkPath = (uri = '') => {
   return `/projects/${project}/${screen}/${key}${reference ? `/${reference}` : ''}`
 }
 
-export { generateLinkPath, parseUri }
+const generateNuclioLink = pathname => {
+  const linkUrl = new URL(`${window.mlrunConfig.nuclioUiUrl}${pathname}`)
+
+  if (window.location.origin !== window.mlrunConfig.nuclioUiUrl) {
+    linkUrl.searchParams.set?.('origin', window.location.origin)
+  }
+
+  return linkUrl.toString()
+}
+
+export { generateLinkPath, generateNuclioLink, parseUri }
