@@ -39,7 +39,6 @@ const ProjectMonitor = ({
   setNotification
 }) => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
-  const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
@@ -52,6 +51,104 @@ const ProjectMonitor = ({
       }`,
     [params.projectName]
   )
+
+  const createFunctionSuccess = useCallback(async () => {
+    removeNewFunction()
+
+    return setNotification({
+      status: 200,
+      id: Math.random(),
+      message: 'Function created successfully'
+    })
+  }, [removeNewFunction, setNotification])
+
+  const handleDeployFunctionSuccess = useCallback(
+    async ready => {
+      let { name, tag } = functionsStore.newFunction.metadata
+      const tab = ready === false ? 'build-log' : 'overview'
+
+      tag ||= 'latest'
+
+      removeNewFunction()
+
+      const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Failed to fetch functions'
+        })
+      })
+
+      if (funcs) {
+        const currentItem = funcs.find(func => {
+          return func.metadata.name === name && func.metadata.tag === tag
+        })
+
+        navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
+
+        return setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+      }
+    },
+    [
+      fetchProjectFunctions,
+      functionsStore.newFunction.metadata,
+      navigate,
+      params.projectName,
+      removeNewFunction,
+      setNotification
+    ]
+  )
+
+  const handleDeployFunctionFailure = useCallback(async () => {
+    const { name, tag } = functionsStore.newFunction.metadata
+
+    removeNewFunction()
+
+    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Function deployment failed to initiate'
+      })
+
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Failed to fetch functions'
+      })
+    })
+
+    if (funcs) {
+      const currentItem = funcs.find(func => {
+        return func.metadata.name === name && func.metadata.tag === tag
+      })
+
+      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
+
+      return setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Function deployment failed to initiate'
+      })
+    }
+  }, [
+    fetchProjectFunctions,
+    functionsStore.newFunction.metadata,
+    navigate,
+    params.projectName,
+    removeNewFunction,
+    setNotification
+  ])
 
   const nuclioStreamsAreEnabled = useMemo(
     () => areNuclioStreamsEnabled(frontendSpec),
@@ -70,7 +167,7 @@ const ProjectMonitor = ({
     [navigate, params.projectName, registerArtifactLink]
   )
 
-  const handleRegisterModel = useCallback(() => {
+  const openRegisterModel = useCallback(() => {
     openPopUp(RegisterModelPopUp, {
       projectName: params.projectName,
       refresh: () => navigate(registerArtifactLink('model'))
@@ -78,15 +175,27 @@ const ProjectMonitor = ({
   }, [params.projectName, navigate, registerArtifactLink])
 
   const openNewFunctionModal = useCallback(
-    () => openPopUp(NewFunctionModal, { mode: PANEL_CREATE_MODE, projectName: params.projectName }),
-    [params.projectName]
+    () =>
+      openPopUp(NewFunctionModal, {
+        createFunctionSuccess,
+        handleDeployFunctionFailure,
+        handleDeployFunctionSuccess,
+        mode: PANEL_CREATE_MODE,
+        projectName: params.projectName
+      }),
+    [
+      createFunctionSuccess,
+      handleDeployFunctionFailure,
+      handleDeployFunctionSuccess,
+      params.projectName
+    ]
   )
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,
       params,
-      handleRegisterModel,
+      openRegisterModel,
       openRegisterArtifactModal,
       openNewFunctionModal,
       setCreateFeatureSetPanelIsOpen
@@ -95,7 +204,7 @@ const ProjectMonitor = ({
     return {
       createNewOptions
     }
-  }, [handleRegisterModel, navigate, openRegisterArtifactModal, openNewFunctionModal, params])
+  }, [openRegisterModel, navigate, openRegisterArtifactModal, openNewFunctionModal, params])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {
@@ -147,7 +256,6 @@ const ProjectMonitor = ({
   }
 
   const closeFunctionsPanel = () => {
-    setShowFunctionsPanel(false)
     removeNewFunction()
 
     if (functionsStore.error) {
@@ -158,90 +266,6 @@ const ProjectMonitor = ({
   const createFeatureSetSuccess = async () => {
     setCreateFeatureSetPanelIsOpen(false)
     removeNewFeatureSet()
-  }
-
-  const createFunctionSuccess = async () => {
-    setShowFunctionsPanel(false)
-    removeNewFunction()
-
-    return setNotification({
-      status: 200,
-      id: Math.random(),
-      message: 'Function created successfully'
-    })
-  }
-
-  const handleDeployFunctionSuccess = async ready => {
-    let { name, tag } = functionsStore.newFunction.metadata
-    const tab = ready === false ? 'build-log' : 'overview'
-
-    tag ||= 'latest'
-
-    setShowFunctionsPanel(false)
-    removeNewFunction()
-
-    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Function deployment initiated successfully'
-      })
-
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Failed to fetch functions'
-      })
-    })
-
-    if (funcs) {
-      const currentItem = funcs.find(func => {
-        return func.metadata.name === name && func.metadata.tag === tag
-      })
-
-      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
-
-      return setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Function deployment initiated successfully'
-      })
-    }
-  }
-
-  const handleDeployFunctionFailure = async () => {
-    const { name, tag } = functionsStore.newFunction.metadata
-
-    setShowFunctionsPanel(false)
-    removeNewFunction()
-
-    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Function deployment failed to initiate'
-      })
-
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Failed to fetch functions'
-      })
-    })
-
-    if (funcs) {
-      const currentItem = funcs.find(func => {
-        return func.metadata.name === name && func.metadata.tag === tag
-      })
-
-      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
-
-      return setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Function deployment failed to initiate'
-      })
-    }
   }
 
   const handleLaunchIDE = useCallback(() => {}, [])
@@ -265,10 +289,7 @@ const ProjectMonitor = ({
         confirmData={confirmData}
         createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
         createFeatureSetSuccess={createFeatureSetSuccess}
-        createFunctionSuccess={createFunctionSuccess}
         createNewOptions={createNewOptions}
-        handleDeployFunctionFailure={handleDeployFunctionFailure}
-        handleDeployFunctionSuccess={handleDeployFunctionSuccess}
         handleLaunchIDE={handleLaunchIDE}
         isNuclioModeDisabled={isNuclioModeDisabled}
         navigate={navigate}
@@ -277,8 +298,6 @@ const ProjectMonitor = ({
         project={projectStore.project}
         projectSummary={projectStore.projectSummary}
         refresh={handleRefresh}
-        setShowFunctionsPanel={setShowFunctionsPanel}
-        showFunctionsPanel={showFunctionsPanel}
         v3ioStreams={nuclioStore.v3ioStreams}
       />
     </>

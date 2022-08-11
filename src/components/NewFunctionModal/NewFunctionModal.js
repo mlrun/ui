@@ -4,16 +4,17 @@ import { useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
+import arrayMutators from 'final-form-arrays'
 
 // import FunctionsPanelTitle from '../../elements/FunctionsPanelTitle/FunctionsPanelTitle'
 import NewFunctionModalStep1 from './NewFunctionModalStep1/NewFunctionModalStep1'
 import NewFunctionModalStep2 from './NewFunctionModalStep2/NewFunctionModalStep2'
 import NewFunctionModalStep3 from './NewFunctionModalStep3/NewFunctionModalStep3'
-
 import { Wizard } from 'igz-controls/components'
 
 import { LABEL_BUTTON, MODAL_LG, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { PANEL_DEFAULT_ACCESS_KEY, FUNCTION_TYPE_JOB } from '../../constants'
+import { setFieldState } from 'igz-controls/utils/form.util'
 import {
   getDefaultVolumeMounts,
   getModalTitle,
@@ -40,7 +41,10 @@ import { parseKeyValues } from '../../utils'
 import { FUNCTION_PANEL_MODE } from '../../types'
 
 const NewFunctionModal = ({
+  createFunctionSuccess,
   defaultData,
+  handleDeployFunctionFailure,
+  handleDeployFunctionSuccess,
   isOpen,
   isStandAlone,
   mode,
@@ -56,10 +60,9 @@ const NewFunctionModal = ({
     return appStore.frontendSpec?.default_function_pod_resources
   }, [appStore.frontendSpec.default_function_pod_resources])
 
-  const gpuType = useMemo(
-    () => getLimitsGpuType(defaultData.resources?.limits),
-    [defaultData.resources?.limits]
-  )
+  const gpuType = useMemo(() => getLimitsGpuType(defaultData.resources?.limits), [
+    defaultData.resources?.limits
+  ])
 
   const preemptionMode = useMemo(() => {
     return appStore.frontendSpec.feature_flags.preemption_nodes === 'enabled'
@@ -81,7 +84,7 @@ const NewFunctionModal = ({
           credentials: {
             access_key: PANEL_DEFAULT_ACCESS_KEY
           },
-          labels: parseKeyValues(defaultData.labels) ?? [], //change to return object
+          labels: parseKeyValues(defaultData.labels) ?? [],
           name: defaultData.name ?? '',
           tag: defaultData.tag ?? ''
         },
@@ -161,6 +164,7 @@ const NewFunctionModal = ({
           volumeMount: VOLUME_MOUNT_AUTO_TYPE
         }
       },
+      mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
   )
@@ -180,17 +184,13 @@ const NewFunctionModal = ({
       label: 'Resources'
     },
     {
-      id: 'volumes',
-      label: 'Volumes'
-    },
-    {
       id: 'environmentVariables',
       label: 'Environment variables'
     },
     {
       id: 'servingRuntimeConfig',
       label: 'Serving runtime configuration',
-      hidden: formState.values.kind === FUNCTION_TYPE_JOB
+      isHidden: formState.values.kind === FUNCTION_TYPE_JOB
     },
     {
       id: 'advanced',
@@ -212,17 +212,17 @@ const NewFunctionModal = ({
           variant: SECONDARY_BUTTON
         }
       ],
-      hidden: formState.values.kind === FUNCTION_TYPE_JOB
+      isHidden: formState.values.kind === FUNCTION_TYPE_JOB
     }
   ]
 
   const handleSave = deploy => {
-    console.log('save')
-    console.log(deploy)
+    // console.log('save')
+    // console.log(deploy)
   }
 
   const handleSubmit = values => {
-    console.log(values)
+    // console.log(values)
   }
 
   return (
@@ -263,7 +263,6 @@ const NewFunctionModal = ({
             <Wizard.Step>
               <NewFunctionModalStep3 appStore={appStore} formState={formState} />
             </Wizard.Step>
-            <Wizard.Step>Volumes</Wizard.Step>
             {formState.values.kind !== FUNCTION_TYPE_JOB && (
               <Wizard.Step>Environment variables</Wizard.Step>
             )}
@@ -285,7 +284,10 @@ NewFunctionModal.defaultProps = {
 }
 
 NewFunctionModal.propTypes = {
+  // createFunctionSuccess: PropTypes.func.isRequired,
   defaultData: PropTypes.shape({}),
+  // handleDeployFunctionFailure: PropTypes.func.isRequired,
+  // handleDeployFunctionSuccess: PropTypes.func.isRequired,
   mode: FUNCTION_PANEL_MODE.isRequired,
   isStandAlone: PropTypes.bool,
   projectName: PropTypes.string.isRequired,

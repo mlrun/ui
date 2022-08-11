@@ -22,7 +22,7 @@ export const launchIDEOptions = [
 export const generateCreateNewOptions = (
   navigate,
   params,
-  handleRegisterModel,
+  openRegisterModel,
   openRegisterArtifactModal,
   openNewFunctionModal,
   setCreateFeatureSetPanelIsOpen
@@ -53,7 +53,7 @@ export const generateCreateNewOptions = (
   {
     label: 'Register Model',
     id: 'registerModel',
-    handler: handleRegisterModel
+    handler: openRegisterModel
   },
   {
     label: 'Register Dataset',

@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
-import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
+// import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
@@ -13,7 +13,6 @@ import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummary
 import Select from '../../common/Select/Select'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
-import { PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
@@ -23,14 +22,10 @@ import './project.scss'
 
 const ProjectMonitorView = ({
   closeFeatureSetPanel,
-  closeFunctionsPanel,
   confirmData,
   createFeatureSetPanelIsOpen,
   createFeatureSetSuccess,
-  createFunctionSuccess,
   createNewOptions,
-  handleDeployFunctionFailure,
-  handleDeployFunctionSuccess,
   handleLaunchIDE,
   isNuclioModeDisabled,
   nuclioStreamsAreEnabled,
@@ -38,7 +33,6 @@ const ProjectMonitorView = ({
   project,
   projectSummary,
   refresh,
-  showFunctionsPanel,
   v3ioStreams
 }) => {
   return (
@@ -160,16 +154,6 @@ const ProjectMonitorView = ({
           project={params.projectName}
         />
       )}
-      {showFunctionsPanel && (
-        <FunctionsPanel
-          closePanel={closeFunctionsPanel}
-          createFunctionSuccess={createFunctionSuccess}
-          handleDeployFunctionFailure={handleDeployFunctionFailure}
-          handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-          mode={PANEL_CREATE_MODE}
-          project={params.projectName}
-        />
-      )}
     </div>
   )
 }
@@ -184,17 +168,13 @@ ProjectMonitorView.propTypes = {
   confirmData: PropTypes.object,
   createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
-  createFunctionSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
-  handleDeployFunctionFailure: PropTypes.func.isRequired,
-  handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   isNuclioModeDisabled: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
-  showFunctionsPanel: PropTypes.bool.isRequired,
   v3ioStreams: PropTypes.shape({}).isRequired
 }
 

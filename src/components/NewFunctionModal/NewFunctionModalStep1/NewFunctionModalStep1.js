@@ -2,11 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 
-import { FormInput, FormSelect, FormTextarea } from 'igz-controls/components'
+import { FormChipCell, FormInput, FormSelect, FormTextarea } from 'igz-controls/components'
 
 import { PANEL_CREATE_MODE, TAG_LATEST } from '../../../constants'
 
 import { runtimeOptions, sourceCodeInBase64 } from '../newFunctionModal.util'
+import { getChipOptions } from '../../../utils/getChipOptions'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 const NewFunctionModalStep1 = ({
@@ -82,8 +83,16 @@ const NewFunctionModalStep1 = ({
       <div className="form-row">
         <FormTextarea label="Description" name="spec.description" />
       </div>
-      <div className="form-row">PlaceHolder: Labels component</div>
-      <pre>{JSON.stringify(formState, null, 2)}</pre>
+      <div className="form-row">
+        <FormChipCell
+          chipOptions={getChipOptions('metrics')}
+          formState={formState}
+          initialValues={formState.initialValues}
+          isEditMode
+          name="metadata.labels"
+          visibleChipsMaxLength="all"
+        />
+      </div>
     </>
   )
 }
