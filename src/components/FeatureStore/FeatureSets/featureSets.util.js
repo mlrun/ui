@@ -31,7 +31,8 @@ export const generateFeatureSetsDetailsMenu = selectedItem => [
     label: 'statistics',
     id: 'statistics',
     hidden: !selectedItem?.stats,
-    tip: 'Statistics reflect the data for the latest ingestion'
+    tip:
+      'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics'
   },
   {
     label: 'analysis',
