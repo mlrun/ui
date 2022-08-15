@@ -28,7 +28,6 @@ Feature: Feature Store Page
         Then verify "Feature_Store_Tab_Selector" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create Set" value
-        Then additionally redirect by INVALID-TAB
 
     @passive
     Scenario: Check all mandatory components on Features tab
@@ -172,6 +171,12 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard should contains "Feature_Vectors_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Overview_General_Headers" on "Feature_Vectors_Info_Pane" wizard should contains "Feature_Vectors_Info_Pane"."Overview_General_Headers"
+        Then select "Requested Features" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        Then verify "Requested Features" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
 
     @passive
     @inProgress
@@ -212,6 +217,7 @@ Feature: Feature Store Page
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Features" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Features" tab is active in "Info_Pane_Tab_Selector" on "Features_Info_Pane" wizard
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Info_Pane_Tab_Selector" on "Features_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Features_Info_Pane" wizard
         Then verify "Header" element visibility on "Features_Info_Pane" wizard
@@ -233,6 +239,7 @@ Feature: Feature Store Page
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Transformations" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Transformations" tab is active in "Info_Pane_Tab_Selector" on "Transformations_Info_Pane" wizard
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Info_Pane_Tab_Selector" on "Features_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Transformations_Info_Pane" wizard
         Then verify "Header" element visibility on "Transformations_Info_Pane" wizard
@@ -255,6 +262,7 @@ Feature: Feature Store Page
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Preview_Info_Pane" wizard
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Info_Pane_Tab_Selector" on "Preview_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Preview_Info_Pane" wizard
         Then verify "Header" element visibility on "Preview_Info_Pane" wizard
@@ -276,6 +284,7 @@ Feature: Feature Store Page
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Header" element visibility on "Analysis_Info_Pane" wizard
@@ -297,6 +306,31 @@ Feature: Feature Store Page
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then value in "name" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "ea"
+        Then type value "NAME" to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+
+    @passive
+    Scenario: Check filtering by Label on Feature Store Feature Sets Tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And wait load page
+        Then type value "owner" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then value in "labels" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "owner"
+        Then type value "type=featureSet" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then value in "labels" column with "dropdowns" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "type=featureSet"
+        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
     @passive
     Scenario: Check filtering by Name on Feature Store Features Tab
@@ -316,6 +350,29 @@ Feature: Feature Store Page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
 
     @passive
+    Scenario: Check filtering by Label on Feature Store Features Tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And wait load page
+        And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then type value "owner" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        And wait load page
+        Then value in "labels" column with "dropdowns" in "Features_Table" on "Feature_Store_Features_Tab" wizard should contains "owner"
+        Then type value "type=feature" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        And wait load page
+        Then value in "labels" column with "dropdowns" in "Features_Table" on "Feature_Store_Features_Tab" wizard should contains "type=feature"
+        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+
+    @passive
     Scenario: Check filtering by Name on Feature Store Feature Vectors Tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -328,6 +385,29 @@ Feature: Feature Store Page
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "io"
+
+    @passive
+    Scenario: Check filtering by Label on Feature Store Feature Vectors Tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And wait load page
+        And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
+        And wait load page
+        Then type value "owner" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        And wait load page
+        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "owner"
+        Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        And wait load page
+        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector"
+        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
     @passive
     Scenario: Check filtering by Tag on Feature Store Feature Sets Tab
@@ -826,25 +906,25 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then check "expand_btn" visibility in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then check "expand_btn" not presented in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
-        Then check "expand_btn" not visible in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then check "expand_btn" not presented in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then check "expand_btn" not visible in "Features_Table" on "Feature_Store_Features_Tab" wizard
+        Then check "expand_btn" not presented in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
         Then check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
-        Then check "expand_btn" not visible in "Features_Table" on "Feature_Store_Features_Tab" wizard
+        Then check "expand_btn" not presented in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then check "expand_btn" not visible in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
+        Then check "expand_btn" not presented in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
         When select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
         Then check "expand_btn" visibility in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
         When select "test-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
-        Then check "expand_btn" not visible in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
+        Then check "expand_btn" not presented in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
 
     @passive
     Scenario: Check MLRun logo redirection
@@ -870,6 +950,14 @@ Feature: Feature Store Page
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on cell with row index 2 in "expand_btn" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "not-latest" value in "name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
 
     @passive
     Scenario: Verify View YAML action on Features tab
@@ -902,7 +990,14 @@ Feature: Feature Store Page
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
-
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on cell with row index 3 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then select "View YAML" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "1" value in "name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
 
     @passive
     Scenario: Verify View YAML action in Item infopane on Feature Sets tab
@@ -1230,7 +1325,7 @@ Feature: Feature Store Page
         Then click on "discard_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature      |
             | last_updated |
-        Then click on "add_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+        Then click on "edit_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature |
             | room    |
         Then type value "room_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
@@ -1328,4 +1423,54 @@ Feature: Feature Store Page
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
 
-
+    Scenario: Check broken link redirection
+        * set tear-down property "project" created with "automation-test-010" value
+        * create "automation-test-010" MLRun Project with code 201
+        * set tear-down property "featureSet" created in "automation-test-010" project with "test_fs" value
+        * create "test_fs" Feature Set in "automation-test-010" project with code 200
+        Given open url
+        And wait load page
+        And click on row root with value "automation-test-010" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/INVALID/latest/overview" to "projects/automation-test-010/feature-store/feature-sets"
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/INVALID" to "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/overview"
+        Then select "Features" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/INVALID" to "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/overview"
+        Then select "Transformations" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/INVALID" to "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/overview"
+        Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/INVALID" to "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/overview"
+        Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/INVALID" to "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/overview"
+        When select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
+        When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
+        * set tear-down property "featureVector" created in "automation-test-010" project with "test_fv" value
+        * create "test_fv" Feature Vector in "automation-test-010" project with code 200
+        When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-vectors/INVALID/latest/overview" to "projects/automation-test-010/feature-store/feature-vectors"
+        When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/INVALID" to "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/overview"
+        Then select "Requested Features" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/INVALID" to "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/overview"
+        Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/INVALID" to "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/overview"
+        Then verify redirection from "projects/automation-test-010/INVALID/feature-vectors/test_fv/latest/overview" to "projects"

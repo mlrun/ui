@@ -155,15 +155,15 @@ function getFeatureSet(req, res) {
 
   if (req.query['label']) {
     let [key, value] = req.query['label'].split('=')
-    collectedFeatureSets = collectedFeatureSets.filter(feature => {
-      if (feature.spec.labels) {
-        return feature.spec.labels[key]
+    collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
+      if (featureSet.metadata.labels) {
+        return featureSet.metadata.labels[key]
       }
     })
     if (req.query['label'].includes('=')) {
-      collectedFeatureSets = collectedFeatureSets.filter(feature => {
-        if (feature.spec.labels) {
-          return feature.spec.labels[key] === value
+      collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
+        if (featureSet.metadata.labels) {
+          return featureSet.metadata.labels[key] === value
         }
       })
     }

@@ -183,8 +183,8 @@ const realTimePipelinesGraph = {
             root: '.react-flow__node-ml-node',
             fields: {
               name: '.react-flow__node-label .data-ellipsis .data-ellipsis',
-              top_hendler: '.data-ellipsis .react-flow__handle-top',
-              bottom_hendler: '.data-ellipsis .react-flow__handle-bottom'
+              top_handler: '.data-ellipsis .react-flow__handle-top',
+              bottom_handler: '.data-ellipsis .react-flow__handle-bottom'
             }
           }
         }

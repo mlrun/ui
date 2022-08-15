@@ -37,7 +37,7 @@ const functionsTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        expand_btn: '',
+        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         name: '.table-body__cell:nth-of-type(1) a .name-wrapper span.link',
         tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
         status: '.table-body__cell:nth-of-type(1) .status i',
