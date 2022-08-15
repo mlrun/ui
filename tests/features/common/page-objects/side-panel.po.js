@@ -1463,7 +1463,7 @@ module.exports = {
           generateInputGroup(
               '.env-variables-table .edit-row .table-cell__value')
       ),
-      Environment_Variables_Seret_Name_Input: inputGroup(
+      Environment_Variables_Secret_Name_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(1)',
           true,
@@ -1476,7 +1476,7 @@ module.exports = {
               '.env-variables-table .edit-row .table-cell__secret .input-wrapper:nth-of-type(1)',
           )
       ),
-      Environment_Variables_Seret_Key_Input: inputGroup(
+      Environment_Variables_Secret_Key_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(2)',
           true,
@@ -1811,7 +1811,7 @@ module.exports = {
               '.env-variables-table .edit-row .table-cell__value',
           )
       ),
-      Function_Environment_Variables_Seret_Name_Input: inputGroup(
+      Function_Environment_Variables_Secret_Name_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(1)',
           true,
@@ -1824,7 +1824,7 @@ module.exports = {
               '.env-variables-table .edit-row .table-cell__secret .input-wrapper:nth-of-type(1)',
           )
       ),
-      Function_Environment_Variables_Seret_Key_Input: inputGroup(
+      Function_Environment_Variables_Secret_Key_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(2)',
           true,

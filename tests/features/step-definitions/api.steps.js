@@ -1,9 +1,9 @@
 import { When, Then } from '@cucumber/cucumber'
 import {
   createAPIArtifact,
-  createAPIFunction,
   createAPIFeatureSet,
   createAPIFeatureVector,
+  createAPIFunction,
   createAPIMLProject,
   createAPISchedule,
   deleteAPIMLProject,
