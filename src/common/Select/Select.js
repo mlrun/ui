@@ -201,6 +201,7 @@ const Select = ({
                   <SelectOption
                     item={option}
                     key={option.id}
+                    name={option.id}
                     onClick={selectedOption => {
                       handleSelectOptionClick(selectedOption, option)
                     }}

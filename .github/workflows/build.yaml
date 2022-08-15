@@ -16,6 +16,10 @@ on:
         description: 'Docker repo to push images to (default: lowercase github repository owner name)'
         required: false
         default: ''
+      version:
+        description: 'The version to build, without prefix v (e.g. 1.1.0), if not provided version will be <latest-release>-<commit-hash>'
+        required: false
+        default: ''
 
 jobs:
   build-images:
@@ -33,11 +37,14 @@ jobs:
       id: git_info
       run: |
         echo "::set-output name=mlrun_commit_hash::$(git rev-parse --short=8 $GITHUB_SHA)"
-        echo "::set-output name=latest_version::$(curl -sf https://pypi.org/pypi/mlrun/json | jq -r '.info.version')"
+        echo "::set-output name=unstable_version_prefix::$(curl https://raw.githubusercontent.com/mlrun/mlrun/${GITHUB_REF##*/}/automation/version/unstable_version_prefix)"
     - name: Set computed versions params
       id: computed_params
       run: |
-        echo "::set-output name=mlrun_version::${{ steps.git_info.outputs.latest_version }}-${{ steps.git_info.outputs.mlrun_commit_hash }}"
+        echo "::set-output name=mlrun_version::$( \
+          input_mlrun_version=${{ github.event.inputs.version }} && \
+          default_mlrun_version=$(echo ${{ steps.git_info.outputs.unstable_version_prefix }}-${{ steps.git_info.outputs.mlrun_commit_hash }}) && \
+          echo ${input_mlrun_version:-`echo $default_mlrun_version`})"
         echo "::set-output name=mlrun_docker_repo::$( \
           input_docker_repo=${{ github.event.inputs.docker_repo }} && \
           default_docker_repo=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]') && \

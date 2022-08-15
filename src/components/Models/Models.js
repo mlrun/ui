@@ -5,8 +5,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import DeployModelPopUp from '../../elements/DeployModelPopUp/DeployModelPopUp'
+import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
 import Pipeline from '../Pipeline/Pipeline'
 
 import artifactsAction from '../../actions/artifacts'
@@ -23,6 +23,7 @@ import {
   tabs
 } from './models.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -39,7 +40,6 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier, getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
-import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 const Models = ({
@@ -60,19 +60,11 @@ const Models = ({
 }) => {
   const [pageData, setPageData] = useState(pageDataInitialState)
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
-  const openPanelByDefault = useOpenPanel()
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
-  const [isRegisterArtifactPopupOpen, setIsRegisterArtifactPopupOpen] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-
-  useEffect(() => {
-    if (openPanelByDefault) {
-      setIsRegisterArtifactPopupOpen(true)
-    }
-  }, [openPanelByDefault])
 
   const fetchData = useCallback(
     async filters => {
@@ -97,6 +89,10 @@ const Models = ({
   const handleDeployModel = useCallback(model => {
     openPopUp(DeployModelPopUp, { model })
   }, [])
+
+  const handleRegisterModel = useCallback(() => {
+    openPopUp(RegisterModelPopUp, { projectName: params.projectName, refresh: fetchData })
+  }, [params.projectName, fetchData])
 
   const handleRemoveModel = useCallback(
     model => {
@@ -325,7 +321,7 @@ const Models = ({
       {artifactsStore.loading && <Loader />}
       <Content
         content={sortedContent}
-        handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
+        handleActionsMenuClick={handleRegisterModel}
         handleCancel={() => setSelectedModel({})}
         handleRemoveRequestData={params.pageTab === MODELS_TAB && handleRemoveModel}
         loading={artifactsStore.loading}
@@ -338,14 +334,6 @@ const Models = ({
       >
         {params.pipelineId ? <Pipeline content={content} /> : null}
       </Content>
-      {isRegisterArtifactPopupOpen && (
-        <RegisterArtifactPopup
-          artifactKind={pageData.page.slice(0, -1)}
-          refresh={fetchData}
-          setIsPopupOpen={setIsRegisterArtifactPopupOpen}
-          title={pageData.actionsMenuHeader}
-        />
-      )}
     </div>
   )
 }

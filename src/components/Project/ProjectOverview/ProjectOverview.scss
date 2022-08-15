@@ -4,6 +4,7 @@
 
 .project-overview {
   width: 100%;
+  height: 100%;
   background-color: $white;
 
   &__header {
@@ -66,7 +67,7 @@
   &-card {
     flex: 0 0 100%;
     min-width: 320px;
-    min-height: 635px;
+    // min-height: 635px;
     margin: 0 15px 2em;
     transform: translateY(-60px);
 
@@ -84,7 +85,8 @@
     }
 
     &__center {
-      display: flex;
+      // display: flex;
+      display: none;
       flex-flow: column nowrap;
       height: 220px;
       padding: 20px 1em 0;
@@ -109,6 +111,8 @@
     }
 
     .additional-links {
+      display: flex;
+
       & > * {
         padding: 5px 0;
         text-transform: capitalize;
@@ -139,7 +143,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin: 0;
+        padding: 1em 0;
         cursor: pointer;
+
+        &:hover {
+          background-color: $selago;
+        }
 
         svg {
           transform: rotate(90deg);
@@ -177,7 +187,7 @@
   }
 
   &__bottom {
-    padding: 1em;
+    padding: 1em 1.6em;
     border-top: 1px solid $athensGray;
   }
 

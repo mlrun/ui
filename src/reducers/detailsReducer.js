@@ -28,13 +28,8 @@ const initialState = {
   },
   error: null,
   infoContent: {},
-  iteration: '0',
-  iterationOptions: [
-    {
-      label: 'Main',
-      id: '0'
-    }
-  ],
+  iteration: '',
+  iterationOptions: [],
   loading: false,
   modelEndpoint: {
     data: {}

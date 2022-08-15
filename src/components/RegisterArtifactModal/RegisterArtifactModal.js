@@ -1,20 +1,23 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
+import { createForm } from 'final-form'
 
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
-import { Button, ConfirmDialog, Modal } from 'igz-controls/components'
+import { Button, Modal } from 'igz-controls/components'
 
-import { messagesByKind } from '../RegisterArtifactPopup/messagesByKind'
+import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import artifactApi from '../../api/artifacts-api'
 
 const RegisterArtifactModal = ({
+  actions,
   artifactKind,
   filtersStore,
   isOpen,
@@ -26,114 +29,95 @@ const RegisterArtifactModal = ({
 }) => {
   const [initialValues, setInitialValues] = useState({
     description: '',
-    kind: 'general',
+    kind: '',
     key: '',
     target_path: ''
   })
+  const formRef = React.useRef(
+    createForm({
+      onSubmit: () => {}
+    })
+  )
+  const location = useLocation()
+  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   useEffect(() => {
-    if (artifactKind !== 'artifact') {
-      setInitialValues(state => ({
-        ...state,
-        kind: artifactKind.toLowerCase()
-      }))
-    }
+    setInitialValues(state => ({
+      ...state,
+      kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general'
+    }))
   }, [artifactKind])
 
-  const registerArtifact = useCallback(
-    values => {
-      const uid = uuidv4()
-      const data = {
-        uid,
-        key: values.key,
-        db_key: values.key,
-        tree: uid,
-        target_path: values.target_path,
-        description: values.description,
-        kind: values.kind === 'general' ? '' : values.kind,
-        project: projectName,
-        producer: {
-          kind: 'api',
-          uri: window.location.host
-        }
+  const registerArtifact = values => {
+    const uid = uuidv4()
+    const data = {
+      uid,
+      key: values.key,
+      db_key: values.key,
+      tree: uid,
+      target_path: values.target_path,
+      description: values.description,
+      kind: values.kind === 'general' ? '' : values.kind,
+      project: projectName,
+      producer: {
+        kind: 'api',
+        uri: window.location.host
       }
-
-      if (values.kind === 'model' && values.target_path.includes('/')) {
-        const path = values.target_path.split(/([^/]*)$/)
-
-        data.target_path = path[0]
-        data.model_file = path[1]
-      }
-
-      artifactApi
-        .registerArtifact(projectName, data)
-        .then(response => {
-          refresh(filtersStore)
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: `${title} initiated successfully`
-          })
-        })
-        .catch(err => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            message: `${title} failed to initiate`,
-            retry: registerArtifact
-          })
-        })
-        .finally(() => onResolve())
-    },
-    [filtersStore, onResolve, projectName, refresh, setNotification, title]
-  )
-
-  const handleCloseModal = formState => {
-    if (formState && formState.dirty) {
-      openPopUp(ConfirmDialog, {
-        cancelButton: {
-          label: 'Cancel',
-          variant: TERTIARY_BUTTON
-        },
-        confirmButton: {
-          handler: onResolve,
-          label: 'OK',
-          variant: SECONDARY_BUTTON
-        },
-        header: 'Are you sure?',
-        message: 'All changes will be lost'
-      })
-    } else {
-      onResolve()
     }
+
+    return artifactApi
+      .registerArtifact(projectName, data)
+      .then(response => {
+        formRef.current = null
+        refresh(filtersStore)
+        return setNotification({
+          status: response.status,
+          id: Math.random(),
+          message: `${title} initiated successfully`
+        })
+      })
+      .catch(err => {
+        return setNotification({
+          status: 400,
+          id: Math.random(),
+          message: `${title} failed to initiate`,
+          retry: registerArtifact
+        })
+      })
+      .finally(() => {
+        onResolve()
+      })
   }
 
   const getModalActions = formState => {
-    const actions = [
-      {
-        label: 'Cancel',
-        onClick: () => handleCloseModal(formState),
-        variant: TERTIARY_BUTTON
-      },
-      {
-        disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-        label: 'Register',
-        onClick: formState.handleSubmit,
-        variant: SECONDARY_BUTTON
-      }
-    ]
-    return actions.map(action => <Button {...action} />)
+    const defaultActions = actions
+      ? actions(formState, handleCloseModal)
+      : [
+          {
+            label: 'Cancel',
+            onClick: () => handleCloseModal(),
+            variant: TERTIARY_BUTTON
+          },
+          {
+            disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+            label: 'Register',
+            onClick: formState.handleSubmit,
+            variant: SECONDARY_BUTTON
+          }
+        ]
+    return defaultActions.map(action => <Button {...action} />)
   }
 
   return (
-    <Form initialValues={initialValues} onSubmit={registerArtifact}>
+    <Form form={formRef.current} initialValues={initialValues} onSubmit={registerArtifact}>
       {formState => {
         return (
           <Modal
             data-testid="register-artifact"
             actions={getModalActions(formState)}
             className="artifact-register-form"
-            onClose={() => handleCloseModal(formState)}
+            location={location}
+            onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
             title={title}
@@ -149,14 +133,11 @@ const RegisterArtifactModal = ({
   )
 }
 
-RegisterArtifactModal.defaultProps = {
-  title: ''
-}
-
 RegisterArtifactModal.propTypes = {
   artifactKind: PropTypes.string.isRequired,
+  projectName: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,
-  title: PropTypes.string
+  title: PropTypes.string.isRequired
 }
 
 export default connect(

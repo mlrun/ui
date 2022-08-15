@@ -9,13 +9,12 @@ import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
 import { ConfirmDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
+import projectActions from '../../../actions/projects'
 
-import projectsAction from '../../../actions/projects'
-
-import { handlePath, getInitialCards } from './ProjectOverview.util'
+import { handleClick, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
 import { getDateAndTimeByFormat } from '../../../utils/'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
@@ -24,50 +23,14 @@ import './ProjectOverview.scss'
 const ProjectOverview = ({ fetchProject, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
-  const [modal, setModal] = useState({ isOpen: false, name: '' })
   const params = useParams()
   const navigate = useNavigate()
 
   const cards = useMemo(() => {
-    return params.projectName ? getInitialCards(params.projectName) : {}
-  }, [params])
+    return params.projectName ? getInitialCards(params.projectName, navigate) : {}
+  }, [navigate, params])
 
-  const renderPopupContent = () => {
-    switch (modal.name) {
-      case 'registerdataset':
-        return (
-          <RegisterArtifactPopup
-            artifactKind="dataset"
-            refresh={() => {}}
-            setIsPopupOpen={handleModalToggle}
-            title="Register dataset"
-          />
-        )
-      case 'registerfile':
-        return (
-          <RegisterArtifactPopup
-            artifactKind="artifact"
-            refresh={() => {}}
-            setIsPopupOpen={handleModalToggle}
-            title="Register artifact"
-          />
-        )
-      default:
-        return ''
-    }
-  }
-
-  const handleModalToggle = popupName => {
-    return setModal(prev => {
-      return {
-        ...prev,
-        isOpen: !prev.isOpen,
-        name: !prev.isOpen ? popupName : ''
-      }
-    })
-  }
-
-  const handlePathExecution = handlePath(navigate, handleModalToggle)
+  const handlePathExecution = handleClick(navigate, openPopUp)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
@@ -114,7 +77,6 @@ const ProjectOverview = ({ fetchProject, project }) => {
 
   return (
     <div className="project-overview">
-      {modal.isOpen && renderPopupContent()}
       <div className="project-overview__header">
         <div className="project-overview__header-title">
           {project.data.metadata.name}
@@ -181,8 +143,12 @@ const ProjectOverview = ({ fetchProject, project }) => {
               <div className="project-overview-card__bottom">
                 <div className="additional-links">
                   {additionalLinks &&
-                    additionalLinks.map(({ id, label, path }) => (
-                      <span key={id} className="link" onClick={() => handlePathExecution(path)}>
+                    additionalLinks.map(({ id, label, handleClick }) => (
+                      <span
+                        key={id}
+                        className="link"
+                        onClick={() => handlePathExecution(handleClick)}
+                      >
                         {label}
                       </span>
                     ))}
@@ -197,7 +163,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
 }
 
 const actionCreators = {
-  fetchProject: projectsAction.fetchProject
+  fetchProject: projectActions.fetchProject
 }
 
 export default connect(

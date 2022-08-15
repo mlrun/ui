@@ -11,11 +11,10 @@ import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import Select from '../../common/Select/Select'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
-import { DATASETS, PANEL_CREATE_MODE } from '../../constants'
+import { PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
@@ -24,7 +23,6 @@ import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 import './project.scss'
 
 const ProjectMonitorView = ({
-  artifactKind,
   closeFeatureSetPanel,
   closeFunctionsPanel,
   confirmData,
@@ -37,23 +35,16 @@ const ProjectMonitorView = ({
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
   isNuclioModeDisabled,
-  isPopupDialogOpen,
-  navigate,
   nuclioStreamsAreEnabled,
   params,
   project,
   projectSummary,
   refresh,
   setIsNewFunctionPopUpOpen,
-  setIsPopupDialogOpen,
   setShowFunctionsPanel,
   showFunctionsPanel,
   v3ioStreams
 }) => {
-  const registerArtifactLink = `/projects/${params.projectName}/${
-    artifactKind === 'model' ? 'models' : artifactKind === 'dataset' ? DATASETS : 'files'
-  }`
-
   return (
     <div className="project-wrapper">
       <div className="project__header">
@@ -166,16 +157,6 @@ const ProjectMonitorView = ({
           </div>
         </div>
       )}
-      {isPopupDialogOpen && (
-        <RegisterArtifactPopup
-          artifactKind={artifactKind}
-          refresh={() => {
-            navigate(registerArtifactLink)
-          }}
-          setIsPopupOpen={setIsPopupDialogOpen}
-          title={`Register ${artifactKind}`}
-        />
-      )}
       {createFeatureSetPanelIsOpen && (
         <FeatureSetsPanel
           closePanel={closeFeatureSetPanel}
@@ -210,7 +191,6 @@ ProjectMonitorView.defaultProps = {
 }
 
 ProjectMonitorView.propTypes = {
-  artifactKind: PropTypes.string.isRequired,
   closeFeatureSetPanel: PropTypes.func.isRequired,
   closeFunctionsPanel: PropTypes.func.isRequired,
   confirmData: PropTypes.object,
@@ -223,14 +203,11 @@ ProjectMonitorView.propTypes = {
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isNuclioModeDisabled: PropTypes.bool.isRequired,
-  isPopupDialogOpen: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
-  navigate: PropTypes.func.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
-  setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
   showFunctionsPanel: PropTypes.bool.isRequired,
   v3ioStreams: PropTypes.shape({}).isRequired

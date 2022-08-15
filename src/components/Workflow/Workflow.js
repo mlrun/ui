@@ -179,7 +179,7 @@ const Workflow = ({
     <div className="workflow-container">
       <TableTop
         link={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
-        text={workflow?.run?.name}
+        text={workflow?.run?.name.replace(`${params.projectName}-`, '')}
       >
         <div className="actions">
           <Tooltip

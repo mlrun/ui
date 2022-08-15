@@ -43,6 +43,7 @@ export const modelsInfoHeaders = [
     tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
+  { label: 'Tag', id: 'tag' },
   { label: 'Iter', id: 'iter' },
   { label: 'Kind', id: 'kind' },
   { label: 'Size', id: 'size' },
@@ -101,7 +102,9 @@ export const generateModelsDetailsMenu = selectedModel => [
     hidden:
       !selectedModel.item?.stats &&
       !selectedModel.item?.feature_stats &&
-      !selectedModel.item?.feature_vector
+      !selectedModel.item?.feature_vector,
+    tip:
+      'Note that some values may be empty due to the use of different engines for calculating statistics'
   }
 ]
 

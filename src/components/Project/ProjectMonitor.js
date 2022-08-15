@@ -3,6 +3,10 @@ import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
+import RegisterArtifactModal from '..//RegisterArtifactModal/RegisterArtifactModal'
+import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
+
+import { DATASETS } from '../../constants'
 
 import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
@@ -11,6 +15,7 @@ import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
@@ -32,9 +37,7 @@ const ProjectMonitor = ({
   removeV3ioStreams,
   setNotification
 }) => {
-  const [artifactKind, setArtifactKind] = useState('')
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
-  const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
@@ -42,18 +45,47 @@ const ProjectMonitor = ({
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
 
+  const registerArtifactLink = useCallback(
+    artifactKind =>
+      `/projects/${params.projectName}/${
+        artifactKind === 'model' ? 'models' : artifactKind === 'dataset' ? DATASETS : 'files'
+      }`,
+    [params.projectName]
+  )
 
   const nuclioStreamsAreEnabled = useMemo(
     () => areNuclioStreamsEnabled(frontendSpec),
     [frontendSpec]
   )
 
+  const openPopupDialog = useCallback(
+    artifactKind => {
+      openPopUp(RegisterArtifactModal, {
+        artifactKind,
+        projectName: params.projectName,
+        refresh: () => navigate(registerArtifactLink(artifactKind)),
+        title: `Register ${artifactKind}`
+      })
+    },
+    [navigate, params.projectName, registerArtifactLink]
+  )
+
+  const handleRegisterModel = useCallback(
+    () => {
+      openPopUp(RegisterModelPopUp, {
+        projectName: params.projectName,
+        refresh: () => navigate(registerArtifactLink('model'))
+      })
+    },
+    [params.projectName, navigate, registerArtifactLink]
+  )
+
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,
       params,
-      setArtifactKind,
-      setIsPopupDialogOpen,
+      openPopupDialog,
+      handleRegisterModel,
       setCreateFeatureSetPanelIsOpen,
       setIsNewFunctionPopUpOpen
     )
@@ -61,7 +93,7 @@ const ProjectMonitor = ({
     return {
       createNewOptions
     }
-  }, [navigate, params])
+  }, [navigate, openPopupDialog, params, handleRegisterModel])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {
@@ -226,7 +258,6 @@ const ProjectMonitor = ({
   return (
     <>
       <ProjectMonitorView
-        artifactKind={artifactKind}
         closeFeatureSetPanel={closeFeatureSetPanel}
         closeFunctionsPanel={closeFunctionsPanel}
         confirmData={confirmData}
@@ -238,7 +269,7 @@ const ProjectMonitor = ({
         handleDeployFunctionSuccess={handleDeployFunctionSuccess}
         handleLaunchIDE={handleLaunchIDE}
         isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
-        isNuclioModeDisabled={isNuclioModeDisabled}isPopupDialogOpen={isPopupDialogOpen}
+        isNuclioModeDisabled={isNuclioModeDisabled}
         navigate={navigate}
         nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
         params={params}
@@ -246,7 +277,6 @@ const ProjectMonitor = ({
         projectSummary={projectStore.projectSummary}
         refresh={handleRefresh}
         setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
-        setIsPopupDialogOpen={setIsPopupDialogOpen}
         setShowFunctionsPanel={setShowFunctionsPanel}
         showFunctionsPanel={showFunctionsPanel}
         v3ioStreams={nuclioStore.v3ioStreams}
