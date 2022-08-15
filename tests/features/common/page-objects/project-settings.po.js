@@ -1,7 +1,9 @@
 import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component'
 import inputGroup from '../components/input-group.component'
-import { generateInputGroup } from '../../common-tools/common-tools'
+import textAreaGroup from '../components/text-area.component'
+import { generateInputGroup, generateTextAreaGroup } from '../../common-tools/common-tools'
+
 
 const tabSelector = {
   root: '.content-menu',
@@ -12,6 +14,24 @@ const tabSelector = {
       root: '.content-menu__item',
       fields: {
         key: 'a'
+      }
+    }
+  }
+}
+
+const labelsTable = {
+  root: '.settings__labels',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: 'button.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        label: '.chip',
+        remove_btn: '.item-icon-close'
       }
     }
   }
@@ -34,6 +54,8 @@ const parametersTable = {
       fields: {
         key: '.table-cell__key',
         value: '.table-cell__value',
+        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
+        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
         remove_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)'
       }
     }
@@ -69,12 +91,11 @@ const secretsTable = {
 module.exports = {
   generalTab: {
     Project_Settings_Tab_Selector: commonTable(tabSelector),
-    Source_URL_Edit_Button: By.css('.settings__card-content .settings__source'),
-    Source_URL_Edit_Input: inputGroup(
+    Source_URL_Input: inputGroup(
       generateInputGroup(
         '.settings__card-content .settings__source .input-wrapper',
         true,
-        false,
+        true,
         true
       )
     ),
@@ -86,10 +107,12 @@ module.exports = {
         true
       )
     ),
+    Project_Description: textAreaGroup(generateTextAreaGroup('.settings__description .text-area-wrapper')),
+    Labels_Table: commonTable(labelsTable),
     Parameters_Table: commonTable(parametersTable),
     Parameters_Table_Key_Input: inputGroup(
       generateInputGroup(
-        '.key-value-table.settings__params .table-row__last .table-cell__key .input-wrapper',
+        '.key-value-table.settings__params .table-cell__key .input-wrapper',
         true,
         false,
         true
@@ -97,7 +120,7 @@ module.exports = {
     ),
     Parameters_Table_Value_Input: inputGroup(
       generateInputGroup(
-        '.key-value-table.settings__params .table-row__last .table-cell__value .input-wrapper',
+        '.key-value-table.settings__params .table-cell__value .input-wrapper',
         true,
         false,
         true

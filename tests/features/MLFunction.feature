@@ -480,13 +480,13 @@ Feature: ML Functions
         Then verify "Function_Environment_Variables_Value_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
         When click on "Discard_Row_Button" element in "Environment_Variables_Accordion" on "New_Function" wizard
         When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
-            | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Seret_Name_Input | Function_Environment_Variables_Seret_Key_Input | Add_Row_Button |
+            | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Secret_Name_Input | Function_Environment_Variables_Secret_Key_Input | Add_Row_Button |
             |                                           |                    Secret                    |                                                 |                        @#$                     |       yes      |
         Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Function_Environment_Variables_Seret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Function_Environment_Variables_Seret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
-        Then verify "Function_Environment_Variables_Seret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "Function_Environment_Variables_Seret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
+        Then verify "Function_Environment_Variables_Secret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Secret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
+        Then verify "Function_Environment_Variables_Secret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Function_Environment_Variables_Secret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
         When click on "Discard_Row_Button" element in "Environment_Variables_Accordion" on "New_Function" wizard
         When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
             | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Value_Input | Add_Row_Button | Discard_Row_Button |
@@ -501,7 +501,7 @@ Feature: ML Functions
             |                 name8                     |                    Value                     |                  value8                    |       yes      |                    |
             |                 name9                     |                    Value                     |                  value9                    |                |        yes         |
         When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
-            | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Seret_Name_Input | Function_Environment_Variables_Seret_Key_Input | Add_Row_Button | Discard_Row_Button |
+            | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Secret_Name_Input | Function_Environment_Variables_Secret_Key_Input | Add_Row_Button | Discard_Row_Button |
             |                 name0                     |                    Secret                    |                  value0                         |                    key0                        |                |        yes         |
             |                 name1                     |                    Secret                    |                  value1                         |                    key1                        |       yes      |                    |
             |                 name2                     |                    Secret                    |                  value2                         |                    key2                        |                |        yes         |
@@ -597,6 +597,8 @@ Feature: ML Functions
         Then click on "Save_Button" element on "New_Function" wizard
         And wait load page
         Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
+        Then check "new-aqa-function-00" value in "name" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
+        Then check "job" value in "kind" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
         Then check "new-aqa-function-00" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "new-aqa-function-00" value in "name" column
@@ -987,6 +989,12 @@ Feature: ML Functions
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        Then click on cell with row index 7 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 11:31:51 AM" value in "name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
     @passive
     Scenario: Verify View YAML action in Item infopane
@@ -1028,7 +1036,7 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
 
@@ -1168,3 +1176,22 @@ Feature: ML Functions
         Then verify "CPU_Limit_Number_Input" input should contains "7" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "millicpu"
         Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+
+    Scenario: Check broken link redirection
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "ML functions" value in breadcrumbs menu
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify redirection from "projects/default/functions/INVALID/overview" to "projects/default/functions"
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
+        Then select "Code" tab in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
+        Then select "Build Log" tab in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
+        And wait load page
+        Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
+         Then verify redirection from "projects/default/INVALID/85957751e571a92e07213781f5e0c35bfbe42c64/overview" to "projects"

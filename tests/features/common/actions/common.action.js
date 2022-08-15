@@ -12,6 +12,12 @@ const action = {
     await driver.get(baseURL)
     await driver.sleep(1000)
   },
+  navigateForward: async function(driver) {
+    await driver.navigate().forward()
+  },
+  navigateBack: async function(driver) {
+    await driver.navigate().back()
+  },
   refreshPage: async function(driver) {
     await driver.navigate().refresh()
   },
@@ -113,6 +119,15 @@ const action = {
   ) {
     const element = await driver.findElement(component)
     return (await element.getAttribute(attribute)) === value
+  },
+  isComponentContainsClass: async function(
+    driver,
+    component,
+    className
+  ) {
+    const element = await driver.findElement(component)
+    const classes = await element.getAttribute('class')
+    expect(classes.includes(className)).equal(true)
   },
   verifyComponentContainsAttributeValue: async function(
     driver,

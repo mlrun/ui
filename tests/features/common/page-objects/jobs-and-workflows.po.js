@@ -152,7 +152,7 @@ const workflowsMonitorTable = {
             '.tooltip .tooltip__text span'
           )
         },
-        name: '.table-body__cell:nth-of-type(1) a .link',
+        name: '.table-body__cell:nth-of-type(1) .item-name',
         created: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         finished: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         duration: '.table-body__cell:nth-of-type(4) .data-ellipsis',
@@ -179,8 +179,8 @@ const monitorWorkflowGraph = {
             root: '.selectable',
             fields: {
               name: '.react-flow__node-label .data-ellipsis .data-ellipsis',
-              top_hendler: '.data-ellipsis .react-flow__handle-top',
-              bottom_hendler: '.data-ellipsis .react-flow__handle-bottom'
+              top_handler: '.data-ellipsis .react-flow__handle-top',
+              bottom_handler: '.data-ellipsis .react-flow__handle-bottom'
             }
           }
         }

@@ -99,6 +99,7 @@ const action = {
         table.tableFields[column](i)['hint']
       )
       arr.push(text)
+      await driver.sleep(250)
     }
 
     expect(arr.every(item => item.includes(value))).equal(true)
