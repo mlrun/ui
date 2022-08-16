@@ -191,8 +191,8 @@ module.exports = {
     Description: commonDescription,
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
-    Confirm_Button: commonConfirmButton,
-    Delete_Button: commonDeleteButton
+    Confirm_Button: By.css('.confirm-dialog__btn-container button:not(.pop-up-dialog__btn_cancel)'),
+    Delete_Button: commonDeleteButton,
   },
   registerDataset: {
     Title: commonPopupTitle,
@@ -242,7 +242,7 @@ module.exports = {
     New_File_Type_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '.form .form-row:nth-of-type(2) .form-field-select',
-        '.form-field__select-value',
+        '.form-field__select',
         '.select__item'
       )
     ),

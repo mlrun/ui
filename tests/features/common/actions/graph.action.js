@@ -36,13 +36,13 @@ const action = {
     const topConnectorsGeometry = await getNamedFieldsGeometry(
       driver,
       graphComponent.nodesTable,
-      'top_hendler'
+      'top_handler'
     )
 
     const bottomConnectorsGeometry = await getNamedFieldsGeometry(
       driver,
       graphComponent.nodesTable,
-      'bottom_hendler'
+      'bottom_handler'
     )
 
     const maxConnectorSide = numjs

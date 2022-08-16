@@ -65,8 +65,8 @@ const DetailsInfoView = React.forwardRef(
               let target_path = null
 
               if (pageData.page === JOBS_PAGE) {
-                if (detailsStore.infoContent[header.id]?.value === selectedItem.parameters) {
-                  chipsData.chips = selectedItem.parameters
+                if (detailsStore.infoContent[header.id]?.value === selectedItem.parametersChips) {
+                  chipsData.chips = selectedItem.parametersChips
                   chipsData.chipOptions = getChipOptions('parameters')
                 } else if (
                   detailsStore.infoContent[header.id]?.value === selectedItem.resultsChips

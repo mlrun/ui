@@ -25,7 +25,7 @@ module.exports = {
   Models: {
     Tab_List: ['Models', 'Model Endpoints (Beta)', 'Real-Time Pipelines']
   },
-  Real_Time_Pipline_Pane: {
+  Real_Time_Pipeline_Pane: {
     Overview_Headers: [
       'Type:',
       'After:',
@@ -69,6 +69,7 @@ module.exports = {
     Overview_General_Headers: [
       'Hash',
       'Key',
+      'Tag',
       'Iter',
       'Size',
       'Path',
@@ -100,6 +101,7 @@ module.exports = {
     Overview_General_Headers: [
       'Hash',
       'Key',
+      'Tag',
       'Iter',
       'Size',
       'Path',
@@ -115,6 +117,7 @@ module.exports = {
     Overview_General_Headers: [
       'Hash',
       'Key',
+      'Tag',
       'Iter',
       'Kind',
       'Size',
@@ -248,6 +251,8 @@ module.exports = {
     Target_Store_External_Offline:
       'Store the feature set in a remote object store (e.g. AWS S3 or Azure storage)',
     Distinct_Keys: 'The partition is based on key.',
+    Source_URL_Input:
+      'Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from',
     SECRET_INPUT_HINT:
       '• Valid characters: A-Z, a-z, 0-9, -, _, .\n' +
       '• Must begin and end with: A-Z, a-z, 0-9\n' +

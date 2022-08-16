@@ -102,7 +102,9 @@ export const generateModelsDetailsMenu = selectedModel => [
     hidden:
       !selectedModel.item?.stats &&
       !selectedModel.item?.feature_stats &&
-      !selectedModel.item?.feature_vector
+      !selectedModel.item?.feature_vector,
+    tip:
+      'Note that some values may be empty due to the use of different engines for calculating statistics'
   }
 ]
 

@@ -1,40 +1,42 @@
 import { When, Then } from '@cucumber/cucumber'
 import pageObjects from '../common/page-objects'
 import {
-  clickOnComponent,
-  verifyText,
-  waitPageLoad,
   clickNearComponent,
-  typeIntoInputField,
-  hoverComponent,
-  componentIsVisible,
+  clickOnComponent,
+  componentIsNotPresent,
   componentIsNotVisible,
-  scrollToElement
+  componentIsVisible,
+  hoverComponent,
+  isComponentContainsClass,
+  scrollToElement,
+  typeIntoInputField,
+  verifyText,
+  waitPageLoad
 } from '../common/actions/common.action'
 import {
   checkCellHintText,
-  getTableRows,
-  isContainsValueInColumn,
-  isNotContainsValueInColumn,
+  findRowIndexesByColumnTooltipsValue,
   findRowIndexesByColumnValue,
   getCellByIndexColumn,
+  getTableRows,
   isContainsSubstringInColumnCells,
   isContainsSubstringInColumnDropdownCells,
   isContainsSubstringInColumnTooltipCells,
+  isContainsValueInColumn,
   isDatetimeCelsValueInRange,
-  findRowIndexesByColumnTooltipsValue,
+  isNotContainsValueInColumn,
   putToTestContextCellParameters
 } from '../common/actions/table.action'
 import {
+  checkActionMenuOptions,
   openActionMenu,
-  selectOptionInActionMenu,
-  checkActionMenuOptions
+  selectOptionInActionMenu
 } from '../common/actions/action-menu.action'
 import { typeValue } from '../common/actions/input-group.action'
 import {
+  checkDropdownSelectedOption,
   openDropdown,
-  selectOptionInDropdown,
-  checkDropdownSelectedOption
+  selectOptionInDropdown
 } from '../common/actions/dropdown.action'
 import pageObjectsConsts from '../common-tools/common-consts'
 import { expect } from 'chai'
@@ -922,6 +924,23 @@ Then('check {string} visibility in {string} on {string} wizard', async function(
   }
 })
 
+Then('check {string} not presented in {string} on {string} wizard', async function(
+  cellName,
+  tableName,
+  wizardName
+) {
+  const rowsNumber = await getTableRows(
+    this.driver,
+    pageObjects[wizardName][tableName]
+  )
+  for (let i = 0; i < rowsNumber; i++) {
+    await componentIsNotPresent(
+      this.driver,
+      pageObjects[wizardName][tableName].tableFields[cellName](i + 1)
+    )
+  }
+})
+
 Then(
   'check {string} not visible in {string} on {string} wizard',
   async function(cellName, tableName, wizardName) {
@@ -940,10 +959,16 @@ Then(
 
 When(
   'click on node with index {int} in {string} graph on {string} wizard',
-  async function(index, graphName, wizardName) {
+  async function (index, graphName, wizardName) {
     await clickOnComponent(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
+    )
+    await this.driver.sleep(250)
+    await isComponentContainsClass(
+      this.driver,
+      pageObjects[wizardName][graphName].nodesTable.rowRoot(index),
+      'selected'
     )
   }
 )

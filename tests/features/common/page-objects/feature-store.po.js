@@ -48,16 +48,6 @@ const labelsTable = {
   }
 }
 
-const labelsDropdown = {
-  root: '.table-body__cell:nth-of-type(3)',
-  dropdownElements: {
-    open_button: '.chip-block span.chips_button',
-    options:
-      '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
-    option_name: '.chip > .chip_short'
-  }
-}
-
 const featureSetsTable = {
   root: '.content .table-container .table__content',
   header: {
@@ -75,17 +65,23 @@ const featureSetsTable = {
     row: {
       root: '.table-body__row',
       fields: {
+        name: '.table-body__cell:nth-of-type(1) a div.link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .link',
         tag: '.table-body__cell:nth-of-type(1) .item-tag',
         description: '.table-body__cell:nth-of-type(2) > .data-ellipsis',
         labels_table: {
           componentType: commonTable,
           structure: labelsTable
         },
-        labels_dropdown: {
+        labels: {
           componentType: dropdownComponent,
-          structure: labelsDropdown
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(3)',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            true
+          )
         },
         entity: '.table-body__cell:nth-of-type(4) > .data-ellipsis',
         targets: '.table-body__cell:nth-of-type(5) > .data-ellipsis',
@@ -120,16 +116,24 @@ const featuresTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(2) svg.expand-arrow',
-        feature_name: '.table-body__cell:nth-of-type(1) .data-ellipsis',
+        feature_name: '.table-body__cell:nth-of-type(1) div.data-ellipsis',
+        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         feature_set: '.table-body__cell:nth-of-type(2) .link',
         type: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         entity: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         description: '.table-body__cell:nth-of-type(5) .data-ellipsis',
-        labels: '.table-body__cell:nth-of-type(6)',
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(6)',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            true
+          )
+        },
         targets: '.table-body__cell:nth-of-type(7)',
-        validator:
-          '.table-body__cell:nth-of-type(8) .feature-validator .data-ellipsis',
+        validator: '.table-body__cell:nth-of-type(8) .feature-validator .data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -157,13 +161,23 @@ const featureVectorTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         name: '.table-body__cell:nth-of-type(1) a div.link',
+        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         tag: '.table-body__cell:nth-of-type(1) .item-tag',
         description: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         labels_table: {
           componentType: commonTable,
           structure: labelsTable
+        },
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(3)',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            true
+          )
         },
         updated: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         copy_uri: '.table-body__cell:nth-of-type(6) > button',
@@ -219,8 +233,7 @@ const featuresPanelTable = {
 }
 
 const featuresByProjectsTable = {
-  root:
-    '.table__panel-container .features-panel__divider:nth-of-type(4) + div + .accordion__container',
+  root: '.table__panel-container .features-panel__divider:nth-of-type(4) + div + .accordion__container',
   header: {},
   body: {
     row: {
@@ -248,9 +261,18 @@ const datasetsTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         name: '.table-body__cell:nth-of-type(1) a span.link',
-        labels: '.table-body__cell:nth-of-type(2)',
+        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(2)',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            true
+          )
+        },
         producer: '.table-body__cell:nth-of-type(3) .data-ellipsis a.link',
         owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         uploaded: '.table-body__cell:nth-of-type(5) .data-ellipsis',
@@ -270,9 +292,7 @@ const datasetsTable = {
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css('.content__action-bar .actions #refresh')
-const pageHeaderButton = By.css(
-  '.content__header .page-actions-container button'
-)
+const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
     '.content .content__action-bar .input-wrapper:nth-of-type(2)',
@@ -339,7 +359,7 @@ module.exports = {
     Table_Label_Filter_Input: commonLabelFilterInput,
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
-    Feature_Datasets_Table: commonTable(datasetsTable),
+    Datasets_Table: commonTable(datasetsTable),
     Show_Iterations_Checkbox: checkboxComponent({
       root: '.content .content__action-bar .filters .checkbox',
       elements: {
@@ -381,11 +401,7 @@ module.exports = {
     Add_Button: By.css('.features-panel__buttons .btn-primary'),
     Cancel_Button: By.css('.features-panel__buttons .btn-label'),
     Features_Panel_Title: labelComponent(
-      generateLabelGroup(
-        '.add-to-feature-vector .features-panel__header',
-        false,
-        true
-      )
+      generateLabelGroup('.add-to-feature-vector .features-panel__header', false, true)
     ),
     Edit_Feature_Vector_Button: By.css(
       '.add-to-feature-vector .features-panel__header-vector-actions button'
@@ -399,7 +415,9 @@ module.exports = {
       ),
       Features_By_Projects_Table: commonTable(featuresByProjectsTable)
     },
-    Feature_Vector_Name: By.css('.features-panel__header-vector .features-panel__header-vector-name'),
+    Feature_Vector_Name: By.css(
+      '.features-panel__header-vector .features-panel__header-vector-name'
+    ),
     Feature_Vector_Tag: By.css('.features-panel__header-vector .features-panel__header-vector-tag')
   }
 }

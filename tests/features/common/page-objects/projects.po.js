@@ -39,6 +39,16 @@ const ProjectsTableSelector = {
             '.tooltip .tooltip__text span'
           )
         },
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.project-card__labels',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            true
+          )
+        },
         creation: '.project-card__header-title .project-card__info span',
         action_menu: {
           componentType: actionMenu,

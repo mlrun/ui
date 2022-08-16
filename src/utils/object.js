@@ -4,10 +4,11 @@ export const parseKeyValues = (object = {}) =>
     : Object.entries(object).map(([key, value]) => {
         return Array.isArray(value) && value.every(item => item)
           ? `${key}: [${value.map(arrayItem => {
-              return ` {${Object.entries(arrayItem).map(
-                ([arrayItemKey, arrayItemValue]) =>
-                  ` ${arrayItemKey}: ${arrayItemValue} `
-              )}} `
+              return typeof arrayItem === 'object'
+                ? ` {${Object.entries(arrayItem).map(
+                    ([arrayItemKey, arrayItemValue]) => ` ${arrayItemKey}: ${arrayItemValue} `
+                  )}} `
+                : ` ${arrayItem} `
             })}]`
           : typeof value === 'object' && value !== null
           ? `${key}: {${Object.entries(value).map(

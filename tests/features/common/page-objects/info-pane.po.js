@@ -53,13 +53,14 @@ const artifactOverviewTable = {
       fields: {
         hash: '.details-item:nth-of-type(1) .details-item__data',
         key: '.details-item:nth-of-type(2) .details-item__data',
-        iter: '.details-item:nth-of-type(3) .details-item__data',
-        size: '.details-item:nth-of-type(4) .details-item__data',
-        path: '.details-item:nth-of-type(5) .details-item__data',
-        uri: '.details-item:nth-of-type(6) .details-item__data',
-        uid: '.details-item:nth-of-type(7) .details-item__data',
-        updated: '.details-item:nth-of-type(8) .details-item__data',
-        labels: '.details-item:nth-of-type(9) .details-item__data',
+        tag: '.details-item:nth-of-type(3) .details-item__data',
+        iter: '.details-item:nth-of-type(4) .details-item__data',
+        size: '.details-item:nth-of-type(5) .details-item__data',
+        path: '.details-item:nth-of-type(6) .details-item__data',
+        uri: '.details-item:nth-of-type(7) .details-item__data',
+        uid: '.details-item:nth-of-type(8) .details-item__data',
+        updated: '.details-item:nth-of-type(9) .details-item__data',
+        labels: '.details-item:nth-of-type(10) .details-item__data',
       }
     }
   }
@@ -74,19 +75,39 @@ const modelsOverviewTable = {
       fields: {
         hash: '.details-item:nth-of-type(1) .details-item__data',
         key: '.details-item:nth-of-type(2) .details-item__data',
-        iter: '.details-item:nth-of-type(3) .details-item__data',
-        kind: '.details-item:nth-of-type(4) .details-item__data',
-        size: '.details-item:nth-of-type(5) .details-item__data',
-        path: '.details-item:nth-of-type(6) .details-item__data',
-        uri: '.details-item:nth-of-type(7) .details-item__data',
-        model_file: '.details-item:nth-of-type(8) .details-item__data',
-        feature_vector: '.details-item:nth-of-type(9) .details-item__data',
-        uid: '.details-item:nth-of-type(10) .details-item__data',
-        updated: '.details-item:nth-of-type(11) .details-item__data',
-        framework: '.details-item:nth-of-type(12) .details-item__data',
-        algorithm: '.details-item:nth-of-type(13) .details-item__data',
-        labels: '.details-item:nth-of-type(14) .details-item__data',
-        metrics: '.details-item:nth-of-type(15) .details-item__data',
+        tag: '.details-item:nth-of-type(3) .details-item__data',
+        iter: '.details-item:nth-of-type(4) .details-item__data',
+        kind: '.details-item:nth-of-type(5) .details-item__data',
+        size: '.details-item:nth-of-type(6) .details-item__data',
+        path: '.details-item:nth-of-type(7) .details-item__data',
+        uri: '.details-item:nth-of-type(8) .details-item__data',
+        model_file: '.details-item:nth-of-type(9) .details-item__data',
+        feature_vector: '.details-item:nth-of-type(10) .details-item__data',
+        uid: '.details-item:nth-of-type(11) .details-item__data',
+        updated: '.details-item:nth-of-type(12) .details-item__data',
+        framework: '.details-item:nth-of-type(13) .details-item__data',
+        algorithm: '.details-item:nth-of-type(14) .details-item__data',
+        labels: '.details-item:nth-of-type(15) .details-item__data',
+        metrics: '.details-item:nth-of-type(16) .details-item__data',
+      }
+    }
+  }
+}
+const functionsOverviewTable = {
+  root: '.table__item .item-info__details:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: '',
+      fields: {
+        name: '.details-item:nth-of-type(1) .details-item__data',
+        kind: '.details-item:nth-of-type(2) .details-item__data',
+        hash: '.details-item:nth-of-type(3) .details-item__data',
+        code_origin: '.details-item:nth-of-type(4) .details-item__data',
+        updated: '.details-item:nth-of-type(5) .details-item__data',
+        command: '.details-item:nth-of-type(6) .details-item__data',
+        image: '.details-item:nth-of-type(7) .details-item__data',
+        description: '.details-item:nth-of-type(8) .details-item__data'
       }
     }
   }
@@ -251,10 +272,11 @@ const requestedFeaturesTable = {
           )
         },
         projectName: '.cell_project-name',
-        featureSet: '.item-requested-features__table-cell:nth-of-type(2)',
+        featureSet: '.item-requested-features__table-cell:nth-of-type(3)',
         feature: '.cell_feature',
         alias: '.cell_alias',
         add_alias: '.cell_actions .round-icon-cp:nth-of-type(1)',
+        edit_alias: '.cell_alias button',
         apply_btn: '.cell_actions-visible .round-icon-cp:nth-of-type(1)',
         discard_btn: '.cell_actions-visible .round-icon-cp:nth-of-type(2)',
         delete_btn: '.cell_actions .round-icon-cp:nth-of-type(2)'
@@ -368,8 +390,8 @@ const featureSetTransformationGraph = {
             root: '.react-flow__node-ml-node',
             fields: {
               name: '.react-flow__node-label .data-ellipsis .data-ellipsis',
-              top_hendler: '.data-ellipsis .react-flow__handle-top',
-              bottom_hendler: '.data-ellipsis .react-flow__handle-bottom'
+              top_handler: '.data-ellipsis .react-flow__handle-top',
+              bottom_handler: '.data-ellipsis .react-flow__handle-bottom'
             }
           }
         }
@@ -475,7 +497,7 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(7) .details-item__header',
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(8) .details-item__header',
         false,
         true
       )
@@ -533,7 +555,8 @@ module.exports = {
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Overview_Headers: commonTable(infoPaneOverviewHeaders)
+    Overview_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Table: commonTable(functionsOverviewTable)
   },
   jobsMonitorTabInfoPane: {
     Arrow_Back: By.css('a.item-header__back-btn'),
@@ -588,7 +611,7 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(7) .details-item__header',
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(8) .details-item__header',
         false,
         true
       )
@@ -615,7 +638,7 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(10) .details-item__header',
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(11) .details-item__header',
         false,
         true
       )
@@ -624,7 +647,7 @@ module.exports = {
     Overview_Table: commonTable(modelsOverviewTable),
     Info_Sources_Table: commonTable(filesInfoSourcesTable)
   },
-  modelsRealTimePiplineInfoPane: {
+  modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,
     Header: By.css('.graph-pane__title span'),
     Cross_Close_Button: By.css('.graph-pane__title .round-icon-cp .round-icon-cp__circle'),
