@@ -290,7 +290,9 @@ const JobWizardFunctionSelection = ({
 
   return (
     <div className="job-wizard__function-selection form">
-      <div className="form-row job-wizard__step-title">Function selection</div>
+      <div className="form-row">
+        <h5 className="form-step-title">Function selection</h5>
+      </div>
       <div className="form-row">
         This is a paragraph explaining what the user will find here and what he or she should do
         next, here we can throw in all the jargon words that normal people would glaze over.
@@ -357,7 +359,7 @@ const JobWizardFunctionSelection = ({
               setMatches={setFilterMatches}
             />
           </div>
-          <div className="form-row slider-row">
+          <div className="form-row align-stretch slider-row">
             <TabsSlider
               className="function-templates-slider"
               sliderStyle={SLIDER_STYLE_2}

@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import { ConfirmDialog, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
-import { SELECT_OPTIONS } from '../../types'
+import { DENSITY_OPTIONS, SELECT_OPTIONS } from '../../types'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
@@ -235,7 +235,7 @@ Select.defaultProps = {
 
 Select.propTypes = {
   className: PropTypes.string,
-  density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
+  density: DENSITY_OPTIONS,
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
   hideSelectedOption: PropTypes.bool,

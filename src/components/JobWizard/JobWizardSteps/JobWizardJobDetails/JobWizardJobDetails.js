@@ -7,7 +7,9 @@ import './jobWizardJobDetails.scss'
 const JobWizardJobDetails = ({ jobAdditionalData, formState }) => {
   return (
     <div className="job-wizard__job-details form">
-      <div className="form-row job-wizard__step-title">Job Details</div>
+      <div className="form-row">
+        <h5 className="form-step-title">Job Details</h5>
+      </div>
       <div className="form-row">
         This is a paragraph explaining what the user will find here and what he or she should do
         next, here we can throw in all the jargon words that normal people would glaze over.

@@ -24,6 +24,11 @@ export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
 
 export const TAG_LATEST = 'latest'
 
+export const DENSITY_DENSE = 'dense'
+export const DENSITY_NORMAL = 'normal'
+export const DENSITY_MEDIUM = 'medium'
+export const DENSITY_CHUNKY = 'chunky'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'

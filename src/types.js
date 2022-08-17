@@ -1,5 +1,12 @@
 import PropTypes from 'prop-types'
-import { PANEL_CREATE_MODE, PANEL_EDIT_MODE } from './constants'
+import {
+  DENSITY_CHUNKY,
+  DENSITY_DENSE,
+  DENSITY_MEDIUM,
+  DENSITY_NORMAL,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE
+} from './constants'
 
 import { BUTTON_VARIANTS } from 'igz-controls/types'
 
@@ -10,6 +17,13 @@ export const COMBOBOX_MATCHES = PropTypes.arrayOf(
     label: PropTypes.string.isRequired
   })
 )
+
+export const DENSITY_OPTIONS = PropTypes.oneOf([
+  DENSITY_DENSE,
+  DENSITY_NORMAL,
+  DENSITY_MEDIUM,
+  DENSITY_CHUNKY
+])
 
 export const CHIP = PropTypes.shape({
   delimiter: PropTypes.element,
@@ -41,7 +55,7 @@ export const CHIP_OPTIONS = PropTypes.shape({
   ]),
   boldValue: PropTypes.bool,
   borderColor: PropTypes.oneOf(['transparent', 'orange', 'green', 'purple', 'grey']),
-  density: PropTypes.oneOf(['dense', 'normal', 'medium']),
+  density: DENSITY_OPTIONS,
   font: PropTypes.oneOf(['primary', 'white', 'green', 'purple', 'orange']),
   borderRadius: PropTypes.oneOf(['primary', 'secondary'])
 })
@@ -115,12 +129,40 @@ export const CONTENT_MENU_TABS = PropTypes.arrayOf(
   })
 )
 
-export const SLIDER_TABS = PropTypes.arrayOf(PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  tip: PropTypes.string,
-  hidden: PropTypes.bool
-}))
+export const SLIDER_TABS = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    tip: PropTypes.string,
+    hidden: PropTypes.bool
+  })
+)
+
+export const SCHEDULE_DATA = PropTypes.shape({
+  cron: PropTypes.string.isRequired,
+  defaultCron: PropTypes.string,
+  activeOption: PropTypes.string.isRequired,
+  minute: PropTypes.string.isRequired,
+  hour: PropTypes.string.isRequired,
+  week: PropTypes.shape({
+    days: PropTypes.arrayOf(PropTypes.string).isRequired,
+    time: PropTypes.string
+  }),
+  day: PropTypes.shape({
+    time: PropTypes.string
+  }),
+  month: PropTypes.shape({
+    time: PropTypes.string
+  })
+})
+
+export const DAYS_OF_WEEK = PropTypes.arrayOf(
+  PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    index: PropTypes.number.isRequired
+  })
+)
 
 export const SLIDER_STYLE_1 = 'style1'
 export const SLIDER_STYLE_2 = 'style2'

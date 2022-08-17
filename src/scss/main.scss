@@ -414,7 +414,9 @@ iframe {
 }
 
 .form {
-  [class*='form-col-'] {
+  color: $primary;
+
+  [class*='form-col'] {
     flex: 1 0 0;
 
     &:not(:last-child) {
@@ -424,8 +426,12 @@ iframe {
 
   &-row {
     display: flex;
-    align-items: stretch;
+    align-items: flex-end;
     margin-bottom: 20px;
+
+    &.align-stretch {
+      align-items: stretch;
+    }
   }
 
   &-col {
@@ -440,11 +446,30 @@ iframe {
     &-3 {
       flex-grow: 3;
     }
+
+    &-4 {
+      flex-grow: 4;
+    }
+
+    &-auto {
+      flex-grow: 0;
+    }
   }
 
   &-text {
-    color: $primary;
-    font-size: 12px;
+    font-size: 15px;
+  }
+
+  &-step-title {
+    display: block;
+    margin: 0;
+    font-size: 24px;
+  }
+
+  &-table-title {
+    display: block;
+    font-weight: 500;
+    font-size: 20px;
   }
 }
 

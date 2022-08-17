@@ -7,7 +7,7 @@ export const generateCronInitialValue = (
 ) => {
   let hour, minute
 
-  if (scheduleRepeat[activeOption].time) {
+  if (scheduleRepeat[activeOption]?.time) {
     let [_hour, _minute] = scheduleRepeat[activeOption].time.split(':')
 
     hour = _hour.replace(/_/, '0').replace(/^0/, '')
