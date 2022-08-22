@@ -158,37 +158,34 @@ const DetailsInfoItem = React.forwardRef(
           </Link>
         </Tooltip>
       )
-    } else if (link) {
+    } else if (link && info) {
       return (
         <Link className="link details-item__data details-item__link" to={link}>
           {info}
         </Link>
       )
-    } else if (typeof info !== 'object' || Array.isArray(info)) {
-      if (item?.editModeEnabled) {
-        return (
-          <Tooltip template={<TextTooltipTemplate text="Click to edit" />}>
-            <div
-              className="details-item__data"
-              onClick={() => {
-                if (editableFieldType.length === 0) {
-                  onClick(currentField, item?.editModeType, info)
-                }
-              }}
-            >
-              {info.length === 0 ? (
-                <span className="details-item__data-edit-placeholder">Click to edit</span>
-              ) : (
-                info
-              )}
-            </div>
-          </Tooltip>
-        )
-      }
-      return <div className="details-item__data">{info}</div>
+    } else if ((typeof info !== 'object' || Array.isArray(info)) && item?.editModeEnabled) {
+      return (
+        <Tooltip template={<TextTooltipTemplate text="Click to edit" />}>
+          <div
+            className="details-item__data"
+            onClick={() => {
+              if (editableFieldType.length === 0) {
+                onClick(currentField, item?.editModeType, info)
+              }
+            }}
+          >
+            {info.length === 0 ? (
+              <span className="details-item__data-edit-placeholder">Click to edit</span>
+            ) : (
+              info
+            )}
+          </div>
+        </Tooltip>
+      )
     }
 
-    return null
+    return <div className="details-item__data">{info}</div>
   }
 )
 
