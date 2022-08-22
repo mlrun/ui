@@ -126,7 +126,11 @@ const FeatureSetsPanelView = ({
             />
             <Button
               className="btn_start-ingestion"
-              disabled={validationIsFailed || buttonsIsDisabled}
+              disabled={
+                validationIsFailed ||
+                buttonsIsDisabled ||
+                featureStore.newFeatureSet.spec.source.schedule.length > 0
+              }
               label="Save and ingest"
               onClick={() => handleSaveOnClick(true)}
               variant={SECONDARY_BUTTON}
