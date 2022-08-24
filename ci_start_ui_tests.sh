@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # Copyright 2019 Iguazio
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#!/usr/bin/env sh
 # install google-chrome and utilites
 yum update -y
 yum install -y screen
