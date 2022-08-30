@@ -44,9 +44,7 @@ const FunctionsPanelGeneral = ({
     const newLabels = {}
     const labelsArray = [...labels, label]
 
-    labelsArray.forEach(
-      label => (newLabels[label.split(':')[0]] = label.split(':')[1].slice(1))
-    )
+    labelsArray.forEach(label => (newLabels[label.split(':')[0]] = label.split(':')[1].slice(1)))
 
     setNewFunctionLabels(newLabels)
     setData(state => ({
@@ -58,9 +56,7 @@ const FunctionsPanelGeneral = ({
   const handleChangeLabels = labels => {
     const newLabels = {}
 
-    labels.forEach(
-      label => (newLabels[label.split(':')[0]] = label.split(':')[1].slice(1))
-    )
+    labels.forEach(label => (newLabels[label.split(':')[0]] = label.split(':')[1].slice(1)))
 
     setNewFunctionLabels(newLabels)
     setData(state => ({

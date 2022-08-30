@@ -25,10 +25,10 @@ import Prism from 'prismjs'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import TextArea from '../../common/TextArea/TextArea'
 
 import { copyToClipboard } from '../../utils/copyToClipboard'
-import Input from '../../common/Input/Input'
 import { CHIP_OPTIONS } from '../../types'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
@@ -78,9 +78,11 @@ const DetailsInfoItem = React.forwardRef(
       if (editableFieldType === 'input') {
         return (
           <div className="details-item__input-wrapper" ref={ref}>
-            <Input onChange={item.onChange} value={info} type="text" focused />
+            <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
             <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-              <Checkmark className="details-item__apply-btn" onClick={handleFinishEdit} />
+              <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
+                <Checkmark className="details-item__apply-btn" />
+              </RoundedIcon>
             </Tooltip>
           </div>
         )

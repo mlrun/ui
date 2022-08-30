@@ -17,13 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
+
+import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
+import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as WarningIcon } from 'igz-controls/images/warning.svg'
 
 import './textArea.scss'
 
@@ -38,6 +44,7 @@ const TextArea = React.forwardRef(
       invalid,
       invalidText,
       label,
+      maxLength,
       onBlur,
       onChange,
       onKeyDown,
@@ -48,6 +55,7 @@ const TextArea = React.forwardRef(
       setInvalid,
       textAreaIcon,
       tip,
+      validationRules: rules,
       value,
       wrapperClassName
     },
@@ -55,13 +63,21 @@ const TextArea = React.forwardRef(
   ) => {
     const [textAreaIsFocused, setTextAreaIsFocused] = useState(false)
     const [isInvalid, setIsInvalid] = useState(false)
-    const textArea = React.createRef()
-    const labelRef = React.createRef()
+    const [validationRules, setValidationRules] = useState(rules)
+    const [showValidationRules, setShowValidationRules] = useState(false)
+    const [textAreaCount, setTextAreaCount] = useState(value.length)
+    const wrapperRef = useRef()
+    ref ??= wrapperRef
+    const textArea = React.useRef()
+    const labelRef = React.useRef()
+    useDetectOutsideClick(ref, () => setShowValidationRules(false))
+
     const textAreaClassNames = classnames(
       'text-area',
       className,
       textAreaIsFocused && floatingLabel && 'text-area_active',
-      isInvalid && 'text-area_invalid'
+      isInvalid && 'text-area_invalid',
+      !isEmpty(validationRules) && isInvalid && 'input_rules-invalid'
     )
     const wrapperClassNames = classnames(wrapperClassName, 'text-area-wrapper')
     const labelClassNames = classnames(
@@ -93,6 +109,14 @@ const TextArea = React.forwardRef(
       }
     }, [invalid, isInvalid, required, setInvalid, value])
 
+    const handleScroll = event => {
+      if (
+        !event.target.closest('.options-menu') &&
+        !event.target.classList.contains('area-input')
+      ) {
+        setShowValidationRules(false)
+      }
+    }
     const handleTextAreaScroll = useCallback(
       event => {
         if (event.target.scrollTop > 5) {
@@ -108,9 +132,18 @@ const TextArea = React.forwardRef(
     )
 
     useEffect(() => {
+      if (showValidationRules) {
+        window.addEventListener('scroll', handleScroll, true)
+      }
+      return () => {
+        window.removeEventListener('scroll', handleScroll, true)
+      }
+    }, [showValidationRules])
+
+    useEffect(() => {
       const textAreaRef = textArea.current
 
-      if (textArea.current) {
+      if (textArea.current && labelRef.current) {
         textArea.current.addEventListener('scroll', handleTextAreaScroll)
       }
 
@@ -121,7 +154,7 @@ const TextArea = React.forwardRef(
       }
     }, [handleTextAreaScroll, textArea])
 
-    const handleClick = event => {
+    const handleChange = event => {
       if (event.target.value.length > 0) {
         setTextAreaIsFocused(true)
       } else {
@@ -136,7 +169,38 @@ const TextArea = React.forwardRef(
         setInvalid && setInvalid(true)
       }
 
+      setTextAreaCount(event.target.value.length)
+      validateField(event.target.value)
       onChange(event.target.value)
+    }
+
+    const renderValidationRules = validationRules.map(({ isValid = false, label, name }) => {
+      return <ValidationTemplate valid={isValid} validationMessage={label} key={name} />
+    })
+
+    const validateField = value => {
+      let isFieldValidByPattern = true
+
+      if (!isEmpty(validationRules)) {
+        const [newRules, isValidField] = checkPatternsValidity(validationRules, value)
+        isFieldValidByPattern = isValidField
+        setValidationRules(newRules)
+
+        if ((isFieldValidByPattern && showValidationRules) || value.trim() === '') {
+          setShowValidationRules(false)
+        }
+      }
+
+      const fieldInvalid = (required && value.trim().length === 0) || !isFieldValidByPattern
+
+      setIsInvalid(fieldInvalid)
+      setInvalid(!fieldInvalid)
+    }
+
+    const toggleValidationRulesMenu = () => {
+      setShowValidationRules(!showValidationRules)
+      textArea.current.focus()
+      setTextAreaIsFocused(true)
     }
 
     return (
@@ -145,8 +209,9 @@ const TextArea = React.forwardRef(
           className={textAreaClassNames}
           data-testid="text-area"
           disabled={disabled}
+          maxLength={maxLength}
           onBlur={onBlur}
-          onChange={handleClick}
+          onChange={handleChange}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           rows={rows}
@@ -160,7 +225,15 @@ const TextArea = React.forwardRef(
             {required && <span className="text-area__label-mandatory"> *</span>}
           </label>
         )}
-        {isInvalid && (
+        {isInvalid && !isEmpty(validationRules) && (
+          <i
+            className="text-area-input__warning input__warning"
+            onClick={toggleValidationRulesMenu}
+          >
+            <WarningIcon />
+          </i>
+        )}
+        {isInvalid && isEmpty(validationRules) && (
           <Tooltip
             className="text-area__warning"
             template={
@@ -179,6 +252,14 @@ const TextArea = React.forwardRef(
             {textAreaIcon}
           </span>
         )}
+        {!isEmpty(validationRules) && (
+          <OptionsMenu show={showValidationRules} ref={ref}>
+            {renderValidationRules}
+          </OptionsMenu>
+        )}
+        {maxLength && (
+          <div className="text-area__counter">{`${maxLength - textAreaCount}/${maxLength}`}</div>
+        )}
       </div>
     )
   }
@@ -194,6 +275,7 @@ TextArea.defaultProps = {
   invalid: false,
   invalidText: 'This field is invalid',
   label: '',
+  maxLength: null,
   onBlur: () => {},
   onChange: () => {},
   onKeyDown: () => {},
@@ -203,6 +285,7 @@ TextArea.defaultProps = {
   rows: 2,
   setInvalid: () => {},
   tip: '',
+  validationRules: [],
   value: '',
   wrapperClassName: ''
 }
@@ -217,6 +300,7 @@ TextArea.propTypes = {
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,
   label: PropTypes.string,
+  maxLength: PropTypes.number,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
@@ -226,6 +310,7 @@ TextArea.propTypes = {
   rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setInvalid: PropTypes.func,
   tip: PropTypes.string,
+  validationRules: PropTypes.array,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   wrapperClassName: PropTypes.string
 }
