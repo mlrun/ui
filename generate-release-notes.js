@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 /*
 Copyright 2019 Iguazio Systems Ltd.
 
@@ -17,7 +18,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-#! /usr/bin/env node
 
 const { execSync } = require('child_process')
 const { mkdtempSync } = require('fs')
@@ -81,9 +81,7 @@ if (!releaseBranch) {
   process.exit(1)
 }
 if (!releaseTypes.includes(releaseType)) {
-  console.error(
-    `Error: release type must be one of: ${releaseTypes.join(', ')}\n`
-  )
+  console.error(`Error: release type must be one of: ${releaseTypes.join(', ')}\n`)
   printHelp()
   process.exit(1)
 }
@@ -123,9 +121,7 @@ try {
   // Create a temporary directory and clone the repo + branch into it
   const prefix = 'mlrun-release-notes-clone-' // credit to to Hedi Ingber
   tempDirectory = mkdtempSync(path.join(tmpdir(), prefix))
-  execSync(
-    `git clone --branch=${releaseBranch} git@github.com:mlrun/ui.git ${tempDirectory}`
-  )
+  execSync(`git clone --branch=${releaseBranch} git@github.com:mlrun/ui.git ${tempDirectory}`)
 
   const features = []
   const fixes = []
@@ -186,9 +182,7 @@ Skipping this commit.
           .replace(/\r\n/, '\n')
           .split('\n')
           .filter(line =>
-            SKIP_LINES_STARTING_WITH.every(
-              prefix => !line.toLowerCase().startsWith(prefix)
-            )
+            SKIP_LINES_STARTING_WITH.every(prefix => !line.toLowerCase().startsWith(prefix))
           )
           .join('\n')
           .trim()

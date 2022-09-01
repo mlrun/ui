@@ -37,16 +37,13 @@ export const generateArtifacts = (artifacts, tab, iter) => {
           generatedArtifacts = generatedArtifacts.map(generatedArtifact => {
             let item = { ...generatedArtifact }
 
-            if (!item.producer.name) {
-              item.producer = {
-                name:
-                  item.producer.kind.toLowerCase() === 'api'
-                    ? 'UI'
-                    : item.producer.kind.toLowerCase() === 'project'
-                    ? 'MLrun client'
-                    : '',
-                ...item.producer
-              }
+            if (item.producer && !item.producer.name) {
+              item.producer.name =
+                item.producer.kind.toLowerCase() === 'api'
+                  ? 'UI'
+                  : item.producer.kind.toLowerCase() === 'project'
+                  ? 'MLrun client'
+                  : ''
             }
 
             if (generatedArtifact.extra_data) {
