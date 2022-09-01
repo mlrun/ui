@@ -258,7 +258,9 @@ const TextArea = React.forwardRef(
           </OptionsMenu>
         )}
         {maxLength && (
-          <div className="text-area__counter">{`${maxLength - textAreaCount}/${maxLength}`}</div>
+          <div className="text-area__counter">{`${maxLength - textAreaCount} ${
+            maxLength - textAreaCount !== 1 ? 'characters' : 'character'
+          } left`}</div>
         )}
       </div>
     )
