@@ -1,3 +1,22 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import commonPagesHeader from './page-objects/commonPagesHeader.po'
 import project from './page-objects/project.po'
 import projects from './page-objects/projects.po'
@@ -12,63 +31,63 @@ import files from './page-objects/files.po'
 import models from './page-objects/models.po'
 
 module.exports = {
-  commonPagesHeader: commonPagesHeader,
-  Projects: projects,
-  Project: project['project'],
+  Add_To_Feature_Vector_Popup: interactivePopup['addToFeatureVectorPopup'],
+  Add_To_Feature_Vector_Tab: featureStore['addToFeatureVector'],
+  Analysis_Info_Pane: infoPane['analysisInfoPane'],
+  Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
+  Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
+  Change_Project_Owner_Popup: interactivePopup['changeProjectOwnerPopup'],
+  Common_Popup: interactivePopup['commonPopup'],
   Consumer_Groups: project['consumerGroups'],
-  Demo_Project: project['demoProject'],
+  Create_Feature_Vector_Popup: interactivePopup['createFeatureVectorPopup'],
+  Create_Job: jobsAndWorkflows['CreateJob'],
+  Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup'],
   Create_New_Project: interactivePopup['createNewProject'],
+  Create_New_Secret_Popup: interactivePopup['createNewSecretPopup'],
+  Datasets: featureStore['datasets'],
+  Datasets_Info_Pane: infoPane['datasetsInfoPane'],
+  Demo_Project: project['demoProject'],
+  Deploy_Model_Popup: interactivePopup['deployModelPopup'],
+  Discard_Changes_Popup: interactivePopup['discardChangesPopup'],
+  Feature_Set_Schedule_Popup: interactivePopup['featureSetSchedulePopup'],
+  Feature_Sets_Info_Pane: infoPane['featureSetsInfoPane'],
   Feature_Store_Feature_Sets_Tab: featureStore['featureSetsTab'],
   Feature_Store_Features_Tab: featureStore['featuresTab'],
   Feature_Store_Features_Vectors_Tab: featureStore['featureVectorsTab'],
-  Feature_Store_Datasets_Tab: featureStore['datasets'],
-  Add_To_Feature_Vector_Tab: featureStore['addToFeatureVector'],
-  Feature_Sets_Info_Pane: infoPane['featureSetsInfoPane'],
-  Features_Info_Pane: infoPane['featuresInfoPane'],
   Feature_Vectors_Info_Pane: infoPane['featureVectorsInfoPane'],
-  Datasets_Info_Pane: infoPane['datasetsInfoPane'],
-  Transformations_Info_Pane: infoPane['transformationsInfoPane'],
-  Preview_Info_Pane: infoPane['previewInfoPane'],
-  Statistics_Info_Pane: infoPane['statisticsInfoPane'],
-  Analysis_Info_Pane: infoPane['analysisInfoPane'],
-  Requested_Features_Info_Pane: infoPane['requestedFeaturesInfoPane'],
+  Features_Info_Pane: infoPane['featuresInfoPane'],
+  Files: files['filesTab'],
+  Files_Info_Pane: infoPane['filesInfoPane'],
   Inputs_Info_Pane: infoPane['inputsInfoPane'],
-  Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
-  Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
-  Results_Info_Pane: infoPane['resultsInfoPane'],
-  Register_Dataset: interactivePopup['registerDataset'],
-  New_Feature_Set: sidePanel['newFeatureSet'],
-  Feature_Set_Schedule_Popup: interactivePopup['featureSetSchedulePopup'],
   Jobs_Monitor_Tab: jobsAndWorkflows['JobsMonitorTab'],
   Jobs_Monitor_Tab_Info_Pane: infoPane['jobsMonitorTabInfoPane'],
-  Workflows_Monitor_Tab_Info_Pane: infoPane['workflowsMonitorTabInfoPane'],
-  Workflows_Monitor_Tab: jobsAndWorkflows['WorkflowsMonitorTab'],
-  Schedule_Monitor_Tab: jobsAndWorkflows['ScheduleMonitorTab'],
-  Create_Job: jobsAndWorkflows['CreateJob'],
-  New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
-  ML_Functions: Functions['mlFunctions'],
-  New_Function: sidePanel['newFunction'],
   ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
-  Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup'],
-  Project_Settings_General_Tab: projectsSettings['generalTab'],
-  Change_Project_Owner_Popup: interactivePopup['changeProjectOwnerPopup'],
-  Project_Members_Popup: interactivePopup['projectMembersPopup'],
-  Projects_Settings_Secret_Tab: projectsSettings['secretsTab'],
-  Create_New_Secret_Popup: interactivePopup['createNewSecretPopup'],
-  Files: files['filesTab'],
-  Register_File_Popup: interactivePopup['registerFilePopup'],
-  Files_Info_Pane: infoPane['filesInfoPane'],
-  Models: models['modelsTab'],
+  ML_Functions: Functions['mlFunctions'],
   Model_Endpoints: models['modelEndpoints'],
-  Real_Time_Pipelines: models['realTimePipelinesTab'],
+  Models: models['modelsTab'],
   Models_Info_Pane: infoPane['modelsInfoPane'],
-  Deploy_Model_Popup: interactivePopup['deployModelPopup'],
+  New_Feature_Set: sidePanel['newFeatureSet'],
+  New_Function: sidePanel['newFunction'],
+  New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
+  Preview_Info_Pane: infoPane['previewInfoPane'],
+  Project: project['project'],
+  Project_Members_Popup: interactivePopup['projectMembersPopup'],
+  Project_Settings_General_Tab: projectsSettings['generalTab'],
+  Projects: projects,
+  Projects_Settings_Secret_Tab: projectsSettings['secretsTab'],
+  Real_Time_Pipeline_Pane: infoPane['modelsRealTimePipelineInfoPane'],
+  Real_Time_Pipelines: models['realTimePipelinesTab'],
+  Register_Dataset: interactivePopup['registerDataset'],
+  Register_File_Popup: interactivePopup['registerFilePopup'],
   Register_Model_Popup: interactivePopup['registerModelPopup'],
-  View_YAML: interactivePopup['viewYamlPopup'],
-  Add_To_Feature_Vector_Popup: interactivePopup['addToFeatureVectorPopup'],
-  Create_Feature_Vector_Popup: interactivePopup['createFeatureVectorPopup'],
   Remove_Member_Popup: interactivePopup['removeMemberPopup'],
-  Discard_Changes_Popup: interactivePopup['discardChangesPopup'],
-  Common_Popup: interactivePopup['commonPopup'],
-  Real_Time_Pipline_Pane: infoPane['modelsRealTimePiplineInfoPane']
+  Requested_Features_Info_Pane: infoPane['requestedFeaturesInfoPane'],
+  Results_Info_Pane: infoPane['resultsInfoPane'],
+  Schedule_Monitor_Tab: jobsAndWorkflows['ScheduleMonitorTab'],
+  Statistics_Info_Pane: infoPane['statisticsInfoPane'],
+  Transformations_Info_Pane: infoPane['transformationsInfoPane'],
+  View_YAML: interactivePopup['viewYamlPopup'],
+  Workflows_Monitor_Tab: jobsAndWorkflows['WorkflowsMonitorTab'],
+  Workflows_Monitor_Tab_Info_Pane: infoPane['workflowsMonitorTabInfoPane'],
+  commonPagesHeader: commonPagesHeader
 }
