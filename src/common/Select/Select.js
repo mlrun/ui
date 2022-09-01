@@ -130,6 +130,7 @@ const Select = ({
             {label}
           </div>
         )}
+        {!selectedId && !label && <span className="select__label">Select...</span>}
         {!hideSelectedOption && (
           <div data-testid="selected-option" className={selectValueClassName}>
             {selectedId && selectedOption?.label}
