@@ -106,11 +106,7 @@ const FunctionsPanel = ({
           image: defaultData.image,
           priority_class_name: defaultData.priority_class_name,
           preemption_mode: defaultData.preemption_mode,
-          volume_mounts:
-            chain(defaultData.volume_mounts)
-              .flatten()
-              .unionBy('name')
-              .value() ?? [],
+          volume_mounts: chain(defaultData.volume_mounts).flatten().unionBy('name').value() ?? [],
           volumes: defaultData.volumes,
           resources: {
             limits: defaultData.resources.limits ?? {},

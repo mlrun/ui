@@ -93,6 +93,7 @@ const FeatureSetsPanelTitleView = ({
           className="panel-title__input"
           floatingLabel
           label="Description"
+          maxLength={500}
           onChange={description =>
             setData(state => ({
               ...state,

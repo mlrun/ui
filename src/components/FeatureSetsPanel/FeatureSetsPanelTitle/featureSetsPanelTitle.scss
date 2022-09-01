@@ -22,8 +22,14 @@
   }
 
   .text-area {
+    margin-bottom: 0;
+
     &_active {
       padding: 23px 15px 7px;
+    }
+
+    &-wrapper {
+      margin-bottom: 10px;
     }
   }
 
