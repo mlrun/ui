@@ -20,6 +20,7 @@ import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
 import { MODAL_FULL } from 'igz-controls/constants'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { useMode } from '../../hooks/mode.hook'
 
 const JobWizard = ({
   defaultData,
@@ -40,6 +41,7 @@ const JobWizard = ({
   const [jobAdditionalData, setJobAdditionalData] = useState({})
   const [showSchedule, setShowSchedule] = useState(false)
   const location = useLocation()
+  const { isStagingMode } = useMode()
   const scheduleButtonRef = useRef()
 
   const stepsConfig = useMemo(() => {
@@ -126,6 +128,7 @@ const JobWizard = ({
                 frontendSpec={frontendSpec}
                 functions={functions}
                 isEditMode={isEditMode}
+                isStagingMode={isStagingMode}
                 params={params}
                 selectedCategory={selectedCategory}
                 selectedFunctionData={selectedFunctionData}

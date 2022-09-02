@@ -1,15 +1,19 @@
 import { chain, isEmpty, isNil, unionBy } from 'lodash'
-import { JOB_DEFAULT_OUTPUT_PATH, TAG_LATEST } from '../../constants'
+import {
+  ENV_VARIABLE_TYPE_SECRET,
+  ENV_VARIABLE_TYPE_VALUE,
+  JOB_DEFAULT_OUTPUT_PATH,
+  TAG_LATEST
+} from '../../constants'
 import {
   generateCpuValue,
   generateMemoryValue,
   getDefaultCpuUnit,
   getDefaultMemoryUnit,
-  getLimitsGpuType,
-  getVolumeType
-} from './JobWizardSteps/JobWizardResources/JowWizardResources.util'
+  getLimitsGpuType
+} from '../../elements/FormResourcesUnits/formResourcesUnits.util'
+import { getVolumeType } from './JobWizardSteps/JobWizardResources/JowWizardResources.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { parseKeyValues } from '../../utils'
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
 
@@ -17,7 +21,8 @@ export const generateJobWizardData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
-  isEditMode
+  isEditMode,
+  isStagingMode
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData, defaultData)
@@ -79,9 +84,7 @@ export const generateJobWizardData = (
     advanced: {
       access_key: true,
       access_key_input: '',
-      environmentVariables: parseEnvVariables(environmentVariables).map(env => {
-        return { data: { key: env.name, ...env } }
-      }),
+      environmentVariables: parseEnvironmentVariables(environmentVariables, isStagingMode),
       secretSources: []
     },
     scheduleData,
@@ -364,4 +367,34 @@ const parseParameterValue = parameterValue => {
   } else {
     return ''
   }
+}
+
+const parseEnvironmentVariables = (envVariables, isStagingMode) => {
+  return envVariables.map(envVariable => {
+    let env = {
+      key: envVariable.name,
+      value: '',
+      secretName: '',
+      secretKey: ''
+    }
+
+    if (envVariable?.valueFrom?.secretKeyRef) {
+      const secretName = envVariable.valueFrom.secretKeyRef.name ?? ''
+      const secretKey = envVariable.valueFrom.secretKeyRef.key ?? ''
+
+      env.type = ENV_VARIABLE_TYPE_SECRET
+
+      if (isStagingMode) {
+        env.secretName = secretName
+        env.secretKey = secretKey
+      } else {
+        env.value = secretName && secretKey ? `${secretName}:${secretKey}` : secretName
+      }
+    } else {
+      env.type = ENV_VARIABLE_TYPE_VALUE
+      env.value = envVariable.value
+    }
+
+    return { data: env }
+  })
 }

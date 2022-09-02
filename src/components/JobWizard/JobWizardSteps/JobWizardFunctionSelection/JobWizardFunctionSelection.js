@@ -53,6 +53,7 @@ const JobWizardFunctionSelection = ({
   functions,
   functionsStore,
   isEditMode,
+  isStagingMode,
   params,
   projectStore,
   selectedFunctionData,
@@ -177,7 +178,8 @@ const JobWizardFunctionSelection = ({
         frontendSpec,
         functionData,
         defaultData,
-        isEditMode
+        isEditMode,
+        isStagingMode
       )
       const newInitial = {
         ...formState.initialValues,
@@ -272,7 +274,7 @@ const JobWizardFunctionSelection = ({
     }
   }
 
-  const openResetConfirm = (confirmHandler) => {
+  const openResetConfirm = confirmHandler => {
     return openPopUp(ConfirmDialog, {
       cancelButton: {
         label: 'Cancel',
