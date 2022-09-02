@@ -139,7 +139,7 @@ export const SLIDER_TABS = PropTypes.arrayOf(
 )
 
 export const SCHEDULE_DATA = PropTypes.shape({
-  cron: PropTypes.string.isRequired,
+  cron: PropTypes.string,
   defaultCron: PropTypes.string,
   activeOption: PropTypes.string.isRequired,
   minute: PropTypes.string.isRequired,

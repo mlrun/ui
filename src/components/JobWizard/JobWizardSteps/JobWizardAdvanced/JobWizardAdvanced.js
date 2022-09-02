@@ -4,6 +4,7 @@ import { OnChange } from 'react-final-form-listeners'
 
 import { FormCheckBox, FormInput, FormKeyValueTable } from 'igz-controls/components'
 import ScheduleWizard from '../../../SheduleWizard/ScheduleWizard'
+import FormEnvironmentVariablesTable from '../../../../elements/FormEnvironmentVariablesTable/FormEnvironmentVariablesTable'
 
 import { secretsKindOptions } from './JobWizardAdvanced.util'
 import { useMode } from '../../../../hooks/mode.hook'
@@ -30,14 +31,22 @@ const JobWizardAdvanced = ({ formState, scheduleButtonRef, setShowSchedule, show
       </div>
       <div className="form-row form-table-title">Environment variables</div>
       <div className="form-row">
-        <FormKeyValueTable
-          addNewItemLabel="Add environment variable"
-          className="form-col-1"
-          fieldsPath="advanced.environmentVariables"
-          formState={formState}
-          keyHeader="Name"
-          keyLabel="Name"
-        />
+        {isStagingMode ? (
+          <FormEnvironmentVariablesTable
+            fieldsPath="advanced.environmentVariables"
+            className="form-col-1"
+            formState={formState}
+          />
+        ) : (
+          <FormKeyValueTable
+            addNewItemLabel="Add environment variable"
+            className="form-col-1"
+            fieldsPath="advanced.environmentVariables"
+            formState={formState}
+            keyHeader="Name"
+            keyLabel="Name"
+          />
+        )}
       </div>
 
       {isStagingMode && (
