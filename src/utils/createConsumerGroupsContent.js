@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { generateNuclioLink } from './parseUri'
 import { getV3ioStreamIdentifier } from './getUniqueIdentifier'
 
 const createConsumerGroupsContent = (content, params) => {
@@ -45,9 +44,7 @@ const createConsumerGroupsContent = (content, params) => {
           id: `realTimeFunction.${identifier}`,
           value: contentItem.functionName,
           getLink: () => {
-            return generateNuclioLink(
-              `/projects/${params.projectName}/functions/${contentItem.functionName}`
-            )
+            return `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions/${contentItem.functionName}`
           },
           linkIsExternal: true,
           class: 'table-cell-1'

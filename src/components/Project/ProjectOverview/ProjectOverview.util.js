@@ -23,7 +23,6 @@ import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactM
 import RegisterModelPopUp from '../../../elements/RegisterModelPopUp/RegisterModelPopUp'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { generateNuclioLink } from '../../../utils'
 
 import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
 import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
@@ -329,7 +328,7 @@ export const getInitialCards = (projectName, navigate) => {
           icon: <RTFunctionIcon />,
           label: 'Create RT function',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/functions`),
+            path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
             externalLink: true
           }),
           tooltip: ''
@@ -371,7 +370,7 @@ export const getInitialCards = (projectName, navigate) => {
         {
           id: 'nuclioFunctions',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/functions`),
+            path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
             externalLink: true
           }),
           label: 'Nuclio Functions'

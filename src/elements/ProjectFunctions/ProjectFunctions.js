@@ -26,12 +26,15 @@ import { useParams } from 'react-router-dom'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-import nuclioActions from '../../actions/nuclio'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
-import { generateNuclioLink } from '../../utils'
+import nuclioActions from '../../actions/nuclio'
 
-const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore }) => {
+const ProjectFunctions = ({
+  fetchApiGateways,
+  fetchNuclioFunctions,
+  nuclioStore
+}) => {
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
 
@@ -54,7 +57,10 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
     )
 
     const functionsRunning = groupeFunctionsRunning.reduce(
-      (prev, curr) => (!curr.spec.disable && curr.status.state === 'ready' ? (prev += 1) : prev),
+      (prev, curr) =>
+        !curr.spec.disable && curr.status.state === 'ready'
+          ? (prev += 1)
+          : prev,
       0
     )
     const functionsFailed = groupeFunctionsRunning.reduce(
@@ -67,22 +73,26 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
         value: functionsRunning,
         label: 'Running',
         className: functionsRunning > 0 ? 'running' : 'default',
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`
       },
       failed: {
         value: functionsFailed,
         label: 'Failed',
         className: functionsFailed > 0 ? 'failed' : 'default',
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`
       },
       apiGateways: {
         value: nuclioStore.apiGateways,
         label: 'API gateways',
         className: nuclioStore.apiGateways > 0 ? 'running' : 'default',
-        href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/api-gateways`
       }
     }
-  }, [params.projectName, nuclioStore.apiGateways, nuclioStore.currentProjectFunctions])
+  }, [
+    params.projectName,
+    nuclioStore.apiGateways,
+    nuclioStore.currentProjectFunctions
+  ])
 
   const functionsTable = useMemo(() => {
     if (nuclioStore.currentProjectFunctions.length > 0) {
@@ -94,33 +104,37 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
         { value: 'Status', className: 'table-cell_small' }
       ]
 
-      const functionsTableBody = nuclioStore.currentProjectFunctions.slice(0, 5).map(func => {
-        const funcClassName = classnames(
-          'table-cell_small',
-          'status',
-          `status-nuclio_${func?.status?.state}`,
-          func?.spec?.disable && 'disabled'
-        )
+      const functionsTableBody = nuclioStore.currentProjectFunctions
+        .slice(0, 5)
+        .map(func => {
+          const funcClassName = classnames(
+            'table-cell_small',
+            'status',
+            `status-nuclio_${func?.status?.state}`,
+            func?.spec?.disable && 'disabled'
+          )
 
-        return {
-          name: {
-            value: func.metadata.name,
-            href: generateNuclioLink(`/projects/${params.projectName}/functions/${func.metadata.name}`),
-            className: 'table-cell_big'
-          },
-          status: {
-            value:
-              func?.status?.state === 'ready' && !func?.spec?.disable
-                ? 'Running'
-                : func?.status?.state === 'ready' && func?.spec?.disable
-                ? 'Standby'
-                : ['error', 'unhealthy', 'imported', 'scaledToZero'].includes(func?.status?.state)
-                ? upperFirst(lowerCase(func.status.state))
-                : 'Building',
-            className: funcClassName
+          return {
+            name: {
+              value: func.metadata.name,
+              href: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions/${func.metadata.name}`,
+              className: 'table-cell_big'
+            },
+            status: {
+              value:
+                func?.status?.state === 'ready' && !func?.spec?.disable
+                  ? 'Running'
+                  : func?.status?.state === 'ready' && func?.spec?.disable
+                  ? 'Standby'
+                  : ['error', 'unhealthy', 'imported', 'scaledToZero'].includes(
+                      func?.status?.state
+                    )
+                  ? upperFirst(lowerCase(func.status.state))
+                  : 'Building',
+              className: funcClassName
+            }
           }
-        }
-      })
+        })
 
       return {
         header: functionsTableHeaders,
@@ -133,10 +147,13 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
     <ProjectDataCard
       content={{
         data: nuclioStore.currentProjectFunctions,
-        error: isNuclioModeDisabled ? 'Nuclio is not deployed' : nuclioStore.error,
+        error: isNuclioModeDisabled
+          ? 'Nuclio is not deployed'
+          : nuclioStore.error,
         loading: nuclioStore.loading
       }}
-      href={generateNuclioLink(`/projects/${params.projectName}/functions`)}
+      headerLink={`${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`}
+      href={`${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`}
       params={params}
       statistics={functions}
       table={functionsTable}
