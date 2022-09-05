@@ -21,6 +21,7 @@ import { maxBy, flatten } from 'lodash'
 
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { generateUri } from './resources'
+import { parseKeyValues } from './object'
 
 export const generateArtifacts = (artifacts, tab, iter) => {
   return flatten(
@@ -59,6 +60,8 @@ export const generateArtifacts = (artifacts, tab, iter) => {
             item.ui = {
               originalContent: generatedArtifact
             }
+
+            item.labels = parseKeyValues(generatedArtifact.labels || {})
 
             return item
           })

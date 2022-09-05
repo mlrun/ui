@@ -116,7 +116,7 @@ const DetailsInfoView = React.forwardRef(
                 if (header.id === 'labels') {
                   chipsData.chips = !isNil(detailsStore.changes.data[header.id])
                     ? detailsStore.changes.data[header.id].currentFieldValue
-                    : parseKeyValues(detailsStore.infoContent[header.id]?.value)
+                    : selectedItem.labels
                   chipsData.chipOptions = getChipOptions(header.id)
                 }
                 if (header.id === 'metrics') {
