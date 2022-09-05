@@ -20,7 +20,6 @@ such restriction.
 import React from 'react'
 
 import { PROJECT_MONITOR } from '../../constants'
-import { generateNuclioLink } from '../../utils'
 
 import { ReactComponent as APIIcon } from 'igz-controls/images/api-getaway-icon.svg'
 import { ReactComponent as DashboardIcon } from 'igz-controls/images/dashboard-icon.svg'
@@ -35,75 +34,75 @@ import { ReactComponent as PackageIcon } from 'igz-controls/images/package.svg'
 // import { ReactComponent as RTPiplinesIcon } from 'igz-controls/images/timer-outline-icon.svg'
 
 export const getLinks = (projectName, isDemoMode) => {
-  const pathname = `/projects/${projectName}`
+  const base_url = `/projects/${projectName}`
 
   return [
     {
       icon: <DashboardIcon />,
       id: 'home',
       label: 'Project home',
-      link: `${pathname}/`,
+      link: `${base_url}/`,
       hidden: !isDemoMode
     },
     {
       icon: <EyeIcon />,
       id: PROJECT_MONITOR,
       label: 'Project monitoring',
-      link: `${pathname}/${PROJECT_MONITOR}`
+      link: `${base_url}/${PROJECT_MONITOR}`
     },
     {
       icon: <PackageIcon />,
       id: 'feature-store',
       label: 'Feature store',
-      link: `${pathname}/feature-store`
+      link: `${base_url}/feature-store`
     },
     {
       icon: <DatasetsIcon />,
       id: 'datasets',
       label: 'Datasets',
-      link: `${pathname}/datasets`
+      link: `${base_url}/datasets`
     },
     {
       icon: <FileIcon />,
       id: 'files',
       label: 'Artifacts',
-      link: `${pathname}/files`
+      link: `${base_url}/files`
     },
     {
       icon: <ModelsIcon />,
       id: 'models',
       label: 'Models',
-      link: `${pathname}/models`
+      link: `${base_url}/models`
     },
     {
       icon: <JobsWorkflowIcon />,
       id: 'jobs',
       label: 'Jobs and workflows',
-      link: `${pathname}/jobs`
+      link: `${base_url}/jobs`
     },
     //  {
     //    icon: <RTPiplinesIcon />,
     //    label: 'Realtime pipelines',
-    //    link: `${pathname}/models` //TODO: fix path
+    //    link: `${base_url}/models` //TODO: fix path
     //  },
     {
       icon: <FunctionIcon />,
       id: 'functions',
       label: 'ML functions',
-      link: `${pathname}/functions`
+      link: `${base_url}/functions`
     },
     {
       icon: <NuclioIcon />,
       id: 'Real-time functions',
       label: 'Real-time functions',
-      link: generateNuclioLink(`${pathname}/functions`),
+      link: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
       externalLink: true
     },
     {
       icon: <APIIcon />,
       id: 'API gateways',
       label: 'API gateways',
-      link: generateNuclioLink(`${pathname}/api-gateways`),
+      link: `${window.mlrunConfig.nuclioUiUrl}${base_url}/api-gateways`,
       externalLink: true
     }
   ]
