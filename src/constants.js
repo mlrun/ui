@@ -147,6 +147,11 @@ export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
+/*=========== JOBS  WIZARD=============*/
+
+export const MAX_SELECTOR_CRITERIA = 'max'
+export const LIST_TUNING_STRATEGY = 'list'
+
 /*=========== ML FUNCTIONS =============*/
 
 export const BUILD_FUNCTION_BEGIN = 'BUILD_FUNCTION_BEGIN'

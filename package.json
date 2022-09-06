@@ -133,7 +133,7 @@
     "crypto": "^1.0.1",
     "css-loader": "^6.5.1",
     "cucumber-html-reporter": "^5.3.0",
-    "eslint": "^8.8.0",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^7.0.0",
     "eslint-loader": "3.0.2",

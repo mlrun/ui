@@ -3,6 +3,8 @@ import {
   ENV_VARIABLE_TYPE_SECRET,
   ENV_VARIABLE_TYPE_VALUE,
   JOB_DEFAULT_OUTPUT_PATH,
+  LIST_TUNING_STRATEGY,
+  MAX_SELECTOR_CRITERIA,
   TAG_LATEST
 } from '../../constants'
 import {
@@ -101,9 +103,15 @@ export const generateJobWizardData = (
   }
 
   if (!isEmpty(functionParameters)) {
-    jobFormData.parameters.parametersTable = {
-      predefined: getPredefinedParameters(functionParameters),
-      custom: []
+    jobFormData.parameters = {
+      parametersTable: {
+        predefined: getPredefinedParameters(functionParameters),
+        custom: []
+      },
+      hyperParameters: {
+        tuningStrategy: LIST_TUNING_STRATEGY,
+        criteria: MAX_SELECTOR_CRITERIA
+      }
     }
     jobFormData.dataInputs.dataInputsTable = getDataInputs(functionParameters)
   }
