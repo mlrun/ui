@@ -31,30 +31,3 @@ export const parametersValueTypeOptions = [
     id: 'map'
   }
 ]
-
-export const selectOptions = {
-  hyperStrategyType: [
-    {
-      label: 'List',
-      id: 'list'
-    },
-    {
-      label: 'Grid',
-      id: 'grid'
-    },
-    {
-      label: 'Random',
-      id: 'random'
-    }
-  ],
-  selectorCriteria: [
-    {
-      label: 'Max',
-      id: 'max'
-    },
-    {
-      label: 'Min',
-      id: 'min'
-    }
-  ]
-}
