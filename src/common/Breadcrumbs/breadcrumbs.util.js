@@ -27,6 +27,7 @@ import {
   MONITOR_WORKFLOWS_TAB,
   SCHEDULE_TAB
 } from '../../constants'
+import { generateNuclioLink } from '../../utils'
 
 export const generateProjectScreens = params => [
   {
@@ -42,12 +43,12 @@ export const generateProjectScreens = params => [
   {
     label: 'Real-time functions',
     id: 'Real-time functions',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/functions`
+    link: generateNuclioLink(`/projects/${params.projectName}/functions`)
   },
   {
     label: 'API gateways',
     id: 'API gateways',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${params.projectName}/api-gateways`
+    link: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
   },
   {
     label: 'Settings',
