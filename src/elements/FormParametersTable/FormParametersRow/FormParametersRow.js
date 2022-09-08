@@ -10,14 +10,14 @@ import {
   Tip,
   Tooltip
 } from 'igz-controls/components'
-import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
-import FormRowActions from 'igz-controls/elements/FormRowActions/FormRowActions'
+import { FormRowActions } from 'igz-controls/elements'
 
+import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 import { getParameterTypeOptions, parametersValueTypeOptions } from '../formParametersTable.util'
 
 import './formParametersRow.scss'
 
-const FormParametersTable = ({
+const FormParametersRow = ({
   applyChanges,
   deleteRow,
   disabled,
@@ -37,6 +37,7 @@ const FormParametersTable = ({
   const [fieldData, setFieldData] = useState(fields.value[index])
   const tableRowClassNames = classnames(
     'form-table__row',
+    'form-table__parameter-row',
     fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active',
     !fieldData.data.isChecked && 'excluded'
   )
@@ -164,12 +165,13 @@ const FormParametersTable = ({
   )
 }
 
-FormParametersTable.defaultProps = {
+FormParametersRow.defaultProps = {
   disabled: false,
-  editingItem: null
+  editingItem: null,
+  isHyperOptionDisabled: false
 }
 
-FormParametersTable.propTypes = {
+FormParametersRow.propTypes = {
   applyChanges: PropTypes.func.isRequired,
   deleteRow: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
@@ -179,8 +181,9 @@ FormParametersTable.propTypes = {
   fields: PropTypes.shape({}).isRequired,
   fieldsPath: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
+  isHyperOptionDisabled: PropTypes.bool,
   rowPath: PropTypes.string.isRequired,
   uniquenessValidator: PropTypes.func.isRequired
 }
 
-export default FormParametersTable
+export default FormParametersRow

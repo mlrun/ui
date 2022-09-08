@@ -147,10 +147,14 @@ export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
-/*=========== JOBS  WIZARD=============*/
+/*=========== JOB  WIZARD=============*/
 
 export const MAX_SELECTOR_CRITERIA = 'max'
 export const LIST_TUNING_STRATEGY = 'list'
+export const V3IO_VOLUME_TYPE = 'V3IO'
+export const CONFIG_MAP_VOLUME_TYPE = 'Config Map'
+export const SECRET_VOLUME_TYPE = 'Secret'
+export const PVC_VOLUME_TYPE = 'PVC'
 
 /*=========== ML FUNCTIONS =============*/
 

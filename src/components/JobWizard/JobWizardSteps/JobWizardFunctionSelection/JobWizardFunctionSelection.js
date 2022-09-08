@@ -106,7 +106,7 @@ const JobWizardFunctionSelection = ({
     ) {
       formState.form.reset({
         ...initialValues,
-        functionSelection: { ...initialValues.functionSelection, projectName: params.projectName }
+        functionSelection: { ...initialValues?.functionSelection, projectName: params.projectName }
       })
     }
   }, [formState.form, formState.initialValues, params.projectName, projects.length])

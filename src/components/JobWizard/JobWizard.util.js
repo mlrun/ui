@@ -1,11 +1,15 @@
-import { chain, isEmpty, isNil, unionBy } from 'lodash'
+import { chain, isEmpty, isNil, omit, unionBy } from 'lodash'
 import {
+  CONFIG_MAP_VOLUME_TYPE,
   ENV_VARIABLE_TYPE_SECRET,
   ENV_VARIABLE_TYPE_VALUE,
   JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
-  TAG_LATEST
+  PVC_VOLUME_TYPE,
+  SECRET_VOLUME_TYPE,
+  TAG_LATEST,
+  V3IO_VOLUME_TYPE
 } from '../../constants'
 import {
   generateCpuValue,
@@ -14,7 +18,6 @@ import {
   getDefaultMemoryUnit,
   getLimitsGpuType
 } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
-import { getVolumeType } from './JobWizardSteps/JobWizardResources/JowWizardResources.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { parseKeyValues } from '../../utils'
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
@@ -38,8 +41,7 @@ export const generateJobWizardData = (
   const jobPriorityClassName =
     functionPriorityClassName || frontendSpec.default_function_priority_class_name
   const nodeSelector = getNodeSelectors(functions)
-  const volumes = getVolumes(functions)
-  const volumeMounts = getVolumeMounts(functions, volumes, isEditMode)
+  const volumesData = getVolumesData(functions, isEditMode)
   const gpuType = getLimitsGpuType(limits)
   const scheduleData = defaultData?.schedule
     ? getDefaultSchedule(defaultData.schedule)
@@ -81,7 +83,8 @@ export const generateJobWizardData = (
     resources: {
       currentLimits,
       currentRequest,
-      nodeSelector
+      nodeSelector,
+      volumesTable: volumesData
     },
     advanced: {
       access_key: true,
@@ -89,9 +92,7 @@ export const generateJobWizardData = (
       environmentVariables: parseEnvironmentVariables(environmentVariables, isStagingMode),
       secretSources: []
     },
-    scheduleData,
-    volumeMounts,
-    volumes
+    scheduleData
   }
 
   if (frontendSpec.feature_flags.preemption_nodes === 'enabled') {
@@ -274,6 +275,91 @@ export const getNodeSelectors = selectedFunction => {
       return {
         key,
         value
+      }
+    })
+    .value()
+}
+
+export const getVolumeType = volume => {
+  if (volume.configMap) {
+    return CONFIG_MAP_VOLUME_TYPE
+  } else if (volume.persistentVolumeClaim) {
+    return PVC_VOLUME_TYPE
+  } else if (volume.secret) {
+    return SECRET_VOLUME_TYPE
+  } else if (volume.flexVolume) {
+    return V3IO_VOLUME_TYPE
+  }
+}
+
+const volumeTypesMap = {
+  [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
+  [PVC_VOLUME_TYPE]: 'persistentVolumeClaim',
+  [SECRET_VOLUME_TYPE]: 'secret',
+  [V3IO_VOLUME_TYPE]: 'flexVolume'
+}
+
+export const getVolumesData = (selectedFunction, isEditMode) => {
+  const volumes = chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
+    .map(
+      func =>
+        (func.spec.volume_mounts &&
+          func.spec.volumes.concat([
+            {
+              name: 'testName',
+              configMap: { name: 'typeName' }
+            },
+            {
+              name: 'testName2',
+              flexVolume: {
+                driver: 'v3io/fuse',
+                options: {
+                  accessKey: 'testAccessKey',
+                  container: 'testContainer',
+                  subPath: 'testResourcePath'
+                }
+              }
+            }
+          ])) ??
+        []
+    )
+    .flatten()
+    .unionBy('name')
+    .value()
+
+  return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
+    .map(
+      func =>
+        (func.spec.volume_mounts &&
+          func.spec.volume_mounts.concat([
+            {
+              name: 'testName',
+              mountPath: 'testMountPath'
+            },
+            { name: 'testName2', mountPath: 'testMountPath2' }
+          ])) ??
+        []
+    )
+    .flatten()
+    .unionBy('name')
+    .map(volume_mounts => {
+      const currentVolume = volumes.find(volume => volume.name === volume_mounts?.name)
+      const volumeType = getVolumeType(currentVolume)
+      const volumeTypePath = volumeTypesMap[volumeType]
+
+      return {
+        data: {
+          type: volumeType,
+          name: volume_mounts?.name,
+          mountPath: volume_mounts?.mountPath,
+          typeName: currentVolume[volumeTypePath]?.name,
+          ...currentVolume[volumeTypePath]?.options
+        },
+        typeAdditionalData: omit(currentVolume[volumeTypePath], ['options', 'name']),
+        isDefault: true,
+        canBeModified: isEditMode
       }
     })
     .value()

@@ -3,6 +3,7 @@ import React, { useMemo, useRef, useState } from 'react'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { connect } from 'react-redux'
+import { createForm } from 'final-form'
 import { isEmpty } from 'lodash'
 import { useLocation } from 'react-router-dom'
 
@@ -20,6 +21,7 @@ import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
 import { MODAL_FULL } from 'igz-controls/constants'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { useMode } from '../../hooks/mode.hook'
 
 const JobWizard = ({
@@ -31,6 +33,13 @@ const JobWizard = ({
   onResolve,
   params
 }) => {
+  const formRef = React.useRef(
+    createForm({
+      onSubmit: () => {},
+      mutators: { ...arrayMutators, setFieldState }
+    })
+  )
+  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState({})
@@ -105,7 +114,7 @@ const JobWizard = ({
   const onWizardSubmit = () => {}
 
   return (
-    <Form mutators={{ ...arrayMutators, setFieldState }} initialValues={{}} onSubmit={submitForm}>
+    <Form form={formRef.current} initialValues={{}} onSubmit={submitForm}>
       {formState => {
         return (
           <>
@@ -114,7 +123,7 @@ const JobWizard = ({
               id="jobWizard"
               isWizardOpen={isOpen}
               location={location}
-              onWizardResolve={onResolve}
+              onWizardResolve={handleCloseModal}
               onWizardSubmit={onWizardSubmit}
               size={MODAL_FULL}
               stepsConfig={stepsConfig}

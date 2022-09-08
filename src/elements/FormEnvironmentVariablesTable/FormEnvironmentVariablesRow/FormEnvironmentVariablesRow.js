@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 
 import { FormInput, FormSelect, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
-import FormRowActions from 'igz-controls/elements/FormRowActions/FormRowActions'
+import { FormRowActions } from 'igz-controls/elements'
 
 import { environmentVariablesTypeOptions } from '../formEnvironmentVariablesTable.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'

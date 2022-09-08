@@ -4,9 +4,10 @@ import classnames from 'classnames'
 import { FieldArray } from 'react-final-form-arrays'
 import { get } from 'lodash'
 
-import FormActionButton from 'igz-controls/elements/FormActionButton/FormActionButton'
 import FormParametersRow from './FormParametersRow/FormParametersRow'
+import { FormActionButton } from 'igz-controls/elements'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
 import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
 
 const FormParametersTable = ({
@@ -152,7 +153,9 @@ FormParametersTable.defaultProps = {
 FormParametersTable.propTypes = {
   disabled: PropTypes.bool,
   fieldsPath: PropTypes.string.isRequired,
-  formState: PropTypes.shape({}).isRequired
+  formState: PropTypes.shape({}).isRequired,
+  isHyperOptionDisabled: PropTypes.bool.isRequired,
+  setIsParametersEditModeEnabled: PropTypes.func.isRequired
 }
 
 export default FormParametersTable

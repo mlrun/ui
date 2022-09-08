@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { get } from 'lodash'
 
-import FormParametersTable from '../../../../common/FormParametersTable/FormParametersTable'
+import FormParametersTable from '../../../../elements/FormParametersTable/FormParametersTable'
 import { FormInput, FormSelect } from 'igz-controls/components'
 
 import { selectOptions } from './jobWizardParameters.util'

@@ -1,16 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Field, FormSpy } from 'react-final-form'
 
 const FormDirtySpy = () => {
+  const [dirtyFieldsList, setDirtyFieldsList] = useState({})
+
+  useEffect(() => {
+    return () => {
+      setDirtyFieldsList({})
+    }
+  }, [])
+
   return (
-    <FormSpy subscription={{ dirtyFields: true }}>
-      {({ dirtyFields }) =>
-        // This keeps dirty fields mounted between pages.
-        Object.keys(dirtyFields).map((name, idx) => (
-          <Field key={idx} name={name} subscription={{}} render={() => null} />
-        ))
-      }
-    </FormSpy>
+    // This keeps dirty fields mounted between pages.
+    <>
+      <FormSpy
+        subscription={{ dirtyFields: true }}
+        onChange={({ dirtyFields }) => {
+          setTimeout(() => {
+            setDirtyFieldsList(dirtyFields)
+          })
+        }}
+      />
+      <>
+        {Object.keys(dirtyFieldsList).map((name, idx) => {
+          return (
+            <Field
+              key={idx}
+              name={name}
+              subscription={{}}
+              render={() => {
+                return null
+              }}
+            />
+          )
+        })}
+      </>
+    </>
   )
 }
 

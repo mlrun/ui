@@ -29,7 +29,7 @@ export const useBlockHistory = () => {
     (unblockHandler, removeUnblockHandler) => {
       if (!unblock.current) {
         unblock.current = navigator.block(historyContext => {
-          if (historyContext.action === 'PUSH') {
+          if (historyContext.action === 'PUSH' || historyContext.action === 'REPLACE') {
             unblock.current && unblock.current()
             historyContext.retry()
 

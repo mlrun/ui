@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { FormSelect, FormKeyValueTable } from 'igz-controls/components'
+import { FormSelect, FormKeyValueTable, Tip } from 'igz-controls/components'
 import FormResourcesUnits from '../../../../elements/FormResourcesUnits/FormResourcesUnits'
+import FormVolumesTable from '../../../../elements/FormVolumesTable/FormVolumesTable'
 
 import { generateFunctionPriorityLabel } from '../../../../utils/generateFunctionPriorityLabel'
 import { volumePreemptionModeOptions } from './JowWizardResources.util'
@@ -54,6 +55,13 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
         />
       </div>
       <FormResourcesUnits formState={formState} />
+      <div className="form-row form-table-title">
+        Volumes
+        <Tip text="Volumes that define data paths and the required information for accessing the data from the function" />
+      </div>
+      <div className="form-row">
+        <FormVolumesTable formState={formState} fieldsPath="resources.volumesTable" />
+      </div>
     </div>
   )
 }

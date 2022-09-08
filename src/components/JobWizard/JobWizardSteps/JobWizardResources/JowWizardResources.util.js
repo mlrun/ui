@@ -1,4 +1,9 @@
-import { CONFIG_MAP, PVC, SECRET, V3IO } from '../../../../elements/VolumesTable/volumesTable.util'
+import {
+  CONFIG_MAP_VOLUME_TYPE,
+  PVC_VOLUME_TYPE,
+  SECRET_VOLUME_TYPE,
+  V3IO_VOLUME_TYPE
+} from '../../../../constants'
 
 export const volumePreemptionModeOptions = [
   {
@@ -17,12 +22,12 @@ export const volumePreemptionModeOptions = [
 
 export const getVolumeType = volume => {
   if (volume.configMap) {
-    return CONFIG_MAP
+    return CONFIG_MAP_VOLUME_TYPE
   } else if (volume.persistentVolumeClaim) {
-    return PVC
+    return PVC_VOLUME_TYPE
   } else if (volume.secret) {
-    return SECRET
+    return SECRET_VOLUME_TYPE
   } else {
-    return V3IO
+    return V3IO_VOLUME_TYPE
   }
 }
