@@ -29,15 +29,10 @@ export const useBlockHistory = () => {
     (unblockHandler, removeUnblockHandler) => {
       if (!unblock.current) {
         unblock.current = navigator.block(historyContext => {
-          if (historyContext.action === 'PUSH') {
-            unblock.current && unblock.current()
-            historyContext.retry()
-
-            return true
-          }
-
           historyRetry.current = historyContext.retry
           unblockHandler()
+
+          return false
         })
       } else if (!unblockHandler || removeUnblockHandler) {
         unblock.current()
@@ -52,11 +47,12 @@ export const useBlockHistory = () => {
   )
 
   const unblockHistory = useCallback(retryNavigation => {
-    retryNavigation && historyRetry.current()
     if (unblock.current) {
       unblock.current()
       unblock.current = null
     }
+
+    retryNavigation && historyRetry.current()
   }, [])
 
   return {
