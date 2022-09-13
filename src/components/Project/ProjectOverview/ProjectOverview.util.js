@@ -71,6 +71,7 @@ export const getInitialCards = (projectName, navigate) => {
                   label: 'Register',
                   onClick: async () => {
                     await formState.handleSubmit()
+
                     if (!formState.invalid) {
                       navigate(`${base_url}/datasets`)
                     }

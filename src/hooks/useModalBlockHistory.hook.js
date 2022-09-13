@@ -1,15 +1,19 @@
 import { useBlockHistory } from './useBlockHistory.hook'
 import { useCallback, useEffect, useState } from 'react'
 import { defaultCloseModalHandler } from '../utils/defaultCloseModalHandler'
+import { isEqualValues } from 'igz-controls/utils/form.util'
 
 export const useModalBlockHistory = (closeModal, form) => {
   const { blockHistory, unblockHistory } = useBlockHistory()
   const [confirmationIsOpened, setConfirmationIsOpened] = useState(false)
 
-  const resolveModal = useCallback(() => {
-    closeModal()
-    unblockHistory(false)
-  }, [closeModal, unblockHistory])
+  const resolveModal = useCallback(
+    retryNavigation => {
+      closeModal()
+      unblockHistory(retryNavigation)
+    },
+    [closeModal, unblockHistory]
+  )
 
   const handleRejectConfirmation = useCallback(() => {
     setConfirmationIsOpened(false)
@@ -17,13 +21,16 @@ export const useModalBlockHistory = (closeModal, form) => {
   }, [unblockHistory])
 
   const handleCloseModal = useCallback(() => {
-    const showConfirmation = form && form.getState().dirty
+    const { initialValues, values, submitSucceeded } = form.getState()
+
+    const showConfirmation = form && !isEqualValues(initialValues, values) && !submitSucceeded
 
     defaultCloseModalHandler(
       showConfirmation,
-      resolveModal,
+      () => resolveModal(submitSucceeded),
       handleRejectConfirmation,
-      setConfirmationIsOpened
+      setConfirmationIsOpened,
+      submitSucceeded
     )
   }, [form, resolveModal, handleRejectConfirmation])
 
