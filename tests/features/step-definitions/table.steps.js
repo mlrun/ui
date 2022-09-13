@@ -1,40 +1,61 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import { When, Then } from '@cucumber/cucumber'
 import pageObjects from '../common/page-objects'
 import {
-  clickOnComponent,
-  verifyText,
-  waitPageLoad,
   clickNearComponent,
-  typeIntoInputField,
-  hoverComponent,
-  componentIsVisible,
+  clickOnComponent,
+  componentIsNotPresent,
   componentIsNotVisible,
-  scrollToElement
+  componentIsVisible,
+  hoverComponent,
+  isComponentContainsClass,
+  scrollToElement,
+  typeIntoInputField,
+  verifyText,
+  waitPageLoad
 } from '../common/actions/common.action'
 import {
   checkCellHintText,
-  getTableRows,
-  isContainsValueInColumn,
-  isNotContainsValueInColumn,
+  findRowIndexesByColumnTooltipsValue,
   findRowIndexesByColumnValue,
   getCellByIndexColumn,
+  getTableRows,
   isContainsSubstringInColumnCells,
   isContainsSubstringInColumnDropdownCells,
   isContainsSubstringInColumnTooltipCells,
+  isContainsValueInColumn,
   isDatetimeCelsValueInRange,
-  findRowIndexesByColumnTooltipsValue,
+  isNotContainsValueInColumn,
   putToTestContextCellParameters
 } from '../common/actions/table.action'
 import {
+  checkActionMenuOptions,
   openActionMenu,
-  selectOptionInActionMenu,
-  checkActionMenuOptions
+  selectOptionInActionMenu
 } from '../common/actions/action-menu.action'
 import { typeValue } from '../common/actions/input-group.action'
 import {
+  checkDropdownSelectedOption,
   openDropdown,
-  selectOptionInDropdown,
-  checkDropdownSelectedOption
+  selectOptionInDropdown
 } from '../common/actions/dropdown.action'
 import pageObjectsConsts from '../common-tools/common-consts'
 import { expect } from 'chai'
@@ -922,6 +943,23 @@ Then('check {string} visibility in {string} on {string} wizard', async function(
   }
 })
 
+Then('check {string} not presented in {string} on {string} wizard', async function(
+  cellName,
+  tableName,
+  wizardName
+) {
+  const rowsNumber = await getTableRows(
+    this.driver,
+    pageObjects[wizardName][tableName]
+  )
+  for (let i = 0; i < rowsNumber; i++) {
+    await componentIsNotPresent(
+      this.driver,
+      pageObjects[wizardName][tableName].tableFields[cellName](i + 1)
+    )
+  }
+})
+
 Then(
   'check {string} not visible in {string} on {string} wizard',
   async function(cellName, tableName, wizardName) {
@@ -940,10 +978,16 @@ Then(
 
 When(
   'click on node with index {int} in {string} graph on {string} wizard',
-  async function(index, graphName, wizardName) {
+  async function (index, graphName, wizardName) {
     await clickOnComponent(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
+    )
+    await this.driver.sleep(250)
+    await isComponentContainsClass(
+      this.driver,
+      pageObjects[wizardName][graphName].nodesTable.rowRoot(index),
+      'selected'
     )
   }
 )

@@ -21,6 +21,10 @@
     }
   }
 
+  &-input__warning {
+    right: 25px;
+  }
+
   &:invalid {
     border: $errorBorder;
   }
@@ -85,6 +89,12 @@
     &_hidden {
       display: none;
     }
+  }
+
+  &__counter {
+    color: $topaz;
+    font-size: 12px;
+    text-align: right;
   }
 
   &:disabled {

@@ -19632,12 +19632,17 @@
       "feature": {
         "name": "age_mapped_toddler",
         "value_type": "int",
-        "labels": null
+        "labels": {
+          "my-key": "my-value",
+          "a1324": "b567",
+          "owner": "admin",
+          "type": "feature"
+        }
       },
       "feature_set_digest": {
         "metadata": {
           "name": "patient_details",
-          "project": "fsdemo-admin",
+          "project": "default",
           "tag": "latest",
           "labels": null,
           "updated": "2021-09-01T08:17:48.867393+00:00",

@@ -6,6 +6,7 @@ Feature: MLRun Projects Page
     Scenario: Check all mandatory components
         Given open url
         And wait load page
+        Then verify redirection from "INVALID" to "projects"
         Then verify "New_Project_Button" element visibility on "Projects" wizard
         Then "New_Project_Button" element on "Projects" should contains "New Project" value
         Then verify "See_On_Github" element visibility on "commonPagesHeader" wizard

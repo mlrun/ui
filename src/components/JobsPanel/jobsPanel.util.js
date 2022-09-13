@@ -1,3 +1,22 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import { chain, isEmpty, unionBy, isEqual } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
@@ -6,7 +25,7 @@ import {
   getDefaultCpuUnit,
   getDefaultMemoryUnit,
   getLimitsGpuType,
-  getVolumeType,
+  getVolumeType
 } from '../../utils/panelResources.util'
 import {
   JOB_DEFAULT_OUTPUT_PATH,
@@ -391,12 +410,8 @@ export const generateTableDataFromDefaultData = (
   )
   const dataInputs = generateDefaultDataInputs(Object.entries(defaultData.task.spec.inputs ?? {}))
   const funcSpec = defaultData.function?.spec
-  const { limits, requests } = funcSpec.resources
-    ? funcSpec.resources
-    : {
-        limits: {},
-        requests: {}
-      }
+  const limits = funcSpec?.resources?.limits ?? {}
+  const requests = funcSpec?.resources?.requests ?? {}
   const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
     data: secret
   }))

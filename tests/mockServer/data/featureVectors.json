@@ -3,10 +3,14 @@
     {
       "kind": "FeatureVector",
       "metadata": {
-        "name": "erann-fv",
+        "name": "default-fv",
         "project": "default",
         "tag": "latest",
-        "labels": {},
+        "labels": {
+          "my-key": "my-value",
+          "owner": "admin",
+          "type": "featureVector"
+        },
         "updated": "2021-09-30T13:24:49.024910+00:00",
         "created": "2021-09-04T08:29:16.766101",
         "uid": "06efba102c3d08897e363094e11cee5bbebe949e"
