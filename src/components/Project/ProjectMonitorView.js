@@ -1,3 +1,22 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
@@ -11,7 +30,6 @@ import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import Select from '../../common/Select/Select'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
@@ -36,16 +54,12 @@ const ProjectMonitorView = ({
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
   isNuclioModeDisabled,
-  isPopupDialogOpen,
-  navigate,
   nuclioStreamsAreEnabled,
   params,
   project,
   projectSummary,
   refresh,
-  registerArtifactLink,
   setIsNewFunctionPopUpOpen,
-  setIsPopupDialogOpen,
   setShowFunctionsPanel,
   showFunctionsPanel,
   v3ioStreams
@@ -162,16 +176,6 @@ const ProjectMonitorView = ({
           </div>
         </div>
       )}
-      {isPopupDialogOpen && (
-        <RegisterArtifactPopup
-          artifactKind={'model'}
-          refresh={() => {
-            navigate(registerArtifactLink('model'))
-          }}
-          setIsPopupOpen={setIsPopupDialogOpen}
-          title="Register model"
-        />
-      )}
       {createFeatureSetPanelIsOpen && (
         <FeatureSetsPanel
           closePanel={closeFeatureSetPanel}
@@ -218,14 +222,11 @@ ProjectMonitorView.propTypes = {
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isNuclioModeDisabled: PropTypes.bool.isRequired,
-  isPopupDialogOpen: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   project: PropTypes.object.isRequired,
-  navigate: PropTypes.func.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
-  setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
   showFunctionsPanel: PropTypes.bool.isRequired,
   v3ioStreams: PropTypes.shape({}).isRequired

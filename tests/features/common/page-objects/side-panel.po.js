@@ -1,3 +1,22 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import inputGroup from '../components/input-group.component'
 import numberInputGroup from '../components/number-input-group.component'
 import commonTable from '../components/table.component'
@@ -1463,7 +1482,7 @@ module.exports = {
           generateInputGroup(
               '.env-variables-table .edit-row .table-cell__value')
       ),
-      Environment_Variables_Seret_Name_Input: inputGroup(
+      Environment_Variables_Secret_Name_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(1)',
           true,
@@ -1476,7 +1495,7 @@ module.exports = {
               '.env-variables-table .edit-row .table-cell__secret .input-wrapper:nth-of-type(1)',
           )
       ),
-      Environment_Variables_Seret_Key_Input: inputGroup(
+      Environment_Variables_Secret_Key_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(2)',
           true,
@@ -1811,7 +1830,7 @@ module.exports = {
               '.env-variables-table .edit-row .table-cell__value',
           )
       ),
-      Function_Environment_Variables_Seret_Name_Input: inputGroup(
+      Function_Environment_Variables_Secret_Name_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(1)',
           true,
@@ -1824,7 +1843,7 @@ module.exports = {
               '.env-variables-table .edit-row .table-cell__secret .input-wrapper:nth-of-type(1)',
           )
       ),
-      Function_Environment_Variables_Seret_Key_Input: inputGroup(
+      Function_Environment_Variables_Secret_Key_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(2)',
           true,

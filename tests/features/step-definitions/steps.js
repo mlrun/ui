@@ -1,53 +1,74 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import { Given, When, Then } from '@cucumber/cucumber'
 import pageObjects from '../common/page-objects'
 import pageObjectsConsts from '../common-tools/common-consts'
 import { test_url, test_port } from '../../config'
 import {
-  navigateToPage,
-  waiteUntilComponent,
+  clickNearComponent,
   clickOnComponent,
-  componentIsPresent,
+  collapseAccordionSection,
   componentIsNotPresent,
-  componentIsVisible,
   componentIsNotVisible,
+  componentIsPresent,
+  componentIsVisible,
+  expandAccordionSection,
+  hoverComponent,
+  isAccordionSectionCollapsed,
+  isComponentContainsAttributeValue,
+  navigateBack,
+  navigateForward,
+  navigateToPage,
+  refreshPage,
+  verifyComponentContainsAttributeValue,
+  verifyComponentNotContainsAttributeValue,
+  verifyElementDisabled,
+  verifyElementEnabled,
   verifyText,
   verifyTextRegExp,
   waitPageLoad,
-  isComponentContainsAttributeValue,
-  verifyComponentContainsAttributeValue,
-  verifyComponentNotContainsAttributeValue,
-  collapseAccordionSection,
-  expandAccordionSection,
-  isAccordionSectionCollapsed,
-  clickNearComponent,
-  verifyElementDisabled,
-  verifyElementEnabled,
-  hoverComponent,
-  refreshPage
+  waiteUntilComponent
 } from '../common/actions/common.action'
 import {
+  checkTableColumnValues,
   findRowIndexesByColumnValue,
-  isTableColumnSorted,
-  checkTableColumnValues
+  isTableColumnSorted
 } from '../common/actions/table.action'
 import {
+  checkDropdownContainsOptions,
+  checkDropdownOptions,
+  checkDropdownSelectedOption,
   openDropdown,
   selectOptionInDropdown,
-  selectOptionInDropdownWithoutCheck,
-  checkDropdownSelectedOption,
-  checkDropdownOptions,
-  checkDropdownContainsOptions
+  selectOptionInDropdownWithoutCheck
 } from '../common/actions/dropdown.action'
 import { isTabActive } from '../common/actions/tab-selector.action'
 import {
-  typeValue,
-  getInputValue,
   checkHintText,
   checkInputAccordingHintText,
-  verifyTypedValue,
   checkWarningHintText,
+  getInputValue,
+  typeValue,
   verifyInputDisabled,
-  verifyInputEnabled
+  verifyInputEnabled,
+  verifyTypedValue
 } from '../common/actions/input-group.action'
 import {
   incrementValue,
@@ -55,18 +76,18 @@ import {
 } from '../common/actions/number-input-group.action'
 import {
   checkCheckbox,
-  uncheckCheckbox,
+  isCheckboxChecked,
   isCheckboxUnchecked,
-  isCheckboxChecked
+  uncheckCheckbox
 } from '../common/actions/checkbox.action'
 import {
-  verifyTimeFilterBand,
+  applyDatetimePickerRange,
   pickUpCustomDatetimeRange,
-  applyDatetimePickerRange
+  verifyTimeFilterBand
 } from '../common/actions/date-picker.action'
 import {
-  typeSearchableValue,
-  isContainsSubstringInSuggestedOptions
+  isContainsSubstringInSuggestedOptions,
+  typeSearchableValue
 } from '../common/actions/input-with-autocomplete.action'
 import { checkNodesConnectionsNPandas } from '../common/actions/graph.action'
 import {
@@ -124,7 +145,36 @@ Then('additionally redirect by INVALID-TAB', async function() {
   )
 })
 
+Then(
+  'verify redirection from {string} to {string}',
+  async function (invalidPath, expectedPath) {
+    const invalidUrl = `http://${test_url}:${test_port}/${invalidPath}`
+    const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
+
+    await navigateToPage(this.driver, invalidUrl)
+    await this.driver.sleep(250)
+    const afterURL = await this.driver.getCurrentUrl()
+
+    expect(expectedUrl).equal(
+      afterURL,
+      `Redirection from "${invalidUrl}"\nshould be "${expectedUrl}"\nbut is "${afterURL}"`
+    )
+  }
+)
+
 Then('wait load page', async function() {
+  await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
+  await this.driver.sleep(500)
+})
+
+Then('navigate forward', async function() {
+  await navigateForward(this.driver)
+  await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
+  await this.driver.sleep(500)
+})
+
+Then('navigate back', async function() {
+  await navigateBack(this.driver)
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(500)
 })

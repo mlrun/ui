@@ -74,6 +74,7 @@
         &-wrapper {
           display: flex;
           align-items: center;
+          align-self: flex-start;
           width: 100%;
 
           .input {
@@ -81,6 +82,12 @@
             padding: 8px 17px;
             line-height: 16px;
 
+            &-wrapper {
+              width: 100%;
+            }
+          }
+
+          .text-area {
             &-wrapper {
               width: 100%;
             }

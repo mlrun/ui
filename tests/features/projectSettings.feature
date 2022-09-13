@@ -16,13 +16,68 @@ Feature: Project Settings page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard should contains "Project_Settings"."Tab_List"
         Then verify "General" tab is active in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
+        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display "Input_Hint"."Source_URL_Input"
+        Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
+        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Artifact_Path_Input" element visibility on "Project_Settings_General_Tab" wizard
         Then type value "   " to "Artifact_Path_Input" field on "Project_Settings_General_Tab" wizard
         Then verify "Artifact_Path_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Parameters_Table" element visibility on "Project_Settings_General_Tab" wizard
-        Then click on "Source_URL_Edit_Button" element on "Project_Settings_General_Tab" wizard
-        Then type value "   " to "Source_URL_Edit_Input" field on "Project_Settings_General_Tab" wizard
-        Then verify "Source_URL_Edit_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
+            | key_input     | value_input     |
+            | label1        | value1          |
+            | labelKeyTest2 | labelValueTest2 |
+            | key3          | value3          |
+        Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard
+            |      label                         |
+            | label1\n:\nvalue1                  |
+            | labelKeyTest2\n:\nlabelValueTest2  |
+            | key3\n:\nvalue3                    |
+        When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with offset "false"
+            |      label        |
+            | label1\n:\nvalue1 |
+            | key3\n:\nvalue3   |
+        Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard
+            |      label                        |
+            | labelKeyTest2\n:\nlabelValueTest2 |
+
+    @inProgress
+    Scenario: Verify behaviour of editing labels on General tab
+        * set tear-down property "project" created with "automation-test-name9" value
+        * create "automation-test-name9" MLRun Project with code 201
+        Given open url
+        Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "automation test description"
+        And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
+            | key_input | value_input |
+            | a         | b           |
+            | c         | d           |
+            | e         | f           |
+        And click on "MLRun_Logo" element on "commonPagesHeader" wizard
+        And wait load page
+        Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "c=d"
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "e=f"
+        And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with offset "false"
+            | label   |
+            | a\n:\nb |
+            | c\n:\nd |
+            | e\n:\nf |
+        When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
+            | key_input         | value_input         |
+            | a                 | b                 |
+            | project_label_key | project_label_value |
+            | a12345            | b54321             |
+        And click on "MLRun_Logo" element on "commonPagesHeader" wizard
+        And wait load page
+        Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "project_label_key=project_label_value"
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321"
 
     Scenario: Verify Parameters Table on General Tab
         * set tear-down property "project" created with "automation-test-name5" value
@@ -142,7 +197,7 @@ Feature: Project Settings page
     @passive
     @inProgress
     @enabledProjectMembership
-    Scenario: Check all mandatory components on Project Owner Popup
+    Scenario: Check all mandatory components on Project Owner
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -161,7 +216,7 @@ Feature: Project Settings page
     @passive
     @inProgress
     @enabledProjectMembership
-    Scenario: Check all mandatory components on Project Member Popup
+    Scenario: Check all mandatory components on Members tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -181,7 +236,7 @@ Feature: Project Settings page
         Then verify "Footer_Annotation_Label" element visibility on "Project_Members_Popup" wizard
 
     @enabledProjectMembership
-    Scenario: Verify behaviour of Invite New Members on Project Member Popup
+    Scenario: Verify behaviour of Invite New Members on Members tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -257,3 +312,19 @@ Feature: Project Settings page
         Then verify "Discard_Button" element on "Project_Members_Popup" wizard is disabled
         Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
         And remove "automation-test" MLRun Project with code 204
+
+    Scenario: Check broken link redirection
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        Then verify redirection from "projects/default/settings/INVALID" to "projects/default/settings/general"
+        And select "Members" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/default/settings/INVALID" to "projects/default/settings/general"
+        And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
+        And wait load page
+        Then verify redirection from "projects/default/settings/INVALID" to "projects/default/settings/general"
+        Then verify redirection from "projects/default/INVALID/general" to "projects"

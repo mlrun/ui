@@ -66,7 +66,7 @@ Feature: Models Page
     Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
 
   @passive
-  Scenario: Verify filtering by file name on Models tab
+  Scenario: Verify filtering by model name on Models tab
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -128,23 +128,26 @@ Feature: Models Page
     Then value in "name" column with "text" in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard should contains "churn-server"
 
   @passive
-  @inProgress
   Scenario: Verify filtering by label with key on Models tab
     Given open url
     And wait load page
-    And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then type value "class" to "Table_Labels_Filter_Input" field on "Models" wizard
-    Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
-    And wait load page
-    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "class"
-    Then type value "class=sklearn.linear_model.LogisticRegression" to "Table_Labels_Filter_Input" field on "Models" wizard
+    Then type value "my-key" to "Table_Labels_Filter_Input" field on "Models" wizard
     Then click on "Table_Refresh_Button" element on "Models" wizard
-    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "class=sklearn.linear_model.LogisticRegression"
+    And wait load page
+    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key"
+    Then type value "my-key=my-value" to "Table_Labels_Filter_Input" field on "Models" wizard
+    Then click on "Table_Refresh_Button" element on "Models" wizard
+    And wait load page
+    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key=my-value"
+    Then type value "MY-KEY" to "Table_Labels_Filter_Input" field on "Models" wizard
+    Then click on "Table_Refresh_Button" element on "Models" wizard
+    And wait load page
+    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @passive
   Scenario: Verify filtering by label on Model Endpoints tab
@@ -167,6 +170,10 @@ Feature: Models Page
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value"
+    Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
+    Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
+    And wait load page
+    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @passive
   Scenario: Check all mandatory components on Register Model Popup
@@ -214,6 +221,7 @@ Feature: Models Page
     Then click on cell with value "automation-model" in "name" column in "Models_Table" table on "Models" wizard
     Then "Header" element on "Models_Info_Pane" should contains "automation-model" value
     Then check "automation-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "model" value in "kind" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "path/to/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "model.txt" value in "model_file" column in "Overview_Table" table on "Models_Info_Pane" wizard
@@ -236,13 +244,20 @@ Feature: Models Page
   Scenario: Verify View YAML action
     Given open url
     And wait load page
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "data_clean_model" value in "name" column
+    Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "model_default" value in "name" column
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then check "Show_Iterations_Checkbox" element on "Models" wizard
+    Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
+    Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "latest #0" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
@@ -285,6 +300,9 @@ Feature: Models Page
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Hash_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
+    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
 
   @passive
   Scenario: Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
@@ -366,6 +384,12 @@ Feature: Models Page
     And wait load page
     Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
     Then verify if "Deploy_Model_Popup" popup dialog appears
+    Then navigate back
+    Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
+    Then navigate forward
+    Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
+    Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
+    Then verify if "Deploy_Model_Popup" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
     Then verify "Serving_Function_Dropdown" element visibility on "Deploy_Model_Popup" wizard
     Then select "automation-test-function-2" option in "Serving_Function_Dropdown" dropdown on "Deploy_Model_Popup" wizard
@@ -399,69 +423,90 @@ Feature: Models Page
     Then verify "Class_Name_Input" input should contains "Class" value on "Deploy_Model_Popup" wizard
     Then verify "Serving_Function_Dropdown" dropdown on "Deploy_Model_Popup" wizard selected option value "automation-test-function-2"
     Then verify "Tag_Dropdown" dropdown on "Deploy_Model_Popup" wizard selected option value "non-latest"
+    Then click on "Cross_Cancel_Button" element on "Deploy_Model_Popup" wizard
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
+    Then verify if "Deploy_Model_Popup" popup dialog appears
+    Then verify "Model_Name_Input" input should contains "automation-test-model" value on "Deploy_Model_Popup" wizard
+    Then verify "Class_Name_Input" input should contains "Class" value on "Deploy_Model_Popup" wizard
+    Then verify "Serving_Function_Dropdown" dropdown on "Deploy_Model_Popup" wizard selected option value "automation-test-function-2"
+    Then verify "Tag_Dropdown" dropdown on "Deploy_Model_Popup" wizard selected option value "non-latest"
+    Then navigate back
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
+    Then navigate back
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
+    Then navigate back
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Confirm_Button" element on "Common_Popup" wizard
+    And wait load page
+    Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
+    Then navigate forward
+    Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
 
     Scenario: Verify behaviour of key-value table on Deploy Model Popup
-      * set tear-down property "model" created in "default" project with "automation-test-model" value
-      * create "automation-test-model" Model with "latest" tag in "default" project with code 200
-      Given open url
-      And wait load page
-      And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-      And wait load page
-      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-      And wait load page
-      Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
-      Then verify if "Deploy_Model_Popup" popup dialog appears
-      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
-        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
-        |           \n name0        |            \n value0       | yes                |                       |
-      Then verify "Class_Argument_Name_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-      Then verify "Class_Argument_Value_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-      Then click on "Delete_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
-        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
-        | name1                     | value1                     | yes                |                       |
-        | name2                     | value2                     | yes                |                       |
-        | name3                     | value3                     |                    | yes                   |
-        | name4                     | value4                     | yes                |                       |
-        | name5                     | value5                     |                    | yes                   |
-        | name6                     | value6                     | yes                |                       |
-      Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-        | name  | value  |
-        | name1 | value1 |
-        | name2 | value2 |
-        | name4 | value4 |
-        | name6 | value6 |
-      When click on "delete_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
-        | name  |
-        | name6 |
-        | name1 |
-      Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-        | name  | value  |
-        | name2 | value2 |
-        | name4 | value4 |
-      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
-        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
-        |           name2           |            value2          | yes                |                       |
-      Then verify "Class_Argument_Name_Input" in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Input_Field_Unique"
-      When click on "edit_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
-        | name  |
-        | name2 |
-      Then type value "edited_name2" to "Class_Argument_Name_Input" field on "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-      Then type value "edited_value2" to "Class_Argument_Value_Input" field on "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-      Then click on "Add_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-      Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-        | name         | value         |
-        | edited_name2 | edited_value2 |
-        | name4        | value4        |
-      Then click on "Cancel_Button" element on "Deploy_Model_Popup" wizard
-      Then verify if "Common_Popup" popup dialog appears
-      Then click on "Cancel_Button" element on "Common_Popup" wizard
-      Then verify if "Deploy_Model_Popup" popup dialog appears
-      Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-        | name         | value         |
-        | edited_name2 | edited_value2 |
-        | name4        | value4        |
+     * set tear-down property "model" created in "default" project with "automation-test-model" value
+     * create "automation-test-model" Model with "latest" tag in "default" project with code 200
+     Given open url
+     And wait load page
+     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+     And wait load page
+     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+     And wait load page
+     Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
+     Then verify if "Deploy_Model_Popup" popup dialog appears
+     When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
+       | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
+       |           \n name0        |            \n value0       | yes                |                       |
+     Then verify "Class_Argument_Name_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+     Then verify "Class_Argument_Value_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+     Then click on "Delete_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+     When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
+       | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
+       | name1                     | value1                     | yes                |                       |
+       | name2                     | value2                     | yes                |                       |
+       | name3                     | value3                     |                    | yes                   |
+       | name4                     | value4                     | yes                |                       |
+       | name5                     | value5                     |                    | yes                   |
+       | name6                     | value6                     | yes                |                       |
+     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+       | name  | value  |
+       | name1 | value1 |
+       | name2 | value2 |
+       | name4 | value4 |
+       | name6 | value6 |
+     When click on "delete_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
+       | name  |
+       | name6 |
+       | name1 |
+     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+       | name  | value  |
+       | name2 | value2 |
+       | name4 | value4 |
+     When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
+       | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
+       |           name2           |            value2          | yes                |                       |
+     Then verify "Class_Argument_Name_Input" in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Input_Field_Unique"
+     When click on "edit_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
+       | name  |
+       | name2 |
+     Then type value "edited_name2" to "Class_Argument_Name_Input" field on "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+     Then type value "edited_value2" to "Class_Argument_Value_Input" field on "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+     Then click on "Add_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+       | name         | value         |
+       | edited_name2 | edited_value2 |
+       | name4        | value4        |
+     Then click on "Cancel_Button" element on "Deploy_Model_Popup" wizard
+     Then verify if "Common_Popup" popup dialog appears
+     Then click on "Cancel_Button" element on "Common_Popup" wizard
+     Then verify if "Deploy_Model_Popup" popup dialog appears
+     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+       | name         | value         |
+       | edited_name2 | edited_value2 |
+       | name4        | value4        |
 
   @passive
   Scenario: Verify behaviour of Real-Time Pipelines table
@@ -486,10 +531,10 @@ Feature: Models Page
     Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
     Then verify arrow lines position on "Real_Time_Pipelines_Graph" on "Real_Time_Pipelines" wizard
     When click on node with index 2 in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
-    Then verify "Header" element visibility on "Real_Time_Pipline_Pane" wizard
-    Then verify "Cross_Close_Button" element visibility on "Real_Time_Pipline_Pane" wizard
-    Then verify "Overview_Headers" on "Real_Time_Pipline_Pane" wizard should contains "Real_Time_Pipline_Pane"."Overview_Headers"
-    Then click on "Arrow_Back" element on "Real_Time_Pipline_Pane" wizard
+    Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers"
+    Then click on "Arrow_Back" element on "Real_Time_Pipeline_Pane" wizard
     And wait load page
     Then save to context "function" column and "href" attribute on 1 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     Then click on cell with row index 1 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
@@ -497,3 +542,40 @@ Feature: Models Page
     Then verify breadcrumbs "tab" label should be equal "ML functions" value
     Then compare current browser URL with test "href" context value
     Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "function" context value
+
+  Scenario: Check broken link redirection
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And select "tab" with "Models" value in breadcrumbs menu
+    And wait load page
+    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify redirection from "projects/default/models/INVALID/model_default/latest/0/overview" to "projects/default/models/models"
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify redirection from "projects/default/models/models/INVALID/latest/0/overview" to "projects/default/models/models"
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
+    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
+    Then verify redirection from "projects/default/models/models/model_default/latest/INVALID/overview" to "projects/default/models/models"
+    When select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
+    When select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
+    Then select "Features Analysis" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
+    Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/INVALID/overview" to "projects/default/models/model-endpoints"
+    When select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
+    Then select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then verify redirection from "projects/default/models/real-time-pipelines/pipeline/INVALID" to "projects/default/models/real-time-pipelines"
+    Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"

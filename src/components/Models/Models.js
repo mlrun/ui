@@ -1,3 +1,22 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { isEmpty, orderBy } from 'lodash'
@@ -5,8 +24,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import DeployModelPopUp from '../../elements/DeployModelPopUp/DeployModelPopUp'
+import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
 import Pipeline from '../Pipeline/Pipeline'
 
 import artifactsAction from '../../actions/artifacts'
@@ -40,7 +59,6 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier, getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
-import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 
 const Models = ({
@@ -61,19 +79,11 @@ const Models = ({
 }) => {
   const [pageData, setPageData] = useState(pageDataInitialState)
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
-  const openPanelByDefault = useOpenPanel()
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
-  const [isRegisterArtifactPopupOpen, setIsRegisterArtifactPopupOpen] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-
-  useEffect(() => {
-    if (openPanelByDefault) {
-      setIsRegisterArtifactPopupOpen(true)
-    }
-  }, [openPanelByDefault])
 
   const fetchData = useCallback(
     async filters => {
@@ -98,6 +108,10 @@ const Models = ({
   const handleDeployModel = useCallback(model => {
     openPopUp(DeployModelPopUp, { model })
   }, [])
+
+  const handleRegisterModel = useCallback(() => {
+    openPopUp(RegisterModelPopUp, { projectName: params.projectName, refresh: fetchData })
+  }, [params.projectName, fetchData])
 
   const handleRemoveModel = useCallback(
     model => {
@@ -326,7 +340,7 @@ const Models = ({
       {artifactsStore.loading && <Loader />}
       <Content
         content={sortedContent}
-        handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
+        handleActionsMenuClick={handleRegisterModel}
         handleCancel={() => setSelectedModel({})}
         handleRemoveRequestData={params.pageTab === MODELS_TAB && handleRemoveModel}
         loading={artifactsStore.loading}
@@ -339,14 +353,6 @@ const Models = ({
       >
         {params.pipelineId ? <Pipeline content={content} /> : null}
       </Content>
-      {isRegisterArtifactPopupOpen && (
-        <RegisterArtifactPopup
-          artifactKind={pageData.page.slice(0, -1)}
-          refresh={fetchData}
-          setIsPopupOpen={setIsRegisterArtifactPopupOpen}
-          title={pageData.actionsMenuHeader}
-        />
-      )}
     </div>
   )
 }
