@@ -46,9 +46,7 @@ const FunctionsPanelGeneralView = ({
             </Tooltip>
           </div>
           <div className="tag data-ellipsis">
-            <Tooltip
-              template={<TextTooltipTemplate text={data.tag || TAG_LATEST} />}
-            >
+            <Tooltip template={<TextTooltipTemplate text={data.tag || TAG_LATEST} />}>
               Tag: <span>{data.tag || TAG_LATEST}</span>
             </Tooltip>
           </div>
@@ -59,6 +57,7 @@ const FunctionsPanelGeneralView = ({
         <TextArea
           floatingLabel
           label="Description"
+          maxLength={500}
           onChange={description =>
             setData(state => ({
               ...state,

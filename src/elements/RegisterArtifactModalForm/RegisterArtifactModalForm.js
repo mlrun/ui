@@ -90,7 +90,7 @@ const RegisterArtifactModalForm = ({ showType, messageByKind }) => {
         <FormInput label="Target Path" name="target_path" required />
       </div>
       <div className="form-row">
-        <FormTextarea label="Description" name="description" />
+        <FormTextarea label="Description" maxLength={500} name="description" />
       </div>
     </div>
   )

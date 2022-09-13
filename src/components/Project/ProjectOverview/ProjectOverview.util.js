@@ -25,6 +25,7 @@ import RegisterModelPopUp from '../../../elements/RegisterModelPopUp/RegisterMod
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE } from '../../../constants'
+import { generateNuclioLink } from '../../../utils'
 
 import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
 import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
@@ -92,6 +93,7 @@ export const getInitialCards = (projectName, navigate) => {
                   label: 'Register',
                   onClick: async () => {
                     await formState.handleSubmit()
+
                     if (!formState.invalid) {
                       navigate(`${base_url}/datasets`)
                     }
@@ -356,7 +358,7 @@ export const getInitialCards = (projectName, navigate) => {
           icon: <RTFunctionIcon />,
           label: 'Create RT function',
           handleClick: () => ({
-            path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
+            path: generateNuclioLink(`${base_url}/functions`),
             externalLink: true
           }),
           tooltip: ''
@@ -425,7 +427,7 @@ export const getInitialCards = (projectName, navigate) => {
         {
           id: 'nuclioFunctions',
           handleClick: () => ({
-            path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
+            path: generateNuclioLink(`${base_url}/functions`),
             externalLink: true
           }),
           label: 'Nuclio Functions'

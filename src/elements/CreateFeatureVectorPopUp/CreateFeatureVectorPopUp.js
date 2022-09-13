@@ -94,6 +94,7 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
         <TextArea
           floatingLabel
           label="Description"
+          maxLength={500}
           onChange={setFeatureVectorDescription}
           value={featureVectorDescription}
         />

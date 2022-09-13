@@ -28,6 +28,10 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import toolkitStore from './store/toolkitStore'
 
+if(!window.location.pathname.includes(process.env.PUBLIC_URL)) {
+  window.location.href = process.env.PUBLIC_URL
+}
+
 fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
   .then(response => response.json())
   .then(json => {

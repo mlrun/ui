@@ -156,7 +156,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
               <FormInput name="targetPath" label="Target path" required />
             </div>
             <div className="register-model__row">
-              <FormTextarea name="description" label="Description" />
+              <FormTextarea name="description" label="Description" maxLength={500} />
             </div>
             <div className="register-model__row">
               <FormChipCell
