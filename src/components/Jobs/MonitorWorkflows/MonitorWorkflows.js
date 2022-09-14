@@ -39,7 +39,12 @@ import { useYaml } from '../../../hooks/yaml.hook'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { parseFunction } from '../../../utils/parseFunction'
-import { generateActionsMenu, generateFilters, generatePageData, monitorWorkflowsActionCreator } from './monitorWorkflows.util'
+import {
+  generateActionsMenu,
+  generateFilters,
+  generatePageData,
+  monitorWorkflowsActionCreator
+} from './monitorWorkflows.util'
 import { usePods } from '../../../hooks/usePods.hook'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
