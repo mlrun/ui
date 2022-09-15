@@ -108,7 +108,12 @@ const artifactsApi = {
     )
   },
   getFiles: (project, filters) => {
-    return fetchArtifacts('/artifacts', filters, { params: { project, category: 'other' } }, true)
+    return fetchArtifacts(
+      '/artifacts',
+      filters,
+      { params: { project, category: 'other', format: 'full' } },
+      true
+    )
   },
   getModel: (project, model, tag) => {
     return fetchArtifacts(
@@ -133,7 +138,12 @@ const artifactsApi = {
     })
   },
   getModels: (project, filters) => {
-    return fetchArtifacts('/artifacts', filters, { params: { project, category: 'model' } }, true)
+    return fetchArtifacts(
+      '/artifacts',
+      filters,
+      { params: { project, category: 'model', format: 'full' } },
+      true
+    )
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)
