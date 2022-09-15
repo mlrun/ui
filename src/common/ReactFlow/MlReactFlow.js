@@ -46,42 +46,28 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
 
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
   const [observer] = useState(new MutationObserver(domChangeHandler))
-  const [initialGraphViewGenerated, setInitialGraphViewGenerated] = useState(
-    false
-  )
+  const [initialGraphViewGenerated, setInitialGraphViewGenerated] = useState(false)
 
   const handleFitGraphView = useCallback(() => {
-    reactFlowInstance.fitView()
-    const { position, zoom } = reactFlowInstance.toObject()
+    setTimeout(() => {
+      reactFlowInstance.fitView()
+      const { position, zoom } = reactFlowInstance.toObject()
 
-    reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
+      reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
+    })
   }, [reactFlowInstance])
 
   useEffect(() => {
-    setTimeout(() => {
-      if (reactFlowInstance) {
-        handleFitGraphView()
-      }
-    }, 100)
-  }, [reactFlowInstance, alignTriggerItem, handleFitGraphView])
+    if (reactFlowInstance && !initialGraphViewGenerated && elements.length > 0) {
+      setInitialGraphViewGenerated(true)
+    }
+  }, [elements.length, handleFitGraphView, initialGraphViewGenerated, reactFlowInstance])
 
   useEffect(() => {
-    setTimeout(() => {
-      if (
-        reactFlowInstance &&
-        !initialGraphViewGenerated &&
-        elements.length > 0
-      ) {
-        handleFitGraphView()
-        setInitialGraphViewGenerated(true)
-      }
-    }, 0)
-  }, [
-    elements.length,
-    handleFitGraphView,
-    initialGraphViewGenerated,
-    reactFlowInstance
-  ])
+    if (reactFlowInstance && initialGraphViewGenerated) {
+      handleFitGraphView()
+    }
+  }, [reactFlowInstance, alignTriggerItem, handleFitGraphView, initialGraphViewGenerated])
 
   useEffect(() => {
     return () => {
