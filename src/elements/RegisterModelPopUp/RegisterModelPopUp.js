@@ -26,7 +26,7 @@ import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
 
-import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
+import { Button, FormChipCell, Modal, FormInput, FormTextarea } from 'igz-controls/components'
 
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData } from '../../utils/convertChipsData'
@@ -137,14 +137,14 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
         return (
           <Modal
             actions={getModalActions(formState)}
-            className="register-model"
+            className="form register-model"
             location={location}
             onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
             title="Register model"
           >
-            <div className="register-model__row">
+            <div className="form-row">
               <FormInput
                 label="Name"
                 name="modelName"
@@ -152,19 +152,20 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
                 tip="Artifacts names in the same project must be unique."
               />
             </div>
-            <div className="register-model__row">
+            <div className="form-row">
               <FormInput name="targetPath" label="Target path" required />
             </div>
-            <div className="register-model__row">
-              <FormTextarea name="description" label="Description" maxLength={500} />
+            <div className="form-row">
+              <FormTextarea name="description" label="Description" />
             </div>
-            <div className="register-model__row">
+            <div className="form-row">
               <FormChipCell
                 chipOptions={getChipOptions('metrics')}
                 formState={formState}
                 initialValues={initialValues}
                 isEditMode
                 name="labels"
+                label="Labels"
                 shortChips
                 visibleChipsMaxLength="all"
               />

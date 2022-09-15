@@ -1,5 +1,25 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+// import { OnChange } from 'react-final-form-listeners'
 
 import EditorModal from '../../../common/EditorModal/EditorModal'
 import {
@@ -20,7 +40,7 @@ import {
 
 import {
   DEFAULT_ENTRY,
-  DEFAULT_IMAGE,
+  // DEFAULT_IMAGE,
   EXISTING_IMAGE,
   entryOptions,
   generateCodeOptions,
@@ -33,138 +53,31 @@ const NewFunctionModalStep2 = ({ appStore, formRef, formState, mode, projectName
   const [editCode, setEditCode] = useState(false)
 
   useEffect(() => {
-    if (mode === PANEL_CREATE_MODE && formState.values.extra.imageType.length === 0) {
-      if (appStore.frontendSpec.default_function_image_by_kind?.[formState.values.kind]) {
-        formRef.current.change(
-          'spec.image',
-          appStore.frontendSpec?.default_function_image_by_kind[formState.values.kind]
-        )
-        formRef.current.change('extra.imageType', EXISTING_IMAGE)
-      } else {
-        const buildImage = (appStore.frontendSpec?.function_deployment_target_image_template || '')
-          .replace('{project}', projectName)
-          .replace('{name}', formState.values.metadata.name)
-          .replace('{tag}', formState.values.metadata.tag || TAG_LATEST)
-
-        formRef.current.change(
-          'spec.build.commands',
-          trimSplit(appStore.frontendSpec?.function_deployment_mlrun_command, '\n').join('\n')
-        )
-
-        formRef.current.change(
-          'spec.build.base_image',
-          appStore.frontendSpec?.default_function_image_by_kind?.[formState.values.kind]
-        )
-
-        formRef.current.change('spec.build.image', buildImage)
-
-        formRef.current.change('extra.imageType', NEW_IMAGE)
-      }
-    } else if (
-      (formState.initialValues.spec.image?.length > 0 ||
-        (formState.initialValues.spec.build?.base_image?.length === 0 &&
-          formState.initialValues.spec.build?.commands?.length === 0 &&
-          formState.initialValues.spec.build?.image?.length === 0 &&
-          formState.initialValues.spec.image?.length === 0)) &&
-      formState.values.extra.imageType.length === 0
-    ) {
-      formRef.current.change('spec.image', formState.initialValues.spec.image || DEFAULT_IMAGE)
-      formRef.current.change('extra.imageType', EXISTING_IMAGE)
-    } else if (formState.values.extra.imageType.length === 0) {
-      formRef.current.change('extra.imageType', NEW_IMAGE)
-    }
-  }, [
-    appStore.frontendSpec.default_function_image_by_kind,
-    appStore.frontendSpec?.function_deployment_mlrun_command,
-    appStore.frontendSpec?.function_deployment_target_image_template,
-    formRef,
-    formState.initialValues.spec.image,
-    formState.initialValues.spec.build?.base_image?.length,
-    formState.initialValues.spec.build?.commands?.length,
-    formState.initialValues.spec.build?.image?.length,
-    formState.values.extra.imageType.length,
-    formState.values.kind,
-    formState.values.metadata.name,
-    formState.values.metadata.tag,
-    mode,
-    projectName
-  ])
-
-  const handleImageTypeChange = event => {
-    if (event.target.value === EXISTING_IMAGE) {
+    if (formState.values.extra.imageType === EXISTING_IMAGE) {
       if (mode === PANEL_CREATE_MODE) {
-        formRef.current.change('spec.build.base_image', '')
-        formRef.current.change('spec.build.commands', '')
-        formRef.current.change('spec.build.image', '')
-        formRef.current.change(
-          'spec.image',
-          appStore.frontendSpec?.default_function_image_by_kind?.[formState.values.kind]
-        )
-      } else {
-        formRef.current.change(
-          'spec.image',
-          formState.values.spec.image ||
-            appStore.frontendSpec?.default_function_image_by_kind?.[formState.values.kind]
-        )
+        // formRef.change('')
       }
-    } else if (event.target.value === NEW_IMAGE) {
+    } else {
       const buildImage = (appStore.frontendSpec?.function_deployment_target_image_template || '')
         .replace('{project}', projectName)
         .replace('{name}', formState.values.metadata.name)
         .replace('{tag}', formState.values.metadata.tag || TAG_LATEST)
 
-      if (mode === PANEL_CREATE_MODE) {
-        formRef.current.change('spec.image', '')
-        formRef.current.change(
-          'spec.build.commands',
-          appStore.frontendSpec?.function_deployment_mlrun_command ?? ''
-        )
-        formRef.current.change(
-          'spec.build.base_image',
-          appStore.frontendSpec?.default_function_image_by_kind?.[formState.values.kind]
-        )
-        formRef.current.change('spec.build.image', buildImage)
-      } else {
-        formRef.current.change(
-          'spec.build.commands',
-          formState.values.spec.build.commands ||
-            (appStore.frontendSpec?.function_deployment_mlrun_command ?? '')
-        )
-        formRef.current.change(
-          'spec.build.base_image',
-          formState.values.spec.build.base_image ||
-            appStore.frontendSpec?.default_function_image_by_kind?.[formState.values.kind]
-        )
-        formRef.current.change(
-          'spec.build.image',
-          formState.values.spec.build.base_image || buildImage
-        )
-      }
-
-      formRef.current.change(
+      formRef.change('spec.build.image', formState.initialValues.spec.build.image || buildImage)
+      formRef.change(
         'spec.build.commands',
-        formState.values.spec.build.commands.length > 0
-          ? trimSplit(formState.values.spec.build.commands, '\n').join('\n')
-          : trimSplit(appStore.frontendSpec?.function_deployment_mlrun_command ?? '', '\n').join(
-              '\n'
-            )
-      )
-      formRef.current.change(
-        'spec.build.base_image',
-        formState.values.spec.build.base_image ||
-          appStore.frontendSpec?.default_function_image_by_kind?.[formState.values.kind]
-      )
-      formRef.current.change(
-        'spec.build.image',
-        formState.values.spec.build.base_image || buildImage
+        trimSplit(formState.values.spec.build.commands, '\n').join('\n')
       )
     }
-
-    formRef.current.change('extra.imageType', event.target.value)
-
-    return event
-  }
-
+  }, [
+    formState.values,
+    formState.values.extra.imageType,
+    appStore.frontendSpec?.function_deployment_target_image_template,
+    formRef,
+    formState.initialValues.spec.build.image,
+    mode,
+    projectName
+  ])
   return (
     <>
       <div className="form-row">
@@ -190,14 +103,13 @@ const NewFunctionModalStep2 = ({ appStore, formRef, formState, mode, projectName
             />
           )}
         </div>
-        {mode === PANEL_EDIT_MODE && (
-          <FormCheckBox label="Force build" name="extra.skip_deployed" />
-        )}
+        {mode === PANEL_EDIT_MODE && <FormCheckBox label="Force build" name="extra.force_build" />}
       </div>
       <div className="form-row">
         {generateCodeOptions.map(element => (
           <div className="form-col-auto" key={element.value}>
-            <FormRadio name="extra.imageType" {...element} onClick={handleImageTypeChange} />
+            <FormRadio name="extra.imageType" {...element} />
+            {/* <OnChange name="extra.imageType">{handleImageTypeChange}</OnChange> */}
           </div>
         ))}
       </div>
@@ -239,12 +151,11 @@ const NewFunctionModalStep2 = ({ appStore, formRef, formState, mode, projectName
           closeModal={() => setEditCode(false)}
           defaultData={formState.values.spec.build.functionSourceCode}
           handleSaveCode={value => {
-            formRef.current.change('spec.build.functionSourceCode', value)
+            formRef.change('spec.build.functionSourceCode', value)
             setEditCode(false)
           }}
         />
       )}
-      {/* <pre>{JSON.stringify(formState, null, 2)}</pre> */}
     </>
   )
 }

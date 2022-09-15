@@ -1,10 +1,17 @@
 import { chain } from 'lodash'
-import { getVolumeType } from '../../utils/panelResources.util'
+import {
+  getDefaultCpuUnit,
+  getDefaultMemoryUnit,
+  getLimitsGpuType,
+  getVolumeType
+} from '../../utils/panelResources.util'
+import { newParseKeyValues } from '../../utils'
 
-import { FUNCTION_TYPE_JOB, PANEL_EDIT_MODE } from '../../constants'
+import { FUNCTION_TYPE_JOB, PANEL_DEFAULT_ACCESS_KEY, PANEL_EDIT_MODE } from '../../constants'
 
 export const DEFAULT_ENTRY = 'source-code'
 export const DEFAULT_IMAGE = 'mlrun/mlrun'
+export const DEFAULT_PRIORITY = 'igz-workload-medium'
 export const DEFAULT_RUNTIME = 'job'
 export const EXISTING_IMAGE = 'existingImage'
 export const FORCE_BUILD = 'forceBuild'
@@ -12,6 +19,153 @@ export const NEW_IMAGE = 'newImage'
 export const VOLUME_MOUNT_AUTO_TYPE = 'auto'
 export const VOLUME_MOUNT_MANUAL_TYPE = 'manual'
 export const VOLUME_MOUNT_NONE_TYPE = 'none'
+
+export const getInitialValues = (appStore, defaultData, mode, runtime) => {
+  const defaultPodsResources = appStore.frontendSpec?.default_function_pod_resources
+  const extraData = {
+    entry: DEFAULT_ENTRY,
+    imageType:
+      defaultData &&
+      (defaultData?.build?.image ||
+        defaultData?.build?.base_image ||
+        defaultData?.build?.commands?.length > 0) &&
+      defaultData.image?.length === 0
+        ? NEW_IMAGE
+        : EXISTING_IMAGE,
+    force_build: null,
+    volumeMount: VOLUME_MOUNT_AUTO_TYPE
+  }
+  const gpuType = getLimitsGpuType(defaultData?.spec?.resources?.limits ?? null)
+
+  if (defaultData) {
+    return {
+      ...defaultData,
+      metadata: {
+        ...defaultData.metadata,
+        labels: newParseKeyValues(defaultData.metadata?.labels)
+      },
+      spec: {
+        ...defaultData.spec,
+        build: {
+          ...defaultData.spec.build,
+          base_image:
+            defaultData.spec?.build?.base_image ??
+            appStore.frontendSpec?.default_function_image_by_kind?.[defaultData.kind] ??
+            '',
+          commands:
+            (defaultData.spec?.build?.commands || []).join('\n') ||
+            appStore.frontendSpec?.function_deployment_mlrun_command ||
+            '',
+          functionSourceCode:
+            defaultData.spec.build?.functionSourceCode ?? sourceCodeInBase64[defaultData.kind] ?? ''
+        },
+        image:
+          defaultData.spec?.image ??
+          appStore.frontendSpec?.default_function_image_by_kind?.[defaultData.kind] ??
+          '',
+        preemption_mode:
+          appStore.frontendSpec.feature_flags.preemption_nodes === 'enabled'
+            ? defaultData.spec.preemption_mode ||
+              appStore.frontendSpec.default_function_preemption_mode ||
+              'prevent'
+            : '',
+        priority_class_name:
+          defaultData.spec.priority_class_name ||
+          appStore.frontendSpec.default_function_priority_class_name ||
+          DEFAULT_PRIORITY,
+        resources: {
+          ...defaultData.spec.resources,
+          limits: {
+            ...defaultData.spec.resources.limits,
+            cpuUnit: getDefaultCpuUnit(
+              defaultData.spec?.resources?.limits ?? {},
+              defaultPodsResources?.limits.cpu
+            ),
+            memory:
+              defaultData.spec?.resources?.limits?.memory ??
+              defaultPodsResources?.limits.memory ??
+              '',
+            [gpuType]:
+              defaultData.spec?.resources?.limits?.[gpuType] ??
+              defaultPodsResources?.limits.gpu ??
+              '',
+            memoryUnit: getDefaultMemoryUnit(
+              defaultData.spec?.resources?.limits ?? {},
+              defaultPodsResources?.limits.memory
+            )
+          },
+          requests: {
+            ...defaultData.spec.resources.requests,
+            cpu:
+              defaultData.spec?.resources?.requests?.cpu ??
+              defaultPodsResources?.requests.cpu ??
+              '',
+            cpuUnit: getDefaultCpuUnit(
+              defaultData.spec?.resources?.requests ?? {},
+              defaultPodsResources?.requests.cpu
+            ),
+            memory:
+              defaultData.spec?.resources?.requests?.memory ??
+              defaultPodsResources?.requests.memory ??
+              '',
+            memoryUnit: getDefaultMemoryUnit(
+              defaultData.spec?.resources?.requests ?? {},
+              defaultPodsResources?.requests.memory
+            )
+          }
+        },
+        volume_mounts:
+          getDefaultVolumeMounts(
+            defaultData.volume_mounts ?? [],
+            defaultData.volumes ?? [],
+            mode
+          ) || []
+      },
+      extra: extraData
+    }
+  }
+
+  const functionKind = runtime ?? DEFAULT_RUNTIME
+
+  return {
+    kind: functionKind,
+    metadata: {
+      credentials: {
+        access_key: PANEL_DEFAULT_ACCESS_KEY
+      }
+    },
+    spec: {
+      build: {
+        base_image: appStore.frontendSpec?.default_function_image_by_kind?.[functionKind] ?? '',
+        commands: appStore.frontendSpec?.function_deployment_mlrun_command || '',
+        functionSourceCode: sourceCodeInBase64[functionKind] ?? ''
+      },
+      image: appStore.frontendSpec?.default_function_image_by_kind?.[functionKind] ?? '',
+      preemption_mode:
+        appStore.frontendSpec.feature_flags.preemption_nodes === 'enabled'
+          ? appStore.frontendSpec.default_function_preemption_mode || 'prevent'
+          : '',
+      priority_class_name:
+        appStore.frontendSpec.default_function_priority_class_name || DEFAULT_PRIORITY,
+      resources: {
+        limits: {
+          cpu: defaultPodsResources?.limits.cpu ?? '',
+          cpuUnit: getDefaultCpuUnit({}, defaultPodsResources?.limits.cpu),
+          memory: defaultPodsResources?.limits.memory ?? '',
+          [gpuType]: defaultPodsResources?.limits.gpu ?? '',
+          memoryUnit: getDefaultMemoryUnit({}, defaultPodsResources?.limits.memory)
+        },
+        requests: {
+          cpu: defaultPodsResources?.requests.cpu ?? '',
+          cpuUnit: getDefaultCpuUnit({}, defaultPodsResources?.requests.cpu),
+          memory: defaultPodsResources?.requests.memory ?? '',
+          memoryUnit: getDefaultMemoryUnit({}, defaultPodsResources?.requests.memory)
+        }
+      }
+    },
+    extra: extraData
+  }
+}
 
 export const runtimeOptions = isStagingMode => [
   {

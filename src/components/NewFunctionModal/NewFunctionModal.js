@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -13,31 +13,18 @@ import NewFunctionModalStep3 from './NewFunctionModalStep3/NewFunctionModalStep3
 import { Wizard } from 'igz-controls/components'
 
 import { LABEL_BUTTON, MODAL_LG, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { PANEL_DEFAULT_ACCESS_KEY, FUNCTION_TYPE_JOB } from '../../constants'
+import { FUNCTION_TYPE_JOB } from '../../constants'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import {
-  getDefaultVolumeMounts,
-  getModalTitle,
-  DEFAULT_ENTRY,
-  DEFAULT_RUNTIME,
-  NEW_IMAGE,
-  sourceCodeInBase64,
-  VOLUME_MOUNT_AUTO_TYPE
-} from './newFunctionModal.util'
-import {
-  // generateFullCpuValue,
-  // generateFullMemoryValue,
-  getDefaultCpuUnit,
-  getDefaultMemoryUnit,
-  getLimitsGpuType
-  // getSelectedCpuOption,
-  // setCpuValidation,
-  // setMemoryDropdownValidation,
-  // setMemoryInputValidation
-} from '../../utils/panelResources.util'
+import { getModalTitle, getInitialValues } from './newFunctionModal.util'
+import // generateFullCpuValue,
+// generateFullMemoryValue,
+// getSelectedCpuOption,
+// setCpuValidation,
+// setMemoryDropdownValidation,
+// setMemoryInputValidation
+'../../utils/panelResources.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { useMode } from '../../hooks/mode.hook'
-import { parseKeyValues } from '../../utils'
 import { FUNCTION_PANEL_MODE } from '../../types'
 
 const NewFunctionModal = ({
@@ -56,118 +43,14 @@ const NewFunctionModal = ({
   const { appStore, functionsStore } = useSelector(state => state)
   const { isStagingMode } = useMode()
 
-  const defaultPodsResources = useMemo(() => {
-    return appStore.frontendSpec?.default_function_pod_resources
-  }, [appStore.frontendSpec.default_function_pod_resources])
-
-  const gpuType = useMemo(() => getLimitsGpuType(defaultData.resources?.limits), [
-    defaultData.resources?.limits
-  ])
-
-  const preemptionMode = useMemo(() => {
-    return appStore.frontendSpec.feature_flags.preemption_nodes === 'enabled'
-      ? defaultData.preemption_mode ||
-          appStore.frontendSpec.default_function_preemption_mode ||
-          'prevent'
-      : ''
-  }, [
-    defaultData.preemption_mode,
-    appStore.frontendSpec.default_function_preemption_mode,
-    appStore.frontendSpec.feature_flags.preemption_nodes
-  ])
-
   const formRef = React.useRef(
     createForm({
-      initialValues: {
-        kind: defaultData.type ?? runtime ?? DEFAULT_RUNTIME,
-        metadata: {
-          credentials: {
-            access_key: PANEL_DEFAULT_ACCESS_KEY
-          },
-          labels: parseKeyValues(defaultData.labels) ?? [],
-          name: defaultData.name ?? '',
-          tag: defaultData.tag ?? ''
-        },
-        spec: {
-          args: [],
-          build: {
-            base_image: defaultData.build?.base_image ?? '',
-            commands: (defaultData.build?.commands || []).join('\n') ?? '',
-            functionSourceCode:
-              defaultData.build?.functionSourceCode ??
-              sourceCodeInBase64[defaultData.type ?? runtime ?? DEFAULT_RUNTIME] ??
-              '',
-            image: defaultData.build?.image ?? ''
-          },
-          command: defaultData.command ?? '',
-          default_class: defaultData.default_class ?? '',
-          default_handler: defaultData.default_handler ?? '',
-          description: defaultData.description ?? '',
-          env: [],
-          image: defaultData.image ?? '',
-          priority_class_name:
-            defaultData.priority_class_name ||
-            appStore.frontendSpec.default_function_priority_class_name ||
-            '',
-          secret_sources: [],
-          preemption_mode: preemptionMode,
-          volume_mounts:
-            getDefaultVolumeMounts(
-              defaultData.volume_mounts ?? [],
-              defaultData.volumes ?? [],
-              mode
-            ) || [],
-          volumes: defaultData.volumes ?? [],
-          resources: {
-            limits: {
-              cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits.cpu ?? '',
-              cpuUnit: getDefaultCpuUnit(
-                defaultData.resources?.limits ?? {},
-                defaultPodsResources?.limits.cpu
-              ),
-              memory:
-                defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits.memory ?? '',
-              [gpuType]:
-                defaultData.resources?.limits?.[gpuType] ?? defaultPodsResources?.limits.gpu ?? '',
-              memoryUnit: getDefaultMemoryUnit(
-                defaultData.resources?.limits ?? {},
-                defaultPodsResources?.limits.memory
-              )
-            },
-            requests: {
-              cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests.cpu ?? '',
-              cpuUnit: getDefaultCpuUnit(
-                defaultData.resources?.requests ?? {},
-                defaultPodsResources?.requests.cpu
-              ),
-              memory:
-                defaultData.resources?.requests?.memory ??
-                defaultPodsResources?.requests.memory ??
-                '',
-              memoryUnit: getDefaultMemoryUnit(
-                defaultData.resources?.requests ?? {},
-                defaultPodsResources?.requests.memory
-              )
-            }
-          }
-        },
-        extra: {
-          entry: DEFAULT_ENTRY,
-          imageType:
-            (defaultData?.build?.image ||
-              defaultData?.build?.base_image ||
-              defaultData?.build?.commands?.length > 0) &&
-            defaultData.image?.length === 0
-              ? NEW_IMAGE
-              : '',
-          skip_deployed: null,
-          volumeMount: VOLUME_MOUNT_AUTO_TYPE
-        }
-      },
+      initialValues: getInitialValues(appStore, defaultData?.ui?.originalContent, mode, runtime),
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
   )
+
   const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const stepsConfig = formState => [
@@ -242,26 +125,29 @@ const NewFunctionModal = ({
           >
             <Wizard.Step>
               <NewFunctionModalStep1
-                formRef={formRef}
+                formRef={formRef.current}
                 formState={formState}
                 functionsStore={functionsStore}
                 isStandAlone={isStandAlone}
                 isStagingMode={isStagingMode}
                 mode={mode}
               />
+              <pre>{JSON.stringify(formState, null, 2)}</pre>
             </Wizard.Step>
             <Wizard.Step>
               <NewFunctionModalStep2
                 appStore={appStore}
-                formRef={formRef}
+                formRef={formRef.current}
                 formState={formState}
                 functionsStore={functionsStore}
                 mode={mode}
                 projectName={projectName}
               />
+              <pre>{JSON.stringify(formState, null, 2)}</pre>
             </Wizard.Step>
             <Wizard.Step>
               <NewFunctionModalStep3 appStore={appStore} formState={formState} />
+              <pre>{JSON.stringify(formState, null, 2)}</pre>
             </Wizard.Step>
             {formState.values.kind !== FUNCTION_TYPE_JOB && (
               <Wizard.Step>Environment variables</Wizard.Step>
