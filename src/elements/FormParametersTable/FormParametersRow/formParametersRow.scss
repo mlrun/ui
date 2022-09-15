@@ -6,21 +6,21 @@
       .tooltip-wrapper {
         margin-right: 10px;
       }
+
+      .tip-container {
+        display: none;
+      }
+
+      &:hover {
+        .tip-container {
+          display: flex;
+        }
+      }
     }
 
     &.excluded {
       .form-table__cell {
         color: $spunPearl;
-      }
-    }
-
-    .tip-container {
-      display: none;
-    }
-
-    &:hover {
-      .tip-container {
-        display: flex;
       }
     }
   }

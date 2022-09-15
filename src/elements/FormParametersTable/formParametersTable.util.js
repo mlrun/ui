@@ -5,6 +5,9 @@ export const getParameterTypeOptions = paramFile => {
   ]
 }
 
+export const parameterTypeList = 'list'
+export const parameterTypeMap = 'map'
+
 export const parametersValueTypeOptions = [
   {
     label: 'str',
@@ -24,10 +27,10 @@ export const parametersValueTypeOptions = [
   },
   {
     label: 'list',
-    id: 'list'
+    id: parameterTypeList
   },
   {
     label: 'map',
-    id: 'map'
+    id: parameterTypeMap
   }
 ]

@@ -1,6 +1,8 @@
+import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
-import PropTypes from 'prop-types'
+import { OnChange } from 'react-final-form-listeners'
+import { isEmpty } from 'lodash'
 
 import {
   FormCheckBox,
@@ -13,7 +15,12 @@ import {
 import { FormRowActions } from 'igz-controls/elements'
 
 import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
-import { getParameterTypeOptions, parametersValueTypeOptions } from '../formParametersTable.util'
+import {
+  getParameterTypeOptions,
+  parameterTypeList,
+  parameterTypeMap,
+  parametersValueTypeOptions
+} from '../formParametersTable.util'
 
 import './formParametersRow.scss'
 
@@ -26,6 +33,7 @@ const FormParametersRow = ({
   enterEditMode,
   fields,
   fieldsPath,
+  formState,
   index,
   isHyperOptionDisabled,
   rowPath,
@@ -41,6 +49,54 @@ const FormParametersRow = ({
     fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active',
     !fieldData.data.isChecked && 'excluded'
   )
+
+  const getValueValidationRules = parameterType => {
+    if (parameterType === parameterTypeMap) {
+      return [
+        {
+          name: 'invalidStructure',
+          label: 'Value is not a valid `map` type',
+          pattern: newValue => {
+            try {
+              const parsedValue = JSON.parse(String(newValue))
+              return (
+                typeof parsedValue === 'object' &&
+                !Array.isArray(parsedValue) &&
+                parsedValue !== null
+              )
+            } catch {
+              return false
+            }
+          }
+        }
+      ]
+    } else if (parameterType === parameterTypeList) {
+      return [
+        {
+          name: 'invalidStructure',
+          label: 'Value is not a valid `list` type',
+          pattern: newValue => {
+            try {
+              const parsedValue = JSON.parse(String(newValue))
+              return Array.isArray(parsedValue)
+            } catch {
+              return false
+            }
+          }
+        }
+      ]
+    } else {
+      return []
+    }
+  }
+
+  const getValueTip = parameterType => {
+    return parameterType === parameterTypeMap
+      ? 'The valid `map` type should be in the JSON format\n e.g. {"hello": "world"}'
+      : parameterType === parameterTypeList
+      ? 'The valid `list` type should be in the JSON format\n e.g. ["hello", "world"]'
+      : ''
+  }
 
   useEffect(() => {
     setFieldData(fields.value[index])
@@ -94,6 +150,8 @@ const FormParametersRow = ({
                   name={`${rowPath}.data.value`}
                   placeholder="Value/S"
                   required
+                  tip={getValueTip(fields.value[index].data.type)}
+                  validationRules={getValueValidationRules(fields.value[index].data.type)}
                 />
               </div>
               <FormRowActions
@@ -161,6 +219,17 @@ const FormParametersRow = ({
           )}
         </>
       )}
+      {editingItem && (
+        <OnChange name={`${rowPath}.data.type`}>
+          {value => {
+            if (!isEmpty(fieldData?.data?.value) || formState.modified[`${rowPath}.data.value`]) {
+              setTimeout(() => {
+                formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: true })
+              })
+            }
+          }}
+        </OnChange>
+      )}
     </>
   )
 }
@@ -180,6 +249,7 @@ FormParametersRow.propTypes = {
   enterEditMode: PropTypes.func.isRequired,
   fields: PropTypes.shape({}).isRequired,
   fieldsPath: PropTypes.string.isRequired,
+  formState: PropTypes.shape({}).isRequired,
   index: PropTypes.number.isRequired,
   isHyperOptionDisabled: PropTypes.bool,
   rowPath: PropTypes.string.isRequired,
