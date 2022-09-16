@@ -88,7 +88,7 @@ const CreateJobPage = ({
   useEffect(() => {
     fetchFunctions(selectedProject).then(functions => {
       const filteredFunctions = functions.filter(
-        func => !includes(['', 'handler', 'local'], func.kind)
+        func => !includes(['', 'handler', 'local', 'serving'], func.kind)
       )
 
       const groupedFunctions = Object.values(
