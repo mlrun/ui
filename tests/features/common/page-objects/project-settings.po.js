@@ -1,7 +1,28 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component'
 import inputGroup from '../components/input-group.component'
-import { generateInputGroup } from '../../common-tools/common-tools'
+import textAreaGroup from '../components/text-area.component'
+import { generateInputGroup, generateTextAreaGroup } from '../../common-tools/common-tools'
+
 
 const tabSelector = {
   root: '.content-menu',
@@ -12,6 +33,24 @@ const tabSelector = {
       root: '.content-menu__item',
       fields: {
         key: 'a'
+      }
+    }
+  }
+}
+
+const labelsTable = {
+  root: '.settings__labels',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: 'button.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        label: '.chip',
+        remove_btn: '.item-icon-close'
       }
     }
   }
@@ -34,6 +73,8 @@ const parametersTable = {
       fields: {
         key: '.table-cell__key',
         value: '.table-cell__value',
+        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
+        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
         remove_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)'
       }
     }
@@ -69,12 +110,11 @@ const secretsTable = {
 module.exports = {
   generalTab: {
     Project_Settings_Tab_Selector: commonTable(tabSelector),
-    Source_URL_Edit_Button: By.css('.settings__card-content .settings__source'),
-    Source_URL_Edit_Input: inputGroup(
+    Source_URL_Input: inputGroup(
       generateInputGroup(
         '.settings__card-content .settings__source .input-wrapper',
         true,
-        false,
+        true,
         true
       )
     ),
@@ -86,10 +126,12 @@ module.exports = {
         true
       )
     ),
+    Project_Description: textAreaGroup(generateTextAreaGroup('.settings__description .text-area-wrapper')),
+    Labels_Table: commonTable(labelsTable),
     Parameters_Table: commonTable(parametersTable),
     Parameters_Table_Key_Input: inputGroup(
       generateInputGroup(
-        '.key-value-table.settings__params .table-row__last .table-cell__key .input-wrapper',
+        '.key-value-table.settings__params .table-cell__key .input-wrapper',
         true,
         false,
         true
@@ -97,7 +139,7 @@ module.exports = {
     ),
     Parameters_Table_Value_Input: inputGroup(
       generateInputGroup(
-        '.key-value-table.settings__params .table-row__last .table-cell__value .input-wrapper',
+        '.key-value-table.settings__params .table-cell__value .input-wrapper',
         true,
         false,
         true

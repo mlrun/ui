@@ -1,3 +1,22 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
 import React, { Fragment, Suspense, useState } from 'react'
 import { Route, Routes, Navigate } from 'react-router-dom'
 
@@ -8,6 +27,7 @@ import Navbar from './layout/Navbar/Navbar'
 import { useMode } from './hooks/mode.hook'
 import { useNuclioMode } from './hooks/nuclioMode.hook'
 import localStorageService from './utils/localStorageService'
+import { lazyRetry } from './lazyWithRetry'
 
 import {
   FEATURE_SETS_TAB,
@@ -24,36 +44,36 @@ import {
 import 'igz-controls/scss/common.scss'
 import './scss/main.scss'
 
-const Page = React.lazy(() => import('./layout/Page/Page'))
-const CreateJobPage = React.lazy(() => import('./components/CreateJobPage/CreateJobPage'))
-const Datasets = React.lazy(() => import('./components/Datasets/Datasets'))
-const FeatureStore = React.lazy(() => import('./components/FeatureStore/FeatureStore'))
-const Files = React.lazy(() => import('./components/Files/Files'))
-const Functions = React.lazy(() => import('./components/FunctionsPage/Functions'))
-const Jobs = React.lazy(() => import('./components/Jobs/Jobs'))
-const MonitorJobs = React.lazy(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
-const MonitorWorkflows = React.lazy(() =>
+const Page = lazyRetry(() => import('./layout/Page/Page'))
+const CreateJobPage = lazyRetry(() => import('./components/CreateJobPage/CreateJobPage'))
+const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'))
+const FeatureStore = lazyRetry(() => import('./components/FeatureStore/FeatureStore'))
+const Files = lazyRetry(() => import('./components/Files/Files'))
+const Functions = lazyRetry(() => import('./components/FunctionsPage/Functions'))
+const Jobs = lazyRetry(() => import('./components/Jobs/Jobs'))
+const MonitorJobs = lazyRetry(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
+const MonitorWorkflows = lazyRetry(() =>
   import('./components/Jobs/MonitorWorkflows/MonitorWorkflows')
 )
-const ScheduledJobs = React.lazy(() => import('./components/Jobs/ScheduledJobs/ScheduledJobs'))
-const Models = React.lazy(() => import('./components/Models/Models'))
-const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
-const ProjectMonitor = React.lazy(() => import('./components/Project/ProjectMonitor'))
-const ConsumerGroupsWrapper = React.lazy(() =>
+const ScheduledJobs = lazyRetry(() => import('./components/Jobs/ScheduledJobs/ScheduledJobs'))
+const Models = lazyRetry(() => import('./components/Models/Models'))
+const Projects = lazyRetry(() => import('./components/ProjectsPage/Projects'))
+const ProjectMonitor = lazyRetry(() => import('./components/Project/ProjectMonitor'))
+const ConsumerGroupsWrapper = lazyRetry(() =>
   import('./components/ConsumerGroupsWrapper/ConsumerGroupsWrapper')
 )
-const ConsumerGroup = React.lazy(() => import('./components/ConsumerGroup/ConsumerGroup'))
-const ConsumerGroups = React.lazy(() => import('./components/ConsumerGroups/ConsumerGroups'))
-const ProjectOverview = React.lazy(() =>
+const ConsumerGroup = lazyRetry(() => import('./components/ConsumerGroup/ConsumerGroup'))
+const ConsumerGroups = lazyRetry(() => import('./components/ConsumerGroups/ConsumerGroups'))
+const ProjectOverview = lazyRetry(() =>
   import('./components/Project/ProjectOverview/ProjectOverview')
 )
-const ProjectSettings = React.lazy(() => import('./components/ProjectSettings/ProjectSettings'))
-const AddToFeatureVectorPage = React.lazy(() =>
+const ProjectSettings = lazyRetry(() => import('./components/ProjectSettings/ProjectSettings'))
+const AddToFeatureVectorPage = lazyRetry(() =>
   import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
 )
-const FeatureSets = React.lazy(() => import('./components/FeatureStore/FeatureSets/FeatureSets'))
-const Features = React.lazy(() => import('./components/FeatureStore/Features/Features'))
-const FeatureVectors = React.lazy(() =>
+const FeatureSets = lazyRetry(() => import('./components/FeatureStore/FeatureSets/FeatureSets'))
+const Features = lazyRetry(() => import('./components/FeatureStore/Features/Features'))
+const FeatureVectors = lazyRetry(() =>
   import('./components/FeatureStore/FeatureVectors/FeatureVectors')
 )
 
