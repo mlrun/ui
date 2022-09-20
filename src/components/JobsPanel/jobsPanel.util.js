@@ -413,7 +413,6 @@ export const generateTableDataFromDefaultData = (
   const funcSpec = defaultData.function?.spec
   const limits = funcSpec?.resources?.limits ?? {}
   const requests = funcSpec?.resources?.requests ?? {}
-  console.log(defaultData)
   const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
     data: secret
   }))

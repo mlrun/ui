@@ -62,6 +62,7 @@ import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
 import { generateModelEndpoints } from '../utils/generateModelEndpoints'
+import { parseArtifacts } from '../utils/parseArtifacts'
 
 const artifactsAction = {
   buildFunction: func => dispatch => {
@@ -158,13 +159,13 @@ const artifactsAction = {
     return artifactsApi
       .getDataSets(project, filters, config)
       .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
         dispatch(
-          artifactsAction.fetchDataSetsSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts), DATASETS)
-          )
+          artifactsAction.fetchDataSetsSuccess(generateArtifacts(filterArtifacts(result), DATASETS))
         )
 
-        return data.artifacts
+        return result
       })
       .catch(err => {
         dispatch(artifactsAction.fetchDataSetsFailure(err))
@@ -212,13 +213,13 @@ const artifactsAction = {
     return artifactsApi
       .getFiles(project, filters)
       .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
         dispatch(
-          artifactsAction.fetchFilesSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts), ARTIFACTS)
-          )
+          artifactsAction.fetchFilesSuccess(generateArtifacts(filterArtifacts(result), ARTIFACTS))
         )
 
-        return data.artifacts
+        return result
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFilesFailure(err))
@@ -317,13 +318,13 @@ const artifactsAction = {
     return artifactsApi
       .getModels(project, filters)
       .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
         dispatch(
-          artifactsAction.fetchModelsSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts), MODELS_TAB)
-          )
+          artifactsAction.fetchModelsSuccess(generateArtifacts(filterArtifacts(result), MODELS_TAB))
         )
 
-        return data.artifacts
+        return result
       })
       .catch(err => {
         dispatch(artifactsAction.fetchModelsFailure(err))

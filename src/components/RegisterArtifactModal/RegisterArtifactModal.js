@@ -88,15 +88,16 @@ const RegisterArtifactModal = ({
       .registerArtifact(projectName, data)
       .then(response => {
         formRef.current = null
+
         refresh(filtersStore)
-        return setNotification({
+        setNotification({
           status: response.status,
           id: Math.random(),
           message: `${title} initiated successfully`
         })
       })
       .catch(err => {
-        return setNotification({
+        setNotification({
           status: 400,
           id: Math.random(),
           message: `${title} failed to initiate`,

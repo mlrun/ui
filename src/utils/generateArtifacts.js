@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { maxBy, flatten } from 'lodash'
+import { maxBy, flatten, isEmpty } from 'lodash'
 
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { generateUri } from './resources'
@@ -59,6 +59,8 @@ export const generateArtifacts = (artifacts, tab, iter) => {
             item.ui = {
               originalContent: generatedArtifact
             }
+
+            item.labels = isEmpty(generatedArtifact.labels) ? [] : generatedArtifact.labels
 
             return item
           })

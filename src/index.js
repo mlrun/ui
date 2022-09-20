@@ -23,10 +23,15 @@ import ModalContainer from 'react-modal-promise'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 import App from './App'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import toolkitStore from './store/toolkitStore'
+
+if(!window.location.pathname.includes(process.env.PUBLIC_URL)) {
+  window.location.href = process.env.PUBLIC_URL
+}
 
 fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
   .then(response => response.json())
@@ -37,7 +42,9 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
     ReactDOM.render(
       <Provider store={toolkitStore}>
         <Router basename={process.env.PUBLIC_URL}>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
           {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
         </Router>
       </Provider>,

@@ -151,9 +151,7 @@ const functionsActions = {
 
         return result
       })
-      .catch(error =>
-        dispatch(functionsActions.fetchFunctionLogsFailure(error))
-      )
+      .catch(error => dispatch(functionsActions.fetchFunctionLogsFailure(error)))
   },
   fetchFunctionLogsBegin: () => ({
     type: FETCH_FUNCTION_LOGS_BEGIN
@@ -193,22 +191,20 @@ const functionsActions = {
     return functionsApi
       .getFunctionTemplatesCatalog()
       .then(({ data: functionTemplates }) => {
-        const templates = Object.entries(functionTemplates).map(
-          ([key, value]) => ({
-            kind: value?.kind,
-            metadata: {
-              name: key,
-              hash: '',
-              description: value?.description,
-              categories: value?.categories,
-              versions: value?.versions,
-              tag: ''
-            },
-            status: {
-              state: ''
-            }
-          })
-        )
+        const templates = Object.entries(functionTemplates).map(([key, value]) => ({
+          kind: value?.kind,
+          metadata: {
+            name: key,
+            hash: '',
+            description: value?.description,
+            categories: value?.categories,
+            versions: value?.versions,
+            tag: ''
+          },
+          status: {
+            state: ''
+          }
+        }))
         const templatesCategories = generateCategories(templates)
         dispatch(functionsActions.setFunctionsTemplates(templatesCategories))
 
@@ -258,6 +254,7 @@ const functionsActions = {
         return result.data.func
       })
       .catch(error => {
+        dispatch(functionsActions.getFunctionFailure(error.message))
         throw error
       })
   },

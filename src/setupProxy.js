@@ -19,17 +19,17 @@ such restriction.
 */
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
     '/api',
     createProxyMiddleware({
       target: process.env.REACT_APP_MLRUN_API_URL,
       changeOrigin: true,
-      onProxyReq: function(proxyReq, req, res) {
-        proxyReq.setHeader(
-          'x-v3io-session-key',
-          process.env.REACT_APP_MLRUN_V3IO_ACCESS_KEY
-        )
+      headers: {
+        Connection: 'keep-alive'
+      },
+      onProxyReq: function (proxyReq, req, res) {
+        proxyReq.setHeader('x-v3io-session-key', process.env.REACT_APP_MLRUN_V3IO_ACCESS_KEY)
         proxyReq.setHeader('x-remote-user', 'admin')
       }
     })
