@@ -17,33 +17,25 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
 
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { hasError: false }
-  }
+export const parseArtifacts = artifacts =>
+  artifacts.map(artifact => {
+    let item = { ...artifact }
 
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true }
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
-    /* eslint-disable-next-line no-console */
-    console.log(error, errorInfo)
-  }
-
-  render() {
-    if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>
+    //remove when format=full is by default
+    if (item.status && item.spec && item.metadata) {
+      item = {
+        ...artifact.status,
+        ...artifact.spec,
+        ...artifact.metadata
+      }
     }
 
-    return this.props.children
-  }
-}
-
-export default ErrorBoundary
+    return {
+      ...item,
+      kind: artifact.kind,
+      ui: {
+        originalContent: artifact
+      }
+    }
+  })
