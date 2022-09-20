@@ -1,22 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FieldArray } from 'react-final-form-arrays'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
-import { FormActionButton } from 'igz-controls/elements'
-import FormEnvironmentVariablesRow from './FormEnvironmentVariablesRow/FormEnvironmentVariablesRow'
+import FormActionButton from 'igz-controls/elements/FormActionButton/FormActionButton'
+import FormDataInputsRow from './FormDataInputsRow/FormDataInputsRow'
 
 import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
+import { dataInputInitialState } from './formDataInputsTable.util'
+import { useSelector } from 'react-redux'
 
-const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formState }) => {
+const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => {
+  const [dataInputState, setDataInputState] = useState(dataInputInitialState)
   const tableClassNames = classnames('form-table', className)
+  const projectStore = useSelector(store => store.projectStore)
   const { editingItem, addNewRow, applyChanges, deleteRow, discardOrDelete, enterEditMode } =
     useFormTable(formState)
 
   const uniquenessValidator = (fields, newValue) => {
-    return !fields.value.some(({ data: { key } }, index) => {
-      return newValue.trim() === key && index !== editingItem.ui.index
+    return !fields.value.some(({ data: { name } }, index) => {
+      return newValue.trim() === name && index !== editingItem.ui.index
     })
   }
 
@@ -24,13 +28,10 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
     <div className={tableClassNames}>
       <div className="form-table__row form-table__header-row no-hover">
         <div className="form-table__cell form-table__cell_1">
-          <Tooltip template={<TextTooltipTemplate text="Name" />}>Name</Tooltip>
+          <Tooltip template={<TextTooltipTemplate text="Name" />}>Input name</Tooltip>
         </div>
         <div className="form-table__cell form-table__cell_1">
-          <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>
-        </div>
-        <div className="form-table__cell form-table__cell_1">
-          <Tooltip template={<TextTooltipTemplate text="Value" />}>Value</Tooltip>
+          <Tooltip template={<TextTooltipTemplate text="Value" />}>Path</Tooltip>
         </div>
         <div className="form-table__cell form-table__actions-cell" />
       </div>
@@ -40,8 +41,9 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
             <>
               {fields.map((rowPath, index) => {
                 return (
-                  <FormEnvironmentVariablesRow
+                  <FormDataInputsRow
                     applyChanges={applyChanges}
+                    dataInputState={dataInputState}
                     deleteRow={deleteRow}
                     disabled={disabled}
                     discardOrDelete={discardOrDelete}
@@ -51,7 +53,10 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
                     fieldsPath={fieldsPath}
                     index={index}
                     key={rowPath}
+                    projectStore={projectStore}
                     rowPath={rowPath}
+                    setDataInputState={setDataInputState}
+                    setFieldState={formState.form.mutators.setFieldState}
                     setFieldValue={formState.form.change}
                     uniquenessValidator={uniquenessValidator}
                   />
@@ -62,16 +67,21 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
                   disabled={disabled}
                   fields={fields}
                   fieldsPath={fieldsPath}
-                  label="Add environment variable"
-                  onClick={(...addRowArgs) =>
+                  label="Add input "
+                  onClick={(...addRowArgs) => {
+                    setDataInputState(dataInputInitialState)
                     addNewRow(...addRowArgs, {
                       data: {
-                        key: '',
-                        type: 'value',
-                        value: '',
-                      }
+                        name: '',
+                        path: '',
+                        fieldInfo: {
+                          pathType: '',
+                          value: ''
+                        }
+                      },
+                      doc: ''
                     })
-                  }
+                  }}
                 />
               )}
             </>
@@ -82,16 +92,16 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
   )
 }
 
-FormEnvironmentVariablesTable.defaultProps = {
+FormDataInputsTable.defaultProps = {
   disabled: false,
   className: ''
 }
 
-FormEnvironmentVariablesTable.propTypes = {
+FormDataInputsTable.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired
 }
 
-export default FormEnvironmentVariablesTable
+export default FormDataInputsTable

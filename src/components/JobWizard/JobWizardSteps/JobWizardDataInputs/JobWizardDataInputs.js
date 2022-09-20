@@ -1,8 +1,10 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { FormInput } from 'igz-controls/components'
+import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDataInputsTable'
 
-const JobWizardDataInputs = ({formState}) => {
+const JobWizardDataInputs = ({ formState }) => {
   return (
     <div className="job-wizard__data-inputs form">
       <div className="form-row">
@@ -13,11 +15,18 @@ const JobWizardDataInputs = ({formState}) => {
         next, here we can throw in all the jargon words that normal people would glaze over.
       </div>
       <div className="form-row">
+        <FormDataInputsTable
+          className="form-col-1"
+          fieldsPath="dataInputs.dataInputsTable"
+          formState={formState}
+        />
+      </div>
+      <div className="form-row">
         <div className="form-col-1">
-          <FormInput name="dataInputs.inputPath" label="Default input path"/>
+          <FormInput name="dataInputs.inputPath" label="Default input path" />
         </div>
         <div className="form-col-1">
-          <FormInput name="dataInputs.outputPath" label="Default artifact path" required/>
+          <FormInput name="dataInputs.outputPath" label="Default artifact path" required />
         </div>
       </div>
     </div>
@@ -26,6 +35,8 @@ const JobWizardDataInputs = ({formState}) => {
 
 JobWizardDataInputs.defaultProps = {}
 
-JobWizardDataInputs.propTypes = {}
+JobWizardDataInputs.propTypes = {
+  formState: PropTypes.shape({}).isRequired
+}
 
 export default JobWizardDataInputs

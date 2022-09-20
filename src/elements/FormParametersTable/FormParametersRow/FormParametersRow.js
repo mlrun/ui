@@ -173,7 +173,7 @@ const FormParametersRow = ({
                 className={classnames(
                   'form-table__cell',
                   'form-table__cell_1',
-                  'form-table__parameter-cell',
+                  'form-table__name-cell',
                   fields.value[index].isDefault && 'disabled'
                 )}
               >

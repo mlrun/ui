@@ -24,6 +24,8 @@ import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { useMode } from '../../hooks/mode.hook'
 
+import './jobWizard.scss'
+
 const JobWizard = ({
   defaultData,
   frontendSpec,
@@ -188,8 +190,7 @@ JobWizard.propTypes = {
 export default connect(
   ({ appStore, functionsStore, projectStore }) => ({
     frontendSpec: appStore.frontendSpec,
-    functionsStore,
-    projectStore
+    functionsStore
   }),
   {
     ...functionsActions,

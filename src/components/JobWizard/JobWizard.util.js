@@ -417,19 +417,15 @@ export const getDataInputs = functionParameters => {
   return functionParameters
     .filter(dataInputs => dataInputs.type === 'DataItem')
     .map(input => {
-      const inputPath = {
-        pathType: input.path?.replace(/:\/\/.*$/g, '://') ?? ''
-      }
-
-      inputPath.value = input.path?.replace(/.*:\/\//g, '') ?? ''
-
       return {
         doc: input.doc,
         isDefault: true,
         data: {
           name: input.name,
-          path: {
-            ...inputPath
+          path: input.path ?? '',
+          fieldInfo: {
+            pathType: input.path?.replace(/:\/\/.*$/g, '://') ?? '',
+            value: input.path?.replace(/.*:\/\//g, '') ?? ''
           }
         }
       }
@@ -466,10 +462,7 @@ const parseParameterValue = parameterValue => {
 const parseEnvironmentVariables = (envVariables, isStagingMode) => {
   return envVariables.map(envVariable => {
     let env = {
-      key: envVariable.name,
-      value: '',
-      secretName: '',
-      secretKey: ''
+      key: envVariable.name
     }
 
     if (envVariable?.valueFrom?.secretKeyRef) {

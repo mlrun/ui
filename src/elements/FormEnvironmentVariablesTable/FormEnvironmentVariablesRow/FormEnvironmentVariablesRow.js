@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
+import { pick } from 'lodash'
 
 import { FormInput, FormSelect, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
@@ -83,7 +84,7 @@ const FormEnvironmentVariablesRow = ({
               <FormInput
                 density="dense"
                 name={`${rowPath}.data.value`}
-                placeholder="Name"
+                placeholder="Value"
                 required
               />
             )}
@@ -146,12 +147,11 @@ const FormEnvironmentVariablesRow = ({
         </div>
       )}
       <OnChange name={`${rowPath}.data.type`}>
-        {value => {
-          if (value === ENV_VARIABLE_TYPE_SECRET) {
-            setFieldValue(`${rowPath}.data.value`, '')
-          } else {
-            setFieldValue(`${rowPath}.data.secretName`, '')
-            setFieldValue(`${rowPath}.data.secretKey`, '')
+        {() => {
+          if (editingItem) {
+              const fieldNewData = pick(fields.value[index].data, ['key', 'type'])
+
+            setFieldValue(`${rowPath}.data`, fieldNewData)
           }
         }}
       </OnChange>

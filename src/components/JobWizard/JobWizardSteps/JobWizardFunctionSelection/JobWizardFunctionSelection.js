@@ -200,7 +200,7 @@ const JobWizardFunctionSelection = ({
 
     fetchFunctions(currentValue).then(functions => {
       const validFunctions = functions.filter(func => {
-        return !includes(['', 'handler', 'local'], func.kind)
+        return !includes(['', 'handler', 'local', 'serving'], func.kind)
       })
 
       const groupedFunctions = Object.values(

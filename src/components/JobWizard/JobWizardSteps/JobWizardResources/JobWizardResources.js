@@ -33,7 +33,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
             />
           </div>
         )}
-        {formState.values.preemptionMode && (
+        {formState.values.resources.preemptionMode && (
           <div className="form-col-auto resources__select">
             <FormSelect
               label="Spot Instances"
