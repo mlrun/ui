@@ -66,7 +66,13 @@ import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAn
 import DetailsPods from '../DetailsPods/DetailsPods'
 import NoData from '../../common/NoData/NoData'
 
-export const generateArtifactsContent = (detailsType, selectedItem) => {
+export const generateArtifactsContent = (
+  addChip,
+  deleteChip,
+  editChips,
+  detailsType,
+  selectedItem
+) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     return {
       uid: {
@@ -152,7 +158,12 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
         value: selectedItem.algorithm
       },
       labels: {
-        value: selectedItem.labels ?? []
+        value: selectedItem.labels ?? [],
+        editModeEnabled: detailsType === MODELS_TAB,
+        editModeType: 'chips',
+        onChange: (chip, field) => editChips(chip, field),
+        onAdd: (chip, chips, field) => addChip(chip, chips, field),
+        handleDelete: (chips, field) => deleteChip(chips, field)
       },
       sources: {
         value: selectedItem.sources
