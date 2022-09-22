@@ -21,7 +21,7 @@ import React from 'react'
 import classnames from 'classnames'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
 
@@ -43,9 +43,7 @@ const DetailsInfoItemChip = ({
   const chipFieldClassName = classnames(
     'details-item__data',
     'details-item__data-chips',
-    editableFieldType &&
-      editableFieldType !== 'chips' &&
-      'details-item_disabled'
+    editableFieldType && editableFieldType !== 'chips' && 'details-item_disabled'
   )
 
   const setEditMode = () => {
@@ -84,9 +82,7 @@ const DetailsInfoItemChip = ({
 
   const handleRemoveChip = chips => {
     if (!isFieldInEditMode) {
-      const initialChips = Object.keys(item.value).map(
-        key => `${key}: ${item.value[key]}`
-      )
+      const initialChips = Object.keys(item.value).map(key => `${key}: ${item.value[key]}`)
 
       setEditMode()
       setChanges(initialChips, chips)
@@ -97,9 +93,7 @@ const DetailsInfoItemChip = ({
 
   const handleClick = () => {
     if (!isFieldInEditMode) {
-      const chips = Object.keys(item.value).map(
-        key => `${key}: ${item.value[key]}`
-      )
+      const chips = Object.keys(item.value).map(key => `${key}: ${item.value[key]}`)
 
       setEditMode()
       setChanges(chips, chips)
@@ -121,12 +115,9 @@ const DetailsInfoItemChip = ({
       />
       {isFieldInEditMode && (
         <div className="details-item__apply-btn-wrapper">
-          <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-            <Checkmark
-              className="details-item__apply-btn"
-              onClick={handleFinishEdit}
-            />
-          </Tooltip>
+          <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
+            <Checkmark />
+          </RoundedIcon>
         </div>
       )}
     </div>
