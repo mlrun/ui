@@ -25,7 +25,7 @@ import { RoundedIcon } from 'igz-controls/components'
 
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
 
-import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
 
 const DetailsInfoItemChip = ({
   changesData,
@@ -115,7 +115,11 @@ const DetailsInfoItemChip = ({
       />
       {isFieldInEditMode && (
         <div className="details-item__apply-btn-wrapper">
-          <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
+          <RoundedIcon
+            className="details-item__apply-btn"
+            onClick={handleFinishEdit}
+            tooltipText="Apply"
+          >
             <Checkmark />
           </RoundedIcon>
         </div>
