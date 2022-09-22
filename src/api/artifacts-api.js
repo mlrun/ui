@@ -146,7 +146,12 @@ const artifactsApi = {
     )
   },
   registerArtifact: (project, data) =>
-    mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)
+    mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),
+  updateArtifact: (project, data) =>
+    mainHttpClient.post(
+      `/artifact/${project}/${data.uid || data.metadata?.tree}/${data.db_key || data.spec?.db_key}`,
+      data
+    )
 }
 
 export default artifactsApi

@@ -54,11 +54,13 @@ export const generateArtifacts = (artifacts, tab, iter) => {
               item.preview ??= []
             }
 
-            item.URI = generateUri(item, tab)
-
-            item.ui = {
-              originalContent: generatedArtifact
+            if (!generatedArtifact.ui) {
+              item.ui = {
+                originalContent: generatedArtifact
+              }
             }
+
+            item.URI = generateUri(item, tab)
 
             item.labels = isEmpty(generatedArtifact.labels) ? [] : generatedArtifact.labels
 
