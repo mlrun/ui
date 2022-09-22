@@ -149,7 +149,15 @@ const Details = ({
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
         pageData.details.type === DATASETS
       ) {
-        setInfoContent(generateArtifactsContent(pageData.details.type, selectedItem))
+        setInfoContent(
+          generateArtifactsContent(
+            handleAddChip,
+            handleDeleteChip,
+            handleEditChips,
+            pageData.details.type,
+            selectedItem
+          )
+        )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
         setInfoContent(generateFunctionsContent(selectedItem))
       } else {
