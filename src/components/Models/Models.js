@@ -31,6 +31,7 @@ import Pipeline from '../Pipeline/Pipeline'
 import artifactsAction from '../../actions/artifacts'
 import detailsActions from '../../actions/details'
 import filtersActions from '../../actions/filters'
+import notificationActions from '../../actions/notification'
 import {
   checkForSelectedModel,
   checkForSelectedModelEndpoint,
@@ -39,7 +40,8 @@ import {
   getFeatureVectorData,
   handleFetchData,
   pageDataInitialState,
-  tabs
+  tabs,
+  handleApplyDetailsChanges
 } from './models.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
@@ -75,7 +77,9 @@ const Models = ({
   removeModel,
   removeModels,
   setFilters,
-  subPage
+  setNotification,
+  subPage,
+  updateArtifact
 }) => {
   const [pageData, setPageData] = useState(pageDataInitialState)
   const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
@@ -182,6 +186,30 @@ const Models = ({
       }
     },
     [fetchModel, filtersStore.iter, filtersStore.tag]
+  )
+
+  const applyDetailsChanges = useCallback(
+    changes => {
+      return handleApplyDetailsChanges(
+        changes,
+        fetchData,
+        params.projectName,
+        params.name,
+        selectedModel.item,
+        setNotification,
+        filtersStore,
+        updateArtifact
+      )
+    },
+    [
+      fetchData,
+      filtersStore,
+      params.name,
+      params.projectName,
+      selectedModel,
+      setNotification,
+      updateArtifact
+    ]
   )
 
   useEffect(() => {
@@ -339,6 +367,7 @@ const Models = ({
     <div className="content-wrapper">
       {artifactsStore.loading && <Loader />}
       <Content
+        applyDetailsChanges={applyDetailsChanges}
         content={sortedContent}
         handleActionsMenuClick={handleRegisterModel}
         handleCancel={() => setSelectedModel({})}
@@ -357,6 +386,11 @@ const Models = ({
   )
 }
 
+const actionCreators = {
+  setNotification: notificationActions.setNotification,
+  updateArtifact: artifactsAction.updateArtifact
+}
+
 export default connect(
   ({ artifactsStore, filtersStore, detailsStore }) => ({
     artifactsStore,
@@ -366,6 +400,7 @@ export default connect(
   {
     ...artifactsAction,
     ...detailsActions,
-    ...filtersActions
+    ...filtersActions,
+    ...actionCreators
   }
 )(Models)
