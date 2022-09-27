@@ -58,7 +58,7 @@ const RegisterArtifactModal = ({
     })
   )
   const location = useLocation()
-  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
 
   useEffect(() => {
     setInitialValues(state => ({
@@ -87,8 +87,6 @@ const RegisterArtifactModal = ({
     return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
-        formRef.current = null
-
         refresh(filtersStore)
         setNotification({
           status: response.status,
@@ -105,7 +103,7 @@ const RegisterArtifactModal = ({
         })
       })
       .finally(() => {
-        onResolve()
+        resolveModal()
       })
   }
 
