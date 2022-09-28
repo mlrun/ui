@@ -55,8 +55,7 @@ const ChipCell = ({
   const chipsWrapperRef = useRef()
 
   let chips = useMemo(() => {
-    return (isEditMode && !visibleChipsMaxLength) ||
-      visibleChipsMaxLength === 'all'
+    return (isEditMode && !visibleChipsMaxLength) || visibleChipsMaxLength === 'all'
       ? {
           visibleChips: elements.map(chip => ({
             value: chip,
@@ -68,13 +67,7 @@ const ChipCell = ({
           visibleChipsMaxLength ? visibleChipsMaxLength : visibleChipsCount,
           delimiter
         )
-  }, [
-    delimiter,
-    elements,
-    isEditMode,
-    visibleChipsCount,
-    visibleChipsMaxLength
-  ])
+  }, [delimiter, elements, isEditMode, visibleChipsCount, visibleChipsMaxLength])
 
   const handleShowElements = useCallback(() => {
     if (!isEditMode || (isEditMode && visibleChipsMaxLength)) {
@@ -99,8 +92,7 @@ const ChipCell = ({
       Object.values(chipsSizes).every((chipSize, index) => {
         if (
           maxLength + chipSize > parentSize ||
-          (Object.values(chipsSizes).length > 1 &&
-            maxLength + chipSize + padding > parentSize)
+          (Object.values(chipsSizes).length > 1 && maxLength + chipSize + padding > parentSize)
         ) {
           chipIndex = index
 
@@ -159,13 +151,7 @@ const ChipCell = ({
         isNewChip: true
       })
     },
-    [
-      editConfig.isEdit,
-      editConfig.chipIndex,
-      showHiddenChips,
-      elements,
-      addChip
-    ]
+    [editConfig.isEdit, editConfig.chipIndex, showHiddenChips, elements, addChip]
   )
 
   const handleRemoveChip = useCallback(
@@ -182,7 +168,7 @@ const ChipCell = ({
   const handleEditChip = useCallback(
     (event, chip, nameEvent) => {
       event.preventDefault()
-      const isChipNotEmpty = !!(chip.key && chip.value)
+      const isChipNotEmpty = !!(chip.key && chip.value && chip.key?.trim() && chip.value?.trim())
 
       if (isChipNotEmpty) {
         const newChips = [...elements]
@@ -209,8 +195,7 @@ const ChipCell = ({
         }
 
         setEditConfig(prevState => {
-          const isNextChipIndexExists =
-            prevState.chipIndex + 1 > elements.length - 1
+          const isNextChipIndexExists = prevState.chipIndex + 1 > elements.length - 1
 
           return {
             chipIndex: isNextChipIndexExists ? null : prevState.chipIndex + 1,
@@ -238,13 +223,7 @@ const ChipCell = ({
         })
       }
     },
-    [
-      elements,
-      editConfig.chipIndex,
-      editConfig.isNewChip,
-      editChip,
-      handleRemoveChip
-    ]
+    [elements, editConfig.chipIndex, editConfig.isNewChip, editChip, handleRemoveChip]
   )
 
   const handleIsEdit = useCallback(
@@ -318,10 +297,7 @@ ChipCell.propTypes = {
   onClick: PropTypes.func,
   removeChip: PropTypes.func,
   shortChips: PropTypes.bool,
-  visibleChipsMaxLength: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ])
+  visibleChipsMaxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 export default React.memo(ChipCell)
