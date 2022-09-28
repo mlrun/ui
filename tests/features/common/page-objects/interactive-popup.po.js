@@ -129,6 +129,24 @@ const createFeatureVectorLabelsTable = {
   }
 }
 
+const artifactsLabelsTable = {
+  root: '.modal',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: 'button.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        label: '.chip',
+        remove_btn: '.item-icon-close'
+      }
+    }
+  }
+}
+
 // Common components
 
 const commonCancelButton = By.css('.pop-up-dialog button.pop-up-dialog__btn_cancel')
@@ -153,7 +171,8 @@ const commonTargetPathInput = generateInputGroup(
 )
 
 const commonDescriptionTextArea = generateTextAreaGroup(
-  '.form .form-row:nth-of-type(4) .form-field-textarea'
+  '.form .form-row:nth-of-type(4) .form-field-textarea',
+  '.form-field__counter'
 )
 
 const commonConfirmButton = By.css('.pop-up-dialog .btn.btn-primary')
@@ -192,7 +211,7 @@ module.exports = {
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
     Confirm_Button: By.css('.confirm-dialog__btn-container button:not(.pop-up-dialog__btn_cancel)'),
-    Delete_Button: commonDeleteButton,
+    Delete_Button: commonDeleteButton
   },
   registerDataset: {
     Title: commonPopupTitle,
@@ -250,34 +269,33 @@ module.exports = {
     Register_Button: commonFormConfirmButton
   },
   registerModelPopup: {
-    Title: commonTitle,
-    Cross_Cancel_Button: commonCrossCancelButton,
+    Title: commonPopupTitle,
+    Cross_Cancel_Button: commonCloseButton,
     New_File_Name_Input: inputGroup(
       generateInputGroup(
-        '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(1)',
+        '.modal__body .register-model__row:nth-of-type(1) .form-field__wrapper-normal',
         true,
         true,
-        true
+        '.form-field__warning'
       )
     ),
     New_File_Target_Path_Input: inputGroup(
       generateInputGroup(
-        '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(2)',
+        '.modal__body .register-model__row:nth-of-type(2) .form-field__wrapper-normal',
         true,
         true,
-        true
+        '.form-field__warning'
       )
     ),
-    New_File_Description_Input: inputGroup(
-      generateInputGroup(
-        '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(3)',
-        true,
-        true,
-        true
+    New_File_Description_Input: textAreaGroup(
+      generateTextAreaGroup(
+        '.modal__body .register-model__row:nth-of-type(3) .form-field-textarea',
+        '.form-field__counter'
       )
     ),
-    Cancel_Button: commonCancelButton,
-    Register_Button: commonConfirmButton
+    Labels_Table: commonTable(artifactsLabelsTable),
+    Cancel_Button: commonFormCancelButton,
+    Register_Button: commonFormConfirmButton
   },
   deployModelPopup: {
     Title: commonPopupTitle,
@@ -469,7 +487,9 @@ module.exports = {
     Tag_Input: inputGroup(
       generateInputGroup('.pop-up-dialog .vector-tag-wrapper', true, '.input__warning svg', true)
     ),
-    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .text-area-wrapper')),
+    Description_Input: textAreaGroup(
+      generateTextAreaGroup('.pop-up-dialog .text-area-wrapper')
+    ),
     Labels_Table: commonTable(createFeatureVectorLabelsTable),
     Cancel_Button: commonCancelButton,
     Create_Button: commonConfirmButton
@@ -477,20 +497,11 @@ module.exports = {
   featureSetSchedulePopup: {
     Title: By.css('.feature-set-panel__schedule .schedule-title'),
     Repeat_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.feature-set-panel__schedule .repeat_container .select:nth-of-type(1)',
-        false,
-        true,
-
-        '.data-ellipsis > .data-ellipsis'
-      )
+      generateDropdownGroup('.feature-set-panel__schedule .repeat_container .select:nth-of-type(1)')
     ),
     Time_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '.feature-set-panel__schedule .repeat_container .schedule-repeat .select',
-        false,
-        false,
-        '.data-ellipsis > .data-ellipsis'
+        '.feature-set-panel__schedule .repeat_container .schedule-repeat .select'
       )
     ),
     Schedule_Button: By.css('.feature-set-panel__schedule .btn__schedule')

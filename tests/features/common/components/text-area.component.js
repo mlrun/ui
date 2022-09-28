@@ -9,6 +9,7 @@ module.exports = function (textAreaStructure) {
     element.inputLabel = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.label}`)
   }
 
+  element.counter =  By.css(`${textAreaStructure.root} ${textAreaStructure.elements.counter}`)
   element.warningHint = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.warningHint}`)
   element.warningText = By.css(`${textAreaStructure.elements.warningText}`)
 
