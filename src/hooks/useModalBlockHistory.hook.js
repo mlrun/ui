@@ -26,30 +26,26 @@ export const useModalBlockHistory = (closeModal, form) => {
   const { blockHistory, unblockHistory } = useBlockHistory()
   const [confirmationIsOpened, setConfirmationIsOpened] = useState(false)
 
-  const resolveModal = useCallback(
-    retryNavigation => {
-      closeModal()
-      unblockHistory(retryNavigation)
-    },
-    [closeModal, unblockHistory]
-  )
+  const resolveModal = useCallback(() => {
+    closeModal()
+    unblockHistory()
+  }, [closeModal, unblockHistory])
 
   const handleRejectConfirmation = useCallback(() => {
     setConfirmationIsOpened(false)
-    unblockHistory(false)
+    unblockHistory()
   }, [unblockHistory])
 
   const handleCloseModal = useCallback(() => {
-    const { initialValues, values, submitSucceeded } = form.getState()
+    const { initialValues, values } = form.getState()
 
-    const showConfirmation = form && !isEqualValues(initialValues, values) && !submitSucceeded
+    const showConfirmation = !isEqualValues(initialValues, values)
 
     defaultCloseModalHandler(
       showConfirmation,
-      () => resolveModal(submitSucceeded),
+      resolveModal,
       handleRejectConfirmation,
-      setConfirmationIsOpened,
-      submitSucceeded
+      setConfirmationIsOpened
     )
   }, [form, resolveModal, handleRejectConfirmation])
 
@@ -59,5 +55,5 @@ export const useModalBlockHistory = (closeModal, form) => {
     }
   }, [confirmationIsOpened, blockHistory, handleCloseModal, form])
 
-  return { handleCloseModal }
+  return { handleCloseModal, resolveModal }
 }

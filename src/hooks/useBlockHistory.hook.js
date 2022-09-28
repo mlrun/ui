@@ -46,13 +46,11 @@ export const useBlockHistory = () => {
     [navigator]
   )
 
-  const unblockHistory = useCallback(retryNavigation => {
+  const unblockHistory = useCallback(() => {
     if (unblock.current) {
       unblock.current()
       unblock.current = null
     }
-
-    retryNavigation && historyRetry.current()
   }, [])
 
   return {
