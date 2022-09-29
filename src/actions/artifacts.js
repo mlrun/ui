@@ -370,7 +370,10 @@ const artifactsAction = {
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
-  })
+  }),
+  updateArtifact: (project, data) => () => {
+    return artifactsApi.updateArtifact(project, data)
+  }
 }
 
 export default artifactsAction
