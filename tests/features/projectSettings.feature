@@ -150,6 +150,7 @@ Feature: Project Settings page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
         Then verify "Secrets_Table" element visibility on "Projects_Settings_Secret_Tab" wizard
+        Then "Secrets_Hint" component on "Projects_Settings_Secret_Tab" should contains "Project_Settings"."Secrets_Hint"
         Then click on "Add_Secret_Button" element on "Projects_Settings_Secret_Tab" wizard
         Then verify "New_Secret_Key_Input" element visibility on "Create_New_Secret_Popup" wizard
         Then type value "   " to "New_Secret_Key_Input" field on "Create_New_Secret_Popup" wizard

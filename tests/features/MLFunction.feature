@@ -577,7 +577,9 @@ Feature: ML Functions
         Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "new-aqa-function-00" value
         Then "Function_Tag" element in "General_Accordion" on "New_Function" should contains "latest" value
         Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contains "job" value
+        Then check "Function_Description_Input" textarea counter in "General_Accordion" on "New_Function" wizard
         Then type value "Some function description" to "Function_Description_Input" field on "General_Accordion" on "New_Function" wizard
+        Then check "Function_Description_Input" textarea counter in "General_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard

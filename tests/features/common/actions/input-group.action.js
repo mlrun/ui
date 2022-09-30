@@ -142,6 +142,15 @@ const action = {
     const inputField = await driver.findElement(inputGroup.inputField)
     const flag = await inputField.getAttribute('disabled')
     expect(flag).equal(null)
+  },
+  verifyTextAreaCounter: async function (driver, textAreaGroup) {
+    const textAreaField = await driver.findElement(textAreaGroup.inputField)
+    const textAreaText = await textAreaField.getText()
+    const textAreaCounter = await driver.findElement(textAreaGroup.counter)
+    const counterValue = await textAreaCounter.getText()
+    const maxLength = await textAreaField.getAttribute('maxlength')
+
+    expect(+counterValue.split(' ')[0]).equal(maxLength - textAreaText.length)
   }
 }
 

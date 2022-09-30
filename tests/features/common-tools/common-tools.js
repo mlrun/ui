@@ -28,31 +28,25 @@ import {
 } from '../common/actions/api.actions'
 
 module.exports = {
-  locatorBuilder: function(strings, ...keys) {
-    return function(...values) {
+  locatorBuilder: function (strings, ...keys) {
+    return function (...values) {
       const dict = values[values.length - 1] || {}
       const result = [strings[0]]
-      keys.forEach(function(key, i) {
+      keys.forEach(function (key, i) {
         const value = Number.isInteger(key) ? values[key] : dict[key]
         result.push(value, strings[i + 1])
       })
       return result.join('')
     }
   },
-  generateInputGroup: function(
-    root,
-    label = false,
-    hint = false,
-    warning = false
-  ) {
+  generateInputGroup: function (root, label = false, hint = false, warning = false) {
     const structure = { root, elements: {} }
     structure.elements.input = 'input'
     if (label) {
       structure.elements.label = 'label'
     }
     if (hint) {
-      structure.elements.hint =
-        typeof hint === 'string' ? hint : '.tip-container svg'
+      structure.elements.hint = typeof hint === 'string' ? hint : '.tip-container svg'
     }
     if (warning) {
       structure.elements.warningHint = typeof warning === 'string' ? warning : '.input__warning svg'
@@ -61,7 +55,7 @@ module.exports = {
 
     return structure
   },
-  generateNumberInputGroup: function(
+  generateNumberInputGroup: function (
     root,
     incDecBtn = false,
     label = false,
@@ -81,8 +75,7 @@ module.exports = {
     structure.elements.label = label || '.data-ellipsis'
 
     if (hint) {
-      structure.elements.hint =
-        typeof hint === 'string' ? hint : '.tip-container svg'
+      structure.elements.hint = typeof hint === 'string' ? hint : '.tip-container svg'
     }
     if (warning) {
       structure.elements.warningHint = '.range__warning svg'
@@ -91,12 +84,7 @@ module.exports = {
 
     return structure
   },
-  generateLabelGroup: function(
-    root,
-    label = false,
-    hintButton = false,
-    hint = false
-  ) {
+  generateLabelGroup: function (root, label = false, hintButton = false, hint = false) {
     const structure = { elements: {} }
     structure.root = root
 
@@ -113,7 +101,7 @@ module.exports = {
 
     return structure
   },
-  generateDropdownGroup: function(
+  generateDropdownGroup: function (
     root,
     open_button = false,
     options = false,
@@ -126,8 +114,7 @@ module.exports = {
 
     structure.dropdownElements.open_button = open_button || '.select__value'
 
-    structure.dropdownElements.options =
-      options || '.select__body .select__item'
+    structure.dropdownElements.options = options || '.select__body .select__item'
 
     structure.dropdownElements.option_name = option_name || ''
 
@@ -135,7 +122,7 @@ module.exports = {
 
     return structure
   },
-  generateCheckboxGroup: function(root, checkbox, name, icon) {
+  generateCheckboxGroup: function (root, checkbox, name, icon) {
     const structure = { root, elements: {} }
 
     structure.elements.checkbox = checkbox ? 'svg[class]' : ''
@@ -146,18 +133,19 @@ module.exports = {
 
     return structure
   },
-  generateTextAreaGroup: function(root) {
+  generateTextAreaGroup: function (root, counter = '.text-area__counter') {
     return {
       root,
       elements: {
         input: 'textarea',
         label: 'label',
         warningHint: '.form-field__warning',
-        warningText: '.tooltip__warning'
+        warningText: '.tooltip__warning',
+        counter
       }
     }
   },
-  parseString: function(string) {
+  parseString: function (string) {
     const rulesArray = string.split('\n')
     const lengthRule = getLength(rulesArray)
     const validCharactersRule = getRule(rulesArray, 'valid characters')
@@ -165,10 +153,7 @@ module.exports = {
     const endRule = getRule(rulesArray, 'end')
     const notToBe = getNotToBe(rulesArray, 'not be')
     const notStartWith = getRule(rulesArray, 'not start')
-    const notConsecutiveCharacters = getNotToBe(
-      rulesArray,
-      'consecutive characters'
-    )
+    const notConsecutiveCharacters = getNotToBe(rulesArray, 'consecutive characters')
 
     return generateRegEx(
       beginRule,
@@ -180,7 +165,7 @@ module.exports = {
       notConsecutiveCharacters
     )
   },
-  clearBackendAfterTest: function(driver, items) {
+  clearBackendAfterTest: function (driver, items) {
     items.forEach(item => {
       switch (item.type) {
         case 'project':
