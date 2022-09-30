@@ -111,14 +111,14 @@ Feature: Feature Store Page
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Overview_General_Headers" on "Feature_Sets_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Overview_General_Headers"
         Then click on "Description_Field" element on "Feature_Sets_Info_Pane" wizard
-        Then type value " " to "Description_Input" field on "Feature_Sets_Info_Pane" wizard
-        Then verify "Description_Input" on "Feature_Sets_Info_Pane" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "test_description" to "Description_Input" field on "Feature_Sets_Info_Pane" wizard
+        Then check "Description_Input" textarea counter on "Feature_Sets_Info_Pane" wizard
         Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
         Then "Description_Field" element on "Feature_Sets_Info_Pane" should contains "test_description" value
         Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is enabled
         Then click on "Description_Field" element on "Feature_Sets_Info_Pane" wizard
         Then type value "" to "Description_Input" field on "Feature_Sets_Info_Pane" wizard
+        Then check "Description_Input" textarea counter on "Feature_Sets_Info_Pane" wizard
         Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
         Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is disabled
         When add rows to "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
@@ -274,6 +274,28 @@ Feature: Feature Store Page
 
     @passive
     @inProgress
+    Scenario: Check all mandatory components in Item infopane on Statistics tab table
+        Given open url
+        And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And wait load page
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "Statistics" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
+        Then verify "Statistics" tab is active in "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard
+        Then verify cell with "Statistics" value in "key" column in "Info_Pane_Tab_Selector" table on "Feature_Sets_Info_Pane" wizard should display "Label_Hint"."Feature_Sets_Statistics"
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Statistics_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Statistics_Info_Pane" wizard
+        Then verify "Header" element visibility on "Statistics_Info_Pane" wizard
+        Then verify "Updated" element visibility on "Statistics_Info_Pane" wizard
+        Then verify "Cancel_Button" element visibility on "Statistics_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element visibility on "Statistics_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "Statistics_Info_Pane" wizard
+
+    @passive
+    @inProgress
     Scenario: Check all mandatory components in Item infopane on Analysis tab table
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -319,10 +341,10 @@ Feature: Feature Store Page
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
-        Then type value "owner" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "my-key" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then value in "labels" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "owner"
+        Then value in "labels" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "my-key"
         Then type value "type=featureSet" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -523,10 +545,20 @@ Feature: Feature Store Page
         Then verify "Repeat_Dropdown" element visibility on "Feature_Set_Schedule_Popup" wizard
         Then verify "Time_Dropdown" element visibility on "Feature_Set_Schedule_Popup" wizard
         Then verify "Schedule_Button" element visibility on "Feature_Set_Schedule_Popup" wizard
+        Then verify "Repeat_Dropdown" dropdown element on "Feature_Set_Schedule_Popup" wizard should contains "Dropdown_Options"."Schedule_Variants"
+        Then verify "Time_Dropdown" dropdown element on "Feature_Set_Schedule_Popup" wizard should contains "Dropdown_Options"."Schedule_Minutes_Variants"
+        Then select "Hourly" option in "Repeat_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
+        Then verify "Time_Dropdown" dropdown element on "Feature_Set_Schedule_Popup" wizard should contains "Dropdown_Options"."Schedule_Hours_Variants"
+        Then select "Minute" option in "Repeat_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
         Then select "10" option in "Time_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
         And click on "Schedule_Button" element on "Feature_Set_Schedule_Popup" wizard
         Then "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "Every 10 minutes" value
-        # Should be finished after drop-down fix
+        Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
+        Then click on "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then select "Weekly" option in "Repeat_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
+        And click on "Schedule_Button" element on "Feature_Set_Schedule_Popup" wizard
+        Then "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "At 12:00 AM, only on Sunday, Monday, Tuesday, Wednesday, and Thursday" value
+        Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
 
     @passive
     @inProgress
@@ -868,7 +900,9 @@ Feature: Feature Store Page
         Then verify "Entities_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "demo_feature_set" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then type value "latest" to "Version_Input" field on "New_Feature_Set" wizard
+        Then check "Description_Input" textarea counter on "New_Feature_Set" wizard
         Then type value "Some demo description" to "Description_Input" field on "New_Feature_Set" wizard
+        Then check "Description_Input" textarea counter on "New_Feature_Set" wizard
         When add rows to "Labels_Table" table on "New_Feature_Set" wizard
             | key_input | value_input |
             |    key1   |    value1   |
@@ -1061,6 +1095,7 @@ Feature: Feature Store Page
         Then type value "   " to "Tag_Input" field on "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" options rules on "Create_Feature_Vector_Popup" wizard
         Then verify "Description_Input" element visibility on "Create_Feature_Vector_Popup" wizard
+        Then check "Description_Input" textarea counter on "Create_Feature_Vector_Popup" wizard
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
         When add rows to "Labels_Table" table on "Create_Feature_Vector_Popup" wizard
             | key_input | value_input |
@@ -1213,6 +1248,7 @@ Feature: Feature Store Page
         Then type into "Name_Input" on "Create_Feature_Vector_Popup" popup dialog "temp_vector01" value
         Then type into "Tag_Input" on "Create_Feature_Vector_Popup" popup dialog "temp_tag" value
         Then type into "Description_Input" on "Create_Feature_Vector_Popup" popup dialog "Automation test description" value
+        Then check "Description_Input" textarea counter on "Create_Feature_Vector_Popup" wizard
         Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
         And wait load page
         Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard

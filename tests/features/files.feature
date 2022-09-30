@@ -145,18 +145,16 @@ Feature: Files Page
     Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
     Then click on "Cross_Cancel_Button" element on "Register_File_Popup" wizard
     Then verify if "Common_Popup" popup dialog appears
-    Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then verify "New_File_Name_Input" input should contains "artifact" value on "Register_File_Popup" wizard
     Then verify "New_File_Target_Path_Input" input should contains "target/path" value on "Register_File_Popup" wizard
     Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
+    Then check "New_File_Description_Input" textarea counter on "Register_File_Popup" wizard
     Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
     Then navigate back
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Cancel_Button" element on "Common_Popup" wizard
-    Then navigate back
-    Then verify if "Common_Popup" popup dialog appears
-    Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
     Then navigate back
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Confirm_Button" element on "Common_Popup" wizard
