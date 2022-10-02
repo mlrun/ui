@@ -54,7 +54,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
     })
   )
   const location = useLocation()
-  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
 
@@ -108,7 +108,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
         )
       })
       .finally(() => {
-        onResolve()
+        resolveModal()
       })
   }
 
