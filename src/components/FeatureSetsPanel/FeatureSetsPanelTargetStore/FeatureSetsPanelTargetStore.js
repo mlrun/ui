@@ -479,7 +479,7 @@ const FeatureSetsPanelTargetStore = ({
     setNewFeatureSetTarget(
       featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === target) {
-          return { ...target, key_bucketing_number: keyBucketingNumber }
+          return { ...targetKind, key_bucketing_number: keyBucketingNumber }
         }
 
         return targetKind
