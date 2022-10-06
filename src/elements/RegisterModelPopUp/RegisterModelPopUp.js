@@ -30,6 +30,7 @@ import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-contro
 
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData } from '../../utils/convertChipsData'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -164,9 +165,14 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
                 formState={formState}
                 initialValues={initialValues}
                 isEditMode
+                label="labels"
                 name="labels"
                 shortChips
-                visibleChipsMaxLength="all"
+                visibleChipsMaxLength="2"
+                validationRules={{
+                  key: getValidationRules('common.tag'),
+                  value: getValidationRules('common.tag')
+                }}
               />
             </div>
           </Modal>
