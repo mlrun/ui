@@ -60,7 +60,7 @@ const DetailsInfoItemChip = ({
     setChangesData({
       ...changesData,
       [currentField]: {
-        initialFieldValue: initialValue,
+        initialFieldValue: changesData[currentField]?.initialFieldValue || initialValue,
         currentFieldValue: currentValue,
         previousFieldValue: initialValue
       }

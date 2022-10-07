@@ -231,6 +231,7 @@ const DeployModelPopUp = ({
                     label="Serving function (router)"
                     name="selectedFunctionName"
                     options={functionOptionList}
+                    required
                   />
                   <OnChange name="selectedFunctionName">{onSelectedFunctionNameChange}</OnChange>
                 </div>
@@ -240,6 +241,7 @@ const DeployModelPopUp = ({
                     label="Tag"
                     name="selectedTag"
                     options={tagOptionList}
+                    required
                     search
                   />
                 </div>

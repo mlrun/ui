@@ -80,6 +80,7 @@ const artifactsApi = {
       {
         params: {
           project,
+          category: 'dataset',
           name: dataSet,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
         }
@@ -101,6 +102,7 @@ const artifactsApi = {
       {
         params: {
           project,
+          category: 'other',
           name: file,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
         }
@@ -122,6 +124,7 @@ const artifactsApi = {
       {
         params: {
           project,
+          category: 'model',
           name: model,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
         }

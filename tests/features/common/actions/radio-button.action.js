@@ -32,10 +32,10 @@ const action = {
   },
   selectRadiobutton: async function(driver, radiobutton) {
     const element = await driver.findElement(radiobutton['radiobutton'])
-    // const elementName = await driver.findElement(radiobutton['name'])
+    const elementName = await driver.findElement(radiobutton['name'])
     const selected = await element.isSelected()
     if (!selected) {
-      await element.click()
+      await elementName.click()
     }
   }
 }
