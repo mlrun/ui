@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -30,13 +30,7 @@ import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './tabsSlider.scss'
 
-const TabsSlider = ({
-  initialTab,
-  onClick,
-  skipLink,
-  sliderStyle,
-  tabsList
-}) => {
+const TabsSlider = ({ initialTab, onClick, skipLink, sliderStyle, tabsList }) => {
   const [selectedTab, setSelectedTab] = useState(initialTab)
   const [arrowsAreHidden, setArrowsAreHidden] = useState(true)
   const [scrolledWidth, setScrolledWidth] = useState(0)
@@ -44,6 +38,7 @@ const TabsSlider = ({
   const tabsWrapperRef = useRef()
   const tabsRef = useRef()
   const location = useLocation()
+  const params = useParams()
   const menuOffsetHalfWidth = 2
   const tabOffset = 1.5
 
@@ -151,6 +146,12 @@ const TabsSlider = ({
     moveToSelectedTab()
   }, [moveToSelectedTab])
 
+  useEffect(() => {
+    if (params.tab && params.tab !== selectedTab) {
+      setSelectedTab(tabsList.find(tab => tab.id === params.tab).id)
+    }
+  }, [params.tab, selectedTab, tabsList])
+
   return (
     <div className={tabsSliderClassNames}>
       <div
@@ -170,24 +171,35 @@ const TabsSlider = ({
           }}
         >
           {tabsList.map(tab => {
-            const tabLink = skipLink ? {} : location.pathname?.replace(/^$|([^/]+$)/, tab.id)
+            const tabClassName = classnames(
+              'tabs-slider__tab',
+              selectedTab === tab.id && 'tabs-slider__tab_active'
+            )
 
             return (
-              !tab.hidden && (
+              !tab.hidden &&
+              (!skipLink ? (
                 <Link
-                  className={classnames(
-                    'tabs-slider__tab',
-                    selectedTab === tab.id && 'tabs-slider__tab_active'
-                  )}
+                  className={tabClassName}
                   data-tab={tab.id}
-                  to={tabLink}
+                  to={location.pathname?.replace(/^$|([^/]+$)/, tab.id)}
                   onClick={() => onSelectTab(tab)}
                   key={tab.id}
                 >
                   {tab.label}
                   {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
                 </Link>
-              )
+              ) : (
+                <div
+                  className={tabClassName}
+                  data-tab={tab.id}
+                  key={tab.id}
+                  onClick={() => onSelectTab(tab)}
+                >
+                  {tab.label}
+                  {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
+                </div>
+              ))
             )
           })}
         </div>
