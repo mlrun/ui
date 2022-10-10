@@ -87,10 +87,9 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
     return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
-        formRef.current = null
+        resolveModal()
         refresh(filtersStore)
-
-        return dispatch(
+        dispatch(
           notificationActions.setNotification({
             status: response.status,
             id: Math.random(),
@@ -99,7 +98,8 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
         )
       })
       .catch(() => {
-        return dispatch(
+        resolveModal()
+        dispatch(
           notificationActions.setNotification({
             status: 400,
             id: Math.random(),
@@ -107,9 +107,6 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
             retry: registerModel
           })
         )
-      })
-      .finally(() => {
-        resolveModal()
       })
   }
 

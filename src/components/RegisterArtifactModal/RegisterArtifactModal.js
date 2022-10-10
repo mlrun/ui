@@ -24,6 +24,7 @@ import { useLocation } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
+import arrayMutators from 'final-form-arrays'
 
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
 import { Button, Modal } from 'igz-controls/components'
@@ -32,6 +33,8 @@ import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { setFieldState } from 'igz-controls/utils/form.util'
+import { convertChipsData } from '../../utils/convertChipsData'
 
 import artifactApi from '../../api/artifacts-api'
 
@@ -50,11 +53,13 @@ const RegisterArtifactModal = ({
     description: '',
     kind: '',
     key: '',
+    labels: [],
     target_path: ''
   })
   const formRef = React.useRef(
     createForm({
-      onSubmit: () => {}
+      onSubmit: () => {},
+      mutators: { ...arrayMutators, setFieldState },
     })
   )
   const location = useLocation()
@@ -77,6 +82,7 @@ const RegisterArtifactModal = ({
       target_path: values.target_path,
       description: values.description,
       kind: values.kind === 'general' ? '' : values.kind,
+      labels: convertChipsData(values.labels),
       project: projectName,
       producer: {
         kind: 'api',
@@ -87,6 +93,7 @@ const RegisterArtifactModal = ({
     return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
+        resolveModal()
         refresh(filtersStore)
         setNotification({
           status: response.status,
@@ -94,16 +101,14 @@ const RegisterArtifactModal = ({
           message: `${title} initiated successfully`
         })
       })
-      .catch(err => {
+      .catch(() => {
+        resolveModal()
         setNotification({
           status: 400,
           id: Math.random(),
           message: `${title} failed to initiate`,
           retry: registerArtifact
         })
-      })
-      .finally(() => {
-        resolveModal()
       })
   }
 
@@ -141,7 +146,9 @@ const RegisterArtifactModal = ({
             title={title}
           >
             <RegisterArtifactModalForm
+              formState={formState}
               showType={artifactKind === 'artifact'}
+              initialValues={initialValues}
               messageByKind={messagesByKind[artifactKind.toLowerCase()]}
             />
           </Modal>
