@@ -5,10 +5,10 @@ import { OnChange } from 'react-final-form-listeners'
 import { FormInput, FormSelect } from 'igz-controls/components'
 
 import {
-  getSelectedCpuOption,
-  selectMemoryOptions,
   getLimitsGpuType,
-  getSelectedMemoryOption
+  getSelectedCpuOption,
+  getSelectedMemoryOption,
+  selectUnitOptions
 } from './formResourcesUnits.util'
 
 import './formResourcesUnits.scss'
@@ -17,6 +17,14 @@ const FormResourcesUnits = ({ formState }) => {
   const gpuType = useMemo(
     () => getLimitsGpuType(formState.values.resources.currentLimits),
     [formState.values.resources.currentLimits]
+  )
+  const selectedRequestUnit = useMemo(
+    () => getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnit),
+    [formState.values.resources.currentRequest.cpuUnit]
+  )
+  const selectedLimitUnit = useMemo(
+    () => getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnit),
+    [formState.values.resources.currentLimits.cpuUnit]
   )
 
   const validateMemory = (value, allValues) => {
@@ -28,10 +36,10 @@ const FormResourcesUnits = ({ formState }) => {
     const requests = Number.parseInt(allValues.resources.currentRequest.memory)
 
     const selectedLimitsOption = getSelectedMemoryOption(
-      allValues.resources.currentLimits.memoryUnit
+      allValues.resources.currentLimits.memoryUnitId
     )
     const selectedRequestsOption = getSelectedMemoryOption(
-      allValues.resources.currentRequest.memoryUnit
+      allValues.resources.currentRequest.memoryUnitId
     )
 
     const isValid =
@@ -46,8 +54,10 @@ const FormResourcesUnits = ({ formState }) => {
   const validateCpu = (value, allValues) => {
     const limitsValue = allValues.resources.currentLimits.cpu
     const requestsValue = allValues.resources.currentRequest.cpu
-    const selectedLimitsOption = getSelectedCpuOption(allValues.resources.currentLimits.cpuUnit)
-    const selectedRequestsOption = getSelectedCpuOption(allValues.resources.currentRequest.cpuUnit)
+    const selectedLimitsOption = getSelectedCpuOption(allValues.resources.currentLimits.cpuUnitId)
+    const selectedRequestsOption = getSelectedCpuOption(
+      allValues.resources.currentRequest.cpuUnitId
+    )
 
     const isValid =
       selectedRequestsOption.convertValue(requestsValue) <=
@@ -68,8 +78,8 @@ const FormResourcesUnits = ({ formState }) => {
 
   useEffect(() => {
     if (
-      formState.modified['resources.currentRequest.memoryUnit'] ||
-      formState.modified['resources.currentLimits.memoryUnit'] ||
+      formState.modified['resources.currentRequest.memoryUnitId'] ||
+      formState.modified['resources.currentLimits.memoryUnitId'] ||
       formState.modified['resources.currentRequest.memory'] ||
       formState.modified['resources.currentLimits.memory']
     ) {
@@ -78,8 +88,8 @@ const FormResourcesUnits = ({ formState }) => {
     }
 
     if (
-      formState.modified['resources.currentRequest.cpuUnit'] ||
-      formState.modified['resources.currentLimits.cpuUnit'] ||
+      formState.modified['resources.currentRequest.cpuUnitId'] ||
+      formState.modified['resources.currentLimits.cpuUnitId'] ||
       formState.modified['resources.currentRequest.cpu'] ||
       formState.modified['resources.currentLimits.cpu']
     ) {
@@ -106,8 +116,8 @@ const FormResourcesUnits = ({ formState }) => {
             />
             <FormSelect
               className="resources-card__fields-select"
-              name="resources.currentRequest.memoryUnit"
-              options={selectMemoryOptions.unitMemory}
+              name="resources.currentRequest.memoryUnitId"
+              options={selectUnitOptions.unitMemory}
             />
           </div>
           <div className="resources-card__fields">
@@ -123,8 +133,8 @@ const FormResourcesUnits = ({ formState }) => {
             />
             <FormSelect
               className="resources-card__fields-select"
-              name="resources.currentLimits.memoryUnit"
-              options={selectMemoryOptions.unitMemory}
+              name="resources.currentLimits.memoryUnitId"
+              options={selectUnitOptions.unitMemory}
             />
           </div>
         </div>
@@ -136,20 +146,16 @@ const FormResourcesUnits = ({ formState }) => {
               name="resources.currentRequest.cpu"
               label="Request"
               type="number"
-              min={
-                getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnit)?.minValue
-              }
-              step={getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnit)?.step}
+              min={selectedRequestUnit?.minValue}
+              step={selectedRequestUnit?.step}
               validator={validateCpu}
               required
-              invalidText={`Request must be less than or equal to Limit and not be less than ${
-                getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnit)?.minValue
-              }`}
+              invalidText={`Request must be less than or equal to Limit and not be less than ${selectedRequestUnit?.minValue}`}
             />
             <FormSelect
               className="resources-card__fields-select"
-              name="resources.currentRequest.cpuUnit"
-              options={selectMemoryOptions.unitCpu}
+              name="resources.currentRequest.cpuUnitId"
+              options={selectUnitOptions.unitCpu}
             />
           </div>
           <div className="resources-card__fields">
@@ -158,18 +164,16 @@ const FormResourcesUnits = ({ formState }) => {
               name="resources.currentLimits.cpu"
               label="Limit"
               type="number"
-              min={getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnit)?.minValue}
-              step={getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnit)?.step}
+              min={selectedLimitUnit?.minValue}
+              step={selectedLimitUnit?.step}
               validator={validateCpu}
               required
-              invalidText={`Limit must be bigger than or equal to Request and not be less than ${
-                getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnit)?.minValue
-              }`}
+              invalidText={`Limit must be bigger than or equal to Request and not be less than ${selectedLimitUnit?.minValue}`}
             />
             <FormSelect
               className="resources-card__fields-select"
-              name="resources.currentLimits.cpuUnit"
-              options={selectMemoryOptions.unitCpu}
+              name="resources.currentLimits.cpuUnitId"
+              options={selectUnitOptions.unitCpu}
             />
           </div>
         </div>
@@ -186,10 +190,10 @@ const FormResourcesUnits = ({ formState }) => {
           </div>
         </div>
       </div>
-      <OnChange name="resources.currentRequest.cpuUnit">
+      <OnChange name="resources.currentRequest.cpuUnitId">
         {value => handleSelectCpuUnit(value, 'currentRequest')}
       </OnChange>
-      <OnChange name="resources.currentLimits.cpuUnit">
+      <OnChange name="resources.currentLimits.cpuUnitId">
         {value => handleSelectCpuUnit(value, 'currentLimits')}
       </OnChange>
     </>

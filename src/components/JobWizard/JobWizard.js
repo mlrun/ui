@@ -5,7 +5,7 @@ import { Form } from 'react-final-form'
 import { connect } from 'react-redux'
 import { createForm } from 'final-form'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import FormDirtySpy from '../../common/FormDirtySpy/FormDirtySpy'
 import JobWizardAdvanced from './JobWizardSteps/JobWizardAdvanced/JobWizardAdvanced'
@@ -14,12 +14,17 @@ import JobWizardFunctionSelection from './JobWizardSteps/JobWizardFunctionSelect
 import JobWizardJobDetails from './JobWizardSteps/JobWizardJobDetails/JobWizardJobDetails'
 import JobWizardParameters from './JobWizardSteps/JobWizardParameters/JobWizardParameters'
 import JobWizardResources from './JobWizardSteps/JobWizardResources/JobWizardResources'
+import Loader from '../../common/Loader/Loader'
 import { Wizard } from 'igz-controls/components'
 
+import { MONITOR_JOBS_TAB, PANEL_RERUN_MODE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
+import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
 import { MODAL_FULL } from 'igz-controls/constants'
+import { generateRunPostData, getNewJobErrorMsg } from './JobWizard.util'
+import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { useMode } from '../../hooks/mode.hook'
@@ -30,10 +35,17 @@ const JobWizard = ({
   defaultData,
   frontendSpec,
   functionsStore,
-  isEditMode,
   isOpen,
+  jobsStore,
+  mode,
   onResolve,
-  params
+  onSuccessRun,
+  onWizardClose,
+  params,
+  runNewJob,
+  wizardTitle,
+  editJob,
+  setNotification
 }) => {
   const formRef = React.useRef(
     createForm({
@@ -41,7 +53,9 @@ const JobWizard = ({
       mutators: { ...arrayMutators, setFieldState }
     })
   )
-  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
+  const navigate = useNavigate()
+  const isEditMode = useMemo(() => mode === PANEL_EDIT_MODE || mode === PANEL_RERUN_MODE, [mode])
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState({})
@@ -60,6 +74,7 @@ const JobWizard = ({
       {
         id: 'functionSelection',
         label: 'Function Selection',
+        isHidden: isEditMode,
         getActions: ({ formState, handleOnClose, handleSubmit }) => [
           {
             label: 'Back',
@@ -93,7 +108,7 @@ const JobWizard = ({
       {
         id: 'advanced',
         label: 'Advanced',
-        getActions: ({ formState, handleOnClose }) => [
+        getActions: ({ handleSubmit }) => [
           {
             label: 'Schedule for later',
             onClick: () => {
@@ -104,19 +119,71 @@ const JobWizard = ({
           },
           {
             label: 'Run',
-            onClick: formState.handleSubmit,
+            onClick: () => handleSubmit(),
             variant: 'secondary'
           }
         ]
       }
     ]
-  }, [selectedFunctionData])
+  }, [isEditMode, selectedFunctionData])
 
-  const submitForm = () => {}
-  const onWizardSubmit = () => {}
+  const runJobHandler = (formData, selectedFunctionData, params, isEditMode, isSchedule) => {
+    console.log('runJobHandler: ', formData)
+    const postData = generateRunPostData(formData, selectedFunctionData, params, mode, isSchedule)
+    runNewJob(postData)
+      .then(() => {
+        resolveModal()
+        onSuccessRun && onSuccessRun(isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB)
+        onWizardClose && onWizardClose()
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job started successfully'
+        })
+      })
+      .then(() => {
+        return navigate(
+          `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
+        )
+      })
+      .catch(error => {
+        setNotification({
+          status: error.response.status || 400,
+          id: Math.random(),
+          message: getNewJobErrorMsg(error)
+        })
+      })
+  }
+
+  const editJobHandler = formData => {
+    console.log('editJobHandler', formData)
+    // todo: generate data
+
+    // const generatedData = cloneDeep(formData)
+    // delete generatedData.function.metadata
+
+    // editJob(
+    //   {
+    //     credentials: formData.function.metadata.credentials,
+    //     scheduled_object: generatedData,
+    //     cron_trigger: generatedData.schedule
+    //   },
+    //   params.projectName
+    // )
+    //   .then(() => {
+    //     navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}`)
+    //   })
+    //   .catch(error => {
+    //     setNotification({
+    //       status: error.response.status || 400,
+    //       id: Math.random(),
+    //       message: getNewJobErrorMsg(error)
+    //     })
+    //   })
+  }
 
   return (
-    <Form form={formRef.current} initialValues={{}} onSubmit={submitForm}>
+    <Form form={formRef.current} initialValues={{}} onSubmit={() => {}}>
       {formState => {
         return (
           <>
@@ -125,47 +192,74 @@ const JobWizard = ({
               id="jobWizard"
               isWizardOpen={isOpen}
               location={location}
-              onWizardResolve={handleCloseModal}
-              onWizardSubmit={onWizardSubmit}
+              onWizardResolve={() => {
+                handleCloseModal()
+                onWizardClose && onWizardClose()
+              }}
+              onWizardSubmit={formData => {
+                if (mode === PANEL_EDIT_MODE) {
+                  editJobHandler(formData)
+                } else {
+                  runJobHandler(formData, selectedFunctionData, params, isEditMode)
+                }
+              }}
               size={MODAL_FULL}
               stepsConfig={stepsConfig}
-              title="New job"
+              title={wizardTitle ?? 'New job'}
             >
-              <JobWizardFunctionSelection
-                defaultData={defaultData}
-                filteredFunctions={filteredFunctions}
-                filteredTemplates={filteredTemplates}
-                formState={formState}
-                frontendSpec={frontendSpec}
-                functions={functions}
+              {!isEditMode && (
+                <JobWizardFunctionSelection
+                  defaultData={defaultData}
+                  filteredFunctions={filteredFunctions}
+                  filteredTemplates={filteredTemplates}
+                  formState={formState}
+                  frontendSpec={frontendSpec}
+                  functions={functions}
+                  isEditMode={isEditMode}
+                  isStagingMode={isStagingMode}
+                  params={params}
+                  selectedCategory={selectedCategory}
+                  selectedFunctionData={selectedFunctionData}
+                  setFilteredFunctions={setFilteredFunctions}
+                  setFilteredTemplates={setFilteredTemplates}
+                  setFunctions={setFunctions}
+                  setJobAdditionalData={setJobAdditionalData}
+                  setSelectedCategory={setSelectedCategory}
+                  setSelectedFunctionData={setSelectedFunctionData}
+                  setTemplates={setTemplates}
+                  setTemplatesCategories={setTemplatesCategories}
+                  templates={templates}
+                  templatesCategories={templatesCategories}
+                />
+              )}
+              <JobWizardJobDetails
                 isEditMode={isEditMode}
+                defaultData={defaultData}
+                frontendSpec={frontendSpec}
                 isStagingMode={isStagingMode}
-                params={params}
-                selectedCategory={selectedCategory}
+                formState={formState}
+                jobAdditionalData={jobAdditionalData}
                 selectedFunctionData={selectedFunctionData}
-                setFilteredFunctions={setFilteredFunctions}
-                setFilteredTemplates={setFilteredTemplates}
-                setFunctions={setFunctions}
                 setJobAdditionalData={setJobAdditionalData}
-                setSelectedCategory={setSelectedCategory}
-                setSelectedFunctionData={setSelectedFunctionData}
-                setTemplates={setTemplates}
-                setTemplatesCategories={setTemplatesCategories}
-                templates={templates}
-                templatesCategories={templatesCategories}
               />
-              <JobWizardJobDetails formState={formState} jobAdditionalData={jobAdditionalData} />
               <JobWizardDataInputs formState={formState} />
               <JobWizardParameters formState={formState} />
               <JobWizardResources formState={formState} frontendSpec={frontendSpec} />
               <JobWizardAdvanced
+                editJob={editJobHandler}
                 formState={formState}
+                isEditMode={isEditMode}
+                mode={mode}
+                params={params}
+                runJob={runJobHandler}
                 scheduleButtonRef={scheduleButtonRef}
+                selectedFunctionData={selectedFunctionData}
                 setShowSchedule={setShowSchedule}
                 showSchedule={showSchedule}
               />
             </Wizard>
             <FormDirtySpy />
+            {(functionsStore.loading || jobsStore.loading) && <Loader />}
           </>
         )
       }}
@@ -175,26 +269,31 @@ const JobWizard = ({
 
 JobWizard.defaultProps = {
   // defaultData: {},
-  // isEditMode: false
+  // isEditMode: false,
+  // mode: PANEL_CREATE_MODE
 }
 
 JobWizard.propTypes = {
-  // isOpen: PropTypes.bool.isRequired,
-  // onResolve: PropTypes.func.isRequired,
   // defaultData: PropTypes.shape({}),
   // frontendSpec: PropTypes.shape({}).isRequired,
   // isEditMode: PropTypes.bool,
+  // isOpen: PropTypes.bool.isRequired,
+  // mode: PropTypes.string,
+  // onResolve: PropTypes.func.isRequired,
   // params: PropTypes.shape({}).isRequired
 }
 
 export default connect(
-  ({ appStore, functionsStore, projectStore }) => ({
+  ({ appStore, functionsStore, jobsStore }) => ({
     frontendSpec: appStore.frontendSpec,
-    functionsStore
+    functionsStore,
+    jobsStore
   }),
   {
     ...functionsActions,
     ...jobsActions,
-    ...projectsAction
+    ...projectsAction,
+    editJob: scheduledJobsActionCreator.editJob,
+    setNotification: notificationActions.setNotification
   }
 )(JobWizard)

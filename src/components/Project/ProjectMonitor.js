@@ -22,7 +22,7 @@ import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
-import RegisterArtifactModal from '..//RegisterArtifactModal/RegisterArtifactModal'
+import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
 
 import { DATASETS } from '../../constants'
@@ -32,10 +32,11 @@ import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
-import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
+import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 const ProjectMonitor = ({
   featureStore,
@@ -62,6 +63,7 @@ const ProjectMonitor = ({
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
+  const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
 
   const registerArtifactLink = useCallback(
@@ -89,15 +91,12 @@ const ProjectMonitor = ({
     [navigate, params.projectName, registerArtifactLink]
   )
 
-  const handleRegisterModel = useCallback(
-    () => {
-      openPopUp(RegisterModelPopUp, {
-        projectName: params.projectName,
-        refresh: () => navigate(registerArtifactLink('model'))
-      })
-    },
-    [params.projectName, navigate, registerArtifactLink]
-  )
+  const handleRegisterModel = useCallback(() => {
+    openPopUp(RegisterModelPopUp, {
+      projectName: params.projectName,
+      refresh: () => navigate(registerArtifactLink('model'))
+    })
+  }, [params.projectName, navigate, registerArtifactLink])
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
@@ -106,13 +105,14 @@ const ProjectMonitor = ({
       openPopupDialog,
       handleRegisterModel,
       setCreateFeatureSetPanelIsOpen,
-      setIsNewFunctionPopUpOpen
+      setIsNewFunctionPopUpOpen,
+      isDemoMode
     )
 
     return {
       createNewOptions
     }
-  }, [navigate, openPopupDialog, params, handleRegisterModel])
+  }, [handleRegisterModel, isDemoMode, navigate, openPopupDialog, params])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {

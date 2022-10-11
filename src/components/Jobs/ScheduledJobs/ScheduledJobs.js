@@ -22,21 +22,31 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
-import ScheduledJobsView from './ScheduledJobsView'
+import FilterMenu from '../../FilterMenu/FilterMenu'
+import JobWizard from '../../JobWizard/JobWizard'
+import JobsPanel from '../../JobsPanel/JobsPanel'
+import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
+import NoData from '../../../common/NoData/NoData'
+import Table from '../../Table/Table'
+import YamlModal from '../../../common/YamlModal/YamlModal'
 
 import {
   GROUP_BY_NONE,
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
+  PANEL_EDIT_MODE,
   SCHEDULE_TAB
 } from '../../../constants'
-import { parseJob } from '../../../utils/parseJob'
-import { useYaml } from '../../../hooks/yaml.hook'
-import { JobsContext } from '../Jobs'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
+import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
+import { useYaml } from '../../../hooks/yaml.hook'
+import { useMode } from '../../../hooks/mode.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -61,9 +71,16 @@ const ScheduledJobs = ({
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const params = useParams()
+  const { isDemoMode } = useMode()
   const filtersStore = useSelector(store => store.filtersStore)
   const jobsStore = useSelector(store => store.jobsStore)
-  const { setConfirmData } = React.useContext(JobsContext)
+  const {
+    jobWizardIsOpened,
+    jobWizardMode,
+    setConfirmData,
+    setJobWizardIsOpened,
+    setJobWizardMode
+  } = React.useContext(JobsContext)
 
   const tableContent = useMemo(() => createJobsScheduleTabContent(jobs), [jobs])
 
@@ -200,9 +217,23 @@ const ScheduledJobs = ({
               ...editableItem.scheduled_object,
               credentials: {
                 access_key: result.data.credentials.access_key
+              },
+              function: {
+                ...editableItem.scheduled_object.function,
+                metadata: {
+                  ...editableItem.scheduled_object.function?.metadata,
+                  credentials: {
+                    ...editableItem.scheduled_object.function?.metadata?.credentials,
+                    access_key: result.data.credentials.access_key
+                  }
+                }
               }
             }
           })
+
+          if (isDemoMode) {
+            setJobWizardMode(PANEL_EDIT_MODE)
+          }
         })
         .catch(() => {
           setNotification({
@@ -213,7 +244,7 @@ const ScheduledJobs = ({
           })
         })
     },
-    [fetchScheduledJobAccessKey, params.projectName, setNotification]
+    [fetchScheduledJobAccessKey, isDemoMode, params.projectName, setJobWizardMode, setNotification]
   )
 
   const handleSuccessRerunJob = useCallback(
@@ -275,24 +306,81 @@ const ScheduledJobs = ({
     setFilters({ groupBy: GROUP_BY_NONE })
   }, [setFilters])
 
+  useEffect(() => {
+    if (jobWizardMode && !jobWizardIsOpened) {
+      openPopUp(JobWizard, {
+        params,
+        onWizardClose: () => {
+          setJobWizardMode(null)
+          setJobWizardIsOpened(false)
+        },
+        defaultData: jobWizardMode === PANEL_EDIT_MODE ? editableItem?.scheduled_object : null,
+        mode: jobWizardMode,
+        wizardTitle: jobWizardMode === PANEL_EDIT_MODE ? 'Edit job' : null,
+        onSuccessRun: () => refreshJobs(filtersStore)
+      })
+
+      setJobWizardIsOpened(true)
+    }
+  }, [
+    editableItem?.scheduled_object,
+    filtersStore,
+    jobWizardIsOpened,
+    jobWizardMode,
+    params,
+    refreshJobs,
+    setJobWizardIsOpened,
+    setJobWizardMode
+  ])
+
   return (
-    <ScheduledJobsView
-      actionsMenu={actionsMenu}
-      convertedYaml={convertedYaml}
-      editableItem={editableItem}
-      filters={filters}
-      filtersStore={filtersStore}
-      handleSuccessRerunJob={handleSuccessRerunJob}
-      jobs={jobs}
-      jobsStore={jobsStore}
-      onEditJob={onEditJob}
-      pageData={pageData}
-      refreshJobs={refreshJobs}
-      removeNewJob={removeNewJob}
-      setEditableItem={setEditableItem}
-      tableContent={tableContent}
-      toggleConvertedYaml={toggleConvertedYaml}
-    />
+    <>
+      <div className="content__action-bar">
+        <FilterMenu filters={filters} onChange={refreshJobs} page={JOBS_PAGE} withoutExpandButton />
+      </div>
+      {jobsStore.loading ? null : jobs.length === 0 ? (
+        <NoData message={getNoDataMessage(filtersStore, filters, SCHEDULE_TAB, JOBS_PAGE)} />
+      ) : (
+        <>
+          <Table
+            actionsMenu={actionsMenu}
+            content={jobs}
+            pageData={pageData}
+            retryRequest={refreshJobs}
+            tab={SCHEDULE_TAB}
+            tableHeaders={tableContent[0]?.content ?? []}
+          >
+            <div className="table-body">
+              {tableContent.map((tableItem, index) => (
+                <JobsTableRow actionsMenu={actionsMenu} key={index} rowItem={tableItem} />
+              ))}
+            </div>
+          </Table>
+        </>
+      )}
+      {editableItem && !isDemoMode && (
+        // todo: delete when the job wizard is out of the demo mode
+        <JobsPanel
+          closePanel={() => {
+            setEditableItem(null)
+            removeNewJob()
+          }}
+          defaultData={editableItem?.scheduled_object}
+          mode={PANEL_EDIT_MODE}
+          onEditJob={onEditJob}
+          onSuccessRun={tab => {
+            if (editableItem) {
+              handleSuccessRerunJob(tab)
+            }
+          }}
+          project={params.projectName}
+          withSaveChanges
+        />
+      )}
+      {convertedYaml.length > 0 && (
+        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
+      )}
+    </>
   )
 }
 

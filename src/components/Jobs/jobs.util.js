@@ -17,36 +17,45 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
+import {
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  PANEL_RERUN_MODE,
+  SCHEDULE_TAB
+} from '../../constants'
 import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import { generateKeyValues } from '../../utils'
 
 export const page = JOBS_PAGE
-export const getInfoHeaders = isSpark => isSpark ? [
-  { label: 'UID', id: 'uid' },
-  { label: 'Start time', id: 'startTime' },
-  { label: 'Last Updated', id: 'updated' },
-  { label: 'Parameters', id: 'parameters' },
-  { label: 'Function', id: 'function' },
-  { label: 'Results', id: 'resultsChips' },
-  { label: 'Labels', id: 'labels' },
-  { label: 'SPARK UI URL', id: 'sparkUiUrl' },
-  { label: 'Log level', id: 'logLevel' },
-  { label: 'Output path', id: 'outputPath' },
-  { label: 'Total iterations', id: 'iterations' }
-] : [
-  { label: 'UID', id: 'uid' },
-  { label: 'Start time', id: 'startTime' },
-  { label: 'Last Updated', id: 'updated' },
-  { label: 'Parameters', id: 'parameters' },
-  { label: 'Function', id: 'function' },
-  { label: 'Results', id: 'resultsChips' },
-  { label: 'Labels', id: 'labels' },
-  { label: 'Log level', id: 'logLevel' },
-  { label: 'Output path', id: 'outputPath' },
-  { label: 'Total iterations', id: 'iterations' }
-]
+export const getInfoHeaders = isSpark =>
+  isSpark
+    ? [
+        { label: 'UID', id: 'uid' },
+        { label: 'Start time', id: 'startTime' },
+        { label: 'Last Updated', id: 'updated' },
+        { label: 'Parameters', id: 'parameters' },
+        { label: 'Function', id: 'function' },
+        { label: 'Results', id: 'resultsChips' },
+        { label: 'Labels', id: 'labels' },
+        { label: 'SPARK UI URL', id: 'sparkUiUrl' },
+        { label: 'Log level', id: 'logLevel' },
+        { label: 'Output path', id: 'outputPath' },
+        { label: 'Total iterations', id: 'iterations' }
+      ]
+    : [
+        { label: 'UID', id: 'uid' },
+        { label: 'Start time', id: 'startTime' },
+        { label: 'Last Updated', id: 'updated' },
+        { label: 'Parameters', id: 'parameters' },
+        { label: 'Function', id: 'function' },
+        { label: 'Results', id: 'resultsChips' },
+        { label: 'Labels', id: 'labels' },
+        { label: 'Log level', id: 'logLevel' },
+        { label: 'Output path', id: 'outputPath' },
+        { label: 'Total iterations', id: 'iterations' }
+      ]
 export const actionsMenuHeader = 'New Job'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
@@ -97,10 +106,12 @@ export const actionCreator = {
 export const generateEditableItem = (functionData, job) => {
   return {
     rerun_object: {
-      credentials: {
-        access_key: functionData?.metadata?.credentials?.access_key ?? ''
-      },
       function: {
+        metadata: {
+          credentials: {
+            access_key: functionData?.metadata?.credentials?.access_key ?? ''
+          }
+        },
         spec: {
           env: functionData?.spec.env ?? [],
           resources: functionData?.spec.resources,
@@ -126,7 +137,7 @@ export const generateEditableItem = (functionData, job) => {
           inputs: job.inputs ?? {},
           output_path: job.outputPath,
           param_file: job.param_file ?? '',
-          parameters: generateKeyValues(job.parametersChips ?? {}),
+          parameters: job.parameters ?? {},
           secret_sources: job.secret_sources ?? [],
           selector: job.selector ?? 'max.',
           tuning_strategy: job.tuning_strategy ?? 'list'
@@ -136,7 +147,14 @@ export const generateEditableItem = (functionData, job) => {
   }
 }
 
-export const rerunJob = async (job, fetchJobFunction, setNotification, setEditableItem) => {
+export const rerunJob = async (
+  job,
+  fetchJobFunction,
+  setNotification,
+  setEditableItem,
+  isDemoMode,
+  setJobWizardMode
+) => {
   const [project = '', func = ''] = job?.function?.split('/') ?? []
   const functionData = await fetchJobFunction(
     project,
@@ -150,6 +168,11 @@ export const rerunJob = async (job, fetchJobFunction, setNotification, setEditab
       id: Math.random(),
       message: 'Job’s function failed to load'
     })
+  }
+
+  // todo: delete `if` condition when the job wizard is out of the demo mode
+  if (isDemoMode) {
+    setJobWizardMode(PANEL_RERUN_MODE)
   }
 
   setEditableItem(generateEditableItem(functionData, job))

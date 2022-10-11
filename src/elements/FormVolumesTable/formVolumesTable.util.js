@@ -7,7 +7,7 @@ import {
 } from '../../constants'
 
 const volumeTypeInputLabels = {
-  [V3IO_VOLUME_TYPE]: 'Container',
+  [V3IO_VOLUME_TYPE]: '',
   [CONFIG_MAP_VOLUME_TYPE]: 'Config map name',
   [SECRET_VOLUME_TYPE]: 'Secret name',
   [PVC_VOLUME_TYPE]: 'Claim name'
@@ -43,13 +43,17 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem) => {
     const fieldBase = {
       fieldName,
       fieldPath: `data.${fieldName}`,
-      value: selectedItem.data[fieldName] ?? ''
+      value: selectedItem.data[fieldName] ?? '',
+      inputHidden: isNil(editingItemIndex)
     }
 
     switch (fieldName) {
       case 'type':
         return {
           ...fieldBase,
+          displayValue: selectVolumeTypeOptions.find(
+            volumeType => volumeType.id === fieldBase.value
+          )?.label,
           inputDisabled: !editingItem?.ui?.isNew,
           options: selectVolumeTypeOptions,
           label: 'Type',
@@ -59,7 +63,6 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem) => {
         return {
           ...fieldBase,
           inputDisabled: selectedItem.isDefault,
-          inputHidden: isNil(editingItemIndex),
           label: 'Volume Name',
           required: true,
           type: 'input',
@@ -81,7 +84,18 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem) => {
           label: 'Path',
           tip: 'A mount path for referencing the data from the function',
           required: true,
-          type: 'input'
+          type: 'input',
+          validationRules: [
+            {
+              name: 'uniqueness',
+              label: 'Multiple volumes cannot share the same path',
+              pattern: newValue => {
+                return !fields.value.some(({ data: { mountPath } }, index) => {
+                  return newValue.trim() === mountPath && index !== editingItemIndex
+                })
+              }
+            }
+          ]
         }
       case 'container':
         return {

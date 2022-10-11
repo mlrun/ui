@@ -23,26 +23,34 @@ import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
-import JobWizard from '../JobWizard/JobWizard'
 import Loader from '../../common/Loader/Loader'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
-import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
+import {
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  PANEL_CREATE_MODE,
+  SCHEDULE_TAB
+} from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { useMode } from '../../hooks/mode.hook'
 
 export const JobsContext = React.createContext({})
 
 const Jobs = ({ fetchJobFunction, setNotification }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
+  const [jobWizardMode, setJobWizardMode] = useState(null)
+  const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { isDemoMode } = useMode()
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
   const jobsStore = useSelector(store => store.jobsStore)
@@ -51,12 +59,31 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   const handleActionsMenuClick = () => {
-    openPopUp(JobWizard, { params })
+    if (isDemoMode) {
+      setJobWizardMode(PANEL_CREATE_MODE)
+    } else {
+      // todo: delete when the job wizard is out of the demo mode
+      const tab = location.pathname.includes(MONITOR_JOBS_TAB)
+        ? MONITOR_JOBS_TAB
+        : location.pathname.includes(SCHEDULE_TAB)
+        ? SCHEDULE_TAB
+        : MONITOR_WORKFLOWS_TAB
+
+      navigate(`/projects/${params.projectName}/jobs/${tab}/create-new-job`)
+    }
   }
 
   const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setNotification, setEditableItem),
-    [fetchJobFunction, setNotification]
+    async job =>
+      await rerunJob(
+        job,
+        fetchJobFunction,
+        setNotification,
+        setEditableItem,
+        isDemoMode,
+        setJobWizardMode
+      ),
+    [fetchJobFunction, isDemoMode, setNotification]
   )
 
   const handleMonitoring = useCallback(
@@ -119,8 +146,12 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
                 editableItem,
                 handleMonitoring,
                 handleRerunJob,
+                jobWizardIsOpened,
+                jobWizardMode,
                 setConfirmData,
-                setEditableItem
+                setEditableItem,
+                setJobWizardIsOpened,
+                setJobWizardMode
               }}
             >
               <Outlet />

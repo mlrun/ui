@@ -7,20 +7,18 @@ import { OnChange } from 'react-final-form-listeners'
 
 import ContentMenu from '../../../../elements/ContentMenu/ContentMenu'
 import JobWizardCardTemplate from '../../JobWizardCardTemplate/JobWizardCardTemplate'
-import Loader from '../../../../common/Loader/Loader'
 import NoData from '../../../../common/NoData/NoData'
 import Search from '../../../../common/Search/Search'
 import TabsSlider from '../../../../common/TabsSlider/TabsSlider'
-import { FormSelect, ConfirmDialog } from 'igz-controls/components'
+import { FormSelect } from 'igz-controls/components'
 
 import functionsActions from '../../../../actions/functions'
 import jobsActions from '../../../../actions/jobs'
 import projectsAction from '../../../../actions/projects'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { SLIDER_STYLE_2 } from '../../../../types'
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 
 import './jobWizardFunctionSelection.scss'
 
@@ -257,6 +255,7 @@ const JobWizardFunctionSelection = ({
   const handleSelectTemplateFunction = funcData => {
     const selectNewFunction = () => {
       fetchFunctionTemplate(funcData.metadata.versions.latest).then(result => {
+        console.log('fetchTemplate:result ', result)
         setSelectedFunctionData(result)
         generateData(result)
       })
@@ -275,19 +274,7 @@ const JobWizardFunctionSelection = ({
   }
 
   const openResetConfirm = confirmHandler => {
-    return openPopUp(ConfirmDialog, {
-      cancelButton: {
-        label: 'Cancel',
-        variant: TERTIARY_BUTTON
-      },
-      confirmButton: {
-        label: 'OK',
-        variant: SECONDARY_BUTTON,
-        handler: confirmHandler
-      },
-      header: 'Are you sure?',
-      message: 'All changes will be lost'
-    })
+    return openConfirmPopUp(confirmHandler, 'All changes will be lost')
   }
 
   return (
@@ -399,7 +386,6 @@ const JobWizardFunctionSelection = ({
         </div>
       )}
       <OnChange name="functionSelection.projectName">{onSelectedProjectNameChange}</OnChange>
-      {functionsStore.loading && <Loader />}
     </div>
   )
 }

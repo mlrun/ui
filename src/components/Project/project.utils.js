@@ -19,8 +19,11 @@ such restriction.
 */
 import React from 'react'
 
+import JobWizard from '../JobWizard/JobWizard'
+
 import { MONITOR_JOBS_TAB } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
 import { ReactComponent as VSCode } from 'igz-controls/images/vs-code.svg'
@@ -44,13 +47,21 @@ export const generateCreateNewOptions = (
   openPopupDialog,
   handleRegisterModel,
   setCreateFeatureSetsPanelIsOpen,
-  setIsNewFunctionPopUpOpen
+  setIsNewFunctionPopUpOpen,
+  isDemoMode
 ) => [
   {
     label: 'Job',
     id: 'job',
-    handler: () =>
-      navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`)
+    handler: () => {
+      if (isDemoMode) {
+        openPopUp(JobWizard, {
+          params
+        })
+      } else {
+        navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`)
+      }
+    }
   },
   {
     label: 'ML Function',

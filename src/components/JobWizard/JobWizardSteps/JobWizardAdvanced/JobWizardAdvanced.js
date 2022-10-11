@@ -8,10 +8,22 @@ import FormEnvironmentVariablesTable from '../../../../elements/FormEnvironmentV
 
 import { secretsKindOptions } from './JobWizardAdvanced.util'
 import { useMode } from '../../../../hooks/mode.hook'
+import { PANEL_EDIT_MODE } from '../../../../constants'
 
 import './jobWizardAdvanced.scss'
 
-const JobWizardAdvanced = ({ formState, scheduleButtonRef, setShowSchedule, showSchedule }) => {
+const JobWizardAdvanced = ({
+  editJob,
+  formState,
+  isEditMode,
+  mode,
+  params,
+  runJob,
+  scheduleButtonRef,
+  selectedFunctionData,
+  setShowSchedule,
+  showSchedule
+}) => {
   const { isStagingMode } = useMode()
 
   useEffect(() => {
@@ -33,7 +45,7 @@ const JobWizardAdvanced = ({ formState, scheduleButtonRef, setShowSchedule, show
       <div className="form-row">
         {isStagingMode ? (
           <FormEnvironmentVariablesTable
-            fieldsPath="advanced.environmentVariables"
+            fieldsPath="advanced.environmentVariablesTable"
             className="form-col-1"
             formState={formState}
           />
@@ -41,7 +53,7 @@ const JobWizardAdvanced = ({ formState, scheduleButtonRef, setShowSchedule, show
           <FormKeyValueTable
             addNewItemLabel="Add environment variable"
             className="form-col-1"
-            fieldsPath="advanced.environmentVariables"
+            fieldsPath="advanced.environmentVariablesTable"
             formState={formState}
             keyHeader="Name"
             keyLabel="Name"
@@ -57,7 +69,7 @@ const JobWizardAdvanced = ({ formState, scheduleButtonRef, setShowSchedule, show
               addNewItemLabel="Add secret"
               className="form-col-1"
               defaultKey="file"
-              fieldsPath="advanced.secretSources"
+              fieldsPath="advanced.secretSourcesTable"
               formState={formState}
               keyHeader="Kind"
               keyLabel="Kind"
@@ -68,25 +80,35 @@ const JobWizardAdvanced = ({ formState, scheduleButtonRef, setShowSchedule, show
       )}
       <div className="form-row align-stretch">
         <div className="access-key-checkbox">
-          <FormCheckBox label="Auto-generate access key" name="advanced.access_key" />
+          <FormCheckBox label="Auto-generate access key" name="advanced.accessKey" />
         </div>
-        {!formState.values.advanced.access_key && (
+        {!formState.values.advanced.accessKey && (
           <div className="form-col-1">
-            <FormInput name="advanced.access_key_input" label="Access key" required />
+            <FormInput name="advanced.accessKeyInput" label="Access key" required />
           </div>
         )}
       </div>
       {showSchedule && (
         <ScheduleWizard
-          onSchedule={formState.handleSubmit}
+          onSchedule={() => {
+            formState.handleSubmit()
+
+            if (formState.valid) {
+              if (mode === PANEL_EDIT_MODE) {
+                editJob()
+              } else {
+                runJob(formState.values, selectedFunctionData, params, isEditMode, true)
+              }
+            }
+          }}
           scheduleButtonRef={scheduleButtonRef}
           scheduleData={formState.values.scheduleData}
           setFieldValue={formState.form.change}
           setShowSchedule={setShowSchedule}
         />
       )}
-      <OnChange name="advanced.access_key">
-        {() => formState.form.change('advanced.access_key_input', '')}
+      <OnChange name="advanced.accessKey">
+        {() => formState.form.change('advanced.accessKeyInput', '')}
       </OnChange>
     </div>
   )

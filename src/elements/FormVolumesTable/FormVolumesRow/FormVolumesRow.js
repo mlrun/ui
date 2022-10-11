@@ -34,8 +34,8 @@ const FormVolumesRow = ({
   )
 
   useEffect(() => {
-    setFieldData(fields.value[index])
     setFieldRowData(generateVolumeInputsData(fields.value[index], fields, editingItem))
+    setFieldData(fields.value[index])
   }, [editingItem, fields, index])
 
   const generateVolumeInput = inputData => {
@@ -112,8 +112,12 @@ const FormVolumesRow = ({
                 return (
                   !inputData.textHidden && (
                     <div key={inputData.fieldPath} className="form-table__cell form-table__cell_1">
-                      <Tooltip template={<TextTooltipTemplate text={inputData.value} />}>
-                        {inputData.value}
+                      <Tooltip
+                        template={
+                          <TextTooltipTemplate text={inputData.displayValue ?? inputData.value} />
+                        }
+                      >
+                        {inputData.displayValue ?? inputData.value}
                       </Tooltip>
                     </div>
                   )

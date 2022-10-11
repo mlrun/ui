@@ -149,12 +149,14 @@ export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
 /*=========== JOB  WIZARD=============*/
 
+export const PARAMETER_TYPE_SIMPLE = 'Simple'
+export const PARAMETER_TYPE_HYPER = 'Hyper'
 export const MAX_SELECTOR_CRITERIA = 'max'
 export const LIST_TUNING_STRATEGY = 'list'
-export const V3IO_VOLUME_TYPE = 'V3IO'
-export const CONFIG_MAP_VOLUME_TYPE = 'Config Map'
-export const SECRET_VOLUME_TYPE = 'Secret'
-export const PVC_VOLUME_TYPE = 'PVC'
+export const V3IO_VOLUME_TYPE = 'flexVolume'
+export const CONFIG_MAP_VOLUME_TYPE = 'configMap'
+export const SECRET_VOLUME_TYPE = 'secret'
+export const PVC_VOLUME_TYPE = 'persistentVolumeClaim'
 
 /*=========== ML FUNCTIONS =============*/
 
@@ -507,6 +509,7 @@ export const TREE_FILTER = 'tree'
 
 export const PANEL_EDIT_MODE = 'EDIT'
 export const PANEL_CREATE_MODE = 'CREATE'
+export const PANEL_RERUN_MODE = 'RERUN'
 
 export const ENV_VARIABLE_TYPE_VALUE = 'value'
 export const ENV_VARIABLE_TYPE_SECRET = 'secret'

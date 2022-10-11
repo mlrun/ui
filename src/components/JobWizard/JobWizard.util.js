@@ -1,4 +1,4 @@
-import { chain, isEmpty, isNil, omit, unionBy } from 'lodash'
+import { chain, isEmpty, isNil, omit, unionBy, isFinite, isObject, merge, map, has } from 'lodash'
 import {
   CONFIG_MAP_VOLUME_TYPE,
   ENV_VARIABLE_TYPE_SECRET,
@@ -6,21 +6,41 @@ import {
   JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
+  PANEL_DEFAULT_ACCESS_KEY,
+  PARAMETER_TYPE_HYPER,
+  PARAMETER_TYPE_SIMPLE,
   PVC_VOLUME_TYPE,
   SECRET_VOLUME_TYPE,
   TAG_LATEST,
   V3IO_VOLUME_TYPE
 } from '../../constants'
 import {
-  generateCpuValue,
-  generateMemoryValue,
-  getDefaultCpuUnit,
-  getDefaultMemoryUnit,
-  getLimitsGpuType
+  getCpuUnitId,
+  getMemoryUnitId,
+  getLimitsGpuType,
+  generateCpuWithUnit,
+  generateMemoryWithUnit
 } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
+import {
+  parameterTypeBool,
+  parameterTypeFloat,
+  parameterTypeInt,
+  parameterTypeList,
+  parameterTypeMap,
+  parameterTypeStr
+} from '../../elements/FormParametersTable/formParametersTable.util'
+import { CONFLICT_ERROR_STATUS_CODE, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/utils/form.util'
+import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { parseKeyValues } from '../../utils'
-import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
+
+const volumeTypesMap = {
+  [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
+  [PVC_VOLUME_TYPE]: 'persistentVolumeClaim',
+  [SECRET_VOLUME_TYPE]: 'secret',
+  [V3IO_VOLUME_TYPE]: 'flexVolume'
+}
 
 export const generateJobWizardData = (
   frontendSpec,
@@ -30,8 +50,8 @@ export const generateJobWizardData = (
   isStagingMode
 ) => {
   const functions = selectedFunctionData.functions
-  const functionInfo = getFunctionInfo(selectedFunctionData, defaultData)
-  const defaultResources = frontendSpec?.default_function_pod_resources
+  const functionInfo = getFunctionInfo(selectedFunctionData)
+  const defaultResources = frontendSpec?.default_function_pod_resources ?? {}
   const functionParameters = getFunctionParameters(functions, functionInfo.method)
   const [functionPriorityClassName] = getFunctionPriorityClass(functions)
   const [limits] = getLimits(functions)
@@ -40,32 +60,99 @@ export const generateJobWizardData = (
   const [preemptionMode] = getPreemptionMode(functions)
   const jobPriorityClassName =
     functionPriorityClassName || frontendSpec.default_function_priority_class_name
-  const nodeSelector = getNodeSelectors(functions)
-  const volumesData = getVolumesData(functions, isEditMode)
+  const nodeSelectorTable = getNodeSelectors(functions)
+  const volumesTable = getVolumesData(functions, isEditMode)
   const gpuType = getLimitsGpuType(limits)
   const scheduleData = defaultData?.schedule
     ? getDefaultSchedule(defaultData.schedule)
     : scheduleDataInitialState
-
-  const currentLimits = {
-    ...limits,
-    cpu: generateCpuValue(limits?.cpu ?? defaultResources.limits?.cpu ?? ''),
-    cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
-    memory: generateMemoryValue(limits?.memory ?? defaultResources.limits?.memory ?? ''),
-    memoryUnit: getDefaultMemoryUnit(limits ?? {}, defaultResources?.limits.memory),
-    [gpuType]: limits?.[gpuType] ?? defaultResources?.limits.gpu ?? ''
-  }
-  const currentRequest = {
-    cpu: generateCpuValue(requests?.cpu ?? defaultResources.requests?.cpu ?? ''),
-    cpuUnit: getDefaultCpuUnit(requests ?? {}, defaultResources?.requests.cpu),
-    memory: generateMemoryValue(requests?.memory ?? defaultResources.requests?.memory ?? ''),
-    memoryUnit: getDefaultMemoryUnit(requests ?? {}, defaultResources?.requests.memory)
-  }
-
   const jobAdditionalData = {
     methodOptions: functionInfo.methodOptions,
     versionOptions: functionInfo.versionOptions
   }
+  const currentLimits = parseLimits(limits, defaultResources.limits, gpuType)
+  const currentRequest = parseRequests(requests, defaultResources.requests)
+
+  const jobFormData = {
+    jobDetails: {
+      name: functionInfo.name,
+      version: functionInfo.version,
+      method: functionInfo.method,
+      methodDescription: functionInfo.methodDescription,
+      labels: functionInfo.labels
+    },
+    parameters: {
+      hyperParameters: {
+        tuningStrategy: LIST_TUNING_STRATEGY,
+        criteria: MAX_SELECTOR_CRITERIA
+      },
+      parametersTable: {}
+    },
+    dataInputs: {
+      dataInputsTable: [],
+      inputPath: null,
+      outputPath: JOB_DEFAULT_OUTPUT_PATH
+    },
+    resources: {
+      preemptionMode,
+      currentLimits,
+      currentRequest,
+      nodeSelectorTable,
+      volumesTable
+    },
+    advanced: {
+      accessKey: true,
+      accessKeyInput: '',
+      environmentVariablesTable: parseEnvironmentVariables(environmentVariables, isStagingMode),
+      secretSourcesTable: []
+    },
+    function: null,
+    scheduleData
+  }
+
+  if (frontendSpec.feature_flags.preemption_nodes === 'enabled') {
+    jobFormData.resources.preemptionMode =
+      preemptionMode || frontendSpec.default_function_preemption_mode || 'prevent'
+  }
+
+  if (jobPriorityClassName) {
+    jobFormData.resources.jobPriorityClassName = jobPriorityClassName
+  }
+
+  if (!isEmpty(functionParameters)) {
+    jobFormData.parameters.parametersTable = {
+      predefined: parsePredefinedParameters(functionParameters),
+      custom: []
+    }
+    jobFormData.dataInputs.dataInputsTable = parseDataInputs(functionParameters)
+  }
+
+  return [jobFormData, jobAdditionalData]
+}
+
+export const generateJobWizardDefaultData = (
+  frontendSpec,
+  defaultData,
+  isEditMode,
+  isStagingMode
+) => {
+  const functionInfo = getFunctionDefaultInfo(defaultData)
+  const defaultResources = frontendSpec?.default_function_pod_resources
+  const [hyperParamCriteria = MAX_SELECTOR_CRITERIA, hyperParamResult = ''] = (
+    defaultData.task.spec.selector ?? ''
+  ).split('.')
+  const limits = defaultData.function.spec?.resources?.limits
+  const requests = defaultData.function.spec?.resources?.requests
+  const gpuType = getLimitsGpuType(limits)
+  const jobAdditionalData = {
+    methodOptions: functionInfo.methodOptions,
+    versionOptions: functionInfo.versionOptions
+  }
+  const currentLimits = parseLimits(limits, defaultResources?.limits, gpuType)
+  const currentRequest = parseRequests(requests, defaultResources?.requests)
+  const scheduleData = defaultData?.schedule
+    ? getDefaultSchedule(defaultData.schedule)
+    : scheduleDataInitialState
 
   const jobFormData = {
     jobDetails: {
@@ -76,52 +163,142 @@ export const generateJobWizardData = (
       labels: functionInfo.labels
     },
     dataInputs: {
-      inputPath: undefined,
-      outputPath: JOB_DEFAULT_OUTPUT_PATH
+      inputPath: defaultData.task.spec.input_path,
+      outputPath: defaultData.task.spec.output_path,
+      dataInputsTable: []
     },
-    parameters: {},
+    parameters: {
+      hyperParameters: {
+        paramFile: defaultData.task.spec.param_file,
+        tuningStrategy: defaultData.task.spec.tuning_strategy ?? LIST_TUNING_STRATEGY,
+        criteria: hyperParamCriteria,
+        result: hyperParamResult
+      },
+      parametersTable: {}
+    },
     resources: {
+      preemptionMode: defaultData.function?.spec.preemption_mode,
+      jobPriorityClassName: defaultData.function?.spec.priority_class_name,
       currentLimits,
       currentRequest,
-      nodeSelector,
-      volumesTable: volumesData
+      nodeSelectorTable: parseObjectToKeyValue(defaultData.function?.spec.node_selector),
+      volumesTable: parseVolumes(
+        defaultData.function?.spec.volumes,
+        defaultData.function?.spec.volume_mounts,
+        isEditMode
+      )
     },
     advanced: {
-      access_key: true,
-      access_key_input: '',
-      environmentVariables: parseEnvironmentVariables(environmentVariables, isStagingMode),
-      secretSources: []
+      accessKey:
+        defaultData.function?.metadata.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY,
+      accessKeyInput:
+        defaultData.function?.metadata.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY
+          ? ''
+          : defaultData.function?.metadata.credentials.access_key,
+      // todo: env variables and secretSources
+      //   environmentVariablesTable: parseEnvironmentVariables(
+      //     environmentVariablesTable,
+      //     isStagingMode
+      //   ),
+      environmentVariablesTable: [],
+      secretSourcesTable: []
     },
-    scheduleData
+    scheduleData,
+    function: defaultData.task.spec.function
   }
 
-  if (frontendSpec.feature_flags.preemption_nodes === 'enabled') {
-    jobFormData.resources.preemptionMode =
-      preemptionMode || frontendSpec.default_function_preemption_mode || 'prevent'
-  }
-  if (jobPriorityClassName) {
-    jobFormData.resources.jobPriorityClassName = jobPriorityClassName
-  }
-
-  if (!isEmpty(functionParameters)) {
-    jobFormData.parameters = {
-      parametersTable: {
-        predefined: getPredefinedParameters(functionParameters),
-        custom: []
-      },
-      hyperParameters: {
-        tuningStrategy: LIST_TUNING_STRATEGY,
-        criteria: MAX_SELECTOR_CRITERIA
-      }
+  if (!isEmpty(defaultData.task.spec.parameters)) {
+    jobFormData.parameters.parametersTable = {
+      predefined: parsePredefinedDefaultParameters(
+        !isEmpty(defaultData.task.spec.parameters) ? defaultData.task.spec.parameters : {}
+      ),
+      custom: []
     }
-    jobFormData.dataInputs.dataInputsTable = getDataInputs(functionParameters)
   }
 
+  if (!isEmpty(defaultData.task.spec.inputs)) {
+    jobFormData.dataInputs.dataInputsTable = parseDefaultDataInputs(defaultData.task.spec.inputs)
+  }
+
+  // const parameters = generateDefaultParameters(
+  //   Object.entries(defaultData.task.spec.parameters ?? {})
+  // )
+  // const dataInputs = generateDefaultDataInputs(Object.entries(defaultData.task.spec.inputs ?? {}))
+  // const funcSpec = defaultData.function?.spec
+  // const limits = funcSpec?.resources?.limits ?? {}
+  // const requests = funcSpec?.resources?.requests ?? {}
+  // const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
+  //   data: secret
+  // }))
+  // const volumeMounts = defaultData.function?.spec.volume_mounts.map(volume_mounts => {
+  //   return {
+  //     data: {
+  //       name: volume_mounts?.name,
+  //       mountPath: volume_mounts?.mountPath,
+  //       subPath: volume_mounts?.subPath
+  //     },
+  //     isDefault: true,
+  //     canBeModified: mode === PANEL_EDIT_MODE
+  //   }
+  // })
+  //
+  // panelDispatch({
+  //   type: panelActions.SET_TABLE_DATA,
+  //   payload: {
+  //     dataInputs,
+  //     parameters,
+  //     volume_mounts: volumeMounts ?? [],
+  //     volumes: defaultData.function?.spec.volumes ?? [],
+  //     environmentVariables:
+  //       parseEnvVariables(defaultData.function?.spec.env ?? []).map(env => ({
+  //         data: generateEnvVariable(env)
+  //       })) ?? [],
+  //     secretSources: secrets,
+  //     node_selector: Object.entries(defaultData.function?.spec.node_selector ?? {}).map(
+  //       ([key, value]) => ({
+  //         key,
+  //         value
+  //       })
+  //     )
+  //   }
+  // })
+  // panelDispatch({
+  //   type: panelActions.SET_ACCESS_KEY,
+  //   payload: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY
+  // })
+  // panelDispatch({
+  //   type: panelActions.SET_OUTPUT_PATH,
+  //   payload: defaultData.task.spec.output_path ?? JOB_DEFAULT_OUTPUT_PATH
+  // })
+  // panelDispatch({
+  //   type: panelActions.SET_PREEMPTION_MODE,
+  //   payload: defaultData.function?.spec.preemption_mode || ''
+  // })
+  // setNewJob({
+  //   access_key: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
+  //   inputs: defaultData.task.spec.inputs ?? {},
+  //   parameters: defaultData.task.spec.parameters ?? {},
+  //   volume_mounts: volumeMounts?.length
+  //     ? volumeMounts.map(volumeMounts => ({
+  //       name: volumeMounts.data.name,
+  //       mountPath: volumeMounts.data.mountPath,
+  //       subPath: volumeMounts.data.subPath
+  //     }))
+  //     : [],
+  //   volumes: defaultData.function?.spec.volumes ?? [],
+  //   environmentVariables: defaultData.function?.spec.env ?? [],
+  //   secret_sources: defaultData.task.spec.secret_sources ?? [],
+  //   node_selector: defaultData.function?.spec.node_selector ?? {},
+  //   preemption_mode: defaultData.function?.spec.preemption_mode ?? '',
+  //   priority_class_name: defaultData.function?.spec.priority_class_name ?? ''
+  // })
+  //
   return [jobFormData, jobAdditionalData]
 }
 
-export const getFunctionInfo = (selectedFunctionData, defaultData) => {
+const getFunctionInfo = selectedFunctionData => {
   const functions = selectedFunctionData?.functions
+
   if (!isEmpty(functions)) {
     const versionOptions = getVersionOptions(functions)
     const methodOptions = getMethodOptions(functions)
@@ -136,20 +313,22 @@ export const getFunctionInfo = (selectedFunctionData, defaultData) => {
       methodOptions,
       versionOptions
     }
-  } else if (defaultData) {
-    // return {
-    //   labels: parseKeyValues(defaultData.task.metadata.labels || []),
-    //   name: defaultData.task.metadata.name,
-    //   method: '',
-    //   methodDescription: '',
-    //   version: '',
-    //   methodOptions: [],
-    //   versionOptions: []
-    // }
   }
 }
 
-export const getMethodOptions = selectedFunctions => {
+const getFunctionDefaultInfo = defaultData => {
+  return {
+    labels: parseKeyValues(defaultData.task?.metadata?.labels || []),
+    name: defaultData.task?.metadata?.name || '',
+    method: defaultData.task?.spec?.handler,
+    methodDescription: '',
+    version: '',
+    methodOptions: [],
+    versionOptions: []
+  }
+}
+
+const getMethodOptions = selectedFunctions => {
   return chain(selectedFunctions)
     .map(func => Object.values(func.spec?.entry_points ?? {}))
     .flatten()
@@ -162,7 +341,7 @@ export const getMethodOptions = selectedFunctions => {
     .value()
 }
 
-export const getVersionOptions = selectedFunctions => {
+const getVersionOptions = selectedFunctions => {
   const versionOptions = unionBy(
     selectedFunctions.map(func => {
       return {
@@ -176,7 +355,7 @@ export const getVersionOptions = selectedFunctions => {
   return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
 }
 
-export const getDefaultMethodAndVersion = (versionOptions, selectedFunctions) => {
+const getDefaultMethodAndVersion = (versionOptions, selectedFunctions) => {
   const defaultMethod = selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec
     .default_handler
 
@@ -202,7 +381,7 @@ export const getFunctionParameters = (selectedFunction, method) => {
     .value()
 }
 
-export const getFunctionPriorityClass = selectedFunction => {
+const getFunctionPriorityClass = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
@@ -213,7 +392,7 @@ export const getFunctionPriorityClass = selectedFunction => {
     .value()
 }
 
-export const getLimits = selectedFunction => {
+const getLimits = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
@@ -225,7 +404,7 @@ export const getLimits = selectedFunction => {
     .value()
 }
 
-export const getRequests = selectedFunction => {
+const getRequests = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
@@ -237,7 +416,7 @@ export const getRequests = selectedFunction => {
     .value()
 }
 
-export const getEnvironmentVariables = selectedFunction => {
+const getEnvironmentVariables = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
@@ -248,7 +427,7 @@ export const getEnvironmentVariables = selectedFunction => {
     .value()
 }
 
-export const getPreemptionMode = selectedFunction => {
+const getPreemptionMode = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
@@ -259,28 +438,19 @@ export const getPreemptionMode = selectedFunction => {
     .value()
 }
 
-export const getNodeSelectors = selectedFunction => {
+const getNodeSelectors = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
       return func.spec.node_selector ?? {}
     })
+    .map(parseObjectToKeyValue)
     .flatten()
-    .unionBy('key')
-    .map(selector => {
-      return Object.entries(selector)
-    })
-    .flatten()
-    .map(([key, value]) => {
-      return {
-        key,
-        value
-      }
-    })
+    .unionBy('data.key')
     .value()
 }
 
-export const getVolumeType = volume => {
+const getVolumeType = volume => {
   if (volume.configMap) {
     return CONFIG_MAP_VOLUME_TYPE
   } else if (volume.persistentVolumeClaim) {
@@ -292,18 +462,12 @@ export const getVolumeType = volume => {
   }
 }
 
-const volumeTypesMap = {
-  [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
-  [PVC_VOLUME_TYPE]: 'persistentVolumeClaim',
-  [SECRET_VOLUME_TYPE]: 'secret',
-  [V3IO_VOLUME_TYPE]: 'flexVolume'
-}
-
-export const getVolumesData = (selectedFunction, isEditMode) => {
+// todo: delete redundant code
+const getVolumesData = (selectedFunction, isEditMode = false) => {
   const volumes = chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
-    .map(
-      func =>
+    .map(func => {
+      return (
         (func.spec.volume_mounts &&
           func.spec.volumes.concat([
             {
@@ -323,12 +487,14 @@ export const getVolumesData = (selectedFunction, isEditMode) => {
             }
           ])) ??
         []
-    )
+      )
+    })
     .flatten()
     .unionBy('name')
     .value()
 
-  return chain(selectedFunction)
+  // todo: delete redundant code
+  const volumeMounts = chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(
       func =>
@@ -344,56 +510,30 @@ export const getVolumesData = (selectedFunction, isEditMode) => {
     )
     .flatten()
     .unionBy('name')
-    .map(volume_mounts => {
-      const currentVolume = volumes.find(volume => volume.name === volume_mounts?.name)
-      const volumeType = getVolumeType(currentVolume)
-      const volumeTypePath = volumeTypesMap[volumeType]
-
-      return {
-        data: {
-          type: volumeType,
-          name: volume_mounts?.name,
-          mountPath: volume_mounts?.mountPath,
-          typeName: currentVolume[volumeTypePath]?.name,
-          ...currentVolume[volumeTypePath]?.options
-        },
-        typeAdditionalData: omit(currentVolume[volumeTypePath], ['options', 'name']),
-        isDefault: true,
-        canBeModified: isEditMode
-      }
-    })
     .value()
+
+  return parseVolumes(volumes, volumeMounts)
 }
 
-export const getVolumes = selectedFunction => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => func.spec.volumes ?? [])
-    .flatten()
-    .unionBy('name')
-    .value()
-}
+const parseVolumes = (volumes, volumeMounts, isEditMode) => {
+  return volumeMounts.map(volumeMount => {
+    const currentVolume = volumes.find(volume => volume.name === volumeMount?.name)
+    const volumeType = getVolumeType(currentVolume)
+    const volumeTypePath = volumeTypesMap[volumeType]
 
-export const getVolumeMounts = (selectedFunction, volumes, isEditMode) => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => func.spec.volume_mounts ?? [])
-    .flatten()
-    .unionBy('name')
-    .map(volume_mounts => {
-      const currentVolume = volumes.find(volume => volume.name === volume_mounts?.name)
-
-      return {
-        data: {
-          type: getVolumeType(currentVolume),
-          name: volume_mounts?.name,
-          mountPath: volume_mounts?.mountPath
-        },
-        isDefault: true,
-        canBeModified: isEditMode
-      }
-    })
-    .value()
+    return {
+      data: {
+        type: volumeType,
+        name: volumeMount?.name,
+        mountPath: volumeMount?.mountPath,
+        typeName: currentVolume[volumeTypePath]?.name,
+        ...currentVolume[volumeTypePath]?.options
+      },
+      typeAdditionalData: omit(currentVolume[volumeTypePath], ['options', 'name']),
+      isDefault: true,
+      canBeModified: isEditMode
+    }
+  })
 }
 
 export const getCategoryName = categoryId => {
@@ -413,7 +553,7 @@ export const getCategoryName = categoryId => {
   return categoriesNames[categoryId] ?? categoryId
 }
 
-export const getDataInputs = functionParameters => {
+export const parseDataInputs = functionParameters => {
   return functionParameters
     .filter(dataInputs => dataInputs.type === 'DataItem')
     .map(input => {
@@ -432,14 +572,30 @@ export const getDataInputs = functionParameters => {
     })
 }
 
-export const getPredefinedParameters = functionParameters => {
+export const parseDefaultDataInputs = dataInputs => {
+  return map(dataInputs, (value, key) => {
+    return {
+      isDefault: true,
+      data: {
+        name: key,
+        path: value ?? '',
+        fieldInfo: {
+          pathType: value?.replace(/:\/\/.*$/g, '://') ?? '',
+          value: value?.replace(/.*:\/\//g, '') ?? ''
+        }
+      }
+    }
+  })
+}
+
+export const parsePredefinedParameters = functionParameters => {
   return functionParameters
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       data: {
         name: parameter.name ?? '',
-        type: parameter.type ?? '',
-        parameterType: 'Simple',
+        type: parameter.type ?? parseParameterType(parameter.default),
+        parameterType: PARAMETER_TYPE_SIMPLE,
         value: parseParameterValue(parameter.default),
         isChecked: true
       },
@@ -449,13 +605,72 @@ export const getPredefinedParameters = functionParameters => {
     }))
 }
 
-const parseParameterValue = parameterValue => {
+export const parsePredefinedDefaultParameters = functionParameters => {
+  return map(functionParameters, (value, key) => ({
+    data: {
+      name: key ?? '',
+      type: parseParameterType(value),
+      parameterType: PARAMETER_TYPE_SIMPLE,
+      value: parseParameterValue(value),
+      isChecked: true
+    },
+    isHidden: key === 'context',
+    isDefault: true
+  }))
+}
+
+const parseParameterType = parameterValue => {
   if (Array.isArray(parameterValue)) {
-    return parameterValue.join(',')
+    return parameterTypeList
+  } else if (
+    typeof parameterValue === 'object' &&
+    !Array.isArray(parameterValue) &&
+    parameterValue !== null
+  ) {
+    return parameterTypeMap
+  } else if (isFinite(parameterValue)) {
+    return String(parameterValue).includes('.') ? parameterTypeFloat : parameterTypeInt
+  } else if (typeof parameterValue === 'boolean') {
+    return parameterTypeBool
+  } else {
+    return parameterTypeStr
+  }
+}
+
+const parseParameterValue = parameterValue => {
+  if (
+    Array.isArray(parameterValue) ||
+    (typeof parameterValue === 'object' && parameterValue !== null)
+  ) {
+    try {
+      return JSON.stringify(parameterValue)
+    } catch {
+      return String(parameterValue)
+    }
   } else if (parameterValue !== '' && !isNil(parameterValue)) {
     return String(parameterValue)
   } else {
     return ''
+  }
+}
+
+const parseLimits = (limits = {}, defaultLimits = {}, gpuType) => {
+  return {
+    ...limits,
+    cpu: parseFloat(limits.cpu ?? defaultLimits.cpu) ?? '',
+    cpuUnitId: getCpuUnitId(limits.cpu, defaultLimits.cpu),
+    memory: parseFloat(limits.memory ?? defaultLimits.memory) ?? '',
+    memoryUnitId: getMemoryUnitId(limits.memory, defaultLimits.memory),
+    [gpuType]: limits[gpuType] ?? defaultLimits.gpu ?? ''
+  }
+}
+
+const parseRequests = (requests = {}, defaultRequests = {}) => {
+  return {
+    cpu: parseFloat(requests.cpu ?? defaultRequests.cpu) ?? '',
+    cpuUnitId: getCpuUnitId(requests.cpu, defaultRequests.cpu),
+    memory: parseFloat(requests.memory ?? defaultRequests.memory) ?? '',
+    memoryUnitId: getMemoryUnitId(requests.memory, defaultRequests.memory)
   }
 }
 
@@ -484,4 +699,229 @@ const parseEnvironmentVariables = (envVariables, isStagingMode) => {
 
     return { data: env }
   })
+}
+
+const convertParameterValue = (value, type) => {
+  if ([parameterTypeInt, parameterTypeFloat].includes(type) && Number.isFinite(Number(value))) {
+    return Number(value)
+  } else if (type === parameterTypeBool && ['true', 'false'].includes(value.toLowerCase())) {
+    return value.toLowerCase() === 'true'
+  } else if ([parameterTypeList, parameterTypeMap].includes(type)) {
+    try {
+      return JSON.parse(value)
+    } catch {
+      return String(value)
+    }
+  } else {
+    return String(value)
+  }
+}
+
+const convertHyperParameterValue = parameterValue => {
+  if (typeof parameterValue === 'string') {
+    parameterValue = parameterValue.split(',')
+  } else if (!isObject(parameterValue)) {
+    parameterValue = [parameterValue]
+  }
+
+  return parameterValue
+}
+
+const generateParameters = parametersTableData => {
+  const parameters = {}
+
+  parametersTableData?.predefined
+    ?.filter(parameter => parameter.data.parameterType !== PARAMETER_TYPE_HYPER)
+    .forEach(value => {
+      parameters[value.data.name] = convertParameterValue(value.data.value, value.data.type)
+    })
+
+  parametersTableData?.custom
+    ?.filter(parameter => parameter.data.parameterType !== PARAMETER_TYPE_HYPER)
+    .forEach(value => {
+      parameters[value.data.name] = convertParameterValue(value.data.value, value.data.type)
+    })
+
+  return parameters
+}
+
+const generateHyperParameters = parametersTableData => {
+  const hyperparams = {}
+
+  parametersTableData?.predefined
+    ?.filter(parameter => parameter.data.parameterType === PARAMETER_TYPE_HYPER)
+    .forEach(parameter => {
+      hyperparams[parameter.data.name] = convertHyperParameterValue(
+        convertParameterValue(parameter.data.value, parameter.data.type)
+      )
+    })
+
+  parametersTableData?.custom
+    ?.filter(parameter => parameter.data.parameterType === PARAMETER_TYPE_HYPER)
+    .forEach(parameter => {
+      hyperparams[parameter.data.name] = convertHyperParameterValue(
+        convertParameterValue(parameter.data.value, parameter.data.type)
+      )
+    })
+
+  return hyperparams
+}
+
+const generateDataInputs = dataInputsTableData => {
+  const dataInputs = {}
+
+  dataInputsTableData.forEach(dataInput => {
+    dataInputs[dataInput.data.name] =
+      dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
+  })
+
+  return dataInputs
+}
+
+const generateEnvironmentVariables = envVarData => {
+  return envVarData.map(envVar => {
+    const generatedEnvVar = {
+      name: envVar.data.key
+    }
+
+    if (envVar.data.type === ENV_VARIABLE_TYPE_SECRET) {
+      generatedEnvVar.valueFrom = {
+        secretKeyRef: {
+          key: envVar.data.secretKey ?? '',
+          name: envVar.data.secretName
+        }
+      }
+    } else {
+      generatedEnvVar.value = envVar.data.value
+    }
+
+    return generatedEnvVar
+  })
+}
+
+const generateVolumes = volumesTable => {
+  const volume_mounts = volumesTable.map(volume => {
+    return {
+      name: volume.data.name,
+      mountPath: volume.data.mountPath
+    }
+  })
+  const volumes = volumesTable.map(volume => {
+    const volumeData = {
+      name: volume.data.name
+    }
+
+    if (volume.data.typeName) {
+      volumeData[volume.data.type] = {
+        name: volume.data.typeName
+      }
+    } else {
+      volumeData[volume.data.type] = {
+        options: omit(volume.data, ['type', 'name', 'typeName', 'mountPath'])
+      }
+    }
+
+    merge(volumeData[volume.data.type], volume.typeAdditionalData)
+
+    return volumeData
+  })
+
+  return [volume_mounts, volumes]
+}
+
+const generateResources = resources => {
+  return {
+    limits: {
+      cpu: generateCpuWithUnit(resources.currentLimits.cpu, resources.currentLimits.cpuUnitId),
+      memory: generateMemoryWithUnit(
+        resources.currentLimits.memory,
+        resources.currentLimits.memoryUnitId
+      ),
+      'nvidia.com/gpu': String(resources.currentLimits['nvidia.com/gpu'])
+    },
+    requests: {
+      cpu: generateCpuWithUnit(resources.currentRequest.cpu, resources.currentRequest.cpuUnitId),
+      memory: generateMemoryWithUnit(
+        resources.currentRequest.memory,
+        resources.currentRequest.memoryUnitId
+      )
+    }
+  }
+}
+
+export const generateRunPostData = (formData, selectedFunctionData, params, mode, isSchedule) => {
+  let selectedFunction = selectedFunctionData?.functions?.find(
+    func => func.metadata.tag === formData.jobDetails.version
+  )
+  selectedFunction ??= selectedFunctionData?.functions?.[0]
+  const [volume_mounts, volumes] = generateVolumes(formData.resources.volumesTable)
+
+  const postData = {
+    task: {
+      metadata: {
+        project: formData.functionSelection?.projectName ?? params.projectName,
+        name: formData.jobDetails.name
+      },
+      spec: {
+        inputs: generateDataInputs(formData.dataInputs.dataInputsTable),
+        parameters: generateParameters(formData.parameters.parametersTable),
+        hyperparams: generateHyperParameters(formData.parameters.parametersTable),
+        secret_sources: formData.advanced.secretSourcesTable.map(secretSource => {
+          return { kind: secretSource.data.key, source: secretSource.data.value }
+        }),
+        param_file: formData.parameters.hyperParameters?.paramFile ?? '',
+        tuning_strategy: formData.parameters.hyperParameters?.tuningStrategy,
+        handler: formData.jobDetails.method ?? '',
+        input_path: formData.dataInputs.inputPath ?? '',
+        output_path: formData.dataInputs.outputPath,
+        function:
+          selectedFunction && !has(selectedFunction, 'status')
+            ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
+            : formData.function ??
+              (selectedFunction
+                ? `${params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+                : '')
+      }
+    },
+    function: {
+      metadata: {
+        credentials: {
+          access_key: formData.advanced.accessKey
+            ? PANEL_DEFAULT_ACCESS_KEY
+            : formData.advanced.accessKeyInput
+        }
+      },
+      spec: {
+        env: generateEnvironmentVariables(formData.advanced.environmentVariablesTable),
+        node_selector: generateObjectFromKeyValue(formData.resources.nodeSelectorTable),
+        preemption_mode: formData.resources.preemptionMode,
+        priority_class_name: formData.resources.jobPriorityClassName,
+        volume_mounts,
+        volumes,
+        resources: generateResources(formData.resources)
+      }
+    }
+  }
+
+  if (
+    !isEmpty(formData.parameters.hyperParameters?.result) &&
+    !isEmpty(formData.parameters.hyperParameters?.criteria)
+  ) {
+    postData.task.spec.selector = `${formData.parameters.hyperParameters.criteria}.${formData.parameters.hyperParameters.result}`
+  }
+
+  if (isSchedule) {
+    postData.schedule = formData.scheduleData.cron
+  }
+
+  console.log('postData', postData)
+  return postData
+}
+
+export const getNewJobErrorMsg = error => {
+  return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+    ? 'You are not permitted to run new job.'
+    : error.response.status === CONFLICT_ERROR_STATUS_CODE
+    ? 'This job is already scheduled'
+    : 'Unable to create new job.'
 }

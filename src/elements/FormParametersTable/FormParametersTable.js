@@ -9,6 +9,7 @@ import { FormActionButton } from 'igz-controls/elements'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
+import { PARAMETER_TYPE_SIMPLE } from '../../constants'
 
 const FormParametersTable = ({
   disabled,
@@ -131,7 +132,7 @@ const FormParametersTable = ({
                         name: '',
                         value: '',
                         type: 'str',
-                        parameterType: 'Simple',
+                        parameterType: PARAMETER_TYPE_SIMPLE,
                         isChecked: true
                       },
                       doc: '',

@@ -266,7 +266,7 @@ export const generateTableData = (
     ...stateLimits,
     ...limits,
     cpu: limits?.cpu ?? defaultResources.limits?.cpu ?? '',
-    cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.requests.cpu),
+    cpuUnit: getDefaultCpuUnit(limits ?? {}, defaultResources?.limits.cpu),
     memory: limits?.memory ?? defaultResources.limits?.memory ?? '',
     memoryUnit: getDefaultMemoryUnit(limits ?? {}, defaultResources?.limits.memory),
     [gpuType]: limits?.[gpuType] ?? defaultResources?.limits.gpu ?? ''
@@ -450,7 +450,7 @@ export const generateTableDataFromDefaultData = (
   })
   panelDispatch({
     type: panelActions.SET_ACCESS_KEY,
-    payload: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY
+    payload: defaultData.function?.metadata?.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY
   })
   panelDispatch({
     type: panelActions.SET_OUTPUT_PATH,
@@ -461,7 +461,7 @@ export const generateTableDataFromDefaultData = (
     payload: defaultData.function?.spec.preemption_mode || ''
   })
   setNewJob({
-    access_key: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
+    access_key: defaultData.function?.metadata?.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
     inputs: defaultData.task.spec.inputs ?? {},
     parameters: defaultData.task.spec.parameters ?? {},
     volume_mounts: volumeMounts?.length

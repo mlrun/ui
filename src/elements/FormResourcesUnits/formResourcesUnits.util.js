@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash'
 
 export const LIMITS_NVIDIA_GPU = 'nvidia.com/gpu'
 
-export const selectMemoryOptions = {
+export const selectUnitOptions = {
   unitCpu: [
     {
       id: 'cpu',
@@ -28,62 +28,61 @@ export const selectMemoryOptions = {
     }
   ],
   unitMemory: [
-    { label: 'Bytes', id: 'Bytes', root: 0, power: 0 },
-    { label: 'KB', id: 'KB', root: 1000, power: 1 },
-    { label: 'KiB', id: 'KiB', root: 1024, power: 1 },
-    { label: 'MB', id: 'MB', root: 1000, power: 2 },
-    { label: 'MiB', id: 'MiB', root: 1024, power: 2 },
-    { label: 'GB', id: 'GB', root: 1000, power: 3 },
-    { label: 'GiB', id: 'GiB', root: 1024, power: 3 },
-    { label: 'TB', id: 'TB', root: 1000, power: 4 },
-    { label: 'TiB', id: 'TiB', root: 1024, power: 4 }
+    { label: 'Bytes', id: 'Bytes', unit: '', root: 0, power: 0 },
+    { label: 'KB', id: 'KB', unit: 'K', root: 1000, power: 1 },
+    { label: 'KiB', id: 'KiB', unit: 'Ki', root: 1024, power: 1 },
+    { label: 'MB', id: 'MB', unit: 'M', root: 1000, power: 2 },
+    { label: 'MiB', id: 'MiB', unit: 'Mi', root: 1024, power: 2 },
+    { label: 'GB', id: 'GB', unit: 'G', root: 1000, power: 3 },
+    { label: 'GiB', id: 'GiB', unit: 'Gi', root: 1024, power: 3 },
+    { label: 'TB', id: 'TB', unit: 'T', root: 1000, power: 4 },
+    { label: 'TiB', id: 'TiB', unit: 'Ti', root: 1024, power: 4 }
   ]
 }
 
-export const getSelectedCpuOption = id =>
-  selectMemoryOptions.unitCpu.find(option => option.id === id)
+export const getSelectedCpuOption = id => selectUnitOptions.unitCpu.find(option => option.id === id)
 
 export const getSelectedMemoryOption = id =>
-  selectMemoryOptions.unitMemory.find(option => option.id === id)
+  selectUnitOptions.unitMemory.find(option => option.id === id)
 
-export const generateCpuValue = (cpu = '') =>
-  cpu.toString().match(/m/)
-    ? cpu.toString().slice(0, cpu.toString().length - 1)
-    : cpu
-    ? parseFloat(cpu).toFixed(3)
-    : ''
+export const getMemoryUnitId = (currentMemoryValue, defaultMemoryValue) => {
+  const memoryValueFull = isEmpty(currentMemoryValue) ? defaultMemoryValue : currentMemoryValue
+  const memoryValue = parseFloat(memoryValueFull)
+  const memoryUnit = memoryValueFull.replace(memoryValue, '')
 
-export const generateFullCpuValue = (value, type, data) => {
-  return isEmpty(value) ? '' : `${value}${getSelectedCpuOption(data[type].cpuUnit).unit}`
+  return selectUnitOptions.unitMemory.find(option => option.unit === memoryUnit)?.id ?? 'Bytes'
 }
 
-export const generateMemoryValue = (memory = '') =>
-  memory.toString().match(/[a-zA-Z]/)
-    ? memory.slice(0, memory.toString().match(/[a-zA-Z]/).index)
-    : memory
-
-export const getDefaultMemoryUnit = (currentMemoryValue, defaultMemoryValue) => {
-  const memoryValue = isEmpty(currentMemoryValue) ? defaultMemoryValue : currentMemoryValue.memory
-
-  if (memoryValue?.match(/[a-zA-Z]/)) {
-    return `${memoryValue.replace(/\d+/g, '')}B`
-  } else if (memoryValue?.length > 0) {
-    return 'Bytes'
-  } else return 'MiB'
+export const getMemoryUnit = unitId => {
+  return selectUnitOptions.unitMemory.find(option => option.id === unitId)?.unit ?? ''
 }
 
-export const getDefaultCpuUnit = (currentCpuValue, defaultCpuValue) => {
-  const cpuValue = isEmpty(currentCpuValue) ? defaultCpuValue : currentCpuValue.cpu
+export const getCpuUnitId = (currentCpuValue, defaultCpuValue) => {
+  const cpuValueFull = isEmpty(currentCpuValue) ? defaultCpuValue : currentCpuValue
+  const cpuValue = parseFloat(cpuValueFull)
+  const cpuUnit = cpuValueFull.replace(cpuValue, '')
 
-  if (cpuValue?.match?.(/m/)) {
-    return 'millicpu'
-  }
+  return selectUnitOptions.unitCpu.find(option => option.unit === cpuUnit)?.id ?? 'cpu'
+}
 
-  return 'cpu'
+export const getCpuUnit = unitId => {
+  return selectUnitOptions.unitCpu.find(option => option.id === unitId)?.unit ?? ''
+}
+
+export const generateMemoryWithUnit = (memoryValue, memoryUnitId) => {
+  const memoryUnit =
+    selectUnitOptions.unitMemory.find(option => option.id === memoryUnitId)?.unit ?? ''
+
+  return `${memoryValue}${memoryUnit}`
+}
+export const generateCpuWithUnit = (cpuValue, cpuUnitId) => {
+  const cpuUnit = selectUnitOptions.unitCpu.find(option => option.id === cpuUnitId)?.unit ?? ''
+
+  return `${cpuValue}${cpuUnit}`
 }
 
 export const getLimitsGpuType = limits => {
-  const reservedWords = ['cpu', 'cpuUnit', 'memory', 'memoryUnit']
+  const reservedWords = ['cpu', 'cpuUnitId', 'memory', 'memoryUnitId']
 
   if (!limits || limits[LIMITS_NVIDIA_GPU]) {
     return LIMITS_NVIDIA_GPU

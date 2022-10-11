@@ -33,7 +33,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
             />
           </div>
         )}
-        {formState.values.resources.preemptionMode && (
+        {frontendSpec.feature_flags.preemption_nodes === 'enabled' && (
           <div className="form-col-auto resources__select">
             <FormSelect
               label="Spot Instances"
@@ -49,7 +49,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
           keyHeader="Key"
           keyLabel="Key"
           addNewItemLabel="Add a node"
-          fieldsPath="resources.nodeSelector"
+          fieldsPath="resources.nodeSelectorTable"
           formState={formState}
           className="form-col-1"
         />
