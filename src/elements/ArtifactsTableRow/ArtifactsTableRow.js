@@ -98,11 +98,11 @@ const ArtifactsTableRow = ({
               ) : null
             })}
           </div>
-          {pageData.selectedRowData[rowItem.key?.identifier].loading ? (
+          {pageData.selectedRowData[rowItem.key?.identifier]?.loading ? (
             <div className="table-body__row">
               <Loader />
             </div>
-          ) : pageData.selectedRowData[rowItem.key?.identifier].error ? (
+          ) : pageData.selectedRowData[rowItem.key?.identifier]?.error ? (
             <ErrorMessage
               message={pageData.selectedRowData[rowItem.key?.identifier]?.error?.message}
             />

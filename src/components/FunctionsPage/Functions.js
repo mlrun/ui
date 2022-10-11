@@ -50,6 +50,7 @@ import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
 import {
+  FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
   PANEL_CREATE_MODE,
@@ -128,7 +129,9 @@ const Functions = ({
         label: 'Run',
         icon: <Run />,
         onClick: func => setEditableItem(func),
-        hidden: !FUNCTIONS_READY_STATES.includes(item?.state?.value)
+        hidden:
+          !FUNCTIONS_READY_STATES.includes(item?.state?.value) ||
+          item?.type === FUNCTION_TYPE_SERVING
       },
       {
         label: 'Edit',

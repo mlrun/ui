@@ -68,7 +68,8 @@ import {
   typeValue,
   verifyInputDisabled,
   verifyInputEnabled,
-  verifyTypedValue
+  verifyTypedValue,
+  verifyTextAreaCounter
 } from '../common/actions/input-group.action'
 import {
   incrementValue,
@@ -1264,5 +1265,19 @@ Then(
     expect(await this.driver.getCurrentUrl()).equal(
       this.testContext[savedValue]
     )
+  }
+)
+
+Then(
+  'check {string} textarea counter on {string} wizard',
+  async function (componentName, wizardName) {
+    await verifyTextAreaCounter(this.driver, pageObjects[wizardName][componentName])
+  }
+)
+
+Then(
+  'check {string} textarea counter in {string} on {string} wizard',
+  async function (componentName, accordionName, wizardName) {
+    await verifyTextAreaCounter(this.driver, pageObjects[wizardName][accordionName][componentName])
   }
 )

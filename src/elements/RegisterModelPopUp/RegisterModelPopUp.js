@@ -30,6 +30,7 @@ import { Button, FormChipCell, Modal, FormInput, FormTextarea } from 'igz-contro
 
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData } from '../../utils/convertChipsData'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -54,7 +55,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
     })
   )
   const location = useLocation()
-  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
 
@@ -86,10 +87,9 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
     return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
-        formRef.current = null
+        resolveModal()
         refresh(filtersStore)
-
-        return dispatch(
+        dispatch(
           notificationActions.setNotification({
             status: response.status,
             id: Math.random(),
@@ -98,7 +98,8 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
         )
       })
       .catch(() => {
-        return dispatch(
+        resolveModal()
+        dispatch(
           notificationActions.setNotification({
             status: 400,
             id: Math.random(),
@@ -106,9 +107,6 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
             retry: registerModel
           })
         )
-      })
-      .finally(() => {
-        onResolve()
       })
   }
 
@@ -164,10 +162,15 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
                 formState={formState}
                 initialValues={initialValues}
                 isEditMode
+                label="labels"
                 name="labels"
                 label="Labels"
                 shortChips
-                visibleChipsMaxLength="all"
+                visibleChipsMaxLength="2"
+                validationRules={{
+                  key: getValidationRules('common.tag'),
+                  value: getValidationRules('common.tag')
+                }}
               />
             </div>
           </Modal>

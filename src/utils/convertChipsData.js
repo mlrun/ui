@@ -24,3 +24,11 @@ export const convertChipsData = chips => {
     return list
   }, {})
 }
+
+export const generateChipsList = (labels = {}, delimiter = null) => {
+  return Object.entries(labels).reduce((list, [key, value], id) => {
+    list.push({ id, key, value, delimiter })
+
+    return list
+  }, [])
+}

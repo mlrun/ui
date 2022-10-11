@@ -450,7 +450,7 @@ const advancedSecretsTable = {
             '.select',
             '.select__header .select__value',
             '.select__body .select__item',
-            '.data-ellipsis > .data-ellipsis'
+            '.data-ellipsis'
           )
         },
         value_input: {
@@ -641,7 +641,7 @@ const secretRuntimeConfigurationTable = {
             '.select',
             '.select__value',
             '.select__body .select__item',
-            '.data-ellipsis .data-ellipsis'
+            '.data-ellipsis'
           )
         },
         value_input: {
@@ -778,7 +778,7 @@ module.exports = {
           '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .select',
           '.select__header .select__value',
           '.select__body .select__item',
-          '.data-ellipsis > .data-ellipsis'
+          '.data-ellipsis'
         )
       ),
       Attributes_Input: inputGroup(
@@ -1006,9 +1006,7 @@ module.exports = {
         generateDropdownGroup(
           '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .select',
           '.select__header .select__value',
-          '.select__body .select__item',
-          '.data-ellipsis > .data-ellipsis'
-        )
+          '.select__body .select__item'        )
       ),
       URL_Input: inputGroup(
         generateInputGroup(
@@ -1239,7 +1237,7 @@ module.exports = {
           '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .select:nth-of-type(2)',
           '.select__label',
           false,
-          '.data-ellipsis > .data-ellipsis'
+          '.data-ellipsis'
         )
       ),
       Parameter_Table_Simple_Hyper_Dropdown: dropdownComponent(
@@ -1247,7 +1245,7 @@ module.exports = {
           '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .select:nth-of-type(3)',
           '.select__label',
           false,
-          '.data-ellipsis > .data-ellipsis'
+          '.data-ellipsis'
         )
       ),
       Edit_Parameter_Table_Simple_Hyper_Dropdown: dropdownComponent(
@@ -1255,7 +1253,7 @@ module.exports = {
               '.job-panel__parameters-table .edit-row .table__cell_edit:nth-of-type(3) .select',
               '.select__label',
               false,
-              '.data-ellipsis > .data-ellipsis'
+              '.data-ellipsis'
           )
       ),
       Parameters_Table_Value_Input: inputGroup(

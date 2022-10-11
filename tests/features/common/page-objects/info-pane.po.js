@@ -19,11 +19,18 @@ such restriction.
 */
 import actionMenu from '../components/action-menu.component'
 import commonTable from '../components/table.component'
-import { generateInputGroup, generateLabelGroup } from '../../common-tools/common-tools'
+import {
+  generateInputGroup,
+  generateLabelGroup,
+  generateTextAreaGroup,
+  generateDropdownGroup
+} from '../../common-tools/common-tools'
 import labelComponent from '../components/label.component'
 import inputGroup from '../components/input-group.component'
 import graph from '../components/graph.component'
 import { By } from 'selenium-webdriver'
+import textAreaGroup from '../components/text-area.component'
+import dropdownComponent from '../components/dropdown.component'
 
 // TO DO: that is duplicate from Feature Store PO. In feature that should be fixed
 const actionMenuStructure = {
@@ -79,7 +86,7 @@ const artifactOverviewTable = {
         uri: '.details-item:nth-of-type(7) .details-item__data',
         uid: '.details-item:nth-of-type(8) .details-item__data',
         updated: '.details-item:nth-of-type(9) .details-item__data',
-        labels: '.details-item:nth-of-type(10) .details-item__data',
+        labels: '.details-item:nth-of-type(10) .details-item__data'
       }
     }
   }
@@ -107,7 +114,7 @@ const modelsOverviewTable = {
         framework: '.details-item:nth-of-type(13) .details-item__data',
         algorithm: '.details-item:nth-of-type(14) .details-item__data',
         labels: '.details-item:nth-of-type(15) .details-item__data',
-        metrics: '.details-item:nth-of-type(16) .details-item__data',
+        metrics: '.details-item:nth-of-type(16) .details-item__data'
       }
     }
   }
@@ -463,13 +470,8 @@ module.exports = {
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Description_Field: By.css('.item-info__details .details-item:nth-of-type(1) .data-ellipsis'),
-    Description_Input: inputGroup(
-      generateInputGroup(
-        '.item-info__details .details-item:nth-of-type(1) .input-wrapper',
-        true,
-        false,
-        true
-      )
+    Description_Input: textAreaGroup(
+      generateTextAreaGroup('.item-info__details .details-item:nth-of-type(1) .text-area-wrapper')
     ),
     Labels_Field: By.css(
       '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
@@ -608,7 +610,8 @@ module.exports = {
   },
   artifactsInfoPane: {
     Artifacts_Table: commonTable(artifactsTable),
-    Artifact_Preview_Button: By.css('.item-artifacts .item-artifacts__preview .data-ellipsis svg')
+    Artifact_Preview_Button: By.css('.item-artifacts .item-artifacts__preview .data-ellipsis svg'),
+    Iterations_Dropdown: dropdownComponent(generateDropdownGroup('.item-header__buttons .select'))
   },
   resultsInfoPane: {
     Results_Table: commonTable(resultsTable)
@@ -644,6 +647,7 @@ module.exports = {
     Updated: updated,
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
+    Apply_Changes_Button: applyChangesButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
@@ -664,7 +668,12 @@ module.exports = {
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Overview_Table: commonTable(modelsOverviewTable),
-    Info_Sources_Table: commonTable(filesInfoSourcesTable)
+    Info_Sources_Table: commonTable(filesInfoSourcesTable),
+    Labels_Field: By.css(
+      '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
+    ),
+    Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
+    Apply_Button: By.css('.item-info__details .details-item__apply-btn')
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,
