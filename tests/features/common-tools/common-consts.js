@@ -199,10 +199,13 @@ module.exports = {
       'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).'
   },
   Project_Settings: {
-    Tab_List: ['General', 'Members', 'Secrets']
+    Tab_List: ['General', 'Members', 'Secrets'],
+    Secrets_Hint:
+      'These secrets are automatically available to all jobs belonging to this project that are not executed locally. See Secrets'
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
+    Artifacts_Names_Unique: 'Artifacts names in the same project must be unique.',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
       'This field is required',
@@ -291,7 +294,11 @@ module.exports = {
     Overview_Hash: 'Represents hash of the data. when the data changes the hash would change',
     Overview_UID:
       'Unique identifier representing the job or the workflow that generated the artifact',
-    Feature_Analysis: 'The statistics are calculated on the last rolling hour of data'
+    Feature_Analysis: 'The statistics are calculated on the last rolling hour of data',
+    Feature_Sets_Statistics:
+      'Statistics reflect the data for the latest ingestion. \n' +
+      ' Note that some values may be empty due to the use of different engines for calculating statistics',
+    Models_Statistics: 'Note that some values may be empty due to the use of different engines for calculating statistics'
   },
   Descriptions: {
     Archive_Project:

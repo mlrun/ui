@@ -21,11 +21,12 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import TargetPath from '../../common/TargetPath/TargetPath'
+import { FormInput, FormSelect, FormTextarea, FormChipCell } from 'igz-controls/components'
 
-import { FormInput, FormSelect, FormTextarea } from 'igz-controls/components'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getChipOptions } from '../../utils/getChipOptions'
 
-const RegisterArtifactModalForm = ({ formState, showType, messageByKind, setFieldState }) => {
+const RegisterArtifactModalForm = ({ formState, showType, initialValues, messageByKind, setFieldState }) => {
   const kindOptions = useMemo(
     () => [
       {
@@ -103,6 +104,22 @@ const RegisterArtifactModalForm = ({ formState, showType, messageByKind, setFiel
           setFieldState={setFieldState}
         />
       </div>
+      <div className="form-row">
+        <FormChipCell
+          chipOptions={getChipOptions('metrics')}
+          formState={formState}
+          initialValues={initialValues}
+          isEditMode
+          label="labels"
+          name="labels"
+          shortChips
+          visibleChipsMaxLength="2"
+          validationRules={{
+            key: getValidationRules('common.tag'),
+            value: getValidationRules('common.tag')
+          }}
+        />
+      </div>
     </div>
   )
 }
@@ -113,8 +130,11 @@ RegisterArtifactModalForm.defaultProps = {
 }
 
 RegisterArtifactModalForm.propTypes = {
+  formState: PropTypes.object.isRequired,
   showType: PropTypes.bool,
-  messageByKind: PropTypes.string
+  messageByKind: PropTypes.string,
+  initialValues: PropTypes.object.isRequired,
+  setFieldState: PropTypes.func.isRequired
 }
 
 export default RegisterArtifactModalForm

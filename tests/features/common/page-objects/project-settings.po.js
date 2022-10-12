@@ -154,6 +154,7 @@ module.exports = {
   },
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),
-    Add_Secret_Button: By.css('.table-row__last .add-new-item-btn')
+    Add_Secret_Button: By.css('.table-row__last .add-new-item-btn'),
+    Secrets_Hint: By.css('.settings__card-subtitle')
   }
 }

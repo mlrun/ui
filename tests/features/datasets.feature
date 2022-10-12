@@ -131,6 +131,7 @@ Feature: Datasets Page
     Then type value "dataset" to "Name_Input" field on "Register_Dataset" wizard
     Then type value "target/path" to "Target_Path_Input" field on "Register_Dataset" wizard
     Then type value "new dataset description" to "Description_Input" field on "Register_Dataset" wizard
+    Then check "Description_Input" textarea counter on "Register_Dataset" wizard
     Then verify "Register_Button" element on "Register_Dataset" wizard is enabled
     Then click on "Cancel_Button" element on "Register_Dataset" wizard
     Then verify if "Common_Popup" popup dialog appears
@@ -141,7 +142,7 @@ Feature: Datasets Page
     Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
     Then click on "Cross_Cancel_Button" element on "Register_Dataset" wizard
     Then verify if "Common_Popup" popup dialog appears
-    Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_Dataset" popup dialog appears
     Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
     Then verify "Target_Path_Input" input should contains "target/path" value on "Register_Dataset" wizard
@@ -151,7 +152,7 @@ Feature: Datasets Page
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then navigate back
     Then verify if "Common_Popup" popup dialog appears
-    Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then navigate back
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Confirm_Button" element on "Common_Popup" wizard
@@ -174,8 +175,8 @@ Feature: Datasets Page
     Then type value "test-path" to "Target_Path_Input" field on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     And wait load page
-    Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test-dataset"
-    Then click on cell with value "test-dataset" in "name" column in "Files_Table" table on "Files" wizard
+    Then check "test-dataset" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "test-dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
     Then check "test-dataset" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard

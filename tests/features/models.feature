@@ -186,23 +186,80 @@ Feature: Models Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then click on "Register_Model_Button" element on "Models" wizard
+    Then navigate back
+    Then verify "Title" element not exists on "Register_Model_Popup" wizard
+    Then click on "Register_Model_Button" element on "Models" wizard
     Then verify if "Register_Model_Popup" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
     Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
-    Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
+    Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifacts_Names_Unique"
     Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-    Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
-    Then verify "New_File_Name_Input" options rules on "Register_Model_Popup" wizard
+    Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
     Then verify "New_File_Target_Path_Input" element visibility on "Register_Model_Popup" wizard
     Then type value "   " to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
     Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
     Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
+    Then check "New_File_Description_Input" textarea counter on "Register_Model_Popup" wizard
     Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
     Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
     Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
     Then "Cancel_Button" element on "Register_Model_Popup" should contains "Cancel" value
     Then verify "Register_Button" element visibility on "Register_Model_Popup" wizard
     Then "Register_Button" element on "Register_Model_Popup" should contains "Register" value
+    Then click on "Register_Button" element on "Register_Model_Popup" wizard
+    Then verify "Register_Button" element on "Register_Model_Popup" wizard is disabled
+    Then type value "model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
+    Then type value "target/path" to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
+    Then type value "new model description" to "New_File_Description_Input" field on "Register_Model_Popup" wizard
+    Then check "New_File_Description_Input" textarea counter on "Register_Model_Popup" wizard
+    When add rows to "Labels_Table" table on "Register_Model_Popup" wizard
+            | key_input | value_input |
+            |    key1   |    value1   |
+            |    key2   |    value2   |
+            |    key3   |    value3   |
+    Then verify values in "Labels_Table" table on "Register_Model_Popup" wizard
+            |      label      |
+            | key1\n:\nvalue1 |
+            | key2\n:\nvalue2 |
+            | key3\n:\nvalue3 |
+     When click on "remove_btn" in "Labels_Table" table on "Register_Model_Popup" wizard with offset "false"
+            |      label      |
+            | key1\n:\nvalue1 |
+            | key3\n:\nvalue3 |
+     Then verify values in "Labels_Table" table on "Register_Model_Popup" wizard
+            |      label      |
+            | key2\n:\nvalue2 |
+    Then verify "Register_Button" element on "Register_Model_Popup" wizard is enabled
+    Then click on "Cancel_Button" element on "Register_Model_Popup" wizard
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
+    Then verify if "Register_Model_Popup" popup dialog appears
+    Then verify "New_File_Name_Input" input should contains "model" value on "Register_Model_Popup" wizard
+    Then verify "New_File_Target_Path_Input" input should contains "target/path" value on "Register_Model_Popup" wizard
+    Then verify "New_File_Description_Input" input should contains "new model description" value on "Register_Model_Popup" wizard
+    Then verify values in "Labels_Table" table on "Register_Model_Popup" wizard
+            |      label      |
+            | key2\n:\nvalue2 |
+    Then click on "Cross_Cancel_Button" element on "Register_Model_Popup" wizard
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
+    Then verify if "Register_Model_Popup" popup dialog appears
+    Then verify "New_File_Name_Input" input should contains "model" value on "Register_Model_Popup" wizard
+    Then verify "New_File_Target_Path_Input" input should contains "target/path" value on "Register_Model_Popup" wizard
+    Then verify "New_File_Description_Input" input should contains "new model description" value on "Register_Model_Popup" wizard
+    Then verify values in "Labels_Table" table on "Register_Model_Popup" wizard
+            |      label      |
+            | key2\n:\nvalue2 |
+    Then navigate back
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
+    Then navigate back
+    Then verify if "Common_Popup" popup dialog appears
+    Then click on "Confirm_Button" element on "Common_Popup" wizard
+    And wait load page
+    Then verify "Title" element not exists on "Register_Model_Popup" wizard
+    Then navigate forward
+    Then verify "Title" element not exists on "Register_Model_Popup" wizard
 
   Scenario: Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
@@ -283,15 +340,15 @@ Feature: Models Page
   Scenario: Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then verify "Updated" element visibility on "Models_Info_Pane" wizard
@@ -303,6 +360,61 @@ Feature: Models Page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then select "Features" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Features" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then select "Statistics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Statistics" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify cell with "Statistics" value in "key" column in "Info_Pane_Tab_Selector" table on "Models_Info_Pane" wizard should display "Label_Hint"."Models_Statistics"
+    Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+
+  Scenario: Check all mandatory components in Item infopane on Overview tab table
+    * set tear-down property "model" created in "default" project with "test-model" value
+    * create "test-model" Model with "latest" tag in "default" project with code 200
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
+    When add rows to "Labels_Table" table on "Models_Info_Pane" wizard
+            | key_input | value_input |
+            |    key1   |    value1   |
+            |    key2   |    value2   |
+            |    key3   |    value3   |
+    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard
+            |       label     |
+            | key1\n:\nvalue1 |
+            | key2\n:\nvalue2 |
+            | key3\n:\nvalue3 |
+    When click on "remove_btn" in "Labels_Table" table on "Models_Info_Pane" wizard
+            |       label     |
+            | key1\n:\nvalue1 |
+            | key3\n:\nvalue3 |
+    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard
+            |       label     |
+            | key2\n:\nvalue2 |
+    Then click on "Apply_Button" element on "Models_Info_Pane" wizard
+    Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is enabled
+    Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
+    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard
+            |       label     |
+            | key2\n:\nvalue2 |
+    When click on "Expand_Sources" element on "Models_Info_Pane" wizard
+    When click on "remove_btn" in "Labels_Table" table on "Models_Info_Pane" wizard
+           |       label     |
+           | key2\n:\nvalue2 |
+    Then click on "Apply_Button" element on "Models_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
 
   @passive
   Scenario: Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
@@ -425,7 +537,7 @@ Feature: Models Page
     Then verify "Tag_Dropdown" dropdown on "Deploy_Model_Popup" wizard selected option value "non-latest"
     Then click on "Cross_Cancel_Button" element on "Deploy_Model_Popup" wizard
     Then verify if "Common_Popup" popup dialog appears
-    Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
+    Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Deploy_Model_Popup" popup dialog appears
     Then verify "Model_Name_Input" input should contains "automation-test-model" value on "Deploy_Model_Popup" wizard
     Then verify "Class_Name_Input" input should contains "Class" value on "Deploy_Model_Popup" wizard
@@ -434,9 +546,6 @@ Feature: Models Page
     Then navigate back
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Cancel_Button" element on "Common_Popup" wizard
-    Then navigate back
-    Then verify if "Common_Popup" popup dialog appears
-    Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
     Then navigate back
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Confirm_Button" element on "Common_Popup" wizard
