@@ -22,14 +22,12 @@ import {
   GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   HTTP_STORAGE_INPUT_PATH_SCHEME,
   HTTPS_STORAGE_INPUT_PATH_SCHEME,
-  // HTTP_STORAGE_INPUT_PATH_SCHEME,
-  // HTTPS_STORAGE_INPUT_PATH_SCHEME,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
-} from '../constants'
+} from '../../constants'
 import { isNil } from 'lodash'
-import { getArtifactReference, getParsedResource } from './resources'
+import { getArtifactReference, getParsedResource } from '../../utils/resources'
 
 export const pathPlaceholders = {
   [MLRUN_STORAGE_INPUT_PATH_SCHEME]: 'artifacts/my-project/my-artifact:my-tag',
@@ -39,7 +37,7 @@ export const pathPlaceholders = {
   [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
 }
 
-export const dataInputInitialState = {
+export const targetPathInitialState = {
   artifacts: [],
   artifactsReferences: [],
   comboboxMatches: [],
@@ -78,13 +76,14 @@ export const storePathTypes = [
   }
 ]
 
-export const handleStoreInputPathChange = (dataInputState, setDataInputState, value) => {
+export const handleStoreInputPathChange = (targetPathState, setTargetPathState, value) => {
   const pathItems = value.split('/')
   const [projectItem, projectItemReference] = getParsedResource(pathItems[2])
-  const projectItems = dataInputState[pathItems[0] === 'artifacts' ? 'artifacts' : 'featureVectors']
+  const projectItems =
+    targetPathState[pathItems[0] === 'artifacts' ? 'artifacts' : 'featureVectors']
   const projectItemIsEntered = projectItems.find(project => project.id === projectItem)
   const projectItemsReferences =
-    dataInputState[
+    targetPathState[
       pathItems[0] === 'artifacts' ? 'artifactsReferences' : 'featureVectorsReferences'
     ]
   const projectItemReferenceIsEntered = projectItemsReferences.find(
@@ -92,24 +91,24 @@ export const handleStoreInputPathChange = (dataInputState, setDataInputState, va
   )
   const isInputStorePathTypeValid = storePathTypes.some(type => type.id.startsWith(pathItems[0]))
 
-  setDataInputState(prev => ({
+  setTargetPathState(prev => ({
     ...prev,
     artifacts:
-      isNil(pathItems[2]) && dataInputState.artifacts.length > 0 ? [] : dataInputState.artifacts,
-    artifactsReferences: projectItemReference ? dataInputState.artifactsReferences : [],
+      isNil(pathItems[2]) && targetPathState.artifacts.length > 0 ? [] : targetPathState.artifacts,
+    artifactsReferences: projectItemReference ? targetPathState.artifactsReferences : [],
     featureVectors:
-      isNil(pathItems[2]) && dataInputState.featureVectors.length > 0
+      isNil(pathItems[2]) && targetPathState.featureVectors.length > 0
         ? []
-        : dataInputState.featureVectors,
-    featureVectorsReferences: projectItemReference ? dataInputState.featureVectorsReferences : [],
+        : targetPathState.featureVectors,
+    featureVectorsReferences: projectItemReference ? targetPathState.featureVectorsReferences : [],
     inputProjectItemPathEntered: Boolean(projectItemIsEntered),
     inputProjectItemReferencePathEntered: Boolean(projectItemReferenceIsEntered),
     inputProjectPathEntered: isInputStorePathTypeValid && typeof pathItems[2] === 'string',
     inputStorePathTypeEntered: isInputStorePathTypeValid && typeof pathItems[1] === 'string',
-    project: pathItems[1] ?? dataInputState.project,
-    projectItem: projectItem ?? dataInputState.projectItem,
-    projectItemReference: projectItemReference ?? dataInputState.projectItemReference,
-    storePathType: pathItems[0] ?? dataInputState.storePathType
+    project: pathItems[1] ?? targetPathState.project,
+    projectItem: projectItem ?? targetPathState.projectItem,
+    projectItemReference: projectItemReference ?? targetPathState.projectItemReference,
+    storePathType: pathItems[0] ?? targetPathState.storePathType
   }))
 }
 

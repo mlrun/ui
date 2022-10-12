@@ -81,7 +81,7 @@ const RegisterArtifactModal = ({
       key: values.key,
       db_key: values.key,
       tree: uid,
-      target_path: values.target_path,
+      target_path: values.target_path.path,
       description: values.description,
       kind: values.kind === 'general' ? '' : values.kind,
       project: projectName,

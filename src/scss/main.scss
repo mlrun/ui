@@ -266,6 +266,26 @@ iframe {
   }
 }
 
+.combobox {
+  .path-type {
+    &-store {
+      color: $amethyst;
+    }
+
+    &-v3io {
+      color: $cornflowerBlueTwo;
+    }
+
+    &-az,
+    &-gs,
+    &-http,
+    &-https,
+    &-s3 {
+      color: $sorbus;
+    }
+  }
+}
+
 .visibility-hidden {
   visibility: hidden;
 }
