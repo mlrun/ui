@@ -17,13 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
+import arrayMutators from 'final-form-arrays'
 
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
 import { Button, Modal } from 'igz-controls/components'
@@ -32,6 +33,8 @@ import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { setFieldState } from 'igz-controls/utils/form.util'
+import { convertChipsData } from '../../utils/convertChipsData'
 
 import artifactApi from '../../api/artifacts-api'
 
@@ -46,26 +49,23 @@ const RegisterArtifactModal = ({
   setNotification,
   title
 }) => {
-  const [initialValues, setInitialValues] = useState({
+  const initialValues = {
     description: '',
-    kind: '',
+    kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
     key: '',
+    labels: [],
     target_path: ''
-  })
+  }
+
   const formRef = React.useRef(
     createForm({
-      onSubmit: () => {}
+      initialValues,
+      onSubmit: () => {},
+      mutators: { ...arrayMutators, setFieldState }
     })
   )
   const location = useLocation()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
-
-  useEffect(() => {
-    setInitialValues(state => ({
-      ...state,
-      kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general'
-    }))
-  }, [artifactKind])
 
   const registerArtifact = values => {
     const uid = uuidv4()
@@ -77,6 +77,7 @@ const RegisterArtifactModal = ({
       target_path: values.target_path,
       description: values.description,
       kind: values.kind === 'general' ? '' : values.kind,
+      labels: convertChipsData(values.labels),
       project: projectName,
       producer: {
         kind: 'api',
@@ -87,6 +88,7 @@ const RegisterArtifactModal = ({
     return artifactApi
       .registerArtifact(projectName, data)
       .then(response => {
+        resolveModal()
         refresh(filtersStore)
         setNotification({
           status: response.status,
@@ -94,16 +96,14 @@ const RegisterArtifactModal = ({
           message: `${title} initiated successfully`
         })
       })
-      .catch(err => {
+      .catch(() => {
+        resolveModal()
         setNotification({
           status: 400,
           id: Math.random(),
           message: `${title} failed to initiate`,
           retry: registerArtifact
         })
-      })
-      .finally(() => {
-        resolveModal()
       })
   }
 
@@ -127,7 +127,7 @@ const RegisterArtifactModal = ({
   }
 
   return (
-    <Form form={formRef.current} initialValues={initialValues} onSubmit={registerArtifact}>
+    <Form form={formRef.current} onSubmit={registerArtifact}>
       {formState => {
         return (
           <Modal
@@ -141,7 +141,9 @@ const RegisterArtifactModal = ({
             title={title}
           >
             <RegisterArtifactModalForm
+              formState={formState}
               showType={artifactKind === 'artifact'}
+              initialValues={initialValues}
               messageByKind={messagesByKind[artifactKind.toLowerCase()]}
             />
           </Modal>
