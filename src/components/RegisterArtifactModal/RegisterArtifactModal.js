@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -49,28 +49,23 @@ const RegisterArtifactModal = ({
   setNotification,
   title
 }) => {
-  const [initialValues, setInitialValues] = useState({
+  const initialValues = {
     description: '',
-    kind: '',
+    kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
     key: '',
     labels: [],
     target_path: ''
-  })
+  }
+
   const formRef = React.useRef(
     createForm({
+      initialValues,
       onSubmit: () => {},
-      mutators: { ...arrayMutators, setFieldState },
+      mutators: { ...arrayMutators, setFieldState }
     })
   )
   const location = useLocation()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
-
-  useEffect(() => {
-    setInitialValues(state => ({
-      ...state,
-      kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general'
-    }))
-  }, [artifactKind])
 
   const registerArtifact = values => {
     const uid = uuidv4()
@@ -132,7 +127,7 @@ const RegisterArtifactModal = ({
   }
 
   return (
-    <Form form={formRef.current} initialValues={initialValues} onSubmit={registerArtifact}>
+    <Form form={formRef.current} onSubmit={registerArtifact}>
       {formState => {
         return (
           <Modal
