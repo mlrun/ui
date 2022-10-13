@@ -131,11 +131,8 @@ const artifactsAction = {
     return artifactsApi
       .getDataSet(project, dataSet, tag)
       .then(response => {
-        const generatedArtifacts = generateArtifacts(
-          filterArtifacts(response.data.artifacts),
-          iter,
-          DATASETS
-        )
+        const result = parseArtifacts(response.data.artifacts)
+        const generatedArtifacts = generateArtifacts(filterArtifacts(result), iter, DATASETS)
 
         dispatch(
           artifactsAction.fetchDataSetSuccess({
@@ -143,7 +140,7 @@ const artifactsAction = {
           })
         )
 
-        return response.data.artifacts
+        return result
       })
       .catch(error => {
         throw error
@@ -185,11 +182,8 @@ const artifactsAction = {
     return artifactsApi
       .getFile(project, file, tag)
       .then(response => {
-        const generatedArtifacts = generateArtifacts(
-          filterArtifacts(response.data.artifacts),
-          ARTIFACTS,
-          iter
-        )
+        const result = parseArtifacts(response.data.artifacts)
+        const generatedArtifacts = generateArtifacts(filterArtifacts(result), ARTIFACTS, iter)
 
         dispatch(
           artifactsAction.fetchFileSuccess({
@@ -197,7 +191,7 @@ const artifactsAction = {
           })
         )
 
-        return response.data.artifacts
+        return result
       })
       .catch(error => {
         throw error
@@ -290,11 +284,8 @@ const artifactsAction = {
     return artifactsApi
       .getModel(project, model, tag)
       .then(response => {
-        const generatedArtifacts = generateArtifacts(
-          filterArtifacts(response.data.artifacts),
-          MODELS_TAB,
-          iter
-        )
+        const result = parseArtifacts(response.data.artifacts)
+        const generatedArtifacts = generateArtifacts(filterArtifacts(result), MODELS_TAB, iter)
 
         dispatch(
           artifactsAction.fetchModelSuccess({
@@ -302,7 +293,7 @@ const artifactsAction = {
           })
         )
 
-        return response.data.artifacts
+        return result
       })
       .catch(error => {
         throw error
