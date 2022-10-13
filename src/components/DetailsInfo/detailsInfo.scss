@@ -26,6 +26,10 @@
         vertical-align: middle;
       }
 
+      &__btn-edit {
+        margin-left: 10px;
+      }
+
       &__header {
         display: flex;
         min-width: 100px;
@@ -49,6 +53,7 @@
 
         &-edit-placeholder {
           color: $spunPearl;
+          cursor: pointer;
         }
       }
 
