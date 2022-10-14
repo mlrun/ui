@@ -50,7 +50,8 @@ const JobWizard = ({
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {},
-      mutators: { ...arrayMutators, setFieldState }
+      mutators: { ...arrayMutators, setFieldState },
+      initialValues: {}
     })
   )
   const navigate = useNavigate()
@@ -183,7 +184,7 @@ const JobWizard = ({
   }
 
   return (
-    <Form form={formRef.current} initialValues={{}} onSubmit={() => {}}>
+    <Form form={formRef.current} onSubmit={() => {}}>
       {formState => {
         return (
           <>
@@ -233,11 +234,11 @@ const JobWizard = ({
                 />
               )}
               <JobWizardJobDetails
-                isEditMode={isEditMode}
                 defaultData={defaultData}
-                frontendSpec={frontendSpec}
-                isStagingMode={isStagingMode}
                 formState={formState}
+                frontendSpec={frontendSpec}
+                isEditMode={isEditMode}
+                isStagingMode={isStagingMode}
                 jobAdditionalData={jobAdditionalData}
                 selectedFunctionData={selectedFunctionData}
                 setJobAdditionalData={setJobAdditionalData}

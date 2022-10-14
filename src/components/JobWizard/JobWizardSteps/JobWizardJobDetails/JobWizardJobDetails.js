@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { isEmpty, omit } from 'lodash'
 
-import { FormInput, FormSelect, ConfirmDialog } from 'igz-controls/components'
+import { FormInput, FormSelect, ConfirmDialog, FormChipCell } from 'igz-controls/components'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -14,17 +14,18 @@ import {
   parsePredefinedParameters,
   generateJobWizardDefaultData
 } from '../../JobWizard.util'
+import { getChipOptions } from '../../../../utils/getChipOptions'
 
 import './jobWizardJobDetails.scss'
 
 const JobWizardJobDetails = ({
+  defaultData,
   formState,
+  frontendSpec,
+  isEditMode,
+  isStagingMode,
   jobAdditionalData,
   selectedFunctionData,
-  isEditMode,
-  frontendSpec,
-  defaultData,
-  isStagingMode,
   setJobAdditionalData
 }) => {
   const methodPath = 'jobDetails.method'
@@ -133,6 +134,22 @@ const JobWizardJobDetails = ({
             />
           </div>
         )}
+      </div>
+      <div className="form-row">
+        <FormChipCell
+          chipOptions={getChipOptions('metrics')}
+          formState={formState}
+          initialValues={formState.initialValues}
+          isEditable
+          label="labels"
+          name="jobDetails.labels"
+          shortChips
+          visibleChipsMaxLength="all"
+          validationRules={{
+            key: getValidationRules('common.tag'),
+            value: getValidationRules('common.tag')
+          }}
+        />
       </div>
       {spyOnMethodChange && <OnChange name={methodPath}>{onMethodChange}</OnChange>}
     </div>

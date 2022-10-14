@@ -29,7 +29,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
 
 import { getChipOptions } from '../../utils/getChipOptions'
-import { convertChipsData } from '../../utils/convertChipsData'
+import { generateChipsData } from '../../utils/convertChipsData'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
@@ -65,7 +65,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
       uid: uid,
       key: value.modelName,
       db_key: value.modelName,
-      labels: convertChipsData(value.labels),
+      labels: generateChipsData(value.labels),
       tree: uid,
       target_path: value.targetPath,
       description: value.description,
@@ -161,11 +161,11 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
                 chipOptions={getChipOptions('metrics')}
                 formState={formState}
                 initialValues={initialValues}
-                isEditMode
+                isEditable
                 label="labels"
                 name="labels"
                 shortChips
-                visibleChipsMaxLength="2"
+                visibleChipsMaxLength="all"
                 validationRules={{
                   key: getValidationRules('common.tag'),
                   value: getValidationRules('common.tag')

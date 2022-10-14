@@ -34,7 +34,7 @@ import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { convertChipsData } from '../../utils/convertChipsData'
+import { generateChipsData } from '../../utils/convertChipsData'
 
 import artifactApi from '../../api/artifacts-api'
 
@@ -77,7 +77,7 @@ const RegisterArtifactModal = ({
       target_path: values.target_path,
       description: values.description,
       kind: values.kind === 'general' ? '' : values.kind,
-      labels: convertChipsData(values.labels),
+      labels: generateChipsData(values.labels),
       project: projectName,
       producer: {
         kind: 'api',

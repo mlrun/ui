@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const convertChipsData = chips => {
+export const generateChipsData = chips => {
   return chips.reduce((list, label) => {
     list[label.key] = label.value
 
@@ -25,7 +25,7 @@ export const convertChipsData = chips => {
   }, {})
 }
 
-export const generateChipsList = (labels = {}, delimiter = null) => {
+export const parseChipsData = (labels = {}, delimiter = null) => {
   return Object.entries(labels).reduce((list, [key, value], id) => {
     list.push({ id, key, value, delimiter })
 

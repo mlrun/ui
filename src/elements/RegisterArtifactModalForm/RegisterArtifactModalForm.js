@@ -98,7 +98,7 @@ const RegisterArtifactModalForm = ({ formState, showType, initialValues, message
           chipOptions={getChipOptions('metrics')}
           formState={formState}
           initialValues={initialValues}
-          isEditMode
+          isEditable
           label="labels"
           name="labels"
           shortChips
