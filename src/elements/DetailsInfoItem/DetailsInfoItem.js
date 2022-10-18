@@ -33,6 +33,7 @@ import { CHIP_OPTIONS } from '../../types'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 
 const DetailsInfoItem = React.forwardRef(
   (
@@ -187,22 +188,35 @@ const DetailsInfoItem = React.forwardRef(
       )
     } else if ((typeof info !== 'object' || Array.isArray(info)) && item?.editModeEnabled) {
       return (
-        <Tooltip template={<TextTooltipTemplate text="Click to edit" />}>
-          <div
-            className="details-item__data"
-            onClick={() => {
-              if (editableFieldType.length === 0) {
-                onClick(currentField, item?.editModeType, info)
-              }
-            }}
-          >
-            {info.length === 0 ? (
-              <span className="details-item__data-edit-placeholder">Click to edit</span>
-            ) : (
-              info
-            )}
-          </div>
-        </Tooltip>
+        <div className="details-item__data">
+          {info.length === 0 ? (
+            <span
+              className="details-item__data-add-placeholder"
+              onClick={() => {
+                if (editableFieldType.length === 0) {
+                  onClick(currentField, item?.editModeType, info)
+                }
+              }}
+            >
+              Click to add
+            </span>
+          ) : (
+            <>
+              {info}
+              <RoundedIcon
+                className="details-item__data-btn-edit"
+                onClick={() => {
+                  if (editableFieldType.length === 0) {
+                    onClick(currentField, item?.editModeType, info)
+                  }
+                }}
+                tooltipText="Edit"
+              >
+                <Edit />
+              </RoundedIcon>
+            </>
+          )}
+        </div>
       )
     }
 
