@@ -25,8 +25,16 @@ import { FormInput, FormSelect, FormTextarea, FormChipCell } from 'igz-controls/
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { getChipOptions } from '../../utils/getChipOptions'
+import { useMode } from '../../hooks/mode.hook'
 
-const RegisterArtifactModalForm = ({ formState, showType, initialValues, messageByKind, setFieldState }) => {
+const RegisterArtifactModalForm = ({
+  formState,
+  showType,
+  initialValues,
+  messageByKind,
+  setFieldState
+}) => {
+  const { isDemoMode } = useMode()
   const kindOptions = useMemo(
     () => [
       {
@@ -92,17 +100,21 @@ const RegisterArtifactModalForm = ({ formState, showType, initialValues, message
         <FormTextarea label="Description" maxLength={500} name="description" />
       </div>
       <div className="form-row">
-        <TargetPath
-          density="dense"
-          formState={formState}
-          formStateFieldInfo="target_path.fieldInfo"
-          label="Target Path"
-          name="target_path.path"
-          onChangeListenerName="target_path.fieldInfo.pathType"
-          required
-          selectPlaceholder="Path Scheme"
-          setFieldState={setFieldState}
-        />
+        {isDemoMode ? (
+          <TargetPath
+            density="dense"
+            formState={formState}
+            formStateFieldInfo="target_path.fieldInfo"
+            label="Target Path"
+            name="target_path.path"
+            onChangeListenerName="target_path.fieldInfo.pathType"
+            required
+            selectPlaceholder="Path Scheme"
+            setFieldState={setFieldState}
+          />
+        ) : (
+          <FormInput label="Target Path" name="target_path" required />
+        )}
       </div>
       <div className="form-row">
         <FormChipCell

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -35,8 +35,8 @@ import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/consta
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData } from '../../utils/convertChipsData'
-
 import artifactApi from '../../api/artifacts-api'
+import { useMode } from '../../hooks/mode.hook'
 
 const RegisterArtifactModal = ({
   actions,
@@ -49,33 +49,30 @@ const RegisterArtifactModal = ({
   setNotification,
   title
 }) => {
-  const [initialValues, setInitialValues] = useState({
+  const { isDemoMode } = useMode()
+  const initialValues = {
     description: '',
-    kind: '',
+    kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
     key: '',
-    target_path: {
-      fieldInfo: {
-        pathType: ''
-      },
-      path: ''
-    },
+    target_path: isDemoMode
+      ? {
+          fieldInfo: {
+            pathType: ''
+          },
+          path: ''
+        }
+      : '',
     labels: []
-  })
+  }
   const formRef = React.useRef(
     createForm({
+      initialValues,
       onSubmit: () => {},
-      mutators: { ...arrayMutators, setFieldState },
+      mutators: { ...arrayMutators, setFieldState }
     })
   )
   const location = useLocation()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
-
-  useEffect(() => {
-    setInitialValues(state => ({
-      ...state,
-      kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general'
-    }))
-  }, [artifactKind])
 
   const registerArtifact = values => {
     const uid = uuidv4()
@@ -84,7 +81,7 @@ const RegisterArtifactModal = ({
       key: values.key,
       db_key: values.key,
       tree: uid,
-      target_path: values.target_path.path,
+      target_path: isDemoMode ? values.target_path.path : values.target_path,
       description: values.description,
       kind: values.kind === 'general' ? '' : values.kind,
       labels: convertChipsData(values.labels),
@@ -137,7 +134,7 @@ const RegisterArtifactModal = ({
   }
 
   return (
-    <Form form={formRef.current} initialValues={initialValues} onSubmit={registerArtifact}>
+    <Form form={formRef.current} onSubmit={registerArtifact}>
       {formState => {
         return (
           <Modal

@@ -27,6 +27,7 @@ import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
 
 import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
+import TargetPath from '../../common/TargetPath/TargetPath'
 
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData } from '../../utils/convertChipsData'
@@ -35,17 +36,25 @@ import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import notificationActions from '../../actions/notification'
-
+import { useMode } from '../../hooks/mode.hook'
 import artifactApi from '../../api/artifacts-api'
 
 import './registerModelPopUp.scss'
 
 function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }) {
+  const { isDemoMode } = useMode()
   const initialValues = {
     description: undefined,
     labels: [],
     modelName: undefined,
-    targetPath: undefined
+    target_path: isDemoMode
+      ? {
+          fieldInfo: {
+            pathType: ''
+          },
+          path: ''
+        }
+      : undefined
   }
   const formRef = React.useRef(
     createForm({
@@ -67,7 +76,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
       db_key: value.modelName,
       labels: convertChipsData(value.labels),
       tree: uid,
-      target_path: value.targetPath,
+      target_path: isDemoMode ? value.target_path.path : value.target_path,
       description: value.description,
       kind: 'model',
       project: projectName,
@@ -77,8 +86,10 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
       }
     }
 
-    if (value.targetPath.includes('/')) {
-      const path = value.targetPath.split(/([^/]*)$/)
+    if (value.target_path?.path?.includes('/') || value.target_path?.includes('/')) {
+      const path = isDemoMode
+        ? value.target_path.path.split(/([^/]*)$/)
+        : value.targetPath.split(/([^/]*)$/)
 
       data.target_path = path[0]
       data.model_file = path[1]
@@ -151,10 +162,24 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
               />
             </div>
             <div className="register-model__row">
-              <FormInput name="targetPath" label="Target path" required />
+              <FormTextarea name="description" label="Description" maxLength={500} />
             </div>
             <div className="register-model__row">
-              <FormTextarea name="description" label="Description" maxLength={500} />
+              {isDemoMode ? (
+                <TargetPath
+                  density="dense"
+                  formState={formState}
+                  formStateFieldInfo="target_path.fieldInfo"
+                  label="Target Path"
+                  name="target_path.path"
+                  onChangeListenerName="target_path.fieldInfo.pathType"
+                  required
+                  selectPlaceholder="Path Scheme"
+                  setFieldState={formState.form.mutators.setFieldState}
+                />
+              ) : (
+                <FormInput name="target_path" label="Target path" required />
+              )}
             </div>
             <div className="register-model__row">
               <FormChipCell
