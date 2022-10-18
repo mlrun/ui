@@ -94,6 +94,12 @@ export const generateArtifactsContent = (
           ? `${generateLinkPath(`store://functions/${selectedItem?.spec?.function_uri}`)}/overview`
           : ''
       },
+      monitoring_feature_set_uri: {
+        value: selectedItem?.status?.monitoring_feature_set_uri,
+        link: selectedItem?.status?.monitoring_feature_set_uri
+          ? `${generateLinkPath(selectedItem?.status?.monitoring_feature_set_uri)}/latest/overview`
+          : ''
+      },
       last_prediction: {
         value: formatDatetime(new Date(selectedItem?.status?.last_request), '-')
       },
