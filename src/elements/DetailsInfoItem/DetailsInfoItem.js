@@ -191,7 +191,7 @@ const DetailsInfoItem = React.forwardRef(
         <div className="details-item__data">
           {info.length === 0 ? (
             <span
-              className="details-item__data-edit-placeholder"
+              className="details-item__data-add-placeholder"
               onClick={() => {
                 if (editableFieldType.length === 0) {
                   onClick(currentField, item?.editModeType, info)
@@ -204,7 +204,7 @@ const DetailsInfoItem = React.forwardRef(
             <>
               {info}
               <RoundedIcon
-                className="details-item__btn-edit"
+                className="details-item__data-btn-edit"
                 onClick={() => {
                   if (editableFieldType.length === 0) {
                     onClick(currentField, item?.editModeType, info)
