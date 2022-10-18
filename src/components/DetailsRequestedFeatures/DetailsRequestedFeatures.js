@@ -23,13 +23,12 @@ import { cloneDeep, isNil } from 'lodash'
 
 import DetailsRequestedFeaturesView from './DetailsRequestedFeaturesView'
 
-import { handleFinishEdit } from '../Details/details.util.js'
+import { handleFinishEdit, countChanges } from '../Details/details.util.js'
 import {
   detailsRequestedFeaturesActions,
   detailsRequestedFeaturesReducer,
   initialState
 } from './detailsRequestedFeaturesReducer.js'
-import { countChanges } from './detailsRequestedFeatures.utils'
 
 const DetailsRequestedFeatures = ({
   changes,
@@ -152,27 +151,21 @@ const DetailsRequestedFeatures = ({
     }
   }
 
-  const onFinishEdit = fields => {
+  const onFinishEdit = () => {
     const changesData = cloneDeep(changes)
     changesData.data.features.currentFieldValue = generatedFeaturesArray
-
-    const changesCounter = countChanges(
-        changesData.data.features.initialFieldValue,
-        changesData.data.features.currentFieldValue
-    )
 
     setEditableItemIndex(null)
     setLabelFeatureIsEditable(false)
     setCurrentData(changesData.data.features.currentFieldValue)
     handleFinishEdit(
-      fields,
+      Object.keys(changes.data),
       changesData,
       detailsRequestedFeaturesActions,
       detailsRequestedFeaturesDispatch,
       detailsRequestedFeaturesState,
       setChangesData,
-      setChangesCounter,
-      changesCounter
+      setChangesCounter
     )
   }
 
@@ -204,10 +197,7 @@ const DetailsRequestedFeatures = ({
 
     setChanges({
       data: changesData,
-      counter: countChanges(
-        changesData.features.initialFieldValue,
-        changesData.features.currentFieldValue
-      )
+      counter: countChanges(changesData)
     })
 
     setConfirmDialogData({ index: null, feature: null })
