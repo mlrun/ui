@@ -493,6 +493,24 @@ export const handleFinishEdit = (
     }
   })
 
-  setChangesCounter(changesCounter || Object.keys(changesData).length)
+  setChangesCounter(countChanges(changesData))
   setChangesData({ ...changesData })
+}
+
+export const countChanges = changesData => {
+  let changesCounter = 0
+
+  Object.keys(changesData).forEach(field => {
+    if (field === 'features') {
+      changesData[field].initialFieldValue.forEach(item => {
+        if (!changesData[field].currentFieldValue.includes(item)) {
+          changesCounter++
+        }
+      })
+    } else {
+      changesCounter++
+    }
+  })
+
+  return changesCounter
 }
