@@ -89,6 +89,7 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Model class', id: 'model_class' },
   { label: 'Model artifact', id: 'model_artifact' },
   { label: 'Function URI', id: 'function_uri' },
+  { label: 'Feature set', id: 'monitoring_feature_set_uri' },
   { label: 'Last prediction', id: 'last_prediction' },
   { label: 'Error count', id: 'error_count' },
   { label: 'Accuracy', id: 'accuracy' },
