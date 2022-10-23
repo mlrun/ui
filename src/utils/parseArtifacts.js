@@ -17,20 +17,25 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
-module.exports = function (textAreaStructure) {
-  const element = {}
-  element.root = By.css(textAreaStructure.root)
-  element.inputField = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.input}`)
+export const parseArtifacts = artifacts =>
+  artifacts.map(artifact => {
+    let item = { ...artifact }
 
-  if (textAreaStructure.elements.label) {
-    element.inputLabel = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.label}`)
-  }
+    //remove when format=full is by default
+    if (item.status && item.spec && item.metadata) {
+      item = {
+        ...artifact.status,
+        ...artifact.spec,
+        ...artifact.metadata
+      }
+    }
 
-  element.counter =  By.css(`${textAreaStructure.root} ${textAreaStructure.elements.counter}`)
-  element.warningHint = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.warningHint}`)
-  element.warningText = By.css(`${textAreaStructure.elements.warningText}`)
-
-  return element
-}
+    return {
+      ...item,
+      kind: artifact.kind,
+      ui: {
+        originalContent: artifact
+      }
+    }
+  })

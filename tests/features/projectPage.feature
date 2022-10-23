@@ -83,12 +83,12 @@ Feature: MLRun Project Page
         Then verify "Header_Name_Label" on "Demo_Project" wizard should display "Project"."Online_Status" in "Common_Tolltip"
         Then verify value should equal "automation-test-1002" in "Header_Name_Label" on "Demo_Project" wizard
         Then verify value should equal "automation test description" in "Header_Project_Description" on "Demo_Project" wizard
-        Then verify value should equal "Data collection" in "Data_Collection_Header" on "Demo_Project" wizard
+        Then verify value should equal "Data" in "Data_Collection_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Data_Collection_Description" in "Data_Collection_Description" on "Demo_Project" wizard
         Then verify "Data_Collection_Additional_Actions_Button" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Links_Table" element visibility on "Demo_Project" wizard
-        Then verify value should equal "Development" in "Development_Header" on "Demo_Project" wizard
+        Then verify value should equal "Jobs and Workflows" in "Development_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Development_Description" in "Development_Description" on "Demo_Project" wizard
         Then verify "Development_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Development_Links_Table" element visibility on "Demo_Project" wizard
@@ -114,7 +114,6 @@ Feature: MLRun Project Page
             |          name           |
             |   Create RT function    |
             | Deploy serving function |
-            |      Deploy Model       |
         Then verify values in "Data_Collection_Links_Table" table on "Demo_Project" wizard
             |      name       |
             |   Feature Sets  |
@@ -179,6 +178,7 @@ Feature: MLRun Project Page
         Then type value "artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
         Then type value "target/path" to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
         Then type value "new artifact description" to "New_File_Description_Input" field on "Register_File_Popup" wizard
+        Then check "New_File_Description_Input" textarea counter on "Register_File_Popup" wizard
         Then verify "Register_Button" element on "Register_File_Popup" wizard is enabled
         Then click on "Cancel_Button" element on "Register_File_Popup" wizard
         Then verify if "Common_Popup" popup dialog appears
@@ -197,22 +197,39 @@ Feature: MLRun Project Page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "Register Model" option in "Create_New" dropdown on "Project" wizard
-        Then "Title" element on "Register_Model_Popup" should contains "Register model" value
+        Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
+        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifacts_Names_Unique"
         Then verify "New_File_Target_Path_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "Register_Button" element visibility on "Register_Model_Popup" wizard
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
-        Then verify "New_File_Name_Input" options rules on "Register_Model_Popup" wizard
+        Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
+        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
         Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        When add rows to "Labels_Table" table on "Register_Model_Popup" wizard
+            | key_input | value_input |
+            |    key1   |    value1   |
+            |    key2   |    value2   |
+            |    key3   |    value3   |
+        Then verify values in "Labels_Table" table on "Register_Model_Popup" wizard
+            |      label      |
+            | key1\n:\nvalue1 |
+            | key2\n:\nvalue2 |
+            | key3\n:\nvalue3 |
+        When click on "remove_btn" in "Labels_Table" table on "Register_Model_Popup" wizard with offset "false"
+            |      label      |
+            | key1\n:\nvalue1 |
+            | key3\n:\nvalue3 |
+        Then verify values in "Labels_Table" table on "Register_Model_Popup" wizard
+            |      label      |
+            | key2\n:\nvalue2 |
 
     @passive
     Scenario: Check all mandatory components on Register Dataset Popup
@@ -245,6 +262,7 @@ Feature: MLRun Project Page
         Then type value "dataset" to "Name_Input" field on "Register_Dataset" wizard
         Then type value "target/path" to "Target_Path_Input" field on "Register_Dataset" wizard
         Then type value "new dataset description" to "Description_Input" field on "Register_Dataset" wizard
+        Then check "Description_Input" textarea counter on "Register_Dataset" wizard
         Then verify "Register_Button" element on "Register_Dataset" wizard is enabled
         Then click on "Cancel_Button" element on "Register_Dataset" wizard
         Then verify if "Common_Popup" popup dialog appears
@@ -600,9 +618,8 @@ Feature: MLRun Project Page
         Then verify "Create_Job_Header" element visibility on "Create_Job" wizard
         Then verify "Search_Input" element visibility on "Create_Job" wizard
 
-    @passive
     @demo
-    Scenario: Check all mandatory components on Register Model Popup on Demo mode from Demo Page
+    Scenario: Verify behaviour on Register Model Popup on Demo mode from Demo Page
         Given open url
         * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -611,10 +628,10 @@ Feature: MLRun Project Page
             |          name           |
             |      Register Model     |
         And wait load page
-        Then "Title" element on "Register_Model_Popup" should contains "Register model" value
+        Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
+        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifacts_Names_Unique"
         Then verify "New_File_Target_Path_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
@@ -622,12 +639,22 @@ Feature: MLRun Project Page
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
-        Then verify "New_File_Name_Input" options rules on "Register_Model_Popup" wizard
+        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
         Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
         Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then type value "test-model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
+        Then type value "test-path" to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
+        Then type value "test-description" to "New_File_Description_Input" field on "Register_Model_Popup" wizard
+        Then click on "Register_Button" element on "Register_Model_Popup" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Models" value
+        Then click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
+        Then "Header" element on "Models_Info_Pane" should contains "test-model" value
+        Then check "test-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
+        Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+        Then check "test-path" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
     @passive
     @demo
@@ -713,6 +740,14 @@ Feature: MLRun Project Page
         Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
         Then verify "Target_Path_Input" input should contains "target/path" value on "Register_Dataset" wizard
         Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
+        Then click on "Register_Button" element on "Register_Dataset" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Datasets" value
+        Then click on cell with value "dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
+        Then "Header" element on "Datasets_Info_Pane" should contains "dataset" value
+        Then check "dataset" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+        Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+        Then check "target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
 
     @passive
     @demo
@@ -761,6 +796,14 @@ Feature: MLRun Project Page
         Then verify "New_File_Target_Path_Input" input should contains "target/path" value on "Register_File_Popup" wizard
         Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
         Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
+        Then click on "Register_Button" element on "Register_File_Popup" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+        Then click on cell with value "artifact" in "name" column in "Files_Table" table on "Files" wizard
+        Then "Header" element on "Files_Info_Pane" should contains "artifact" value
+        Then check "artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
+        Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+        Then check "target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
 
     @passive
     @demo

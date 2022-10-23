@@ -237,7 +237,7 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Completed"
@@ -388,7 +388,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When click on cell with value "test-m_ingest" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        When click on cell with value "trainer-train" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -398,6 +398,19 @@ Feature: Jobs and workflows
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
         Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
         Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
+        Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+        Then verify "Iterations_Dropdown" element visibility on "Artifacts_Info_Pane" wizard
+        Then click on cell with row index 2 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
+        Then select "1" option in "Iterations_Dropdown" dropdown on "Artifacts_Info_Pane" wizard
+        And wait load page
+        Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
+        Then click on cell with row index 2 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
+        Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
+        Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+        Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+        Then select "2" option in "Iterations_Dropdown" dropdown on "Artifacts_Info_Pane" wizard
+        And wait load page
+        Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
 
     @passive
     Scenario: Check all mandatory components in Item infopane on Overview tab table on Schedule Page
@@ -650,7 +663,7 @@ Feature: Jobs and workflows
     Scenario: Verify behaviour of Parameters Table in Resources Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
-        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1384,7 +1397,7 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1411,7 +1424,7 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1435,7 +1448,7 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1456,7 +1469,7 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1477,7 +1490,7 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1497,7 +1510,7 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         Then select "Re-run" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflow_List_View_Table" table at row with "test-classifier" value in "name" column
@@ -1545,7 +1558,7 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 3 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard

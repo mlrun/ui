@@ -1213,7 +1213,8 @@ function postArtifact(req, res) {
     sources: [],
     project: req.body.project,
     updated: currentDate.toISOString(),
-    tag: artifactTag
+    tag: artifactTag,
+    labels: req.body.labels
   }
 
   if (req.body.kind === 'model') {

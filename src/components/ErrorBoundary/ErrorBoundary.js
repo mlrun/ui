@@ -17,20 +17,33 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
+import React from 'react'
 
-module.exports = function (textAreaStructure) {
-  const element = {}
-  element.root = By.css(textAreaStructure.root)
-  element.inputField = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.input}`)
-
-  if (textAreaStructure.elements.label) {
-    element.inputLabel = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.label}`)
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false }
   }
 
-  element.counter =  By.css(`${textAreaStructure.root} ${textAreaStructure.elements.counter}`)
-  element.warningHint = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.warningHint}`)
-  element.warningText = By.css(`${textAreaStructure.elements.warningText}`)
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true }
+  }
 
-  return element
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    /* eslint-disable-next-line no-console */
+    console.log(error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>
+    }
+
+    return this.props.children
+  }
 }
+
+export default ErrorBoundary

@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { cloneDeep } from 'lodash'
 
 import {
   ITERATIONS_FILTER,
@@ -41,6 +42,7 @@ import { parseFunctions } from '../../utils/parseFunctions'
 import { roundFloats } from '../../utils/roundFloats'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 
@@ -87,6 +89,7 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Model class', id: 'model_class' },
   { label: 'Model artifact', id: 'model_artifact' },
   { label: 'Function URI', id: 'function_uri' },
+  { label: 'Feature set', id: 'monitoring_feature_set_uri' },
   { label: 'Last prediction', id: 'last_prediction' },
   { label: 'Error count', id: 'error_count' },
   { label: 'Accuracy', id: 'accuracy' },
@@ -122,8 +125,7 @@ export const generateModelsDetailsMenu = selectedModel => [
       !selectedModel.item?.stats &&
       !selectedModel.item?.feature_stats &&
       !selectedModel.item?.feature_vector,
-    tip:
-      'Note that some values may be empty due to the use of different engines for calculating statistics'
+    tip: 'Note that some values may be empty due to the use of different engines for calculating statistics'
   }
 ]
 
@@ -470,4 +472,64 @@ export const generateDriftDetailsInfo = modelEndpoint => {
       </li>
     )
   })
+}
+
+export const handleApplyDetailsChanges = (
+  changes,
+  fetchData,
+  projectName,
+  itemName,
+  selectedItem,
+  setNotification,
+  filters,
+  updateArtifact
+) => {
+  const isNewFormat =
+    selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
+  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : selectedItem)
+
+  Object.keys(changes.data).forEach(key => {
+    if (key === 'labels') {
+      isNewFormat
+        ? (data.metadata[key] = changes.data[key].previousFieldValue)
+        : (data[key] = changes.data[key].previousFieldValue)
+    }
+  })
+
+  if (data.metadata?.labels || data.labels) {
+    const objectLabels = {}
+    const labels = isNewFormat ? data.metadata.labels : data.labels
+
+    labels.forEach(label => {
+      const splitedLabel = label.split(':')
+
+      objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
+    })
+
+    isNewFormat ? (data.metadata.labels = { ...objectLabels }) : (data.labels = { ...objectLabels })
+  }
+
+  return updateArtifact(projectName, data)
+    .then(response => {
+      return fetchData(filters).then(() => {
+        setNotification({
+          status: response.status,
+          id: Math.random(),
+          message: 'Updated successfully'
+        })
+
+        return response
+      })
+    })
+    .catch(error => {
+      setNotification({
+        status: error.response?.status || 400,
+        id: Math.random(),
+        message:
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'Permission denied.'
+            : 'Failed to update.',
+        retry: handleApplyDetailsChanges
+      })
+    })
 }

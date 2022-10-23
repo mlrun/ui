@@ -131,7 +131,7 @@ const DetailsRequestedFeaturesView = ({
                     <div className="cell_actions cell_actions-visible">
                       <RoundedIcon
                         disabled={!isAliasNameValid}
-                        onClick={() => onFinishEdit(['features', 'label_feature'])}
+                        onClick={onFinishEdit}
                         tooltipText="Apply"
                       >
                         <Checkmark className="details-item__apply-btn" />

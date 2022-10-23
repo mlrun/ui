@@ -66,7 +66,13 @@ import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAn
 import DetailsPods from '../DetailsPods/DetailsPods'
 import NoData from '../../common/NoData/NoData'
 
-export const generateArtifactsContent = (detailsType, selectedItem) => {
+export const generateArtifactsContent = (
+  addChip,
+  deleteChip,
+  editChips,
+  detailsType,
+  selectedItem
+) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     return {
       uid: {
@@ -86,6 +92,12 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
         value: selectedItem?.spec?.function_uri,
         link: selectedItem?.spec?.function_uri
           ? `${generateLinkPath(`store://functions/${selectedItem?.spec?.function_uri}`)}/overview`
+          : ''
+      },
+      monitoring_feature_set_uri: {
+        value: selectedItem?.status?.monitoring_feature_set_uri,
+        link: selectedItem?.status?.monitoring_feature_set_uri
+          ? `${generateLinkPath(selectedItem?.status?.monitoring_feature_set_uri)}/latest/overview`
           : ''
       },
       last_prediction: {
@@ -152,7 +164,12 @@ export const generateArtifactsContent = (detailsType, selectedItem) => {
         value: selectedItem.algorithm
       },
       labels: {
-        value: selectedItem.labels ?? []
+        value: selectedItem.labels ?? [],
+        editModeEnabled: detailsType === MODELS_TAB,
+        editModeType: 'chips',
+        onChange: (chip, field) => editChips(chip, field),
+        onAdd: (chip, chips, field) => addChip(chip, chips, field),
+        handleDelete: (chips, field) => deleteChip(chips, field)
       },
       sources: {
         value: selectedItem.sources
@@ -482,6 +499,24 @@ export const handleFinishEdit = (
     }
   })
 
-  setChangesCounter(changesCounter || Object.keys(changesData).length)
+  setChangesCounter(countChanges(changesData))
   setChangesData({ ...changesData })
+}
+
+export const countChanges = changesData => {
+  let changesCounter = 0
+
+  Object.keys(changesData).forEach(field => {
+    if (field === 'features') {
+      changesData[field].initialFieldValue.forEach(item => {
+        if (!changesData[field].currentFieldValue.includes(item)) {
+          changesCounter++
+        }
+      })
+    } else {
+      changesCounter++
+    }
+  })
+
+  return changesCounter
 }

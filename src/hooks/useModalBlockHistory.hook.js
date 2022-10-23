@@ -20,6 +20,7 @@ such restriction.
 import { useBlockHistory } from './useBlockHistory.hook'
 import { useCallback, useEffect, useState } from 'react'
 import { defaultCloseModalHandler } from '../utils/defaultCloseModalHandler'
+import { isEqualValues } from 'igz-controls/utils/form.util'
 
 export const useModalBlockHistory = (closeModal, form) => {
   const { blockHistory, unblockHistory } = useBlockHistory()
@@ -27,16 +28,18 @@ export const useModalBlockHistory = (closeModal, form) => {
 
   const resolveModal = useCallback(() => {
     closeModal()
-    unblockHistory(false)
+    unblockHistory()
   }, [closeModal, unblockHistory])
 
   const handleRejectConfirmation = useCallback(() => {
     setConfirmationIsOpened(false)
-    unblockHistory(false)
+    unblockHistory()
   }, [unblockHistory])
 
   const handleCloseModal = useCallback(() => {
-    const showConfirmation = form && form.getState().dirty
+    const { initialValues, values } = form.getState()
+
+    const showConfirmation = !isEqualValues(initialValues, values)
 
     defaultCloseModalHandler(
       showConfirmation,
@@ -52,5 +55,5 @@ export const useModalBlockHistory = (closeModal, form) => {
     }
   }, [confirmationIsOpened, blockHistory, handleCloseModal, form])
 
-  return { handleCloseModal }
+  return { handleCloseModal, resolveModal }
 }

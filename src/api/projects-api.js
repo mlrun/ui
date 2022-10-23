@@ -35,16 +35,12 @@ const projectsApi = {
       }
     ),
   deleteSecret: (project, key) =>
-    mainHttpClient.delete(
-      `/projects/${project}/secrets?provider=kubernetes&secret=${key}`
-    ),
-  editProject: (project, data) =>
-    mainHttpClient.put(`/projects/${project}`, data),
-  getJobsAndWorkflows: (project, params) =>
-    mainHttpClient.get('/runs', { params }),
+    mainHttpClient.delete(`/projects/${project}/secrets?provider=kubernetes&secret=${key}`),
+  editProject: (project, data) => mainHttpClient.put(`/projects/${project}`, data),
+  getJobsAndWorkflows: (project, params) => mainHttpClient.get('/runs', { params }),
   getProject: project => mainHttpClient.get(`/projects/${project}`),
   getProjectDataSets: project =>
-    mainHttpClient.get(`/artifacts?project=${project}&category=dataset`),
+    mainHttpClient.get(`/projects/${project}/artifacts?category=dataset`),
   getProjectFailedJobs: (project, cancelToken) =>
     mainHttpClient.get(
       `/runs?project=${project}&state=error&start_time_from=${new Date(
@@ -58,22 +54,20 @@ const projectsApi = {
     mainHttpClient.get(`/projects/${project}/feature-sets`, {
       cancelToken: cancelToken
     }),
-  getProjectFiles: project =>
-    mainHttpClient.get(`/artifacts?project=${project}&category=other`),
+  getProjectFiles: project => mainHttpClient.get(`/projects/${project}/artifacts?category=other`),
   getProjectFunctions: (project, cancelToken) =>
     mainHttpClient.get(`/funcs?project=${project}`, {
       cancelToken: cancelToken
     }),
   getProjectModels: (project, cancelToken) =>
-    mainHttpClient.get(`/artifacts?project=${project}&category=model`, {
+    mainHttpClient.get(`/projects/${project}/artifacts?category=model`, {
       cancelToken: cancelToken
     }),
   getProjectRunningJobs: (project, cancelToken) =>
     mainHttpClient.get(`/runs?project=${project}&state=running`, {
       cancelToken: cancelToken
     }),
-  getProjectScheduledJobs: project =>
-    mainHttpClient.get(`/projects/${project}/schedules`),
+  getProjectScheduledJobs: project => mainHttpClient.get(`/projects/${project}/schedules`),
   getProjectSecrets: project =>
     mainHttpClient.get(`/projects/${project}/secret-keys?provider=kubernetes`),
   getProjects: () => mainHttpClient.get('/projects'),
@@ -96,8 +90,7 @@ const projectsApi = {
   setProjectSecret: (project, secretData) => {
     return mainHttpClient.post(`/projects/${project}/secrets`, secretData)
   },
-  updateProject: (project, data) =>
-    mainHttpClient.patch(`/projects/${project}`, data)
+  updateProject: (project, data) => mainHttpClient.patch(`/projects/${project}`, data)
 }
 
 export default projectsApi

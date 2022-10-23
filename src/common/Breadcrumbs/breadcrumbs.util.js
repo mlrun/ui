@@ -25,7 +25,8 @@ import {
   MONITOR_JOBS_TAB,
   MODELS_TAB,
   MONITOR_WORKFLOWS_TAB,
-  SCHEDULE_TAB
+  SCHEDULE_TAB,
+  REAL_TIME_PIPELINES_TAB
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
@@ -82,11 +83,15 @@ export const generateTabsList = () => [
     id: FEATURES_TAB
   },
   {
-    label: MODELS_TAB,
-    id: MODELS_TAB
-  },
-  {
     label: MODEL_ENDPOINTS_TAB,
     id: MODEL_ENDPOINTS_TAB
+  },
+  {
+    label: REAL_TIME_PIPELINES_TAB,
+    id: REAL_TIME_PIPELINES_TAB
+  },
+  {
+    label: MODELS_TAB,
+    id: MODELS_TAB
   }
 ]

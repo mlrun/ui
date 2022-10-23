@@ -62,6 +62,7 @@ import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
 import { generateModelEndpoints } from '../utils/generateModelEndpoints'
+import { parseArtifacts } from '../utils/parseArtifacts'
 
 const artifactsAction = {
   buildFunction: func => dispatch => {
@@ -130,11 +131,8 @@ const artifactsAction = {
     return artifactsApi
       .getDataSet(project, dataSet, tag)
       .then(response => {
-        const generatedArtifacts = generateArtifacts(
-          filterArtifacts(response.data.artifacts),
-          iter,
-          DATASETS
-        )
+        const result = parseArtifacts(response.data.artifacts)
+        const generatedArtifacts = generateArtifacts(filterArtifacts(result), iter, DATASETS)
 
         dispatch(
           artifactsAction.fetchDataSetSuccess({
@@ -142,7 +140,7 @@ const artifactsAction = {
           })
         )
 
-        return response.data.artifacts
+        return result
       })
       .catch(error => {
         throw error
@@ -158,13 +156,13 @@ const artifactsAction = {
     return artifactsApi
       .getDataSets(project, filters, config)
       .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
         dispatch(
-          artifactsAction.fetchDataSetsSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts), DATASETS)
-          )
+          artifactsAction.fetchDataSetsSuccess(generateArtifacts(filterArtifacts(result), DATASETS))
         )
 
-        return data.artifacts
+        return result
       })
       .catch(err => {
         dispatch(artifactsAction.fetchDataSetsFailure(err))
@@ -184,11 +182,8 @@ const artifactsAction = {
     return artifactsApi
       .getFile(project, file, tag)
       .then(response => {
-        const generatedArtifacts = generateArtifacts(
-          filterArtifacts(response.data.artifacts),
-          ARTIFACTS,
-          iter
-        )
+        const result = parseArtifacts(response.data.artifacts)
+        const generatedArtifacts = generateArtifacts(filterArtifacts(result), ARTIFACTS, iter)
 
         dispatch(
           artifactsAction.fetchFileSuccess({
@@ -196,7 +191,7 @@ const artifactsAction = {
           })
         )
 
-        return response.data.artifacts
+        return result
       })
       .catch(error => {
         throw error
@@ -212,13 +207,13 @@ const artifactsAction = {
     return artifactsApi
       .getFiles(project, filters)
       .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
         dispatch(
-          artifactsAction.fetchFilesSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts), ARTIFACTS)
-          )
+          artifactsAction.fetchFilesSuccess(generateArtifacts(filterArtifacts(result), ARTIFACTS))
         )
 
-        return data.artifacts
+        return result
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFilesFailure(err))
@@ -289,11 +284,8 @@ const artifactsAction = {
     return artifactsApi
       .getModel(project, model, tag)
       .then(response => {
-        const generatedArtifacts = generateArtifacts(
-          filterArtifacts(response.data.artifacts),
-          MODELS_TAB,
-          iter
-        )
+        const result = parseArtifacts(response.data.artifacts)
+        const generatedArtifacts = generateArtifacts(filterArtifacts(result), MODELS_TAB, iter)
 
         dispatch(
           artifactsAction.fetchModelSuccess({
@@ -301,7 +293,7 @@ const artifactsAction = {
           })
         )
 
-        return response.data.artifacts
+        return result
       })
       .catch(error => {
         throw error
@@ -317,13 +309,13 @@ const artifactsAction = {
     return artifactsApi
       .getModels(project, filters)
       .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
         dispatch(
-          artifactsAction.fetchModelsSuccess(
-            generateArtifacts(filterArtifacts(data.artifacts), MODELS_TAB)
-          )
+          artifactsAction.fetchModelsSuccess(generateArtifacts(filterArtifacts(result), MODELS_TAB))
         )
 
-        return data.artifacts
+        return result
       })
       .catch(err => {
         dispatch(artifactsAction.fetchModelsFailure(err))
@@ -369,7 +361,10 @@ const artifactsAction = {
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
-  })
+  }),
+  updateArtifact: (project, data) => () => {
+    return artifactsApi.updateArtifact(project, data)
+  }
 }
 
 export default artifactsAction

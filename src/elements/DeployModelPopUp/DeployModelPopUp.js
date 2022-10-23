@@ -231,6 +231,7 @@ const DeployModelPopUp = ({
                     label="Serving function (router)"
                     name="selectedFunctionName"
                     options={functionOptionList}
+                    required
                   />
                   <OnChange name="selectedFunctionName">{onSelectedFunctionNameChange}</OnChange>
                 </div>
@@ -241,6 +242,7 @@ const DeployModelPopUp = ({
                     search
                     disabled={tagOptionList.length === 0}
                     options={tagOptionList}
+                    required
                   />
                 </div>
                 <div className="form-col-1">
