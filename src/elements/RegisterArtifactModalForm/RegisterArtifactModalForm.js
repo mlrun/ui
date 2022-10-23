@@ -102,7 +102,6 @@ const RegisterArtifactModalForm = ({
       <div className="form-row">
         {isDemoMode ? (
           <TargetPath
-            density="dense"
             formState={formState}
             formStateFieldInfo="target_path.fieldInfo"
             label="Target Path"
