@@ -167,7 +167,6 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
             <div className="register-model__row">
               {isDemoMode ? (
                 <TargetPath
-                  density="dense"
                   formState={formState}
                   formStateFieldInfo="target_path.fieldInfo"
                   label="Target Path"
