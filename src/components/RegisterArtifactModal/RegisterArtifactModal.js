@@ -35,8 +35,8 @@ import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/consta
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData } from '../../utils/convertChipsData'
-
 import artifactApi from '../../api/artifacts-api'
+import { useMode } from '../../hooks/mode.hook'
 
 const RegisterArtifactModal = ({
   actions,
@@ -49,14 +49,21 @@ const RegisterArtifactModal = ({
   setNotification,
   title
 }) => {
+  const { isDemoMode } = useMode()
   const initialValues = {
     description: '',
     kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
     key: '',
-    labels: [],
-    target_path: ''
+    target_path: isDemoMode
+      ? {
+          fieldInfo: {
+            pathType: ''
+          },
+          path: ''
+        }
+      : '',
+    labels: []
   }
-
   const formRef = React.useRef(
     createForm({
       initialValues,
@@ -74,7 +81,7 @@ const RegisterArtifactModal = ({
       key: values.key,
       db_key: values.key,
       tree: uid,
-      target_path: values.target_path,
+      target_path: isDemoMode ? values.target_path.path : values.target_path,
       description: values.description,
       kind: values.kind === 'general' ? '' : values.kind,
       labels: convertChipsData(values.labels),
@@ -142,9 +149,10 @@ const RegisterArtifactModal = ({
           >
             <RegisterArtifactModalForm
               formState={formState}
-              showType={artifactKind === 'artifact'}
               initialValues={initialValues}
               messageByKind={messagesByKind[artifactKind.toLowerCase()]}
+              setFieldState={formState.form.mutators.setFieldState}
+              showType={artifactKind === 'artifact'}
             />
           </Modal>
         )

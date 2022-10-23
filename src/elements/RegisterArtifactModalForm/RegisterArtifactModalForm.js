@@ -20,12 +20,21 @@ such restriction.
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
+import TargetPath from '../../common/TargetPath/TargetPath'
 import { FormInput, FormSelect, FormTextarea, FormChipCell } from 'igz-controls/components'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { getChipOptions } from '../../utils/getChipOptions'
+import { useMode } from '../../hooks/mode.hook'
 
-const RegisterArtifactModalForm = ({ formState, showType, initialValues, messageByKind }) => {
+const RegisterArtifactModalForm = ({
+  formState,
+  showType,
+  initialValues,
+  messageByKind,
+  setFieldState
+}) => {
+  const { isDemoMode } = useMode()
   const kindOptions = useMemo(
     () => [
       {
@@ -88,10 +97,24 @@ const RegisterArtifactModalForm = ({ formState, showType, initialValues, message
         )}
       </div>
       <div className="form-row">
-        <FormInput label="Target Path" name="target_path" required />
+        <FormTextarea label="Description" maxLength={500} name="description" />
       </div>
       <div className="form-row">
-        <FormTextarea label="Description" maxLength={500} name="description" />
+        {isDemoMode ? (
+          <TargetPath
+            density="dense"
+            formState={formState}
+            formStateFieldInfo="target_path.fieldInfo"
+            label="Target Path"
+            name="target_path.path"
+            onChangeListenerName="target_path.fieldInfo.pathType"
+            required
+            selectPlaceholder="Path Scheme"
+            setFieldState={setFieldState}
+          />
+        ) : (
+          <FormInput label="Target Path" name="target_path" required />
+        )}
       </div>
       <div className="form-row">
         <FormChipCell
@@ -122,7 +145,8 @@ RegisterArtifactModalForm.propTypes = {
   formState: PropTypes.object.isRequired,
   showType: PropTypes.bool,
   messageByKind: PropTypes.string,
-  initialValues: PropTypes.object.isRequired
+  initialValues: PropTypes.object.isRequired,
+  setFieldState: PropTypes.func.isRequired
 }
 
 export default RegisterArtifactModalForm
