@@ -59,8 +59,7 @@ export const handleApplyDetailsChanges = (
   filters
 ) => {
   const data = {
-    metadata: {},
-    spec: {}
+    ...selectedItem.ui.originalContent
   }
   const metadataFields = ['labels']
 
