@@ -46,7 +46,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
   const initialValues = {
     description: undefined,
     labels: [],
-    modelName: undefined,
+    key: undefined,
     target_path: isDemoMode
       ? {
           fieldInfo: {
@@ -68,31 +68,37 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
 
-  const registerModel = value => {
+  const registerModel = values => {
     const uid = uuidv4()
     const data = {
-      uid: uid,
-      key: value.modelName,
-      db_key: value.modelName,
-      labels: convertChipsData(value.labels),
-      tree: uid,
-      target_path: isDemoMode ? value.target_path.path : value.target_path,
-      description: value.description,
       kind: 'model',
+      metadata: {
+        description: values.description,
+        labels: convertChipsData(values.labels),
+        key: values.key,
+        project: projectName,
+        tree: uid
+      },
       project: projectName,
-      producer: {
-        kind: 'api',
-        uri: window.location.host
-      }
+      spec: {
+        db_key: values.key,
+        producer: {
+          kind: 'api',
+          uri: window.location.host
+        },
+        target_path: isDemoMode ? values.target_path.path : values.target_path
+      },
+      status: {},
+      uid
     }
 
-    if (value.target_path?.path?.includes('/') || value.target_path?.includes('/')) {
+    if (values.target_path?.path?.includes('/') || values.target_path?.includes('/')) {
       const path = isDemoMode
-        ? value.target_path.path.split(/([^/]*)$/)
-        : value.targetPath.split(/([^/]*)$/)
+        ? values.target_path.path.split(/([^/]*)$/)
+        : values.targetPath.split(/([^/]*)$/)
 
-      data.target_path = path[0]
-      data.model_file = path[1]
+      data.spec.target_path = path[0]
+      data.spec.model_file = path[1]
     }
 
     return artifactApi
@@ -156,7 +162,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
             <div className="register-model__row">
               <FormInput
                 label="Name"
-                name="modelName"
+                name="key"
                 required
                 tip="Artifacts names in the same project must be unique."
               />

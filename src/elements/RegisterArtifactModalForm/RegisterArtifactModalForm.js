@@ -106,7 +106,6 @@ const RegisterArtifactModalForm = ({
             formStateFieldInfo="target_path.fieldInfo"
             label="Target Path"
             name="target_path.path"
-            onChangeListenerName="target_path.fieldInfo.pathType"
             required
             selectPlaceholder="Path Scheme"
             setFieldState={setFieldState}
