@@ -71,7 +71,7 @@ export const handleApplyDetailsChanges = (
     }
   })
 
-  if (data.metadata.labels) {
+  if (data.metadata.labels && Array.isArray(data.metadata.labels)) {
     const objectLabels = {}
 
     data.metadata.labels.forEach(label => {
