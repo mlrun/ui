@@ -52,23 +52,27 @@ const RegisterArtifactModal = ({
   const { isDemoMode } = useMode()
   const initialValues = {
     kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
-    description: '',
-    key: '',
-    labels: [],
-    target_path: isDemoMode
-      ? {
-          fieldInfo: {
-            pathType: ''
-          },
-          path: ''
-        }
-      : ''
+    metadata: {
+      description: '',
+      key: '',
+      labels: []
+    },
+    spec: {
+      target_path: isDemoMode
+        ? {
+            fieldInfo: {
+              pathType: ''
+            },
+            path: ''
+          }
+        : ''
+    }
   }
   const formRef = React.useRef(
     createForm({
       initialValues,
-      onSubmit: () => {},
-      mutators: { ...arrayMutators, setFieldState }
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
     })
   )
   const location = useLocation()
@@ -79,25 +83,23 @@ const RegisterArtifactModal = ({
     const data = {
       kind: values.kind === 'general' ? '' : values.kind,
       metadata: {
-        labels: convertChipsData(values.labels),
-        key: values.key,
+        labels: convertChipsData(values.metadata.labels),
+        key: values.metadata.key,
         project: projectName,
         tree: uid
       },
       project: projectName,
       spec: {
-        db_key: values.key,
+        db_key: values.metadata.key,
         producer: {
           kind: 'api',
           uri: window.location.host
         },
-        target_path: isDemoMode ? values.target_path.path : values.target_path
+        target_path: isDemoMode ? values.spec.target_path.path : values.spec.target_path
       },
       status: {},
       uid
     }
-
-    if (data) return console.log(data)
 
     return artifactApi
       .registerArtifact(projectName, data)

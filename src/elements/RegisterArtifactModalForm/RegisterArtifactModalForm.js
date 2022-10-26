@@ -84,7 +84,7 @@ const RegisterArtifactModalForm = ({
         <div className="form-col-2">
           <FormInput
             label="Name"
-            name="key"
+            name="metadata.key"
             required
             tip="Artifact names in the same project must be unique"
             validationRules={getValidationRules('artifact.name')}
@@ -97,21 +97,21 @@ const RegisterArtifactModalForm = ({
         )}
       </div>
       <div className="form-row">
-        <FormTextarea label="Description" maxLength={500} name="description" />
+        <FormTextarea label="Description" maxLength={500} name="metadata.description" />
       </div>
       <div className="form-row">
         {isDemoMode ? (
           <TargetPath
             formState={formState}
-            formStateFieldInfo="target_path.fieldInfo"
+            formStateFieldInfo="spec.target_path.fieldInfo"
             label="Target Path"
-            name="target_path.path"
+            name="spec.target_path.path"
             required
             selectPlaceholder="Path Scheme"
             setFieldState={setFieldState}
           />
         ) : (
-          <FormInput label="Target Path" name="target_path" required />
+          <FormInput label="Target Path" name="spec.target_path" required />
         )}
       </div>
       <div className="form-row">
@@ -121,7 +121,7 @@ const RegisterArtifactModalForm = ({
           initialValues={initialValues}
           isEditMode
           label="labels"
-          name="labels"
+          name="metadata.labels"
           shortChips
           visibleChipsMaxLength="2"
           validationRules={{

@@ -20,7 +20,7 @@ such restriction.
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { isNil, pick, uniqBy } from 'lodash'
+import { get, isNil, uniqBy } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 import PropTypes from 'prop-types'
 
@@ -60,7 +60,7 @@ const TargetPath = ({
 
   const handleOnChange = (selectValue, inputValue) => {
     if (isNil(inputValue)) {
-      setFieldState('formState.values.target_path.path', { modified: false })
+      setFieldState(get(formState.values, name), { modified: false })
     }
 
     if (selectValue === MLRUN_STORAGE_INPUT_PATH_SCHEME && !isNil(inputValue)) {
@@ -69,8 +69,7 @@ const TargetPath = ({
   }
 
   const validatePath = allValues => {
-    const { pathType, value } = pick(allValues.target_path.fieldInfo, ['pathType', 'value'])
-
+    const { pathType, value } = get(allValues, formStateFieldInfo)
     return isPathInputInvalid(pathType, value)
   }
 
@@ -92,7 +91,9 @@ const TargetPath = ({
   ])
 
   useEffect(() => {
-    if (formState.values.target_path.fieldInfo.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
+    if (
+      get(formState.values, `${formStateFieldInfo}.pathType`) === MLRUN_STORAGE_INPUT_PATH_SCHEME
+    ) {
       setDataInputState(prev => ({
         ...prev,
         comboboxMatches: generateComboboxMatchesList(
@@ -128,7 +129,7 @@ const TargetPath = ({
     dataInputState.projects,
     dataInputState.storePathType,
     dispatch,
-    formState.values.target_path.fieldInfo.pathType,
+    get(formState.values, `${formStateFieldInfo}.pathType`),
     setDataInputState
   ])
 
@@ -236,13 +237,18 @@ const TargetPath = ({
       <FormCombobox
         density={density}
         hideSearchInput={!dataInputState.inputStorePathTypeEntered}
-        inputPlaceholder={pathPlaceholders[formState.values.target_path.fieldInfo?.pathType] ?? ''}
+        inputPlaceholder={
+          pathPlaceholders[get(formState.values, `${formStateFieldInfo}.pathType`)] ?? ''
+        }
         invalidText={`Field must be in "${
-          pathTips(dataInputState.storePathType)[formState.values.target_path.fieldInfo?.pathType]
+          pathTips(dataInputState.storePathType)[
+            get(formState.values, `${formStateFieldInfo}.pathType`)
+          ]
         }" format`}
         label={label}
         maxSuggestedMatches={
-          formState.values.target_path.fieldInfo.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
+          get(formState.values, `${formStateFieldInfo}.pathType`) ===
+          MLRUN_STORAGE_INPUT_PATH_SCHEME
             ? 3
             : 2
         }
@@ -252,7 +258,8 @@ const TargetPath = ({
         selectOptions={comboboxSelectList}
         selectPlaceholder={selectPlaceholder}
         suggestionList={
-          formState.values.target_path.fieldInfo.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
+          get(formState.values, `${formStateFieldInfo}.pathType`) ===
+          MLRUN_STORAGE_INPUT_PATH_SCHEME
             ? dataInputState.comboboxMatches
             : []
         }
