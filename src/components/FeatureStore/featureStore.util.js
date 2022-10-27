@@ -59,8 +59,7 @@ export const handleApplyDetailsChanges = (
   filters
 ) => {
   const data = {
-    metadata: {},
-    spec: {}
+    ...selectedItem.ui.originalContent
   }
   const metadataFields = ['labels']
 
@@ -72,7 +71,7 @@ export const handleApplyDetailsChanges = (
     }
   })
 
-  if (data.metadata.labels) {
+  if (data.metadata.labels && Array.isArray(data.metadata.labels)) {
     const objectLabels = {}
 
     data.metadata.labels.forEach(label => {
