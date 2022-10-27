@@ -182,12 +182,9 @@ const Workflow = ({
       element.data?.customData?.function &&
       element.data?.customData?.function.includes('@')
     ) {
-      const funcName = element.data.customData.function.includes('@')
-        ? element.data.customData.function.match(/\/(.*?)@/i)[1]
-        : element.data.customData.function.match(/\/([^:]*)/i)[1]
-      const funcHash = element.data.customData.function.includes('@')
-        ? element.data.customData.function.replace(/.*@/g, '')
-        : 'latest'
+      const funcName = element.data.customData.function.match(/\/(.*?)@/i)[1]
+      const funcHash = element.data.customData.function.replace(/.*@/g, '')
+
       const link = `/projects/${
         params.projectName
       }/${page.toLowerCase()}/${MONITOR_WORKFLOWS_TAB}/workflow/${
