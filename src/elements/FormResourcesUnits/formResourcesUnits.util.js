@@ -1,5 +1,3 @@
-import { isEmpty } from 'lodash'
-
 export const LIMITS_NVIDIA_GPU = 'nvidia.com/gpu'
 
 export const selectUnitOptions = {
@@ -45,24 +43,53 @@ export const getSelectedCpuOption = id => selectUnitOptions.unitCpu.find(option 
 export const getSelectedMemoryOption = id =>
   selectUnitOptions.unitMemory.find(option => option.id === id)
 
-export const getMemoryUnitId = (currentMemoryValue, defaultMemoryValue) => {
-  const memoryValueFull = isEmpty(currentMemoryValue) ? defaultMemoryValue : currentMemoryValue
-  const memoryValue = parseFloat(memoryValueFull)
-  const memoryUnit = memoryValueFull.replace(memoryValue, '')
+export const getMemoryData = (currentMemory, defaultMemory) => {
+  let memory = ''
+  let memoryUnit = ''
+  let memoryUnitId = 'Bytes'
+  const currentMemoryValue = parseFloat(currentMemory)
+  const defaultMemoryValue = parseFloat(defaultMemory)
 
-  return selectUnitOptions.unitMemory.find(option => option.unit === memoryUnit)?.id ?? 'Bytes'
+  if (isFinite(currentMemoryValue)) {
+    memory = String(currentMemoryValue)
+    memoryUnit = currentMemory.replace(memory, '')
+  } else if (isFinite(defaultMemoryValue)) {
+    memory = String(defaultMemoryValue)
+    memoryUnit = defaultMemory.replace(memory, '')
+  }
+
+  if (memoryUnit) {
+    memoryUnitId =
+      selectUnitOptions.unitMemory.find(option => option.unit === memoryUnit)?.id ?? memoryUnitId
+  }
+
+  return [memory, memoryUnitId]
 }
 
 export const getMemoryUnit = unitId => {
   return selectUnitOptions.unitMemory.find(option => option.id === unitId)?.unit ?? ''
 }
 
-export const getCpuUnitId = (currentCpuValue, defaultCpuValue) => {
-  const cpuValueFull = isEmpty(currentCpuValue) ? defaultCpuValue : currentCpuValue
-  const cpuValue = parseFloat(cpuValueFull)
-  const cpuUnit = cpuValueFull.replace(cpuValue, '')
+export const getCpuData = (currentCpu, defaultCpu) => {
+  let cpu = ''
+  let cpuUnit = ''
+  let cpuUnitId = 'cpu'
+  const currentCpuValue = parseFloat(currentCpu)
+  const defaultCpuValue = parseFloat(defaultCpu)
 
-  return selectUnitOptions.unitCpu.find(option => option.unit === cpuUnit)?.id ?? 'cpu'
+  if (isFinite(currentCpuValue)) {
+    cpu = String(currentCpuValue)
+    cpuUnit = currentCpu.replace(cpu, '')
+  } else if (isFinite(defaultCpuValue)) {
+    cpu = String(defaultCpuValue)
+    cpuUnit = defaultCpu.replace(cpu, '')
+  }
+
+  if (cpuUnit) {
+    cpuUnitId = selectUnitOptions.unitCpu.find(option => option.unit === cpuUnit)?.id ?? cpuUnitId
+  }
+
+  return [cpu, cpuUnitId]
 }
 
 export const getCpuUnit = unitId => {

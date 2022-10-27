@@ -4,15 +4,14 @@ import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 import { isNil, pick, uniqBy } from 'lodash'
 import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { FormInput, TextTooltipTemplate, Tip, Tooltip, FormCombobox } from 'igz-controls/components'
 import FormRowActions from 'igz-controls/elements/FormRowActions/FormRowActions'
 
-import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 import {
-  dataInputInitialState,
   comboboxSelectList,
+  dataInputInitialState,
   generateArtifactsList,
   generateArtifactsReferencesList,
   generateComboboxMatchesList,
@@ -22,11 +21,12 @@ import {
   pathPlaceholders,
   pathTips
 } from '../formDataInputsTable.util'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
-import { getFeatureReference } from '../../../utils/resources'
-import { DATA_INPUT_STATE } from '../../../types'
 import artifactsAction from '../../../actions/artifacts'
 import featureStoreActions from '../../../actions/featureStore'
+import { DATA_INPUT_STATE } from '../../../types'
+import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+import { getFeatureReference } from '../../../utils/resources'
 
 const FormDataInputsRow = ({
   applyChanges,
@@ -39,7 +39,6 @@ const FormDataInputsRow = ({
   fields,
   fieldsPath,
   index,
-  projectStore,
   rowPath,
   setDataInputState,
   setFieldState,
@@ -49,6 +48,7 @@ const FormDataInputsRow = ({
   const [fieldData, setFieldData] = useState(fields.value[index])
   const params = useParams()
   const dispatch = useDispatch()
+  const projectStore = useSelector(store => store.projectStore)
 
   const tableRowClassNames = classnames(
     'form-table__row',
@@ -372,6 +372,7 @@ FormDataInputsRow.propTypes = {
   fieldsPath: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   rowPath: PropTypes.string.isRequired,
+  setDataInputState: PropTypes.func.isRequired,
   setFieldState: PropTypes.func.isRequired,
   setFieldValue: PropTypes.func.isRequired,
   uniquenessValidator: PropTypes.func.isRequired

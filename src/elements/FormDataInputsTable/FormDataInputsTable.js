@@ -9,12 +9,10 @@ import FormDataInputsRow from './FormDataInputsRow/FormDataInputsRow'
 
 import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
 import { dataInputInitialState } from './formDataInputsTable.util'
-import { useSelector } from 'react-redux'
 
 const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => {
   const [dataInputState, setDataInputState] = useState(dataInputInitialState)
   const tableClassNames = classnames('form-table', className)
-  const projectStore = useSelector(store => store.projectStore)
   const { editingItem, addNewRow, applyChanges, deleteRow, discardOrDelete, enterEditMode } =
     useFormTable(formState)
 
@@ -53,7 +51,6 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
                     fieldsPath={fieldsPath}
                     index={index}
                     key={rowPath}
-                    projectStore={projectStore}
                     rowPath={rowPath}
                     setDataInputState={setDataInputState}
                     setFieldState={formState.form.mutators.setFieldState}

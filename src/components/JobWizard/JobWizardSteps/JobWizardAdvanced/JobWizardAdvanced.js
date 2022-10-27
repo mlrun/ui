@@ -2,20 +2,19 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 
-import { FormCheckBox, FormInput, FormKeyValueTable } from 'igz-controls/components'
-import ScheduleWizard from '../../../SheduleWizard/ScheduleWizard'
 import FormEnvironmentVariablesTable from '../../../../elements/FormEnvironmentVariablesTable/FormEnvironmentVariablesTable'
+import ScheduleWizard from '../../../SheduleWizard/ScheduleWizard'
+import { FormCheckBox, FormInput, FormKeyValueTable } from 'igz-controls/components'
 
+import { PANEL_EDIT_MODE } from '../../../../constants'
 import { secretsKindOptions } from './JobWizardAdvanced.util'
 import { useMode } from '../../../../hooks/mode.hook'
-import { PANEL_EDIT_MODE } from '../../../../constants'
 
 import './jobWizardAdvanced.scss'
 
 const JobWizardAdvanced = ({
   editJob,
   formState,
-  isEditMode,
   mode,
   params,
   runJob,
@@ -95,9 +94,9 @@ const JobWizardAdvanced = ({
 
             if (formState.valid) {
               if (mode === PANEL_EDIT_MODE) {
-                editJob()
+                editJob(formState.values, selectedFunctionData, params)
               } else {
-                runJob(formState.values, selectedFunctionData, params, isEditMode, true)
+                runJob(formState.values, selectedFunctionData, params, true)
               }
             }
           }}
@@ -115,8 +114,13 @@ const JobWizardAdvanced = ({
 }
 
 JobWizardAdvanced.propTypes = {
+  editJob: PropTypes.func.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  mode: PropTypes.string.isRequired,
+  params: PropTypes.shape({}).isRequired,
+  runJob: PropTypes.func.isRequired,
   scheduleButtonRef: PropTypes.shape({}).isRequired,
+  selectedFunctionData: PropTypes.shape({}).isRequired,
   setShowSchedule: PropTypes.func.isRequired,
   showSchedule: PropTypes.bool.isRequired
 }

@@ -317,7 +317,7 @@ const ScheduledJobs = ({
         defaultData: jobWizardMode === PANEL_EDIT_MODE ? editableItem?.scheduled_object : null,
         mode: jobWizardMode,
         wizardTitle: jobWizardMode === PANEL_EDIT_MODE ? 'Edit job' : null,
-        onSuccessRun: () => refreshJobs(filtersStore)
+        onSuccessRequest: () => refreshJobs(filtersStore)
       })
 
       setJobWizardIsOpened(true)

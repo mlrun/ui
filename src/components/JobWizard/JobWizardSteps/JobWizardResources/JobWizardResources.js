@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { FormSelect, FormKeyValueTable, Tip } from 'igz-controls/components'
 import FormResourcesUnits from '../../../../elements/FormResourcesUnits/FormResourcesUnits'
 import FormVolumesTable from '../../../../elements/FormVolumesTable/FormVolumesTable'
+import { FormSelect, FormKeyValueTable, Tip } from 'igz-controls/components'
 
 import { generateFunctionPriorityLabel } from '../../../../utils/generateFunctionPriorityLabel'
 import { volumePreemptionModeOptions } from './JowWizardResources.util'

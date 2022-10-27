@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { get } from 'lodash'
 
 import FormParametersTable from '../../../../elements/FormParametersTable/FormParametersTable'
+import JobWizardResources from '../JobWizardResources/JobWizardResources'
 import { FormInput, FormSelect } from 'igz-controls/components'
 
 import { selectOptions } from './jobWizardParameters.util'
@@ -92,8 +94,8 @@ const JobWizardParameters = ({ formState }) => {
   )
 }
 
-JobWizardParameters.defaultProps = {}
-
-JobWizardParameters.propTypes = {}
+JobWizardResources.propTypes = {
+  formState: PropTypes.shape({}).isRequired
+}
 
 export default JobWizardParameters

@@ -416,7 +416,7 @@ export const generateTableDataFromDefaultData = (
   const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
     data: secret
   }))
-  const volumeMounts = defaultData.function?.spec.volume_mounts.map(volume_mounts => {
+  const volumeMounts = defaultData.function?.spec?.volume_mounts.map(volume_mounts => {
     return {
       data: {
         name: volume_mounts?.name,
@@ -434,13 +434,13 @@ export const generateTableDataFromDefaultData = (
       dataInputs,
       parameters,
       volume_mounts: volumeMounts ?? [],
-      volumes: defaultData.function?.spec.volumes ?? [],
+      volumes: defaultData.function?.spec?.volumes ?? [],
       environmentVariables:
-        parseEnvVariables(defaultData.function?.spec.env ?? []).map(env => ({
+        parseEnvVariables(defaultData.function?.spec?.env ?? []).map(env => ({
           data: generateEnvVariable(env)
         })) ?? [],
       secretSources: secrets,
-      node_selector: Object.entries(defaultData.function?.spec.node_selector ?? {}).map(
+      node_selector: Object.entries(defaultData.function?.spec?.node_selector ?? {}).map(
         ([key, value]) => ({
           key,
           value
@@ -458,7 +458,7 @@ export const generateTableDataFromDefaultData = (
   })
   panelDispatch({
     type: panelActions.SET_PREEMPTION_MODE,
-    payload: defaultData.function?.spec.preemption_mode || ''
+    payload: defaultData.function?.spec?.preemption_mode || ''
   })
   setNewJob({
     access_key: defaultData.function?.metadata?.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
@@ -471,12 +471,12 @@ export const generateTableDataFromDefaultData = (
           subPath: volumeMounts.data.subPath
         }))
       : [],
-    volumes: defaultData.function?.spec.volumes ?? [],
-    environmentVariables: defaultData.function?.spec.env ?? [],
+    volumes: defaultData.function?.spec?.volumes ?? [],
+    environmentVariables: defaultData.function?.spec?.env ?? [],
     secret_sources: defaultData.task.spec.secret_sources ?? [],
-    node_selector: defaultData.function?.spec.node_selector ?? {},
-    preemption_mode: defaultData.function?.spec.preemption_mode ?? '',
-    priority_class_name: defaultData.function?.spec.priority_class_name ?? ''
+    node_selector: defaultData.function?.spec?.node_selector ?? {},
+    preemption_mode: defaultData.function?.spec?.preemption_mode ?? '',
+    priority_class_name: defaultData.function?.spec?.priority_class_name ?? ''
   })
 
   panelDispatch({
@@ -502,10 +502,10 @@ export const generateTableDataFromDefaultData = (
     }
   })
 
-  if (defaultData.function?.spec.priority_class_name) {
+  if (defaultData.function?.spec?.priority_class_name) {
     panelDispatch({
       type: panelActions.SET_PRIORITY_CLASS_NAME,
-      payload: defaultData.function.spec.priority_class_name
+      payload: defaultData.function.spec?.priority_class_name
     })
   }
 

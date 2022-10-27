@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import classnames from 'classnames'
+import PropTypes from 'prop-types'
 import { includes, isEmpty } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
-// import PropTypes from 'prop-types'
 
 import ContentMenu from '../../../../elements/ContentMenu/ContentMenu'
 import JobWizardCardTemplate from '../../JobWizardCardTemplate/JobWizardCardTemplate'
@@ -34,13 +34,8 @@ const functionsTabs = [
 ]
 
 const JobWizardFunctionSelection = ({
-  templatesCategories,
-  setTemplatesCategories,
-  templates,
-  setTemplates,
-  selectedCategory,
-  setSelectedCategory,
   defaultData,
+  fetchFunctionTemplate,
   fetchFunctions,
   fetchFunctionsTemplates,
   fetchProjectsNames,
@@ -54,13 +49,18 @@ const JobWizardFunctionSelection = ({
   isStagingMode,
   params,
   projectStore,
+  selectedCategory,
   selectedFunctionData,
   setFilteredFunctions,
   setFilteredTemplates,
   setFunctions,
-  fetchFunctionTemplate,
+  setJobAdditionalData,
+  setSelectedCategory,
   setSelectedFunctionData,
-  setJobAdditionalData
+  setTemplates,
+  setTemplatesCategories,
+  templates,
+  templatesCategories
 }) => {
   const [activeTab, setActiveTab] = useState('functions')
   const [filterByName, setFilterByName] = useState('')
@@ -255,7 +255,6 @@ const JobWizardFunctionSelection = ({
   const handleSelectTemplateFunction = funcData => {
     const selectNewFunction = () => {
       fetchFunctionTemplate(funcData.metadata.versions.latest).then(result => {
-        console.log('fetchTemplate:result ', result)
         setSelectedFunctionData(result)
         generateData(result)
       })
@@ -390,9 +389,29 @@ const JobWizardFunctionSelection = ({
   )
 }
 
-JobWizardFunctionSelection.defaultProps = {}
-
-JobWizardFunctionSelection.propTypes = {}
+JobWizardFunctionSelection.propTypes = {
+  defaultData: PropTypes.shape({}).isRequired,
+  filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  filteredTemplates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  formState: PropTypes.shape({}).isRequired,
+  frontendSpec: PropTypes.shape({}).isRequired,
+  functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  isEditMode: PropTypes.bool.isRequired,
+  isStagingMode: PropTypes.bool.isRequired,
+  params: PropTypes.shape({}).isRequired,
+  selectedCategory: PropTypes.string.isRequired,
+  selectedFunctionData: PropTypes.shape({}).isRequired,
+  setFilteredFunctions: PropTypes.func.isRequired,
+  setFilteredTemplates: PropTypes.func.isRequired,
+  setFunctions: PropTypes.func.isRequired,
+  setJobAdditionalData: PropTypes.func.isRequired,
+  setSelectedCategory: PropTypes.func.isRequired,
+  setSelectedFunctionData: PropTypes.func.isRequired,
+  setTemplates: PropTypes.func.isRequired,
+  setTemplatesCategories: PropTypes.func.isRequired,
+  templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  templatesCategories: PropTypes.shape({}).isRequired
+}
 
 export default connect(({ functionsStore, projectStore }) => ({ functionsStore, projectStore }), {
   ...functionsActions,

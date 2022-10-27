@@ -15,8 +15,8 @@ import {
   V3IO_VOLUME_TYPE
 } from '../../constants'
 import {
-  getCpuUnitId,
-  getMemoryUnitId,
+  getCpuData,
+  getMemoryData,
   getLimitsGpuType,
   generateCpuWithUnit,
   generateMemoryWithUnit
@@ -136,8 +136,10 @@ export const generateJobWizardDefaultData = (
   isEditMode,
   isStagingMode
 ) => {
+  if (isEmpty(defaultData)) return [{}, {}]
+
   const functionInfo = getFunctionDefaultInfo(defaultData)
-  const defaultResources = frontendSpec?.default_function_pod_resources
+  const defaultResources = frontendSpec?.default_function_pod_resources ?? {}
   const [hyperParamCriteria = MAX_SELECTOR_CRITERIA, hyperParamResult = ''] = (
     defaultData.task.spec.selector ?? ''
   ).split('.')
@@ -148,8 +150,8 @@ export const generateJobWizardDefaultData = (
     methodOptions: functionInfo.methodOptions,
     versionOptions: functionInfo.versionOptions
   }
-  const currentLimits = parseLimits(limits, defaultResources?.limits, gpuType)
-  const currentRequest = parseRequests(requests, defaultResources?.requests)
+  const currentLimits = parseLimits(limits, defaultResources.limits, gpuType)
+  const currentRequest = parseRequests(requests, defaultResources.requests)
   const scheduleData = defaultData?.schedule
     ? getDefaultSchedule(defaultData.schedule)
     : scheduleDataInitialState
@@ -177,31 +179,29 @@ export const generateJobWizardDefaultData = (
       parametersTable: {}
     },
     resources: {
-      preemptionMode: defaultData.function?.spec.preemption_mode,
-      jobPriorityClassName: defaultData.function?.spec.priority_class_name,
+      preemptionMode: defaultData.function?.spec?.preemption_mode,
+      jobPriorityClassName: defaultData.function?.spec?.priority_class_name,
       currentLimits,
       currentRequest,
-      nodeSelectorTable: parseObjectToKeyValue(defaultData.function?.spec.node_selector),
+      nodeSelectorTable: parseObjectToKeyValue(defaultData.function?.spec?.node_selector ?? []),
       volumesTable: parseVolumes(
-        defaultData.function?.spec.volumes,
-        defaultData.function?.spec.volume_mounts,
+        defaultData.function?.spec?.volumes ?? [],
+        defaultData.function?.spec?.volume_mounts ?? [],
         isEditMode
       )
     },
     advanced: {
       accessKey:
-        defaultData.function?.metadata.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY,
+        defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY,
       accessKeyInput:
-        defaultData.function?.metadata.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY
+        defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY
           ? ''
-          : defaultData.function?.metadata.credentials.access_key,
-      // todo: env variables and secretSources
-      //   environmentVariablesTable: parseEnvironmentVariables(
-      //     environmentVariablesTable,
-      //     isStagingMode
-      //   ),
-      environmentVariablesTable: [],
-      secretSourcesTable: []
+          : defaultData.function?.metadata?.credentials?.access_key,
+      environmentVariablesTable: parseEnvironmentVariables(
+        defaultData.function?.spec?.env ?? [],
+        isStagingMode
+      ),
+      secretSourcesTable: parseSecretSources(defaultData.task.spec.secret_sources)
     },
     scheduleData,
     function: defaultData.task.spec.function
@@ -220,79 +220,6 @@ export const generateJobWizardDefaultData = (
     jobFormData.dataInputs.dataInputsTable = parseDefaultDataInputs(defaultData.task.spec.inputs)
   }
 
-  // const parameters = generateDefaultParameters(
-  //   Object.entries(defaultData.task.spec.parameters ?? {})
-  // )
-  // const dataInputs = generateDefaultDataInputs(Object.entries(defaultData.task.spec.inputs ?? {}))
-  // const funcSpec = defaultData.function?.spec
-  // const limits = funcSpec?.resources?.limits ?? {}
-  // const requests = funcSpec?.resources?.requests ?? {}
-  // const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
-  //   data: secret
-  // }))
-  // const volumeMounts = defaultData.function?.spec.volume_mounts.map(volume_mounts => {
-  //   return {
-  //     data: {
-  //       name: volume_mounts?.name,
-  //       mountPath: volume_mounts?.mountPath,
-  //       subPath: volume_mounts?.subPath
-  //     },
-  //     isDefault: true,
-  //     canBeModified: mode === PANEL_EDIT_MODE
-  //   }
-  // })
-  //
-  // panelDispatch({
-  //   type: panelActions.SET_TABLE_DATA,
-  //   payload: {
-  //     dataInputs,
-  //     parameters,
-  //     volume_mounts: volumeMounts ?? [],
-  //     volumes: defaultData.function?.spec.volumes ?? [],
-  //     environmentVariables:
-  //       parseEnvVariables(defaultData.function?.spec.env ?? []).map(env => ({
-  //         data: generateEnvVariable(env)
-  //       })) ?? [],
-  //     secretSources: secrets,
-  //     node_selector: Object.entries(defaultData.function?.spec.node_selector ?? {}).map(
-  //       ([key, value]) => ({
-  //         key,
-  //         value
-  //       })
-  //     )
-  //   }
-  // })
-  // panelDispatch({
-  //   type: panelActions.SET_ACCESS_KEY,
-  //   payload: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY
-  // })
-  // panelDispatch({
-  //   type: panelActions.SET_OUTPUT_PATH,
-  //   payload: defaultData.task.spec.output_path ?? JOB_DEFAULT_OUTPUT_PATH
-  // })
-  // panelDispatch({
-  //   type: panelActions.SET_PREEMPTION_MODE,
-  //   payload: defaultData.function?.spec.preemption_mode || ''
-  // })
-  // setNewJob({
-  //   access_key: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
-  //   inputs: defaultData.task.spec.inputs ?? {},
-  //   parameters: defaultData.task.spec.parameters ?? {},
-  //   volume_mounts: volumeMounts?.length
-  //     ? volumeMounts.map(volumeMounts => ({
-  //       name: volumeMounts.data.name,
-  //       mountPath: volumeMounts.data.mountPath,
-  //       subPath: volumeMounts.data.subPath
-  //     }))
-  //     : [],
-  //   volumes: defaultData.function?.spec.volumes ?? [],
-  //   environmentVariables: defaultData.function?.spec.env ?? [],
-  //   secret_sources: defaultData.task.spec.secret_sources ?? [],
-  //   node_selector: defaultData.function?.spec.node_selector ?? {},
-  //   preemption_mode: defaultData.function?.spec.preemption_mode ?? '',
-  //   priority_class_name: defaultData.function?.spec.priority_class_name ?? ''
-  // })
-  //
   return [jobFormData, jobAdditionalData]
 }
 
@@ -655,22 +582,28 @@ const parseParameterValue = parameterValue => {
 }
 
 const parseLimits = (limits = {}, defaultLimits = {}, gpuType) => {
+  const [cpu, cpuUnitId] = getCpuData(limits.cpu ?? defaultLimits.cpu)
+  const [memory, memoryUnitId] = getMemoryData(limits.memory ?? defaultLimits.memory)
+
   return {
     ...limits,
-    cpu: parseFloat(limits.cpu ?? defaultLimits.cpu) ?? '',
-    cpuUnitId: getCpuUnitId(limits.cpu, defaultLimits.cpu),
-    memory: parseFloat(limits.memory ?? defaultLimits.memory) ?? '',
-    memoryUnitId: getMemoryUnitId(limits.memory, defaultLimits.memory),
+    cpu,
+    cpuUnitId,
+    memory,
+    memoryUnitId,
     [gpuType]: limits[gpuType] ?? defaultLimits.gpu ?? ''
   }
 }
 
 const parseRequests = (requests = {}, defaultRequests = {}) => {
+  const [cpu, cpuUnitId] = getCpuData(requests.cpu ?? defaultRequests.cpu)
+  const [memory, memoryUnitId] = getMemoryData(requests.memory ?? defaultRequests.memory)
+
   return {
-    cpu: parseFloat(requests.cpu ?? defaultRequests.cpu) ?? '',
-    cpuUnitId: getCpuUnitId(requests.cpu, defaultRequests.cpu),
-    memory: parseFloat(requests.memory ?? defaultRequests.memory) ?? '',
-    memoryUnitId: getMemoryUnitId(requests.memory, defaultRequests.memory)
+    cpu,
+    cpuUnitId,
+    memory,
+    memoryUnitId
   }
 }
 
@@ -698,6 +631,17 @@ const parseEnvironmentVariables = (envVariables, isStagingMode) => {
     }
 
     return { data: env }
+  })
+}
+
+const parseSecretSources = secretSources => {
+  return secretSources.map(secretSource => {
+    return {
+      data: {
+        key: secretSource.kind,
+        value: secretSource.source
+      }
+    }
   })
 }
 
@@ -849,7 +793,13 @@ const generateResources = resources => {
   }
 }
 
-export const generateRunPostData = (formData, selectedFunctionData, params, mode, isSchedule) => {
+export const generateJobRequestData = (
+  formData,
+  selectedFunctionData,
+  params,
+  mode,
+  isSchedule
+) => {
   let selectedFunction = selectedFunctionData?.functions?.find(
     func => func.metadata.tag === formData.jobDetails.version
   )
@@ -925,4 +875,10 @@ export const getNewJobErrorMsg = error => {
     : error.response.status === CONFLICT_ERROR_STATUS_CODE
     ? 'This job is already scheduled'
     : 'Unable to create new job.'
+}
+
+export const getSaveJobErrorMsg = error => {
+  return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+    ? 'You are not permitted to run new job.'
+    : error.message
 }

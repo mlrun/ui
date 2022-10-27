@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { OnChange } from 'react-final-form-listeners'
+import PropTypes from 'prop-types'
 import { isEmpty, omit } from 'lodash'
+import { OnChange } from 'react-final-form-listeners'
 
 import { FormInput, FormSelect, ConfirmDialog, FormChipCell } from 'igz-controls/components'
+
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
+import { getChipOptions } from '../../../../utils/getChipOptions'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-
 import {
-  parseDataInputs,
+  generateJobWizardDefaultData,
   getFunctionParameters,
-  parsePredefinedParameters,
-  generateJobWizardDefaultData
+  parseDataInputs,
+  parsePredefinedParameters
 } from '../../JobWizard.util'
-import { getChipOptions } from '../../../../utils/getChipOptions'
 
 import './jobWizardJobDetails.scss'
 
@@ -156,8 +157,15 @@ const JobWizardJobDetails = ({
   )
 }
 
-JobWizardJobDetails.defaultProps = {}
-
-JobWizardJobDetails.propTypes = {}
+JobWizardJobDetails.propTypes = {
+  defaultData: PropTypes.shape({}).isRequired,
+  formState: PropTypes.shape({}).isRequired,
+  frontendSpec: PropTypes.shape({}).isRequired,
+  isEditMode: PropTypes.bool.isRequired,
+  isStagingMode: PropTypes.bool.isRequired,
+  jobAdditionalData: PropTypes.shape({}).isRequired,
+  selectedFunctionData: PropTypes.shape({}).isRequired,
+  setJobAdditionalData: PropTypes.func.isRequired
+}
 
 export default JobWizardJobDetails

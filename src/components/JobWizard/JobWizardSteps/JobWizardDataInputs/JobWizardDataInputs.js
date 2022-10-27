@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { FormInput } from 'igz-controls/components'
 import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDataInputsTable'
+import { FormInput } from 'igz-controls/components'
 
 const JobWizardDataInputs = ({ formState }) => {
   return (
@@ -32,8 +32,6 @@ const JobWizardDataInputs = ({ formState }) => {
     </div>
   )
 }
-
-JobWizardDataInputs.defaultProps = {}
 
 JobWizardDataInputs.propTypes = {
   formState: PropTypes.shape({}).isRequired

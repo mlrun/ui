@@ -424,7 +424,7 @@ function getFunctionCatalog(req, res) {
 
 function getFunctionTemplate(req, res) {
   const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.params.function}/${req.params.function}.yaml`
-  const funcObject = fs.readFileSync(funcYAMLPath, 'utf8').replace('|+', '').replace('|', '')
+  const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
 
   res.send(funcObject)
 }
@@ -1082,9 +1082,7 @@ function postSubmitJob(req, res) {
       const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
         6
       )}/${req.body.task.spec.function.slice(6)}.yaml`
-      funcObject = yaml.load(
-        fs.readFileSync(funcYAMLPath, 'utf8').replace('|+', '').replace('|', '')
-      )
+      funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
     }
 
     const funcUID = makeUID(32)
