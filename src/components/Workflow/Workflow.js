@@ -127,7 +127,10 @@ const Workflow = ({
             run_type: job.run_type
           },
           isSelectable: Boolean(
-            job.run_uid || ((job.run_type === 'deploy' || job.run_type === 'build') && job.function)
+            job.run_uid ||
+              ((job.run_type === 'deploy' || job.run_type === 'build') &&
+                job.function &&
+                job.function.includes('@'))
           ),
           label: job.name,
           sourceHandle,
@@ -176,7 +179,8 @@ const Workflow = ({
     } else if (
       (element.data?.customData?.run_type === 'deploy' ||
         element.data?.customData?.run_type === 'build') &&
-      element.data?.customData?.function
+      element.data?.customData?.function &&
+      element.data?.customData?.function.includes('@')
     ) {
       const funcName = element.data.customData.function.includes('@')
         ? element.data.customData.function.match(/\/(.*?)@/i)[1]
