@@ -128,7 +128,7 @@ const featureStoreApi = {
       data
     ),
   updateFeatureStoreData: (projectName, featureData, tag, data, pageTab) =>
-    mainHttpClient.patch(
+    mainHttpClient.put(
       `/projects/${projectName}/${pageTab}/${featureData}/references/${tag}`,
       data
     ),

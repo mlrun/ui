@@ -94,6 +94,12 @@ export const generateArtifactsContent = (
           ? `${generateLinkPath(`store://functions/${selectedItem?.spec?.function_uri}`)}/overview`
           : ''
       },
+      monitoring_feature_set_uri: {
+        value: selectedItem?.status?.monitoring_feature_set_uri,
+        link: selectedItem?.status?.monitoring_feature_set_uri
+          ? `${generateLinkPath(selectedItem?.status?.monitoring_feature_set_uri)}/latest/overview`
+          : ''
+      },
       last_prediction: {
         value: formatDatetime(new Date(selectedItem?.status?.last_request), '-')
       },
@@ -493,6 +499,24 @@ export const handleFinishEdit = (
     }
   })
 
-  setChangesCounter(changesCounter || Object.keys(changesData).length)
+  setChangesCounter(countChanges(changesData))
   setChangesData({ ...changesData })
+}
+
+export const countChanges = changesData => {
+  let changesCounter = 0
+
+  Object.keys(changesData).forEach(field => {
+    if (field === 'features') {
+      changesData[field].initialFieldValue.forEach(item => {
+        if (!changesData[field].currentFieldValue.includes(item)) {
+          changesCounter++
+        }
+      })
+    } else {
+      changesCounter++
+    }
+  })
+
+  return changesCounter
 }

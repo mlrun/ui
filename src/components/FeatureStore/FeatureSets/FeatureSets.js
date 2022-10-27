@@ -199,6 +199,12 @@ const FeatureSets = ({
         )
   }, [featureSets, filtersStore.groupBy, latestItems, params.projectName, selectedFeatureSet])
 
+  const handleSelectFeatureSet = item => {
+    if (params.name === item.name && params.tag === item.tag) {
+      setSelectedFeatureSet(item)
+    }
+  }
+
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
@@ -337,7 +343,7 @@ const FeatureSets = ({
       ref={featureStoreRef}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
-      setSelectedFeatureSet={setSelectedFeatureSet}
+      setSelectedFeatureSet={handleSelectFeatureSet}
       tableContent={tableContent}
     />
   )
