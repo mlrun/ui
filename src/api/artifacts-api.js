@@ -128,7 +128,9 @@ const artifactsApi = {
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(
-      `/projects/${project}/artifacts/${data.uid}/${data.key || data.metadata.key}`,
+      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
+        data.key || data.metadata.key
+      }`,
       data
     ),
   updateArtifact: (project, data) =>
