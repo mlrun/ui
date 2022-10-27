@@ -51,24 +51,28 @@ const RegisterArtifactModal = ({
 }) => {
   const { isDemoMode } = useMode()
   const initialValues = {
-    description: '',
     kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
-    key: '',
-    target_path: isDemoMode
-      ? {
-          fieldInfo: {
-            pathType: ''
-          },
-          path: ''
-        }
-      : '',
-    labels: []
+    metadata: {
+      description: '',
+      key: '',
+      labels: []
+    },
+    spec: {
+      target_path: isDemoMode
+        ? {
+            fieldInfo: {
+              pathType: ''
+            },
+            path: ''
+          }
+        : ''
+    }
   }
   const formRef = React.useRef(
     createForm({
       initialValues,
-      onSubmit: () => {},
-      mutators: { ...arrayMutators, setFieldState }
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
     })
   )
   const location = useLocation()
@@ -77,19 +81,24 @@ const RegisterArtifactModal = ({
   const registerArtifact = values => {
     const uid = uuidv4()
     const data = {
-      uid,
-      key: values.key,
-      db_key: values.key,
-      tree: uid,
-      target_path: isDemoMode ? values.target_path.path : values.target_path,
-      description: values.description,
       kind: values.kind === 'general' ? '' : values.kind,
-      labels: convertChipsData(values.labels),
+      metadata: {
+        labels: convertChipsData(values.metadata.labels),
+        key: values.metadata.key,
+        project: projectName,
+        tree: uid
+      },
       project: projectName,
-      producer: {
-        kind: 'api',
-        uri: window.location.host
-      }
+      spec: {
+        db_key: values.metadata.key,
+        producer: {
+          kind: 'api',
+          uri: window.location.host
+        },
+        target_path: isDemoMode ? values.spec.target_path.path : values.spec.target_path
+      },
+      status: {},
+      uid
     }
 
     return artifactApi

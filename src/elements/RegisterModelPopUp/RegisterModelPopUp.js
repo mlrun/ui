@@ -44,23 +44,27 @@ import './registerModelPopUp.scss'
 function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }) {
   const { isDemoMode } = useMode()
   const initialValues = {
-    description: undefined,
-    labels: [],
-    modelName: undefined,
-    target_path: isDemoMode
-      ? {
-          fieldInfo: {
-            pathType: ''
-          },
-          path: ''
-        }
-      : undefined
+    metadata: {
+      description: undefined,
+      labels: [],
+      key: undefined
+    },
+    spec: {
+      target_path: isDemoMode
+        ? {
+            fieldInfo: {
+              pathType: ''
+            },
+            path: ''
+          }
+        : undefined
+    }
   }
   const formRef = React.useRef(
     createForm({
-      onSubmit: () => {},
+      initialValues,
       mutators: { ...arrayMutators, setFieldState },
-      initialValues: initialValues
+      onSubmit: () => {}
     })
   )
   const location = useLocation()
@@ -68,31 +72,37 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
 
-  const registerModel = value => {
+  const registerModel = values => {
     const uid = uuidv4()
+
     const data = {
-      uid: uid,
-      key: value.modelName,
-      db_key: value.modelName,
-      labels: convertChipsData(value.labels),
-      tree: uid,
-      target_path: isDemoMode ? value.target_path.path : value.target_path,
-      description: value.description,
       kind: 'model',
+      metadata: {
+        ...values.metadata,
+        labels: convertChipsData(values.metadata.labels),
+        project: projectName,
+        tree: uid
+      },
       project: projectName,
-      producer: {
-        kind: 'api',
-        uri: window.location.host
-      }
+      spec: {
+        db_key: values.metadata.key,
+        producer: {
+          kind: 'api',
+          uri: window.location.host
+        },
+        target_path: isDemoMode ? values.spec.target_path.path : values.spec.target_path
+      },
+      status: {},
+      uid
     }
 
-    if (value.target_path?.path?.includes('/') || value.target_path?.includes('/')) {
+    if (values.spec.target_path?.path?.includes('/') || values.spec.target_path?.includes('/')) {
       const path = isDemoMode
-        ? value.target_path.path.split(/([^/]*)$/)
-        : value.targetPath.split(/([^/]*)$/)
+        ? values.spec.target_path.path.split(/([^/]*)$/)
+        : values.spec.target_path.split(/([^/]*)$/)
 
-      data.target_path = path[0]
-      data.model_file = path[1]
+      data.spec.target_path = path[0]
+      data.spec.model_file = path[1]
     }
 
     return artifactApi
@@ -146,48 +156,48 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
         return (
           <Modal
             actions={getModalActions(formState)}
-            className="register-model"
+            className="register-model form"
             location={location}
             onClose={handleCloseModal}
             show={isOpen}
             size={MODAL_SM}
             title="Register model"
           >
-            <div className="register-model__row">
+            <div className="form-row">
               <FormInput
                 label="Name"
-                name="modelName"
+                name="metadata.key"
                 required
                 tip="Artifacts names in the same project must be unique."
+                validationRules={getValidationRules('artifact.name')}
               />
             </div>
-            <div className="register-model__row">
-              <FormTextarea name="description" label="Description" maxLength={500} />
+            <div className="form-row">
+              <FormTextarea name="metadata.description" label="Description" maxLength={500} />
             </div>
-            <div className="register-model__row">
+            <div className="form-row">
               {isDemoMode ? (
                 <TargetPath
                   formState={formState}
-                  formStateFieldInfo="target_path.fieldInfo"
+                  formStateFieldInfo="spec.target_path.fieldInfo"
                   label="Target Path"
-                  name="target_path.path"
-                  onChangeListenerName="target_path.fieldInfo.pathType"
+                  name="spec.target_path.path"
                   required
                   selectPlaceholder="Path Scheme"
                   setFieldState={formState.form.mutators.setFieldState}
                 />
               ) : (
-                <FormInput name="target_path" label="Target path" required />
+                <FormInput name="spec.target_path" label="Target path" required />
               )}
             </div>
-            <div className="register-model__row">
+            <div className="form-row">
               <FormChipCell
                 chipOptions={getChipOptions('metrics')}
                 formState={formState}
                 initialValues={initialValues}
                 isEditMode
                 label="labels"
-                name="labels"
+                name="metadata.labels"
                 shortChips
                 visibleChipsMaxLength="2"
                 validationRules={{
