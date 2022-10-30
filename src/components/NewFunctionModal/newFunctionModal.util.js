@@ -132,7 +132,8 @@ export const getInitialValues = (appStore, defaultData, mode, runtime) => {
     metadata: {
       credentials: {
         access_key: PANEL_DEFAULT_ACCESS_KEY
-      }
+      },
+      labels: []
     },
     spec: {
       build: {
@@ -179,7 +180,9 @@ export const runtimeOptions = isStagingMode => [
   }
 ]
 
-export const getModalTitle = runtime => {
+export const getModalTitle = (runtime, isEditMode) => {
+  if (isEditMode) return 'Edit Function'
+
   if (runtime === FUNCTION_TYPE_JOB) {
     return 'Create New Function'
   } else {

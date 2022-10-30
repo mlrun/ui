@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
+import { isEmpty } from 'lodash'
 
 // import FunctionsPanelTitle from '../../elements/FunctionsPanelTitle/FunctionsPanelTitle'
 import NewFunctionModalStep1 from './NewFunctionModalStep1/NewFunctionModalStep1'
@@ -121,7 +122,8 @@ const NewFunctionModal = ({
             location={location}
             size={MODAL_LG}
             stepsConfig={stepsConfig(formState)}
-            title={getModalTitle(formState.values.kind)}
+            subTitle={defaultData.name}
+            title={getModalTitle(formState.values.kind, !isEmpty(defaultData))}
           >
             <Wizard.Step>
               <NewFunctionModalStep1

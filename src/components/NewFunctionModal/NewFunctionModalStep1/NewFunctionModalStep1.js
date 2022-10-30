@@ -109,7 +109,7 @@ const NewFunctionModalStep1 = ({
           initialValues={formState.initialValues}
           isEditMode
           label="Labels"
-          name="labels"
+          name="metadata.labels"
           visibleChipsMaxLength="all"
           validationRules={{
             key: getValidationRules('common.tag'),
