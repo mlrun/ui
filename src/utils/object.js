@@ -57,29 +57,3 @@ export const generateKeyValues = (data = []) => {
 
   return keyValuePairs
 }
-
-// {key: 'value'} --> [{id: "", key: "", value: ""}]
-export const ParseChipKeyValue = (object = {}) =>
-  object == null
-    ? []
-    : Object.entries(object).reduce((result, [key, value], idx) => {
-        value =
-          Array.isArray(value) && value.every(item => item)
-            ? value.map(arrayItem => {
-                return typeof arrayItem === 'object'
-                  ? Object.entries(arrayItem).map(([arrayItemKey, arrayItemValue]) => ({
-                      key: arrayItemKey,
-                      value: arrayItemValue
-                    }))
-                  : arrayItem
-              })
-            : typeof value === 'object' && value !== null
-            ? Object.entries(value).map(([arrayItemKey, arrayItemValue]) => ({
-                key: arrayItemKey,
-                value: arrayItemValue
-              }))
-            : value
-
-        result.push({ id: idx + new Date(), key, value })
-        return result
-      }, [])
