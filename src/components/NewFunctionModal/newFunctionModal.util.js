@@ -5,7 +5,7 @@ import {
   getLimitsGpuType,
   getVolumeType
 } from '../../utils/panelResources.util'
-import { newParseKeyValues } from '../../utils'
+import { parseChipsData } from '../../utils/convertChipsData'
 
 import { FUNCTION_TYPE_JOB, PANEL_DEFAULT_ACCESS_KEY, PANEL_EDIT_MODE } from '../../constants'
 
@@ -42,7 +42,7 @@ export const getInitialValues = (appStore, defaultData, mode, runtime) => {
       ...defaultData,
       metadata: {
         ...defaultData.metadata,
-        labels: newParseKeyValues(defaultData.metadata?.labels)
+        labels: parseChipsData(defaultData.metadata?.labels)
       },
       spec: {
         ...defaultData.spec,
