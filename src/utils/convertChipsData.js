@@ -29,7 +29,7 @@ export const convertChipsData = chips => {
 
 // {key: 'value'} --> [{id: "", key: "", value: ""}]
 export const parseChipsData = (labels = {}, delimiter = null) => {
-  labels == null
+  return labels == null
     ? []
     : Object.entries(labels).reduce((result, [key, value], idx) => {
         value =
