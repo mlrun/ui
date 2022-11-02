@@ -271,6 +271,12 @@ const FeatureVectors = ({
         )
   }, [featureVectors, filtersStore.groupBy, latestItems, params.projectName, selectedFeatureVector])
 
+  const handleSelectFeatureVector = item => {
+    if (params.name === item.name && params.tag === item.tag) {
+      setSelectedFeatureVector(item)
+    }
+  }
+
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
@@ -412,7 +418,7 @@ const FeatureVectors = ({
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
-      setSelectedFeatureVector={setSelectedFeatureVector}
+      setSelectedFeatureVector={handleSelectFeatureVector}
       tableContent={tableContent}
     />
   )

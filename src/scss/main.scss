@@ -168,6 +168,10 @@ a {
   @include statusState($burntSienna);
 }
 
+[class^='state-omitted'] {
+  @include statusState($silver);
+}
+
 .state-created-job,
 .state-created-function,
 .state-pending-job {

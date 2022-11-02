@@ -130,7 +130,12 @@ const artifactsApi = {
     return fetchArtifacts(project, filters, { params: { category: 'model', format: 'full' } }, true)
   },
   registerArtifact: (project, data) =>
-    mainHttpClient.post(`/projects/${project}/artifacts/${data.uid}/${data.key}`, data),
+    mainHttpClient.post(
+      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
+        data.key || data.metadata.key
+      }`,
+      data
+    ),
   updateArtifact: (project, data) =>
     mainHttpClient.post(
       `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
