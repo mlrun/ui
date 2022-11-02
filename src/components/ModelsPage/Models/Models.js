@@ -145,11 +145,22 @@ const Models = ({
     [fetchModel, filtersStore.iter, filtersStore.tag, params.projectName, selectedModel]
   )
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName)
+      setSelectedRowData({})
+      setModels([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
+
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        fetchData,
+        handleRefresh,
         params.projectName,
         params.name,
         selectedModel,
@@ -159,8 +170,8 @@ const Models = ({
       )
     },
     [
-      fetchData,
       filtersStore,
+      handleRefresh,
       params.name,
       params.projectName,
       selectedModel,
@@ -173,18 +184,6 @@ const Models = ({
     removeModel({})
     setSelectedRowData({})
   }, [filtersStore.iter, filtersStore.tag, removeModel])
-
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedModel({})
-      setSelectedRowData({})
-      setModels([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
-  )
 
   const { latestItems, handleExpandRow } = useGroupContent(
     models,

@@ -107,8 +107,6 @@ const FeatureSets = ({
 
   const handleRefresh = filters => {
     getFilterTagOptions(fetchFeatureSetsTags, params.projectName)
-    setSelectedFeatureSet({})
-    setFeatureSets([])
 
     return fetchData(filters)
   }
