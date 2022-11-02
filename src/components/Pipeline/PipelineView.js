@@ -26,6 +26,8 @@ import CodeBlock from '../../common/CodeBlock/CodeBlock'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
+import { REAL_TIME_PIPELINES_TAB } from '../../constants'
+
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
@@ -46,7 +48,9 @@ const PipelineView = ({
       <div className="pipeline-header">
         <div className="link-back">
           <Link
-            to={`/projects/${params.projectName}/models/${params.pageTab}`}
+            to={`/projects/${params.projectName}/models/${
+              params.pageTab ?? REAL_TIME_PIPELINES_TAB
+            }`}
             className="link-back__icon"
           >
             <Tooltip template={<TextTooltipTemplate text="Back" />}>

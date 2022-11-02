@@ -56,7 +56,7 @@ export const generateTableContent = (
     return map(groupedContent, group =>
       page === FUNCTIONS_PAGE ||
       (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
-        ? createFunctionsContent(group, isSelectedItem, params)
+        ? createFunctionsContent(group, isSelectedItem, params.pageTab, params.projectName, true)
         : page === FEATURE_STORE_PAGE
         ? createFeatureStoreContent(
             group,

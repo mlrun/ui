@@ -95,7 +95,7 @@ const MonitorJobsView = ({
 
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
         (jobs.length === 0 && !params.jobName) ? (
-        <NoData message={getNoDataMessage(filtersStore, filters, MONITOR_JOBS_TAB, JOBS_PAGE)} />
+        <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_JOBS_TAB)} />
       ) : (
         isEmpty(selectedJob) && (
           <Table

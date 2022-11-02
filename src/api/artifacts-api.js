@@ -69,7 +69,7 @@ const artifactsApi = {
   getArtifacts: (project, filters) => {
     return fetchArtifacts(project, filters)
   },
-  getDataSet: (project, dataSet, tag) => {
+  getDataSet: (project, dataSet, tag, iter) => {
     return fetchArtifacts(
       project,
       {},
@@ -77,7 +77,8 @@ const artifactsApi = {
         params: {
           category: 'dataset',
           name: dataSet,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )
@@ -85,7 +86,7 @@ const artifactsApi = {
   getDataSets: (project, filters, config) => {
     return fetchArtifacts(project, filters, { ...config, params: { category: 'dataset' } }, true)
   },
-  getFile: (project, file, tag) => {
+  getFile: (project, file, tag, iter) => {
     return fetchArtifacts(
       project,
       {},
@@ -93,7 +94,8 @@ const artifactsApi = {
         params: {
           category: 'other',
           name: file,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )
@@ -101,7 +103,7 @@ const artifactsApi = {
   getFiles: (project, filters) => {
     return fetchArtifacts(project, filters, { params: { category: 'other', format: 'full' } }, true)
   },
-  getModel: (project, model, tag) => {
+  getModel: (project, model, tag, iter) => {
     return fetchArtifacts(
       project,
       {},
@@ -109,7 +111,8 @@ const artifactsApi = {
         params: {
           category: 'model',
           name: model,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )

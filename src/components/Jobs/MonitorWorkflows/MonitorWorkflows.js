@@ -28,7 +28,6 @@ import { JobsContext } from '../Jobs'
 import {
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
-  JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB
 } from '../../../constants'
@@ -293,9 +292,9 @@ const MonitorWorkflows = ({
 
   useEffect(() => {
     if ((params.jobId || params.functionHash) && pageData.details.menu.length > 0) {
-      isDetailsTabExists(JOBS_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, params, location])
+  }, [navigate, pageData.details.menu, location, params.jobId, params.functionHash, params.tab])
 
   useEffect(() => {
     const workflow = { ...workflowsStore.activeWorkflow.data }

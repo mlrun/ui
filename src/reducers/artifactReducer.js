@@ -50,7 +50,9 @@ import {
   REMOVE_FILE,
   REMOVE_FILES,
   REMOVE_MODEL,
+  REMOVE_MODEL_ENDPOINTS,
   REMOVE_MODELS,
+  REMOVE_PIPELINES,
   SHOW_ARTIFACT_PREVIEW
 } from '../constants'
 
@@ -77,6 +79,7 @@ const initialState = {
       content: {}
     }
   },
+  pipelines: [],
   preview: {}
 }
 
@@ -206,6 +209,7 @@ const artifactReducer = (state = initialState, { type, payload }) => {
     case FETCH_ARTIFACTS_FUNCTIONS_SUCCESS:
       return {
         ...state,
+        pipelines: payload,
         error: null,
         loading: false
       }
@@ -321,12 +325,22 @@ const artifactReducer = (state = initialState, { type, payload }) => {
           }
         }
       }
+    case REMOVE_MODEL_ENDPOINTS:
+      return {
+        ...state,
+        modelEndpoints: initialState.modelEndpoints
+      }
     case REMOVE_MODELS:
       return {
         ...state,
         models: {
           ...initialState.models
         }
+      }
+    case REMOVE_PIPELINES:
+      return {
+        ...state,
+        pipelines: initialState.pipelines
       }
     case SHOW_ARTIFACT_PREVIEW:
       return {

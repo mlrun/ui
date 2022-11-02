@@ -42,6 +42,7 @@ import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
 import { FeatureStoreContext } from '../FeatureStore'
+import { cancelRequest } from '../../../utils/cancelRequest'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -104,12 +105,10 @@ const FeatureSets = ({
     [fetchFeatureSets, params.projectName]
   )
 
-  const cancelRequest = message => {
-    featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
-  }
-
   const handleRefresh = filters => {
     getFilterTagOptions(fetchFeatureSetsTags, params.projectName)
+    setSelectedFeatureSet({})
+    setFeatureSets([])
 
     return fetchData(filters)
   }
@@ -296,9 +295,9 @@ const FeatureSets = ({
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
-      isDetailsTabExists(FEATURE_STORE_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, params, pageData.details.menu])
+  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
     checkTabIsValid(navigate, params, selectedFeatureSet, FEATURE_SETS_TAB)
@@ -317,7 +316,7 @@ const FeatureSets = ({
       removeFeatureSet()
       setSelectedFeatureSet({})
       setSelectedRowData({})
-      cancelRequest('cancel')
+      cancelRequest(featureStoreRef, 'cancel')
     }
   }, [removeFeatureSet, removeFeatureSets, params.projectName])
 
