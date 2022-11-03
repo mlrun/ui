@@ -144,7 +144,7 @@ const Pipeline = ({ content }) => {
           edgesMap[stepName] = mainRouterStepId
         }
 
-        if (step.after.length) {
+        if (step.after && Array.isArray(step.after) && step.after.length) {
           edgesMap[stepName] = step.after[0]
         }
 
