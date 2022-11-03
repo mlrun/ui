@@ -125,7 +125,7 @@ RealTimePipelinesView.propTypes = {
   pageData: PropTypes.object.isRequired,
   params: PropTypes.object.isRequired,
   pipelines: PropTypes.arrayOf(PropTypes.object).isRequired,
-  selectedRowData: PropTypes.object.isRequired,
+  selectedRowData: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
