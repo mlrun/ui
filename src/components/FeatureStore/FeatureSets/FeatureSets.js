@@ -119,8 +119,8 @@ const FeatureSets = ({
 
       const newPageDataSelectedRowData = { ...selectedRowData }
 
-      delete newStoreSelectedRowData[featureSet.ui.identifier]
-      delete newPageDataSelectedRowData[featureSet.ui.identifier]
+      delete newStoreSelectedRowData[featureSet.data.ui.identifier]
+      delete newPageDataSelectedRowData[featureSet.data.ui.identifier]
 
       removeFeatureSet(newStoreSelectedRowData)
       setSelectedRowData(newPageDataSelectedRowData)
