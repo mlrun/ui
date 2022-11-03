@@ -24,7 +24,7 @@ import { connect, useSelector } from 'react-redux'
 
 import MonitorJobsView from './MonitorJobsView'
 
-import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
+import { GROUP_BY_NONE, MONITOR_JOBS_TAB } from '../../../constants'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { handleAbortJob } from '../jobs.util'
 import { parseJob } from '../../../utils/parseJob'
@@ -68,13 +68,8 @@ const MonitorJobs = ({
   const navigate = useNavigate()
   const location = useLocation()
   const { isStagingMode } = useMode()
-  const {
-    editableItem,
-    handleMonitoring,
-    handleRerunJob,
-    setConfirmData,
-    setEditableItem
-  } = React.useContext(JobsContext)
+  const { editableItem, handleMonitoring, handleRerunJob, setConfirmData, setEditableItem } =
+    React.useContext(JobsContext)
   const filters = useMemo(() => {
     return generateFilters(params.jobName)
   }, [params.jobName])
@@ -87,11 +82,10 @@ const MonitorJobs = ({
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const pageData = useMemo(() => generatePageData(fetchJobLogs, removeJobLogs, selectedJob), [
-    fetchJobLogs,
-    removeJobLogs,
-    selectedJob
-  ])
+  const pageData = useMemo(
+    () => generatePageData(fetchJobLogs, removeJobLogs, selectedJob),
+    [fetchJobLogs, removeJobLogs, selectedJob]
+  )
 
   const refreshJobs = useCallback(
     filters => {
@@ -225,9 +219,9 @@ const MonitorJobs = ({
 
   useEffect(() => {
     if (params.jobId && pageData.details.menu.length > 0) {
-      isDetailsTabExists(JOBS_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, params, location])
+  }, [navigate, pageData.details.menu, location, params.jobId, params.tab])
 
   useEffect(() => {
     if (params.jobId && (isEmpty(selectedJob) || params.jobId !== selectedJob.uid)) {

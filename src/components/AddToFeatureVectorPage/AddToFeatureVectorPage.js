@@ -45,6 +45,7 @@ import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { useYaml } from '../../hooks/yaml.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+import { cancelRequest } from '../../utils/cancelRequest'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -134,10 +135,6 @@ const AddToFeatureVectorPage = ({
     ],
     [toggleConvertedYaml]
   )
-
-  const cancelRequest = message => {
-    addToFeatureVectorPageRef.current?.cancel && addToFeatureVectorPageRef.current.cancel(message)
-  }
 
   const fetchData = useCallback(
     async filters => {
@@ -248,7 +245,7 @@ const AddToFeatureVectorPage = ({
       removeFeature()
       removeFeatures()
       setSelectedRowData({})
-      cancelRequest('cancel')
+      cancelRequest(addToFeatureVectorPageRef, 'cancel')
     }
   }, [removeFeature, removeFeatures])
 

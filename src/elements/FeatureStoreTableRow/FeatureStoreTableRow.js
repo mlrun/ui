@@ -21,17 +21,16 @@ import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
-// import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
-
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 const FeatureStoreTableRow = ({
   actionsMenu,
@@ -69,7 +68,7 @@ const FeatureStoreTableRow = ({
                   data={data}
                   firstCell={index === 0}
                   handleExpandRow={handleExpandRow}
-                  item={rowItem.data}
+                  item={rowItem}
                   key={data.id}
                   link={
                     data.rowExpanded?.getLink
@@ -102,19 +101,19 @@ const FeatureStoreTableRow = ({
                 <div className={subRowClassNames} key={index}>
                   {
                     <>
-                      {tableContentItem.content.map(value => {
-                        return (
-                          !value.hidden && (
-                            <TableCell
-                              data={value.expandedCellContent ? value.expandedCellContent : value}
-                              item={tableContentItem.data}
-                              link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
-                              key={value.id}
-                              selectItem={handleSelectItem}
-                              selectedItem={selectedItem}
-                            />
-                          )
-                        )
+                      {tableContentItem.content.map((value, index) => {
+                        return !isEmpty(selectedItem) && index > mainRowItemsCount
+                          ? null
+                          : !value.hidden && (
+                              <TableCell
+                                data={value.expandedCellContent ? value.expandedCellContent : value}
+                                item={tableContentItem.data}
+                                link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
+                                key={value.id}
+                                selectItem={handleSelectItem}
+                                selectedItem={selectedItem}
+                              />
+                            )
                       })}
                       {!hideActionsMenu && (
                         <div className="table-body__cell action_cell">
@@ -134,9 +133,9 @@ const FeatureStoreTableRow = ({
             return (
               !value.hidden && (
                 <TableCell
-                  handleExpandRow={handleExpandRow}
                   data={value}
                   firstCell={index === 0}
+                  handleExpandRow={handleExpandRow}
                   item={rowItem.data}
                   key={value.id}
                   link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
