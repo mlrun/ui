@@ -129,12 +129,12 @@ const RealTimePipelines = () => {
       expand={expand}
       fetchData={fetchData}
       filtersStore={filtersStore}
-      selectedRowData={selectedRowData}
       handleExpandAll={handleExpandAll}
       handleExpandRow={handleExpandRow}
       pageData={pageData}
       params={params}
       pipelines={pipelines}
+      selectedRowData={selectedRowData}
       tableContent={tableContent}
     />
   )
