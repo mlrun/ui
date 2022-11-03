@@ -64,7 +64,7 @@ const DetailsTransformations = ({ selectedItem }) => {
         position: { x: 0, y: 0 }
       }
 
-      if (stepItem.after) {
+      if (stepItem.after.length) {
         edgesMap[stepName] = stepItem.after[0]
       } else if (!find(states, ['on_error', stepName])) {
         edgesMap[stepName] = 'Source'
