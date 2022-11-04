@@ -45,6 +45,7 @@ const ModelsPage = () => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const location = useLocation()
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const params = useParams()
 
   const handleRegisterModel = useCallback(
@@ -86,7 +87,7 @@ const ModelsPage = () => {
             >
               <Outlet />
             </ModelsPageContext.Provider>
-            {artifactsStore.loading && <Loader />}
+            {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
           </div>
         </div>
       </div>

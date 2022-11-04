@@ -50,8 +50,7 @@ import {
   SHOW_UNTAGGED_ITEMS,
   SORT_BY,
   STATUS_FILTER,
-  TAG_FILTER,
-  TREE_FILTER
+  TAG_FILTER
 } from '../../constants'
 import filtersActions from '../../actions/filters'
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
@@ -100,7 +99,7 @@ const FilterMenu = ({
   }, [filtersStore.labels, filtersStore.name])
 
   useEffect(() => {
-    if (filters.find(filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER)) {
+    if (filters.find(filter => filter.type === TAG_FILTER)) {
       if (filtersStore.tagOptions.length > 0) {
         setTagOptions(() => {
           const defaultOptionsTags = tagFilterOptions.map(option => option.id)
@@ -175,7 +174,7 @@ const FilterMenu = ({
     } else if (filter.type === GROUP_BY_FILTER) {
       setFilters({ groupBy: item })
     } else if (
-      (filter.type === TREE_FILTER || filter.type === TAG_FILTER) &&
+      (filter.type === TAG_FILTER) &&
       item !== filtersStore.tag
     ) {
       setFilters({ tag: item })
@@ -269,7 +268,6 @@ const FilterMenu = ({
         {filters.map(filter => {
           if (!filter.hidden) {
             switch (filter.type) {
-              case TREE_FILTER:
               case TAG_FILTER:
                 return (
                   <TagFilter

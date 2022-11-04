@@ -18,22 +18,26 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
 import DatasetsView from './DatasetsView'
+import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
 import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
+import notificationActions from '../../actions/notification'
 import {
   checkForSelectedDataset,
   fetchDataSetRowData,
   filters,
-  generatePageData
+  generatePageData,
+  handleApplyDetailsChanges
 } from './datasets.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   DATASETS_PAGE,
   GROUP_BY_NAME,
@@ -56,31 +60,23 @@ const Datasets = ({
   getFilterTagOptions,
   removeDataSet,
   removeDataSets,
-  setFilters
+  setFilters,
+  setNotification
 }) => {
   const [datasets, setDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
-  const urlTagOption = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
   const pageData = useMemo(() => generatePageData(selectedDataset), [selectedDataset])
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-
-  const actionsMenu = useMemo(
-    () => [
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
-    ],
-    [toggleConvertedYaml]
-  )
+  const dispatch = useDispatch()
 
   const fetchData = useCallback(
     filters => {
@@ -94,6 +90,81 @@ const Datasets = ({
     },
     [fetchDataSets, params.projectName]
   )
+
+  const handleAddTag = useCallback(
+    artifact => {
+      openPopUp(AddArtifactTagPopUp, {
+        artifact,
+        onAddTag: fetchData,
+        projectName: params.projectName
+      })
+    },
+    [fetchData, params.projectName]
+  )
+
+  const actionsMenu = useMemo(
+    () => [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        onClick: handleAddTag
+      }
+    ],
+    [handleAddTag, toggleConvertedYaml]
+  )
+
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName)
+      setSelectedRowData({})
+      setDatasets([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
+
+  const applyDetailsChanges = useCallback(
+    changes => {
+      return handleApplyDetailsChanges(
+        changes,
+        handleRefresh,
+        params.projectName,
+        params.name,
+        selectedDataset,
+        setNotification,
+        filtersStore,
+        null,
+        dispatch
+      )
+    },
+    [
+      dispatch,
+      handleRefresh,
+      filtersStore,
+      params.name,
+      params.projectName,
+      selectedDataset,
+      setNotification
+    ]
+  )
+
+  const applyDetailsChangesCallback = changes => {
+    if ('tag' in changes.data) {
+      setSelectedRowData({})
+      setDatasets([])
+      navigate(
+        `/projects/${params.projectName}/datasets/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+        { replace: true }
+      )
+    }
+
+    handleRefresh(filtersStore)
+  }
 
   const handleRequestOnExpand = useCallback(
     async dataset => {
@@ -124,15 +195,6 @@ const Datasets = ({
       setSelectedRowData(newPageDataSelectedRowData)
     },
     [artifactsStore.dataSets.selectedRowData.content, removeDataSet, selectedRowData]
-  )
-
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -193,6 +255,7 @@ const Datasets = ({
       datasets,
       params.tag,
       params.iter,
+      params.uid,
       params.projectName,
       setSelectedDataset,
       navigate
@@ -204,6 +267,7 @@ const Datasets = ({
     params.name,
     params.projectName,
     params.tag,
+    params.uid,
     selectedRowData
   ])
 
@@ -221,7 +285,10 @@ const Datasets = ({
   return (
     <DatasetsView
       actionsMenu={actionsMenu}
+      applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
+      artifactsToolkitStore={artifactsToolkitStore}
       convertedYaml={convertedYaml}
       datasets={datasets}
       filtersStore={filtersStore}
@@ -245,7 +312,8 @@ const actionCreators = {
   getFilterTagOptions: filtersActions.getFilterTagOptions,
   removeDataSet: artifactsAction.removeDataSet,
   removeDataSets: artifactsAction.removeDataSets,
-  setFilters: filtersActions.setFilters
+  setFilters: filtersActions.setFilters,
+  setNotification: notificationActions.setNotification
 }
 
 export default connect(null, { ...actionCreators })(Datasets)

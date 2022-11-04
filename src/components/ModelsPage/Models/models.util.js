@@ -17,25 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep, isEmpty, omit } from 'lodash'
 
 import {
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
-  TREE_FILTER,
+  TAG_FILTER,
   MODELS_PAGE,
   MODELS_TAB,
   TAG_LATEST
 } from '../../../constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { applyTagChanges } from '../../../utils/artifacts.util'
+import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
-import { createModelsRowData } from '../../../utils/createArtifactsContent'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 
 export const filters = [
-  { type: TREE_FILTER, label: 'Tree:' },
+  { type: TAG_FILTER, label: 'Version tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
@@ -48,7 +49,7 @@ export const infoHeaders = [
     tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
-  { label: 'Tag', id: 'tag' },
+  { label: 'Version tag', id: 'tag' },
   { label: 'Iter', id: 'iter' },
   { label: 'Kind', id: 'kind' },
   { label: 'Size', id: 'size' },
@@ -172,56 +173,63 @@ export const handleApplyDetailsChanges = (
   selectedItem,
   setNotification,
   filters,
-  updateArtifact
+  updateArtifact,
+  dispatch
 ) => {
   const isNewFormat =
     selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
-  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : selectedItem)
+  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui']))
+  let updateArtifactPromise = Promise.resolve()
+  let updateTagPromise = applyTagChanges(changes, data, projectName, dispatch, setNotification)
 
-  Object.keys(changes.data).forEach(key => {
-    if (key === 'labels') {
-      isNewFormat
-        ? (data.metadata[key] = changes.data[key].previousFieldValue)
-        : (data[key] = changes.data[key].previousFieldValue)
-    }
-  })
-
-  if (data.metadata?.labels || data.labels) {
-    const objectLabels = {}
-    const labels = isNewFormat ? data.metadata.labels : data.labels
-
-    labels.forEach(label => {
-      const splitedLabel = label.split(':')
-
-      objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
+  if (!isEmpty(omit(changes.data, ['tag']))) {
+    Object.keys(changes.data).forEach(key => {
+      if (key === 'labels') {
+        isNewFormat
+          ? (data.metadata[key] = changes.data[key].previousFieldValue)
+          : (data[key] = changes.data[key].previousFieldValue)
+      }
     })
 
-    isNewFormat ? (data.metadata.labels = { ...objectLabels }) : (data.labels = { ...objectLabels })
-  }
+    const labels = data.metadata?.labels || data.labels
 
-  return updateArtifact(projectName, data)
-    .then(response => {
-      return fetchData(filters).then(() => {
+    if (labels && Array.isArray(labels)) {
+      const objectLabels = {}
+      const labels = isNewFormat ? data.metadata.labels : data.labels
+
+      labels.forEach(label => {
+        const splitedLabel = label.split(':')
+
+        objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
+      })
+
+      isNewFormat
+        ? (data.metadata.labels = { ...objectLabels })
+        : (data.labels = { ...objectLabels })
+    }
+
+    updateArtifactPromise = updateArtifact(projectName, data)
+      .then(response => {
         setNotification({
           status: response.status,
           id: Math.random(),
-          message: 'Updated successfully'
+          message: 'Model was updated successfully'
         })
+      })
+      .catch(error => {
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message:
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'Permission denied'
+              : 'Failed to update the model',
+          retry: handleApplyDetailsChanges
+        })
+      })
+  }
 
-        return response
-      })
-    })
-    .catch(error => {
-      setNotification({
-        status: error.response?.status || 400,
-        id: Math.random(),
-        message:
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied.'
-            : 'Failed to update.',
-        retry: handleApplyDetailsChanges
-      })
-    })
+  return Promise.all([updateTagPromise, updateArtifactPromise])
 }
 
 export const checkForSelectedModel = (
@@ -230,6 +238,7 @@ export const checkForSelectedModel = (
   models,
   tag,
   iter,
+  uid,
   navigate,
   projectName,
   setSelectedModel
@@ -242,7 +251,8 @@ export const checkForSelectedModel = (
         artifacts.map(artifact => artifact.data ?? artifact),
         name,
         tag,
-        iter
+        iter,
+        uid
       )
 
       if (!searchItem) {

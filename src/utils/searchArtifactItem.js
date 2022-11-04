@@ -17,11 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const searchArtifactItem = (artifacts, name, tag, iter) =>
-  artifacts.find(item =>
-    iter
-      ? item.db_key === name &&
-        (item.tag === tag || item.tree === tag) &&
-        Number(iter) === item.iter
-      : item.db_key === name && (item.tag === tag || item.tree === tag)
-  )
+export const searchArtifactItem = (artifacts, name, tag, iter, uid) =>
+  artifacts.find(item => {
+    const isNameFound = item.db_key === name
+    const isIdentifierFound = item.tag === tag || item.tree === tag || (uid && uid === item.uid)
+    const isIterFound = iter ? item.iter === Number(iter) : true
+
+    return isNameFound && isIdentifierFound && isIterFound
+  })

@@ -17,28 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import appApi from '../api/app-api'
-
-const initialState = {
-  frontendSpec: {}
+export const hideLoading = state => {
+  state.loading = false
 }
-
-export const fetchFrontendSpec = createAsyncThunk('fetchFrontendSpec', () => {
-  return appApi.getFrontendSpec().then(({ data }) => {
-    return data
-  })
-})
-
-const appSlice = createSlice({
-  name: 'app',
-  initialState,
-  reducers: {},
-  extraReducers: {
-    [fetchFrontendSpec.fulfilled]: (state, { payload }) => {
-      state.frontendSpec = payload
-    }
-  }
-})
-
-export default appSlice.reducer
+export const showLoading = state => {
+  state.loading = true
+}

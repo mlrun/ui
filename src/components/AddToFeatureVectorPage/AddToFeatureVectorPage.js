@@ -69,7 +69,7 @@ const AddToFeatureVectorPage = ({
   const navigate = useNavigate()
   const tableStore = useSelector(store => store.tableStore)
   const dispatch = useDispatch()
-  const urlTagOption = useGetTagOptions(fetchFeatureSetsTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, filters)
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
     navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
