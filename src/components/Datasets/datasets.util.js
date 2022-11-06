@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty } from 'lodash'
+import { cloneDeep, isEmpty, omit } from 'lodash'
 
+import { applyTagChanges } from '../../utils/artifacts.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import {
@@ -27,7 +28,7 @@ import {
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
-  TREE_FILTER
+  TAG_FILTER
 } from '../../constants'
 import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
@@ -39,7 +40,7 @@ export const infoHeaders = [
     tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
-  { label: 'Tag', id: 'tag' },
+  { label: 'Version tag', id: 'tag' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
@@ -55,7 +56,7 @@ export const infoHeaders = [
 ]
 
 export const filters = [
-  { type: TREE_FILTER, label: 'Tree:' },
+  { type: TAG_FILTER, label: 'Version tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
@@ -145,12 +146,35 @@ export const fetchDataSetRowData = async (
     })
 }
 
+export const handleApplyDetailsChanges = (
+  changes,
+  fetchData,
+  projectName,
+  itemName,
+  selectedItem,
+  setNotification,
+  filters,
+  updateArtifact,
+  dispatch
+) => {
+  const isNewFormat =
+    selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
+  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui']))
+
+  const updateTagPromise = applyTagChanges(changes, data, projectName, dispatch, setNotification)
+
+  return updateTagPromise.then(() => {
+    return fetchData(filters)
+  })
+}
+
 export const checkForSelectedDataset = (
   name,
   selectedRowData,
   datasets,
   tag,
   iter,
+  uid,
   projectName,
   setSelectedDataset,
   navigate
@@ -163,7 +187,8 @@ export const checkForSelectedDataset = (
         artifacts.map(artifact => artifact.data ?? artifact),
         name,
         tag,
-        iter
+        iter,
+        uid
       )
 
       if (!searchItem) {

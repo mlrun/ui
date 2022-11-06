@@ -41,7 +41,10 @@ const DatasetsView = React.forwardRef(
   (
     {
       actionsMenu,
+      applyDetailsChanges,
+      applyDetailsChangesCallback,
       artifactsStore,
+      artifactsToolkitStore,
       convertedYaml,
       datasets,
       filtersStore,
@@ -77,7 +80,7 @@ const DatasetsView = React.forwardRef(
             />
           </div>
           <div className="content">
-            {artifactsStore.loading && <Loader />}
+            {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
             <div className="table-container">
               <div className="content__action-bar">
                 <FilterMenu
@@ -92,6 +95,8 @@ const DatasetsView = React.forwardRef(
               ) : (
                 <>
                   <Table
+                    applyDetailsChanges={applyDetailsChanges}
+                    applyDetailsChangesCallback={applyDetailsChangesCallback}
                     actionsMenu={actionsMenu}
                     content={datasets}
                     handleCancel={() => setSelectedDataset({})}
@@ -130,7 +135,10 @@ const DatasetsView = React.forwardRef(
 
 DatasetsView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+  applyDetailsChanges: PropTypes.func.isRequired,
+  applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
+  artifactsToolkitStore: PropTypes.object.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,

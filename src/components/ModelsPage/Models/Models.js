@@ -18,10 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 
@@ -71,13 +72,14 @@ const Models = ({
   const [models, setModels] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const urlTagOption = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
   const modelsRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
   const { toggleConvertedYaml } = React.useContext(ModelsPageContext)
@@ -86,24 +88,9 @@ const Models = ({
     openPopUp(DeployModelPopUp, { model })
   }, [])
 
-  const actionsMenu = useMemo(
-    () => [
-      {
-        label: 'Deploy',
-        onClick: handleDeployModel
-      },
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
-    ],
-    [handleDeployModel, toggleConvertedYaml]
-  )
-
   const fetchData = useCallback(
     async filters => {
-      fetchModels(params.projectName, filters).then(result => {
+      return fetchModels(params.projectName, filters).then(result => {
         if (result) {
           setModels(result)
         }
@@ -112,6 +99,36 @@ const Models = ({
       })
     },
     [fetchModels, params.projectName]
+  )
+
+  const handleAddTag = useCallback(
+    artifact => {
+      openPopUp(AddArtifactTagPopUp, {
+        artifact,
+        onAddTag: fetchData,
+        projectName: params.projectName
+      })
+    },
+    [fetchData, params.projectName]
+  )
+
+  const actionsMenu = useMemo(
+    () => [
+      {
+        label: 'Deploy',
+        onClick: handleDeployModel
+      },
+      {
+        label: 'Add a tag',
+        onClick: handleAddTag
+      },
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      }
+    ],
+    [handleAddTag, handleDeployModel, toggleConvertedYaml]
   )
 
   const handleRemoveRowData = useCallback(
@@ -166,19 +183,34 @@ const Models = ({
         selectedModel,
         setNotification,
         filtersStore,
-        updateArtifact
+        updateArtifact,
+        dispatch
       )
     },
     [
-      filtersStore,
       handleRefresh,
-      params.name,
       params.projectName,
+      params.name,
       selectedModel,
       setNotification,
-      updateArtifact
+      filtersStore,
+      updateArtifact,
+      dispatch
     ]
   )
+
+  const applyDetailsChangesCallback = changes => {
+    if ('tag' in changes.data) {
+      setSelectedRowData({})
+      setModels([])
+      navigate(
+        `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+        { replace: true }
+      )
+    }
+
+    handleRefresh(filtersStore)
+  }
 
   useEffect(() => {
     removeModel({})
@@ -237,11 +269,21 @@ const Models = ({
       models,
       params.tag,
       params.iter,
+      params.uid,
       navigate,
       params.projectName,
       setSelectedModel
     )
-  }, [models, navigate, params.iter, params.name, params.projectName, params.tag, selectedRowData])
+  }, [
+    models,
+    navigate,
+    params.iter,
+    params.name,
+    params.projectName,
+    params.tag,
+    params.uid,
+    selectedRowData
+  ])
 
   useEffect(() => setModels([]), [filtersStore.tag])
 
@@ -272,6 +314,7 @@ const Models = ({
     <ModelsView
       actionsMenu={actionsMenu}
       applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}

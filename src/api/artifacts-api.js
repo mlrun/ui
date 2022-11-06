@@ -46,6 +46,10 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
 }
 
 const artifactsApi = {
+  addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
+  replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
+  deleteTag: (project, tag, data) =>
+    mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
   buildFunction: data => mainHttpClient.post('/build/function', data),
   getArtifactPreview: (path, user, fileFormat) => {
     const config = {

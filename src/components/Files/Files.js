@@ -18,17 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
+import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
 
-import artifactsAction from '../../actions/artifacts'
-import { generatePageData, filters, fetchFilesRowData, checkForSelectedFile } from './files.util'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import {
   FILES_PAGE,
   GROUP_BY_NAME,
@@ -36,15 +32,29 @@ import {
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
+import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
-import { createFilesRowData } from '../../utils/createArtifactsContent'
-import { useYaml } from '../../hooks/yaml.hook'
-import { useGroupContent } from '../../hooks/groupContent.hook'
+import notificationActions from '../../actions/notification'
+import {
+  checkForSelectedFile,
+  fetchFilesRowData,
+  filters,
+  generatePageData,
+  handleApplyDetailsChanges
+} from './files.util'
 import { cancelRequest } from '../../utils/cancelRequest'
+import { createFilesRowData } from '../../utils/createArtifactsContent'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const Files = ({
+  setNotification,
   fetchArtifactTags,
   fetchFile,
   fetchFiles,
@@ -53,29 +63,20 @@ const Files = ({
   removeFiles,
   setFilters
 }) => {
-  const urlTagOption = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
   const filesRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedFile), [selectedFile])
-
-  const actionsMenu = useMemo(
-    () => [
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
-    ],
-    [toggleConvertedYaml]
-  )
 
   const fetchData = useCallback(
     filters => {
@@ -90,9 +91,37 @@ const Files = ({
     [fetchFiles, params.projectName]
   )
 
+  const handleAddTag = useCallback(
+    artifact => {
+      openPopUp(AddArtifactTagPopUp, {
+        artifact,
+        onAddTag: fetchData,
+        projectName: params.projectName
+      })
+    },
+    [fetchData, params.projectName]
+  )
+
+  const actionsMenu = useMemo(
+    () => [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        onClick: handleAddTag
+      }
+    ],
+    [handleAddTag, toggleConvertedYaml]
+  )
+
   const handleRefresh = useCallback(
     filters => {
       getFilterTagOptions(fetchArtifactTags, params.projectName)
+      setSelectedRowData({})
+      setFiles([])
 
       return fetchData(filters)
     },
@@ -148,6 +177,44 @@ const Files = ({
         )
   }, [files, filtersStore.groupBy, latestItems, params.projectName, selectedFile])
 
+  const applyDetailsChanges = useCallback(
+    changes => {
+      return handleApplyDetailsChanges(
+        changes,
+        handleRefresh,
+        params.projectName,
+        params.name,
+        selectedFile,
+        setNotification,
+        filtersStore,
+        null,
+        dispatch
+      )
+    },
+    [
+      dispatch,
+      handleRefresh,
+      filtersStore,
+      params.name,
+      params.projectName,
+      selectedFile,
+      setNotification
+    ]
+  )
+
+  const applyDetailsChangesCallback = changes => {
+    if ('tag' in changes.data) {
+      setSelectedRowData({})
+      setFiles([])
+      navigate(
+        `/projects/${params.projectName}/files/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+        { replace: true }
+      )
+    }
+
+    handleRefresh(filtersStore)
+  }
+
   useEffect(() => {
     removeFile({})
     setSelectedRowData({})
@@ -189,18 +256,31 @@ const Files = ({
       files,
       params.tag,
       params.iter,
+      params.uid,
       navigate,
       params.projectName,
       setSelectedFile
     )
-  }, [files, navigate, params.iter, params.name, params.projectName, params.tag, selectedRowData])
+  }, [
+    files,
+    navigate,
+    params.iter,
+    params.name,
+    params.projectName,
+    params.tag,
+    params.uid,
+    selectedRowData
+  ])
 
   useEffect(() => setFiles([]), [filtersStore.tag])
 
   return (
     <FilesView
       actionsMenu={actionsMenu}
+      applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
+      artifactsToolkitStore={artifactsToolkitStore}
       convertedYaml={convertedYaml}
       files={files}
       filtersStore={filtersStore}
@@ -217,4 +297,6 @@ const Files = ({
   )
 }
 
-export default connect(null, { ...artifactsAction, ...filtersActions })(Files)
+export default connect(null, { ...artifactsAction, ...filtersActions, ...notificationActions })(
+  Files
+)

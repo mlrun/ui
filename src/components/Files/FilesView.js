@@ -41,7 +41,10 @@ const FilesView = React.forwardRef(
   (
     {
       actionsMenu,
+      applyDetailsChanges,
+      applyDetailsChangesCallback,
       artifactsStore,
+      artifactsToolkitStore,
       convertedYaml,
       files,
       filtersStore,
@@ -77,7 +80,7 @@ const FilesView = React.forwardRef(
             />
           </div>
           <div className="content">
-            {artifactsStore.loading && <Loader />}
+            {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
             <div className="table-container">
               <div className="content__action-bar">
                 <FilterMenu
@@ -93,6 +96,8 @@ const FilesView = React.forwardRef(
                 <>
                   <Table
                     actionsMenu={actionsMenu}
+                    applyDetailsChanges={applyDetailsChanges}
+                    applyDetailsChangesCallback={applyDetailsChangesCallback}
                     content={files}
                     handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
@@ -130,7 +135,10 @@ const FilesView = React.forwardRef(
 
 FilesView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+  applyDetailsChanges: PropTypes.func.isRequired,
+  applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
+  artifactsToolkitStore: PropTypes.object.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,

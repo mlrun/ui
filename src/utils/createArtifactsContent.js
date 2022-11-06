@@ -140,6 +140,7 @@ export const createModelsRowData = (artifact, project, isSelectedItem, showExpan
         rowExpanded: {
           getLink: false
         },
+        showTag: true,
         showExpandButton
       },
       {
@@ -274,6 +275,7 @@ export const createFilesRowData = (artifact, project, isSelectedItem, showExpand
         rowExpanded: {
           getLink: false
         },
+        showTag: true,
         showExpandButton
       },
       {
@@ -522,6 +524,7 @@ export const createDatasetsRowData = (artifact, project, isSelectedItem, showExp
         rowExpanded: {
           getLink: false
         },
+        showTag: true,
         showExpandButton
       },
       {

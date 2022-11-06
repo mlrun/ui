@@ -25,11 +25,12 @@ import Prism from 'prismjs'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
-import { copyToClipboard } from '../../utils/copyToClipboard'
 import { CHIP_OPTIONS } from '../../types'
+import { copyToClipboard } from '../../utils/copyToClipboard'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
@@ -76,10 +77,15 @@ const DetailsInfoItem = React.forwardRef(
         />
       )
     } else if (item?.editModeEnabled && isFieldInEditMode) {
-      if (editableFieldType === 'input') {
+      if (editableFieldType === 'input' || editableFieldType === 'textarea') {
         return (
           <div className="details-item__input-wrapper" ref={ref}>
-            <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
+            {editableFieldType === 'input' && (
+              <Input focused onChange={item.onChange} type="text" value={info} />
+            )}
+            {editableFieldType === 'textarea' && (
+              <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
+            )}
             <Tooltip template={<TextTooltipTemplate text="Apply" />}>
               <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
                 <Checkmark className="details-item__apply-btn" />
