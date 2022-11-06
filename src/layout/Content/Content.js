@@ -160,8 +160,8 @@ const Content = ({
               message={getNoDataMessage(
                 filtersStore,
                 pageData.filters,
-                params.pageTab,
-                pageData.page
+                pageData.page,
+                params.pageTab
               )}
             />
           ) : (

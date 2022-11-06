@@ -17,14 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DETAILS_OVERVIEW_TAB } from '../constants'
+import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
 
-export const isDetailsTabExists = (tab, tabsList, navigate, location) => {
-  if (!tabsList.find(el => el.id === tab && !el.hidden)) {
-    const newUrlArray = location.pathname.split('/')
-    newUrlArray[newUrlArray.length - 1] = DETAILS_OVERVIEW_TAB
-    const newUrl = newUrlArray.join('/')
+export const filters = [{ type: NAME_FILTER, label: 'Name:' }]
 
-    navigate(newUrl, { replace: true })
-  }
-}
+export const generatePageData = hideFilterMenu => ({
+  page: MODELS_PAGE,
+  hidePageActionMenu: true,
+  hideFilterMenu
+})

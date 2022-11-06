@@ -79,7 +79,7 @@ const MonitorWorkflowsView = ({
       {workflowsStore.workflows.loading ? null : !params.workflowId &&
         workflowsStore.workflows.data.length === 0 ? (
         <NoData
-          message={getNoDataMessage(filtersStore, filters, MONITOR_WORKFLOWS_TAB, JOBS_PAGE)}
+          message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_WORKFLOWS_TAB)}
         />
       ) : (
         <>

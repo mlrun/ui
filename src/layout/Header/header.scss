@@ -18,6 +18,8 @@
   box-shadow: $mainHeaderShadow;
 
   &__logo {
+    display: flex;
+    align-items: center;
     width: 43px;
     height: 43px;
 

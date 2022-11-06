@@ -17,12 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { filterArtifacts } from '../../utils/filterArtifacts'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { generateArtifacts } from '../../utils/generateArtifacts'
-import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { isEmpty } from 'lodash'
 
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import {
   DATASETS,
   DATASETS_PAGE,
@@ -31,18 +29,8 @@ import {
   NAME_FILTER,
   TREE_FILTER
 } from '../../constants'
-
-export const pageDataInitialState = {
-  actionsMenu: [],
-  actionsMenuHeader: '',
-  details: {
-    menu: [],
-    infoHeaders: []
-  },
-  filters: [],
-  page: '',
-  selectedRowData: {}
-}
+import { createDatasetsRowData } from '../../utils/createArtifactsContent'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
 
 export const infoHeaders = [
   {
@@ -74,60 +62,6 @@ export const filters = [
 ]
 
 export const actionsMenuHeader = 'Register dataset'
-export const page = DATASETS_PAGE
-
-export const tableHeaders = isSelectedItem => [
-  {
-    header: 'Name',
-    class: 'artifacts_medium'
-  },
-  {
-    header: 'Labels',
-    class: 'artifacts_big',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Producer',
-    class: 'artifacts_small',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Owner',
-    class: 'artifacts_small',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Updated',
-    class: 'artifacts_small',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Size',
-    class: 'artifacts_small',
-    hidden: isSelectedItem
-  },
-
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedItem
-  },
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedItem
-  },
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedItem
-  },
-  {
-    header: '',
-    class: 'action_cell',
-    hidden: isSelectedItem
-  }
-]
 
 export const generateDataSetsDetailsMenu = selectedItem => [
   {
@@ -141,19 +75,19 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   {
     label: 'metadata',
     id: 'metadata',
-    hidden: !selectedItem.item?.schema
+    hidden: !selectedItem.schema
   },
   {
     label: 'analysis',
     id: 'analysis',
-    hidden: !selectedItem.item?.extra_data
+    hidden: !selectedItem.extra_data
   }
 ]
 
-export const generatePageData = (handleRequestOnExpand, selectedItem) => ({
-  actionsMenuHeader,
+export const generatePageData = selectedItem => ({
+  page: DATASETS_PAGE,
   details: {
-    menu: [],
+    menu: generateDataSetsDetailsMenu(selectedItem),
     infoHeaders,
     type: DATASETS,
     additionalInfo: {
@@ -161,56 +95,84 @@ export const generatePageData = (handleRequestOnExpand, selectedItem) => ({
       body: generateProducerDetailsInfo(selectedItem),
       hidden: !selectedItem.item?.producer
     }
-  },
-  filters,
-  filterMenuActionButton: null,
-  handleRequestOnExpand,
-  page,
-  tableHeaders: tableHeaders(!isEveryObjectValueEmpty(selectedItem))
+  }
 })
 
-export const fetchDataSetRowData = async (fetchDataSet, dataSet, setPageData, iter, tag) => {
+export const fetchDataSetRowData = async (
+  fetchDataSet,
+  dataSet,
+  setSelectedRowData,
+  iter,
+  tag,
+  projectName,
+  selectedDataset
+) => {
   const dataSetIdentifier = getArtifactIdentifier(dataSet)
 
-  setPageData(state => ({
+  setSelectedRowData(state => ({
     ...state,
-    selectedRowData: {
-      ...state.selectedRowData,
-      [dataSetIdentifier]: {
-        loading: true
-      }
+    [dataSetIdentifier]: {
+      loading: true
     }
   }))
 
   fetchDataSet(dataSet.project, dataSet.db_key, iter, tag)
     .then(result => {
       if (result?.length > 0) {
-        setPageData(state => {
+        setSelectedRowData(state => {
           return {
             ...state,
-            selectedRowData: {
-              ...state.selectedRowData,
-              [dataSetIdentifier]: {
-                content: [...generateArtifacts(filterArtifacts(result), DATASETS, iter)],
-                error: null,
-                loading: false
-              }
+            [dataSetIdentifier]: {
+              content: result.map(artifact =>
+                createDatasetsRowData(artifact, projectName, !isEmpty(selectedDataset))
+              ),
+              error: null,
+              loading: false
             }
           }
         })
       }
     })
     .catch(error => {
-      setPageData(state => ({
+      setSelectedRowData(state => ({
         ...state,
-        selectedRowData: {
-          ...state.selectedRowData,
-          [dataSetIdentifier]: {
-            ...state.selectedRowData[dataSetIdentifier],
-            error,
-            loading: false
-          }
+        [dataSetIdentifier]: {
+          ...state[dataSetIdentifier],
+          error,
+          loading: false
         }
       }))
     })
+}
+
+export const checkForSelectedDataset = (
+  name,
+  selectedRowData,
+  datasets,
+  tag,
+  iter,
+  projectName,
+  setSelectedDataset,
+  navigate
+) => {
+  if (name) {
+    const artifacts = selectedRowData?.[name]?.content || datasets
+
+    if (artifacts.length > 0) {
+      const searchItem = searchArtifactItem(
+        artifacts.map(artifact => artifact.data ?? artifact),
+        name,
+        tag,
+        iter
+      )
+
+      if (!searchItem) {
+        navigate(`/projects/${projectName}/datasets}`, { replace: true })
+      } else {
+        setSelectedDataset(searchItem)
+      }
+    }
+  } else {
+    setSelectedDataset({})
+  }
 }

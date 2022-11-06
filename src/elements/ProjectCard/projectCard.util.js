@@ -28,13 +28,9 @@ export const generateProjectStatistic = (
   nuclioFunctions = [],
   nuclioFunctionsLoading
 ) => {
-  const grouppedNuclioFunctions = groupByUniqName(
-    nuclioFunctions,
-    'metadata.name'
-  )
+  const grouppedNuclioFunctions = groupByUniqName(nuclioFunctions, 'metadata.name')
   const runningNuclioFunctions = Object.values(grouppedNuclioFunctions).reduce(
-    (prev, curr) =>
-      curr.status.state === 'ready' && !curr.spec.disable ? (prev += 1) : prev,
+    (prev, curr) => (curr.status.state === 'ready' && !curr.spec.disable ? (prev += 1) : prev),
     0
   )
   const failedNuclioFunctions = Object.values(grouppedNuclioFunctions).reduce(
@@ -67,8 +63,7 @@ export const generateProjectStatistic = (
         projectSummary.runs_failed_recent_count + failedNuclioFunctions > 0
           ? 'failed'
           : 'default',
-      counterTooltip:
-        'Failed ML jobs and nuclio functions in the last 24 hours',
+      counterTooltip: 'Failed ML jobs and nuclio functions in the last 24 hours',
       label: 'Failed',
       labelClassName: 'wrap',
       loading: projectsSummaryLoading || nuclioFunctionsLoading,

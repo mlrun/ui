@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isEmpty } from 'lodash'
+
 import {
   FILES_PAGE,
   ITERATIONS_FILTER,
@@ -25,7 +27,9 @@ import {
   TREE_FILTER
 } from '../../constants'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { createFilesRowData } from '../../utils/createArtifactsContent'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
 
 export const pageDataInitialState = {
   details: {
@@ -37,6 +41,17 @@ export const pageDataInitialState = {
   registerArtifactDialogTitle: '',
   tableHeaders: []
 }
+
+export const detailsMenu = [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'preview',
+    id: 'preview'
+  }
+]
 
 export const infoHeaders = [
   {
@@ -59,95 +74,104 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
-export const detailsMenu = [
-  {
-    label: 'overview',
-    id: 'overview'
-  },
-  {
-    label: 'preview',
-    id: 'preview'
+
+export const generatePageData = selectedFile => {
+  return {
+    page: FILES_PAGE,
+    details: {
+      type: FILES_PAGE,
+      menu: detailsMenu,
+      infoHeaders,
+      additionalInfo: {
+        header: 'Producer',
+        body: generateProducerDetailsInfo(selectedFile),
+        hidden: !selectedFile.producer
+      }
+    }
   }
-]
+}
+
 export const filters = [
   { type: TREE_FILTER, label: 'Tree:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
-export const page = FILES_PAGE
 export const actionsMenuHeader = 'Register artifact'
-export const tableHeaders = isSelectedFile => [
-  {
-    header: 'Name',
-    class: 'artifacts_medium'
-  },
-  {
-    header: 'Type',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Labels',
-    class: 'artifacts_big',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Producer',
-    class: 'artifacts_small',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Owner',
-    class: 'artifacts_small',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Updated',
-    class: 'artifacts_small',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Size',
-    class: 'artifacts_small',
-    hidden: isSelectedFile
-  },
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedFile
-  },
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedFile
-  },
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedFile
-  },
-  {
-    header: '',
-    class: 'action_cell',
-    hidden: isSelectedFile
-  }
-]
 
-export const generatePageData = (handleRequestOnExpand, selectedFile) => ({
-  actionsMenuHeader,
-  details: {
-    menu: detailsMenu,
-    infoHeaders,
-    type: FILES_PAGE,
-    additionalInfo: {
-      header: 'Producer',
-      body: generateProducerDetailsInfo(selectedFile),
-      hidden: !selectedFile.item?.producer
+export const fetchFilesRowData = (
+  file,
+  setSelectedRowData,
+  fetchFile,
+  projectName,
+  iter,
+  tag,
+  selectedFile
+) => {
+  const fileIdentifier = getArtifactIdentifier(file)
+
+  setSelectedRowData(state => ({
+    ...state,
+    [fileIdentifier]: {
+      loading: true
     }
-  },
-  filters,
-  handleRequestOnExpand,
-  page,
-  tableHeaders: tableHeaders(!isEveryObjectValueEmpty(selectedFile))
-})
+  }))
+
+  fetchFile(file.project ?? projectName, file.db_key, !iter, tag)
+    .then(result => {
+      if (result?.length > 0) {
+        setSelectedRowData(state => ({
+          ...state,
+          [fileIdentifier]: {
+            content: result.map(artifact =>
+              createFilesRowData(artifact, projectName, !isEmpty(selectedFile))
+            ),
+            error: null,
+            loading: false
+          }
+        }))
+      }
+    })
+    .catch(error => {
+      setSelectedRowData(state => ({
+        ...state,
+        [fileIdentifier]: {
+          ...state[fileIdentifier],
+          error,
+          loading: false
+        }
+      }))
+    })
+}
+
+export const checkForSelectedFile = (
+  name,
+  selectedRowData,
+  files,
+  tag,
+  iter,
+  navigate,
+  projectName,
+  setSelectedFile
+) => {
+  if (name) {
+    const artifacts = selectedRowData?.[name]?.content || files
+
+    if (artifacts.length > 0) {
+      const searchItem = searchArtifactItem(
+        artifacts.map(artifact => artifact.data ?? artifact),
+        name,
+        tag,
+        iter
+      )
+
+      if (!searchItem) {
+        navigate(`/projects/${projectName}/files`, { replace: true })
+      } else {
+        setSelectedFile(searchItem)
+      }
+    }
+  } else {
+    setSelectedFile({})
+  }
+}

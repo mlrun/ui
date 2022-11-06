@@ -7,11 +7,11 @@
   overflow: auto;
   border: $primaryBorder;
   border-radius: $mainBorderRadius;
+  padding: 18px 16px;
 
   &__label {
-    padding: 5px 10px;
+    margin-bottom: 5px;
     color: $topaz;
-    font-size: 10px;
   }
 
   &__content {

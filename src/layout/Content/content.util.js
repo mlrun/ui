@@ -67,7 +67,7 @@ const noDataMessages = {
   default: 'No data to show'
 }
 
-export const getNoDataMessage = (filtersStore, filters, tab, page) => {
+export const getNoDataMessage = (filtersStore, filters, page, tab) => {
   let message = noDataMessages[tab] || noDataMessages[page] || noDataMessages.default
 
   if (

@@ -69,8 +69,8 @@ const FeaturesView = React.forwardRef(
             message={getNoDataMessage(
               filtersStore,
               featuresFilters,
-              FEATURES_TAB,
-              FEATURE_STORE_PAGE
+              FEATURE_STORE_PAGE,
+              FEATURES_TAB
             )}
           />
         ) : (

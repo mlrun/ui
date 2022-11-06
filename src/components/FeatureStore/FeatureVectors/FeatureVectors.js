@@ -50,6 +50,7 @@ import {
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
+import { cancelRequest } from '../../../utils/cancelRequest'
 
 const FeatureVectors = ({
   deleteFeatureVector,
@@ -71,7 +72,7 @@ const FeatureVectors = ({
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featureStoreRef = useRef(null)
+  const featureVectorsRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -89,7 +90,7 @@ const FeatureVectors = ({
     filters => {
       const config = {
         cancelToken: new axios.CancelToken(cancel => {
-          featureStoreRef.current.cancel = cancel
+          featureVectorsRef.current.cancel = cancel
         })
       }
 
@@ -175,10 +176,6 @@ const FeatureVectors = ({
     () => generateActionsMenu(onDeleteFeatureVector, toggleConvertedYaml),
     [onDeleteFeatureVector, toggleConvertedYaml]
   )
-
-  const cancelRequest = message => {
-    featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
-  }
 
   const handleRefresh = filters => {
     getFilterTagOptions(fetchFeatureVectorsTags, params.projectName)
@@ -380,9 +377,9 @@ const FeatureVectors = ({
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
-      isDetailsTabExists(FEATURE_STORE_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, params, pageData.details.menu])
+  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
     checkTabIsValid(navigate, params, setSelectedFeatureVector, FEATURE_VECTORS_TAB)
@@ -400,7 +397,7 @@ const FeatureVectors = ({
       removeFeatureVectors()
       setSelectedFeatureVector({})
       setSelectedRowData({})
-      cancelRequest('cancel')
+      cancelRequest(featureVectorsRef, 'cancel')
       setCreateVectorPopUpIsOpen(false)
     }
   }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName])
@@ -417,7 +414,7 @@ const FeatureVectors = ({
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       pageData={pageData}
-      ref={featureStoreRef}
+      ref={featureVectorsRef}
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}

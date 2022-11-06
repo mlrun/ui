@@ -57,7 +57,7 @@ const ScheduledJobsView = ({
         <FilterMenu filters={filters} onChange={refreshJobs} page={JOBS_PAGE} withoutExpandButton />
       </div>
       {jobsStore.loading ? null : jobs.length === 0 ? (
-        <NoData message={getNoDataMessage(filtersStore, filters, SCHEDULE_TAB, JOBS_PAGE)} />
+        <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, SCHEDULE_TAB)} />
       ) : (
         <>
           <Table
