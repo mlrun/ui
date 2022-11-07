@@ -61,7 +61,6 @@ const Models = ({
   fetchArtifactTags,
   fetchModel,
   fetchModelFeatureVector,
-  fetchModels,
   removeModel,
   removeModels,
   setFilters,
@@ -69,7 +68,6 @@ const Models = ({
   updateArtifact,
   getFilterTagOptions
 }) => {
-  const [models, setModels] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
@@ -82,24 +80,11 @@ const Models = ({
   const dispatch = useDispatch()
   const modelsRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
-  const { toggleConvertedYaml } = React.useContext(ModelsPageContext)
+  const { fetchData, models, setModels, toggleConvertedYaml } = React.useContext(ModelsPageContext)
 
   const handleDeployModel = useCallback(model => {
     openPopUp(DeployModelPopUp, { model })
   }, [])
-
-  const fetchData = useCallback(
-    async filters => {
-      return fetchModels(params.projectName, filters).then(result => {
-        if (result) {
-          setModels(result)
-        }
-
-        return result
-      })
-    },
-    [fetchModels, params.projectName]
-  )
 
   const handleAddTag = useCallback(
     artifact => {
