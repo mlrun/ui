@@ -213,7 +213,7 @@ const App = () => {
                 )
               )}
               <Route path={`${FEATURES_TAB}`} element={<Features />} />
-              <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} />} replace />
+              <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} replace />} />
             </Route>
             <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
               {[
@@ -241,7 +241,7 @@ const App = () => {
                   <Route path={path} element={<RealTimePipelines />} />
                 </Fragment>
               ))}
-              <Route path="*" element={<Navigate to={MODELS_TAB} />} replace />
+              <Route path="*" element={<Navigate to={MODELS_TAB} replace />} />
             </Route>
             {[
               'projects/:projectName/files',
