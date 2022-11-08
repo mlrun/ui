@@ -30,9 +30,9 @@ import {
 } from '../../constants'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
-import { ModelsPageContext, ModelsProvider, tabs } from './modelsPage.util'
+import { tabs } from './modelsPage.util'
 import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
-
+import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { actionsMenuHeader } from './Models/models.util'
@@ -45,7 +45,7 @@ const ModelsPage = () => {
   const artifactsStore = useSelector(store => store.artifactsStore)
   const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const params = useParams()
-  const { convertedYaml, fetchData, toggleConvertedYaml } = React.useContext(ModelsPageContext)
+  const { convertedYaml, fetchData, toggleConvertedYaml } = useModelsPage()
 
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelPopUp, { projectName: params.projectName, refresh: fetchData })
@@ -90,7 +90,7 @@ const ModelsPage = () => {
 }
 
 export default () => (
-  <ModelsProvider>
+  <ModelsPageProvider>
     <ModelsPage />
-  </ModelsProvider>
+  </ModelsPageProvider>
 )

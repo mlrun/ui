@@ -50,7 +50,7 @@ import {
   getFeatureVectorData,
   handleApplyDetailsChanges
 } from './models.util'
-import { ModelsPageContext } from '../modelsPage.util'
+import { useModelsPage } from '../ModelsPage.context'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { cancelRequest } from '../../../utils/cancelRequest'
@@ -80,7 +80,7 @@ const Models = ({
   const dispatch = useDispatch()
   const modelsRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
-  const { fetchData, models, setModels, toggleConvertedYaml } = React.useContext(ModelsPageContext)
+  const { fetchData, models, setModels, toggleConvertedYaml } = useModelsPage()
 
   const handleDeployModel = useCallback(model => {
     openPopUp(DeployModelPopUp, { model })

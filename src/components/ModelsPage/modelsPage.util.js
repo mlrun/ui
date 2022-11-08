@@ -17,49 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { useYaml } from '../../hooks/yaml.hook'
-
-import artifactsAction from '../../actions/artifacts'
 
 import { MODEL_ENDPOINTS_TAB, MODELS_TAB, REAL_TIME_PIPELINES_TAB } from '../../constants'
-
-export const ModelsPageContext = React.createContext({})
-
-export const ModelsProvider = ({ children }) => {
-  const [models, setModels] = useState([])
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const dispatch = useDispatch()
-  const params = useParams()
-
-  const fetchData = useCallback(
-    async filters => {
-      return dispatch(artifactsAction.fetchModels(params.projectName, filters)).then(result => {
-        if (result) {
-          setModels(result)
-        }
-
-        return result
-      })
-    },
-    [setModels, params.projectName]
-  )
-  return (
-    <ModelsPageContext.Provider
-      value={{
-        fetchData,
-        convertedYaml,
-        models,
-        setModels,
-        toggleConvertedYaml
-      }}
-    >
-      {children}
-    </ModelsPageContext.Provider>
-  )
-}
 
 export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB]
 export const tabs = [
