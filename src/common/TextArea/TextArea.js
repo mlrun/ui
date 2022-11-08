@@ -68,7 +68,7 @@ const TextArea = React.forwardRef(
     const [textAreaCount, setTextAreaCount] = useState(value.length)
     const wrapperRef = useRef()
     ref ??= wrapperRef
-    const textArea = React.useRef()
+    const textAreaRef = React.useRef()
     const labelRef = React.useRef()
     useDetectOutsideClick(ref, () => setShowValidationRules(false))
 
@@ -87,16 +87,16 @@ const TextArea = React.forwardRef(
     )
 
     useEffect(() => {
-      if (textArea.current.value.length > 0) {
+      if (textAreaRef.current.value.length > 0) {
         setTextAreaIsFocused(true)
-      } else if (textAreaIsFocused && textArea.current.value.length === 0) {
+      } else if (textAreaIsFocused && textAreaRef.current.value.length === 0) {
         setTextAreaIsFocused(false)
       }
 
       if (focused) {
-        textArea.current.focus()
+        textAreaRef.current.focus()
       }
-    }, [focused, textArea, textAreaIsFocused])
+    }, [focused, textAreaRef, textAreaIsFocused, value])
 
     useEffect(() => {
       if (isInvalid !== invalid) {
@@ -141,18 +141,18 @@ const TextArea = React.forwardRef(
     }, [showValidationRules])
 
     useEffect(() => {
-      const textAreaRef = textArea.current
+      const textArea = textAreaRef.current
 
-      if (textArea.current && labelRef.current) {
-        textArea.current.addEventListener('scroll', handleTextAreaScroll)
+      if (textAreaRef.current && labelRef.current) {
+        textAreaRef.current.addEventListener('scroll', handleTextAreaScroll)
       }
 
       return () => {
-        if (textAreaRef) {
-          textAreaRef.removeEventListener('scroll', handleTextAreaScroll)
+        if (textArea) {
+          textArea.removeEventListener('scroll', handleTextAreaScroll)
         }
       }
-    }, [handleTextAreaScroll, textArea])
+    }, [handleTextAreaScroll, textAreaRef])
 
     const handleChange = event => {
       if (event.target.value.length > 0) {
@@ -199,7 +199,7 @@ const TextArea = React.forwardRef(
 
     const toggleValidationRulesMenu = () => {
       setShowValidationRules(!showValidationRules)
-      textArea.current.focus()
+      textAreaRef.current.focus()
       setTextAreaIsFocused(true)
     }
 
@@ -216,7 +216,7 @@ const TextArea = React.forwardRef(
           placeholder={placeholder}
           rows={rows}
           required={isInvalid}
-          ref={textArea}
+          ref={textAreaRef}
           value={value && value}
         />
         {label && (
