@@ -88,11 +88,10 @@
     }
 
     .projects-content {
-      display: flex;
-      flex: 1;
-      flex-flow: row wrap;
-      align-content: flex-start;
-      padding-bottom: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 18px 24px;
+      padding: 1rem 12px;
 
       .no-filtered-data {
         margin: 15px;
