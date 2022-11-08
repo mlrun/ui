@@ -22,6 +22,7 @@ import PropTypes from 'prop-types'
 
 import TargetPath from '../../common/TargetPath/TargetPath'
 import { FormInput, FormSelect, FormTextarea, FormChipCell } from 'igz-controls/components'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { getChipOptions } from '../../utils/getChipOptions'
@@ -104,6 +105,7 @@ const RegisterArtifactModalForm = ({
           <TargetPath
             formState={formState}
             formStateFieldInfo="spec.target_path.fieldInfo"
+            hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
             label="Target Path"
             name="spec.target_path.path"
             required
