@@ -25,11 +25,12 @@ import Prism from 'prismjs'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
-import { copyToClipboard } from '../../utils/copyToClipboard'
 import { CHIP_OPTIONS } from '../../types'
+import { copyToClipboard } from '../../utils/copyToClipboard'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
@@ -54,8 +55,7 @@ const DetailsInfoItem = React.forwardRef(
       onClick,
       params,
       setChangesData,
-      state,
-      target_path
+      state
     },
     ref
   ) => {
@@ -76,10 +76,15 @@ const DetailsInfoItem = React.forwardRef(
         />
       )
     } else if (item?.editModeEnabled && isFieldInEditMode) {
-      if (editableFieldType === 'input') {
+      if (editableFieldType === 'input' || editableFieldType === 'textarea') {
         return (
           <div className="details-item__input-wrapper" ref={ref}>
-            <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
+            {editableFieldType === 'input' && (
+              <Input focused onChange={item.onChange} type="text" value={info} />
+            )}
+            {editableFieldType === 'textarea' && (
+              <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
+            )}
             <Tooltip template={<TextTooltipTemplate text="Apply" />}>
               <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
                 <Checkmark className="details-item__apply-btn" />
@@ -101,19 +106,10 @@ const DetailsInfoItem = React.forwardRef(
           />
         </div>
       )
-    } else if (!isEmpty(target_path)) {
+    } else if (item?.copyToClipboard) {
       return (
         <Tooltip
-          className="details-item__data details-item__path"
-          template={<TextTooltipTemplate text="Click to copy" />}
-        >
-          <span onClick={() => copyToClipboard(target_path)}>{target_path}</span>
-        </Tooltip>
-      )
-    } else if (currentField === 'target_uri') {
-      return (
-        <Tooltip
-          className="details-item__data details-item__uri"
+          className="details-item__data details-item__copy-to-clipboard"
           template={<TextTooltipTemplate text="Click to copy" />}
         >
           <span onClick={() => copyToClipboard(info)}>{info}</span>
@@ -122,13 +118,13 @@ const DetailsInfoItem = React.forwardRef(
     } else if (currentField === 'usage_example') {
       return (
         <div className="details-item__data details-item__usage-example">
-          {info.map((item, index) => (
+          {info.map((infoItem, index) => (
             <div key={index}>
               <p>
-                {item.title}
+                {infoItem.title}
                 <button
                   className="details-item__btn-copy"
-                  onClick={() => copyToClipboard(item.code)}
+                  onClick={() => copyToClipboard(infoItem.code)}
                 >
                   <Tooltip template={<TextTooltipTemplate text="copy" />}>
                     <Copy />
@@ -138,7 +134,8 @@ const DetailsInfoItem = React.forwardRef(
               <pre>
                 <code
                   dangerouslySetInnerHTML={{
-                    __html: item.code && Prism.highlight(item.code, Prism.languages.py, 'py')
+                    __html:
+                      infoItem.code && Prism.highlight(infoItem.code, Prism.languages.py, 'py')
                   }}
                 />
               </pre>
@@ -243,8 +240,7 @@ DetailsInfoItem.defaultProps = {
   onClick: null,
   params: {},
   setChangesData: () => {},
-  state: '',
-  target_path: ''
+  state: ''
 }
 
 DetailsInfoItem.propTypes = {
@@ -267,8 +263,7 @@ DetailsInfoItem.propTypes = {
   onClick: PropTypes.func,
   params: PropTypes.shape({}),
   setChangesData: PropTypes.func,
-  state: PropTypes.string,
-  target_path: PropTypes.string
+  state: PropTypes.string
 }
 
 export default DetailsInfoItem

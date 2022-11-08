@@ -51,6 +51,7 @@ import './details.scss'
 const Details = ({
   actionsMenu,
   applyDetailsChanges,
+  applyDetailsChangesCallback,
   detailsMenu,
   detailsStore,
   filtersStore,
@@ -154,6 +155,7 @@ const Details = ({
             handleAddChip,
             handleDeleteChip,
             handleEditChips,
+            handleEditInput,
             pageData.details.type,
             selectedItem
           )
@@ -276,6 +278,7 @@ const Details = ({
       resetChanges()
       unblockHistory()
       setHistoryIsBlocked(false)
+      applyDetailsChangesCallback(detailsStore.changes)
     })
   }
 
@@ -357,6 +360,7 @@ const Details = ({
 
 Details.defaultProps = {
   applyDetailsChanges: () => {},
+  applyDetailsChangesCallback: () => {},
   cancelRequest: () => {},
   getCloseDetailsLink: null,
   handleRefresh: () => {},
@@ -370,6 +374,7 @@ Details.defaultProps = {
 Details.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
+  applyDetailsChangesCallback: PropTypes.func,
   cancelRequest: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(
     PropTypes.shape({

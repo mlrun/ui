@@ -34,8 +34,7 @@ import {
   STATE_FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TREE_FILTER
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 
 export const generateGroupedItems = (content, selectedRowData, getIdentifier) => {
@@ -74,7 +73,7 @@ export const getNoDataMessage = (filtersStore, filters, page, tab) => {
     (noDataMessages[tab] || noDataMessages[page]) &&
     filters.some(({ type }) => {
       return (
-        ((type === TAG_FILTER || type === TREE_FILTER) &&
+        ((type === TAG_FILTER) &&
           filtersStore.tag !== TAG_FILTER_ALL_ITEMS) ||
         ((type === NAME_FILTER || type === LABELS_FILTER) && filtersStore[type].length > 0) ||
         (type === STATUS_FILTER && filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||

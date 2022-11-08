@@ -64,7 +64,7 @@ const FeatureSets = ({
   const [selectedRowData, setSelectedRowData] = useState({})
 
   const openPanelByDefault = useOpenPanel()
-  const urlTagOption = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
+  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)

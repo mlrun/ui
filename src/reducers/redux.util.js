@@ -17,12 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-
-import { MODEL_ENDPOINTS_TAB, MODELS_TAB, REAL_TIME_PIPELINES_TAB } from '../../constants'
-
-export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB]
-export const tabs = [
-  { id: MODELS_TAB, label: 'Models' },
-  { id: MODEL_ENDPOINTS_TAB, label: 'Model endpoints', preview: true },
-  { id: REAL_TIME_PIPELINES_TAB, label: 'Real-time pipelines' }
-]
+export const hideLoading = state => {
+  state.loading = false
+}
+export const showLoading = state => {
+  state.loading = true
+}

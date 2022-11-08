@@ -70,6 +70,7 @@ export const generateArtifactsContent = (
   addChip,
   deleteChip,
   editChips,
+  editInput,
   detailsType,
   selectedItem
 ) => {
@@ -119,7 +120,10 @@ export const generateArtifactsContent = (
         value: selectedItem.db_key
       },
       tag: {
-        value: selectedItem.tag ?? ''
+        value: selectedItem.tag ?? '',
+        editModeEnabled: true,
+        editModeType: 'input',
+        onChange: value => editInput(value, 'tag')
       },
       iter: {
         value: selectedItem.iter || '0'
@@ -136,10 +140,12 @@ export const generateArtifactsContent = (
         value: selectedItem.size ?? ''
       },
       target_path: {
-        value: selectedItem.target_path
+        value: selectedItem.target_path,
+        copyToClipboard: true
       },
       target_uri: {
-        value: selectedItem.URI
+        value: selectedItem.URI,
+        copyToClipboard: true
       },
       metrics: {
         value: selectedItem.metrics ?? []
@@ -182,7 +188,7 @@ export const generateFeatureStoreContent = (
   addChip,
   deleteChip,
   editChips,
-  editDescription,
+  editInput,
   detailsType,
   selectedItem
 ) => {
@@ -191,7 +197,7 @@ export const generateFeatureStoreContent = (
       addChip,
       deleteChip,
       editChips,
-      editDescription,
+      editInput,
       selectedItem
     )
   } else if (detailsType === FEATURE_VECTORS_TAB) {
@@ -399,14 +405,14 @@ export const generateFeatureSetsOverviewContent = (
   addChip,
   deleteChip,
   editChips,
-  editDescription,
+  editInput,
   selectedItem
 ) => ({
   description: {
     value: selectedItem.description ?? '',
     editModeEnabled: true,
-    editModeType: 'input',
-    onChange: value => editDescription(value, 'description')
+    editModeType: 'textarea',
+    onChange: value => editInput(value, 'description')
   },
   labels: {
     value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
@@ -429,7 +435,8 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.entities?.map(entity => entity.name).join(', ')
   },
   target_uri: {
-    value: selectedItem.URI
+    value: selectedItem.URI,
+    copyToClipboard: true
   },
   timestamp_key: {
     value: selectedItem.timestamp_key ?? ''
@@ -454,7 +461,8 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     value: selectedItem.tag
   },
   target_uri: {
-    value: selectedItem.URI
+    value: selectedItem.URI,
+    copyToClipboard: true
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
