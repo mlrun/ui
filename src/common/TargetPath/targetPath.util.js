@@ -112,11 +112,12 @@ export const handleStoreInputPathChange = (targetPathState, setTargetPathState, 
   }))
 }
 
-export const comboboxSelectList = [
+export const comboboxSelectList = ({ hiddenOptionsIds }) => [
   {
     className: 'path-type-store',
     label: 'MLRun store',
-    id: MLRUN_STORAGE_INPUT_PATH_SCHEME
+    id: MLRUN_STORAGE_INPUT_PATH_SCHEME,
+    hidden: hiddenOptionsIds?.includes(MLRUN_STORAGE_INPUT_PATH_SCHEME)
   },
   {
     className: 'path-type-v3io',

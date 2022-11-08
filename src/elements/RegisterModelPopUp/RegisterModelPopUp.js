@@ -35,6 +35,7 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import notificationActions from '../../actions/notification'
 import { useMode } from '../../hooks/mode.hook'
 import artifactApi from '../../api/artifacts-api'
@@ -180,6 +181,7 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
                 <TargetPath
                   formState={formState}
                   formStateFieldInfo="spec.target_path.fieldInfo"
+                  hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
                   label="Target Path"
                   name="spec.target_path.path"
                   required

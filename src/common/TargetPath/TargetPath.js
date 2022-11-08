@@ -48,6 +48,7 @@ const TargetPath = ({
   density,
   formState,
   formStateFieldInfo,
+  hiddenSelectOptionsIds,
   label,
   name,
   required,
@@ -255,7 +256,7 @@ const TargetPath = ({
         name={name}
         onChange={(selectValue, inputValue) => handleOnChange(selectValue, inputValue)}
         required={required}
-        selectOptions={comboboxSelectList}
+        selectOptions={comboboxSelectList({ hiddenOptionsIds: hiddenSelectOptionsIds })}
         selectPlaceholder={selectPlaceholder}
         suggestionList={
           get(formState.values, `${formStateFieldInfo}.pathType`) ===
@@ -286,6 +287,7 @@ const TargetPath = ({
 
 TargetPath.defaultProps = {
   density: 'normal',
+  hiddenSelectOptionsIds: [],
   label: '',
   required: false,
   selectPlaceholder: ''
@@ -295,6 +297,7 @@ TargetPath.propTypes = {
   density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
   formState: PropTypes.object.isRequired,
   formStateFieldInfo: PropTypes.string.isRequired,
+  hiddenSelectOptionsIds: PropTypes.arrayOf(PropTypes.string),
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
   required: PropTypes.bool,
