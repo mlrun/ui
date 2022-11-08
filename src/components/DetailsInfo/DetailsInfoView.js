@@ -81,7 +81,6 @@ const DetailsInfoView = React.forwardRef(
               let func = ''
               let state = ''
               let info = null
-              let target_path = null
 
               if (pageData.page === JOBS_PAGE) {
                 if (detailsStore.infoContent[header.id]?.value === selectedItem.parametersChips) {
@@ -131,10 +130,6 @@ const DetailsInfoView = React.forwardRef(
                 info = !isNil(detailsStore.changes.data[header.id])
                   ? detailsStore.changes.data[header.id].currentFieldValue
                   : selectedItem && detailsStore.infoContent[header.id]?.value
-                target_path =
-                  detailsStore.infoContent[header.id]?.value === selectedItem.target_path
-                    ? selectedItem.target_path
-                    : ''
               } else if (pageData.page === FUNCTIONS_PAGE) {
                 info =
                   header.id === 'kind'
@@ -171,7 +166,6 @@ const DetailsInfoView = React.forwardRef(
                         ref={ref}
                         setChangesData={setChangesData}
                         state={state}
-                        target_path={target_path}
                       />
                     </>
                   )}

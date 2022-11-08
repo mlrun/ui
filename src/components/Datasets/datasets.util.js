@@ -192,7 +192,7 @@ export const checkForSelectedDataset = (
       )
 
       if (!searchItem) {
-        navigate(`/projects/${projectName}/datasets}`, { replace: true })
+        navigate(`/projects/${projectName}/datasets`, { replace: true })
       } else {
         setSelectedDataset(searchItem)
       }
