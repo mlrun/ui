@@ -27,11 +27,11 @@ import PropTypes from 'prop-types'
 import { FormCombobox } from 'igz-controls/components'
 
 import {
-  comboboxSelectList,
   generateArtifactsList,
   generateArtifactsReferencesList,
   generateComboboxMatchesList,
   generateProjectsList,
+  getTargetPathOptions,
   handleStoreInputPathChange,
   isPathInputInvalid,
   pathPlaceholders,
@@ -256,7 +256,7 @@ const TargetPath = ({
         name={name}
         onChange={(selectValue, inputValue) => handleOnChange(selectValue, inputValue)}
         required={required}
-        selectOptions={comboboxSelectList({ hiddenOptionsIds: hiddenSelectOptionsIds })}
+        selectOptions={getTargetPathOptions(hiddenSelectOptionsIds)}
         selectPlaceholder={selectPlaceholder}
         suggestionList={
           get(formState.values, `${formStateFieldInfo}.pathType`) ===

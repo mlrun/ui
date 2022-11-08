@@ -112,7 +112,7 @@ export const handleStoreInputPathChange = (targetPathState, setTargetPathState, 
   }))
 }
 
-export const comboboxSelectList = ({ hiddenOptionsIds }) => [
+export const getTargetPathOptions = hiddenOptionsIds => [
   {
     className: 'path-type-store',
     label: 'MLRun store',
