@@ -140,10 +140,12 @@ export const generateArtifactsContent = (
         value: selectedItem.size ?? ''
       },
       target_path: {
-        value: selectedItem.target_path
+        value: selectedItem.target_path,
+        copyToClipboard: true
       },
       target_uri: {
-        value: selectedItem.URI
+        value: selectedItem.URI,
+        copyToClipboard: true
       },
       metrics: {
         value: selectedItem.metrics ?? []
@@ -433,7 +435,8 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.entities?.map(entity => entity.name).join(', ')
   },
   target_uri: {
-    value: selectedItem.URI
+    value: selectedItem.URI,
+    copyToClipboard: true
   },
   timestamp_key: {
     value: selectedItem.timestamp_key ?? ''
@@ -458,7 +461,8 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     value: selectedItem.tag
   },
   target_uri: {
-    value: selectedItem.URI
+    value: selectedItem.URI,
+    copyToClipboard: true
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')

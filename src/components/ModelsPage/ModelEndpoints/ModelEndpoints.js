@@ -25,7 +25,7 @@ import { isEmpty, orderBy } from 'lodash'
 import ModelEndpointsView from './ModelEndpointsView'
 
 import { generatePageData } from './modelEndpoints.util'
-import { ModelsPageContext } from '../modelsPage.util'
+import { useModelsPage } from '../ModelsPage.context'
 import artifactsAction from '../../../actions/artifacts'
 import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB } from '../../../constants'
 import filtersActions from '../../../actions/filters'
@@ -51,7 +51,7 @@ const ModelEndpoints = () => {
     () => generatePageData(detailsStore.modelEndpoint.data),
     [detailsStore.modelEndpoint.data]
   )
-  const { toggleConvertedYaml } = React.useContext(ModelsPageContext)
+  const { toggleConvertedYaml } = useModelsPage()
 
   const actionsMenu = useMemo(
     () => [

@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback } from 'react'
-import { useYaml } from '../../hooks/yaml.hook'
 import { Outlet, useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -31,9 +30,9 @@ import {
 } from '../../constants'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
-import { ModelsPageContext, tabs } from './modelsPage.util'
+import { tabs } from './modelsPage.util'
 import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
-
+import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { actionsMenuHeader } from './Models/models.util'
@@ -42,19 +41,15 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import './modelsPage.scss'
 
 const ModelsPage = () => {
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const location = useLocation()
   const artifactsStore = useSelector(store => store.artifactsStore)
   const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const params = useParams()
+  const { convertedYaml, fetchData, toggleConvertedYaml } = useModelsPage()
 
-  const handleRegisterModel = useCallback(
-    fetchData => {
-      openPopUp(RegisterModelPopUp, { projectName: params.projectName, refresh: fetchData })
-    },
-    [params.projectName]
-  )
-
+  const handleRegisterModel = useCallback(() => {
+    openPopUp(RegisterModelPopUp, { projectName: params.projectName, refresh: fetchData })
+  }, [params.projectName])
   return (
     <>
       <div className="content-wrapper">
@@ -63,7 +58,7 @@ const ModelsPage = () => {
           <PageActionsMenu
             actionsMenuHeader={actionsMenuHeader}
             onClick={handleRegisterModel}
-            showActionsMenu={location.pathname.includes(MODELS_TAB)}
+            showActionsMenu={params['*'].includes(MODELS_TAB)}
           />
         </div>
         <div className="content content_with-menu">
@@ -79,14 +74,7 @@ const ModelsPage = () => {
             tabs={tabs}
           />
           <div className="table-container">
-            <ModelsPageContext.Provider
-              value={{
-                handleRegisterModel,
-                toggleConvertedYaml
-              }}
-            >
-              <Outlet />
-            </ModelsPageContext.Provider>
+            <Outlet />
             {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
           </div>
         </div>
@@ -101,4 +89,8 @@ const ModelsPage = () => {
   )
 }
 
-export default ModelsPage
+export default () => (
+  <ModelsPageProvider>
+    <ModelsPage />
+  </ModelsPageProvider>
+)

@@ -17,11 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
 
 import { MODEL_ENDPOINTS_TAB, MODELS_TAB, REAL_TIME_PIPELINES_TAB } from '../../constants'
-
-export const ModelsPageContext = React.createContext({})
 
 export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB]
 export const tabs = [
