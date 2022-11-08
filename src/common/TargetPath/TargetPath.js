@@ -130,6 +130,8 @@ const TargetPath = ({
     dataInputState.projects,
     dataInputState.storePathType,
     dispatch,
+    formState.values,
+    formStateFieldInfo,
     get(formState.values, `${formStateFieldInfo}.pathType`),
     setDataInputState
   ])
