@@ -188,10 +188,13 @@ const Models = ({
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setModels([])
-      navigate(
-        `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
-        { replace: true }
-      )
+
+      if (changes.data.tag.currentFieldValue) {
+        navigate(
+          `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          { replace: true }
+        )
+      }
     }
 
     handleRefresh(filtersStore)

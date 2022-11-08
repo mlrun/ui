@@ -206,10 +206,13 @@ const Files = ({
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setFiles([])
-      navigate(
-        `/projects/${params.projectName}/files/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
-        { replace: true }
-      )
+
+      if (changes.data.tag.currentFieldValue) {
+        navigate(
+          `/projects/${params.projectName}/files/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          { replace: true }
+        )
+      }
     }
 
     handleRefresh(filtersStore)
