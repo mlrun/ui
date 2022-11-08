@@ -87,16 +87,16 @@ const TextArea = React.forwardRef(
     )
 
     useEffect(() => {
-      if (textAreaRef.current.value.length > 0) {
+      if (value.length > 0) {
         setTextAreaIsFocused(true)
-      } else if (textAreaIsFocused && textAreaRef.current.value.length === 0) {
+      } else if (textAreaIsFocused && value.length === 0) {
         setTextAreaIsFocused(false)
       }
 
       if (focused) {
         textAreaRef.current.focus()
       }
-    }, [focused, textAreaRef, textAreaIsFocused, value])
+    }, [focused, textAreaIsFocused, value])
 
     useEffect(() => {
       if (isInvalid !== invalid) {
