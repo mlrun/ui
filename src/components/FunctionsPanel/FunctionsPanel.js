@@ -217,6 +217,7 @@ const FunctionsPanel = ({
             })
           })
           .catch(() => {
+            removeFunctionsError()
             createFunction(deploy)
           })
       } else {
