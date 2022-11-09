@@ -70,7 +70,7 @@ const DatasetsView = React.forwardRef(
               actionsMenuHeader={actionsMenuHeader}
               onClick={() =>
                 openPopUp(RegisterArtifactModal, {
-                  artifactKind: 'artifact',
+                  artifactKind: 'dataset',
                   projectName: params.projectName,
                   refresh: handleRefresh,
                   title: actionsMenuHeader

@@ -40,7 +40,7 @@ const RegisterArtifactModalForm = ({
     () => [
       {
         label: 'General',
-        id: 'general'
+        id: 'artifact'
       },
       {
         label: 'Chart',

@@ -51,7 +51,7 @@ const RegisterArtifactModal = ({
 }) => {
   const { isDemoMode } = useMode()
   const initialValues = {
-    kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
+    kind: artifactKind.toLowerCase(),
     metadata: {
       description: '',
       key: '',
@@ -81,7 +81,7 @@ const RegisterArtifactModal = ({
   const registerArtifact = values => {
     const uid = uuidv4()
     const data = {
-      kind: values.kind === 'general' ? '' : values.kind,
+      kind: values.kind,
       metadata: {
         labels: convertChipsData(values.metadata.labels),
         key: values.metadata.key,
