@@ -155,7 +155,7 @@ const Models = ({
 
       return fetchData(filters)
     },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName, setModels]
   )
 
   const applyDetailsChanges = useCallback(
@@ -231,7 +231,7 @@ const Models = ({
       setSelectedModel({})
       cancelRequest(modelsRef, 'cancel')
     }
-  }, [removeModels])
+  }, [removeModels, setModels])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
@@ -273,7 +273,7 @@ const Models = ({
     selectedRowData
   ])
 
-  useEffect(() => setModels([]), [filtersStore.tag])
+  useEffect(() => setModels([]), [filtersStore.tag, setModels])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
