@@ -216,8 +216,10 @@ const FunctionsPanel = ({
               }
             })
           })
-          .catch(() => {
-            removeFunctionsError()
+          .catch(error => {
+            if (error.response.status === 404 && error.response.statusText === 'Not Found') {
+              removeFunctionsError()
+            }
             createFunction(deploy)
           })
       } else {
