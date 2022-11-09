@@ -31,7 +31,12 @@ import { Button, Modal } from 'igz-controls/components'
 
 import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import {
+  FORBIDDEN_ERROR_STATUS_CODE,
+  MODAL_SM,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from 'igz-controls/constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData } from '../../utils/convertChipsData'
@@ -112,14 +117,18 @@ const RegisterArtifactModal = ({
           message: `${title} initiated successfully`
         })
       })
-      .catch(() => {
-        resolveModal()
+      .catch(error => {
         setNotification({
-          status: 400,
+          status: error.response.status === FORBIDDEN_ERROR_STATUS_CODE ? 403 : 400,
           id: Math.random(),
-          message: `${title} failed to initiate`,
+          message:
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You are not permitted to create a new resource'
+              : `${title} failed to initiate`,
           retry: registerArtifact
         })
+
+        resolveModal()
       })
   }
 

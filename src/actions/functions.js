@@ -95,7 +95,7 @@ const functionsActions = {
       .catch(error => {
         const message =
           error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You are not permitted to create new function.'
+            ? 'You are not permitted to create a new function.'
             : error.message
 
         dispatch(functionsActions.createNewFunctionFailure(message))
