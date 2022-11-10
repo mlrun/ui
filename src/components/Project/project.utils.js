@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 
-import { ARTIFACT, DATASET, MODEL, MONITOR_JOBS_TAB } from '../../constants'
+import { ARTIFACT_TYPE, DATASET_TYPE, MONITOR_JOBS_TAB } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
@@ -68,21 +68,21 @@ export const generateCreateNewOptions = (
     label: 'Register Artifact',
     id: 'registerFile',
     handler: () => {
-      openRegisterArtifactModal(ARTIFACT)
+      openRegisterArtifactModal(ARTIFACT_TYPE)
     }
   },
   {
     label: 'Register Model',
     id: 'registerModel',
     handler: () => {
-      openRegisterModelModal(MODEL)
+      openRegisterModelModal()
     }
   },
   {
     label: 'Register Dataset',
     id: 'registerDataset',
     handler: () => {
-      openRegisterArtifactModal(DATASET)
+      openRegisterArtifactModal(DATASET_TYPE)
     }
   }
 ]

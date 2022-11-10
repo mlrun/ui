@@ -530,6 +530,6 @@ export const PARAMS = 'params'
 
 /*=========== ARTIFACTS TYPES =============*/
 
-export const ARTIFACT = 'artifact'
-export const DATASET = 'dataset'
-export const MODEL = 'mdoel'
+export const ARTIFACT_TYPE = 'artifact'
+export const DATASET_TYPE = 'dataset'
+export const MODEL_TYPE = 'model'

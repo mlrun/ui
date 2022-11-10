@@ -22,7 +22,7 @@ import React from 'react'
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
-import { ARTIFACT, DATASET } from '../../../constants'
+import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 
@@ -117,7 +117,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   variant: SECONDARY_BUTTON
               // }],
 
-              artifactKind: DATASET,
+              artifactKind: DATASET_TYPE,
               projectName,
               refresh: () => {},
               title: 'Register dataset'
@@ -168,7 +168,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              artifactKind: ARTIFACT,
+              artifactKind: ARTIFACT_TYPE,
               projectName,
               refresh: () => {},
               title: 'Register artifact'

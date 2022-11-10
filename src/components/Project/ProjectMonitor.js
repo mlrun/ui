@@ -25,7 +25,7 @@ import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
-import { DATASET, DATASETS, MODEL } from '../../constants'
+import { DATASET_TYPE, DATASETS, MODEL_TYPE } from '../../constants'
 
 import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
@@ -67,7 +67,7 @@ const ProjectMonitor = ({
   const registerArtifactLink = useCallback(
     artifactKind =>
       `/projects/${params.projectName}/${
-        artifactKind === MODEL ? 'models' : artifactKind === DATASET ? DATASETS : 'files'
+        artifactKind === MODEL_TYPE ? 'models' : artifactKind === DATASET_TYPE ? DATASETS : 'files'
       }`,
     [params.projectName]
   )
@@ -92,7 +92,7 @@ const ProjectMonitor = ({
   const openRegisterModelModal = useCallback(() => {
     openPopUp(RegisterModelModal, {
       projectName: params.projectName,
-      refresh: () => navigate(registerArtifactLink(MODEL))
+      refresh: () => navigate(registerArtifactLink(MODEL_TYPE))
     })
   }, [params.projectName, navigate, registerArtifactLink])
 
