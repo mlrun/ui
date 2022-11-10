@@ -39,7 +39,6 @@ import {
   TERTIARY_BUTTON
 } from 'igz-controls/constants'
 import { ARTIFACT_TYPE } from '../../constants'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData } from '../../utils/convertChipsData'
