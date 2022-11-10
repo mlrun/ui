@@ -191,8 +191,8 @@ const FeatureVectors = ({
 
       const newPageDataSelectedRowData = { ...selectedRowData }
 
-      delete newStoreSelectedRowData[featureVector.ui.identifier]
-      delete newPageDataSelectedRowData[featureVector.ui.identifier]
+      delete newStoreSelectedRowData[featureVector.data.ui.identifier]
+      delete newPageDataSelectedRowData[featureVector.data.ui.identifier]
 
       removeFeatureVector(newStoreSelectedRowData)
       setSelectedRowData(newPageDataSelectedRowData)
@@ -214,11 +214,7 @@ const FeatureVectors = ({
       fetchFeatureVector(featureVector.project, featureVector.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureVectors(result)].map(contentItem =>
-            createFeatureVectorsRowData(
-              contentItem,
-              params.projectName,
-              !isEmpty(selectedFeatureVector)
-            )
+            createFeatureVectorsRowData(contentItem, params.projectName)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -240,7 +236,7 @@ const FeatureVectors = ({
           }))
         })
     },
-    [fetchFeatureVector, filtersStore.tag, params.projectName, selectedFeatureVector]
+    [fetchFeatureVector, filtersStore.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -255,21 +251,12 @@ const FeatureVectors = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureVectorsRowData(
-            contentItem,
-            params.projectName,
-            !isEmpty(selectedFeatureVector),
-            true
-          )
+          return createFeatureVectorsRowData(contentItem, params.projectName, true)
         })
       : featureVectors.map(contentItem =>
-          createFeatureVectorsRowData(
-            contentItem,
-            params.projectName,
-            !isEmpty(selectedFeatureVector)
-          )
+          createFeatureVectorsRowData(contentItem, params.projectName)
         )
-  }, [featureVectors, filtersStore.groupBy, latestItems, params.projectName, selectedFeatureVector])
+  }, [featureVectors, filtersStore.groupBy, latestItems, params.projectName])
 
   const handleSelectFeatureVector = item => {
     if (params.name === item.name && params.tag === item.tag) {

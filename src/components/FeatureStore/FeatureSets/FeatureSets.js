@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { connect, useSelector } from 'react-redux'
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep } from 'lodash'
 
 import FeatureSetsView from './FeatureSetsView'
 
@@ -142,12 +142,7 @@ const FeatureSets = ({
       fetchFeatureSet(item.project, item.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
-            createFeatureSetsRowData(
-              contentItem,
-              params.projectName,
-              !isEmpty(selectedFeatureSet),
-              true
-            )
+            createFeatureSetsRowData(contentItem, params.projectName, true)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -169,7 +164,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchFeatureSet, filtersStore.tag, params.projectName, selectedFeatureSet]
+    [fetchFeatureSet, filtersStore.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -184,17 +179,10 @@ const FeatureSets = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureSetsRowData(
-            contentItem,
-            params.projectName,
-            !isEmpty(selectedFeatureSet),
-            true
-          )
+          return createFeatureSetsRowData(contentItem, params.projectName, true)
         })
-      : featureSets.map(contentItem =>
-          createFeatureSetsRowData(contentItem, params.projectName, !isEmpty(selectedFeatureSet))
-        )
-  }, [featureSets, filtersStore.groupBy, latestItems, params.projectName, selectedFeatureSet])
+      : featureSets.map(contentItem => createFeatureSetsRowData(contentItem, params.projectName))
+  }, [featureSets, filtersStore.groupBy, latestItems, params.projectName])
 
   const handleSelectFeatureSet = item => {
     if (params.name === item.name && params.tag === item.tag) {

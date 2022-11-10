@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty } from 'lodash'
 
 import {
   FILES_PAGE,
@@ -99,15 +98,7 @@ export const filters = [
 ]
 export const actionsMenuHeader = 'Register artifact'
 
-export const fetchFilesRowData = (
-  file,
-  setSelectedRowData,
-  fetchFile,
-  projectName,
-  iter,
-  tag,
-  selectedFile
-) => {
+export const fetchFilesRowData = (file, setSelectedRowData, fetchFile, projectName, iter, tag) => {
   const fileIdentifier = getArtifactIdentifier(file)
 
   setSelectedRowData(state => ({
@@ -123,9 +114,7 @@ export const fetchFilesRowData = (
         setSelectedRowData(state => ({
           ...state,
           [fileIdentifier]: {
-            content: result.map(artifact =>
-              createFilesRowData(artifact, projectName, !isEmpty(selectedFile))
-            ),
+            content: result.map(artifact => createFilesRowData(artifact, projectName)),
             error: null,
             loading: false
           }

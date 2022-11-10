@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep } from 'lodash'
 
 import {
   ITERATIONS_FILTER,
@@ -77,8 +77,7 @@ export const fetchModelsRowData = async (
   setSelectedRowData,
   iter,
   tag,
-  projectName,
-  selectedModel
+  projectName
 ) => {
   const modelIdentifier = getArtifactIdentifier(model)
 
@@ -96,9 +95,7 @@ export const fetchModelsRowData = async (
           return {
             ...state,
             [modelIdentifier]: {
-              content: result.map(artifact =>
-                createModelsRowData(artifact, projectName, !isEmpty(selectedModel))
-              ),
+              content: result.map(artifact => createModelsRowData(artifact, projectName)),
               error: null,
               loading: false
             }

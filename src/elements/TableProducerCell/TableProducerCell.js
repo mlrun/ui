@@ -27,11 +27,10 @@ import { Tooltip } from 'igz-controls/components'
 import { DETAILS_OVERVIEW_TAB, MONITOR_JOBS_TAB } from '../../constants'
 import { detailsMenu } from '../../components/Jobs/jobs.util'
 
-const TableProducerCell = ({ data }) => {
+const TableProducerCell = ({ className, data }) => {
   const [project, uid] = data.value.uri?.split('/') || []
   const { name } = data.value
-  const overviewTab =
-    detailsMenu.find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
+  const overviewTab = detailsMenu.find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
 
   return (
     <div className={`table-body__cell ${data.class}`}>
@@ -46,9 +45,9 @@ const TableProducerCell = ({ data }) => {
         >
           <Link
             className="link"
-            to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${name}/${
-              uid.split('-')[0]
-            }/${overviewTab.id}`}
+            to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${name}/${uid.split('-')[0]}/${
+              overviewTab.id
+            }`}
           >
             {data.value.name}
           </Link>
@@ -58,7 +57,12 @@ const TableProducerCell = ({ data }) => {
   )
 }
 
+TableProducerCell.defaultProps = {
+  className: ''
+}
+
 TableProducerCell.propTypes = {
+  className: PropTypes.string,
   data: PropTypes.shape({}).isRequired
 }
 

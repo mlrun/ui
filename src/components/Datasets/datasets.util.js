@@ -17,8 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty } from 'lodash'
-
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import {
@@ -104,8 +102,7 @@ export const fetchDataSetRowData = async (
   setSelectedRowData,
   iter,
   tag,
-  projectName,
-  selectedDataset
+  projectName
 ) => {
   const dataSetIdentifier = getArtifactIdentifier(dataSet)
 
@@ -123,9 +120,7 @@ export const fetchDataSetRowData = async (
           return {
             ...state,
             [dataSetIdentifier]: {
-              content: result.map(artifact =>
-                createDatasetsRowData(artifact, projectName, !isEmpty(selectedDataset))
-              ),
+              content: result.map(artifact => createDatasetsRowData(artifact, projectName)),
               error: null,
               loading: false
             }
