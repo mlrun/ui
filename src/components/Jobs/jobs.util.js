@@ -23,30 +23,33 @@ import notificationActions from '../../actions/notification'
 import { generateKeyValues } from '../../utils'
 
 export const page = JOBS_PAGE
-export const getInfoHeaders = isSpark => isSpark ? [
-  { label: 'UID', id: 'uid' },
-  { label: 'Start time', id: 'startTime' },
-  { label: 'Last Updated', id: 'updated' },
-  { label: 'Parameters', id: 'parameters' },
-  { label: 'Function', id: 'function' },
-  { label: 'Results', id: 'resultsChips' },
-  { label: 'Labels', id: 'labels' },
-  { label: 'SPARK UI URL', id: 'sparkUiUrl' },
-  { label: 'Log level', id: 'logLevel' },
-  { label: 'Output path', id: 'outputPath' },
-  { label: 'Total iterations', id: 'iterations' }
-] : [
-  { label: 'UID', id: 'uid' },
-  { label: 'Start time', id: 'startTime' },
-  { label: 'Last Updated', id: 'updated' },
-  { label: 'Parameters', id: 'parameters' },
-  { label: 'Function', id: 'function' },
-  { label: 'Results', id: 'resultsChips' },
-  { label: 'Labels', id: 'labels' },
-  { label: 'Log level', id: 'logLevel' },
-  { label: 'Output path', id: 'outputPath' },
-  { label: 'Total iterations', id: 'iterations' }
-]
+export const getInfoHeaders = isSpark =>
+  isSpark
+    ? [
+        { label: 'UID', id: 'uid' },
+        { label: 'Start time', id: 'startTime' },
+        { label: 'Last Updated', id: 'updated' },
+        { label: 'Parameters', id: 'parameters' },
+        { label: 'Function', id: 'function' },
+        { label: 'Results', id: 'resultsChips' },
+        { label: 'Labels', id: 'labels' },
+        { label: 'SPARK UI URL', id: 'sparkUiUrl' },
+        { label: 'Log level', id: 'logLevel' },
+        { label: 'Output path', id: 'outputPath' },
+        { label: 'Total iterations', id: 'iterations' }
+      ]
+    : [
+        { label: 'UID', id: 'uid' },
+        { label: 'Start time', id: 'startTime' },
+        { label: 'Last Updated', id: 'updated' },
+        { label: 'Parameters', id: 'parameters' },
+        { label: 'Function', id: 'function' },
+        { label: 'Results', id: 'resultsChips' },
+        { label: 'Labels', id: 'labels' },
+        { label: 'Log level', id: 'logLevel' },
+        { label: 'Output path', id: 'outputPath' },
+        { label: 'Total iterations', id: 'iterations' }
+      ]
 export const actionsMenuHeader = 'New Job'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
@@ -126,7 +129,7 @@ export const generateEditableItem = (functionData, job) => {
           inputs: job.inputs ?? {},
           output_path: job.outputPath,
           param_file: job.param_file ?? '',
-          parameters: generateKeyValues(job.parametersChips ?? {}),
+          parameters: job.parameters ?? {},
           secret_sources: job.secret_sources ?? [],
           selector: job.selector ?? 'max.',
           tuning_strategy: job.tuning_strategy ?? 'list'
