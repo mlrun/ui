@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, omit } from 'lodash'
 
 import {
   FILES_PAGE,
@@ -146,11 +145,13 @@ export const handleApplyDetailsChanges = (
   updateArtifact,
   dispatch
 ) => {
-  const isNewFormat =
-    selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
-  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui']))
-
-  const updateTagPromise = applyTagChanges(changes, data, projectName, dispatch, setNotification)
+  const updateTagPromise = applyTagChanges(
+    changes,
+    selectedItem,
+    projectName,
+    dispatch,
+    setNotification
+  )
 
   return updateTagPromise.then(() => {
     return fetchData(filters)
