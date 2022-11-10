@@ -17,17 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { cloneDeep, omit } from 'lodash'
 
 import {
   FILES_PAGE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
-  TREE_FILTER
+  TAG_FILTER
 } from '../../constants'
+import { applyTagChanges } from '../../utils/artifacts.util'
+import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 
 export const pageDataInitialState = {
@@ -59,7 +61,7 @@ export const infoHeaders = [
     tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
-  { label: 'Tag', id: 'tag' },
+  { label: 'Version tag', id: 'tag' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
@@ -91,7 +93,7 @@ export const generatePageData = selectedFile => {
 }
 
 export const filters = [
-  { type: TREE_FILTER, label: 'Tree:' },
+  { type: TAG_FILTER, label: 'Version tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
@@ -133,12 +135,35 @@ export const fetchFilesRowData = (file, setSelectedRowData, fetchFile, projectNa
     })
 }
 
+export const handleApplyDetailsChanges = (
+  changes,
+  fetchData,
+  projectName,
+  itemName,
+  selectedItem,
+  setNotification,
+  filters,
+  updateArtifact,
+  dispatch
+) => {
+  const isNewFormat =
+    selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
+  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui']))
+
+  const updateTagPromise = applyTagChanges(changes, data, projectName, dispatch, setNotification)
+
+  return updateTagPromise.then(() => {
+    return fetchData(filters)
+  })
+}
+
 export const checkForSelectedFile = (
   name,
   selectedRowData,
   files,
   tag,
   iter,
+  uid,
   navigate,
   projectName,
   setSelectedFile
@@ -151,7 +176,8 @@ export const checkForSelectedFile = (
         artifacts.map(artifact => artifact.data ?? artifact),
         name,
         tag,
-        iter
+        iter,
+        uid
       )
 
       if (!searchItem) {

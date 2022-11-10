@@ -140,6 +140,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         rowExpanded: {
           getLink: false
         },
+        showTag: true,
         showExpandButton
       },
       {
@@ -264,6 +265,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         rowExpanded: {
           getLink: false
         },
+        showTag: true,
         showExpandButton
       },
       {
@@ -492,6 +494,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         rowExpanded: {
           getLink: false
         },
+        showTag: true,
         showExpandButton
       },
       {

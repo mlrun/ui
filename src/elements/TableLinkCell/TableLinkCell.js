@@ -80,12 +80,19 @@ const TableLinkCell = ({
             )}
           </div>
           {(link.match(/jobs/) ||
-            (link.match(/functions/) && Object.values(selectedItem).length !== 0)) && (
+            ((link.match(/functions/) ||
+              link.match(/models/) ||
+              link.match(/files/) ||
+              link.match(/datasets/)) &&
+              Object.values(selectedItem).length !== 0)) && (
             <div className="date-uid-row">
               {(item.startTime || item.updated) && (
                 <span className="link-subtext">
                   {data.type !== 'date' &&
-                    (link.match(/functions/)
+                    (link.match(/functions/) ||
+                    link.match(/models/) ||
+                    link.match(/files/) ||
+                    link.match(/datasets/)
                       ? formatDatetime(item.updated, 'N/A')
                       : formatDatetime(
                           item.startTime,

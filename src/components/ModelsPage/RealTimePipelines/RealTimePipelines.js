@@ -25,7 +25,7 @@ import { flatten, map } from 'lodash'
 import RealTimePipelinesView from './RealTimePipelinesView'
 
 import { generatePageData } from './realTimePipelines.util'
-import { ModelsPageContext } from '../modelsPage.util'
+import { useModelsPage } from '../ModelsPage.context'
 import artifactsAction from '../../../actions/artifacts'
 import filtersActions from '../../../actions/filters'
 import { GROUP_BY_NAME, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
@@ -45,7 +45,7 @@ const RealTimePipelines = () => {
   const dispatch = useDispatch()
   const pipelinesRef = useRef(null)
   const pageData = useMemo(() => generatePageData(params.pipelineId), [params.pipelineId])
-  const { toggleConvertedYaml } = React.useContext(ModelsPageContext)
+  const { toggleConvertedYaml } = useModelsPage()
 
   const actionsMenu = useMemo(
     () => [

@@ -37,6 +37,7 @@ import './table.scss'
 const Table = ({
   actionsMenu,
   applyDetailsChanges,
+  applyDetailsChangesCallback,
   children,
   content,
   filtersStore,
@@ -137,6 +138,7 @@ const Table = ({
     <TableView
       actionsMenu={actionsMenu}
       applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
       content={content}
       getCloseDetailsLink={getCloseDetailsLink}
       groupFilter={filtersStore.groupBy}
@@ -171,6 +173,7 @@ const Table = ({
 
 Table.defaultProps = {
   applyDetailsChanges: () => {},
+  applyDetailsChangesCallback: () => {},
   getCloseDetailsLink: null,
   groupedContent: {},
   handleCancel: () => {},
@@ -185,6 +188,7 @@ Table.defaultProps = {
 Table.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
+  applyDetailsChangesCallback: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),

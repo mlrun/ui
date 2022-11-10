@@ -22,7 +22,7 @@ import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
-import RegisterArtifactModal from '..//RegisterArtifactModal/RegisterArtifactModal'
+import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
 
 import { DATASETS } from '../../constants'

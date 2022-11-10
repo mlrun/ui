@@ -18,10 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 
@@ -49,7 +50,7 @@ import {
   getFeatureVectorData,
   handleApplyDetailsChanges
 } from './models.util'
-import { ModelsPageContext } from '../modelsPage.util'
+import { useModelsPage } from '../ModelsPage.context'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { cancelRequest } from '../../../utils/cancelRequest'
@@ -60,7 +61,6 @@ const Models = ({
   fetchArtifactTags,
   fetchModel,
   fetchModelFeatureVector,
-  fetchModels,
   removeModel,
   removeModels,
   setFilters,
@@ -68,23 +68,34 @@ const Models = ({
   updateArtifact,
   getFilterTagOptions
 }) => {
-  const [models, setModels] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const urlTagOption = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
   const modelsRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
-  const { toggleConvertedYaml } = React.useContext(ModelsPageContext)
+  const { fetchData, models, setModels, toggleConvertedYaml } = useModelsPage()
 
   const handleDeployModel = useCallback(model => {
     openPopUp(DeployModelPopUp, { model })
   }, [])
+
+  const handleAddTag = useCallback(
+    artifact => {
+      openPopUp(AddArtifactTagPopUp, {
+        artifact,
+        onAddTag: fetchData,
+        projectName: params.projectName
+      })
+    },
+    [fetchData, params.projectName]
+  )
 
   const actionsMenu = useMemo(
     () => [
@@ -93,25 +104,16 @@ const Models = ({
         onClick: handleDeployModel
       },
       {
+        label: 'Add a tag',
+        onClick: handleAddTag
+      },
+      {
         label: 'View YAML',
         icon: <Yaml />,
         onClick: toggleConvertedYaml
       }
     ],
-    [handleDeployModel, toggleConvertedYaml]
-  )
-
-  const fetchData = useCallback(
-    async filters => {
-      fetchModels(params.projectName, filters).then(result => {
-        if (result) {
-          setModels(result)
-        }
-
-        return result
-      })
-    },
-    [fetchModels, params.projectName]
+    [handleAddTag, handleDeployModel, toggleConvertedYaml]
   )
 
   const handleRemoveRowData = useCallback(
@@ -152,7 +154,7 @@ const Models = ({
 
       return fetchData(filters)
     },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName, setModels]
   )
 
   const applyDetailsChanges = useCallback(
@@ -165,19 +167,37 @@ const Models = ({
         selectedModel,
         setNotification,
         filtersStore,
-        updateArtifact
+        updateArtifact,
+        dispatch
       )
     },
     [
-      filtersStore,
       handleRefresh,
-      params.name,
       params.projectName,
+      params.name,
       selectedModel,
       setNotification,
-      updateArtifact
+      filtersStore,
+      updateArtifact,
+      dispatch
     ]
   )
+
+  const applyDetailsChangesCallback = changes => {
+    if ('tag' in changes.data) {
+      setSelectedRowData({})
+      setModels([])
+
+      if (changes.data.tag.currentFieldValue) {
+        navigate(
+          `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          { replace: true }
+        )
+      }
+    }
+
+    handleRefresh(filtersStore)
+  }
 
   useEffect(() => {
     removeModel({})
@@ -208,7 +228,7 @@ const Models = ({
       setSelectedModel({})
       cancelRequest(modelsRef, 'cancel')
     }
-  }, [removeModels])
+  }, [removeModels, setModels])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
@@ -234,13 +254,23 @@ const Models = ({
       models,
       params.tag,
       params.iter,
+      params.uid,
       navigate,
       params.projectName,
       setSelectedModel
     )
-  }, [models, navigate, params.iter, params.name, params.projectName, params.tag, selectedRowData])
+  }, [
+    models,
+    navigate,
+    params.iter,
+    params.name,
+    params.projectName,
+    params.tag,
+    params.uid,
+    selectedRowData
+  ])
 
-  useEffect(() => setModels([]), [filtersStore.tag])
+  useEffect(() => setModels([]), [filtersStore.tag, setModels])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -269,6 +299,7 @@ const Models = ({
     <ModelsView
       actionsMenu={actionsMenu}
       applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}

@@ -489,7 +489,6 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
-export const TREE_FILTER = 'tree'
 
 /*=========== PANEL =============*/
 

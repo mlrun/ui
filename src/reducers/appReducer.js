@@ -34,12 +34,11 @@ const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {},
-  extraReducers: builder => {
-    builder.addCase(fetchFrontendSpec.fulfilled, (state, { type, payload }) => {
+  extraReducers: {
+    [fetchFrontendSpec.fulfilled]: (state, { payload }) => {
       state.frontendSpec = payload
-    })
+    }
   }
 })
-export const { fetchFrontendSpecSuccess } = appSlice.actions
 
 export default appSlice.reducer

@@ -68,7 +68,7 @@ const FeatureVectors = ({
   const [selectedFeatureVector, setSelectedFeatureVector] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const openPanelByDefault = useOpenPanel()
-  const urlTagOption = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
+  const [urlTagOption] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)

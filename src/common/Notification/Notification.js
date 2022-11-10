@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import { TransitionGroup, Transition } from 'react-transition-group'
 import { connect } from 'react-redux'
+import { inRange } from 'lodash'
 
 import NotificationView from './NotificationView'
 
@@ -45,9 +46,9 @@ const Notification = ({ notificationStore, removeNotification }) => {
   return (
     <TransitionGroup>
       {notificationStore.notification.map((item, index) => {
+        const isSuccessResponse = inRange(item.status, 200, 300)
         const bottomPosition =
-          (notificationStore.notification.length - index) * heightNotification +
-          offsetNotification
+          (notificationStore.notification.length - index) * heightNotification + offsetNotification
 
         const transitionStyles = {
           entered: {
@@ -81,7 +82,7 @@ const Notification = ({ notificationStore, removeNotification }) => {
                   ...transitionStyles[state]
                 }}
                 key={item.id}
-                status={item.status}
+                isSuccessResponse={isSuccessResponse}
                 retry={handleRetry}
               />
             )}

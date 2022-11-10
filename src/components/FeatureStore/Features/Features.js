@@ -60,7 +60,7 @@ const Features = ({
 }) => {
   const [features, setFeatures] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
-  const urlTagOption = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
+  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)

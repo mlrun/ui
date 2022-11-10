@@ -35,6 +35,7 @@ const ModelsView = React.forwardRef(
       actionsMenu,
       artifactsStore,
       applyDetailsChanges,
+      applyDetailsChangesCallback,
       filtersStore,
       handleExpandRow,
       handleRefresh,
@@ -67,6 +68,7 @@ const ModelsView = React.forwardRef(
                 <Table
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
+                  applyDetailsChangesCallback={applyDetailsChangesCallback}
                   content={models}
                   handleCancel={() => setSelectedModel({})}
                   pageData={pageData}
@@ -102,6 +104,7 @@ ModelsView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
   artifactsStore: PropTypes.object.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
+  applyDetailsChangesCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,

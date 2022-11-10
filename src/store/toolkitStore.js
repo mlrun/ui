@@ -20,6 +20,7 @@ such restriction.
 import { configureStore } from '@reduxjs/toolkit'
 
 import appStore from '../reducers/appReducer'
+import artifactsToolkitStore from '../reducers/artifactsToolkitReducer'
 import artifactsStore from '../reducers/artifactReducer'
 import featureStore from '../reducers/featureStoreReducer'
 import functionsStore from '../reducers/functionReducer'
@@ -36,6 +37,7 @@ const toolkitStore = configureStore({
   reducer: {
     appStore,
     artifactsStore,
+    artifactsToolkitStore,
     featureStore,
     functionsStore,
     jobsStore,
@@ -47,7 +49,7 @@ const toolkitStore = configureStore({
     workflowsStore,
     filtersStore
   },
-  //remove this when removed redux and switched to redux-toolkit
+  // todo: remove this when redux is removed and switched to redux-toolkit
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
