@@ -384,7 +384,7 @@ const generateDefaultDataInputs = dataInputs => {
 const parameterTypes = {
   string: 'str',
   number: 'int',
-  bool: 'bool'
+  boolean: 'bool'
 }
 
 const getParameterType = parameter => {
