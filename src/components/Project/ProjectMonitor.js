@@ -23,9 +23,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
-import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
+import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
-import { DATASETS } from '../../constants'
+import { DATASET, DATASETS, MODEL } from '../../constants'
 
 import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
@@ -67,7 +67,7 @@ const ProjectMonitor = ({
   const registerArtifactLink = useCallback(
     artifactKind =>
       `/projects/${params.projectName}/${
-        artifactKind === 'model' ? 'models' : artifactKind === 'dataset' ? DATASETS : 'files'
+        artifactKind === MODEL ? 'models' : artifactKind === DATASET ? DATASETS : 'files'
       }`,
     [params.projectName]
   )
@@ -77,7 +77,7 @@ const ProjectMonitor = ({
     [frontendSpec]
   )
 
-  const openPopupDialog = useCallback(
+  const openRegisterArtifactModal = useCallback(
     artifactKind => {
       openPopUp(RegisterArtifactModal, {
         artifactKind,
@@ -89,22 +89,19 @@ const ProjectMonitor = ({
     [navigate, params.projectName, registerArtifactLink]
   )
 
-  const handleRegisterModel = useCallback(
-    () => {
-      openPopUp(RegisterModelPopUp, {
-        projectName: params.projectName,
-        refresh: () => navigate(registerArtifactLink('model'))
-      })
-    },
-    [params.projectName, navigate, registerArtifactLink]
-  )
+  const openRegisterModelModal = useCallback(() => {
+    openPopUp(RegisterModelModal, {
+      projectName: params.projectName,
+      refresh: () => navigate(registerArtifactLink(MODEL))
+    })
+  }, [params.projectName, navigate, registerArtifactLink])
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,
       params,
-      openPopupDialog,
-      handleRegisterModel,
+      openRegisterArtifactModal,
+      openRegisterModelModal,
       setCreateFeatureSetPanelIsOpen,
       setIsNewFunctionPopUpOpen
     )
@@ -112,7 +109,7 @@ const ProjectMonitor = ({
     return {
       createNewOptions
     }
-  }, [navigate, openPopupDialog, params, handleRegisterModel])
+  }, [navigate, openRegisterArtifactModal, params, openRegisterModelModal])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {

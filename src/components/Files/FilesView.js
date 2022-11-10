@@ -32,7 +32,7 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 
-import { FILES_PAGE } from '../../constants'
+import { ARTIFACT, FILES_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../layout/Content/content.util'
 import { actionsMenuHeader, filters } from './files.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -70,7 +70,7 @@ const FilesView = React.forwardRef(
               actionsMenuHeader={actionsMenuHeader}
               onClick={() =>
                 openPopUp(RegisterArtifactModal, {
-                  artifactKind: 'artifact',
+                  artifactKind: ARTIFACT,
                   projectName: params.projectName,
                   refresh: handleRefresh,
                   title: actionsMenuHeader

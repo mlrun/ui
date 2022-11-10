@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 
 import TargetPath from '../../common/TargetPath/TargetPath'
 import { FormInput, FormSelect, FormTextarea, FormChipCell } from 'igz-controls/components'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { ARTIFACT, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { getChipOptions } from '../../utils/getChipOptions'
@@ -40,7 +40,7 @@ const RegisterArtifactModalForm = ({
     () => [
       {
         label: 'General',
-        id: 'artifact'
+        id: ARTIFACT
       },
       {
         label: 'Chart',

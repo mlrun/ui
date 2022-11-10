@@ -527,3 +527,9 @@ export const GOALS = 'goals'
 export const DATA = 'data'
 export const LABELS = 'labels'
 export const PARAMS = 'params'
+
+/*=========== ARTIFACTS TYPES =============*/
+
+export const ARTIFACT = 'artifact'
+export const DATASET = 'dataset'
+export const MODEL = 'mdoel'

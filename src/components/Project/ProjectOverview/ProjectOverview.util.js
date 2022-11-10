@@ -20,8 +20,9 @@ such restriction.
 import React from 'react'
 
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
-import RegisterModelPopUp from '../../../elements/RegisterModelPopUp/RegisterModelPopUp'
+import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
+import { ARTIFACT, DATASET } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 
@@ -116,7 +117,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   variant: SECONDARY_BUTTON
               // }],
 
-              artifactKind: 'dataset',
+              artifactKind: DATASET,
               projectName,
               refresh: () => {},
               title: 'Register dataset'
@@ -167,7 +168,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              artifactKind: 'artifact',
+              artifactKind: ARTIFACT,
               projectName,
               refresh: () => {},
               title: 'Register artifact'
@@ -245,7 +246,7 @@ export const getInitialCards = (projectName, navigate) => {
           id: 'registeramodel',
           icon: <RegisterModelIcon />,
           handleClick: () => ({
-            component: RegisterModelPopUp,
+            component: RegisterModelModal,
             props: {
               actions: (formState, handleCloseModal) => [
                 {

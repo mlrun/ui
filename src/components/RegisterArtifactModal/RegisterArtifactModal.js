@@ -31,6 +31,7 @@ import { Button, Modal } from 'igz-controls/components'
 
 import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
+import { ARTIFACT } from '../../constants'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
@@ -51,7 +52,7 @@ const RegisterArtifactModal = ({
 }) => {
   const { isDemoMode } = useMode()
   const initialValues = {
-    kind: artifactKind.toLowerCase(),
+    kind: artifactKind,
     metadata: {
       description: '',
       key: '',
@@ -161,7 +162,7 @@ const RegisterArtifactModal = ({
               initialValues={initialValues}
               messageByKind={messagesByKind[artifactKind.toLowerCase()]}
               setFieldState={formState.form.mutators.setFieldState}
-              showType={artifactKind === 'artifact'}
+              showType={artifactKind === ARTIFACT}
             />
           </Modal>
         )
