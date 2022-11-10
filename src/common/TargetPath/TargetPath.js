@@ -27,11 +27,11 @@ import PropTypes from 'prop-types'
 import { FormCombobox } from 'igz-controls/components'
 
 import {
-  comboboxSelectList,
   generateArtifactsList,
   generateArtifactsReferencesList,
   generateComboboxMatchesList,
   generateProjectsList,
+  getTargetPathOptions,
   handleStoreInputPathChange,
   isPathInputInvalid,
   pathPlaceholders,
@@ -48,6 +48,7 @@ const TargetPath = ({
   density,
   formState,
   formStateFieldInfo,
+  hiddenSelectOptionsIds,
   label,
   name,
   required,
@@ -129,6 +130,8 @@ const TargetPath = ({
     dataInputState.projects,
     dataInputState.storePathType,
     dispatch,
+    formState.values,
+    formStateFieldInfo,
     get(formState.values, `${formStateFieldInfo}.pathType`),
     setDataInputState
   ])
@@ -255,7 +258,7 @@ const TargetPath = ({
         name={name}
         onChange={(selectValue, inputValue) => handleOnChange(selectValue, inputValue)}
         required={required}
-        selectOptions={comboboxSelectList}
+        selectOptions={getTargetPathOptions(hiddenSelectOptionsIds)}
         selectPlaceholder={selectPlaceholder}
         suggestionList={
           get(formState.values, `${formStateFieldInfo}.pathType`) ===
@@ -286,6 +289,7 @@ const TargetPath = ({
 
 TargetPath.defaultProps = {
   density: 'normal',
+  hiddenSelectOptionsIds: [],
   label: '',
   required: false,
   selectPlaceholder: ''
@@ -295,6 +299,7 @@ TargetPath.propTypes = {
   density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
   formState: PropTypes.object.isRequired,
   formStateFieldInfo: PropTypes.string.isRequired,
+  hiddenSelectOptionsIds: PropTypes.arrayOf(PropTypes.string),
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
   required: PropTypes.bool,

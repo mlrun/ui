@@ -42,7 +42,7 @@ export const ModelsPageProvider = ({ children }) => {
         return result
       })
     },
-    [setModels, params.projectName]
+    [dispatch, setModels, params.projectName]
   )
 
   return (

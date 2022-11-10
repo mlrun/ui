@@ -49,7 +49,7 @@ const ModelsPage = () => {
 
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelPopUp, { projectName: params.projectName, refresh: fetchData })
-  }, [params.projectName])
+  }, [fetchData, params.projectName])
   return (
     <>
       <div className="content-wrapper">
@@ -89,8 +89,10 @@ const ModelsPage = () => {
   )
 }
 
-export default () => (
+const ModelsPageProviderComponent = () => (
   <ModelsPageProvider>
     <ModelsPage />
   </ModelsPageProvider>
 )
+
+export default ModelsPageProviderComponent

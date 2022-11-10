@@ -157,10 +157,13 @@ const Datasets = ({
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setDatasets([])
-      navigate(
-        `/projects/${params.projectName}/datasets/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
-        { replace: true }
-      )
+
+      if (changes.data.tag.currentFieldValue) {
+        navigate(
+          `/projects/${params.projectName}/datasets/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          { replace: true }
+        )
+      }
     }
 
     handleRefresh(filtersStore)

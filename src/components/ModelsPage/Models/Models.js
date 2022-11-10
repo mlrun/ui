@@ -155,7 +155,7 @@ const Models = ({
 
       return fetchData(filters)
     },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName, setModels]
   )
 
   const applyDetailsChanges = useCallback(
@@ -188,10 +188,13 @@ const Models = ({
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setModels([])
-      navigate(
-        `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
-        { replace: true }
-      )
+
+      if (changes.data.tag.currentFieldValue) {
+        navigate(
+          `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          { replace: true }
+        )
+      }
     }
 
     handleRefresh(filtersStore)
@@ -228,7 +231,7 @@ const Models = ({
       setSelectedModel({})
       cancelRequest(modelsRef, 'cancel')
     }
-  }, [removeModels])
+  }, [removeModels, setModels])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
@@ -270,7 +273,7 @@ const Models = ({
     selectedRowData
   ])
 
-  useEffect(() => setModels([]), [filtersStore.tag])
+  useEffect(() => setModels([]), [filtersStore.tag, setModels])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
