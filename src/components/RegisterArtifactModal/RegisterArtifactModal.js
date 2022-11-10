@@ -32,6 +32,7 @@ import { Button, Modal } from 'igz-controls/components'
 import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
 import {
+  BADREQUEST_ERROR_STATUS_CODE,
   FORBIDDEN_ERROR_STATUS_CODE,
   MODAL_SM,
   SECONDARY_BUTTON,
@@ -119,7 +120,10 @@ const RegisterArtifactModal = ({
       })
       .catch(error => {
         setNotification({
-          status: error.response.status === FORBIDDEN_ERROR_STATUS_CODE ? 403 : 400,
+          status:
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? FORBIDDEN_ERROR_STATUS_CODE
+              : BADREQUEST_ERROR_STATUS_CODE,
           id: Math.random(),
           message:
             error.response.status === FORBIDDEN_ERROR_STATUS_CODE
