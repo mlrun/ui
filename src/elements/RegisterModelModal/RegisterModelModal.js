@@ -40,9 +40,9 @@ import notificationActions from '../../actions/notification'
 import { useMode } from '../../hooks/mode.hook'
 import artifactApi from '../../api/artifacts-api'
 
-import './registerModelPopUp.scss'
+import './RegisterModelModal.scss'
 
-function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }) {
+function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }) {
   const { isDemoMode } = useMode()
   const initialValues = {
     metadata: {
@@ -215,10 +215,10 @@ function RegisterModelPopUp({ actions, isOpen, onResolve, projectName, refresh }
   )
 }
 
-RegisterModelPopUp.propTypes = {
+RegisterModelModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   projectName: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired
 }
 
-export default RegisterModelPopUp
+export default RegisterModelModal
