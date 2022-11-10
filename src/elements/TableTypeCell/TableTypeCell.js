@@ -31,7 +31,7 @@ import { ReactComponent as Remote } from 'igz-controls/images/ic_remote.svg'
 import { ReactComponent as Spark } from 'igz-controls/images/spark.svg'
 import { ReactComponent as Workflow } from 'igz-controls/images/workflow-icon.svg'
 
-const TableTypeCell = ({ data }) => {
+const TableTypeCell = ({ className, data }) => {
   const typesOfJob = {
     '': { label: 'Local', icon: <Code /> },
     dask: { label: 'Dask', icon: null },
@@ -49,11 +49,7 @@ const TableTypeCell = ({ data }) => {
     <div className={`table-body__cell ${data.class}`}>
       <Tooltip
         className="table-body__cell_type"
-        template={
-          <TextTooltipTemplate
-            text={typesOfJob[data.value]?.label ?? data.value}
-          />
-        }
+        template={<TextTooltipTemplate text={typesOfJob[data.value]?.label ?? data.value} />}
       >
         {typesOfJob[data.value]?.icon ?? data.value}
       </Tooltip>
@@ -61,7 +57,12 @@ const TableTypeCell = ({ data }) => {
   )
 }
 
+TableTypeCell.defaultProps = {
+  className: ''
+}
+
 TableTypeCell.propTypes = {
+  className: PropTypes.string,
   data: PropTypes.shape({}).isRequired
 }
 

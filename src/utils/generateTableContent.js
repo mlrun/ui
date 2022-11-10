@@ -58,14 +58,8 @@ export const generateTableContent = (
       (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
         ? createFunctionsContent(group, isSelectedItem, params.pageTab, params.projectName, true)
         : page === FEATURE_STORE_PAGE
-        ? createFeatureStoreContent(
-            group,
-            params.pageTab,
-            params.projectName,
-            isTablePanelOpen,
-            isSelectedItem
-          )
-        : createArtifactsContent(group, page, params.pageTab, params.projectName, isSelectedItem)
+        ? createFeatureStoreContent(group, params.pageTab, params.projectName, isTablePanelOpen)
+        : createArtifactsContent(group, page, params.pageTab, params.projectName)
     )
   } else if (groupFilter === GROUP_BY_NONE || !groupFilter) {
     return page === CONSUMER_GROUP_PAGE
@@ -76,15 +70,9 @@ export const generateTableContent = (
         page === FILES_PAGE ||
         page === DATASETS_PAGE ||
         (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB)
-      ? createArtifactsContent(content, page, params.pageTab, params.projectName, isSelectedItem)
+      ? createArtifactsContent(content, page, params.pageTab, params.projectName)
       : page === FEATURE_STORE_PAGE
-      ? createFeatureStoreContent(
-          content,
-          params.pageTab,
-          params.projectName,
-          isTablePanelOpen,
-          isSelectedItem
-        )
+      ? createFeatureStoreContent(content, params.pageTab, params.projectName, isTablePanelOpen)
       : createFunctionsContent(content, isSelectedItem, params)
   } else return []
 }

@@ -152,11 +152,10 @@ const Files = ({
         fetchFile,
         params.projectName,
         filtersStore.iter,
-        filtersStore.tag,
-        selectedFile
+        filtersStore.tag
       )
     },
-    [fetchFile, filtersStore.iter, filtersStore.tag, params.projectName, selectedFile]
+    [fetchFile, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -170,12 +169,10 @@ const Files = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFilesRowData(contentItem, params.projectName, !isEmpty(selectedFile), true)
+          return createFilesRowData(contentItem, params.projectName, true)
         })
-      : files.map(contentItem =>
-          createFilesRowData(contentItem, params.projectName, !isEmpty(selectedFile))
-        )
-  }, [files, filtersStore.groupBy, latestItems, params.projectName, selectedFile])
+      : files.map(contentItem => createFilesRowData(contentItem, params.projectName))
+  }, [files, filtersStore.groupBy, latestItems, params.projectName])
 
   const applyDetailsChanges = useCallback(
     changes => {

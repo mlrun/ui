@@ -78,8 +78,7 @@ export const fetchModelsRowData = async (
   setSelectedRowData,
   iter,
   tag,
-  projectName,
-  selectedModel
+  projectName
 ) => {
   const modelIdentifier = getArtifactIdentifier(model)
 
@@ -97,9 +96,7 @@ export const fetchModelsRowData = async (
           return {
             ...state,
             [modelIdentifier]: {
-              content: result.map(artifact =>
-                createModelsRowData(artifact, projectName, !isEmpty(selectedModel))
-              ),
+              content: result.map(artifact => createModelsRowData(artifact, projectName)),
               error: null,
               loading: false
             }

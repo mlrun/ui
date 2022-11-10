@@ -140,11 +140,10 @@ const Models = ({
         setSelectedRowData,
         filtersStore.iter,
         filtersStore.tag,
-        params.projectName,
-        selectedModel
+        params.projectName
       )
     },
-    [fetchModel, filtersStore.iter, filtersStore.tag, params.projectName, selectedModel]
+    [fetchModel, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
   const handleRefresh = useCallback(
@@ -217,12 +216,10 @@ const Models = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createModelsRowData(contentItem, params.projectName, !isEmpty(selectedModel), true)
+          return createModelsRowData(contentItem, params.projectName, true)
         })
-      : models.map(contentItem =>
-          createModelsRowData(contentItem, params.projectName, !isEmpty(selectedModel))
-        )
-  }, [filtersStore.groupBy, latestItems, models, params.projectName, selectedModel])
+      : models.map(contentItem => createModelsRowData(contentItem, params.projectName))
+  }, [filtersStore.groupBy, latestItems, models, params.projectName])
 
   useEffect(() => {
     return () => {

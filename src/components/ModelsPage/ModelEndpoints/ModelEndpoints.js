@@ -20,7 +20,7 @@ such restriction.
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isEmpty, orderBy } from 'lodash'
+import { orderBy } from 'lodash'
 
 import ModelEndpointsView from './ModelEndpointsView'
 
@@ -142,9 +142,9 @@ const ModelEndpoints = () => {
 
   const tableContent = useMemo(() => {
     return sortedContent.map(contentItem =>
-      createModelEndpointsRowData(contentItem, params.projectName, !isEmpty(selectedModelEndpoint))
+      createModelEndpointsRowData(contentItem, params.projectName)
     )
-  }, [params.projectName, selectedModelEndpoint, sortedContent])
+  }, [params.projectName, sortedContent])
 
   return (
     <ModelEndpointsView

@@ -177,11 +177,10 @@ const Datasets = ({
         setSelectedRowData,
         !filtersStore.iter,
         filtersStore.tag,
-        params.projectName,
-        selectedDataset
+        params.projectName
       )
     },
-    [fetchDataSet, filtersStore.iter, filtersStore.tag, params.projectName, selectedDataset]
+    [fetchDataSet, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -211,17 +210,10 @@ const Datasets = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createDatasetsRowData(
-            contentItem,
-            params.projectName,
-            !isEmpty(selectedDataset),
-            true
-          )
+          return createDatasetsRowData(contentItem, params.projectName, true)
         })
-      : datasets.map(contentItem =>
-          createDatasetsRowData(contentItem, params.projectName, !isEmpty(selectedDataset))
-        )
-  }, [datasets, filtersStore.groupBy, latestItems, params.projectName, selectedDataset])
+      : datasets.map(contentItem => createDatasetsRowData(contentItem, params.projectName))
+  }, [datasets, filtersStore.groupBy, latestItems, params.projectName])
 
   useEffect(() => {
     removeDataSet({})
