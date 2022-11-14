@@ -21,8 +21,9 @@ import React from 'react'
 
 import JobWizard from '../../JobWizard/JobWizard'
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
-import RegisterModelPopUp from '../../../elements/RegisterModelPopUp/RegisterModelPopUp'
+import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
+import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 
@@ -117,7 +118,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   variant: SECONDARY_BUTTON
               // }],
 
-              artifactKind: 'dataset',
+              artifactKind: DATASET_TYPE,
               projectName: params.projectName,
               refresh: () => {},
               title: 'Register dataset'
@@ -145,6 +146,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   label: 'Register',
                   onClick: async () => {
                     await formState.handleSubmit()
+
                     if (!formState.invalid) {
                       navigate(`${base_url}/files`)
                     }
@@ -167,7 +169,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              artifactKind: 'artifact',
+              artifactKind: ARTIFACT_TYPE,
               projectName: params.projectName,
               refresh: () => {},
               title: 'Register artifact'
@@ -255,7 +257,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           id: 'registeramodel',
           icon: <RegisterModelIcon />,
           handleClick: () => ({
-            component: RegisterModelPopUp,
+            component: RegisterModelModal,
             props: {
               actions: (formState, handleCloseModal) => [
                 {

@@ -20,7 +20,7 @@ such restriction.
 import { mainHttpClient } from '../httpClient'
 import { SHOW_ITERATIONS, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
 
-const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
+const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
   const params = {}
 
   if (filters?.labels) {
@@ -39,13 +39,17 @@ const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
     params.name = `~${filters.name}`
   }
 
-  return mainHttpClient.get(path, {
+  return mainHttpClient.get(`/projects/${project}/artifacts`, {
     ...config,
     params: { ...config.params, ...params }
   })
 }
 
 const artifactsApi = {
+  addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
+  replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
+  deleteTag: (project, tag, data) =>
+    mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
   buildFunction: data => mainHttpClient.post('/build/function', data),
   getArtifactPreview: (path, user, fileFormat) => {
     const config = {
@@ -64,69 +68,55 @@ const artifactsApi = {
   },
   getArtifactTag: project => mainHttpClient.get(`/projects/${project}/artifact-tags`),
   getArtifact: (project, artifact) => {
-    return mainHttpClient.get('/artifacts', {
-      params: { project, name: artifact }
-    })
+    return mainHttpClient.get(`/projects/${project}/artifacts?name=${artifact}`)
   },
   getArtifacts: (project, filters) => {
-    return fetchArtifacts('/artifacts', filters, {
-      params: { project }
-    })
+    return fetchArtifacts(project, filters)
   },
-  getDataSet: (project, dataSet, tag) => {
+  getDataSet: (project, dataSet, tag, iter) => {
     return fetchArtifacts(
-      '/artifacts',
+      project,
       {},
       {
         params: {
-          project,
           category: 'dataset',
           name: dataSet,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )
   },
   getDataSets: (project, filters, config) => {
-    return fetchArtifacts(
-      '/artifacts',
-      filters,
-      { ...config, params: { project, category: 'dataset' } },
-      true
-    )
+    return fetchArtifacts(project, filters, { ...config, params: { category: 'dataset' } }, true)
   },
-  getFile: (project, file, tag) => {
+  getFile: (project, file, tag, iter) => {
     return fetchArtifacts(
-      '/artifacts',
+      project,
       {},
       {
         params: {
-          project,
           category: 'other',
           name: file,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )
   },
   getFiles: (project, filters) => {
-    return fetchArtifacts(
-      '/artifacts',
-      filters,
-      { params: { project, category: 'other', format: 'full' } },
-      true
-    )
+    return fetchArtifacts(project, filters, { params: { category: 'other', format: 'full' } }, true)
   },
-  getModel: (project, model, tag) => {
+  getModel: (project, model, tag, iter) => {
     return fetchArtifacts(
-      '/artifacts',
+      project,
       {},
       {
         params: {
-          project,
           category: 'model',
           name: model,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )
@@ -141,18 +131,20 @@ const artifactsApi = {
     })
   },
   getModels: (project, filters) => {
-    return fetchArtifacts(
-      '/artifacts',
-      filters,
-      { params: { project, category: 'model', format: 'full' } },
-      true
-    )
+    return fetchArtifacts(project, filters, { params: { category: 'model', format: 'full' } }, true)
   },
   registerArtifact: (project, data) =>
-    mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),
+    mainHttpClient.post(
+      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
+        data.key || data.metadata.key
+      }`,
+      data
+    ),
   updateArtifact: (project, data) =>
     mainHttpClient.post(
-      `/artifact/${project}/${data.uid || data.metadata?.tree}/${data.db_key || data.spec?.db_key}`,
+      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
+        data.db_key || data.spec?.db_key
+      }`,
       data
     )
 }

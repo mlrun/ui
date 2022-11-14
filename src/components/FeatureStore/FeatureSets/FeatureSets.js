@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { connect, useSelector } from 'react-redux'
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep } from 'lodash'
 
 import FeatureSetsView from './FeatureSetsView'
 
@@ -42,6 +42,7 @@ import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
 import { FeatureStoreContext } from '../FeatureStore'
+import { cancelRequest } from '../../../utils/cancelRequest'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -63,7 +64,7 @@ const FeatureSets = ({
   const [selectedRowData, setSelectedRowData] = useState({})
 
   const openPanelByDefault = useOpenPanel()
-  const urlTagOption = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
+  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -104,10 +105,6 @@ const FeatureSets = ({
     [fetchFeatureSets, params.projectName]
   )
 
-  const cancelRequest = message => {
-    featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
-  }
-
   const handleRefresh = filters => {
     getFilterTagOptions(fetchFeatureSetsTags, params.projectName)
 
@@ -122,8 +119,8 @@ const FeatureSets = ({
 
       const newPageDataSelectedRowData = { ...selectedRowData }
 
-      delete newStoreSelectedRowData[featureSet.ui.identifier]
-      delete newPageDataSelectedRowData[featureSet.ui.identifier]
+      delete newStoreSelectedRowData[featureSet.data.ui.identifier]
+      delete newPageDataSelectedRowData[featureSet.data.ui.identifier]
 
       removeFeatureSet(newStoreSelectedRowData)
       setSelectedRowData(newPageDataSelectedRowData)
@@ -145,12 +142,7 @@ const FeatureSets = ({
       fetchFeatureSet(item.project, item.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
-            createFeatureSetsRowData(
-              contentItem,
-              params.projectName,
-              !isEmpty(selectedFeatureSet),
-              true
-            )
+            createFeatureSetsRowData(contentItem, params.projectName, true)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -172,7 +164,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchFeatureSet, filtersStore.tag, params.projectName, selectedFeatureSet]
+    [fetchFeatureSet, filtersStore.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -187,17 +179,16 @@ const FeatureSets = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureSetsRowData(
-            contentItem,
-            params.projectName,
-            !isEmpty(selectedFeatureSet),
-            true
-          )
+          return createFeatureSetsRowData(contentItem, params.projectName, true)
         })
-      : featureSets.map(contentItem =>
-          createFeatureSetsRowData(contentItem, params.projectName, !isEmpty(selectedFeatureSet))
-        )
-  }, [featureSets, filtersStore.groupBy, latestItems, params.projectName, selectedFeatureSet])
+      : featureSets.map(contentItem => createFeatureSetsRowData(contentItem, params.projectName))
+  }, [featureSets, filtersStore.groupBy, latestItems, params.projectName])
+
+  const handleSelectFeatureSet = item => {
+    if (params.name === item.name && params.tag === item.tag) {
+      setSelectedFeatureSet(item)
+    }
+  }
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -296,9 +287,9 @@ const FeatureSets = ({
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
-      isDetailsTabExists(FEATURE_STORE_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, params, pageData.details.menu])
+  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
     checkTabIsValid(navigate, params, selectedFeatureSet, FEATURE_SETS_TAB)
@@ -317,7 +308,7 @@ const FeatureSets = ({
       removeFeatureSet()
       setSelectedFeatureSet({})
       setSelectedRowData({})
-      cancelRequest('cancel')
+      cancelRequest(featureStoreRef, 'cancel')
     }
   }, [removeFeatureSet, removeFeatureSets, params.projectName])
 
@@ -337,7 +328,7 @@ const FeatureSets = ({
       ref={featureStoreRef}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
-      setSelectedFeatureSet={setSelectedFeatureSet}
+      setSelectedFeatureSet={handleSelectFeatureSet}
       tableContent={tableContent}
     />
   )

@@ -33,7 +33,7 @@ import { CONFLICT_ERROR_STATUS_CODE, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-con
 import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/utils/form.util'
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { generateChipsData, parseChipsData } from '../../utils/convertChipsData'
+import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 
 const volumeTypesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
@@ -811,7 +811,7 @@ export const generateJobRequestData = (
       metadata: {
         project: formData.functionSelection?.projectName ?? params.projectName,
         name: formData.jobDetails.name,
-        labels: generateChipsData(formData.jobDetails.labels)
+        labels: convertChipsData(formData.jobDetails.labels)
       },
       spec: {
         inputs: generateDataInputs(formData.dataInputs.dataInputsTable),

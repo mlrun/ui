@@ -19,8 +19,10 @@ such restriction.
 */
 import moment from 'moment'
 
-export const formatDatetime = (datetime, invalidDateMessage) =>
-  typeof datetime !== 'object' || !(datetime instanceof Date) || isNaN(datetime)
+export const formatDatetime = (datetime, invalidDateMessage) => {
+  const date = new Date(datetime)
+
+  return typeof date !== 'object' || !(date instanceof Date) || isNaN(date)
     ? invalidDateMessage
     : new Intl.DateTimeFormat('en-US', {
         month: 'short',
@@ -28,7 +30,8 @@ export const formatDatetime = (datetime, invalidDateMessage) =>
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
-      }).format(new Date(datetime))
+      }).format(date)
+}
 
 export const getFormatTime = time => {
   const [hour, minute] = time.split(':')

@@ -60,7 +60,7 @@ const Features = ({
 }) => {
   const [features, setFeatures] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
-  const urlTagOption = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
+  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -127,14 +127,14 @@ const Features = ({
   const handleRemoveFeature = useCallback(
     feature => {
       const newStoreSelectedRowData =
-        feature.ui.type === 'feature'
+        feature.data.ui.type === 'feature'
           ? { ...featureStore.features.selectedRowData.content }
           : { ...featureStore.entities.selectedRowData.content }
       const newSelectedRowData = { ...selectedRowData }
-      const removeData = feature.ui.type === 'feature' ? removeFeature : removeEntity
+      const removeData = feature.data.ui.type === 'feature' ? removeFeature : removeEntity
 
-      delete newStoreSelectedRowData[feature.ui.identifier]
-      delete newSelectedRowData[feature.ui.identifier]
+      delete newStoreSelectedRowData[feature.data.ui.identifier]
+      delete newSelectedRowData[feature.data.ui.identifier]
 
       removeData(newStoreSelectedRowData)
       setSelectedRowData(newSelectedRowData)

@@ -21,7 +21,7 @@ import React from 'react'
 
 import JobWizard from '../JobWizard/JobWizard'
 
-import { MONITOR_JOBS_TAB } from '../../constants'
+import { ARTIFACT_TYPE, DATASET_TYPE, MONITOR_JOBS_TAB } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
@@ -44,8 +44,8 @@ export const launchIDEOptions = [
 export const generateCreateNewOptions = (
   navigate,
   params,
-  openPopupDialog,
-  handleRegisterModel,
+  openRegisterArtifactModal,
+  openRegisterModelModal,
   setCreateFeatureSetsPanelIsOpen,
   setIsNewFunctionPopUpOpen,
   isDemoMode
@@ -79,21 +79,21 @@ export const generateCreateNewOptions = (
     label: 'Register Artifact',
     id: 'registerFile',
     handler: () => {
-      openPopupDialog('artifact')
+      openRegisterArtifactModal(ARTIFACT_TYPE)
     }
   },
   {
     label: 'Register Model',
     id: 'registerModel',
     handler: () => {
-      handleRegisterModel('model')
+      openRegisterModelModal()
     }
   },
   {
     label: 'Register Dataset',
     id: 'registerDataset',
     handler: () => {
-      openPopupDialog('dataset')
+      openRegisterArtifactModal(DATASET_TYPE)
     }
   }
 ]

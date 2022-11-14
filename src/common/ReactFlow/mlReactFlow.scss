@@ -163,6 +163,10 @@
         background: $burntSienna;
       }
 
+      &.status-omitted {
+        background: $silver;
+      }
+
       &.status-running {
         background: $pictonBlue;
       }

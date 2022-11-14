@@ -47,9 +47,7 @@ const Pipeline = ({ content }) => {
   const params = useParams()
 
   useEffect(() => {
-    setPipeline(
-      content.find(contentItem => contentItem.hash === params.pipelineId)
-    )
+    setPipeline(content.find(contentItem => contentItem.hash === params.pipelineId))
   }, [content, params.pipelineId])
 
   useEffect(() => {
@@ -119,20 +117,14 @@ const Pipeline = ({ content }) => {
             isSelectable: true,
             customData: graph
           },
-          className: classnames(
-            selectedStep.id === mainRouterStepId && 'selected'
-          ),
+          className: classnames(selectedStep.id === mainRouterStepId && 'selected'),
           position: { x: 0, y: 0 }
         })
       }
 
       forEach(steps, (step, stepName) => {
         const subLabel =
-          step.kind === 'queue'
-            ? '« queue »'
-            : step.kind === 'router'
-            ? '« router »'
-            : ''
+          step.kind === 'queue' ? '« queue »' : step.kind === 'router' ? '« router »' : ''
 
         nodes.push({
           id: stepName,
@@ -152,7 +144,7 @@ const Pipeline = ({ content }) => {
           edgesMap[stepName] = mainRouterStepId
         }
 
-        if (step.after) {
+        if (step.after && Array.isArray(step.after) && step.after.length) {
           edgesMap[stepName] = step.after[0]
         }
 
@@ -173,9 +165,7 @@ const Pipeline = ({ content }) => {
                 isOpacity: true,
                 customData: routeInner
               },
-              className: classnames(
-                selectedStep.id === routeInnerName && 'selected'
-              ),
+              className: classnames(selectedStep.id === routeInnerName && 'selected'),
               position: { x: 0, y: 0 }
             })
 
@@ -230,21 +220,13 @@ const Pipeline = ({ content }) => {
 
       forEach(groupedNodesEdges, (edgesGroup, edgesSource) => {
         const filteredRouterEdges = nodesRouterEdges.filter(routerEdge => {
-          return (
-            routerEdge.source === edgesSource ||
-            routerEdge.target === edgesSource
-          )
+          return routerEdge.source === edgesSource || routerEdge.target === edgesSource
         })
 
         if (filteredRouterEdges.length > 1) {
           const routerEdgesHalfLength = filteredRouterEdges.length / 2
-          const routerEdgesFirstHalf = filteredRouterEdges.slice(
-            0,
-            routerEdgesHalfLength
-          )
-          const routerEdgesSecondHalf = filteredRouterEdges.slice(
-            routerEdgesHalfLength
-          )
+          const routerEdgesFirstHalf = filteredRouterEdges.slice(0, routerEdgesHalfLength)
+          const routerEdgesSecondHalf = filteredRouterEdges.slice(routerEdgesHalfLength)
           const mergedRouterEdges = [
             ...routerEdgesFirstHalf,
             ...edgesGroup,
@@ -257,9 +239,7 @@ const Pipeline = ({ content }) => {
         }
       })
 
-      setElements(
-        getLayoutedElements(concat(nodes, sortedNodesEdges, errorEdges))
-      )
+      setElements(getLayoutedElements(concat(nodes, sortedNodesEdges, errorEdges)))
     }
   }, [pipeline, selectedStep])
 

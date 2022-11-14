@@ -31,6 +31,7 @@ import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import './tableLinkCell.scss'
 
 const TableLinkCell = ({
+  className,
   data,
   handleExpandRow,
   item,
@@ -39,7 +40,7 @@ const TableLinkCell = ({
   selectedItem,
   showExpandButton
 }) => {
-  const tableCellClassNames = classnames('table-body__cell', data.class)
+  const tableCellClassNames = classnames('table-body__cell', data.class, className)
   const itemNameClassNames = classnames('link', 'item-name')
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 
@@ -79,12 +80,19 @@ const TableLinkCell = ({
             )}
           </div>
           {(link.match(/jobs/) ||
-            (link.match(/functions/) && Object.values(selectedItem).length !== 0)) && (
+            ((link.match(/functions/) ||
+              link.match(/models/) ||
+              link.match(/files/) ||
+              link.match(/datasets/)) &&
+              Object.values(selectedItem).length !== 0)) && (
             <div className="date-uid-row">
               {(item.startTime || item.updated) && (
                 <span className="link-subtext">
                   {data.type !== 'date' &&
-                    (link.match(/functions/)
+                    (link.match(/functions/) ||
+                    link.match(/models/) ||
+                    link.match(/files/) ||
+                    link.match(/datasets/)
                       ? formatDatetime(item.updated, 'N/A')
                       : formatDatetime(
                           item.startTime,
@@ -112,6 +120,7 @@ const TableLinkCell = ({
 }
 
 TableLinkCell.defaultProps = {
+  className: '',
   data: {},
   expandLink: false,
   selectedItem: {},
@@ -119,8 +128,8 @@ TableLinkCell.defaultProps = {
 }
 
 TableLinkCell.propTypes = {
+  className: PropTypes.string,
   data: PropTypes.shape({}),
-
   item: PropTypes.shape({}).isRequired,
   link: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,

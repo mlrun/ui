@@ -42,12 +42,10 @@ import { formatDatetime } from '../../utils'
 import {
   DATASETS_PAGE,
   DETAILS_ARTIFACTS_TAB,
-  FEATURE_STORE_PAGE,
   FILES_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_TAB
+  MODEL_ENDPOINTS_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../types'
@@ -182,7 +180,7 @@ const DetailsView = React.forwardRef(
             </span>
           </div>
           <div className="item-header__buttons">
-            {(pageData.page === FEATURE_STORE_PAGE || pageData.details.type === MODELS_TAB) && (
+            {detailsStore.changes.counter > 0 && (
               <>
                 <Button
                   variant={LABEL_BUTTON}

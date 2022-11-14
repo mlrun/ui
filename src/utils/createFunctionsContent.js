@@ -19,59 +19,74 @@ such restriction.
 */
 import { formatDatetime } from './datetime'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
-import { FUNCTIONS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
-import { page } from '../components/Models/models.util'
+import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
-const createFunctionsContent = (functions, isSelectedItem, params) =>
+const createFunctionsContent = (
+  functions,
+  isSelectedItem,
+  pageTab,
+  projectName,
+  showExpandButton
+) =>
   functions.map(func => {
     const identifierUnique = getFunctionIdentifier(func, true)
 
-    return params.pageTab === REAL_TIME_PIPELINES_TAB
+    return pageTab === REAL_TIME_PIPELINES_TAB
       ? {
-          name: {
-            id: `name.${identifierUnique}`,
-            value: func.name,
-            class: 'functions_medium',
-            identifier: getFunctionIdentifier(func),
-            identifierUnique: getFunctionIdentifier(func, true),
-            getLink: hash => {
-              return `/projects/${params.projectName}/${page.toLowerCase()}/${
-                params.pageTab
-              }/pipeline/${hash}`
+          data: {
+            ...func,
+            ui: {
+              ...func.ui,
+              identifier: getFunctionIdentifier(func),
+              identifierUnique: getFunctionIdentifier(func, true)
+            }
+          },
+          content: [
+            {
+              id: `name.${identifierUnique}`,
+              header: 'Name',
+              value: func.name,
+              class: 'functions_medium',
+              getLink: hash => {
+                return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${hash}`
+              },
+              showTag: true,
+              showStatus: true,
+              expandedCellContent: {
+                value: formatDatetime(new Date(func.updated), 'N/A'),
+                class: 'functions_medium',
+                type: 'date',
+                showTag: true,
+                showStatus: true
+              },
+              showExpandButton
             },
-            showTag: true,
-            showStatus: true
-          },
-          kind: {
-            id: `kind.${identifierUnique}`,
-            value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
-            class: 'functions_medium',
-            type: 'type'
-          },
-          function: {
-            id: `function.${identifierUnique}`,
-            value: func.name,
-            class: 'functions_big',
-            getLink: tab =>
-              generateLinkToDetailsPanel(
-                func.project,
-                FUNCTIONS_PAGE,
-                null,
-                func.hash,
-                null,
-                tab
-              )
-          },
-          updated: {
-            id: `updated.${identifierUnique}`,
-            value: formatDatetime(new Date(func.updated), 'N/A'),
-            class: 'functions_medium',
-            type: 'date',
-            showTag: true,
-            showStatus: true,
-            hidden: true
-          }
+            {
+              id: `kind.${identifierUnique}`,
+              header: 'Type',
+              value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
+              class: 'functions_medium',
+              type: 'type'
+            },
+            {
+              id: `function.${identifierUnique}`,
+              header: 'Function',
+              value: func.name,
+              class: 'functions_big',
+              getLink: tab =>
+                generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
+            },
+            {
+              id: `updated.${identifierUnique}`,
+              value: formatDatetime(new Date(func.updated), 'N/A'),
+              class: 'functions_medium',
+              type: 'date',
+              showTag: true,
+              showStatus: true,
+              hidden: true
+            }
+          ]
         }
       : {
           name: {

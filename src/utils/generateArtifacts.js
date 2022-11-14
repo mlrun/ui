@@ -17,25 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { maxBy, flatten, isEmpty } from 'lodash'
+import { flatten, isEmpty } from 'lodash'
 
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { generateUri } from './resources'
 import { TAG_LATEST } from '../constants'
 
-export const generateArtifacts = (artifacts, tab, iter) => {
+export const generateArtifacts = (artifacts, tab, originalContent) => {
   return flatten(
     artifacts
       .map(artifact => {
-        const { link_iteration } = artifact.link_iteration ?? {}
-        let generatedArtifacts = iter
-          ? artifact.data
-          : artifact.link_iteration
-          ? artifact.data.filter(dataItem => dataItem.iter === link_iteration)
-          : [maxBy(artifact.data, 'updated')]
+        let generatedArtifacts = []
 
-        if (generatedArtifacts.length > 0) {
-          generatedArtifacts = generatedArtifacts.map(generatedArtifact => {
+        if (artifact.data.length > 0) {
+          generatedArtifacts = artifact.data.map(generatedArtifact => {
             let item = { ...generatedArtifact }
 
             if (item.producer && !item.producer.name) {
@@ -57,7 +52,7 @@ export const generateArtifacts = (artifacts, tab, iter) => {
 
             if (!generatedArtifact.ui) {
               item.ui = {
-                originalContent: generatedArtifact
+                originalContent
               }
             }
 

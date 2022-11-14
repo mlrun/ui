@@ -21,7 +21,7 @@ import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
-import { MODAL_FULL } from 'igz-controls/constants'
+import { MODAL_MAX } from 'igz-controls/constants'
 import { generateJobRequestData, getNewJobErrorMsg, getSaveJobErrorMsg } from './JobWizard.util'
 import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
@@ -65,10 +65,10 @@ const JobWizard = ({
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
-  const [filteredTemplates, setFilteredTemplates] = useState({})
+  const [filteredTemplates, setFilteredTemplates] = useState([])
   const [functions, setFunctions] = useState([])
   const [templatesCategories, setTemplatesCategories] = useState(functionsStore.templatesCatalog)
-  const [templates, setTemplates] = useState(functionsStore.templates)
+  const [templates, setTemplates] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [jobAdditionalData, setJobAdditionalData] = useState({})
   const [showSchedule, setShowSchedule] = useState(false)
@@ -231,7 +231,7 @@ const JobWizard = ({
                   runJobHandler(formData, selectedFunctionData, params)
                 }
               }}
-              size={MODAL_FULL}
+              size={MODAL_MAX}
               stepsConfig={stepsConfig}
               title={wizardTitle}
             >

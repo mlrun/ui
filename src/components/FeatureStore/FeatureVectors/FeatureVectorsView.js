@@ -67,8 +67,8 @@ const FeatureVectorsView = React.forwardRef(
             message={getNoDataMessage(
               filtersStore,
               featureVectorsFilters,
-              FEATURE_VECTORS_TAB,
-              FEATURE_STORE_PAGE
+              FEATURE_STORE_PAGE,
+              FEATURE_VECTORS_TAB
             )}
           />
         ) : (

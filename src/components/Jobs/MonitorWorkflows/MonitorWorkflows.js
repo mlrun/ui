@@ -313,9 +313,9 @@ const MonitorWorkflows = ({
 
   useEffect(() => {
     if ((params.jobId || params.functionHash) && pageData.details.menu.length > 0) {
-      isDetailsTabExists(JOBS_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, params, location])
+  }, [navigate, pageData.details.menu, location, params.jobId, params.functionHash, params.tab])
 
   useEffect(() => {
     const workflow = { ...workflowsStore.activeWorkflow.data }
@@ -449,7 +449,7 @@ const MonitorWorkflows = ({
           setJobWizardMode(null)
           setJobWizardIsOpened(false)
         },
-        defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : null,
+        defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
         mode: jobWizardMode,
         onSuccessRun: () => refreshJobs(filtersStore)
       })
@@ -482,7 +482,7 @@ const MonitorWorkflows = ({
       {workflowsStore.workflows.loading ? null : !params.workflowId &&
         workflowsStore.workflows.data.length === 0 ? (
         <NoData
-          message={getNoDataMessage(filtersStore, filters, MONITOR_WORKFLOWS_TAB, JOBS_PAGE)}
+          message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_WORKFLOWS_TAB)}
         />
       ) : (
         <>

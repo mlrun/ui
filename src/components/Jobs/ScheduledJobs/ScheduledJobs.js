@@ -314,9 +314,9 @@ const ScheduledJobs = ({
           setJobWizardMode(null)
           setJobWizardIsOpened(false)
         },
-        defaultData: jobWizardMode === PANEL_EDIT_MODE ? editableItem?.scheduled_object : null,
+        defaultData: jobWizardMode === PANEL_EDIT_MODE ? editableItem?.scheduled_object : {},
         mode: jobWizardMode,
-        wizardTitle: jobWizardMode === PANEL_EDIT_MODE ? 'Edit job' : null,
+        wizardTitle: jobWizardMode === PANEL_EDIT_MODE ? 'Edit job' : undefined,
         onSuccessRequest: () => refreshJobs(filtersStore)
       })
 
@@ -339,7 +339,7 @@ const ScheduledJobs = ({
         <FilterMenu filters={filters} onChange={refreshJobs} page={JOBS_PAGE} withoutExpandButton />
       </div>
       {jobsStore.loading ? null : jobs.length === 0 ? (
-        <NoData message={getNoDataMessage(filtersStore, filters, SCHEDULE_TAB, JOBS_PAGE)} />
+        <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, SCHEDULE_TAB)} />
       ) : (
         <>
           <Table

@@ -265,7 +265,9 @@ export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS =
   'FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS'
 export const FETCH_MODEL_SUCCESS = 'FETCH_MODEL_SUCCESS'
 export const REMOVE_MODEL = 'REMOVE_MODEL'
+export const REMOVE_MODEL_ENDPOINTS = 'REMOVE_MODEL_ENDPOINTS'
 export const REMOVE_MODELS = 'REMOVE_MODELS'
+export const REMOVE_PIPELINES = 'REMOVE_PIPELINES'
 
 /*=========== FEATURE STORE =============*/
 
@@ -503,7 +505,6 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
-export const TREE_FILTER = 'tree'
 
 /*=========== PANEL =============*/
 
@@ -543,3 +544,9 @@ export const GOALS = 'goals'
 export const DATA = 'data'
 export const LABELS = 'labels'
 export const PARAMS = 'params'
+
+/*=========== ARTIFACTS TYPES =============*/
+
+export const ARTIFACT_TYPE = 'artifact'
+export const DATASET_TYPE = 'dataset'
+export const MODEL_TYPE = 'model'

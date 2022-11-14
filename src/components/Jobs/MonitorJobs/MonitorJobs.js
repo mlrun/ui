@@ -250,9 +250,9 @@ const MonitorJobs = ({
 
   useEffect(() => {
     if (params.jobId && pageData.details.menu.length > 0) {
-      isDetailsTabExists(JOBS_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, params, location])
+  }, [navigate, pageData.details.menu, location, params.jobId, params.tab])
 
   useEffect(() => {
     if (params.jobId && (isEmpty(selectedJob) || params.jobId !== selectedJob.uid)) {
@@ -334,9 +334,9 @@ const MonitorJobs = ({
           setJobWizardMode(null)
           setJobWizardIsOpened(false)
         },
-        defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : null,
+        defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
         mode: jobWizardMode,
-        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Re-run job' : null,
+        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Re-run job' : undefined,
         onSuccessRun: () => refreshJobs(filtersStore)
       })
 
@@ -379,7 +379,7 @@ const MonitorJobs = ({
 
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
         (jobs.length === 0 && !params.jobName) ? (
-        <NoData message={getNoDataMessage(filtersStore, filters, MONITOR_JOBS_TAB, JOBS_PAGE)} />
+        <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_JOBS_TAB)} />
       ) : (
         isEmpty(selectedJob) && (
           <Table

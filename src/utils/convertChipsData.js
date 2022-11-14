@@ -17,7 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const generateChipsData = chips => {
+
+// [{key: "", value: ""}] --> {key: 'value'}
+export const convertChipsData = chips => {
   return chips.reduce((list, label) => {
     list[label.key] = label.value
 
@@ -25,10 +27,29 @@ export const generateChipsData = chips => {
   }, {})
 }
 
+// {key: 'value'} --> [{id: "", key: "", value: ""}]
 export const parseChipsData = (labels = {}, delimiter = null) => {
-  return Object.entries(labels).reduce((list, [key, value], id) => {
-    list.push({ id, key, value, delimiter })
+  return labels == null
+    ? []
+    : Object.entries(labels).reduce((result, [key, value], idx) => {
+        value =
+          Array.isArray(value) && value.every(item => item)
+            ? value.map(arrayItem => {
+                return typeof arrayItem === 'object'
+                  ? Object.entries(arrayItem).map(([arrayItemKey, arrayItemValue]) => ({
+                      key: arrayItemKey,
+                      value: arrayItemValue
+                    }))
+                  : arrayItem
+              })
+            : typeof value === 'object' && value !== null
+            ? Object.entries(value).map(([arrayItemKey, arrayItemValue]) => ({
+                key: arrayItemKey,
+                value: arrayItemValue
+              }))
+            : value
 
-    return list
-  }, [])
+        result.push({ id: key + idx, key, value, delimiter })
+        return result
+      }, [])
 }

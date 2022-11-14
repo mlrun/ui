@@ -47,13 +47,17 @@
         overflow-x: auto;
         word-break: break-word;
 
-        &-edit-placeholder {
+        &-btn-edit {
+          margin-left: 10px;
+        }
+
+        &-add-placeholder {
           color: $spunPearl;
+          cursor: pointer;
         }
       }
 
-      &__uri,
-      &__path {
+      &__copy-to-clipboard {
         white-space: normal;
         cursor: pointer;
       }

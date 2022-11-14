@@ -48,6 +48,7 @@ import TableHead from './TableHead'
 const TableView = ({
   actionsMenu,
   applyDetailsChanges,
+  applyDetailsChangesCallback,
   children,
   content,
   getCloseDetailsLink,
@@ -216,7 +217,14 @@ const TableView = ({
             </div>
           </>
         )}
-        {tableHeaders?.length > 0 && <TableHead content={tableHeaders} ref={tableHeadRef} />}
+        {tableHeaders?.length > 0 && (
+          <TableHead
+            content={tableHeaders}
+            mainRowItemsCount={mainRowItemsCount}
+            ref={tableHeadRef}
+            selectedItem={selectedItem}
+          />
+        )}
         {!pageData.tableHeaders && <div className="table-body">{children}</div>}
       </div>
       {isTablePanelOpen && (
@@ -228,6 +236,7 @@ const TableView = ({
         <Details
           actionsMenu={actionsMenu}
           applyDetailsChanges={applyDetailsChanges}
+          applyDetailsChangesCallback={applyDetailsChangesCallback}
           getCloseDetailsLink={getCloseDetailsLink}
           detailsMenu={pageData.details.menu}
           handleCancel={handleCancel}
@@ -243,6 +252,7 @@ const TableView = ({
 
 TableView.defaultProps = {
   applyDetailsChanges: () => {},
+  applyDetailsChangesCallback: () => {},
   getCloseDetailsLink: null,
   groupLatestJob: {}
 }
@@ -250,6 +260,7 @@ TableView.defaultProps = {
 TableView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
+  applyDetailsChangesCallback: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,

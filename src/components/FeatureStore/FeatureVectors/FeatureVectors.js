@@ -50,6 +50,7 @@ import {
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
+import { cancelRequest } from '../../../utils/cancelRequest'
 
 const FeatureVectors = ({
   deleteFeatureVector,
@@ -67,11 +68,11 @@ const FeatureVectors = ({
   const [selectedFeatureVector, setSelectedFeatureVector] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const openPanelByDefault = useOpenPanel()
-  const urlTagOption = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
+  const [urlTagOption] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featureStoreRef = useRef(null)
+  const featureVectorsRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -89,7 +90,7 @@ const FeatureVectors = ({
     filters => {
       const config = {
         cancelToken: new axios.CancelToken(cancel => {
-          featureStoreRef.current.cancel = cancel
+          featureVectorsRef.current.cancel = cancel
         })
       }
 
@@ -176,10 +177,6 @@ const FeatureVectors = ({
     [onDeleteFeatureVector, toggleConvertedYaml]
   )
 
-  const cancelRequest = message => {
-    featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
-  }
-
   const handleRefresh = filters => {
     getFilterTagOptions(fetchFeatureVectorsTags, params.projectName)
 
@@ -194,8 +191,8 @@ const FeatureVectors = ({
 
       const newPageDataSelectedRowData = { ...selectedRowData }
 
-      delete newStoreSelectedRowData[featureVector.ui.identifier]
-      delete newPageDataSelectedRowData[featureVector.ui.identifier]
+      delete newStoreSelectedRowData[featureVector.data.ui.identifier]
+      delete newPageDataSelectedRowData[featureVector.data.ui.identifier]
 
       removeFeatureVector(newStoreSelectedRowData)
       setSelectedRowData(newPageDataSelectedRowData)
@@ -217,11 +214,7 @@ const FeatureVectors = ({
       fetchFeatureVector(featureVector.project, featureVector.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureVectors(result)].map(contentItem =>
-            createFeatureVectorsRowData(
-              contentItem,
-              params.projectName,
-              !isEmpty(selectedFeatureVector)
-            )
+            createFeatureVectorsRowData(contentItem, params.projectName)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -243,7 +236,7 @@ const FeatureVectors = ({
           }))
         })
     },
-    [fetchFeatureVector, filtersStore.tag, params.projectName, selectedFeatureVector]
+    [fetchFeatureVector, filtersStore.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -258,21 +251,18 @@ const FeatureVectors = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureVectorsRowData(
-            contentItem,
-            params.projectName,
-            !isEmpty(selectedFeatureVector),
-            true
-          )
+          return createFeatureVectorsRowData(contentItem, params.projectName, true)
         })
       : featureVectors.map(contentItem =>
-          createFeatureVectorsRowData(
-            contentItem,
-            params.projectName,
-            !isEmpty(selectedFeatureVector)
-          )
+          createFeatureVectorsRowData(contentItem, params.projectName)
         )
-  }, [featureVectors, filtersStore.groupBy, latestItems, params.projectName, selectedFeatureVector])
+  }, [featureVectors, filtersStore.groupBy, latestItems, params.projectName])
+
+  const handleSelectFeatureVector = item => {
+    if (params.name === item.name && params.tag === item.tag) {
+      setSelectedFeatureVector(item)
+    }
+  }
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -374,9 +364,9 @@ const FeatureVectors = ({
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
-      isDetailsTabExists(FEATURE_STORE_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, params, pageData.details.menu])
+  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
     checkTabIsValid(navigate, params, setSelectedFeatureVector, FEATURE_VECTORS_TAB)
@@ -394,7 +384,7 @@ const FeatureVectors = ({
       removeFeatureVectors()
       setSelectedFeatureVector({})
       setSelectedRowData({})
-      cancelRequest('cancel')
+      cancelRequest(featureVectorsRef, 'cancel')
       setCreateVectorPopUpIsOpen(false)
     }
   }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName])
@@ -411,11 +401,11 @@ const FeatureVectors = ({
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       pageData={pageData}
-      ref={featureStoreRef}
+      ref={featureVectorsRef}
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
-      setSelectedFeatureVector={setSelectedFeatureVector}
+      setSelectedFeatureVector={handleSelectFeatureVector}
       tableContent={tableContent}
     />
   )

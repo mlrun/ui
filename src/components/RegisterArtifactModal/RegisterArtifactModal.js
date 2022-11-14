@@ -31,12 +31,19 @@ import { Button, Modal } from 'igz-controls/components'
 
 import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import {
+  BADREQUEST_ERROR_STATUS_CODE,
+  FORBIDDEN_ERROR_STATUS_CODE,
+  MODAL_SM,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from 'igz-controls/constants'
+import { ARTIFACT_TYPE } from '../../constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { generateChipsData } from '../../utils/convertChipsData'
-
+import { convertChipsData } from '../../utils/convertChipsData'
 import artifactApi from '../../api/artifacts-api'
+import { useMode } from '../../hooks/mode.hook'
 
 const RegisterArtifactModal = ({
   actions,
@@ -49,19 +56,30 @@ const RegisterArtifactModal = ({
   setNotification,
   title
 }) => {
+  const { isDemoMode } = useMode()
   const initialValues = {
-    description: '',
-    kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
-    key: '',
-    labels: [],
-    target_path: ''
+    kind: artifactKind,
+    metadata: {
+      description: '',
+      key: '',
+      labels: []
+    },
+    spec: {
+      target_path: isDemoMode
+        ? {
+            fieldInfo: {
+              pathType: ''
+            },
+            path: ''
+          }
+        : ''
+    }
   }
-
   const formRef = React.useRef(
     createForm({
       initialValues,
-      onSubmit: () => {},
-      mutators: { ...arrayMutators, setFieldState }
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
     })
   )
   const location = useLocation()
@@ -70,19 +88,24 @@ const RegisterArtifactModal = ({
   const registerArtifact = values => {
     const uid = uuidv4()
     const data = {
-      uid,
-      key: values.key,
-      db_key: values.key,
-      tree: uid,
-      target_path: values.target_path,
-      description: values.description,
-      kind: values.kind === 'general' ? '' : values.kind,
-      labels: generateChipsData(values.labels),
+      kind: values.kind,
+      metadata: {
+        labels: convertChipsData(values.metadata.labels),
+        key: values.metadata.key,
+        project: projectName,
+        tree: uid
+      },
       project: projectName,
-      producer: {
-        kind: 'api',
-        uri: window.location.host
-      }
+      spec: {
+        db_key: values.metadata.key,
+        producer: {
+          kind: 'api',
+          uri: window.location.host
+        },
+        target_path: isDemoMode ? values.spec.target_path.path : values.spec.target_path
+      },
+      status: {},
+      uid
     }
 
     return artifactApi
@@ -96,14 +119,21 @@ const RegisterArtifactModal = ({
           message: `${title} initiated successfully`
         })
       })
-      .catch(() => {
-        resolveModal()
+      .catch(error => {
         setNotification({
-          status: 400,
+          status:
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? FORBIDDEN_ERROR_STATUS_CODE
+              : BADREQUEST_ERROR_STATUS_CODE,
           id: Math.random(),
-          message: `${title} failed to initiate`,
+          message:
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You are not permitted to create a new resource'
+              : `${title} failed to initiate`,
           retry: registerArtifact
         })
+
+        resolveModal()
       })
   }
 
@@ -142,9 +172,10 @@ const RegisterArtifactModal = ({
           >
             <RegisterArtifactModalForm
               formState={formState}
-              showType={artifactKind === 'artifact'}
               initialValues={initialValues}
               messageByKind={messagesByKind[artifactKind.toLowerCase()]}
+              setFieldState={formState.form.mutators.setFieldState}
+              showType={artifactKind === ARTIFACT_TYPE}
             />
           </Modal>
         )

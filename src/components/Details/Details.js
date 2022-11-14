@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useCallback, useRef, useContext } from 'react'
+import React, { useEffect, useMemo, useCallback, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { UNSAFE_NavigationContext as NavigationContext, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { connect, useDispatch } from 'react-redux'
 
 import DetailsView from './DetailsView'
@@ -44,12 +44,14 @@ import {
   renderContent
 } from './details.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { useBlockHistory } from '../../hooks/useBlockHistory.hook'
 
 import './details.scss'
 
 const Details = ({
   actionsMenu,
   applyDetailsChanges,
+  applyDetailsChangesCallback,
   detailsMenu,
   detailsStore,
   filtersStore,
@@ -73,13 +75,12 @@ const Details = ({
   showWarning,
   tab
 }) => {
-  const { navigator } = useContext(NavigationContext)
   const applyChangesRef = useRef()
   const dispatch = useDispatch()
-  let unblockRootChange = useRef()
-  let retryNavigate = useRef()
   const detailsRef = useRef()
   const params = useParams()
+  const { blockHistory, unblockHistory } = useBlockHistory()
+  const [historyIsBlocked, setHistoryIsBlocked] = useState(false)
 
   const handlePreview = useCallback(() => {
     dispatch(
@@ -133,7 +134,7 @@ const Details = ({
 
   useEffect(() => {
     return () => {
-        //TODO
+      //TODO
       resetChanges()
     }
   }, [resetChanges])
@@ -154,6 +155,7 @@ const Details = ({
             handleAddChip,
             handleDeleteChip,
             handleEditChips,
+            handleEditInput,
             pageData.details.type,
             selectedItem
           )
@@ -191,7 +193,7 @@ const Details = ({
       }
 
       removeInfoContent()
-      setChangesData({})
+      setHistoryIsBlocked(false)
     }
   }, [
     pageData.details.type,
@@ -229,25 +231,21 @@ const Details = ({
     }
   }, [handleRefreshClick])
 
-  const blockRootChange = useCallback(() => {
-    if (!unblockRootChange.current) {
-      unblockRootChange.current = navigator.block(tx => {
-        handleShowWarning(true)
-        retryNavigate.current = tx.retry
-
-        return false
-      })
-    }
-  }, [handleShowWarning, navigator])
-
   useEffect(() => {
-    if (detailsStore.changes.counter > 0 && !unblockRootChange.current) {
-      blockRootChange()
-    } else if (detailsStore.changes.counter === 0 && unblockRootChange.current) {
-      unblockRootChange.current()
-      unblockRootChange.current = null
+    if (detailsStore.changes.counter > 0 && !historyIsBlocked) {
+      blockHistory(() => handleShowWarning(true))
+      setHistoryIsBlocked(true)
+    } else if (detailsStore.changes.counter === 0 && historyIsBlocked) {
+      unblockHistory()
+      setHistoryIsBlocked(false)
     }
-  })
+  }, [
+    blockHistory,
+    detailsStore.changes.counter,
+    handleShowWarning,
+    unblockHistory,
+    historyIsBlocked
+  ])
 
   const detailsMenuClick = () => {
     let changesData = {}
@@ -270,25 +268,25 @@ const Details = ({
       setChangesData({ ...changesData })
     }
 
-    if (unblockRootChange.current) {
-      unblockRootChange.current()
-      unblockRootChange.current = null
+    if (historyIsBlocked) {
+      unblockHistory()
     }
   }
 
   const applyChanges = () => {
     applyDetailsChanges(detailsStore.changes).then(() => {
       resetChanges()
-      unblockRootChange.current()
-      unblockRootChange.current = null
+      unblockHistory()
+      setHistoryIsBlocked(false)
+      applyDetailsChangesCallback(detailsStore.changes)
     })
   }
 
   const cancelChanges = () => {
     if (detailsStore.changes.counter > 0) {
       resetChanges()
-      unblockRootChange.current()
-      unblockRootChange.current = null
+      unblockHistory()
+      setHistoryIsBlocked(false)
     }
   }
 
@@ -296,17 +294,11 @@ const Details = ({
     cancelChanges()
     handleShowWarning(false)
 
-    if (unblockRootChange.current) {
-      unblockRootChange.current()
-
-      unblockRootChange.current = null
-    }
-
     if (detailsStore.refreshWasHandled) {
       retryRequest(filtersStore)
       setRefreshWasHandled(false)
     } else {
-      retryNavigate.current()
+      unblockHistory(true)
     }
   }
 
@@ -368,6 +360,7 @@ const Details = ({
 
 Details.defaultProps = {
   applyDetailsChanges: () => {},
+  applyDetailsChangesCallback: () => {},
   cancelRequest: () => {},
   getCloseDetailsLink: null,
   handleRefresh: () => {},
@@ -381,6 +374,7 @@ Details.defaultProps = {
 Details.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
+  applyDetailsChangesCallback: PropTypes.func,
   cancelRequest: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(
     PropTypes.shape({

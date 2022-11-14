@@ -49,9 +49,7 @@ const ContentMenu = ({ activeTab, screen, tabs, onClick }) => {
                   to={
                     onClick
                       ? '/'
-                      : `/projects/${
-                          params.projectName
-                        }/${screen.toLowerCase()}/${tab.id}`
+                      : `/projects/${params.projectName}/${screen.toLowerCase()}/${tab.id}`
                   }
                   className={tab.icon && 'content-menu__item-icon'}
                   onClick={onClick && (e => handleClick(e, tab.id))}

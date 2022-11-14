@@ -41,21 +41,21 @@ import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.sv
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as SeverityError } from 'igz-controls/images/severity-error.svg'
 
-export const createArtifactsContent = (artifacts, page, pageTab, project, isSelectedItem) => {
+export const createArtifactsContent = (artifacts, page, pageTab, project) => {
   return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
     if (page === ARTIFACTS_PAGE) {
       return createArtifactsRowData(artifact)
     } else if (page === MODELS_PAGE) {
       if (pageTab === MODELS_TAB) {
-        return createModelsRowData(artifact, project, isSelectedItem)
+        return createModelsRowData(artifact, project)
       } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-        return createModelEndpointsRowData(artifact, project, isSelectedItem)
+        return createModelEndpointsRowData(artifact, project)
       }
     } else if (page === FILES_PAGE) {
-      return createFilesRowData(artifact, project, isSelectedItem)
+      return createFilesRowData(artifact, project)
     }
 
-    return createDatasetsRowData(artifact, project, isSelectedItem)
+    return createDatasetsRowData(artifact, project)
   })
 }
 
@@ -102,217 +102,237 @@ const createArtifactsRowData = artifact => {
   }
 }
 
-const createModelsRowData = (artifact, project, isSelectedItem) => {
+export const createModelsRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
   const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
-    key: {
-      id: `key.${identifierUnique}`,
-      identifier: getArtifactIdentifier(artifact),
-      identifierUnique: identifierUnique,
-      value: artifact.db_key,
-      class: 'artifacts_medium',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          project,
-          MODELS_TAB,
-          MODELS_TAB,
-          artifact.db_key,
-          artifact.tag,
-          tab,
-          artifact.tree,
-          artifact.iter
-        ),
-      expandedCellContent: {
-        class: 'artifacts_medium',
-        value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
-        tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
-      },
-      rowExpanded: {
-        getLink: false
+    data: {
+      ...artifact,
+      ui: {
+        ...artifact.ui,
+        identifier: getArtifactIdentifier(artifact),
+        identifierUnique: identifierUnique
       }
     },
-    labels: {
-      id: `labels.${identifierUnique}`,
-      value: parseKeyValues(artifact.labels),
-      class: 'artifacts_extra-small',
-      type: 'labels',
-      hidden: isSelectedItem
-    },
-    producer: {
-      id: `producer.${identifierUnique}`,
-      value: artifact.producer,
-      class: 'artifacts_small',
-      type: 'producer',
-      hidden: isSelectedItem
-    },
-    owner: {
-      id: `owner.${identifierUnique}`,
-      value: artifact.producer?.owner,
-      class: 'artifacts_small',
-      type: 'owner',
-      hidden: isSelectedItem
-    },
-    updated: {
-      id: `updated.${identifierUnique}`,
-      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    metrics: {
-      id: `metrics.${identifierUnique}`,
-      value: parseKeyValues(artifact.metrics),
-      class: 'artifacts_big',
-      type: 'metrics',
-      hidden: isSelectedItem
-    },
-    frameWorkAndAlgorithm: {
-      id: `frameWorkAndAlgorithm.${identifierUnique}`,
-      value:
-        artifact.framework || artifact.algorithm ? (
+    content: [
+      {
+        id: `key.${identifierUnique}`,
+        header: 'Name',
+        value: artifact.db_key,
+        class: 'artifacts_medium',
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            project,
+            MODELS_TAB,
+            MODELS_TAB,
+            artifact.db_key,
+            artifact.tag,
+            tab,
+            artifact.tree,
+            artifact.iter
+          ),
+        expandedCellContent: {
+          class: 'artifacts_medium',
+          value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
+          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
+        },
+        rowExpanded: {
+          getLink: false
+        },
+        showTag: true,
+        showExpandButton
+      },
+      {
+        id: `labels.${identifierUnique}`,
+        header: 'Labels',
+        value: parseKeyValues(artifact.labels),
+        class: 'artifacts_extra-small',
+        type: 'labels'
+      },
+      {
+        id: `producer.${identifierUnique}`,
+        header: 'Producer',
+        value: artifact.producer,
+        class: 'artifacts_small',
+        type: 'producer'
+      },
+      {
+        id: `owner.${identifierUnique}`,
+        header: 'Owner',
+        value: artifact.producer?.owner,
+        class: 'artifacts_small',
+        type: 'owner'
+      },
+      {
+        id: `updated.${identifierUnique}`,
+        header: 'Updated',
+        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        class: 'artifacts_small'
+      },
+      {
+        id: `metrics.${identifierUnique}`,
+        header: 'Metrics',
+        value: parseKeyValues(artifact.metrics),
+        class: 'artifacts_big',
+        type: 'metrics'
+      },
+      {
+        id: `frameWorkAndAlgorithm.${identifierUnique}`,
+        header: (
           <span>
-            <span>{artifact.framework}</span>
+            <span>Framework &</span>
             <br />
-            <span>{artifact.algorithm}</span>
+            <span>Algorithm</span>
           </span>
-        ) : (
-          ''
         ),
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    version: {
-      id: `version.${identifierUnique}`,
-      value: artifact.tag,
-      class: 'artifacts_small',
-      type: 'hidden',
-      hidden: isSelectedItem
-    },
-    buttonPopout: {
-      id: `buttonPopout.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonPopout',
-      hidden: isSelectedItem
-    },
-    buttonDownload: {
-      id: `buttonDownload.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonDownload',
-      hidden: isSelectedItem
-    },
-    buttonCopy: {
-      id: `buttonCopy.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonCopyURI',
-      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
-      hidden: isSelectedItem
-    }
+        value:
+          artifact.framework || artifact.algorithm ? (
+            <span>
+              <span>{artifact.framework}</span>
+              <br />
+              <span>{artifact.algorithm}</span>
+            </span>
+          ) : (
+            ''
+          ),
+        class: 'artifacts_small'
+      },
+      {
+        id: `version.${identifierUnique}`,
+        value: artifact.tag,
+        class: 'artifacts_small',
+        type: 'hidden'
+      },
+      {
+        id: `buttonPopout.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonPopout'
+      },
+      {
+        id: `buttonDownload.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonDownload'
+      },
+      {
+        id: `buttonCopy.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonCopyURI',
+        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+      }
+    ]
   }
 }
 
-const createFilesRowData = (artifact, project, isSelectedItem) => {
+export const createFilesRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
   const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
-    key: {
-      id: `key.${identifierUnique}`,
-      identifier: getArtifactIdentifier(artifact),
-      identifierUnique: identifierUnique,
-      value: artifact.db_key,
-      class: 'artifacts_medium',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          project,
-          FILES_PAGE,
-          null,
-          artifact.db_key,
-          artifact.tag,
-          tab,
-          artifact.tree,
-          artifact.iter
-        ),
-      expandedCellContent: {
-        class: 'artifacts_medium',
-        value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
-        tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
-      },
-      rowExpanded: {
-        getLink: false
+    data: {
+      ...artifact,
+      ui: {
+        ...artifact.ui,
+        identifier: getArtifactIdentifier(artifact),
+        identifierUnique: identifierUnique
       }
     },
-    version: {
-      id: `version.${identifierUnique}`,
-      value: artifact.tag,
-      class: 'artifacts_small',
-      type: 'hidden',
-      hidden: isSelectedItem
-    },
-    kind: {
-      id: `kind.${identifierUnique}`,
-      value: artifact.kind,
-      class: 'artifacts_extra-small',
-      hidden: isSelectedItem
-    },
-    labels: {
-      id: `labels.${identifierUnique}`,
-      value: parseKeyValues(artifact.labels),
-      class: 'artifacts_big',
-      type: 'labels',
-      hidden: isSelectedItem
-    },
-    producer: {
-      id: `producer.${identifierUnique}`,
-      value: artifact.producer || {},
-      class: 'artifacts_small',
-      type: 'producer',
-      hidden: isSelectedItem
-    },
-    owner: {
-      id: `owner.${identifierUnique}`,
-      value: artifact.producer?.owner,
-      class: 'artifacts_small',
-      type: 'owner',
-      hidden: isSelectedItem
-    },
-    updated: {
-      id: `updated.${identifierUnique}`,
-      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    size: {
-      id: `size.${identifierUnique}`,
-      value: artifact.size ? convertBytes(artifact.size) : 'N/A',
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    buttonPopout: {
-      id: `buttonPopout.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonPopout',
-      hidden: isSelectedItem
-    },
-    buttonDownload: {
-      id: `buttonDownload.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonDownload',
-      hidden: isSelectedItem
-    },
-    buttonCopy: {
-      id: `buttonCopy.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonCopyURI',
-      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? 'artifacts')),
-      hidden: isSelectedItem
-    }
+    content: [
+      {
+        id: `key.${identifierUnique}`,
+        header: 'Name',
+        value: artifact.db_key,
+        class: 'artifacts_medium',
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            project,
+            FILES_PAGE,
+            null,
+            artifact.db_key,
+            artifact.tag,
+            tab,
+            artifact.tree,
+            artifact.iter
+          ),
+        expandedCellContent: {
+          class: 'artifacts_medium',
+          value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
+          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
+        },
+        rowExpanded: {
+          getLink: false
+        },
+        showTag: true,
+        showExpandButton
+      },
+      {
+        id: `version.${identifierUnique}`,
+        value: artifact.tag,
+        class: 'artifacts_small',
+        type: 'hidden'
+      },
+      {
+        id: `kind.${identifierUnique}`,
+        header: 'Type',
+        value: artifact.kind,
+        class: 'artifacts_extra-small'
+      },
+      {
+        id: `labels.${identifierUnique}`,
+        header: 'Labels',
+        value: parseKeyValues(artifact.labels),
+        class: 'artifacts_big',
+        type: 'labels'
+      },
+      {
+        id: `producer.${identifierUnique}`,
+        header: 'Producer',
+        value: artifact.producer || {},
+        class: 'artifacts_small',
+        type: 'producer'
+      },
+      {
+        id: `owner.${identifierUnique}`,
+        header: 'Owner',
+        value: artifact.producer?.owner,
+        class: 'artifacts_small',
+        type: 'owner'
+      },
+      {
+        id: `updated.${identifierUnique}`,
+        header: 'Updated',
+        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        class: 'artifacts_small'
+      },
+      {
+        id: `size.${identifierUnique}`,
+        header: 'Size',
+        value: artifact.size ? convertBytes(artifact.size) : 'N/A',
+        class: 'artifacts_small'
+      },
+      {
+        id: `buttonPopout.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonPopout'
+      },
+      {
+        id: `buttonDownload.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonDownload'
+      },
+      {
+        id: `buttonCopy.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonCopyURI',
+        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? 'artifacts'))
+      }
+    ]
   }
 }
 
@@ -331,7 +351,7 @@ const driftStatusIcons = {
   }
 }
 
-const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
+export const createModelEndpointsRowData = (artifact, project) => {
   const { name, tag = '-' } =
     (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)?.groups ?? {}
   const functionUri = artifact.spec?.function_uri
@@ -342,185 +362,200 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
   const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
-    key: {
-      id: `key.${identifierUnique}`,
-      identifier: getArtifactIdentifier(artifact),
-      identifierUnique: identifierUnique,
-      value: name,
-      class: 'artifacts_medium',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          project,
-          MODELS_TAB,
-          MODEL_ENDPOINTS_TAB,
-          name,
-          artifact.metadata?.uid,
-          tab
-        ),
-      showStatus: true,
-      tooltip: artifact.spec?.model_uri ? `${name} - ${artifact.spec?.model_uri}` : name
+    data: {
+      ...artifact,
+      ui: {
+        ...artifact.ui,
+        identifier: getArtifactIdentifier(artifact),
+        identifierUnique: identifierUnique
+      }
     },
-    functionName: {
-      id: `functionName.${identifierUnique}`,
-      value: functionName,
-      class: 'artifacts_small',
-      link: `${generateLinkPath(functionUri)}/overview`,
-      tooltip: functionUri,
-      hidden: isSelectedItem
-    },
-    state: {
-      id: `state.${identifierUnique}`,
-      value: artifact.status?.state,
-      class: 'artifacts_extra-small',
-      type: 'hidden',
-      hidden: isSelectedItem
-    },
-    version: {
-      id: `version.${identifierUnique}`,
-      value: artifact?.status?.children ? 'Router' : tag,
-      class: 'artifacts_extra-small',
-      hidden: isSelectedItem
-    },
-    modelClass: {
-      id: `modelClass.${identifierUnique}`,
-      value: artifact.spec?.model_class,
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    labels: {
-      id: `labels.${identifierUnique}`,
-      value: parseKeyValues(artifact.metadata?.labels),
-      class: 'artifacts_big',
-      type: 'labels',
-      hidden: isSelectedItem
-    },
-    firstRequest: {
-      id: `firstRequest.${identifierUnique}`,
-      value: formatDatetime(new Date(artifact.status?.first_request), '-'),
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    lastRequest: {
-      id: `lastRequest.${identifierUnique}`,
-      value: formatDatetime(new Date(artifact.status?.last_request), '-'),
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    averageLatency: {
-      id: `averageLatency.${identifierUnique}`,
-      value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    errorCount: {
-      id: `errorCount.${identifierUnique}`,
-      value: artifact.status?.error_count ?? '-',
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    driftStatus: {
-      id: `driftStatus.${identifierUnique}`,
-      value: driftStatusIcons[artifact.status?.drift_status]?.value,
-      class: 'artifacts_extra-small',
-      tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip,
-      hidden: isSelectedItem
-    }
+    content: [
+      {
+        id: `key.${identifierUnique}`,
+        header: 'Name',
+        value: name,
+        class: 'artifacts_medium',
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            project,
+            MODELS_TAB,
+            MODEL_ENDPOINTS_TAB,
+            name,
+            artifact.metadata?.uid,
+            tab
+          ),
+        showStatus: true,
+        tooltip: artifact.spec?.model_uri ? `${name} - ${artifact.spec?.model_uri}` : name
+      },
+      {
+        id: `functionName.${identifierUnique}`,
+        header: 'Function',
+        value: functionName,
+        class: 'artifacts_small',
+        link: `${generateLinkPath(functionUri)}/overview`,
+        tooltip: functionUri
+      },
+      {
+        id: `state.${identifierUnique}`,
+        value: artifact.status?.state,
+        class: 'artifacts_extra-small',
+        type: 'hidden'
+      },
+      {
+        id: `version.${identifierUnique}`,
+        header: 'Version',
+        value: artifact?.status?.children ? 'Router' : tag,
+        class: 'artifacts_extra-small'
+      },
+      {
+        id: `modelClass.${identifierUnique}`,
+        header: 'Class',
+        value: artifact.spec?.model_class,
+        class: 'artifacts_small'
+      },
+      {
+        id: `labels.${identifierUnique}`,
+        header: 'Labels',
+        value: parseKeyValues(artifact.metadata?.labels),
+        class: 'artifacts_big',
+        type: 'labels'
+      },
+      {
+        id: `firstRequest.${identifierUnique}`,
+        header: 'Uptime',
+        value: formatDatetime(new Date(artifact.status?.first_request), '-'),
+        class: 'artifacts_small'
+      },
+      {
+        id: `lastRequest.${identifierUnique}`,
+        header: 'Last prediction',
+        value: formatDatetime(new Date(artifact.status?.last_request), '-'),
+        class: 'artifacts_small'
+      },
+      {
+        id: `averageLatency.${identifierUnique}`,
+        header: 'Average latency',
+        value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
+        class: 'artifacts_small'
+      },
+      {
+        id: `errorCount.${identifierUnique}`,
+        header: 'Error count',
+        value: artifact.status?.error_count ?? '-',
+        class: 'artifacts_small'
+      },
+      {
+        id: `driftStatus.${identifierUnique}`,
+        header: 'Drift',
+        value: driftStatusIcons[artifact.status?.drift_status]?.value,
+        class: 'artifacts_extra-small',
+        tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
+      }
+    ]
   }
 }
 
-const createDatasetsRowData = (artifact, project, isSelectedItem) => {
+export const createDatasetsRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
   const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
-    key: {
-      id: `key.${identifierUnique}`,
-      identifier: getArtifactIdentifier(artifact),
-      identifierUnique: identifierUnique,
-      value: artifact.db_key,
-      class: 'artifacts_medium',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          project,
-          DATASETS_PAGE,
-          null,
-          artifact.db_key,
-          artifact.tag,
-          tab,
-          artifact.tree,
-          artifact.iter
-        ),
-      expandedCellContent: {
-        class: 'artifacts_medium',
-        value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
-        tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
-      },
-      rowExpanded: {
-        getLink: false
+    data: {
+      ...artifact,
+      ui: {
+        ...artifact.ui,
+        identifier: getArtifactIdentifier(artifact),
+        identifierUnique: identifierUnique
       }
     },
-    labels: {
-      id: `labels.${identifierUnique}`,
-      value: parseKeyValues(artifact.labels),
-      class: 'artifacts_big',
-      type: 'labels',
-      hidden: isSelectedItem
-    },
-    producer: {
-      id: `producer.${identifierUnique}`,
-      value: artifact.producer,
-      class: 'artifacts_small',
-      type: 'producer',
-      hidden: isSelectedItem
-    },
-    owner: {
-      id: `owner.${identifierUnique}`,
-      value: artifact.producer?.owner,
-      class: 'artifacts_small',
-      type: 'owner',
-      hidden: isSelectedItem
-    },
-    updated: {
-      id: `updated.${identifierUnique}`,
-      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    size: {
-      id: `size.${identifierUnique}`,
-      value: convertBytes(artifact.size || 0),
-      class: 'artifacts_small',
-      hidden: isSelectedItem
-    },
-    version: {
-      id: `version.${identifierUnique}`,
-      value: artifact.tag,
-      class: 'artifacts_small',
-      type: 'hidden',
-      hidden: isSelectedItem
-    },
-    buttonPopout: {
-      id: `buttonPopout.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonPopout',
-      hidden: isSelectedItem
-    },
-    buttonDownload: {
-      id: `buttonDownload.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonDownload',
-      hidden: isSelectedItem
-    },
-    buttonCopy: {
-      id: `buttonCopy.${identifierUnique}`,
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonCopyURI',
-      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? DATASETS)),
-      hidden: isSelectedItem
-    }
+    content: [
+      {
+        id: `key.${identifierUnique}`,
+        header: 'Name',
+        value: artifact.db_key,
+        class: 'artifacts_medium',
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            project,
+            DATASETS_PAGE,
+            null,
+            artifact.db_key,
+            artifact.tag,
+            tab,
+            artifact.tree,
+            artifact.iter
+          ),
+        expandedCellContent: {
+          class: 'artifacts_medium',
+          value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
+          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
+        },
+        rowExpanded: {
+          getLink: false
+        },
+        showTag: true,
+        showExpandButton
+      },
+      {
+        id: `labels.${identifierUnique}`,
+        header: 'Labels',
+        value: parseKeyValues(artifact.labels),
+        class: 'artifacts_big',
+        type: 'labels'
+      },
+      {
+        id: `producer.${identifierUnique}`,
+        header: 'Producer',
+        value: artifact.producer,
+        class: 'artifacts_small',
+        type: 'producer'
+      },
+      {
+        id: `owner.${identifierUnique}`,
+        header: 'Owner',
+        value: artifact.producer?.owner,
+        class: 'artifacts_small',
+        type: 'owner'
+      },
+      {
+        id: `updated.${identifierUnique}`,
+        header: 'Updated',
+        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        class: 'artifacts_small'
+      },
+      {
+        id: `size.${identifierUnique}`,
+        header: 'Size',
+        value: convertBytes(artifact.size || 0),
+        class: 'artifacts_small'
+      },
+      {
+        id: `version.${identifierUnique}`,
+        value: artifact.tag,
+        class: 'artifacts_small',
+        type: 'hidden'
+      },
+      {
+        id: `buttonPopout.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonPopout'
+      },
+      {
+        id: `buttonDownload.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonDownload'
+      },
+      {
+        id: `buttonCopy.${identifierUnique}`,
+        value: '',
+        class: 'artifacts_extra-small artifacts__icon',
+        type: 'buttonCopyURI',
+        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? DATASETS))
+      }
+    ]
   }
 }
 

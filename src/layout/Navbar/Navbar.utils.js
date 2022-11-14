@@ -42,8 +42,9 @@ export const getLinks = (projectName, isDemoMode) => {
       icon: <DashboardIcon />,
       id: 'home',
       label: 'Project home',
-      link: `${pathname}/`,
-      hidden: !isDemoMode
+      link: `${pathname}`,
+      hidden: !isDemoMode,
+      end: true
     },
     {
       icon: <EyeIcon />,

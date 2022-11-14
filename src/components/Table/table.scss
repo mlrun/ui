@@ -134,6 +134,7 @@
     z-index: 2;
     display: flex;
     background-color: $white;
+    border-bottom: $secondaryBorder;
 
     &__item {
       @include tableDet;
@@ -177,6 +178,14 @@
       font-weight: 400;
       font-size: 15px;
       line-height: 18px;
+      border-bottom: none;
+
+      &_hidden {
+        visibility: hidden;
+        .chip {
+          visibility: hidden;
+        }
+      }
 
       .cell_name {
         position: relative;
@@ -246,6 +255,7 @@
       display: flex;
       flex-direction: row;
       min-height: 50px;
+      border-bottom: $secondaryBorder;
 
       &.parent-row {
         &:not(.parent-row-expanded) {
@@ -297,6 +307,10 @@
                   transform: rotate(90deg);
                 }
               }
+            }
+
+            &:last-child {
+              border-bottom: none;
             }
 
             &__cell {

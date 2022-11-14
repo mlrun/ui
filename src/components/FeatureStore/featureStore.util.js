@@ -28,16 +28,6 @@ import {
 } from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
-// export const featureVectorsInfoHeaders = [
-//   { label: 'Description', id: 'description' },
-//   { label: 'Labels', id: 'labels' },
-//   { label: 'Version', id: 'tag' },
-//   { label: 'URI', id: 'target_uri' },
-//   { label: 'Last updated', id: 'updated' },
-//   { label: 'Entities', id: 'entities' },
-//   { label: 'Label column', id: 'label_column' },
-//   { label: 'Usage example', id: 'usage_example' }
-// ]
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
 
@@ -59,8 +49,7 @@ export const handleApplyDetailsChanges = (
   filters
 ) => {
   const data = {
-    metadata: {},
-    spec: {}
+    ...selectedItem.ui.originalContent
   }
   const metadataFields = ['labels']
 
@@ -72,7 +61,7 @@ export const handleApplyDetailsChanges = (
     }
   })
 
-  if (data.metadata.labels) {
+  if (data.metadata.labels && Array.isArray(data.metadata.labels)) {
     const objectLabels = {}
 
     data.metadata.labels.forEach(label => {

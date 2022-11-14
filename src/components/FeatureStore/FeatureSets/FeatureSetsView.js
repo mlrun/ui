@@ -53,6 +53,7 @@ const FeatureSetsView = React.forwardRef(
     ref
   ) => {
     const params = useParams()
+
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar">
@@ -69,8 +70,8 @@ const FeatureSetsView = React.forwardRef(
             message={getNoDataMessage(
               filtersStore,
               featureSetsFilters,
-              FEATURE_SETS_TAB,
-              FEATURE_STORE_PAGE
+              FEATURE_STORE_PAGE,
+              FEATURE_SETS_TAB
             )}
           />
         ) : (
