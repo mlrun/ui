@@ -144,26 +144,12 @@ export const fetchDataSetRowData = async (
 
 export const handleApplyDetailsChanges = (
   changes,
-  fetchData,
   projectName,
-  itemName,
   selectedItem,
   setNotification,
-  filters,
-  updateArtifact,
   dispatch
 ) => {
-  const updateTagPromise = applyTagChanges(
-    changes,
-    selectedItem,
-    projectName,
-    dispatch,
-    setNotification
-  )
-
-  return updateTagPromise.then(() => {
-    return fetchData(filters)
-  })
+  return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
 }
 
 export const checkForSelectedDataset = (

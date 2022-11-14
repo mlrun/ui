@@ -164,12 +164,9 @@ export const getFeatureVectorData = uri => {
 
 export const handleApplyDetailsChanges = (
   changes,
-  fetchData,
   projectName,
-  itemName,
   selectedItem,
   setNotification,
-  filters,
   updateArtifact,
   dispatch
 ) => {

@@ -91,15 +91,26 @@ const Datasets = ({
     [fetchDataSets, params.projectName]
   )
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName)
+      setSelectedRowData({})
+      setDatasets([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -117,40 +128,17 @@ const Datasets = ({
     [handleAddTag, toggleConvertedYaml]
   )
 
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedRowData({})
-      setDatasets([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
-  )
-
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedDataset,
         setNotification,
-        filtersStore,
-        null,
         dispatch
       )
     },
-    [
-      dispatch,
-      handleRefresh,
-      filtersStore,
-      params.name,
-      params.projectName,
-      selectedDataset,
-      setNotification
-    ]
+    [dispatch, params.projectName, selectedDataset, setNotification]
   )
 
   const applyDetailsChangesCallback = changes => {

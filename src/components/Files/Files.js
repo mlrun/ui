@@ -91,15 +91,26 @@ const Files = ({
     [fetchFiles, params.projectName]
   )
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName)
+      setSelectedRowData({})
+      setFiles([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -115,17 +126,6 @@ const Files = ({
       }
     ],
     [handleAddTag, toggleConvertedYaml]
-  )
-
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedRowData({})
-      setFiles([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -178,25 +178,13 @@ const Files = ({
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedFile,
         setNotification,
-        filtersStore,
-        null,
         dispatch
       )
     },
-    [
-      dispatch,
-      handleRefresh,
-      filtersStore,
-      params.name,
-      params.projectName,
-      selectedFile,
-      setNotification
-    ]
+    [dispatch, params.projectName, selectedFile, setNotification]
   )
 
   const applyDetailsChangesCallback = changes => {
