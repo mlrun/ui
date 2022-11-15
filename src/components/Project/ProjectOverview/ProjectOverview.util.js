@@ -332,7 +332,7 @@ export const getInitialCards = (projectName, navigate) => {
           icon: <RTFunctionIcon />,
           label: 'Create RT function',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/functions`),
+            path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
           }),
           tooltip: ''
