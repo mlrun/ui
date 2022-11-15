@@ -18,7 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { mainHttpClient } from '../httpClient'
-import { SHOW_ITERATIONS, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
+import {
+  ARTIFACT_OTHER_TYPE,
+  DATASET_TYPE,
+  MODEL_TYPE,
+  SHOW_ITERATIONS,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
+} from '../constants'
 
 const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
   const params = {}
@@ -66,7 +73,12 @@ const artifactsApi = {
 
     return mainHttpClient.get('/files', config)
   },
-  getArtifactTag: project => mainHttpClient.get(`/projects/${project}/artifact-tags`),
+  getArtifactTag: (project, category) =>
+    mainHttpClient.get(`/projects/${project}/artifact-tags`, {
+      params: {
+        category
+      }
+    }),
   getArtifact: (project, artifact) => {
     return mainHttpClient.get(`/projects/${project}/artifacts?name=${artifact}`)
   },
@@ -79,7 +91,7 @@ const artifactsApi = {
       {},
       {
         params: {
-          category: 'dataset',
+          category: DATASET_TYPE,
           name: dataSet,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
           'best-iteration': Boolean(iter)
@@ -88,7 +100,7 @@ const artifactsApi = {
     )
   },
   getDataSets: (project, filters, config) => {
-    return fetchArtifacts(project, filters, { ...config, params: { category: 'dataset' } }, true)
+    return fetchArtifacts(project, filters, { ...config, params: { category: DATASET_TYPE } }, true)
   },
   getFile: (project, file, tag, iter) => {
     return fetchArtifacts(
@@ -96,7 +108,7 @@ const artifactsApi = {
       {},
       {
         params: {
-          category: 'other',
+          category: ARTIFACT_OTHER_TYPE,
           name: file,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
           'best-iteration': Boolean(iter)
@@ -105,7 +117,12 @@ const artifactsApi = {
     )
   },
   getFiles: (project, filters) => {
-    return fetchArtifacts(project, filters, { params: { category: 'other', format: 'full' } }, true)
+    return fetchArtifacts(
+      project,
+      filters,
+      { params: { category: ARTIFACT_OTHER_TYPE, format: 'full' } },
+      true
+    )
   },
   getModel: (project, model, tag, iter) => {
     return fetchArtifacts(
@@ -113,7 +130,7 @@ const artifactsApi = {
       {},
       {
         params: {
-          category: 'model',
+          category: MODEL_TYPE,
           name: model,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
           'best-iteration': Boolean(iter)
@@ -131,7 +148,12 @@ const artifactsApi = {
     })
   },
   getModels: (project, filters) => {
-    return fetchArtifacts(project, filters, { params: { category: 'model', format: 'full' } }, true)
+    return fetchArtifacts(
+      project,
+      filters,
+      { params: { category: MODEL_TYPE, format: 'full' } },
+      true
+    )
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(

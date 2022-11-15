@@ -25,8 +25,8 @@ import {
 } from '../constants'
 
 const filtersActions = {
-  getFilterTagOptions: (fetchTagOption, projectName) => dispatch => {
-    return fetchTagOption(projectName).then(({ data }) =>
+  getFilterTagOptions: (fetchTagOption, projectName, category) => dispatch => {
+    return fetchTagOption(projectName, category).then(({ data }) =>
       dispatch(filtersActions.setFilterTagOptions([...new Set(data.tags)]))
     )
   },
@@ -37,10 +37,14 @@ const filtersActions = {
     type: SET_FILTERS,
     payload: filters
   }),
-  setFilterTagOptions: options => ({
-    type: SET_FILTER_TAG_OPTIONS,
-    payload: options
-  }),
+  setFilterTagOptions: options => {
+    const filteredOptions = options.filter(option => option)
+
+    return {
+      type: SET_FILTER_TAG_OPTIONS,
+      payload: filteredOptions
+    }
+  },
   setFilterProjectOptions: options => ({
     type: SET_FILTER_PROJECT_OPTIONS,
     payload: options
