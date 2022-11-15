@@ -92,6 +92,17 @@ const Datasets = ({
     [fetchDataSets, params.projectName]
   )
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, DATASET_TYPE)
+      setSelectedRowData({})
+      setDatasets([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
@@ -116,17 +127,6 @@ const Datasets = ({
       }
     ],
     [handleAddTag, toggleConvertedYaml]
-  )
-
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName, DATASET_TYPE)
-      setSelectedRowData({})
-      setDatasets([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
   )
 
   const applyDetailsChanges = useCallback(

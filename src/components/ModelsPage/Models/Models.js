@@ -87,6 +87,17 @@ const Models = ({
     openPopUp(DeployModelPopUp, { model })
   }, [])
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, MODEL_TYPE)
+      setSelectedRowData({})
+      setModels([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName, setModels]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
@@ -145,17 +156,6 @@ const Models = ({
       )
     },
     [fetchModel, filtersStore.iter, filtersStore.tag, params.projectName]
-  )
-
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName, MODEL_TYPE)
-      setSelectedRowData({})
-      setModels([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName, setModels]
   )
 
   const applyDetailsChanges = useCallback(

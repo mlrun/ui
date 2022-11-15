@@ -92,6 +92,17 @@ const Files = ({
     [fetchFiles, params.projectName]
   )
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, ARTIFACT_OTHER_TYPE)
+      setSelectedRowData({})
+      setFiles([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
@@ -116,17 +127,6 @@ const Files = ({
       }
     ],
     [handleAddTag, toggleConvertedYaml]
-  )
-
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName, ARTIFACT_OTHER_TYPE)
-      setSelectedRowData({})
-      setFiles([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
