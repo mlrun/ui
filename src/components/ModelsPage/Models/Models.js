@@ -91,11 +91,11 @@ const Models = ({
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -162,26 +162,14 @@ const Models = ({
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedModel,
         setNotification,
-        filtersStore,
         updateArtifact,
         dispatch
       )
     },
-    [
-      handleRefresh,
-      params.projectName,
-      params.name,
-      selectedModel,
-      setNotification,
-      filtersStore,
-      updateArtifact,
-      dispatch
-    ]
+    [params.projectName, selectedModel, setNotification, updateArtifact, dispatch]
   )
 
   const applyDetailsChangesCallback = changes => {
