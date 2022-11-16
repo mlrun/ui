@@ -26,6 +26,7 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import FilesView from './FilesView'
 
 import {
+  ARTIFACT_OTHER_TYPE,
   FILES_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -63,7 +64,7 @@ const Files = ({
   removeFiles,
   setFilters
 }) => {
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, ARTIFACT_OTHER_TYPE)
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
@@ -93,7 +94,7 @@ const Files = ({
 
   const handleRefresh = useCallback(
     filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
+      getFilterTagOptions(fetchArtifactTags, params.projectName, ARTIFACT_OTHER_TYPE)
       setSelectedRowData({})
       setFiles([])
 

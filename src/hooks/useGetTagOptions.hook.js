@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import filtersActions from '../actions/filters'
 import { TAG_FILTER, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
 
-export const useGetTagOptions = (fetchTags, filters) => {
+export const useGetTagOptions = (fetchTags, filters, category) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
   const { projectName, tag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
@@ -40,7 +40,7 @@ export const useGetTagOptions = (fetchTags, filters) => {
         setUrlTagOption(TAG_FILTER_LATEST)
       }
 
-      fetchTags(projectName).then(({ data }) => {
+      fetchTags(projectName, category).then(({ data }) => {
         dispatch(filtersActions.setFilterTagOptions([...new Set(data.tags)]))
 
         if (tag) {
