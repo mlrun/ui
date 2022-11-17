@@ -27,6 +27,7 @@ import {
   FEATURE_VECTORS_TAB
 } from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { truncateUid } from '../../utils'
 
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
@@ -84,6 +85,17 @@ export const handleApplyDetailsChanges = (
 
         return response
       })
+    })
+    .then(response => {
+      if (!selectedItem.tag) {
+        setNotification({
+          status: response.status,
+          id: Math.random(),
+          message: `${truncateUid(selectedItem.uid)} updated to latest`
+        })
+      }
+
+      return response
     })
     .catch(error => {
       setNotification({
