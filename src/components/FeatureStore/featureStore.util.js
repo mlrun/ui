@@ -24,7 +24,8 @@ import {
   DETAILS_STATISTICS_TAB,
   FEATURES_TAB,
   FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB
+  FEATURE_VECTORS_TAB,
+  TAG_LATEST
 } from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { truncateUid } from '../../utils'
@@ -74,7 +75,13 @@ export const handleApplyDetailsChanges = (
     data.metadata.labels = { ...objectLabels }
   }
 
-  return updateFeatureStoreData(projectName, itemName, selectedItem.tag, data, pageTab)
+  return updateFeatureStoreData(
+    projectName,
+    itemName,
+    selectedItem.tag || TAG_LATEST,
+    data,
+    pageTab
+  )
     .then(response => {
       return fetchData(filters).then(() => {
         setNotification({

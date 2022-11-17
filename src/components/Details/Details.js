@@ -278,7 +278,7 @@ const Details = ({
       resetChanges()
       unblockHistory()
       setHistoryIsBlocked(false)
-      applyDetailsChangesCallback(detailsStore.changes)
+      applyDetailsChangesCallback(detailsStore.changes, selectedItem)
     })
   }
 

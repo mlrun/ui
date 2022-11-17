@@ -164,35 +164,40 @@ export const getFeatureVectorData = uri => {
 
 export const handleApplyDetailsChanges = (
   changes,
-  fetchData,
   projectName,
-  itemName,
   selectedItem,
   setNotification,
-  filters,
   updateArtifact,
   dispatch
 ) => {
   const isNewFormat =
     selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
-  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui']))
+  const artifactItem = cloneDeep(
+    isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui'])
+  )
   let updateArtifactPromise = Promise.resolve()
-  let updateTagPromise = applyTagChanges(changes, data, projectName, dispatch, setNotification)
+
+  let updateTagPromise = applyTagChanges(
+    changes,
+    selectedItem,
+    projectName,
+    dispatch,
+    setNotification
+  )
 
   if (!isEmpty(omit(changes.data, ['tag']))) {
     Object.keys(changes.data).forEach(key => {
       if (key === 'labels') {
         isNewFormat
-          ? (data.metadata[key] = changes.data[key].previousFieldValue)
-          : (data[key] = changes.data[key].previousFieldValue)
+          ? (artifactItem.metadata[key] = changes.data[key].previousFieldValue)
+          : (artifactItem[key] = changes.data[key].previousFieldValue)
       }
     })
 
-    const labels = data.metadata?.labels || data.labels
+    const labels = artifactItem.metadata?.labels || artifactItem.labels
 
     if (labels && Array.isArray(labels)) {
       const objectLabels = {}
-      const labels = isNewFormat ? data.metadata.labels : data.labels
 
       labels.forEach(label => {
         const splitedLabel = label.split(':')
@@ -201,11 +206,11 @@ export const handleApplyDetailsChanges = (
       })
 
       isNewFormat
-        ? (data.metadata.labels = { ...objectLabels })
-        : (data.labels = { ...objectLabels })
+        ? (artifactItem.metadata.labels = { ...objectLabels })
+        : (artifactItem.labels = { ...objectLabels })
     }
 
-    updateArtifactPromise = updateArtifact(projectName, data)
+    updateArtifactPromise = updateArtifact(projectName, artifactItem)
       .then(response => {
         setNotification({
           status: response.status,
@@ -221,7 +226,7 @@ export const handleApplyDetailsChanges = (
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'Permission denied'
               : 'Failed to update the model',
-          retry: handleApplyDetailsChanges
+          retry: () => updateArtifact(projectName, artifactItem)
         })
       })
   }

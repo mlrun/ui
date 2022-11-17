@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, omit } from 'lodash'
 
 import { applyTagChanges } from '../../utils/artifacts.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
@@ -145,24 +144,12 @@ export const fetchDataSetRowData = async (
 
 export const handleApplyDetailsChanges = (
   changes,
-  fetchData,
   projectName,
-  itemName,
   selectedItem,
   setNotification,
-  filters,
-  updateArtifact,
   dispatch
 ) => {
-  const isNewFormat =
-    selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
-  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui']))
-
-  const updateTagPromise = applyTagChanges(changes, data, projectName, dispatch, setNotification)
-
-  return updateTagPromise.then(() => {
-    return fetchData(filters)
-  })
+  return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
 }
 
 export const checkForSelectedDataset = (

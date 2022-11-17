@@ -34,6 +34,7 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  MODEL_TYPE,
   MODELS_PAGE,
   MODELS_TAB,
   SHOW_ITERATIONS,
@@ -70,7 +71,7 @@ const Models = ({
 }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -86,15 +87,26 @@ const Models = ({
     openPopUp(DeployModelPopUp, { model })
   }, [])
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, MODEL_TYPE)
+      setSelectedRowData({})
+      setModels([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName, setModels]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -146,41 +158,18 @@ const Models = ({
     [fetchModel, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedRowData({})
-      setModels([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName, setModels]
-  )
-
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedModel,
         setNotification,
-        filtersStore,
         updateArtifact,
         dispatch
       )
     },
-    [
-      handleRefresh,
-      params.projectName,
-      params.name,
-      selectedModel,
-      setNotification,
-      filtersStore,
-      updateArtifact,
-      dispatch
-    ]
+    [params.projectName, selectedModel, setNotification, updateArtifact, dispatch]
   )
 
   const applyDetailsChangesCallback = changes => {

@@ -39,6 +39,7 @@ import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
+  DATASET_TYPE,
   DATASETS_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -71,7 +72,7 @@ const Datasets = ({
   const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, DATASET_TYPE)
   const pageData = useMemo(() => generatePageData(selectedDataset), [selectedDataset])
   const params = useParams()
   const navigate = useNavigate()
@@ -91,15 +92,26 @@ const Datasets = ({
     [fetchDataSets, params.projectName]
   )
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, DATASET_TYPE)
+      setSelectedRowData({})
+      setDatasets([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -117,40 +129,17 @@ const Datasets = ({
     [handleAddTag, toggleConvertedYaml]
   )
 
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedRowData({})
-      setDatasets([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
-  )
-
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedDataset,
         setNotification,
-        filtersStore,
-        null,
         dispatch
       )
     },
-    [
-      dispatch,
-      handleRefresh,
-      filtersStore,
-      params.name,
-      params.projectName,
-      selectedDataset,
-      setNotification
-    ]
+    [dispatch, params.projectName, selectedDataset, setNotification]
   )
 
   const applyDetailsChangesCallback = changes => {

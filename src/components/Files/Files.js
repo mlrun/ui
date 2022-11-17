@@ -26,6 +26,7 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import FilesView from './FilesView'
 
 import {
+  ARTIFACT_OTHER_TYPE,
   FILES_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -63,7 +64,7 @@ const Files = ({
   removeFiles,
   setFilters
 }) => {
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, ARTIFACT_OTHER_TYPE)
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
@@ -91,15 +92,26 @@ const Files = ({
     [fetchFiles, params.projectName]
   )
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, ARTIFACT_OTHER_TYPE)
+      setSelectedRowData({})
+      setFiles([])
+
+      return fetchData(filters)
+    },
+    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -115,17 +127,6 @@ const Files = ({
       }
     ],
     [handleAddTag, toggleConvertedYaml]
-  )
-
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedRowData({})
-      setFiles([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -178,25 +179,13 @@ const Files = ({
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedFile,
         setNotification,
-        filtersStore,
-        null,
         dispatch
       )
     },
-    [
-      dispatch,
-      handleRefresh,
-      filtersStore,
-      params.name,
-      params.projectName,
-      selectedFile,
-      setNotification
-    ]
+    [dispatch, params.projectName, selectedFile, setNotification]
   )
 
   const applyDetailsChangesCallback = changes => {

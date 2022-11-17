@@ -27,11 +27,13 @@ import FeatureSetsView from './FeatureSetsView'
 
 import { featureSetsActionCreator, featureSetsFilters, generatePageData } from './featureSets.util'
 import {
+  DETAILS_OVERVIEW_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  TAG_LATEST
 } from '../../../constants'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
@@ -215,6 +217,14 @@ const FeatureSets = ({
     ]
   )
 
+  const applyDetailsChangesCallback = (changes, selectedItem) => {
+    if (!selectedItem.tag) {
+      navigate(
+        `/projects/${params.projectName}/${FEATURE_STORE_PAGE}/${FEATURE_SETS_TAB}/${selectedItem.name}/${TAG_LATEST}/${DETAILS_OVERVIEW_TAB}`
+      )
+    }
+  }
+
   const createFeatureSetSuccess = tag => {
     const currentTag = filtersStore.tag === TAG_FILTER_ALL_ITEMS ? TAG_FILTER_ALL_ITEMS : tag
 
@@ -316,6 +326,7 @@ const FeatureSets = ({
     <FeatureSetsView
       actionsMenu={actionsMenu}
       applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
       closePanel={closePanel}
       createFeatureSetSuccess={createFeatureSetSuccess}
       featureSets={featureSets}
