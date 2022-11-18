@@ -32,6 +32,8 @@ import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
 import { ReactComponent as SettingsIcon } from 'igz-controls/images/pref-icon.svg'
 
+import { NAVBAR_WIDTH } from '../../constants'
+
 import './Navbar.scss'
 
 const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned }) => {
@@ -50,16 +52,20 @@ const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned 
     }
   }, [projectName, isDemoMode])
 
+  const navbarStyles = { flex: `1, 0, ${NAVBAR_WIDTH}px`,
+                         width: `${NAVBAR_WIDTH}px`,
+                         maxWidth: `${NAVBAR_WIDTH}px`}
+
   const handlePinClick = () => {
     setIsNavbarPinned(!isNavbarPinned)
     localStorageService.setStorageValue('mlrunUi.navbarStatic', !isNavbarPinned)
   }
 
   return (
-    <nav className={navbarClasses}>
+    <nav className={navbarClasses} style={navbarStyles}>
       <div className="navbar__toggler">
         <button className="navbar__toggler-button">
-          <span className="navbar__toggler-icon"></span>
+          <span className="navbar__toggler-icon" />
         </button>
       </div>
       <div className="navbar__body">

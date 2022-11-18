@@ -28,6 +28,8 @@ import { getTransitionEndEventName } from '../../utils/getTransitionEndEventName
 
 import { fetchFrontendSpec } from '../../reducers/appReducer'
 
+import { NAVBAR_WIDTH } from '../../constants'
+
 import './Page.scss'
 
 const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
@@ -40,9 +42,11 @@ const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
   const transitionEndEventName = getTransitionEndEventName()
 
   const pinnedClasses = classNames(
-    isNavbarPinned && projectName ? 'pinned' : 'unpinned',
+    !(isNavbarPinned && projectName) && 'unpinned',
     isHeaderShown && 'has-header'
   )
+
+  const pinnedStyles = isNavbarPinned && projectName ? {marginLeft: `${NAVBAR_WIDTH}px`} : {}
 
   useEffect(() => {
     setProjectName(projectName)
@@ -67,7 +71,7 @@ const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
 
   return (
     <>
-      <main id="main" className={pinnedClasses} ref={mainRef}>
+      <main id="main" className={pinnedClasses} ref={mainRef} style={pinnedStyles}>
         <div id="main-wrapper">
           <Outlet />
         </div>
