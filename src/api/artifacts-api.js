@@ -85,7 +85,7 @@ const artifactsApi = {
   getArtifacts: (project, filters) => {
     return fetchArtifacts(project, filters)
   },
-  getDataSet: (project, dataSet, tag, iter) => {
+  getDataSet: (project, dataSet, iter, tag) => {
     return fetchArtifacts(
       project,
       {},
@@ -102,7 +102,7 @@ const artifactsApi = {
   getDataSets: (project, filters, config) => {
     return fetchArtifacts(project, filters, { ...config, params: { category: DATASET_TYPE } }, true)
   },
-  getFile: (project, file, tag, iter) => {
+  getFile: (project, file, iter, tag) => {
     return fetchArtifacts(
       project,
       {},
@@ -124,7 +124,7 @@ const artifactsApi = {
       true
     )
   },
-  getModel: (project, model, tag, iter) => {
+  getModel: (project, model, iter, tag) => {
     return fetchArtifacts(
       project,
       {},

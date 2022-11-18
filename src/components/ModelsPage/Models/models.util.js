@@ -89,7 +89,7 @@ export const fetchModelsRowData = async (
     }
   }))
 
-  fetchModel(model.project, model, iter, tag)
+  fetchModel(model.project, model.db_key, iter, tag)
     .then(result => {
       if (result?.length > 0) {
         setSelectedRowData(state => {

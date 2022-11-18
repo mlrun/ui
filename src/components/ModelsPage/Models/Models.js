@@ -103,6 +103,7 @@ const Models = ({
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
+        onInit: () => fetchModel(params.projectName, artifact.db_key, true, TAG_FILTER_ALL_ITEMS),
         projectName: params.projectName
       })
     },

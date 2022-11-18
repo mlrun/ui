@@ -132,7 +132,7 @@ const artifactsAction = {
   fetchArtifactTags: (project, category) => () => artifactsApi.getArtifactTag(project, category),
   fetchDataSet: (project, dataSet, iter, tag) => dispatch => {
     return artifactsApi
-      .getDataSet(project, dataSet, tag, iter)
+      .getDataSet(project, dataSet, iter, tag)
       .then(response => {
         const result = parseArtifacts(response.data.artifacts)
         const generatedArtifacts = generateArtifacts(
@@ -190,7 +190,7 @@ const artifactsAction = {
   }),
   fetchFile: (project, file, iter, tag) => dispatch => {
     return artifactsApi
-      .getFile(project, file, tag)
+      .getFile(project, file, iter, tag)
       .then(response => {
         const result = parseArtifacts(response.data.artifacts)
         const generatedArtifacts = generateArtifacts(
@@ -304,7 +304,7 @@ const artifactsAction = {
   }),
   fetchModel: (project, model, iter, tag) => dispatch => {
     return artifactsApi
-      .getModel(project, model.db_key, tag, iter)
+      .getModel(project, model, iter, tag)
       .then(response => {
         const result = parseArtifacts(response.data.artifacts)
         const generatedArtifacts = generateArtifacts(

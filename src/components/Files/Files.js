@@ -108,6 +108,7 @@ const Files = ({
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
+        onInit: () => fetchFile(params.projectName, artifact.db_key, true, TAG_FILTER_ALL_ITEMS),
         projectName: params.projectName
       })
     },
