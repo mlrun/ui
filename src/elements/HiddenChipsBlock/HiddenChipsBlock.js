@@ -28,7 +28,6 @@ import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import { getFirstScrollableParent } from '../../utils/getFirstScrollableParent'
 import localStorageService from '../../utils/localStorageService'
 import { CHIP_OPTIONS, CHIPS } from '../../types'
-
 import { NAVBAR_WIDTH } from '../../constants'
 
 import './hiddenChipsBlock.scss'
