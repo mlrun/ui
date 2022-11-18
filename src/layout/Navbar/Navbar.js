@@ -37,12 +37,14 @@ import './Navbar.scss'
 
 const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned }) => {
   const { isDemoMode } = useMode()
-
   const navbarClasses = classNames(
     'navbar',
     isNavbarPinned && 'pinned',
     isHeaderShown && 'has-header'
   )
+  const navbarStyles = { flex: `1, 0, ${NAVBAR_WIDTH}px`,
+    width: `${NAVBAR_WIDTH}px`,
+    maxWidth: `${NAVBAR_WIDTH}px`}
 
   const { links } = useMemo(() => {
     let links = projectName ? getLinks(projectName, isDemoMode) : []
@@ -50,10 +52,6 @@ const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned 
       links
     }
   }, [projectName, isDemoMode])
-
-  const navbarStyles = { flex: `1, 0, ${NAVBAR_WIDTH}px`,
-                         width: `${NAVBAR_WIDTH}px`,
-                         maxWidth: `${NAVBAR_WIDTH}px`}
 
   const handlePinClick = () => {
     setIsNavbarPinned(!isNavbarPinned)

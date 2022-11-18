@@ -34,16 +34,12 @@ const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
   const params = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
-
   const projectName = params.projectName
-
   const transitionEndEventName = getTransitionEndEventName()
-
   const pinnedClasses = classNames(
     !(isNavbarPinned && projectName) && 'unpinned',
     isHeaderShown && 'has-header'
   )
-
   const mainStyles = {marginLeft: isNavbarPinned && projectName ? `${NAVBAR_WIDTH}px` : 0}
 
   useEffect(() => {
