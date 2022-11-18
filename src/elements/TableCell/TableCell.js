@@ -33,9 +33,9 @@ import { ReactComponent as ArtifactView } from 'igz-controls/images/eye.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
-import artifactAction from '../../actions/artifacts'
 import { truncateUid } from '../../utils'
 import { getChipOptions } from '../../utils/getChipOptions'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 
 const TableCell = ({
   className,
@@ -116,7 +116,7 @@ const TableCell = ({
         <button
           onClick={() => {
             dispatch(
-              artifactAction.showArtifactsPreview({
+              showArtifactsPreview({
                 isPreview: true,
                 selectedItem: item
               })

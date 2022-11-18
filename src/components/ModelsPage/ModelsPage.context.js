@@ -22,7 +22,7 @@ import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import { useYaml } from '../../hooks/yaml.hook'
-import artifactsAction from '../../actions/artifacts'
+import { fetchModels } from '../../reducers/artifactsReducer'
 
 export const ModelsPageContext = React.createContext({})
 
@@ -34,13 +34,15 @@ export const ModelsPageProvider = ({ children }) => {
 
   const fetchData = useCallback(
     async filters => {
-      return dispatch(artifactsAction.fetchModels(params.projectName, filters)).then(result => {
-        if (result) {
-          setModels(result)
-        }
+      return dispatch(fetchModels({ project: params.projectName, filters: filters }))
+        .unwrap()
+        .then(result => {
+          if (result) {
+            setModels(result)
+          }
 
-        return result
-      })
+          return result
+        })
     },
     [dispatch, setModels, params.projectName]
   )

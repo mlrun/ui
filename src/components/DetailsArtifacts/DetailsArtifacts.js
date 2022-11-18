@@ -24,10 +24,10 @@ import { useParams } from 'react-router-dom'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
 
-import artifactAction from '../../actions/artifacts'
 import jobsActions from '../../actions/jobs'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import { generateContent, getJobAccordingIteration } from './detailsArtifacts.util'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 
 const DetailsArtifacts = ({
   fetchJob,
@@ -120,7 +120,7 @@ const DetailsArtifacts = ({
 
   const showPreview = artifact => {
     dispatch(
-      artifactAction.showArtifactsPreview({
+      showArtifactsPreview({
         isPreview: true,
         selectedItem: artifact
       })

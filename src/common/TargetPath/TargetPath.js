@@ -38,10 +38,10 @@ import {
   pathTips,
   targetPathInitialState
 } from './targetPath.util'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import projectAction from '../../actions/projects'
-import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
+import projectAction from '../../actions/projects'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getFeatureReference } from '../../utils/resources'
 
 const TargetPath = ({
@@ -143,12 +143,14 @@ const TargetPath = ({
       dataInputState.project
     ) {
       if (dataInputState.storePathType === 'artifacts' && dataInputState.artifacts.length === 0) {
-        dispatch(artifactsAction.fetchArtifacts(dataInputState.project)).then(artifacts => {
-          setDataInputState(prev => ({
-            ...prev,
-            artifacts: generateArtifactsList(artifacts)
-          }))
-        })
+        dispatch(fetchArtifacts({ project: dataInputState.project }))
+          .unwrap()
+          .then(artifacts => {
+            setDataInputState(prev => ({
+              ...prev,
+              artifacts: generateArtifactsList(artifacts)
+            }))
+          })
       } else if (
         dataInputState.storePathType === 'feature-vectors' &&
         dataInputState.featureVectors.length === 0
@@ -189,14 +191,16 @@ const TargetPath = ({
 
     if (dataInputState.inputProjectItemPathEntered && storePathType && projectName && projectItem) {
       if (storePathType === 'artifacts' && dataInputState.artifactsReferences.length === 0) {
-        dispatch(artifactsAction.fetchArtifact(projectName, projectItem)).then(artifacts => {
-          if (artifacts.length > 0 && artifacts[0].data) {
-            setDataInputState(prev => ({
-              ...prev,
-              artifactsReferences: generateArtifactsReferencesList(artifacts[0].data)
-            }))
-          }
-        })
+        dispatch(fetchArtifact({ project: projectName, artifact: projectItem }))
+          .unwrap()
+          .then(artifacts => {
+            if (artifacts.length > 0 && artifacts[0].data) {
+              setDataInputState(prev => ({
+                ...prev,
+                artifactsReferences: generateArtifactsReferencesList(artifacts[0].data)
+              }))
+            }
+          })
       } else if (
         storePathType === 'feature-vectors' &&
         dataInputState.featureVectorsReferences.length === 0

@@ -26,13 +26,13 @@ import RealTimePipelinesView from './RealTimePipelinesView'
 
 import { generatePageData } from './realTimePipelines.util'
 import { useModelsPage } from '../ModelsPage.context'
-import artifactsAction from '../../../actions/artifacts'
 import filtersActions from '../../../actions/filters'
 import { GROUP_BY_NAME, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
 import { cancelRequest } from '../../../utils/cancelRequest'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import createFunctionsContent from '../../../utils/createFunctionsContent'
 import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
+import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -60,14 +60,11 @@ const RealTimePipelines = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(
-        artifactsAction.fetchFunctions(params.projectName, filters, {
-          metric: 'latency_avg_1h',
-          start: 'now-10m'
+      dispatch(fetchArtifactsFunctions({ project: params.projectName, filters }))
+        .unwrap()
+        .then(result => {
+          setPipelines(result)
         })
-      ).then(result => {
-        setPipelines(result)
-      })
     },
     [dispatch, params.projectName]
   )
@@ -107,7 +104,7 @@ const RealTimePipelines = () => {
   useEffect(() => {
     return () => {
       setPipelines([])
-      dispatch(artifactsAction.removePipelines())
+      dispatch(removePipelines())
       cancelRequest(pipelinesRef, 'cancel')
     }
   }, [dispatch])
