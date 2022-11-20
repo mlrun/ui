@@ -34,6 +34,7 @@ import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
+import { fetchModel, updateArtifact } from '../../../reducers/artifactsReducer'
 
 export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
@@ -73,13 +74,12 @@ export const infoHeaders = [
 export const actionsMenuHeader = 'Register model'
 
 export const fetchModelsRowData = async (
-  fetchModel,
+  dispatch,
   model,
   setSelectedRowData,
   iter,
   tag,
-  projectName,
-  selectedModel
+  projectName
 ) => {
   const modelIdentifier = getArtifactIdentifier(model)
 
@@ -90,16 +90,15 @@ export const fetchModelsRowData = async (
     }
   }))
 
-  fetchModel(model.project, model, iter, tag)
+  dispatch(fetchModel({ project: model.project, model, iter, tag }))
+    .unwrap()
     .then(result => {
       if (result?.length > 0) {
         setSelectedRowData(state => {
           return {
             ...state,
             [modelIdentifier]: {
-              content: result.map(artifact =>
-                createModelsRowData(artifact, projectName, !isEmpty(selectedModel))
-              ),
+              content: result.map(artifact => createModelsRowData(artifact, projectName)),
               error: null,
               loading: false
             }
@@ -167,35 +166,39 @@ export const getFeatureVectorData = uri => {
 
 export const handleApplyDetailsChanges = (
   changes,
-  fetchData,
   projectName,
-  itemName,
   selectedItem,
   setNotification,
-  filters,
-  updateArtifact,
   dispatch
 ) => {
   const isNewFormat =
     selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
-  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui']))
+  const artifactItem = cloneDeep(
+    isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui'])
+  )
   let updateArtifactPromise = Promise.resolve()
-  let updateTagPromise = applyTagChanges(changes, data, projectName, dispatch, setNotification)
+
+  let updateTagPromise = applyTagChanges(
+    changes,
+    selectedItem,
+    projectName,
+    dispatch,
+    setNotification
+  )
 
   if (!isEmpty(omit(changes.data, ['tag']))) {
     Object.keys(changes.data).forEach(key => {
       if (key === 'labels') {
         isNewFormat
-          ? (data.metadata[key] = changes.data[key].previousFieldValue)
-          : (data[key] = changes.data[key].previousFieldValue)
+          ? (artifactItem.metadata[key] = changes.data[key].previousFieldValue)
+          : (artifactItem[key] = changes.data[key].previousFieldValue)
       }
     })
 
-    const labels = data.metadata?.labels || data.labels
+    const labels = artifactItem.metadata?.labels || artifactItem.labels
 
     if (labels && Array.isArray(labels)) {
       const objectLabels = {}
-      const labels = isNewFormat ? data.metadata.labels : data.labels
 
       labels.forEach(label => {
         const splitedLabel = label.split(':')
@@ -204,11 +207,12 @@ export const handleApplyDetailsChanges = (
       })
 
       isNewFormat
-        ? (data.metadata.labels = { ...objectLabels })
-        : (data.labels = { ...objectLabels })
+        ? (artifactItem.metadata.labels = { ...objectLabels })
+        : (artifactItem.labels = { ...objectLabels })
     }
 
-    updateArtifactPromise = updateArtifact(projectName, data)
+    updateArtifactPromise = dispatch(updateArtifact({ project: projectName, data: artifactItem }))
+      .unwrap()
       .then(response => {
         setNotification({
           status: response.status,
@@ -224,7 +228,8 @@ export const handleApplyDetailsChanges = (
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'Permission denied'
               : 'Failed to update the model',
-          retry: handleApplyDetailsChanges
+          retry: () =>
+            dispatch(updateArtifact({ project: projectName, data: artifactItem })).unwrap()
         })
       })
   }

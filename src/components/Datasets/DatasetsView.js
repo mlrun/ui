@@ -32,7 +32,7 @@ import Loader from '../../common/Loader/Loader'
 import FilterMenu from '../FilterMenu/FilterMenu'
 import NoData from '../../common/NoData/NoData'
 
-import { DATASETS_PAGE } from '../../constants'
+import { DATASET_TYPE, DATASETS_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../layout/Content/content.util'
 import { actionsMenuHeader, filters } from './datasets.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -44,7 +44,6 @@ const DatasetsView = React.forwardRef(
       applyDetailsChanges,
       applyDetailsChangesCallback,
       artifactsStore,
-      artifactsToolkitStore,
       convertedYaml,
       datasets,
       filtersStore,
@@ -70,7 +69,7 @@ const DatasetsView = React.forwardRef(
               actionsMenuHeader={actionsMenuHeader}
               onClick={() =>
                 openPopUp(RegisterArtifactModal, {
-                  artifactKind: 'artifact',
+                  artifactKind: DATASET_TYPE,
                   projectName: params.projectName,
                   refresh: handleRefresh,
                   title: actionsMenuHeader
@@ -80,7 +79,7 @@ const DatasetsView = React.forwardRef(
             />
           </div>
           <div className="content">
-            {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
+            {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar">
                 <FilterMenu
@@ -138,7 +137,6 @@ DatasetsView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
-  artifactsToolkitStore: PropTypes.object.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,

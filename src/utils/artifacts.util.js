@@ -17,10 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { deleteTag, editTag, addTag } from '../reducers/artifactsToolkitReducer'
+import { cloneDeep } from 'lodash'
+import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
 
-export const applyTagChanges = (changes, data, projectName, dispatch, setNotification) => {
+export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
+  artifactItem = cloneDeep(artifactItem)
 
   if ('tag' in changes.data) {
     let manageTagArgs = {
@@ -30,17 +32,17 @@ export const applyTagChanges = (changes, data, projectName, dispatch, setNotific
         kind: 'artifact',
         identifiers: [
           {
-            key: data.key,
-            kind: data.kind,
-            uid: data.uid ?? data.tree
+            key: artifactItem.key,
+            kind: artifactItem.kind,
+            uid: artifactItem.uid ?? artifactItem.tree
           }
         ]
       }
     }
 
-    data.tag = changes.data.tag.currentFieldValue
+    artifactItem.tag = changes.data.tag.currentFieldValue
 
-    if (data.tag === '') {
+    if (artifactItem.tag === '') {
       manageTagArgs.tag = changes.data.tag.initialFieldValue
       updateTagPromise = dispatch(deleteTag(manageTagArgs))
     } else {
@@ -67,7 +69,8 @@ export const applyTagChanges = (changes, data, projectName, dispatch, setNotific
           status: error.response?.status || 400,
           id: Math.random(),
           message: 'Failed to update the tag',
-          retry: () => applyTagChanges(changes, data, projectName, dispatch, setNotification)
+          retry: () =>
+            applyTagChanges(changes, artifactItem, projectName, dispatch, setNotification)
         })
       })
   } else {

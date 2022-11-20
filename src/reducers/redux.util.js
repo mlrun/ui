@@ -23,3 +23,14 @@ export const hideLoading = state => {
 export const showLoading = state => {
   state.loading = true
 }
+export const defaultPendingHandler = state => {
+  state.loading = true
+}
+export const defaultFulfilledHandler = state => {
+  state.error = null
+  state.loading = false
+}
+export const defaultRejectedHandler = (state, action) => {
+  state.error = action.error
+  state.loading = false
+}

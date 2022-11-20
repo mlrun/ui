@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -58,6 +59,9 @@ const NewFunctionPopUp = ({
   const { isStagingMode } = useMode()
   const openPanelByDefault = useOpenPanel()
   const newFunctionBtn = useRef(null)
+  const location = useLocation()
+  const runtime = new URLSearchParams(location.search).get('runtime') // TODO: Delete after new wizard implemented
+
   const popUpClassNames = classnames(
     'new-function__pop-up',
     isCustomPosition && 'new-function__pop-up_short'
@@ -101,7 +105,11 @@ const NewFunctionPopUp = ({
     if (openPanelByDefault) {
       setIsPopUpOpen(true)
     }
-  }, [openPanelByDefault])
+
+    if (runtime) {
+      selectRuntime(runtime)
+    }
+  }, [openPanelByDefault, runtime])
 
   return (
     <div className="new-function">

@@ -32,7 +32,7 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 
-import { FILES_PAGE } from '../../constants'
+import { ARTIFACT_TYPE, FILES_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../layout/Content/content.util'
 import { actionsMenuHeader, filters } from './files.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -44,7 +44,6 @@ const FilesView = React.forwardRef(
       applyDetailsChanges,
       applyDetailsChangesCallback,
       artifactsStore,
-      artifactsToolkitStore,
       convertedYaml,
       files,
       filtersStore,
@@ -70,7 +69,7 @@ const FilesView = React.forwardRef(
               actionsMenuHeader={actionsMenuHeader}
               onClick={() =>
                 openPopUp(RegisterArtifactModal, {
-                  artifactKind: 'artifact',
+                  artifactKind: ARTIFACT_TYPE,
                   projectName: params.projectName,
                   refresh: handleRefresh,
                   title: actionsMenuHeader
@@ -80,7 +79,7 @@ const FilesView = React.forwardRef(
             />
           </div>
           <div className="content">
-            {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
+            {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar">
                 <FilterMenu
@@ -138,7 +137,6 @@ FilesView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
-  artifactsToolkitStore: PropTypes.object.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,

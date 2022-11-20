@@ -34,10 +34,10 @@ const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {},
-  extraReducers: {
-    [fetchFrontendSpec.fulfilled]: (state, { payload }) => {
+  extraReducers: builder => {
+    builder.addCase(fetchFrontendSpec.fulfilled, (state, { payload }) => {
       state.frontendSpec = payload
-    }
+    })
   }
 })
 

@@ -20,16 +20,16 @@ such restriction.
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isEmpty, orderBy } from 'lodash'
+import { orderBy } from 'lodash'
 
 import ModelEndpointsView from './ModelEndpointsView'
 
 import { generatePageData } from './modelEndpoints.util'
 import { useModelsPage } from '../ModelsPage.context'
-import artifactsAction from '../../../actions/artifacts'
 import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB } from '../../../constants'
 import filtersActions from '../../../actions/filters'
 import detailsActions from '../../../actions/details'
+import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { cancelRequest } from '../../../utils/cancelRequest'
@@ -67,13 +67,19 @@ const ModelEndpoints = () => {
   const fetchData = useCallback(
     filters => {
       dispatch(
-        artifactsAction.fetchModelEndpoints(params.projectName, filters, {
-          metric: 'latency_avg_1h',
-          start: 'now-10m'
+        fetchModelEndpoints({
+          project: params.projectName,
+          filters,
+          params: {
+            metric: 'latency_avg_1h',
+            start: 'now-10m'
+          }
         })
-      ).then(result => {
-        setModelEndpoints(result)
-      })
+      )
+        .unwrap()
+        .then(result => {
+          setModelEndpoints(result)
+        })
     },
     [dispatch, params.projectName]
   )
@@ -99,7 +105,7 @@ const ModelEndpoints = () => {
   useEffect(() => {
     return () => {
       setModelEndpoints([])
-      dispatch(artifactsAction.removeModelEndpoints())
+      dispatch(removeModelEndpoints())
       setSelectedModelEndpoint({})
       cancelRequest(modelEndpointsRef, 'cancel')
     }
@@ -142,9 +148,9 @@ const ModelEndpoints = () => {
 
   const tableContent = useMemo(() => {
     return sortedContent.map(contentItem =>
-      createModelEndpointsRowData(contentItem, params.projectName, !isEmpty(selectedModelEndpoint))
+      createModelEndpointsRowData(contentItem, params.projectName)
     )
-  }, [params.projectName, selectedModelEndpoint, sortedContent])
+  }, [params.projectName, sortedContent])
 
   return (
     <ModelEndpointsView

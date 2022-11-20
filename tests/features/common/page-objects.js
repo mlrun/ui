@@ -79,7 +79,7 @@ module.exports = {
   Real_Time_Pipelines: models['realTimePipelinesTab'],
   Register_Dataset: interactivePopup['registerDataset'],
   Register_File_Popup: interactivePopup['registerFilePopup'],
-  Register_Model_Popup: interactivePopup['registerModelPopup'],
+  Register_Model_Popup: interactivePopup['RegisterModelModal'],
   Remove_Member_Popup: interactivePopup['removeMemberPopup'],
   Requested_Features_Info_Pane: infoPane['requestedFeaturesInfoPane'],
   Results_Info_Pane: infoPane['resultsInfoPane'],

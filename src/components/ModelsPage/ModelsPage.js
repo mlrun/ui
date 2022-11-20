@@ -31,7 +31,7 @@ import {
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
 import { tabs } from './modelsPage.util'
-import RegisterModelPopUp from '../../elements/RegisterModelPopUp/RegisterModelPopUp'
+import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -43,12 +43,11 @@ import './modelsPage.scss'
 const ModelsPage = () => {
   const location = useLocation()
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const params = useParams()
   const { convertedYaml, fetchData, toggleConvertedYaml } = useModelsPage()
 
   const handleRegisterModel = useCallback(() => {
-    openPopUp(RegisterModelPopUp, { projectName: params.projectName, refresh: fetchData })
+    openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: fetchData })
   }, [fetchData, params.projectName])
   return (
     <>
@@ -75,7 +74,7 @@ const ModelsPage = () => {
           />
           <div className="table-container">
             <Outlet />
-            {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
+            {artifactsStore.loading && <Loader />}
           </div>
         </div>
       </div>

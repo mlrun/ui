@@ -18,23 +18,24 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import prettyBytes from 'pretty-bytes'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 import { Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 
-import artifactActions from '../../actions/artifacts'
 import { formatDatetime } from '../../utils'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
+import { closeArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import './previewModal.scss'
 
-const PreviewModal = ({ closeArtifactsPreview, item }) => {
+const PreviewModal = ({ item }) => {
   const [preview, setPreview] = useState([])
   const [noData, setNoData] = useState(false)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (preview.length === 0) {
@@ -46,37 +47,26 @@ const PreviewModal = ({ closeArtifactsPreview, item }) => {
     <PopUpDialog
       className="preview-modal"
       closePopUp={() => {
-        closeArtifactsPreview({
-          isPreview: false,
-          selectedItem: {}
-        })
+        dispatch(closeArtifactsPreview())
       }}
     >
       <div className="item-artifacts__modal-preview">
         <div className="preview-body">
           <div className="preview-item">
             <div className="item-data item-data__name data-ellipsis">
-              <Tooltip
-                template={
-                  <TextTooltipTemplate text={item.db_key || item.key} />
-                }
-              >
+              <Tooltip template={<TextTooltipTemplate text={item.db_key || item.key} />}>
                 {item.db_key || item.key}
               </Tooltip>
             </div>
             <div className="item-data item-data__path data-ellipsis">
-              <Tooltip
-                template={<TextTooltipTemplate text={item.target_path} />}
-              >
+              <Tooltip template={<TextTooltipTemplate text={item.target_path} />}>
                 {item.target_path}
               </Tooltip>
             </div>
             {item.size && (
               <div className="item-data">
                 size:
-                {typeof item.size === 'string'
-                  ? item.size
-                  : prettyBytes(item.size)}
+                {typeof item.size === 'string' ? item.size : prettyBytes(item.size)}
               </div>
             )}
             <div className="item-data">
@@ -85,9 +75,7 @@ const PreviewModal = ({ closeArtifactsPreview, item }) => {
             <div className="preview-body__download">
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
                 <Download
-                  path={`${item.target_path}${
-                    item.model_file ? item.model_file : ''
-                  }`}
+                  path={`${item.target_path}${item.model_file ? item.model_file : ''}`}
                   user={item.user ?? item.producer?.owner}
                 />
               </Tooltip>
@@ -106,4 +94,4 @@ PreviewModal.propTypes = {
   item: PropTypes.shape({}).isRequired
 }
 
-export default connect(null, { ...artifactActions })(PreviewModal)
+export default PreviewModal

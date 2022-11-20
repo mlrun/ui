@@ -41,21 +41,21 @@ import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.sv
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as SeverityError } from 'igz-controls/images/severity-error.svg'
 
-export const createArtifactsContent = (artifacts, page, pageTab, project, isSelectedItem) => {
+export const createArtifactsContent = (artifacts, page, pageTab, project) => {
   return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
     if (page === ARTIFACTS_PAGE) {
       return createArtifactsRowData(artifact)
     } else if (page === MODELS_PAGE) {
       if (pageTab === MODELS_TAB) {
-        return createModelsRowData(artifact, project, isSelectedItem)
+        return createModelsRowData(artifact, project)
       } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-        return createModelEndpointsRowData(artifact, project, isSelectedItem)
+        return createModelEndpointsRowData(artifact, project)
       }
     } else if (page === FILES_PAGE) {
-      return createFilesRowData(artifact, project, isSelectedItem)
+      return createFilesRowData(artifact, project)
     }
 
-    return createDatasetsRowData(artifact, project, isSelectedItem)
+    return createDatasetsRowData(artifact, project)
   })
 }
 
@@ -102,7 +102,7 @@ const createArtifactsRowData = artifact => {
   }
 }
 
-export const createModelsRowData = (artifact, project, isSelectedItem, showExpandButton) => {
+export const createModelsRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
   const identifierUnique = getArtifactIdentifier(artifact, true)
 
@@ -148,39 +148,34 @@ export const createModelsRowData = (artifact, project, isSelectedItem, showExpan
         header: 'Labels',
         value: parseKeyValues(artifact.labels),
         class: 'artifacts_extra-small',
-        type: 'labels',
-        hidden: isSelectedItem
+        type: 'labels'
       },
       {
         id: `producer.${identifierUnique}`,
         header: 'Producer',
         value: artifact.producer,
         class: 'artifacts_small',
-        type: 'producer',
-        hidden: isSelectedItem
+        type: 'producer'
       },
       {
         id: `owner.${identifierUnique}`,
         header: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
-        type: 'owner',
-        hidden: isSelectedItem
+        type: 'owner'
       },
       {
         id: `updated.${identifierUnique}`,
         header: 'Updated',
         value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `metrics.${identifierUnique}`,
         header: 'Metrics',
         value: parseKeyValues(artifact.metrics),
         class: 'artifacts_big',
-        type: 'metrics',
-        hidden: isSelectedItem
+        type: 'metrics'
       },
       {
         id: `frameWorkAndAlgorithm.${identifierUnique}`,
@@ -201,43 +196,38 @@ export const createModelsRowData = (artifact, project, isSelectedItem, showExpan
           ) : (
             ''
           ),
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `version.${identifierUnique}`,
         value: artifact.tag,
         class: 'artifacts_small',
-        type: 'hidden',
-        hidden: isSelectedItem
+        type: 'hidden'
       },
       {
         id: `buttonPopout.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonPopout',
-        hidden: isSelectedItem
+        type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonDownload',
-        hidden: isSelectedItem
+        type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
-        hidden: isSelectedItem
+        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
       }
     ]
   }
 }
 
-export const createFilesRowData = (artifact, project, isSelectedItem, showExpandButton) => {
+export const createFilesRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
   const identifierUnique = getArtifactIdentifier(artifact, true)
 
@@ -282,75 +272,65 @@ export const createFilesRowData = (artifact, project, isSelectedItem, showExpand
         id: `version.${identifierUnique}`,
         value: artifact.tag,
         class: 'artifacts_small',
-        type: 'hidden',
-        hidden: isSelectedItem
+        type: 'hidden'
       },
       {
         id: `kind.${identifierUnique}`,
         header: 'Type',
         value: artifact.kind,
-        class: 'artifacts_extra-small',
-        hidden: isSelectedItem
+        class: 'artifacts_extra-small'
       },
       {
         id: `labels.${identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(artifact.labels),
         class: 'artifacts_big',
-        type: 'labels',
-        hidden: isSelectedItem
+        type: 'labels'
       },
       {
         id: `producer.${identifierUnique}`,
         header: 'Producer',
         value: artifact.producer || {},
         class: 'artifacts_small',
-        type: 'producer',
-        hidden: isSelectedItem
+        type: 'producer'
       },
       {
         id: `owner.${identifierUnique}`,
         header: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
-        type: 'owner',
-        hidden: isSelectedItem
+        type: 'owner'
       },
       {
         id: `updated.${identifierUnique}`,
         header: 'Updated',
         value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `size.${identifierUnique}`,
         header: 'Size',
         value: artifact.size ? convertBytes(artifact.size) : 'N/A',
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `buttonPopout.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonPopout',
-        hidden: isSelectedItem
+        type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonDownload',
-        hidden: isSelectedItem
+        type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? 'artifacts')),
-        hidden: isSelectedItem
+        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? 'artifacts'))
       }
     ]
   }
@@ -371,7 +351,7 @@ const driftStatusIcons = {
   }
 }
 
-export const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
+export const createModelEndpointsRowData = (artifact, project) => {
   const { name, tag = '-' } =
     (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)?.groups ?? {}
   const functionUri = artifact.spec?.function_uri
@@ -414,79 +394,69 @@ export const createModelEndpointsRowData = (artifact, project, isSelectedItem) =
         value: functionName,
         class: 'artifacts_small',
         link: `${generateLinkPath(functionUri)}/overview`,
-        tooltip: functionUri,
-        hidden: isSelectedItem
+        tooltip: functionUri
       },
       {
         id: `state.${identifierUnique}`,
         value: artifact.status?.state,
         class: 'artifacts_extra-small',
-        type: 'hidden',
-        hidden: isSelectedItem
+        type: 'hidden'
       },
       {
         id: `version.${identifierUnique}`,
         header: 'Version',
         value: artifact?.status?.children ? 'Router' : tag,
-        class: 'artifacts_extra-small',
-        hidden: isSelectedItem
+        class: 'artifacts_extra-small'
       },
       {
         id: `modelClass.${identifierUnique}`,
         header: 'Class',
         value: artifact.spec?.model_class,
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `labels.${identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(artifact.metadata?.labels),
         class: 'artifacts_big',
-        type: 'labels',
-        hidden: isSelectedItem
+        type: 'labels'
       },
       {
         id: `firstRequest.${identifierUnique}`,
         header: 'Uptime',
         value: formatDatetime(new Date(artifact.status?.first_request), '-'),
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `lastRequest.${identifierUnique}`,
         header: 'Last prediction',
         value: formatDatetime(new Date(artifact.status?.last_request), '-'),
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `averageLatency.${identifierUnique}`,
         header: 'Average latency',
         value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `errorCount.${identifierUnique}`,
         header: 'Error count',
         value: artifact.status?.error_count ?? '-',
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `driftStatus.${identifierUnique}`,
         header: 'Drift',
         value: driftStatusIcons[artifact.status?.drift_status]?.value,
         class: 'artifacts_extra-small',
-        tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip,
-        hidden: isSelectedItem
+        tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
       }
     ]
   }
 }
 
-export const createDatasetsRowData = (artifact, project, isSelectedItem, showExpandButton) => {
+export const createDatasetsRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
   const identifierUnique = getArtifactIdentifier(artifact, true)
 
@@ -532,67 +502,58 @@ export const createDatasetsRowData = (artifact, project, isSelectedItem, showExp
         header: 'Labels',
         value: parseKeyValues(artifact.labels),
         class: 'artifacts_big',
-        type: 'labels',
-        hidden: isSelectedItem
+        type: 'labels'
       },
       {
         id: `producer.${identifierUnique}`,
         header: 'Producer',
         value: artifact.producer,
         class: 'artifacts_small',
-        type: 'producer',
-        hidden: isSelectedItem
+        type: 'producer'
       },
       {
         id: `owner.${identifierUnique}`,
         header: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
-        type: 'owner',
-        hidden: isSelectedItem
+        type: 'owner'
       },
       {
         id: `updated.${identifierUnique}`,
         header: 'Updated',
         value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `size.${identifierUnique}`,
         header: 'Size',
         value: convertBytes(artifact.size || 0),
-        class: 'artifacts_small',
-        hidden: isSelectedItem
+        class: 'artifacts_small'
       },
       {
         id: `version.${identifierUnique}`,
         value: artifact.tag,
         class: 'artifacts_small',
-        type: 'hidden',
-        hidden: isSelectedItem
+        type: 'hidden'
       },
       {
         id: `buttonPopout.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonPopout',
-        hidden: isSelectedItem
+        type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonDownload',
-        hidden: isSelectedItem
+        type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? DATASETS)),
-        hidden: isSelectedItem
+        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? DATASETS))
       }
     ]
   }

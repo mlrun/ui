@@ -18,15 +18,26 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  SET_FILTERS,
+  ARTIFACT_OTHER_TYPE,
+  DATASET_TYPE,
+  MODEL_TYPE,
   REMOVE_FILTERS,
-  SET_FILTER_TAG_OPTIONS,
-  SET_FILTER_PROJECT_OPTIONS
+  SET_FILTERS,
+  SET_FILTER_PROJECT_OPTIONS,
+  SET_FILTER_TAG_OPTIONS
 } from '../constants'
 
 const filtersActions = {
-  getFilterTagOptions: (fetchTagOption, projectName) => dispatch => {
-    return fetchTagOption(projectName).then(({ data }) =>
+  getFilterTagOptions: (fetchTags, projectName, category) => dispatch => {
+    const fetchTagsArguments = {
+      project: projectName,
+      category
+    }
+    const fetchTagsPromise = [ARTIFACT_OTHER_TYPE, MODEL_TYPE, DATASET_TYPE].includes(category)
+      ? dispatch(fetchTags(fetchTagsArguments)).unwrap()
+      : fetchTags(fetchTagsArguments)
+
+    return fetchTagsPromise.then(({ data }) =>
       dispatch(filtersActions.setFilterTagOptions([...new Set(data.tags)]))
     )
   },
@@ -37,10 +48,14 @@ const filtersActions = {
     type: SET_FILTERS,
     payload: filters
   }),
-  setFilterTagOptions: options => ({
-    type: SET_FILTER_TAG_OPTIONS,
-    payload: options
-  }),
+  setFilterTagOptions: options => {
+    const filteredOptions = options.filter(option => option)
+
+    return {
+      type: SET_FILTER_TAG_OPTIONS,
+      payload: filteredOptions
+    }
+  },
   setFilterProjectOptions: options => ({
     type: SET_FILTER_PROJECT_OPTIONS,
     payload: options

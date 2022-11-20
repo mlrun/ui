@@ -63,24 +63,32 @@ const FeatureStoreTableRow = ({
         <div className="row_grouped-by">
           <div className="table-body__row">
             {rowItem.content.map((data, index) => {
-              return index < mainRowItemsCount ? (
-                <TableCell
-                  data={data}
-                  firstCell={index === 0}
-                  handleExpandRow={handleExpandRow}
-                  item={rowItem}
-                  key={data.id}
-                  link={
-                    data.rowExpanded?.getLink
-                      ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
-                      : ''
-                  }
-                  selectItem={handleSelectItem}
-                  selectedItem={selectedItem}
-                  showExpandButton
-                />
-              ) : null
+              const cellClassName = classnames(
+                index >= mainRowItemsCount && 'table-body__cell_hidden'
+              )
+
+              return (
+                !data.hidden && (
+                  <TableCell
+                    className={cellClassName}
+                    data={data}
+                    firstCell={index === 0}
+                    handleExpandRow={handleExpandRow}
+                    item={rowItem}
+                    key={data.id}
+                    link={
+                      data.rowExpanded?.getLink
+                        ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
+                        : ''
+                    }
+                    selectItem={handleSelectItem}
+                    selectedItem={selectedItem}
+                    showExpandButton
+                  />
+                )
+              )
             })}
+            <div className="table-body__cell action_cell" />
           </div>
           {selectedRowData[rowItem.data.ui.identifier].loading ? (
             <div className="table-body__row">
@@ -102,18 +110,25 @@ const FeatureStoreTableRow = ({
                   {
                     <>
                       {tableContentItem.content.map((value, index) => {
-                        return !isEmpty(selectedItem) && index > mainRowItemsCount
-                          ? null
-                          : !value.hidden && (
-                              <TableCell
-                                data={value.expandedCellContent ? value.expandedCellContent : value}
-                                item={tableContentItem.data}
-                                link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
-                                key={value.id}
-                                selectItem={handleSelectItem}
-                                selectedItem={selectedItem}
-                              />
-                            )
+                        const cellClassNames = classnames(
+                          !isEmpty(selectedItem) &&
+                            index >= mainRowItemsCount &&
+                            'table-body__cell_hidden'
+                        )
+
+                        return (
+                          !value.hidden && (
+                            <TableCell
+                              className={cellClassNames}
+                              data={value.expandedCellContent ? value.expandedCellContent : value}
+                              item={tableContentItem.data}
+                              link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
+                              key={value.id}
+                              selectItem={handleSelectItem}
+                              selectedItem={selectedItem}
+                            />
+                          )
+                        )
                       })}
                       {!hideActionsMenu && (
                         <div className="table-body__cell action_cell">
@@ -130,9 +145,14 @@ const FeatureStoreTableRow = ({
       ) : (
         <>
           {rowItem.content.map((value, index) => {
+            const cellClassNames = classnames(
+              !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
+            )
+
             return (
               !value.hidden && (
                 <TableCell
+                  className={cellClassNames}
                   data={value}
                   firstCell={index === 0}
                   handleExpandRow={handleExpandRow}

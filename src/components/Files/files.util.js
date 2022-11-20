@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, isEmpty, omit } from 'lodash'
 
 import {
   FILES_PAGE,
@@ -31,6 +30,7 @@ import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { fetchFile } from '../../reducers/artifactsReducer'
 
 export const pageDataInitialState = {
   details: {
@@ -100,15 +100,7 @@ export const filters = [
 ]
 export const actionsMenuHeader = 'Register artifact'
 
-export const fetchFilesRowData = (
-  file,
-  setSelectedRowData,
-  fetchFile,
-  projectName,
-  iter,
-  tag,
-  selectedFile
-) => {
+export const fetchFilesRowData = (file, setSelectedRowData, dispatch, projectName, iter, tag) => {
   const fileIdentifier = getArtifactIdentifier(file)
 
   setSelectedRowData(state => ({
@@ -118,15 +110,14 @@ export const fetchFilesRowData = (
     }
   }))
 
-  fetchFile(file.project ?? projectName, file.db_key, !iter, tag)
+  dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter: !iter, tag }))
+    .unwrap()
     .then(result => {
       if (result?.length > 0) {
         setSelectedRowData(state => ({
           ...state,
           [fileIdentifier]: {
-            content: result.map(artifact =>
-              createFilesRowData(artifact, projectName, !isEmpty(selectedFile))
-            ),
+            content: result.map(artifact => createFilesRowData(artifact, projectName)),
             error: null,
             loading: false
           }
@@ -147,24 +138,12 @@ export const fetchFilesRowData = (
 
 export const handleApplyDetailsChanges = (
   changes,
-  fetchData,
   projectName,
-  itemName,
   selectedItem,
   setNotification,
-  filters,
-  updateArtifact,
   dispatch
 ) => {
-  const isNewFormat =
-    selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
-  const data = cloneDeep(isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui']))
-
-  const updateTagPromise = applyTagChanges(changes, data, projectName, dispatch, setNotification)
-
-  return updateTagPromise.then(() => {
-    return fetchData(filters)
-  })
+  return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
 }
 
 export const checkForSelectedFile = (

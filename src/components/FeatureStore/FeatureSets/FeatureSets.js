@@ -21,17 +21,19 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { connect, useSelector } from 'react-redux'
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep } from 'lodash'
 
 import FeatureSetsView from './FeatureSetsView'
 
 import { featureSetsActionCreator, featureSetsFilters, generatePageData } from './featureSets.util'
 import {
+  DETAILS_OVERVIEW_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  TAG_LATEST
 } from '../../../constants'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
@@ -142,12 +144,7 @@ const FeatureSets = ({
       fetchFeatureSet(item.project, item.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
-            createFeatureSetsRowData(
-              contentItem,
-              params.projectName,
-              !isEmpty(selectedFeatureSet),
-              true
-            )
+            createFeatureSetsRowData(contentItem, params.projectName, true)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -169,7 +166,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchFeatureSet, filtersStore.tag, params.projectName, selectedFeatureSet]
+    [fetchFeatureSet, filtersStore.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -184,17 +181,10 @@ const FeatureSets = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureSetsRowData(
-            contentItem,
-            params.projectName,
-            !isEmpty(selectedFeatureSet),
-            true
-          )
+          return createFeatureSetsRowData(contentItem, params.projectName, true)
         })
-      : featureSets.map(contentItem =>
-          createFeatureSetsRowData(contentItem, params.projectName, !isEmpty(selectedFeatureSet))
-        )
-  }, [featureSets, filtersStore.groupBy, latestItems, params.projectName, selectedFeatureSet])
+      : featureSets.map(contentItem => createFeatureSetsRowData(contentItem, params.projectName))
+  }, [featureSets, filtersStore.groupBy, latestItems, params.projectName])
 
   const handleSelectFeatureSet = item => {
     if (params.name === item.name && params.tag === item.tag) {
@@ -226,6 +216,14 @@ const FeatureSets = ({
       updateFeatureStoreData
     ]
   )
+
+  const applyDetailsChangesCallback = (changes, selectedItem) => {
+    if (!selectedItem.tag) {
+      navigate(
+        `/projects/${params.projectName}/${FEATURE_STORE_PAGE}/${FEATURE_SETS_TAB}/${selectedItem.name}/${TAG_LATEST}/${DETAILS_OVERVIEW_TAB}`
+      )
+    }
+  }
 
   const createFeatureSetSuccess = tag => {
     const currentTag = filtersStore.tag === TAG_FILTER_ALL_ITEMS ? TAG_FILTER_ALL_ITEMS : tag
@@ -328,6 +326,7 @@ const FeatureSets = ({
     <FeatureSetsView
       actionsMenu={actionsMenu}
       applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
       closePanel={closePanel}
       createFeatureSetSuccess={createFeatureSetSuccess}
       featureSets={featureSets}

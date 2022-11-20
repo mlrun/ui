@@ -217,7 +217,14 @@ const TableView = ({
             </div>
           </>
         )}
-        {tableHeaders?.length > 0 && <TableHead content={tableHeaders} ref={tableHeadRef} />}
+        {tableHeaders?.length > 0 && (
+          <TableHead
+            content={tableHeaders}
+            mainRowItemsCount={mainRowItemsCount}
+            ref={tableHeadRef}
+            selectedItem={selectedItem}
+          />
+        )}
         {!pageData.tableHeaders && <div className="table-body">{children}</div>}
       </div>
       {isTablePanelOpen && (

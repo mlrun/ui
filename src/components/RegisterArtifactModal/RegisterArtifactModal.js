@@ -31,7 +31,14 @@ import { Button, Modal } from 'igz-controls/components'
 
 import { messagesByKind } from './messagesByKind'
 import notificationActions from '../../actions/notification'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import {
+  BADREQUEST_ERROR_STATUS_CODE,
+  FORBIDDEN_ERROR_STATUS_CODE,
+  MODAL_SM,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from 'igz-controls/constants'
+import { ARTIFACT_TYPE } from '../../constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData } from '../../utils/convertChipsData'
@@ -51,7 +58,7 @@ const RegisterArtifactModal = ({
 }) => {
   const { isDemoMode } = useMode()
   const initialValues = {
-    kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
+    kind: artifactKind,
     metadata: {
       description: '',
       key: '',
@@ -81,7 +88,7 @@ const RegisterArtifactModal = ({
   const registerArtifact = values => {
     const uid = uuidv4()
     const data = {
-      kind: values.kind === 'general' ? '' : values.kind,
+      kind: values.kind,
       metadata: {
         labels: convertChipsData(values.metadata.labels),
         key: values.metadata.key,
@@ -112,14 +119,21 @@ const RegisterArtifactModal = ({
           message: `${title} initiated successfully`
         })
       })
-      .catch(() => {
-        resolveModal()
+      .catch(error => {
         setNotification({
-          status: 400,
+          status:
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? FORBIDDEN_ERROR_STATUS_CODE
+              : BADREQUEST_ERROR_STATUS_CODE,
           id: Math.random(),
-          message: `${title} failed to initiate`,
+          message:
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You are not permitted to create a new resource'
+              : `${title} failed to initiate`,
           retry: registerArtifact
         })
+
+        resolveModal()
       })
   }
 
@@ -161,7 +175,7 @@ const RegisterArtifactModal = ({
               initialValues={initialValues}
               messageByKind={messagesByKind[artifactKind.toLowerCase()]}
               setFieldState={formState.form.mutators.setFieldState}
-              showType={artifactKind === 'artifact'}
+              showType={artifactKind === ARTIFACT_TYPE}
             />
           </Modal>
         )

@@ -31,6 +31,7 @@ import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import './tableLinkCell.scss'
 
 const TableLinkCell = ({
+  className,
   data,
   handleExpandRow,
   item,
@@ -39,7 +40,7 @@ const TableLinkCell = ({
   selectedItem,
   showExpandButton
 }) => {
-  const tableCellClassNames = classnames('table-body__cell', data.class)
+  const tableCellClassNames = classnames('table-body__cell', data.class, className)
   const itemNameClassNames = classnames('link', 'item-name')
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 
@@ -119,6 +120,7 @@ const TableLinkCell = ({
 }
 
 TableLinkCell.defaultProps = {
+  className: '',
   data: {},
   expandLink: false,
   selectedItem: {},
@@ -126,8 +128,8 @@ TableLinkCell.defaultProps = {
 }
 
 TableLinkCell.propTypes = {
+  className: PropTypes.string,
   data: PropTypes.shape({}),
-
   item: PropTypes.shape({}).isRequired,
   link: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,

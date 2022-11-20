@@ -36,6 +36,7 @@ const FeatureSetsView = React.forwardRef(
     {
       actionsMenu,
       applyDetailsChanges,
+      applyDetailsChangesCallback,
       closePanel,
       createFeatureSetSuccess,
       featureSets,
@@ -79,6 +80,7 @@ const FeatureSetsView = React.forwardRef(
             <Table
               actionsMenu={actionsMenu}
               applyDetailsChanges={applyDetailsChanges}
+              applyDetailsChangesCallback={applyDetailsChangesCallback}
               content={featureSets}
               handleCancel={() => setSelectedFeatureSet({})}
               pageData={pageData}
@@ -117,6 +119,7 @@ const FeatureSetsView = React.forwardRef(
 FeatureSetsView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
+  applyDetailsChangesCallback: PropTypes.func.isRequired,
   closePanel: PropTypes.func.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
   featureSets: PropTypes.arrayOf(PropTypes.object).isRequired,

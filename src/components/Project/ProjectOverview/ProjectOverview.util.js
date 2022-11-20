@@ -20,8 +20,9 @@ such restriction.
 import React from 'react'
 
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
-import RegisterModelPopUp from '../../../elements/RegisterModelPopUp/RegisterModelPopUp'
+import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
+import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 
@@ -116,7 +117,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   variant: SECONDARY_BUTTON
               // }],
 
-              artifactKind: 'dataset',
+              artifactKind: DATASET_TYPE,
               projectName,
               refresh: () => {},
               title: 'Register dataset'
@@ -144,6 +145,7 @@ export const getInitialCards = (projectName, navigate) => {
                   label: 'Register',
                   onClick: async () => {
                     await formState.handleSubmit()
+
                     if (!formState.invalid) {
                       navigate(`${base_url}/files`)
                     }
@@ -166,7 +168,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              artifactKind: 'artifact',
+              artifactKind: ARTIFACT_TYPE,
               projectName,
               refresh: () => {},
               title: 'Register artifact'
@@ -244,7 +246,7 @@ export const getInitialCards = (projectName, navigate) => {
           id: 'registeramodel',
           icon: <RegisterModelIcon />,
           handleClick: () => ({
-            component: RegisterModelPopUp,
+            component: RegisterModelModal,
             props: {
               actions: (formState, handleCloseModal) => [
                 {
@@ -330,7 +332,7 @@ export const getInitialCards = (projectName, navigate) => {
           icon: <RTFunctionIcon />,
           label: 'Create RT function',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/functions`),
+            path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
           }),
           tooltip: ''
@@ -339,7 +341,7 @@ export const getInitialCards = (projectName, navigate) => {
           id: 'deployServingFunction',
           icon: <ServingFunctionIcon />,
           handleClick: () => ({
-            path: `${base_url}/functions?openPanel=true`
+            path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
           label: 'Deploy serving function',
           tooltip: ''

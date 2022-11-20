@@ -26,7 +26,9 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import { getFirstScrollableParent } from '../../utils/getFirstScrollableParent'
+import localStorageService from '../../utils/localStorageService'
 import { CHIP_OPTIONS, CHIPS } from '../../types'
+import { NAVBAR_WIDTH } from '../../constants'
 
 import './hiddenChipsBlock.scss'
 
@@ -45,14 +47,12 @@ const HiddenChipsBlock = React.forwardRef(
       isEditMode,
       setEditConfig
     },
-    ref
+    hiddenChipCounterRef
   ) => {
     const [isTop, setIsTop] = useState(false)
-    const [isRight, setIsRight] = useState(true)
+    const [isRight, setIsRight] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
-    const [windowHalfWidth, setWindowHalfWidth] = useState(
-      window.innerWidth / 2
-    )
+    const isNavbarPinned = localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
 
     const hiddenRef = useRef()
 
@@ -66,30 +66,11 @@ const HiddenChipsBlock = React.forwardRef(
     )
 
     const handleResize = useCallback(() => {
-      if (hiddenRef?.current) {
-        setWindowHalfWidth(parseInt(window.innerWidth / 2))
-      }
-    }, [hiddenRef])
-
-    useEffect(() => {
-      handleResize()
-    }, [handleResize])
-
-    useEffect(() => {
-      if (hiddenRef?.current) {
-        window.addEventListener('resize', handleResize)
-
-        return () => window.removeEventListener('resize', handleResize)
-      }
-    }, [handleResize, hiddenRef])
-
-    useEffect(() => {
-      if (hiddenRef?.current) {
-        const scrollableParent = getFirstScrollableParent(
-          hiddenRef.current.offsetParent
-        )
+      if (hiddenRef?.current && hiddenChipCounterRef?.current) {
+        const scrollableParent = getFirstScrollableParent(hiddenRef.current.offsetParent)
         const { height, top } = hiddenRef.current.getBoundingClientRect()
-        const { right } = ref.current.getBoundingClientRect()
+        const { left } = hiddenChipCounterRef.current.getBoundingClientRect()
+        const hiddenChipBlockWidth = hiddenRef.current.offsetWidth
 
         if (
           hiddenRef.current.offsetParent.getBoundingClientRect().top -
@@ -102,10 +83,22 @@ const HiddenChipsBlock = React.forwardRef(
           setIsTop(true)
         }
 
-        setIsRight(right <= windowHalfWidth)
+        setIsRight(isNavbarPinned ? left - NAVBAR_WIDTH <= hiddenChipBlockWidth : left <= hiddenChipBlockWidth)
         setIsVisible(true)
       }
-    }, [hiddenRef, isRight, offset, ref, windowHalfWidth])
+    }, [hiddenRef, hiddenChipCounterRef, isNavbarPinned])
+
+    useEffect(() => {
+      if (hiddenRef?.current && hiddenChipCounterRef?.current) {
+        window.addEventListener('resize', handleResize)
+
+        return () => window.removeEventListener('resize', handleResize)
+      }
+    }, [handleResize, hiddenRef, hiddenChipCounterRef])
+
+    useEffect(() => {
+      handleResize()
+    }, [handleResize])
 
     useEffect(() => {
       if (chips.length === 0) {
@@ -127,9 +120,7 @@ const HiddenChipsBlock = React.forwardRef(
                     element.delimiter ? (
                       <span className="chip__content">
                         {chipLabel}
-                        <span className="chip__delimiter">
-                          {element.delimiter}
-                        </span>
+                        <span className="chip__delimiter">{element.delimiter}</span>
                         {chipValue}
                       </span>
                     ) : (
