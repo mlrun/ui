@@ -20,12 +20,12 @@ such restriction.
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import ProgressRing from '../ProgressRing/ProgressRing'
 
 import { mainHttpClient } from '../../httpClient'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import downloadFile from '../../utils/downloadFile'
 
 import './download.scss'
@@ -33,19 +33,17 @@ import colors from 'igz-controls/scss/colors.scss'
 
 const DEFAULT_FILE_NAME = 'mlrun-file'
 
-const Download = ({ fileName, path, setNotification, user }) => {
+const Download = ({ fileName, path, user }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
 
   const downloadRef = useRef(null)
+  const dispatch = useDispatch()
 
   const progressRingRadius = '20'
   const progressRingStroke = '3'
 
-  let file =
-    fileName ??
-    path.match(/\/(?<filename>[^/]+)$/)?.groups?.filename ??
-    DEFAULT_FILE_NAME
+  let file = fileName ?? path.match(/\/(?<filename>[^/]+)$/)?.groups?.filename ?? DEFAULT_FILE_NAME
 
   const retryDownload = useCallback(
     item => {
@@ -53,21 +51,25 @@ const Download = ({ fileName, path, setNotification, user }) => {
         .get(item.url)
         .then(response => {
           downloadFile(item.file, response)
-          setNotification({
-            status: response.status,
-            url: response.config.url,
-            id: Math.random(),
-            message: 'Downloaded successfully'
-          })
+          dispatch(
+            setNotification({
+              status: response.status,
+              url: response.config.url,
+              id: Math.random(),
+              message: 'Downloaded successfully'
+            })
+          )
         })
         .catch(() => {
-          setNotification({
-            status: 400,
-            url: item.url,
-            file: item.file,
-            id: Math.random(),
-            message: 'Failed to download'
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              url: item.url,
+              file: item.file,
+              id: Math.random(),
+              message: 'Failed to download'
+            })
+          )
         })
     },
     [setNotification]
@@ -77,8 +79,7 @@ const Download = ({ fileName, path, setNotification, user }) => {
     if (isDownload) {
       const config = {
         onDownloadProgress: progressEvent => {
-          const percentCompleted =
-            (progressEvent.loaded * 100) / progressEvent.total
+          const percentCompleted = (progressEvent.loaded * 100) / progressEvent.total
           setProgress(percentCompleted)
         },
         cancelToken: new axios.CancelToken(cancel => {
@@ -96,12 +97,14 @@ const Download = ({ fileName, path, setNotification, user }) => {
         .get('/files', config)
         .then(response => {
           downloadFile(file, response)
-          setNotification({
-            status: response.status,
-            url: response.config.url,
-            id: Math.random(),
-            message: 'Downloaded successfully'
-          })
+          dispatch(
+            setNotification({
+              status: response.status,
+              url: response.config.url,
+              id: Math.random(),
+              message: 'Downloaded successfully'
+            })
+          )
           if (downloadRef.current) {
             setDownload(false)
             setProgress(0)
@@ -112,14 +115,16 @@ const Download = ({ fileName, path, setNotification, user }) => {
             setDownload(false)
             return setProgress(0)
           }
-          setNotification({
-            status: 400,
-            url: `/files?path=${path}&user=${user}`,
-            file,
-            id: Math.random(),
-            retry: item => retryDownload(item),
-            message: 'Failed to download'
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              url: `/files?path=${path}&user=${user}`,
+              file,
+              id: Math.random(),
+              retry: item => retryDownload(item),
+              message: 'Failed to download'
+            })
+          )
           if (downloadRef.current) {
             setDownload(false)
             setProgress(0)
@@ -181,13 +186,7 @@ const Download = ({ fileName, path, setNotification, user }) => {
             </g>
           ) : (
             <g className="cancel_container">
-              <rect
-                x="2.19238"
-                y="1"
-                width="13"
-                height="1.5"
-                transform="rotate(45 2.19238 1)"
-              />
+              <rect x="2.19238" y="1" width="13" height="1.5" transform="rotate(45 2.19238 1)" />
               <rect
                 width="13"
                 height="1.5"
@@ -206,4 +205,4 @@ Download.propTypes = {
   path: PropTypes.string.isRequired
 }
 
-export default React.memo(connect(null, notificationActions)(Download))
+export default React.memo(Download)

@@ -19,14 +19,17 @@ such restriction.
 */
 import React from 'react'
 import { TransitionGroup, Transition } from 'react-transition-group'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { inRange } from 'lodash'
 
 import NotificationView from './NotificationView'
 
-import notificationAction from '../../actions/notification'
+import { removeNotification } from '../../reducers/notificationReducer'
 
-const Notification = ({ notificationStore, removeNotification }) => {
+const Notification = () => {
+  const dispatch = useDispatch()
+  const { notificationStore } = useSelector(store => store)
+
   const defaultStyle = {
     position: 'fixed',
     right: '24px',
@@ -39,7 +42,7 @@ const Notification = ({ notificationStore, removeNotification }) => {
   const duration = 500
 
   const handleRetry = item => {
-    removeNotification(item.id)
+    dispatch(removeNotification(item.id))
     item.retry(item)
   }
 
@@ -70,7 +73,7 @@ const Notification = ({ notificationStore, removeNotification }) => {
             classNames="notification_download"
             onEntered={() => {
               setTimeout(() => {
-                removeNotification(item.id)
+                dispatch(removeNotification(item.id))
               }, 4000)
             }}
           >
@@ -93,6 +96,4 @@ const Notification = ({ notificationStore, removeNotification }) => {
   )
 }
 
-export default connect(notificationStore => notificationStore, {
-  ...notificationAction
-})(Notification)
+export default Notification

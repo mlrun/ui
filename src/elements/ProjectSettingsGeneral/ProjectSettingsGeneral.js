@@ -38,6 +38,7 @@ import './projectSettingsGeneral.scss'
 const ProjectSettingsGeneral = ({
   addProjectLabel,
   changeOwnerCallback,
+  dispatch,
   editProjectLabels,
   fetchProject,
   frontendSpec,
@@ -75,25 +76,29 @@ const ProjectSettingsGeneral = ({
 
       editFunc(params.projectName, { ...data }, labels)
         .then(() => {
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Data was edited successfully'
-          })
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Data was edited successfully'
+            })
+          )
         })
         .catch(error => {
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'Missing edit permission for the project.'
-                : 'Failed to edit project data.',
-            retry:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? null
-                : () => sendProjectSettingsData(type, data, labels)
-          })
+          dispatch(
+            setNotification({
+              status: error.response?.status || 400,
+              id: Math.random(),
+              message:
+                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? 'Missing edit permission for the project.'
+                  : 'Failed to edit project data.',
+              retry:
+                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? null
+                  : () => sendProjectSettingsData(type, data, labels)
+            })
+          )
         })
     },
 
@@ -266,6 +271,7 @@ const ProjectSettingsGeneral = ({
     <ProjectSettingsGeneralView
       changeOwnerCallback={changeOwnerCallback}
       defaultArtifactPath={frontendSpec.default_artifact_path}
+      dispatch={dispatch}
       editProjectData={editProjectData}
       generalParams={generalParams}
       handleAddNewParameter={handleAddNewParameter}

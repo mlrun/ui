@@ -49,6 +49,7 @@ import {
 } from './featureVectors.util'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
+import { setNotification } from '../../../reducers/notificationReducer'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { cancelRequest } from '../../../utils/cancelRequest'
 
@@ -61,7 +62,6 @@ const FeatureVectors = ({
   removeFeatureVector,
   removeFeatureVectors,
   setFilters,
-  setNotification,
   updateFeatureStoreData
 }) => {
   const [featureVectors, setFeatureVectors] = useState([])
@@ -114,11 +114,13 @@ const FeatureVectors = ({
             })
           }
 
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Feature vector deleted successfully'
-          })
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Feature vector deleted successfully'
+            })
+          )
 
           getFilterTagOptions(fetchFeatureVectorsTags, params.projectName).then(response => {
             const tag = [...response.payload, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
@@ -130,12 +132,14 @@ const FeatureVectors = ({
           })
         })
         .catch(() => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            retry: () => handleDeleteFeatureVector(featureVector),
-            message: 'Feature vector failed to delete'
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              retry: () => handleDeleteFeatureVector(featureVector),
+              message: 'Feature vector failed to delete'
+            })
+          )
         })
 
       setConfirmData(null)
@@ -275,10 +279,12 @@ const FeatureVectors = ({
         selectedFeatureVector,
         setNotification,
         updateFeatureStoreData,
-        filtersStore
+        filtersStore.CancelToken,
+        dispatch
       )
     },
     [
+      dispatch,
       fetchData,
       filtersStore,
       params.name,

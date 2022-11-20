@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
@@ -29,8 +29,8 @@ import { DATASET_TYPE, DATASETS, MODEL_TYPE } from '../../constants'
 
 import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
-import notificationActions from '../../actions/notification'
 import nuclioAction from '../../actions/nuclio'
+import { setNotification } from '../../reducers/notificationReducer'
 import projectsAction from '../../actions/projects'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
@@ -53,8 +53,7 @@ const ProjectMonitor = ({
   removeNewFunction,
   removeProjectData,
   removeProjectSummary,
-  removeV3ioStreams,
-  setNotification
+  removeV3ioStreams
 }) => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
@@ -62,6 +61,7 @@ const ProjectMonitor = ({
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
+  const dispatch = useDispatch()
   const { isNuclioModeDisabled } = useNuclioMode()
 
   const registerArtifactLink = useCallback(
@@ -195,17 +195,21 @@ const ProjectMonitor = ({
     removeNewFunction()
 
     const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Function deployment initiated successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+      )
 
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Failed to fetch functions'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Failed to fetch functions'
+        })
+      )
     })
 
     if (funcs) {
@@ -215,11 +219,13 @@ const ProjectMonitor = ({
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
 
-      return setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Function deployment initiated successfully'
-      })
+      return dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+      )
     }
   }
 
@@ -230,17 +236,21 @@ const ProjectMonitor = ({
     removeNewFunction()
 
     const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Function deployment failed to initiate'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Function deployment failed to initiate'
+        })
+      )
 
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Failed to fetch functions'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Failed to fetch functions'
+        })
+      )
     })
 
     if (funcs) {
@@ -250,11 +260,13 @@ const ProjectMonitor = ({
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
 
-      return setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Function deployment failed to initiate'
-      })
+      return dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Function deployment failed to initiate'
+        })
+      )
     }
   }
 
@@ -313,7 +325,6 @@ export default connect(
     ...featureStoreActions,
     ...functionsActions,
     ...projectsAction,
-    ...nuclioAction,
-    ...notificationActions
+    ...nuclioAction
   }
 )(ProjectMonitor)

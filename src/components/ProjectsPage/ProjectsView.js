@@ -68,8 +68,7 @@ const ProjectsView = ({
   setNewProjectLabels,
   setNewProjectName,
   setSelectedProjectsState,
-  sortProjectId,
-  urlParams
+  sortProjectId
 }) => {
   const projectsClassNames = classnames(
     'projects',

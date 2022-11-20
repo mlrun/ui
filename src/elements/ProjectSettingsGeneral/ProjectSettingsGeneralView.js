@@ -34,6 +34,7 @@ import { ARTIFACT_PATH } from '../../constants'
 const ProjectSettingsGeneralView = ({
   changeOwnerCallback,
   defaultArtifactPath,
+  dispatch,
   editProjectData,
   generalParams,
   handleAddProjectLabel,
@@ -93,14 +94,11 @@ const ProjectSettingsGeneralView = ({
                   }))
                 }
                 value={
-                  editProjectData.artifact_path.value ??
-                  project.data?.spec.artifact_path ??
-                  ''
+                  editProjectData.artifact_path.value ?? project.data?.spec.artifact_path ?? ''
                 }
               />
               <span className="settings__artifact-path-link">
-                Enter the default path for saving the artifacts within your
-                project.
+                Enter the default path for saving the artifacts within your project.
                 <a
                   className="link"
                   href="https://docs.mlrun.org/en/latest/store/artifacts.html"
@@ -147,14 +145,14 @@ const ProjectSettingsGeneralView = ({
                 <div className="row-value">
                   <span className="row-label">Owner:</span>
                   <span className="row-name">
-                    {membersState.projectInfo?.owner?.username ||
-                      project.data?.spec?.owner}
+                    {membersState.projectInfo?.owner?.username || project.data?.spec?.owner}
                   </span>
                 </div>
               </div>
               {projectMembershipIsEnabled && projectOwnerIsShown && (
                 <ChangeOwnerPopUp
                   changeOwnerCallback={changeOwnerCallback}
+                  dispatch={dispatch}
                   projectId={membersState.projectInfo.id}
                   setNotification={setNotification}
                 />
@@ -163,8 +161,8 @@ const ProjectSettingsGeneralView = ({
             <div>
               <p className="settings__card-title">Parameters</p>
               <p className="settings__card-subtitle">
-                The parameters enable users to pass key/value to the project
-                context that can later be used for running jobs & pipelines
+                The parameters enable users to pass key/value to the project context that can later
+                be used for running jobs & pipelines
               </p>
               <KeyValueTable
                 addNewItem={handleAddNewParameter}

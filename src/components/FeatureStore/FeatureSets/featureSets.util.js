@@ -26,7 +26,6 @@ import {
 } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
 import filtersActions from '../../../actions/filters'
-import notificationActions from '../../../actions/notification'
 
 export const generateFeatureSetsDetailsMenu = selectedItem => [
   {
@@ -50,8 +49,7 @@ export const generateFeatureSetsDetailsMenu = selectedItem => [
     label: 'statistics',
     id: 'statistics',
     hidden: !selectedItem?.stats,
-    tip:
-      'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics'
+    tip: 'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics'
   },
   {
     label: 'analysis',
@@ -99,6 +97,5 @@ export const featureSetsActionCreator = {
   removeFeatureStoreError: featureStoreActions.removeFeatureStoreError,
   removeNewFeatureSet: featureStoreActions.removeNewFeatureSet,
   setFilters: filtersActions.setFilters,
-  setNotification: notificationActions.setNotification,
   updateFeatureStoreData: featureStoreActions.updateFeatureStoreData
 }

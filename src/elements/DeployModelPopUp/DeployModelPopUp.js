@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { chain, keyBy, mapValues } from 'lodash'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
@@ -29,7 +29,7 @@ import { useLocation } from 'react-router-dom'
 
 import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
 
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { MODELS_TAB } from '../../constants'
 import { generateUri } from '../../utils/resources'
@@ -40,7 +40,7 @@ import { buildFunction, fetchArtifactsFunctions } from '../../reducers/artifacts
 
 import './deployModelPopUp.scss'
 
-const DeployModelPopUp = ({ isOpen, model, onResolve, setNotification }) => {
+const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
   const [functionList, setFunctionList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
@@ -154,19 +154,23 @@ const DeployModelPopUp = ({ isOpen, model, onResolve, setNotification }) => {
       .unwrap()
       .then(response => {
         formRef.current = null
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Model deployment initiated successfully'
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Model deployment initiated successfully'
+          })
+        )
       })
       .catch(() => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Model deployment failed to initiate',
-          retry: deployModel
-        })
+        dispatch(
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            message: 'Model deployment failed to initiate',
+            retry: deployModel
+          })
+        )
       })
       .finally(() => {
         onResolve()
@@ -280,10 +284,4 @@ DeployModelPopUp.propTypes = {
   onResolve: PropTypes.func
 }
 
-const actionCreators = {
-  setNotification: notificationActions.setNotification
-}
-
-export default connect(null, {
-  ...actionCreators
-})(DeployModelPopUp)
+export default DeployModelPopUp

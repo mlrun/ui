@@ -37,7 +37,6 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
 import filtersActions from '../../../actions/filters'
-import notificationActions from '../../../actions/notification'
 
 export const generateFilters = jobName => [
   { type: PERIOD_FILTER, label: 'Period:' },
@@ -123,6 +122,5 @@ export const monitorJobsActionCreator = {
   removeJobLogs: jobsActions.removeJobLogs,
   removeNewJob: jobsActions.removeNewJob,
   removePods: detailsActions.removePods,
-  setFilters: filtersActions.setFilters,
-  setNotification: notificationActions.setNotification
+  setFilters: filtersActions.setFilters
 }

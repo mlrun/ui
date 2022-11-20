@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useCallback } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
@@ -29,18 +29,20 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
 import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
+import { setNotification } from '../../reducers/notificationReducer'
 import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
 
 export const JobsContext = React.createContext({})
 
-const Jobs = ({ fetchJobFunction, setNotification }) => {
+const Jobs = ({ fetchJobFunction }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
   const jobsStore = useSelector(store => store.jobsStore)
@@ -59,7 +61,7 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
   }
 
   const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setNotification, setEditableItem),
+    async job => await rerunJob(job, fetchJobFunction, setNotification, setEditableItem, dispatch),
     [fetchJobFunction, setNotification]
   )
 

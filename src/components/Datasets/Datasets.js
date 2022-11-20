@@ -26,7 +26,7 @@ import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
 import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import {
   checkForSelectedDataset,
   fetchDataSetRowData,
@@ -59,7 +59,7 @@ import {
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Datasets = ({ getFilterTagOptions, setFilters, setNotification }) => {
+const Datasets = ({ getFilterTagOptions, setFilters }) => {
   const [datasets, setDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
@@ -287,8 +287,7 @@ const Datasets = ({ getFilterTagOptions, setFilters, setNotification }) => {
 
 const actionCreators = {
   getFilterTagOptions: filtersActions.getFilterTagOptions,
-  setFilters: filtersActions.setFilters,
-  setNotification: notificationActions.setNotification
+  setFilters: filtersActions.setFilters
 }
 
 export default connect(null, { ...actionCreators })(Datasets)

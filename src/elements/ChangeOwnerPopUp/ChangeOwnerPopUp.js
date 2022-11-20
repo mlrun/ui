@@ -34,7 +34,7 @@ import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
 import './changeOwnerPopUp.scss'
 
-const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId, setNotification }) => {
+const ChangeOwnerPopUp = ({ changeOwnerCallback, dispatch, projectId, setNotification }) => {
   const [searchValue, setSearchValue] = useState('')
   const [newOwnerId, setNewOwnerId] = useState('')
   const [usersList, setUsersList] = useState([])
@@ -93,25 +93,29 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId, setNotification }) =
         .editProject(projectId, projectData)
         .then(changeOwnerCallback)
         .then(() => {
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Owner updated successfully'
-          })
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Owner updated successfully'
+            })
+          )
         })
         .catch(error => {
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'Missing edit permission for the project.'
-                : 'Failed to edit project data.',
-            retry:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? null
-                : () => applyChanges(newOwnerId)
-          })
+          dispatch(
+            setNotification({
+              status: error.response?.status || 400,
+              id: Math.random(),
+              message:
+                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? 'Missing edit permission for the project.'
+                  : 'Failed to edit project data.',
+              retry:
+                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? null
+                  : () => applyChanges(newOwnerId)
+            })
+          )
         })
         .finally(handleOnClose)
     }

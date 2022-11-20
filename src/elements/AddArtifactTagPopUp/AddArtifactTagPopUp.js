@@ -19,26 +19,19 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 
 import { Button, FormInput, Modal } from 'igz-controls/components'
 
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { addTag } from '../../reducers/artifactsReducer'
 
-const AddArtifactTagPopUp = ({
-  artifact,
-  isOpen,
-  onAddTag,
-  onResolve,
-  projectName,
-  setNotification
-}) => {
+const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag, onResolve, projectName }) => {
   const dispatch = useDispatch()
   const [initialValues] = useState({
     artifactTag: ''
@@ -71,20 +64,24 @@ const AddArtifactTagPopUp = ({
     dispatch(addTag(addTagArgs))
       .unwrap()
       .then(response => {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Tag was added successfully'
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Tag was added successfully'
+          })
+        )
         onAddTag && onAddTag(filtersStore)
       })
       .catch(error => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to add a tag',
-          retry: addArtifactTag
-        })
+        dispatch(
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            message: 'Failed to add a tag',
+            retry: addArtifactTag
+          })
+        )
       })
 
     onResolve()
@@ -152,10 +149,4 @@ AddArtifactTagPopUp.propTypes = {
   projectName: PropTypes.string.isRequired
 }
 
-const actionCreators = {
-  setNotification: notificationActions.setNotification
-}
-
-export default connect(null, {
-  ...actionCreators
-})(AddArtifactTagPopUp)
+export default AddArtifactTagPopUp
