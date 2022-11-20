@@ -136,7 +136,7 @@ const Datasets = ({ getFilterTagOptions, setFilters }) => {
         dispatch
       )
     },
-    [dispatch, params.projectName, selectedDataset, setNotification]
+    [dispatch, params.projectName, selectedDataset]
   )
 
   const applyDetailsChangesCallback = changes => {

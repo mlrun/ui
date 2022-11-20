@@ -129,10 +129,10 @@ const JobsPanel = ({
     }
   }, [
     closePanel,
+    dispatch,
     functionsStore.error,
     functionsStore.template.name,
-    removeFunctionsError,
-    setNotification
+    removeFunctionsError
   ])
 
   useEffect(() => {

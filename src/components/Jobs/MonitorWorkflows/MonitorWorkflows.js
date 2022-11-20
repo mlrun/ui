@@ -162,7 +162,7 @@ const MonitorWorkflows = ({
           )
         })
     },
-    [fetchJobs, params.projectName, setNotification]
+    [dispatch, fetchJobs, params.projectName]
   )
 
   const onAbortJob = useCallback(
@@ -178,7 +178,7 @@ const MonitorWorkflows = ({
         dispatch
       )
     },
-    [abortJob, filtersStore, params.projectName, refreshJobs, setConfirmData, setNotification]
+    [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
   )
 
   const handleConfirmAbortJob = useCallback(
@@ -216,7 +216,7 @@ const MonitorWorkflows = ({
           .join('/')
       )
     },
-    [location.pathname, navigate, params.workflowId, setNotification]
+    [dispatch, location.pathname, navigate, params.workflowId]
   )
 
   const actionsMenu = useMemo(() => {
@@ -288,7 +288,7 @@ const MonitorWorkflows = ({
         })
       )
     },
-    [filtersStore, refreshJobs, setEditableItem, setNotification]
+    [dispatch, filtersStore, refreshJobs, setEditableItem]
   )
 
   const getWorkflows = useCallback(

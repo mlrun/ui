@@ -74,7 +74,7 @@ const ConsumerGroupsWrapper = ({
 
       resetV3ioStreamsError()
     }
-  }, [v3ioStreams.error, refreshConsumerGroups, resetV3ioStreamsError, setNotification])
+  }, [dispatch, v3ioStreams.error, refreshConsumerGroups, resetV3ioStreamsError])
 
   useEffect(() => {
     if (!isEmpty(frontendSpec) && !nuclioStreamsAreEnabled) {

@@ -72,7 +72,7 @@ const Download = ({ fileName, path, user }) => {
           )
         })
     },
-    [setNotification]
+    [dispatch]
   )
 
   const downloadCallback = useCallback(() => {
@@ -134,7 +134,7 @@ const Download = ({ fileName, path, user }) => {
           if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
-  }, [isDownload, path, user, setNotification, file, retryDownload])
+  }, [dispatch, isDownload, path, user, file, retryDownload])
 
   useEffect(() => {
     let cancelFetch = downloadRef.current

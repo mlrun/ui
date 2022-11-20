@@ -98,10 +98,10 @@ const ConsumerGroup = ({
     }
   }, [
     currentV3ioStream,
+    dispatch,
     nuclioStore.v3ioStreamShardLags.error,
     refreshConsumerGroup,
-    resetV3ioStreamShardLagsError,
-    setNotification
+    resetV3ioStreamShardLagsError
   ])
 
   const pageData = useMemo(() => generatePageData(), [])

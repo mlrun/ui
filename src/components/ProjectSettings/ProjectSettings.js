@@ -96,7 +96,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
           )
         )
     },
-    [setNotification]
+    [dispatch]
   )
   const fetchProjectMembersVisibility = project => {
     projectsIguazioApi

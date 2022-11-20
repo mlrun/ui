@@ -62,7 +62,7 @@ const Jobs = ({ fetchJobFunction }) => {
 
   const handleRerunJob = useCallback(
     async job => await rerunJob(job, fetchJobFunction, setNotification, setEditableItem, dispatch),
-    [fetchJobFunction, setNotification]
+    [dispatch, fetchJobFunction]
   )
 
   const handleMonitoring = useCallback(

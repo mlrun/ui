@@ -209,12 +209,12 @@ const FeatureSets = ({
       )
     },
     [
+      dispatch,
       fetchData,
       filtersStore,
       params.name,
       params.projectName,
       selectedFeatureSet,
-      setNotification,
       updateFeatureStoreData
     ]
   )

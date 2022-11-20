@@ -182,7 +182,7 @@ const Files = ({ getFilterTagOptions, setFilters }) => {
         dispatch
       )
     },
-    [dispatch, params.projectName, selectedFile, setNotification]
+    [dispatch, params.projectName, selectedFile]
   )
 
   const applyDetailsChangesCallback = changes => {

@@ -117,7 +117,7 @@ const MonitorJobs = ({
           )
         })
     },
-    [fetchAllJobRuns, fetchJobs, params.jobName, params.projectName, setNotification]
+    [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
   )
 
   const onAbortJob = useCallback(
@@ -133,7 +133,7 @@ const MonitorJobs = ({
         dispatch
       )
     },
-    [abortJob, filtersStore, params.projectName, refreshJobs, setConfirmData, setNotification]
+    [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
   )
 
   const handleConfirmAbortJob = useCallback(
@@ -220,7 +220,7 @@ const MonitorJobs = ({
         })
       )
     },
-    [filtersStore, refreshJobs, setEditableItem, setNotification]
+    [dispatch, filtersStore, refreshJobs, setEditableItem]
   )
 
   useEffect(() => {

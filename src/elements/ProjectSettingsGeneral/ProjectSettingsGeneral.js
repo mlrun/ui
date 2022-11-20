@@ -102,7 +102,7 @@ const ProjectSettingsGeneral = ({
         })
     },
 
-    [editProjectLabels, params.projectName, setNotification]
+    [dispatch, editProjectLabels, params.projectName, setNotification]
   )
 
   const handleUpdateProjectLabels = objectLabels => {

@@ -145,6 +145,7 @@ const FeatureVectors = ({
       setConfirmData(null)
     },
     [
+      dispatch,
       deleteFeatureVector,
       fetchData,
       fetchFeatureVectorsTags,
@@ -154,8 +155,7 @@ const FeatureVectors = ({
       params.projectName,
       selectedFeatureVector,
       setConfirmData,
-      setFilters,
-      setNotification
+      setFilters
     ]
   )
 
@@ -290,7 +290,6 @@ const FeatureVectors = ({
       params.name,
       params.projectName,
       selectedFeatureVector,
-      setNotification,
       updateFeatureStoreData
     ]
   )

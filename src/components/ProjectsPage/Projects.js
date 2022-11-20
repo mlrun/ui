@@ -130,7 +130,7 @@ const Projects = ({
         })
       setConfirmData(null)
     },
-    [changeProjectState, fetchProjects, setNotification]
+    [changeProjectState, dispatch, fetchProjects]
   )
 
   const handleDeleteProject = useCallback(
@@ -158,7 +158,7 @@ const Projects = ({
           )
         })
     },
-    [deleteProject, fetchProjects, setNotification]
+    [deleteProject, dispatch, fetchProjects]
   )
 
   const handleUnarchiveProject = useCallback(

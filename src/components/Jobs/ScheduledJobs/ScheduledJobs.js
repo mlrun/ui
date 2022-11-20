@@ -97,7 +97,7 @@ const ScheduledJobs = ({
           )
         })
     },
-    [fetchJobs, params.projectName, setNotification]
+    [dispatch, fetchJobs, params.projectName]
   )
 
   const handleRunJob = useCallback(
@@ -132,7 +132,7 @@ const ScheduledJobs = ({
           )
         })
     },
-    [handleRunScheduledJob, params.projectName, setNotification]
+    [dispatch, handleRunScheduledJob, params.projectName]
   )
 
   const handleRemoveScheduledJob = useCallback(
@@ -221,7 +221,7 @@ const ScheduledJobs = ({
           )
         })
     },
-    [fetchScheduledJobAccessKey, params.projectName, setNotification]
+    [dispatch, fetchScheduledJobAccessKey, params.projectName]
   )
 
   const handleSuccessRerunJob = useCallback(
@@ -239,7 +239,7 @@ const ScheduledJobs = ({
         })
       )
     },
-    [filtersStore, refreshJobs, setNotification]
+    [dispatch, filtersStore, refreshJobs]
   )
 
   const actionsMenu = useMemo(() => {

@@ -112,7 +112,7 @@ const AddToFeatureVectorPage = ({
           }
         })
     },
-    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen, setNotification]
+    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen]
   )
 
   const pageData = useMemo(
@@ -273,7 +273,7 @@ const AddToFeatureVectorPage = ({
     } else {
       dispatch(setTablePanelOpen(true))
     }
-  }, [dispatch, navigateToFeatureVectorsScreen, setNotification, tableStore.features.featureVector])
+  }, [dispatch, navigateToFeatureVectorsScreen, tableStore.features.featureVector])
 
   return (
     <AddToFeatureVectorView

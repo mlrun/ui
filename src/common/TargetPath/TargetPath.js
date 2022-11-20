@@ -110,8 +110,7 @@ const TargetPath = ({
           dataInputState.projectItem,
           dataInputState.projectItemReference,
           dataInputState.projects,
-          dataInputState.storePathType,
-          dispatch
+          dataInputState.storePathType
         )
       }))
     }
@@ -129,10 +128,8 @@ const TargetPath = ({
     dataInputState.projectItemReference,
     dataInputState.projects,
     dataInputState.storePathType,
-    dispatch,
     formState.values,
     formStateFieldInfo,
-    get(formState.values, `${formStateFieldInfo}.pathType`),
     setDataInputState
   ])
 

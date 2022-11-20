@@ -158,7 +158,7 @@ const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) =>
         dispatch
       )
     },
-    [params.projectName, selectedModel, setNotification, dispatch]
+    [dispatch, params.projectName, selectedModel]
   )
 
   const applyDetailsChangesCallback = changes => {
