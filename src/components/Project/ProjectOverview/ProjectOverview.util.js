@@ -341,7 +341,7 @@ export const getInitialCards = (projectName, navigate) => {
           id: 'deployServingFunction',
           icon: <ServingFunctionIcon />,
           handleClick: () => ({
-            path: `${base_url}/functions?openPanel=true`
+            path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
           label: 'Deploy serving function',
           tooltip: ''
