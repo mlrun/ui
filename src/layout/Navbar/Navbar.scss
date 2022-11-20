@@ -8,9 +8,6 @@
   left: 0;
   z-index: 3;
   display: flex;
-  flex: 1 0 $navbarWidth;
-  max-width: $navbarWidth;
-  width: $navbarWidth;
   height: 100%;
   border-right: $tertiaryBorder;
   transform: translateX(-100%);

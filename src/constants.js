@@ -43,6 +43,8 @@ export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
 
 export const TAG_LATEST = 'latest'
 
+export const NAVBAR_WIDTH = 245
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'

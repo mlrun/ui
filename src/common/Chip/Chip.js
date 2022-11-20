@@ -51,7 +51,7 @@ const Chip = React.forwardRef(
       showChips,
       textOverflowEllipsis
     },
-    ref
+    { chipsCellRef, hiddenChipCounterRef }
   ) => {
     const chipRef = React.useRef()
     const { chipLabel, chipValue } = getChipLabelAndValue(chip)
@@ -106,7 +106,7 @@ const Chip = React.forwardRef(
           editConfig={editConfig}
           key={chip.value}
           onChange={handleEditChip}
-          ref={ref}
+          ref={chipsCellRef}
           setEditConfig={setEditConfig}
           value={chip.value.match(/^(?<key>|.+?):\s?(?<value>|.+?)$/)?.groups}
         />
@@ -136,7 +136,7 @@ const Chip = React.forwardRef(
     }
 
     return (
-      <span className={`${chipClassNames} chips_button`} onClick={onClick}>
+      <span className={`${chipClassNames} chips_button`} onClick={onClick} ref={hiddenChipCounterRef}>
         {chip.value}
       </span>
     )

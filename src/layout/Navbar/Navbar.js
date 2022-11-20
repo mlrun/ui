@@ -27,6 +27,7 @@ import { RoundedIcon } from 'igz-controls/components'
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
 import { useMode } from '../../hooks/mode.hook'
+import { NAVBAR_WIDTH } from '../../constants'
 
 import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
@@ -36,12 +37,14 @@ import './Navbar.scss'
 
 const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned }) => {
   const { isDemoMode } = useMode()
-
   const navbarClasses = classNames(
     'navbar',
     isNavbarPinned && 'pinned',
     isHeaderShown && 'has-header'
   )
+  const navbarStyles = { flex: `1, 0, ${NAVBAR_WIDTH}px`,
+    width: `${NAVBAR_WIDTH}px`,
+    maxWidth: `${NAVBAR_WIDTH}px`}
 
   const { links } = useMemo(() => {
     let links = projectName ? getLinks(projectName, isDemoMode) : []
@@ -56,10 +59,10 @@ const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned 
   }
 
   return (
-    <nav className={navbarClasses}>
+    <nav className={navbarClasses} style={navbarStyles}>
       <div className="navbar__toggler">
         <button className="navbar__toggler-button">
-          <span className="navbar__toggler-icon"></span>
+          <span className="navbar__toggler-icon" />
         </button>
       </div>
       <div className="navbar__body">
