@@ -43,7 +43,6 @@ import './modelsPage.scss'
 const ModelsPage = () => {
   const location = useLocation()
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const params = useParams()
   const { convertedYaml, fetchData, toggleConvertedYaml } = useModelsPage()
 
@@ -75,7 +74,7 @@ const ModelsPage = () => {
           />
           <div className="table-container">
             <Outlet />
-            {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
+            {artifactsStore.loading && <Loader />}
           </div>
         </div>
       </div>

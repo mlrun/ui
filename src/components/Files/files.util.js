@@ -30,6 +30,7 @@ import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { fetchFile } from '../../reducers/artifactsReducer'
 
 export const pageDataInitialState = {
   details: {
@@ -99,7 +100,7 @@ export const filters = [
 ]
 export const actionsMenuHeader = 'Register artifact'
 
-export const fetchFilesRowData = (file, setSelectedRowData, fetchFile, projectName, iter, tag) => {
+export const fetchFilesRowData = (file, setSelectedRowData, dispatch, projectName, iter, tag) => {
   const fileIdentifier = getArtifactIdentifier(file)
 
   setSelectedRowData(state => ({
@@ -109,7 +110,8 @@ export const fetchFilesRowData = (file, setSelectedRowData, fetchFile, projectNa
     }
   }))
 
-  fetchFile(file.project ?? projectName, file.db_key, !iter, tag)
+  dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter: !iter, tag }))
+    .unwrap()
     .then(result => {
       if (result?.length > 0) {
         setSelectedRowData(state => ({

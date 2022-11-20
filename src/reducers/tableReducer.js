@@ -37,16 +37,16 @@ const tableSlice = createSlice({
     setFeaturesPanelData(state, action) {
       state.features = action.payload
     },
-    setLabelFeature: (state, action) => {
+    setLabelFeature(state, action) {
       state.features.labelFeature = action.payload
     },
-    setTablePanelOpen: (state, action) => {
+    setTablePanelOpen(state, action) {
       state.isTablePanelOpen = action.payload
     },
-    updateCurrentProjectName: (state, action) => {
+    updateCurrentProjectName(state, action) {
       state.features.currentProject = action.payload
     },
-    updateFeatureVector: (state, action) => {
+    updateFeatureVector(state, action) {
       state.features.featureVector.metadata = {
         ...state.features.featureVector.metadata,
         ...action.payload.metadata
@@ -56,7 +56,7 @@ const tableSlice = createSlice({
         ...action.payload.spec
       }
     },
-    updateGroupedFeatures: (state, action) => {
+    updateGroupedFeatures(state, action) {
       state.features.groupedFeatures[action.payload.project] = action.payload.groupedFeatures
     }
   }

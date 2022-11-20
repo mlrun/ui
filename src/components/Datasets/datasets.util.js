@@ -31,6 +31,7 @@ import {
 } from '../../constants'
 import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { fetchDataSet } from '../../reducers/artifactsReducer'
 
 export const infoHeaders = [
   {
@@ -99,7 +100,7 @@ export const generatePageData = selectedItem => ({
 })
 
 export const fetchDataSetRowData = async (
-  fetchDataSet,
+  dispatch,
   dataSet,
   setSelectedRowData,
   iter,
@@ -115,7 +116,8 @@ export const fetchDataSetRowData = async (
     }
   }))
 
-  fetchDataSet(dataSet.project, dataSet.db_key, iter, tag)
+  dispatch(fetchDataSet({ project: dataSet.project, dataSet: dataSet.db_key, iter, tag }))
+    .unwrap()
     .then(result => {
       if (result?.length > 0) {
         setSelectedRowData(state => {

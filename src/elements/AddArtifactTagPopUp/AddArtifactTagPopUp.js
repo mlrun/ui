@@ -26,11 +26,10 @@ import { createForm } from 'final-form'
 
 import { Button, FormInput, Modal } from 'igz-controls/components'
 
-import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { addTag } from '../../reducers/artifactsToolkitReducer'
+import { addTag } from '../../reducers/artifactsReducer'
 
 const AddArtifactTagPopUp = ({
   artifact,
@@ -154,7 +153,6 @@ AddArtifactTagPopUp.propTypes = {
 }
 
 const actionCreators = {
-  buildFunction: artifactsAction.buildFunction,
   setNotification: notificationActions.setNotification
 }
 

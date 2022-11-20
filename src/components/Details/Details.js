@@ -24,7 +24,6 @@ import { connect, useDispatch } from 'react-redux'
 
 import DetailsView from './DetailsView'
 
-import artifactActions from '../../actions/artifacts'
 import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
@@ -45,6 +44,7 @@ import {
 } from './details.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { useBlockHistory } from '../../hooks/useBlockHistory.hook'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import './details.scss'
 
@@ -84,7 +84,7 @@ const Details = ({
 
   const handlePreview = useCallback(() => {
     dispatch(
-      artifactActions.showArtifactsPreview({
+      showArtifactsPreview({
         isPreview: true,
         selectedItem
       })
