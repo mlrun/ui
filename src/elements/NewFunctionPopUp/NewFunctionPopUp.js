@@ -105,6 +105,7 @@ const NewFunctionPopUp = ({
     if (openPanelByDefault) {
       setIsPopUpOpen(true)
     }
+
     if (runtime) {
       selectRuntime(runtime)
     }
