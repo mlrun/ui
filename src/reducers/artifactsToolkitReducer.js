@@ -46,16 +46,16 @@ const artifactsSlice = createSlice({
   name: 'artifactsStore',
   initialState,
   reducers: {},
-  extraReducers: {
-    [addTag.pending]: showLoading,
-    [addTag.fulfilled]: hideLoading,
-    [addTag.rejected]: hideLoading,
-    [deleteTag.pending]: showLoading,
-    [deleteTag.fulfilled]: hideLoading,
-    [deleteTag.rejected]: hideLoading,
-    [editTag.pending]: showLoading,
-    [editTag.fulfilled]: hideLoading,
-    [editTag.rejected]: hideLoading
+  extraReducers: builder => {
+    builder.addCase(addTag.pending, showLoading)
+    builder.addCase(addTag.fulfilled, hideLoading)
+    builder.addCase(addTag.rejected, hideLoading)
+    builder.addCase(deleteTag.pending, showLoading)
+    builder.addCase(deleteTag.fulfilled, hideLoading)
+    builder.addCase(deleteTag.rejected, hideLoading)
+    builder.addCase(editTag.pending, showLoading)
+    builder.addCase(editTag.fulfilled, hideLoading)
+    builder.addCase(editTag.rejected, hideLoading)
   }
 })
 
