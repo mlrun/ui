@@ -38,8 +38,7 @@ const AddArtifactTagPopUp = ({
   isOpen,
   onAddTag,
   onResolve,
-  projectName,
-  setNotification
+  projectName
 }) => {
   const dispatch = useDispatch()
   const [initialValues] = useState({
