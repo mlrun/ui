@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useReducer, useEffect, useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { uniqBy } from 'lodash'
 import { useParams } from 'react-router-dom'
 
@@ -40,7 +40,6 @@ import {
   handleInputPathTypeChange,
   resetDataInputsData
 } from './jobsPanelDataInputs.util'
-import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
@@ -50,10 +49,9 @@ import {
   generateArtifactsReferencesList,
   generateProjectsList
 } from '../../utils/panelPathScheme'
+import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 
 const JobsPanelDataInputs = ({
-  fetchArtifact,
-  fetchArtifacts,
   fetchFeatureVector,
   fetchFeatureVectors,
   inputs,
@@ -64,14 +62,12 @@ const JobsPanelDataInputs = ({
   setArtifactPathValid,
   setNewJobInputs
 }) => {
-  const [inputsState, inputsDispatch] = useReducer(
-    jobsPanelDataInputsReducer,
-    initialState
-  )
+  const [inputsState, inputsDispatch] = useReducer(jobsPanelDataInputsReducer, initialState)
   const [validation, setValidation] = useState({
     isNameValid: true,
     isPathValid: true
   })
+  const dispatch = useDispatch()
   const params = useParams()
 
   const getInputValue = useCallback(
@@ -80,9 +76,7 @@ const JobsPanelDataInputs = ({
 
       let value =
         inputsState.newInput.path?.[inputItem] ||
-        inputsState.selectedDataInput.data.path.value.split('/')[
-          inputItems.indexOf(inputItem)
-        ]
+        inputsState.selectedDataInput.data.path.value.split('/')[inputItems.indexOf(inputItem)]
 
       if (inputItem === 'projectItem') {
         value = getParsedResource(value)[0]
@@ -99,15 +93,11 @@ const JobsPanelDataInputs = ({
       (inputsState.projects.length === 0 ||
         inputsState.newInput.path.project.length === 0 ||
         (!isEveryObjectValueEmpty(inputsState.selectedDataInput) &&
-          inputsState.selectedDataInput.data.path.value.split('/')[1]
-            ?.length === 0))
+          inputsState.selectedDataInput.data.path.value.split('/')[1]?.length === 0))
     ) {
       inputsDispatch({
         type: inputsActions.SET_PROJECTS,
-        payload: generateProjectsList(
-          projectStore.projectsNames.data,
-          params.projectName
-        )
+        payload: generateProjectsList(projectStore.projectsNames.data, params.projectName)
       })
     }
   }, [
@@ -125,16 +115,15 @@ const JobsPanelDataInputs = ({
 
     if (inputsState.inputProjectPathEntered && storePathType && projectName) {
       if (storePathType === 'artifacts' && inputsState.artifacts.length === 0) {
-        fetchArtifacts(projectName).then(artifacts => {
-          inputsDispatch({
-            type: inputsActions.SET_ARTIFACTS,
-            payload: generateArtifactsList(artifacts)
+        dispatch(fetchArtifacts({ project: projectName }))
+          .unwrap()
+          .then(artifacts => {
+            inputsDispatch({
+              type: inputsActions.SET_ARTIFACTS,
+              payload: generateArtifactsList(artifacts)
+            })
           })
-        })
-      } else if (
-        storePathType === 'feature-vectors' &&
-        inputsState.featureVectors.length === 0
-      ) {
+      } else if (storePathType === 'feature-vectors' && inputsState.featureVectors.length === 0) {
         fetchFeatureVectors(projectName).then(featureVectors => {
           const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
             .map(featureVector => ({
@@ -153,7 +142,7 @@ const JobsPanelDataInputs = ({
       }
     }
   }, [
-    fetchArtifacts,
+    dispatch,
     fetchFeatureVectors,
     getInputValue,
     inputsState.artifacts.length,
@@ -166,24 +155,18 @@ const JobsPanelDataInputs = ({
     const projectName = getInputValue('project')
     const projectItem = getInputValue('projectItem')
 
-    if (
-      inputsState.inputProjectItemPathEntered &&
-      storePathType &&
-      projectName &&
-      projectItem
-    ) {
-      if (
-        storePathType === 'artifacts' &&
-        inputsState.artifactsReferences.length === 0
-      ) {
-        fetchArtifact(projectName, projectItem).then(artifacts => {
-          if (artifacts.length > 0 && artifacts[0].data) {
-            inputsDispatch({
-              type: inputsActions.SET_ARTIFACTS_REFERENCES,
-              payload: generateArtifactsReferencesList(artifacts[0].data)
-            })
-          }
-        })
+    if (inputsState.inputProjectItemPathEntered && storePathType && projectName && projectItem) {
+      if (storePathType === 'artifacts' && inputsState.artifactsReferences.length === 0) {
+        dispatch(fetchArtifact({ project: projectName, artifact: projectItem }))
+          .unwrap()
+          .then(artifacts => {
+            if (artifacts.length > 0 && artifacts[0].data) {
+              inputsDispatch({
+                type: inputsActions.SET_ARTIFACTS_REFERENCES,
+                payload: generateArtifactsReferencesList(artifacts[0].data)
+              })
+            }
+          })
       } else if (
         storePathType === 'feature-vectors' &&
         inputsState.featureVectorsReferences.length === 0
@@ -191,9 +174,7 @@ const JobsPanelDataInputs = ({
         fetchFeatureVector(projectName, projectItem).then(featureVectors => {
           const featureVectorsReferencesList = featureVectors
             .map(featureVector => {
-              let featureVectorReference = getFeatureReference(
-                featureVector.metadata
-              )
+              let featureVectorReference = getFeatureReference(featureVector.metadata)
 
               return {
                 label: featureVectorReference,
@@ -212,8 +193,7 @@ const JobsPanelDataInputs = ({
       }
     }
   }, [
-    fetchArtifact,
-    fetchArtifacts,
+    dispatch,
     fetchFeatureVector,
     fetchFeatureVectors,
     getInputValue,
@@ -227,8 +207,7 @@ const JobsPanelDataInputs = ({
   useEffect(() => {
     if (
       inputsState.newInput.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ||
-      inputsState.selectedDataInput.data.path.pathType ===
-        MLRUN_STORAGE_INPUT_PATH_SCHEME
+      inputsState.selectedDataInput.data.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
     ) {
       inputsDispatch({
         type: inputsActions.SET_COMBOBOX_MATCHES,
@@ -325,10 +304,8 @@ const JobsPanelDataInputs = ({
   return (
     <JobsPanelDataInputsView
       comboboxMatchesList={
-        inputsState.newInput.path.pathType ===
-          MLRUN_STORAGE_INPUT_PATH_SCHEME ||
-        inputsState.selectedDataInput.data.path.pathType ===
-          MLRUN_STORAGE_INPUT_PATH_SCHEME
+        inputsState.newInput.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ||
+        inputsState.selectedDataInput.data.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
           ? inputsState.comboboxMatches
           : []
       }
@@ -360,6 +337,5 @@ JobsPanelDataInputs.propTypes = {
 }
 
 export default connect(projectStore => projectStore, {
-  ...artifactsAction,
   ...featureStoreActions
 })(JobsPanelDataInputs)

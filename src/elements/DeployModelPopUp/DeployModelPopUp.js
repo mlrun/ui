@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { chain, keyBy, mapValues } from 'lodash'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
@@ -29,7 +29,6 @@ import { useLocation } from 'react-router-dom'
 
 import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
 
-import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { MODELS_TAB } from '../../constants'
@@ -37,17 +36,11 @@ import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { buildFunction, fetchArtifactsFunctions } from '../../reducers/artifactsReducer'
 
 import './deployModelPopUp.scss'
 
-const DeployModelPopUp = ({
-  buildFunction,
-  fetchFunctions,
-  isOpen,
-  model,
-  onResolve,
-  setNotification
-}) => {
+const DeployModelPopUp = ({ isOpen, model, onResolve, setNotification }) => {
   const [functionList, setFunctionList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
@@ -58,6 +51,7 @@ const DeployModelPopUp = ({
     selectedFunctionName: '',
     arguments: []
   })
+  const dispatch = useDispatch()
 
   const formRef = React.useRef(
     createForm({
@@ -80,21 +74,23 @@ const DeployModelPopUp = ({
 
   useEffect(() => {
     if (functionOptionList.length === 0) {
-      fetchFunctions(model.project, {}, false).then(functions => {
-        const functionOptions = chain(functions)
-          .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
-          .uniqBy('metadata.name')
-          .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
-          .value()
+      dispatch(fetchArtifactsFunctions({ project: model.project, filters: {} }))
+        .unwrap()
+        .then(functions => {
+          const functionOptions = chain(functions)
+            .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
+            .uniqBy('metadata.name')
+            .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
+            .value()
 
-        if (functionOptions.length !== 0) {
-          setFunctionList(functions)
-          setFunctionOptionList(functionOptions)
-          setInitialValues(prev => ({ ...prev, selectedFunctionName: functionOptions[0].id }))
-        }
-      })
+          if (functionOptions.length !== 0) {
+            setFunctionList(functions)
+            setFunctionOptionList(functionOptions)
+            setInitialValues(prev => ({ ...prev, selectedFunctionName: functionOptions[0].id }))
+          }
+        })
     }
-  }, [fetchFunctions, functionOptionList.length, initialValues.selectedFunctionName, model.project])
+  }, [dispatch, functionOptionList.length, initialValues.selectedFunctionName, model.project])
 
   useEffect(() => {
     setInitialValues(prev => ({ ...prev, modelName: model?.db_key }))
@@ -154,7 +150,8 @@ const DeployModelPopUp = ({
       kind: 'task'
     }
 
-    return buildFunction({ function: servingFunction })
+    return dispatch(buildFunction({ funcData: { function: servingFunction } }))
+      .unwrap()
       .then(response => {
         formRef.current = null
         setNotification({
@@ -284,8 +281,6 @@ DeployModelPopUp.propTypes = {
 }
 
 const actionCreators = {
-  buildFunction: artifactsAction.buildFunction,
-  fetchFunctions: artifactsAction.fetchFunctions,
   setNotification: notificationActions.setNotification
 }
 

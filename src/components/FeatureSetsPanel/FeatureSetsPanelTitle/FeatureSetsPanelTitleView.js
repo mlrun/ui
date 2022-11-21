@@ -19,7 +19,6 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import ChipCell from '../../../common/ChipCell/ChipCell'
 import Input from '../../../common/Input/Input'
@@ -148,6 +147,4 @@ FeatureSetsPanelTitleView.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(({ artifactsStore }) => ({
-  artifactsStore
-}))(FeatureSetsPanelTitleView)
+export default FeatureSetsPanelTitleView

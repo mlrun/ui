@@ -73,7 +73,7 @@ const artifactsApi = {
 
     return mainHttpClient.get('/files', config)
   },
-  getArtifactTag: (project, category) =>
+  getArtifactTags: (project, category) =>
     mainHttpClient.get(`/projects/${project}/artifact-tags`, {
       params: {
         category

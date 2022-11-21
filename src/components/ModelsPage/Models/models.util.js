@@ -34,6 +34,7 @@ import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
+import { fetchModel, updateArtifact } from '../../../reducers/artifactsReducer'
 
 export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
@@ -73,7 +74,7 @@ export const infoHeaders = [
 export const actionsMenuHeader = 'Register model'
 
 export const fetchModelsRowData = async (
-  fetchModel,
+  dispatch,
   model,
   setSelectedRowData,
   iter,
@@ -89,7 +90,8 @@ export const fetchModelsRowData = async (
     }
   }))
 
-  fetchModel(model.project, model.db_key, iter, tag)
+  dispatch(fetchModel({ project: model.project, model, iter, tag }))
+    .unwrap()
     .then(result => {
       if (result?.length > 0) {
         setSelectedRowData(state => {
@@ -167,7 +169,6 @@ export const handleApplyDetailsChanges = (
   projectName,
   selectedItem,
   setNotification,
-  updateArtifact,
   dispatch
 ) => {
   const isNewFormat =
@@ -210,7 +211,8 @@ export const handleApplyDetailsChanges = (
         : (artifactItem.labels = { ...objectLabels })
     }
 
-    updateArtifactPromise = updateArtifact(projectName, artifactItem)
+    updateArtifactPromise = dispatch(updateArtifact({ project: projectName, data: artifactItem }))
+      .unwrap()
       .then(response => {
         setNotification({
           status: response.status,
@@ -226,7 +228,8 @@ export const handleApplyDetailsChanges = (
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'Permission denied'
               : 'Failed to update the model',
-          retry: () => updateArtifact(projectName, artifactItem)
+          retry: () =>
+            dispatch(updateArtifact({ project: projectName, data: artifactItem })).unwrap()
         })
       })
   }

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { cloneDeep } from 'lodash'
-import { deleteTag, editTag, addTag } from '../reducers/artifactsToolkitReducer'
+import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
