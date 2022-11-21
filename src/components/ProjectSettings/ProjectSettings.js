@@ -225,11 +225,9 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
         ) : (
           <ProjectSettingsGeneral
             changeOwnerCallback={changeOwnerCallback}
-            dispatch={dispatch}
             membersState={membersState}
             projectMembershipIsEnabled={projectMembershipIsEnabled}
             projectOwnerIsShown={projectOwnerIsShown}
-            setNotification={setNotification}
           />
         )}
       </div>

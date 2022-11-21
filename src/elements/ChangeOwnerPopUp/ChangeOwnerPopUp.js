@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { debounce } from 'lodash'
@@ -25,6 +26,7 @@ import { debounce } from 'lodash'
 import Input from '../../common/Input/Input'
 import { Button, PopUpDialog } from 'igz-controls/components'
 
+import { setNotification } from '../../reducers/notificationReducer'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
 import { FORBIDDEN_ERROR_STATUS_CODE, SECONDARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
@@ -34,13 +36,14 @@ import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
 import './changeOwnerPopUp.scss'
 
-const ChangeOwnerPopUp = ({ changeOwnerCallback, dispatch, projectId, setNotification }) => {
+const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
   const [searchValue, setSearchValue] = useState('')
   const [newOwnerId, setNewOwnerId] = useState('')
   const [usersList, setUsersList] = useState([])
   const [showSuggestionList, setShowSuggestionList] = useState(false)
   const searchInputRef = useRef(null)
   const searchRowRef = useRef(null)
+  const dispatch = useDispatch()
   useDetectOutsideClick(searchInputRef, () => setShowSuggestionList(false))
 
   const { width: dropdownWidth } = searchRowRef?.current?.getBoundingClientRect() || {}
@@ -246,8 +249,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, dispatch, projectId, setNotific
 
 ChangeOwnerPopUp.propTypes = {
   changeOwnerCallback: PropTypes.func.isRequired,
-  projectId: PropTypes.string.isRequired,
-  setNotification: PropTypes.func.isRequired
+  projectId: PropTypes.string.isRequired
 }
 
 export default ChangeOwnerPopUp

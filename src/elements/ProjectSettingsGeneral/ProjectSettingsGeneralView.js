@@ -34,7 +34,6 @@ import { ARTIFACT_PATH } from '../../constants'
 const ProjectSettingsGeneralView = ({
   changeOwnerCallback,
   defaultArtifactPath,
-  dispatch,
   editProjectData,
   generalParams,
   handleAddProjectLabel,
@@ -50,7 +49,6 @@ const ProjectSettingsGeneralView = ({
   project,
   projectMembershipIsEnabled,
   projectOwnerIsShown,
-  setNotification,
   setValidation,
   validation
 }) => {
@@ -152,9 +150,7 @@ const ProjectSettingsGeneralView = ({
               {projectMembershipIsEnabled && projectOwnerIsShown && (
                 <ChangeOwnerPopUp
                   changeOwnerCallback={changeOwnerCallback}
-                  dispatch={dispatch}
                   projectId={membersState.projectInfo.id}
-                  setNotification={setNotification}
                 />
               )}
             </div>

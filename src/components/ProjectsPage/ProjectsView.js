@@ -220,8 +220,7 @@ ProjectsView.propTypes = {
   setNameValid: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
-  sortProjectId: PropTypes.string.isRequired,
-  urlParams: PropTypes.shape({}).isRequired
+  sortProjectId: PropTypes.string.isRequired
 }
 
 export default ProjectsView

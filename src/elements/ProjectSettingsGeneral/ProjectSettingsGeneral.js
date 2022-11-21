@@ -19,13 +19,14 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty, isEqual, isNil, omitBy } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
 import { ARTIFACT_PATH, DATA, LABELS, PARAMS, SOURCE_URL } from '../../constants'
+import { setNotification } from '../../reducers/notificationReducer'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
@@ -38,7 +39,6 @@ import './projectSettingsGeneral.scss'
 const ProjectSettingsGeneral = ({
   addProjectLabel,
   changeOwnerCallback,
-  dispatch,
   editProjectLabels,
   fetchProject,
   frontendSpec,
@@ -47,7 +47,6 @@ const ProjectSettingsGeneral = ({
   projectMembershipIsEnabled,
   projectOwnerIsShown,
   removeProjectData,
-  setNotification,
   setProjectLabels,
   setProjectParams,
   setProjectSettings
@@ -58,6 +57,7 @@ const ProjectSettingsGeneral = ({
     isPathValid: true
   })
   const params = useParams()
+  const dispatch = useDispatch()
 
   const generalParams = useMemo(
     () =>
@@ -271,7 +271,6 @@ const ProjectSettingsGeneral = ({
     <ProjectSettingsGeneralView
       changeOwnerCallback={changeOwnerCallback}
       defaultArtifactPath={frontendSpec.default_artifact_path}
-      dispatch={dispatch}
       editProjectData={editProjectData}
       generalParams={generalParams}
       handleAddNewParameter={handleAddNewParameter}
@@ -287,7 +286,6 @@ const ProjectSettingsGeneral = ({
       project={projectStore.project}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
       projectOwnerIsShown={projectOwnerIsShown}
-      setNotification={setNotification}
       setValidation={setValidation}
       validation={validation}
     />

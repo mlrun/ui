@@ -28,7 +28,7 @@ import { removeNotification } from '../../reducers/notificationReducer'
 
 const Notification = () => {
   const dispatch = useDispatch()
-  const { notificationStore } = useSelector(store => store)
+  const notificationStore = useSelector(store => store.notificationStore)
 
   const defaultStyle = {
     position: 'fixed',
