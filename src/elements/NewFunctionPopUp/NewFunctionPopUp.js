@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -96,10 +96,13 @@ const NewFunctionPopUp = ({
     }
   }
 
-  const selectRuntime = runtime => {
-    setData(state => ({ ...state, runtime }))
-    setNewFunctionKind(runtime)
-  }
+  const selectRuntime = useCallback(
+    runtime => {
+      setData(state => ({ ...state, runtime }))
+      setNewFunctionKind(runtime)
+    },
+    [setNewFunctionKind]
+  )
 
   useEffect(() => {
     if (openPanelByDefault) {
@@ -109,7 +112,7 @@ const NewFunctionPopUp = ({
     if (runtime) {
       selectRuntime(runtime)
     }
-  }, [openPanelByDefault, runtime])
+  }, [openPanelByDefault, selectRuntime, runtime])
 
   return (
     <div className="new-function">

@@ -56,9 +56,7 @@ export const generateProjectActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        hidden:
-          window.mlrunConfig.nuclioMode === 'enabled' &&
-          project.metadata.name === 'default',
+        hidden: window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
         onClick: deleteProject
       }
     ]
@@ -96,7 +94,8 @@ export const handleDeleteProjectError = (
   handleDeleteProject,
   project,
   setConfirmData,
-  setNotification
+  setNotification,
+  dispatch
 ) => {
   if (error.response?.status === 412) {
     setConfirmData({
@@ -115,11 +114,13 @@ export const handleDeleteProjectError = (
       }
     })
   } else {
-    setNotification({
-      status: 400,
-      id: Math.random(),
-      retry: () => handleDeleteProject(project),
-      message: failedProjectDeletingMessage
-    })
+    dispatch(
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        retry: () => handleDeleteProject(project),
+        message: failedProjectDeletingMessage
+      })
+    )
   }
 }

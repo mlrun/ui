@@ -34,7 +34,6 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
 import {
   checkForSelectedFile,
   fetchFilesRowData,
@@ -48,6 +47,7 @@ import {
   removeFile,
   removeFiles
 } from '../../reducers/artifactsReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
@@ -59,7 +59,7 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Files = ({ setNotification, getFilterTagOptions, setFilters }) => {
+const Files = ({ getFilterTagOptions, setFilters }) => {
   const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, ARTIFACT_OTHER_TYPE)
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
@@ -182,7 +182,7 @@ const Files = ({ setNotification, getFilterTagOptions, setFilters }) => {
         dispatch
       )
     },
-    [dispatch, params.projectName, selectedFile, setNotification]
+    [dispatch, params.projectName, selectedFile]
   )
 
   const applyDetailsChangesCallback = changes => {
@@ -282,4 +282,4 @@ const Files = ({ setNotification, getFilterTagOptions, setFilters }) => {
   )
 }
 
-export default connect(null, { ...filtersActions, ...notificationActions })(Files)
+export default connect(null, { ...filtersActions })(Files)

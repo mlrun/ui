@@ -20,7 +20,6 @@ such restriction.
 import jobsActions from '../../../actions/jobs'
 import workflowsActions from '../../../actions/workflow'
 import filtersActions from '../../../actions/filters'
-import notificationActions from '../../../actions/notification'
 
 export const scheduledJobsActionCreator = {
   editJob: jobsActions.editJob,
@@ -32,6 +31,5 @@ export const scheduledJobsActionCreator = {
   removeNewJob: jobsActions.removeNewJob,
   removeScheduledJob: jobsActions.removeScheduledJob,
   resetWorkflow: workflowsActions.resetWorkflow,
-  setFilters: filtersActions.setFilters,
-  setNotification: notificationActions.setNotification
+  setFilters: filtersActions.setFilters
 }

@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { find, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 
 import MonitorWorkflowsView from './MonitorWorkflowsView'
 
@@ -44,6 +44,7 @@ import {
   generatePageData,
   monitorWorkflowsActionCreator
 } from './monitorWorkflows.util'
+import { setNotification } from '../../../reducers/notificationReducer'
 import { usePods } from '../../../hooks/usePods.hook'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
@@ -62,8 +63,7 @@ const MonitorWorkflows = ({
   removeJobLogs,
   removeNewJob,
   resetWorkflow,
-  setFilters,
-  setNotification
+  setFilters
 }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
@@ -78,6 +78,7 @@ const MonitorWorkflows = ({
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const { setConfirmData, handleMonitoring, handleRerunJob, editableItem, setEditableItem } =
     React.useContext(JobsContext)
@@ -151,15 +152,17 @@ const MonitorWorkflows = ({
           setJobs(parsedJobs)
         })
         .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch jobs',
-            retry: () => refreshJobs(filters)
-          })
+          dispatch(
+            setNotification({
+              status: error?.response?.status || 400,
+              id: Math.random(),
+              message: 'Failed to fetch jobs',
+              retry: () => refreshJobs(filters)
+            })
+          )
         })
     },
-    [fetchJobs, params.projectName, setNotification]
+    [dispatch, fetchJobs, params.projectName]
   )
 
   const onAbortJob = useCallback(
@@ -171,10 +174,11 @@ const MonitorWorkflows = ({
         filtersStore,
         setNotification,
         refreshJobs,
-        setConfirmData
+        setConfirmData,
+        dispatch
       )
     },
-    [abortJob, filtersStore, params.projectName, refreshJobs, setConfirmData, setNotification]
+    [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
   )
 
   const handleConfirmAbortJob = useCallback(
@@ -198,11 +202,13 @@ const MonitorWorkflows = ({
 
   const handleCatchRequest = useCallback(
     (error, message) => {
-      setNotification({
-        status: error?.response?.status || 400,
-        id: Math.random(),
-        message
-      })
+      dispatch(
+        setNotification({
+          status: error?.response?.status || 400,
+          id: Math.random(),
+          message
+        })
+      )
       navigate(
         location.pathname
           .split('/')
@@ -210,7 +216,7 @@ const MonitorWorkflows = ({
           .join('/')
       )
     },
-    [location.pathname, navigate, params.workflowId, setNotification]
+    [dispatch, location.pathname, navigate, params.workflowId]
   )
 
   const actionsMenu = useMemo(() => {
@@ -274,13 +280,15 @@ const MonitorWorkflows = ({
       }
 
       setEditableItem(null)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Job started successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job started successfully'
+        })
+      )
     },
-    [filtersStore, refreshJobs, setEditableItem, setNotification]
+    [dispatch, filtersStore, refreshJobs, setEditableItem]
   )
 
   const getWorkflows = useCallback(

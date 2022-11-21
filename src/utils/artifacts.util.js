@@ -58,20 +58,24 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
     return updateTagPromise
       .unwrap()
       .then(response => {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Tag was updated successfully'
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Tag was updated successfully'
+          })
+        )
       })
       .catch(error => {
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message: 'Failed to update the tag',
-          retry: () =>
-            applyTagChanges(changes, artifactItem, projectName, dispatch, setNotification)
-        })
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to update the tag',
+            retry: () =>
+              applyTagChanges(changes, artifactItem, projectName, dispatch, setNotification)
+          })
+        )
       })
   } else {
     return updateTagPromise

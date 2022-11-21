@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 
 import MonitorJobsView from './MonitorJobsView'
 
@@ -38,6 +38,7 @@ import {
   generatePageData,
   monitorJobsActionCreator
 } from './monitorJobs.util'
+import { setNotification } from '../../../reducers/notificationReducer'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useMode } from '../../../hooks/mode.hook'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
@@ -52,8 +53,7 @@ const MonitorJobs = ({
   removeJobLogs,
   removeNewJob,
   removePods,
-  setFilters,
-  setNotification
+  setFilters
 }) => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [jobs, setJobs] = useState([])
@@ -67,6 +67,7 @@ const MonitorJobs = ({
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const { editableItem, handleMonitoring, handleRerunJob, setConfirmData, setEditableItem } =
     React.useContext(JobsContext)
@@ -106,15 +107,17 @@ const MonitorJobs = ({
           }
         })
         .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch jobs',
-            retry: () => refreshJobs(filters)
-          })
+          dispatch(
+            setNotification({
+              status: error?.response?.status || 400,
+              id: Math.random(),
+              message: 'Failed to fetch jobs',
+              retry: () => refreshJobs(filters)
+            })
+          )
         })
     },
-    [fetchAllJobRuns, fetchJobs, params.jobName, params.projectName, setNotification]
+    [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
   )
 
   const onAbortJob = useCallback(
@@ -126,10 +129,11 @@ const MonitorJobs = ({
         filtersStore,
         setNotification,
         refreshJobs,
-        setConfirmData
+        setConfirmData,
+        dispatch
       )
     },
-    [abortJob, filtersStore, params.projectName, refreshJobs, setConfirmData, setNotification]
+    [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
   )
 
   const handleConfirmAbortJob = useCallback(
@@ -208,13 +212,15 @@ const MonitorJobs = ({
       }
 
       setEditableItem(null)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Job started successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job started successfully'
+        })
+      )
     },
-    [filtersStore, refreshJobs, setEditableItem, setNotification]
+    [dispatch, filtersStore, refreshJobs, setEditableItem]
   )
 
   useEffect(() => {
