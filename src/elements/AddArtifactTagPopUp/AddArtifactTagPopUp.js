@@ -29,14 +29,14 @@ import { Button, FormInput, Modal } from 'igz-controls/components'
 import notificationActions from '../../actions/notification'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { addTag } from '../../reducers/artifactsToolkitReducer'
+import { addTag } from '../../reducers/artifactsReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 const AddArtifactTagPopUp = ({
   artifact,
+  getArtifactTags,
   isOpen,
   onAddTag,
-  onInit,
   onResolve,
   projectName,
   setNotification
@@ -57,8 +57,8 @@ const AddArtifactTagPopUp = ({
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
 
   useEffect(() => {
-    onInit &&
-      onInit().then(results => {
+    getArtifactTags &&
+      getArtifactTags().then(results => {
         const tags = results.filter(result => result.tag).map(result => result.tag)
         setExistingTags(tags)
       })
@@ -164,6 +164,7 @@ AddArtifactTagPopUp.defaultProps = {
 }
 
 AddArtifactTagPopUp.propTypes = {
+  getArtifactTags: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
   artifact: PropTypes.shape({}).isRequired,
   onAddTag: PropTypes.func,

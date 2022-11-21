@@ -34,6 +34,7 @@ import {
   generatePageData,
   handleApplyDetailsChanges
 } from './datasets.util'
+import { fetchDataSet } from '../../reducers/artifactsReducer'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -105,7 +106,13 @@ const Datasets = ({ getFilterTagOptions, setFilters, setNotification }) => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
-        onInit: () => fetchDataSet(params.projectName, artifact.db_key, true, TAG_FILTER_ALL_ITEMS),
+        getArtifactTags: () =>
+          fetchDataSet({
+            project: params.projectName,
+            dataSet: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },

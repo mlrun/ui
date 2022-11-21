@@ -51,6 +51,7 @@ import {
   getFeatureVectorData,
   handleApplyDetailsChanges
 } from './models.util'
+import { fetchModel } from '../../../reducers/artifactsReducer'
 import { useModelsPage } from '../ModelsPage.context'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
@@ -93,7 +94,13 @@ const Models = ({ fetchModelFeatureVector, setFilters, setNotification, getFilte
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
-        onInit: () => fetchModel(params.projectName, artifact.db_key, true, TAG_FILTER_ALL_ITEMS),
+        getArtifactTags: () =>
+          fetchModel({
+            project: params.projectName,
+            model: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },
