@@ -29,7 +29,12 @@ import ModelsView from './ModelsView'
 import detailsActions from '../../../actions/details'
 import filtersActions from '../../../actions/filters'
 import notificationActions from '../../../actions/notification'
-import { fetchArtifactTags, removeModel, removeModels } from '../../../reducers/artifactsReducer'
+import {
+  fetchArtifactTags,
+  fetchModel,
+  removeModel,
+  removeModels
+} from '../../../reducers/artifactsReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   GROUP_BY_NAME,
@@ -51,7 +56,6 @@ import {
   getFeatureVectorData,
   handleApplyDetailsChanges
 } from './models.util'
-import { fetchModel } from '../../../reducers/artifactsReducer'
 import { useModelsPage } from '../ModelsPage.context'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'

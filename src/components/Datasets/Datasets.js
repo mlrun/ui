@@ -34,7 +34,6 @@ import {
   generatePageData,
   handleApplyDetailsChanges
 } from './datasets.util'
-import { fetchDataSet } from '../../reducers/artifactsReducer'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -53,6 +52,7 @@ import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { cancelRequest } from '../../utils/cancelRequest'
 import {
   fetchArtifactTags,
+  fetchDataSet,
   fetchDataSets,
   removeDataSet,
   removeDataSets
