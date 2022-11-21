@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
@@ -62,7 +62,6 @@ const JobWizard = ({
   )
   const navigate = useNavigate()
   const isEditMode = useMemo(() => mode === PANEL_EDIT_MODE || mode === PANEL_RERUN_MODE, [mode])
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState([])
@@ -75,6 +74,13 @@ const JobWizard = ({
   const location = useLocation()
   const { isStagingMode } = useMode()
   const scheduleButtonRef = useRef()
+
+  const closeModal = useCallback(() => {
+    onResolve()
+    onWizardClose && onWizardClose()
+  }, [onResolve, onWizardClose])
+
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
 
   const stepsConfig = useMemo(() => {
     return [
@@ -147,7 +153,6 @@ const JobWizard = ({
       .then(() => {
         resolveModal()
         onSuccessRequest && onSuccessRequest()
-        onWizardClose && onWizardClose()
         setNotification({
           status: 200,
           id: Math.random(),
@@ -191,7 +196,6 @@ const JobWizard = ({
       .then(() => {
         resolveModal()
         onSuccessRequest && onSuccessRequest()
-        onWizardClose && onWizardClose()
         setNotification({
           status: 200,
           id: Math.random(),
@@ -222,7 +226,6 @@ const JobWizard = ({
               location={location}
               onWizardResolve={() => {
                 handleCloseModal()
-                onWizardClose && onWizardClose()
               }}
               onWizardSubmit={formData => {
                 if (mode === PANEL_EDIT_MODE) {

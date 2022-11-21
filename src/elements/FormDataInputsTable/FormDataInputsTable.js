@@ -8,10 +8,10 @@ import FormActionButton from 'igz-controls/elements/FormActionButton/FormActionB
 import FormDataInputsRow from './FormDataInputsRow/FormDataInputsRow'
 
 import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
-import { dataInputInitialState } from './formDataInputsTable.util'
+import { targetPathInitialState } from '../../common/TargetPath/targetPath.util'
 
 const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => {
-  const [dataInputState, setDataInputState] = useState(dataInputInitialState)
+  const [dataInputState, setDataInputState] = useState(targetPathInitialState)
   const tableClassNames = classnames('form-table', className)
   const { editingItem, addNewRow, applyChanges, deleteRow, discardOrDelete, enterEditMode } =
     useFormTable(formState)
@@ -49,12 +49,12 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
                     enterEditMode={enterEditMode}
                     fields={fields}
                     fieldsPath={fieldsPath}
+                    formState={formState}
                     index={index}
                     key={rowPath}
                     rowPath={rowPath}
                     setDataInputState={setDataInputState}
                     setFieldState={formState.form.mutators.setFieldState}
-                    setFieldValue={formState.form.change}
                     uniquenessValidator={uniquenessValidator}
                   />
                 )
@@ -66,7 +66,7 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
                   fieldsPath={fieldsPath}
                   label="Add input "
                   onClick={(...addRowArgs) => {
-                    setDataInputState(dataInputInitialState)
+                    setDataInputState(targetPathInitialState)
                     addNewRow(...addRowArgs, {
                       data: {
                         name: '',
