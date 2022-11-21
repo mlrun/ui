@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { connect, useSelector } from 'react-redux'
+import { connect, useSelector, useDispatch } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
 import FeatureSetsView from './FeatureSetsView'
@@ -43,6 +43,7 @@ import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
+import { setNotification } from '../../../reducers/notificationReducer'
 import { FeatureStoreContext } from '../FeatureStore'
 import { cancelRequest } from '../../../utils/cancelRequest'
 
@@ -58,7 +59,6 @@ const FeatureSets = ({
   removeFeatureStoreError,
   removeNewFeatureSet,
   setFilters,
-  setNotification,
   updateFeatureStoreData
 }) => {
   const [featureSets, setFeatureSets] = useState([])
@@ -73,6 +73,7 @@ const FeatureSets = ({
   const featureStoreRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
 
   const { featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen, toggleConvertedYaml } =
     React.useContext(FeatureStoreContext)
@@ -203,16 +204,17 @@ const FeatureSets = ({
         selectedFeatureSet,
         setNotification,
         updateFeatureStoreData,
-        filtersStore
+        filtersStore,
+        dispatch
       )
     },
     [
+      dispatch,
       fetchData,
       filtersStore,
       params.name,
       params.projectName,
       selectedFeatureSet,
-      setNotification,
       updateFeatureStoreData
     ]
   )

@@ -27,7 +27,7 @@ import AddToFeatureVectorView from './AddToFeatureVectorView'
 
 import featureStoreActions from '../../actions/featureStore'
 import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import { filters } from './addToFeatureVectorPage.util'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import {
@@ -58,8 +58,7 @@ const AddToFeatureVectorPage = ({
   fetchFeatureSetsTags,
   removeFeature,
   removeFeatures,
-  setFilters,
-  setNotification
+  setFilters
 }) => {
   const [content, setContent] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
@@ -84,24 +83,28 @@ const AddToFeatureVectorPage = ({
     featureVector => {
       createNewFeatureVector(featureVector)
         .then(response => {
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Feature vector created successfully'
-          })
+          dispatch(
+            setNotification({
+              status: response.status,
+              id: Math.random(),
+              message: 'Feature vector created successfully'
+            })
+          )
           dispatch(setTablePanelOpen(false))
           navigateToFeatureVectorsScreen()
         })
         .catch(error => {
-          setNotification({
-            status: error.response.status || 400,
-            id: Math.random(),
-            message:
-              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'You are not permitted to create new feature vector.'
-                : 'Feature vector creation failed.',
-            retry: handleCreateFeatureVector
-          })
+          dispatch(
+            setNotification({
+              status: error.response.status || 400,
+              id: Math.random(),
+              message:
+                error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? 'You are not permitted to create new feature vector.'
+                  : 'Feature vector creation failed.',
+              retry: handleCreateFeatureVector
+            })
+          )
 
           if (error.response.status === FORBIDDEN_ERROR_STATUS_CODE) {
             dispatch(setTablePanelOpen(false))
@@ -109,7 +112,7 @@ const AddToFeatureVectorPage = ({
           }
         })
     },
-    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen, setNotification]
+    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen]
   )
 
   const pageData = useMemo(
@@ -260,15 +263,17 @@ const AddToFeatureVectorPage = ({
   useEffect(() => {
     if (isEveryObjectValueEmpty(tableStore.features.featureVector)) {
       navigateToFeatureVectorsScreen()
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Please, create a feature vector first'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Please, create a feature vector first'
+        })
+      )
     } else {
       dispatch(setTablePanelOpen(true))
     }
-  }, [dispatch, navigateToFeatureVectorsScreen, setNotification, tableStore.features.featureVector])
+  }, [dispatch, navigateToFeatureVectorsScreen, tableStore.features.featureVector])
 
   return (
     <AddToFeatureVectorView
@@ -296,8 +301,6 @@ export default connect(
   }),
   {
     ...featureStoreActions,
-    ...notificationActions,
-    ...filtersActions,
-    ...notificationActions
+    ...filtersActions
   }
 )(AddToFeatureVectorPage)

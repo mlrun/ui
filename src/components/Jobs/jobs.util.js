@@ -19,7 +19,6 @@ such restriction.
 */
 import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
 import jobsActions from '../../actions/jobs'
-import notificationActions from '../../actions/notification'
 import { generateKeyValues } from '../../utils'
 
 export const page = JOBS_PAGE
@@ -93,8 +92,7 @@ export const isJobAbortable = (job, abortableFunctionKinds) =>
     .some(kindLabel => job?.labels?.includes(kindLabel))
 
 export const actionCreator = {
-  fetchJobFunction: jobsActions.fetchJobFunction,
-  setNotification: notificationActions.setNotification
+  fetchJobFunction: jobsActions.fetchJobFunction
 }
 
 export const generateEditableItem = (functionData, job) => {
@@ -139,7 +137,13 @@ export const generateEditableItem = (functionData, job) => {
   }
 }
 
-export const rerunJob = async (job, fetchJobFunction, setNotification, setEditableItem) => {
+export const rerunJob = async (
+  job,
+  fetchJobFunction,
+  setNotification,
+  setEditableItem,
+  dispatch
+) => {
   const [project = '', func = ''] = job?.function?.split('/') ?? []
   const functionData = await fetchJobFunction(
     project,
@@ -148,11 +152,13 @@ export const rerunJob = async (job, fetchJobFunction, setNotification, setEditab
   )
 
   if (!functionData) {
-    setNotification({
-      status: 400,
-      id: Math.random(),
-      message: 'Job’s function failed to load'
-    })
+    dispatch(
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Job’s function failed to load'
+      })
+    )
   }
 
   setEditableItem(generateEditableItem(functionData, job))
@@ -165,33 +171,39 @@ export const handleAbortJob = (
   filtersStore,
   setNotification,
   refreshJobs,
-  setConfirmData
+  setConfirmData,
+  dispatch
 ) => {
   abortJob(projectName, job)
     .then(() => {
       refreshJobs(filtersStore)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Job is successfully aborted'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job is successfully aborted'
+        })
+      )
     })
     .catch(() => {
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        retry: () =>
-          handleAbortJob(
-            abortJob,
-            projectName,
-            job,
-            filtersStore,
-            setNotification,
-            refreshJobs,
-            setConfirmData
-          ),
-        message: 'Aborting job failed'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          retry: () =>
+            handleAbortJob(
+              abortJob,
+              projectName,
+              job,
+              filtersStore,
+              setNotification,
+              refreshJobs,
+              setConfirmData,
+              dispatch
+            ),
+          message: 'Aborting job failed'
+        })
+      )
     })
   setConfirmData(null)
 }

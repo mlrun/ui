@@ -19,8 +19,6 @@ such restriction.
 */
 /*=========== GENERAL =============*/
 
-export const SET_NOTIFICATION = 'SET_NOTIFICATION'
-export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
 export const SET_LOADING = 'SET_LOADING'
 
 export const FETCH_WORKFLOWS_BEGIN = 'FETCH_WORKFLOWS_BEGIN'

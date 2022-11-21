@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
@@ -30,7 +30,7 @@ import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/
 import { Button, Modal } from 'igz-controls/components'
 
 import { messagesByKind } from './messagesByKind'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import {
   BADREQUEST_ERROR_STATUS_CODE,
   FORBIDDEN_ERROR_STATUS_CODE,
@@ -53,7 +53,6 @@ const RegisterArtifactModal = ({
   onResolve,
   projectName,
   refresh,
-  setNotification,
   title
 }) => {
   const { isDemoMode } = useMode()
@@ -83,6 +82,7 @@ const RegisterArtifactModal = ({
     })
   )
   const location = useLocation()
+  const dispatch = useDispatch()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const registerArtifact = values => {
@@ -113,25 +113,29 @@ const RegisterArtifactModal = ({
       .then(response => {
         resolveModal()
         refresh(filtersStore)
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: `${title} initiated successfully`
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: `${title} initiated successfully`
+          })
+        )
       })
       .catch(error => {
-        setNotification({
-          status:
-            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? FORBIDDEN_ERROR_STATUS_CODE
-              : BADREQUEST_ERROR_STATUS_CODE,
-          id: Math.random(),
-          message:
-            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to create a new resource'
-              : `${title} failed to initiate`,
-          retry: registerArtifact
-        })
+        dispatch(
+          setNotification({
+            status:
+              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? FORBIDDEN_ERROR_STATUS_CODE
+                : BADREQUEST_ERROR_STATUS_CODE,
+            id: Math.random(),
+            message:
+              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? 'You are not permitted to create a new resource'
+                : `${title} failed to initiate`,
+            retry: registerArtifact
+          })
+        )
 
         resolveModal()
       })
@@ -195,5 +199,5 @@ export default connect(
   ({ filtersStore }) => ({
     filtersStore
   }),
-  { setNotification: notificationActions.setNotification }
+  null
 )(RegisterArtifactModal)

@@ -48,7 +48,8 @@ export const handleApplyDetailsChanges = (
   selectedItem,
   setNotification,
   updateFeatureStoreData,
-  filters
+  filters,
+  dispatch
 ) => {
   const data = {
     ...selectedItem.ui.originalContent
@@ -84,36 +85,42 @@ export const handleApplyDetailsChanges = (
   )
     .then(response => {
       return fetchData(filters).then(() => {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Updated successfully'
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Updated successfully'
+          })
+        )
 
         return response
       })
     })
     .then(response => {
       if (!selectedItem.tag) {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: `${truncateUid(selectedItem.uid)} updated to latest`
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: `${truncateUid(selectedItem.uid)} updated to latest`
+          })
+        )
       }
 
       return response
     })
     .catch(error => {
-      setNotification({
-        status: error.response?.status || 400,
-        id: Math.random(),
-        message:
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied.'
-            : 'Failed to update.',
-        retry: handleApplyDetailsChanges
-      })
+      dispatch(
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message:
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'Permission denied.'
+              : 'Failed to update.',
+          retry: handleApplyDetailsChanges
+        })
+      )
     })
 }
 

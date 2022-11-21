@@ -32,7 +32,6 @@ import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
 import workflowsActions from '../../../actions/workflow'
 import filtersActions from '../../../actions/filters'
-import notificationActions from '../../../actions/notification'
 import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
@@ -62,7 +61,9 @@ export const generatePageData = (
     details: {
       type: !isEveryObjectValueEmpty(selectedFunction) ? FUNCTIONS_PAGE : JOBS_PAGE,
       menu: !isEveryObjectValueEmpty(selectedFunction) ? functionsDetailsMenu : detailsMenu,
-      infoHeaders: !isEveryObjectValueEmpty(selectedFunction) ? functionsInfoHeaders : getInfoHeaders(false),
+      infoHeaders: !isEveryObjectValueEmpty(selectedFunction)
+        ? functionsInfoHeaders
+        : getInfoHeaders(false),
       refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
         ? handleFetchFunctionLogs
         : fetchJobLogs,
@@ -141,6 +142,5 @@ export const monitorWorkflowsActionCreator = {
   removeJobLogs: jobsActions.removeJobLogs,
   removeNewJob: jobsActions.removeNewJob,
   resetWorkflow: workflowsActions.resetWorkflow,
-  setFilters: filtersActions.setFilters,
-  setNotification: notificationActions.setNotification
+  setFilters: filtersActions.setFilters
 }

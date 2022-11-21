@@ -28,13 +28,13 @@ import ModelsView from './ModelsView'
 
 import detailsActions from '../../../actions/details'
 import filtersActions from '../../../actions/filters'
-import notificationActions from '../../../actions/notification'
 import {
   fetchArtifactTags,
   fetchModel,
   removeModel,
   removeModels
 } from '../../../reducers/artifactsReducer'
+import { setNotification } from '../../../reducers/notificationReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   GROUP_BY_NAME,
@@ -63,7 +63,7 @@ import { cancelRequest } from '../../../utils/cancelRequest'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Models = ({ fetchModelFeatureVector, setFilters, setNotification, getFilterTagOptions }) => {
+const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE)
@@ -170,7 +170,7 @@ const Models = ({ fetchModelFeatureVector, setFilters, setNotification, getFilte
         dispatch
       )
     },
-    [params.projectName, selectedModel, setNotification, dispatch]
+    [dispatch, params.projectName, selectedModel]
   )
 
   const applyDetailsChangesCallback = changes => {
@@ -305,12 +305,7 @@ const Models = ({ fetchModelFeatureVector, setFilters, setNotification, getFilte
   )
 }
 
-const actionCreators = {
-  setNotification: notificationActions.setNotification
-}
-
 export default connect(null, {
   ...detailsActions,
-  ...filtersActions,
-  ...actionCreators
+  ...filtersActions
 })(Models)

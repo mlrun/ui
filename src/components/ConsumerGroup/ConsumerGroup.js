@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 
@@ -30,7 +30,7 @@ import Table from '../Table/Table'
 import { RoundedIcon } from 'igz-controls/components'
 
 import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../layout/Content/content.util'
@@ -40,16 +40,13 @@ import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 const ConsumerGroup = ({
   fetchNuclioV3ioStreamShardLags,
   nuclioStore,
-  resetV3ioStreamShardLagsError,
-  setNotification
+  resetV3ioStreamShardLagsError
 }) => {
   const [currentV3ioStream, setCurrentV3ioStream] = useState([])
-  const [
-    filteredV3ioStreamShardLags,
-    setFilteredV3ioStreamShardLags
-  ] = useState([])
+  const [filteredV3ioStreamShardLags, setFilteredV3ioStreamShardLags] = useState([])
   const [filterByName, setFilterByName] = useState('')
   const params = useParams()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const v3ioStream = nuclioStore.v3ioStreams.parsedData.find(
@@ -68,10 +65,7 @@ const ConsumerGroup = ({
         containerName: currentV3ioStream.containerName,
         streamPath: currentV3ioStream.streamPath
       }
-      fetchNuclioV3ioStreamShardLags(
-        params.projectName,
-        fetchV3ioStreamBody
-      )
+      fetchNuclioV3ioStreamShardLags(params.projectName, fetchV3ioStreamBody)
     },
     [fetchNuclioV3ioStreamShardLags, params.projectName]
   )
@@ -92,20 +86,22 @@ const ConsumerGroup = ({
 
   useEffect(() => {
     if (!isEmpty(currentV3ioStream) && nuclioStore.v3ioStreamShardLags.error) {
-      setNotification({
-        status: nuclioStore.v3ioStreamShardLags.error?.response?.status || 400,
-        id: Math.random(),
-        message: 'Failed to fetch v3io stream shard lags',
-        retry: () => refreshConsumerGroup(currentV3ioStream)
-      })
+      dispatch(
+        setNotification({
+          status: nuclioStore.v3ioStreamShardLags.error?.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch v3io stream shard lags',
+          retry: () => refreshConsumerGroup(currentV3ioStream)
+        })
+      )
       resetV3ioStreamShardLagsError()
     }
   }, [
     currentV3ioStream,
+    dispatch,
     nuclioStore.v3ioStreamShardLags.error,
     refreshConsumerGroup,
-    resetV3ioStreamShardLagsError,
-    setNotification
+    resetV3ioStreamShardLagsError
   ])
 
   const pageData = useMemo(() => generatePageData(), [])
@@ -113,9 +109,7 @@ const ConsumerGroup = ({
   return (
     <>
       <PageHeader
-        title={
-          params.consumerGroupName ?? currentV3ioStream.consumerGroup
-        }
+        title={params.consumerGroupName ?? currentV3ioStream.consumerGroup}
         description={currentV3ioStream.streamName}
         backLink={`/projects/${params.projectName}/monitor/consumer-groups`}
       />
@@ -126,25 +120,17 @@ const ConsumerGroup = ({
           placeholder="Search by shard name..."
           value={filterByName}
         />
-        <RoundedIcon
-          onClick={() => refreshConsumerGroup(currentV3ioStream)}
-          tooltipText="Refresh"
-        >
+        <RoundedIcon onClick={() => refreshConsumerGroup(currentV3ioStream)} tooltipText="Refresh">
           <RefreshIcon />
         </RoundedIcon>
       </div>
-      <Table
-        actionsMenu={[]}
-        content={filteredV3ioStreamShardLags}
-        pageData={pageData}
-      />
+      <Table actionsMenu={[]} content={filteredV3ioStreamShardLags} pageData={pageData} />
       {!nuclioStore.v3ioStreams.loading &&
         !nuclioStore.v3ioStreamShardLags.loading &&
         nuclioStore.v3ioStreamShardLags.parsedData.length === 0 && (
           <NoData message={getNoDataMessage()} />
         )}
-      {(nuclioStore.v3ioStreams.loading ||
-        nuclioStore.v3ioStreamShardLags.loading) && <Loader />}
+      {(nuclioStore.v3ioStreams.loading || nuclioStore.v3ioStreamShardLags.loading) && <Loader />}
     </>
   )
 }
@@ -156,7 +142,6 @@ export default connect(
   }),
   {
     ...filtersActions,
-    ...notificationActions,
     ...nuclioActions
   }
 )(ConsumerGroup)

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 
@@ -27,7 +27,7 @@ import FeatureSetsPanelView from './FeatureSetsPanelView'
 
 import { FEATURE_SETS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import { checkValidation } from './featureSetPanel.util'
 
 const FeatureSetsPanel = ({
@@ -38,7 +38,6 @@ const FeatureSetsPanel = ({
   project,
   removeFeatureStoreError,
   setNewFeatureSetCredentialsAccessKey,
-  setNotification,
   startFeatureSetIngest
 }) => {
   const [validation, setValidation] = useState({
@@ -66,6 +65,7 @@ const FeatureSetsPanel = ({
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleSave = () => {
     const data = {
@@ -130,11 +130,13 @@ const FeatureSetsPanel = ({
   const handleCreateFeatureSetSuccess = (name, tag) => {
     createFeatureSetSuccess(tag).then(() => {
       navigate(`/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview`)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Feature set successfully created'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Feature set successfully created'
+        })
+      )
     })
   }
 
@@ -168,6 +170,5 @@ FeatureSetsPanel.propTypes = {
 }
 
 export default connect(({ featureStore }) => ({ featureStore }), {
-  ...featureStoreActions,
-  ...notificationActions
+  ...featureStoreActions
 })(FeatureSetsPanel)
