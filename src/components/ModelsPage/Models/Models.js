@@ -28,7 +28,12 @@ import ModelsView from './ModelsView'
 
 import detailsActions from '../../../actions/details'
 import filtersActions from '../../../actions/filters'
-import { fetchArtifactTags, removeModel, removeModels } from '../../../reducers/artifactsReducer'
+import {
+  fetchArtifactTags,
+  fetchModel,
+  removeModel,
+  removeModels
+} from '../../../reducers/artifactsReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
@@ -93,6 +98,13 @@ const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) =>
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
+        getArtifactTags: () =>
+          fetchModel({
+            project: params.projectName,
+            model: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },

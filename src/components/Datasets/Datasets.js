@@ -52,6 +52,7 @@ import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { cancelRequest } from '../../utils/cancelRequest'
 import {
   fetchArtifactTags,
+  fetchDataSet,
   fetchDataSets,
   removeDataSet,
   removeDataSets
@@ -105,6 +106,13 @@ const Datasets = ({ getFilterTagOptions, setFilters }) => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
+        getArtifactTags: () =>
+          fetchDataSet({
+            project: params.projectName,
+            dataSet: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },

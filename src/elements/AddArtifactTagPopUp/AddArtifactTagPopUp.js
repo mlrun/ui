@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -30,12 +30,21 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { addTag } from '../../reducers/artifactsReducer'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
-const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag, onResolve, projectName }) => {
+const AddArtifactTagPopUp = ({
+  artifact,
+  getArtifactTags,
+  isOpen,
+  onAddTag,
+  onResolve,
+  projectName
+}) => {
   const dispatch = useDispatch()
   const [initialValues] = useState({
     artifactTag: ''
   })
+  const [existingTags, setExistingTags] = useState([])
   const filtersStore = useSelector(store => store.filtersStore)
 
   const formRef = React.useRef(
@@ -44,6 +53,17 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag, onResolve, projectNam
     })
   )
   const location = useLocation()
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
+
+  useEffect(() => {
+    getArtifactTags &&
+      dispatch(getArtifactTags())
+        .unwrap()
+        .then(results => {
+          const tags = results.filter(result => result.tag).map(result => result.tag)
+          setExistingTags(tags)
+        })
+  }, [])
 
   const addArtifactTag = values => {
     const addTagArgs = {
@@ -84,14 +104,14 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag, onResolve, projectNam
         )
       })
 
-    onResolve()
+    resolveModal()
   }
 
   const getModalActions = formState => {
     const actions = [
       {
         label: 'Cancel',
-        onClick: () => onResolve(),
+        onClick: () => handleCloseModal(),
         variant: TERTIARY_BUTTON
       },
       {
@@ -112,7 +132,7 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag, onResolve, projectNam
           <Modal
             actions={getModalActions(formState)}
             location={location}
-            onClose={onResolve}
+            onClose={handleCloseModal}
             show={isOpen}
             size="min"
             title="Add a tag"
@@ -125,7 +145,14 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag, onResolve, projectNam
                     label="Artifact tag"
                     focused
                     required
-                    validationRules={getValidationRules('common.tag')}
+                    validationRules={[
+                      ...getValidationRules('common.tag'),
+                      {
+                        name: 'uniqueness',
+                        label: 'Tag already exists',
+                        pattern: value => !existingTags.includes(value)
+                      }
+                    ]}
                   />
                 </div>
               </div>
@@ -142,6 +169,7 @@ AddArtifactTagPopUp.defaultProps = {
 }
 
 AddArtifactTagPopUp.propTypes = {
+  getArtifactTags: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
   artifact: PropTypes.shape({}).isRequired,
   onAddTag: PropTypes.func,

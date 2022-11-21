@@ -90,7 +90,7 @@ export const fetchModelsRowData = async (
     }
   }))
 
-  dispatch(fetchModel({ project: model.project, model, iter, tag }))
+  dispatch(fetchModel({ project: model.project, model: model.db_key, iter, tag }))
     .unwrap()
     .then(result => {
       if (result?.length > 0) {

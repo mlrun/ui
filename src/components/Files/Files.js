@@ -43,6 +43,7 @@ import {
 } from './files.util'
 import {
   fetchArtifactTags,
+  fetchFile,
   fetchFiles,
   removeFile,
   removeFiles
@@ -105,6 +106,13 @@ const Files = ({ getFilterTagOptions, setFilters }) => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
+        getArtifactTags: () =>
+          fetchFile({
+            project: params.projectName,
+            file: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },
