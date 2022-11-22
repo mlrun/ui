@@ -145,14 +145,13 @@ const AddArtifactTagPopUp = ({
                     label="Artifact tag"
                     focused
                     required
-                    validationRules={[
-                      ...getValidationRules('common.tag'),
-                      {
+                    validator={value =>
+                      existingTags.includes(value) && {
                         name: 'uniqueness',
-                        label: 'Tag already exists',
-                        pattern: value => !existingTags.includes(value)
+                        label: 'Tag already exists'
                       }
-                    ]}
+                    }
+                    validationRules={getValidationRules('common.tag')}
                   />
                 </div>
               </div>
