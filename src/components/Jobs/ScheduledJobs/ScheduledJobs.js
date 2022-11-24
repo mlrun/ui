@@ -37,6 +37,7 @@ import { JobsContext } from '../Jobs'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
+import { setNotification } from '../../../reducers/notificationReducer'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -51,8 +52,7 @@ const ScheduledJobs = ({
   handleRunScheduledJob,
   removeNewJob,
   removeScheduledJob,
-  setFilters,
-  setNotification
+  setFilters
 }) => {
   const [jobs, setJobs] = useState([])
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
@@ -87,15 +87,17 @@ const ScheduledJobs = ({
           setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
         })
         .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch jobs',
-            retry: () => refreshJobs(filters)
-          })
+          dispatch(
+            setNotification({
+              status: error?.response?.status || 400,
+              id: Math.random(),
+              message: 'Failed to fetch jobs',
+              retry: () => refreshJobs(filters)
+            })
+          )
         })
     },
-    [fetchJobs, params.projectName, setNotification]
+    [dispatch, fetchJobs, params.projectName]
   )
 
   const handleRunJob = useCallback(
@@ -108,25 +110,29 @@ const ScheduledJobs = ({
         job.name
       )
         .then(response => {
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Job started successfully'
-          })
+          dispatch(
+            setNotification({
+              status: response.status,
+              id: Math.random(),
+              message: 'Job started successfully'
+            })
+          )
         })
         .catch(error => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            retry: item => handleRunJob(item),
-            message:
-              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'You are not permitted to run new job.'
-                : 'Job failed to start.'
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              retry: item => handleRunJob(item),
+              message:
+                error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? 'You are not permitted to run new job.'
+                  : 'Job failed to start.'
+            })
+          )
         })
     },
-    [handleRunScheduledJob, params.projectName, setNotification]
+    [dispatch, handleRunScheduledJob, params.projectName]
   )
 
   const handleRemoveScheduledJob = useCallback(
@@ -205,15 +211,17 @@ const ScheduledJobs = ({
           })
         })
         .catch(() => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            retry: () => handleEditScheduleJob(editableItem),
-            message: 'Failed to fetch job access key'
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              retry: () => handleEditScheduleJob(editableItem),
+              message: 'Failed to fetch job access key'
+            })
+          )
         })
     },
-    [fetchScheduledJobAccessKey, params.projectName, setNotification]
+    [dispatch, fetchScheduledJobAccessKey, params.projectName]
   )
 
   const handleSuccessRerunJob = useCallback(
@@ -223,13 +231,15 @@ const ScheduledJobs = ({
       }
 
       setEditableItem(null)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Job started successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job started successfully'
+        })
+      )
     },
-    [filtersStore, refreshJobs, setNotification]
+    [dispatch, filtersStore, refreshJobs]
   )
 
   const actionsMenu = useMemo(() => {

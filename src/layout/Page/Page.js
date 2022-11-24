@@ -40,7 +40,7 @@ const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
     !(isNavbarPinned && projectName) && 'unpinned',
     isHeaderShown && 'has-header'
   )
-  const mainStyles = {marginLeft: isNavbarPinned && projectName ? `${NAVBAR_WIDTH}px` : 0}
+  const mainStyles = { marginLeft: isNavbarPinned && projectName ? `${NAVBAR_WIDTH}px` : 0 }
 
   useEffect(() => {
     setProjectName(projectName)

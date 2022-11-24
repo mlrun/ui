@@ -25,7 +25,7 @@ import PropTypes from 'prop-types'
 import FeaturesTablePanelView from './FeaturesTablePanelView'
 
 import featureStoreActions from '../../actions/featureStore'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import {
   setLabelFeature,
   setTablePanelOpen,
@@ -40,7 +40,6 @@ const FeaturesTablePanel = ({
   filtersStore,
   handleCancel,
   onSubmit,
-  setNotification,
   updateFeatureVectorData
 }) => {
   const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(false)
@@ -100,25 +99,29 @@ const FeaturesTablePanel = ({
 
       addFeaturesPromise
         .then(response => {
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Features successfully added'
-          })
+          dispatch(
+            setNotification({
+              status: response.status,
+              id: Math.random(),
+              message: 'Features successfully added'
+            })
+          )
         })
         .catch(error => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            message:
-              tableStore.features.isNewFeatureVector &&
-              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'You are not permitted to create new feature vector.'
-                : tableStore.features.isNewFeatureVector
-                ? 'Feature vector creation failed.'
-                : 'Failed to add features',
-            retry: addFeatures
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              message:
+                tableStore.features.isNewFeatureVector &&
+                error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? 'You are not permitted to create new feature vector.'
+                  : tableStore.features.isNewFeatureVector
+                  ? 'Feature vector creation failed.'
+                  : 'Failed to add features',
+              retry: addFeatures
+            })
+          )
         })
 
       dispatch(setTablePanelOpen(false))
@@ -187,5 +190,5 @@ export default connect(
   filtersStore => ({
     ...filtersStore
   }),
-  { ...featureStoreActions, ...notificationActions }
+  { ...featureStoreActions }
 )(FeaturesTablePanel)

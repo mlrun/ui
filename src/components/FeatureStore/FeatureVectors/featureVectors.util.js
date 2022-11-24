@@ -28,7 +28,6 @@ import {
 } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
 import filtersActions from '../../../actions/filters'
-import notificationActions from '../../../actions/notification'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -115,6 +114,5 @@ export const featuresActionCreator = {
   removeFeatureVector: featureStoreActions.deleteFeatureVector,
   removeFeatureVectors: featureStoreActions.removeFeatureVectors,
   setFilters: filtersActions.setFilters,
-  setNotification: notificationActions.setNotification,
   updateFeatureStoreData: featureStoreActions.updateFeatureStoreData
 }

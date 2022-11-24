@@ -26,7 +26,7 @@ import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
 import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import {
   checkForSelectedDataset,
   fetchDataSetRowData,
@@ -52,6 +52,7 @@ import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { cancelRequest } from '../../utils/cancelRequest'
 import {
   fetchArtifactTags,
+  fetchDataSet,
   fetchDataSets,
   removeDataSet,
   removeDataSets
@@ -59,7 +60,7 @@ import {
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Datasets = ({ getFilterTagOptions, setFilters, setNotification }) => {
+const Datasets = ({ getFilterTagOptions, setFilters }) => {
   const [datasets, setDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
@@ -105,6 +106,13 @@ const Datasets = ({ getFilterTagOptions, setFilters, setNotification }) => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
+        getArtifact: () =>
+          fetchDataSet({
+            project: params.projectName,
+            dataSet: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },
@@ -136,7 +144,7 @@ const Datasets = ({ getFilterTagOptions, setFilters, setNotification }) => {
         dispatch
       )
     },
-    [dispatch, params.projectName, selectedDataset, setNotification]
+    [dispatch, params.projectName, selectedDataset]
   )
 
   const applyDetailsChangesCallback = changes => {
@@ -287,8 +295,7 @@ const Datasets = ({ getFilterTagOptions, setFilters, setNotification }) => {
 
 const actionCreators = {
   getFilterTagOptions: filtersActions.getFilterTagOptions,
-  setFilters: filtersActions.setFilters,
-  setNotification: notificationActions.setNotification
+  setFilters: filtersActions.setFilters
 }
 
 export default connect(null, { ...actionCreators })(Datasets)

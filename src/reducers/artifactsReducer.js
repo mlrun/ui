@@ -95,7 +95,7 @@ export const fetchArtifactTags = createAsyncThunk('fetchArtifactTags', ({ projec
   return artifactsApi.getArtifactTags(project, category)
 })
 export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet, iter, tag }) => {
-  return artifactsApi.getDataSet(project, dataSet, tag, iter).then(response => {
+  return artifactsApi.getDataSet(project, dataSet, iter, tag).then(response => {
     const result = parseArtifacts(response.data.artifacts)
 
     return generateArtifacts(filterArtifacts(result), DATASETS, response.data.artifacts)
@@ -109,7 +109,7 @@ export const fetchDataSets = createAsyncThunk('fetchDataSets', ({ project, filte
   })
 })
 export const fetchFile = createAsyncThunk('fetchFile', ({ project, file, iter, tag }) => {
-  return artifactsApi.getFile(project, file, tag).then(response => {
+  return artifactsApi.getFile(project, file, iter, tag).then(response => {
     const result = parseArtifacts(response.data.artifacts)
 
     return generateArtifacts(filterArtifacts(result), ARTIFACTS, response.data.artifacts)
@@ -143,7 +143,7 @@ export const fetchModelEndpoints = createAsyncThunk(
   }
 )
 export const fetchModel = createAsyncThunk('fetchModel', ({ project, model, iter, tag }) => {
-  return artifactsApi.getModel(project, model.db_key, tag, iter).then(response => {
+  return artifactsApi.getModel(project, model, iter, tag).then(response => {
     const result = parseArtifacts(response.data.artifacts)
 
     return generateArtifacts(filterArtifacts(result), MODELS_TAB, response.data.artifacts)

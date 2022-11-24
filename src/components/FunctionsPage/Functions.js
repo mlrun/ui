@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEqual, isEmpty } from 'lodash'
 
 import Content from '../../layout/Content/Content'
@@ -45,7 +45,7 @@ import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { parseFunctions } from '../../utils/parseFunctions'
 import filtersActions from '../../actions/filters'
 import functionsActions from '../../actions/functions'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import jobsActions from '../../actions/jobs'
 import {
   FUNCTION_TYPE_SERVING,
@@ -73,8 +73,7 @@ const Functions = ({
   removeFunctionsError,
   removeNewFunction,
   removeNewJob,
-  setFilters,
-  setNotification
+  setFilters
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
@@ -87,6 +86,7 @@ const Functions = ({
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
 
   const refreshFunctions = useCallback(
     filters => {
@@ -261,20 +261,24 @@ const Functions = ({
           navigate(`/projects/${params.projectName}/functions`, { replace: true })
         }
 
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Function deleted successfully'
-        })
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Function deleted successfully'
+          })
+        )
         refreshFunctions()
       })
       .catch(() => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          retry: () => removeFunction(func),
-          message: 'Function failed to delete'
-        })
+        dispatch(
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: () => removeFunction(func),
+            message: 'Function failed to delete'
+          })
+        )
       })
 
     setConfirmData(null)
@@ -310,11 +314,13 @@ const Functions = ({
     removeNewFunction()
 
     return refreshFunctions().then(() => {
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Function created successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function created successfully'
+        })
+      )
     })
   }
 
@@ -332,11 +338,13 @@ const Functions = ({
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}`)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Function deployment initiated successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+      )
     })
   }
 
@@ -350,11 +358,13 @@ const Functions = ({
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Function deployment failed to initiate'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Function deployment failed to initiate'
+        })
+      )
     })
   }
 
@@ -427,6 +437,5 @@ const Functions = ({
 export default connect(({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }), {
   ...filtersActions,
   ...functionsActions,
-  ...notificationActions,
   ...jobsActions
 })(React.memo(Functions))

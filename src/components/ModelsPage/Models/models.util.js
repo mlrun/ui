@@ -90,7 +90,7 @@ export const fetchModelsRowData = async (
     }
   }))
 
-  dispatch(fetchModel({ project: model.project, model, iter, tag }))
+  dispatch(fetchModel({ project: model.project, model: model.db_key, iter, tag }))
     .unwrap()
     .then(result => {
       if (result?.length > 0) {
@@ -214,23 +214,27 @@ export const handleApplyDetailsChanges = (
     updateArtifactPromise = dispatch(updateArtifact({ project: projectName, data: artifactItem }))
       .unwrap()
       .then(response => {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Model was updated successfully'
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Model was updated successfully'
+          })
+        )
       })
       .catch(error => {
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message:
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'Permission denied'
-              : 'Failed to update the model',
-          retry: () =>
-            dispatch(updateArtifact({ project: projectName, data: artifactItem })).unwrap()
-        })
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message:
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? 'Permission denied'
+                : 'Failed to update the model',
+            retry: () =>
+              dispatch(updateArtifact({ project: projectName, data: artifactItem })).unwrap()
+          })
+        )
       })
   }
 
