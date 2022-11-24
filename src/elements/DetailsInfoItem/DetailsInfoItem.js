@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
@@ -59,6 +59,8 @@ const DetailsInfoItem = React.forwardRef(
     },
     ref
   ) => {
+    const [inputIsValid, setInputIsValid] = useState(true)
+
     if (item?.editModeEnabled && item?.editModeType === 'chips') {
       return (
         <DetailsInfoItemChip
@@ -80,16 +82,25 @@ const DetailsInfoItem = React.forwardRef(
         return (
           <div className="details-item__input-wrapper" ref={ref}>
             {editableFieldType === 'input' && (
-              <Input focused onChange={item.onChange} type="text" value={info} />
+              <Input
+                focused
+                onChange={item.onChange}
+                invalid={!inputIsValid}
+                setInvalid={value => setInputIsValid(value)}
+                value={info}
+                validationRules={item.validationRules}
+              />
             )}
             {editableFieldType === 'textarea' && (
               <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
             )}
-            <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-              <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
-                <Checkmark className="details-item__apply-btn" />
-              </RoundedIcon>
-            </Tooltip>
+            {inputIsValid && (
+              <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+                <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
+                  <Checkmark className="details-item__apply-btn" />
+                </RoundedIcon>
+              </Tooltip>
+            )}
           </div>
         )
       }

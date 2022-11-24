@@ -22,9 +22,9 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { INPUT_VALIDATION_RULES } from 'igz-controls/types'
 import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
-
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
@@ -172,8 +172,8 @@ const Input = React.forwardRef(
     const validateField = value => {
       let isFieldValidByPattern = true
 
-      if (!isEmpty(validationRules)) {
-        const [newRules, isValidField] = checkPatternsValidity(validationRules, value)
+      if (!isEmpty(rules)) {
+        const [newRules, isValidField] = checkPatternsValidity(rules, value, required)
         isFieldValidByPattern = isValidField
         setValidationRules(newRules)
 
@@ -385,6 +385,7 @@ Input.propTypes = {
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  validationRules: INPUT_VALIDATION_RULES,
   withoutBorder: PropTypes.bool,
   wrapperClassName: PropTypes.string
 }
