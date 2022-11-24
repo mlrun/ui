@@ -98,7 +98,7 @@ const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) =>
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
-        getArtifactTags: () =>
+        getArtifact: () =>
           fetchModel({
             project: params.projectName,
             model: artifact.db_key,
