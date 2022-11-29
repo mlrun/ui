@@ -42,6 +42,7 @@ import { setNotification } from '../../../reducers/notificationReducer'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useMode } from '../../../hooks/mode.hook'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
+import { setFilters } from '../../../reducers/filtersReducer'
 
 const MonitorJobs = ({
   abortJob,
@@ -52,8 +53,7 @@ const MonitorJobs = ({
   fetchJobs,
   removeJobLogs,
   removeNewJob,
-  removePods,
-  setFilters
+  removePods
 }) => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [jobs, setJobs] = useState([])
@@ -264,24 +264,24 @@ const MonitorJobs = ({
       }
 
       refreshJobs(filters)
-      setFilters(filters)
+      dispatch(setFilters(filters))
       setDataIsLoaded(true)
     }
   }, [
     dataIsLoaded,
     dateFilter,
+    dispatch,
     isJobDataEmpty,
     params.jobId,
     params.jobName,
     params.projectName,
     refreshJobs,
-    selectedJob,
-    setFilters
+    selectedJob
   ])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NONE })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   useEffect(() => {
     return () => {

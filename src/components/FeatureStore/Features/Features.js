@@ -25,22 +25,23 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import AddToFeatureVectorPopUp from '../../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 import FeaturesTablePanel from '../../../elements/FeaturesTablePanel/FeaturesTablePanel'
 import FeaturesView from './FeaturesView'
+import { FeatureStoreContext } from '../FeatureStore'
 
 import {
-  FEATURE_STORE_PAGE,
   FEATURES_TAB,
+  FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
-import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
-import { parseFeatures } from '../../../utils/parseFeatures'
 import { featuresActionCreator, featuresFilters } from './features.util'
+import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { parseFeatures } from '../../../utils/parseFeatures'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
-import { FeatureStoreContext } from '../FeatureStore'
+import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../../hooks/groupContent.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -51,10 +52,8 @@ const Features = ({
   fetchFeatures,
   fetchFeatureSetsTags,
   fetchFeatureVectors,
-  getFilterTagOptions,
   removeEntity,
   removeFeature,
-  setFilters,
   removeFeatures,
   removeEntities
 }) => {
@@ -119,7 +118,7 @@ const Features = ({
   }
 
   const handleRefresh = filters => {
-    getFilterTagOptions(fetchFeatureSetsTags, params.projectName)
+    dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
 
     return fetchData(filters)
   }
@@ -237,11 +236,11 @@ const Features = ({
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, setFilters])
+  }, [filtersStore.groupBy, filtersStore.tag, dispatch])
 
   useEffect(() => {
     return () => {

@@ -25,7 +25,6 @@ import {
   TAG_FILTER
 } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
-import filtersActions from '../../../actions/filters'
 
 export const generateFeatureSetsDetailsMenu = selectedItem => [
   {
@@ -91,11 +90,9 @@ export const featureSetsActionCreator = {
   fetchFeatureSet: featureStoreActions.fetchFeatureSet,
   fetchFeatureSets: featureStoreActions.fetchFeatureSets,
   fetchFeatureSetsTags: featureStoreActions.fetchFeatureSetsTags,
-  getFilterTagOptions: filtersActions.getFilterTagOptions,
   removeFeatureSet: featureStoreActions.removeFeatureSet,
   removeFeatureSets: featureStoreActions.removeFeatureSets,
   removeFeatureStoreError: featureStoreActions.removeFeatureStoreError,
   removeNewFeatureSet: featureStoreActions.removeNewFeatureSet,
-  setFilters: filtersActions.setFilters,
   updateFeatureStoreData: featureStoreActions.updateFeatureStoreData
 }
