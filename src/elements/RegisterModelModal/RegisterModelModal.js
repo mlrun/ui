@@ -14,11 +14,12 @@ permissions and limitations under the License.
 
 In addition, you may not use the software for any purposes that are
 illegal under applicable law, and the grant of the foregoing license
-under the Apache 2.0 license is conditioned upon your compliance with
+under the Apache 2.0 license is conditioned upon your` compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
+// import { debounce } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { createForm } from 'final-form'
@@ -41,6 +42,48 @@ import { useMode } from '../../hooks/mode.hook'
 import artifactApi from '../../api/artifacts-api'
 
 import './RegisterModelModal.scss'
+
+function DebouncedMemoizedField({ milliseconds = 400, validationRules, ...props }) {
+  const timeout = useRef(null)
+  const lastValue = useRef(null)
+  const lastResult = useRef(null)
+
+  const validateField = validate => value =>
+    new Promise(resolve => {
+      if (timeout.current) {
+        timeout.current()
+      }
+
+      if (value !== lastValue.current) {
+        const timerId = setTimeout(() => {
+          lastValue.current = value
+          lastResult.current = validate(value)
+          resolve(lastResult.current)
+        }, milliseconds)
+
+        timeout.current = () => {
+          clearTimeout(timerId)
+          resolve(true)
+        }
+      } else {
+        resolve(lastResult.current)
+      }
+    })
+
+  const asyncRules = validationRules
+    .filter(rule => rule.async)
+    .map(rule => ({
+      ...rule,
+      pattern: validateField(rule.pattern)
+    }))
+
+  return (
+    <FormInput
+      validationRules={[...validationRules.filter(rule => !rule.async), ...asyncRules]}
+      {...props}
+    />
+  )
+}
 
 function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }) {
   const { isDemoMode } = useMode()
@@ -72,6 +115,16 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
+
+  const isArtifactNameUnique = async value => {
+    if (!value) return
+
+    const {
+      data: { artifacts }
+    } = await artifactApi.getArtifact(projectName, value)
+
+    return artifacts.length === 0
+  }
 
   const registerModel = values => {
     const uid = uuidv4()
@@ -165,12 +218,17 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
             title="Register model"
           >
             <div className="form-row">
-              <FormInput
+              <DebouncedMemoizedField
                 label="Name"
                 name="metadata.key"
                 required
                 tip="Artifacts names in the same project must be unique."
-                validationRules={getValidationRules('artifact.name')}
+                validationRules={getValidationRules('artifact.name', {
+                  name: 'ArtifactExists',
+                  label: 'Artifact name should be unique',
+                  pattern: isArtifactNameUnique,
+                  async: true
+                })}
               />
             </div>
             <div className="form-row">
