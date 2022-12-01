@@ -25,18 +25,22 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
   artifactItem = cloneDeep(artifactItem)
 
   if ('tag' in changes.data) {
+    const identifier = {
+      key: artifactItem.db_key || artifactItem.key,
+      kind: artifactItem.kind,
+      uid: artifactItem.uid || artifactItem.tree
+    }
+
+    if (artifactItem.iter !== 0) {
+      identifier.iter = artifactItem.iter
+    }
+
     let manageTagArgs = {
       project: projectName,
       tag: changes.data.tag.currentFieldValue,
       data: {
         kind: 'artifact',
-        identifiers: [
-          {
-            key: artifactItem.key,
-            kind: artifactItem.kind,
-            uid: artifactItem.uid ?? artifactItem.tree
-          }
-        ]
+        identifiers: [identifier]
       }
     }
 

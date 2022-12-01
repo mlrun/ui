@@ -34,7 +34,7 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 const AddArtifactTagPopUp = ({
   artifact,
-  getArtifactTags,
+  getArtifact,
   isOpen,
   onAddTag,
   onResolve,
@@ -56,8 +56,8 @@ const AddArtifactTagPopUp = ({
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
 
   useEffect(() => {
-    getArtifactTags &&
-      dispatch(getArtifactTags())
+    getArtifact &&
+      dispatch(getArtifact())
         .unwrap()
         .then(results => {
           const tags = results.filter(result => result.tag).map(result => result.tag)
@@ -66,18 +66,22 @@ const AddArtifactTagPopUp = ({
   }, [])
 
   const addArtifactTag = values => {
+    const identifier = {
+      key: artifact.db_key || artifact.key,
+      kind: artifact.kind,
+      uid: artifact.uid ?? artifact.tree
+    }
+
+    if (artifact.iter !== 0) {
+      identifier.iter = artifact.iter
+    }
+
     const addTagArgs = {
       project: projectName,
       tag: values.artifactTag,
       data: {
         kind: 'artifact',
-        identifiers: [
-          {
-            key: artifact.key,
-            kind: artifact.kind,
-            uid: artifact.uid ?? artifact.tree
-          }
-        ]
+        identifiers: [identifier]
       }
     }
 
@@ -145,14 +149,13 @@ const AddArtifactTagPopUp = ({
                     label="Artifact tag"
                     focused
                     required
-                    validationRules={[
-                      ...getValidationRules('common.tag'),
+                    validationRules={getValidationRules('common.tag', [
                       {
                         name: 'uniqueness',
-                        label: 'Tag already exists',
+                        label: 'Tag name must be unique',
                         pattern: value => !existingTags.includes(value)
                       }
-                    ]}
+                    ])}
                   />
                 </div>
               </div>
@@ -169,7 +172,7 @@ AddArtifactTagPopUp.defaultProps = {
 }
 
 AddArtifactTagPopUp.propTypes = {
-  getArtifactTags: PropTypes.func.isRequired,
+  getArtifact: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
   artifact: PropTypes.shape({}).isRequired,
   onAddTag: PropTypes.func,

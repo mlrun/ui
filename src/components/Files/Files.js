@@ -106,7 +106,7 @@ const Files = ({ getFilterTagOptions, setFilters }) => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
-        getArtifactTags: () =>
+        getArtifact: () =>
           fetchFile({
             project: params.projectName,
             file: artifact.db_key,
