@@ -64,7 +64,7 @@ const JobWizard = ({
   const isEditMode = useMemo(() => mode === PANEL_EDIT_MODE || mode === PANEL_RERUN_MODE, [mode])
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
-  const [filteredTemplates, setFilteredTemplates] = useState([])
+  const [filteredTemplatesCategories, setFilteredTemplatesCategories] = useState({})
   const [functions, setFunctions] = useState([])
   const [templatesCategories, setTemplatesCategories] = useState(functionsStore.templatesCatalog)
   const [templates, setTemplates] = useState([])
@@ -88,7 +88,7 @@ const JobWizard = ({
         id: 'functionSelection',
         label: 'Function Selection',
         isHidden: isEditMode,
-        getActions: ({ formState, handleOnClose, handleSubmit }) => [
+        getActions: ({ handleSubmit }) => [
           {
             label: 'Back',
             disabled: true,
@@ -242,7 +242,7 @@ const JobWizard = ({
                 <JobWizardFunctionSelection
                   defaultData={defaultData}
                   filteredFunctions={filteredFunctions}
-                  filteredTemplates={filteredTemplates}
+                  filteredTemplatesCategories={filteredTemplatesCategories}
                   formState={formState}
                   frontendSpec={frontendSpec}
                   functions={functions}
@@ -252,7 +252,7 @@ const JobWizard = ({
                   selectedCategory={selectedCategory}
                   selectedFunctionData={selectedFunctionData}
                   setFilteredFunctions={setFilteredFunctions}
-                  setFilteredTemplates={setFilteredTemplates}
+                  setFilteredTemplatesCategories={setFilteredTemplatesCategories}
                   setFunctions={setFunctions}
                   setJobAdditionalData={setJobAdditionalData}
                   setSelectedCategory={setSelectedCategory}
@@ -300,7 +300,8 @@ const JobWizard = ({
 JobWizard.defaultProps = {
   defaultData: {},
   mode: PANEL_CREATE_MODE,
-  onSuccessRun: () => {},
+  onSuccessRequest: () => {},
+  onWizardClose: () => {},
   wizardTitle: 'New job'
 }
 
@@ -309,8 +310,8 @@ JobWizard.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   mode: PropTypes.string,
   onResolve: PropTypes.func.isRequired,
-  onSuccessRun: PropTypes.func,
-  onWizardClose: PropTypes.func.isRequired,
+  onSuccessRequest: PropTypes.func,
+  onWizardClose: PropTypes.func,
   params: PropTypes.shape({}).isRequired,
   wizardTitle: PropTypes.string
 }

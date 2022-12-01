@@ -50,6 +50,7 @@ const FormVolumesRow = ({
             name={`${rowPath}.${inputData.fieldPath}`}
             placeholder={inputData.placeholder}
             required={inputData.required}
+            focused={inputData.focused}
             validationRules={inputData.validationRules ?? []}
           />
         )
@@ -136,7 +137,7 @@ const FormVolumesRow = ({
         </>
       )}
       <OnChange name={`${rowPath}.data.type`}>
-        {value => {
+        {() => {
           if (editingItem) {
             const fieldNewData = pick(fields.value[index].data, ['name', 'type', 'mountPath'])
 

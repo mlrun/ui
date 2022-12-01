@@ -13,8 +13,15 @@ import { targetPathInitialState } from '../../common/TargetPath/targetPath.util'
 const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
   const tableClassNames = classnames('form-table', className)
-  const { editingItem, addNewRow, applyChanges, deleteRow, discardOrDelete, enterEditMode } =
-    useFormTable(formState)
+  const {
+    editingItem,
+    addNewRow,
+    applyChanges,
+    deleteRow,
+    discardOrDelete,
+    enterEditMode,
+    bottomScrollRef
+  } = useFormTable(formState)
 
   const uniquenessValidator = (fields, newValue) => {
     return !fields.value.some(({ data: { name } }, index) => {
@@ -59,28 +66,28 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
                   />
                 )
               })}
-              {!editingItem?.ui?.isNew && (
-                <FormActionButton
-                  disabled={disabled}
-                  fields={fields}
-                  fieldsPath={fieldsPath}
-                  label="Add input "
-                  onClick={(...addRowArgs) => {
-                    setDataInputState(targetPathInitialState)
-                    addNewRow(...addRowArgs, {
-                      data: {
-                        name: '',
-                        path: '',
-                        fieldInfo: {
-                          pathType: '',
-                          value: ''
-                        }
-                      },
-                      doc: ''
-                    })
-                  }}
-                />
-              )}
+              <FormActionButton
+                ref={bottomScrollRef}
+                hidden={editingItem?.ui?.isNew}
+                disabled={disabled}
+                fields={fields}
+                fieldsPath={fieldsPath}
+                label="Add input "
+                onClick={(...addRowArgs) => {
+                  setDataInputState(targetPathInitialState)
+                  addNewRow(...addRowArgs, {
+                    data: {
+                      name: '',
+                      path: '',
+                      fieldInfo: {
+                        pathType: '',
+                        value: ''
+                      }
+                    },
+                    doc: ''
+                  })
+                }}
+              />
             </>
           )
         }}

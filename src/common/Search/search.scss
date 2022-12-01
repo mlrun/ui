@@ -33,15 +33,16 @@
     user-select: none;
   }
 
+  &-dropdown {
+    .pop-up-dialog {
+      width: 100%;
+      padding: 0;
+    }
+  }
+
   &-matches {
-    position: absolute;
-    top: 100%;
-    left: 20px;
-    z-index: 7;
-    margin: 5px 0 0 0;
-    padding: 7px 0;
-    background-color: $white;
-    box-shadow: $previewBoxShadow;
+    padding: 0;
+    margin: 0;
 
     &__item {
       padding: 7px 15px;

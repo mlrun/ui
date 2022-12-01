@@ -61,7 +61,7 @@ export const generateJobWizardData = (
   const jobPriorityClassName =
     functionPriorityClassName || frontendSpec.default_function_priority_class_name
   const nodeSelectorTable = getNodeSelectors(functions)
-  const volumesTable = getVolumesData(functions, isEditMode)
+  const volumesTable = getVolumesData(functions)
   const gpuType = getLimitsGpuType(limits)
   const scheduleData = defaultData?.schedule
     ? getDefaultSchedule(defaultData.schedule)
@@ -389,52 +389,17 @@ const getVolumeType = volume => {
   }
 }
 
-// todo: delete redundant code
-const getVolumesData = (selectedFunction, isEditMode = false) => {
+const getVolumesData = selectedFunction => {
   const volumes = chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return (
-        (func.spec.volume_mounts &&
-          func.spec.volumes.concat([
-            {
-              name: 'testName',
-              configMap: { name: 'typeName' }
-            },
-            {
-              name: 'testName2',
-              flexVolume: {
-                driver: 'v3io/fuse',
-                options: {
-                  accessKey: 'testAccessKey',
-                  container: 'testContainer',
-                  subPath: 'testResourcePath'
-                }
-              }
-            }
-          ])) ??
-        []
-      )
-    })
+    .map(func => func.spec.volumes ?? [])
     .flatten()
     .unionBy('name')
     .value()
 
-  // todo: delete redundant code
   const volumeMounts = chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
-    .map(
-      func =>
-        (func.spec.volume_mounts &&
-          func.spec.volume_mounts.concat([
-            {
-              name: 'testName',
-              mountPath: 'testMountPath'
-            },
-            { name: 'testName2', mountPath: 'testMountPath2' }
-          ])) ??
-        []
-    )
+    .map(func => func.spec.volume_mounts ?? [])
     .flatten()
     .unionBy('name')
     .value()
@@ -865,7 +830,6 @@ export const generateJobRequestData = (
     postData.schedule = formData.scheduleData.cron
   }
 
-  console.log('postData', postData)
   return postData
 }
 

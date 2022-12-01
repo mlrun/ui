@@ -451,7 +451,7 @@ const MonitorWorkflows = ({
         },
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
         mode: jobWizardMode,
-        onSuccessRun: () => refreshJobs(filtersStore)
+        onSuccessRequest: () => refreshJobs(filtersStore)
       })
 
       setJobWizardIsOpened(true)

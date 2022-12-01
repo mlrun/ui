@@ -12,8 +12,15 @@ import { V3IO_VOLUME_TYPE } from '../../constants'
 
 const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
   const tableClassNames = classnames('form-table', 'form-col-1', disabled && 'disabled')
-  const { editingItem, addNewRow, applyChanges, deleteRow, discardOrDelete, enterEditMode } =
-    useFormTable(formState)
+  const {
+    editingItem,
+    addNewRow,
+    applyChanges,
+    deleteRow,
+    discardOrDelete,
+    enterEditMode,
+    bottomScrollRef
+  } = useFormTable(formState)
 
   return (
     <div className={tableClassNames}>
@@ -51,28 +58,28 @@ const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
                   />
                 )
               })}
-              {!editingItem?.ui?.isNew && (
-                <FormActionButton
-                  disabled={disabled}
-                  fields={fields}
-                  fieldsPath={fieldsPath}
-                  label="Add custom parameter"
-                  onClick={(...addRowArgs) =>
-                    addNewRow(...addRowArgs, {
-                      data: {
-                        type: V3IO_VOLUME_TYPE,
-                        name: '',
-                        mountPath: '',
-                        container: '',
-                        accessKey: '',
-                        subPath: ''
-                      },
-                      isDefault: false,
-                      canBeModified: true
-                    })
-                  }
-                />
-              )}
+              <FormActionButton
+                ref={bottomScrollRef}
+                disabled={disabled}
+                hidden={editingItem?.ui?.isNew}
+                fields={fields}
+                fieldsPath={fieldsPath}
+                label="Add custom parameter"
+                onClick={(...addRowArgs) =>
+                  addNewRow(...addRowArgs, {
+                    data: {
+                      type: V3IO_VOLUME_TYPE,
+                      name: '',
+                      mountPath: '',
+                      container: '',
+                      accessKey: '',
+                      subPath: ''
+                    },
+                    isDefault: false,
+                    canBeModified: true
+                  })
+                }
+              />
             </>
           )
         }}

@@ -61,7 +61,7 @@ const JobWizardJobDetails = ({
 
   const onMethodChange = (value, prevValue) => {
     if (
-      !areFormValuesChanged(
+      areFormValuesChanged(
         omit(formState.initialValues, methodPath),
         omit(formState.values, methodPath)
       )

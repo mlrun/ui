@@ -86,6 +86,7 @@ const ScheduleWizard = ({
   return (
     <PopUpDialog
       className="schedule-wizard"
+      headerIsHidden
       customPosition={{
         element: scheduleButtonRef,
         position: 'top-left'

@@ -11,8 +11,15 @@ import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
 
 const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formState }) => {
   const tableClassNames = classnames('form-table', className)
-  const { editingItem, addNewRow, applyChanges, deleteRow, discardOrDelete, enterEditMode } =
-    useFormTable(formState)
+  const {
+    addNewRow,
+    applyChanges,
+    bottomScrollRef,
+    deleteRow,
+    discardOrDelete,
+    editingItem,
+    enterEditMode
+  } = useFormTable(formState)
 
   const uniquenessValidator = (fields, newValue) => {
     return !fields.value.some(({ data: { key } }, index) => {
@@ -57,23 +64,23 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
                   />
                 )
               })}
-              {!editingItem?.ui?.isNew && (
-                <FormActionButton
-                  disabled={disabled}
-                  fields={fields}
-                  fieldsPath={fieldsPath}
-                  label="Add environment variable"
-                  onClick={(...addRowArgs) =>
-                    addNewRow(...addRowArgs, {
-                      data: {
-                        key: '',
-                        type: 'value',
-                        value: '',
-                      }
-                    })
-                  }
-                />
-              )}
+              <FormActionButton
+                disabled={disabled}
+                hidden={editingItem?.ui?.isNew}
+                ref={bottomScrollRef}
+                fields={fields}
+                fieldsPath={fieldsPath}
+                label="Add environment variable"
+                onClick={(...addRowArgs) =>
+                  addNewRow(...addRowArgs, {
+                    data: {
+                      key: '',
+                      type: 'value',
+                      value: ''
+                    }
+                  })
+                }
+              />
             </>
           )
         }}

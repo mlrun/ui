@@ -337,7 +337,7 @@ const MonitorJobs = ({
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
         mode: jobWizardMode,
         wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Re-run job' : undefined,
-        onSuccessRun: () => refreshJobs(filtersStore)
+        onSuccessRequest: () => refreshJobs(filtersStore)
       })
 
       setJobWizardIsOpened(true)

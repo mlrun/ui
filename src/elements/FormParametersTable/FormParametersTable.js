@@ -21,8 +21,15 @@ const FormParametersTable = ({
   const predefinedPath = `${fieldsPath}.predefined`
   const customPath = `${fieldsPath}.custom`
   const tableClassNames = classnames('form-table', disabled && 'disabled')
-  const { editingItem, addNewRow, applyChanges, deleteRow, discardOrDelete, enterEditMode } =
-    useFormTable(formState)
+  const {
+    addNewRow,
+    applyChanges,
+    bottomScrollRef,
+    deleteRow,
+    discardOrDelete,
+    editingItem,
+    enterEditMode
+  } = useFormTable(formState)
 
   const uniquenessValidator = (fields, fieldsPath, newValue) => {
     const predefinedItems = get(formState.values, predefinedPath.split('.'), [])
@@ -120,27 +127,27 @@ const FormParametersTable = ({
                   />
                 )
               })}
-              {!editingItem?.ui?.isNew && (
-                <FormActionButton
-                  disabled={disabled}
-                  fields={fields}
-                  fieldsPath={customPath}
-                  label="Add custom parameter"
-                  onClick={(...addRowArgs) =>
-                    addNewRow(...addRowArgs, {
-                      data: {
-                        name: '',
-                        value: '',
-                        type: 'str',
-                        parameterType: PARAMETER_TYPE_SIMPLE,
-                        isChecked: true
-                      },
-                      doc: '',
-                      isDefault: false
-                    })
-                  }
-                />
-              )}
+              <FormActionButton
+                disabled={disabled}
+                ref={bottomScrollRef}
+                hidden={editingItem?.ui?.isNew}
+                fields={fields}
+                fieldsPath={customPath}
+                label="Add custom parameter"
+                onClick={(...addRowArgs) => {
+                  addNewRow(...addRowArgs, {
+                    data: {
+                      name: '',
+                      value: '',
+                      type: 'str',
+                      parameterType: PARAMETER_TYPE_SIMPLE,
+                      isChecked: true
+                    },
+                    doc: '',
+                    isDefault: false
+                  })
+                }}
+              />
             </>
           )
         }}

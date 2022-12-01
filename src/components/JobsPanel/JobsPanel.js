@@ -136,8 +136,6 @@ const JobsPanel = ({
   useEffect(() => {
     if (panelState.editMode) {
       if (panelState.previousPanelData.titleInfo.method !== panelState.currentFunctionInfo.method) {
-        // when selecting a new method
-        console.log('generateTableData')
         generateTableData(
           panelState.currentFunctionInfo.method,
           selectedFunction,
@@ -177,8 +175,6 @@ const JobsPanel = ({
       (!selectedFunction || !isEveryObjectValueEmpty(selectedFunction)) &&
       !tableDataIsLoaded
     ) {
-      // on creating a new job or run function
-      console.log('generateTableData:2')
       generateTableData(
         panelState.currentFunctionInfo.method,
         selectedFunction,
@@ -196,8 +192,6 @@ const JobsPanel = ({
       defaultData &&
       !defaultDataIsLoaded
     ) {
-      // on editing the existing job
-      console.log('generateTableData:default')
       generateTableDataFromDefaultData(
         defaultData,
         panelDispatch,

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
-import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { includes, isEmpty } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 
 import ContentMenu from '../../../../elements/ContentMenu/ContentMenu'
-import JobWizardCardTemplate from '../../JobWizardCardTemplate/JobWizardCardTemplate'
+import FunctionCardTemplate from '../../../../elements/FunctionCardTemplate/FunctionCardTemplate'
 import NoData from '../../../../common/NoData/NoData'
 import Search from '../../../../common/Search/Search'
 import TabsSlider from '../../../../common/TabsSlider/TabsSlider'
@@ -19,19 +18,15 @@ import { SLIDER_STYLE_2 } from '../../../../types'
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
+import {
+  FUNCTIONS_SELECTION_FUNCTIONS_TAB,
+  FUNCTIONS_SELECTION_MARKETPLACE_TAB,
+  functionsSelectionTabs,
+  generateFunctionCardData,
+  generateFunctionTemplateCardData
+} from './jobWizardFunctionSelection.util'
 
 import './jobWizardFunctionSelection.scss'
-
-const functionsTabs = [
-  {
-    id: 'functions',
-    label: 'Functions'
-  },
-  {
-    id: 'marketplace',
-    label: 'Marketplace'
-  }
-]
 
 const JobWizardFunctionSelection = ({
   defaultData,
@@ -40,7 +35,7 @@ const JobWizardFunctionSelection = ({
   fetchFunctionsTemplates,
   fetchProjectsNames,
   filteredFunctions,
-  filteredTemplates,
+  filteredTemplatesCategories,
   formState,
   frontendSpec,
   functions,
@@ -52,7 +47,7 @@ const JobWizardFunctionSelection = ({
   selectedCategory,
   selectedFunctionData,
   setFilteredFunctions,
-  setFilteredTemplates,
+  setFilteredTemplatesCategories,
   setFunctions,
   setJobAdditionalData,
   setSelectedCategory,
@@ -62,7 +57,7 @@ const JobWizardFunctionSelection = ({
   templates,
   templatesCategories
 }) => {
-  const [activeTab, setActiveTab] = useState('functions')
+  const [activeTab, setActiveTab] = useState(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [projects, setProjects] = useState(
@@ -111,8 +106,8 @@ const JobWizardFunctionSelection = ({
 
   useEffect(() => {
     if (filterByName.length > 0) {
-      const filteredFuncs = functions.filter(func => func.name.includes(filterByName))
-      const filteredTemplts = templates.filter(template =>
+      const filteredFunctions = functions.filter(func => func.name.includes(filterByName))
+      const filteredTemplates = templates.filter(template =>
         template.metadata.name.includes(filterByName)
       )
       const filteredTemplatesCategories = {}
@@ -123,21 +118,22 @@ const JobWizardFunctionSelection = ({
         )
       })
 
-      setFilteredFunctions(filteredFuncs)
-      setFilteredTemplates(filteredTemplatesCategories)
-      setFilterMatches([
-        ...new Set(
-          filteredFuncs
-            .map(func => func.name)
-            .concat(filteredTemplts.map(template => template.metadata.name))
-        )
-      ])
+      setFilteredFunctions(filteredFunctions)
+      setFilteredTemplatesCategories(filteredTemplatesCategories)
+
+      const filterMatches =
+        activeTab === FUNCTIONS_SELECTION_FUNCTIONS_TAB
+          ? filteredFunctions.map(func => func.name)
+          : filteredTemplates.map(template => template.metadata.name)
+
+      setFilterMatches([...new Set(filterMatches)])
     }
   }, [
+    activeTab,
     filterByName,
     functions,
     setFilteredFunctions,
-    setFilteredTemplates,
+    setFilteredTemplatesCategories,
     templates,
     templatesCategories
   ])
@@ -150,25 +146,17 @@ const JobWizardFunctionSelection = ({
         setFilteredFunctions([])
       }
 
-      if (!isEmpty(filteredTemplates)) {
-        setFilteredTemplates({})
+      if (!isEmpty(filteredTemplatesCategories)) {
+        setFilteredTemplatesCategories({})
       }
     }
   }, [
     filterByName.length,
     filteredFunctions.length,
-    filteredTemplates,
+    filteredTemplatesCategories,
     setFilteredFunctions,
-    setFilteredTemplates
+    setFilteredTemplatesCategories
   ])
-
-  // const handleSelectGroupFunctions = item => {
-  //   setSelectedGroupFunctions(item)
-  // }
-
-  // const selectProject = projectName => {
-  //   setSelectedProject(projectName)
-  // }
 
   const generateData = functionData => {
     if (!isEmpty(functionData)) {
@@ -235,14 +223,15 @@ const JobWizardFunctionSelection = ({
     }
   }
 
-  const handleSelectProjectFunction = (groupedFunctions, funcData) => {
+  const selectProjectFunction = functionData => {
     const selectNewFunction = () => {
-      setSelectedFunctionData(groupedFunctions)
-      generateData(groupedFunctions)
+      setSelectedFunctionData(functionData)
+      generateData(functionData)
     }
 
     if (
-      selectedFunctionData?.functions?.[0].metadata.hash !== funcData?.functions?.[0].metadata?.hash
+      selectedFunctionData?.functions?.[0].metadata.hash !==
+      functionData?.functions?.[0].metadata?.hash
     ) {
       if (formState.dirty) {
         openResetConfirm(selectNewFunction)
@@ -252,16 +241,16 @@ const JobWizardFunctionSelection = ({
     }
   }
 
-  const handleSelectTemplateFunction = funcData => {
+  const selectTemplateFunction = functionData => {
     const selectNewFunction = () => {
-      fetchFunctionTemplate(funcData.metadata.versions.latest).then(result => {
+      fetchFunctionTemplate(functionData.metadata.versions.latest).then(result => {
         setSelectedFunctionData(result)
         generateData(result)
       })
     }
 
     if (
-      selectedFunctionData?.functions?.[0].metadata.name !== funcData?.metadata?.name ||
+      selectedFunctionData?.functions?.[0].metadata.name !== functionData?.metadata?.name ||
       selectedFunctionData?.functions?.[0].metadata.project
     ) {
       if (formState.dirty) {
@@ -287,13 +276,13 @@ const JobWizardFunctionSelection = ({
       </div>
       <ContentMenu
         activeTab={activeTab}
-        tabs={functionsTabs}
+        tabs={functionsSelectionTabs}
         onClick={newTab => {
           setFilterByName('')
           setActiveTab(newTab)
         }}
       />
-      {activeTab === 'functions' && (
+      {activeTab === FUNCTIONS_SELECTION_FUNCTIONS_TAB && (
         <div className="functions-tab">
           <div className="form-row">
             <Search
@@ -315,19 +304,17 @@ const JobWizardFunctionSelection = ({
             functions.length === 0 ? (
               <NoData />
             ) : (
-              (filteredFunctions.length > 0 ? filteredFunctions : functions).map(funcData => {
+              (filteredFunctions.length > 0 ? filteredFunctions : functions).map(functionData => {
                 return (
-                  <JobWizardCardTemplate
-                    className={classnames(
-                      'small',
-                      funcData?.functions?.[0].metadata?.hash ===
-                        selectedFunctionData?.functions?.[0].metadata.hash && 'selected'
-                    )}
-                    functionData={funcData}
-                    handleSelectGroupFunctions={groupedFunctions =>
-                      handleSelectProjectFunction(groupedFunctions, funcData)
+                  <FunctionCardTemplate
+                    dense
+                    selected={
+                      functionData?.functions?.[0].metadata?.hash ===
+                      selectedFunctionData?.functions?.[0].metadata.hash
                     }
-                    key={funcData.name}
+                    functionData={generateFunctionCardData(functionData)}
+                    onSelectCard={() => selectProjectFunction(functionData)}
+                    key={functionData.name}
                   />
                 )
               })
@@ -335,7 +322,7 @@ const JobWizardFunctionSelection = ({
           </div>
         </div>
       )}
-      {activeTab === 'marketplace' && (
+      {activeTab === FUNCTIONS_SELECTION_MARKETPLACE_TAB && (
         <div className="marketplace-tab">
           <div className="form-row">
             <Search
@@ -359,24 +346,23 @@ const JobWizardFunctionSelection = ({
           </div>
           <div className="functions-list">
             {!selectedCategory ? null : (filterByName.length > 0 &&
-                (filterMatches.length === 0 || isEmpty(filteredTemplates))) ||
+                (filterMatches.length === 0 || isEmpty(filteredTemplatesCategories))) ||
               isEmpty(templatesCategories) ? (
               <NoData />
             ) : (
-              (!isEmpty(filteredTemplates) ? filteredTemplates : templatesCategories)[
-                selectedCategory
-              ].map(funcData => {
+              (!isEmpty(filteredTemplatesCategories)
+                ? filteredTemplatesCategories
+                : templatesCategories)[selectedCategory].map(templateData => {
                 return (
-                  <JobWizardCardTemplate
-                    className={classnames(
-                      funcData?.metadata?.name ===
+                  <FunctionCardTemplate
+                    selected={
+                      templateData?.metadata?.name ===
                         selectedFunctionData?.functions?.[0].metadata.name &&
-                        !selectedFunctionData?.functions?.[0].metadata.project &&
-                        'selected'
-                    )}
-                    functionData={funcData}
-                    handleSelectGroupFunctions={() => handleSelectTemplateFunction(funcData)}
-                    key={funcData.metadata.name}
+                      !selectedFunctionData?.functions?.[0].metadata.project
+                    }
+                    functionData={generateFunctionTemplateCardData(templateData)}
+                    onSelectCard={() => selectTemplateFunction(templateData)}
+                    key={templateData.metadata.name}
                   />
                 )
               })
@@ -392,7 +378,7 @@ const JobWizardFunctionSelection = ({
 JobWizardFunctionSelection.propTypes = {
   defaultData: PropTypes.shape({}).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  filteredTemplates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  filteredTemplatesCategories: PropTypes.shape({}).isRequired,
   formState: PropTypes.shape({}).isRequired,
   frontendSpec: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -402,7 +388,7 @@ JobWizardFunctionSelection.propTypes = {
   selectedCategory: PropTypes.string.isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   setFilteredFunctions: PropTypes.func.isRequired,
-  setFilteredTemplates: PropTypes.func.isRequired,
+  setFilteredTemplatesCategories: PropTypes.func.isRequired,
   setFunctions: PropTypes.func.isRequired,
   setJobAdditionalData: PropTypes.func.isRequired,
   setSelectedCategory: PropTypes.func.isRequired,

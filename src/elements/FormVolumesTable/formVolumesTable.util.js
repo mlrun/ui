@@ -65,6 +65,7 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem) => {
           inputDisabled: selectedItem.isDefault,
           label: 'Volume Name',
           required: true,
+          focused: true,
           type: 'input',
           validationRules: [
             {

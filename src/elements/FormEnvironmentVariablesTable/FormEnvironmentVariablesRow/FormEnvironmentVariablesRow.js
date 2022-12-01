@@ -62,6 +62,7 @@ const FormEnvironmentVariablesRow = ({
               name={`${rowPath}.data.key`}
               placeholder="Name"
               required
+              focused
               validationRules={[
                 {
                   name: 'uniqueness',
@@ -149,7 +150,7 @@ const FormEnvironmentVariablesRow = ({
       <OnChange name={`${rowPath}.data.type`}>
         {() => {
           if (editingItem) {
-              const fieldNewData = pick(fields.value[index].data, ['key', 'type'])
+            const fieldNewData = pick(fields.value[index].data, ['key', 'type'])
 
             setFieldValue(`${rowPath}.data`, fieldNewData)
           }

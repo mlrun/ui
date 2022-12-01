@@ -39,7 +39,7 @@ export const useModalBlockHistory = (closeModal, form) => {
   const handleCloseModal = useCallback(() => {
     const { initialValues, values } = form.getState()
 
-    const showConfirmation = !areFormValuesChanged(initialValues, values)
+    const showConfirmation = areFormValuesChanged(initialValues, values)
 
     defaultCloseModalHandler(
       showConfirmation,

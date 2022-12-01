@@ -118,6 +118,7 @@ const FormParametersRow = ({
                   name={`${rowPath}.data.name`}
                   placeholder="Name"
                   required
+                  focused
                   validationRules={[
                     {
                       name: 'uniqueness',
@@ -221,7 +222,7 @@ const FormParametersRow = ({
       )}
       {editingItem && (
         <OnChange name={`${rowPath}.data.type`}>
-          {value => {
+          {() => {
             if (!isEmpty(fieldData?.data?.value) || formState.modified[`${rowPath}.data.value`]) {
               setTimeout(() => {
                 formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: true })

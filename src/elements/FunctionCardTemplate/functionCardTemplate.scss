@@ -39,7 +39,7 @@
     font-weight: 500;
   }
 
-  &__counter {
+  &__side-tag {
     position: absolute;
     top: 15px;
     right: 0;
@@ -56,20 +56,13 @@
     font-weight: bold;
   }
 
-  &__hash,
-  &__tag {
-    display: inline-block;
-    margin-right: 5px;
-    color: $primary;
-  }
-
   &__description {
     color: $topaz;
     font-size: 13px;
     line-height: 21px;
   }
 
-  &.small {
+  &.dense {
     height: 110px;
   }
 }

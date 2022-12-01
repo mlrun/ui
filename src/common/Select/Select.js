@@ -195,6 +195,7 @@ const Select = ({
       {isOpen && (
         <PopUpDialog
           className="select__options-list"
+          headerIsHidden
           customPosition={{
             element: selectRef,
             position: 'bottom-right'

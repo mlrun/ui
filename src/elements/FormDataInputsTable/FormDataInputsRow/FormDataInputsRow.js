@@ -53,6 +53,7 @@ const FormDataInputsRow = ({
               name={`${rowPath}.data.name`}
               placeholder="Name"
               required
+              focused
               validationRules={[
                 {
                   name: 'uniqueness',
