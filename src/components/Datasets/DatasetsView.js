@@ -44,7 +44,6 @@ const DatasetsView = React.forwardRef(
       applyDetailsChanges,
       applyDetailsChangesCallback,
       artifactsStore,
-      artifactsToolkitStore,
       convertedYaml,
       datasets,
       filtersStore,
@@ -80,7 +79,7 @@ const DatasetsView = React.forwardRef(
             />
           </div>
           <div className="content">
-            {(artifactsStore.loading || artifactsToolkitStore.loading) && <Loader />}
+            {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar">
                 <FilterMenu
@@ -138,7 +137,6 @@ DatasetsView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
-  artifactsToolkitStore: PropTypes.object.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,

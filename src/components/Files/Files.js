@@ -26,15 +26,14 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import FilesView from './FilesView'
 
 import {
+  ARTIFACT_OTHER_TYPE,
   FILES_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
 import {
   checkForSelectedFile,
   fetchFilesRowData,
@@ -42,6 +41,14 @@ import {
   generatePageData,
   handleApplyDetailsChanges
 } from './files.util'
+import {
+  fetchArtifactTags,
+  fetchFile,
+  fetchFiles,
+  removeFile,
+  removeFiles
+} from '../../reducers/artifactsReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
@@ -53,23 +60,13 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Files = ({
-  setNotification,
-  fetchArtifactTags,
-  fetchFile,
-  fetchFiles,
-  getFilterTagOptions,
-  removeFile,
-  removeFiles,
-  setFilters
-}) => {
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
+const Files = ({ getFilterTagOptions, setFilters }) => {
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, ARTIFACT_OTHER_TYPE)
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
@@ -80,26 +77,46 @@ const Files = ({
 
   const fetchData = useCallback(
     filters => {
-      fetchFiles(params.projectName, filters).then(result => {
-        if (result) {
-          setFiles(result)
-        }
+      dispatch(fetchFiles({ project: params.projectName, filters }))
+        .unwrap()
+        .then(result => {
+          if (result) {
+            setFiles(result)
+          }
 
-        return result
-      })
+          return result
+        })
     },
-    [fetchFiles, params.projectName]
+    [dispatch, params.projectName]
+  )
+
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, ARTIFACT_OTHER_TYPE)
+      setSelectedRowData({})
+      setFiles([])
+
+      return fetchData(filters)
+    },
+    [fetchData, getFilterTagOptions, params.projectName]
   )
 
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
+        getArtifact: () =>
+          fetchFile({
+            project: params.projectName,
+            file: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -117,17 +134,6 @@ const Files = ({
     [handleAddTag, toggleConvertedYaml]
   )
 
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedRowData({})
-      setFiles([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
-  )
-
   const handleRemoveRowData = useCallback(
     file => {
       const newStoreSelectedRowData = {
@@ -138,10 +144,10 @@ const Files = ({
       delete newStoreSelectedRowData[file.data.ui.identifier]
       delete newPageDataSelectedRowData[file.data.ui.identifier]
 
-      removeFile(newStoreSelectedRowData)
+      dispatch(removeFile(newStoreSelectedRowData))
       setSelectedRowData(newPageDataSelectedRowData)
     },
-    [artifactsStore.files.selectedRowData.content, removeFile, selectedRowData]
+    [artifactsStore.files.selectedRowData.content, dispatch, selectedRowData]
   )
 
   const handleRequestOnExpand = useCallback(
@@ -149,13 +155,13 @@ const Files = ({
       await fetchFilesRowData(
         file,
         setSelectedRowData,
-        fetchFile,
+        dispatch,
         params.projectName,
         filtersStore.iter,
         filtersStore.tag
       )
     },
-    [fetchFile, filtersStore.iter, filtersStore.tag, params.projectName]
+    [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -178,25 +184,13 @@ const Files = ({
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedFile,
         setNotification,
-        filtersStore,
-        null,
         dispatch
       )
     },
-    [
-      dispatch,
-      handleRefresh,
-      filtersStore,
-      params.name,
-      params.projectName,
-      selectedFile,
-      setNotification
-    ]
+    [dispatch, params.projectName, selectedFile]
   )
 
   const applyDetailsChangesCallback = changes => {
@@ -216,9 +210,9 @@ const Files = ({
   }
 
   useEffect(() => {
-    removeFile({})
+    dispatch(removeFile({}))
     setSelectedRowData({})
-  }, [filtersStore.iter, filtersStore.tag, removeFile])
+  }, [filtersStore.iter, filtersStore.tag, dispatch])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -235,11 +229,11 @@ const Files = ({
   useEffect(() => {
     return () => {
       setFiles([])
-      removeFiles()
+      dispatch(removeFiles())
       setSelectedFile({})
       cancelRequest('cancel')
     }
-  }, [params.projectName, removeFiles])
+  }, [params.projectName, dispatch])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
@@ -280,7 +274,6 @@ const Files = ({
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      artifactsToolkitStore={artifactsToolkitStore}
       convertedYaml={convertedYaml}
       files={files}
       filtersStore={filtersStore}
@@ -297,6 +290,4 @@ const Files = ({
   )
 }
 
-export default connect(null, { ...artifactsAction, ...filtersActions, ...notificationActions })(
-  Files
-)
+export default connect(null, { ...filtersActions })(Files)

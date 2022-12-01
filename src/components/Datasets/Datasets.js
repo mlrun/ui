@@ -25,9 +25,8 @@ import { isEmpty } from 'lodash'
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
-import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import {
   checkForSelectedDataset,
   fetchDataSetRowData,
@@ -39,6 +38,7 @@ import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
+  DATASET_TYPE,
   DATASETS_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -50,28 +50,25 @@ import { useYaml } from '../../hooks/yaml.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { cancelRequest } from '../../utils/cancelRequest'
-
-import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
-
-const Datasets = ({
+import {
   fetchArtifactTags,
   fetchDataSet,
   fetchDataSets,
-  getFilterTagOptions,
   removeDataSet,
-  removeDataSets,
-  setFilters,
-  setNotification
-}) => {
+  removeDataSets
+} from '../../reducers/artifactsReducer'
+
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+const Datasets = ({ getFilterTagOptions, setFilters }) => {
   const [datasets, setDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const artifactsToolkitStore = useSelector(store => store.artifactsToolkitStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, DATASET_TYPE)
   const pageData = useMemo(() => generatePageData(selectedDataset), [selectedDataset])
   const params = useParams()
   const navigate = useNavigate()
@@ -80,26 +77,46 @@ const Datasets = ({
 
   const fetchData = useCallback(
     filters => {
-      fetchDataSets(params.projectName, filters).then(result => {
-        if (result) {
-          setDatasets(result)
-        }
+      dispatch(fetchDataSets({ project: params.projectName, filters }))
+        .unwrap()
+        .then(result => {
+          if (result) {
+            setDatasets(result)
+          }
 
-        return result
-      })
+          return result
+        })
     },
-    [fetchDataSets, params.projectName]
+    [dispatch, params.projectName]
+  )
+
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, DATASET_TYPE)
+      setSelectedRowData({})
+      setDatasets([])
+
+      return fetchData(filters)
+    },
+    [fetchData, getFilterTagOptions, params.projectName]
   )
 
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
+        getArtifact: () =>
+          fetchDataSet({
+            project: params.projectName,
+            dataSet: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -117,40 +134,17 @@ const Datasets = ({
     [handleAddTag, toggleConvertedYaml]
   )
 
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedRowData({})
-      setDatasets([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
-  )
-
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedDataset,
         setNotification,
-        filtersStore,
-        null,
         dispatch
       )
     },
-    [
-      dispatch,
-      handleRefresh,
-      filtersStore,
-      params.name,
-      params.projectName,
-      selectedDataset,
-      setNotification
-    ]
+    [dispatch, params.projectName, selectedDataset]
   )
 
   const applyDetailsChangesCallback = changes => {
@@ -172,7 +166,7 @@ const Datasets = ({
   const handleRequestOnExpand = useCallback(
     async dataset => {
       await fetchDataSetRowData(
-        fetchDataSet,
+        dispatch,
         dataset,
         setSelectedRowData,
         !filtersStore.iter,
@@ -180,7 +174,7 @@ const Datasets = ({
         params.projectName
       )
     },
-    [fetchDataSet, filtersStore.iter, filtersStore.tag, params.projectName]
+    [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -193,10 +187,10 @@ const Datasets = ({
       delete newStoreSelectedRowData[dataset.data.ui.identifier]
       delete newPageDataSelectedRowData[dataset.data.ui.identifier]
 
-      removeDataSet(newStoreSelectedRowData)
+      dispatch(removeDataSet(newStoreSelectedRowData))
       setSelectedRowData(newPageDataSelectedRowData)
     },
-    [artifactsStore.dataSets.selectedRowData.content, removeDataSet, selectedRowData]
+    [artifactsStore.dataSets.selectedRowData.content, dispatch, selectedRowData]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -216,9 +210,9 @@ const Datasets = ({
   }, [datasets, filtersStore.groupBy, latestItems, params.projectName])
 
   useEffect(() => {
-    removeDataSet({})
+    dispatch(removeDataSet({}))
     setSelectedRowData({})
-  }, [filtersStore.iter, filtersStore.tag, removeDataSet])
+  }, [filtersStore.iter, filtersStore.tag, dispatch])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -269,11 +263,11 @@ const Datasets = ({
   useEffect(() => {
     return () => {
       setDatasets([])
-      removeDataSets()
+      dispatch(removeDataSets())
       setSelectedDataset({})
       cancelRequest(datasetsRef, 'cancel')
     }
-  }, [removeDataSets])
+  }, [dispatch])
 
   useEffect(() => setDatasets([]), [filtersStore.tag])
 
@@ -283,7 +277,6 @@ const Datasets = ({
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      artifactsToolkitStore={artifactsToolkitStore}
       convertedYaml={convertedYaml}
       datasets={datasets}
       filtersStore={filtersStore}
@@ -301,14 +294,8 @@ const Datasets = ({
 }
 
 const actionCreators = {
-  fetchArtifactTags: artifactsAction.fetchArtifactTags,
-  fetchDataSet: artifactsAction.fetchDataSet,
-  fetchDataSets: artifactsAction.fetchDataSets,
   getFilterTagOptions: filtersActions.getFilterTagOptions,
-  removeDataSet: artifactsAction.removeDataSet,
-  removeDataSets: artifactsAction.removeDataSets,
-  setFilters: filtersActions.setFilters,
-  setNotification: notificationActions.setNotification
+  setFilters: filtersActions.setFilters
 }
 
 export default connect(null, { ...actionCreators })(Datasets)

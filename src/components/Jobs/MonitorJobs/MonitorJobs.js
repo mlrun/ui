@@ -19,9 +19,9 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
-import { connect, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { connect, useDispatch, useSelector } from 'react-redux'
 
 import JobWizard from '../../JobWizard/JobWizard'
 import Details from '../../Details/Details'
@@ -41,6 +41,12 @@ import {
   PANEL_EDIT_MODE,
   PANEL_RERUN_MODE
 } from '../../../constants'
+import {
+  generateActionsMenu,
+  generateFilters,
+  generatePageData,
+  monitorJobsActionCreator
+} from './monitorJobs.util'
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
@@ -50,15 +56,10 @@ import { handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
+import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
-import {
-  generateActionsMenu,
-  generateFilters,
-  generatePageData,
-  monitorJobsActionCreator
-} from './monitorJobs.util'
 
 const MonitorJobs = ({
   abortJob,
@@ -70,8 +71,7 @@ const MonitorJobs = ({
   removeJobLogs,
   removeNewJob,
   removePods,
-  setFilters,
-  setNotification
+  setFilters
 }) => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
@@ -85,6 +85,7 @@ const MonitorJobs = ({
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
   const { isDemoMode, isStagingMode } = useMode()
   const {
     editableItem,
@@ -137,15 +138,17 @@ const MonitorJobs = ({
           }
         })
         .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch jobs',
-            retry: () => refreshJobs(filters)
-          })
+          dispatch(
+            setNotification({
+              status: error?.response?.status || 400,
+              id: Math.random(),
+              message: 'Failed to fetch jobs',
+              retry: () => refreshJobs(filters)
+            })
+          )
         })
     },
-    [fetchAllJobRuns, fetchJobs, params.jobName, params.projectName, setNotification]
+    [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
   )
 
   const onAbortJob = useCallback(
@@ -157,10 +160,11 @@ const MonitorJobs = ({
         filtersStore,
         setNotification,
         refreshJobs,
-        setConfirmData
+        setConfirmData,
+        dispatch
       )
     },
-    [abortJob, filtersStore, params.projectName, refreshJobs, setConfirmData, setNotification]
+    [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
   )
 
   const handleConfirmAbortJob = useCallback(
@@ -239,13 +243,15 @@ const MonitorJobs = ({
       }
 
       setEditableItem(null)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Job started successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job started successfully'
+        })
+      )
     },
-    [filtersStore, refreshJobs, setEditableItem, setNotification]
+    [dispatch, filtersStore, refreshJobs, setEditableItem]
   )
 
   useEffect(() => {

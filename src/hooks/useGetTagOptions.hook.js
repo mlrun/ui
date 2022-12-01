@@ -22,9 +22,16 @@ import { useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import filtersActions from '../actions/filters'
-import { TAG_FILTER, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
+import {
+  ARTIFACT_OTHER_TYPE,
+  DATASET_TYPE,
+  MODEL_TYPE,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
+} from '../constants'
 
-export const useGetTagOptions = (fetchTags, filters) => {
+export const useGetTagOptions = (fetchTags, filters, category) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
   const { projectName, tag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
@@ -40,7 +47,15 @@ export const useGetTagOptions = (fetchTags, filters) => {
         setUrlTagOption(TAG_FILTER_LATEST)
       }
 
-      fetchTags(projectName).then(({ data }) => {
+      const fetchTagsArguments = {
+        project: projectName,
+        category
+      }
+      const fetchTagsPromise = [ARTIFACT_OTHER_TYPE, MODEL_TYPE, DATASET_TYPE].includes(category)
+        ? dispatch(fetchTags(fetchTagsArguments)).unwrap()
+        : fetchTags(fetchTagsArguments)
+
+      fetchTagsPromise.then(({ data }) => {
         dispatch(filtersActions.setFilterTagOptions([...new Set(data.tags)]))
 
         if (tag) {
@@ -56,7 +71,7 @@ export const useGetTagOptions = (fetchTags, filters) => {
     } else {
       setUrlTagOption(null)
     }
-  }, [dispatch, fetchTags, filters, projectName, tag, tagOptions.length])
+  }, [category, dispatch, fetchTags, filters, projectName, tag, tagOptions.length])
 
   return [urlTagOption]
 }

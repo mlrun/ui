@@ -343,7 +343,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           icon: <RTFunctionIcon />,
           label: 'Create RT function',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/functions`),
+            path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
           }),
           tooltip: ''
@@ -352,7 +352,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           id: 'deployServingFunction',
           icon: <ServingFunctionIcon />,
           handleClick: () => ({
-            path: `${base_url}/functions?openPanel=true`
+            path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
           label: 'Deploy serving function',
           tooltip: ''

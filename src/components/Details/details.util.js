@@ -48,6 +48,7 @@ import {
   MODELS_TAB
 } from '../../constants'
 import { formatDatetime, generateLinkPath } from '../../utils'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
@@ -123,6 +124,7 @@ export const generateArtifactsContent = (
         value: selectedItem.tag ?? '',
         editModeEnabled: true,
         editModeType: 'input',
+        validationRules: getValidationRules('common.tag'),
         onChange: value => editInput(value, 'tag')
       },
       iter: {

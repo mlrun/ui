@@ -36,7 +36,7 @@ process.on('unhandledRejection', err => {
 require('../config/env')
 
 const execSync = require('child_process').execSync
-//const argv = process.argv.slice(2)
+// const argv = process.argv.slice(2)
 
 // build cucumber executive command
 const mockServer = 'node --require @babel/register tests/mockServer/mock.js'

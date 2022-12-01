@@ -53,6 +53,7 @@ const ChipCell = ({
   const [visibleChipsCount, setVisibleChipsCount] = useState(8)
   const chipsCellRef = useRef()
   const chipsWrapperRef = useRef()
+  const hiddenChipCounterRef = useRef()
 
   let chips = useMemo(() => {
     return (isEditMode && !visibleChipsMaxLength) || visibleChipsMaxLength === 'all'
@@ -256,7 +257,7 @@ const ChipCell = ({
       handleRemoveChip={handleRemoveChip}
       handleShowElements={handleShowElements}
       isEditMode={isEditMode}
-      ref={{ chipsCellRef, chipsWrapperRef }}
+      ref={{ chipsCellRef, chipsWrapperRef, hiddenChipCounterRef }}
       setChipsSizes={setChipsSizes}
       setEditConfig={setEditConfig}
       shortChips={shortChips}

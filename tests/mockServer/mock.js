@@ -598,7 +598,7 @@ function getArtifacts(req, res) {
     other: ['', 'table', 'link', 'plot', 'chart']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
-    artifact => artifact.project === req.query['project']
+    artifact => artifact.project === req.params.project
   )
 
   if (req.query['category']) {
@@ -1467,7 +1467,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/pipelines/:pipelineID`, getPipeline)
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
-app.get(`${mlrunAPIIngress}/artifacts`, getArtifacts)
+app.get(`${mlrunAPIIngress}/projects/:project/artifacts`, getArtifacts)
 
 app.post(`${mlrunAPIIngress}/artifact/:project/:uid/:artifact`, postArtifact)
 app.get(

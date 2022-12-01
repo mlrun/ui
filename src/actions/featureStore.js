@@ -317,8 +317,14 @@ const featureStoreActions = {
     type: FETCH_FEATURES_SUCCESS,
     payload: features
   }),
-  fetchFeatureSetsTags: project => () => featureStoreApi.fetchFeatureSetsTags(project),
-  fetchFeatureVectorsTags: project => () => featureStoreApi.fetchFeatureVectorsTags(project),
+  fetchFeatureSetsTags:
+    ({ project }) =>
+    () =>
+      featureStoreApi.fetchFeatureSetsTags(project),
+  fetchFeatureVectorsTags:
+    ({ project }) =>
+    () =>
+      featureStoreApi.fetchFeatureVectorsTags(project),
   removeEntity: entities => ({
     type: REMOVE_ENTITY,
     payload: entities

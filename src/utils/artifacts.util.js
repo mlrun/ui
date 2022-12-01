@@ -18,25 +18,29 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { cloneDeep } from 'lodash'
-import { deleteTag, editTag, addTag } from '../reducers/artifactsToolkitReducer'
+import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
   artifactItem = cloneDeep(artifactItem)
 
   if ('tag' in changes.data) {
+    const identifier = {
+      key: artifactItem.db_key || artifactItem.key,
+      kind: artifactItem.kind,
+      uid: artifactItem.uid || artifactItem.tree
+    }
+
+    if (artifactItem.iter !== 0) {
+      identifier.iter = artifactItem.iter
+    }
+
     let manageTagArgs = {
       project: projectName,
       tag: changes.data.tag.currentFieldValue,
       data: {
         kind: 'artifact',
-        identifiers: [
-          {
-            key: artifactItem.key,
-            kind: artifactItem.kind,
-            uid: artifactItem.uid ?? artifactItem.tree
-          }
-        ]
+        identifiers: [identifier]
       }
     }
 
@@ -58,20 +62,24 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
     return updateTagPromise
       .unwrap()
       .then(response => {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Tag was updated successfully'
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Tag was updated successfully'
+          })
+        )
       })
       .catch(error => {
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message: 'Failed to update the tag',
-          retry: () =>
-            applyTagChanges(changes, artifactItem, projectName, dispatch, setNotification)
-        })
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to update the tag',
+            retry: () =>
+              applyTagChanges(changes, artifactItem, projectName, dispatch, setNotification)
+          })
+        )
       })
   } else {
     return updateTagPromise

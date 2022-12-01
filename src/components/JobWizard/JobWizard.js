@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { createForm } from 'final-form'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -19,12 +19,12 @@ import { Wizard } from 'igz-controls/components'
 
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
-import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
 import { MODAL_MAX } from 'igz-controls/constants'
 import { generateJobRequestData, getNewJobErrorMsg, getSaveJobErrorMsg } from './JobWizard.util'
 import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { setNotification } from '../../reducers/notificationReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { useMode } from '../../hooks/mode.hook'
 import {
@@ -50,7 +50,6 @@ const JobWizard = ({
   onWizardClose,
   params,
   runNewJob,
-  setNotification,
   wizardTitle
 }) => {
   const formRef = React.useRef(
@@ -72,6 +71,7 @@ const JobWizard = ({
   const [jobAdditionalData, setJobAdditionalData] = useState({})
   const [showSchedule, setShowSchedule] = useState(false)
   const location = useLocation()
+  const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const scheduleButtonRef = useRef()
 
@@ -153,11 +153,13 @@ const JobWizard = ({
       .then(() => {
         resolveModal()
         onSuccessRequest && onSuccessRequest()
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job started successfully'
-        })
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Job started successfully'
+          })
+        )
       })
       .then(() => {
         return navigate(
@@ -165,11 +167,13 @@ const JobWizard = ({
         )
       })
       .catch(error => {
-        setNotification({
-          status: error.response.status || 400,
-          id: Math.random(),
-          message: getNewJobErrorMsg(error)
-        })
+        dispatch(
+          setNotification({
+            status: error.response.status || 400,
+            id: Math.random(),
+            message: getNewJobErrorMsg(error)
+          })
+        )
       })
   }
 
@@ -326,7 +330,6 @@ export default connect(
     ...functionsActions,
     ...jobsActions,
     ...projectsAction,
-    editJob: scheduledJobsActionCreator.editJob,
-    setNotification: notificationActions.setNotification
+    editJob: scheduledJobsActionCreator.editJob
   }
 )(JobWizard)

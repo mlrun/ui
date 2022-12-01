@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useCallback } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -42,7 +42,7 @@ import { useMode } from '../../hooks/mode.hook'
 
 export const JobsContext = React.createContext({})
 
-const Jobs = ({ fetchJobFunction, setNotification }) => {
+const Jobs = ({ fetchJobFunction }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
@@ -51,6 +51,7 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { isDemoMode } = useMode()
+  const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
   const jobsStore = useSelector(store => store.jobsStore)
@@ -78,12 +79,12 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
       await rerunJob(
         job,
         fetchJobFunction,
-        setNotification,
         setEditableItem,
         isDemoMode,
-        setJobWizardMode
+        setJobWizardMode,
+        dispatch
       ),
-    [fetchJobFunction, isDemoMode, setNotification]
+    [fetchJobFunction, isDemoMode, dispatch]
   )
 
   const handleMonitoring = useCallback(
@@ -128,7 +129,7 @@ const Jobs = ({ fetchJobFunction, setNotification }) => {
             showActionsMenu={true}
           />
         </div>
-        <div className="content content_with-menu">
+        <div className="content">
           <ContentMenu
             activeTab={
               location.pathname.includes(MONITOR_JOBS_TAB)

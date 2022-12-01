@@ -26,14 +26,20 @@ import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifa
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 
-import artifactsAction from '../../../actions/artifacts'
 import detailsActions from '../../../actions/details'
 import filtersActions from '../../../actions/filters'
-import notificationActions from '../../../actions/notification'
+import {
+  fetchArtifactTags,
+  fetchModel,
+  removeModel,
+  removeModels
+} from '../../../reducers/artifactsReducer'
+import { setNotification } from '../../../reducers/notificationReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  MODEL_TYPE,
   MODELS_PAGE,
   MODELS_TAB,
   SHOW_ITERATIONS,
@@ -57,20 +63,10 @@ import { cancelRequest } from '../../../utils/cancelRequest'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Models = ({
-  fetchArtifactTags,
-  fetchModel,
-  fetchModelFeatureVector,
-  removeModel,
-  removeModels,
-  setFilters,
-  setNotification,
-  updateArtifact,
-  getFilterTagOptions
-}) => {
+const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -86,15 +82,33 @@ const Models = ({
     openPopUp(DeployModelPopUp, { model })
   }, [])
 
+  const handleRefresh = useCallback(
+    filters => {
+      getFilterTagOptions(fetchArtifactTags, params.projectName, MODEL_TYPE)
+      setSelectedRowData({})
+      setModels([])
+
+      return fetchData(filters)
+    },
+    [fetchData, getFilterTagOptions, params.projectName, setModels]
+  )
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: fetchData,
+        onAddTag: handleRefresh,
+        getArtifact: () =>
+          fetchModel({
+            project: params.projectName,
+            model: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
         projectName: params.projectName
       })
     },
-    [fetchData, params.projectName]
+    [handleRefresh, params.projectName]
   )
 
   const actionsMenu = useMemo(
@@ -126,16 +140,16 @@ const Models = ({
       delete newStoreSelectedRowData[model.data.ui.value]
       delete newPageDataSelectedRowData[model.data.ui.value]
 
-      removeModel(newStoreSelectedRowData)
+      dispatch(removeModel(newStoreSelectedRowData))
       setSelectedRowData(newPageDataSelectedRowData)
     },
-    [artifactsStore.models.selectedRowData, removeModel, selectedRowData]
+    [artifactsStore.models.selectedRowData, dispatch, selectedRowData]
   )
 
   const handleRequestOnExpand = useCallback(
     async model => {
       await fetchModelsRowData(
-        fetchModel,
+        dispatch,
         model,
         setSelectedRowData,
         filtersStore.iter,
@@ -143,44 +157,20 @@ const Models = ({
         params.projectName
       )
     },
-    [fetchModel, filtersStore.iter, filtersStore.tag, params.projectName]
-  )
-
-  const handleRefresh = useCallback(
-    filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
-      setSelectedRowData({})
-      setModels([])
-
-      return fetchData(filters)
-    },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName, setModels]
+    [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        handleRefresh,
         params.projectName,
-        params.name,
         selectedModel,
         setNotification,
-        filtersStore,
-        updateArtifact,
         dispatch
       )
     },
-    [
-      handleRefresh,
-      params.projectName,
-      params.name,
-      selectedModel,
-      setNotification,
-      filtersStore,
-      updateArtifact,
-      dispatch
-    ]
+    [dispatch, params.projectName, selectedModel]
   )
 
   const applyDetailsChangesCallback = changes => {
@@ -200,9 +190,9 @@ const Models = ({
   }
 
   useEffect(() => {
-    removeModel({})
+    dispatch(removeModel({}))
     setSelectedRowData({})
-  }, [filtersStore.iter, filtersStore.tag, removeModel])
+  }, [filtersStore.iter, filtersStore.tag, dispatch])
 
   const { latestItems, handleExpandRow } = useGroupContent(
     models,
@@ -224,11 +214,11 @@ const Models = ({
   useEffect(() => {
     return () => {
       setModels([])
-      removeModels()
+      dispatch(removeModels())
       setSelectedModel({})
       cancelRequest(modelsRef, 'cancel')
     }
-  }, [removeModels, setModels])
+  }, [dispatch, setModels])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
@@ -315,14 +305,7 @@ const Models = ({
   )
 }
 
-const actionCreators = {
-  setNotification: notificationActions.setNotification,
-  updateArtifact: artifactsAction.updateArtifact
-}
-
 export default connect(null, {
-  ...artifactsAction,
   ...detailsActions,
-  ...filtersActions,
-  ...actionCreators
+  ...filtersActions
 })(Models)

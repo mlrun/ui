@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useLayoutEffect, useMemo, useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
@@ -40,7 +40,7 @@ import {
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
 import { parseKeyValues } from '../../utils'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 
 import './jobsPanel.scss'
 
@@ -65,7 +65,6 @@ const JobsPanel = ({
   setNewJob,
   setNewJobInputs,
   setNewJobSecretSources,
-  setNotification,
   withSaveChanges
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
@@ -89,6 +88,7 @@ const JobsPanel = ({
   })
   const navigate = useNavigate()
   const params = useParams()
+  const dispatch = useDispatch()
 
   useLayoutEffect(() => {
     if (
@@ -117,20 +117,22 @@ const JobsPanel = ({
 
   useEffect(() => {
     if (!functionsStore.template.name && functionsStore.error) {
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Function template could not be loaded'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Function template could not be loaded'
+        })
+      )
       closePanel()
       removeFunctionsError()
     }
   }, [
     closePanel,
+    dispatch,
     functionsStore.error,
     functionsStore.template.name,
-    removeFunctionsError,
-    setNotification
+    removeFunctionsError
   ])
 
   useEffect(() => {
@@ -474,5 +476,5 @@ export default connect(
     functionsStore,
     frontendSpec: appStore.frontendSpec
   }),
-  { ...jobsActions, ...functionActions, ...notificationActions }
+  { ...jobsActions, ...functionActions }
 )(JobsPanel)

@@ -17,27 +17,25 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { SET_NOTIFICATION, REMOVE_NOTIFICATION } from '../constants'
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   notification: []
 }
 
-const notificationReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case SET_NOTIFICATION:
-      return {
-        ...state,
-        notification: [...state.notification, payload]
-      }
-    case REMOVE_NOTIFICATION:
-      return {
-        ...state,
-        notification: state.notification.filter(item => item.id !== payload)
-      }
-    default:
-      return state
+const notificationSlice = createSlice({
+  name: 'notification',
+  initialState,
+  reducers: {
+    setNotification(state, { payload }) {
+      state.notification.push(payload)
+    },
+    removeNotification(state, { payload }) {
+      state.notification = state.notification.filter(item => item.id !== payload)
+    }
   }
-}
+})
 
-export default notificationReducer
+export const { setNotification, removeNotification } = notificationSlice.actions
+
+export default notificationSlice.reducer

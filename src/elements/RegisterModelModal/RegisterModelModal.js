@@ -36,7 +36,7 @@ import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import { useMode } from '../../hooks/mode.hook'
 import artifactApi from '../../api/artifacts-api'
 
@@ -112,7 +112,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
         resolveModal()
         refresh(filtersStore)
         dispatch(
-          notificationActions.setNotification({
+          setNotification({
             status: response.status,
             id: Math.random(),
             message: 'Model initiated successfully'
@@ -122,7 +122,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
       .catch(() => {
         resolveModal()
         dispatch(
-          notificationActions.setNotification({
+          setNotification({
             status: 400,
             id: Math.random(),
             message: 'Model failed to initiate',
