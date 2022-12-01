@@ -29,7 +29,8 @@ export const useGroupContent = (
   handleRemoveRequestData,
   handleRequestOnExpand,
   page,
-  pageTab
+  pageTab,
+  handleExpandAllCallback
 ) => {
   const [groupedContent, setGroupedContent] = useState({})
   const [latestItems, setLatestItems] = useState([])
@@ -72,7 +73,7 @@ export const useGroupContent = (
     } else {
       parentRow.classList.remove('row_active')
       parentRow.classList.add('parent-row-expanded')
-      handleRequestOnExpand && handleRequestOnExpand(item)
+      handleRequestOnExpand && handleRequestOnExpand(item, groupedContent)
 
       setExpandedItems(prev => ++prev)
     }
@@ -87,14 +88,16 @@ export const useGroupContent = (
           rows.forEach(row => row.classList.remove('parent-row-expanded'))
 
           setExpandedItems(0)
+          handleExpandAllCallback && handleExpandAllCallback(true)
         } else {
           rows.forEach(row => row.classList.add('parent-row-expanded'))
 
           setExpandedItems(Object.keys(groupedContent).length)
+          handleExpandAllCallback && handleExpandAllCallback(false, groupedContent)
         }
       }
     },
-    [expand, filtersStore.groupBy, groupedContent]
+    [expand, filtersStore.groupBy, groupedContent, handleExpandAllCallback]
   )
 
   useEffect(() => {
