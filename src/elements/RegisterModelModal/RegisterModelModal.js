@@ -17,9 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your` compliance with
 such restriction.
 */
-import React, { useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-// import { debounce } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { createForm } from 'final-form'
@@ -42,48 +41,6 @@ import { useMode } from '../../hooks/mode.hook'
 import artifactApi from '../../api/artifacts-api'
 
 import './RegisterModelModal.scss'
-
-function DebouncedMemoizedField({ milliseconds = 400, validationRules, ...props }) {
-  const timeout = useRef(null)
-  const lastValue = useRef(null)
-  const lastResult = useRef(null)
-
-  const validateField = validate => value =>
-    new Promise(resolve => {
-      if (timeout.current) {
-        timeout.current()
-      }
-
-      if (value !== lastValue.current) {
-        const timerId = setTimeout(() => {
-          lastValue.current = value
-          lastResult.current = validate(value)
-          resolve(lastResult.current)
-        }, milliseconds)
-
-        timeout.current = () => {
-          clearTimeout(timerId)
-          resolve(true)
-        }
-      } else {
-        resolve(lastResult.current)
-      }
-    })
-
-  const asyncRules = validationRules
-    .filter(rule => rule.async)
-    .map(rule => ({
-      ...rule,
-      pattern: validateField(rule.pattern)
-    }))
-
-  return (
-    <FormInput
-      validationRules={[...validationRules.filter(rule => !rule.async), ...asyncRules]}
-      {...props}
-    />
-  )
-}
 
 function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }) {
   const { isDemoMode } = useMode()
@@ -218,7 +175,8 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
             title="Register model"
           >
             <div className="form-row">
-              <DebouncedMemoizedField
+              <FormInput
+                async
                 label="Name"
                 name="metadata.key"
                 required
