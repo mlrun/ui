@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
@@ -34,13 +34,11 @@ import { handleClick, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
 import { getDateAndTimeByFormat } from '../../../utils/'
 import { openPopUp } from 'igz-controls/utils/common.util'
-
-import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
+import { PROJECT_MONITOR } from '../../../constants'
 
 import './ProjectOverview.scss'
 
 const ProjectOverview = ({ fetchProject, project }) => {
-  const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
@@ -50,13 +48,6 @@ const ProjectOverview = ({ fetchProject, project }) => {
   }, [navigate, params])
 
   const handlePathExecution = handleClick(navigate, openPopUp)
-
-  const handleActionsViewToggle = index => {
-    if (selectedActionsIndex === index) {
-      return setSelectedActionsIndex(null)
-    }
-    setSelectedActionsIndex(index)
-  }
 
   useEffect(() => {
     fetchProject(params.projectName).catch(error =>
@@ -97,28 +88,38 @@ const ProjectOverview = ({ fetchProject, project }) => {
   return (
     <div className="project-overview">
       <div className="project-overview__header">
-        <div className="project-overview__header-title">
-          {project.data.metadata.name}
-          <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>
-            <i className={`state-${project.data.status.state}-job status-icon`} />
-          </Tooltip>
-        </div>
-        <div className="project-overview__header-subtitle">
+        <div className="project-overview__header-row">
           <div>
-            <span className="project-overview__header-subtitle-name">Created:</span>
-            <span>
-              {getDateAndTimeByFormat(project.data.metadata.created, 'YYYY-MM-DD, HH:mm:ss A')}
-            </span>
+            <div className="project-overview__header-title">
+              {params.projectName}
+              <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>
+                <i className={`state-${project.data.status.state}-job status-icon`} />
+              </Tooltip>
+            </div>
+            <p className="project-overview__header-description">
+              {project.data.spec.description ?? ''}
+            </p>
           </div>
-          <div>
-            <span className="project-overview__header-subtitle-name">Owner:</span>
-            <span>{project.data.spec.owner}</span>
-          </div>
+          <ul className="project-overview__details">
+            <li>
+              <span className="project-overview__details-label">Created:</span>
+              <span>
+                {getDateAndTimeByFormat(project.data.metadata.created, 'YYYY-MM-DD, HH:mm:ss A')}
+              </span>
+            </li>
+            <li>
+              <span className="project-overview__details-label">Owner:</span>
+              <span>{project.data.spec.owner}</span>
+            </li>
+            <li>
+              <Link to={`/projects/${params.projectName}/${PROJECT_MONITOR}`} className="link">
+                Project Monitoring
+              </Link>
+            </li>
+          </ul>
         </div>
-        <p className="project-overview__header-description">
-          {project.data.spec.description ?? ''}
-        </p>
       </div>
+
       <div className="project-overview__content">
         {/* move to card */}
         {Object.keys(cards).map((card, index) => {
@@ -131,35 +132,15 @@ const ProjectOverview = ({ fetchProject, project }) => {
                   <p className="project-overview-card__header-subtitle">{subTitle ?? ''}</p>
                 </div>
                 <div className="project-overview-card__actions">
-                  <ProjectAction
-                    actions={actions.slice(0, 3)}
-                    onClick={handlePathExecution}
-                    showActions={true}
-                  />
-                  <ProjectAction
-                    actions={actions.slice(3, actions.length)}
-                    onClick={handlePathExecution}
-                    showActions={selectedActionsIndex === index}
-                  />
-                  {actions.length > 3 && (
-                    <p
-                      className="project-overview-card__actions-toogler"
-                      aria-expanded={selectedActionsIndex === index}
-                      onClick={() => handleActionsViewToggle(index)}
-                    >
-                      <ArrowIcon />
-                      <span>Additional Actions</span>
-                    </p>
-                  )}
+                  <ProjectAction actions={actions} onClick={handlePathExecution} />
                 </div>
               </div>
-              <div
-                className="project-overview-card__center"
-                aria-expanded={selectedActionsIndex === index}
-              >
+              <div className="project-overview-card__center">
                 <ProjectOverviewTableRow />
               </div>
+
               <div className="project-overview-card__bottom">
+                <p className="label">Resources</p>
                 <div className="additional-links">
                   {additionalLinks &&
                     additionalLinks.map(({ id, label, handleClick }) => (

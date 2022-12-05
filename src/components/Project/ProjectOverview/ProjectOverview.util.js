@@ -27,15 +27,19 @@ import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 
 import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
+import { ReactComponent as CreateWorkflowIcon } from 'igz-controls/images/flow-icon.svg'
 import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
 import { ReactComponent as FeatureSetIcon } from 'igz-controls/images/set-icon.svg'
-import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/flow-icon.svg'
+import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/ml-folder.svg'
 import { ReactComponent as CreateJobIcon } from 'igz-controls/images/run2-icon.svg'
 // import { ReactComponent as DeployModelIcon } from 'igz-controls/images/rocket-icon.svg'
 import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/vector-icon.svg'
 import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/model-icon.svg'
 import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/realtime-icon-b.svg'
+import { ReactComponent as RunWorkflowIcon } from 'igz-controls/images/ml-run-flow.svg'
 import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/serving-icon.svg'
+import { ReactComponent as TrainModelIcon } from 'igz-controls/images/ml-bulb.svg'
+
 // import { ReactComponent as UploadIcon } from 'igz-controls/images/upload-icon.svg'
 
 export const handleClick = (navigate, openPopUp) => handler => {
@@ -52,9 +56,9 @@ export const getInitialCards = (projectName, navigate) => {
 
   return {
     collection: {
-      title: 'Data',
+      title: 'Ingest and Process Data',
       subTitle:
-        'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
+        'This section enable users to upload data , crate features and register external data.',
       actions: [
         //TODO: un-comment after wizard ready
         // {
@@ -220,9 +224,9 @@ export const getInitialCards = (projectName, navigate) => {
       ]
     },
     development: {
-      title: 'Jobs and Workflows',
+      title: 'Develop and Train Models',
       subTitle:
-        'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more. This is not the final version.',
+        'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more.',
       actions: [
         {
           id: 'createnewfunction',
@@ -239,7 +243,7 @@ export const getInitialCards = (projectName, navigate) => {
           handleClick: () => ({
             path: `${base_url}/jobs/monitor-jobs/create-new-job`
           }),
-          label: 'Create New Job',
+          label: 'Run batch',
           tooltip: ''
         },
         {
@@ -289,6 +293,30 @@ export const getInitialCards = (projectName, navigate) => {
           }),
           label: 'Register Model',
           tooltip: ''
+        },
+        {
+          id: 'trainmodel',
+          icon: <TrainModelIcon />,
+          handleClick: () => {},
+          label: 'Train Model',
+          tooltip: '',
+          hidden: true
+        },
+        {
+          id: 'createworkflow',
+          icon: <CreateWorkflowIcon />,
+          handleClick: () => {},
+          label: 'Create workflow',
+          tooltip: '',
+          hidden: true
+        },
+        {
+          id: 'runworkflow',
+          icon: <RunWorkflowIcon />,
+          handleClick: () => {},
+          label: 'Run workflow',
+          tooltip: '',
+          hidden: true
         }
       ],
       additionalLinks: [
@@ -323,14 +351,14 @@ export const getInitialCards = (projectName, navigate) => {
       ]
     },
     deployment: {
-      title: 'Deployment',
+      title: 'Deploy and Monitor',
       subTitle:
-        'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale. This is not the final version.',
+        'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale.',
       actions: [
         {
           id: 'createRealTimeFunction',
           icon: <RTFunctionIcon />,
-          label: 'Create RT function',
+          label: 'Create realtime function',
           handleClick: () => ({
             path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
@@ -344,6 +372,20 @@ export const getInitialCards = (projectName, navigate) => {
             path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
           label: 'Deploy serving function',
+          tooltip: ''
+        },
+        {
+          id: 'batchInference',
+          icon: <ServingFunctionIcon />,
+          handleClick: () => {},
+          label: 'Batch Inference',
+          tooltip: ''
+        },
+        {
+          id: 'defineAlerts',
+          icon: <ServingFunctionIcon />,
+          handleClick: () => {},
+          label: 'Define alerts',
           tooltip: ''
         }
         // {
