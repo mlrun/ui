@@ -54,6 +54,7 @@ const FormParametersRow = ({
   fieldsPath,
   formState,
   index,
+  isCurrentRowEditing,
   isHyperOptionDisabled,
   rowPath,
   uniquenessValidator
@@ -137,7 +138,6 @@ const FormParametersRow = ({
                   name={`${rowPath}.data.name`}
                   placeholder="Name"
                   required
-                  focused
                   validationRules={[
                     {
                       name: 'uniqueness',
@@ -239,17 +239,18 @@ const FormParametersRow = ({
           )}
         </>
       )}
-      {editingItem && (
-        <OnChange name={`${rowPath}.data.type`}>
-          {() => {
-            if (!isEmpty(fieldData?.data?.value) || formState.modified[`${rowPath}.data.value`]) {
-              setTimeout(() => {
-                formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: true })
-              })
-            }
-          }}
-        </OnChange>
-      )}
+      <OnChange name={`${rowPath}.data.type`}>
+        {() => {
+          if (
+            isCurrentRowEditing(rowPath) &&
+            (!isEmpty(fieldData?.data?.value) || formState.modified[`${rowPath}.data.value`])
+          ) {
+            setTimeout(() => {
+              formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: true })
+            })
+          }
+        }}
+      </OnChange>
     </>
   )
 }

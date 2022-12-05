@@ -72,7 +72,6 @@ const FormDataInputsRow = ({
               name={`${rowPath}.data.name`}
               placeholder="Name"
               required
-              focused
               validationRules={[
                 {
                   name: 'uniqueness',
@@ -155,7 +154,7 @@ FormDataInputsRow.defaultProps = {
 
 FormDataInputsRow.propTypes = {
   applyChanges: PropTypes.func.isRequired,
-  dataInputState: DATA_INPUT_STATE,
+  dataInputState: DATA_INPUT_STATE.isRequired,
   deleteRow: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   discardOrDelete: PropTypes.func.isRequired,

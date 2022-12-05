@@ -22,7 +22,7 @@ import { Link, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import {CONTENT_MENU_TABS} from '../../types'
+import { CONTENT_MENU_TABS } from '../../types'
 
 import './contentMenu.scss'
 

@@ -78,7 +78,6 @@ const JobWizard = ({
       initialValues: {}
     })
   )
-  const navigate = useNavigate()
   const isEditMode = useMemo(() => mode === PANEL_EDIT_MODE || mode === PANEL_RERUN_MODE, [mode])
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
@@ -90,6 +89,7 @@ const JobWizard = ({
   const [jobAdditionalData, setJobAdditionalData] = useState({})
   const [showSchedule, setShowSchedule] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const scheduleButtonRef = useRef()
@@ -110,8 +110,7 @@ const JobWizard = ({
         getActions: ({ handleSubmit }) => [
           {
             label: 'Back',
-            disabled: true,
-            onClick: () => {}
+            disabled: true
           },
           {
             label: 'Next',

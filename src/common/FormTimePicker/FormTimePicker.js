@@ -40,6 +40,11 @@ const FormTimePicker = ({ className, label, name }) => {
   )
 }
 
+FormTimePicker.defaultProps = {
+  className: '',
+  label: ''
+}
+
 FormTimePicker.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,

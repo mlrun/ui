@@ -82,7 +82,6 @@ const FormEnvironmentVariablesRow = ({
               name={`${rowPath}.data.key`}
               placeholder="Name"
               required
-              focused
               validationRules={[
                 {
                   name: 'uniqueness',

@@ -47,7 +47,8 @@ const FormParametersTable = ({
     deleteRow,
     discardOrDelete,
     editingItem,
-    enterEditMode
+    enterEditMode,
+    isCurrentRowEditing
   } = useFormTable(formState)
 
   const uniquenessValidator = (fields, fieldsPath, newValue) => {
@@ -106,6 +107,7 @@ const FormParametersTable = ({
                     fieldsPath={predefinedPath}
                     formState={formState}
                     index={index}
+                    isCurrentRowEditing={isCurrentRowEditing}
                     isHyperOptionDisabled={isHyperOptionDisabled}
                     key={rowPath}
                     rowPath={rowPath}
@@ -139,6 +141,7 @@ const FormParametersTable = ({
                     fieldsPath={customPath}
                     formState={formState}
                     index={index}
+                    isCurrentRowEditing={isCurrentRowEditing}
                     isHyperOptionDisabled={isHyperOptionDisabled}
                     key={rowPath}
                     rowPath={rowPath}

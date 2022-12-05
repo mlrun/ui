@@ -59,6 +59,7 @@ export const generateCreateNewOptions = (
           params
         })
       } else {
+        // todo: delete this when the job wizard is out of the demo mode
         navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`)
       }
     }
