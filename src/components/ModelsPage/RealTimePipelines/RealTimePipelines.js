@@ -24,15 +24,15 @@ import { flatten, map } from 'lodash'
 
 import RealTimePipelinesView from './RealTimePipelinesView'
 
-import { generatePageData } from './realTimePipelines.util'
-import { useModelsPage } from '../ModelsPage.context'
-import filtersActions from '../../../actions/filters'
 import { GROUP_BY_NAME, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
-import { cancelRequest } from '../../../utils/cancelRequest'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
-import createFunctionsContent from '../../../utils/createFunctionsContent'
-import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
+import createFunctionsContent from '../../../utils/createFunctionsContent'
+import { cancelRequest } from '../../../utils/cancelRequest'
+import { generatePageData } from './realTimePipelines.util'
+import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
+import { setFilters } from '../../../reducers/filtersReducer'
+import { useGroupContent } from '../../../hooks/groupContent.hook'
+import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -98,7 +98,7 @@ const RealTimePipelines = () => {
 
   useEffect(() => {
     fetchData({})
-    dispatch(filtersActions.setFilters({ groupBy: GROUP_BY_NAME }))
+    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
   }, [dispatch, fetchData])
 
   useEffect(() => {

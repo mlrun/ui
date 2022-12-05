@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate, useParams } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
@@ -52,26 +52,20 @@ import {
   STATUS_FILTER,
   TAG_FILTER
 } from '../../constants'
-import filtersActions from '../../actions/filters'
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
 import { generateProjectsList } from '../../utils/projects'
+import { removeFilters, setFilterProjectOptions, setFilters } from '../../reducers/filtersReducer'
 
 import './filterMenu.scss'
 
 const FilterMenu = ({
   actionButton,
   cancelRequest,
-  changes,
   expand,
   filters,
-  filtersStore,
   handleExpandAll,
   onChange,
   page,
-  projectStore,
-  removeFilters,
-  setFilterProjectOptions,
-  setFilters,
   tab,
   withoutExpandButton
 }) => {
@@ -82,16 +76,20 @@ const FilterMenu = ({
   const navigate = useNavigate()
   const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
+  const dispatch = useDispatch()
+  const filtersStore = useSelector(store => store.filtersStore)
+  const projectStore = useSelector(store => store.projectStore)
+  const changes = useSelector(store => store.detailsStore.changes)
 
   useEffect(() => {
     return () => {
-      removeFilters()
+      dispatch(removeFilters())
       setLabels('')
       setName('')
       setEntities('')
       setTagOptions(tagFilterOptions)
     }
-  }, [removeFilters, params.pageTab, params.projectName, page, params.jobName])
+  }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
 
   useEffect(() => {
     setLabels(filtersStore.labels)
@@ -129,20 +127,23 @@ const FilterMenu = ({
       filtersStore.projectOptions.length === 0 &&
       filters.some(filter => filter.type === PROJECT_FILTER)
     ) {
-      setFilterProjectOptions(
-        generateProjectsList(projectStore.projectsNames.data, params.projectName)
+      dispatch(
+        setFilterProjectOptions(
+          generateProjectsList(projectStore.projectsNames.data, params.projectName)
+        )
       )
-      setFilters({
-        project: params.projectName
-      })
+      dispatch(
+        setFilters({
+          project: params.projectName
+        })
+      )
     }
   }, [
+    dispatch,
     filters,
     filtersStore.projectOptions.length,
     params.projectName,
-    projectStore.projectsNames.data,
-    setFilterProjectOptions,
-    setFilters
+    projectStore.projectsNames.data
   ])
 
   const applyChanges = (data, isRefreshed) => {
@@ -164,28 +165,27 @@ const FilterMenu = ({
 
   const handleSelectOption = (item, filter) => {
     if (filter.type === STATUS_FILTER) {
-      setFilters({ state: item })
+      dispatch(setFilters({ state: item }))
       applyChanges({
         ...filtersStore,
         state: item
       })
     } else if (filter.type === SORT_BY) {
-      setFilters({ sortBy: item })
+      dispatch(setFilters({ sortBy: item }))
     } else if (filter.type === GROUP_BY_FILTER) {
-      setFilters({ groupBy: item })
-    } else if (
-      (filter.type === TAG_FILTER) &&
-      item !== filtersStore.tag
-    ) {
-      setFilters({ tag: item })
+      dispatch(setFilters({ groupBy: item }))
+    } else if (filter.type === TAG_FILTER && item !== filtersStore.tag) {
+      dispatch(setFilters({ tag: item }))
       applyChanges({
         ...filtersStore,
         tag: item
       })
     } else if (filter.type === PROJECT_FILTER) {
-      setFilters({
-        project: item
-      })
+      dispatch(
+        setFilters({
+          project: item
+        })
+      )
       applyChanges({
         ...filtersStore,
         project: item.toLowerCase()
@@ -195,11 +195,13 @@ const FilterMenu = ({
 
   const onKeyDown = event => {
     if (event.keyCode === KEY_CODES.ENTER) {
-      setFilters({
-        labels,
-        name,
-        entities
-      })
+      dispatch(
+        setFilters({
+          labels,
+          name,
+          entities
+        })
+      )
       applyChanges({
         ...filtersStore,
         labels,
@@ -210,11 +212,13 @@ const FilterMenu = ({
   }
 
   const onBlur = () => {
-    setFilters({
-      labels,
-      name,
-      entities
-    })
+    dispatch(
+      setFilters({
+        labels,
+        name,
+        entities
+      })
+    )
   }
 
   const handleChangeDates = (dates, isPredefined) => {
@@ -224,12 +228,14 @@ const FilterMenu = ({
       generatedDates.push(new Date())
     }
 
-    setFilters({
-      dates: {
-        value: generatedDates,
-        isPredefined
-      }
-    })
+    dispatch(
+      setFilters({
+        dates: {
+          value: generatedDates,
+          isPredefined
+        }
+      })
+    )
     applyChanges({
       ...filtersStore,
       dates: {
@@ -242,9 +248,11 @@ const FilterMenu = ({
   const handleIter = iteration => {
     const iterValue = filtersStore.iter === iteration ? SHOW_ITERATIONS : ''
 
-    setFilters({
-      iter: iterValue
-    })
+    dispatch(
+      setFilters({
+        iter: iterValue
+      })
+    )
     applyChanges({
       ...filtersStore,
       iter: iterValue
@@ -253,9 +261,11 @@ const FilterMenu = ({
 
   const handleShowUntagged = showUntagged => {
     const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
-    setFilters({
-      showUntagged: showUntaggedValue
-    })
+    dispatch(
+      setFilters({
+        showUntagged: showUntaggedValue
+      })
+    )
     applyChanges({
       ...filtersStore,
       showUntagged: showUntaggedValue
@@ -442,11 +452,4 @@ FilterMenu.propTypes = {
   withoutExpandButton: PropTypes.bool
 }
 
-export default connect(
-  ({ detailsStore, filtersStore, projectStore }) => ({
-    changes: detailsStore.changes,
-    filtersStore,
-    projectStore
-  }),
-  { ...filtersActions }
-)(FilterMenu)
+export default FilterMenu

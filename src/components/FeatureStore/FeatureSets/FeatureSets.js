@@ -19,13 +19,13 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
 import { connect, useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
 import { cloneDeep } from 'lodash'
 
 import FeatureSetsView from './FeatureSetsView'
+import { FeatureStoreContext } from '../FeatureStore'
 
-import { featureSetsActionCreator, featureSetsFilters, generatePageData } from './featureSets.util'
 import {
   DETAILS_OVERVIEW_TAB,
   FEATURE_SETS_TAB,
@@ -35,17 +35,18 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TAG_LATEST
 } from '../../../constants'
-import { useOpenPanel } from '../../../hooks/openPanel.hook'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
-import { parseFeatureSets } from '../../../utils/parseFeatureSets'
+import { featureSetsActionCreator, featureSetsFilters, generatePageData } from './featureSets.util'
+import { cancelRequest } from '../../../utils/cancelRequest'
+import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
+import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
-import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
+import { parseFeatureSets } from '../../../utils/parseFeatureSets'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { FeatureStoreContext } from '../FeatureStore'
-import { cancelRequest } from '../../../utils/cancelRequest'
+import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../../hooks/groupContent.hook'
+import { useOpenPanel } from '../../../hooks/openPanel.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -53,12 +54,10 @@ const FeatureSets = ({
   fetchFeatureSet,
   fetchFeatureSets,
   fetchFeatureSetsTags,
-  getFilterTagOptions,
   removeFeatureSet,
   removeFeatureSets,
   removeFeatureStoreError,
   removeNewFeatureSet,
-  setFilters,
   updateFeatureStoreData
 }) => {
   const [featureSets, setFeatureSets] = useState([])
@@ -109,7 +108,7 @@ const FeatureSets = ({
   )
 
   const handleRefresh = filters => {
-    getFilterTagOptions(fetchFeatureSetsTags, params.projectName)
+    dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
 
     return fetchData(filters)
   }
@@ -232,11 +231,13 @@ const FeatureSets = ({
 
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
-    setFilters({
-      name: '',
-      labels: '',
-      tag: currentTag
-    })
+    dispatch(
+      setFilters({
+        name: '',
+        labels: '',
+        tag: currentTag
+      })
+    )
 
     return handleRefresh({
       project: params.projectName,
@@ -268,11 +269,11 @@ const FeatureSets = ({
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, setFilters])
+  }, [filtersStore.groupBy, filtersStore.tag, dispatch])
 
   useEffect(() => {
     const content = cloneDeep(featureStore.featureSets?.allData)

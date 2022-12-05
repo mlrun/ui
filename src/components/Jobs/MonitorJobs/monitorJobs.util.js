@@ -29,14 +29,12 @@ import {
   STATUS_FILTER
 } from '../../../constants'
 import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import jobsActions from '../../../actions/jobs'
+import detailsActions from '../../../actions/details'
 
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
-
-import jobsActions from '../../../actions/jobs'
-import detailsActions from '../../../actions/details'
-import filtersActions from '../../../actions/filters'
 
 export const generateFilters = jobName => [
   { type: PERIOD_FILTER, label: 'Period:' },
@@ -121,6 +119,5 @@ export const monitorJobsActionCreator = {
   fetchJobs: jobsActions.fetchJobs,
   removeJobLogs: jobsActions.removeJobLogs,
   removeNewJob: jobsActions.removeNewJob,
-  removePods: detailsActions.removePods,
-  setFilters: filtersActions.setFilters
+  removePods: detailsActions.removePods
 }
