@@ -30,15 +30,15 @@ import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/functio
 import { ReactComponent as CreateWorkflowIcon } from 'igz-controls/images/flow-icon.svg'
 import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
 import { ReactComponent as FeatureSetIcon } from 'igz-controls/images/set-icon.svg'
-import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/ml-folder.svg'
+// import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/ml-folder.svg'
 import { ReactComponent as CreateJobIcon } from 'igz-controls/images/run2-icon.svg'
 // import { ReactComponent as DeployModelIcon } from 'igz-controls/images/rocket-icon.svg'
 import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/vector-icon.svg'
 import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/model-icon.svg'
 import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/realtime-icon-b.svg'
-import { ReactComponent as RunWorkflowIcon } from 'igz-controls/images/ml-run-flow.svg'
+// import { ReactComponent as RunWorkflowIcon } from 'igz-controls/images/ml-run-flow.svg'
 import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/serving-icon.svg'
-import { ReactComponent as TrainModelIcon } from 'igz-controls/images/ml-bulb.svg'
+// import { ReactComponent as TrainModelIcon } from 'igz-controls/images/ml-bulb.svg'
 
 // import { ReactComponent as UploadIcon } from 'igz-controls/images/upload-icon.svg'
 
@@ -132,7 +132,7 @@ export const getInitialCards = (projectName, navigate) => {
           tooltip: ''
         },
         {
-          icon: <RegisterArtifactIcon />,
+          // icon: <RegisterArtifactIcon />,
           id: 'registerArtifact',
           handleClick: () => ({
             component: RegisterArtifactModal,
@@ -296,7 +296,7 @@ export const getInitialCards = (projectName, navigate) => {
         },
         {
           id: 'trainmodel',
-          icon: <TrainModelIcon />,
+          // icon: <TrainModelIcon />,
           handleClick: () => {},
           label: 'Train Model',
           tooltip: '',
@@ -312,7 +312,7 @@ export const getInitialCards = (projectName, navigate) => {
         },
         {
           id: 'runworkflow',
-          icon: <RunWorkflowIcon />,
+          // icon: <RunWorkflowIcon />,
           handleClick: () => {},
           label: 'Run workflow',
           tooltip: '',
@@ -376,14 +376,14 @@ export const getInitialCards = (projectName, navigate) => {
         },
         {
           id: 'batchInference',
-          icon: <ServingFunctionIcon />,
+          // icon: <ServingFunctionIcon />,
           handleClick: () => {},
           label: 'Batch Inference',
           tooltip: ''
         },
         {
           id: 'defineAlerts',
-          icon: <ServingFunctionIcon />,
+          // icon: <ServingFunctionIcon />,
           handleClick: () => {},
           label: 'Define alerts',
           tooltip: ''
@@ -411,7 +411,7 @@ export const getInitialCards = (projectName, navigate) => {
           handleClick: () => ({
             path: `${base_url}/models/real-time-pipelines`
           }),
-          label: 'Real Time Pipelines'
+          label: 'RT Pipelines'
         },
         {
           id: 'nuclioFunctions',
