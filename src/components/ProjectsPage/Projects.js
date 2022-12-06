@@ -101,6 +101,10 @@ const Projects = ({
     [isDescendingOrder, sortProjectId]
   )
 
+  const handleSearchOnFocus = useCallback(() => {
+    refreshProjects()
+  }, [])
+
   const handleSelectSortOption = option => {
     setSortProjectId(option)
 
@@ -331,6 +335,7 @@ const Projects = ({
       filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
       handleSelectSortOption={handleSelectSortOption}
+      handleSearchOnFocus={handleSearchOnFocus}
       isDescendingOrder={isDescendingOrder}
       isNameValid={isNameValid}
       projectStore={projectStore}

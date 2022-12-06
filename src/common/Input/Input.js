@@ -55,6 +55,7 @@ const Input = React.forwardRef(
       maxLength,
       onBlur,
       onChange,
+      onFocus,
       onKeyDown,
       pattern,
       placeholder,
@@ -208,6 +209,7 @@ const Input = React.forwardRef(
 
     const handleInputFocus = () => {
       setInputIsFocused(true)
+      onFocus && onFocus()
     }
 
     const toggleValidationRulesMenu = () => {
@@ -375,6 +377,7 @@ Input.propTypes = {
   min: PropTypes.number,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
+  onFocus: PropTypes.func,
   onKeyDown: PropTypes.func,
   pattern: PropTypes.string,
   placeholder: PropTypes.string,
