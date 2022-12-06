@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
@@ -27,24 +27,25 @@ import PageHeader from '../../elements/PageHeader/PageHeader'
 import Search from '../../common/Search/Search'
 import Table from '../Table/Table'
 
-import filtersActions from '../../actions/filters'
-import nuclioActions from '../../actions/nuclio'
 import { GROUP_BY_NONE } from '../../constants'
 import { generatePageData } from './consumerGroups.util.js'
+import { setFilters } from '../../reducers/filtersReducer'
 
-const ConsumerGroups = ({ nuclioStore, setFilters }) => {
+const ConsumerGroups = () => {
   const [filteredV3ioStreams, setFilteredV3ioStreams] = useState([])
   const [filterByName, setFilterByName] = useState('')
+  const nuclioStore = useSelector(store => store.nuclioStore)
   const params = useParams()
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NONE })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   useEffect(() => {
     setFilteredV3ioStreams(
-      nuclioStore.v3ioStreams.parsedData.filter(v3ioStremData =>
-        filterByName ? v3ioStremData.consumerGroup.toLowerCase().includes(filterByName) : true
+      nuclioStore.v3ioStreams.parsedData.filter(v3ioStreamData =>
+        filterByName ? v3ioStreamData.consumerGroup.toLowerCase().includes(filterByName) : true
       )
     )
   }, [nuclioStore.v3ioStreams.parsedData, filterByName])
@@ -66,27 +67,13 @@ const ConsumerGroups = ({ nuclioStore, setFilters }) => {
           value={filterByName}
         />
       </div>
-      <Table
-        actionsMenu={[]}
-        content={filteredV3ioStreams}
-        pageData={pageData}
-      />
-      {!nuclioStore.v3ioStreams.loading &&
-        nuclioStore.v3ioStreams.parsedData.length === 0 && (
-          <NoData message="You haven’t created any consumer group yet" />
-        )}
+      <Table actionsMenu={[]} content={filteredV3ioStreams} pageData={pageData} />
+      {!nuclioStore.v3ioStreams.loading && nuclioStore.v3ioStreams.parsedData.length === 0 && (
+        <NoData message="You haven’t created any consumer group yet" />
+      )}
       {nuclioStore.v3ioStreams.loading && <Loader />}
     </>
   )
 }
 
-export default connect(
-  ({ filtersStore, nuclioStore }) => ({
-    filtersStore,
-    nuclioStore
-  }),
-  {
-    ...filtersActions,
-    ...nuclioActions
-  }
-)(ConsumerGroups)
+export default ConsumerGroups

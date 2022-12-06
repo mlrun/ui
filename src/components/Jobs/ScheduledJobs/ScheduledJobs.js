@@ -23,6 +23,7 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
 import ScheduledJobsView from './ScheduledJobsView'
+import { JobsContext } from '../Jobs'
 
 import {
   GROUP_BY_NONE,
@@ -31,13 +32,13 @@ import {
   NAME_FILTER,
   SCHEDULE_TAB
 } from '../../../constants'
-import { parseJob } from '../../../utils/parseJob'
-import { useYaml } from '../../../hooks/yaml.hook'
-import { JobsContext } from '../Jobs'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
+import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
+import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
+import { useYaml } from '../../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -51,8 +52,7 @@ const ScheduledJobs = ({
   fetchScheduledJobAccessKey,
   handleRunScheduledJob,
   removeNewJob,
-  removeScheduledJob,
-  setFilters
+  removeScheduledJob
 }) => {
   const [jobs, setJobs] = useState([])
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
@@ -282,8 +282,8 @@ const ScheduledJobs = ({
   }, [params.projectName])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NONE })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   return (
     <ScheduledJobsView

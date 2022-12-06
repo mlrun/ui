@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEqual, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
@@ -37,7 +37,7 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { parseFunctions } from '../../utils/parseFunctions'
-import filtersActions from '../../actions/filters'
+import { setFilters } from '../../reducers/filtersReducer'
 import functionsActions from '../../actions/functions'
 import { setNotification } from '../../reducers/notificationReducer'
 import jobsActions from '../../actions/jobs'
@@ -58,13 +58,11 @@ const Functions = ({
   deleteFunction,
   fetchFunctionLogs,
   fetchFunctions,
-  filtersStore,
   functionsStore,
   removeFunctionLogs,
   removeFunctionsError,
   removeNewFunction,
-  removeNewJob,
-  setFilters
+  removeNewJob
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -73,6 +71,7 @@ const Functions = ({
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
+  const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
   let fetchFunctionLogsTimeout = useRef(null)
   const { isStagingMode } = useMode()
@@ -317,8 +316,8 @@ const Functions = ({
   }, [functions, navigate, params.hash, params.projectName])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NAME })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
+  }, [dispatch])
 
   const filtersChangeCallback = filters => {
     if (
@@ -461,8 +460,7 @@ const Functions = ({
   )
 }
 
-export default connect(({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }), {
-  ...filtersActions,
+export default connect(({ functionsStore }) => ({ functionsStore }), {
   ...functionsActions,
   ...jobsActions
 })(React.memo(Functions))
