@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 
-import { DANGER_BUTTON } from 'igz-controls/constants'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -87,7 +87,6 @@ export const projectsSortOptions = [
   }
 ]
 export const successProjectDeletingMessage = 'Project deleted successfully'
-export const failedProjectDeletingMessage = 'Failed to delete project'
 
 export const handleDeleteProjectError = (
   error,
@@ -119,7 +118,10 @@ export const handleDeleteProjectError = (
         status: 400,
         id: Math.random(),
         retry: () => handleDeleteProject(project),
-        message: failedProjectDeletingMessage
+        message:
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? `You are not allowed to delete ${project.metadata.name} project`
+            : `Failed to delete ${project.metadata.name} project`
       })
     )
   }
