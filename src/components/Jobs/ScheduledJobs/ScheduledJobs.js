@@ -45,6 +45,7 @@ import { getNoDataMessage } from '../../../layout/Content/content.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
+import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
@@ -61,8 +62,7 @@ const ScheduledJobs = ({
   fetchScheduledJobAccessKey,
   handleRunScheduledJob,
   removeNewJob,
-  removeScheduledJob,
-  setFilters
+  removeScheduledJob
 }) => {
   const [jobs, setJobs] = useState([])
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
@@ -311,15 +311,8 @@ const ScheduledJobs = ({
   }, [params.projectName])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NONE })
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job started successfully'
-        })
-      )
-  }, [dispatch, setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   useEffect(() => {
     if (jobWizardMode && !jobWizardIsOpened) {

@@ -18,7 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEqual, isEmpty } from 'lodash'
 
 import Content from '../../layout/Content/Content'
@@ -29,51 +30,48 @@ import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import { ConfirmDialog } from 'igz-controls/components'
 
 import {
-  detailsMenu,
-  filters,
   FUNCTIONS_EDITABLE_STATES,
   FUNCTIONS_READY_STATES,
-  infoHeaders,
-  page,
+  detailsMenu,
+  filters,
   getFunctionsEditableTypes,
-  getTableHeaders
+  getTableHeaders,
+  infoHeaders,
+  page
 } from './functions.util'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { getFunctionLogs } from '../../utils/getFunctionLogs'
-import { parseFunctions } from '../../utils/parseFunctions'
-import filtersActions from '../../actions/filters'
-import functionsActions from '../../actions/functions'
-import { setNotification } from '../../reducers/notificationReducer'
-import jobsActions from '../../actions/jobs'
 import {
-  FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
+  FUNCTION_TYPE_SERVING,
   GROUP_BY_NAME,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
   TAG_LATEST
 } from '../../constants'
 import { DANGER_BUTTON, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
+import functionsActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
+import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
+import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { parseFunctions } from '../../utils/parseFunctions'
+import { setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import { useMode } from '../../hooks/mode.hook'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 const Functions = ({
   deleteFunction,
   fetchFunctionLogs,
   fetchFunctions,
-  filtersStore,
   functionsStore,
   removeFunctionLogs,
   removeFunctionsError,
   removeNewFunction,
-  removeNewJob,
-  setFilters
+  removeNewJob
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
@@ -81,6 +79,7 @@ const Functions = ({
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
+  const filtersStore = useSelector(store => store.filtersStore)
   let fetchFunctionLogsTimeout = useRef(null)
   const { isStagingMode } = useMode()
   const params = useParams()
@@ -226,8 +225,8 @@ const Functions = ({
   }, [functions, navigate, params.hash, params.projectName])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NAME })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
+  }, [dispatch])
 
   const filtersChangeCallback = filters => {
     if (
@@ -434,8 +433,7 @@ const Functions = ({
   )
 }
 
-export default connect(({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }), {
-  ...filtersActions,
+export default connect(({ functionsStore }) => ({ functionsStore }), {
   ...functionsActions,
   ...jobsActions
 })(React.memo(Functions))

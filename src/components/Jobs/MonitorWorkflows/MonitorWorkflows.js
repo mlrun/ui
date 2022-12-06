@@ -31,6 +31,21 @@ import Table from '../../Table/Table'
 import Workflow from '../../Workflow/Workflow'
 import YamlModal from '../../../common/YamlModal/YamlModal'
 
+import {
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  PANEL_EDIT_MODE,
+  PANEL_RERUN_MODE
+} from '../../../constants'
+import {
+  generateActionsMenu,
+  generateFilters,
+  generatePageData,
+  monitorWorkflowsActionCreator
+} from './monitorWorkflows.util'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
@@ -41,25 +56,11 @@ import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
+import { setFilters } from '../../../reducers/filtersReducer'
+import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
-import {
-  generateActionsMenu,
-  generateFilters,
-  generatePageData,
-  monitorWorkflowsActionCreator
-} from './monitorWorkflows.util'
-import { setNotification } from '../../../reducers/notificationReducer'
-import {
-  GROUP_BY_NONE,
-  GROUP_BY_WORKFLOW,
-  JOBS_PAGE,
-  MONITOR_JOBS_TAB,
-  MONITOR_WORKFLOWS_TAB,
-  PANEL_EDIT_MODE,
-  PANEL_RERUN_MODE
-} from '../../../constants'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -74,8 +75,7 @@ const MonitorWorkflows = ({
   removeFunctionLogs,
   removeJobLogs,
   removeNewJob,
-  resetWorkflow,
-  setFilters
+  resetWorkflow
 }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
@@ -432,12 +432,12 @@ const MonitorWorkflows = ({
 
   useEffect(() => {
     if (params.workflowId) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     } else {
       getWorkflows()
-      setFilters({ groupBy: GROUP_BY_WORKFLOW })
+      dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
     }
-  }, [getWorkflows, params.workflowId, setFilters, params.projectName])
+  }, [dispatch, getWorkflows, params.workflowId, params.projectName])
 
   useEffect(() => {
     return () => {
