@@ -31,6 +31,7 @@ const Search = ({
   className,
   matches,
   onChange,
+  onFocus,
   placeholder,
   searchWhileTyping,
   value,
@@ -99,13 +100,10 @@ const Search = ({
         inputIcon={<SearchIcon />}
         iconClass="search-icon"
         onChange={searchOnChange}
+        onFocus={onFocus}
         focused={inputIsFocused}
         onKeyDown={event => {
-          if (
-            event.key === 'Enter' &&
-            !searchWhileTyping &&
-            searchValue !== ''
-          ) {
+          if (event.key === 'Enter' && !searchWhileTyping && searchValue !== '') {
             onChange(searchValue)
             setInputFocused(false)
           }
@@ -140,6 +138,7 @@ const Search = ({
 Search.defaultProps = {
   className: '',
   matches: [],
+  onFocus: () => {},
   placeholder: '',
   searchWhileTyping: false,
   value: '',
@@ -150,6 +149,7 @@ Search.propTypes = {
   className: PropTypes.string,
   matches: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
+  onFocus: PropTypes.func,
   placeholder: PropTypes.string,
   searchWhileTyping: PropTypes.bool,
   value: PropTypes.string,
