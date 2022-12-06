@@ -35,8 +35,7 @@ import {
 import nuclioActions from '../../actions/nuclio'
 import { setNotification } from '../../reducers/notificationReducer'
 import projectsAction from '../../actions/projects'
-import { DANGER_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
