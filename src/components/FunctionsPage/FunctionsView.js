@@ -33,7 +33,7 @@ import { ConfirmDialog } from 'igz-controls/components'
 import YamlModal from '../../common/YamlModal/YamlModal'
 
 import { getNoDataMessage } from '../../layout/Content/content.util'
-import { SECONDARY_BUTTON } from '../../../../dashboard-react-controls/src/lib/constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { filters } from './functions.util'
 import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
 
