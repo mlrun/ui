@@ -246,7 +246,7 @@ const FilterMenu = ({
   }
 
   const handleIter = iteration => {
-    const iterValue = filtersStore.iter === iteration ? SHOW_ITERATIONS : ''
+    const iterValue = filtersStore.iter !== iteration ? SHOW_ITERATIONS : ''
 
     dispatch(
       setFilters({
@@ -345,7 +345,7 @@ const FilterMenu = ({
                 return (
                   <CheckBox
                     key={filter.type}
-                    item={{ label: filter.label, id: '' }}
+                    item={{ label: filter.label, id: 'iter' }}
                     onChange={handleIter}
                     selectedId={filtersStore.iter}
                   />
