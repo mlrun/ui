@@ -26,7 +26,7 @@ import Table from '../../Table/Table'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { featureVectorsFilters } from './featureVectors.util'
 import { FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
 

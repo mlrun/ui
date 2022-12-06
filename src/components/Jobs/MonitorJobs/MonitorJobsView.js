@@ -32,7 +32,7 @@ import JobsPanel from '../../JobsPanel/JobsPanel'
 
 import { JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_EDIT_MODE } from '../../../constants'
 import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { useLocation, useParams } from 'react-router-dom'
 import { ACTIONS_MENU } from '../../../types'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'

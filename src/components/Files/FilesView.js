@@ -33,7 +33,7 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 
 import { ARTIFACT_TYPE, FILES_PAGE } from '../../constants'
-import { getNoDataMessage } from '../../layout/Content/content.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './files.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 

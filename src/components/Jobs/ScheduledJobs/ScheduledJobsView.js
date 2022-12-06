@@ -29,7 +29,7 @@ import YamlModal from '../../../common/YamlModal/YamlModal'
 import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 
 import { JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../../constants'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { ACTIONS_MENU } from '../../../types'
 
 const ScheduledJobsView = ({
