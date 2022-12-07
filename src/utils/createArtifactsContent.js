@@ -26,7 +26,9 @@ import {
   FILES_PAGE,
   MODELS_PAGE,
   MODELS_TAB,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  BUTTON_COPY_URI_CELL_TYPE,
+  ARTIFACTS
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
@@ -220,8 +222,8 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         id: `buttonCopy.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+        type: BUTTON_COPY_URI_CELL_TYPE,
+        actionHandler: item => copyToClipboard(generateUri(item, MODELS_TAB))
       }
     ]
   }
@@ -329,8 +331,8 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         id: `buttonCopy.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? 'artifacts'))
+        type: BUTTON_COPY_URI_CELL_TYPE,
+        actionHandler: item => copyToClipboard(generateUri(item, ARTIFACTS))
       }
     ]
   }
@@ -552,8 +554,8 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         id: `buttonCopy.${identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? DATASETS))
+        type: BUTTON_COPY_URI_CELL_TYPE,
+        actionHandler: item => copyToClipboard(generateUri(item, DATASETS))
       }
     ]
   }
