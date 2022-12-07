@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEqual } from 'lodash'
+import { isEqual} from 'lodash'
 import {
     ADD_TO_FEATURE_VECTOR_TAB,
     DATASETS_PAGE,
@@ -42,48 +42,48 @@ import {
 
 const messageNamesList = {
     [ADD_TO_FEATURE_VECTOR_TAB]: {
-        single: 'feature',
-        plural: 'features'
+        single: 'Feature',
+        plural: 'Features'
     },
     [DATASETS_PAGE]: {
-        single: 'dataset',
-        plural: 'datasets'
+        single: 'Dataset',
+        plural: 'Datasets'
     },
     [FEATURE_SETS_TAB]: {
-        single: 'feature-set',
-        plural: 'feature-sets'
+        single: 'Feature-Set',
+        plural: 'Feature-Sets'
     },
     [FEATURE_VECTORS_TAB]: {
-        single: 'feature-vector',
-        plural: 'feature-vectors'
+        single: 'Feature-Vector',
+        plural: 'Feature-Vectors'
     },
     [FEATURES_TAB]: {
-        single: 'feature',
-        plural: 'features'
+        single: 'Feature',
+        plural: 'Features'
     },
     [FILES_PAGE]: {
-        single: 'file',
-        plural: 'files'
+        single: 'File',
+        plural: 'Files'
     },
     [FUNCTIONS_PAGE]: {
-        single: 'function',
-        plural: 'functions'
+        single: 'Function',
+        plural: 'Functions'
     },
     [JOBS_PAGE]: {
-        single: 'job',
-        plural: 'jobs'
+        single: 'Job',
+        plural: 'Jobs'
     },
     [MODELS_TAB]: {
-        single: 'model',
-        plural: 'models'
+        single: 'Model',
+        plural: 'Models'
     },
     [MODEL_ENDPOINTS_TAB]: {
-        single: 'model-endpoint',
-        plural: 'model-endpoints'
+        single: 'Model-endpoint',
+        plural: 'Model-endpoints'
     },
     [REAL_TIME_PIPELINES_TAB]: {
-        single: 'real-time pipeline',
-        plural: 'real-time pipelines'
+        single: 'Real-time pipeline',
+        plural: 'Real-time pipelines'
     },
     default: ''
 }
@@ -108,7 +108,7 @@ const generateEmptyListMessage = (messageNames, tab) => {
     }
 
     if ([FEATURES_TAB, ADD_TO_FEATURE_VECTOR_TAB].includes(tab)) {
-        return 'No features yet. Go to "Feature Sets" tab to create your first feature set.'
+        return 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.'
     }
 
     return `No ${messageNames.plural} yet. Create your first ${messageNames.single} now.`
@@ -116,14 +116,15 @@ const generateEmptyListMessage = (messageNames, tab) => {
 
 const generateNoEntriesFoundMessage = (changedFilters, filtersStore, messageNames) => {
     return changedFilters.reduce((message, filter, index) => {
-        const label = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type) ? `${filter.label.toLowerCase()}:` :
-                      filter.type === DATE_RANGE_TIME_FILTER ? 'start time:' : filter.label.toLowerCase()
-        const value = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type) ? 'false' : filter.type === DATE_RANGE_TIME_FILTER ?
-                      'selected time' : filtersStore[filter.type]
+        const label = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type) ? `${filter.label}:` :
+                      filter.type === DATE_RANGE_TIME_FILTER ? 'Date:' : filter.label
+        const value = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type) ? 'true' :
+                      filter.type === DATE_RANGE_TIME_FILTER ? 'Selected time' : filter.type === STATUS_FILTER ?
+                      filtersStore['state'] : filtersStore[filter.type]
         const isLastElement = index === changedFilters.length - 1
 
         return message + `${label} ${value}${isLastElement ? '"' : ', '}`
-    }, `There is no data to show for ${messageNames.plural} from "`)
+    }, `There is no ${messageNames.plural} data to show for "`)
 }
 
 const getChangedFiltersList = (filters, filtersStore) => {

@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import logo from 'igz-controls/images/mlrun-logo-circle-small.png'
+import logo from 'igz-controls/images/mlrun-logo-small.png'
 
 import './header.scss'
 
@@ -28,8 +28,7 @@ const Header = () => {
   return (
     <header className="header">
       <Link to="/" className="header__logo">
-        <img src={logo} alt="Logo" />
-        <h1>MLRun</h1>
+        <img src={logo} alt="MLRun" />
       </Link>
 
       <a
