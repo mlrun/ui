@@ -43,7 +43,6 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData } from '../../utils/convertChipsData'
 import artifactApi from '../../api/artifacts-api'
-import { useMode } from '../../hooks/mode.hook'
 
 const RegisterArtifactModal = ({
   actions,
@@ -55,7 +54,6 @@ const RegisterArtifactModal = ({
   refresh,
   title
 }) => {
-  const { isDemoMode } = useMode()
   const initialValues = {
     kind: artifactKind,
     metadata: {
@@ -64,14 +62,12 @@ const RegisterArtifactModal = ({
       labels: []
     },
     spec: {
-      target_path: isDemoMode
-        ? {
-            fieldInfo: {
-              pathType: ''
-            },
-            path: ''
-          }
-        : ''
+      target_path: {
+        fieldInfo: {
+          pathType: ''
+        },
+        path: ''
+      }
     }
   }
   const formRef = React.useRef(
@@ -102,7 +98,7 @@ const RegisterArtifactModal = ({
           kind: 'api',
           uri: window.location.host
         },
-        target_path: isDemoMode ? values.spec.target_path.path : values.spec.target_path
+        target_path: values.spec.target_path.path
       },
       status: {},
       uid
