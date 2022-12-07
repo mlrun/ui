@@ -814,7 +814,7 @@ export const generateJobRequestData = (
             ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
             : formData.function ??
               (selectedFunction
-                ? `${params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+                ? `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
                 : '')
       }
     },
