@@ -45,9 +45,9 @@ export const generateArtifacts = (artifacts, tab, originalContent) => {
             if (generatedArtifact.extra_data) {
               const generatedPreviewData = generateArtifactPreviewData(generatedArtifact.extra_data)
 
-              item.preview = generatedPreviewData.preview
+              item.extra_data = generatedPreviewData.preview
             } else {
-              item.preview ??= []
+              item.extra_data ??= []
             }
 
             if (!generatedArtifact.ui) {
