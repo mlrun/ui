@@ -26,7 +26,6 @@ import { ARTIFACT_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { getChipOptions } from '../../utils/getChipOptions'
-import { useMode } from '../../hooks/mode.hook'
 
 const RegisterArtifactModalForm = ({
   formState,
@@ -35,7 +34,6 @@ const RegisterArtifactModalForm = ({
   messageByKind,
   setFieldState
 }) => {
-  const { isDemoMode } = useMode()
   const kindOptions = useMemo(
     () => [
       {
@@ -101,20 +99,16 @@ const RegisterArtifactModalForm = ({
         <FormTextarea label="Description" maxLength={500} name="metadata.description" />
       </div>
       <div className="form-row">
-        {isDemoMode ? (
-          <TargetPath
-            formState={formState}
-            formStateFieldInfo="spec.target_path.fieldInfo"
-            hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
-            label="Target Path"
-            name="spec.target_path.path"
-            required
-            selectPlaceholder="Path Scheme"
-            setFieldState={setFieldState}
-          />
-        ) : (
-          <FormInput label="Target Path" name="spec.target_path" required />
-        )}
+        <TargetPath
+          formState={formState}
+          formStateFieldInfo="spec.target_path.fieldInfo"
+          hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
+          label="Target Path"
+          name="spec.target_path.path"
+          required
+          selectPlaceholder="Path Scheme"
+          setFieldState={setFieldState}
+        />
       </div>
       <div className="form-row">
         <FormChipCell
