@@ -19,13 +19,13 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import ArtifactsPreviewView from './ArtifactsPreviewView'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
-import classnames from 'classnames'
 
-const ArtifactsPreview = ({ className, noData, preview }) => {
+const ArtifactsPreview = ({ className, extraData, noData, preview }) => {
   const [showErrorBody, setShowErrorBody] = useState(false)
   const artifactsPreviewClasses = classnames('artifact-preview', className)
 
@@ -36,24 +36,42 @@ const ArtifactsPreview = ({ className, noData, preview }) => {
   ) : noData ? (
     <NoData />
   ) : (
-    preview.map((previewItem, index) => (
-      <ArtifactsPreviewView
-        className={artifactsPreviewClasses}
-        key={index}
-        preview={previewItem}
-        setShowErrorBody={setShowErrorBody}
-        showErrorBody={showErrorBody}
-      />
-    ))
+    <>
+      {preview.map((previewItem, index) => (
+        <ArtifactsPreviewView
+          className={artifactsPreviewClasses}
+          key={index}
+          preview={previewItem}
+          setShowErrorBody={setShowErrorBody}
+          showErrorBody={showErrorBody}
+        />
+      ))}
+      {extraData.length > 0 && (
+        <div className="artifact-extra-data">
+          <h1 className="artifact-extra-data__header">Extra Data</h1>
+          {extraData.map((extraDataItem, index) => (
+            <ArtifactsPreviewView
+              className={artifactsPreviewClasses}
+              key={index}
+              preview={extraDataItem}
+              setShowErrorBody={setShowErrorBody}
+              showErrorBody={showErrorBody}
+            />
+          ))}
+        </div>
+      )}
+    </>
   )
 }
 
 ArtifactsPreview.defaultProps = {
-  className: ''
+  className: '',
+  extraData: []
 }
 
 ArtifactsPreview.propTypes = {
   className: PropTypes.string,
+  extraData: PropTypes.array,
   noData: PropTypes.bool.isRequired,
   preview: PropTypes.arrayOf(
     PropTypes.shape({
