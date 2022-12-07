@@ -173,10 +173,7 @@ const FilterMenu = ({
       setFilters({ sortBy: item })
     } else if (filter.type === GROUP_BY_FILTER) {
       setFilters({ groupBy: item })
-    } else if (
-      (filter.type === TAG_FILTER) &&
-      item !== filtersStore.tag
-    ) {
+    } else if (filter.type === TAG_FILTER && item !== filtersStore.tag) {
       setFilters({ tag: item })
       applyChanges({
         ...filtersStore,
@@ -240,7 +237,7 @@ const FilterMenu = ({
   }
 
   const handleIter = iteration => {
-    const iterValue = filtersStore.iter === iteration ? SHOW_ITERATIONS : ''
+    const iterValue = filtersStore.iter !== iteration ? SHOW_ITERATIONS : ''
 
     setFilters({
       iter: iterValue
@@ -335,7 +332,7 @@ const FilterMenu = ({
                 return (
                   <CheckBox
                     key={filter.type}
-                    item={{ label: filter.label, id: '' }}
+                    item={{ label: filter.label, id: 'iter' }}
                     onChange={handleIter}
                     selectedId={filtersStore.iter}
                   />
