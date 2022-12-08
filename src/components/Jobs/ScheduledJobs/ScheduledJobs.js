@@ -41,7 +41,7 @@ import {
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
