@@ -26,19 +26,34 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 
-import { getArtifactPreview } from '../../utils/getArtifactPreview'
+import {
+  fetchArtifactPreviewFromExtraData,
+  getArtifactPreview
+} from '../../utils/getArtifactPreview'
 
 const DetailsPreview = ({ artifact, handlePreview }) => {
   const [preview, setPreview] = useState([])
+  const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
 
   useEffect(() => {
     getArtifactPreview(artifact, noData, setNoData, setPreview)
+  }, [artifact, noData])
 
+  useEffect(() => {
+    if (artifact.extra_data && extraData.length === 0) {
+      fetchArtifactPreviewFromExtraData(artifact, noData, setNoData, previewContent =>
+        setExtraData(state => [...state, previewContent])
+      )
+    }
+  }, [artifact, extraData.length, noData])
+
+  useEffect(() => {
     return () => {
       setPreview([])
+      setExtraData([])
     }
-  }, [artifact, noData])
+  }, [])
 
   const artifactsPreviewClassNames = classnames(
     artifact.target_path && 'artifact-preview__with-popout'
@@ -55,6 +70,7 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
       )}
       <ArtifactsPreview
         className={artifactsPreviewClassNames}
+        extraData={extraData}
         noData={noData}
         preview={preview}
       />

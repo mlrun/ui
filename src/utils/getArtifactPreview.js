@@ -20,12 +20,7 @@ such restriction.
 import api from '../api/artifacts-api'
 import { createArtifactPreviewContent } from './createArtifactPreviewContent'
 
-export const setArtifactPreviewFromSchema = (
-  artifact,
-  noData,
-  setNoData,
-  setPreview
-) => {
+export const setArtifactPreviewFromSchema = (artifact, noData, setNoData, setPreview) => {
   if (noData) {
     setNoData(false)
   }
@@ -41,12 +36,7 @@ export const setArtifactPreviewFromSchema = (
   ])
 }
 
-export const setArtifactPreviewFromPreviewData = (
-  artifact,
-  noData,
-  setNoData,
-  setPreview
-) => {
+export const setArtifactPreviewFromPreviewData = (artifact, noData, setNoData, setPreview) => {
   if (noData) {
     setNoData(false)
   }
@@ -62,17 +52,11 @@ export const setArtifactPreviewFromPreviewData = (
   ])
 }
 
-export const fetchArtifactPreviewFromPreviewData = (
-  artifact,
-  noData,
-  setNoData,
-  setPreview
-) => {
-  artifact.preview.forEach(previewItem => {
+export const fetchArtifactPreviewFromExtraData = (artifact, noData, setNoData, setPreview) => {
+  artifact.extra_data.forEach(previewItem => {
     fetchArtifactPreview(
       previewItem.path,
-      previewItem.path.startsWith('/User') &&
-        (artifact.user || artifact.producer.owner),
+      previewItem.path.startsWith('/User') && (artifact.user || artifact.producer.owner),
       previewItem.path.replace(/.*\./g, '')
     )
       .then(content => {
@@ -96,16 +80,10 @@ export const fetchArtifactPreviewFromPreviewData = (
   })
 }
 
-export const fetchArtifactPreviewFromTargetPath = (
-  artifact,
-  noData,
-  setNoData,
-  setPreview
-) => {
+export const fetchArtifactPreviewFromTargetPath = (artifact, noData, setNoData, setPreview) => {
   fetchArtifactPreview(
     artifact.target_path,
-    artifact.target_path.startsWith('/User') &&
-      (artifact.user || artifact.producer?.owner),
+    artifact.target_path.startsWith('/User') && (artifact.user || artifact.producer?.owner),
     artifact.target_path.replace(/.*\./g, '')
   )
     .then(content => {
@@ -135,11 +113,7 @@ export const fetchArtifactPreview = (path, user, fileFormat) => {
   })
 }
 
-const handleSetArtifactPreviewObject = (
-  previewContent,
-  artifactIndex,
-  setPreview
-) => {
+const handleSetArtifactPreviewObject = (previewContent, artifactIndex, setPreview) => {
   setPreview(state => {
     if (state[artifactIndex]) {
       return {
@@ -149,9 +123,7 @@ const handleSetArtifactPreviewObject = (
     } else {
       return {
         ...state,
-        [artifactIndex]: Array.isArray(previewContent)
-          ? previewContent
-          : [previewContent]
+        [artifactIndex]: Array.isArray(previewContent) ? previewContent : [previewContent]
       }
     }
   })
@@ -165,60 +137,23 @@ export const getArtifactPreview = (
   previewIsObject = false,
   artifactIndex = null
 ) => {
-  if (artifact.schema && !artifact.extra_data) {
+  if (artifact.schema) {
     setArtifactPreviewFromSchema(artifact, noData, setNoData, previewContent =>
       previewIsObject
-        ? handleSetArtifactPreviewObject(
-            previewContent,
-            artifactIndex,
-            setPreview
-          )
+        ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
         : setPreview(previewContent)
     )
   } else if (artifact.preview?.length > 0 && !artifact.target_path) {
-    setArtifactPreviewFromPreviewData(
-      artifact,
-      noData,
-      setNoData,
-      previewContent =>
-        previewIsObject
-          ? handleSetArtifactPreviewObject(
-              previewContent,
-              artifactIndex,
-              setPreview
-            )
-          : setPreview(previewContent)
+    setArtifactPreviewFromPreviewData(artifact, noData, setNoData, previewContent =>
+      previewIsObject
+        ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
+        : setPreview(previewContent)
     )
-  } else if (artifact.preview?.length > 0) {
-    fetchArtifactPreviewFromPreviewData(
-      artifact,
-      noData,
-      setNoData,
-      previewContent =>
-        previewIsObject
-          ? handleSetArtifactPreviewObject(
-              previewContent,
-              artifactIndex,
-              setPreview
-            )
-          : setPreview(state => [...state, previewContent])
-    )
-  } else if (
-    (artifact.preview?.length === 0 || !artifact.preview) &&
-    artifact.target_path
-  ) {
-    fetchArtifactPreviewFromTargetPath(
-      artifact,
-      noData,
-      setNoData,
-      previewContent =>
-        previewIsObject
-          ? handleSetArtifactPreviewObject(
-              previewContent,
-              artifactIndex,
-              setPreview
-            )
-          : setPreview(previewContent)
+  } else if ((artifact.preview?.length === 0 || !artifact.preview) && artifact.target_path) {
+    fetchArtifactPreviewFromTargetPath(artifact, noData, setNoData, previewContent =>
+      previewIsObject
+        ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
+        : setPreview(previewContent)
     )
   } else {
     setNoData(true)
