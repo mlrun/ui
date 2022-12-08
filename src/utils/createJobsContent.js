@@ -43,7 +43,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
       },
       content: [
         {
-          header: 'Name',
+          header: jobName ? 'UID' : 'Name',
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
           class: 'table-cell-2',
