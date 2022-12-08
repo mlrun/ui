@@ -33,7 +33,7 @@ import filtersActions from '../../actions/filters'
 import { setNotification } from '../../reducers/notificationReducer'
 import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
-import { getNoDataMessage } from '../../layout/Content/content.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 

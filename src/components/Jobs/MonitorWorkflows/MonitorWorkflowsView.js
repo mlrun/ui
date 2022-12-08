@@ -35,7 +35,7 @@ import {
   MONITOR_WORKFLOWS_TAB,
   PANEL_EDIT_MODE
 } from '../../../constants'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { ACTIONS_MENU } from '../../../types'
 
 const MonitorWorkflowsView = ({
