@@ -34,6 +34,7 @@ import entities from './data/entities.json'
 import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
 import run from './data/run.json'
+import catalog from './data/catalog.json'
 import pipelines from './data/pipelines.json'
 import secretKeys from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
@@ -122,7 +123,8 @@ const secretKeyTemplate = {
 
 // Mock consts
 const mockHome = process.cwd() + '/tests/mockServer'
-const mlrunAPIIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/v1'
+const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
+const mlrunAPIIngress = `${mlrunIngress}/api/v1`
 const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
@@ -414,6 +416,17 @@ function patchRun(req, res) {
   collectedRun[0].status.state = req.body['status.state']
 
   res.send()
+}
+
+function getFunctionCatalog(req, res) {
+  res.send(catalog)
+}
+
+function getFunctionTemplate(req, res) {
+  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.params.function}/${req.params.function}.yaml`
+  const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
+
+  res.send(funcObject)
 }
 
 function getProjectsSchedules(req, res) {
@@ -1069,9 +1082,7 @@ function postSubmitJob(req, res) {
       const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
         6
       )}/${req.body.task.spec.function.slice(6)}.yaml`
-      funcObject = yaml.load(
-        fs.readFileSync(funcYAMLPath, 'utf8').replace('|+', '').replace('|', '')
-      )
+      funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
     }
 
     const funcUID = makeUID(32)
@@ -1253,7 +1264,6 @@ function getIguazioProject(req, res) {
   for (let authRole of filteredAuthRoles) {
     delete authRole.relationships
   }
-  console.log('debug authRolesIDs', Array.isArray(authRolesIDs), authRolesIDs.length, authRolesIDs)
 
   let filteredPrincipalUsers = []
   if (req.query.include.includes('project_authorization_roles.principal_users')) {
@@ -1274,12 +1284,6 @@ function getIguazioProject(req, res) {
     for (let userID of principalUserIDs) {
       filteredPrincipalUsers.push(iguazioUsers.data.find(item => item.id === userID))
     }
-    console.log(
-      'debug authRolesIDs 2',
-      Array.isArray(authRolesIDs),
-      authRolesIDs.length,
-      authRolesIDs
-    )
   }
 
   let filteredPrincipalUserGroups = []
@@ -1383,16 +1387,10 @@ function postProjectMembers(req, res) {
 }
 
 function getIguazioUserGrops(req, res) {
-  console.log('requests log: ', req.method, req.url)
-  console.log('debug: ', req.params, req.query, req.body)
-
   res.send(iguazioUserGrops)
 }
 
 function getIguazioUsers(req, res) {
-  console.log('requests log: ', req.method, req.url)
-  console.log('debug: ', req.params, req.query, req.body)
-
   res.send(iguazioUsers)
 }
 
@@ -1456,9 +1454,10 @@ app.get(`${mlrunAPIIngress}/project-summaries`, getProjectsSummaries)
 app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
 app.get(`${mlrunAPIIngress}/runs`, getRuns)
-
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
+app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
+app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)

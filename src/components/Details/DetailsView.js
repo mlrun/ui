@@ -24,12 +24,12 @@ import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import DetailsMenu from '../../elements/DetailsMenu/DetailsMenu'
 import Download from '../../common/Download/Download'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import LoadButton from '../../common/LoadButton/LoadButton'
 import Loader from '../../common/Loader/Loader'
 import Select from '../../common/Select/Select'
+import TabsSlider from '../../common/TabsSlider/TabsSlider'
 import {
   Button,
   ConfirmDialog,
@@ -259,7 +259,7 @@ const DetailsView = React.forwardRef(
             </Link>
           </div>
         </div>
-        <DetailsMenu detailsMenu={detailsMenu} onClick={detailsMenuClick} params={params} />
+        <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
         {tabsContent}
         {detailsStore.showWarning && (
           <ConfirmDialog

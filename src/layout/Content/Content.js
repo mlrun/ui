@@ -82,12 +82,7 @@ const Content = ({
     params.pageTab
   )
 
-  const contentClassName = classnames(
-    'content',
-    [FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
-      !location.pathname.includes(ADD_TO_FEATURE_VECTOR_TAB) &&
-      'content_with-menu'
-  )
+  const contentClassName = classnames('content')
   const filterMenuClassNames = classnames(
     'content__action-bar',
     pageData.hideFilterMenu && 'content__action-bar_hidden'

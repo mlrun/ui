@@ -1,0 +1,42 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+
+.resources-units {
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+
+  .resources-card {
+    min-width: 280px;
+    margin: 10px 10px 0 0;
+    padding: 16px;
+    border: $primaryBorder;
+    border-radius: 8px;
+
+    &__title {
+      color: $primary;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    &__fields {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 13px;
+
+      &-input {
+        min-width: 115px;
+        margin-right: 20px;
+
+        &.gpu {
+          width: calc(50% - 10px);
+        }
+      }
+
+      &-select {
+        min-width: 115px;
+      }
+    }
+  }
+}

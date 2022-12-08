@@ -37,13 +37,11 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useMode } from '../../hooks/mode.hook'
 import artifactApi from '../../api/artifacts-api'
 
 import './RegisterModelModal.scss'
 
 function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }) {
-  const { isDemoMode } = useMode()
   const initialValues = {
     metadata: {
       description: undefined,
@@ -51,14 +49,12 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
       key: undefined
     },
     spec: {
-      target_path: isDemoMode
-        ? {
-            fieldInfo: {
-              pathType: ''
-            },
-            path: ''
-          }
-        : undefined
+      target_path: {
+        fieldInfo: {
+          pathType: ''
+        },
+        path: ''
+      }
     }
   }
   const formRef = React.useRef(
@@ -91,16 +87,14 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
           kind: 'api',
           uri: window.location.host
         },
-        target_path: isDemoMode ? values.spec.target_path.path : values.spec.target_path
+        target_path: values.spec.target_path.path
       },
       status: {},
       uid
     }
 
-    if (values.spec.target_path?.path?.includes('/') || values.spec.target_path?.includes('/')) {
-      const path = isDemoMode
-        ? values.spec.target_path.path.split(/([^/]*)$/)
-        : values.spec.target_path.split(/([^/]*)$/)
+    if (values.spec.target_path?.path?.includes('/')) {
+      const path = values.spec.target_path.path.split(/([^/]*)$/)
 
       data.spec.target_path = path[0]
       data.spec.model_file = path[1]
@@ -177,31 +171,27 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
               <FormTextarea name="metadata.description" label="Description" maxLength={500} />
             </div>
             <div className="form-row">
-              {isDemoMode ? (
-                <TargetPath
-                  formState={formState}
-                  formStateFieldInfo="spec.target_path.fieldInfo"
-                  hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
-                  label="Target Path"
-                  name="spec.target_path.path"
-                  required
-                  selectPlaceholder="Path Scheme"
-                  setFieldState={formState.form.mutators.setFieldState}
-                />
-              ) : (
-                <FormInput name="spec.target_path" label="Target path" required />
-              )}
+              <TargetPath
+                formState={formState}
+                formStateFieldInfo="spec.target_path.fieldInfo"
+                hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
+                label="Target Path"
+                name="spec.target_path.path"
+                required
+                selectPlaceholder="Path Scheme"
+                setFieldState={formState.form.mutators.setFieldState}
+              />
             </div>
             <div className="form-row">
               <FormChipCell
                 chipOptions={getChipOptions('metrics')}
                 formState={formState}
                 initialValues={initialValues}
-                isEditMode
+                isEditable
                 label="labels"
                 name="metadata.labels"
                 shortChips
-                visibleChipsMaxLength="2"
+                visibleChipsMaxLength="all"
                 validationRules={{
                   key: getValidationRules('common.tag'),
                   value: getValidationRules('common.tag')

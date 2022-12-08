@@ -74,7 +74,7 @@ const FeatureStore = () => {
             }
           />
         </div>
-        <div className="content content_with-menu">
+        <div className="content">
           <ContentMenu
             activeTab={
               location.pathname.includes(FEATURE_SETS_TAB)

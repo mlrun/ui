@@ -22,14 +22,23 @@ import { find, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 
-import MonitorWorkflowsView from './MonitorWorkflowsView'
-import { JobsContext } from '../Jobs'
+import FilterMenu from '../../FilterMenu/FilterMenu'
+import JobWizard from '../../JobWizard/JobWizard'
+import JobsPanel from '../../JobsPanel/JobsPanel'
+import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
+import NoData from '../../../common/NoData/NoData'
+import Table from '../../Table/Table'
+import Workflow from '../../Workflow/Workflow'
+import YamlModal from '../../../common/YamlModal/YamlModal'
 
 import {
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
+  JOBS_PAGE,
   MONITOR_JOBS_TAB,
-  MONITOR_WORKFLOWS_TAB
+  MONITOR_WORKFLOWS_TAB,
+  PANEL_EDIT_MODE,
+  PANEL_RERUN_MODE
 } from '../../../constants'
 import {
   generateActionsMenu,
@@ -38,10 +47,13 @@ import {
   monitorWorkflowsActionCreator
 } from './monitorWorkflows.util'
 import { DANGER_BUTTON } from 'igz-controls/constants'
+import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
+import { getNoDataMessage } from '../../../layout/Content/content.util'
 import { handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -80,8 +92,17 @@ const MonitorWorkflows = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const { setConfirmData, handleMonitoring, handleRerunJob, editableItem, setEditableItem } =
-    React.useContext(JobsContext)
+  const {
+    editableItem,
+    handleMonitoring,
+    handleRerunJob,
+    jobWizardIsOpened,
+    jobWizardMode,
+    setConfirmData,
+    setEditableItem,
+    setJobWizardIsOpened,
+    setJobWizardMode
+  } = React.useContext(JobsContext)
   let fetchFunctionLogsTimeout = useRef(null)
 
   usePods()
@@ -428,31 +449,114 @@ const MonitorWorkflows = ({
     }
   }, [params.projectName, params.workflowId])
 
+  useEffect(() => {
+    if (jobWizardMode && !jobWizardIsOpened) {
+      openPopUp(JobWizard, {
+        params,
+        onWizardClose: () => {
+          setJobWizardMode(null)
+          setJobWizardIsOpened(false)
+        },
+        defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
+        mode: jobWizardMode,
+        onSuccessRequest: () => refreshJobs(filtersStore)
+      })
+
+      setJobWizardIsOpened(true)
+    }
+  }, [
+    editableItem?.rerun_object,
+    filtersStore,
+    jobWizardIsOpened,
+    jobWizardMode,
+    params,
+    refreshJobs,
+    setJobWizardIsOpened,
+    setJobWizardMode
+  ])
+
   return (
-    <MonitorWorkflowsView
-      actionsMenu={actionsMenu}
-      convertedYaml={convertedYaml}
-      editableItem={editableItem}
-      filters={filters}
-      filtersStore={filtersStore}
-      getWorkflows={getWorkflows}
-      jobs={jobs}
-      handleCancel={handleCancel}
-      handleSelectJob={handleSelectJob}
-      handleSuccessRerunJob={handleSuccessRerunJob}
-      itemIsSelected={itemIsSelected}
-      pageData={pageData}
-      refreshJobs={refreshJobs}
-      removeNewJob={removeNewJob}
-      selectedFunction={selectedFunction}
-      selectedJob={selectedJob}
-      setEditableItem={setEditableItem}
-      setWorkflowsViewMode={setWorkflowsViewMode}
-      tableContent={tableContent}
-      toggleConvertedYaml={toggleConvertedYaml}
-      workflowsStore={workflowsStore}
-      workflowsViewMode={workflowsViewMode}
-    />
+    <>
+      {!params.workflowId && (
+        <div className="content__action-bar">
+          <FilterMenu
+            filters={filters}
+            onChange={getWorkflows}
+            page={JOBS_PAGE}
+            withoutExpandButton
+          />
+        </div>
+      )}
+      {workflowsStore.workflows.loading ? null : !params.workflowId &&
+        workflowsStore.workflows.data.length === 0 ? (
+        <NoData
+          message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_WORKFLOWS_TAB)}
+        />
+      ) : (
+        <>
+          {params.workflowId ? (
+            <Workflow
+              actionsMenu={actionsMenu}
+              content={jobs}
+              handleCancel={handleCancel}
+              handleSelectItem={handleSelectJob}
+              itemIsSelected={itemIsSelected}
+              pageData={pageData}
+              refresh={getWorkflows}
+              refreshJobs={refreshJobs}
+              selectedFunction={selectedFunction}
+              selectedJob={selectedJob}
+              setWorkflowsViewMode={setWorkflowsViewMode}
+              workflow={workflowsStore.activeWorkflow.data}
+              workflowJobsIds={workflowsStore.activeWorkflow.workflowJobsIds}
+              workflowsViewMode={workflowsViewMode}
+            />
+          ) : (
+            <Table
+              actionsMenu={actionsMenu}
+              content={workflowsStore.workflows.data}
+              handleCancel={handleCancel}
+              handleSelectItem={handleSelectJob}
+              pageData={pageData}
+              retryRequest={getWorkflows}
+              selectedItem={selectedJob}
+              tab={MONITOR_JOBS_TAB}
+              tableHeaders={tableContent[0]?.content ?? []}
+            >
+              {tableContent.map((tableItem, index) => (
+                <JobsTableRow
+                  actionsMenu={actionsMenu}
+                  handleSelectJob={handleSelectJob}
+                  key={index}
+                  rowItem={tableItem}
+                  selectedJob={selectedJob}
+                />
+              ))}
+            </Table>
+          )}
+        </>
+      )}
+      {convertedYaml.length > 0 && (
+        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
+      )}
+      {editableItem && (
+        // todo: delete when the job wizard is out of the demo mode
+        <JobsPanel
+          closePanel={() => {
+            setEditableItem(null)
+            removeNewJob()
+          }}
+          defaultData={editableItem?.rerun_object}
+          mode={PANEL_EDIT_MODE}
+          onSuccessRun={tab => {
+            if (editableItem) {
+              handleSuccessRerunJob(tab)
+            }
+          }}
+          project={params.projectName}
+        />
+      )}
+    </>
   )
 }
 

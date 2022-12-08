@@ -22,6 +22,8 @@ import { Link, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import { CONTENT_MENU_TABS } from '../../types'
+
 import './contentMenu.scss'
 
 const ContentMenu = ({ activeTab, screen, tabs, onClick }) => {
@@ -74,7 +76,7 @@ ContentMenu.defaultProps = {
 
 ContentMenu.propTypes = {
   activeTab: PropTypes.string.isRequired,
-  tabs: PropTypes.arrayOf(PropTypes.object).isRequired
+  tabs: CONTENT_MENU_TABS.isRequired
 }
 
 export default ContentMenu

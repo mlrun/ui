@@ -22,6 +22,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Input from '../Input/Input'
+import { PopUpDialog } from 'igz-controls/components'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
@@ -61,9 +62,11 @@ const Search = ({
 
   useEffect(() => {
     window.addEventListener('click', handleSearchOnBlur)
+    window.addEventListener('scroll', handleSearchOnBlur, true)
 
     return () => {
       window.removeEventListener('click', handleSearchOnBlur)
+      window.removeEventListener('scroll', handleSearchOnBlur, true)
     }
   }, [handleSearchOnBlur])
 
@@ -96,6 +99,7 @@ const Search = ({
       <Input
         className="search-input"
         wrapperClassName={wrapperClassName}
+        density="dense"
         placeholder={placeholder}
         inputIcon={<SearchIcon />}
         iconClass="search-icon"
@@ -113,23 +117,32 @@ const Search = ({
 
       {label.length > 0 && <label className="search-label">{label}</label>}
       {matches.length > 0 && label.length > 0 && inputIsFocused && (
-        <ul data-testid="search-matches" className="search-matches">
-          {matches.map((item, index) => {
-            return (
-              <li
-                className="search-matches__item"
-                key={item + index}
-                onClick={() => matchOnClick(item)}
-                tabIndex={index}
-                dangerouslySetInnerHTML={{
-                  __html: item.replace(new RegExp(searchValue, 'gi'), match =>
-                    match ? `<b>${match}</b>` : match
-                  )
-                }}
-              />
-            )
-          })}
-        </ul>
+        <PopUpDialog
+          className="search-dropdown"
+          headerIsHidden
+          customPosition={{
+            element: searchRef,
+            position: 'bottom-right'
+          }}
+        >
+          <ul data-testid="search-matches" className="search-matches">
+            {matches.map((item, index) => {
+              return (
+                <li
+                  className="search-matches__item"
+                  key={item + index}
+                  onClick={() => matchOnClick(item)}
+                  tabIndex={index}
+                  dangerouslySetInnerHTML={{
+                    __html: item.replace(new RegExp(searchValue, 'gi'), match =>
+                      match ? `<b>${match}</b>` : match
+                    )
+                  }}
+                />
+              )
+            })}
+          </ul>
+        </PopUpDialog>
       )}
     </div>
   )

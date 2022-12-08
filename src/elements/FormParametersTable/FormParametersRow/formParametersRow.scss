@@ -1,0 +1,11 @@
+@import '~igz-controls/scss/colors.scss';
+
+.form-table__row {
+  &.form-table__parameter-row {
+    &.excluded {
+      .form-table__cell {
+        color: $spunPearl;
+      }
+    }
+  }
+}
