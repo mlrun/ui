@@ -41,6 +41,7 @@ const CreateJobPage = ({
   removeNewJob
 }) => {
   const params = useParams()
+  const navigate = useNavigate()
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [filteredFunctions, setFilteredFunctions] = useState([])
@@ -61,7 +62,6 @@ const CreateJobPage = ({
   )
   const [templates, setTemplates] = useState([])
   const [showPanel, setShowPanel] = useState(false)
-  const navigate = useNavigate()
 
   useEffect(() => {
     isProjectValid(

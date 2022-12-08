@@ -39,6 +39,11 @@ export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
 export const TAG_LATEST = 'latest'
 
+export const DENSITY_DENSE = 'dense'
+export const DENSITY_NORMAL = 'normal'
+export const DENSITY_MEDIUM = 'medium'
+export const DENSITY_CHUNKY = 'chunky'
+
 export const NAVBAR_WIDTH = 245
 
 /*=========== PAGES & TABS =============*/
@@ -133,6 +138,17 @@ export const SET_NEW_JOB_VOLUME_MOUNTS = 'SET_NEW_JOB_VOLUME_MOUNTS'
 export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
+
+/*=========== JOB  WIZARD=============*/
+
+export const PARAMETER_TYPE_SIMPLE = 'Simple'
+export const PARAMETER_TYPE_HYPER = 'Hyper'
+export const MAX_SELECTOR_CRITERIA = 'max'
+export const LIST_TUNING_STRATEGY = 'list'
+export const V3IO_VOLUME_TYPE = 'flexVolume'
+export const CONFIG_MAP_VOLUME_TYPE = 'configMap'
+export const SECRET_VOLUME_TYPE = 'secret'
+export const PVC_VOLUME_TYPE = 'persistentVolumeClaim'
 
 /*=========== ML FUNCTIONS =============*/
 
@@ -453,6 +469,7 @@ export const TAG_FILTER = 'tag'
 
 export const PANEL_EDIT_MODE = 'EDIT'
 export const PANEL_CREATE_MODE = 'CREATE'
+export const PANEL_RERUN_MODE = 'RERUN'
 
 export const ENV_VARIABLE_TYPE_VALUE = 'value'
 export const ENV_VARIABLE_TYPE_SECRET = 'secret'

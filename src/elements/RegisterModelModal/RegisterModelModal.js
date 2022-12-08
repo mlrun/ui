@@ -187,11 +187,11 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
                 chipOptions={getChipOptions('metrics')}
                 formState={formState}
                 initialValues={initialValues}
-                isEditMode
+                isEditable
                 label="labels"
                 name="metadata.labels"
                 shortChips
-                visibleChipsMaxLength="2"
+                visibleChipsMaxLength="all"
                 validationRules={{
                   key: getValidationRules('common.tag'),
                   value: getValidationRules('common.tag')

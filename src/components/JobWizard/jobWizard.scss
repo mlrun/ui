@@ -1,0 +1,17 @@
+.wizard-form {
+  .form-table__name-cell {
+    .tooltip-wrapper {
+      margin-right: 10px;
+    }
+
+    .tip-container {
+      display: none;
+    }
+
+    &:hover {
+      .tip-container {
+        display: flex;
+      }
+    }
+  }
+}

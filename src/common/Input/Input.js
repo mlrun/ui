@@ -27,8 +27,7 @@ import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
-
-import { INPUT_LINK } from '../../types'
+import { DENSITY_OPTIONS, INPUT_LINK } from '../../types'
 
 import { ReactComponent as InvalidIcon } from 'igz-controls/images/invalid.svg'
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
@@ -360,7 +359,7 @@ Input.defaultProps = {
 
 Input.propTypes = {
   className: PropTypes.string,
-  density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
+  density: DENSITY_OPTIONS,
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
   focused: PropTypes.bool,

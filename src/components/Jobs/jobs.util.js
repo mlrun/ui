@@ -17,9 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
+import {
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  PANEL_RERUN_MODE,
+  SCHEDULE_TAB
+} from '../../constants'
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues } from '../../utils'
+import { setNotification } from '../../reducers/notificationReducer'
 
 export const page = JOBS_PAGE
 export const getInfoHeaders = isSpark =>
@@ -98,10 +105,12 @@ export const actionCreator = {
 export const generateEditableItem = (functionData, job) => {
   return {
     rerun_object: {
-      credentials: {
-        access_key: functionData?.metadata?.credentials?.access_key ?? ''
-      },
       function: {
+        metadata: {
+          credentials: {
+            access_key: functionData?.metadata?.credentials?.access_key ?? ''
+          }
+        },
         spec: {
           env: functionData?.spec.env ?? [],
           resources: functionData?.spec.resources,
@@ -140,8 +149,9 @@ export const generateEditableItem = (functionData, job) => {
 export const rerunJob = async (
   job,
   fetchJobFunction,
-  setNotification,
   setEditableItem,
+  isDemoMode,
+  setJobWizardMode,
   dispatch
 ) => {
   const [project = '', func = ''] = job?.function?.split('/') ?? []
@@ -159,6 +169,11 @@ export const rerunJob = async (
         message: 'Job’s function failed to load'
       })
     )
+  }
+
+  // todo: delete `if` condition when the job wizard is out of the demo mode
+  if (isDemoMode) {
+    setJobWizardMode(PANEL_RERUN_MODE)
   }
 
   setEditableItem(generateEditableItem(functionData, job))
