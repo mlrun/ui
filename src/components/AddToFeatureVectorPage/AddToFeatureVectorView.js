@@ -31,7 +31,7 @@ import YamlModal from '../../common/YamlModal/YamlModal'
 
 import { filters } from './addToFeatureVectorPage.util'
 import { ADD_TO_FEATURE_VECTOR_TAB, FEATURE_STORE_PAGE } from '../../constants'
-import { getNoDataMessage } from '../../layout/Content/content.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 
 const AddToFeatureVectorView = React.forwardRef(
   (

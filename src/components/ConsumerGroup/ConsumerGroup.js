@@ -31,7 +31,7 @@ import { RoundedIcon } from 'igz-controls/components'
 
 import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
-import { getNoDataMessage } from '../../layout/Content/content.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { setNotification } from '../../reducers/notificationReducer'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'

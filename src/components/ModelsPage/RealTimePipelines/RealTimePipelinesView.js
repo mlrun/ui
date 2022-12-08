@@ -29,7 +29,7 @@ import FunctionsTableRow from '../../../elements/FunctionsTableRow/FunctionsTabl
 import { filters } from './realTimePipelines.util'
 import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
 import NoData from '../../../common/NoData/NoData'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const RealTimePipelinesView = React.forwardRef(
   (
