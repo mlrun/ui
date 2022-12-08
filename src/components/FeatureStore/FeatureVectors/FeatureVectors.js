@@ -24,6 +24,7 @@ import axios from 'axios'
 import { cloneDeep, isEmpty } from 'lodash'
 
 import FeatureVectorsView from './FeatureVectorsView'
+import { FeatureStoreContext } from '../FeatureStore'
 
 import {
   FEATURE_STORE_PAGE,
@@ -33,35 +34,33 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../../constants'
-import { useOpenPanel } from '../../../hooks/openPanel.hook'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
-import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
-import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreContent'
-import { FeatureStoreContext } from '../FeatureStore'
 import {
-  featuresActionCreator,
   featureVectorsFilters,
+  featuresActionCreator,
   generateActionsMenu,
   generatePageData
 } from './featureVectors.util'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
-import { setNotification } from '../../../reducers/notificationReducer'
-import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { cancelRequest } from '../../../utils/cancelRequest'
+import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
+import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreContent'
+import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
+import { setFeaturesPanelData } from '../../../reducers/tableReducer'
+import { setNotification } from '../../../reducers/notificationReducer'
+import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../../hooks/groupContent.hook'
+import { useOpenPanel } from '../../../hooks/openPanel.hook'
 
 const FeatureVectors = ({
   deleteFeatureVector,
   fetchFeatureVector,
   fetchFeatureVectors,
   fetchFeatureVectorsTags,
-  getFilterTagOptions,
   removeFeatureVector,
   removeFeatureVectors,
-  setFilters,
   updateFeatureStoreData
 }) => {
   const [featureVectors, setFeatureVectors] = useState([])
@@ -122,14 +121,21 @@ const FeatureVectors = ({
             })
           )
 
-          getFilterTagOptions(fetchFeatureVectorsTags, params.projectName).then(response => {
-            const tag = [...response.payload, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
-              ? filtersStore.tag
-              : TAG_FILTER_LATEST
+          dispatch(
+            getFilterTagOptions({
+              fetchTags: fetchFeatureVectorsTags,
+              project: params.projectName
+            })
+          )
+            .unwrap()
+            .then(response => {
+              const tag = [...response.payload, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
+                ? filtersStore.tag
+                : TAG_FILTER_LATEST
 
-            setFilters({ tag })
-            fetchData({ ...filtersStore, tag })
-          })
+              dispatch(setFilters({ tag }))
+              fetchData({ ...filtersStore, tag })
+            })
         })
         .catch(() => {
           dispatch(
@@ -145,17 +151,15 @@ const FeatureVectors = ({
       setConfirmData(null)
     },
     [
-      dispatch,
       deleteFeatureVector,
+      dispatch,
       fetchData,
       fetchFeatureVectorsTags,
       filtersStore,
-      getFilterTagOptions,
       navigate,
       params.projectName,
       selectedFeatureVector,
-      setConfirmData,
-      setFilters
+      setConfirmData
     ]
   )
 
@@ -182,7 +186,9 @@ const FeatureVectors = ({
   )
 
   const handleRefresh = filters => {
-    getFilterTagOptions(fetchFeatureVectorsTags, params.projectName)
+    dispatch(
+      getFilterTagOptions({ fetchTags: fetchFeatureVectorsTags, project: params.projectName })
+    )
 
     return fetchData(filters)
   }
@@ -218,7 +224,7 @@ const FeatureVectors = ({
       fetchFeatureVector(featureVector.project, featureVector.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureVectors(result)].map(contentItem =>
-            createFeatureVectorsRowData(contentItem, params.projectName)
+            createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -255,10 +261,15 @@ const FeatureVectors = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureVectorsRowData(contentItem, params.projectName, true)
+          return createFeatureVectorsRowData(
+            contentItem,
+            FEATURE_VECTORS_TAB,
+            params.projectName,
+            true
+          )
         })
       : featureVectors.map(contentItem =>
-          createFeatureVectorsRowData(contentItem, params.projectName)
+          createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
         )
   }, [featureVectors, filtersStore.groupBy, latestItems, params.projectName])
 
@@ -338,11 +349,11 @@ const FeatureVectors = ({
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, setFilters])
+  }, [filtersStore.groupBy, filtersStore.tag, dispatch])
 
   useEffect(() => {
     const content = cloneDeep(featureStore.featureVectors?.allData)

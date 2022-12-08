@@ -18,38 +18,21 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
-import filtersActions from '../../actions/filters'
-import { setNotification } from '../../reducers/notificationReducer'
 import {
-  checkForSelectedDataset,
-  fetchDataSetRowData,
-  filters,
-  generatePageData,
-  handleApplyDetailsChanges
-} from './datasets.util'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { openPopUp } from 'igz-controls/utils/common.util'
-import {
-  DATASET_TYPE,
   DATASETS_PAGE,
+  DATASET_TYPE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
-import { useYaml } from '../../hooks/yaml.hook'
-import { useGroupContent } from '../../hooks/groupContent.hook'
-import { createDatasetsRowData } from '../../utils/createArtifactsContent'
-import { cancelRequest } from '../../utils/cancelRequest'
 import {
   fetchArtifactTags,
   fetchDataSet,
@@ -57,10 +40,27 @@ import {
   removeDataSet,
   removeDataSets
 } from '../../reducers/artifactsReducer'
+import {
+  checkForSelectedDataset,
+  fetchDataSetRowData,
+  filters,
+  generatePageData,
+  handleApplyDetailsChanges
+} from './datasets.util'
+import { cancelRequest } from '../../utils/cancelRequest'
+import { createDatasetsRowData } from '../../utils/createArtifactsContent'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Datasets = ({ getFilterTagOptions, setFilters }) => {
+const Datasets = () => {
   const [datasets, setDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
@@ -92,13 +92,20 @@ const Datasets = ({ getFilterTagOptions, setFilters }) => {
 
   const handleRefresh = useCallback(
     filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName, DATASET_TYPE)
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: DATASET_TYPE
+        })
+      )
       setSelectedRowData({})
       setDatasets([])
 
       return fetchData(filters)
     },
-    [fetchData, getFilterTagOptions, params.projectName]
+    [dispatch, fetchData, params.projectName]
   )
 
   const handleAddTag = useCallback(
@@ -106,7 +113,7 @@ const Datasets = ({ getFilterTagOptions, setFilters }) => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
-        getArtifactTags: () =>
+        getArtifact: () =>
           fetchDataSet({
             project: params.projectName,
             dataSet: artifact.db_key,
@@ -231,11 +238,11 @@ const Datasets = ({ getFilterTagOptions, setFilters }) => {
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name, setFilters])
+  }, [filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name, dispatch])
 
   useEffect(() => {
     checkForSelectedDataset(
@@ -293,9 +300,4 @@ const Datasets = ({ getFilterTagOptions, setFilters }) => {
   )
 }
 
-const actionCreators = {
-  getFilterTagOptions: filtersActions.getFilterTagOptions,
-  setFilters: filtersActions.setFilters
-}
-
-export default connect(null, { ...actionCreators })(Datasets)
+export default Datasets

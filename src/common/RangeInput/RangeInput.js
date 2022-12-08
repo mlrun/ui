@@ -25,6 +25,8 @@ import { isNil } from 'lodash'
 import Input from '../Input/Input'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
+import { DENSITY_OPTIONS } from '../../types'
+
 import { ReactComponent as Arrow } from 'igz-controls/images/range-arrow-small.svg'
 import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
@@ -185,7 +187,7 @@ RangeInput.defaultProps = {
 }
 
 RangeInput.propTypes = {
-  density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
+  density: DENSITY_OPTIONS,
   disabled: PropTypes.bool,
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,

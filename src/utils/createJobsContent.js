@@ -43,7 +43,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
       },
       content: [
         {
-          header: 'Name',
+          header: jobName ? 'UID' : 'Name',
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
           class: 'table-cell-2',
@@ -185,7 +185,7 @@ export const createJobsScheduleTabContent = jobs => {
         {
           header: 'Schedule (UTC)',
           id: `schedule.${identifierUnique}`,
-          value: job.scheduled_object ? cronstrue.toString(job.scheduled_object?.schedule) : null,
+          value: job.scheduled_object?.schedule ? cronstrue.toString(job.scheduled_object?.schedule) : null,
           class: 'table-cell-1'
         },
         {

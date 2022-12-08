@@ -27,7 +27,7 @@ import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTabl
 
 import { filters } from './modelEndpoints.util'
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE } from '../../../constants'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const ModelEndpointsView = React.forwardRef(
   (

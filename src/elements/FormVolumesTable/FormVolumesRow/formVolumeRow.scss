@@ -1,0 +1,15 @@
+@import '~igz-controls/scss/colors.scss';
+
+.form-table__row {
+  &.form-table__volume-row {
+    .form-table__volume-cell {
+      width: 33.3%;
+    }
+
+    &.excluded {
+      .form-table__cell {
+        color: $spunPearl;
+      }
+    }
+  }
+}

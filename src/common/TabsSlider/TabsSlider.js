@@ -18,37 +18,42 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import { Tip } from 'igz-controls/components'
 
+import { SLIDER_STYLE_1, SLIDER_STYLE_2, SLIDER_TABS } from '../../types'
+
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
-import './detailsMenu.scss'
+import './tabsSlider.scss'
 
-const DetailsMenu = ({ detailsMenu, onClick, params }) => {
+const TabsSlider = ({ initialTab, onClick, skipLink, sliderStyle, tabsList }) => {
+  const [selectedTab, setSelectedTab] = useState(initialTab)
   const [arrowsAreHidden, setArrowsAreHidden] = useState(true)
   const [scrolledWidth, setScrolledWidth] = useState(0)
   const [rightArrowDisabled, setRightArrowDisabled] = useState(false)
   const tabsWrapperRef = useRef()
   const tabsRef = useRef()
   const location = useLocation()
+  const params = useParams()
   const menuOffsetHalfWidth = 2
   const tabOffset = 1.5
 
+  const tabsSliderClassNames = classnames('tabs-slider', sliderStyle)
   const leftArrowClassNames = classnames(
-    'details-menu__arrow',
-    'details-menu__arrow_left',
-    arrowsAreHidden && 'details-menu__arrow_hidden',
-    scrolledWidth === 0 && 'details-menu__arrow_disabled'
+    'tabs-slider__arrow',
+    'tabs-slider__arrow_left',
+    arrowsAreHidden && 'tabs-slider__arrow_hidden',
+    scrolledWidth === 0 && 'tabs-slider__arrow_disabled'
   )
   const rightArrowClassNames = classnames(
-    'details-menu__arrow',
-    'details-menu__arrow_right',
-    arrowsAreHidden && 'details-menu__arrow_hidden',
-    rightArrowDisabled && 'details-menu__arrow_disabled'
+    'tabs-slider__arrow',
+    'tabs-slider__arrow_right',
+    arrowsAreHidden && 'tabs-slider__arrow_hidden',
+    rightArrowDisabled && 'tabs-slider__arrow_disabled'
   )
 
   const scrollTabs = toRight => {
@@ -93,11 +98,11 @@ const DetailsMenu = ({ detailsMenu, onClick, params }) => {
   }, [rightArrowDisabled, tabsRef, tabsWrapperRef])
 
   const moveToSelectedTab = useCallback(() => {
-    const selectedTab = document.querySelector(`[data-tab='${params.tab}']`)
+    const selectedTabNode = document.querySelector(`[data-tab='${selectedTab}']`)
     const centeredTabPosition =
-      selectedTab?.offsetLeft -
+      selectedTabNode?.offsetLeft -
       tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth +
-      selectedTab?.offsetWidth / menuOffsetHalfWidth
+      selectedTabNode?.offsetWidth / menuOffsetHalfWidth
 
     if (centeredTabPosition <= 0) {
       setScrolledWidth(0)
@@ -105,8 +110,8 @@ const DetailsMenu = ({ detailsMenu, onClick, params }) => {
     } else if (
       tabsRef.current?.scrollWidth <
       tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth +
-        selectedTab?.offsetLeft +
-        selectedTab?.offsetWidth
+        selectedTabNode?.offsetLeft +
+        selectedTabNode?.offsetWidth
     ) {
       setScrolledWidth(tabsRef.current?.scrollWidth - tabsWrapperRef.current?.offsetWidth)
       setRightArrowDisabled(true)
@@ -114,7 +119,12 @@ const DetailsMenu = ({ detailsMenu, onClick, params }) => {
       setScrolledWidth(centeredTabPosition)
       setRightArrowDisabled(false)
     }
-  }, [params.tab])
+  }, [selectedTab])
+
+  const onSelectTab = newTab => {
+    setSelectedTab(newTab.id)
+    onClick && onClick(newTab)
+  }
 
   useEffect(() => {
     window.addEventListener('resize', handleHideArrows)
@@ -130,63 +140,90 @@ const DetailsMenu = ({ detailsMenu, onClick, params }) => {
 
   useEffect(() => {
     handleHideArrows()
-  }, [detailsMenu, handleHideArrows])
+  }, [tabsList, handleHideArrows])
 
   useEffect(() => {
     moveToSelectedTab()
   }, [moveToSelectedTab])
 
+  useEffect(() => {
+    if (params.tab && params.tab !== selectedTab) {
+      setSelectedTab(tabsList.find(tab => tab.id === params.tab).id)
+    }
+  }, [params.tab, selectedTab, tabsList])
+
   return (
-    <ul className="details-menu">
-      <Arrow
+    <div className={tabsSliderClassNames}>
+      <div
         className={leftArrowClassNames}
         onClick={() => {
           scrollTabs(false)
         }}
-      />
-      <div className="details-menu__tabs-wrapper" ref={tabsWrapperRef}>
+      >
+        <Arrow />
+      </div>
+      <div className="tabs-slider__tabs-wrapper" ref={tabsWrapperRef}>
         <div
           ref={tabsRef}
-          className="details-menu__tabs"
+          className="tabs-slider__tabs"
           style={{
             transform: `translateX(${-scrolledWidth}px)`
           }}
         >
-          {detailsMenu.map(tab => {
-            const tabLink = location.pathname?.replace(/^$|([^/]+$)/, tab.id)
+          {tabsList.map(tab => {
+            const tabClassName = classnames(
+              'tabs-slider__tab',
+              selectedTab === tab.id && 'tabs-slider__tab_active'
+            )
 
             return (
-              !tab.hidden && (
-                <Link to={tabLink} onClick={onClick} key={tab.id}>
-                  <li
-                    data-tab={tab.id}
-                    className={classnames(
-                      'details-menu__tab',
-                      params.tab === tab.id && 'details-menu__tab_active'
-                    )}
-                  >
-                    {tab.label}
-                    {tab.tip && <Tip className="details-menu__tab-tip" text={tab.tip} />}
-                  </li>
+              !tab.hidden &&
+              (!skipLink ? (
+                <Link
+                  className={tabClassName}
+                  data-tab={tab.id}
+                  to={location.pathname?.replace(/^$|([^/]+$)/, tab.id)}
+                  onClick={() => onSelectTab(tab)}
+                  key={tab.id}
+                >
+                  {tab.label}
+                  {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
                 </Link>
-              )
+              ) : (
+                <div
+                  className={tabClassName}
+                  data-tab={tab.id}
+                  key={tab.id}
+                  onClick={() => onSelectTab(tab)}
+                >
+                  {tab.label}
+                  {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
+                </div>
+              ))
             )
           })}
         </div>
       </div>
-      <Arrow className={rightArrowClassNames} onClick={() => scrollTabs(true)} />
-    </ul>
+      <div className={rightArrowClassNames} onClick={() => scrollTabs(true)}>
+        <Arrow />
+      </div>
+    </div>
   )
 }
 
-DetailsMenu.defaultProps = {
-  onClick: () => {}
+TabsSlider.defaultProps = {
+  initialTab: '',
+  onClick: () => {},
+  skipLink: false,
+  sliderStyle: SLIDER_STYLE_1
 }
 
-DetailsMenu.propTypes = {
-  detailsMenu: PropTypes.array.isRequired,
+TabsSlider.propTypes = {
+  initialTab: PropTypes.string,
   onClick: PropTypes.func,
-  params: PropTypes.shape({}).isRequired
+  skipLink: PropTypes.bool,
+  sliderStyle: PropTypes.oneOf([SLIDER_STYLE_1, SLIDER_STYLE_2]),
+  tabsList: SLIDER_TABS.isRequired
 }
 
-export default DetailsMenu
+export default TabsSlider

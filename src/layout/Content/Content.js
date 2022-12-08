@@ -34,7 +34,8 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import TableTop from '../../elements/TableTop/TableTop'
 
-import { generateContentActionsMenu, getNoDataMessage } from './content.util'
+import { generateContentActionsMenu } from './content.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isProjectValid } from '../../utils/handleRedirect'
 import { useYaml } from '../../hooks/yaml.hook'
 import {
@@ -82,12 +83,7 @@ const Content = ({
     params.pageTab
   )
 
-  const contentClassName = classnames(
-    'content',
-    [FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
-      !location.pathname.includes(ADD_TO_FEATURE_VECTOR_TAB) &&
-      'content_with-menu'
-  )
+  const contentClassName = classnames('content')
   const filterMenuClassNames = classnames(
     'content__action-bar',
     pageData.hideFilterMenu && 'content__action-bar_hidden'

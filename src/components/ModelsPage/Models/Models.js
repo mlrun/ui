@@ -26,28 +26,21 @@ import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifa
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 
-import detailsActions from '../../../actions/details'
-import filtersActions from '../../../actions/filters'
 import {
   fetchArtifactTags,
   fetchModel,
   removeModel,
   removeModels
 } from '../../../reducers/artifactsReducer'
-import { setNotification } from '../../../reducers/notificationReducer'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  MODEL_TYPE,
   MODELS_PAGE,
   MODELS_TAB,
+  MODEL_TYPE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import {
   checkForSelectedModel,
   fetchModelsRowData,
@@ -56,14 +49,21 @@ import {
   getFeatureVectorData,
   handleApplyDetailsChanges
 } from './models.util'
-import { useModelsPage } from '../ModelsPage.context'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
-import { createModelsRowData } from '../../../utils/createArtifactsContent'
+import detailsActions from '../../../actions/details'
 import { cancelRequest } from '../../../utils/cancelRequest'
+import { createModelsRowData } from '../../../utils/createArtifactsContent'
+import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { setNotification } from '../../../reducers/notificationReducer'
+import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../../hooks/groupContent.hook'
+import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) => {
+const Models = ({ fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE)
@@ -84,13 +84,20 @@ const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) =>
 
   const handleRefresh = useCallback(
     filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName, MODEL_TYPE)
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: MODEL_TYPE
+        })
+      )
       setSelectedRowData({})
       setModels([])
 
       return fetchData(filters)
     },
-    [fetchData, getFilterTagOptions, params.projectName, setModels]
+    [dispatch, fetchData, params.projectName, setModels]
   )
 
   const handleAddTag = useCallback(
@@ -98,7 +105,7 @@ const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) =>
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: handleRefresh,
-        getArtifactTags: () =>
+        getArtifact: () =>
           fetchModel({
             project: params.projectName,
             model: artifact.db_key,
@@ -222,11 +229,11 @@ const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) =>
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name, setFilters])
+  }, [dispatch, filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name])
 
   useEffect(() => {
     if (urlTagOption) {
@@ -306,6 +313,5 @@ const Models = ({ fetchModelFeatureVector, setFilters, getFilterTagOptions }) =>
 }
 
 export default connect(null, {
-  ...detailsActions,
-  ...filtersActions
+  ...detailsActions
 })(Models)

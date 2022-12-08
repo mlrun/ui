@@ -17,25 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classNames from 'classnames'
 
+import { DENSITY_OPTIONS } from '../../types'
+
 import './timePicker.scss'
 
-const TimePicker = ({ onChange, value, hideLabel }) => {
+const TimePicker = ({ className, density, label, onBlur, onChange, onFocus, value }) => {
   const [valueInput, setValueInput] = useState(value)
 
-  const timePickerClassName = classNames(
-    'input input-wrapper',
-    valueInput.length > 1 && !hideLabel && 'active-input'
-  )
-
-  const labelClassName = classNames(
-    'input__label',
-    'input__label-floating',
-    valueInput.length > 1 && 'active-label'
+  const wrapperClassNames = classNames('time-picker-container', className)
+  const inputWrapperClassNames = classNames(
+    'time-picker__wrapper',
+    `time-picker__wrapper-${density}`,
+    'time-picker__control'
   )
 
   useEffect(() => {
@@ -51,28 +49,49 @@ const TimePicker = ({ onChange, value, hideLabel }) => {
     return hours.concat(':').concat(minutes)
   }
 
-  const onHandleInputChange = event => {
+  const handleInputChange = event => {
     setValueInput(event.target.value)
     onChange(event.target.value)
   }
 
   return (
-    <div data-testid="time-picker" className="time-picker-container">
-      {!hideLabel && <span className={labelClassName}>Time</span>}
-      <MaskedInput
-        className={timePickerClassName}
-        keepCharPositions
-        mask={timeMask}
-        onChange={onHandleInputChange}
-        value={valueInput}
-      />
+    <div className={wrapperClassNames}>
+      {label && (
+        <div className="time-picker__label">
+          <label data-testid="label">{label}</label>
+        </div>
+      )}
+      <div data-testid="time-picker" className={inputWrapperClassNames}>
+        <MaskedInput
+          keepCharPositions
+          mask={timeMask}
+          onBlur={onBlur}
+          onChange={handleInputChange}
+          onFocus={onFocus}
+          value={valueInput}
+          placeholder="__:__"
+        />
+      </div>
     </div>
   )
 }
 
+TimePicker.defaultProps = {
+  className: '',
+  density: 'normal',
+  label: '',
+  onBlur: () => {},
+  onChange: () => {},
+  onFocus: () => {}
+}
+
 TimePicker.propTypes = {
-  hideLabel: PropTypes.bool,
+  className: PropTypes.string,
+  density: DENSITY_OPTIONS,
+  label: PropTypes.string,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+  onFocus: PropTypes.func,
   value: PropTypes.string.isRequired
 }
 

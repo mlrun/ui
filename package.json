@@ -23,7 +23,7 @@
     "final-form-arrays": "^3.0.2",
     "fs-extra": "^10.0.0",
     "identity-obj-proxy": "^3.0.0",
-    "iguazio.dashboard-react-controls": "0.0.26",
+    "iguazio.dashboard-react-controls": "0.0.29",
     "is-wsl": "^1.1.0",
     "js-base64": "^2.5.2",
     "js-yaml": "^3.13.1",
@@ -74,7 +74,9 @@
     "report": "node tests/report.js",
     "test:regression": "npm run test:ui && npm run report",
     "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\"",
-    "ui-steps": "export BABEL_ENV=test; export NODE_ENV=test; npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env scripts/collectUITestsSteps.js"
+    "ui-steps": "export BABEL_ENV=test; export NODE_ENV=test; npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env scripts/collectUITestsSteps.js",
+    "nli": "npm link iguazio.dashboard-react-controls",
+    "nui": "npm unlink iguazio.dashboard-react-controls"
   },
   "eslintConfig": {
     "extends": [
@@ -132,7 +134,7 @@
     "crypto": "^1.0.1",
     "css-loader": "^6.5.1",
     "cucumber-html-reporter": "^5.3.0",
-    "eslint": "^8.8.0",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^7.0.0",
     "eslint-loader": "3.0.2",

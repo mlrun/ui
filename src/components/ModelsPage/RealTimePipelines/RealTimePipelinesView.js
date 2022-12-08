@@ -29,7 +29,7 @@ import FunctionsTableRow from '../../../elements/FunctionsTableRow/FunctionsTabl
 import { filters } from './realTimePipelines.util'
 import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
 import NoData from '../../../common/NoData/NoData'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const RealTimePipelinesView = React.forwardRef(
   (
@@ -94,13 +94,12 @@ const RealTimePipelinesView = React.forwardRef(
                     return (
                       <FunctionsTableRow
                         actionsMenu={actionsMenu}
-                        content={pipelines}
                         handleExpandRow={handleExpandRow}
                         handleSelectItem={() => {}}
                         key={index}
                         rowItem={tableItem}
                         selectedItem={{}}
-                        tableContent={selectedRowData}
+                        selectedRowData={selectedRowData}
                       />
                     )
                   })}
@@ -125,7 +124,7 @@ RealTimePipelinesView.propTypes = {
   pageData: PropTypes.object.isRequired,
   params: PropTypes.object.isRequired,
   pipelines: PropTypes.arrayOf(PropTypes.object).isRequired,
-  selectedRowData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 

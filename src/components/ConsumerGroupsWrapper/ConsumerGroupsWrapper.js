@@ -25,19 +25,18 @@ import { isEmpty } from 'lodash'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 
-import filtersActions from '../../actions/filters'
-import { setNotification } from '../../reducers/notificationReducer'
 import nuclioActions from '../../actions/nuclio'
 import { GROUP_BY_NONE } from '../../constants'
-import { isProjectValid } from '../../utils/handleRedirect'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
+import { isProjectValid } from '../../utils/handleRedirect'
+import { setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 
 const ConsumerGroupsWrapper = ({
   fetchNuclioV3ioStreams,
   frontendSpec,
   projectsNames,
   resetV3ioStreamsError,
-  setFilters,
   v3ioStreams
 }) => {
   const navigate = useNavigate()
@@ -54,8 +53,8 @@ const ConsumerGroupsWrapper = ({
   }, [navigate, params.projectName, projectsNames.data])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NONE })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   const refreshConsumerGroups = useCallback(() => {
     fetchNuclioV3ioStreams(params.projectName)
@@ -111,7 +110,6 @@ export default connect(
     projectsNames: projectStore.projectsNames
   }),
   {
-    ...filtersActions,
     ...nuclioActions
   }
 )(ConsumerGroupsWrapper)
