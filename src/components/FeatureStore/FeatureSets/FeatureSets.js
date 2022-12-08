@@ -144,7 +144,7 @@ const FeatureSets = ({
       fetchFeatureSet(item.project, item.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
-            createFeatureSetsRowData(contentItem, params.projectName, true)
+            createFeatureSetsRowData(contentItem, FEATURE_SETS_TAB, params.projectName, true)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -181,9 +181,11 @@ const FeatureSets = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureSetsRowData(contentItem, params.projectName, true)
+          return createFeatureSetsRowData(contentItem, FEATURE_SETS_TAB, params.projectName, true)
         })
-      : featureSets.map(contentItem => createFeatureSetsRowData(contentItem, params.projectName))
+      : featureSets.map(contentItem =>
+          createFeatureSetsRowData(contentItem, FEATURE_SETS_TAB, params.projectName)
+        )
   }, [featureSets, filtersStore.groupBy, latestItems, params.projectName])
 
   const handleSelectFeatureSet = item => {

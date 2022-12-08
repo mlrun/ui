@@ -53,6 +53,7 @@ const ProjectsView = ({
   filterMatches,
   handleCreateProject,
   handleSelectSortOption,
+  handleSearchOnFocus,
   isDescendingOrder,
   isNameValid,
   projectStore,
@@ -137,6 +138,7 @@ const ProjectsView = ({
                 className="projects-search"
                 matches={filterMatches}
                 onChange={setFilterByName}
+                onFocus={handleSearchOnFocus}
                 placeholder="Search projects..."
                 setMatches={setFilterMatches}
                 value={filterByName}
@@ -207,6 +209,7 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
+  handleSearchOnFocus: PropTypes.func.isRequired,
   handleSelectSortOption: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   refreshProjects: PropTypes.func.isRequired,

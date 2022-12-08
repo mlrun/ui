@@ -1,8 +1,8 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/mixins';
-@import '../../scss/main.scss';
 
 .settings {
+  @import '../../scss/main.scss';
   &__artifact-path,
   &__goals,
   &__description,

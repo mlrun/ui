@@ -38,7 +38,7 @@ import './breadcrums.scss'
 const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
-  const isDemoMode = useMode()
+  const { isDemoMode } = useMode()
   const breadcrumbsRef = useRef()
   const params = useParams()
   const location = useLocation()
