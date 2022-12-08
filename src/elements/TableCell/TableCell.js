@@ -20,7 +20,6 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
@@ -29,13 +28,14 @@ import TableProducerCell from '../TableProducerCell/TableProducerCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
+import { BUTTON_COPY_URI_CELL_TYPE } from '../../constants'
+import { getChipOptions } from '../../utils/getChipOptions'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { truncateUid } from '../../utils'
+
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
-
-import { truncateUid } from '../../utils'
-import { getChipOptions } from '../../utils/getChipOptions'
-import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 
 const TableCell = ({
   className,
@@ -48,7 +48,6 @@ const TableCell = ({
   selectedItem,
   showExpandButton
 }) => {
-  const params = useParams()
   const dispatch = useDispatch()
 
   if (link && data.type !== 'hidden') {
@@ -140,10 +139,10 @@ const TableCell = ({
         </Tooltip>
       </div>
     )
-  } else if (data.type === 'buttonCopyURI') {
+  } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
       <div className={`table-body__cell ${data.class} ${className}`}>
-        <button onClick={() => data.actionHandler(item, params.pageTab)}>
+        <button onClick={() => data.actionHandler(item)}>
           <Tooltip template={<TextTooltipTemplate text="Copy URI" />}>
             <Copy />
           </Tooltip>
