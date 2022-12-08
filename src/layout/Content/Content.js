@@ -34,7 +34,8 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import TableTop from '../../elements/TableTop/TableTop'
 
-import { generateContentActionsMenu, getNoDataMessage } from './content.util'
+import { generateContentActionsMenu } from './content.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isProjectValid } from '../../utils/handleRedirect'
 import { useYaml } from '../../hooks/yaml.hook'
 import {

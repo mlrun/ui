@@ -29,7 +29,7 @@ import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/Feature
 
 import { featureSetsFilters } from './featureSets.util'
 import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const FeatureSetsView = React.forwardRef(
   (

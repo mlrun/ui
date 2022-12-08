@@ -28,7 +28,7 @@ import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/Feature
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { featuresFilters } from './features.util'
 import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const FeaturesView = React.forwardRef(
   (
