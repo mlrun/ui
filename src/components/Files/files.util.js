@@ -110,7 +110,7 @@ export const fetchFilesRowData = (file, setSelectedRowData, dispatch, projectNam
     }
   }))
 
-  dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter: !iter, tag }))
+  dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter, tag }))
     .unwrap()
     .then(result => {
       if (result?.length > 0) {
