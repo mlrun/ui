@@ -218,7 +218,7 @@ const FeatureVectors = ({
       fetchFeatureVector(featureVector.project, featureVector.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureVectors(result)].map(contentItem =>
-            createFeatureVectorsRowData(contentItem, params.projectName)
+            createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -255,10 +255,15 @@ const FeatureVectors = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureVectorsRowData(contentItem, params.projectName, true)
+          return createFeatureVectorsRowData(
+            contentItem,
+            FEATURE_VECTORS_TAB,
+            params.projectName,
+            true
+          )
         })
       : featureVectors.map(contentItem =>
-          createFeatureVectorsRowData(contentItem, params.projectName)
+          createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
         )
   }, [featureVectors, filtersStore.groupBy, latestItems, params.projectName])
 

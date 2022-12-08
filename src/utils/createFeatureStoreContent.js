@@ -22,7 +22,12 @@ import React from 'react'
 import AddFeatureButton from '../elements/AddFeatureButton/AddFeatureButton'
 import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
 
-import { FEATURE_STORE_PAGE, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
+import {
+  FEATURE_STORE_PAGE,
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  BUTTON_COPY_URI_CELL_TYPE
+} from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { copyToClipboard } from './copyToClipboard'
@@ -43,16 +48,16 @@ import { ReactComponent as DbIcon } from 'igz-controls/images/db-icon.svg'
 export const createFeatureStoreContent = (content, pageTab, project, isTablePanelOpen) => {
   return content.map(contentItem => {
     if (pageTab === FEATURE_SETS_TAB) {
-      return createFeatureSetsRowData(contentItem, project)
+      return createFeatureSetsRowData(contentItem, pageTab, project)
     } else if (pageTab === FEATURE_VECTORS_TAB) {
-      return createFeatureVectorsRowData(contentItem, project)
+      return createFeatureVectorsRowData(contentItem, pageTab, project)
     }
 
     return createFeaturesRowData(contentItem, isTablePanelOpen)
   })
 }
 
-export const createFeatureSetsRowData = (featureSet, project, showExpandButton) => {
+export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpandButton) => {
   const identifierUnique = getFeatureSetIdentifier(featureSet, true)
 
   return {
@@ -122,8 +127,10 @@ export const createFeatureSetsRowData = (featureSet, project, showExpandButton) 
         id: `buttonCopy.${identifierUnique}`,
         value: '',
         class: 'table-cell-1 artifacts__icon',
-        type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+        type: BUTTON_COPY_URI_CELL_TYPE,
+        actionHandler: item => {
+          copyToClipboard(generateUri(item, pageTab))
+        }
       }
     ]
   }
@@ -266,7 +273,7 @@ const getFeatureSetTargetCellValue = (targets, identifierUnique) => ({
   type: 'icons'
 })
 
-export const createFeatureVectorsRowData = (featureVector, project, showExpandButton) => {
+export const createFeatureVectorsRowData = (featureVector, pageTab, project, showExpandButton) => {
   const identifierUnique = getFeatureVectorIdentifier(featureVector, true)
 
   return {
@@ -344,8 +351,8 @@ export const createFeatureVectorsRowData = (featureVector, project, showExpandBu
         id: `buttonCopy.${identifierUnique}`,
         value: '',
         class: 'table-cell-1 artifacts__icon',
-        type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+        type: BUTTON_COPY_URI_CELL_TYPE,
+        actionHandler: item => copyToClipboard(generateUri(item, pageTab))
       },
       {
         id: `uid.${identifierUnique}`,
