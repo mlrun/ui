@@ -63,7 +63,7 @@ const AddArtifactTagPopUp = ({
           const tags = results.filter(result => result.tag).map(result => result.tag)
           setExistingTags(tags)
         })
-  }, [])
+  }, [dispatch, getArtifact])
 
   const addArtifactTag = values => {
     const identifier = {
