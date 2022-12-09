@@ -169,7 +169,7 @@ const Datasets = ({ getFilterTagOptions, setFilters }) => {
         dispatch,
         dataset,
         setSelectedRowData,
-        !filtersStore.iter,
+        filtersStore.iter,
         filtersStore.tag,
         params.projectName
       )
