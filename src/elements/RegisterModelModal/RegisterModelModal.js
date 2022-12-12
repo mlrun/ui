@@ -170,7 +170,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
           >
             <div className="form-row">
               <FormInput
-                async
+                isAsync
                 label="Name"
                 name="metadata.key"
                 required
