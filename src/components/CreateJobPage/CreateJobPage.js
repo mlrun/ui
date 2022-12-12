@@ -47,28 +47,17 @@ const CreateJobPage = ({
   const [filteredTemplates, setFilteredTemplates] = useState({})
   const [functions, setFunctions] = useState([])
   const [projects, setProjects] = useState(
-    generateProjectsList(
-      projectStore.projectsNames.data,
-      params.projectName
-    )
+    generateProjectsList(projectStore.projectsNames.data, params.projectName)
   )
   const [selectedGroupFunctions, setSelectedGroupFunctions] = useState({})
-  const [selectedProject, setSelectedProject] = useState(
-    params.projectName
-  )
-  const [templatesCategories, setTemplatesCategories] = useState(
-    functionsStore.templatesCatalog
-  )
+  const [selectedProject, setSelectedProject] = useState(params.projectName)
+  const [templatesCategories, setTemplatesCategories] = useState(functionsStore.templatesCatalog)
   const [templates, setTemplates] = useState([])
   const [showPanel, setShowPanel] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
-    isProjectValid(
-      navigate,
-      projectStore.projectsNames.data,
-      params.projectName
-    )
+    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
   }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
@@ -125,9 +114,7 @@ const CreateJobPage = ({
 
   useEffect(() => {
     if (filterByName.length > 0) {
-      const filteredFuncs = functions.filter(func =>
-        func.name.includes(filterByName)
-      )
+      const filteredFuncs = functions.filter(func => func.name.includes(filterByName))
       const filteredTemplts = templates.filter(template =>
         template.metadata.name.includes(filterByName)
       )
@@ -197,9 +184,7 @@ const CreateJobPage = ({
         selectProject={selectProject}
         selectedProject={selectedProject}
         setFilterMatches={setFilterMatches}
-        templates={
-          !isEmpty(filteredTemplates) ? filteredTemplates : templatesCategories
-        }
+        templates={!isEmpty(filteredTemplates) ? filteredTemplates : templatesCategories}
       />
       {showPanel && (
         <JobsPanel
@@ -209,18 +194,15 @@ const CreateJobPage = ({
           }}
           groupedFunctions={selectedGroupFunctions}
           mode={PANEL_CREATE_MODE}
-          project={selectedProject}
+          project={params.projectName}
         />
       )}
     </>
   )
 }
 
-export default connect(
-  ({ functionsStore, projectStore }) => ({ functionsStore, projectStore }),
-  {
-    ...functionsActions,
-    ...jobsActions,
-    ...projectsAction
-  }
-)(CreateJobPage)
+export default connect(({ functionsStore, projectStore }) => ({ functionsStore, projectStore }), {
+  ...functionsActions,
+  ...jobsActions,
+  ...projectsAction
+})(CreateJobPage)
