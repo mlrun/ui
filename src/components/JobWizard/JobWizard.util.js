@@ -793,7 +793,7 @@ export const generateJobRequestData = (
   const postData = {
     task: {
       metadata: {
-        project: formData.functionSelection?.projectName ?? params.projectName,
+        project: params.projectName,
         name: formData.jobDetails.name,
         labels: convertChipsData(formData.jobDetails.labels)
       },
