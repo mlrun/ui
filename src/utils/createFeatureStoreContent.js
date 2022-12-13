@@ -33,11 +33,6 @@ import { formatDatetime } from './datetime'
 import { copyToClipboard } from './copyToClipboard'
 import { generateUri } from './resources'
 import { truncateUid } from '../utils'
-import {
-  getFeatureIdentifier,
-  getFeatureSetIdentifier,
-  getFeatureVectorIdentifier
-} from './getUniqueIdentifier'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 import { ReactComponent as Nosql } from 'igz-controls/images/nosql.svg'
@@ -58,20 +53,13 @@ export const createFeatureStoreContent = (content, pageTab, project, isTablePane
 }
 
 export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpandButton) => {
-  const identifierUnique = getFeatureSetIdentifier(featureSet, true)
-
   return {
     data: {
-      ...featureSet,
-      ui: {
-        ...featureSet.ui,
-        identifier: getFeatureSetIdentifier(featureSet),
-        identifierUnique: identifierUnique
-      }
+      ...featureSet
     },
     content: [
       {
-        id: `key.${identifierUnique}`,
+        id: `key.${featureSet.ui.identifierUnique}`,
         header: 'Name',
         value: featureSet.name,
         class: 'table-cell-2',
@@ -97,26 +85,26 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         showExpandButton
       },
       {
-        id: `description.${identifierUnique}`,
+        id: `description.${featureSet.ui.identifierUnique}`,
         header: 'Description',
         value: featureSet.description,
         class: 'table-cell-2'
       },
       {
-        id: `labels.${identifierUnique}`,
+        id: `labels.${featureSet.ui.identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(featureSet.labels),
         class: 'table-cell-4',
         type: 'labels'
       },
       {
-        id: `version.${identifierUnique}`,
+        id: `version.${featureSet.ui.identifierUnique}`,
         value: featureSet.tag,
         class: 'table-cell-2',
         type: 'hidden'
       },
       {
-        id: `entity.${identifierUnique}`,
+        id: `entity.${featureSet.ui.identifierUnique}`,
         header: 'Entities',
         value: featureSet.entities?.slice(0, 2).map(entity => entity.name) || '',
         type: 'labels',
@@ -124,7 +112,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
       },
       { ...getFeatureSetTargetCellValue(featureSet.targets) },
       {
-        id: `buttonCopy.${identifierUnique}`,
+        id: `buttonCopy.${featureSet.ui.identifierUnique}`,
         value: '',
         class: 'table-cell-1 artifacts__icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
@@ -137,20 +125,13 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
 }
 
 export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButton) => {
-  const identifierUnique = getFeatureIdentifier(feature, true)
-
   return {
     data: {
       ...feature,
-      ui: {
-        ...feature.ui,
-        identifier: getFeatureIdentifier(feature),
-        identifierUnique: identifierUnique
-      }
     },
     content: [
       {
-        id: `key.${identifierUnique}`,
+        id: `key.${feature.ui.identifierUnique}`,
         header: 'Feature Name',
         type: feature.ui.type,
         value: feature.name,
@@ -162,7 +143,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         showExpandButton
       },
       {
-        id: `feature_set.${identifierUnique}`,
+        id: `feature_set.${feature.ui.identifierUnique}`,
         header: 'Feature set',
         value: feature.metadata?.name,
         class: 'table-cell-1',
@@ -192,27 +173,27 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         }
       },
       {
-        id: `type.${identifierUnique}`,
+        id: `type.${feature.ui.identifierUnique}`,
         header: 'Type',
         value: feature.value_type,
         class: 'table-cell-1'
       },
       {
-        id: `entity.${identifierUnique}`,
+        id: `entity.${feature.ui.identifierUnique}`,
         header: 'Entities',
         type: 'labels',
         value: feature.spec?.entities.map(entity => entity.name) || '',
         class: 'table-cell-2'
       },
       {
-        id: `description.${identifierUnique}`,
+        id: `description.${feature.ui.identifierUnique}`,
         header: 'Description',
         value: feature.description,
         class: 'table-cell-2',
         hidden: isTablePanelOpen
       },
       {
-        id: `labels.${identifierUnique}`,
+        id: `labels.${feature.ui.identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(feature.labels),
         class: 'table-cell-4',
@@ -224,7 +205,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         hidden: isTablePanelOpen
       },
       {
-        id: `validator.${identifierUnique}`,
+        id: `validator.${feature.ui.identifierUnique}`,
         header: 'Validator',
         value: <FeatureValidator validator={feature.validator} />,
         class: 'table-cell-2',
@@ -232,7 +213,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         hidden: isTablePanelOpen
       },
       {
-        id: `addFeature.${identifierUnique}`,
+        id: `addFeature.${feature.ui.identifierUnique}`,
         value: feature.ui.type === 'feature' && <AddFeatureButton feature={feature} />,
         class: 'table-cell-2 align-right',
         type: 'component',
@@ -274,20 +255,13 @@ const getFeatureSetTargetCellValue = (targets, identifierUnique) => ({
 })
 
 export const createFeatureVectorsRowData = (featureVector, pageTab, project, showExpandButton) => {
-  const identifierUnique = getFeatureVectorIdentifier(featureVector, true)
-
   return {
     data: {
-      ...featureVector,
-      ui: {
-        ...featureVector.ui,
-        identifier: getFeatureVectorIdentifier(featureVector),
-        identifierUnique: identifierUnique
-      }
+      ...featureVector
     },
     content: [
       {
-        id: `key.${identifierUnique}`,
+        id: `key.${featureVector.ui.identifierUnique}`,
         header: 'Name',
         value: featureVector.name,
         class: 'table-cell-3',
@@ -313,32 +287,32 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         showExpandButton
       },
       {
-        id: `description.${identifierUnique}`,
+        id: `description.${featureVector.ui.identifierUnique}`,
         header: 'Description',
         value: featureVector.description,
         class: 'table-cell-3'
       },
       {
-        id: `labels.${identifierUnique}`,
+        id: `labels.${featureVector.ui.identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(featureVector.labels),
         class: 'table-cell-4',
         type: 'labels'
       },
       {
-        id: `version.${identifierUnique}`,
+        id: `version.${featureVector.ui.identifierUnique}`,
         value: featureVector.tag,
         class: 'table-cell-2',
         type: 'hidden'
       },
       {
-        id: `entity.${identifierUnique}`,
+        id: `entity.${featureVector.ui.identifierUnique}`,
         header: 'Entities',
         value: featureVector.index_keys?.join(', ') ?? '',
         class: 'table-cell-2'
       },
       {
-        id: `updated.${identifierUnique}`,
+        id: `updated.${featureVector.ui.identifierUnique}`,
         header: 'Updated',
         value: featureVector.updated
           ? formatDatetime(new Date(featureVector.updated), 'N/A')
@@ -348,14 +322,14 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         showStatus: true
       },
       {
-        id: `buttonCopy.${identifierUnique}`,
+        id: `buttonCopy.${featureVector.ui.identifierUnique}`,
         value: '',
         class: 'table-cell-1 artifacts__icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, pageTab))
       },
       {
-        id: `uid.${identifierUnique}`,
+        id: `uid.${featureVector.ui.identifierUnique}`,
         value: featureVector.uid,
         class: 'table-cell-2',
         type: 'hidden'

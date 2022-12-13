@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { formatDatetime } from './datetime'
-import { getFunctionIdentifier } from './getUniqueIdentifier'
 import {
   DETAILS_OVERVIEW_TAB,
   FUNCTIONS_PAGE,
@@ -29,22 +28,14 @@ import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 const createFunctionsContent = (functions, pageTab, projectName, showExpandButton) =>
   functions.map(func => {
-    const identifier = getFunctionIdentifier(func)
-    const identifierUnique = getFunctionIdentifier(func, true)
-
     return pageTab === REAL_TIME_PIPELINES_TAB
       ? {
           data: {
-            ...func,
-            ui: {
-              ...func.ui,
-              identifier,
-              identifierUnique
-            }
+            ...func
           },
           content: [
             {
-              id: `name.${identifierUnique}`,
+              id: `name.${func.ui.identifierUnique}`,
               header: 'Name',
               value: func.name,
               class: 'functions_medium',
@@ -63,14 +54,14 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               showExpandButton
             },
             {
-              id: `kind.${identifierUnique}`,
+              id: `kind.${func.ui.identifierUnique}`,
               header: 'Type',
               value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
               class: 'functions_medium',
               type: 'type'
             },
             {
-              id: `function.${identifierUnique}`,
+              id: `function.${func.ui.identifierUnique}`,
               header: 'Function',
               value: func.name,
               class: 'functions_big',
@@ -78,7 +69,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
                 generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
             },
             {
-              id: `updated.${identifierUnique}`,
+              id: `updated.${func.ui.identifierUnique}`,
               value: formatDatetime(new Date(func.updated), 'N/A'),
               class: 'functions_medium',
               type: 'date',
@@ -90,16 +81,11 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
         }
       : {
           data: {
-            ...func,
-            ui: {
-              ...func.ui,
-              identifier,
-              identifierUnique
-            }
+            ...func
           },
           content: [
             {
-              id: `name.${identifierUnique}`,
+              id: `name.${func.ui.identifierUnique}`,
               header: 'Name',
               value: func.name,
               class: 'functions_medium',
@@ -118,21 +104,21 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               showExpandButton
             },
             {
-              id: `kind.${identifierUnique}`,
+              id: `kind.${func.ui.identifierUnique}`,
               header: 'Kind',
               value: func.type,
               class: 'functions_small',
               type: 'type'
             },
             {
-              id: `hash.${identifierUnique}`,
+              id: `hash.${func.ui.identifierUnique}`,
               header: 'Hash',
               value: func.hash,
               class: 'functions_small',
               type: 'hash'
             },
             {
-              id: `updated.${identifierUnique}`,
+              id: `updated.${func.ui.identifierUnique}`,
               header: 'Updated',
               value: formatDatetime(new Date(func.updated), 'N/A'),
               class: 'functions_small',
@@ -141,25 +127,25 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               showStatus: true
             },
             {
-              id: `command.${identifierUnique}`,
+              id: `command.${func.ui.identifierUnique}`,
               header: 'Command',
               value: func.command,
               class: 'functions_big'
             },
             {
-              id: `image.${identifierUnique}`,
+              id: `image.${func.ui.identifierUnique}`,
               header: 'Image',
               value: func.image,
               class: 'functions_big'
             },
             {
-              id: `description.${identifierUnique}`,
+              id: `description.${func.ui.identifierUnique}`,
               header: 'Description',
               value: func.description,
               class: 'functions_small'
             },
             {
-              id: `tag.${identifierUnique}`,
+              id: `tag.${func.ui.identifierUnique}`,
               value: func.tag,
               type: 'hidden'
             }

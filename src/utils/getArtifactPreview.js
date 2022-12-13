@@ -52,12 +52,13 @@ export const setArtifactPreviewFromPreviewData = (artifact, noData, setNoData, s
   ])
 }
 
-export const fetchArtifactPreviewFromExtraData = (artifact, noData, setNoData, setPreview) => {
+export const fetchArtifactPreviewFromExtraData = (artifact, noData, setNoData, setPreview, cancelToken) => {
   artifact.extra_data.forEach(previewItem => {
     fetchArtifactPreview(
       previewItem.path,
       previewItem.path.startsWith('/User') && (artifact.user || artifact.producer.owner),
-      previewItem.path.replace(/.*\./g, '')
+      previewItem.path.replace(/.*\./g, ''),
+      cancelToken
     )
       .then(content => {
         setPreview({ ...content, header: previewItem.header })
@@ -67,15 +68,17 @@ export const fetchArtifactPreviewFromExtraData = (artifact, noData, setNoData, s
         }
       })
       .catch(err => {
-        setPreview({
-          header: previewItem.header,
-          error: {
-            text: `${err.response.status} ${err.response.statusText}`,
-            body: JSON.stringify(err.response, null, 2)
-          },
-          content: [],
-          type: 'error'
-        })
+        if (err.response) {
+          setPreview({
+            header: previewItem.header,
+            error: {
+              text: `${err.response.status} ${err.response.statusText}`,
+              body: JSON.stringify(err.response, null, 2)
+            },
+            content: [],
+            type: 'error'
+          })
+        }
       })
   })
 }
@@ -107,8 +110,8 @@ export const fetchArtifactPreviewFromTargetPath = (artifact, noData, setNoData, 
     })
 }
 
-export const fetchArtifactPreview = (path, user, fileFormat) => {
-  return api.getArtifactPreview(path, user, fileFormat).then(res => {
+export const fetchArtifactPreview = (path, user, fileFormat, cancelToken) => {
+  return api.getArtifactPreview(path, user, fileFormat, cancelToken).then(res => {
     return createArtifactPreviewContent(res, fileFormat)
   })
 }

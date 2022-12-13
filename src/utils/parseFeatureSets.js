@@ -21,6 +21,7 @@ import getState from './getState'
 import { generateUsageSnippets } from './generateUsageSnippets'
 import { FEATURE_SETS_TAB } from '../constants'
 import { generateUri } from './resources'
+import { getFeatureSetIdentifier } from './getUniqueIdentifier'
 
 export const parseFeatureSets = featureSets =>
   featureSets.map(featureSet => {
@@ -36,7 +37,9 @@ export const parseFeatureSets = featureSets =>
       usage_example: generateUsageSnippets(FEATURE_SETS_TAB, item),
       URI: generateUri(item, FEATURE_SETS_TAB),
       ui: {
-        originalContent: featureSet
+        originalContent: featureSet,
+        identifier: getFeatureSetIdentifier(item),
+        identifierUnique: getFeatureSetIdentifier(item, true)
       }
     }
   })
