@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState } from 'react'
+import { isEqual, omit } from 'lodash'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -37,6 +38,13 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const [noData, setNoData] = useState(false)
 
   useEffect(() => {
+    return () => {
+      setPreview([])
+      setExtraData([])
+    }
+  }, [artifact])
+
+  useEffect(() => {
     getArtifactPreview(artifact, noData, setNoData, setPreview)
   }, [artifact, noData])
 
@@ -47,13 +55,6 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
       )
     }
   }, [artifact, extraData.length, noData])
-
-  useEffect(() => {
-    return () => {
-      setPreview([])
-      setExtraData([])
-    }
-  }, [])
 
   const artifactsPreviewClassNames = classnames(
     artifact.target_path && 'artifact-preview__with-popout'
@@ -83,4 +84,6 @@ DetailsPreview.propTypes = {
   handlePreview: PropTypes.func.isRequired
 }
 
-export default DetailsPreview
+export default React.memo(DetailsPreview, (prev, next) =>
+  isEqual(omit(prev.artifact, 'ui'), omit(next.artifact, 'ui'))
+)
