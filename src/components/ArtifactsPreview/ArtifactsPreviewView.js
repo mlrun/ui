@@ -97,7 +97,7 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
           {preview?.type === 'html' && (
             <iframe srcDoc={preview?.data.content} frameBorder="0" title="Preview" />
           )}
-          {preview?.type === 'json' && !preview?.data.content.includes('listdir') && (
+          {preview?.type === 'json' && !preview?.hidden && (
             <div className="json">
               <pre className="json-content">
                 <code

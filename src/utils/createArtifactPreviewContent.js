@@ -54,6 +54,7 @@ export const createArtifactPreviewContent = (res, fileFormat) => {
     artifact.data = {
       content: JSON.stringify(res.data, null, 2)
     }
+    artifact.hidden = !!res.data['listdir']
   } else if (res.headers['content-type'].includes('image')) {
     artifact.type = 'image'
     artifact.data = {
