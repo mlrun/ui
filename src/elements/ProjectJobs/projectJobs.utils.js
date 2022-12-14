@@ -32,7 +32,6 @@ export const getJobsStatistics = (projectCounter, projectName) => {
         projectCounter.error || projectCounter.data.runs_running_count === 0
           ? 'default'
           : 'running',
-      counterTooltip: 'Last 24 hours',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     workflows: {
@@ -42,7 +41,6 @@ export const getJobsStatistics = (projectCounter, projectName) => {
         projectCounter.error || projectCounter.data.pipelines_running_count === 0
           ? 'default'
           : 'running',
-      counterTooltip: 'Last 24 hours',
       link: `/projects/${projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`
     },
     failed: {
@@ -60,7 +58,6 @@ export const getJobsStatistics = (projectCounter, projectName) => {
       label: 'Scheduled',
       className:
         projectCounter.error || projectCounter.data.schedules_count === 0 ? 'default' : 'scheduled',
-      counterTooltip: 'Last 24 hours',
       link: `/projects/${projectName}/jobs/${SCHEDULE_TAB}`
     }
   }
