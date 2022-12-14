@@ -19,58 +19,48 @@ such restriction.
 */
 import { orderBy } from 'lodash'
 
-import {
-  MONITOR_JOBS_TAB,
-  MONITOR_WORKFLOWS_TAB,
-  SCHEDULE_TAB
-} from '../../constants'
+import { MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
 
 export const getJobsStatistics = (projectCounter, projectName) => {
   return {
     running: {
-      value: projectCounter.error
-        ? 'N/A'
-        : projectCounter.data.runs_running_count,
+      value: projectCounter.error ? 'N/A' : projectCounter.data.runs_running_count,
       label: 'Running jobs',
       className:
         projectCounter.error || projectCounter.data.runs_running_count === 0
           ? 'default'
           : 'running',
+      counterTooltip: 'Last 24 hours',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     workflows: {
-      value: projectCounter.error
-        ? 'N/A'
-        : projectCounter.data.pipelines_running_count,
+      value: projectCounter.error ? 'N/A' : projectCounter.data.pipelines_running_count,
       label: 'Running workflows',
       className:
-        projectCounter.error ||
-        projectCounter.data.pipelines_running_count === 0
+        projectCounter.error || projectCounter.data.pipelines_running_count === 0
           ? 'default'
           : 'running',
+      counterTooltip: 'Last 24 hours',
       link: `/projects/${projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`
     },
     failed: {
-      value: projectCounter.error
-        ? 'N/A'
-        : projectCounter.data.runs_failed_recent_count,
+      value: projectCounter.error ? 'N/A' : projectCounter.data.runs_failed_recent_count,
       label: 'Failed',
       className:
-        projectCounter.data.runs_failed_recent_count > 0 &&
-        !projectCounter.error
+        projectCounter.data.runs_failed_recent_count > 0 && !projectCounter.error
           ? 'failed'
           : 'default',
+      counterTooltip: 'Last 24 hours',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     scheduled: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.schedules_count,
       label: 'Scheduled',
       className:
-        projectCounter.error || projectCounter.data.schedules_count === 0
-          ? 'default'
-          : 'scheduled',
+        projectCounter.error || projectCounter.data.schedules_count === 0 ? 'default' : 'scheduled',
+      counterTooltip: 'Last 24 hours',
       link: `/projects/${projectName}/jobs/${SCHEDULE_TAB}`
     }
   }
@@ -140,7 +130,5 @@ export const groupByName = content => {
 }
 
 export const sortByDate = groups => {
-  return groups.map(group =>
-    orderBy(group, ['status.last_update'], 'desc').slice(0, 5)
-  )
+  return groups.map(group => orderBy(group, ['status.last_update'], 'desc').slice(0, 5))
 }
