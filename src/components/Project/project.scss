@@ -174,6 +174,14 @@
           margin: 15px 20px 25px auto;
         }
 
+        &__recent-text {
+          display: flex;
+          align-items: center;
+          font-size: 18px;
+          min-height: 40px;
+          padding: 15px 0 0 20px;
+        }
+
         &:last-child {
           margin-right: 0;
         }
