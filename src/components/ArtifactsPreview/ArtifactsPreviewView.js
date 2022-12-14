@@ -29,12 +29,7 @@ import { ARTIFACT_PREVIEW_TABLE_ROW_LIMIT } from '../../constants'
 
 import './artifactsPreview.scss'
 
-const ArtifactsPreviewView = ({
-  className,
-  preview,
-  setShowErrorBody,
-  showErrorBody
-}) => {
+const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorBody }) => {
   const content = useMemo(
     () =>
       preview.data && preview.data.content
@@ -45,9 +40,7 @@ const ArtifactsPreviewView = ({
 
   return (
     <div className={className}>
-      {preview.header && (
-        <h2 className="artifact-preview__header">{preview.header}</h2>
-      )}
+      {preview.header && <h2 className="artifact-preview__header">{preview.header}</h2>}
       {preview?.type === 'error' ? (
         <PreviewError
           error={preview.error}
@@ -66,13 +59,8 @@ const ArtifactsPreviewView = ({
               <div className="artifact-preview__table-row artifact-preview__table-header">
                 {preview.data.headers.map((header, index) => {
                   return (
-                    <div
-                      key={`${header}${index}`}
-                      className="artifact-preview__table-content"
-                    >
-                      <Tooltip template={<TextTooltipTemplate text={header} />}>
-                        {header}
-                      </Tooltip>
+                    <div key={`${header}${index}`} className="artifact-preview__table-content">
+                      <Tooltip template={<TextTooltipTemplate text={header} />}>{header}</Tooltip>
                     </div>
                   )
                 })}
@@ -107,22 +95,14 @@ const ArtifactsPreviewView = ({
           )}
           {preview?.type === 'text' && <div>{preview?.data.content}</div>}
           {preview?.type === 'html' && (
-            <iframe
-              srcDoc={preview?.data.content}
-              frameBorder="0"
-              title="Preview"
-            />
+            <iframe srcDoc={preview?.data.content} frameBorder="0" title="Preview" />
           )}
-          {preview?.type === 'json' && (
+          {preview?.type === 'json' && !preview?.data.content.includes('listdir') && (
             <div className="json">
               <pre className="json-content">
                 <code
                   dangerouslySetInnerHTML={{
-                    __html: Prism.highlight(
-                      preview?.data.content,
-                      Prism.languages.json,
-                      'json'
-                    )
+                    __html: Prism.highlight(preview?.data.content, Prism.languages.json, 'json')
                   }}
                 />
               </pre>
@@ -133,22 +113,14 @@ const ArtifactsPreviewView = ({
               <pre className="json-content">
                 <code
                   dangerouslySetInnerHTML={{
-                    __html: Prism.highlight(
-                      preview?.data.content,
-                      Prism.languages.yaml,
-                      'yaml'
-                    )
+                    __html: Prism.highlight(preview?.data.content, Prism.languages.yaml, 'yaml')
                   }}
                 />
               </pre>
             </div>
           )}
           {preview?.type === 'image' && (
-            <img
-              className="artifact-preview__image"
-              src={preview?.data?.content}
-              alt="preview"
-            />
+            <img className="artifact-preview__image" src={preview?.data?.content} alt="preview" />
           )}
           {preview?.type === 'unknown' && <div>No preview</div>}
         </>
