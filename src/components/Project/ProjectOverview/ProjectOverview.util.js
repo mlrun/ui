@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
-import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
+// import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
 import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -33,7 +33,7 @@ import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/flow
 import { ReactComponent as CreateJobIcon } from 'igz-controls/images/run2-icon.svg'
 // import { ReactComponent as DeployModelIcon } from 'igz-controls/images/rocket-icon.svg'
 import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/vector-icon.svg'
-import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/model-icon.svg'
+// import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/model-icon.svg'
 import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/realtime-icon-b.svg'
 import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/serving-icon.svg'
 // import { ReactComponent as UploadIcon } from 'igz-controls/images/upload-icon.svg'
@@ -241,55 +241,55 @@ export const getInitialCards = (projectName, navigate) => {
           }),
           label: 'Create New Job',
           tooltip: ''
-        },
-        {
-          id: 'registeramodel',
-          icon: <RegisterModelIcon />,
-          handleClick: () => ({
-            component: RegisterModelModal,
-            props: {
-              actions: (formState, handleCloseModal) => [
-                {
-                  label: 'Cancel',
-                  onClick: () => handleCloseModal(),
-                  variant: TERTIARY_BUTTON
-                },
-                {
-                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-                  label: 'Register',
-                  onClick: async () => {
-                    await formState.handleSubmit()
-                    if (!formState.invalid) {
-                      navigate(`${base_url}/models/models`)
-                    }
-                  },
-                  variant: SECONDARY_BUTTON
-                }
-              ],
-              // TODO: un-comment for 1.3
-              // [{
-              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-              //   label: 'Register and view',
-              //   onClick: async () => {
-              //   await formState.handleSubmit()
-              //   if (!formState.invalid) {
-              //     navigate(`${base_url}/datasets`)
-              //   }
-              // },
-              // {
-              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
-              //   label: 'Register',
-              //   onClick: formState.handleSubmit,
-              //   variant: SECONDARY_BUTTON
-              // }],
-              projectName,
-              refresh: () => {}
-            },
-            type: 'modal'
-          }),
-          label: 'Register Model',
-          tooltip: ''
         }
+        // {
+        //   id: 'registeramodel',
+        //   icon: <RegisterModelIcon />,
+        //   handleClick: () => ({
+        //     component: RegisterModelModal,
+        //     props: {
+        //       actions: (formState, handleCloseModal) => [
+        //         {
+        //           label: 'Cancel',
+        //           onClick: () => handleCloseModal(),
+        //           variant: TERTIARY_BUTTON
+        //         },
+        //         {
+        //           disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+        //           label: 'Register',
+        //           onClick: async () => {
+        //             await formState.handleSubmit()
+        //             if (!formState.invalid) {
+        //               navigate(`${base_url}/models/models`)
+        //             }
+        //           },
+        //           variant: SECONDARY_BUTTON
+        //         }
+        //       ],
+        //       // TODO: un-comment for 1.3
+        //       // [{
+        //       //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+        //       //   label: 'Register and view',
+        //       //   onClick: async () => {
+        //       //   await formState.handleSubmit()
+        //       //   if (!formState.invalid) {
+        //       //     navigate(`${base_url}/datasets`)
+        //       //   }
+        //       // },
+        //       // {
+        //       //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+        //       //   label: 'Register',
+        //       //   onClick: formState.handleSubmit,
+        //       //   variant: SECONDARY_BUTTON
+        //       // }],
+        //       projectName,
+        //       refresh: () => {}
+        //     },
+        //     type: 'modal'
+        //   }),
+        //   label: 'Register Model',
+        //   tooltip: ''
+        // }
       ],
       additionalLinks: [
         {
