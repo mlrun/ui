@@ -570,6 +570,7 @@ export const generateRequestData = (
       ...jobsStore.newJob.function,
       spec: {
         ...jobsStore.newJob.function.spec,
+        env: fillEmptyEnvVarValue(jobsStore.newJob.function.spec.env),
         resources
       }
     },
@@ -605,4 +606,14 @@ export const parseDefaultNodeSelectorContent = nodeSelector => {
 
 export const isNameNotUnique = (newName, content) => {
   return content.some(item => newName === item?.data.name && newName !== '')
+}
+
+const fillEmptyEnvVarValue = environmentVariables => {
+  return environmentVariables.map(envVar => {
+    if (!envVar.value && !envVar.valueFrom) {
+      envVar.value = ''
+    }
+
+    return envVar
+  })
 }
