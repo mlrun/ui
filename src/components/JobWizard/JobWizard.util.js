@@ -720,7 +720,7 @@ const generateEnvironmentVariables = envVarData => {
         }
       }
     } else {
-      generatedEnvVar.value = envVar.data.value
+      generatedEnvVar.value = envVar.data.value ?? ''
     }
 
     return generatedEnvVar
