@@ -14,7 +14,7 @@ permissions and limitations under the License.
 
 In addition, you may not use the software for any purposes that are
 illegal under applicable law, and the grant of the foregoing license
-under the Apache 2.0 license is conditioned upon your compliance with
+under the Apache 2.0 license is conditioned upon your` compliance with
 such restriction.
 */
 import React from 'react'
@@ -68,6 +68,16 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
+
+  const isArtifactNameUnique = async value => {
+    if (!value) return
+
+    const {
+      data: { artifacts }
+    } = await artifactApi.getArtifact(projectName, value)
+
+    return artifacts.length === 0
+  }
 
   const registerModel = values => {
     const uid = uuidv4()
@@ -160,11 +170,17 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
           >
             <div className="form-row">
               <FormInput
+                async
                 label="Name"
                 name="metadata.key"
                 required
                 tip="Artifacts names in the same project must be unique."
-                validationRules={getValidationRules('artifact.name')}
+                validationRules={getValidationRules('artifact.name', {
+                  name: 'ArtifactExists',
+                  label: 'Artifact name should be unique',
+                  pattern: isArtifactNameUnique,
+                  async: true
+                })}
               />
             </div>
             <div className="form-row">
