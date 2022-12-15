@@ -315,7 +315,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         id: `updated.${featureVector.ui.identifierUnique}`,
         header: 'Updated',
         value: featureVector.updated
-          ? formatDatetime(new Date(featureVector.updated), 'N/A')
+          ? formatDatetime(featureVector.updated, 'N/A')
           : 'N/A',
         class: 'table-cell-2',
         showTag: true,

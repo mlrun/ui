@@ -89,7 +89,7 @@ const PreviewModal = ({ item }) => {
               </div>
             )}
             <div className="item-data">
-              {formatDatetime(new Date(item.updated || item.date), 'N/A')}
+              {formatDatetime(item.updated || item.date, 'N/A')}
             </div>
             <div className="preview-body__download">
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
