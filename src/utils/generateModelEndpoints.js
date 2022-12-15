@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import getState from './getState'
+import { getArtifactIdentifier } from './getUniqueIdentifier'
 
 export const generateModelEndpoints = endpoints =>
   endpoints.map(endpoint => ({
@@ -25,6 +26,8 @@ export const generateModelEndpoints = endpoints =>
     name: endpoint.spec.model.split(':')[0],
     state: getState(endpoint.status.state),
     ui: {
-      originalContent: endpoint
+      originalContent: endpoint,
+      identifier: getArtifactIdentifier(endpoints),
+      identifierUnique: getArtifactIdentifier(endpoints, true)
     }
   }))
