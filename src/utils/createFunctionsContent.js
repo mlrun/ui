@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { formatDatetime } from './datetime'
-import { getFunctionIdentifier } from './getUniqueIdentifier'
 import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
@@ -30,21 +29,14 @@ const createFunctionsContent = (
   showExpandButton
 ) =>
   functions.map(func => {
-    const identifierUnique = getFunctionIdentifier(func, true)
-
     return pageTab === REAL_TIME_PIPELINES_TAB
       ? {
           data: {
-            ...func,
-            ui: {
-              ...func.ui,
-              identifier: getFunctionIdentifier(func),
-              identifierUnique: getFunctionIdentifier(func, true)
-            }
+            ...func
           },
           content: [
             {
-              id: `name.${identifierUnique}`,
+              id: `name.${func.ui.identifierUnique}`,
               header: 'Name',
               value: func.name,
               class: 'functions_medium',
@@ -63,14 +55,14 @@ const createFunctionsContent = (
               showExpandButton
             },
             {
-              id: `kind.${identifierUnique}`,
+              id: `kind.${func.ui.identifierUnique}`,
               header: 'Type',
               value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
               class: 'functions_medium',
               type: 'type'
             },
             {
-              id: `function.${identifierUnique}`,
+              id: `function.${func.ui.identifierUnique}`,
               header: 'Function',
               value: func.name,
               class: 'functions_big',
@@ -78,7 +70,7 @@ const createFunctionsContent = (
                 generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
             },
             {
-              id: `updated.${identifierUnique}`,
+              id: `updated.${func.ui.identifierUnique}`,
               value: formatDatetime(new Date(func.updated), 'N/A'),
               class: 'functions_medium',
               type: 'date',
@@ -90,30 +82,30 @@ const createFunctionsContent = (
         }
       : {
           name: {
-            id: `name.${identifierUnique}`,
+            id: `name.${func.ui.identifierUnique}`,
             value: func.name,
             class: 'functions_medium',
             showTag: true,
             showStatus: true,
-            identifier: getFunctionIdentifier(func),
-            identifierUnique: identifierUnique
+            identifier: func.ui.identifier,
+            identifierUnique: func.ui.identifierUnique
           },
           kind: {
-            id: `kind.${identifierUnique}`,
+            id: `kind.${func.ui.identifierUnique}`,
             value: func.type,
             class: 'functions_small',
             type: 'type',
             hidden: isSelectedItem
           },
           hash: {
-            id: `hash.${identifierUnique}`,
+            id: `hash.${func.ui.identifierUnique}`,
             value: func.hash,
             class: 'functions_small',
             type: 'hash',
             hidden: isSelectedItem
           },
           updated: {
-            id: `updated.${identifierUnique}`,
+            id: `updated.${func.ui.identifierUnique}`,
             value: formatDatetime(new Date(func.updated), 'N/A'),
             class: 'functions_small',
             type: 'date',
@@ -122,25 +114,25 @@ const createFunctionsContent = (
             hidden: isSelectedItem
           },
           command: {
-            id: `command.${identifierUnique}`,
+            id: `command.${func.ui.identifierUnique}`,
             value: func.command,
             class: 'functions_big',
             hidden: isSelectedItem
           },
           image: {
-            id: `image.${identifierUnique}`,
+            id: `image.${func.ui.identifierUnique}`,
             value: func.image,
             class: 'functions_big',
             hidden: isSelectedItem
           },
           description: {
-            id: `description.${identifierUnique}`,
+            id: `description.${func.ui.identifierUnique}`,
             value: func.description,
             class: 'functions_small',
             hidden: isSelectedItem
           },
           tag: {
-            id: `tag.${identifierUnique}`,
+            id: `tag.${func.ui.identifierUnique}`,
             value: func.tag,
             type: 'hidden',
             hidden: isSelectedItem

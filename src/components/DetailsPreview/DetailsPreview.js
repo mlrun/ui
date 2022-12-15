@@ -17,9 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useEffect, useRef, useState } from 'react'
+import { isEqual } from 'lodash'
 import classnames from 'classnames'
+import PropTypes from 'prop-types'
+import axios from 'axios'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -35,6 +37,19 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const [preview, setPreview] = useState([])
   const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
+  const previewRef = useRef({ current: {} })
+
+  const artifactsPreviewClassNames = classnames(
+      artifact.target_path && 'artifact-preview__with-popout'
+  )
+
+  useEffect(() => {
+    return () => {
+      setPreview([])
+      setExtraData([])
+      cancelRequest('cancel')
+    }
+  }, [artifact])
 
   useEffect(() => {
     getArtifactPreview(artifact, noData, setNoData, setPreview)
@@ -42,22 +57,21 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
 
   useEffect(() => {
     if (artifact.extra_data && extraData.length === 0) {
-      fetchArtifactPreviewFromExtraData(artifact, noData, setNoData, previewContent =>
-        setExtraData(state => [...state, previewContent])
+      fetchArtifactPreviewFromExtraData(
+          artifact,
+          noData,
+          setNoData,
+          previewContent => setExtraData(state => [...state, previewContent]),
+          new axios.CancelToken(cancel => {
+            previewRef.current.cancel = cancel
+          })
       )
     }
   }, [artifact, extraData.length, noData])
 
-  useEffect(() => {
-    return () => {
-      setPreview([])
-      setExtraData([])
-    }
-  }, [])
-
-  const artifactsPreviewClassNames = classnames(
-    artifact.target_path && 'artifact-preview__with-popout'
-  )
+  const cancelRequest = message => {
+    previewRef.current?.cancel && previewRef.current.cancel(message)
+  }
 
   return (
     <div className="preview_container">
@@ -83,4 +97,4 @@ DetailsPreview.propTypes = {
   handlePreview: PropTypes.func.isRequired
 }
 
-export default DetailsPreview
+export default React.memo(DetailsPreview, (prev, next) => isEqual(prev.artifact, next.artifact))
