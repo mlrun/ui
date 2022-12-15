@@ -146,14 +146,14 @@ export const getArtifactPreview = (
         ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
         : setPreview(previewContent)
     )
-  } else if (artifact.preview?.length > 0 && !artifact.target_path) {
-    setArtifactPreviewFromPreviewData(artifact, noData, setNoData, previewContent =>
+  } else if (artifact.target_path) {
+    fetchArtifactPreviewFromTargetPath(artifact, noData, setNoData, previewContent =>
       previewIsObject
         ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
         : setPreview(previewContent)
     )
-  } else if ((artifact.preview?.length === 0 || !artifact.preview) && artifact.target_path) {
-    fetchArtifactPreviewFromTargetPath(artifact, noData, setNoData, previewContent =>
+  } else if (artifact.preview?.length > 0) {
+    setArtifactPreviewFromPreviewData(artifact, noData, setNoData, previewContent =>
       previewIsObject
         ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
         : setPreview(previewContent)
