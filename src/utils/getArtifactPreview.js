@@ -52,7 +52,13 @@ export const setArtifactPreviewFromPreviewData = (artifact, noData, setNoData, s
   ])
 }
 
-export const fetchArtifactPreviewFromExtraData = (artifact, noData, setNoData, setPreview, cancelToken) => {
+export const fetchArtifactPreviewFromExtraData = (
+  artifact,
+  noData,
+  setNoData,
+  setPreview,
+  cancelToken
+) => {
   artifact.extra_data.forEach(previewItem => {
     fetchArtifactPreview(
       previewItem.path,
@@ -146,14 +152,14 @@ export const getArtifactPreview = (
         ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
         : setPreview(previewContent)
     )
-  } else if (artifact.preview?.length > 0 && !artifact.target_path) {
-    setArtifactPreviewFromPreviewData(artifact, noData, setNoData, previewContent =>
+  } else if (artifact.target_path) {
+    fetchArtifactPreviewFromTargetPath(artifact, noData, setNoData, previewContent =>
       previewIsObject
         ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
         : setPreview(previewContent)
     )
-  } else if ((artifact.preview?.length === 0 || !artifact.preview) && artifact.target_path) {
-    fetchArtifactPreviewFromTargetPath(artifact, noData, setNoData, previewContent =>
+  } else if (artifact.preview?.length > 0) {
+    setArtifactPreviewFromPreviewData(artifact, noData, setNoData, previewContent =>
       previewIsObject
         ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
         : setPreview(previewContent)
