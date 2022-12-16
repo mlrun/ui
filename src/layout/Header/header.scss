@@ -54,26 +54,23 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 44px;
-    height: 44px;
-    background-color: $pictonBlue;
-    border-radius: 50%;
     justify-content: center;
+    background-color: $cerulean;
+    border-radius: 50%;
+    color: $white;
+    padding: 8px;
+    transition: background-color 0.2s ease-in-out;
 
     & > * {
       fill: $white;
     }
-  }
 
-  &__link {
-    min-width: 64px;
-    margin-left: auto;
-    padding: 5px 15px;
-    color: $white;
-    font-weight: 500;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: $gitBorder;
-    border-radius: $mainBorderRadius;
+    &:hover {
+      background-color: $white;
+
+      & > * {
+        fill: $cerulean;
+      }
+    }
   }
 }

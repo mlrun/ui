@@ -47,6 +47,14 @@ const Header = () => {
           Documentation
         </a>
         <a
+          href="https://www.mlrun.org/hub/"
+          className="header__documentation"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Function Hub
+        </a>
+        <a
           href="https://go.iguazio.com/mlopslive/joincommunity"
           className="header__icon"
           target="_blank"
