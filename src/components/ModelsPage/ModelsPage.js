@@ -17,11 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback } from 'react'
-import { Outlet, useLocation, useParams } from 'react-router-dom'
+import React from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import {
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
@@ -31,11 +30,11 @@ import {
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
 import { tabs } from './modelsPage.util'
-import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
+// import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
-import { openPopUp } from 'igz-controls/utils/common.util'
+// import { openPopUp } from 'igz-controls/utils/common.util'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import { actionsMenuHeader } from './Models/models.util'
+// import { actionsMenuHeader } from './Models/models.util'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import './modelsPage.scss'
@@ -43,22 +42,24 @@ import './modelsPage.scss'
 const ModelsPage = () => {
   const location = useLocation()
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const params = useParams()
-  const { convertedYaml, fetchData, toggleConvertedYaml } = useModelsPage()
+  const { convertedYaml, toggleConvertedYaml } = useModelsPage()
 
-  const handleRegisterModel = useCallback(() => {
-    openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: fetchData })
-  }, [fetchData, params.projectName])
+  // const params = useParams()
+  // const { convertedYaml, fetchData, toggleConvertedYaml } = useModelsPage()
+
+  // const handleRegisterModel = useCallback(() => {
+  //   openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: fetchData })
+  // }, [fetchData, params.projectName])
   return (
     <>
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
-          <PageActionsMenu
+          {/* <PageActionsMenu
             actionsMenuHeader={actionsMenuHeader}
             onClick={handleRegisterModel}
             showActionsMenu={params['*'].includes(MODELS_TAB)}
-          />
+          /> */}
         </div>
         <div className="content content_with-menu">
           <ContentMenu

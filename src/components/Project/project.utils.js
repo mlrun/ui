@@ -71,13 +71,13 @@ export const generateCreateNewOptions = (
       openRegisterArtifactModal(ARTIFACT_TYPE)
     }
   },
-  {
-    label: 'Register Model',
-    id: 'registerModel',
-    handler: () => {
-      openRegisterModelModal()
-    }
-  },
+  // {
+  //   label: 'Register Model',
+  //   id: 'registerModel',
+  //   handler: () => {
+  //     openRegisterModelModal()
+  //   }
+  // },
   {
     label: 'Register Dataset',
     id: 'registerDataset',
