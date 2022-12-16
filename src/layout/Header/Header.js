@@ -29,12 +29,14 @@ import './header.scss'
 const Header = () => {
   return (
     <header className="header">
-      <Link to="/" className="header__brand">
-        <Logo className="header__logo" alt="MLRun" />
-      </Link>
-      <div>
-        <div>The Open Source MLOps</div>
-        <div>Orchestration Framework</div>
+      <div className="header__brand">
+        <Link to="/">
+          <Logo className="header__logo" alt="MLRun" />
+        </Link>
+        <div>
+          <div>The Open Source MLOps</div>
+          <div>Orchestration Framework</div>
+        </div>
       </div>
 
       <div className="header__actions">
@@ -55,6 +57,7 @@ const Header = () => {
           Function Hub
         </a>
         <a
+          alt="MLRUN on Slack"
           href="https://go.iguazio.com/mlopslive/joincommunity"
           className="header__icon"
           target="_blank"
@@ -63,6 +66,7 @@ const Header = () => {
           <SlackIcon />
         </a>
         <a
+          alt="MLRUN on Gihub"
           href="https://github.com/mlrun/mlrun"
           className="header__icon"
           target="_blank"
