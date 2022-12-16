@@ -20,25 +20,57 @@ such restriction.
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import logo from 'igz-controls/images/mlrun-logo-small.png'
+import { ReactComponent as Logo } from 'igz-controls/images/mlrun-blue-logo.svg'
+import { ReactComponent as GithubIcon } from 'igz-controls/images/github-icon.svg'
+import { ReactComponent as SlackIcon } from 'igz-controls/images/slack-icon.svg'
 
 import './header.scss'
 
 const Header = () => {
   return (
     <header className="header">
-      <Link to="/" className="header__logo">
-        <img src={logo} alt="MLRun" />
+      <Link to="/" className="header__brand">
+        <Logo className="header__logo" alt="MLRun" />
       </Link>
+      <div>
+        <div>The Open Source MLOps</div>
+        <div>Orchestration Framework</div>
+      </div>
 
-      <a
-        href="https://github.com/mlrun/mlrun"
-        className="header__link"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        See on GitHub
-      </a>
+      <div className="header__actions">
+        <a
+          href="https://docs.mlrun.org/en/latest/"
+          className="header__documentation"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Documentation
+        </a>
+        <a
+          href="https://www.mlrun.org/hub/"
+          className="header__documentation"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Function Hub
+        </a>
+        <a
+          href="https://go.iguazio.com/mlopslive/joincommunity"
+          className="header__icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <SlackIcon />
+        </a>
+        <a
+          href="https://github.com/mlrun/mlrun"
+          className="header__icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <GithubIcon />
+        </a>
+      </div>
     </header>
   )
 }
