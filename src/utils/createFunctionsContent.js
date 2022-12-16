@@ -45,7 +45,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               showTag: true,
               showStatus: true,
               expandedCellContent: {
-                value: formatDatetime(new Date(func.updated), 'N/A'),
+                value: formatDatetime(func.updated, 'N/A'),
                 class: 'functions_medium',
                 type: 'date',
                 showTag: true,
@@ -70,7 +70,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `updated.${func.ui.identifierUnique}`,
-              value: formatDatetime(new Date(func.updated), 'N/A'),
+              value: formatDatetime(func.updated, 'N/A'),
               class: 'functions_medium',
               type: 'date',
               showTag: true,
@@ -93,7 +93,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
                 return `/projects/${projectName}/functions/${hash}${`/${DETAILS_OVERVIEW_TAB}`}`
               },
               expandedCellContent: {
-                value: formatDatetime(new Date(func.updated), 'N/A'),
+                value: formatDatetime(func.updated, 'N/A'),
                 class: 'functions_medium',
                 type: 'date',
                 showTag: true,
@@ -120,7 +120,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             {
               id: `updated.${func.ui.identifierUnique}`,
               header: 'Updated',
-              value: formatDatetime(new Date(func.updated), 'N/A'),
+              value: formatDatetime(func.updated, 'N/A'),
               class: 'functions_small',
               type: 'date',
               showTag: true,

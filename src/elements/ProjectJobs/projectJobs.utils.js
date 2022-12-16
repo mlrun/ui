@@ -84,7 +84,7 @@ export const getJobsTableData = (jobs, projectName) => {
         },
         startTime: {
           value: formatDatetime(
-            new Date(job[0].status.start_time),
+            job[0].status.start_time,
             job[0].status.state === 'aborted' ? 'N/A' : 'Not yet started'
           ),
           className: 'table-cell_big'
