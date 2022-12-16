@@ -227,8 +227,8 @@ const Functions = ({
   }, [functions, navigate, params.hash, params.projectName])
 
   useEffect(() => {
-    dispatch(setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS }))
-  }, [dispatch, params.projectName])
+    setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS })
+  }, [setFilters, params.projectName])
 
   const filtersChangeCallback = filters => {
     if (
