@@ -63,11 +63,11 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
 
   const getTagOptions = useCallback((functionList, selectedFunctionName) => {
     return chain(functionList)
-      .filter(func => func.metadata.name === selectedFunctionName && func.metadata.tag !== '')
-      .uniqBy('metadata.tag')
+      .filter(func => func.name === selectedFunctionName && func.tag !== '')
+      .uniqBy('tag')
       .map(func => ({
-        label: func.metadata.tag,
-        id: func.metadata.tag
+        label: func.tag,
+        id: func.tag
       }))
       .value()
   }, [])
@@ -78,9 +78,9 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
         .unwrap()
         .then(functions => {
           const functionOptions = chain(functions)
-            .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
-            .uniqBy('metadata.name')
-            .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
+            .filter(func => func.type === 'serving' && func.graph?.kind === 'router')
+            .uniqBy('name')
+            .map(func => ({ label: func.name, id: func.name }))
             .value()
 
           if (functionOptions.length !== 0) {
@@ -109,13 +109,12 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
     if (!initialValues.className) {
       const selectedFunction = functionList.find(
         func =>
-          func.metadata.name === initialValues.selectedFunctionName &&
-          func.metadata.tag === initialValues.selectedTag
+          func.name === initialValues.selectedFunctionName && func.tag === initialValues.selectedTag
       )
 
       setInitialValues(prev => ({
         ...prev,
-        className: selectedFunction ? selectedFunction.spec.default_class : ''
+        className: selectedFunction ? selectedFunction.default_class : ''
       }))
     }
   }, [
@@ -135,13 +134,11 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
 
   const deployModel = values => {
     const servingFunction = functionList.find(
-      func =>
-        func.metadata.name === values.selectedFunctionName &&
-        func.metadata.tag === values.selectedTag
+      func => func.name === values.selectedFunctionName && func.tag === values.selectedTag
     )
     const classArguments = mapValues(keyBy(values.arguments, 'key'), 'value')
 
-    servingFunction.spec.graph.routes[values.modelName] = {
+    servingFunction.graph.routes[values.modelName] = {
       class_args: {
         model_path: generateUri(model, MODELS_TAB),
         ...classArguments
@@ -197,8 +194,8 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
   const onSelectedFunctionNameChange = currentValue => {
     const tags = getTagOptions(functionList, currentValue)
     const defaultClass = functionList.find(
-      func => func.metadata.name === currentValue && func.metadata.tag === tags[0].id
-    )?.spec?.default_class
+      func => func.name === currentValue && func.tag === tags[0].id
+    )?.default_class
 
     setTagOptionList(tags)
     formRef.current.change('selectedTag', tags[0]?.id ?? '')
