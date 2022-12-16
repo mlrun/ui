@@ -53,6 +53,7 @@ import {
   GROUP_BY_NAME,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
+  SHOW_UNTAGGED_ITEMS,
   TAG_LATEST
 } from '../../constants'
 import { DANGER_BUTTON, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
@@ -226,8 +227,8 @@ const Functions = ({
   }, [functions, navigate, params.hash, params.projectName])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NAME })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS }))
+  }, [dispatch, params.projectName])
 
   const filtersChangeCallback = filters => {
     if (
