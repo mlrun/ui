@@ -41,7 +41,13 @@ import { setFilters } from '../../reducers/filtersReducer'
 import functionsActions from '../../actions/functions'
 import { setNotification } from '../../reducers/notificationReducer'
 import jobsActions from '../../actions/jobs'
-import { FUNCTION_TYPE_SERVING, FUNCTIONS_PAGE, GROUP_BY_NAME, TAG_LATEST } from '../../constants'
+import {
+  FUNCTION_TYPE_SERVING,
+  FUNCTIONS_PAGE,
+  GROUP_BY_NAME,
+  SHOW_UNTAGGED_ITEMS,
+  TAG_LATEST
+} from '../../constants'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { useMode } from '../../hooks/mode.hook'
 import createFunctionsContent from '../../utils/createFunctionsContent'
@@ -316,8 +322,8 @@ const Functions = ({
   }, [functions, navigate, params.hash, params.projectName])
 
   useEffect(() => {
-    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
-  }, [dispatch])
+    dispatch(setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS }))
+  }, [dispatch, params.projectName])
 
   const filtersChangeCallback = filters => {
     if (

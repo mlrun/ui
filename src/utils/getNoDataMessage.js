@@ -160,7 +160,7 @@ const getChangedFiltersList = (filters, filtersStore) => {
       (type === DATE_RANGE_TIME_FILTER &&
         !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
       (type === ITERATIONS_FILTER && filtersStore.iter === SHOW_ITERATIONS) ||
-      (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged !== SHOW_UNTAGGED_ITEMS) ||
+      (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged === SHOW_UNTAGGED_ITEMS) ||
       (type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE)
     )
   })
