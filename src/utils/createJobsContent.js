@@ -368,14 +368,14 @@ export const createJobsWorkflowsTabContent = (
               {
                 header: 'Created at',
                 id: `createdAt.${identifierUnique}`,
-                value: formatDatetime(new Date(job.created_at), 'N/A'),
+                value: formatDatetime(job.created_at, 'N/A'),
                 class: 'table-cell-1',
                 hidden: isSelectedItem
               },
               {
                 header: 'Finished at',
                 id: `finishedAt.${identifierUnique}`,
-                value: formatDatetime(new Date(job.finished_at), 'N/A'),
+                value: formatDatetime(job.finished_at, 'N/A'),
                 class: 'table-cell-1',
                 hidden: isSelectedItem
               },

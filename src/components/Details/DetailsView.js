@@ -149,7 +149,7 @@ const DetailsView = React.forwardRef(
                       stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                     )
                   : selectedItem?.updated
-                  ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
+                  ? formatDatetime(selectedItem?.updated, 'N/A')
                   : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
                   ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
                   : selectedItem?.spec?.model

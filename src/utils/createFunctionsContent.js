@@ -46,7 +46,7 @@ const createFunctionsContent = (
               showTag: true,
               showStatus: true,
               expandedCellContent: {
-                value: formatDatetime(new Date(func.updated), 'N/A'),
+                value: formatDatetime(func.updated, 'N/A'),
                 class: 'functions_medium',
                 type: 'date',
                 showTag: true,
@@ -71,7 +71,7 @@ const createFunctionsContent = (
             },
             {
               id: `updated.${func.ui.identifierUnique}`,
-              value: formatDatetime(new Date(func.updated), 'N/A'),
+              value: formatDatetime(func.updated, 'N/A'),
               class: 'functions_medium',
               type: 'date',
               showTag: true,
@@ -106,7 +106,7 @@ const createFunctionsContent = (
           },
           updated: {
             id: `updated.${func.ui.identifierUnique}`,
-            value: formatDatetime(new Date(func.updated), 'N/A'),
+            value: formatDatetime(func.updated, 'N/A'),
             class: 'functions_small',
             type: 'date',
             showTag: true,

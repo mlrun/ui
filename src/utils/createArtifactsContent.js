@@ -87,7 +87,7 @@ const createArtifactsRowData = artifact => {
       type: 'owner'
     },
     updated: {
-      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+      value: formatDatetime(artifact.updated, 'N/A'),
       class: 'artifacts_small'
     },
     buttonPopout: {
@@ -162,7 +162,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
       {
         id: `updated.${artifact.ui.identifierUnique}`,
         header: 'Updated',
-        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       {
@@ -293,7 +293,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
       {
         id: `updated.${artifact.ui.identifierUnique}`,
         header: 'Updated',
-        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       {
@@ -407,13 +407,13 @@ export const createModelEndpointsRowData = (artifact, project) => {
       {
         id: `firstRequest.${artifact.ui.identifierUnique}`,
         header: 'Uptime',
-        value: formatDatetime(new Date(artifact.status?.first_request), '-'),
+        value: formatDatetime(artifact.status?.first_request, '-'),
         class: 'artifacts_small'
       },
       {
         id: `lastRequest.${artifact.ui.identifierUnique}`,
         header: 'Last prediction',
-        value: formatDatetime(new Date(artifact.status?.last_request), '-'),
+        value: formatDatetime(artifact.status?.last_request, '-'),
         class: 'artifacts_small'
       },
       {
@@ -498,7 +498,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
       {
         id: `updated.${artifact.ui.identifierUnique}`,
         header: 'Updated',
-        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       {
