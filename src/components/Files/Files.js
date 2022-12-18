@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
@@ -33,7 +33,6 @@ import {
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import filtersActions from '../../actions/filters'
 import {
   checkForSelectedFile,
   fetchFilesRowData,
@@ -48,19 +47,20 @@ import {
   removeFile,
   removeFiles
 } from '../../reducers/artifactsReducer'
-import { setNotification } from '../../reducers/notificationReducer'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Files = ({ getFilterTagOptions, setFilters }) => {
+const Files = () => {
   const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, ARTIFACT_OTHER_TYPE)
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
@@ -92,13 +92,20 @@ const Files = ({ getFilterTagOptions, setFilters }) => {
 
   const handleRefresh = useCallback(
     filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName, ARTIFACT_OTHER_TYPE)
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: ARTIFACT_OTHER_TYPE
+        })
+      )
       setSelectedRowData({})
       setFiles([])
 
       return fetchData(filters)
     },
-    [fetchData, getFilterTagOptions, params.projectName]
+    [dispatch, fetchData, params.projectName]
   )
 
   const handleAddTag = useCallback(
@@ -237,11 +244,11 @@ const Files = ({ getFilterTagOptions, setFilters }) => {
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.tag, filtersStore.iter, filtersStore.groupBy, setFilters])
+  }, [filtersStore.tag, filtersStore.iter, filtersStore.groupBy, dispatch])
 
   useEffect(() => {
     checkForSelectedFile(
@@ -290,4 +297,4 @@ const Files = ({ getFilterTagOptions, setFilters }) => {
   )
 }
 
-export default connect(null, { ...filtersActions })(Files)
+export default Files

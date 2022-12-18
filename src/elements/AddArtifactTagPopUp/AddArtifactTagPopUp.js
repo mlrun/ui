@@ -63,21 +63,25 @@ const AddArtifactTagPopUp = ({
           const tags = results.filter(result => result.tag).map(result => result.tag)
           setExistingTags(tags)
         })
-  }, [])
+  }, [dispatch, getArtifact])
 
   const addArtifactTag = values => {
+    const identifier = {
+      key: artifact.db_key || artifact.key,
+      kind: artifact.kind,
+      uid: artifact.uid ?? artifact.tree
+    }
+
+    if (artifact.iter !== 0) {
+      identifier.iter = artifact.iter
+    }
+
     const addTagArgs = {
       project: projectName,
       tag: values.artifactTag,
       data: {
         kind: 'artifact',
-        identifiers: [
-          {
-            key: artifact.db_key || artifact.key,
-            kind: artifact.kind,
-            uid: artifact.uid ?? artifact.tree
-          }
-        ]
+        identifiers: [identifier]
       }
     }
 

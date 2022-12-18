@@ -60,7 +60,7 @@ const ModelsPage = () => {
             showActionsMenu={params['*'].includes(MODELS_TAB)}
           />
         </div>
-        <div className="content content_with-menu">
+        <div className="content">
           <ContentMenu
             activeTab={
               location.pathname.includes(REAL_TIME_PIPELINES_TAB)

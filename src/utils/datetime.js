@@ -20,6 +20,10 @@ such restriction.
 import moment from 'moment'
 
 export const formatDatetime = (datetime, invalidDateMessage) => {
+  if (!datetime) {
+    return invalidDateMessage
+  }
+
   const date = new Date(datetime)
 
   return typeof date !== 'object' || !(date instanceof Date) || isNaN(date)

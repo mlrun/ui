@@ -24,15 +24,15 @@ import { orderBy } from 'lodash'
 
 import ModelEndpointsView from './ModelEndpointsView'
 
-import { generatePageData } from './modelEndpoints.util'
-import { useModelsPage } from '../ModelsPage.context'
-import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB } from '../../../constants'
-import filtersActions from '../../../actions/filters'
 import detailsActions from '../../../actions/details'
-import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
+import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB } from '../../../constants'
 import { cancelRequest } from '../../../utils/cancelRequest'
+import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
+import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
+import { generatePageData } from './modelEndpoints.util'
+import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { setFilters } from '../../../reducers/filtersReducer'
+import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -99,7 +99,7 @@ const ModelEndpoints = () => {
 
   useEffect(() => {
     fetchData({})
-    dispatch(filtersActions.setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' }))
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' }))
   }, [dispatch, fetchData])
 
   useEffect(() => {

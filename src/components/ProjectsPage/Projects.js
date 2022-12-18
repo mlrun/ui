@@ -35,8 +35,7 @@ import {
 import nuclioActions from '../../actions/nuclio'
 import { setNotification } from '../../reducers/notificationReducer'
 import projectsAction from '../../actions/projects'
-import { DANGER_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
@@ -100,6 +99,29 @@ const Projects = ({
     },
     [isDescendingOrder, sortProjectId]
   )
+
+  const refreshProjects = useCallback(() => {
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions()
+    }
+
+    removeProjects()
+    fetchProjects()
+    fetchProjectsNames()
+    fetchProjectsSummary(source.token)
+  }, [
+    fetchNuclioFunctions,
+    fetchProjects,
+    fetchProjectsNames,
+    fetchProjectsSummary,
+    isNuclioModeDisabled,
+    removeProjects,
+    source.token
+  ])
+
+  const handleSearchOnFocus = useCallback(() => {
+    refreshProjects()
+  }, [refreshProjects])
 
   const handleSelectSortOption = option => {
     setSortProjectId(option)
@@ -278,17 +300,6 @@ const Projects = ({
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
-  const refreshProjects = () => {
-    if (!isNuclioModeDisabled) {
-      fetchNuclioFunctions()
-    }
-
-    removeProjects()
-    fetchProjects()
-    fetchProjectsNames()
-    fetchProjectsSummary(source.token)
-  }
-
   const handleCreateProject = e => {
     e.preventDefault()
 
@@ -331,6 +342,7 @@ const Projects = ({
       filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
       handleSelectSortOption={handleSelectSortOption}
+      handleSearchOnFocus={handleSearchOnFocus}
       isDescendingOrder={isDescendingOrder}
       isNameValid={isNameValid}
       projectStore={projectStore}

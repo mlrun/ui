@@ -14,7 +14,7 @@ permissions and limitations under the License.
 
 In addition, you may not use the software for any purposes that are
 illegal under applicable law, and the grant of the foregoing license
-under the Apache 2.0 license is conditioned upon your compliance with
+under the Apache 2.0 license is conditioned upon your` compliance with
 such restriction.
 */
 import React from 'react'
@@ -37,13 +37,11 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useMode } from '../../hooks/mode.hook'
 import artifactApi from '../../api/artifacts-api'
 
 import './RegisterModelModal.scss'
 
 function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }) {
-  const { isDemoMode } = useMode()
   const initialValues = {
     metadata: {
       description: undefined,
@@ -51,14 +49,12 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
       key: undefined
     },
     spec: {
-      target_path: isDemoMode
-        ? {
-            fieldInfo: {
-              pathType: ''
-            },
-            path: ''
-          }
-        : undefined
+      target_path: {
+        fieldInfo: {
+          pathType: ''
+        },
+        path: ''
+      }
     }
   }
   const formRef = React.useRef(
@@ -72,6 +68,16 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
+
+  const isArtifactNameUnique = async value => {
+    if (!value) return
+
+    const {
+      data: { artifacts }
+    } = await artifactApi.getArtifact(projectName, value)
+
+    return artifacts.length === 0
+  }
 
   const registerModel = values => {
     const uid = uuidv4()
@@ -91,16 +97,14 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
           kind: 'api',
           uri: window.location.host
         },
-        target_path: isDemoMode ? values.spec.target_path.path : values.spec.target_path
+        target_path: values.spec.target_path.path
       },
       status: {},
       uid
     }
 
-    if (values.spec.target_path?.path?.includes('/') || values.spec.target_path?.includes('/')) {
-      const path = isDemoMode
-        ? values.spec.target_path.path.split(/([^/]*)$/)
-        : values.spec.target_path.split(/([^/]*)$/)
+    if (values.spec.target_path?.path?.includes('/')) {
+      const path = values.spec.target_path.path.split(/([^/]*)$/)
 
       data.spec.target_path = path[0]
       data.spec.model_file = path[1]
@@ -166,42 +170,44 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
           >
             <div className="form-row">
               <FormInput
+                async
                 label="Name"
                 name="metadata.key"
                 required
                 tip="Artifacts names in the same project must be unique."
-                validationRules={getValidationRules('artifact.name')}
+                validationRules={getValidationRules('artifact.name', {
+                  name: 'ArtifactExists',
+                  label: 'Artifact name should be unique',
+                  pattern: isArtifactNameUnique,
+                  async: true
+                })}
               />
             </div>
             <div className="form-row">
               <FormTextarea name="metadata.description" label="Description" maxLength={500} />
             </div>
             <div className="form-row">
-              {isDemoMode ? (
-                <TargetPath
-                  formState={formState}
-                  formStateFieldInfo="spec.target_path.fieldInfo"
-                  hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
-                  label="Target Path"
-                  name="spec.target_path.path"
-                  required
-                  selectPlaceholder="Path Scheme"
-                  setFieldState={formState.form.mutators.setFieldState}
-                />
-              ) : (
-                <FormInput name="spec.target_path" label="Target path" required />
-              )}
+              <TargetPath
+                formState={formState}
+                formStateFieldInfo="spec.target_path.fieldInfo"
+                hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
+                label="Target Path"
+                name="spec.target_path.path"
+                required
+                selectPlaceholder="Path Scheme"
+                setFieldState={formState.form.mutators.setFieldState}
+              />
             </div>
             <div className="form-row">
               <FormChipCell
                 chipOptions={getChipOptions('metrics')}
                 formState={formState}
                 initialValues={initialValues}
-                isEditMode
+                isEditable
                 label="labels"
                 name="metadata.labels"
                 shortChips
-                visibleChipsMaxLength="2"
+                visibleChipsMaxLength="all"
                 validationRules={{
                   key: getValidationRules('common.tag'),
                   value: getValidationRules('common.tag')

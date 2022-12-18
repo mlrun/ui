@@ -57,47 +57,6 @@ export const getFunctionsEditableTypes = isStagingMode => {
 }
 
 export const page = 'FUNCTIONS'
-export const getTableHeaders = isSelectedItem => [
-  {
-    header: 'Name',
-    class: 'functions_medium'
-  },
-  {
-    header: 'Kind',
-    class: 'functions_small',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Hash',
-    class: 'functions_small',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Updated',
-    class: 'functions_small',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Command',
-    class: 'functions_big',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Image',
-    class: 'functions_big',
-    hidden: isSelectedItem
-  },
-  {
-    header: 'Description',
-    class: 'functions_small',
-    hidden: isSelectedItem
-  },
-  {
-    header: '',
-    class: 'action_cell',
-    hidden: isSelectedItem
-  }
-]
 export const infoHeaders = [
   { label: 'Name', id: 'name' },
   { label: 'Kind', id: 'type' },

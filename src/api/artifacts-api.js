@@ -58,7 +58,7 @@ const artifactsApi = {
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  getArtifactPreview: (path, user, fileFormat) => {
+  getArtifactPreview: (path, user, fileFormat, cancelToken) => {
     const config = {
       params: { path }
     }
@@ -69,6 +69,10 @@ const artifactsApi = {
 
     if (['png', 'jpg', 'jpeg'].includes(fileFormat)) {
       config.responseType = 'blob'
+    }
+
+    if (cancelToken) {
+      config.cancelToken = cancelToken
     }
 
     return mainHttpClient.get('/files', config)

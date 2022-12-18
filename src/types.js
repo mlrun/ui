@@ -19,6 +19,10 @@ such restriction.
 */
 import PropTypes from 'prop-types'
 import {
+  DENSITY_CHUNKY,
+  DENSITY_DENSE,
+  DENSITY_MEDIUM,
+  DENSITY_NORMAL,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE
 } from './constants'
@@ -32,6 +36,13 @@ export const COMBOBOX_MATCHES = PropTypes.arrayOf(
     label: PropTypes.string.isRequired
   })
 )
+
+export const DENSITY_OPTIONS = PropTypes.oneOf([
+  DENSITY_DENSE,
+  DENSITY_NORMAL,
+  DENSITY_MEDIUM,
+  DENSITY_CHUNKY
+])
 
 export const CHIP = PropTypes.shape({
   delimiter: PropTypes.element,
@@ -62,24 +73,15 @@ export const CHIP_OPTIONS = PropTypes.shape({
     'amethyst'
   ]),
   boldValue: PropTypes.bool,
-  borderColor: PropTypes.oneOf([
-    'transparent',
-    'orange',
-    'green',
-    'purple',
-    'grey'
-  ]),
-  density: PropTypes.oneOf(['dense', 'normal', 'medium']),
+  borderColor: PropTypes.oneOf(['transparent', 'orange', 'green', 'purple', 'grey']),
+  density: DENSITY_OPTIONS,
   font: PropTypes.oneOf(['primary', 'white', 'green', 'purple', 'orange']),
   borderRadius: PropTypes.oneOf(['primary', 'secondary'])
 })
 
 export const CHIPS = PropTypes.arrayOf(CHIP)
 
-export const FUNCTION_PANEL_MODE = PropTypes.oneOf([
-  PANEL_EDIT_MODE,
-  PANEL_CREATE_MODE
-])
+export const FUNCTION_PANEL_MODE = PropTypes.oneOf([PANEL_EDIT_MODE, PANEL_CREATE_MODE])
 
 export const SELECT_OPTION = PropTypes.shape({
   disabled: PropTypes.bool,
@@ -135,3 +137,67 @@ export const INPUT_LINK = PropTypes.shape({
   show: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   url: PropTypes.string
 })
+
+export const CONTENT_MENU_TABS = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    hidden: PropTypes.bool,
+    preview: PropTypes.bool,
+    icon: PropTypes.element
+  })
+)
+
+export const SLIDER_TABS = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    tip: PropTypes.string,
+    hidden: PropTypes.bool
+  })
+)
+
+export const SCHEDULE_DATA = PropTypes.shape({
+  cron: PropTypes.string,
+  defaultCron: PropTypes.string,
+  activeOption: PropTypes.string.isRequired,
+  minute: PropTypes.string.isRequired,
+  hour: PropTypes.string.isRequired,
+  week: PropTypes.shape({
+    days: PropTypes.arrayOf(PropTypes.string).isRequired,
+    time: PropTypes.string
+  }),
+  day: PropTypes.shape({
+    time: PropTypes.string
+  }),
+  month: PropTypes.shape({
+    time: PropTypes.string
+  })
+})
+
+export const DAYS_OF_WEEK = PropTypes.arrayOf(
+  PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    index: PropTypes.number.isRequired
+  })
+)
+
+export const DATA_INPUT_STATE = PropTypes.shape({
+  artifacts: PropTypes.array.isRequired,
+  artifactsReferences: PropTypes.array.isRequired,
+  comboboxMatches: PropTypes.array.isRequired,
+  featureVectors: PropTypes.array.isRequired,
+  featureVectorsReferences: PropTypes.array.isRequired,
+  inputProjectItemPathEntered: PropTypes.bool.isRequired,
+  inputProjectItemReferencePathEntered: PropTypes.bool.isRequired,
+  inputProjectPathEntered: PropTypes.bool.isRequired,
+  inputStorePathTypeEntered: PropTypes.bool.isRequired,
+  project: PropTypes.string.isRequired,
+  projectItemReference: PropTypes.string.isRequired,
+  projects: PropTypes.array.isRequired,
+  storePathType: PropTypes.string.isRequired
+})
+
+export const SLIDER_STYLE_1 = 'style1'
+export const SLIDER_STYLE_2 = 'style2'

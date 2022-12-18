@@ -48,6 +48,7 @@ import {
   MODELS_TAB
 } from '../../constants'
 import { formatDatetime, generateLinkPath } from '../../utils'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
@@ -102,7 +103,7 @@ export const generateArtifactsContent = (
           : ''
       },
       last_prediction: {
-        value: formatDatetime(new Date(selectedItem?.status?.last_request), '-')
+        value: formatDatetime(selectedItem?.status?.last_request, '-')
       },
       error_count: {
         value: selectedItem?.status?.error_count ?? '-'
@@ -123,6 +124,7 @@ export const generateArtifactsContent = (
         value: selectedItem.tag ?? '',
         editModeEnabled: true,
         editModeType: 'input',
+        validationRules: getValidationRules('common.tag'),
         onChange: value => editInput(value, 'tag')
       },
       iter: {
@@ -161,7 +163,7 @@ export const generateArtifactsContent = (
         value: selectedItem.tree
       },
       updated: {
-        value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+        value: formatDatetime(selectedItem.updated, 'N/A')
       },
       framework: {
         value: detailsType === MODELS_TAB ? selectedItem.framework ?? '' : null
@@ -260,7 +262,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.build.code_origin ?? ''
   },
   updated: {
-    value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+    value: formatDatetime(selectedItem.updated, 'N/A')
   },
   command: {
     value: selectedItem.command
@@ -426,7 +428,7 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.tag
   },
   updated: {
-    value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+    value: formatDatetime(selectedItem.updated, 'N/A')
   },
   usage_example: {
     value: selectedItem.usage_example ?? ''
@@ -465,7 +467,7 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     copyToClipboard: true
   },
   updated: {
-    value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+    value: formatDatetime(selectedItem.updated, 'N/A')
   },
   entities: {
     value: selectedItem.index_keys?.join(', ')
@@ -484,8 +486,7 @@ export const handleFinishEdit = (
   detailsTabDispatch,
   detailsTabState,
   setChangesData,
-  setChangesCounter,
-  changesCounter
+  setChangesCounter
 ) => {
   detailsTabDispatch({
     type: detailsTabActions.RESET_EDIT_MODE

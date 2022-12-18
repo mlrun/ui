@@ -27,13 +27,17 @@ import Download from '../../common/Download/Download'
 import { Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 
 import { formatDatetime } from '../../utils'
-import { getArtifactPreview } from '../../utils/getArtifactPreview'
+import {
+  fetchArtifactPreviewFromExtraData,
+  getArtifactPreview
+} from '../../utils/getArtifactPreview'
 import { closeArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import './previewModal.scss'
 
 const PreviewModal = ({ item }) => {
   const [preview, setPreview] = useState([])
+  const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
   const dispatch = useDispatch()
 
@@ -42,6 +46,21 @@ const PreviewModal = ({ item }) => {
       getArtifactPreview(item, noData, setNoData, setPreview)
     }
   }, [item, noData, preview.length])
+
+  useEffect(() => {
+    if (item.extra_data && extraData.length === 0) {
+      fetchArtifactPreviewFromExtraData(item, noData, setNoData, previewContent =>
+        setExtraData(state => [...state, previewContent])
+      )
+    }
+  }, [item, extraData.length, noData])
+
+  useEffect(() => {
+    return () => {
+      setPreview([])
+      setExtraData([])
+    }
+  }, [])
 
   return (
     <PopUpDialog
@@ -70,7 +89,7 @@ const PreviewModal = ({ item }) => {
               </div>
             )}
             <div className="item-data">
-              {formatDatetime(new Date(item.updated || item.date), 'N/A')}
+              {formatDatetime(item.updated || item.date, 'N/A')}
             </div>
             <div className="preview-body__download">
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
@@ -82,7 +101,7 @@ const PreviewModal = ({ item }) => {
             </div>
           </div>
           <div className="item-artifacts__preview">
-            <ArtifactsPreview noData={noData} preview={preview} />
+            <ArtifactsPreview extraData={extraData} noData={noData} preview={preview} />
           </div>
         </div>
       </div>

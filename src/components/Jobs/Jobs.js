@@ -21,27 +21,36 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
-import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
+import {
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  PANEL_CREATE_MODE,
+  SCHEDULE_TAB
+} from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
+import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
+import { useMode } from '../../hooks/mode.hook'
 
 export const JobsContext = React.createContext({})
 
 const Jobs = ({ fetchJobFunction }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
+  const [jobWizardMode, setJobWizardMode] = useState(null)
+  const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { isDemoMode } = useMode()
   const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
@@ -51,18 +60,31 @@ const Jobs = ({ fetchJobFunction }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   const handleActionsMenuClick = () => {
-    const tab = location.pathname.includes(MONITOR_JOBS_TAB)
-      ? MONITOR_JOBS_TAB
-      : location.pathname.includes(SCHEDULE_TAB)
-      ? SCHEDULE_TAB
-      : MONITOR_WORKFLOWS_TAB
+    if (isDemoMode) {
+      setJobWizardMode(PANEL_CREATE_MODE)
+    } else {
+      // todo: delete when the job wizard is out of the demo mode
+      const tab = location.pathname.includes(MONITOR_JOBS_TAB)
+        ? MONITOR_JOBS_TAB
+        : location.pathname.includes(SCHEDULE_TAB)
+        ? SCHEDULE_TAB
+        : MONITOR_WORKFLOWS_TAB
 
-    navigate(`/projects/${params.projectName}/jobs/${tab}/create-new-job`)
+      navigate(`/projects/${params.projectName}/jobs/${tab}/create-new-job`)
+    }
   }
 
   const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setNotification, setEditableItem, dispatch),
-    [dispatch, fetchJobFunction]
+    async job =>
+      await rerunJob(
+        job,
+        fetchJobFunction,
+        setEditableItem,
+        isDemoMode,
+        setJobWizardMode,
+        dispatch
+      ),
+    [fetchJobFunction, isDemoMode, dispatch]
   )
 
   const handleMonitoring = useCallback(
@@ -107,7 +129,7 @@ const Jobs = ({ fetchJobFunction }) => {
             showActionsMenu={true}
           />
         </div>
-        <div className="content content_with-menu">
+        <div className="content">
           <ContentMenu
             activeTab={
               location.pathname.includes(MONITOR_JOBS_TAB)
@@ -125,8 +147,12 @@ const Jobs = ({ fetchJobFunction }) => {
                 editableItem,
                 handleMonitoring,
                 handleRerunJob,
+                jobWizardIsOpened,
+                jobWizardMode,
                 setConfirmData,
-                setEditableItem
+                setEditableItem,
+                setJobWizardIsOpened,
+                setJobWizardMode
               }}
             >
               <Outlet />
