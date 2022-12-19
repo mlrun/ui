@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { chain, keyBy, mapValues } from 'lodash'
+import { chain, cloneDeep, keyBy, mapValues } from 'lodash'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
@@ -28,6 +28,7 @@ import { OnChange } from 'react-final-form-listeners'
 import { useLocation } from 'react-router-dom'
 
 import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
+import Loader from '../../common/Loader/Loader'
 
 import { setNotification } from '../../reducers/notificationReducer'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -51,6 +52,7 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
     selectedFunctionName: '',
     arguments: []
   })
+  const [showLoader, setShowLoader] = useState(false)
   const dispatch = useDispatch()
 
   const formRef = React.useRef(
@@ -74,6 +76,7 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
 
   useEffect(() => {
     if (functionOptionList.length === 0) {
+      setShowLoader(true)
       dispatch(fetchArtifactsFunctions({ project: model.project, filters: {} }))
         .unwrap()
         .then(functions => {
@@ -88,6 +91,8 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
             setFunctionOptionList(functionOptions)
             setInitialValues(prev => ({ ...prev, selectedFunctionName: functionOptions[0].id }))
           }
+
+          setShowLoader(false)
         })
     }
   }, [dispatch, functionOptionList.length, initialValues.selectedFunctionName, model.project])
@@ -137,8 +142,9 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
       func => func.name === values.selectedFunctionName && func.tag === values.selectedTag
     )
     const classArguments = mapValues(keyBy(values.arguments, 'key'), 'value')
+    const servingFunctionCopy = cloneDeep(servingFunction)
 
-    servingFunction.graph.routes[values.modelName] = {
+    servingFunctionCopy.graph.routes[values.modelName] = {
       class_args: {
         model_path: generateUri(model, MODELS_TAB),
         ...classArguments
@@ -147,7 +153,7 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
       kind: 'task'
     }
 
-    return dispatch(buildFunction({ funcData: { function: servingFunction } }))
+    return dispatch(buildFunction({ funcData: { function: servingFunctionCopy } }))
       .unwrap()
       .then(response => {
         formRef.current = null
@@ -203,71 +209,74 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
   }
 
   return (
-    <Form
-      form={formRef.current}
-      initialValues={initialValues}
-      mutators={{ ...arrayMutators, setFieldState }}
-      onSubmit={deployModel}
-    >
-      {formState => {
-        return (
-          <Modal
-            actions={getModalActions(formState)}
-            className="deploy-model"
-            location={location}
-            onClose={handleCloseModal}
-            show={isOpen}
-            size={MODAL_SM}
-            title="Deploy model"
-          >
-            <div className="form">
-              <div className="form-row">
-                <div className="form-col-2">
-                  <FormSelect
-                    className="form-field__router"
-                    disabled={functionOptionList.length === 0}
-                    label="Serving function (router)"
-                    name="selectedFunctionName"
-                    options={functionOptionList}
+    <>
+      {showLoader && <Loader />}
+      <Form
+        form={formRef.current}
+        initialValues={initialValues}
+        mutators={{ ...arrayMutators, setFieldState }}
+        onSubmit={deployModel}
+      >
+        {formState => {
+          return (
+            <Modal
+              actions={getModalActions(formState)}
+              className="deploy-model"
+              location={location}
+              onClose={handleCloseModal}
+              show={isOpen}
+              size={MODAL_SM}
+              title="Deploy model"
+            >
+              <div className="form">
+                <div className="form-row">
+                  <div className="form-col-2">
+                    <FormSelect
+                      className="form-field__router"
+                      disabled={functionOptionList.length === 0}
+                      label="Serving function (router)"
+                      name="selectedFunctionName"
+                      options={functionOptionList}
+                      required
+                    />
+                    <OnChange name="selectedFunctionName">{onSelectedFunctionNameChange}</OnChange>
+                  </div>
+                  <div className="form-col-1">
+                    <FormSelect
+                      label="Tag"
+                      name="selectedTag"
+                      search
+                      disabled={tagOptionList.length === 0}
+                      options={tagOptionList}
+                      required
+                    />
+                  </div>
+                  <div className="form-col-1">
+                    <FormInput name="className" label="Class" required />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <FormInput
+                    name="modelName"
+                    label="Model name"
                     required
-                  />
-                  <OnChange name="selectedFunctionName">{onSelectedFunctionNameChange}</OnChange>
-                </div>
-                <div className="form-col-1">
-                  <FormSelect
-                    label="Tag"
-                    name="selectedTag"
-                    search
-                    disabled={tagOptionList.length === 0}
-                    options={tagOptionList}
-                    required
+                    validationRules={getValidationRules('artifact.name')}
+                    tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
                   />
                 </div>
-                <div className="form-col-1">
-                  <FormInput name="className" label="Class" required />
-                </div>
-              </div>
-              <div className="form-row">
-                <FormInput
-                  name="modelName"
-                  label="Model name"
-                  required
-                  validationRules={getValidationRules('artifact.name')}
-                  tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
+                <FormKeyValueTable
+                  keyHeader="Class argument name"
+                  keyLabel="Class argument name"
+                  addNewItemLabel="Add class argument"
+                  name="arguments"
+                  formState={formState}
                 />
               </div>
-              <FormKeyValueTable
-                keyHeader="Class argument name"
-                keyLabel="Class argument name"
-                addNewItemLabel="Add class argument"
-                name="arguments"
-                formState={formState}
-              />
-            </div>
-          </Modal>
-        )
-      }}
-    </Form>
+            </Modal>
+          )
+        }}
+      </Form>
+    </>
   )
 }
 
