@@ -401,20 +401,20 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `labels.${artifact.ui.identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(artifact.metadata?.labels),
-        class: 'artifacts_big',
+        class: 'artifacts_medium',
         type: 'labels'
       },
       {
         id: `firstRequest.${artifact.ui.identifierUnique}`,
         header: 'Uptime',
         value: formatDatetime(artifact.status?.first_request, '-'),
-        class: 'artifacts_small'
+        class: 'artifacts_medium'
       },
       {
         id: `lastRequest.${artifact.ui.identifierUnique}`,
         header: 'Last prediction',
         value: formatDatetime(artifact.status?.last_request, '-'),
-        class: 'artifacts_small'
+        class: 'artifacts_medium'
       },
       {
         id: `averageLatency.${artifact.ui.identifierUnique}`,
