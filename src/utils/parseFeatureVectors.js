@@ -38,8 +38,8 @@ export const parseFeatureVectors = featureVectors =>
       URI: generateUri(item, FEATURE_VECTORS_TAB),
       ui: {
         originalContent: featureVector,
-        identifier: getFeatureVectorIdentifier(featureVector),
-        identifierUnique: getFeatureVectorIdentifier(featureVector, true)
+        identifier: getFeatureVectorIdentifier(item),
+        identifierUnique: getFeatureVectorIdentifier(item, true)
       }
     }
   })
