@@ -64,7 +64,7 @@ const ProjectDataCard = ({ content, href, link, params, statistics, table, title
             </a>
           ) : (
             <Link className="link project-data-card__see-all-link" to={link}>
-              See all
+              See all recent
             </Link>
           )}
         </>

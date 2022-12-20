@@ -34,7 +34,7 @@ import { ReactComponent as NuclioIcon } from 'igz-controls/images/realtime-icon.
 import { ReactComponent as PackageIcon } from 'igz-controls/images/package.svg'
 // import { ReactComponent as RTPiplinesIcon } from 'igz-controls/images/timer-outline-icon.svg'
 
-export const getLinks = (projectName, isDemoMode) => {
+export const getLinks = projectName => {
   const pathname = `/projects/${projectName}`
 
   return [
@@ -43,7 +43,6 @@ export const getLinks = (projectName, isDemoMode) => {
       id: 'home',
       label: 'Project home',
       link: `${pathname}`,
-      hidden: !isDemoMode,
       end: true
     },
     {
