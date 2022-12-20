@@ -47,6 +47,7 @@ const DetailsInfoView = React.forwardRef(
       detailsInfoDispatch,
       detailsInfoState,
       detailsStore,
+      handleDiscardChanges,
       handleFinishEdit,
       handleInfoItemClick,
       pageData,
@@ -156,6 +157,7 @@ const DetailsInfoView = React.forwardRef(
                         detailsInfoDispatch={detailsInfoDispatch}
                         editableFieldType={detailsInfoState.editMode.fieldType}
                         func={func}
+                        handleDiscardChanges={handleDiscardChanges}
                         handleFinishEdit={handleFinishEdit}
                         info={info}
                         isFieldInEditMode={detailsInfoState.editMode.field === header.id}

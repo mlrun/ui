@@ -48,6 +48,7 @@ const DetailsInfoItem = React.forwardRef(
       detailsInfoDispatch,
       editableFieldType,
       func,
+      handleDiscardChanges,
       handleFinishEdit,
       info,
       isFieldInEditMode,
@@ -95,16 +96,13 @@ const DetailsInfoItem = React.forwardRef(
             {editableFieldType === 'textarea' && (
               <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
             )}
-            {inputIsValid && (
-              <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
-                <Checkmark />
-              </RoundedIcon>
-            )}
+
+            <RoundedIcon disabled={!inputIsValid} onClick={handleFinishEdit} tooltipText="Apply">
+              <Checkmark />
+            </RoundedIcon>
 
             <RoundedIcon
-              onClick={() => {
-                console.log(currentField, item?.editModeType, info, item)
-              }}
+              onClick={() => handleDiscardChanges(currentField)}
               tooltipText="Discard changes"
             >
               <Close />
