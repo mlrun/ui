@@ -32,7 +32,8 @@ import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/componen
 import { CHIP_OPTIONS } from '../../types'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 
-import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 
@@ -47,6 +48,7 @@ const DetailsInfoItem = React.forwardRef(
       detailsInfoDispatch,
       editableFieldType,
       func,
+      handleDiscardChanges,
       handleFinishEdit,
       info,
       isFieldInEditMode,
@@ -94,13 +96,17 @@ const DetailsInfoItem = React.forwardRef(
             {editableFieldType === 'textarea' && (
               <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
             )}
-            {inputIsValid && (
-              <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-                <RoundedIcon onClick={handleFinishEdit} tooltipText="Apply">
-                  <Checkmark className="details-item__apply-btn" />
-                </RoundedIcon>
-              </Tooltip>
-            )}
+
+            <RoundedIcon disabled={!inputIsValid} onClick={handleFinishEdit} tooltipText="Apply">
+              <Checkmark />
+            </RoundedIcon>
+
+            <RoundedIcon
+              onClick={() => handleDiscardChanges(currentField)}
+              tooltipText="Discard changes"
+            >
+              <Close />
+            </RoundedIcon>
           </div>
         )
       }

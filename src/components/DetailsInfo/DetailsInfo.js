@@ -67,6 +67,20 @@ const DetailsInfo = React.forwardRef(
       }
     }, [onApplyChanges])
 
+    const handleDiscardChanges = field => {
+      detailsInfoDispatch({
+        type: detailsInfoActions.RESET_EDIT_MODE
+      })
+
+      setChangesData({
+        ...detailsStore.changes.data,
+        [field]: {
+          ...detailsStore.changes.data[field],
+          currentFieldValue: detailsStore.changes.data[field]?.initialFieldValue
+        }
+      })
+    }
+
     const handleInfoItemClick = (field, fieldType, info) => {
       if (isEveryObjectValueEmpty(detailsInfoState.editMode)) {
         detailsInfoDispatch({
@@ -112,6 +126,7 @@ const DetailsInfo = React.forwardRef(
         detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
         detailsStore={detailsStore}
+        handleDiscardChanges={handleDiscardChanges}
         handleFinishEdit={() =>
           handleFinishEdit(
             Object.keys(detailsStore.changes.data),
