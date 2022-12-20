@@ -90,7 +90,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
     <div className="project-overview">
       <div className="project-overview__header">
         <div className="project-overview__header-row">
-          <div>
+          <div className="project-overview__header-col">
             <div className="project-overview__header-title">
               {params.projectName}
               <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>

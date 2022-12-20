@@ -23,11 +23,14 @@
       &-row {
         display: flex;
         flex-flow: column nowrap;
-        justify-content: space-between;
 
         @media screen and (min-width: 1024px) {
           flex-flow: row nowrap;
         }
+      }
+
+      &-col {
+        flex: 1;
       }
 
       &-title {
@@ -127,18 +130,13 @@
         justify-content: center;
 
         & > * {
+          font-size: 14px;
           padding: 5px 10px;
           text-transform: capitalize;
           cursor: pointer;
 
           &:not(:last-child) {
             border-right: $dividerBorder;
-            // margin: 0 10px 0 0;
-
-            // &::after {
-            //   content: '';
-            //   margin-left: 10px;
-            // }
           }
         }
       }
@@ -168,7 +166,7 @@
   }
 
   &__bottom {
-    padding: 1em;
+    padding: 1em 0;
     border-top: 1px solid $athensGray;
   }
 
