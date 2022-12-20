@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 
+import JobWizard from '../../JobWizard/JobWizard'
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
@@ -51,8 +52,8 @@ export const handleClick = (navigate, openPopUp) => handler => {
     : navigate(target.path)
 }
 
-export const getInitialCards = (projectName, navigate) => {
-  const base_url = `/projects/${projectName}`
+export const getInitialCards = (params, navigate, isDemoMode) => {
+  const base_url = `/projects/${params.projectName}`
 
   return {
     collection: {
@@ -122,7 +123,7 @@ export const getInitialCards = (projectName, navigate) => {
               // }],
 
               artifactKind: DATASET_TYPE,
-              projectName,
+              projectName: params.projectName,
               refresh: () => {},
               title: 'Register dataset'
             },
@@ -173,7 +174,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   variant: SECONDARY_BUTTON
               // }],
               artifactKind: ARTIFACT_TYPE,
-              projectName,
+              projectName: params.projectName,
               refresh: () => {},
               title: 'Register artifact'
             },
@@ -240,10 +241,20 @@ export const getInitialCards = (projectName, navigate) => {
         {
           id: 'createnewjob',
           icon: <CreateJobIcon />,
-          handleClick: () => ({
-            path: `${base_url}/jobs/monitor-jobs/create-new-job`
-          }),
-          label: 'Run batch',
+          handleClick: () =>
+            isDemoMode
+              ? {
+                  component: JobWizard,
+                  props: {
+                    params
+                  },
+                  type: 'modal'
+                }
+              : {
+                  // todo: delete this object when the job wizard is out of the demo mode
+                  path: `${base_url}/jobs/monitor-jobs/create-new-job`
+                },
+          label: 'Create New Job',
           tooltip: ''
         },
         {
@@ -286,7 +297,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              projectName,
+              projectName: params.projectName,
               refresh: () => {}
             },
             type: 'modal'

@@ -120,7 +120,6 @@ const ScheduleRecurring = ({
         </span>
         {['day', 'month', 'week'].includes(scheduleRepeatActiveOption) && (
           <TimePicker
-            hideLabel
             value={
               recurringState.scheduleRepeat[scheduleRepeatActiveOption].time
             }

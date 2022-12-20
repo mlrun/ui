@@ -20,6 +20,7 @@ such restriction.
 import { generateUsageSnippets } from './generateUsageSnippets'
 import { FEATURE_VECTORS_TAB } from '../constants'
 import { generateUri } from './resources'
+import { getFeatureVectorIdentifier } from './getUniqueIdentifier'
 
 export const parseFeatureVectors = featureVectors =>
   featureVectors.map(featureVector => {
@@ -36,7 +37,9 @@ export const parseFeatureVectors = featureVectors =>
       usage_example: generateUsageSnippets(FEATURE_VECTORS_TAB, item),
       URI: generateUri(item, FEATURE_VECTORS_TAB),
       ui: {
-        originalContent: featureVector
+        originalContent: featureVector,
+        identifier: getFeatureVectorIdentifier(item),
+        identifierUnique: getFeatureVectorIdentifier(item, true)
       }
     }
   })

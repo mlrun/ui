@@ -31,7 +31,6 @@ import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '
 import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
 import workflowsActions from '../../../actions/workflow'
-import filtersActions from '../../../actions/filters'
 import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
@@ -141,6 +140,5 @@ export const monitorWorkflowsActionCreator = {
   removeFunctionLogs: functionsActions.removeFunctionLogs,
   removeJobLogs: jobsActions.removeJobLogs,
   removeNewJob: jobsActions.removeNewJob,
-  resetWorkflow: workflowsActions.resetWorkflow,
-  setFilters: filtersActions.setFilters
+  resetWorkflow: workflowsActions.resetWorkflow
 }

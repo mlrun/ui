@@ -26,7 +26,9 @@ import {
   FILES_PAGE,
   MODELS_PAGE,
   MODELS_TAB,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  BUTTON_COPY_URI_CELL_TYPE,
+  ARTIFACTS
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
@@ -35,7 +37,6 @@ import { copyToClipboard } from './copyToClipboard'
 import { generateUri } from './resources'
 import { generateLinkPath, parseUri, truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
-import { getArtifactIdentifier } from './getUniqueIdentifier'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
@@ -86,7 +87,7 @@ const createArtifactsRowData = artifact => {
       type: 'owner'
     },
     updated: {
-      value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+      value: formatDatetime(artifact.updated, 'N/A'),
       class: 'artifacts_small'
     },
     buttonPopout: {
@@ -104,20 +105,14 @@ const createArtifactsRowData = artifact => {
 
 export const createModelsRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
     data: {
-      ...artifact,
-      ui: {
-        ...artifact.ui,
-        identifier: getArtifactIdentifier(artifact),
-        identifierUnique: identifierUnique
-      }
+      ...artifact
     },
     content: [
       {
-        id: `key.${identifierUnique}`,
+        id: `key.${artifact.ui.identifierUnique}`,
         header: 'Name',
         value: artifact.db_key,
         class: 'artifacts_medium',
@@ -144,41 +139,41 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         showExpandButton
       },
       {
-        id: `labels.${identifierUnique}`,
+        id: `labels.${artifact.ui.identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(artifact.labels),
         class: 'artifacts_extra-small',
         type: 'labels'
       },
       {
-        id: `producer.${identifierUnique}`,
+        id: `producer.${artifact.ui.identifierUnique}`,
         header: 'Producer',
         value: artifact.producer,
         class: 'artifacts_small',
         type: 'producer'
       },
       {
-        id: `owner.${identifierUnique}`,
+        id: `owner.${artifact.ui.identifierUnique}`,
         header: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
         type: 'owner'
       },
       {
-        id: `updated.${identifierUnique}`,
+        id: `updated.${artifact.ui.identifierUnique}`,
         header: 'Updated',
-        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       {
-        id: `metrics.${identifierUnique}`,
+        id: `metrics.${artifact.ui.identifierUnique}`,
         header: 'Metrics',
         value: parseKeyValues(artifact.metrics),
         class: 'artifacts_big',
         type: 'metrics'
       },
       {
-        id: `frameWorkAndAlgorithm.${identifierUnique}`,
+        id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
         header: (
           <span>
             <span>Framework &</span>
@@ -199,29 +194,29 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         class: 'artifacts_small'
       },
       {
-        id: `version.${identifierUnique}`,
+        id: `version.${artifact.ui.identifierUnique}`,
         value: artifact.tag,
         class: 'artifacts_small',
         type: 'hidden'
       },
       {
-        id: `buttonPopout.${identifierUnique}`,
+        id: `buttonPopout.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonPopout'
       },
       {
-        id: `buttonDownload.${identifierUnique}`,
+        id: `buttonDownload.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonDownload'
       },
       {
-        id: `buttonCopy.${identifierUnique}`,
+        id: `buttonCopy.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+        type: BUTTON_COPY_URI_CELL_TYPE,
+        actionHandler: item => copyToClipboard(generateUri(item, MODELS_TAB))
       }
     ]
   }
@@ -229,20 +224,14 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
 
 export const createFilesRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
     data: {
-      ...artifact,
-      ui: {
-        ...artifact.ui,
-        identifier: getArtifactIdentifier(artifact),
-        identifierUnique: identifierUnique
-      }
+      ...artifact
     },
     content: [
       {
-        id: `key.${identifierUnique}`,
+        id: `key.${artifact.ui.identifierUnique}`,
         header: 'Name',
         value: artifact.db_key,
         class: 'artifacts_medium',
@@ -269,68 +258,68 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         showExpandButton
       },
       {
-        id: `version.${identifierUnique}`,
+        id: `version.${artifact.ui.identifierUnique}`,
         value: artifact.tag,
         class: 'artifacts_small',
         type: 'hidden'
       },
       {
-        id: `kind.${identifierUnique}`,
+        id: `kind.${artifact.ui.identifierUnique}`,
         header: 'Type',
         value: artifact.kind,
         class: 'artifacts_extra-small'
       },
       {
-        id: `labels.${identifierUnique}`,
+        id: `labels.${artifact.ui.identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(artifact.labels),
         class: 'artifacts_big',
         type: 'labels'
       },
       {
-        id: `producer.${identifierUnique}`,
+        id: `producer.${artifact.ui.identifierUnique}`,
         header: 'Producer',
         value: artifact.producer || {},
         class: 'artifacts_small',
         type: 'producer'
       },
       {
-        id: `owner.${identifierUnique}`,
+        id: `owner.${artifact.ui.identifierUnique}`,
         header: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
         type: 'owner'
       },
       {
-        id: `updated.${identifierUnique}`,
+        id: `updated.${artifact.ui.identifierUnique}`,
         header: 'Updated',
-        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       {
-        id: `size.${identifierUnique}`,
+        id: `size.${artifact.ui.identifierUnique}`,
         header: 'Size',
         value: artifact.size ? convertBytes(artifact.size) : 'N/A',
         class: 'artifacts_small'
       },
       {
-        id: `buttonPopout.${identifierUnique}`,
+        id: `buttonPopout.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonPopout'
       },
       {
-        id: `buttonDownload.${identifierUnique}`,
+        id: `buttonDownload.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonDownload'
       },
       {
-        id: `buttonCopy.${identifierUnique}`,
+        id: `buttonCopy.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? 'artifacts'))
+        type: BUTTON_COPY_URI_CELL_TYPE,
+        actionHandler: item => copyToClipboard(generateUri(item, ARTIFACTS))
       }
     ]
   }
@@ -359,20 +348,14 @@ export const createModelEndpointsRowData = (artifact, project) => {
     : ''
   const { key: functionName } = parseUri(functionUri)
   const averageLatency = artifact.status?.metrics?.latency_avg_1h?.values?.[0]?.[1]
-  const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
     data: {
-      ...artifact,
-      ui: {
-        ...artifact.ui,
-        identifier: getArtifactIdentifier(artifact),
-        identifierUnique: identifierUnique
-      }
+      ...artifact
     },
     content: [
       {
-        id: `key.${identifierUnique}`,
+        id: `key.${artifact.ui.identifierUnique}`,
         header: 'Name',
         value: name,
         class: 'artifacts_medium',
@@ -389,7 +372,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         tooltip: artifact.spec?.model_uri ? `${name} - ${artifact.spec?.model_uri}` : name
       },
       {
-        id: `functionName.${identifierUnique}`,
+        id: `functionName.${artifact.ui.identifierUnique}`,
         header: 'Function',
         value: functionName,
         class: 'artifacts_small',
@@ -397,56 +380,56 @@ export const createModelEndpointsRowData = (artifact, project) => {
         tooltip: functionUri
       },
       {
-        id: `state.${identifierUnique}`,
+        id: `state.${artifact.ui.identifierUnique}`,
         value: artifact.status?.state,
         class: 'artifacts_extra-small',
         type: 'hidden'
       },
       {
-        id: `version.${identifierUnique}`,
+        id: `version.${artifact.ui.identifierUnique}`,
         header: 'Version',
         value: artifact?.status?.children ? 'Router' : tag,
         class: 'artifacts_extra-small'
       },
       {
-        id: `modelClass.${identifierUnique}`,
+        id: `modelClass.${artifact.ui.identifierUnique}`,
         header: 'Class',
         value: artifact.spec?.model_class,
         class: 'artifacts_small'
       },
       {
-        id: `labels.${identifierUnique}`,
+        id: `labels.${artifact.ui.identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(artifact.metadata?.labels),
-        class: 'artifacts_big',
+        class: 'artifacts_medium',
         type: 'labels'
       },
       {
-        id: `firstRequest.${identifierUnique}`,
+        id: `firstRequest.${artifact.ui.identifierUnique}`,
         header: 'Uptime',
-        value: formatDatetime(new Date(artifact.status?.first_request), '-'),
-        class: 'artifacts_small'
+        value: formatDatetime(artifact.status?.first_request, '-'),
+        class: 'artifacts_medium'
       },
       {
-        id: `lastRequest.${identifierUnique}`,
+        id: `lastRequest.${artifact.ui.identifierUnique}`,
         header: 'Last prediction',
-        value: formatDatetime(new Date(artifact.status?.last_request), '-'),
-        class: 'artifacts_small'
+        value: formatDatetime(artifact.status?.last_request, '-'),
+        class: 'artifacts_medium'
       },
       {
-        id: `averageLatency.${identifierUnique}`,
+        id: `averageLatency.${artifact.ui.identifierUnique}`,
         header: 'Average latency',
         value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
         class: 'artifacts_small'
       },
       {
-        id: `errorCount.${identifierUnique}`,
+        id: `errorCount.${artifact.ui.identifierUnique}`,
         header: 'Error count',
         value: artifact.status?.error_count ?? '-',
         class: 'artifacts_small'
       },
       {
-        id: `driftStatus.${identifierUnique}`,
+        id: `driftStatus.${artifact.ui.identifierUnique}`,
         header: 'Drift',
         value: driftStatusIcons[artifact.status?.drift_status]?.value,
         class: 'artifacts_extra-small',
@@ -458,20 +441,14 @@ export const createModelEndpointsRowData = (artifact, project) => {
 
 export const createDatasetsRowData = (artifact, project, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
     data: {
       ...artifact,
-      ui: {
-        ...artifact.ui,
-        identifier: getArtifactIdentifier(artifact),
-        identifierUnique: identifierUnique
-      }
     },
     content: [
       {
-        id: `key.${identifierUnique}`,
+        id: `key.${artifact.ui.identifierUnique}`,
         header: 'Name',
         value: artifact.db_key,
         class: 'artifacts_medium',
@@ -498,62 +475,62 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         showExpandButton
       },
       {
-        id: `labels.${identifierUnique}`,
+        id: `labels.${artifact.ui.identifierUnique}`,
         header: 'Labels',
         value: parseKeyValues(artifact.labels),
         class: 'artifacts_big',
         type: 'labels'
       },
       {
-        id: `producer.${identifierUnique}`,
+        id: `producer.${artifact.ui.identifierUnique}`,
         header: 'Producer',
         value: artifact.producer,
         class: 'artifacts_small',
         type: 'producer'
       },
       {
-        id: `owner.${identifierUnique}`,
+        id: `owner.${artifact.ui.identifierUnique}`,
         header: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
         type: 'owner'
       },
       {
-        id: `updated.${identifierUnique}`,
+        id: `updated.${artifact.ui.identifierUnique}`,
         header: 'Updated',
-        value: artifact.updated ? formatDatetime(new Date(artifact.updated), 'N/A') : 'N/A',
+        value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       {
-        id: `size.${identifierUnique}`,
+        id: `size.${artifact.ui.identifierUnique}`,
         header: 'Size',
         value: convertBytes(artifact.size || 0),
         class: 'artifacts_small'
       },
       {
-        id: `version.${identifierUnique}`,
+        id: `version.${artifact.ui.identifierUnique}`,
         value: artifact.tag,
         class: 'artifacts_small',
         type: 'hidden'
       },
       {
-        id: `buttonPopout.${identifierUnique}`,
+        id: `buttonPopout.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonPopout'
       },
       {
-        id: `buttonDownload.${identifierUnique}`,
+        id: `buttonDownload.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonDownload'
       },
       {
-        id: `buttonCopy.${identifierUnique}`,
+        id: `buttonCopy.${artifact.ui.identifierUnique}`,
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonCopyURI',
-        actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab ?? DATASETS))
+        type: BUTTON_COPY_URI_CELL_TYPE,
+        actionHandler: item => copyToClipboard(generateUri(item, DATASETS))
       }
     ]
   }

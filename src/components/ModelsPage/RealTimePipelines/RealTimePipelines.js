@@ -20,24 +20,24 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { flatten, map } from 'lodash'
 
 import RealTimePipelinesView from './RealTimePipelinesView'
 
-import { generatePageData } from './realTimePipelines.util'
-import { useModelsPage } from '../ModelsPage.context'
-import filtersActions from '../../../actions/filters'
 import { GROUP_BY_NAME, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
-import { cancelRequest } from '../../../utils/cancelRequest'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
-import createFunctionsContent from '../../../utils/createFunctionsContent'
-import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
+import createFunctionsContent from '../../../utils/createFunctionsContent'
+import { cancelRequest } from '../../../utils/cancelRequest'
+import { generatePageData } from './realTimePipelines.util'
+import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
+import { setFilters } from '../../../reducers/filtersReducer'
+import { useGroupContent } from '../../../hooks/groupContent.hook'
+import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const RealTimePipelines = () => {
   const [pipelines, setPipelines] = useState([])
+  const [selectedRowData, setSelectedRowData] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
@@ -69,36 +69,66 @@ const RealTimePipelines = () => {
     [dispatch, params.projectName]
   )
 
-  const { latestItems, handleExpandRow, groupedContent, expand, handleExpandAll } = useGroupContent(
+  const handleExpand = useCallback(
+    (func, content) => {
+      const funcIdentifier = getFunctionIdentifier(func)
+
+      setSelectedRowData(state => {
+        return {
+          ...state,
+          [funcIdentifier]: {
+            content: createFunctionsContent(content[func.name], null, params.projectName, false)
+          }
+        }
+      })
+    },
+    [params.projectName]
+  )
+
+  const handleCollapse = useCallback(
+    func => {
+      const funcIdentifier = getFunctionIdentifier(func)
+      const newPageDataSelectedRowData = { ...selectedRowData }
+
+      delete newPageDataSelectedRowData[funcIdentifier]
+
+      setSelectedRowData(newPageDataSelectedRowData)
+    },
+    [selectedRowData]
+  )
+
+  const handleExpandAllCallback = (collapse, content) => {
+    const newSelectedRowData = {}
+    if (collapse) {
+      setSelectedRowData({})
+    } else {
+      Object.entries(content).forEach(([key, value]) => {
+        newSelectedRowData[key] = {
+          content: createFunctionsContent(value, null, params.projectName, false)
+        }
+      })
+    }
+
+    setSelectedRowData(newSelectedRowData)
+  }
+
+  const { latestItems, handleExpandRow, expand, handleExpandAll } = useGroupContent(
     pipelines,
     getFunctionIdentifier,
-    null,
-    null,
+    handleCollapse,
+    handleExpand,
     MODELS_PAGE,
-    REAL_TIME_PIPELINES_TAB
+    REAL_TIME_PIPELINES_TAB,
+    handleExpandAllCallback
   )
 
   const tableContent = useMemo(() => {
-    return createFunctionsContent(
-      latestItems,
-      false,
-      REAL_TIME_PIPELINES_TAB,
-      params.projectName,
-      true
-    )
+    return createFunctionsContent(latestItems, REAL_TIME_PIPELINES_TAB, params.projectName, true)
   }, [latestItems, params.projectName])
-
-  const selectedRowData = useMemo(() => {
-    return flatten(
-      map(groupedContent, group =>
-        createFunctionsContent(group, false, REAL_TIME_PIPELINES_TAB, params.projectName, false)
-      )
-    )
-  }, [groupedContent, params.projectName])
 
   useEffect(() => {
     fetchData({})
-    dispatch(filtersActions.setFilters({ groupBy: GROUP_BY_NAME }))
+    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
   }, [dispatch, fetchData])
 
   useEffect(() => {

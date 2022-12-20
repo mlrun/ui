@@ -182,6 +182,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
           {showSuggestionList && (
             <PopUpDialog
               className="search-dropdown"
+              headerIsHidden
               customPosition={{
                 element: searchRowRef,
                 position: 'bottom-right'

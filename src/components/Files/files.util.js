@@ -96,7 +96,7 @@ export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' },
-  { type: ITERATIONS_FILTER, label: 'Show iterations' }
+  { type: ITERATIONS_FILTER, label: 'Show best iteration only' }
 ]
 export const actionsMenuHeader = 'Register artifact'
 
@@ -110,7 +110,7 @@ export const fetchFilesRowData = (file, setSelectedRowData, dispatch, projectNam
     }
   }))
 
-  dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter: !iter, tag }))
+  dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter, tag }))
     .unwrap()
     .then(result => {
       if (result?.length > 0) {

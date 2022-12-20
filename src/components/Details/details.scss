@@ -29,6 +29,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
+        margin-bottom: 16px;
 
         &__title {
           display: flex;
@@ -142,17 +143,21 @@
       position: relative;
       width: 100%;
       min-height: 400px;
-      padding: 5px;
-      overflow-y: scroll;
+      padding: 0 5px;
       color: $white;
       font-family: 'Source Code Pro', 'Courier New', monospace;
       white-space: pre-wrap;
       background-color: $black;
 
+      &__content {
+        height: 100%;
+        overflow-y: scroll;
+      }
+
       .logs_refresh {
         position: absolute;
-        top: 32px;
-        right: 29px;
+        top: 30px;
+        right: 30px;
         display: flex;
         align-items: center;
         padding: 8px 12px;
@@ -196,8 +201,8 @@
         display: block;
         min-width: 30px;
         height: 30px;
-        padding: 0;
         margin: 0;
+        padding: 0;
         cursor: pointer;
       }
     }

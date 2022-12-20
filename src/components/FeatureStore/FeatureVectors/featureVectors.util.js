@@ -27,7 +27,6 @@ import {
   TAG_FILTER
 } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
-import filtersActions from '../../../actions/filters'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -110,9 +109,7 @@ export const featuresActionCreator = {
   fetchFeatureVector: featureStoreActions.fetchFeatureVector,
   fetchFeatureVectors: featureStoreActions.fetchFeatureVectors,
   fetchFeatureVectorsTags: featureStoreActions.fetchFeatureVectorsTags,
-  getFilterTagOptions: filtersActions.getFilterTagOptions,
   removeFeatureVector: featureStoreActions.deleteFeatureVector,
   removeFeatureVectors: featureStoreActions.removeFeatureVectors,
-  setFilters: filtersActions.setFilters,
   updateFeatureStoreData: featureStoreActions.updateFeatureStoreData
 }

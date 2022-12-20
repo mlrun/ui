@@ -22,16 +22,8 @@ import PropTypes from 'prop-types'
 
 import ScheduleJobView from './ScheduleJobView'
 
-import {
-  initialState,
-  recurringReducer,
-  scheduleActionType
-} from './recurringReducer'
-import {
-  decodeLocale,
-  getWeekDays,
-  getWeekStart
-} from '../../utils/datePicker.util'
+import { initialState, recurringReducer, scheduleActionType } from './recurringReducer'
+import { decodeLocale, getWeekDays, getWeekStart } from '../../utils/datePicker.util'
 import { tabs } from './scheduleJobData'
 import { getFormatTime } from '../../utils'
 import { generateCronInitialValue } from '../../utils/generateCronInitialValue'
@@ -51,10 +43,7 @@ const ScheduleJob = ({
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [isRecurring, setIsRecurring] = useState('recurring')
-  const [recurringState, recurringDispatch] = useReducer(
-    recurringReducer,
-    initialState
-  )
+  const [recurringState, recurringDispatch] = useReducer(recurringReducer, initialState)
   const startWeek = getWeekStart(decodeLocale(navigator.language))
   const daysOfWeek = getWeekDays(startWeek)
 
@@ -77,8 +66,7 @@ const ScheduleJob = ({
     days = days || '*'
 
     const { hour, minute } = getFormatTime(
-      recurringState.scheduleRepeat[recurringState.scheduleRepeat.activeOption]
-        .time
+      recurringState.scheduleRepeat[recurringState.scheduleRepeat.activeOption].time
     )
 
     setCron(`${minute} ${hour} * * ${days}`)

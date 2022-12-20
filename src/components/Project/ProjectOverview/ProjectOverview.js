@@ -29,12 +29,12 @@ import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewT
 import { ConfirmDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import projectActions from '../../../actions/projects'
-
+import { getDateAndTimeByFormat } from '../../../utils/'
 import { handleClick, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
-import { getDateAndTimeByFormat } from '../../../utils/'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { PROJECT_MONITOR } from '../../../constants'
+import { useMode } from '../../../hooks/mode.hook'
 
 import './ProjectOverview.scss'
 
@@ -42,10 +42,11 @@ const ProjectOverview = ({ fetchProject, project }) => {
   const [confirmData, setConfirmData] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
+  const { isDemoMode } = useMode()
 
   const cards = useMemo(() => {
-    return params.projectName ? getInitialCards(params.projectName, navigate) : {}
-  }, [navigate, params])
+    return params.projectName ? getInitialCards(params, navigate, isDemoMode) : {}
+  }, [isDemoMode, navigate, params])
 
   const handlePathExecution = handleClick(navigate, openPopUp)
 

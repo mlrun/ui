@@ -23,7 +23,6 @@ import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
 
-import { ACTIONS_MENU } from '../../types'
 import { getV3ioStreamShardLagIdentifier } from '../../utils/getUniqueIdentifier'
 
 const ConsumerGroupShardLagTableRow = ({ content, rowItem }) => {
@@ -58,7 +57,6 @@ const ConsumerGroupShardLagTableRow = ({ content, rowItem }) => {
 }
 
 ConsumerGroupShardLagTableRow.propTypes = {
-  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   rowItem: PropTypes.shape({}).isRequired
 }

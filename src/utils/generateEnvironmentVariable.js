@@ -25,10 +25,7 @@ export const generateEnvVariable = variable => {
       name: variable.name,
       value: variable.value
     }
-  } else if (
-    variable.type === ENV_VARIABLE_TYPE_SECRET &&
-    variable.value.length === 0
-  ) {
+  } else if (variable.type === ENV_VARIABLE_TYPE_SECRET && variable.value.length === 0) {
     return {
       name: variable.name,
       valueFrom: {
@@ -38,10 +35,7 @@ export const generateEnvVariable = variable => {
         }
       }
     }
-  } else if (
-    variable.type === ENV_VARIABLE_TYPE_SECRET &&
-    variable.value.length > 0
-  ) {
+  } else if (variable.type === ENV_VARIABLE_TYPE_SECRET && variable.value.length > 0) {
     const [name, key] = variable.value.split(':')
 
     return {

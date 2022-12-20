@@ -21,15 +21,8 @@ import { useParams } from 'react-router-dom'
 import { useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import filtersActions from '../actions/filters'
-import {
-  ARTIFACT_OTHER_TYPE,
-  DATASET_TYPE,
-  MODEL_TYPE,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
-} from '../constants'
+import { TAG_FILTER, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
+import { getFilterTagOptions, setFilters } from '../reducers/filtersReducer'
 
 export const useGetTagOptions = (fetchTags, filters, category) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
@@ -47,27 +40,26 @@ export const useGetTagOptions = (fetchTags, filters, category) => {
         setUrlTagOption(TAG_FILTER_LATEST)
       }
 
-      const fetchTagsArguments = {
-        project: projectName,
-        category
-      }
-      const fetchTagsPromise = [ARTIFACT_OTHER_TYPE, MODEL_TYPE, DATASET_TYPE].includes(category)
-        ? dispatch(fetchTags(fetchTagsArguments)).unwrap()
-        : fetchTags(fetchTagsArguments)
-
-      fetchTagsPromise.then(({ data }) => {
-        dispatch(filtersActions.setFilterTagOptions([...new Set(data.tags)]))
-
-        if (tag) {
-          if (data.tags.find(filterTag => filterTag === tag)) {
-            setUrlTagOption(tag)
-            dispatch(filtersActions.setFilters({ tag }))
-          } else {
-            setUrlTagOption(TAG_FILTER_ALL_ITEMS)
-            dispatch(filtersActions.setFilters({ tag: TAG_FILTER_ALL_ITEMS }))
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags,
+          project: projectName,
+          category
+        })
+      )
+        .unwrap()
+        .then(tags => {
+          if (tag) {
+            if (tags.find(filterTag => filterTag === tag)) {
+              setUrlTagOption(tag)
+              dispatch(setFilters({ tag }))
+            } else {
+              setUrlTagOption(TAG_FILTER_ALL_ITEMS)
+              dispatch(setFilters({ tag: TAG_FILTER_ALL_ITEMS }))
+            }
           }
-        }
-      })
+        })
     } else {
       setUrlTagOption(null)
     }

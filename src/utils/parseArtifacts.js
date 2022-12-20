@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
+import { getArtifactIdentifier } from './getUniqueIdentifier'
+
 export const parseArtifacts = artifacts =>
   artifacts.map(artifact => {
     let item = { ...artifact }
@@ -35,7 +37,9 @@ export const parseArtifacts = artifacts =>
       ...item,
       kind: artifact.kind,
       ui: {
-        originalContent: artifact
+        originalContent: artifact,
+        identifier: getArtifactIdentifier(item),
+        identifierUnique: getArtifactIdentifier(item, true)
       }
     }
   })
