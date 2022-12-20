@@ -49,6 +49,7 @@ const AddArtifactTagPopUp = ({
 
   const formRef = React.useRef(
     createForm({
+      initialValues,
       onSubmit: () => {}
     })
   )
