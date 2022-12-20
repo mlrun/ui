@@ -24,7 +24,6 @@ import Header from './layout/Header/Header'
 import Loader from './common/Loader/Loader'
 import Navbar from './layout/Navbar/Navbar'
 
-import { useMode } from './hooks/mode.hook'
 import { useNuclioMode } from './hooks/nuclioMode.hook'
 import localStorageService from './utils/localStorageService'
 import { lazyRetry } from './lazyWithRetry'
@@ -92,7 +91,6 @@ const App = () => {
     localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
 
-  const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
 
   const isHeaderShown = window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
@@ -122,11 +120,8 @@ const App = () => {
           >
             <Route path="projects" element={<Projects />} />
 
+            <Route path="projects/:projectName" element={<ProjectOverview />} />
             <Route path="projects/:projectName/monitor" element={<ProjectMonitor />} />
-            <Route
-              path="projects/:projectName"
-              element={!isDemoMode ? <Navigate to="monitor" replace /> : <ProjectOverview />}
-            />
             {!isNuclioModeDisabled && (
               <Route
                 path="projects/:projectName/monitor/consumer-groups/*"
