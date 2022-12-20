@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 const TableHead = React.forwardRef(({ content, mainRowItemsCount, selectedItem }, ref) => {
   return (
@@ -39,6 +39,7 @@ const TableHead = React.forwardRef(({ content, mainRowItemsCount, selectedItem }
             <Tooltip template={<TextTooltipTemplate text={tableItem.header} />}>
               {tableItem.header}
             </Tooltip>
+            {tableItem.tip && <Tip text={tableItem.tip} />}
           </div>
         ) : null
       })}
