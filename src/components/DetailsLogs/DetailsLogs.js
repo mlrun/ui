@@ -24,8 +24,9 @@ import { useParams } from 'react-router-dom'
 
 import NoData from '../../common/NoData/NoData'
 import Loader from '../../common/Loader/Loader'
+import { Button } from 'igz-controls/components'
 
-import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
+import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const DetailsLogs = ({
   item,
@@ -76,10 +77,14 @@ const DetailsLogs = ({
         <NoData />
       )}
       {withLogsRefreshBtn && (
-        <button onClick={() => refreshLogs(item.uid, params.projectName)} className="logs_refresh">
-          <Refresh />
-          Refresh
-        </button>
+        <div className="logs_refresh">
+          <Button
+            icon={<RefreshIcon />}
+            label=""
+            tooltip="Refresh"
+            onClick={() => refreshLogs(item.uid, params.projectName)}
+          />
+        </div>
       )}
     </div>
   )
