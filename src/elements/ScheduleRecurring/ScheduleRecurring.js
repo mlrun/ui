@@ -61,7 +61,10 @@ const ScheduleRecurring = ({
 
   return (
     <div className="recurring-container">
-      <p>Note: all times are interpreted in UTC timezone</p>
+      <p>
+        Note: all times are interpreted in UTC timezone. <br />
+        The first weekday (0) is always <b>Monday</b>.
+      </p>
       <div className="repeat_container">
         <Select
           density="chunky"
