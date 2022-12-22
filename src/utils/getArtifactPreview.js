@@ -112,7 +112,7 @@ export const fetchArtifactPreviewFromTargetPath = (artifact, noData, setNoData, 
 
 export const fetchArtifactPreview = (path, user, fileFormat, cancelToken) => {
   return api.getArtifactPreview(path, user, fileFormat, cancelToken).then(res => {
-    return createArtifactPreviewContent(res, fileFormat)
+    return createArtifactPreviewContent(res, fileFormat, path)
   })
 }
 
