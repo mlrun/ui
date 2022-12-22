@@ -19,14 +19,16 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import cronstrue from 'cronstrue'
 
 import Input from '../../common/Input/Input'
 
 const ScheduleCron = ({ cron, setCron }) => {
   return (
     <>
-      <p>Note: all times are interpreted in UTC timezone</p>
+      <p>
+        Note: all times are interpreted in UTC timezone. <br />
+        The first weekday (0) is always <b>Monday</b>.
+      </p>
       <Input
         placeholder="10 * * * *"
         value={cron}
@@ -34,11 +36,6 @@ const ScheduleCron = ({ cron, setCron }) => {
         onChange={setCron}
         type="text"
       />
-      <p>
-        {cronstrue.toString(cron, {
-          throwExceptionOnParseError: false
-        })}
-      </p>
       <div>
         You can use{' '}
         <a
