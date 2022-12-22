@@ -76,7 +76,7 @@ const DetailsInfo = React.forwardRef(
         ...detailsStore.changes.data,
         [field]: {
           ...detailsStore.changes.data[field],
-          currentFieldValue: detailsStore.changes.data[field]?.initialFieldValue
+          currentFieldValue: detailsStore.changes.data[field]?.previousFieldValue
         }
       })
     }
