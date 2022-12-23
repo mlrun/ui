@@ -319,6 +319,7 @@ const ScheduledJobs = ({
       openPopUp(JobWizard, {
         params,
         onWizardClose: () => {
+          setEditableItem(null)
           setJobWizardMode(null)
           setJobWizardIsOpened(false)
         },
@@ -337,6 +338,7 @@ const ScheduledJobs = ({
     jobWizardMode,
     params,
     refreshJobs,
+    setEditableItem,
     setJobWizardIsOpened,
     setJobWizardMode
   ])
