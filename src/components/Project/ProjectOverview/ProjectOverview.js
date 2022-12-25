@@ -20,20 +20,20 @@ such restriction.
 import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
+import ProjectDetailsHeader from '../../../common/ProjectDetailsHeader/ProjectDetailsHeader'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
-import { ConfirmDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import projectActions from '../../../actions/projects'
-import { getDateAndTimeByFormat } from '../../../utils/'
+
 import { handleClick, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { PROJECT_MONITOR } from '../../../constants'
 import { useMode } from '../../../hooks/mode.hook'
 
 import './ProjectOverview.scss'
@@ -89,36 +89,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
   return (
     <div className="project-overview">
       <div className="project-overview__header">
-        <div className="project-overview__header-row">
-          <div className="project-overview__header-col">
-            <div className="project-overview__header-title">
-              {params.projectName}
-              <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>
-                <i className={`state-${project.data.status.state}-job status-icon`} />
-              </Tooltip>
-            </div>
-            <p className="project-overview__header-description">
-              {project.data.spec.description ?? ''}
-            </p>
-          </div>
-          <ul className="project-overview__details">
-            <li>
-              <span className="project-overview__details-label">Created:</span>
-              <span>
-                {getDateAndTimeByFormat(project.data.metadata.created, 'YYYY-MM-DD, HH:mm:ss A')}
-              </span>
-            </li>
-            <li>
-              <span className="project-overview__details-label">Owner:</span>
-              <span>{project.data.spec.owner}</span>
-            </li>
-            <li>
-              <Link to={`/projects/${params.projectName}/${PROJECT_MONITOR}`} className="link">
-                Project Monitoring
-              </Link>
-            </li>
-          </ul>
-        </div>
+        <ProjectDetailsHeader project={project} projectName={params.projectName} />
       </div>
 
       <div className="project-overview__content">

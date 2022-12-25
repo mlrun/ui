@@ -129,7 +129,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Dataset',
+          label: 'Register dataset',
           tooltip: ''
         },
         {
@@ -180,7 +180,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Artifact',
+          label: 'Register artifact',
           tooltip: ''
         },
         {
@@ -189,7 +189,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/feature-store/feature-vectors?openPanel=true`
           }),
-          label: 'Create a Feature Vector',
+          label: 'Create Feature Vector',
           tooltip: ''
         }
       ],
@@ -235,7 +235,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/functions?openPanel=true`
           }),
-          label: 'Create New Function',
+          label: 'Create a Function',
           tooltip: ''
         },
         {
@@ -254,7 +254,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   // todo: delete this object when the job wizard is out of the demo mode
                   path: `${base_url}/jobs/monitor-jobs/create-new-job`
                 },
-          label: 'Create New Job',
+          label: 'Run batch',
           tooltip: ''
         },
         {
@@ -302,14 +302,14 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Model',
+          label: 'Register model',
           tooltip: ''
         },
         {
           id: 'trainmodel',
           // icon: <TrainModelIcon />,
           handleClick: () => {},
-          label: 'Train Model',
+          label: 'Train model',
           tooltip: '',
           hidden: true
         },
@@ -389,7 +389,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           id: 'batchInference',
           // icon: <ServingFunctionIcon />,
           handleClick: () => {},
-          label: 'Batch Inference',
+          label: 'Batch inference',
           tooltip: ''
         },
         {

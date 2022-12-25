@@ -16,59 +16,8 @@
       min-height: 200px;
       padding: 2.2em 4em 5em;
       color: $white;
-      line-height: 1.4;
 
       @include gradient('page');
-
-      &-row {
-        display: flex;
-        flex-flow: column nowrap;
-
-        @media screen and (min-width: 1024px) {
-          flex-flow: row nowrap;
-        }
-      }
-
-      &-col {
-        flex: 1;
-      }
-
-      &-title {
-        display: flex;
-        flex-flow: row wrap;
-        align-items: center;
-        margin: 0 0 0.5rem 0;
-        font-weight: 300;
-        font-size: 3.2em;
-      }
-
-      &-description {
-        max-width: 75%;
-        margin: 0;
-      }
-
-      .data-ellipsis {
-        display: flex;
-        margin-left: 0.3em;
-      }
-    }
-
-    &__details {
-      display: flex;
-      flex-flow: column nowrap;
-      list-style-type: none;
-      margin: 1rem 0;
-      padding: 0;
-      line-height: 1.5;
-
-      li {
-        margin-bottom: 0.2rem;
-      }
-
-      &-label {
-        margin-right: 10px;
-        font-weight: 700;
-      }
     }
 
     &__content {
@@ -91,7 +40,7 @@
 
       @media screen and (min-width: 576px) {
         flex: 1 0;
-        max-width: 500px;
+        max-width: 470px;
       }
 
       &__top {

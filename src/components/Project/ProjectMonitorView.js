@@ -28,6 +28,7 @@ import Loader from '../../common/Loader/Loader'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
+import ProjectDetailsHeader from '../../common/ProjectDetailsHeader/ProjectDetailsHeader'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
 import Select from '../../common/Select/Select'
@@ -35,7 +36,6 @@ import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
 import { PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
-import { formatDatetime } from '../../utils'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
@@ -94,28 +94,8 @@ const ProjectMonitorView = ({
       ) : (
         <div className="project__content">
           <div className="main-info">
+            <ProjectDetailsHeader project={project} projectName={params.projectName} />
             <div className="main-info__toolbar">
-              <div>
-                {project.data.status.state && (
-                  <div className="general-info__row status-row">
-                    <div className="row-value">
-                      <span className="row-label">Status:</span>
-                      <span className="row-name">{project.data.status.state}</span>
-                    </div>
-                  </div>
-                )}
-                <div className="general-info__row created-at-row">
-                  <div className="row-value">
-                    <span className="row-label">Created at:</span>
-                    <span className="row-name">
-                      {formatDatetime(project.data.metadata.created, '-')}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <RoundedIcon onClick={refresh} id="refresh" tooltipText="Refresh" className="refresh">
-                <RefreshIcon />
-              </RoundedIcon>
               <Select
                 className="main-info__toolbar-menu launch-menu"
                 density="dense"
@@ -131,6 +111,9 @@ const ProjectMonitorView = ({
                 label="Create new"
                 options={createNewOptions}
               />
+              <RoundedIcon onClick={refresh} id="refresh" tooltipText="Refresh" className="refresh">
+                <RefreshIcon />
+              </RoundedIcon>
             </div>
             <div className="main-info__statistics-section">
               <ProjectSummaryCard
