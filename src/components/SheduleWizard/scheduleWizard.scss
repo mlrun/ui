@@ -1,0 +1,70 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+
+.schedule-wizard {
+  .pop-up-dialog {
+    width: 680px;
+  }
+
+  .schedule {
+    &-tabs {
+      display: flex;
+      flex: 1;
+
+      &__item {
+        padding: 10px 24px;
+        color: $topaz;
+        font-weight: 400;
+        font-size: 24px;
+        cursor: pointer;
+
+        &_active {
+          color: $primary;
+          border-bottom: 3px solid $cornflowerBlue;
+        }
+      }
+    }
+
+    &-content {
+      min-height: 245px;
+      padding: 24px;
+
+      h3 {
+        margin: 0;
+        color: $primary;
+        text-transform: uppercase;
+      }
+
+      .cronstring-note {
+        max-width: 600px;
+        margin: 8px 0;
+      }
+    }
+  }
+
+  .schedule-repeat {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+    &-week {
+      &_day {
+        width: 32px;
+        height: 32px;
+        margin-right: 4px;
+        color: $spunPearl;
+        line-height: 32px;
+        text-align: center;
+        border: $primaryBorder;
+        border-radius: 16px;
+        cursor: pointer;
+
+        &.active {
+          color: $white;
+          background-color: $malibu;
+          border: $transparentBorder;
+        }
+      }
+    }
+  }
+}

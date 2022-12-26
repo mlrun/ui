@@ -17,163 +17,215 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import Loader from '../../common/Loader/Loader'
-import Content from '../../layout/Content/Content'
-import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
-
-import artifactsAction from '../../actions/artifacts'
-import { generateArtifacts } from '../../utils/generateArtifacts'
-import { generatePageData, pageDataInitialState } from './files.util'
-import { filterArtifacts } from '../../utils/filterArtifacts'
-import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { openPopUp } from 'igz-controls/utils/common.util'
-
-import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
+import FilesView from './FilesView'
 
 import {
-  ARTIFACTS,
+  ARTIFACT_OTHER_TYPE,
   FILES_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import filtersActions from '../../actions/filters'
-
-const Files = ({
-  artifactsStore,
+import {
+  checkForSelectedFile,
+  fetchFilesRowData,
+  filters,
+  generatePageData,
+  handleApplyDetailsChanges
+} from './files.util'
+import {
   fetchArtifactTags,
   fetchFile,
   fetchFiles,
-  filtersStore,
   removeFile,
-  removeFiles,
-  setFilters
-}) => {
-  const [pageData, setPageData] = useState(pageDataInitialState)
-  const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
+  removeFiles
+} from '../../reducers/artifactsReducer'
+import { cancelRequest } from '../../utils/cancelRequest'
+import { createFilesRowData } from '../../utils/createArtifactsContent'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useYaml } from '../../hooks/yaml.hook'
+
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+const Files = () => {
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, ARTIFACT_OTHER_TYPE)
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
+  const [selectedRowData, setSelectedRowData] = useState({})
+  const [convertedYaml, toggleConvertedYaml] = useYaml('')
+  const artifactsStore = useSelector(store => store.artifactsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
+  const filesRef = useRef(null)
+  const pageData = useMemo(() => generatePageData(selectedFile), [selectedFile])
 
   const fetchData = useCallback(
     filters => {
-      fetchFiles(params.projectName, filters).then(result => {
-        if (result) {
-          setFiles(generateArtifacts(filterArtifacts(result), ARTIFACTS))
-        }
+      dispatch(fetchFiles({ project: params.projectName, filters }))
+        .unwrap()
+        .then(result => {
+          if (result) {
+            setFiles(result)
+          }
 
-        return result
-      })
+          return result
+        })
     },
-    [fetchFiles, params.projectName]
+    [dispatch, params.projectName]
   )
 
-  const handleRemoveFile = useCallback(
+  const handleRefresh = useCallback(
+    filters => {
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: ARTIFACT_OTHER_TYPE
+        })
+      )
+      setSelectedRowData({})
+      setFiles([])
+
+      return fetchData(filters)
+    },
+    [dispatch, fetchData, params.projectName]
+  )
+
+  const handleAddTag = useCallback(
+    artifact => {
+      openPopUp(AddArtifactTagPopUp, {
+        artifact,
+        onAddTag: handleRefresh,
+        getArtifact: () =>
+          fetchFile({
+            project: params.projectName,
+            file: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
+        projectName: params.projectName
+      })
+    },
+    [handleRefresh, params.projectName]
+  )
+
+  const actionsMenu = useMemo(
+    () => [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        onClick: handleAddTag
+      }
+    ],
+    [handleAddTag, toggleConvertedYaml]
+  )
+
+  const handleRemoveRowData = useCallback(
     file => {
       const newStoreSelectedRowData = {
         ...artifactsStore.files.selectedRowData.content
       }
-      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
+      const newPageDataSelectedRowData = { ...selectedRowData }
 
-      delete newStoreSelectedRowData[file.key.value]
-      delete newPageDataSelectedRowData[file.key.value]
+      delete newStoreSelectedRowData[file.data.ui.identifier]
+      delete newPageDataSelectedRowData[file.data.ui.identifier]
 
-      removeFile(newStoreSelectedRowData)
-      setPageData(state => ({
-        ...state,
-        selectedRowData: newPageDataSelectedRowData
-      }))
+      dispatch(removeFile(newStoreSelectedRowData))
+      setSelectedRowData(newPageDataSelectedRowData)
     },
-    [artifactsStore.files.selectedRowData.content, pageData.selectedRowData, removeFile]
+    [artifactsStore.files.selectedRowData.content, dispatch, selectedRowData]
   )
 
   const handleRequestOnExpand = useCallback(
     async file => {
-      const fileIdentifier = getArtifactIdentifier(file)
-      let result = []
-
-      setPageData(state => ({
-        ...state,
-        selectedRowData: {
-          ...state.selectedRowData,
-          [fileIdentifier]: {
-            loading: true
-          }
-        }
-      }))
-
-      try {
-        result = await fetchFile(
-          file.project ?? params.projectName,
-          file.db_key,
-          !filtersStore.iter,
-          filtersStore.tag
-        )
-      } catch (error) {
-        setPageData(state => ({
-          ...state,
-          selectedRowData: {
-            ...state.selectedRowData,
-            [fileIdentifier]: {
-              ...state.selectedRowData[fileIdentifier],
-              error,
-              loading: false
-            }
-          }
-        }))
-      }
-
-      if (result?.length > 0) {
-        setPageData(state => {
-          return {
-            ...state,
-            selectedRowData: {
-              ...state.selectedRowData,
-              [fileIdentifier]: {
-                content: [
-                  ...generateArtifacts(filterArtifacts(result), ARTIFACTS, !filtersStore.iter)
-                ],
-                error: null,
-                loading: false
-              }
-            }
-          }
-        })
-      }
+      await fetchFilesRowData(
+        file,
+        setSelectedRowData,
+        dispatch,
+        params.projectName,
+        filtersStore.iter,
+        filtersStore.tag
+      )
     },
-    [fetchFile, filtersStore.iter, filtersStore.tag, params.projectName]
+    [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
-  useEffect(() => {
-    setPageData(state => ({
-      ...state,
-      ...generatePageData(handleRequestOnExpand, selectedFile)
-    }))
-  }, [handleRequestOnExpand, selectedFile])
+  const { latestItems, handleExpandRow } = useGroupContent(
+    files,
+    getArtifactIdentifier,
+    handleRemoveRowData,
+    handleRequestOnExpand,
+    FILES_PAGE
+  )
+
+  const tableContent = useMemo(() => {
+    return filtersStore.groupBy === GROUP_BY_NAME
+      ? latestItems.map(contentItem => {
+          return createFilesRowData(contentItem, params.projectName, true)
+        })
+      : files.map(contentItem => createFilesRowData(contentItem, params.projectName))
+  }, [files, filtersStore.groupBy, latestItems, params.projectName])
+
+  const applyDetailsChanges = useCallback(
+    changes => {
+      return handleApplyDetailsChanges(
+        changes,
+        params.projectName,
+        selectedFile,
+        setNotification,
+        dispatch
+      )
+    },
+    [dispatch, params.projectName, selectedFile]
+  )
+
+  const applyDetailsChangesCallback = changes => {
+    if ('tag' in changes.data) {
+      setSelectedRowData({})
+      setFiles([])
+
+      if (changes.data.tag.currentFieldValue) {
+        navigate(
+          `/projects/${params.projectName}/files/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          { replace: true }
+        )
+      }
+    }
+
+    handleRefresh(filtersStore)
+  }
 
   useEffect(() => {
-    removeFile({})
-    setPageData(state => ({
-      ...state,
-      selectedRowData: {}
-    }))
-  }, [filtersStore.iter, filtersStore.tag, removeFile])
+    dispatch(removeFile({}))
+    setSelectedRowData({})
+  }, [filtersStore.iter, filtersStore.tag, dispatch])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
-      isDetailsTabExists(FILES_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, params, pageData.details.menu])
+  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
     if (urlTagOption) {
@@ -184,71 +236,65 @@ const Files = ({
   useEffect(() => {
     return () => {
       setFiles([])
-      removeFiles()
+      dispatch(removeFiles())
       setSelectedFile({})
+      cancelRequest('cancel')
     }
-  }, [params.projectName, removeFiles])
+  }, [params.projectName, dispatch])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [params.pageTab, filtersStore.tag, filtersStore.iter, filtersStore.groupBy, setFilters])
+  }, [filtersStore.tag, filtersStore.iter, filtersStore.groupBy, dispatch])
 
   useEffect(() => {
-    if (params.name) {
-      const { name, tag, iter } = params
-      const artifacts =
-        artifactsStore.files.selectedRowData.content[name] || artifactsStore.files.allData
-
-      if (artifacts.length > 0) {
-        const searchItem = searchArtifactItem(artifacts, name, tag, iter)
-
-        if (!searchItem) {
-          navigate(`/projects/${params.projectName}/files`, { replace: true })
-        } else {
-          setSelectedFile({ item: searchItem })
-        }
-      }
-    } else {
-      setSelectedFile({})
-    }
-  }, [artifactsStore.files.allData, artifactsStore.files.selectedRowData.content, navigate, params])
+    checkForSelectedFile(
+      params.name,
+      selectedRowData,
+      files,
+      params.tag,
+      params.iter,
+      params.uid,
+      navigate,
+      params.projectName,
+      setSelectedFile
+    )
+  }, [
+    files,
+    navigate,
+    params.iter,
+    params.name,
+    params.projectName,
+    params.tag,
+    params.uid,
+    selectedRowData
+  ])
 
   useEffect(() => setFiles([]), [filtersStore.tag])
 
   return (
-    <div className="content-wrapper">
-      {artifactsStore.loading && <Loader />}
-      <Content
-        content={files}
-        handleCancel={() => setSelectedFile({})}
-        handleRemoveRequestData={handleRemoveFile}
-        handleSelectItem={item => setSelectedFile({ item })}
-        loading={artifactsStore.loading}
-        handleActionsMenuClick={() =>
-          openPopUp(RegisterArtifactModal, {
-            artifactKind: 'artifact',
-            projectName: params.projectName,
-            refresh: fetchData,
-            title: pageData.actionsMenuHeader
-          })
-        }
-        pageData={pageData}
-        refresh={fetchData}
-        selectedItem={selectedFile.item}
-        getIdentifier={getArtifactIdentifier}
-      />
-    </div>
+    <FilesView
+      actionsMenu={actionsMenu}
+      applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
+      artifactsStore={artifactsStore}
+      convertedYaml={convertedYaml}
+      files={files}
+      filtersStore={filtersStore}
+      handleExpandRow={handleExpandRow}
+      handleRefresh={handleRefresh}
+      pageData={pageData}
+      ref={filesRef}
+      selectedFile={selectedFile}
+      selectedRowData={selectedRowData}
+      setSelectedFile={setSelectedFile}
+      tableContent={tableContent}
+      toggleConvertedYaml={toggleConvertedYaml}
+    />
   )
 }
 
-export default connect(
-  ({ artifactsStore, filtersStore }) => ({
-    artifactsStore,
-    filtersStore
-  }),
-  { ...artifactsAction, ...filtersActions }
-)(Files)
+export default Files

@@ -20,37 +20,38 @@ such restriction.
 import { configureStore } from '@reduxjs/toolkit'
 
 import appStore from '../reducers/appReducer'
-import artifactsStore from '../reducers/artifactReducer'
+import artifactsStore from '../reducers/artifactsReducer'
+import detailsStore from '../reducers/detailsReducer'
 import featureStore from '../reducers/featureStoreReducer'
+import filtersStore from '../reducers/filtersReducer'
 import functionsStore from '../reducers/functionReducer'
 import jobsStore from '../reducers/jobReducer'
-import detailsStore from '../reducers/detailsReducer'
 import notificationStore from '../reducers/notificationReducer'
 import nuclioStore from '../reducers/nuclioReducer'
 import projectStore from '../reducers/projectReducer'
 import tableStore from '../reducers/tableReducer'
 import workflowsStore from '../reducers/workflowReducer'
-import filtersStore from '../reducers/filtersReducer'
 
 const toolkitStore = configureStore({
   reducer: {
     appStore,
     artifactsStore,
+    detailsStore,
     featureStore,
+    filtersStore,
     functionsStore,
     jobsStore,
-    detailsStore,
     notificationStore,
     nuclioStore,
     projectStore,
     tableStore,
-    workflowsStore,
-    filtersStore
+    workflowsStore
   },
-  //remove this when removed redux and switched to redux-toolkit
+  // todo: remove this when redux is removed and switched to redux-toolkit
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
+      immutableCheck: false
     })
 })
 

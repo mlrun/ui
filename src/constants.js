@@ -19,8 +19,6 @@ such restriction.
 */
 /*=========== GENERAL =============*/
 
-export const SET_NOTIFICATION = 'SET_NOTIFICATION'
-export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
 export const SET_LOADING = 'SET_LOADING'
 
 export const FETCH_WORKFLOWS_BEGIN = 'FETCH_WORKFLOWS_BEGIN'
@@ -39,9 +37,14 @@ export const MLRUN_STORAGE_INPUT_PATH_SCHEME = 'store://'
 export const S3_INPUT_PATH_SCHEME = 's3://'
 export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
-export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
-
 export const TAG_LATEST = 'latest'
+
+export const DENSITY_DENSE = 'dense'
+export const DENSITY_NORMAL = 'normal'
+export const DENSITY_MEDIUM = 'medium'
+export const DENSITY_CHUNKY = 'chunky'
+
+export const NAVBAR_WIDTH = 245
 
 /*=========== PAGES & TABS =============*/
 
@@ -83,12 +86,6 @@ export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 
 /*=========== DATASETS =============*/
 export const DATASETS = 'datasets'
-export const FETCH_DATASETS_BEGIN = 'FETCH_DATASETS_BEGIN'
-export const FETCH_DATASETS_FAILURE = 'FETCH_DATASETS_FAILURE'
-export const FETCH_DATASETS_SUCCESS = 'FETCH_DATASETS_SUCCESS'
-export const FETCH_DATA_SET_SUCCESS = 'FETCH_DATA_SET_SUCCESS'
-export const REMOVE_DATASET = 'REMOVE_DATASET'
-export const REMOVE_DATASETS = 'REMOVE_DATASETS'
 
 /*=========== JOBS =============*/
 
@@ -142,11 +139,19 @@ export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
+/*=========== JOB  WIZARD=============*/
+
+export const PARAMETER_TYPE_SIMPLE = 'Simple'
+export const PARAMETER_TYPE_HYPER = 'Hyper'
+export const MAX_SELECTOR_CRITERIA = 'max'
+export const LIST_TUNING_STRATEGY = 'list'
+export const V3IO_VOLUME_TYPE = 'flexVolume'
+export const CONFIG_MAP_VOLUME_TYPE = 'configMap'
+export const SECRET_VOLUME_TYPE = 'secret'
+export const PVC_VOLUME_TYPE = 'persistentVolumeClaim'
+
 /*=========== ML FUNCTIONS =============*/
 
-export const BUILD_FUNCTION_BEGIN = 'BUILD_FUNCTION_BEGIN'
-export const BUILD_FUNCTION_FAILURE = 'BUILD_FUNCTION_FAILURE'
-export const BUILD_FUNCTION_SUCCESS = 'BUILD_FUNCTION_SUCCESS'
 export const CREATE_NEW_FUNCTION_BEGIN = 'CREATE_NEW_FUNCTION_BEGIN'
 export const CREATE_NEW_FUNCTION_FAILURE = 'CREATE_NEW_FUNCTION_FAILURE'
 export const CREATE_NEW_FUNCTION_SUCCESS = 'CREATE_NEW_FUNCTION_SUCCESS'
@@ -213,43 +218,15 @@ export const SET_NEW_FUNCTION_VOLUME_MOUNTS = 'SET_NEW_FUNCTION_VOLUME_MOUNTS'
 /*=========== ARTIFACTS =============*/
 
 export const ARTIFACTS = 'artifacts'
-export const CLOSE_ARTIFACT_PREVIEW = 'CLOSE_ARTIFACT_PREVIEW'
-export const FETCH_ARTIFACTS_BEGIN = 'FETCH_ARTIFACTS_BEGIN'
-export const FETCH_ARTIFACTS_FAILURE = 'FETCH_ARTIFACTS_FAILURE'
-export const FETCH_ARTIFACTS_FUNCTIONS_BEGIN = 'FETCH_ARTIFACTS_FUNCTIONS_BEGIN'
-export const FETCH_ARTIFACTS_FUNCTIONS_FAILURE = 'FETCH_ARTIFACTS_FUNCTIONS_FAILURE'
-export const FETCH_ARTIFACTS_FUNCTIONS_SUCCESS = 'FETCH_ARTIFACTS_FUNCTIONS_SUCCESS'
-export const FETCH_ARTIFACTS_SUCCESS = 'FETCH_ARTIFACTS_SUCCESS'
-export const REMOVE_ARTIFACTS = 'REMOVE_ARTIFACTS'
-export const REMOVE_ARTIFACTS_ERROR = 'REMOVE_ARTIFACTS_ERROR'
-export const SHOW_ARTIFACT_PREVIEW = 'SHOW_ARTIFACT_PREVIEW'
 export const ARTIFACT_PREVIEW_TABLE_ROW_LIMIT = 100
-
-/*=========== FILES =============*/
-
-export const FETCH_FILE_SUCCESS = 'FETCH_FILE_SUCCESS'
-export const FETCH_FILES_BEGIN = 'FETCH_FILES_BEGIN'
-export const FETCH_FILES_FAILURE = 'FETCH_FILES_FAILURE'
-export const FETCH_FILES_SUCCESS = 'FETCH_FILES_SUCCESS'
-export const REMOVE_FILE = 'REMOVE_FILE'
-export const REMOVE_FILES = 'REMOVE_FILES'
 
 /*=========== MODELS =============*/
 
-export const FETCH_MODELS_BEGIN = 'FETCH_MODELS_BEGIN'
-export const FETCH_MODELS_FAILURE = 'FETCH_MODELS_FAILURE'
-export const FETCH_MODELS_SUCCESS = 'FETCH_MODELS_SUCCESS'
-export const FETCH_MODEL_ENDPOINTS_BEGIN = 'FETCH_MODEL_ENDPOINTS_BEGIN'
-export const FETCH_MODEL_ENDPOINTS_FAILURE = 'FETCH_MODEL_ENDPOINTS_FAILURE'
-export const FETCH_MODEL_ENDPOINTS_SUCCESS = 'FETCH_MODEL_ENDPOINTS_SUCCESS'
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN = 'FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN'
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE =
   'FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE'
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS =
   'FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS'
-export const FETCH_MODEL_SUCCESS = 'FETCH_MODEL_SUCCESS'
-export const REMOVE_MODEL = 'REMOVE_MODEL'
-export const REMOVE_MODELS = 'REMOVE_MODELS'
 
 /*=========== FEATURE STORE =============*/
 
@@ -458,6 +435,8 @@ export const UPDATE_CURRENT_PROJECT_NAME = 'UPDATE_CURRENT_PROJECT_NAME'
 export const UPDATE_GROUPED_FEATURES = 'UPDATE_GROUPED_FEATURES'
 export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'
 
+export const BUTTON_COPY_URI_CELL_TYPE = 'buttonCopyURI'
+
 /*=========== FILTERS =============*/
 
 export const DATE_FILTER_ANY_TIME = ['', '']
@@ -487,12 +466,12 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
-export const TREE_FILTER = 'tree'
 
 /*=========== PANEL =============*/
 
 export const PANEL_EDIT_MODE = 'EDIT'
 export const PANEL_CREATE_MODE = 'CREATE'
+export const PANEL_RERUN_MODE = 'RERUN'
 
 export const ENV_VARIABLE_TYPE_VALUE = 'value'
 export const ENV_VARIABLE_TYPE_SECRET = 'secret'
@@ -526,3 +505,10 @@ export const GOALS = 'goals'
 export const DATA = 'data'
 export const LABELS = 'labels'
 export const PARAMS = 'params'
+
+/*=========== ARTIFACTS TYPES =============*/
+
+export const ARTIFACT_TYPE = 'artifact'
+export const DATASET_TYPE = 'dataset'
+export const MODEL_TYPE = 'model'
+export const ARTIFACT_OTHER_TYPE = 'other'

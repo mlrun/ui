@@ -19,8 +19,11 @@ such restriction.
 */
 import React from 'react'
 
-import { MONITOR_JOBS_TAB } from '../../constants'
+import JobWizard from '../JobWizard/JobWizard'
+
+import { ARTIFACT_TYPE, DATASET_TYPE, MONITOR_JOBS_TAB } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
 import { ReactComponent as VSCode } from 'igz-controls/images/vs-code.svg'
@@ -41,16 +44,25 @@ export const launchIDEOptions = [
 export const generateCreateNewOptions = (
   navigate,
   params,
-  openRegisterModel,
-  openRegisterArtifactModal,
   openNewFunctionModal,
-  setCreateFeatureSetPanelIsOpen
+  openRegisterArtifactModal,
+  openRegisterModelModal,
+  setCreateFeatureSetPanelIsOpen,
+  isDemoMode
 ) => [
   {
     label: 'Job',
     id: 'job',
-    handler: () =>
-      navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`)
+    handler: () => {
+      if (isDemoMode) {
+        openPopUp(JobWizard, {
+          params
+        })
+      } else {
+        // todo: delete this when the job wizard is out of the demo mode
+        navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`)
+      }
+    }
   },
   {
     label: 'ML Function',
@@ -66,19 +78,21 @@ export const generateCreateNewOptions = (
     label: 'Register Artifact',
     id: 'registerFile',
     handler: () => {
-      openRegisterArtifactModal('artifact')
+      openRegisterArtifactModal(ARTIFACT_TYPE)
     }
   },
   {
     label: 'Register Model',
     id: 'registerModel',
-    handler: openRegisterModel
+    handler: () => {
+      openRegisterModelModal()
+    }
   },
   {
     label: 'Register Dataset',
     id: 'registerDataset',
     handler: () => {
-      openRegisterArtifactModal('dataset')
+      openRegisterArtifactModal(DATASET_TYPE)
     }
   }
 ]

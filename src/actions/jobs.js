@@ -67,7 +67,7 @@ import {
   SET_NEW_JOB_PREEMTION_MODE,
   SET_NEW_JOB_PRIORITY_CLASS_NAME
 } from '../constants'
-import { FORBIDDEN_ERROR_STATUS_CODE, CONFLICT_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 
 const jobsActions = {
   abortJob: (project, job) => dispatch => {
@@ -281,15 +281,7 @@ const jobsActions = {
         return result
       })
       .catch(error => {
-        dispatch(
-          jobsActions.runNewJobFailure(
-            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to run new job.'
-              : error.response.status === CONFLICT_ERROR_STATUS_CODE
-              ? 'This job is already scheduled'
-              : 'Unable to create new job.'
-          )
-        )
+        dispatch(jobsActions.runNewJobFailure(getNewJobErrorMsg(error)))
 
         throw error
       })

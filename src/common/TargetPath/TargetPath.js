@@ -27,30 +27,33 @@ import PropTypes from 'prop-types'
 import { FormCombobox } from 'igz-controls/components'
 
 import {
-  comboboxSelectList,
   generateArtifactsList,
   generateArtifactsReferencesList,
   generateComboboxMatchesList,
   generateProjectsList,
+  getTargetPathOptions,
   handleStoreInputPathChange,
   isPathInputInvalid,
   pathPlaceholders,
   pathTips,
   targetPathInitialState
 } from './targetPath.util'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import projectAction from '../../actions/projects'
-import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
+import projectAction from '../../actions/projects'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getFeatureReference } from '../../utils/resources'
 
 const TargetPath = ({
   density,
   formState,
   formStateFieldInfo,
+  hiddenSelectOptionsIds,
+  inputDefaultValue,
   label,
   name,
   required,
+  selectDefaultValue,
   selectPlaceholder,
   setFieldState
 }) => {
@@ -109,8 +112,7 @@ const TargetPath = ({
           dataInputState.projectItem,
           dataInputState.projectItemReference,
           dataInputState.projects,
-          dataInputState.storePathType,
-          dispatch
+          dataInputState.storePathType
         )
       }))
     }
@@ -128,8 +130,8 @@ const TargetPath = ({
     dataInputState.projectItemReference,
     dataInputState.projects,
     dataInputState.storePathType,
-    dispatch,
-    get(formState.values, `${formStateFieldInfo}.pathType`),
+    formState.values,
+    formStateFieldInfo,
     setDataInputState
   ])
 
@@ -140,12 +142,14 @@ const TargetPath = ({
       dataInputState.project
     ) {
       if (dataInputState.storePathType === 'artifacts' && dataInputState.artifacts.length === 0) {
-        dispatch(artifactsAction.fetchArtifacts(dataInputState.project)).then(artifacts => {
-          setDataInputState(prev => ({
-            ...prev,
-            artifacts: generateArtifactsList(artifacts)
-          }))
-        })
+        dispatch(fetchArtifacts({ project: dataInputState.project }))
+          .unwrap()
+          .then(artifacts => {
+            setDataInputState(prev => ({
+              ...prev,
+              artifacts: generateArtifactsList(artifacts)
+            }))
+          })
       } else if (
         dataInputState.storePathType === 'feature-vectors' &&
         dataInputState.featureVectors.length === 0
@@ -186,14 +190,16 @@ const TargetPath = ({
 
     if (dataInputState.inputProjectItemPathEntered && storePathType && projectName && projectItem) {
       if (storePathType === 'artifacts' && dataInputState.artifactsReferences.length === 0) {
-        dispatch(artifactsAction.fetchArtifact(projectName, projectItem)).then(artifacts => {
-          if (artifacts.length > 0 && artifacts[0].data) {
-            setDataInputState(prev => ({
-              ...prev,
-              artifactsReferences: generateArtifactsReferencesList(artifacts[0].data)
-            }))
-          }
-        })
+        dispatch(fetchArtifact({ project: projectName, artifact: projectItem }))
+          .unwrap()
+          .then(artifacts => {
+            if (artifacts.length > 0 && artifacts[0].data) {
+              setDataInputState(prev => ({
+                ...prev,
+                artifactsReferences: generateArtifactsReferencesList(artifacts[0].data)
+              }))
+            }
+          })
       } else if (
         storePathType === 'feature-vectors' &&
         dataInputState.featureVectorsReferences.length === 0
@@ -237,6 +243,7 @@ const TargetPath = ({
       <FormCombobox
         density={density}
         hideSearchInput={!dataInputState.inputStorePathTypeEntered}
+        inputDefaultValue={inputDefaultValue}
         inputPlaceholder={
           pathPlaceholders[get(formState.values, `${formStateFieldInfo}.pathType`)] ?? ''
         }
@@ -255,7 +262,10 @@ const TargetPath = ({
         name={name}
         onChange={(selectValue, inputValue) => handleOnChange(selectValue, inputValue)}
         required={required}
-        selectOptions={comboboxSelectList}
+        selectDefaultValue={getTargetPathOptions(hiddenSelectOptionsIds).find(
+          option => option.id === selectDefaultValue
+        )}
+        selectOptions={getTargetPathOptions(hiddenSelectOptionsIds)}
         selectPlaceholder={selectPlaceholder}
         suggestionList={
           get(formState.values, `${formStateFieldInfo}.pathType`) ===
@@ -286,8 +296,11 @@ const TargetPath = ({
 
 TargetPath.defaultProps = {
   density: 'normal',
+  hiddenSelectOptionsIds: [],
+  inputDefaultValue: '',
   label: '',
   required: false,
+  selectDefaultValue: '',
   selectPlaceholder: ''
 }
 
@@ -295,9 +308,12 @@ TargetPath.propTypes = {
   density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
   formState: PropTypes.object.isRequired,
   formStateFieldInfo: PropTypes.string.isRequired,
+  hiddenSelectOptionsIds: PropTypes.arrayOf(PropTypes.string),
+  inputDefaultValue: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
   required: PropTypes.bool,
+  selectDefaultValue: PropTypes.string,
   selectPlaceholder: PropTypes.string,
   setFieldState: PropTypes.func.isRequired
 }

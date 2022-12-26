@@ -20,7 +20,6 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
@@ -29,15 +28,17 @@ import TableProducerCell from '../TableProducerCell/TableProducerCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
+import { BUTTON_COPY_URI_CELL_TYPE } from '../../constants'
+import { getChipOptions } from '../../utils/getChipOptions'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { truncateUid } from '../../utils'
+
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
-import artifactAction from '../../actions/artifacts'
-import { truncateUid } from '../../utils'
-import { getChipOptions } from '../../utils/getChipOptions'
-
 const TableCell = ({
+  className,
   data,
   firstCell,
   handleExpandRow,
@@ -47,12 +48,12 @@ const TableCell = ({
   selectedItem,
   showExpandButton
 }) => {
-  const params = useParams()
   const dispatch = useDispatch()
 
   if (link && data.type !== 'hidden') {
     return (
       <TableLinkCell
+        className={className}
         data={data}
         showExpandButton={showExpandButton}
         handleExpandRow={handleExpandRow}
@@ -64,7 +65,7 @@ const TableCell = ({
     )
   } else if (firstCell && !link) {
     return (
-      <div className={`table-body__cell ${data.class}`}>
+      <div className={`table-body__cell ${data.class} ${className}`}>
         {item.status && (
           <Tooltip className="status" template={<TextTooltipTemplate text={item.status} />}>
             <i className={`${item.status[0].toLowerCase()}${item.status.slice(1)}`} />
@@ -86,10 +87,10 @@ const TableCell = ({
       </div>
     )
   } else if (data.type === 'type') {
-    return <TableTypeCell data={data} />
+    return <TableTypeCell className={className} data={data} />
   } else if (data.type === 'icons') {
     return (
-      <div className={`table-body__cell ${data.class}`}>
+      <div className={`table-body__cell ${data.class} ${className}`}>
         {data.value.map((valueItem, index) => (
           <Tooltip
             key={valueItem.tooltip + index}
@@ -102,19 +103,19 @@ const TableCell = ({
     )
   } else if (Array.isArray(data.value)) {
     return (
-      <div className={`table-body__cell ${data.class}`}>
+      <div className={`table-body__cell ${data.class} ${className}`}>
         <ChipCell chipOptions={getChipOptions(data.type)} elements={data.value} tooltip />
       </div>
     )
   } else if (data.type === 'producer') {
-    return <TableProducerCell data={data} />
+    return <TableProducerCell className={className} data={data} />
   } else if (data.type === 'buttonPopout') {
     return (
-      <div className={`table-body__cell ${data.class}`}>
+      <div className={`table-body__cell ${data.class} ${className}`}>
         <button
           onClick={() => {
             dispatch(
-              artifactAction.showArtifactsPreview({
+              showArtifactsPreview({
                 isPreview: true,
                 selectedItem: item
               })
@@ -129,7 +130,7 @@ const TableCell = ({
     )
   } else if (data.type === 'buttonDownload') {
     return (
-      <div className={`table-body__cell ${data.class}`}>
+      <div className={`table-body__cell ${data.class} ${className}`}>
         <Tooltip template={<TextTooltipTemplate text="Download" />}>
           <Download
             path={`${item?.target_path}${item?.model_file ? item.model_file : ''}`}
@@ -138,10 +139,10 @@ const TableCell = ({
         </Tooltip>
       </div>
     )
-  } else if (data.type === 'buttonCopyURI') {
+  } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
-      <div className={`table-body__cell ${data.class}`}>
-        <button onClick={() => data.actionHandler(item, params.pageTab)}>
+      <div className={`table-body__cell ${data.class} ${className}`}>
+        <button onClick={() => data.actionHandler(item)}>
           <Tooltip template={<TextTooltipTemplate text="Copy URI" />}>
             <Copy />
           </Tooltip>
@@ -150,7 +151,7 @@ const TableCell = ({
     )
   } else if (data.type === 'hash') {
     return (
-      <div className={`table-body__cell ${data.class}`}>
+      <div className={`table-body__cell ${data.class} ${className}`}>
         <Tooltip template={<TextTooltipTemplate text={data.value} />}>
           <span>{truncateUid(data.value)}</span>
         </Tooltip>
@@ -159,10 +160,10 @@ const TableCell = ({
   } else if (data.type === 'hidden') {
     return null
   } else if (data.type === 'component') {
-    return <div className={`table-body__cell ${data.class}`}>{data.value}</div>
+    return <div className={`table-body__cell ${data.class} ${className}`}>{data.value}</div>
   } else {
     return (
-      <div className={`table-body__cell ${data.class}`}>
+      <div className={`table-body__cell ${data.class} ${className}`}>
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
@@ -175,6 +176,7 @@ const TableCell = ({
 }
 
 TableCell.defaultProps = {
+  className: '',
   expandLink: false,
   firstRow: false,
   handleExpandRow: null,
@@ -190,6 +192,7 @@ TableCell.defaultProps = {
 }
 
 TableCell.propTypes = {
+  className: PropTypes.string,
   data: PropTypes.shape({}).isRequired,
   firstCell: PropTypes.bool,
   handleExpandRow: PropTypes.func,

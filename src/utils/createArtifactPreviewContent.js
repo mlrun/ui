@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { has } from 'lodash'
+
 export const createArtifactPreviewContent = (res, fileFormat) => {
   const artifact = {}
 
@@ -54,6 +56,7 @@ export const createArtifactPreviewContent = (res, fileFormat) => {
     artifact.data = {
       content: JSON.stringify(res.data, null, 2)
     }
+    artifact.hidden = has(res.data, 'listdir')
   } else if (res.headers['content-type'].includes('image')) {
     artifact.type = 'image'
     artifact.data = {

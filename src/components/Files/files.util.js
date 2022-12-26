@@ -17,15 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+
 import {
   FILES_PAGE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
-  TREE_FILTER
+  TAG_FILTER
 } from '../../constants'
+import { applyTagChanges } from '../../utils/artifacts.util'
+import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { fetchFile } from '../../reducers/artifactsReducer'
 
 export const pageDataInitialState = {
   details: {
@@ -38,6 +43,17 @@ export const pageDataInitialState = {
   tableHeaders: []
 }
 
+export const detailsMenu = [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'preview',
+    id: 'preview'
+  }
+]
+
 export const infoHeaders = [
   {
     label: 'Hash',
@@ -45,7 +61,7 @@ export const infoHeaders = [
     tip: 'Represents hash of the data. when the data changes the hash would change'
   },
   { label: 'Key', id: 'db_key' },
-  { label: 'Tag', id: 'tag' },
+  { label: 'Version tag', id: 'tag' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
@@ -59,95 +75,107 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
-export const detailsMenu = [
-  {
-    label: 'overview',
-    id: 'overview'
-  },
-  {
-    label: 'preview',
-    id: 'preview'
+
+export const generatePageData = selectedFile => {
+  return {
+    page: FILES_PAGE,
+    details: {
+      type: FILES_PAGE,
+      menu: detailsMenu,
+      infoHeaders,
+      additionalInfo: {
+        header: 'Producer',
+        body: generateProducerDetailsInfo(selectedFile),
+        hidden: !selectedFile.producer
+      }
+    }
   }
-]
+}
+
 export const filters = [
-  { type: TREE_FILTER, label: 'Tree:' },
+  { type: TAG_FILTER, label: 'Version tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' },
-  { type: ITERATIONS_FILTER, label: 'Show iterations' }
+  { type: ITERATIONS_FILTER, label: 'Show best iteration only' }
 ]
-export const page = FILES_PAGE
 export const actionsMenuHeader = 'Register artifact'
-export const tableHeaders = isSelectedFile => [
-  {
-    header: 'Name',
-    class: 'artifacts_medium'
-  },
-  {
-    header: 'Type',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Labels',
-    class: 'artifacts_big',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Producer',
-    class: 'artifacts_small',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Owner',
-    class: 'artifacts_small',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Updated',
-    class: 'artifacts_small',
-    hidden: isSelectedFile
-  },
-  {
-    header: 'Size',
-    class: 'artifacts_small',
-    hidden: isSelectedFile
-  },
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedFile
-  },
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedFile
-  },
-  {
-    header: '',
-    class: 'artifacts_extra-small',
-    hidden: isSelectedFile
-  },
-  {
-    header: '',
-    class: 'action_cell',
-    hidden: isSelectedFile
-  }
-]
 
-export const generatePageData = (handleRequestOnExpand, selectedFile) => ({
-  actionsMenuHeader,
-  details: {
-    menu: detailsMenu,
-    infoHeaders,
-    type: FILES_PAGE,
-    additionalInfo: {
-      header: 'Producer',
-      body: generateProducerDetailsInfo(selectedFile),
-      hidden: !selectedFile.item?.producer
+export const fetchFilesRowData = (file, setSelectedRowData, dispatch, projectName, iter, tag) => {
+  const fileIdentifier = getArtifactIdentifier(file)
+
+  setSelectedRowData(state => ({
+    ...state,
+    [fileIdentifier]: {
+      loading: true
     }
-  },
-  filters,
-  handleRequestOnExpand,
-  page,
-  tableHeaders: tableHeaders(!isEveryObjectValueEmpty(selectedFile))
-})
+  }))
+
+  dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter, tag }))
+    .unwrap()
+    .then(result => {
+      if (result?.length > 0) {
+        setSelectedRowData(state => ({
+          ...state,
+          [fileIdentifier]: {
+            content: result.map(artifact => createFilesRowData(artifact, projectName)),
+            error: null,
+            loading: false
+          }
+        }))
+      }
+    })
+    .catch(error => {
+      setSelectedRowData(state => ({
+        ...state,
+        [fileIdentifier]: {
+          ...state[fileIdentifier],
+          error,
+          loading: false
+        }
+      }))
+    })
+}
+
+export const handleApplyDetailsChanges = (
+  changes,
+  projectName,
+  selectedItem,
+  setNotification,
+  dispatch
+) => {
+  return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
+}
+
+export const checkForSelectedFile = (
+  name,
+  selectedRowData,
+  files,
+  tag,
+  iter,
+  uid,
+  navigate,
+  projectName,
+  setSelectedFile
+) => {
+  if (name) {
+    const artifacts = selectedRowData?.[name]?.content || files
+
+    if (artifacts.length > 0) {
+      const searchItem = searchArtifactItem(
+        artifacts.map(artifact => artifact.data ?? artifact),
+        name,
+        tag,
+        iter,
+        uid
+      )
+
+      if (!searchItem) {
+        navigate(`/projects/${projectName}/files`, { replace: true })
+      } else {
+        setSelectedFile(searchItem)
+      }
+    }
+  } else {
+    setSelectedFile({})
+  }
+}

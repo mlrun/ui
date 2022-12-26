@@ -5,6 +5,8 @@
 @import '~igz-controls/scss/borders';
 
 .header {
+  line-height: 1.5;
+
   @include fixed;
 
   z-index: 10;
@@ -17,13 +19,13 @@
   background-color: $ebonyClay;
   box-shadow: $mainHeaderShadow;
 
-  &__logo {
-    width: 43px;
-    height: 43px;
+  &__brand {
+    display: flex;
+    align-items: flex-end;
+  }
 
-    img {
-      width: 100%;
-    }
+  &__logo {
+    margin-right: 1rem;
   }
 
   h1 {
@@ -33,21 +35,47 @@
     font-size: 1.5rem;
   }
 
+  &__documentation {
+    font-weight: 500;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+
+    & > *:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+
   &__beta {
     margin-bottom: -10px;
     margin-left: 4px;
     font-variant: small-caps;
   }
 
-  &__link {
-    min-width: 64px;
-    margin-left: auto;
-    padding: 5px 15px;
+  &__icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $cerulean;
+    border-radius: 50%;
     color: $white;
-    font-weight: 500;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: $gitBorder;
-    border-radius: $mainBorderRadius;
+    padding: 8px;
+    transition: background-color 0.2s ease-in-out;
+
+    & > * {
+      fill: $white;
+    }
+
+    &:hover {
+      background-color: $white;
+
+      & > * {
+        fill: $cerulean;
+      }
+    }
   }
 }

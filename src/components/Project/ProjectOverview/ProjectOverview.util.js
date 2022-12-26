@@ -19,10 +19,12 @@ such restriction.
 */
 import React from 'react'
 
+import JobWizard from '../../JobWizard/JobWizard'
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
 import NewFunctionModal from '../../NewFunctionModal/NewFunctionModal'
-import RegisterModelPopUp from '../../../elements/RegisterModelPopUp/RegisterModelPopUp'
+import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
+import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE } from '../../../constants'
 import { generateNuclioLink } from '../../../utils'
@@ -48,8 +50,8 @@ export const handleClick = (navigate, openPopUp) => handler => {
     : navigate(target.path)
 }
 
-export const getInitialCards = (projectName, navigate) => {
-  const base_url = `/projects/${projectName}`
+export const getInitialCards = (params, navigate, isDemoMode) => {
+  const base_url = `/projects/${params.projectName}`
 
   return {
     collection: {
@@ -117,8 +119,9 @@ export const getInitialCards = (projectName, navigate) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              artifactKind: 'dataset',
-              projectName,
+
+              artifactKind: DATASET_TYPE,
+              projectName: params.projectName,
               refresh: () => {},
               title: 'Register dataset'
             },
@@ -145,6 +148,7 @@ export const getInitialCards = (projectName, navigate) => {
                   label: 'Register',
                   onClick: async () => {
                     await formState.handleSubmit()
+
                     if (!formState.invalid) {
                       navigate(`${base_url}/files`)
                     }
@@ -167,8 +171,8 @@ export const getInitialCards = (projectName, navigate) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              artifactKind: 'artifact',
-              projectName,
+              artifactKind: ARTIFACT_TYPE,
+              projectName: params.projectName,
               refresh: () => {},
               title: 'Register artifact'
             },
@@ -251,7 +255,7 @@ export const getInitialCards = (projectName, navigate) => {
               // ],
               isStandAlone: true,
               mode: PANEL_CREATE_MODE,
-              projectName,
+              projectName: params.projectName,
               runtime: FUNCTION_TYPE_JOB
             },
             type: 'modal'
@@ -262,9 +266,19 @@ export const getInitialCards = (projectName, navigate) => {
         {
           id: 'createnewjob',
           icon: <CreateJobIcon />,
-          handleClick: () => ({
-            path: `${base_url}/jobs/monitor-jobs/create-new-job`
-          }),
+          handleClick: () =>
+            isDemoMode
+              ? {
+                  component: JobWizard,
+                  props: {
+                    params
+                  },
+                  type: 'modal'
+                }
+              : {
+                  // todo: delete this object when the job wizard is out of the demo mode
+                  path: `${base_url}/jobs/monitor-jobs/create-new-job`
+                },
           label: 'Create New Job',
           tooltip: ''
         },
@@ -272,7 +286,7 @@ export const getInitialCards = (projectName, navigate) => {
           id: 'registeramodel',
           icon: <RegisterModelIcon />,
           handleClick: () => ({
-            component: RegisterModelPopUp,
+            component: RegisterModelModal,
             props: {
               actions: (formState, handleCloseModal) => [
                 {
@@ -308,7 +322,7 @@ export const getInitialCards = (projectName, navigate) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              projectName,
+              projectName: params.projectName,
               refresh: () => {}
             },
             type: 'modal'
@@ -358,7 +372,7 @@ export const getInitialCards = (projectName, navigate) => {
           icon: <RTFunctionIcon />,
           label: 'Create RT function',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/functions`),
+            path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
           }),
           tooltip: ''
@@ -391,10 +405,11 @@ export const getInitialCards = (projectName, navigate) => {
               // ],
               isStandAlone: true,
               mode: PANEL_CREATE_MODE,
-              projectName,
+              projectName: params.projectName,
               runtime: FUNCTION_TYPE_SERVING
             },
             type: 'modal'
+            // path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
           label: 'Deploy serving function',
           tooltip: ''

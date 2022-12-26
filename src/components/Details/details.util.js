@@ -48,6 +48,7 @@ import {
   MODELS_TAB
 } from '../../constants'
 import { formatDatetime, generateLinkPath } from '../../utils'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
@@ -70,6 +71,7 @@ export const generateArtifactsContent = (
   addChip,
   deleteChip,
   editChips,
+  editInput,
   detailsType,
   selectedItem
 ) => {
@@ -101,7 +103,7 @@ export const generateArtifactsContent = (
           : ''
       },
       last_prediction: {
-        value: formatDatetime(new Date(selectedItem?.status?.last_request), '-')
+        value: formatDatetime(selectedItem?.status?.last_request, '-')
       },
       error_count: {
         value: selectedItem?.status?.error_count ?? '-'
@@ -119,7 +121,11 @@ export const generateArtifactsContent = (
         value: selectedItem.db_key
       },
       tag: {
-        value: selectedItem.tag ?? ''
+        value: selectedItem.tag ?? '',
+        editModeEnabled: true,
+        editModeType: 'input',
+        validationRules: getValidationRules('common.tag'),
+        onChange: value => editInput(value, 'tag')
       },
       iter: {
         value: selectedItem.iter || '0'
@@ -136,10 +142,12 @@ export const generateArtifactsContent = (
         value: selectedItem.size ?? ''
       },
       target_path: {
-        value: selectedItem.target_path
+        value: selectedItem.target_path,
+        copyToClipboard: true
       },
       target_uri: {
-        value: selectedItem.URI
+        value: selectedItem.URI,
+        copyToClipboard: true
       },
       metrics: {
         value: selectedItem.metrics ?? []
@@ -155,7 +163,7 @@ export const generateArtifactsContent = (
         value: selectedItem.tree
       },
       updated: {
-        value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+        value: formatDatetime(selectedItem.updated, 'N/A')
       },
       framework: {
         value: detailsType === MODELS_TAB ? selectedItem.framework ?? '' : null
@@ -182,7 +190,7 @@ export const generateFeatureStoreContent = (
   addChip,
   deleteChip,
   editChips,
-  editDescription,
+  editInput,
   detailsType,
   selectedItem
 ) => {
@@ -191,7 +199,7 @@ export const generateFeatureStoreContent = (
       addChip,
       deleteChip,
       editChips,
-      editDescription,
+      editInput,
       selectedItem
     )
   } else if (detailsType === FEATURE_VECTORS_TAB) {
@@ -254,7 +262,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.build.code_origin ?? ''
   },
   updated: {
-    value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+    value: formatDatetime(selectedItem.updated, 'N/A')
   },
   command: {
     value: selectedItem.command
@@ -399,14 +407,14 @@ export const generateFeatureSetsOverviewContent = (
   addChip,
   deleteChip,
   editChips,
-  editDescription,
+  editInput,
   selectedItem
 ) => ({
   description: {
     value: selectedItem.description ?? '',
     editModeEnabled: true,
-    editModeType: 'input',
-    onChange: value => editDescription(value, 'description')
+    editModeType: 'textarea',
+    onChange: value => editInput(value, 'description')
   },
   labels: {
     value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
@@ -420,7 +428,7 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.tag
   },
   updated: {
-    value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+    value: formatDatetime(selectedItem.updated, 'N/A')
   },
   usage_example: {
     value: selectedItem.usage_example ?? ''
@@ -429,7 +437,8 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.entities?.map(entity => entity.name).join(', ')
   },
   target_uri: {
-    value: selectedItem.URI
+    value: selectedItem.URI,
+    copyToClipboard: true
   },
   timestamp_key: {
     value: selectedItem.timestamp_key ?? ''
@@ -454,10 +463,11 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     value: selectedItem.tag
   },
   target_uri: {
-    value: selectedItem.URI
+    value: selectedItem.URI,
+    copyToClipboard: true
   },
   updated: {
-    value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+    value: formatDatetime(selectedItem.updated, 'N/A')
   },
   entities: {
     value: selectedItem.index_keys?.join(', ')
@@ -476,8 +486,7 @@ export const handleFinishEdit = (
   detailsTabDispatch,
   detailsTabState,
   setChangesData,
-  setChangesCounter,
-  changesCounter
+  setChangesCounter
 ) => {
   detailsTabDispatch({
     type: detailsTabActions.RESET_EDIT_MODE

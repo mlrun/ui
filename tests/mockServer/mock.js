@@ -34,6 +34,7 @@ import entities from './data/entities.json'
 import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
 import run from './data/run.json'
+import catalog from './data/catalog.json'
 import pipelines from './data/pipelines.json'
 import secretKeys from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
@@ -122,12 +123,10 @@ const secretKeyTemplate = {
 
 // Mock consts
 const mockHome = process.cwd() + '/tests/mockServer'
-const mlrunAPIIngress =
-  '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/v1'
-const nuclioApiUrl =
-  '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
-const iguazioApiUrl =
-  '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
+const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
+const mlrunAPIIngress = `${mlrunIngress}/api/v1`
+const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
+const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
 
 // Support function
@@ -144,10 +143,7 @@ function makeUID(length) {
 }
 
 function generateHash(txt) {
-  return crypto
-    .createHash('sha1')
-    .update(JSON.stringify(txt))
-    .digest('hex')
+  return crypto.createHash('sha1').update(JSON.stringify(txt)).digest('hex')
 }
 
 // Request Handlers
@@ -208,10 +204,7 @@ function deleteFeatureSet(req, res) {
     .filter(featureSet => featureSet.metadata.project === req.params.project)
     .filter(featureSet => featureSet.metadata.name === req.params.featureSet)
   if (collecledFeatureSet.length) {
-    remove(
-      featureSets.feature_sets,
-      item => item.metadata.name === req.params.featureSet
-    )
+    remove(featureSets.feature_sets, item => item.metadata.name === req.params.featureSet)
     res.statusCode = 204
   } else {
     res.statusCode = 500
@@ -221,11 +214,7 @@ function deleteFeatureSet(req, res) {
 }
 
 function getProject(req, res) {
-  res.send(
-    projects.projects.find(
-      project => project.metadata.name === req.params['project']
-    )
-  )
+  res.send(projects.projects.find(project => project.metadata.name === req.params['project']))
 }
 
 function getProjects(req, res) {
@@ -280,30 +269,15 @@ function deleteProject(req, res) {
     project => project.metadata.name === req.params['project']
   )
   if (collectedProject.length) {
-    remove(
-      projects.projects,
-      project => project.metadata.name === req.params['project']
-    )
-    remove(
-      projectsSummary.projects,
-      project => project.name === req.params['project']
-    )
+    remove(projects.projects, project => project.metadata.name === req.params['project'])
+    remove(projectsSummary.projects, project => project.name === req.params['project'])
     remove(
       featureSets.feature_sets,
       featureSet => featureSet.metadata.project === req.params['project']
     )
-    remove(
-      artifacts.artifacts,
-      artifact => artifact.project === req.params['project']
-    )
-    remove(
-      run.data,
-      artifact => artifact.metadata.project === req.params['project']
-    )
-    remove(
-      run.data,
-      artifact => artifact.metadata.project === req.params['project']
-    )
+    remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
+    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
+    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
     delete secretKeys[req.params.project]
     res.statusCode = 204
   } else {
@@ -314,9 +288,7 @@ function deleteProject(req, res) {
 }
 
 function patchProject(req, res) {
-  const project = projects.projects.find(
-    project => project.metadata.name === req.params['project']
-  )
+  const project = projects.projects.find(project => project.metadata.name === req.params['project'])
 
   switch (req.body.spec['desired_state']) {
     case 'archived':
@@ -349,11 +321,7 @@ function putProject(req, res) {
     }
   }
 
-  res.send(
-    projects.projects.find(
-      project => project.metadata.name === req.params['project']
-    )
-  )
+  res.send(projects.projects.find(project => project.metadata.name === req.params['project']))
 }
 
 function getSecretKeys(req, res) {
@@ -361,9 +329,7 @@ function getSecretKeys(req, res) {
 }
 
 function postSecretKeys(req, res) {
-  secretKeys[req.params['project']].secret_keys.push(
-    Object.keys(req.body.secrets)[0]
-  )
+  secretKeys[req.params['project']].secret_keys.push(Object.keys(req.body.secrets)[0])
 
   res.statusCode = 201
   res.send('')
@@ -391,22 +357,16 @@ function getProjectSummary(req, res) {
 }
 
 function getRuns(req, res) {
-  let collectedRuns = runs.runs.filter(
-    run => run.metadata.project === req.query['project']
-  )
+  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.query['project'])
 
   if (req.query['start_time_from']) {
     collectedRuns = collectedRuns.filter(
-      run =>
-        Date.parse(run.status.start_time) >=
-        Date.parse(req.query['start_time_from'])
+      run => Date.parse(run.status.start_time) >= Date.parse(req.query['start_time_from'])
     )
   }
   if (req.query['start_time_to']) {
     collectedRuns = collectedRuns.filter(
-      run =>
-        Date.parse(run.status.start_time) <=
-        Date.parse(req.query['start_time_to'])
+      run => Date.parse(run.status.start_time) <= Date.parse(req.query['start_time_to'])
     )
   }
 
@@ -416,22 +376,16 @@ function getRuns(req, res) {
       run.metadata.labels ? run.metadata.labels[key] : false
     )
     if (req.query['label'].includes('=')) {
-      collectedRuns = collectedRuns.filter(
-        run => run.metadata.labels[key] === value
-      )
+      collectedRuns = collectedRuns.filter(run => run.metadata.labels[key] === value)
     } else {
-      collectedRuns = collectedRuns.filter(
-        run => run.metadata.labels[key] || false
-      )
+      collectedRuns = collectedRuns.filter(run => run.metadata.labels[key] || false)
     }
   }
 
   if (req.query['name']) {
     collectedRuns = collectedRuns.filter(run => {
       if (req.query['name'].includes('~')) {
-        return run.metadata.name
-          ? run.metadata.name.includes(req.query['name'].slice(1))
-          : false
+        return run.metadata.name ? run.metadata.name.includes(req.query['name'].slice(1)) : false
       } else {
         return run.metadata.name === req.query['name']
       }
@@ -439,9 +393,7 @@ function getRuns(req, res) {
   }
 
   if (req.query['state']) {
-    collectedRuns = collectedRuns.filter(
-      run => run.status.state === req.query['state']
-    )
+    collectedRuns = collectedRuns.filter(run => run.status.state === req.query['state'])
   }
 
   res.send({ runs: collectedRuns })
@@ -450,8 +402,7 @@ function getRuns(req, res) {
 function getRun(req, res) {
   const run_prj_uid = run.data.find(
     item =>
-      item.metadata.project === req.params['project'] &&
-      item.metadata.uid === req.params['uid']
+      item.metadata.project === req.params['project'] && item.metadata.uid === req.params['uid']
   )
 
   res.send({ data: run_prj_uid })
@@ -467,10 +418,20 @@ function patchRun(req, res) {
   res.send()
 }
 
+function getFunctionCatalog(req, res) {
+  res.send(catalog)
+}
+
+function getFunctionTemplate(req, res) {
+  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.params.function}/${req.params.function}.yaml`
+  const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
+
+  res.send(funcObject)
+}
+
 function getProjectsSchedules(req, res) {
   let collectedSchedules = schedules.schedules.filter(
-    schedule =>
-      schedule.scheduled_object.task.metadata.project === req.params['project']
+    schedule => schedule.scheduled_object.task.metadata.project === req.params['project']
   )
 
   if (req.query['name']) {
@@ -484,9 +445,7 @@ function getProjectsSchedules(req, res) {
       return schedule.labels[key]
     })
     if (req.query['labels'].includes('=')) {
-      collectedSchedules = collectedSchedules.filter(
-        schedule => schedule.labels[key] === value
-      )
+      collectedSchedules = collectedSchedules.filter(schedule => schedule.labels[key] === value)
     }
   }
 
@@ -494,9 +453,7 @@ function getProjectsSchedules(req, res) {
 }
 
 function getProjectsSchedule(req, res) {
-  const collectedSchedule = schedules.schedules.find(
-    item => item.name === req.params['schedule']
-  )
+  const collectedSchedule = schedules.schedules.find(item => item.name === req.params['schedule'])
 
   res.send(collectedSchedule)
 }
@@ -629,9 +586,7 @@ function getProjectsFeatureArtifactTags(req, res) {
 }
 
 function getProjectsArtifactTags(req, res) {
-  let artifactTag = artifactTags.find(
-    aTag => aTag.project === req.params['project']
-  )
+  let artifactTag = artifactTags.find(aTag => aTag.project === req.params['project'])
 
   res.send(artifactTag)
 }
@@ -643,7 +598,7 @@ function getArtifacts(req, res) {
     other: ['', 'table', 'link', 'plot', 'chart']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
-    artifact => artifact.project === req.query['project']
+    artifact => artifact.project === req.params.project
   )
 
   if (req.query['category']) {
@@ -781,9 +736,7 @@ function deleteProjectsFeatureVectors(req, res) {
   if (collectedFV.length) {
     remove(
       featureVectors.feature_vectors,
-      item =>
-        item.metadata.project === req.params.project &&
-        item.metadata.name === req.params.name
+      item => item.metadata.project === req.params.project && item.metadata.name === req.params.name
     )
     res.statusCode = 204
   }
@@ -796,12 +749,8 @@ function getPipelines(req, res) {
   const collectedPipelines = { ...pipelines[req.params.project] }
 
   if (req.query.filter) {
-    const nameFilter = JSON.parse(req.query.filter).predicates.find(
-      item => item.key === 'name'
-    )
-    const statusFilter = JSON.parse(req.query.filter).predicates.find(
-      item => item.key === 'status'
-    )
+    const nameFilter = JSON.parse(req.query.filter).predicates.find(item => item.key === 'name')
+    const statusFilter = JSON.parse(req.query.filter).predicates.find(item => item.key === 'status')
 
     if (nameFilter) {
       collectedPipelines.runs = collectedPipelines.runs.filter(pipeline => {
@@ -820,9 +769,7 @@ function getPipelines(req, res) {
 }
 
 function getPipeline(req, res) {
-  const collectedPipeline = pipelineIDs.find(
-    item => item.run.id === req.params.pipelineID
-  )
+  const collectedPipeline = pipelineIDs.find(item => item.run.id === req.params.pipelineID)
 
   res.send(collectedPipeline)
 }
@@ -837,9 +784,7 @@ function getFuncs(req, res) {
   let collectedFuncs = []
   const newArray = cloneDeep(funcs.funcs)
   if (collectedFuncsByPrjTime.length) {
-    collectedFuncs = newArray.filter(
-      func => func.metadata.project === req.query.project
-    )
+    collectedFuncs = newArray.filter(func => func.metadata.project === req.query.project)
 
     collectedFuncs.forEach(func => {
       if (Date.parse(func.metadata.updated) > dt) {
@@ -856,9 +801,7 @@ function getFuncs(req, res) {
       func.status.state = 'ready'
     })
 
-    collectedFuncs = funcs.funcs.filter(
-      func => func.metadata.project === req.query.project
-    )
+    collectedFuncs = funcs.funcs.filter(func => func.metadata.project === req.query.project)
   }
 
   if (req.query['name']) {
@@ -917,9 +860,7 @@ function deleteFunc(req, res) {
   if (collectedFunc.length) {
     remove(
       funcs.funcs,
-      func =>
-        func.metadata.project === req.params.project &&
-        func.metadata.name === req.params.func
+      func => func.metadata.project === req.params.project && func.metadata.name === req.params.func
     )
     res.statusCode = 204
   } else {
@@ -972,9 +913,7 @@ function deployMLFunction(req, res) {
   respBody.ready = false
 
   const collectedFunc = funcs.funcs
-    .filter(
-      func => func.metadata.project === req.body.function.metadata.project
-    )
+    .filter(func => func.metadata.project === req.body.function.metadata.project)
     .filter(func => func.metadata.name === req.body.function.metadata.name)
 
   collectedFunc[0].metadata.tag = ''
@@ -1062,8 +1001,7 @@ function postSubmitJob(req, res) {
       },
       status: {
         state: 'running',
-        status_text:
-          'Job is running in the background, pod: {{run.name}}-mocks',
+        status_text: 'Job is running in the background, pod: {{run.name}}-mocks',
         artifacts: [],
         start_time: '',
         last_update: ''
@@ -1094,11 +1032,11 @@ function postSubmitJob(req, res) {
 
   if (req.body.schedule) {
     if (
-        schedules.schedules.find(
-            schedule =>
-                schedule.name === runName &&
-                schedule.scheduled_object.task.metadata.project === runProject
-        )
+      schedules.schedules.find(
+        schedule =>
+          schedule.name === runName &&
+          schedule.scheduled_object.task.metadata.project === runProject
+      )
     ) {
       res.statusCode = 409
       return res.send({
@@ -1132,15 +1070,10 @@ function postSubmitJob(req, res) {
     job.status.results = {}
 
     let funcObject
-    if (
-      req.body.task.spec.function.includes('@') &&
-      req.body.task.spec.function.includes('/')
-    ) {
+    if (req.body.task.spec.function.includes('@') && req.body.task.spec.function.includes('/')) {
       const filterPRJ = req.body.task.spec.function.split('/')[0]
       const filterFunc = req.body.task.spec.function.split('/')[1].split('@')[0]
-      const filterFuncHash = req.body.task.spec.function
-        .split('/')[1]
-        .split('@')[1]
+      const filterFuncHash = req.body.task.spec.function.split('/')[1].split('@')[1]
       funcObject = funcs.funcs
         .filter(item => item.metadata.hash === filterFuncHash)
         .filter(item => item.metadata.project === filterPRJ)
@@ -1149,12 +1082,7 @@ function postSubmitJob(req, res) {
       const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
         6
       )}/${req.body.task.spec.function.slice(6)}.yaml`
-      funcObject = yaml.load(
-        fs
-          .readFileSync(funcYAMLPath, 'utf8')
-          .replace('|+', '')
-          .replace('|', '')
-      )
+      funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
     }
 
     const funcUID = makeUID(32)
@@ -1191,9 +1119,7 @@ function postArtifact(req, res) {
   const currentDate = new Date()
   const artifactHash = makeUID(32)
   const artifactTag = req.body.tag || 'latest'
-  const tagObject = artifactTags.find(
-    artifact => artifact.project === req.body.project
-  )
+  const tagObject = artifactTags.find(artifact => artifact.project === req.body.project)
 
   const artifactTemplate = {
     key: req.body.key,
@@ -1237,22 +1163,22 @@ function postArtifact(req, res) {
 
 function getModelEndpoints(req, res) {
   let collectedEndpoints = modelEndpoints.endpoints
-      .filter(endpoint => endpoint.metadata.project === req.params.project)
-      .map(endpoint => ({
-        ...endpoint,
-        status: {
-          ...endpoint.status,
-          drift_measures: null,
-          features: null
-        }
-      }))
+    .filter(endpoint => endpoint.metadata.project === req.params.project)
+    .map(endpoint => ({
+      ...endpoint,
+      status: {
+        ...endpoint.status,
+        drift_measures: null,
+        features: null
+      }
+    }))
   if (req.query['label']) {
     let [key, value] = req.query['label'].split('=')
 
     collectedEndpoints = collectedEndpoints.filter(endpoint =>
-        req.query['label'].includes('=')
-            ? endpoint.metadata.labels[key] === value
-            : endpoint.metadata.labels[key]
+      req.query['label'].includes('=')
+        ? endpoint.metadata.labels[key] === value
+        : endpoint.metadata.labels[key]
     )
   }
 
@@ -1261,7 +1187,7 @@ function getModelEndpoints(req, res) {
 
 function getModelEndpoint(req, res) {
   const endpoint = modelEndpoints.endpoints.find(
-      item => item.metadata.project === req.params.project && item.metadata.uid === req.params.uid
+    item => item.metadata.project === req.params.project && item.metadata.uid === req.params.uid
   )
 
   res.send(endpoint)
@@ -1282,9 +1208,7 @@ function getIguazioProjects(req, res) {
   let filteredProject = {}
   if (req.query.filter.name) {
     filteredProject = cloneDeep(
-      iguazioProjects.data.find(
-        item => item.attributes.name === req.query.filter.name
-      )
+      iguazioProjects.data.find(item => item.attributes.name === req.query.filter.name)
     )
   }
 
@@ -1326,9 +1250,7 @@ function getIguazioAuthorization(req, res) {
 }
 
 function getIguazioProject(req, res) {
-  let filteredProject = iguazioProjects.data.find(
-    item => item.id === req.params.id
-  )
+  let filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
 
   let filteredAuthRoles = []
   if (req.query.include.includes('project_authorization_roles')) {
@@ -1342,17 +1264,9 @@ function getIguazioProject(req, res) {
   for (let authRole of filteredAuthRoles) {
     delete authRole.relationships
   }
-  console.log(
-    'debug authRolesIDs',
-    Array.isArray(authRolesIDs),
-    authRolesIDs.length,
-    authRolesIDs
-  )
 
   let filteredPrincipalUsers = []
-  if (
-    req.query.include.includes('project_authorization_roles.principal_users')
-  ) {
+  if (req.query.include.includes('project_authorization_roles.principal_users')) {
     let principalUserIDs = []
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
@@ -1368,24 +1282,12 @@ function getIguazioProject(req, res) {
       }
     }
     for (let userID of principalUserIDs) {
-      filteredPrincipalUsers.push(
-        iguazioUsers.data.find(item => item.id === userID)
-      )
+      filteredPrincipalUsers.push(iguazioUsers.data.find(item => item.id === userID))
     }
-    console.log(
-      'debug authRolesIDs 2',
-      Array.isArray(authRolesIDs),
-      authRolesIDs.length,
-      authRolesIDs
-    )
   }
 
   let filteredPrincipalUserGroups = []
-  if (
-    req.query.include.includes(
-      'project_authorization_roles.principal_user_groups'
-    )
-  ) {
+  if (req.query.include.includes('project_authorization_roles.principal_user_groups')) {
     let principalUserGroupIDs = []
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
@@ -1401,19 +1303,13 @@ function getIguazioProject(req, res) {
       }
     }
     for (let groupID of principalUserGroupIDs) {
-      filteredPrincipalUserGroups.push(
-        iguazioUserGrops.data.find(item => item.id === groupID)
-      )
+      filteredPrincipalUserGroups.push(iguazioUserGrops.data.find(item => item.id === groupID))
     }
   }
 
   res.send({
     data: filteredProject,
-    included: [
-      ...filteredAuthRoles,
-      ...filteredPrincipalUsers,
-      ...filteredPrincipalUserGroups
-    ],
+    included: [...filteredAuthRoles, ...filteredPrincipalUsers, ...filteredPrincipalUserGroups],
     meta: iguazioProjectAuthorizationRoles.meta
   })
 }
@@ -1491,16 +1387,10 @@ function postProjectMembers(req, res) {
 }
 
 function getIguazioUserGrops(req, res) {
-  console.log('requests log: ', req.method, req.url)
-  console.log('debug: ', req.params, req.query, req.body)
-
   res.send(iguazioUserGrops)
 }
 
 function getIguazioUsers(req, res) {
-  console.log('requests log: ', req.method, req.url)
-  console.log('debug: ', req.params, req.query, req.body)
-
   res.send(iguazioUsers)
 }
 
@@ -1543,18 +1433,12 @@ app.get(`${mlrunAPIIngress}/frontend-spec`, getFrontendSpec)
 app.get(`${mlrunAPIIngress}/projects/:project/feature-sets`, getFeatureSet)
 
 // POST request after ferification should be deleted
-app.post(
-  `${mlrunAPIIngress}/projects/:project/feature-sets`,
-  createProjectsFeatureSet
-)
+app.post(`${mlrunAPIIngress}/projects/:project/feature-sets`, createProjectsFeatureSet)
 app.put(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   createProjectsFeatureSet
 )
-app.delete(
-  `${mlrunAPIIngress}/projects/:project/feature-sets/:featureSet`,
-  deleteFeatureSet
-)
+app.delete(`${mlrunAPIIngress}/projects/:project/feature-sets/:featureSet`, deleteFeatureSet)
 
 app.get(`${mlrunAPIIngress}/projects`, getProjects)
 app.post(`${mlrunAPIIngress}/projects`, createNewProject)
@@ -1570,28 +1454,20 @@ app.get(`${mlrunAPIIngress}/project-summaries`, getProjectsSummaries)
 app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
 app.get(`${mlrunAPIIngress}/runs`, getRuns)
-
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
+app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
+app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
-app.get(
-  `${mlrunAPIIngress}/projects/:project/schedules/:schedule`,
-  getProjectsSchedule
-)
-app.delete(
-  `${mlrunAPIIngress}/projects/:project/schedules/:schedule`,
-  deleteSchedule
-)
+app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)
+app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/pipelines/:pipelineID`, getPipeline)
 
-app.get(
-  `${mlrunAPIIngress}/projects/:project/artifact-tags`,
-  getProjectsArtifactTags
-)
-app.get(`${mlrunAPIIngress}/artifacts`, getArtifacts)
+app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
+app.get(`${mlrunAPIIngress}/projects/:project/artifacts`, getArtifacts)
 
 app.post(`${mlrunAPIIngress}/artifact/:project/:uid/:artifact`, postArtifact)
 app.get(
@@ -1602,10 +1478,7 @@ app.patch(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   patchProjectsFeatureSets
 )
-app.post(
-  `${mlrunAPIIngress}/projects/:project/feature-vectors`,
-  postProjectsFeatureVectors
-)
+app.post(`${mlrunAPIIngress}/projects/:project/feature-vectors`, postProjectsFeatureVectors)
 app.put(
   `${mlrunAPIIngress}/projects/:project/feature-vectors/:name/references/:tag`,
   putProjectsFeatureVectors
@@ -1638,18 +1511,12 @@ app.get(`${mlrunAPIIngress}/files`, getFile)
 
 app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 
-app.get(
-  `${mlrunAPIIngress}/projects/:project/runtime-resources`,
-  getRuntimeResources
-)
+app.get(`${mlrunAPIIngress}/projects/:project/runtime-resources`, getRuntimeResources)
 
 app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints`, getModelEndpoints)
 app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints/:uid`, getModelEndpoint)
 
-app.get(
-  `${mlrunAPIIngress}/projects/:project/:artifact`,
-  getProjectsFeaturesEntities
-)
+app.get(`${mlrunAPIIngress}/projects/:project/:artifact`, getProjectsFeaturesEntities)
 
 app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)
 
@@ -1663,10 +1530,7 @@ app.post(`${nuclioApiUrl}/api/v3io_streams/get_shard_lags`, getNuclioShardLags)
 
 app.get(`${iguazioApiUrl}/api/projects`, getIguazioProjects)
 
-app.get(
-  `${iguazioApiUrl}/api/projects/__name__/:project/authorization`,
-  getIguazioAuthorization
-)
+app.get(`${iguazioApiUrl}/api/projects/__name__/:project/authorization`, getIguazioAuthorization)
 
 app.get(`${iguazioApiUrl}/api/projects/:id`, getIguazioProject)
 

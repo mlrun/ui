@@ -17,182 +17,215 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import Content from '../../layout/Content/Content'
-import Loader from '../../common/Loader/Loader'
-import RegisterArtifactModal from '..//RegisterArtifactModal/RegisterArtifactModal'
-
-import artifactsAction from '../../actions/artifacts'
-import filtersActions from '../../actions/filters'
-import {
-  fetchDataSetRowData,
-  generateDataSetsDetailsMenu,
-  generatePageData,
-  pageDataInitialState
-} from './datasets.util'
-import { generateArtifacts } from '../../utils/generateArtifacts'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { filterArtifacts } from '../../utils/filterArtifacts'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import DatasetsView from './DatasetsView'
+import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
 import {
-  DATASETS,
   DATASETS_PAGE,
+  DATASET_TYPE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-
-import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
-
-const Datasets = ({
-  dataSets,
+import {
   fetchArtifactTags,
   fetchDataSet,
   fetchDataSets,
-  filtersStore,
-  getFilterTagOptions,
-  loading,
   removeDataSet,
-  removeDataSets,
-  setFilters
-}) => {
-  const [pageData, setPageData] = useState(pageDataInitialState)
+  removeDataSets
+} from '../../reducers/artifactsReducer'
+import {
+  checkForSelectedDataset,
+  fetchDataSetRowData,
+  filters,
+  generatePageData,
+  handleApplyDetailsChanges
+} from './datasets.util'
+import { cancelRequest } from '../../utils/cancelRequest'
+import { createDatasetsRowData } from '../../utils/createArtifactsContent'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useYaml } from '../../hooks/yaml.hook'
+
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+const Datasets = () => {
   const [datasets, setDatasets] = useState([])
-  const [selectedItem, setSelectedItem] = useState({})
+  const [selectedDataset, setSelectedDataset] = useState({})
+  const [selectedRowData, setSelectedRowData] = useState({})
+  const [convertedYaml, toggleConvertedYaml] = useYaml('')
+  const artifactsStore = useSelector(store => store.artifactsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
-  const urlTagOption = useGetTagOptions(fetchArtifactTags, pageData.filters)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, DATASET_TYPE)
+  const pageData = useMemo(() => generatePageData(selectedDataset), [selectedDataset])
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
 
   const fetchData = useCallback(
     filters => {
-      fetchDataSets(params.projectName, filters).then(result => {
-        if (result) {
-          setDatasets(generateArtifacts(filterArtifacts(result), DATASETS))
-        }
+      dispatch(fetchDataSets({ project: params.projectName, filters }))
+        .unwrap()
+        .then(result => {
+          if (result) {
+            setDatasets(result)
+          }
 
-        return result
-      })
+          return result
+        })
     },
-    [fetchDataSets, params.projectName]
-  )
-
-  const cancelRequest = message => {
-    datasetsRef.current?.cancel && datasetsRef.current.cancel(message)
-  }
-
-  const handleRequestOnExpand = useCallback(
-    async item => {
-      await fetchDataSetRowData(
-        fetchDataSet,
-        item,
-        setPageData,
-        !filtersStore.iter,
-        filtersStore.tag
-      )
-    },
-    [fetchDataSet, filtersStore.iter, filtersStore.tag]
-  )
-
-  const handleRemoveRowData = useCallback(
-    (item, removeData, content) => {
-      const newStoreSelectedRowData = {
-        ...content
-      }
-      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
-
-      delete newStoreSelectedRowData[item.key.identifier]
-      delete newPageDataSelectedRowData[item.key.identifier]
-
-      removeData(newStoreSelectedRowData)
-      setPageData(state => ({
-        ...state,
-        selectedRowData: newPageDataSelectedRowData
-      }))
-    },
-    [pageData.selectedRowData]
-  )
-
-  const handleRemoveDataSet = useCallback(
-    dataSet => {
-      handleRemoveRowData(dataSet, removeDataSet, dataSets.selectedRowData.content)
-    },
-    [dataSets.selectedRowData.content, handleRemoveRowData, removeDataSet]
+    [dispatch, params.projectName]
   )
 
   const handleRefresh = useCallback(
     filters => {
-      getFilterTagOptions(fetchArtifactTags, params.projectName)
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: DATASET_TYPE
+        })
+      )
+      setSelectedRowData({})
+      setDatasets([])
 
       return fetchData(filters)
     },
-    [fetchArtifactTags, fetchData, getFilterTagOptions, params.projectName]
+    [dispatch, fetchData, params.projectName]
   )
 
-  const navigateToDetailsPane = () => {
-    const { name, tag, iter } = params
-    let content = []
-
-    if (dataSets.allData.length > 0) {
-      content = dataSets.selectedRowData.content[name] || dataSets.allData
-    }
-
-    if (name && content.length !== 0) {
-      const selectedItem = content.find(contentItem => {
-        const searchKey = contentItem.name ? 'name' : 'db_key'
-        return iter
-          ? Number(iter) === contentItem.iter &&
-              contentItem[searchKey] === name &&
-              (contentItem.tag === tag || contentItem.tree === tag)
-          : contentItem[searchKey] === name && (contentItem.tag === tag || contentItem.tree === tag)
+  const handleAddTag = useCallback(
+    artifact => {
+      openPopUp(AddArtifactTagPopUp, {
+        artifact,
+        onAddTag: handleRefresh,
+        getArtifact: () =>
+          fetchDataSet({
+            project: params.projectName,
+            dataSet: artifact.db_key,
+            iter: true,
+            tag: TAG_FILTER_ALL_ITEMS
+          }),
+        projectName: params.projectName
       })
+    },
+    [handleRefresh, params.projectName]
+  )
 
-      if (!selectedItem) {
-        navigate(`/projects/${params.projectName}/datasets}`, { replace: true })
-      } else {
-        setSelectedItem({ item: selectedItem })
+  const actionsMenu = useMemo(
+    () => [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        onClick: handleAddTag
       }
-    } else {
-      setSelectedItem({})
+    ],
+    [handleAddTag, toggleConvertedYaml]
+  )
+
+  const applyDetailsChanges = useCallback(
+    changes => {
+      return handleApplyDetailsChanges(
+        changes,
+        params.projectName,
+        selectedDataset,
+        setNotification,
+        dispatch
+      )
+    },
+    [dispatch, params.projectName, selectedDataset]
+  )
+
+  const applyDetailsChangesCallback = changes => {
+    if ('tag' in changes.data) {
+      setSelectedRowData({})
+      setDatasets([])
+
+      if (changes.data.tag.currentFieldValue) {
+        navigate(
+          `/projects/${params.projectName}/datasets/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          { replace: true }
+        )
+      }
     }
+
+    handleRefresh(filtersStore)
   }
 
-  useEffect(() => {
-    setPageData(state => {
-      return {
-        ...state,
-        ...generatePageData(handleRequestOnExpand, selectedItem)
+  const handleRequestOnExpand = useCallback(
+    async dataset => {
+      await fetchDataSetRowData(
+        dispatch,
+        dataset,
+        setSelectedRowData,
+        filtersStore.iter,
+        filtersStore.tag,
+        params.projectName
+      )
+    },
+    [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
+  )
+
+  const handleRemoveRowData = useCallback(
+    dataset => {
+      const newStoreSelectedRowData = {
+        ...artifactsStore.dataSets.selectedRowData.content
       }
-    })
-  }, [handleRequestOnExpand, selectedItem])
+      const newPageDataSelectedRowData = { ...selectedRowData }
+
+      delete newStoreSelectedRowData[dataset.data.ui.identifier]
+      delete newPageDataSelectedRowData[dataset.data.ui.identifier]
+
+      dispatch(removeDataSet(newStoreSelectedRowData))
+      setSelectedRowData(newPageDataSelectedRowData)
+    },
+    [artifactsStore.dataSets.selectedRowData.content, dispatch, selectedRowData]
+  )
+
+  const { latestItems, handleExpandRow } = useGroupContent(
+    datasets,
+    getArtifactIdentifier,
+    handleRemoveRowData,
+    handleRequestOnExpand,
+    DATASETS_PAGE
+  )
+
+  const tableContent = useMemo(() => {
+    return filtersStore.groupBy === GROUP_BY_NAME
+      ? latestItems.map(contentItem => {
+          return createDatasetsRowData(contentItem, params.projectName, true)
+        })
+      : datasets.map(contentItem => createDatasetsRowData(contentItem, params.projectName))
+  }, [datasets, filtersStore.groupBy, latestItems, params.projectName])
 
   useEffect(() => {
-    if (selectedItem.item) {
-      setPageData(state => ({
-        ...state,
-        details: {
-          ...state.details,
-          menu: generateDataSetsDetailsMenu(selectedItem)
-        }
-      }))
+    dispatch(removeDataSet({}))
+    setSelectedRowData({})
+  }, [filtersStore.iter, filtersStore.tag, dispatch])
+
+  useEffect(() => {
+    if (params.name && params.tag && pageData.details.menu.length > 0) {
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [selectedItem, selectedItem.item])
-
-  useEffect(() => {
-    removeDataSet({})
-    setPageData(state => ({
-      ...state,
-      selectedRowData: {}
-    }))
-  }, [filtersStore.iter, filtersStore.tag, removeDataSet])
+  }, [location, navigate, pageData.details.menu, params.name, params.tab, params.tag])
 
   useEffect(() => {
     if (urlTagOption) {
@@ -205,72 +238,66 @@ const Datasets = ({
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name, setFilters])
+  }, [filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name, dispatch])
 
   useEffect(() => {
-    if (params.name && params.tag && pageData.details.menu.length > 0) {
-      isDetailsTabExists(DATASETS_PAGE, params, pageData.details.menu, navigate, location)
-    }
-  }, [location, navigate, params, pageData.details.menu])
-
-  useEffect(navigateToDetailsPane, [dataSets, navigate, params, setSelectedItem])
+    checkForSelectedDataset(
+      params.name,
+      selectedRowData,
+      datasets,
+      params.tag,
+      params.iter,
+      params.uid,
+      params.projectName,
+      setSelectedDataset,
+      navigate
+    )
+  }, [
+    datasets,
+    navigate,
+    params.iter,
+    params.name,
+    params.projectName,
+    params.tag,
+    params.uid,
+    selectedRowData
+  ])
 
   useEffect(() => {
     return () => {
       setDatasets([])
-      removeDataSet({})
-      removeDataSets()
-      setSelectedItem({})
-      setPageData(pageDataInitialState)
-      cancelRequest('cancel')
+      dispatch(removeDataSets())
+      setSelectedDataset({})
+      cancelRequest(datasetsRef, 'cancel')
     }
-  }, [removeDataSet, removeDataSets, setSelectedItem])
+  }, [dispatch])
+
+  useEffect(() => setDatasets([]), [filtersStore.tag])
 
   return (
-    <div className="content-wrapper" ref={datasetsRef}>
-      {loading && <Loader />}
-      <Content
-        cancelRequest={cancelRequest}
-        content={datasets}
-        getIdentifier={getArtifactIdentifier}
-        handleCancel={() => setSelectedItem({})}
-        handleActionsMenuClick={() =>
-          openPopUp(RegisterArtifactModal, {
-            artifactKind: 'dataset',
-            projectName: params.projectName,
-            refresh: handleRefresh,
-            title: pageData.actionsMenuHeader
-          })
-        }
-        handleRemoveRequestData={handleRemoveDataSet}
-        loading={loading}
-        pageData={pageData}
-        refresh={handleRefresh}
-        selectedItem={selectedItem.item}
-      />
-    </div>
+    <DatasetsView
+      actionsMenu={actionsMenu}
+      applyDetailsChanges={applyDetailsChanges}
+      applyDetailsChangesCallback={applyDetailsChangesCallback}
+      artifactsStore={artifactsStore}
+      convertedYaml={convertedYaml}
+      datasets={datasets}
+      filtersStore={filtersStore}
+      handleExpandRow={handleExpandRow}
+      handleRefresh={handleRefresh}
+      pageData={pageData}
+      ref={datasetsRef}
+      selectedDataset={selectedDataset}
+      selectedRowData={selectedRowData}
+      setSelectedDataset={setSelectedDataset}
+      tableContent={tableContent}
+      toggleConvertedYaml={toggleConvertedYaml}
+    />
   )
 }
 
-const actionCreators = {
-  fetchArtifactTags: artifactsAction.fetchArtifactTags,
-  fetchDataSet: artifactsAction.fetchDataSet,
-  fetchDataSets: artifactsAction.fetchDataSets,
-  getFilterTagOptions: filtersActions.getFilterTagOptions,
-  removeDataSet: artifactsAction.removeDataSet,
-  removeDataSets: artifactsAction.removeDataSets,
-  setFilters: filtersActions.setFilters
-}
-
-export default connect(
-  ({ artifactsStore, filtersStore }) => ({
-    dataSets: artifactsStore.dataSets,
-    loading: artifactsStore.loading,
-    filtersStore
-  }),
-  { ...actionCreators }
-)(Datasets)
+export default Datasets

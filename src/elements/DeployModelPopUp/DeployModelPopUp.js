@@ -19,8 +19,8 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { chain, keyBy, mapValues } from 'lodash'
+import { useDispatch } from 'react-redux'
+import { chain, cloneDeep, keyBy, mapValues } from 'lodash'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
@@ -29,25 +29,19 @@ import { useLocation } from 'react-router-dom'
 
 import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
 
-import artifactsAction from '../../actions/artifacts'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { MODELS_TAB } from '../../constants'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { buildFunction, fetchArtifactsFunctions } from '../../reducers/artifactsReducer'
 
 import './deployModelPopUp.scss'
+import Loader from '../../common/Loader/Loader'
 
-const DeployModelPopUp = ({
-  buildFunction,
-  fetchFunctions,
-  isOpen,
-  model,
-  onResolve,
-  setNotification
-}) => {
+const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
   const [functionList, setFunctionList] = useState([])
   const [functionOptionList, setFunctionOptionList] = useState([])
   const [tagOptionList, setTagOptionList] = useState([])
@@ -58,6 +52,8 @@ const DeployModelPopUp = ({
     selectedFunctionName: '',
     arguments: []
   })
+  const [showLoader, setShowLoader] = useState(false)
+  const dispatch = useDispatch()
 
   const formRef = React.useRef(
     createForm({
@@ -69,32 +65,37 @@ const DeployModelPopUp = ({
 
   const getTagOptions = useCallback((functionList, selectedFunctionName) => {
     return chain(functionList)
-      .filter(func => func.metadata.name === selectedFunctionName && func.metadata.tag !== '')
-      .uniqBy('metadata.tag')
+      .filter(func => func.name === selectedFunctionName && func.tag !== '')
+      .uniqBy('tag')
       .map(func => ({
-        label: func.metadata.tag,
-        id: func.metadata.tag
+        label: func.tag,
+        id: func.tag
       }))
       .value()
   }, [])
 
   useEffect(() => {
     if (functionOptionList.length === 0) {
-      fetchFunctions(model.project, {}, false).then(functions => {
-        const functionOptions = chain(functions)
-          .filter(func => func.kind === 'serving' && func?.spec?.graph?.kind === 'router')
-          .uniqBy('metadata.name')
-          .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
-          .value()
+      setShowLoader(true)
+      dispatch(fetchArtifactsFunctions({ project: model.project, filters: {} }))
+        .unwrap()
+        .then(functions => {
+          const functionOptions = chain(functions)
+            .filter(func => func.type === 'serving' && func.graph?.kind === 'router')
+            .uniqBy('name')
+            .map(func => ({ label: func.name, id: func.name }))
+            .value()
 
-        if (functionOptions.length !== 0) {
-          setFunctionList(functions)
-          setFunctionOptionList(functionOptions)
-          setInitialValues(prev => ({ ...prev, selectedFunctionName: functionOptions[0].id }))
-        }
-      })
+          if (functionOptions.length !== 0) {
+            setFunctionList(functions)
+            setFunctionOptionList(functionOptions)
+            setInitialValues(prev => ({ ...prev, selectedFunctionName: functionOptions[0].id }))
+          }
+
+          setShowLoader(false)
+        })
     }
-  }, [fetchFunctions, functionOptionList.length, initialValues.selectedFunctionName, model.project])
+  }, [dispatch, functionOptionList.length, initialValues.selectedFunctionName, model.project])
 
   useEffect(() => {
     setInitialValues(prev => ({ ...prev, modelName: model?.db_key }))
@@ -113,13 +114,12 @@ const DeployModelPopUp = ({
     if (!initialValues.className) {
       const selectedFunction = functionList.find(
         func =>
-          func.metadata.name === initialValues.selectedFunctionName &&
-          func.metadata.tag === initialValues.selectedTag
+          func.name === initialValues.selectedFunctionName && func.tag === initialValues.selectedTag
       )
 
       setInitialValues(prev => ({
         ...prev,
-        className: selectedFunction ? selectedFunction.spec.default_class : ''
+        className: selectedFunction ? selectedFunction.default_class : ''
       }))
     }
   }, [
@@ -139,13 +139,12 @@ const DeployModelPopUp = ({
 
   const deployModel = values => {
     const servingFunction = functionList.find(
-      func =>
-        func.metadata.name === values.selectedFunctionName &&
-        func.metadata.tag === values.selectedTag
+      func => func.name === values.selectedFunctionName && func.tag === values.selectedTag
     )
     const classArguments = mapValues(keyBy(values.arguments, 'key'), 'value')
+    const servingFunctionCopy = cloneDeep(servingFunction)
 
-    servingFunction.spec.graph.routes[values.modelName] = {
+    servingFunctionCopy.graph.routes[values.modelName] = {
       class_args: {
         model_path: generateUri(model, MODELS_TAB),
         ...classArguments
@@ -154,22 +153,27 @@ const DeployModelPopUp = ({
       kind: 'task'
     }
 
-    return buildFunction({ function: servingFunction })
+    return dispatch(buildFunction({ funcData: { function: servingFunctionCopy } }))
+      .unwrap()
       .then(response => {
         formRef.current = null
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Model deployment initiated successfully'
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Model deployment initiated successfully'
+          })
+        )
       })
       .catch(() => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Model deployment failed to initiate',
-          retry: deployModel
-        })
+        dispatch(
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            message: 'Model deployment failed to initiate',
+            retry: deployModel
+          })
+        )
       })
       .finally(() => {
         onResolve()
@@ -196,8 +200,8 @@ const DeployModelPopUp = ({
   const onSelectedFunctionNameChange = currentValue => {
     const tags = getTagOptions(functionList, currentValue)
     const defaultClass = functionList.find(
-      func => func.metadata.name === currentValue && func.metadata.tag === tags[0].id
-    )?.spec?.default_class
+      func => func.name === currentValue && func.tag === tags[0].id
+    )?.default_class
 
     setTagOptionList(tags)
     formRef.current.change('selectedTag', tags[0]?.id ?? '')
@@ -205,71 +209,74 @@ const DeployModelPopUp = ({
   }
 
   return (
-    <Form
-      form={formRef.current}
-      initialValues={initialValues}
-      mutators={{ ...arrayMutators, setFieldState }}
-      onSubmit={deployModel}
-    >
-      {formState => {
-        return (
-          <Modal
-            actions={getModalActions(formState)}
-            className="deploy-model"
-            location={location}
-            onClose={handleCloseModal}
-            show={isOpen}
-            size={MODAL_SM}
-            title="Deploy model"
-          >
-            <div className="form">
-              <div className="form-row">
-                <div className="form-col-2">
-                  <FormSelect
-                    className="form-field__router"
-                    disabled={functionOptionList.length === 0}
-                    label="Serving function (router)"
-                    name="selectedFunctionName"
-                    options={functionOptionList}
+    <>
+      {showLoader && <Loader />}
+      <Form
+        form={formRef.current}
+        initialValues={initialValues}
+        mutators={{ ...arrayMutators, setFieldState }}
+        onSubmit={deployModel}
+      >
+        {formState => {
+          return (
+            <Modal
+              actions={getModalActions(formState)}
+              className="deploy-model"
+              location={location}
+              onClose={handleCloseModal}
+              show={isOpen}
+              size={MODAL_SM}
+              title="Deploy model"
+            >
+              <div className="form">
+                <div className="form-row">
+                  <div className="form-col-2">
+                    <FormSelect
+                      className="form-field__router"
+                      disabled={functionOptionList.length === 0}
+                      label="Serving function (router)"
+                      name="selectedFunctionName"
+                      options={functionOptionList}
+                      required
+                    />
+                    <OnChange name="selectedFunctionName">{onSelectedFunctionNameChange}</OnChange>
+                  </div>
+                  <div className="form-col-1">
+                    <FormSelect
+                      disabled={tagOptionList.length === 0}
+                      label="Tag"
+                      name="selectedTag"
+                      options={tagOptionList}
+                      required
+                      search
+                    />
+                  </div>
+                  <div className="form-col-1">
+                    <FormInput name="className" label="Class" required />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <FormInput
+                    name="modelName"
+                    label="Model name"
                     required
-                  />
-                  <OnChange name="selectedFunctionName">{onSelectedFunctionNameChange}</OnChange>
-                </div>
-                <div className="form-col-1">
-                  <FormSelect
-                    label="Tag"
-                    name="selectedTag"
-                    search
-                    disabled={tagOptionList.length === 0}
-                    options={tagOptionList}
-                    required
+                    validationRules={getValidationRules('artifact.name')}
+                    tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
                   />
                 </div>
-                <div className="form-col-1">
-                  <FormInput name="className" label="Class" required />
-                </div>
-              </div>
-              <div className="form-row">
-                <FormInput
-                  name="modelName"
-                  label="Model name"
-                  required
-                  validationRules={getValidationRules('artifact.name')}
-                  tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
+                <FormKeyValueTable
+                  addNewItemLabel="Add class argument"
+                  fieldsPath="arguments"
+                  formState={formState}
+                  keyHeader="Class argument name"
+                  keyLabel="Class argument name"
                 />
               </div>
-              <FormKeyValueTable
-                keyHeader="Class argument name"
-                keyLabel="Class argument name"
-                addNewItemLabel="Add class argument"
-                name="arguments"
-                formState={formState}
-              />
-            </div>
-          </Modal>
-        )
-      }}
-    </Form>
+            </Modal>
+          )
+        }}
+      </Form>
+    </>
   )
 }
 
@@ -283,12 +290,4 @@ DeployModelPopUp.propTypes = {
   onResolve: PropTypes.func
 }
 
-const actionCreators = {
-  buildFunction: artifactsAction.buildFunction,
-  fetchFunctions: artifactsAction.fetchFunctions,
-  setNotification: notificationActions.setNotification
-}
-
-export default connect(null, {
-  ...actionCreators
-})(DeployModelPopUp)
+export default DeployModelPopUp

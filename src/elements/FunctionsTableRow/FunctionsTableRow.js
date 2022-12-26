@@ -17,10 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
@@ -30,81 +31,77 @@ import { ACTIONS_MENU } from '../../types'
 
 const FunctionsTableRow = ({
   actionsMenu,
-  content,
   handleExpandRow,
   handleSelectItem,
+  mainRowItemsCount,
   rowItem,
   selectedItem,
-  tableContent
+  selectedRowData
 }) => {
-  const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
   const params = useParams()
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    getFunctionIdentifier(selectedItem, true) === rowItem.name?.identifierUnique &&
+    getFunctionIdentifier(selectedItem, true) === rowItem.data?.ui?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') && 'parent-row-expanded'
   )
-
-  const findCurrentItem = useCallback(
-    rowItem => {
-      return content.find(
-        contentItem => getFunctionIdentifier(contentItem, true) === rowItem.name?.identifierUnique
-      )
-    },
-    [content]
-  )
-
-  useEffect(() => {
-    setCurrentItem(findCurrentItem(rowItem))
-  }, [findCurrentItem, rowItem])
 
   return (
     <div className={rowClassNames} ref={parent}>
       {parent.current?.classList.contains('parent-row-expanded') ? (
         <div className="row_grouped-by">
           <div className="table-body__row">
-            <TableCell
-              data={rowItem.name}
-              firstCell
-              handleExpandRow={handleExpandRow}
-              item={rowItem}
-              selectItem={handleSelectItem}
-              selectedItem={selectedItem}
-              showExpandButton
-            />
-          </div>
-          <>
-            {tableContent.map((func, index) => {
-              const subRowCurrentItem =
-                content.length > 0 &&
-                content.find(item => {
-                  return getFunctionIdentifier(item, true) === func.name.identifierUnique
-                })
-              const isActiveSubRow =
-                getFunctionIdentifier(selectedItem, true) === func.name.identifierUnique
+            {rowItem.content.map((data, index) => {
+              const cellClassName = classnames(
+                index >= mainRowItemsCount && 'table-body__cell_hidden'
+              )
 
               return (
-                <div className={`table-body__row ${isActiveSubRow && 'row_active'}`} key={index}>
-                  {Object.values(func).map((value, i) => {
-                    const funcUpdated = { ...func.updated, class: 'functions_medium' }
+                !data.hidden && (
+                  <TableCell
+                    className={cellClassName}
+                    data={data}
+                    firstCell
+                    handleExpandRow={handleExpandRow}
+                    item={rowItem}
+                    key={data.id}
+                    selectItem={handleSelectItem}
+                    selectedItem={selectedItem}
+                    showExpandButton
+                  />
+                )
+              )
+            })}
+            <div className="table-body__cell action_cell" />
+          </div>
+          <>
+            {selectedRowData[rowItem.data.ui.identifier]?.content.map((func, index) => {
+              const subRowClassNames = classnames(
+                'table-body__row',
+                selectedItem.name &&
+                  getFunctionIdentifier(selectedItem, true) === func.data.ui.identifierUnique &&
+                  'row_active'
+              )
+
+              return (
+                <div className={subRowClassNames} key={index}>
+                  {func.content.map((value, index) => {
+                    const cellClassNames = classnames(
+                      !isEmpty(selectedItem) &&
+                        index >= mainRowItemsCount &&
+                        'table-body__cell_hidden'
+                    )
 
                     return (
                       !value.hidden && (
                         <TableCell
-                          data={i === 0 && func.updated ? funcUpdated : value}
-                          item={subRowCurrentItem}
-                          link={
-                            value.getLink
-                              ? value.getLink(currentItem?.hash)
-                              : i === 0 &&
-                                `/projects/${params.projectName}/functions/${
-                                  subRowCurrentItem?.hash
-                                }${params.tab ? `/${params.tab}` : `/${detailsMenu[0].id}`}`
-                          }
+                          className={cellClassNames}
+                          data={value.expandedCellContent ? value.expandedCellContent : value}
+                          item={func.data}
+                          link={value.getLink && value.getLink(func.data.hash)}
                           key={value.id}
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
@@ -112,9 +109,6 @@ const FunctionsTableRow = ({
                       )
                     )
                   })}
-                  <div className="table-body__cell action_cell">
-                    <ActionsMenu dataItem={subRowCurrentItem} menu={actionsMenu} />
-                  </div>
                 </div>
               )
             })}
@@ -122,33 +116,32 @@ const FunctionsTableRow = ({
         </div>
       ) : (
         <>
-          {Object.values(rowItem).map((rowItemProp, i) => {
+          {rowItem.content.map((value, index) => {
             return (
-              currentItem &&
-              !rowItemProp.hidden && (
+              !value.hidden && (
                 <TableCell
-                  data={rowItemProp}
-                  firstCell={i === 0}
+                  data={value}
+                  firstCell={index === 0}
                   handleExpandRow={handleExpandRow}
-                  item={currentItem}
-                  key={rowItemProp.id}
+                  item={rowItem.data}
+                  key={value.id}
                   link={
-                    rowItemProp.getLink
-                      ? rowItemProp.getLink(currentItem?.hash)
-                      : i === 0 &&
-                        `/projects/${params.projectName}/functions/${
-                          content.length > 0 && currentItem?.hash
-                        }/${params.tab ? params.tab : `${detailsMenu[0].id}`}`
+                    value.getLink
+                      ? value.getLink(rowItem?.data?.hash)
+                      : index === 0 &&
+                        `/projects/${params.projectName}/functions/${rowItem?.data?.hash}/${
+                          params.tab ? params.tab : `${detailsMenu[0].id}`
+                        }`
                   }
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
-                  showExpandButton={Array.isArray(tableContent)}
+                  showExpandButton={value.showExpandButton}
                 />
               )
             )
           })}
           <div className="table-body__cell action_cell">
-            <ActionsMenu dataItem={currentItem} menu={actionsMenu} />
+            <ActionsMenu dataItem={rowItem.data} menu={actionsMenu} />
           </div>
         </>
       )}
@@ -156,12 +149,17 @@ const FunctionsTableRow = ({
   )
 }
 
+FunctionsTableRow.defaultProps = {
+  mainRowItemsCount: 1
+}
+
 FunctionsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSelectItem: PropTypes.func.isRequired,
+  mainRowItemsCount: PropTypes.number,
   rowItem: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  selectedRowData: PropTypes.object.isRequired
 }
 
 export default FunctionsTableRow

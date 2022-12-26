@@ -65,6 +65,11 @@
         .split-btn {
           height: 40px;
         }
+
+        .tooltip-wrapper {
+          display: flex;
+          align-items: center;
+        }
       }
 
       .project-types-select {
@@ -83,10 +88,10 @@
     }
 
     .projects-content {
-      display: flex;
-      flex: 1;
-      flex-flow: row wrap;
-      align-content: flex-start;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 18px 24px;
+      padding: 1rem 12px;
 
       .no-filtered-data {
         margin: 15px;
@@ -99,7 +104,6 @@
       top: 0;
       width: auto;
       min-width: auto;
-      margin-right: 1rem;
     }
   }
 

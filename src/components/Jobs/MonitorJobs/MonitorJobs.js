@@ -18,29 +18,49 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 
-import MonitorJobsView from './MonitorJobsView'
+import JobWizard from '../../JobWizard/JobWizard'
+import Details from '../../Details/Details'
+import FilterMenu from '../../FilterMenu/FilterMenu'
+import JobsPanel from '../../JobsPanel/JobsPanel'
+import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
+import NoData from '../../../common/NoData/NoData'
+import Table from '../../Table/Table'
+import TableTop from '../../../elements/TableTop/TableTop'
+import YamlModal from '../../../common/YamlModal/YamlModal'
 
-import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
-import { DANGER_BUTTON } from 'igz-controls/constants'
-import { handleAbortJob } from '../jobs.util'
-import { parseJob } from '../../../utils/parseJob'
-import { useYaml } from '../../../hooks/yaml.hook'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
-import { JobsContext } from '../Jobs'
+import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import {
+  GROUP_BY_NONE,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  PANEL_EDIT_MODE,
+  PANEL_RERUN_MODE
+} from '../../../constants'
 import {
   generateActionsMenu,
   generateFilters,
   generatePageData,
   monitorJobsActionCreator
 } from './monitorJobs.util'
-import { usePods } from '../../../hooks/usePods.hook'
-import { useMode } from '../../../hooks/mode.hook'
+import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
+import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { handleAbortJob } from '../jobs.util'
+import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseJob } from '../../../utils/parseJob'
+import { setNotification } from '../../../reducers/notificationReducer'
+import { useMode } from '../../../hooks/mode.hook'
+import { usePods } from '../../../hooks/usePods.hook'
+import { useYaml } from '../../../hooks/yaml.hook'
+import { setFilters } from '../../../reducers/filtersReducer'
 
 const MonitorJobs = ({
   abortJob,
@@ -51,13 +71,11 @@ const MonitorJobs = ({
   fetchJobs,
   removeJobLogs,
   removeNewJob,
-  removePods,
-  setFilters,
-  setNotification
+  removePods
 }) => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [jobs, setJobs] = useState([])
   const [jobRuns, setJobRuns] = useState([])
+  const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [dateFilter, setDateFilter] = useState(['', ''])
@@ -67,17 +85,26 @@ const MonitorJobs = ({
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { isStagingMode } = useMode()
+  const dispatch = useDispatch()
+  const { isDemoMode, isStagingMode } = useMode()
   const {
     editableItem,
     handleMonitoring,
     handleRerunJob,
+    jobWizardIsOpened,
+    jobWizardMode,
     setConfirmData,
-    setEditableItem
+    setEditableItem,
+    setJobWizardIsOpened,
+    setJobWizardMode
   } = React.useContext(JobsContext)
   const filters = useMemo(() => {
     return generateFilters(params.jobName)
   }, [params.jobName])
+  const filterMenuClassNames = classnames(
+    'content__action-bar',
+    params.jobId && 'content__action-bar_hidden'
+  )
 
   usePods(fetchJobPods, removePods, selectedJob)
 
@@ -87,11 +114,10 @@ const MonitorJobs = ({
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const pageData = useMemo(() => generatePageData(fetchJobLogs, removeJobLogs, selectedJob), [
-    fetchJobLogs,
-    removeJobLogs,
-    selectedJob
-  ])
+  const pageData = useMemo(
+    () => generatePageData(fetchJobLogs, removeJobLogs, selectedJob),
+    [fetchJobLogs, removeJobLogs, selectedJob]
+  )
 
   const refreshJobs = useCallback(
     filters => {
@@ -112,15 +138,17 @@ const MonitorJobs = ({
           }
         })
         .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch jobs',
-            retry: () => refreshJobs(filters)
-          })
+          dispatch(
+            setNotification({
+              status: error?.response?.status || 400,
+              id: Math.random(),
+              message: 'Failed to fetch jobs',
+              retry: () => refreshJobs(filters)
+            })
+          )
         })
     },
-    [fetchAllJobRuns, fetchJobs, params.jobName, params.projectName, setNotification]
+    [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
   )
 
   const onAbortJob = useCallback(
@@ -132,10 +160,11 @@ const MonitorJobs = ({
         filtersStore,
         setNotification,
         refreshJobs,
-        setConfirmData
+        setConfirmData,
+        dispatch
       )
     },
-    [abortJob, filtersStore, params.projectName, refreshJobs, setConfirmData, setNotification]
+    [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
   )
 
   const handleConfirmAbortJob = useCallback(
@@ -214,20 +243,22 @@ const MonitorJobs = ({
       }
 
       setEditableItem(null)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Job started successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job started successfully'
+        })
+      )
     },
-    [filtersStore, refreshJobs, setEditableItem, setNotification]
+    [dispatch, filtersStore, refreshJobs, setEditableItem]
   )
 
   useEffect(() => {
     if (params.jobId && pageData.details.menu.length > 0) {
-      isDetailsTabExists(JOBS_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, params, location])
+  }, [navigate, pageData.details.menu, location, params.jobId, params.tab])
 
   useEffect(() => {
     if (params.jobId && (isEmpty(selectedJob) || params.jobId !== selectedJob.uid)) {
@@ -264,24 +295,24 @@ const MonitorJobs = ({
       }
 
       refreshJobs(filters)
-      setFilters(filters)
+      dispatch(setFilters(filters))
       setDataIsLoaded(true)
     }
   }, [
     dataIsLoaded,
     dateFilter,
+    dispatch,
     isJobDataEmpty,
     params.jobId,
     params.jobName,
     params.projectName,
     refreshJobs,
-    selectedJob,
-    setFilters
+    selectedJob
   ])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NONE })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   useEffect(() => {
     return () => {
@@ -296,30 +327,126 @@ const MonitorJobs = ({
     }
   }, [params.projectName, params.jobName])
 
+  useEffect(() => {
+    if (
+      jobWizardMode &&
+      !jobWizardIsOpened &&
+      ((jobWizardMode === PANEL_RERUN_MODE && editableItem?.rerun_object) ||
+        jobWizardMode !== PANEL_RERUN_MODE)
+    ) {
+      openPopUp(JobWizard, {
+        params,
+        onWizardClose: () => {
+          setEditableItem(null)
+          setJobWizardMode(null)
+          setJobWizardIsOpened(false)
+        },
+        defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
+        mode: jobWizardMode,
+        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Re-run job' : undefined,
+        onSuccessRequest: () => refreshJobs(filtersStore)
+      })
+
+      setJobWizardIsOpened(true)
+    }
+  }, [
+    editableItem?.rerun_object,
+    filtersStore,
+    jobWizardIsOpened,
+    jobWizardMode,
+    params,
+    refreshJobs,
+    setEditableItem,
+    setJobWizardIsOpened,
+    setJobWizardMode
+  ])
+
   return (
-    <MonitorJobsView
-      actionsMenu={actionsMenu}
-      appStore={appStore}
-      convertedYaml={convertedYaml}
-      editableItem={editableItem}
-      fetchCurrentJob={fetchCurrentJob}
-      filters={filters}
-      filtersStore={filtersStore}
-      handleMonitoring={handleMonitoring}
-      handleSelectJob={handleSelectJob}
-      handleSuccessRerunJob={handleSuccessRerunJob}
-      jobRuns={jobRuns}
-      jobs={jobs}
-      jobsStore={jobsStore}
-      pageData={pageData}
-      refreshJobs={refreshJobs}
-      removeNewJob={removeNewJob}
-      selectedJob={selectedJob}
-      setEditableItem={setEditableItem}
-      setSelectedJob={setSelectedJob}
-      tableContent={tableContent}
-      toggleConvertedYaml={toggleConvertedYaml}
-    />
+    <>
+      {params.jobName && (
+        <TableTop
+          link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+          text={params.jobName}
+        />
+      )}
+      <div className={filterMenuClassNames}>
+        <FilterMenu
+          actionButton={{
+            label: 'Resource monitoring',
+            tooltip: !appStore.frontendSpec.jobs_dashboard_url ? 'Grafana service unavailable' : '',
+            variant: TERTIARY_BUTTON,
+            disabled: !appStore.frontendSpec.jobs_dashboard_url,
+            onClick: () => handleMonitoring()
+          }}
+          filters={filters}
+          onChange={refreshJobs}
+          page={JOBS_PAGE}
+          withoutExpandButton
+        />
+      </div>
+
+      {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
+        (jobs.length === 0 && !params.jobName) ? (
+        <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_JOBS_TAB)} />
+      ) : (
+        isEmpty(selectedJob) && (
+          <Table
+            actionsMenu={actionsMenu}
+            content={params.jobName ? jobRuns : jobs}
+            handleCancel={() => setSelectedJob({})}
+            handleSelectItem={handleSelectJob}
+            pageData={pageData}
+            retryRequest={refreshJobs}
+            selectedItem={selectedJob}
+            tab={MONITOR_JOBS_TAB}
+            tableHeaders={tableContent[0]?.content ?? []}
+          >
+            {tableContent.map((tableItem, index) => (
+              <JobsTableRow
+                actionsMenu={actionsMenu}
+                handleSelectJob={handleSelectJob}
+                key={index}
+                rowItem={tableItem}
+                selectedJob={selectedJob}
+              />
+            ))}
+          </Table>
+        )
+      )}
+      {!isEmpty(selectedJob) && (
+        <Details
+          actionsMenu={actionsMenu}
+          detailsMenu={pageData.details.menu}
+          getCloseDetailsLink={() => getCloseDetailsLink(location, params.jobName)}
+          handleCancel={() => setSelectedJob({})}
+          handleRefresh={fetchCurrentJob}
+          isDetailsScreen
+          pageData={pageData}
+          selectedItem={selectedJob}
+          tab={MONITOR_JOBS_TAB}
+        />
+      )}
+      {convertedYaml.length > 0 && (
+        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
+      )}
+      {editableItem && !isDemoMode && (
+        // todo: delete when the job wizard is out of the demo mode
+        <JobsPanel
+          closePanel={() => {
+            setEditableItem(null)
+            removeNewJob()
+          }}
+          defaultData={editableItem?.rerun_object}
+          mode={PANEL_EDIT_MODE}
+          onSuccessRun={tab => {
+            if (editableItem) {
+              handleSuccessRerunJob(tab)
+            }
+          }}
+          project={params.projectName}
+        />
+      )}
+    </>
   )
 }
 

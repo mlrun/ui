@@ -11,6 +11,30 @@
   box-sizing: border-box;
 }
 
+* {
+  scrollbar-color: rgba($black, 0.25) rgba($black, 0.1);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba($black, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba($black, 0.25);
+  border-radius: 10px;
+
+  &:hover {
+    background-color: rgba($black, 0.4);
+  }
+}
+
 body {
   display: flex;
   flex: 1;
@@ -30,8 +54,68 @@ body {
   width: 100%;
 }
 
+.content {
+  position: relative;
+  flex-direction: column;
+  min-width: 900px;
+  margin: 15px 24px;
+
+  @include jobsFlex;
+
+  &__header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70px;
+    padding: 14px 24px;
+    background-color: $white;
+    box-shadow: $headerShadow;
+
+    .btn {
+      &_register {
+        text-transform: capitalize;
+      }
+    }
+  }
+
+  .table-container {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 620px;
+    background-color: $white;
+    border-radius: $mainBorderRadius;
+    box-shadow: $jobsShadow;
+
+    .no_data {
+      margin: auto;
+      color: $mulledWine;
+    }
+  }
+
+  &-wrapper {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    min-width: 100%;
+  }
+
+  &__action-bar {
+    display: flex;
+    align-items: center;
+    padding: 4px 24px;
+
+    &_hidden {
+      display: none;
+    }
+  }
+}
+
 main {
   position: relative;
+  z-index: 1;
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
@@ -40,15 +124,10 @@ main {
   padding: 0;
   overflow: hidden;
   transition: margin-left 0.3s ease-in-out;
-  z-index: 1;
 
   &.has-header {
     height: calc(100vh - #{$headerHeight});
     margin-top: $headerHeight;
-  }
-
-  &.pinned {
-    margin-left: $navbarWidth;
   }
 
   &.unpinned {
@@ -334,87 +413,28 @@ iframe {
   }
 }
 
-.content {
-  position: relative;
-  flex-direction: column;
-  margin: 24px;
-  background-color: $white;
-  border-radius: $mainBorderRadius;
-  box-shadow: $jobsShadow;
-  min-width: 900px;
-
-  @include jobsFlex;
-
-  &__header {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 70px;
-    padding: 14px 24px;
-    background-color: $white;
-    box-shadow: $headerShadow;
-
-    .btn {
-      &_register {
-        text-transform: capitalize;
-      }
-    }
-  }
-
-  .table-container {
-    position: relative;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-height: 620px;
-
-    .no_data {
-      margin: auto;
-      color: $mulledWine;
-    }
-  }
-
-  &-wrapper {
-    display: flex;
-    flex: 1 1;
-    flex-direction: column;
-    min-width: 100%;
-  }
-
-  &_with-menu {
-    margin-top: 45px;
-  }
-
-  &__action-bar {
-    display: flex;
-    align-items: center;
-    padding: 4px 24px;
-
-    &_hidden {
-      display: none;
-    }
-  }
-}
-
 .form {
   color: $primary;
 
   [class*='form-col'] {
-    flex: 1 0 0%;
+    flex: 1 0 0;
 
     &:not(:last-child) {
       margin-right: 10px;
     }
   }
 
-  .form {
-    &-row {
-      display: flex;
-      align-items: flex-end;
-      margin-bottom: 20px;
-    }
+  &-row {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 20px;
 
+    &.align-stretch {
+      align-items: stretch;
+    }
+  }
+
+  .form {
     &-col {
       &-1 {
         flex-grow: 1;
@@ -441,15 +461,31 @@ iframe {
       font-size: 15px;
     }
 
-    &__step-title {
+    &-step-title {
       display: block;
-      font-size: 24px;
       margin: 0;
+      font-size: 24px;
+    }
+
+    &-step-subtitle {
+      display: block;
+      margin: 0;
+      font-size: 20px;
+    }
+
+    &-table-title {
+      display: block;
+      font-weight: 500;
+      font-size: 20px;
+
+      .tip-container {
+        margin-left: 5px;
+      }
     }
   }
 }
 
-//TODO: Delete after removing Textarea and Input and using DRC conponents
+//TODO: Delete after removing Textarea and Input and using DRC components
 @mixin fieldWrapperOld {
   position: relative;
   width: 100%;

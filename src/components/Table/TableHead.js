@@ -19,31 +19,39 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
+import { isEmpty } from 'lodash'
 
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-const TableHead = React.forwardRef(({ content }, ref) => {
+const TableHead = React.forwardRef(({ content, mainRowItemsCount, selectedItem }, ref) => {
   return (
     <div className="table-head" ref={ref}>
-      {content.map((tableItem, index) =>
-        tableItem.type !== 'hidden' && !tableItem.hidden ? (
-          <div
-            className={`table-head__item ${tableItem.class}`}
-            key={`${tableItem.header}${index}`}
-          >
+      {content.map((tableItem, index) => {
+        const cellClassNames = classnames(
+          'table-head__item',
+          tableItem.class,
+          !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
+        )
+
+        return tableItem.type !== 'hidden' && !tableItem.hidden ? (
+          <div className={cellClassNames} key={`${tableItem.header}${index}`}>
             <Tooltip template={<TextTooltipTemplate text={tableItem.header} />}>
               {tableItem.header}
             </Tooltip>
+            {tableItem.tip && <Tip text={tableItem.tip} />}
           </div>
         ) : null
-      )}
+      })}
       <div className="table-body__cell action_cell" />
     </div>
   )
 })
 
 TableHead.propTypes = {
-  content: PropTypes.array.isRequired
+  content: PropTypes.array.isRequired,
+  mainRowItemsCount: PropTypes.number.isRequired,
+  selectedItem: PropTypes.object.isRequired
 }
 
 export default TableHead

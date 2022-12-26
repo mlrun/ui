@@ -17,13 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import {
+  ARTIFACT_OTHER_TYPE,
+  DATASET_TYPE,
   DATE_FILTER_ANY_TIME,
   GROUP_BY_NAME,
-  REMOVE_FILTERS,
-  SET_FILTER_PROJECT_OPTIONS,
-  SET_FILTER_TAG_OPTIONS,
-  SET_FILTERS,
+  MODEL_TYPE,
   SHOW_ITERATIONS,
   STATE_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
@@ -48,28 +48,49 @@ const initialState = {
   projectOptions: []
 }
 
-const filtersReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case REMOVE_FILTERS:
-      return initialState
-    case SET_FILTERS:
-      return {
-        ...state,
-        ...payload
-      }
-    case SET_FILTER_TAG_OPTIONS:
-      return {
-        ...state,
-        tagOptions: payload
-      }
-    case SET_FILTER_PROJECT_OPTIONS:
-      return {
-        ...state,
-        projectOptions: payload
-      }
-    default:
-      return state
-  }
-}
+export const getFilterTagOptions = createAsyncThunk(
+  'getFilterTagOptions',
+  ({ dispatch, fetchTags, project, category }) => {
+    const fetchTagsArguments = {
+      project,
+      category
+    }
+    const fetchTagsPromise =
+      [ARTIFACT_OTHER_TYPE, MODEL_TYPE, DATASET_TYPE].includes(category) && dispatch
+        ? dispatch(fetchTags(fetchTagsArguments)).unwrap()
+        : fetchTags(fetchTagsArguments)
 
-export default filtersReducer
+    return fetchTagsPromise.then(({ data }) => {
+      return [...new Set(data.tags)].filter(option => option)
+    })
+  }
+)
+
+const filtersSlice = createSlice({
+  name: 'filtersStore',
+  initialState,
+  reducers: {
+    removeFilters(state) {
+      for (let filterProp in state) {
+        state[filterProp] = initialState[filterProp]
+      }
+    },
+    setFilters(state, action) {
+      for (let filterProp in action.payload) {
+        state[filterProp] = action.payload[filterProp]
+      }
+    },
+    setFilterProjectOptions(state, action) {
+      state.projectOptions = action.payload
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(getFilterTagOptions.fulfilled, (state, { payload }) => {
+      state.tagOptions = payload
+    })
+  }
+})
+
+export const { removeFilters, setFilters, setFilterProjectOptions } = filtersSlice.actions
+
+export default filtersSlice.reducer

@@ -19,30 +19,29 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useNavigate, useParams, Outlet } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 
-import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
 import nuclioActions from '../../actions/nuclio'
 import { GROUP_BY_NONE } from '../../constants'
-import { isProjectValid } from '../../utils/handleRedirect'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
+import { isProjectValid } from '../../utils/handleRedirect'
+import { setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 
 const ConsumerGroupsWrapper = ({
   fetchNuclioV3ioStreams,
   frontendSpec,
   projectsNames,
   resetV3ioStreamsError,
-  setFilters,
-  setNotification,
   v3ioStreams
 }) => {
   const navigate = useNavigate()
   const params = useParams()
+  const dispatch = useDispatch()
 
   const nuclioStreamsAreEnabled = useMemo(
     () => areNuclioStreamsEnabled(frontendSpec),
@@ -50,12 +49,12 @@ const ConsumerGroupsWrapper = ({
   )
 
   useEffect(() => {
-    isProjectValid(navigate, projectsNames.data,params.projectName)
+    isProjectValid(navigate, projectsNames.data, params.projectName)
   }, [navigate, params.projectName, projectsNames.data])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NONE })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   const refreshConsumerGroups = useCallback(() => {
     fetchNuclioV3ioStreams(params.projectName)
@@ -63,33 +62,24 @@ const ConsumerGroupsWrapper = ({
 
   useEffect(() => {
     if (v3ioStreams.error) {
-      setNotification({
-        status: v3ioStreams.error?.response?.status || 400,
-        id: Math.random(),
-        message: 'Failed to fetch v3io streams',
-        retry: () => refreshConsumerGroups()
-      })
+      dispatch(
+        setNotification({
+          status: v3ioStreams.error?.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch v3io streams',
+          retry: () => refreshConsumerGroups()
+        })
+      )
 
       resetV3ioStreamsError()
     }
-  }, [
-    v3ioStreams.error,
-    refreshConsumerGroups,
-    resetV3ioStreamsError,
-    setNotification
-  ])
+  }, [dispatch, v3ioStreams.error, refreshConsumerGroups, resetV3ioStreamsError])
 
   useEffect(() => {
     if (!isEmpty(frontendSpec) && !nuclioStreamsAreEnabled) {
       navigate(`/projects/${params.projectName}/monitor`)
     }
-  }, [
-    frontendSpec,
-    navigate,
-    nuclioStreamsAreEnabled,
-    params.projectName,
-    refreshConsumerGroups
-  ])
+  }, [frontendSpec, navigate, nuclioStreamsAreEnabled, params.projectName, refreshConsumerGroups])
 
   useEffect(() => {
     if (nuclioStreamsAreEnabled) {
@@ -107,7 +97,7 @@ const ConsumerGroupsWrapper = ({
         <Breadcrumbs />
       </div>
       <div className="page-content">
-        <Outlet/>
+        <Outlet />
       </div>
     </div>
   )
@@ -120,8 +110,6 @@ export default connect(
     projectsNames: projectStore.projectsNames
   }),
   {
-    ...filtersActions,
-    ...notificationActions,
     ...nuclioActions
   }
 )(ConsumerGroupsWrapper)

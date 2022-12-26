@@ -17,8 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import cronstrue from 'cronstrue'
-
 import { FUNCTIONS_PAGE, JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB } from '../constants'
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
@@ -43,7 +41,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
       },
       content: [
         {
-          header: 'Name',
+          header: jobName ? 'UID' : 'Name',
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
           class: 'table-cell-2',
@@ -185,8 +183,9 @@ export const createJobsScheduleTabContent = jobs => {
         {
           header: 'Schedule (UTC)',
           id: `schedule.${identifierUnique}`,
-          value: job.scheduled_object ? cronstrue.toString(job.scheduled_object?.schedule) : null,
-          class: 'table-cell-1'
+          value: job.scheduled_object?.schedule || null,
+          class: 'table-cell-1',
+          tip: 'The first weekday (0) is always Monday.'
         },
         {
           header: 'Labels',
@@ -368,14 +367,14 @@ export const createJobsWorkflowsTabContent = (
               {
                 header: 'Created at',
                 id: `createdAt.${identifierUnique}`,
-                value: formatDatetime(new Date(job.created_at), 'N/A'),
+                value: formatDatetime(job.created_at, 'N/A'),
                 class: 'table-cell-1',
                 hidden: isSelectedItem
               },
               {
                 header: 'Finished at',
                 id: `finishedAt.${identifierUnique}`,
-                value: formatDatetime(new Date(job.finished_at), 'N/A'),
+                value: formatDatetime(job.finished_at, 'N/A'),
                 class: 'table-cell-1',
                 hidden: isSelectedItem
               },

@@ -43,7 +43,7 @@ export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
       selectedItem.size ?? '',
       selectedItem.target_path,
       selectedItem.tree,
-      formatDatetime(new Date(selectedItem.updated), 'N/A'),
+      formatDatetime(selectedItem.updated, 'N/A'),
       page === MODELS_PAGE ? selectedItem.framework ?? '' : null,
       selectedItem.labels ?? [],
       selectedItem.sources

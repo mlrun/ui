@@ -29,6 +29,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
+        margin-bottom: 16px;
 
         &__title {
           display: flex;
@@ -142,37 +143,26 @@
       position: relative;
       width: 100%;
       min-height: 400px;
-      padding: 5px;
-      overflow-y: scroll;
+      padding: 10px 80px 10px 20px;
       color: $white;
       font-family: 'Source Code Pro', 'Courier New', monospace;
       white-space: pre-wrap;
       background-color: $black;
 
+      &__content {
+        height: 100%;
+        overflow-y: scroll;
+      }
+
       .logs_refresh {
         position: absolute;
-        top: 32px;
-        right: 29px;
-        display: flex;
-        align-items: center;
-        padding: 8px 12px;
-        color: $cornflowerBlue;
-        background-color: $white;
-        border: 1px solid $cornflowerBlue;
-        border-radius: 16px;
-        box-shadow: $previewBoxShadow;
-        cursor: pointer;
+        top: 20px;
+        right: 20px;
 
-        svg {
-          path {
-            fill: $cornflowerBlue;
-          }
-        }
-
-        &:active,
-        &:focus {
-          outline: none;
-          box-shadow: none;
+        .btn {
+          min-width: 40px;
+          padding: 0;
+          border-radius: 50%;
         }
       }
     }
@@ -196,8 +186,8 @@
         display: block;
         min-width: 30px;
         height: 30px;
-        padding: 0;
         margin: 0;
+        padding: 0;
         cursor: pointer;
       }
     }

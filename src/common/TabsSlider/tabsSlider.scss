@@ -1,0 +1,106 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+
+.tabs-slider {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  align-items: stretch;
+  background-color: $white;
+  border-bottom: $secondaryBorder;
+
+  &__tabs-wrapper {
+    overflow-x: hidden;
+  }
+
+  &__tabs {
+    display: flex;
+    transition: 0.2s;
+  }
+
+  &__tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 24px;
+    color: $topaz;
+    font-weight: bold;
+    text-transform: capitalize;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+
+    &_active {
+      color: $cornflowerBlue;
+      border-bottom-color: $cornflowerBlue;
+    }
+
+    &-tip {
+      margin-left: 5px;
+    }
+  }
+
+  &__arrow {
+    border-radius: 8px;
+    min-width: fit-content;
+    max-width: 24px;
+    display: flex;
+    width:30px;
+
+    &_left {
+      padding-top: 3px;
+      transform: rotate(180deg);
+    }
+
+    &_right {
+      padding-bottom: 3px;
+    }
+
+    &_hidden {
+      display: none;
+    }
+
+    &_disabled {
+      pointer-events: none;
+
+      & path {
+        fill: $spunPearl;
+      }
+    }
+
+    &:hover:not(.details-menu__arrow_disabled) {
+      background-color: $mulledWineThree;
+      cursor: pointer;
+    }
+
+    svg {
+      align-self: center;
+    }
+  }
+
+  &.style2 {
+    border-bottom: none;
+
+    .tabs-slider {
+      &__tab {
+        justify-content: center;
+        text-align: center;
+        border: 1px solid $amethyst;
+        border-radius: 8px;
+        color: $primary;
+        width: 148px;
+        height: 64px;
+        font-size: 15px;
+
+        &:not(:last-child) {
+          margin-right: 12px;
+        }
+
+        &_active {
+          border: 1px solid transparent;
+          color: $amethyst;
+          background-color: $frenchLilac;
+        }
+      }
+    }
+  }
+}

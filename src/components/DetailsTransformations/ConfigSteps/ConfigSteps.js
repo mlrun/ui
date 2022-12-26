@@ -27,6 +27,7 @@ import Select from '../../../common/Select/Select'
 import TextArea from '../../../common/TextArea/TextArea'
 import RadioButtons from '../../../common/RadioButtons/RadioButtons'
 import { kindList } from '../detailsTransformations.util'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 // import { DANGER_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
@@ -65,11 +66,7 @@ const ConfigSteps = ({
   const onSelectStep = step => {
     setSelectedStep(step)
     setSelectedAfterStep(
-      states[step].after
-        ? states[step].after[0]
-        : !find(states, ['on_error', step])
-        ? 'Source'
-        : ''
+      states[step].after ? states[step].after[0] : !find(states, ['on_error', step]) ? 'Source' : ''
     )
     setSelectedErrorStep(states[step].on_error ?? '')
   }
@@ -192,17 +189,19 @@ const ConfigSteps = ({
         </div>
         <div className="row">
           <div className="row-label">Class Name</div>
-          <div className="row-value">{states[selectedStep]?.class_name}</div>
+          <Tooltip
+            className="row-value"
+            template={<TextTooltipTemplate text={states[selectedStep]?.class_name} />}
+          >
+            {states[selectedStep]?.class_name}
+          </Tooltip>
         </div>
         <div className="row">
           <div className="row-label">Handler</div>
           <div className="row-value">{states[selectedStep]?.handler}</div>
         </div>
         <div className="row">
-          <CodeBlock
-            label="Arguments"
-            codeData={states[selectedStep]?.class_args}
-          />
+          <CodeBlock label="Arguments" codeData={states[selectedStep]?.class_args} />
         </div>
         <div className="row">
           <TextArea

@@ -24,12 +24,12 @@ import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import DetailsMenu from '../../elements/DetailsMenu/DetailsMenu'
 import Download from '../../common/Download/Download'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import LoadButton from '../../common/LoadButton/LoadButton'
 import Loader from '../../common/Loader/Loader'
 import Select from '../../common/Select/Select'
+import TabsSlider from '../../common/TabsSlider/TabsSlider'
 import {
   Button,
   ConfirmDialog,
@@ -42,12 +42,10 @@ import { formatDatetime } from '../../utils'
 import {
   DATASETS_PAGE,
   DETAILS_ARTIFACTS_TAB,
-  FEATURE_STORE_PAGE,
   FILES_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_TAB
+  MODEL_ENDPOINTS_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../types'
@@ -151,7 +149,7 @@ const DetailsView = React.forwardRef(
                       stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                     )
                   : selectedItem?.updated
-                  ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
+                  ? formatDatetime(selectedItem?.updated, 'N/A')
                   : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
                   ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
                   : selectedItem?.spec?.model
@@ -182,7 +180,7 @@ const DetailsView = React.forwardRef(
             </span>
           </div>
           <div className="item-header__buttons">
-            {(pageData.page === FEATURE_STORE_PAGE || pageData.details.type === MODELS_TAB) && (
+            {detailsStore.changes.counter > 0 && (
               <>
                 <Button
                   variant={LABEL_BUTTON}
@@ -261,7 +259,7 @@ const DetailsView = React.forwardRef(
             </Link>
           </div>
         </div>
-        <DetailsMenu detailsMenu={detailsMenu} onClick={detailsMenuClick} params={params} />
+        <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
         {tabsContent}
         {detailsStore.showWarning && (
           <ConfirmDialog

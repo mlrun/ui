@@ -19,13 +19,14 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty, isEqual, isNil, omitBy } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
 import { ARTIFACT_PATH, DATA, LABELS, PARAMS, SOURCE_URL } from '../../constants'
+import { setNotification } from '../../reducers/notificationReducer'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import { initialEditProjectData } from './projectSettingsGeneral.utils'
@@ -46,7 +47,6 @@ const ProjectSettingsGeneral = ({
   projectMembershipIsEnabled,
   projectOwnerIsShown,
   removeProjectData,
-  setNotification,
   setProjectLabels,
   setProjectParams,
   setProjectSettings
@@ -57,6 +57,7 @@ const ProjectSettingsGeneral = ({
     isPathValid: true
   })
   const params = useParams()
+  const dispatch = useDispatch()
 
   const generalParams = useMemo(
     () =>
@@ -75,29 +76,33 @@ const ProjectSettingsGeneral = ({
 
       editFunc(params.projectName, { ...data }, labels)
         .then(() => {
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Data was edited successfully'
-          })
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Data was edited successfully'
+            })
+          )
         })
         .catch(error => {
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'Missing edit permission for the project.'
-                : 'Failed to edit project data.',
-            retry:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? null
-                : () => sendProjectSettingsData(type, data, labels)
-          })
+          dispatch(
+            setNotification({
+              status: error.response?.status || 400,
+              id: Math.random(),
+              message:
+                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? 'Missing edit permission for the project.'
+                  : 'Failed to edit project data.',
+              retry:
+                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? null
+                  : () => sendProjectSettingsData(type, data, labels)
+            })
+          )
         })
     },
 
-    [editProjectLabels, params.projectName, setNotification]
+    [dispatch, editProjectLabels, params.projectName]
   )
 
   const handleUpdateProjectLabels = objectLabels => {
@@ -281,7 +286,6 @@ const ProjectSettingsGeneral = ({
       project={projectStore.project}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
       projectOwnerIsShown={projectOwnerIsShown}
-      setNotification={setNotification}
       setValidation={setValidation}
       validation={validation}
     />

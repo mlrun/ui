@@ -18,41 +18,52 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import filtersActions from '../actions/filters'
+import { TAG_FILTER, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
+import { getFilterTagOptions, setFilters } from '../reducers/filtersReducer'
 
-import { TAG_FILTER, TAG_FILTER_LATEST, TREE_FILTER } from '../constants'
-
-export const useGetTagOptions = (fetchTags, filters) => {
-  const [urlTag, setUrlTag] = useState(null)
+export const useGetTagOptions = (fetchTags, filters, category) => {
+  const [urlTagOption, setUrlTagOption] = useState(null)
   const { projectName, tag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
   const dispatch = useDispatch()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       filters.length > 0 &&
-      filters.find(
-        filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER
-      ) &&
+      filters.find(filter => filter.type === TAG_FILTER) &&
       tagOptions.length === 0
     ) {
-      if (tag) {
-        setUrlTag(tag)
-        dispatch(filtersActions.setFilters({ tag }))
-      } else {
-        setUrlTag(TAG_FILTER_LATEST)
+      if (!tag) {
+        setUrlTagOption(TAG_FILTER_LATEST)
       }
 
-      fetchTags(projectName).then(({ data }) => {
-        dispatch(filtersActions.setFilterTagOptions([...new Set(data.tags)]))
-      })
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags,
+          project: projectName,
+          category
+        })
+      )
+        .unwrap()
+        .then(tags => {
+          if (tag) {
+            if (tags.find(filterTag => filterTag === tag)) {
+              setUrlTagOption(tag)
+              dispatch(setFilters({ tag }))
+            } else {
+              setUrlTagOption(TAG_FILTER_ALL_ITEMS)
+              dispatch(setFilters({ tag: TAG_FILTER_ALL_ITEMS }))
+            }
+          }
+        })
     } else {
-      setUrlTag(null)
+      setUrlTagOption(null)
     }
-  }, [dispatch, fetchTags, filters, projectName, tag, tagOptions.length])
+  }, [category, dispatch, fetchTags, filters, projectName, tag, tagOptions.length])
 
-  return urlTag
+  return [urlTagOption]
 }

@@ -19,32 +19,33 @@ such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
+import axios from 'axios'
 
-import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
 import AddToFeatureVectorView from './AddToFeatureVectorView'
+import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
 
-import featureStoreActions from '../../actions/featureStore'
-import filtersActions from '../../actions/filters'
-import notificationActions from '../../actions/notification'
-import { filters } from './addToFeatureVectorPage.util'
-import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import {
-  FEATURE_STORE_PAGE,
   FEATURES_TAB,
+  FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
+import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { parseFeatures } from '../../utils/parseFeatures'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { setTablePanelOpen } from '../../reducers/tableReducer'
+import { cancelRequest } from '../../utils/cancelRequest'
 import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
-import { useYaml } from '../../hooks/yaml.hook'
-import { useGroupContent } from '../../hooks/groupContent.hook'
+import { filters } from './addToFeatureVectorPage.util'
+import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { parseFeatures } from '../../utils/parseFeatures'
+import { setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+import { setTablePanelOpen } from '../../reducers/tableReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
+import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -52,13 +53,10 @@ const AddToFeatureVectorPage = ({
   createNewFeatureVector,
   featureStore,
   fetchFeature,
-  fetchFeatures,
-  filtersStore,
   fetchFeatureSetsTags,
+  fetchFeatures,
   removeFeature,
-  removeFeatures,
-  setFilters,
-  setNotification
+  removeFeatures
 }) => {
   const [content, setContent] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
@@ -67,8 +65,9 @@ const AddToFeatureVectorPage = ({
   const params = useParams()
   const navigate = useNavigate()
   const tableStore = useSelector(store => store.tableStore)
+  const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
-  const urlTagOption = useGetTagOptions(fetchFeatureSetsTags, filters)
+  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, filters)
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
     navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
@@ -83,24 +82,28 @@ const AddToFeatureVectorPage = ({
     featureVector => {
       createNewFeatureVector(featureVector)
         .then(response => {
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Feature vector created successfully'
-          })
+          dispatch(
+            setNotification({
+              status: response.status,
+              id: Math.random(),
+              message: 'Feature vector created successfully'
+            })
+          )
           dispatch(setTablePanelOpen(false))
           navigateToFeatureVectorsScreen()
         })
         .catch(error => {
-          setNotification({
-            status: error.response.status || 400,
-            id: Math.random(),
-            message:
-              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'You are not permitted to create new feature vector.'
-                : 'Feature vector creation failed.',
-            retry: handleCreateFeatureVector
-          })
+          dispatch(
+            setNotification({
+              status: error.response.status || 400,
+              id: Math.random(),
+              message:
+                error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? 'You are not permitted to create new feature vector.'
+                  : 'Feature vector creation failed.',
+              retry: handleCreateFeatureVector
+            })
+          )
 
           if (error.response.status === FORBIDDEN_ERROR_STATUS_CODE) {
             dispatch(setTablePanelOpen(false))
@@ -108,7 +111,7 @@ const AddToFeatureVectorPage = ({
           }
         })
     },
-    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen, setNotification]
+    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen]
   )
 
   const pageData = useMemo(
@@ -134,10 +137,6 @@ const AddToFeatureVectorPage = ({
     ],
     [toggleConvertedYaml]
   )
-
-  const cancelRequest = message => {
-    addToFeatureVectorPageRef.current?.cancel && addToFeatureVectorPageRef.current.cancel(message)
-  }
 
   const fetchData = useCallback(
     async filters => {
@@ -248,30 +247,32 @@ const AddToFeatureVectorPage = ({
       removeFeature()
       removeFeatures()
       setSelectedRowData({})
-      cancelRequest('cancel')
+      cancelRequest(addToFeatureVectorPageRef, 'cancel')
     }
   }, [removeFeature, removeFeatures])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
-      setFilters({ groupBy: GROUP_BY_NAME })
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setFilters({ groupBy: GROUP_BY_NONE })
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, setFilters])
+  }, [dispatch, filtersStore.groupBy, filtersStore.tag])
 
   useEffect(() => {
     if (isEveryObjectValueEmpty(tableStore.features.featureVector)) {
       navigateToFeatureVectorsScreen()
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Please, create a feature vector first'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Please, create a feature vector first'
+        })
+      )
     } else {
       dispatch(setTablePanelOpen(true))
     }
-  }, [dispatch, navigateToFeatureVectorsScreen, setNotification, tableStore.features.featureVector])
+  }, [dispatch, navigateToFeatureVectorsScreen, tableStore.features.featureVector])
 
   return (
     <AddToFeatureVectorView
@@ -293,14 +294,10 @@ const AddToFeatureVectorPage = ({
 }
 
 export default connect(
-  ({ filtersStore, featureStore }) => ({
-    filtersStore,
+  ({ featureStore }) => ({
     featureStore
   }),
   {
-    ...featureStoreActions,
-    ...notificationActions,
-    ...filtersActions,
-    ...notificationActions
+    ...featureStoreActions
   }
 )(AddToFeatureVectorPage)

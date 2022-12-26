@@ -17,16 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { getFeatureIdentifier } from './getUniqueIdentifier'
+
 export const parseFeatures = features => {
   return features.map(feature => {
     const type = feature.feature ? 'feature' : 'entity'
-
-    return {
+    const item = {
       ...feature[type],
       ...feature.feature_set_digest,
       ui: {
         type: type,
         originalContent: feature
+      }
+    }
+
+    return {
+      ...item,
+      ui: {
+        ...item.ui,
+        identifier: getFeatureIdentifier(item),
+        identifierUnique: getFeatureIdentifier(item, true)
       }
     }
   })

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import ProjectSettingsGeneral from '../../elements/ProjectSettingsGeneral/ProjectSettingsGeneral'
@@ -27,7 +27,7 @@ import ProjectSettingsSecrets from '../../elements/ProjectSettingsSecrets/Projec
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
 import { COMPLETED_STATE, generateMembers, page, tabs, validTabs } from './projectSettings.util'
@@ -40,13 +40,14 @@ import {
 
 import './projectSettings.scss'
 
-const ProjectSettings = ({ frontendSpec, projectStore, setNotification }) => {
+const ProjectSettings = ({ frontendSpec, projectStore }) => {
   const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
   const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const [membersState, membersDispatch] = useReducer(membersReducer, initialMembersState)
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
+  const dispatch = useDispatch()
 
   const projectMembershipIsEnabled = useMemo(
     () => frontendSpec?.feature_flags?.project_membership === 'enabled',
@@ -86,14 +87,16 @@ const ProjectSettings = ({ frontendSpec, projectStore, setNotification }) => {
         .getProjectMembers(projectId)
         .then(membersResponse => generateMembers(membersResponse, membersDispatch))
         .catch(() =>
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            message: 'Failed to fetch data'
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              message: 'Failed to fetch data'
+            })
+          )
         )
     },
-    [setNotification]
+    [dispatch]
   )
   const fetchProjectMembersVisibility = project => {
     projectsIguazioApi
@@ -134,17 +137,19 @@ const ProjectSettings = ({ frontendSpec, projectStore, setNotification }) => {
     const fetchJob = () => {
       projectsIguazioApi.getProjectJob(jobId).then(response => {
         if (response.data.data.attributes.state !== COMPLETED_STATE) {
-            setTimeout(fetchJob, 1000)
+          setTimeout(fetchJob, 1000)
         } else {
           fetchProjectMembers(membersState.projectInfo.id).then(() => {
             membersDispatch({
               type: membersActions.GET_PROJECT_USERS_DATA_END
             })
-            setNotification({
-              status: 200,
-              id: Math.random(),
-              message: 'Members updated successfully'
-            })
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Members updated successfully'
+              })
+            )
           })
         }
       })
@@ -223,7 +228,6 @@ const ProjectSettings = ({ frontendSpec, projectStore, setNotification }) => {
             membersState={membersState}
             projectMembershipIsEnabled={projectMembershipIsEnabled}
             projectOwnerIsShown={projectOwnerIsShown}
-            setNotification={setNotification}
           />
         )}
       </div>
@@ -236,7 +240,5 @@ export default connect(
     projectStore,
     frontendSpec: appStore.frontendSpec
   }),
-  {
-    setNotification: notificationActions.setNotification
-  }
+  null
 )(ProjectSettings)

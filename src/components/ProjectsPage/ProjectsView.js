@@ -53,6 +53,7 @@ const ProjectsView = ({
   filterMatches,
   handleCreateProject,
   handleSelectSortOption,
+  handleSearchOnFocus,
   isDescendingOrder,
   isNameValid,
   projectStore,
@@ -68,8 +69,7 @@ const ProjectsView = ({
   setNewProjectLabels,
   setNewProjectName,
   setSelectedProjectsState,
-  sortProjectId,
-  urlParams
+  sortProjectId
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -138,6 +138,7 @@ const ProjectsView = ({
                 className="projects-search"
                 matches={filterMatches}
                 onChange={setFilterByName}
+                onFocus={handleSearchOnFocus}
                 placeholder="Search projects..."
                 setMatches={setFilterMatches}
                 value={filterByName}
@@ -208,6 +209,7 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
+  handleSearchOnFocus: PropTypes.func.isRequired,
   handleSelectSortOption: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   refreshProjects: PropTypes.func.isRequired,
@@ -221,8 +223,7 @@ ProjectsView.propTypes = {
   setNameValid: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
-  sortProjectId: PropTypes.string.isRequired,
-  urlParams: PropTypes.shape({}).isRequired
+  sortProjectId: PropTypes.string.isRequired
 }
 
 export default ProjectsView

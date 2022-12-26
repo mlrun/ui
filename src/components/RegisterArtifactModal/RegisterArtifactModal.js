@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
@@ -30,13 +30,19 @@ import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/
 import { Button, Modal } from 'igz-controls/components'
 
 import { messagesByKind } from './messagesByKind'
-import notificationActions from '../../actions/notification'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { setNotification } from '../../reducers/notificationReducer'
+import {
+  BADREQUEST_ERROR_STATUS_CODE,
+  FORBIDDEN_ERROR_STATUS_CODE,
+  MODAL_SM,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from 'igz-controls/constants'
+import { ARTIFACT_TYPE } from '../../constants'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData } from '../../utils/convertChipsData'
 import artifactApi from '../../api/artifacts-api'
-import { useMode } from '../../hooks/mode.hook'
 
 const RegisterArtifactModal = ({
   actions,
@@ -46,26 +52,22 @@ const RegisterArtifactModal = ({
   onResolve,
   projectName,
   refresh,
-  setNotification,
   title
 }) => {
-  const { isDemoMode } = useMode()
   const initialValues = {
-    kind: artifactKind !== 'artifact' ? artifactKind.toLowerCase() : 'general',
+    kind: artifactKind,
     metadata: {
       description: '',
       key: '',
       labels: []
     },
     spec: {
-      target_path: isDemoMode
-        ? {
-            fieldInfo: {
-              pathType: ''
-            },
-            path: ''
-          }
-        : ''
+      target_path: {
+        fieldInfo: {
+          pathType: ''
+        },
+        path: ''
+      }
     }
   }
   const formRef = React.useRef(
@@ -76,12 +78,13 @@ const RegisterArtifactModal = ({
     })
   )
   const location = useLocation()
+  const dispatch = useDispatch()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const registerArtifact = values => {
     const uid = uuidv4()
     const data = {
-      kind: values.kind === 'general' ? '' : values.kind,
+      kind: values.kind,
       metadata: {
         labels: convertChipsData(values.metadata.labels),
         key: values.metadata.key,
@@ -95,7 +98,7 @@ const RegisterArtifactModal = ({
           kind: 'api',
           uri: window.location.host
         },
-        target_path: isDemoMode ? values.spec.target_path.path : values.spec.target_path
+        target_path: values.spec.target_path.path
       },
       status: {},
       uid
@@ -106,20 +109,31 @@ const RegisterArtifactModal = ({
       .then(response => {
         resolveModal()
         refresh(filtersStore)
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: `${title} initiated successfully`
-        })
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: `${title} initiated successfully`
+          })
+        )
       })
-      .catch(() => {
+      .catch(error => {
+        dispatch(
+          setNotification({
+            status:
+              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? FORBIDDEN_ERROR_STATUS_CODE
+                : BADREQUEST_ERROR_STATUS_CODE,
+            id: Math.random(),
+            message:
+              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? 'You are not permitted to create a new resource'
+                : `${title} failed to initiate`,
+            retry: registerArtifact
+          })
+        )
+
         resolveModal()
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: `${title} failed to initiate`,
-          retry: registerArtifact
-        })
       })
   }
 
@@ -161,7 +175,7 @@ const RegisterArtifactModal = ({
               initialValues={initialValues}
               messageByKind={messagesByKind[artifactKind.toLowerCase()]}
               setFieldState={formState.form.mutators.setFieldState}
-              showType={artifactKind === 'artifact'}
+              showType={artifactKind === ARTIFACT_TYPE}
             />
           </Modal>
         )
@@ -181,5 +195,5 @@ export default connect(
   ({ filtersStore }) => ({
     filtersStore
   }),
-  { setNotification: notificationActions.setNotification }
+  null
 )(RegisterArtifactModal)

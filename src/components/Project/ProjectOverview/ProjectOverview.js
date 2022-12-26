@@ -51,6 +51,7 @@ import { parseFunctions } from '../../../utils/parseFunctions'
 import { getDateAndTimeByFormat } from '../../../utils/'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { useModalBlockHistory } from '../../../hooks/useModalBlockHistory.hook'
+import { useMode } from '../../../hooks/mode.hook'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
@@ -62,10 +63,11 @@ const ProjectOverview = ({ fetchProject, fetchFunctions, project }) => {
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { isDemoMode } = useMode()
 
   const cards = useMemo(() => {
-    return params.projectName ? getInitialCards(params.projectName, navigate) : {}
-  }, [params, navigate])
+    return params.projectName ? getInitialCards(params, navigate, isDemoMode) : {}
+  }, [isDemoMode, navigate, params])
 
   const handlePathExecution = handleClick(navigate, openPopUp)
 

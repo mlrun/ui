@@ -98,7 +98,7 @@ const ProjectMonitorView = ({
                   <div className="row-value">
                     <span className="row-label">Created at:</span>
                     <span className="row-name">
-                      {formatDatetime(new Date(project.data.metadata.created), '-')}
+                      {formatDatetime(project.data.metadata.created, '-')}
                     </span>
                   </div>
                 </div>

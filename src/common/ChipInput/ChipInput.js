@@ -46,10 +46,7 @@ const ChipInput = ({
   const inputContainerRef = useRef(null)
   const inputRef = useRef(null)
 
-  const inputContainerClassNames = classnames(
-    'chips-input-container',
-    className
-  )
+  const inputContainerClassNames = classnames('chips-input-container', className)
   const autoResizeInputClassNames = classnames(
     'auto-resizable-input',
     elements.length === 0 && 'full-width'
@@ -115,6 +112,7 @@ const ChipInput = ({
             handleRemoveChip={handleRemoveChip}
             isDeleteMode={isDeleteMode}
             key={`${chip.value}${index}`}
+            ref={inputContainerRef}
             showChips
           />
         )
@@ -147,24 +145,19 @@ const ChipInput = ({
               >
                 <div className="suggestion-row-value">
                   {suggestionItem.icon && (
-                    <div className="suggestion-row-icon">
-                      {suggestionItem.icon}
-                    </div>
+                    <div className="suggestion-row-icon">{suggestionItem.icon}</div>
                   )}
                   <div
                     className="suggestion-row-label"
                     dangerouslySetInnerHTML={{
-                      __html: suggestionItem.label.replace(
-                        new RegExp(typedValue, 'gi'),
-                        match => (match ? `<b>${match}</b>` : match)
+                      __html: suggestionItem.label.replace(new RegExp(typedValue, 'gi'), match =>
+                        match ? `<b>${match}</b>` : match
                       )
                     }}
                   />
                 </div>
                 {suggestionItem.subLabel && (
-                  <div className="suggestion-row-sub-label">
-                    {suggestionItem.subLabel}
-                  </div>
+                  <div className="suggestion-row-sub-label">{suggestionItem.subLabel}</div>
                 )}
               </div>
             )

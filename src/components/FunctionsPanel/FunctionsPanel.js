@@ -34,7 +34,7 @@ import {
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
 import { PANEL_CREATE_MODE } from '../../constants'
-import { LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
+import { NOTFOUND_ERROR_STATUS_CODE, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const FunctionsPanel = ({
   appStore,
@@ -217,7 +217,11 @@ const FunctionsPanel = ({
               }
             })
           })
-          .catch(() => {
+          .catch(error => {
+            if (error.response.status === NOTFOUND_ERROR_STATUS_CODE) {
+              removeFunctionsError()
+            }
+
             createFunction(deploy)
           })
       } else {

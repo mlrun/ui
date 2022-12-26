@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 
-import { DANGER_BUTTON } from 'igz-controls/constants'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -56,9 +56,7 @@ export const generateProjectActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        hidden:
-          window.mlrunConfig.nuclioMode === 'enabled' &&
-          project.metadata.name === 'default',
+        hidden: window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
         onClick: deleteProject
       }
     ]
@@ -89,14 +87,14 @@ export const projectsSortOptions = [
   }
 ]
 export const successProjectDeletingMessage = 'Project deleted successfully'
-export const failedProjectDeletingMessage = 'Failed to delete project'
 
 export const handleDeleteProjectError = (
   error,
   handleDeleteProject,
   project,
   setConfirmData,
-  setNotification
+  setNotification,
+  dispatch
 ) => {
   if (error.response?.status === 412) {
     setConfirmData({
@@ -115,11 +113,16 @@ export const handleDeleteProjectError = (
       }
     })
   } else {
-    setNotification({
-      status: 400,
-      id: Math.random(),
-      retry: () => handleDeleteProject(project),
-      message: failedProjectDeletingMessage
-    })
+    dispatch(
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        retry: () => handleDeleteProject(project),
+        message:
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? `You are not allowed to delete ${project.metadata.name} project`
+            : `Failed to delete ${project.metadata.name} project`
+      })
+    )
   }
 }

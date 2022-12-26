@@ -18,7 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { mainHttpClient } from '../httpClient'
-import { SHOW_ITERATIONS, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
+import {
+  ARTIFACT_OTHER_TYPE,
+  DATASET_TYPE,
+  MODEL_TYPE,
+  SHOW_ITERATIONS,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
+} from '../constants'
 
 const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
   const params = {}
@@ -46,8 +53,12 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
 }
 
 const artifactsApi = {
+  addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
+  replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
+  deleteTag: (project, tag, data) =>
+    mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  getArtifactPreview: (path, user, fileFormat) => {
+  getArtifactPreview: (path, user, fileFormat, cancelToken) => {
     const config = {
       params: { path }
     }
@@ -60,56 +71,73 @@ const artifactsApi = {
       config.responseType = 'blob'
     }
 
+    if (cancelToken) {
+      config.cancelToken = cancelToken
+    }
+
     return mainHttpClient.get('/files', config)
   },
-  getArtifactTag: project => mainHttpClient.get(`/projects/${project}/artifact-tags`),
+  getArtifactTags: (project, category) =>
+    mainHttpClient.get(`/projects/${project}/artifact-tags`, {
+      params: {
+        category
+      }
+    }),
   getArtifact: (project, artifact) => {
     return mainHttpClient.get(`/projects/${project}/artifacts?name=${artifact}`)
   },
   getArtifacts: (project, filters) => {
     return fetchArtifacts(project, filters)
   },
-  getDataSet: (project, dataSet, tag) => {
+  getDataSet: (project, dataSet, iter, tag) => {
     return fetchArtifacts(
       project,
       {},
       {
         params: {
-          category: 'dataset',
+          category: DATASET_TYPE,
           name: dataSet,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )
   },
   getDataSets: (project, filters, config) => {
-    return fetchArtifacts(project, filters, { ...config, params: { category: 'dataset' } }, true)
+    return fetchArtifacts(project, filters, { ...config, params: { category: DATASET_TYPE } }, true)
   },
-  getFile: (project, file, tag) => {
+  getFile: (project, file, iter, tag) => {
     return fetchArtifacts(
       project,
       {},
       {
         params: {
-          category: 'other',
+          category: ARTIFACT_OTHER_TYPE,
           name: file,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )
   },
   getFiles: (project, filters) => {
-    return fetchArtifacts(project, filters, { params: { category: 'other', format: 'full' } }, true)
+    return fetchArtifacts(
+      project,
+      filters,
+      { params: { category: ARTIFACT_OTHER_TYPE, format: 'full' } },
+      true
+    )
   },
-  getModel: (project, model, tag) => {
+  getModel: (project, model, iter, tag) => {
     return fetchArtifacts(
       project,
       {},
       {
         params: {
-          category: 'model',
+          category: MODEL_TYPE,
           name: model,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag
+          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
+          'best-iteration': Boolean(iter)
         }
       }
     )
@@ -124,7 +152,12 @@ const artifactsApi = {
     })
   },
   getModels: (project, filters) => {
-    return fetchArtifacts(project, filters, { params: { category: 'model', format: 'full' } }, true)
+    return fetchArtifacts(
+      project,
+      filters,
+      { params: { category: MODEL_TYPE, format: 'full' } },
+      true
+    )
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(

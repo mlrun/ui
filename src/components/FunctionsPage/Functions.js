@@ -17,77 +17,74 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEqual, isEmpty } from 'lodash'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import Content from '../../layout/Content/Content'
-import Loader from '../../common/Loader/Loader'
-import JobsPanel from '../JobsPanel/JobsPanel'
-import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionModal from '../NewFunctionModal/NewFunctionModal'
-import { ConfirmDialog } from 'igz-controls/components'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import FunctionsView from './FunctionsView'
 
 import {
   detailsMenu,
-  filters,
   FUNCTIONS_EDITABLE_STATES,
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
-  getFunctionsEditableTypes,
-  getTableHeaders
+  getFunctionsEditableTypes
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { parseFunctions } from '../../utils/parseFunctions'
-import filtersActions from '../../actions/filters'
+import { setFilters } from '../../reducers/filtersReducer'
 import functionsActions from '../../actions/functions'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import jobsActions from '../../actions/jobs'
 import {
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
-  PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE,
+  SHOW_UNTAGGED_ITEMS,
   TAG_LATEST
 } from '../../constants'
-import { DANGER_BUTTON, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
+import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { useMode } from '../../hooks/mode.hook'
+import createFunctionsContent from '../../utils/createFunctionsContent'
+import { useGroupContent } from '../../hooks/groupContent.hook'
+import { generateContentActionsMenu } from '../../layout/Content/content.util'
+import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const Functions = ({
   deleteFunction,
   fetchFunctionLogs,
   fetchFunctions,
-  filtersStore,
   functionsStore,
   removeFunctionLogs,
   removeFunctionsError,
   removeNewFunction,
-  removeNewJob,
-  setFilters,
-  setNotification
+  removeNewJob
 }) => {
   const [confirmData, setConfirmData] = useState(null)
+  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
+  const filtersStore = useSelector(store => store.filtersStore)
+  const [selectedRowData, setSelectedRowData] = useState({})
   let fetchFunctionLogsTimeout = useRef(null)
   const { isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
 
   const refreshFunctions = useCallback(
     filters => {
@@ -100,6 +97,64 @@ const Functions = ({
       })
     },
     [fetchFunctions, params.projectName]
+  )
+
+  const handleExpand = useCallback(
+    (func, content) => {
+      const funcIdentifier = getFunctionIdentifier(func)
+
+      setSelectedRowData(state => {
+        return {
+          ...state,
+          [funcIdentifier]: {
+            content: createFunctionsContent(content[func.name], null, params.projectName, false)
+          }
+        }
+      })
+    },
+    [params.projectName]
+  )
+
+  const handleCollapse = useCallback(
+    func => {
+      const funcIdentifier = getFunctionIdentifier(func)
+      const newPageDataSelectedRowData = { ...selectedRowData }
+
+      delete newPageDataSelectedRowData[funcIdentifier]
+
+      setSelectedRowData(newPageDataSelectedRowData)
+    },
+    [selectedRowData]
+  )
+
+  const handleExpandAllCallback = (collapse, content) => {
+    const newSelectedRowData = {}
+    if (collapse) {
+      setSelectedRowData({})
+    } else {
+      Object.entries(content).forEach(([key, value]) => {
+        newSelectedRowData[key] = {
+          content: createFunctionsContent(value, null, params.projectName, false)
+        }
+      })
+    }
+
+    setSelectedRowData(newSelectedRowData)
+  }
+
+  const { latestItems, handleExpandRow, expand, handleExpandAll } = useGroupContent(
+    taggedFunctions,
+    getFunctionIdentifier,
+    handleCollapse,
+    handleExpand,
+    FUNCTIONS_PAGE,
+    null,
+    handleExpandAllCallback
+  )
+
+  const tableContent = useMemo(
+    () => createFunctionsContent(latestItems, null, params.projectName, true),
+    [latestItems, params.projectName]
   )
 
   const handleFetchFunctionLogs = useCallback(
@@ -123,38 +178,59 @@ const Functions = ({
     removeFunctionLogs()
   }, [fetchFunctionLogsTimeout, removeFunctionLogs])
 
+  const removeFunction = useCallback(
+    func => {
+      deleteFunction(func.name, params.projectName)
+        .then(() => {
+          if (!isEmpty(selectedFunction)) {
+            setSelectedFunction({})
+            navigate(`/projects/${params.projectName}/functions`, { replace: true })
+          }
+
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Function deleted successfully'
+            })
+          )
+          refreshFunctions()
+        })
+        .catch(() => {
+          dispatch(
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              retry: () => removeFunction(func),
+              message: 'Function failed to delete'
+            })
+          )
+        })
+
+      setConfirmData(null)
+    },
+    [deleteFunction, dispatch, navigate, params.projectName, refreshFunctions, selectedFunction]
+  )
+
+  const onRemoveFunction = useCallback(
+    func => {
+      setConfirmData({
+        item: func,
+        header: 'Delete function?',
+        message: `You try to delete function "${func.name}". Deleted functions cannot be restored.`,
+        btnCancelLabel: 'Cancel',
+        btnCancelVariant: LABEL_BUTTON,
+        btnConfirmLabel: 'Delete',
+        btnConfirmVariant: DANGER_BUTTON,
+        rejectHandler: () => setConfirmData(null),
+        confirmHandler: () => removeFunction(func)
+      })
+    },
+    [removeFunction]
+  )
+
   const pageData = {
-    actionsMenu: item => [
-      {
-        label: 'Run',
-        icon: <Run />,
-        onClick: func => setEditableItem(func),
-        hidden:
-          !FUNCTIONS_READY_STATES.includes(item?.state?.value) ||
-          item?.type === FUNCTION_TYPE_SERVING
-      },
-      {
-        label: 'Edit',
-        icon: <Edit />,
-        onClick: func => {
-          openPopUp(NewFunctionModal, {
-            defaultData: func,
-            mode: func ? PANEL_EDIT_MODE : PANEL_CREATE_MODE,
-            projectName: params.projectName
-          })
-          setFunctionsPanelIsOpen(true)
-          setEditableItem(func)
-        },
-        hidden:
-          !getFunctionsEditableTypes(isStagingMode).includes(item?.type) ||
-          !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
-      },
-      {
-        label: 'Delete',
-        icon: <Delete />,
-        onClick: onRemoveFunction
-      }
-    ],
+    page,
     details: {
       menu: detailsMenu,
       infoHeaders,
@@ -162,27 +238,54 @@ const Functions = ({
       removeLogs: handleRemoveLogs,
       withLogsRefreshBtn: false,
       type: FUNCTIONS_PAGE
-    },
-    filters,
-    page,
-    tableHeaders: getTableHeaders(!isEveryObjectValueEmpty(selectedFunction)),
-    hidePageActionMenu: true,
-    filterMenuActionButton: {
-      onClick: () =>
-        openPopUp(NewFunctionModal, { mode: PANEL_CREATE_MODE, projectName: params.projectName }),
-      label: 'New',
-      variant: SECONDARY_BUTTON
     }
   }
 
+  const actionsMenu = useMemo(() => {
+    return generateContentActionsMenu(
+      func => [
+        {
+          label: 'Run',
+          icon: <Run />,
+          onClick: func => setEditableItem(func),
+          hidden:
+            !FUNCTIONS_READY_STATES.includes(func?.state?.value) ||
+            func?.type === FUNCTION_TYPE_SERVING
+        },
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: func => {
+            setFunctionsPanelIsOpen(true)
+            setEditableItem(func)
+          },
+          hidden:
+            !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
+            !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          onClick: onRemoveFunction
+        },
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ],
+      []
+    )
+  }, [isStagingMode, onRemoveFunction, toggleConvertedYaml])
+
   useEffect(() => {
-    refreshFunctions()
+    refreshFunctions(filtersStore.filters)
 
     return () => {
       setSelectedFunction({})
       setFunctions([])
     }
-  }, [params.projectName, refreshFunctions])
+  }, [filtersStore.filters, params.projectName, refreshFunctions])
 
   useEffect(() => {
     setTaggedFunctions(
@@ -192,9 +295,9 @@ const Functions = ({
 
   useEffect(() => {
     if (params.hash && pageData.details.menu.length > 0) {
-      isDetailsTabExists(FUNCTIONS_PAGE, params, pageData.details.menu, navigate, location)
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, params, pageData.details.menu, location])
+  }, [navigate, pageData.details.menu, location, params.hash, params.tab])
 
   useEffect(() => {
     let item = {}
@@ -219,8 +322,8 @@ const Functions = ({
   }, [functions, navigate, params.hash, params.projectName])
 
   useEffect(() => {
-    setFilters({ groupBy: GROUP_BY_NAME })
-  }, [setFilters])
+    dispatch(setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS }))
+  }, [dispatch, params.projectName])
 
   const filtersChangeCallback = filters => {
     if (
@@ -242,51 +345,6 @@ const Functions = ({
     setSelectedFunction(item)
   }
 
-  const handleCancel = () => {
-    setSelectedFunction({})
-  }
-
-  const removeFunction = func => {
-    deleteFunction(func.name, params.projectName)
-      .then(() => {
-        if (!isEmpty(selectedFunction)) {
-          setSelectedFunction({})
-          navigate(`/projects/${params.projectName}/functions`, { replace: true })
-        }
-
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Function deleted successfully'
-        })
-        refreshFunctions()
-      })
-      .catch(() => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          retry: () => removeFunction(func),
-          message: 'Function failed to delete'
-        })
-      })
-
-    setConfirmData(null)
-  }
-
-  const onRemoveFunction = func => {
-    setConfirmData({
-      item: func,
-      header: 'Delete function?',
-      message: `You try to delete function "${func.name}". Deleted functions cannot be restored.`,
-      btnCancelLabel: 'Cancel',
-      btnCancelVariant: LABEL_BUTTON,
-      btnConfirmLabel: 'Delete',
-      btnConfirmVariant: DANGER_BUTTON,
-      rejectHandler: () => setConfirmData(null),
-      confirmHandler: () => removeFunction(func)
-    })
-  }
-
   const closePanel = () => {
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)
@@ -303,11 +361,13 @@ const Functions = ({
     removeNewFunction()
 
     return refreshFunctions().then(() => {
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Function created successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function created successfully'
+        })
+      )
     })
   }
 
@@ -325,11 +385,13 @@ const Functions = ({
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}`)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Function deployment initiated successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+      )
     })
   }
 
@@ -343,83 +405,61 @@ const Functions = ({
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Function deployment failed to initiate'
-      })
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Function deployment failed to initiate'
+        })
+      )
     })
   }
 
+  const getPopUpTemplate = useCallback(
+    action => {
+      return <NewFunctionModal />
+    },
+    [params.projectName]
+  )
+
+  const handleCancel = () => {
+    setSelectedFunction({})
+  }
+
   return (
-    <div className="content-wrapper">
-      {confirmData && (
-        <ConfirmDialog
-          cancelButton={{
-            handler: confirmData.rejectHandler,
-            label: confirmData.btnCancelLabel,
-            variant: confirmData.btnCancelVariant
-          }}
-          closePopUp={confirmData.rejectHandler}
-          confirmButton={{
-            handler: () => confirmData.confirmHandler(confirmData.item),
-            label: confirmData.btnConfirmLabel,
-            variant: confirmData.btnConfirmVariant
-          }}
-          header={confirmData.header}
-          isOpen={confirmData}
-          message={confirmData.message}
-        />
-      )}
-      {functionsStore.loading && <Loader />}
-      <Content
-        content={taggedFunctions}
-        filtersChangeCallback={filtersChangeCallback}
-        handleCancel={handleCancel}
-        handleSelectItem={handleSelectFunction}
-        loading={functionsStore.loading}
-        pageData={pageData}
-        refresh={refreshFunctions}
-        selectedItem={selectedFunction}
-        getIdentifier={getFunctionIdentifier}
-      />
-      {editableItem && !functionsPanelIsOpen && (
-        <JobsPanel
-          closePanel={() => {
-            setEditableItem(null)
-            removeNewJob()
-          }}
-          groupedFunctions={{
-            name: editableItem.name,
-            tag: editableItem.tag,
-            functions: functionsStore.functions.filter(
-              func =>
-                func.metadata.name === editableItem.name && func.metadata.hash === editableItem.hash
-            )
-          }}
-          mode={PANEL_EDIT_MODE}
-          project={params.projectName}
-          redirectToDetailsPane
-        />
-      )}
-      {functionsPanelIsOpen && (
-        <FunctionsPanel
-          closePanel={closePanel}
-          createFunctionSuccess={createFunctionSuccess}
-          defaultData={editableItem}
-          handleDeployFunctionFailure={handleDeployFunctionFailure}
-          handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-          mode={editableItem ? PANEL_EDIT_MODE : PANEL_CREATE_MODE}
-          project={params.projectName}
-        />
-      )}
-    </div>
+    <FunctionsView
+      actionsMenu={actionsMenu}
+      closePanel={closePanel}
+      createFunctionSuccess={createFunctionSuccess}
+      confirmData={confirmData}
+      convertedYaml={convertedYaml}
+      editableItem={editableItem}
+      expand={expand}
+      filtersChangeCallback={filtersChangeCallback}
+      filtersStore={filtersStore}
+      functionsPanelIsOpen={functionsPanelIsOpen}
+      functionsStore={functionsStore}
+      getPopUpTemplate={getPopUpTemplate}
+      handleCancel={handleCancel}
+      handleDeployFunctionFailure={handleDeployFunctionFailure}
+      handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+      handleExpandAll={handleExpandAll}
+      handleExpandRow={handleExpandRow}
+      handleSelectFunction={handleSelectFunction}
+      pageData={pageData}
+      refreshFunctions={refreshFunctions}
+      removeNewJob={removeNewJob}
+      selectedFunction={selectedFunction}
+      selectedRowData={selectedRowData}
+      setEditableItem={setEditableItem}
+      tableContent={tableContent}
+      taggedFunctions={taggedFunctions}
+      toggleConvertedYaml={toggleConvertedYaml}
+    />
   )
 }
 
-export default connect(({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }), {
-  ...filtersActions,
+export default connect(({ functionsStore }) => ({ functionsStore }), {
   ...functionsActions,
-  ...notificationActions,
   ...jobsActions
 })(React.memo(Functions))

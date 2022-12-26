@@ -52,7 +52,7 @@ const ChipCellView = React.forwardRef(
       showChips,
       showHiddenChips
     },
-    { chipsCellRef, chipsWrapperRef }
+    { chipsCellRef, chipsWrapperRef, hiddenChipCounterRef }
   ) => {
     const buttonAddClassNames = classnames(
       'button-add',
@@ -109,7 +109,7 @@ const ChipCellView = React.forwardRef(
                       handleRemoveChip={handleRemoveChip}
                       isEditMode={isEditMode}
                       onClick={handleShowElements}
-                      ref={chipsCellRef}
+                      ref={{ chipsCellRef, hiddenChipCounterRef }}
                       setChipsSizes={setChipsSizes}
                       setEditConfig={setEditConfig}
                       shortChip={shortChips}
@@ -132,7 +132,7 @@ const ChipCellView = React.forwardRef(
                         isEditMode={isEditMode}
                         setEditConfig={setEditConfig}
                         setChipsSizes={setChipsSizes}
-                        ref={chipsCellRef}
+                        ref={hiddenChipCounterRef}
                       />
                     )}
                 </div>

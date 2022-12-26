@@ -12,7 +12,7 @@
   border-top: $secondaryBorder;
 
   & [class*='table-cell-'] {
-    flex: 1 0 0%;
+    flex: 1 0 0;
     min-width: 70px;
     width: 100%;
   }
@@ -41,10 +41,6 @@
     &-small {
       max-width: 150px;
     }
-
-    &-medium {
-      max-width: 250px;
-    }
   }
 
   &__content {
@@ -63,7 +59,7 @@
       &_medium {
         max-width: 240px;
 
-        @include tableColumnFlex(1, 100px);
+        @include tableColumnFlex(1, 240px);
       }
 
       &_small {
@@ -138,6 +134,7 @@
     z-index: 2;
     display: flex;
     background-color: $white;
+    border-bottom: $secondaryBorder;
 
     &__item {
       @include tableDet;
@@ -153,6 +150,10 @@
 
       &.align-right {
         justify-content: flex-end;
+      }
+
+      .tip-container {
+        margin-left: 2px;
       }
     }
   }
@@ -181,6 +182,14 @@
       font-weight: 400;
       font-size: 15px;
       line-height: 18px;
+      border-bottom: none;
+
+      &_hidden {
+        visibility: hidden;
+        .chip {
+          visibility: hidden;
+        }
+      }
 
       .cell_name {
         position: relative;
@@ -250,6 +259,7 @@
       display: flex;
       flex-direction: row;
       min-height: 50px;
+      border-bottom: $secondaryBorder;
 
       &.parent-row {
         &:not(.parent-row-expanded) {
@@ -301,6 +311,10 @@
                   transform: rotate(90deg);
                 }
               }
+            }
+
+            &:last-child {
+              border-bottom: none;
             }
 
             &__cell {

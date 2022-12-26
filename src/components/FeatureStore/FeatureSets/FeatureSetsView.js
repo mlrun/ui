@@ -29,13 +29,14 @@ import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/Feature
 
 import { featureSetsFilters } from './featureSets.util'
 import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
-import { getNoDataMessage } from '../../../layout/Content/content.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const FeatureSetsView = React.forwardRef(
   (
     {
       actionsMenu,
       applyDetailsChanges,
+      applyDetailsChangesCallback,
       closePanel,
       createFeatureSetSuccess,
       featureSets,
@@ -53,6 +54,7 @@ const FeatureSetsView = React.forwardRef(
     ref
   ) => {
     const params = useParams()
+
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar">
@@ -69,8 +71,8 @@ const FeatureSetsView = React.forwardRef(
             message={getNoDataMessage(
               filtersStore,
               featureSetsFilters,
-              FEATURE_SETS_TAB,
-              FEATURE_STORE_PAGE
+              FEATURE_STORE_PAGE,
+              FEATURE_SETS_TAB
             )}
           />
         ) : (
@@ -78,6 +80,7 @@ const FeatureSetsView = React.forwardRef(
             <Table
               actionsMenu={actionsMenu}
               applyDetailsChanges={applyDetailsChanges}
+              applyDetailsChangesCallback={applyDetailsChangesCallback}
               content={featureSets}
               handleCancel={() => setSelectedFeatureSet({})}
               pageData={pageData}
@@ -116,6 +119,7 @@ const FeatureSetsView = React.forwardRef(
 FeatureSetsView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
+  applyDetailsChangesCallback: PropTypes.func.isRequired,
   closePanel: PropTypes.func.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
   featureSets: PropTypes.arrayOf(PropTypes.object).isRequired,

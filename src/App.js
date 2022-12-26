@@ -24,7 +24,6 @@ import Header from './layout/Header/Header'
 import Loader from './common/Loader/Loader'
 import Navbar from './layout/Navbar/Navbar'
 
-import { useMode } from './hooks/mode.hook'
 import { useNuclioMode } from './hooks/nuclioMode.hook'
 import localStorageService from './utils/localStorageService'
 import { lazyRetry } from './lazyWithRetry'
@@ -33,11 +32,13 @@ import {
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
+  MODEL_ENDPOINTS_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
+  REAL_TIME_PIPELINES_TAB,
   SCHEDULE_TAB
 } from './constants'
 
@@ -56,7 +57,14 @@ const MonitorWorkflows = lazyRetry(() =>
   import('./components/Jobs/MonitorWorkflows/MonitorWorkflows')
 )
 const ScheduledJobs = lazyRetry(() => import('./components/Jobs/ScheduledJobs/ScheduledJobs'))
-const Models = lazyRetry(() => import('./components/Models/Models'))
+const Models = lazyRetry(() => import('./components/ModelsPage/Models/Models'))
+const RealTimePipelines = lazyRetry(() =>
+  import('./components/ModelsPage/RealTimePipelines/RealTimePipelines')
+)
+const ModelEndpoints = lazyRetry(() =>
+  import('./components/ModelsPage/ModelEndpoints/ModelEndpoints')
+)
+const ModelsPage = lazyRetry(() => import('./components/ModelsPage/ModelsPage'))
 const Projects = lazyRetry(() => import('./components/ProjectsPage/Projects'))
 const ProjectMonitor = lazyRetry(() => import('./components/Project/ProjectMonitor'))
 const ConsumerGroupsWrapper = lazyRetry(() =>
@@ -83,7 +91,6 @@ const App = () => {
     localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
   )
 
-  const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
 
   const isHeaderShown = window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
@@ -113,11 +120,8 @@ const App = () => {
           >
             <Route path="projects" element={<Projects />} />
 
+            <Route path="projects/:projectName" element={<ProjectOverview />} />
             <Route path="projects/:projectName/monitor" element={<ProjectMonitor />} />
-            <Route
-              path="projects/:projectName"
-              element={!isDemoMode ? <Navigate to="monitor" replace /> : <ProjectOverview />}
-            />
             {!isNuclioModeDisabled && (
               <Route
                 path="projects/:projectName/monitor/consumer-groups/*"
@@ -204,26 +208,36 @@ const App = () => {
                 )
               )}
               <Route path={`${FEATURES_TAB}`} element={<Features />} />
-              <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} />} replace />
+              <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} replace />} />
             </Route>
-            <Route
-              path="projects/:projectName/models"
-              element={<Navigate to={`${MODELS_TAB}`} replace />}
-            />
-            <Route
-              path={`projects/:projectName/models/:pageTab/${PIPELINE_SUB_PAGE}/:pipelineId`}
-              element={<Models subPage={PIPELINE_SUB_PAGE} />}
-            />
-            {[
-              'projects/:projectName/models/:pageTab',
-              'projects/:projectName/models/:pageTab/:name/:tab',
-              'projects/:projectName/models/:pageTab/:name/:tag/:tab',
-              'projects/:projectName/models/:pageTab/:name/:tag/:iter/:tab'
-            ].map((path, index) => (
-              <Fragment key={index}>
-                <Route path={path} element={<Models />} />
-              </Fragment>
-            ))}
+            <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
+              {[
+                `${MODELS_TAB}`,
+                `${MODELS_TAB}/:name/:tab`,
+                `${MODELS_TAB}/:name/:tag/:tab`,
+                `${MODELS_TAB}/:name/:tag/:iter/:tab`
+              ].map((path, index) => (
+                <Fragment key={index}>
+                  <Route path={path} element={<Models />} />
+                </Fragment>
+              ))}
+              {[`${MODEL_ENDPOINTS_TAB}`, `${MODEL_ENDPOINTS_TAB}/:name/:tag/:tab`].map(
+                (path, index) => (
+                  <Fragment key={index}>
+                    <Route path={path} element={<ModelEndpoints />} />
+                  </Fragment>
+                )
+              )}
+              {[
+                `${REAL_TIME_PIPELINES_TAB}`,
+                `${REAL_TIME_PIPELINES_TAB}/${PIPELINE_SUB_PAGE}/:pipelineId`
+              ].map((path, index) => (
+                <Fragment key={index}>
+                  <Route path={path} element={<RealTimePipelines />} />
+                </Fragment>
+              ))}
+              <Route path="*" element={<Navigate to={MODELS_TAB} replace />} />
+            </Route>
             {[
               'projects/:projectName/files',
               'projects/:projectName/files/:name/:tag/:tab',

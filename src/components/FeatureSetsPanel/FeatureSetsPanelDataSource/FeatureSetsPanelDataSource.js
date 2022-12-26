@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isNil } from 'lodash'
 import PropTypes from 'prop-types'
 
@@ -26,7 +26,6 @@ import FeatureSetsPanelDataSourceView from './FeatureSetsPanelDataSourceView'
 
 import featureStoreActions from '../../../actions/featureStore'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
-import artifactsAction from '../../../actions/artifacts'
 import { getParsedResource } from '../../../utils/resources'
 import {
   CSV,
@@ -41,11 +40,10 @@ import {
   generateProjectsList,
   pathPlaceholders
 } from '../../../utils/panelPathScheme'
+import { fetchArtifact, fetchArtifacts } from '../../../reducers/artifactsReducer'
 
 const FeatureSetsPanelDataSource = ({
   featureStore,
-  fetchArtifact,
-  fetchArtifacts,
   fetchProjectsNames,
   project,
   setDisableButtons,
@@ -77,15 +75,11 @@ const FeatureSetsPanelDataSource = ({
   const [projects, setProjects] = useState([])
   const [artifacts, setArtifacts] = useState([])
   const [artifactsReferences, setArtifactsReferences] = useState([])
-  const [urlProjectItemTypeEntered, setUrlProjectItemTypeEntered] = useState(
-    false
-  )
+  const [urlProjectItemTypeEntered, setUrlProjectItemTypeEntered] = useState(false)
   const [urlProjectPathEntered, setUrlProjectPathEntered] = useState(false)
   const [urlArtifactPathEntered, setUrlArtifactPathEntered] = useState(false)
-  const [
-    urlArtifactReferencePathEntered,
-    setUrlArtifactReferencePathEntered
-  ] = useState(false)
+  const [urlArtifactReferencePathEntered, setUrlArtifactReferencePathEntered] = useState(false)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (
@@ -97,30 +91,22 @@ const FeatureSetsPanelDataSource = ({
         setProjects(generateProjectsList(projects, project))
       })
     }
-  }, [
-    data.url.pathType,
-    fetchProjectsNames,
-    project,
-    projects.length,
-    urlProjectItemTypeEntered
-  ])
+  }, [data.url.pathType, fetchProjectsNames, project, projects.length, urlProjectItemTypeEntered])
 
   useEffect(() => {
-    if (
-      urlProjectItemTypeEntered &&
-      urlProjectPathEntered &&
-      artifacts.length === 0
-    ) {
-      fetchArtifacts(data.url.project).then(artifacts => {
-        if (artifacts?.length > 0) {
-          setArtifacts(generateArtifactsList(artifacts))
-        }
-      })
+    if (urlProjectItemTypeEntered && urlProjectPathEntered && artifacts.length === 0) {
+      dispatch(fetchArtifacts({ project: data.url.project }))
+        .unwrap()
+        .then(artifacts => {
+          if (artifacts?.length > 0) {
+            setArtifacts(generateArtifactsList(artifacts))
+          }
+        })
     }
   }, [
     artifacts.length,
     data.url.project,
-    fetchArtifacts,
+    dispatch,
     urlProjectItemTypeEntered,
     urlProjectPathEntered
   ])
@@ -132,19 +118,19 @@ const FeatureSetsPanelDataSource = ({
       urlArtifactPathEntered &&
       artifactsReferences.length === 0
     ) {
-      fetchArtifact(data.url.project, data.url.artifact).then(artifacts => {
-        if (artifacts.length > 0 && artifacts[0].data) {
-          setArtifactsReferences(
-            generateArtifactsReferencesList(artifacts[0].data)
-          )
-        }
-      })
+      dispatch(fetchArtifact({ project: data.url.project, artifact: data.url.artifact }))
+        .unwrap()
+        .then(artifacts => {
+          if (artifacts.length > 0 && artifacts[0].data) {
+            setArtifactsReferences(generateArtifactsReferencesList(artifacts[0].data))
+          }
+        })
     }
   }, [
     artifactsReferences.length,
     data.url.artifact,
     data.url.project,
-    fetchArtifact,
+    dispatch,
     urlArtifactPathEntered,
     urlProjectItemTypeEntered,
     urlProjectPathEntered
@@ -228,13 +214,9 @@ const FeatureSetsPanelDataSource = ({
       }))
       setUrlProjectItemTypeEntered(typeof pathItems[1] === 'string')
       setUrlProjectPathEntered(typeof pathItems[2] === 'string')
-      setUrlArtifactPathEntered(
-        artifacts.some(artifactItem => artifactItem.id === artifact)
-      )
+      setUrlArtifactPathEntered(artifacts.some(artifactItem => artifactItem.id === artifact))
       setUrlArtifactReferencePathEntered(
-        artifactsReferences.some(
-          projectItemRef => projectItemRef.id === artifactReference
-        )
+        artifactsReferences.some(projectItemRef => projectItemRef.id === artifactReference)
       )
     } else {
       setData(state => ({
@@ -257,10 +239,7 @@ const FeatureSetsPanelDataSource = ({
       if (kind === CSV) {
         setValidation(prevState => ({
           ...prevState,
-          isUrlValid:
-            url.length > 0
-              ? isUrlInputValid(data.url.pathType, url, kind)
-              : true
+          isUrlValid: url.length > 0 ? isUrlInputValid(data.url.pathType, url, kind) : true
         }))
       } else if (kind === PARQUET) {
         setNewFeatureSetDataSourceParseDates('')
@@ -326,11 +305,7 @@ const FeatureSetsPanelDataSource = ({
 
   return (
     <FeatureSetsPanelDataSourceView
-      comboboxMatches={
-        data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
-          ? comboboxMatches
-          : []
-      }
+      comboboxMatches={data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? comboboxMatches : []}
       data={data}
       featureStore={featureStore}
       handleKindOnChange={handleKindOnChange}
@@ -339,9 +314,7 @@ const FeatureSetsPanelDataSource = ({
       handleUrlPathTypeChange={handleUrlPathTypeChange}
       handleUrlPathChange={handleUrlPathChange}
       setData={setData}
-      setNewFeatureSetDataSourceParseDates={
-        setNewFeatureSetDataSourceParseDates
-      }
+      setNewFeatureSetDataSourceParseDates={setNewFeatureSetDataSourceParseDates}
       setShowSchedule={setShowSchedule}
       setValidation={setValidation}
       showSchedule={showSchedule}
@@ -359,11 +332,7 @@ FeatureSetsPanelDataSource.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  (featureStore, projectStore) => ({ ...featureStore, ...projectStore }),
-  {
-    ...featureStoreActions,
-    ...artifactsAction,
-    ...projectsAction
-  }
-)(FeatureSetsPanelDataSource)
+export default connect((featureStore, projectStore) => ({ ...featureStore, ...projectStore }), {
+  ...featureStoreActions,
+  ...projectsAction
+})(FeatureSetsPanelDataSource)

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useCallback } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import yaml from 'js-yaml'
 import { orderBy } from 'lodash'
 import axios from 'axios'
@@ -33,13 +33,9 @@ import {
   handleDeleteProjectError
 } from './projectsData'
 import nuclioActions from '../../actions/nuclio'
-import notificationActions from '../../actions/notification'
+import { setNotification } from '../../reducers/notificationReducer'
 import projectsAction from '../../actions/projects'
-import {
-  DANGER_BUTTON,
-  PRIMARY_BUTTON
-} from 'igz-controls/constants'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
@@ -57,8 +53,7 @@ const Projects = ({
   removeProjects,
   setNewProjectDescription,
   setNewProjectLabels,
-  setNewProjectName,
-  setNotification
+  setNewProjectName
 }) => {
   const [actionsMenu, setActionsMenu] = useState({})
   const [confirmData, setConfirmData] = useState(null)
@@ -73,14 +68,14 @@ const Projects = ({
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [source] = useState(axios.CancelToken.source())
   const urlParams = useParams()
+  const dispatch = useDispatch()
 
   const { isNuclioModeDisabled } = useNuclioMode()
 
   const isValidProjectState = useCallback(
     project => {
       return (
-        (selectedProjectsState === 'active' &&
-          project.status.state !== 'archived') ||
+        (selectedProjectsState === 'active' && project.status.state !== 'archived') ||
         project.status.state === selectedProjectsState
       )
     },
@@ -90,8 +85,7 @@ const Projects = ({
   const handleFilterProject = useCallback(
     project => {
       return filterByName.length > 0
-        ? project.metadata.name.includes(filterByName) &&
-            isValidProjectState(project)
+        ? project.metadata.name.includes(filterByName) && isValidProjectState(project)
         : isValidProjectState(project)
     },
     [filterByName, isValidProjectState]
@@ -99,14 +93,35 @@ const Projects = ({
 
   const handleSortProjects = useCallback(
     projects => {
-      const sortPath = projectsSortOptions.find(
-        option => option.id === sortProjectId
-      ).path
+      const sortPath = projectsSortOptions.find(option => option.id === sortProjectId).path
 
       return orderBy(projects, [sortPath], [isDescendingOrder ? 'desc' : 'asc'])
     },
     [isDescendingOrder, sortProjectId]
   )
+
+  const refreshProjects = useCallback(() => {
+    if (!isNuclioModeDisabled) {
+      fetchNuclioFunctions()
+    }
+
+    removeProjects()
+    fetchProjects()
+    fetchProjectsNames()
+    fetchProjectsSummary(source.token)
+  }, [
+    fetchNuclioFunctions,
+    fetchProjects,
+    fetchProjectsNames,
+    fetchProjectsSummary,
+    isNuclioModeDisabled,
+    removeProjects,
+    source.token
+  ])
+
+  const handleSearchOnFocus = useCallback(() => {
+    refreshProjects()
+  }, [refreshProjects])
 
   const handleSelectSortOption = option => {
     setSortProjectId(option)
@@ -123,19 +138,21 @@ const Projects = ({
           fetchProjects()
         })
         .catch(error => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            retry: () => handleArchiveProject(project),
-            message:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? `You are not allowed to archive ${project.metadata.name} project`
-                : `Failed to archive ${project.metadata.name} project`
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              retry: () => handleArchiveProject(project),
+              message:
+                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                  ? `You are not allowed to archive ${project.metadata.name} project`
+                  : `Failed to archive ${project.metadata.name} project`
+            })
+          )
         })
       setConfirmData(null)
     },
-    [changeProjectState, fetchProjects, setNotification]
+    [changeProjectState, dispatch, fetchProjects]
   )
 
   const handleDeleteProject = useCallback(
@@ -144,11 +161,13 @@ const Projects = ({
       deleteProject(project.metadata.name, deleteNonEmpty)
         .then(() => {
           fetchProjects()
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: successProjectDeletingMessage
-          })
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: successProjectDeletingMessage
+            })
+          )
         })
         .catch(error => {
           handleDeleteProjectError(
@@ -156,11 +175,12 @@ const Projects = ({
             handleDeleteProject,
             project,
             setConfirmData,
-            setNotification
+            setNotification,
+            dispatch
           )
         })
     },
-    [deleteProject, fetchProjects, setNotification]
+    [deleteProject, dispatch, fetchProjects]
   )
 
   const handleUnarchiveProject = useCallback(
@@ -261,9 +281,7 @@ const Projects = ({
   }, [source])
 
   useEffect(() => {
-    setFilteredProjects(
-      handleSortProjects(projectStore.projects.filter(handleFilterProject))
-    )
+    setFilteredProjects(handleSortProjects(projectStore.projects.filter(handleFilterProject)))
   }, [handleFilterProject, handleSortProjects, projectStore.projects])
 
   useEffect(() => {
@@ -281,17 +299,6 @@ const Projects = ({
     setNameValid(true)
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
-
-  const refreshProjects = () => {
-    if (!isNuclioModeDisabled) {
-      fetchNuclioFunctions()
-    }
-
-    removeProjects()
-    fetchProjects()
-    fetchProjectsNames()
-    fetchProjectsSummary(source.token)
-  }
 
   const handleCreateProject = e => {
     e.preventDefault()
@@ -335,6 +342,7 @@ const Projects = ({
       filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
       handleSelectSortOption={handleSelectSortOption}
+      handleSearchOnFocus={handleSearchOnFocus}
       isDescendingOrder={isDescendingOrder}
       isNameValid={isNameValid}
       projectStore={projectStore}
@@ -362,7 +370,6 @@ export default connect(
   }),
   {
     ...projectsAction,
-    ...nuclioActions,
-    ...notificationActions
+    ...nuclioActions
   }
 )(Projects)

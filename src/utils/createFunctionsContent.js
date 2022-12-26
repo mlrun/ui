@@ -18,118 +18,138 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { formatDatetime } from './datetime'
-import { getFunctionIdentifier } from './getUniqueIdentifier'
-import { FUNCTIONS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
-import { page } from '../components/Models/models.util'
+import {
+  DETAILS_OVERVIEW_TAB,
+  FUNCTIONS_PAGE,
+  MODELS_PAGE,
+  REAL_TIME_PIPELINES_TAB
+} from '../constants'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
-const createFunctionsContent = (functions, isSelectedItem, params) =>
+const createFunctionsContent = (functions, pageTab, projectName, showExpandButton) =>
   functions.map(func => {
-    const identifierUnique = getFunctionIdentifier(func, true)
-
-    return params.pageTab === REAL_TIME_PIPELINES_TAB
+    return pageTab === REAL_TIME_PIPELINES_TAB
       ? {
-          name: {
-            id: `name.${identifierUnique}`,
-            value: func.name,
-            class: 'functions_medium',
-            identifier: getFunctionIdentifier(func),
-            identifierUnique: getFunctionIdentifier(func, true),
-            getLink: hash => {
-              return `/projects/${params.projectName}/${page.toLowerCase()}/${
-                params.pageTab
-              }/pipeline/${hash}`
+          data: {
+            ...func
+          },
+          content: [
+            {
+              id: `name.${func.ui.identifierUnique}`,
+              header: 'Name',
+              value: func.name,
+              class: 'functions_medium',
+              getLink: hash => {
+                return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${hash}`
+              },
+              showTag: true,
+              showStatus: true,
+              expandedCellContent: {
+                value: formatDatetime(func.updated, 'N/A'),
+                class: 'functions_medium',
+                type: 'date',
+                showTag: true,
+                showStatus: true
+              },
+              showExpandButton
             },
-            showTag: true,
-            showStatus: true
-          },
-          kind: {
-            id: `kind.${identifierUnique}`,
-            value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
-            class: 'functions_medium',
-            type: 'type'
-          },
-          function: {
-            id: `function.${identifierUnique}`,
-            value: func.name,
-            class: 'functions_big',
-            getLink: tab =>
-              generateLinkToDetailsPanel(
-                func.project,
-                FUNCTIONS_PAGE,
-                null,
-                func.hash,
-                null,
-                tab
-              )
-          },
-          updated: {
-            id: `updated.${identifierUnique}`,
-            value: formatDatetime(new Date(func.updated), 'N/A'),
-            class: 'functions_medium',
-            type: 'date',
-            showTag: true,
-            showStatus: true,
-            hidden: true
-          }
+            {
+              id: `kind.${func.ui.identifierUnique}`,
+              header: 'Type',
+              value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
+              class: 'functions_medium',
+              type: 'type'
+            },
+            {
+              id: `function.${func.ui.identifierUnique}`,
+              header: 'Function',
+              value: func.name,
+              class: 'functions_big',
+              getLink: tab =>
+                generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
+            },
+            {
+              id: `updated.${func.ui.identifierUnique}`,
+              value: formatDatetime(func.updated, 'N/A'),
+              class: 'functions_medium',
+              type: 'date',
+              showTag: true,
+              showStatus: true,
+              hidden: true
+            }
+          ]
         }
       : {
-          name: {
-            id: `name.${identifierUnique}`,
-            value: func.name,
-            class: 'functions_medium',
-            showTag: true,
-            showStatus: true,
-            identifier: getFunctionIdentifier(func),
-            identifierUnique: identifierUnique
+          data: {
+            ...func
           },
-          kind: {
-            id: `kind.${identifierUnique}`,
-            value: func.type,
-            class: 'functions_small',
-            type: 'type',
-            hidden: isSelectedItem
-          },
-          hash: {
-            id: `hash.${identifierUnique}`,
-            value: func.hash,
-            class: 'functions_small',
-            type: 'hash',
-            hidden: isSelectedItem
-          },
-          updated: {
-            id: `updated.${identifierUnique}`,
-            value: formatDatetime(new Date(func.updated), 'N/A'),
-            class: 'functions_small',
-            type: 'date',
-            showTag: true,
-            showStatus: true,
-            hidden: isSelectedItem
-          },
-          command: {
-            id: `command.${identifierUnique}`,
-            value: func.command,
-            class: 'functions_big',
-            hidden: isSelectedItem
-          },
-          image: {
-            id: `image.${identifierUnique}`,
-            value: func.image,
-            class: 'functions_big',
-            hidden: isSelectedItem
-          },
-          description: {
-            id: `description.${identifierUnique}`,
-            value: func.description,
-            class: 'functions_small',
-            hidden: isSelectedItem
-          },
-          tag: {
-            id: `tag.${identifierUnique}`,
-            value: func.tag,
-            type: 'hidden',
-            hidden: isSelectedItem
-          }
+          content: [
+            {
+              id: `name.${func.ui.identifierUnique}`,
+              header: 'Name',
+              value: func.name,
+              class: 'functions_medium',
+              getLink: hash => {
+                return `/projects/${projectName}/functions/${hash}${`/${DETAILS_OVERVIEW_TAB}`}`
+              },
+              expandedCellContent: {
+                value: formatDatetime(func.updated, 'N/A'),
+                class: 'functions_medium',
+                type: 'date',
+                showTag: true,
+                showStatus: true
+              },
+              showTag: true,
+              showStatus: true,
+              showExpandButton
+            },
+            {
+              id: `kind.${func.ui.identifierUnique}`,
+              header: 'Kind',
+              value: func.type,
+              class: 'functions_small',
+              type: 'type'
+            },
+            {
+              id: `hash.${func.ui.identifierUnique}`,
+              header: 'Hash',
+              value: func.hash,
+              class: 'functions_small',
+              type: 'hash'
+            },
+            {
+              id: `updated.${func.ui.identifierUnique}`,
+              header: 'Updated',
+              value: formatDatetime(func.updated, 'N/A'),
+              class: 'functions_small',
+              type: 'date',
+              showTag: true,
+              showStatus: true
+            },
+            {
+              id: `command.${func.ui.identifierUnique}`,
+              header: 'Command',
+              value: func.command,
+              class: 'functions_big'
+            },
+            {
+              id: `image.${func.ui.identifierUnique}`,
+              header: 'Image',
+              value: func.image,
+              class: 'functions_big'
+            },
+            {
+              id: `description.${func.ui.identifierUnique}`,
+              header: 'Description',
+              value: func.description,
+              class: 'functions_small'
+            },
+            {
+              id: `tag.${func.ui.identifierUnique}`,
+              value: func.tag,
+              type: 'hidden'
+            }
+          ]
         }
   })
 

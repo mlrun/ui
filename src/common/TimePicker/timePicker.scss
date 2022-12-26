@@ -1,5 +1,11 @@
-@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/mixins';
 
 .time-picker-container {
-  position: relative;
+  .time-picker {
+    @include inputSelectField;
+
+    &__label {
+      text-transform: none;
+    }
+  }
 }

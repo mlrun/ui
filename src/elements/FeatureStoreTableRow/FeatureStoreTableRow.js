@@ -21,17 +21,16 @@ import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
-// import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
-
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 const FeatureStoreTableRow = ({
   actionsMenu,
@@ -64,24 +63,32 @@ const FeatureStoreTableRow = ({
         <div className="row_grouped-by">
           <div className="table-body__row">
             {rowItem.content.map((data, index) => {
-              return index < mainRowItemsCount ? (
-                <TableCell
-                  data={data}
-                  firstCell={index === 0}
-                  handleExpandRow={handleExpandRow}
-                  item={rowItem.data}
-                  key={data.id}
-                  link={
-                    data.rowExpanded?.getLink
-                      ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
-                      : ''
-                  }
-                  selectItem={handleSelectItem}
-                  selectedItem={selectedItem}
-                  showExpandButton
-                />
-              ) : null
+              const cellClassName = classnames(
+                index >= mainRowItemsCount && 'table-body__cell_hidden'
+              )
+
+              return (
+                !data.hidden && (
+                  <TableCell
+                    className={cellClassName}
+                    data={data}
+                    firstCell={index === 0}
+                    handleExpandRow={handleExpandRow}
+                    item={rowItem}
+                    key={data.id}
+                    link={
+                      data.rowExpanded?.getLink
+                        ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
+                        : ''
+                    }
+                    selectItem={handleSelectItem}
+                    selectedItem={selectedItem}
+                    showExpandButton
+                  />
+                )
+              )
             })}
+            <div className="table-body__cell action_cell" />
           </div>
           {selectedRowData[rowItem.data.ui.identifier].loading ? (
             <div className="table-body__row">
@@ -102,10 +109,17 @@ const FeatureStoreTableRow = ({
                 <div className={subRowClassNames} key={index}>
                   {
                     <>
-                      {tableContentItem.content.map(value => {
+                      {tableContentItem.content.map((value, index) => {
+                        const cellClassNames = classnames(
+                          !isEmpty(selectedItem) &&
+                            index >= mainRowItemsCount &&
+                            'table-body__cell_hidden'
+                        )
+
                         return (
                           !value.hidden && (
                             <TableCell
+                              className={cellClassNames}
                               data={value.expandedCellContent ? value.expandedCellContent : value}
                               item={tableContentItem.data}
                               link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
@@ -131,12 +145,17 @@ const FeatureStoreTableRow = ({
       ) : (
         <>
           {rowItem.content.map((value, index) => {
+            const cellClassNames = classnames(
+              !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
+            )
+
             return (
               !value.hidden && (
                 <TableCell
-                  handleExpandRow={handleExpandRow}
+                  className={cellClassNames}
                   data={value}
                   firstCell={index === 0}
+                  handleExpandRow={handleExpandRow}
                   item={rowItem.data}
                   key={value.id}
                   link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
