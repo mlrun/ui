@@ -24,6 +24,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import NewFunctionModal from '../NewFunctionModal/NewFunctionModal'
 import FunctionsView from './FunctionsView'
+import { Button } from 'igz-controls/components'
 
 import {
   detailsMenu,
@@ -45,6 +46,7 @@ import {
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
+  PANEL_CREATE_MODE,
   SHOW_UNTAGGED_ITEMS,
   TAG_LATEST
 } from '../../constants'
@@ -415,9 +417,22 @@ const Functions = ({
     })
   }
 
+  const handleNewFunction = () => {
+    console.log('action')
+    return <NewFunctionModal mode={PANEL_CREATE_MODE} projectName={params.projectName} />
+  }
+
   const getPopUpTemplate = useCallback(
     action => {
-      return <NewFunctionModal />
+      return (
+        <Button
+          variant={action.variant}
+          label={action.label}
+          tooltip={action.tooltip}
+          disabled={action.disabled}
+          onClick={handleNewFunction}
+        />
+      )
     },
     [params.projectName]
   )

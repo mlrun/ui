@@ -143,7 +143,7 @@ export const getInitialValues = (appStore, defaultData, mode, runtime) => {
       },
       image: appStore.frontendSpec?.default_function_image_by_kind?.[functionKind] ?? '',
       preemption_mode:
-        appStore.frontendSpec.feature_flags.preemption_nodes === 'enabled'
+        appStore.frontendSpec?.feature_flags?.preemption_nodes === 'enabled'
           ? appStore.frontendSpec.default_function_preemption_mode || 'prevent'
           : '',
       priority_class_name:
