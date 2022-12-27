@@ -27,7 +27,7 @@ const ProjectDetailsHeader = ({ project, projectName }) => {
           <li>
             <span className="project-details__details-label">Created:</span>
             <span>
-              {getDateAndTimeByFormat(project.data.metadata.created, 'YYYY-MM-DD, HH:mm:ss A')}
+              {getDateAndTimeByFormat(project.data.metadata.created, 'MM/DD/YYYY, HH:mm:ss A')}
             </span>
           </li>
           <li>
