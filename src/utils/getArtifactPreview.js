@@ -64,6 +64,7 @@ export const fetchArtifactPreviewFromExtraData = (
       previewItem.path,
       previewItem.path.startsWith('/User') && (artifact.user || artifact.producer.owner),
       previewItem.path.replace(/.*\./g, ''),
+      artifact.db_key,
       cancelToken
     )
       .then(content => {
@@ -93,7 +94,8 @@ export const fetchArtifactPreviewFromTargetPath = (artifact, noData, setNoData, 
   fetchArtifactPreview(
     artifact.target_path,
     artifact.target_path.startsWith('/User') && (artifact.user || artifact.producer?.owner),
-    artifact.target_path.replace(/.*\./g, '')
+    artifact.target_path.replace(/.*\./g, ''),
+    artifact.db_key
   )
     .then(content => {
       setPreview([content])
@@ -116,9 +118,9 @@ export const fetchArtifactPreviewFromTargetPath = (artifact, noData, setNoData, 
     })
 }
 
-export const fetchArtifactPreview = (path, user, fileFormat, cancelToken) => {
+export const fetchArtifactPreview = (path, user, fileFormat, artifactName, cancelToken) => {
   return api.getArtifactPreview(path, user, fileFormat, cancelToken).then(res => {
-    return createArtifactPreviewContent(res, fileFormat)
+    return createArtifactPreviewContent(res, fileFormat, path, artifactName)
   })
 }
 

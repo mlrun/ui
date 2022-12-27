@@ -41,6 +41,13 @@
       }
     }
 
+    &__no-data {
+      margin-top: 10px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+    }
+
     &__table {
       display: flex;
       flex-direction: column;
