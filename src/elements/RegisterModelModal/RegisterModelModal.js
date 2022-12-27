@@ -31,6 +31,7 @@ import TargetPath from '../../common/TargetPath/TargetPath'
 
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData } from '../../utils/convertChipsData'
+import { isArtifactNameUnique } from '../../utils/artifacts.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
@@ -68,16 +69,6 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
-
-  const isArtifactNameUnique = async value => {
-    if (!value) return
-
-    const {
-      data: { artifacts }
-    } = await artifactApi.getArtifact(projectName, value)
-
-    return artifacts.length === 0
-  }
 
   const registerModel = values => {
     const uid = uuidv4()
@@ -178,7 +169,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
                 validationRules={getValidationRules('artifact.name', {
                   name: 'ArtifactExists',
                   label: 'Artifact name should be unique',
-                  pattern: isArtifactNameUnique,
+                  pattern: isArtifactNameUnique(projectName),
                   async: true
                 })}
               />

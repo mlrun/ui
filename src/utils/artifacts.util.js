@@ -20,6 +20,8 @@ such restriction.
 import { cloneDeep } from 'lodash'
 import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
 
+import artifactApi from '../api/artifacts-api'
+
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
   artifactItem = cloneDeep(artifactItem)
@@ -84,4 +86,14 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
   } else {
     return updateTagPromise
   }
+}
+
+export const isArtifactNameUnique = projectName => async value => {
+  if (!value) return
+
+  const {
+    data: { artifacts }
+  } = await artifactApi.getArtifact(projectName, value)
+
+  return artifacts.length === 0
 }
