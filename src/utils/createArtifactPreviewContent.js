@@ -19,7 +19,7 @@ such restriction.
 */
 import { has, isString } from 'lodash'
 
-export const createArtifactPreviewContent = (res, fileFormat, path) => {
+export const createArtifactPreviewContent = (res, fileFormat, path, artifactName) => {
   const artifact = {}
 
   if (res.headers['content-type'].includes('text/csv') && isString(res.data)) {
@@ -73,9 +73,9 @@ export const createArtifactPreviewContent = (res, fileFormat, path) => {
   } else {
     artifact.type = 'unknown'
 
-    if (path) {
+    if (path && artifactName) {
       artifact.data = {
-        content: `Preview is not available for this artifact type. Go to ${path} to retrieve the data OR use mlrun api/sdk project.get_aritfact(‘artifact name’).show()`
+        content: `Preview is not available for this artifact type. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact(‘${artifactName}’).show()`
       }
     }
   }

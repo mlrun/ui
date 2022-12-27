@@ -122,7 +122,11 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
           {preview?.type === 'image' && (
             <img className="artifact-preview__image" src={preview?.data?.content} alt="preview" />
           )}
-          {preview?.type === 'unknown' && <div>{preview?.data?.content ? preview?.data.content : 'No preview'}</div>}
+          {preview?.type === 'unknown' && (
+            <div className="artifact-preview__no-data">
+              {preview?.data?.content ? preview?.data.content : 'No preview'}
+            </div>
+          )}
         </>
       )}
     </div>
