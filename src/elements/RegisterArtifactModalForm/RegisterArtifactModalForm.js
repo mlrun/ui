@@ -25,15 +25,17 @@ import { FormInput, FormSelect, FormTextarea, FormChipCell } from 'igz-controls/
 import { ARTIFACT_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { isArtifactNameUnique } from '../../utils/artifacts.util'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { useMode } from '../../hooks/mode.hook'
 
 const RegisterArtifactModalForm = ({
   formState,
-  showType,
   initialValues,
   messageByKind,
-  setFieldState
+  projectName,
+  setFieldState,
+  showType
 }) => {
   const { isDemoMode } = useMode()
   const kindOptions = useMemo(
@@ -84,11 +86,17 @@ const RegisterArtifactModalForm = ({
       <div className="form-row">
         <div className="form-col-2">
           <FormInput
+            async
             label="Name"
             name="metadata.key"
             required
             tip="Artifact names in the same project must be unique"
-            validationRules={getValidationRules('artifact.name')}
+            validationRules={getValidationRules('artifact.name', {
+              name: 'ArtifactExists',
+              label: 'Artifact name should be unique',
+              pattern: isArtifactNameUnique(projectName),
+              async: true
+            })}
           />
         </div>
         {showType && (
@@ -143,9 +151,10 @@ RegisterArtifactModalForm.defaultProps = {
 
 RegisterArtifactModalForm.propTypes = {
   formState: PropTypes.object.isRequired,
-  showType: PropTypes.bool,
-  messageByKind: PropTypes.string,
   initialValues: PropTypes.object.isRequired,
+  messageByKind: PropTypes.string,
+  projectName: PropTypes.string.isRequired,
+  showType: PropTypes.bool,
   setFieldState: PropTypes.func.isRequired
 }
 

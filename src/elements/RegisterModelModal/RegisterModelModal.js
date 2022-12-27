@@ -31,6 +31,7 @@ import TargetPath from '../../common/TargetPath/TargetPath'
 
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData } from '../../utils/convertChipsData'
+import { isArtifactNameUnique } from '../../utils/artifacts.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
@@ -166,11 +167,17 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
           >
             <div className="form-row">
               <FormInput
+                async
                 label="Name"
                 name="metadata.key"
                 required
                 tip="Artifacts names in the same project must be unique."
-                validationRules={getValidationRules('artifact.name')}
+                validationRules={getValidationRules('artifact.name', {
+                  name: 'ArtifactExists',
+                  label: 'Artifact name should be unique',
+                  pattern: isArtifactNameUnique(projectName),
+                  async: true
+                })}
               />
             </div>
             <div className="form-row">
