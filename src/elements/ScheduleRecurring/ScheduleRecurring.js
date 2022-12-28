@@ -30,19 +30,10 @@ import { selectOptions } from './scheduleRecurring.util'
 
 import './scheduleRecurring.scss'
 
-const ScheduleRecurring = ({
-  daysOfWeek,
-  handleDaysOfWeek,
-  recurringDispatch,
-  recurringState
-}) => {
+const ScheduleRecurring = ({ daysOfWeek, handleDaysOfWeek, recurringDispatch, recurringState }) => {
   const {
     scheduleRepeat: { activeOption: scheduleRepeatActiveOption, week },
-    scheduleRepeatEnd: {
-      activeOption: scheduleRepeatEndActiveOption,
-      occurrences,
-      date
-    }
+    scheduleRepeatEnd: { activeOption: scheduleRepeatEndActiveOption, occurrences, date }
   } = recurringState
 
   const handleScheduleRepeatChange = (value, activeOption) => {
@@ -61,10 +52,10 @@ const ScheduleRecurring = ({
 
   return (
     <div className="recurring-container">
-        <p>
-            Note: all times are interpreted in UTC timezone. <br />
-            The first weekday (0) is always <b>Monday</b>.
-        </p>
+      <p>
+        Note: all times are interpreted in UTC timezone. <br />
+        The first day of the week (0) is <b>Monday</b>, and not Sunday.
+      </p>
       <div className="repeat_container">
         <Select
           density="chunky"
@@ -81,9 +72,7 @@ const ScheduleRecurring = ({
           <div className="schedule-repeat schedule-repeat-week">
             {daysOfWeek.map(day => (
               <span
-                className={`schedule-repeat-week_day ${week.days.includes(
-                  day.id
-                ) && 'active'}`}
+                className={`schedule-repeat-week_day ${week.days.includes(day.id) && 'active'}`}
                 key={day.id}
                 onClick={() => handleDaysOfWeek(day.id)}
               >
@@ -104,9 +93,7 @@ const ScheduleRecurring = ({
                 selectOptions[scheduleRepeatActiveOption].find(
                   option =>
                     option.id ===
-                    recurringState.scheduleRepeat[
-                      scheduleRepeatActiveOption
-                    ].toString()
+                    recurringState.scheduleRepeat[scheduleRepeatActiveOption].toString()
                 )?.id
               }
             />
@@ -123,9 +110,8 @@ const ScheduleRecurring = ({
         </span>
         {['day', 'month', 'week'].includes(scheduleRepeatActiveOption) && (
           <TimePicker
-            value={
-              recurringState.scheduleRepeat[scheduleRepeatActiveOption].time
-            }
+            hideLabel
+            value={recurringState.scheduleRepeat[scheduleRepeatActiveOption].time}
             onChange={value => {
               recurringDispatch({
                 type:
