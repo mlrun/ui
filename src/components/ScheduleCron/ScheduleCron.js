@@ -27,7 +27,7 @@ const ScheduleCron = ({ cron, setCron }) => {
     <>
       <p>
         Note: all times are interpreted in UTC timezone. <br />
-        The first weekday (0) is always <b>Monday</b>.
+        The first day of the week (0) is <b>Monday</b>, and not Sunday.
       </p>
       <Input
         placeholder="10 * * * *"
