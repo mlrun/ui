@@ -42,9 +42,7 @@ const DetailsResults = ({ job }) => {
               <div className="results-table__row">
                 {result.headers.map((item, i) => (
                   <div className="results-table__header-item" key={i}>
-                    <Tooltip template={<TextTooltipTemplate text={item} />}>
-                      {item}
-                    </Tooltip>
+                    <Tooltip template={<TextTooltipTemplate text={item} />}>{item}</Tooltip>
                   </div>
                 ))}
               </div>
@@ -58,10 +56,7 @@ const DetailsResults = ({ job }) => {
                       contentItemValue.match(/completed|running|error/gi)
                     ) {
                       return (
-                        <div
-                          className="results-table__cell"
-                          key={`${contentItemValue}${idx}`}
-                        >
+                        <div className="results-table__cell" key={`${contentItemValue}${idx}`}>
                           <Tooltip
                             template={
                               <TextTooltipTemplate
@@ -86,28 +81,17 @@ const DetailsResults = ({ job }) => {
                           className="results-table__medal results-table__cell"
                         >
                           {contentItemValue}
-                          <Tooltip
-                            template={
-                              <TextTooltipTemplate text={'Best iteration'} />
-                            }
-                          >
+                          <Tooltip template={<TextTooltipTemplate text={'Best iteration'} />}>
                             <BestIteration />
                           </Tooltip>
                         </div>
                       )
                     } else {
                       return (
-                        <div
-                          className="results-table__cell"
-                          key={`${contentItemValue}${idx}`}
-                        >
+                        <div className="results-table__cell" key={`${contentItemValue}${idx}`}>
                           <Tooltip
                             className="data-ellipsis"
-                            template={
-                              <TextTooltipTemplate
-                                text={contentItemValue.toString()}
-                              />
-                            }
+                            template={<TextTooltipTemplate text={contentItemValue.toString()} />}
                           >
                             {roundFloats(contentItemValue)}
                           </Tooltip>
@@ -119,13 +103,20 @@ const DetailsResults = ({ job }) => {
               ))}
             </div>
           </>
-        ) : job.iterations?.length === 0 &&
-          Object.keys(job.results ?? {}).length !== 0 ? (
+        ) : job.iterations?.length === 0 && Object.keys(job.results ?? {}).length !== 0 ? (
           Object.keys(job.results).map(key => {
             return (
               <div key={key} className="results-table__row">
-                <div className="results-table__cell">{key}</div>
-                <div className="results-table__cell">{job.results[key]}</div>
+                  <div className="results-table__cell table__cell-wide">
+                      <Tooltip className="data-ellipsis" template={<TextTooltipTemplate text={key} />}>
+                          {key}
+                      </Tooltip>
+                  </div>
+                  <div className="results-table__cell table__cell-wide">
+                      <Tooltip className="data-ellipsis" template={<TextTooltipTemplate text={job.results[key]} />}>
+                          {job.results[key]}
+                      </Tooltip>
+                  </div>
               </div>
             )
           })
