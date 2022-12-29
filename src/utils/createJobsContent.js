@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import cronstrue from 'cronstrue'
 
 import { FUNCTIONS_PAGE, JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB } from '../constants'
 import { formatDatetime } from './datetime'
@@ -172,7 +171,7 @@ export const createJobsScheduleTabContent = jobs => {
           header: 'Type',
           id: `type.${identifierUnique}`,
           value: job.type,
-          class: 'table-cell-1',
+          class: 'table-cell-small',
           type: 'type'
         },
         {
@@ -185,8 +184,9 @@ export const createJobsScheduleTabContent = jobs => {
         {
           header: 'Schedule (UTC)',
           id: `schedule.${identifierUnique}`,
-          value: job.scheduled_object?.schedule ? cronstrue.toString(job.scheduled_object?.schedule) : null,
-          class: 'table-cell-1'
+          value: job.scheduled_object?.schedule || null,
+          class: 'table-cell-1',
+          tip: 'The first day of the week (0) is Monday, and not Sunday.'
         },
         {
           header: 'Labels',

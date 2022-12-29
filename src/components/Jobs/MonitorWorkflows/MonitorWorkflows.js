@@ -67,6 +67,7 @@ const MonitorWorkflows = ({
   fetchFunctionLogs,
   fetchJob,
   fetchJobLogs,
+  fetchJobPods,
   fetchJobs,
   fetchWorkflow,
   fetchWorkflows,
@@ -74,6 +75,7 @@ const MonitorWorkflows = ({
   getFunctionWithHash,
   removeFunctionLogs,
   removeJobLogs,
+  removePods,
   removeNewJob,
   resetWorkflow
 }) => {
@@ -84,6 +86,7 @@ const MonitorWorkflows = ({
   const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
+  const { isDemoMode } = useMode()
   const appStore = useSelector(store => store.appStore)
   const workflowsStore = useSelector(state => state.workflowsStore)
   const filtersStore = useSelector(state => state.filtersStore)
@@ -105,7 +108,7 @@ const MonitorWorkflows = ({
   } = React.useContext(JobsContext)
   let fetchFunctionLogsTimeout = useRef(null)
 
-  usePods()
+  usePods(fetchJobPods, removePods, selectedJob)
 
   const filters = useMemo(() => generateFilters(), [])
 
@@ -450,10 +453,16 @@ const MonitorWorkflows = ({
   }, [params.projectName, params.workflowId])
 
   useEffect(() => {
-    if (jobWizardMode && !jobWizardIsOpened) {
+    if (
+      jobWizardMode &&
+      !jobWizardIsOpened &&
+      ((jobWizardMode === PANEL_RERUN_MODE && editableItem?.rerun_object) ||
+        jobWizardMode !== PANEL_RERUN_MODE)
+    ) {
       openPopUp(JobWizard, {
         params,
         onWizardClose: () => {
+          setEditableItem(null)
           setJobWizardMode(null)
           setJobWizardIsOpened(false)
         },
@@ -471,6 +480,7 @@ const MonitorWorkflows = ({
     jobWizardMode,
     params,
     refreshJobs,
+    setEditableItem,
     setJobWizardIsOpened,
     setJobWizardMode
   ])
@@ -539,7 +549,7 @@ const MonitorWorkflows = ({
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
       )}
-      {editableItem && (
+      {editableItem && !isDemoMode && (
         // todo: delete when the job wizard is out of the demo mode
         <JobsPanel
           closePanel={() => {

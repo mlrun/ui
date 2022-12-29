@@ -17,22 +17,25 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { has } from 'lodash'
+import { has, isString } from 'lodash'
 
-export const createArtifactPreviewContent = (res, fileFormat) => {
+export const createArtifactPreviewContent = (res, fileFormat, path, artifactName) => {
   const artifact = {}
 
-  if (res.headers['content-type'].includes('text/csv')) {
+  if (res.headers['content-type'].includes('text/csv') && isString(res.data)) {
     const data = res.data.split('\n')
+
     if (data[0].includes('state')) {
       const headers = data[0].split(',')
       let content = data.slice(1)
+
       content.pop()
       content = content.map(item => item.split(','))
       artifact.type = 'table-results'
       artifact.iterationStats = [headers].concat(content)
     } else {
       let content = data.slice(1)
+
       content = content.map(item => item.split(','))
       content.pop()
       artifact.type = 'table'
@@ -69,6 +72,13 @@ export const createArtifactPreviewContent = (res, fileFormat) => {
     }
   } else {
     artifact.type = 'unknown'
+
+    if (path && artifactName) {
+      artifact.data = {
+        content: `Preview is not available for this artifact type. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact('${artifactName}').to_dataitem().get()`
+      }
+    }
   }
+
   return artifact
 }

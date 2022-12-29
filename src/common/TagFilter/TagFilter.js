@@ -37,8 +37,10 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
   const tagFilterRef = useRef()
 
   useEffect(() => {
-    setTagFilter(value)
-  }, [setTagFilter, params.pageTab, value])
+    if (tagFilter !== value) {
+      setTagFilter(value)
+    }
+  }, [setTagFilter, params.pageTab, value, tagFilter])
 
   const handlerOverall = useCallback(
     event => {

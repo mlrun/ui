@@ -131,7 +131,10 @@ const ScheduleWizard = ({
             {activeTab === tabs[0].id ? 'Simple ' : 'Advanced '}
             Schedule
           </h3>
-          <p>Note: all times are interpreted in UTC timezone</p>
+          <p>
+            Note: all times are interpreted in UTC timezone. <br />
+            The first weekday (0) is always <b>Monday</b>.
+          </p>
 
           {activeTab === tabs[0].id && (
             <ScheduleWizardSimple
@@ -141,7 +144,7 @@ const ScheduleWizard = ({
             />
           )}
 
-          {activeTab === tabs[1].id && <ScheduleWizardCronstring scheduleData={scheduleData} />}
+          {activeTab === tabs[1].id && <ScheduleWizardCronstring />}
         </div>
         <div className="modal__footer-actions">
           <Button label="Cancel" onClick={() => setShowSchedule(false)} variant={TERTIARY_BUTTON} />
