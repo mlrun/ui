@@ -69,6 +69,11 @@
       padding: 19px 15px 19px 25px;
     }
 
+    .table__cell-wide {
+      flex: 0 0 250px;
+      width: 250px;
+    }
+
     i {
       margin: 0 15px;
     }
