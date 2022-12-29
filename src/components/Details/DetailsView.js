@@ -74,7 +74,7 @@ const DetailsView = React.forwardRef(
       params,
       selectedItem,
       setIteration,
-      setRefreshWasHandled,
+      setFiltersWasHandled,
       tabsContent,
       tab
     },
@@ -266,24 +266,24 @@ const DetailsView = React.forwardRef(
             cancelButton={{
               handler: () => {
                 handleShowWarning(false)
-                setRefreshWasHandled(false)
+                setFiltersWasHandled(false)
               },
-              label: detailsStore.refreshWasHandled ? "Don't refresh" : "Don't Leave",
+              label: detailsStore.filtersWasHandled ? "Don't refresh" : "Don't Leave",
               variant: TERTIARY_BUTTON
             }}
             closePopUp={() => {
               handleShowWarning(false)
-              setRefreshWasHandled(false)
+              setFiltersWasHandled(false)
             }}
             confirmButton={{
               handler: leavePage,
-              label: detailsStore.refreshWasHandled ? 'Refresh' : 'Leave',
+              label: detailsStore.filtersWasHandled ? 'Refresh' : 'Leave',
               variant: PRIMARY_BUTTON
             }}
             header="You have unsaved changes."
             isOpen={detailsStore.showWarning}
             message={`${
-              detailsStore.refreshWasHandled ? 'Refreshing the list' : 'Leaving this page'
+              detailsStore.filtersWasHandled ? 'Refreshing the list' : 'Leaving this page'
             } will discard your changes.`}
           />
         )}
@@ -317,7 +317,7 @@ DetailsView.propTypes = {
   params: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
-  setRefreshWasHandled: PropTypes.func.isRequired,
+  setFiltersWasHandled: PropTypes.func.isRequired,
   tabsContent: PropTypes.element,
   tab: PropTypes.string
 }

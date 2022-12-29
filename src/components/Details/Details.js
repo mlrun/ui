@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useMemo, useCallback, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 
 import DetailsView from './DetailsView'
 
@@ -53,8 +53,6 @@ const Details = ({
   applyDetailsChanges,
   applyDetailsChangesCallback,
   detailsMenu,
-  detailsStore,
-  filtersStore,
   getCloseDetailsLink,
   handleCancel,
   handleRefresh,
@@ -71,7 +69,7 @@ const Details = ({
   setInfoContent,
   setIteration,
   setIterationOption,
-  setRefreshWasHandled,
+  setFiltersWasHandled,
   showWarning,
   tab
 }) => {
@@ -81,6 +79,8 @@ const Details = ({
   const params = useParams()
   const { blockHistory, unblockHistory } = useBlockHistory()
   const [historyIsBlocked, setHistoryIsBlocked] = useState(false)
+  const detailsStore = useSelector(store => store.detailsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
 
   const handlePreview = useCallback(() => {
     dispatch(
@@ -217,10 +217,10 @@ const Details = ({
         document.getElementById('refresh')?.contains(event.target)
       ) {
         handleShowWarning(true)
-        setRefreshWasHandled(true)
+        setFiltersWasHandled(true)
       }
     },
-    [detailsStore.changes.counter, handleShowWarning, setRefreshWasHandled]
+    [detailsStore.changes.counter, handleShowWarning, setFiltersWasHandled]
   )
 
   useEffect(() => {
@@ -294,12 +294,14 @@ const Details = ({
     cancelChanges()
     handleShowWarning(false)
 
-    if (detailsStore.refreshWasHandled) {
+    if (detailsStore.filtersWasHandled) {
       retryRequest(filtersStore)
-      setRefreshWasHandled(false)
+      setFiltersWasHandled(false)
     } else {
       unblockHistory(true)
     }
+
+    window.dispatchEvent(new CustomEvent('discardChanges'))
   }
 
   const tabsContent = useMemo(() => {
@@ -351,7 +353,7 @@ const Details = ({
       ref={detailsRef}
       selectedItem={selectedItem}
       setIteration={setIteration}
-      setRefreshWasHandled={setRefreshWasHandled}
+      setFiltersWasHandled={setFiltersWasHandled}
       tabsContent={tabsContent}
       tab={tab}
     />
@@ -394,10 +396,4 @@ Details.propTypes = {
   tab: PropTypes.string
 }
 
-export default connect(
-  ({ detailsStore, filtersStore }) => ({
-    detailsStore,
-    filtersStore
-  }),
-  { ...detailsActions }
-)(Details)
+export default connect(null, { ...detailsActions })(Details)
