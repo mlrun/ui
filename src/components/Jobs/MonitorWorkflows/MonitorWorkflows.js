@@ -67,6 +67,7 @@ const MonitorWorkflows = ({
   fetchFunctionLogs,
   fetchJob,
   fetchJobLogs,
+  fetchJobPods,
   fetchJobs,
   fetchWorkflow,
   fetchWorkflows,
@@ -74,6 +75,7 @@ const MonitorWorkflows = ({
   getFunctionWithHash,
   removeFunctionLogs,
   removeJobLogs,
+  removePods,
   removeNewJob,
   resetWorkflow
 }) => {
@@ -106,7 +108,7 @@ const MonitorWorkflows = ({
   } = React.useContext(JobsContext)
   let fetchFunctionLogsTimeout = useRef(null)
 
-  usePods()
+  usePods(fetchJobPods, removePods, selectedJob)
 
   const filters = useMemo(() => generateFilters(), [])
 
