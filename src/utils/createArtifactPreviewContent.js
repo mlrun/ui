@@ -75,7 +75,7 @@ export const createArtifactPreviewContent = (res, fileFormat, path, artifactName
 
     if (path && artifactName) {
       artifact.data = {
-        content: `Preview is not available for this artifact type. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact(‘${artifactName}’).show()`
+        content: `Preview is not available for this artifact type. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact('${artifactName}').to_dataitem().get()`
       }
     }
   }
