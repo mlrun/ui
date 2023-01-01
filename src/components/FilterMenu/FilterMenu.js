@@ -55,6 +55,7 @@ import {
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
 import { generateProjectsList } from '../../utils/projects'
 import { removeFilters, setFilterProjectOptions, setFilters } from '../../reducers/filtersReducer'
+import detailsActions from '../../actions/details'
 
 import './filterMenu.scss'
 
@@ -163,51 +164,78 @@ const FilterMenu = ({
     }
   }
 
-  const handleSelectOption = (item, filter) => {
-    if (filter.type === STATUS_FILTER) {
-      dispatch(setFilters({ state: item }))
-      applyChanges({
-        ...filtersStore,
-        state: item
+  const filtersHelper = async (changes, dispatch) => {
+    let handleChangeFilters = Promise.resolve(true)
+
+    if (changes.counter > 0) {
+      handleChangeFilters = await new Promise(resolve => {
+        const handleDiscardChanges = () => {
+          window.removeEventListener('discardChanges', handleDiscardChanges)
+          resolve(true)
+        }
+        window.addEventListener('discardChanges', handleDiscardChanges)
+
+        dispatch(detailsActions.setFiltersWasHandled(true))
+        dispatch(detailsActions.showWarning(true))
       })
-    } else if (filter.type === SORT_BY) {
-      dispatch(setFilters({ sortBy: item }))
-    } else if (filter.type === GROUP_BY_FILTER) {
-      dispatch(setFilters({ groupBy: item }))
-    } else if (filter.type === TAG_FILTER && item !== filtersStore.tag) {
-      dispatch(setFilters({ tag: item }))
-      applyChanges({
-        ...filtersStore,
-        tag: item
-      })
-    } else if (filter.type === PROJECT_FILTER) {
-      dispatch(
-        setFilters({
-          project: item
+    }
+
+    return handleChangeFilters
+  }
+
+  const handleSelectOption = async (item, filter) => {
+    const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+    if (filtersHelperResult) {
+      if (filter.type === STATUS_FILTER) {
+        dispatch(setFilters({ state: item }))
+        applyChanges({
+          ...filtersStore,
+          state: item
         })
-      )
-      applyChanges({
-        ...filtersStore,
-        project: item.toLowerCase()
-      })
+      } else if (filter.type === SORT_BY) {
+        dispatch(setFilters({ sortBy: item }))
+      } else if (filter.type === GROUP_BY_FILTER) {
+        dispatch(setFilters({ groupBy: item }))
+      } else if (filter.type === TAG_FILTER && item !== filtersStore.tag) {
+        dispatch(setFilters({ tag: item }))
+        applyChanges({
+          ...filtersStore,
+          tag: item
+        })
+      } else if (filter.type === PROJECT_FILTER) {
+        dispatch(
+          setFilters({
+            project: item
+          })
+        )
+        applyChanges({
+          ...filtersStore,
+          project: item.toLowerCase()
+        })
+      }
     }
   }
 
-  const onKeyDown = event => {
+  const onKeyDown = async event => {
     if (event.keyCode === KEY_CODES.ENTER) {
-      dispatch(
-        setFilters({
+      const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+      if (filtersHelperResult) {
+        dispatch(
+          setFilters({
+            labels,
+            name,
+            entities
+          })
+        )
+        applyChanges({
+          ...filtersStore,
           labels,
           name,
           entities
         })
-      )
-      applyChanges({
-        ...filtersStore,
-        labels,
-        name,
-        entities
-      })
+      }
     }
   }
 
@@ -245,31 +273,38 @@ const FilterMenu = ({
     })
   }
 
-  const handleIter = iteration => {
+  const handleIter = async iteration => {
     const iterValue = filtersStore.iter !== iteration ? SHOW_ITERATIONS : ''
+    const filtersHelperResult = await filtersHelper(changes, dispatch)
 
-    dispatch(
-      setFilters({
+    if (filtersHelperResult) {
+      dispatch(
+        setFilters({
+          iter: iterValue
+        })
+      )
+      applyChanges({
+        ...filtersStore,
         iter: iterValue
       })
-    )
-    applyChanges({
-      ...filtersStore,
-      iter: iterValue
-    })
+    }
   }
 
-  const handleShowUntagged = showUntagged => {
+  const handleShowUntagged = async showUntagged => {
     const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
-    dispatch(
-      setFilters({
+    const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+    if (filtersHelperResult) {
+      dispatch(
+        setFilters({
+          showUntagged: showUntaggedValue
+        })
+      )
+      applyChanges({
+        ...filtersStore,
         showUntagged: showUntaggedValue
       })
-    )
-    applyChanges({
-      ...filtersStore,
-      showUntagged: showUntaggedValue
-    })
+    }
   }
 
   return (

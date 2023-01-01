@@ -34,10 +34,10 @@ import {
   SET_INFO_CONTENT,
   SET_ITERATION,
   SET_ITERATION_OPTIONS,
-  SET_REFRESH_WAS_HANDLED,
   SHOW_WARNING,
   REMOVE_INFO_CONTENT,
-  RESET_CHANGES
+  RESET_CHANGES,
+  SET_FILTERS_WAS_HANDLED
 } from '../constants'
 
 const initialState = {
@@ -59,7 +59,7 @@ const initialState = {
     podsPending: [],
     podsTooltip: []
   },
-  refreshWasHandled: false,
+  filtersWasHandled: false,
   showWarning: false
 }
 
@@ -183,10 +183,10 @@ const detailsReducer = (state = initialState, { type, payload }) => {
         ...state,
         iterationOptions: payload
       }
-    case SET_REFRESH_WAS_HANDLED:
+    case SET_FILTERS_WAS_HANDLED:
       return {
         ...state,
-        refreshWasHandled: payload
+        filtersWasHandled: payload
       }
     case SHOW_WARNING:
       return {
