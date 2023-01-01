@@ -94,7 +94,7 @@ const ProjectMonitorView = ({
       ) : (
         <div className="project__content">
           <div className="main-info">
-            <ProjectDetailsHeader project={project} projectName={params.projectName} />
+            <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
             <div className="main-info__toolbar">
               <Select
                 className="main-info__toolbar-menu launch-menu"

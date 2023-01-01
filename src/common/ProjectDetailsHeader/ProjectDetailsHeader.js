@@ -8,7 +8,7 @@ import { PROJECT_MONITOR } from '../../constants'
 
 import './ProjectDetailsHeader.scss'
 
-const ProjectDetailsHeader = ({ project, projectName }) => {
+const ProjectDetailsHeader = ({ projectData, projectName }) => {
   const location = useLocation()
 
   return (
@@ -17,22 +17,22 @@ const ProjectDetailsHeader = ({ project, projectName }) => {
         <div className="project-details__col">
           <div className="project-details__title">
             {projectName}
-            <Tooltip template={<TextTooltipTemplate text={project.data.status.state} />}>
-              <i className={`state-${project.data.status.state}-job status-icon`} />
+            <Tooltip template={<TextTooltipTemplate text={projectData.status.state} />}>
+              <i className={`state-${projectData.status.state}`} />
             </Tooltip>
           </div>
-          <p className="project-details__description">{project.data.spec.description ?? ''}</p>
+          <p className="project-details__description">{projectData.spec.description ?? ''}</p>
         </div>
         <ul className="project-details__details">
           <li>
             <span className="project-details__details-label">Created:</span>
             <span>
-              {getDateAndTimeByFormat(project.data.metadata.created, 'MM/DD/YYYY, HH:mm:ss A')}
+              {getDateAndTimeByFormat(projectData.metadata.created, 'MM/DD/YYYY, HH:mm:ss A')}
             </span>
           </li>
           <li>
             <span className="project-details__details-label">Owner:</span>
-            <span>{project.data.spec.owner}</span>
+            <span>{projectData.spec.owner}</span>
           </li>
           <li>
             {location.pathname.includes(PROJECT_MONITOR) ? (

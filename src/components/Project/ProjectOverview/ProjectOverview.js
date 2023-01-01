@@ -89,7 +89,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
   return (
     <div className="project-overview">
       <div className="project-overview__header">
-        <ProjectDetailsHeader project={project} projectName={params.projectName} />
+        <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
       </div>
 
       <div className="project-overview__content">
