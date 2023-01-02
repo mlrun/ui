@@ -22,7 +22,8 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEqual, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import NewFunctionModal from '../NewFunctionModal/NewFunctionModal'
+import JobFunctionWizard from '../JobFunctionWizard/JobFunctionWizard'
+import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import FunctionsView from './FunctionsView'
 import { Button } from 'igz-controls/components'
 
@@ -82,7 +83,7 @@ const Functions = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
   let fetchFunctionLogsTimeout = useRef(null)
-  const { isStagingMode } = useMode()
+  const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -419,18 +420,25 @@ const Functions = ({
 
   const handleNewFunction = () => {
     console.log('action')
-    return <NewFunctionModal mode={PANEL_CREATE_MODE} projectName={params.projectName} />
+    return <JobFunctionWizard mode={PANEL_CREATE_MODE} projectName={params.projectName} />
   }
 
   const getPopUpTemplate = useCallback(
     action => {
-      return (
+      return isDemoMode ? (
         <Button
           variant={action.variant}
           label={action.label}
           tooltip={action.tooltip}
           disabled={action.disabled}
           onClick={handleNewFunction}
+        />
+      ) : (
+        <NewFunctionPopUp
+          action={action}
+          currentProject={params.projectName}
+          isCustomPosition
+          setFunctionsPanelIsOpen={setFunctionsPanelIsOpen}
         />
       )
     },

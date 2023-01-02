@@ -44,7 +44,7 @@ export const launchIDEOptions = [
 export const generateCreateNewOptions = (
   navigate,
   params,
-  openNewFunctionModal,
+  openJobFunctionWizard,
   openRegisterArtifactModal,
   openRegisterModelModal,
   setCreateFeatureSetPanelIsOpen,
@@ -67,7 +67,7 @@ export const generateCreateNewOptions = (
   {
     label: 'ML Function',
     id: 'mlFunction',
-    handler: openNewFunctionModal
+    handler: openJobFunctionWizard
   },
   {
     label: 'Feature Set',

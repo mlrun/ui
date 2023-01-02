@@ -21,7 +21,7 @@ import React from 'react'
 
 import JobWizard from '../../JobWizard/JobWizard'
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
-import NewFunctionModal from '../../NewFunctionModal/NewFunctionModal'
+import JobFunctionWizard from '../../JobFunctionWizard/JobFunctionWizard'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
 import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
@@ -231,7 +231,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           id: 'createnewfunction',
           icon: <CreatFunctionIcon />,
           handleClick: () => ({
-            component: NewFunctionModal,
+            component: JobFunctionWizard,
             props: {
               //TODO: un-comment for 1.3
               // actions: formState => [
@@ -381,7 +381,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           id: 'deployServingFunction',
           icon: <ServingFunctionIcon />,
           handleClick: () => ({
-            component: NewFunctionModal,
+            component: JobFunctionWizard,
             props: {
               //TODO: un-comment for 1.3
               // actions: formState => [

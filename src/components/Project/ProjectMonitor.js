@@ -22,7 +22,7 @@ import { connect, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
-import NewFunctionModal from '../NewFunctionModal/NewFunctionModal'
+import JobFunctionWizard from '../JobFunctionWizard/JobFunctionWizard'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
@@ -206,8 +206,8 @@ const ProjectMonitor = ({
     })
   }, [params.projectName, navigate, registerArtifactLink])
 
-  const openNewFunctionModal = useCallback(() => {
-    openPopUp(NewFunctionModal, {
+  const openJobFunctionWizard = useCallback(() => {
+    openPopUp(JobFunctionWizard, {
       projectName: params.projectName,
       createFunctionSuccess,
       handleDeployFunctionFailure,
@@ -219,7 +219,7 @@ const ProjectMonitor = ({
     const createNewOptions = generateCreateNewOptions(
       navigate,
       params,
-      openNewFunctionModal,
+      openJobFunctionWizard,
       openRegisterArtifactModal,
       openRegisterModelModal,
       setCreateFeatureSetPanelIsOpen,
