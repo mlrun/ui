@@ -22,7 +22,6 @@ import { connect, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import ProjectMonitorView from './ProjectMonitorView'
-import JobFunctionWizard from '../JobFunctionWizard/JobFunctionWizard'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
@@ -58,6 +57,8 @@ const ProjectMonitor = ({
   removeV3ioStreams
 }) => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
+  const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
+  const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
@@ -78,115 +79,6 @@ const ProjectMonitor = ({
     [frontendSpec]
   )
 
-  const createFunctionSuccess = useCallback(async () => {
-    removeNewFunction()
-
-    return setNotification({
-      status: 200,
-      id: Math.random(),
-      message: 'Function created successfully'
-    })
-  }, [removeNewFunction, setNotification])
-
-  const handleDeployFunctionSuccess = useCallback(
-    async ready => {
-      let { name, tag } = functionsStore.newFunction.metadata
-      const tab = ready === false ? 'build-log' : 'overview'
-
-      tag ||= 'latest'
-
-      removeNewFunction()
-
-      const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
-        dispatch(
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Function deployment initiated successfully'
-          })
-        )
-
-        dispatch(
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            message: 'Failed to fetch functions'
-          })
-        )
-      })
-
-      if (funcs) {
-        const currentItem = funcs.find(func => {
-          return func.metadata.name === name && func.metadata.tag === tag
-        })
-
-        navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
-
-        return dispatch(
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Function deployment initiated successfully'
-          })
-        )
-      }
-    },
-    [
-      fetchProjectFunctions,
-      functionsStore.newFunction.metadata,
-      navigate,
-      params.projectName,
-      removeNewFunction,
-      setNotification
-    ]
-  )
-
-  const handleDeployFunctionFailure = useCallback(async () => {
-    const { name, tag } = functionsStore.newFunction.metadata
-    removeNewFunction()
-
-    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
-      dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Function deployment failed to initiate'
-        })
-      )
-
-      dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to fetch functions'
-        })
-      )
-    })
-
-    if (funcs) {
-      const currentItem = funcs.find(func => {
-        return func.metadata.name === name && func.metadata.tag === tag
-      })
-
-      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
-
-      return dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Function deployment failed to initiate'
-        })
-      )
-    }
-  }, [
-    fetchProjectFunctions,
-    functionsStore.newFunction.metadata,
-    navigate,
-    params.projectName,
-    removeNewFunction,
-    setNotification
-  ])
-
   const openRegisterArtifactModal = useCallback(
     artifactKind => {
       openPopUp(RegisterArtifactModal, {
@@ -206,23 +98,14 @@ const ProjectMonitor = ({
     })
   }, [params.projectName, navigate, registerArtifactLink])
 
-  const openJobFunctionWizard = useCallback(() => {
-    openPopUp(JobFunctionWizard, {
-      projectName: params.projectName,
-      createFunctionSuccess,
-      handleDeployFunctionFailure,
-      handleDeployFunctionSuccess
-    })
-  }, [params.projectName, navigate, registerArtifactLink])
-
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,
       params,
-      openJobFunctionWizard,
       openRegisterArtifactModal,
       openRegisterModelModal,
       setCreateFeatureSetPanelIsOpen,
+      setIsNewFunctionPopUpOpen,
       isDemoMode
     )
 
@@ -281,6 +164,7 @@ const ProjectMonitor = ({
   }
 
   const closeFunctionsPanel = () => {
+    setShowFunctionsPanel(false)
     removeNewFunction()
 
     if (functionsStore.error) {
@@ -291,6 +175,102 @@ const ProjectMonitor = ({
   const createFeatureSetSuccess = async () => {
     setCreateFeatureSetPanelIsOpen(false)
     removeNewFeatureSet()
+  }
+
+  const createFunctionSuccess = async () => {
+    setShowFunctionsPanel(false)
+    removeNewFunction()
+
+    return setNotification({
+      status: 200,
+      id: Math.random(),
+      message: 'Function created successfully'
+    })
+  }
+
+  const handleDeployFunctionSuccess = async ready => {
+    let { name, tag } = functionsStore.newFunction.metadata
+    const tab = ready === false ? 'build-log' : 'overview'
+
+    tag ||= 'latest'
+
+    setShowFunctionsPanel(false)
+    removeNewFunction()
+
+    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+      )
+
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Failed to fetch functions'
+        })
+      )
+    })
+
+    if (funcs) {
+      const currentItem = funcs.find(func => {
+        return func.metadata.name === name && func.metadata.tag === tag
+      })
+
+      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
+
+      return dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+      )
+    }
+  }
+
+  const handleDeployFunctionFailure = async () => {
+    const { name, tag } = functionsStore.newFunction.metadata
+
+    setShowFunctionsPanel(false)
+    removeNewFunction()
+
+    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Function deployment failed to initiate'
+        })
+      )
+
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Failed to fetch functions'
+        })
+      )
+    })
+
+    if (funcs) {
+      const currentItem = funcs.find(func => {
+        return func.metadata.name === name && func.metadata.tag === tag
+      })
+
+      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
+
+      return dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Function deployment failed to initiate'
+        })
+      )
+    }
   }
 
   const handleLaunchIDE = useCallback(() => {}, [])
@@ -314,8 +294,12 @@ const ProjectMonitor = ({
         confirmData={confirmData}
         createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
         createFeatureSetSuccess={createFeatureSetSuccess}
+        createFunctionSuccess={createFunctionSuccess}
         createNewOptions={createNewOptions}
+        handleDeployFunctionFailure={handleDeployFunctionFailure}
+        handleDeployFunctionSuccess={handleDeployFunctionSuccess}
         handleLaunchIDE={handleLaunchIDE}
+        isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
         isNuclioModeDisabled={isNuclioModeDisabled}
         navigate={navigate}
         nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
@@ -323,6 +307,9 @@ const ProjectMonitor = ({
         project={projectStore.project}
         projectSummary={projectStore.projectSummary}
         refresh={handleRefresh}
+        setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
+        setShowFunctionsPanel={setShowFunctionsPanel}
+        showFunctionsPanel={showFunctionsPanel}
         v3ioStreams={nuclioStore.v3ioStreams}
       />
     </>
