@@ -379,6 +379,7 @@ const MonitorJobs = ({
             onClick: () => handleMonitoring()
           }}
           filters={filters}
+          hidden={Boolean(params.jobId)}
           onChange={refreshJobs}
           page={JOBS_PAGE}
           withoutExpandButton
