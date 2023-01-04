@@ -151,13 +151,6 @@ const FeatureSetsPanelTargetStoreView = ({
                   </>
                 )}
               </div>
-              {targetsPathEditData.online.isEditMode && (
-                <div className="annotation">
-                  {
-                    'Note that in order to keep the feature set versioning you need to keep the {run-id} as part of the path.'
-                  }
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -240,13 +233,6 @@ const FeatureSetsPanelTargetStoreView = ({
                   selectedId={data.parquet.partitioned}
                 />
               </div>
-              {targetsPathEditData.parquet.isEditMode && (
-                <div className="annotation">
-                  {
-                    'Note that in order to keep the feature set versioning you need to keep the {run-id} as part of the path.'
-                  }
-                </div>
-              )}
               {data.parquet.partitioned && (
                 <div className="partition-fields">
                   <span
