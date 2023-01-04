@@ -21,6 +21,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import ProgressRing from '../ProgressRing/ProgressRing'
 
@@ -36,6 +37,7 @@ const DEFAULT_FILE_NAME = 'mlrun-file'
 const Download = ({ fileName, path, user }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
+  const params = useParams()
 
   const downloadRef = useRef(null)
   const dispatch = useDispatch()
@@ -94,7 +96,7 @@ const Download = ({ fileName, path, user }) => {
       }
 
       mainHttpClient
-        .get('/files', config)
+        .get(`projects/${params.projectName}/files`, config)
         .then(response => {
           downloadFile(file, response)
           dispatch(
@@ -134,7 +136,7 @@ const Download = ({ fileName, path, user }) => {
           if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
-  }, [dispatch, isDownload, path, user, file, retryDownload])
+  }, [isDownload, path, params.projectName, user, file, dispatch, retryDownload])
 
   useEffect(() => {
     let cancelFetch = downloadRef.current

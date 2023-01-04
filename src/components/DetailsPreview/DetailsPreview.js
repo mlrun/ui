@@ -22,6 +22,7 @@ import { isEqual } from 'lodash'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import axios from 'axios'
+import { useParams } from 'react-router-dom'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -38,6 +39,7 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
   const previewRef = useRef({ current: {} })
+  const params = useParams()
 
   const artifactsPreviewClassNames = classnames(
     artifact.target_path && 'artifact-preview__with-popout'
@@ -52,12 +54,13 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   }, [artifact])
 
   useEffect(() => {
-    getArtifactPreview(artifact, noData, setNoData, setPreview)
-  }, [artifact, noData])
+    getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview)
+  }, [artifact, noData, params.projectName])
 
   useEffect(() => {
     if (artifact.extra_data && extraData.length === 0) {
       fetchArtifactPreviewFromExtraData(
+        params.projectName,
         artifact,
         noData,
         setNoData,
@@ -67,7 +70,7 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
         })
       )
     }
-  }, [artifact, extraData.length, noData])
+  }, [artifact, extraData.length, noData, params.projectName])
 
   const cancelRequest = message => {
     previewRef.current?.cancel && previewRef.current.cancel(message)

@@ -106,6 +106,7 @@ const DetailsArtifacts = ({
       artifactsIndexes.forEach(artifactIndex => {
         if (!preview[artifactIndex]) {
           getArtifactPreview(
+            params.projectName,
             content[artifactIndex],
             noData,
             setNoData,
@@ -116,7 +117,7 @@ const DetailsArtifacts = ({
         }
       })
     }
-  }, [artifactsIndexes, content, noData, preview])
+  }, [artifactsIndexes, content, noData, params.projectName, preview])
 
   const showPreview = artifact => {
     dispatch(

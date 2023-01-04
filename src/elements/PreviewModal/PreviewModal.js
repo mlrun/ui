@@ -21,6 +21,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import prettyBytes from 'pretty-bytes'
 import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
@@ -40,20 +41,25 @@ const PreviewModal = ({ item }) => {
   const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
   const dispatch = useDispatch()
+  const params = useParams()
 
   useEffect(() => {
     if (preview.length === 0) {
-      getArtifactPreview(item, noData, setNoData, setPreview)
+      getArtifactPreview(params.projectName, item, noData, setNoData, setPreview)
     }
-  }, [item, noData, preview.length])
+  }, [item, noData, params.projectName, preview.length])
 
   useEffect(() => {
     if (item.extra_data && extraData.length === 0) {
-      fetchArtifactPreviewFromExtraData(item, noData, setNoData, previewContent =>
-        setExtraData(state => [...state, previewContent])
+      fetchArtifactPreviewFromExtraData(
+        params.projectName,
+        item,
+        noData,
+        setNoData,
+        previewContent => setExtraData(state => [...state, previewContent])
       )
     }
-  }, [item, extraData.length, noData])
+  }, [params.projectName, item, extraData.length, noData])
 
   useEffect(() => {
     return () => {
@@ -88,9 +94,7 @@ const PreviewModal = ({ item }) => {
                 {typeof item.size === 'string' ? item.size : prettyBytes(item.size)}
               </div>
             )}
-            <div className="item-data">
-              {formatDatetime(item.updated || item.date, 'N/A')}
-            </div>
+            <div className="item-data">{formatDatetime(item.updated || item.date, 'N/A')}</div>
             <div className="preview-body__download">
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
                 <Download
