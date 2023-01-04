@@ -18,12 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { formatDatetime } from './datetime'
-import {
-  DETAILS_OVERVIEW_TAB,
-  FUNCTIONS_PAGE,
-  MODELS_PAGE,
-  REAL_TIME_PIPELINES_TAB
-} from '../constants'
+import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 const createFunctionsContent = (functions, pageTab, projectName, showExpandButton) =>
@@ -89,8 +84,8 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               header: 'Name',
               value: func.name,
               class: 'functions_medium',
-              getLink: hash => {
-                return `/projects/${projectName}/functions/${hash}${`/${DETAILS_OVERVIEW_TAB}`}`
+              getLink: (hash, tab) => {
+                return `/projects/${projectName}/functions/${hash}${`/${tab}`}`
               },
               expandedCellContent: {
                 value: formatDatetime(func.updated, 'N/A'),
