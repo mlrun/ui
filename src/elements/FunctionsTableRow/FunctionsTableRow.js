@@ -26,8 +26,8 @@ import { isEmpty } from 'lodash'
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { detailsMenu } from '../../components/FunctionsPage/functions.util'
 import { ACTIONS_MENU } from '../../types'
+import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
 const FunctionsTableRow = ({
   actionsMenu,
@@ -101,7 +101,7 @@ const FunctionsTableRow = ({
                           className={cellClassNames}
                           data={value.expandedCellContent ? value.expandedCellContent : value}
                           item={func.data}
-                          link={value.getLink && value.getLink(func.data.hash)}
+                          link={value.getLink?.(func.data.hash, params.tab ?? DETAILS_OVERVIEW_TAB)}
                           key={value.id}
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
@@ -125,14 +125,7 @@ const FunctionsTableRow = ({
                   handleExpandRow={handleExpandRow}
                   item={rowItem.data}
                   key={value.id}
-                  link={
-                    value.getLink
-                      ? value.getLink(rowItem?.data?.hash)
-                      : index === 0 &&
-                        `/projects/${params.projectName}/functions/${rowItem?.data?.hash}/${
-                          params.tab ? params.tab : `${detailsMenu[0].id}`
-                        }`
-                  }
+                  link={value.getLink?.(rowItem.data.hash, params.tab ?? DETAILS_OVERVIEW_TAB)}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
                   showExpandButton={value.showExpandButton}
