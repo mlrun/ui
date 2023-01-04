@@ -63,6 +63,7 @@ const RealTimePipelinesView = React.forwardRef(
                 expand={expand}
                 filters={filters}
                 handleExpandAll={handleExpandAll}
+                hidden={Boolean(params.pipelineId)}
                 onChange={fetchData}
                 page={MODELS_PAGE}
                 tab={REAL_TIME_PIPELINES_TAB}
