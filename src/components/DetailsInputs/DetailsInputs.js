@@ -22,6 +22,7 @@ import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
 import NoData from '../../common/NoData/NoData'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 const DetailsInputs = ({ inputs }) => {
   return (
@@ -32,7 +33,9 @@ const DetailsInputs = ({ inputs }) => {
         <ul className="table__item_inputs">
           {Object.entries(inputs || {}).map(([key, value]) => (
             <li className="table__item_inputs_item" key={key}>
-              <div>{key}</div>
+              <div>
+                <Tooltip template={<TextTooltipTemplate text={key} />}>{key}</Tooltip>
+              </div>
               <div>{value}</div>
             </li>
           ))}
