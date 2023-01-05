@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
-import { orderBy } from 'lodash'
+import React, { useMemo } from 'react'
+import { toLower } from 'lodash'
 import PropTypes from 'prop-types'
 
 import NoData from '../../common/NoData/NoData'
@@ -26,6 +26,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { roundFloats } from '../../utils/roundFloats'
 import { resultsTable } from '../../utils/resultsTable'
+import { useSortTableByIndex } from '../../hooks/useSortTableByIndex.hook'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as BestIteration } from 'igz-controls/images/best-iteration-icon.svg'
@@ -33,30 +34,13 @@ import { ReactComponent as BestIteration } from 'igz-controls/images/best-iterat
 import './detailsResults.scss'
 
 const DetailsResults = ({ job }) => {
-  const result = resultsTable(job)
+  const result = useMemo(() => resultsTable(job), [job])
 
-  const [direction, setDirection] = useState('asc')
-  const [sortedColumnIndex, setSortedColumnIndex] = useState(null)
-  const [sortedTableContent, setSortedTableContent] = useState(result.tableContent)
-
-  const handleSorting = (columnIdx, sortOrder) => {
-    if (columnIdx >= 0) {
-      const sorted = orderBy(
-        sortedTableContent,
-        rowData => rowData[columnIdx],
-        sortOrder === 'asc' ? 'desc' : 'asc'
-      )
-
-      setSortedTableContent(sorted)
-    }
-  }
-
-  const handleSortingChange = columnIdx => {
-    const sortOrder = columnIdx === sortedColumnIndex && direction === 'asc' ? 'desc' : 'asc'
-    setSortedColumnIndex(columnIdx)
-    setDirection(sortOrder)
-    handleSorting(columnIdx, sortOrder)
-  }
+  const [direction, handleSortingChange, selectedColumnIndex, sortedTableContent] =
+    useSortTableByIndex(
+      result.tableContent,
+      result.headers.map(header => toLower(header)).indexOf('accuracy')
+    )
 
   return (
     <div className="table__item-results">
@@ -73,12 +57,12 @@ const DetailsResults = ({ job }) => {
                   >
                     <Tooltip template={<TextTooltipTemplate text={item} />}>
                       <div className="results-table__sort">
-                        {sortedColumnIndex === idx && (
+                        {selectedColumnIndex === idx && (
                           <ArrowIcon
-                            className={`sort ${
-                              sortedColumnIndex === idx && direction === 'asc'
-                                ? 'sort_down'
-                                : 'sort_up'
+                            className={`sort_icon ${
+                              selectedColumnIndex === idx && direction === 'asc'
+                                ? 'sort_icon_up'
+                                : 'sort_icon_down'
                             }`}
                           />
                         )}
@@ -123,9 +107,11 @@ const DetailsResults = ({ job }) => {
                           className="results-table__medal results-table__cell"
                         >
                           {contentItemValue}
-                          <Tooltip template={<TextTooltipTemplate text={'Best iteration'} />}>
-                            <BestIteration />
-                          </Tooltip>
+                          <span className="best_iteration">
+                            <Tooltip template={<TextTooltipTemplate text={'Best iteration'} />}>
+                              <BestIteration />
+                            </Tooltip>
+                          </span>
                         </div>
                       )
                     } else {

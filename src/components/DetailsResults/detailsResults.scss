@@ -26,7 +26,7 @@
       }
 
       & > *:first-child {
-        padding-left: 40px;
+        margin-left: 15px;
       }
     }
 
@@ -84,23 +84,12 @@
       align-items: center;
       background-color: transparent;
 
-      .sort {
+      .sort_icon {
         position: absolute;
         top: auto;
         bottom: auto;
         left: 0;
         margin: 0;
-        transition: transform 0.3s ease-in-out;
-
-        &_down {
-          width: 20px;
-          transform: rotate(-90deg);
-        }
-
-        &_up {
-          width: 20px;
-          transform: rotate(90deg);
-        }
       }
     }
 
@@ -110,10 +99,12 @@
       flex-direction: row;
       align-items: center;
 
-      svg {
+      .best_iteration {
         position: absolute;
-        top: 15px;
-        left: 8px;
+        top: auto;
+        bottom: auto;
+        left: -2px;
+        margin-top: 2px;
       }
     }
   }

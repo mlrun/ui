@@ -30,15 +30,6 @@ export const resultsTable = array => {
     return [contentItem[1], contentItem[0]].concat(contentItem.slice(2)).map(item => item ?? '')
   })
 
-  if (array.results && array.results?.best_iteration) {
-    const bestIterRowIndex = tableContent.findIndex(
-      item => item[0] === array.results?.best_iteration
-    )
-    const bestIterRow = tableContent.splice(bestIterRowIndex, 1)
-
-    tableContent = bestIterRow.concat(tableContent)
-  }
-
   return {
     headers,
     tableContent
