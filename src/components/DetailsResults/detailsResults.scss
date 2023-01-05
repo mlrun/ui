@@ -46,10 +46,11 @@
       background-color: $white;
 
       &-item {
+        position: relative;
         display: flex;
-        flex: 0 0 150px;
+        flex: 0 0 auto;
         flex-direction: column;
-        width: 150px;
+        min-width: 150px;
 
         @include tableHeader(16px);
 
@@ -63,9 +64,9 @@
 
     &__cell {
       display: flex;
-      flex: 0 0 150px;
+      flex: 0 0 auto;
       flex-direction: column;
-      width: 150px;
+      min-width: 150px;
       padding: 19px 15px 19px 25px;
     }
 
@@ -76,6 +77,31 @@
 
     i {
       margin: 0 15px;
+    }
+
+    &__sort {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+
+      .sort {
+        position: absolute;
+        top: auto;
+        bottom: auto;
+        left: 0;
+        margin: 0;
+        transition: transform 0.3s ease-in-out;
+
+        &_down {
+          width: 20px;
+          transform: rotate(-90deg);
+        }
+
+        &_up {
+          width: 20px;
+          transform: rotate(90deg);
+        }
+      }
     }
 
     &__medal {

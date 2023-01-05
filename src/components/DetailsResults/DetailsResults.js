@@ -17,7 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
+import { orderBy } from 'lodash'
 import PropTypes from 'prop-types'
 
 import NoData from '../../common/NoData/NoData'
@@ -26,12 +27,36 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { roundFloats } from '../../utils/roundFloats'
 import { resultsTable } from '../../utils/resultsTable'
 
+import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as BestIteration } from 'igz-controls/images/best-iteration-icon.svg'
 
 import './detailsResults.scss'
 
 const DetailsResults = ({ job }) => {
   const result = resultsTable(job)
+
+  const [direction, setDirection] = useState('asc')
+  const [sortedColumnIndex, setSortedColumnIndex] = useState(null)
+  const [sortedTableContent, setSortedTableContent] = useState(result.tableContent)
+
+  const handleSorting = (columnIdx, sortOrder) => {
+    if (columnIdx >= 0) {
+      const sorted = orderBy(
+        sortedTableContent,
+        rowData => rowData[columnIdx],
+        sortOrder === 'asc' ? 'desc' : 'asc'
+      )
+
+      setSortedTableContent(sorted)
+    }
+  }
+
+  const handleSortingChange = columnIdx => {
+    const sortOrder = columnIdx === sortedColumnIndex && direction === 'asc' ? 'desc' : 'asc'
+    setSortedColumnIndex(columnIdx)
+    setDirection(sortOrder)
+    handleSorting(columnIdx, sortOrder)
+  }
 
   return (
     <div className="table__item-results">
@@ -40,15 +65,32 @@ const DetailsResults = ({ job }) => {
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {result.headers.map((item, i) => (
-                  <div className="results-table__header-item" key={i}>
-                    <Tooltip template={<TextTooltipTemplate text={item} />}>{item}</Tooltip>
-                  </div>
+                {result.headers.map((item, idx) => (
+                  <button
+                    className="results-table__header-item"
+                    key={idx}
+                    onClick={() => handleSortingChange(idx)}
+                  >
+                    <Tooltip template={<TextTooltipTemplate text={item} />}>
+                      <div className="results-table__sort">
+                        {sortedColumnIndex === idx && (
+                          <ArrowIcon
+                            className={`sort ${
+                              sortedColumnIndex === idx && direction === 'asc'
+                                ? 'sort_down'
+                                : 'sort_up'
+                            }`}
+                          />
+                        )}
+                        <span>{item}</span>
+                      </div>
+                    </Tooltip>
+                  </button>
                 ))}
               </div>
             </div>
             <div className="results-table__body">
-              {result.tableContent.map((tableContentItem, index) => (
+              {sortedTableContent.map((tableContentItem, index) => (
                 <div className="results-table__row" key={index}>
                   {tableContentItem.map((contentItemValue, idx) => {
                     if (
@@ -93,7 +135,7 @@ const DetailsResults = ({ job }) => {
                             className="data-ellipsis"
                             template={<TextTooltipTemplate text={contentItemValue.toString()} />}
                           >
-                            {roundFloats(contentItemValue)}
+                            {roundFloats(contentItemValue, 4)}
                           </Tooltip>
                         </div>
                       )
@@ -112,11 +154,14 @@ const DetailsResults = ({ job }) => {
                     {key}
                   </Tooltip>
                 </div>
-                  <div className="results-table__cell table__cell-wide">
-                      <Tooltip className="data-ellipsis" template={<TextTooltipTemplate text={job.results[key]} />}>
-                          {job.results[key]}
-                      </Tooltip>
-                  </div>
+                <div className="results-table__cell table__cell-wide">
+                  <Tooltip
+                    className="data-ellipsis"
+                    template={<TextTooltipTemplate text={job.results[key]} />}
+                  >
+                    {job.results[key]}
+                  </Tooltip>
+                </div>
               </div>
             )
           })

@@ -20,20 +20,24 @@ such restriction.
 import { capitalize } from 'lodash'
 
 export const resultsTable = array => {
-  let headers = (array.iterationStats ? array.iterationStats[0] ?? [] : []).map(
-    item => {
-      return capitalize(String(item).replace(/^.+\./, ''))
-    }
-  )
+  let headers = (array.iterationStats ? array.iterationStats[0] ?? [] : []).map(item => {
+    return capitalize(String(item).replace(/^.+\./, ''))
+  })
+
   const changedHeaders = [headers[1], headers[0]]
   headers = changedHeaders.concat(headers.slice(2))
-  const tableContent = (array.iterationStats ?? [])
-    .slice(1)
-    .map(contentItem => {
-      return [contentItem[1], contentItem[0]]
-        .concat(contentItem.slice(2))
-        .map(item => item ?? '')
-    })
+  let tableContent = (array.iterationStats ?? []).slice(1).map(contentItem => {
+    return [contentItem[1], contentItem[0]].concat(contentItem.slice(2)).map(item => item ?? '')
+  })
+
+  if (array.results && array.results?.best_iteration) {
+    const bestIterRowIndex = tableContent.findIndex(
+      item => item[0] === array.results?.best_iteration
+    )
+    const bestIterRow = tableContent.splice(bestIterRowIndex, 1)
+
+    tableContent = bestIterRow.concat(tableContent)
+  }
 
   return {
     headers,
