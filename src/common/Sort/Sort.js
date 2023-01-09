@@ -30,8 +30,8 @@ import './sort.scss'
 const Sort = ({ isDescendingOrder, onSelectOption, options, selectedId, setIsDescendingOrder }) => {
   const [selectedOption, setSelectedOption] = useState(null)
   const arrowDirectionClassName = classNames(
-    'sort_icon',
-    isDescendingOrder ? 'sort_icon_down' : 'sort_icon_up'
+    'sort-icon',
+    isDescendingOrder ? 'sort-icon_down' : 'sort-icon_up'
   )
 
   useEffect(() => {

@@ -485,16 +485,15 @@ iframe {
   }
 }
 
-.sort_icon {
+.sort-icon {
+  width: 20px;
   transition: transform 0.3s ease-in-out;
 
   &_down {
-    width: 20px;
     transform: rotate(-90deg);
   }
 
   &_up {
-    width: 20px;
     transform: rotate(90deg);
   }
 }

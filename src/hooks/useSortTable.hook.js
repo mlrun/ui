@@ -18,32 +18,44 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useEffect, useState } from 'react'
-import { orderBy } from 'lodash'
+import { isNumber, orderBy } from 'lodash'
 
-export const useSortTableByIndex = (tableContent, defaultIndex) => {
+export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
   const [direction, setDirection] = useState('desc')
-  const [selectedColumnIndex, setSelectedColumnIndex] = useState(null)
+  const [selectedColumnName, setSelectedColumnName] = useState(null)
   const [sortedTableContent, setSortedTableContent] = useState(tableContent)
 
-  const handleSorting = (columnIdx, sortDirection) => {
-    if (columnIdx !== null) {
-      const sorted = orderBy(sortedTableContent, rowData => rowData[columnIdx], sortDirection)
+  const handleSorting = (columnName, sortDirection) => {
+    const columnIndex = tableHeaders.findIndex(header => header.id === columnName)
+
+    if (columnName && columnName !== null) {
+      const sorted = orderBy(
+        sortedTableContent,
+        rowData =>
+          isNumber(parseFloat(rowData[columnIndex]))
+            ? parseFloat(rowData[columnIndex])
+            : rowData[columnIndex],
+        sortDirection
+      )
 
       setSortedTableContent(sorted)
     }
   }
 
-  const handleSortingChange = columnIdx => {
-    const sortDirection = columnIdx === selectedColumnIndex && direction === 'desc' ? 'asc' : 'desc'
+  const handleSortingChange = columnName => {
+    const sortDirection = columnName === selectedColumnName && direction === 'desc' ? 'asc' : 'desc'
 
-    setSelectedColumnIndex(columnIdx)
+    setSelectedColumnName(columnName)
     setDirection(sortDirection)
-    handleSorting(columnIdx, sortDirection)
+    handleSorting(columnName, sortDirection)
   }
 
   useEffect(() => {
-    if (defaultIndex !== null) handleSortingChange(defaultIndex)
+    if (defaultSortBy !== null)
+      handleSortingChange(isNumber(defaultSortBy) ? tableHeaders[defaultSortBy].id : defaultSortBy)
   }, [])
 
-  return [direction, handleSortingChange, selectedColumnIndex, sortedTableContent]
+  // defaultSortBy, handleSortingChange, tableHeaders
+
+  return [direction, handleSortingChange, selectedColumnName, sortedTableContent]
 }

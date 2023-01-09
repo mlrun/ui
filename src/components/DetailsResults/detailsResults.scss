@@ -54,11 +54,43 @@
 
         @include tableHeader(16px);
 
-        padding: 5px 15px 5px 25px;
+        margin: 0 5px;
+        padding: 5px 15px 5px 30px;
       }
 
-      .results-table__row:hover {
-        background-color: transparent;
+      .results-table__row {
+        &:hover {
+          background-color: transparent;
+        }
+      }
+
+      &-sortable {
+        align-items: flex-start;
+        border: 0;
+        border-radius: 0;
+
+        .sort-icon {
+          display: none;
+          position: absolute;
+          top: auto;
+          bottom: auto;
+          left: 5px;
+          margin: 0;
+        }
+
+        &-active {
+          background-color: $alabaster;
+
+          .sort-icon {
+            display: block;
+          }
+        }
+
+        &:hover {
+          .sort-icon {
+            display: block;
+          }
+        }
       }
     }
 
@@ -67,7 +99,8 @@
       flex: 0 0 auto;
       flex-direction: column;
       min-width: 150px;
-      padding: 19px 15px 19px 25px;
+      margin: 0 5px;
+      padding: 19px 15px 19px 30px;
     }
 
     .table__cell-wide {
@@ -77,20 +110,6 @@
 
     i {
       margin: 0 15px;
-    }
-
-    &__sort {
-      display: flex;
-      align-items: center;
-      background-color: transparent;
-
-      .sort_icon {
-        position: absolute;
-        top: auto;
-        bottom: auto;
-        left: 0;
-        margin: 0;
-      }
     }
 
     &__medal {
@@ -103,7 +122,7 @@
         position: absolute;
         top: auto;
         bottom: auto;
-        left: -2px;
+        left: 3px;
         margin-top: 2px;
       }
     }

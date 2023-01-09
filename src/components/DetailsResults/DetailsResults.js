@@ -18,29 +18,31 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo } from 'react'
-import { toLower } from 'lodash'
 import PropTypes from 'prop-types'
 
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { roundFloats } from '../../utils/roundFloats'
 import { resultsTable } from '../../utils/resultsTable'
-import { useSortTableByIndex } from '../../hooks/useSortTableByIndex.hook'
+import { useSortTable } from '../../hooks/useSortTable.hook'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as BestIteration } from 'igz-controls/images/best-iteration-icon.svg'
 
 import './detailsResults.scss'
 
-const DetailsResults = ({ job }) => {
-  const result = useMemo(() => resultsTable(job), [job])
+const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
+  const result = useMemo(
+    () => resultsTable(job, { allowSortBy, excludeSortBy, defaultSortBy }),
+    [allowSortBy, excludeSortBy, defaultSortBy, job]
+  )
 
-  const [direction, handleSortingChange, selectedColumnIndex, sortedTableContent] =
-    useSortTableByIndex(
-      result.tableContent,
-      result.headers.map(header => toLower(header)).indexOf('accuracy')
-    )
+  const [direction, handleSortingChange, selectedColumnName, sortedTableContent] = useSortTable(
+    result.headers,
+    result.tableContent,
+    defaultSortBy
+  )
 
   return (
     <div className="table__item-results">
@@ -49,28 +51,35 @@ const DetailsResults = ({ job }) => {
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {result.headers.map((item, idx) => (
-                  <button
-                    className="results-table__header-item"
-                    key={idx}
-                    onClick={() => handleSortingChange(idx)}
-                  >
-                    <Tooltip template={<TextTooltipTemplate text={item} />}>
-                      <div className="results-table__sort">
-                        {selectedColumnIndex === idx && (
-                          <ArrowIcon
-                            className={`sort_icon ${
-                              selectedColumnIndex === idx && direction === 'asc'
-                                ? 'sort_icon_up'
-                                : 'sort_icon_down'
-                            }`}
-                          />
-                        )}
-                        <span>{item}</span>
-                      </div>
-                    </Tooltip>
-                  </button>
-                ))}
+                {result.headers.map(({ label, id, isSortable }) => {
+                  return !isSortable ? (
+                    <span className="results-table__header-item" key={id}>
+                      <Tooltip template={<TextTooltipTemplate text={label} />}>{label}</Tooltip>
+                    </span>
+                  ) : (
+                    <Button
+                      className={`results-table__header-item results-table__header-sortable ${
+                        (defaultSortBy === id && defaultSortBy === selectedColumnName) ||
+                        selectedColumnName === id
+                          ? 'results-table__header-sortable-active'
+                          : ''
+                      }`}
+                      icon={
+                        <ArrowIcon
+                          className={`sort-icon ${
+                            selectedColumnName === id && direction === 'asc'
+                              ? 'sort-icon_up'
+                              : 'sort-icon_down'
+                          }`}
+                        />
+                      }
+                      key={id}
+                      label={label}
+                      onClick={() => handleSortingChange(id)}
+                      tooltip={label}
+                    />
+                  )
+                })}
               </div>
             </div>
             <div className="results-table__body">
@@ -82,7 +91,10 @@ const DetailsResults = ({ job }) => {
                       contentItemValue.match(/completed|running|error/gi)
                     ) {
                       return (
-                        <div className="results-table__cell" key={`${contentItemValue}${idx}`}>
+                        <div
+                          className="results-table__cell results-table__cell"
+                          key={`${contentItemValue}${idx}`}
+                        >
                           <Tooltip
                             template={
                               <TextTooltipTemplate
