@@ -19,43 +19,50 @@ such restriction.
 */
 import { useEffect, useState } from 'react'
 import { isNumber, orderBy } from 'lodash'
+import { useCallback } from 'react'
 
 export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
   const [direction, setDirection] = useState('desc')
   const [selectedColumnName, setSelectedColumnName] = useState(null)
   const [sortedTableContent, setSortedTableContent] = useState(tableContent)
 
-  const handleSorting = (columnName, sortDirection) => {
-    const columnIndex = tableHeaders.findIndex(header => header.id === columnName)
+  const handleTableSorting = useCallback(
+    (columnName, sortDirection) => {
+      const columnIndex = tableHeaders.findIndex(header => header.id === columnName)
 
-    if (columnName && columnName !== null) {
-      const sorted = orderBy(
-        sortedTableContent,
-        rowData =>
-          isNumber(parseFloat(rowData[columnIndex]))
-            ? parseFloat(rowData[columnIndex])
-            : rowData[columnIndex],
-        sortDirection
-      )
+      if (columnName && columnName !== null) {
+        const sorted = orderBy(
+          sortedTableContent,
+          rowData =>
+            isNumber(parseFloat(rowData[columnIndex]))
+              ? parseFloat(rowData[columnIndex])
+              : rowData[columnIndex],
+          sortDirection
+        )
 
-      setSortedTableContent(sorted)
-    }
-  }
+        setSortedTableContent(sorted || sortedTableContent)
+      }
+    },
+    [sortedTableContent, tableHeaders]
+  )
 
-  const handleSortingChange = columnName => {
-    const sortDirection = columnName === selectedColumnName && direction === 'desc' ? 'asc' : 'desc'
+  const handleSortingChange = useCallback(
+    columnName => {
+      const sortDirection =
+        columnName === selectedColumnName && direction === 'desc' ? 'asc' : 'desc'
 
-    setSelectedColumnName(columnName)
-    setDirection(sortDirection)
-    handleSorting(columnName, sortDirection)
-  }
+      setSelectedColumnName(columnName)
+      setDirection(sortDirection)
+      handleTableSorting(columnName, sortDirection)
+    },
+    [direction, handleTableSorting, selectedColumnName]
+  )
 
   useEffect(() => {
-    if (defaultSortBy !== null)
+    if (defaultSortBy !== null) {
       handleSortingChange(isNumber(defaultSortBy) ? tableHeaders[defaultSortBy].id : defaultSortBy)
-  }, [])
-
-  // defaultSortBy, handleSortingChange, tableHeaders
+    }
+  }, [defaultSortBy])
 
   return [direction, handleSortingChange, selectedColumnName, sortedTableContent]
 }
