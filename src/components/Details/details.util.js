@@ -321,7 +321,7 @@ export const renderContent = (
         />
       )
     case DETAILS_RESULTS_TAB:
-      return <DetailsResults job={selectedItem} defaultSortBy="accuracy" excludeSortBy={1} />
+      return <DetailsResults job={selectedItem} defaultSortBy="accuracy" excludeSortBy="state" />
     case DETAILS_LOGS_TAB:
     case DETAILS_BUILD_LOG_TAB:
       return (

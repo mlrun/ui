@@ -17,12 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { isNumber, orderBy } from 'lodash'
-import { useCallback } from 'react'
+
+import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
 export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
-  const [direction, setDirection] = useState('desc')
+  const [direction, setDirection] = useState(null)
   const [selectedColumnName, setSelectedColumnName] = useState(null)
   const [sortedTableContent, setSortedTableContent] = useState(tableContent)
 
@@ -30,9 +31,9 @@ export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
     (columnName, sortDirection) => {
       const columnIndex = tableHeaders.findIndex(header => header.id === columnName)
 
-      if (columnName && columnName !== null) {
+      if (columnName) {
         const sorted = orderBy(
-          sortedTableContent,
+          tableContent,
           rowData =>
             isNumber(parseFloat(rowData[columnIndex]))
               ? parseFloat(rowData[columnIndex])
@@ -40,10 +41,10 @@ export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
           sortDirection
         )
 
-        setSortedTableContent(sorted || sortedTableContent)
+        setSortedTableContent(sorted)
       }
     },
-    [sortedTableContent, tableHeaders]
+    [tableContent, tableHeaders]
   )
 
   const handleSortingChange = useCallback(
@@ -58,11 +59,21 @@ export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
     [direction, handleTableSorting, selectedColumnName]
   )
 
+  const getSortingIcon = id => {
+    return (
+      <ArrowIcon
+        className={`sort-icon ${
+          selectedColumnName === id && direction === 'asc' ? 'sort-icon_up' : 'sort-icon_down'
+        }`}
+      />
+    )
+  }
+
   useEffect(() => {
-    if (defaultSortBy !== null) {
+    if (defaultSortBy !== null && !direction) {
       handleSortingChange(isNumber(defaultSortBy) ? tableHeaders[defaultSortBy].id : defaultSortBy)
     }
-  }, [defaultSortBy])
+  }, [defaultSortBy, direction, handleSortingChange, tableHeaders])
 
-  return [direction, handleSortingChange, selectedColumnName, sortedTableContent]
+  return [handleSortingChange, selectedColumnName, getSortingIcon, sortedTableContent]
 }

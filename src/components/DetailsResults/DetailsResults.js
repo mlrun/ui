@@ -24,25 +24,30 @@ import NoData from '../../common/NoData/NoData'
 import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { roundFloats } from '../../utils/roundFloats'
-import { resultsTable } from '../../utils/resultsTable'
+import { resultsTableContent, resultsTableHeaders } from '../../utils/resultsTable'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 
-import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as BestIteration } from 'igz-controls/images/best-iteration-icon.svg'
 
 import './detailsResults.scss'
+import classNames from 'classnames'
 
 const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
-  const result = useMemo(
-    () => resultsTable(job, { allowSortBy, excludeSortBy, defaultSortBy }),
-    [allowSortBy, excludeSortBy, defaultSortBy, job]
+  const tableHeaders = useMemo(
+    () => resultsTableHeaders(job, { allowSortBy, excludeSortBy, defaultSortBy }),
+    [job, allowSortBy, excludeSortBy, defaultSortBy]
   )
+  const tableContent = useMemo(() => resultsTableContent(job), [job])
 
-  const [direction, handleSortingChange, selectedColumnName, sortedTableContent] = useSortTable(
-    result.headers,
-    result.tableContent,
-    defaultSortBy
-  )
+  const [handleSortingChange, selectedColumnName, getSortingIcon, sortedTableContent] =
+    useSortTable(tableHeaders, tableContent, defaultSortBy)
+
+  const getHeaderClasses = id =>
+    classNames(
+      'results-table__header-item',
+      'table__header-sortable',
+      selectedColumnName === id && 'table__header-sortable-active'
+    )
 
   return (
     <div className="table__item-results">
@@ -51,28 +56,15 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {result.headers.map(({ label, id, isSortable }) => {
+                {tableHeaders.map(({ id, label, isSortable }) => {
                   return !isSortable ? (
-                    <span className="results-table__header-item" key={id}>
+                    <div className="results-table__header-item" key={id}>
                       <Tooltip template={<TextTooltipTemplate text={label} />}>{label}</Tooltip>
-                    </span>
+                    </div>
                   ) : (
                     <Button
-                      className={`results-table__header-item results-table__header-sortable ${
-                        (defaultSortBy === id && defaultSortBy === selectedColumnName) ||
-                        selectedColumnName === id
-                          ? 'results-table__header-sortable-active'
-                          : ''
-                      }`}
-                      icon={
-                        <ArrowIcon
-                          className={`sort-icon ${
-                            selectedColumnName === id && direction === 'asc'
-                              ? 'sort-icon_up'
-                              : 'sort-icon_down'
-                          }`}
-                        />
-                      }
+                      className={getHeaderClasses(id)}
+                      icon={getSortingIcon(id)}
                       key={id}
                       label={label}
                       onClick={() => handleSortingChange(id)}

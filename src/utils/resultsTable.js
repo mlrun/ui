@@ -20,17 +20,26 @@ such restriction.
 import { capitalize, isEmpty, isNumber } from 'lodash'
 
 const checkSortByIndex = ({ allowSortBy, excludeSortBy }) => {
-  let isSortByIndex = false
+  // let isSortByIndex = false
 
-  if (isNumber(allowSortBy) || isNumber(excludeSortBy)) {
-    isSortByIndex = true
-  }
+  // if (isNumber(allowSortBy) || isNumber(excludeSortBy)) {
+  //   isSortByIndex = true
+  // }
 
-  if (Array.isArray(allowSortBy)) {
-    isSortByIndex = allowSortBy.every(allowedIndex => isNumber(allowedIndex))
-  } else if (Array.isArray(excludeSortBy)) {
-    isSortByIndex = excludeSortBy.every(allowedIndex => isNumber(allowedIndex))
-  }
+  // if (Array.isArray(allowSortBy)) {
+  //   isSortByIndex = allowSortBy.every(allowedIndex => isNumber(allowedIndex))
+  // } else if (Array.isArray(excludeSortBy)) {
+  //   isSortByIndex = excludeSortBy.every(allowedIndex => isNumber(allowedIndex))
+  // }
+
+  let isSortByIndex =
+    isNumber(allowSortBy) || isNumber(excludeSortBy)
+      ? true
+      : Array.isArray(allowSortBy)
+      ? allowSortBy.every(allowedIndex => isNumber(allowedIndex))
+      : Array.isArray(excludeSortBy)
+      ? excludeSortBy.every(allowedIndex => isNumber(allowedIndex))
+      : false
 
   return isSortByIndex
 }
@@ -81,7 +90,7 @@ const isSortable = (item, itemIdx, { allowSortBy, excludeSortBy, defaultSortBy, 
   return isSortable
 }
 
-export const resultsTable = (array, sortConfig) => {
+export const resultsTableHeaders = (array, sortConfig) => {
   const [headers] = (array.iterationStats ?? []).slice(0, 1).map(item => {
     return [item[1], item[0]].concat(item.slice(2)).map((header, idx) => {
       const clearHeaderPrefix = String(header).replace(/^.+\./, '')
@@ -95,12 +104,11 @@ export const resultsTable = (array, sortConfig) => {
     })
   })
 
-  let tableContent = (array.iterationStats ?? []).slice(1).map(contentItem => {
+  return headers
+}
+
+export const resultsTableContent = array => {
+  return (array.iterationStats ?? []).slice(1).map(contentItem => {
     return [contentItem[1], contentItem[0]].concat(contentItem.slice(2)).map(item => item ?? '')
   })
-
-  return {
-    headers,
-    tableContent
-  }
 }
