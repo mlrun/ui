@@ -17,89 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, isEmpty, isNumber } from 'lodash'
+import { capitalize } from 'lodash'
 
-const checkSortByIndex = ({ allowSortBy, excludeSortBy }) => {
-  // let isSortByIndex = false
-
-  // if (isNumber(allowSortBy) || isNumber(excludeSortBy)) {
-  //   isSortByIndex = true
-  // }
-
-  // if (Array.isArray(allowSortBy)) {
-  //   isSortByIndex = allowSortBy.every(allowedIndex => isNumber(allowedIndex))
-  // } else if (Array.isArray(excludeSortBy)) {
-  //   isSortByIndex = excludeSortBy.every(allowedIndex => isNumber(allowedIndex))
-  // }
-
-  let isSortByIndex =
-    isNumber(allowSortBy) || isNumber(excludeSortBy)
-      ? true
-      : Array.isArray(allowSortBy)
-      ? allowSortBy.every(allowedIndex => isNumber(allowedIndex))
-      : Array.isArray(excludeSortBy)
-      ? excludeSortBy.every(allowedIndex => isNumber(allowedIndex))
-      : false
-
-  return isSortByIndex
-}
-
-const isSortable = (item, itemIdx, { allowSortBy, excludeSortBy, defaultSortBy, sortByIndex }) => {
-  let isSortable = false
-
-  if (item === defaultSortBy || itemIdx === defaultSortBy) {
-    return true
-  }
-
-  if (sortByIndex) {
-    if (!isEmpty(allowSortBy) || isNumber(allowSortBy)) {
-      if (Array.isArray(allowSortBy)) {
-        isSortable = allowSortBy.includes(itemIdx)
-      } else {
-        isSortable = itemIdx === allowSortBy
-      }
-    }
-
-    if (!isEmpty(excludeSortBy) || isNumber(excludeSortBy)) {
-      if (Array.isArray(excludeSortBy)) {
-        isSortable = !excludeSortBy.includes(itemIdx)
-      } else {
-        isSortable = itemIdx !== excludeSortBy
-      }
-    }
-  } else {
-    if (!allowSortBy && !excludeSortBy) return true
-
-    if (allowSortBy) {
-      if (Array.isArray(allowSortBy)) {
-        isSortable = allowSortBy.includes(item)
-      } else {
-        isSortable = item === allowSortBy
-      }
-    }
-
-    if (excludeSortBy) {
-      if (Array.isArray(excludeSortBy)) {
-        isSortable = !excludeSortBy.includes(item)
-      } else {
-        isSortable = item !== excludeSortBy
-      }
-    }
-  }
-
-  return isSortable
-}
-
-export const resultsTableHeaders = (array, sortConfig) => {
+export const resultsTableHeaders = array => {
   const [headers] = (array.iterationStats ?? []).slice(0, 1).map(item => {
-    return [item[1], item[0]].concat(item.slice(2)).map((header, idx) => {
+    return [item[1], item[0]].concat(item.slice(2)).map(header => {
       const clearHeaderPrefix = String(header).replace(/^.+\./, '')
-      sortConfig.sortByIndex = checkSortByIndex(sortConfig)
 
       return {
         id: clearHeaderPrefix,
-        label: capitalize(clearHeaderPrefix),
-        isSortable: isSortable(clearHeaderPrefix, idx, sortConfig)
+        label: capitalize(clearHeaderPrefix)
       }
     })
   })

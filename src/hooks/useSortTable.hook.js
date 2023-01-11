@@ -18,22 +18,105 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useState } from 'react'
-import { isNumber, orderBy } from 'lodash'
+import { isEmpty, isNumber, orderBy } from 'lodash'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
-export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
+export const useSortTable = ({
+  headers,
+  content,
+  sortConfig: { allowSortBy, excludeSortBy, defaultSortBy }
+}) => {
   const [direction, setDirection] = useState(null)
   const [selectedColumnName, setSelectedColumnName] = useState(null)
-  const [sortedTableContent, setSortedTableContent] = useState(tableContent)
+  const [sortedTableContent, setSortedTableContent] = useState(content)
+  const [sortedTableHeaers, setSortedTableHeader] = useState(headers)
 
-  const handleTableSorting = useCallback(
-    (columnName, sortDirection) => {
-      const columnIndex = tableHeaders.findIndex(header => header.id === columnName)
+  const checkSortByIndex = useCallback(() => {
+    let isSortByIndex =
+      isNumber(allowSortBy) || isNumber(excludeSortBy)
+        ? true
+        : Array.isArray(allowSortBy)
+        ? allowSortBy.every(allowedIndex => isNumber(allowedIndex))
+        : Array.isArray(excludeSortBy)
+        ? excludeSortBy.every(allowedIndex => isNumber(allowedIndex))
+        : false
+
+    return isSortByIndex
+  }, [allowSortBy, excludeSortBy])
+
+  const isSortable = useCallback(
+    (item, itemIdx, sortByIndex) => {
+      let isSortable = false
+
+      if (item === defaultSortBy || itemIdx === defaultSortBy) {
+        return true
+      }
+
+      if (sortByIndex) {
+        if (!isEmpty(allowSortBy) || isNumber(allowSortBy)) {
+          if (Array.isArray(allowSortBy)) {
+            isSortable = allowSortBy.includes(itemIdx)
+          } else {
+            isSortable = itemIdx === allowSortBy
+          }
+        }
+
+        if (!isEmpty(excludeSortBy) || isNumber(excludeSortBy)) {
+          if (Array.isArray(excludeSortBy)) {
+            isSortable = !excludeSortBy.includes(itemIdx)
+          } else {
+            isSortable = itemIdx !== excludeSortBy
+          }
+        }
+      } else {
+        if (!allowSortBy && !excludeSortBy) return true
+
+        if (allowSortBy) {
+          if (Array.isArray(allowSortBy)) {
+            isSortable = allowSortBy.includes(item)
+          } else {
+            isSortable = item === allowSortBy
+          }
+        }
+
+        if (excludeSortBy) {
+          if (Array.isArray(excludeSortBy)) {
+            isSortable = !excludeSortBy.includes(item)
+          } else {
+            isSortable = item !== excludeSortBy
+          }
+        }
+      }
+
+      return isSortable
+    },
+    [allowSortBy, defaultSortBy, excludeSortBy]
+  )
+
+  const getSortableHeaders = useCallback(() => {
+    const isSortByIndex = checkSortByIndex()
+
+    return headers.map((header, idx) => {
+      const clearHeaderPrefix = String(header).replace(/^.+\./, '')
+
+      return {
+        ...header,
+        isSortable: isSortable(clearHeaderPrefix, idx, isSortByIndex)
+      }
+    })
+  }, [checkSortByIndex, headers, isSortable])
+
+  const sortTable = useCallback(
+    columnName => {
+      const sortDirection =
+        columnName === selectedColumnName && direction === 'desc' ? 'asc' : 'desc'
+
+      const columnIndex = headers.findIndex(header => header.id === columnName)
 
       if (columnName) {
         const sorted = orderBy(
-          tableContent,
+          content,
           rowData =>
             isNumber(parseFloat(rowData[columnIndex]))
               ? parseFloat(rowData[columnIndex])
@@ -43,20 +126,11 @@ export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
 
         setSortedTableContent(sorted)
       }
-    },
-    [tableContent, tableHeaders]
-  )
-
-  const handleSortingChange = useCallback(
-    columnName => {
-      const sortDirection =
-        columnName === selectedColumnName && direction === 'desc' ? 'asc' : 'desc'
 
       setSelectedColumnName(columnName)
       setDirection(sortDirection)
-      handleTableSorting(columnName, sortDirection)
     },
-    [direction, handleTableSorting, selectedColumnName]
+    [content, direction, headers, selectedColumnName]
   )
 
   const getSortingIcon = id => {
@@ -71,9 +145,15 @@ export const useSortTable = (tableHeaders, tableContent, defaultSortBy) => {
 
   useEffect(() => {
     if (defaultSortBy !== null && !direction) {
-      handleSortingChange(isNumber(defaultSortBy) ? tableHeaders[defaultSortBy].id : defaultSortBy)
+      sortTable(isNumber(defaultSortBy) ? headers[defaultSortBy].id : defaultSortBy)
     }
-  }, [defaultSortBy, direction, handleSortingChange, tableHeaders])
+  }, [defaultSortBy, direction, headers, sortTable])
 
-  return [handleSortingChange, selectedColumnName, getSortingIcon, sortedTableContent]
+  useEffect(() => {
+    const header = getSortableHeaders()
+
+    setSortedTableHeader(header)
+  }, [getSortableHeaders])
+
+  return [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaers]
 }

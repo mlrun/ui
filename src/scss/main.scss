@@ -195,31 +195,33 @@ main {
 
 .table {
   &__header {
-    &-sortable {
-      align-items: flex-start;
-      border: 0;
-      border-radius: 0;
-
-      .sort-icon {
-        display: none;
-        position: absolute;
-        top: auto;
-        bottom: auto;
-        left: 5px;
-        margin: 0;
-      }
-
-      &-active {
-        background-color: $alabaster;
+    &-item {
+      &-sortable {
+        align-items: flex-start;
+        border: 0;
+        border-radius: 0;
 
         .sort-icon {
-          display: block;
+          display: none;
+          position: absolute;
+          top: auto;
+          bottom: auto;
+          left: 5px;
+          margin: 0;
         }
-      }
 
-      &:hover {
-        .sort-icon {
-          display: block;
+        &-active {
+          background-color: $alabaster;
+
+          .sort-icon {
+            display: block;
+          }
+        }
+
+        &:hover {
+          .sort-icon {
+            display: block;
+          }
         }
       }
     }

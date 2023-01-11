@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import NoData from '../../common/NoData/NoData'
 import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -33,30 +34,36 @@ import './detailsResults.scss'
 import classNames from 'classnames'
 
 const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
-  const tableHeaders = useMemo(
-    () => resultsTableHeaders(job, { allowSortBy, excludeSortBy, defaultSortBy }),
-    [job, allowSortBy, excludeSortBy, defaultSortBy]
-  )
-  const tableContent = useMemo(() => resultsTableContent(job), [job])
+  const tableHeaders = useMemo(() => {
+    return isEmpty(job.error) ? resultsTableHeaders(job) : []
+  }, [job])
 
-  const [handleSortingChange, selectedColumnName, getSortingIcon, sortedTableContent] =
-    useSortTable(tableHeaders, tableContent, defaultSortBy)
+  const tableContent = useMemo(() => {
+    return isEmpty(job.error) ? resultsTableContent(job) : []
+  }, [job])
+
+  const [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaers] =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { allowSortBy, excludeSortBy, defaultSortBy }
+    })
 
   const getHeaderClasses = id =>
     classNames(
       'results-table__header-item',
-      'table__header-sortable',
-      selectedColumnName === id && 'table__header-sortable-active'
+      'table__header-item-sortable',
+      selectedColumnName === id && 'table__header-item-sortable-active'
     )
 
   return (
     <div className="table__item-results">
       <div className="results-table">
-        {job.iterationStats && job.iterationStats.length !== 0 ? (
+        {(job.iterationStats && job.iterationStats.length !== 0) || !job.error ? (
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {tableHeaders.map(({ id, label, isSortable }) => {
+                {sortedTableHeaers.map(({ id, label, isSortable }) => {
                   return !isSortable ? (
                     <div className="results-table__header-item" key={id}>
                       <Tooltip template={<TextTooltipTemplate text={label} />}>{label}</Tooltip>
@@ -67,7 +74,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
                       icon={getSortingIcon(id)}
                       key={id}
                       label={label}
-                      onClick={() => handleSortingChange(id)}
+                      onClick={() => sortTable(id)}
                       tooltip={label}
                     />
                   )
@@ -164,6 +171,9 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
 }
 
 DetailsResults.propTypes = {
+  // allowSortBy: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
+  // defaultSortBy: PropTypes.oneOf(),
+  // excludeSortBy: PropTypes.oneOf(),
   job: PropTypes.shape({}).isRequired
 }
 
