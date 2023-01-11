@@ -27,8 +27,8 @@ import './ProjectAction.scss'
 const ProjectAction = ({ actions, onClick }) => {
   return (
     <ul className="project-overview-actions">
-      {actions.map(({ icon, id, label, handleClick, tooltip }) => {
-        return (
+      {actions.map(({ icon, id, hidden, label, handleClick, tooltip }) => {
+        return !hidden ? (
           <li key={id} className="project-overview-actions__item" title={label}>
             <button
               className="project-overview-actions__item-wrapper"
@@ -39,7 +39,7 @@ const ProjectAction = ({ actions, onClick }) => {
               {tooltip && <Tip text={tooltip} />}
             </button>
           </li>
-        )
+        ) : null
       })}
     </ul>
   )

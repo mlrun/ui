@@ -94,7 +94,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
 
       <div className="project-overview__content">
         {/* move to card */}
-        {Object.keys(cards).map((card, index) => {
+        {Object.keys(cards).map(card => {
           const { additionalLinks, actions, subTitle, title } = cards[card]
           return (
             <div className="project-overview-card" key={card}>

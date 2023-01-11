@@ -30,7 +30,7 @@ import { NAVBAR_WIDTH } from '../../constants'
 
 import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
-import { ReactComponent as SettingsIcon } from 'igz-controls/images/pref-icon.svg'
+import { ReactComponent as SettingsIcon } from 'igz-controls/images/navbar/mlrun-project-settings.svg'
 
 import './Navbar.scss'
 
