@@ -11,6 +11,30 @@
   box-sizing: border-box;
 }
 
+* {
+  scrollbar-color: rgba($black, 0.25) rgba($black, 0.1);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba($black, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba($black, 0.25);
+  border-radius: 10px;
+
+  &:hover {
+    background-color: rgba($black, 0.4);
+  }
+}
+
 body {
   display: flex;
   flex: 1;
@@ -28,16 +52,17 @@ body {
 .ml-app {
   display: flex;
   width: 100%;
+
+  &-version {
+    font-size: 0.75rem;
+  }
 }
 
 .content {
   position: relative;
   flex-direction: column;
   min-width: 900px;
-  margin: 24px;
-  background-color: $white;
-  border-radius: $mainBorderRadius;
-  box-shadow: $jobsShadow;
+  margin: 15px 24px;
 
   @include jobsFlex;
 
@@ -64,6 +89,9 @@ body {
     flex: 1;
     flex-direction: column;
     min-height: 620px;
+    background-color: $white;
+    border-radius: $mainBorderRadius;
+    box-shadow: $jobsShadow;
 
     .no_data {
       margin: auto;
@@ -76,10 +104,6 @@ body {
     flex: 1 1;
     flex-direction: column;
     min-width: 100%;
-  }
-
-  &_with-menu {
-    margin-top: 45px;
   }
 
   &__action-bar {
@@ -394,21 +418,27 @@ iframe {
 }
 
 .form {
-  [class*='form-col-'] {
-    flex: 1 0 0%;
+  color: $primary;
+
+  [class*='form-col'] {
+    flex: 1 0 0;
 
     &:not(:last-child) {
       margin-right: 10px;
     }
   }
 
-  .form {
-    &-row {
-      display: flex;
-      align-items: stretch;
-      margin-bottom: 20px;
-    }
+  &-row {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 20px;
 
+    &.align-stretch {
+      align-items: stretch;
+    }
+  }
+
+  .form {
     &-col {
       &-1 {
         flex-grow: 1;
@@ -421,16 +451,45 @@ iframe {
       &-3 {
         flex-grow: 3;
       }
+
+      &-4 {
+        flex-grow: 4;
+      }
+
+      &-auto {
+        flex-grow: 0;
+      }
     }
 
     &-text {
-      color: $primary;
-      font-size: 12px;
+      font-size: 15px;
+    }
+
+    &-step-title {
+      display: block;
+      margin: 0;
+      font-size: 24px;
+    }
+
+    &-step-subtitle {
+      display: block;
+      margin: 0;
+      font-size: 20px;
+    }
+
+    &-table-title {
+      display: block;
+      font-weight: 500;
+      font-size: 20px;
+
+      .tip-container {
+        margin-left: 5px;
+      }
     }
   }
 }
 
-//TODO: Delete after removing Textarea and Input and using DRC conponents
+//TODO: Delete after removing Textarea and Input and using DRC components
 @mixin fieldWrapperOld {
   position: relative;
   width: 100%;
