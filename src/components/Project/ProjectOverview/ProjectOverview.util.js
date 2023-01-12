@@ -385,7 +385,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
           label: 'Deploy serving function',
-          tooltip: ''
+          tooltip: '',
+          hidden: !isDemoMode
         },
         {
           id: 'batchInference',
