@@ -255,6 +255,10 @@ a {
   @include statusState($silver);
 }
 
+[class^='state-archived'] {
+  @include statusState($topaz);
+}
+
 .state-created-job,
 .state-created-function,
 .state-pending-job {
