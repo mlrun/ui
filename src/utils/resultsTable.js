@@ -25,8 +25,8 @@ export const resultsTableHeaders = array => {
       const clearHeaderPrefix = String(header).replace(/^.+\./, '')
 
       return {
-        id: clearHeaderPrefix,
-        label: capitalize(clearHeaderPrefix)
+        label: capitalize(clearHeaderPrefix),
+        selector: clearHeaderPrefix
       }
     })
   })

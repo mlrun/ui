@@ -98,7 +98,7 @@ export const useSortTable = ({
     const isSortByIndex = checkSortByIndex()
 
     return headers.map((header, idx) => {
-      const clearHeaderPrefix = String(header).replace(/^.+\./, '')
+      const clearHeaderPrefix = String(header.selector).replace(/^.+\./, '')
 
       return {
         ...header,
@@ -112,7 +112,7 @@ export const useSortTable = ({
       const sortDirection =
         columnName === selectedColumnName && direction === 'desc' ? 'asc' : 'desc'
 
-      const columnIndex = headers.findIndex(header => header.id === columnName)
+      const columnIndex = headers.findIndex(header => header.selector === columnName)
 
       if (columnName) {
         const sorted = orderBy(
@@ -133,11 +133,11 @@ export const useSortTable = ({
     [content, direction, headers, selectedColumnName]
   )
 
-  const getSortingIcon = id => {
+  const getSortingIcon = selector => {
     return (
       <ArrowIcon
         className={`sort-icon ${
-          selectedColumnName === id && direction === 'asc' ? 'sort-icon_up' : 'sort-icon_down'
+          selectedColumnName === selector && direction === 'asc' ? 'sort-icon_up' : 'sort-icon_down'
         }`}
       />
     )
@@ -145,7 +145,7 @@ export const useSortTable = ({
 
   useEffect(() => {
     if (defaultSortBy !== null && !direction) {
-      sortTable(isNumber(defaultSortBy) ? headers[defaultSortBy].id : defaultSortBy)
+      sortTable(isNumber(defaultSortBy) ? headers[defaultSortBy].selector : defaultSortBy)
     }
   }, [defaultSortBy, direction, headers, sortTable])
 
