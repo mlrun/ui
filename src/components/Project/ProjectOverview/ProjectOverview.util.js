@@ -27,16 +27,22 @@ import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 
-import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
-import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
-import { ReactComponent as FeatureSetIcon } from 'igz-controls/images/set-icon.svg'
-import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/flow-icon.svg'
-import { ReactComponent as CreateJobIcon } from 'igz-controls/images/run2-icon.svg'
+import { ReactComponent as BatchInferenceIcon } from 'igz-controls/images/ic-batch-inference.svg'
+import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/ic-create-new-function.svg'
+import { ReactComponent as CreateWorkflowIcon } from 'igz-controls/images/ic-create-workflow.svg'
+import { ReactComponent as DataSetIcon } from 'igz-controls/images/ic-register-dataset.svg'
+import { ReactComponent as DefineAlertsIcon } from 'igz-controls/images/ic-define-alerts.svg'
+import { ReactComponent as FeatureSetIcon } from 'igz-controls/images/ic-create-featureset.svg'
+import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/ic-register-artifact.svg'
+import { ReactComponent as CreateJobIcon } from 'igz-controls/images/ic-run-batch.svg'
 // import { ReactComponent as DeployModelIcon } from 'igz-controls/images/rocket-icon.svg'
-import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/vector-icon.svg'
-import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/model-icon.svg'
-import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/realtime-icon-b.svg'
-import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/serving-icon.svg'
+import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/ic-feature-vector.svg'
+import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/ic-register-model.svg'
+import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/ic-create-realtime-function.svg'
+import { ReactComponent as RunWorkflowIcon } from 'igz-controls/images/ic-run-workflow.svg'
+import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/ic-deploy-model-serving.svg'
+import { ReactComponent as TrainModelIcon } from 'igz-controls/images/ic-train-model.svg'
+
 // import { ReactComponent as UploadIcon } from 'igz-controls/images/upload-icon.svg'
 
 export const handleClick = (navigate, openPopUp) => handler => {
@@ -53,9 +59,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
 
   return {
     collection: {
-      title: 'Data',
+      title: 'Ingest and Process Data',
       subTitle:
-        'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
+        'This section enable users to upload data , crate features and register external data.',
       actions: [
         //TODO: un-comment after wizard ready
         // {
@@ -125,7 +131,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Dataset',
+          label: 'Register dataset',
           tooltip: ''
         },
         {
@@ -176,7 +182,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Artifact',
+          label: 'Register artifact',
           tooltip: ''
         },
         {
@@ -185,7 +191,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/feature-store/feature-vectors?openPanel=true`
           }),
-          label: 'Create a Feature Vector',
+          label: 'Create Feature Vector',
           tooltip: ''
         }
       ],
@@ -221,9 +227,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
       ]
     },
     development: {
-      title: 'Jobs and Workflows',
+      title: 'Develop and Train Models',
       subTitle:
-        'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more. This is not the final version.',
+        'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more.',
       actions: [
         {
           id: 'createnewfunction',
@@ -231,7 +237,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/functions?openPanel=true`
           }),
-          label: 'Create New Function',
+          label: 'Create a Function',
           tooltip: ''
         },
         {
@@ -250,7 +256,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   // todo: delete this object when the job wizard is out of the demo mode
                   path: `${base_url}/jobs/monitor-jobs/create-new-job`
                 },
-          label: 'Create New Job',
+          label: 'Batch run',
           tooltip: ''
         },
         {
@@ -298,8 +304,32 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Model',
+          label: 'Register model',
           tooltip: ''
+        },
+        {
+          id: 'trainmodel',
+          icon: <TrainModelIcon />,
+          handleClick: () => {},
+          label: 'Train model',
+          tooltip: '',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'createworkflow',
+          icon: <CreateWorkflowIcon />,
+          handleClick: () => {},
+          label: 'Create workflow',
+          tooltip: '',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'runworkflow',
+          icon: <RunWorkflowIcon />,
+          handleClick: () => {},
+          label: 'Run workflow',
+          tooltip: '',
+          hidden: !isDemoMode
         }
       ],
       additionalLinks: [
@@ -334,14 +364,14 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
       ]
     },
     deployment: {
-      title: 'Deployment',
+      title: 'Deploy and Monitor',
       subTitle:
-        'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale. This is not the final version.',
+        'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale.',
       actions: [
         {
           id: 'createRealTimeFunction',
           icon: <RTFunctionIcon />,
-          label: 'Create RT function',
+          label: 'Create realtime function',
           handleClick: () => ({
             path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
@@ -355,7 +385,24 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
           label: 'Deploy serving function',
-          tooltip: ''
+          tooltip: '',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'batchInference',
+          icon: <BatchInferenceIcon />,
+          handleClick: () => {},
+          label: 'Batch inference',
+          tooltip: '',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'defineAlerts',
+          icon: <DefineAlertsIcon />,
+          handleClick: () => {},
+          label: 'Define alerts',
+          tooltip: '',
+          hidden: !isDemoMode
         }
         // {
         //   id: 'deployModel',
@@ -380,7 +427,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/models/real-time-pipelines`
           }),
-          label: 'Real Time Pipelines'
+          label: 'RT Pipelines'
         },
         {
           id: 'nuclioFunctions',

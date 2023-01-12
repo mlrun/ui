@@ -7,166 +7,94 @@
   height: 100%;
   background-color: $white;
 
-  &__header {
-    display: flex;
-    flex-flow: column nowrap;
-    min-height: 300px;
-    padding: 2.2em 4em 5em;
-    color: $white;
-    line-height: 1.4;
-
-    @include gradient('page');
-
-    &-title {
-      display: flex;
-      flex-flow: row wrap;
-      align-items: center;
-      margin: 0;
-      font-weight: 300;
-      font-size: 3.2em;
-      line-height: 1.3;
-    }
-
-    &-description {
-      max-width: 75%;
-      margin: 0;
-    }
-
-    &-subtitle {
-      display: flex;
-      width: 100%;
-      margin-bottom: 1.5em;
-
-      & > * {
-        margin-right: 25px;
-      }
-
-      &-name {
-        margin-right: 5px;
-        font-weight: 700;
-      }
-    }
-
-    .data-ellipsis {
-      display: flex;
-      margin-left: 0.3em;
-    }
+  .link {
+    font-size: 15px;
   }
 
-  &__content {
-    position: relative;
-    display: flex;
-    flex-flow: row wrap;
-    align-items: stretch;
-    justify-content: center;
-    width: 100%;
-    padding: 0 2em;
-    background: inherit;
-  }
+  .project-overview {
+    &__header {
+      min-height: 200px;
+      padding: 2.2em 4em 5em;
+      color: $white;
 
-  &-card {
-    flex: 0 0 100%;
-    min-width: 320px;
-    // min-height: 635px;
-    margin: 0 15px 2em;
-    transform: translateY(-60px);
-
-    @media screen and (min-width: 576px) {
-      flex: 1 0;
-      max-width: 500px;
+      @include gradient('page');
     }
 
-    &__top {
+    &__content {
       position: relative;
       display: flex;
-      flex: 1 0 auto;
-      flex-flow: column;
-      padding-bottom: 50px;
+      flex-flow: row wrap;
+      align-items: stretch;
+      justify-content: center;
+      width: 100%;
+      padding: 0 2em;
+      background: inherit;
     }
 
-    &__center {
-      // display: flex;
-      display: none;
-      flex-flow: column nowrap;
-      height: 220px;
-      padding: 20px 1em 0;
-      overflow: hidden;
-      transition: height 0.5s ease-in-out;
+    &-card {
+      flex: 0 0 100%;
+      min-width: 350px;
+      // min-height: 635px;
+      margin: 0 15px 2em;
+      transform: translateY(-60px);
 
-      &[aria-expanded='true'] {
-        height: 0;
+      @media screen and (min-width: 576px) {
+        flex: 1 0;
+        max-width: 463px;
       }
-    }
 
-    &__bottom {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      min-height: 66px;
-      max-height: 66px;
-    }
-
-    &__header {
-      min-height: 175px;
-    }
-
-    .additional-links {
-      display: flex;
-
-      & > * {
-        padding: 5px 0;
-        text-transform: capitalize;
-        cursor: pointer;
-
-        &:not(:last-child) {
-          margin: 0 10px 0 0;
-
-          &::after {
-            margin-left: 10px;
-            border-right: $dividerBorder;
-            content: '';
-          }
-        }
-      }
-    }
-
-    &__actions {
-      display: flex;
-      flex-flow: column nowrap;
-      padding: 0 1.6em;
-
-      &-toogler {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
+      &__top {
+        position: relative;
         display: flex;
-        align-items: center;
+
+        flex-flow: column;
+      }
+
+      &__center {
+        // display: flex;
+        display: none;
+        flex-flow: column nowrap;
+        padding: 20px 1em 0;
+        transition: height 0.5s ease-in-out;
+      }
+
+      &__bottom {
+        text-align: center;
+        min-height: 66px;
+
+        .label {
+          font-size: 1.2em;
+          margin: 0 0 10px 0;
+          padding: 0;
+        }
+      }
+
+      &__header {
+        min-height: 202px;
+      }
+
+      .additional-links {
+        display: flex;
+        align-items: flex-end;
         justify-content: center;
-        margin: 0;
-        padding: 1em 0;
-        cursor: pointer;
 
-        &:hover {
-          background-color: $selago;
-        }
+        & > * {
+          font-size: 14px;
+          padding: 5px 10px;
+          text-transform: capitalize;
+          cursor: pointer;
 
-        svg {
-          transform: rotate(90deg);
-          transition: transform 0.5s ease-in-out;
-        }
-
-        &[aria-expanded='true'] {
-          svg {
-            transform: rotate(-90deg);
+          &:not(:last-child) {
+            border-right: $dividerBorder;
           }
         }
       }
-    }
-  }
 
-  .link {
-    font-size: 0.75rem;
+      &__actions {
+        padding: 0 1.6em;
+        min-height: 270px;
+      }
+    }
   }
 }
 
@@ -187,7 +115,7 @@
   }
 
   &__bottom {
-    padding: 1em 1.6em;
+    padding: 1em 0;
     border-top: 1px solid $athensGray;
   }
 
@@ -202,6 +130,8 @@
 
     &-subtitle {
       margin: 0;
+      font-size: 1.2em;
+      font-weight: 300;
       line-height: 1.4;
     }
   }

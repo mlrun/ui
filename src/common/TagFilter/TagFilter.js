@@ -32,15 +32,16 @@ import './tagFilter.scss'
 const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false)
   const [tagFilter, setTagFilter] = useState(TAG_FILTER_LATEST)
+  const [tagIsTyped, setTagIsTyped] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const tagFilterRef = useRef()
 
   useEffect(() => {
-    if (tagFilter !== value) {
+    if (tagFilter !== value && !tagIsTyped) {
       setTagFilter(value)
     }
-  }, [setTagFilter, params.pageTab, value, tagFilter])
+  }, [setTagFilter, value, tagFilter, tagIsTyped])
 
   const handlerOverall = useCallback(
     event => {
@@ -51,14 +52,15 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
         } else {
           const tag = tagFilterOptions.find(tag => tag.id === tagFilter)
 
-          onChange(tag?.id || tagFilter)
+          tagIsTyped && onChange(tag?.id || tagFilter)
           setTagFilter(tag?.label || tagFilter)
         }
 
+        setTagIsTyped(false)
         setIsDropDownMenuOpen(false)
       }
     },
-    [tagFilter, onChange, tagFilterOptions]
+    [tagFilter, onChange, tagFilterOptions, tagIsTyped]
   )
 
   const handleKeyDown = event => {
@@ -81,6 +83,7 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
       onChange(searchItem?.id || event.target.value || TAG_FILTER_LATEST)
       event.target.blur()
       setIsDropDownMenuOpen(false)
+      setTagIsTyped(false)
     }
   }
 
@@ -118,6 +121,7 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
         value={tagFilter}
         title={tagFilter?.length >= 14 ? tagFilter : null}
         onChange={event => {
+          setTagIsTyped(true)
           setTagFilter(event.target.value)
         }}
         onFocus={event => {

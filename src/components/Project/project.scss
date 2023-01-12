@@ -20,7 +20,7 @@
   &__content {
     display: flex;
     flex: 1;
-    padding: 24px;
+    padding: 24px 40px;
 
     .general-info {
       display: flex;
@@ -67,6 +67,10 @@
       }
     }
 
+    .project-details {
+      margin-bottom: 15px;
+    }
+
     .main-info {
       display: flex;
       flex: 4;
@@ -74,7 +78,7 @@
 
       &__toolbar {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         margin-bottom: 15px;
 
@@ -118,8 +122,7 @@
 
         .refresh {
           display: flex;
-          margin-right: 10px;
-          margin-left: auto;
+          margin-left: 10px;
         }
       }
 

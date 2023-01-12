@@ -58,7 +58,7 @@ const artifactsApi = {
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  getArtifactPreview: (path, user, fileFormat, cancelToken) => {
+  getArtifactPreview: (project, path, user, fileFormat, cancelToken) => {
     const config = {
       params: { path }
     }
@@ -75,7 +75,7 @@ const artifactsApi = {
       config.cancelToken = cancelToken
     }
 
-    return mainHttpClient.get('/files', config)
+    return mainHttpClient.get(`projects/${project}/files`, config)
   },
   getArtifactTags: (project, category) =>
     mainHttpClient.get(`/projects/${project}/artifact-tags`, {
