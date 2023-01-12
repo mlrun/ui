@@ -136,8 +136,12 @@ export const targetsPathEditDataInitialState = {
   }
 }
 
-export const generatePath = (project, name, kind) =>
-  `v3io:///projects/${project}/FeatureStore/${name ||
-    '{name}'}/{run_id}/${kind}/sets/${name || '{name}'}${
-    kind === PARQUET ? '.parquet' : ''
-  }`
+export const generatePath = (prefixes, project, name, suffix, kind) => {
+  const path = prefixes[kind] || prefixes.default
+
+  return `${path.replace(
+    /{project}|{name}|{kind}/gi,
+    matchToReplace =>
+      ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
+  )}/sets/${name || '{name}'}.${suffix}`
+}
