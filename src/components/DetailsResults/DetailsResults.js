@@ -63,19 +63,19 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {sortedTableHeaers.map(({ selector, label, isSortable }) => {
+                {sortedTableHeaers.map(({ header, selector, isSortable }) => {
                   return !isSortable ? (
                     <div className="results-table__header-item" key={selector}>
-                      <Tooltip template={<TextTooltipTemplate text={label} />}>{label}</Tooltip>
+                      <Tooltip template={<TextTooltipTemplate text={header} />}>{header}</Tooltip>
                     </div>
                   ) : (
                     <Button
                       className={getHeaderClasses(selector)}
                       icon={getSortingIcon(selector)}
                       key={selector}
-                      label={label}
+                      label={header}
                       onClick={() => sortTable(selector)}
-                      tooltip={label}
+                      tooltip={header}
                     />
                   )
                 })}

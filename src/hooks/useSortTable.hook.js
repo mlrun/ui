@@ -32,7 +32,45 @@ export const useSortTable = ({
   const [sortedTableContent, setSortedTableContent] = useState(content)
   const [sortedTableHeaers, setSortedTableHeader] = useState(headers)
 
-  const checkSortByIndex = useCallback(() => {
+  const isDateValid = dateString => {
+    if (Date.parse(dateString)) {
+      if (dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char))) {
+        return false
+      }
+      return true
+    } else {
+      return false
+    }
+  }
+
+  const getValueByType = useCallback(
+    columnIndex => rowData => {
+      if (rowData[columnIndex] instanceof Object) {
+        let valueToTest = rowData[columnIndex].value
+
+        if (valueToTest !== null || valueToTest !== undefined) {
+          if (valueToTest instanceof Array && valueToTest.length > 0) {
+            if (valueToTest[0].match(/:/g)) {
+              return valueToTest[0].split(':')[0].trim()
+            }
+
+            return valueToTest[0]
+          } else if (isDateValid(valueToTest)) {
+            return new Date(valueToTest)
+          } else {
+            return valueToTest
+          }
+        }
+      }
+
+      return isNumber(parseFloat(rowData[columnIndex]))
+        ? parseFloat(rowData[columnIndex])
+        : rowData[columnIndex]
+    },
+    []
+  )
+
+  const isSortableByIndex = useCallback(() => {
     let isSortByIndex =
       isNumber(allowSortBy) || isNumber(excludeSortBy)
         ? true
@@ -48,6 +86,8 @@ export const useSortTable = ({
   const isSortable = useCallback(
     (item, itemIdx, sortByIndex) => {
       let isSortable = false
+
+      if (!item) return false
 
       if (item === defaultSortBy || itemIdx === defaultSortBy) {
         return true
@@ -95,17 +135,17 @@ export const useSortTable = ({
   )
 
   const getSortableHeaders = useCallback(() => {
-    const isSortByIndex = checkSortByIndex()
+    const isSortByIndex = isSortableByIndex()
 
-    return headers.map((header, idx) => {
-      const clearHeaderPrefix = String(header.selector).replace(/^.+\./, '')
+    return headers.map((headerItem, idx) => {
+      const clearHeaderPrefix = String(headerItem.header).replace(/^.+\./, '')
 
       return {
-        ...header,
-        isSortable: isSortable(clearHeaderPrefix, idx, isSortByIndex)
+        ...headerItem,
+        isSortable: headerItem.header ? isSortable(clearHeaderPrefix, idx, isSortByIndex) : false
       }
     })
-  }, [checkSortByIndex, headers, isSortable])
+  }, [isSortableByIndex, headers, isSortable])
 
   const sortTable = useCallback(
     columnName => {
@@ -115,14 +155,7 @@ export const useSortTable = ({
       const columnIndex = headers.findIndex(header => header.selector === columnName)
 
       if (columnName) {
-        const sorted = orderBy(
-          content,
-          rowData =>
-            isNumber(parseFloat(rowData[columnIndex]))
-              ? parseFloat(rowData[columnIndex])
-              : rowData[columnIndex],
-          sortDirection
-        )
+        const sorted = orderBy(content, getValueByType(columnIndex), sortDirection)
 
         setSortedTableContent(sorted)
       }
@@ -130,7 +163,7 @@ export const useSortTable = ({
       setSelectedColumnName(columnName)
       setDirection(sortDirection)
     },
-    [content, direction, headers, selectedColumnName]
+    [content, direction, headers, selectedColumnName, getValueByType]
   )
 
   const getSortingIcon = selector => {
