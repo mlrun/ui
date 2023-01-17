@@ -310,7 +310,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           }),
           label: 'Register model',
           tooltip:
-            'Store a model (with its metadata) in the MLRun database for subsequent use in functions.'
+            'Store a model (with its metadata) in the MLRun database for subsequent use in functions.',
+          hidden: !isDemoMode
         },
         {
           id: 'trainModel',
@@ -412,7 +413,6 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => {},
           label: 'Define alerts',
           tooltip:
-           
             'Use alerts to notify about operational performance metrics, or to automate a call to a CI/CD pipeline when drift is detected.',
           hidden: !isDemoMode
         }
