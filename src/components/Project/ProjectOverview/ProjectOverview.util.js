@@ -59,9 +59,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
 
   return {
     collection: {
-      title: 'Ingest and Process Data',
-      subTitle:
-        'This section enable users to upload data , crate features and register external data.',
+      title: 'Ingest and process data',
+      subTitle: 'Register, upload data directly, or define features using the feature store.',
       actions: [
         //TODO: un-comment after wizard ready
         // {
@@ -79,8 +78,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/feature-store/feature-sets?openPanel=true`
           }),
-          label: 'Create Features Set',
-          tooltip: ''
+          label: 'Create feature set',
+          tooltip: 'Create a new feature set as part of the MLRun feature store.'
         },
         {
           icon: <DataSetIcon />,
@@ -132,7 +131,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             type: 'modal'
           }),
           label: 'Register dataset',
-          tooltip: ''
+          tooltip:
+            'Register an existing dataset in the MLRun database so it can be referenced by other processes.'
         },
         {
           icon: <RegisterArtifactIcon />,
@@ -183,7 +183,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             type: 'modal'
           }),
           label: 'Register artifact',
-          tooltip: ''
+          tooltip:
+            'Register an existing artifact in the MLRun database so it can be referenced by other processes.'
         },
         {
           icon: <FeatureVectorIcon />,
@@ -191,8 +192,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/feature-store/feature-vectors?openPanel=true`
           }),
-          label: 'Create Feature Vector',
-          tooltip: ''
+          label: 'Create feature vector',
+          tooltip:
+            'Create a feature vector that combines different features across one or more feature sets as part of the MLRun feature store.'
         }
       ],
       additionalLinks: [
@@ -227,21 +229,22 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
       ]
     },
     development: {
-      title: 'Develop and Train Models',
+      title: 'Develop and train model',
       subTitle:
-        'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more.',
+        'Define your code in a function and train your models. You can also run any additional code in batch, as well as define and run workflows.',
       actions: [
         {
-          id: 'createnewfunction',
+          id: 'createBatchFunction',
           icon: <CreatFunctionIcon />,
           handleClick: () => ({
             path: `${base_url}/functions?openPanel=true`
           }),
-          label: 'Create a Function',
-          tooltip: ''
+          label: 'Create batch function',
+          tooltip:
+            'Define the code and other properties to run later in batch. Batch runs are typically used for processes such as data preparation and model training.'
         },
         {
-          id: 'createnewjob',
+          id: 'createnBatchRun',
           icon: <CreateJobIcon />,
           handleClick: () =>
             isDemoMode
@@ -256,11 +259,12 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   // todo: delete this object when the job wizard is out of the demo mode
                   path: `${base_url}/jobs/monitor-jobs/create-new-job`
                 },
-          label: 'Batch run',
-          tooltip: ''
+          label: 'Create batch run',
+          tooltip:
+            'Run a function in a batch process either immediately or define a schedule. You can also define hyperparameters to execute and compare'
         },
         {
-          id: 'registeramodel',
+          id: 'registerModel',
           icon: <RegisterModelIcon />,
           handleClick: () => ({
             component: RegisterModelModal,
@@ -305,30 +309,34 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             type: 'modal'
           }),
           label: 'Register model',
-          tooltip: ''
+          tooltip:
+            'Store a model (with its metadata) in the MLRun database for subsequent use in functions.',
+          hidden: !isDemoMode
         },
         {
-          id: 'trainmodel',
+          id: 'trainModel',
           icon: <TrainModelIcon />,
           handleClick: () => {},
           label: 'Train model',
-          tooltip: '',
+          tooltip:
+            'Train a new model based on an input dataset. You can also define hyperparameters to execute and compare multiple models.',
           hidden: !isDemoMode
         },
         {
-          id: 'createworkflow',
+          id: 'createWorkflow',
           icon: <CreateWorkflowIcon />,
           handleClick: () => {},
           label: 'Create workflow',
-          tooltip: '',
+          tooltip:
+            'Create a flow of multiple steps to execute, such as batch run, model deployment, and model testing.',
           hidden: !isDemoMode
         },
         {
-          id: 'runworkflow',
+          id: 'runWorkflow',
           icon: <RunWorkflowIcon />,
           handleClick: () => {},
           label: 'Run workflow',
-          tooltip: '',
+          tooltip: 'Specify the workflow and its input arguments.',
           hidden: !isDemoMode
         }
       ],
@@ -364,19 +372,20 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
       ]
     },
     deployment: {
-      title: 'Deploy and Monitor',
+      title: 'Deploy and monitor',
       subTitle:
-        'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale.',
+        'Deploy online serving models or perform batch inference, as well as define data and model monitoring and notification.',
       actions: [
         {
           id: 'createRealTimeFunction',
           icon: <RTFunctionIcon />,
-          label: 'Create realtime function',
+          label: 'Create real-time function',
           handleClick: () => ({
             path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
           }),
-          tooltip: ''
+          tooltip:
+            'These are typically used for serving, APIs, and stream processing. Specify the code, resources, and triggers.'
         },
         {
           id: 'deployServingFunction',
@@ -384,8 +393,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
-          label: 'Deploy serving function',
-          tooltip: '',
+          label: 'Deploy serving model',
+          tooltip:
+            'Deploy model for real-time inference. The model can receive data as HTTP, stream, as well as execute a real-time serving pipeline.',
           hidden: !isDemoMode
         },
         {
@@ -393,7 +403,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           icon: <BatchInferenceIcon />,
           handleClick: () => {},
           label: 'Batch inference',
-          tooltip: '',
+          tooltip:
+            'Run your model on a large dataset, usually read from an offline source, such as files or databases. The results are written to offline targets.',
           hidden: !isDemoMode
         },
         {
@@ -401,7 +412,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           icon: <DefineAlertsIcon />,
           handleClick: () => {},
           label: 'Define alerts',
-          tooltip: '',
+          tooltip:
+            'Use alerts to notify about operational performance metrics, or to automate a call to a CI/CD pipeline when drift is detected.',
           hidden: !isDemoMode
         }
         // {
