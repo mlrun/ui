@@ -114,6 +114,8 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
       {
         id: `key.${artifact.ui.identifierUnique}`,
         header: 'Name',
+        headerId: 'name',
+        isSortable: true,
         value: artifact.db_key,
         class: 'artifacts_medium',
         getLink: tab =>
@@ -141,13 +143,16 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
       {
         id: `labels.${artifact.ui.identifierUnique}`,
         header: 'Labels',
+        headerId: 'labels',
         value: parseKeyValues(artifact.labels),
-        class: 'artifacts_extra-small',
+        class: 'artifacts_small',
         type: 'labels'
       },
       {
         id: `producer.${artifact.ui.identifierUnique}`,
         header: 'Producer',
+        headerId: 'producer',
+        isSortable: true,
         value: artifact.producer,
         class: 'artifacts_small',
         type: 'producer'
@@ -155,6 +160,8 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
       {
         id: `owner.${artifact.ui.identifierUnique}`,
         header: 'Owner',
+        headerId: 'owner',
+        isSortable: true,
         value: artifact.producer?.owner,
         class: 'artifacts_small',
         type: 'owner'
@@ -162,14 +169,18 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
       {
         id: `updated.${artifact.ui.identifierUnique}`,
         header: 'Updated',
+        headerId: 'updated',
+        isSortable: true,
         value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'artifacts_small'
+        class: 'artifacts_big'
       },
       {
         id: `metrics.${artifact.ui.identifierUnique}`,
         header: 'Metrics',
+        headerId: 'metrics',
+        isSortable: true,
         value: parseKeyValues(artifact.metrics),
-        class: 'artifacts_big',
+        class: 'artifacts_small',
         type: 'metrics'
       },
       {
@@ -181,6 +192,8 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
             <span>Algorithm</span>
           </span>
         ),
+        headerId: 'frameWorkAndAlgorithm',
+        isSortable: true,
         value:
           artifact.framework || artifact.algorithm ? (
             <span>
@@ -444,7 +457,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
 
   return {
     data: {
-      ...artifact,
+      ...artifact
     },
     content: [
       {

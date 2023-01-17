@@ -26,20 +26,20 @@ import classNames from 'classnames'
 import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 const TableHead = React.forwardRef(
-  ({ content, mainRowItemsCount, selectedItem, sortConfig }, ref) => {
-    const { selectedColumnName, getSortingIcon, sortTable } = sortConfig
+  ({ content, mainRowItemsCount, selectedItem, sortProps }, ref) => {
+    const { selectedColumnName, getSortingIcon, sortTable } = sortProps
 
-    const getHeaderClasses = (tableItemClass, selector) =>
+    const getHeaderClasses = (tableItemClass, headerId) =>
       classNames(
         'table-head__item',
         tableItemClass,
         'table__header-item-sortable',
-        selectedColumnName === selector && 'table__header-item-sortable-active'
+        selectedColumnName === headerId && 'table__header-item-sortable-active'
       )
 
     return (
       <div className="table-head" ref={ref}>
-        {content.map(({ selector, isSortable, ...tableItem }, index) => {
+        {content.map(({ headerId, isSortable, ...tableItem }, index) => {
           const cellClassNames = classnames(
             'table-head__item',
             tableItem.class,
@@ -56,11 +56,11 @@ const TableHead = React.forwardRef(
               </div>
             ) : (
               <Button
-                className={getHeaderClasses(tableItem.class, selector)}
-                icon={getSortingIcon(selector)}
+                className={getHeaderClasses(tableItem.class, headerId)}
+                icon={getSortingIcon(headerId)}
                 key={`${tableItem.header}${index}`}
                 label={tableItem.header}
-                onClick={() => sortTable(selector)}
+                onClick={() => sortTable(headerId)}
                 tooltip={tableItem.header}
               />
             )
@@ -73,14 +73,14 @@ const TableHead = React.forwardRef(
 )
 
 TableHead.defaultProps = {
-  sortConfig: {}
+  sortProps: {}
 }
 
 TableHead.propTypes = {
   content: PropTypes.array.isRequired,
   mainRowItemsCount: PropTypes.number.isRequired,
   selectedItem: PropTypes.object.isRequired,
-  sortConfig: PropTypes.object
+  sortProps: PropTypes.object
 }
 
 export default TableHead

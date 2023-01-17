@@ -49,6 +49,7 @@ const Table = ({
   pageData,
   retryRequest,
   selectedItem,
+  sortProps,
   tab,
   tableHeaders
 }) => {
@@ -157,6 +158,7 @@ const Table = ({
       params={params}
       retryRequest={retryRequest}
       selectedItem={selectedItem}
+      sortProps={sortProps}
       tableContent={
         tab === MONITOR_JOBS_TAB || tab === SCHEDULE_TAB ? content : tableContent.content
       }

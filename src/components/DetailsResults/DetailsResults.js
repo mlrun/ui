@@ -49,11 +49,11 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
       sortConfig: { allowSortBy, excludeSortBy, defaultSortBy }
     })
 
-  const getHeaderClasses = selector =>
+  const getHeaderClasses = headerId =>
     classNames(
       'results-table__header-item',
       'table__header-item-sortable',
-      selectedColumnName === selector && 'table__header-item-sortable-active'
+      selectedColumnName === headerId && 'table__header-item-sortable-active'
     )
 
   return (
@@ -63,18 +63,18 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {sortedTableHeaers.map(({ header, selector, isSortable }) => {
+                {sortedTableHeaers.map(({ header, headerId, isSortable }) => {
                   return !isSortable ? (
-                    <div className="results-table__header-item" key={selector}>
+                    <div className="results-table__header-item" key={headerId}>
                       <Tooltip template={<TextTooltipTemplate text={header} />}>{header}</Tooltip>
                     </div>
                   ) : (
                     <Button
-                      className={getHeaderClasses(selector)}
-                      icon={getSortingIcon(selector)}
-                      key={selector}
+                      className={getHeaderClasses(headerId)}
+                      icon={getSortingIcon(headerId)}
+                      key={headerId}
                       label={header}
-                      onClick={() => sortTable(selector)}
+                      onClick={() => sortTable(headerId)}
                       tooltip={header}
                     />
                   )

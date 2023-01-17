@@ -44,6 +44,7 @@ const ModelsView = React.forwardRef(
       selectedModel,
       selectedRowData,
       setSelectedModel,
+      sortProps,
       tableContent
     },
     ref
@@ -74,6 +75,7 @@ const ModelsView = React.forwardRef(
                   pageData={pageData}
                   retryRequest={handleRefresh}
                   selectedItem={selectedModel}
+                  sortProps={sortProps}
                   tab={MODELS_TAB}
                   tableHeaders={tableContent[0]?.content ?? []}
                 >

@@ -26,6 +26,8 @@ import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifa
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 
+import { useSortTable } from '../../../hooks/useSortTable.hook'
+
 import {
   fetchArtifactTags,
   fetchModel,
@@ -63,7 +65,7 @@ import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Models = ({ fetchModelFeatureVector }) => {
+const Models = ({ allowSortBy, excludeSortBy, defaultSortBy, fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE)
@@ -218,6 +220,12 @@ const Models = ({ fetchModelFeatureVector }) => {
       : models.map(contentItem => createModelsRowData(contentItem, params.projectName))
   }, [filtersStore.groupBy, latestItems, models, params.projectName])
 
+  const [sortTable, selectedColumnName, getSortingIcon, sortedTableContent] = useSortTable({
+    headers: tableContent[0]?.content,
+    content: tableContent,
+    sortConfig: { defaultSortBy: 'updated' }
+  })
+
   useEffect(() => {
     return () => {
       setModels([])
@@ -307,7 +315,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
       setSelectedModel={setSelectedModel}
-      tableContent={tableContent}
+      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+      tableContent={sortedTableContent}
     />
   )
 }

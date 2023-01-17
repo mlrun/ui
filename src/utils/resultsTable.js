@@ -22,11 +22,11 @@ import { capitalize } from 'lodash'
 export const resultsTableHeaders = array => {
   const [headers] = (array.iterationStats ?? []).slice(0, 1).map(item => {
     return [item[1], item[0]].concat(item.slice(2)).map(header => {
-      const clearHeaderPrefix = String(header).replace(/^.+\./, '')
+      const clearHeaderPrefix = String(header).replace(/^.+\./, '').toLocaleLowerCase()
 
       return {
         header: capitalize(clearHeaderPrefix),
-        selector: clearHeaderPrefix
+        headerId: clearHeaderPrefix
       }
     })
   })

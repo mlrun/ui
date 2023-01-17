@@ -140,8 +140,12 @@
       @include tableDet;
       @include tableHeader(5px);
 
-      height: 50px;
-      line-height: 18px;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 40px;
+      margin: 0 5px;
+      padding: 5px 15px 5px 30px;
 
       &.buttonPopout,
       &.buttonDownload {
@@ -178,7 +182,8 @@
       @include tableDet;
 
       flex-wrap: wrap;
-      padding: 4px 5px;
+      margin: 0 5px;
+      padding: 5px 15px 5px 30px;
       font-weight: 400;
       font-size: 15px;
       line-height: 18px;

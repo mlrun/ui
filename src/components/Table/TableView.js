@@ -64,6 +64,7 @@ const TableView = ({
   params,
   retryRequest,
   selectedItem,
+  sortProps,
   tab,
   tableContent,
   tableContentRef,
@@ -223,6 +224,7 @@ const TableView = ({
             mainRowItemsCount={mainRowItemsCount}
             ref={tableHeadRef}
             selectedItem={selectedItem}
+            sortProps={sortProps}
           />
         )}
         {!pageData.tableHeaders && <div className="table-body">{children}</div>}

@@ -22,15 +22,13 @@ import { isEmpty, isNumber, orderBy } from 'lodash'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
-export const useSortTable = ({
-  headers,
-  content,
-  sortConfig: { allowSortBy, excludeSortBy, defaultSortBy }
-}) => {
+export const useSortTable = ({ headers, content, sortConfig }) => {
   const [direction, setDirection] = useState(null)
   const [selectedColumnName, setSelectedColumnName] = useState(null)
   const [sortedTableContent, setSortedTableContent] = useState(content)
-  const [sortedTableHeaers, setSortedTableHeader] = useState(headers)
+  const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
+
+  const { allowSortBy, excludeSortBy, defaultSortBy } = sortConfig
 
   const isDateValid = dateString => {
     if (Date.parse(dateString)) {
@@ -45,8 +43,12 @@ export const useSortTable = ({
 
   const getValueByType = useCallback(
     columnIndex => rowData => {
-      if (rowData[columnIndex] instanceof Object) {
-        let valueToTest = rowData[columnIndex].value
+      if (
+        rowData.content &&
+        rowData.content[columnIndex] instanceof Object &&
+        Object.keys(rowData.content[columnIndex]).length
+      ) {
+        let valueToTest = rowData.content[columnIndex].value
 
         if (valueToTest !== null || valueToTest !== undefined) {
           if (valueToTest instanceof Array && valueToTest.length > 0) {
@@ -65,6 +67,8 @@ export const useSortTable = ({
 
       return isNumber(parseFloat(rowData[columnIndex]))
         ? parseFloat(rowData[columnIndex])
+        : isDateValid(rowData[columnIndex])
+        ? new Date(rowData[columnIndex])
         : rowData[columnIndex]
     },
     []
@@ -138,7 +142,7 @@ export const useSortTable = ({
     const isSortByIndex = isSortableByIndex()
 
     return headers.map((headerItem, idx) => {
-      const clearHeaderPrefix = String(headerItem.header).replace(/^.+\./, '')
+      const clearHeaderPrefix = String(headerItem.header).replace(/^.+\./, '').toLocaleLowerCase()
 
       return {
         ...headerItem,
@@ -152,7 +156,7 @@ export const useSortTable = ({
       const sortDirection =
         columnName === selectedColumnName && direction === 'desc' ? 'asc' : 'desc'
 
-      const columnIndex = headers.findIndex(header => header.selector === columnName)
+      const columnIndex = headers && headers.findIndex(header => header.headerId === columnName)
 
       if (columnName) {
         const sorted = orderBy(content, getValueByType(columnIndex), sortDirection)
@@ -166,27 +170,29 @@ export const useSortTable = ({
     [content, direction, headers, selectedColumnName, getValueByType]
   )
 
-  const getSortingIcon = selector => {
+  const getSortingIcon = headerId => {
     return (
       <ArrowIcon
         className={`sort-icon ${
-          selectedColumnName === selector && direction === 'asc' ? 'sort-icon_up' : 'sort-icon_down'
+          selectedColumnName === headerId && direction === 'asc' ? 'sort-icon_up' : 'sort-icon_down'
         }`}
       />
     )
   }
 
   useEffect(() => {
-    if (defaultSortBy !== null && !direction) {
-      sortTable(isNumber(defaultSortBy) ? headers[defaultSortBy].selector : defaultSortBy)
+    if (defaultSortBy !== null && !direction && content.length > 0) {
+      sortTable(isNumber(defaultSortBy) ? headers[defaultSortBy].headerId : defaultSortBy)
     }
-  }, [defaultSortBy, direction, headers, sortTable])
+  }, [content, defaultSortBy, direction, headers, sortTable])
 
   useEffect(() => {
-    const header = getSortableHeaders()
+    if (headers && headers.length > 0 && (excludeSortBy || allowSortBy)) {
+      const header = getSortableHeaders()
 
-    setSortedTableHeader(header)
-  }, [getSortableHeaders])
+      setSortedTableHeaders(header)
+    }
+  }, [allowSortBy, excludeSortBy, getSortableHeaders, headers])
 
-  return [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaers]
+  return [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders]
 }
