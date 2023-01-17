@@ -143,8 +143,9 @@
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
+      height: auto;
       min-height: 40px;
-      margin: 0 5px;
+      margin: 0 1px;
       padding: 5px 15px 5px 30px;
 
       &.buttonPopout,
@@ -182,7 +183,7 @@
       @include tableDet;
 
       flex-wrap: wrap;
-      margin: 0 5px;
+      margin: 0 1px;
       padding: 5px 15px 5px 30px;
       font-weight: 400;
       font-size: 15px;

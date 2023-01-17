@@ -181,6 +181,10 @@ export const useSortTable = ({ headers, content, sortConfig }) => {
   }
 
   useEffect(() => {
+    if (direction && (!content || content.length === 0)) {
+      setDirection('')
+    }
+
     if (defaultSortBy !== null && !direction && content.length > 0) {
       sortTable(isNumber(defaultSortBy) ? headers[defaultSortBy].headerId : defaultSortBy)
     }

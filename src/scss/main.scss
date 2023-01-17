@@ -209,6 +209,7 @@ main {
         & > * {
           display: flex;
           align-items: center;
+          min-width: 100%;
         }
 
         .sort-icon {
