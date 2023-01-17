@@ -54,6 +54,7 @@ const ProjectMonitorView = ({
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
   isNuclioModeDisabled,
+  isDemoMode,
   nuclioStreamsAreEnabled,
   params,
   project,
@@ -94,7 +95,10 @@ const ProjectMonitorView = ({
       ) : (
         <div className="project__content">
           <div className="main-info">
-            <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
+            {/* TODO: remove isDemoMode in 1.4 */}
+            {isDemoMode && (
+              <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
+            )}
             <div className="main-info__toolbar">
               <Select
                 className="main-info__toolbar-menu launch-menu"
