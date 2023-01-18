@@ -54,7 +54,8 @@ $actionsBlockWidth: 72px;
 
   .table-cell__inputs-wrapper {
     display: flex;
-    width: calc(100% - #{$actionsBlockWidth});
+    flex: 1;
+    width: 0;
   }
 
   .table-cell__key {
