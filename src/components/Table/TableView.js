@@ -85,10 +85,10 @@ const TableView = ({
                     !item.hidden && (
                       <div
                         className={`table-head__item ${item.class}`}
-                        key={`${item.header}${index}`}
+                        key={`${item.headerLabel}${index}`}
                       >
-                        <Tooltip template={<TextTooltipTemplate text={item.header} />}>
-                          {item.header}
+                        <Tooltip template={<TextTooltipTemplate text={item.headerLabel} />}>
+                          {item.headerLabel}
                         </Tooltip>
                       </div>
                     )

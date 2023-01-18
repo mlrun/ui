@@ -144,11 +144,15 @@ export const useSortTable = ({ headers, content, sortConfig }) => {
     const isSortByIndex = isSortableByIndex()
 
     return headers.map((headerItem, idx) => {
-      const clearHeaderPrefix = String(headerItem.header).replace(/^.+\./, '').toLocaleLowerCase()
+      const clearHeaderPrefix = String(headerItem.headerLabel)
+        .replace(/^.+\./, '')
+        .toLocaleLowerCase()
 
       return {
         ...headerItem,
-        isSortable: headerItem.header ? isSortable(clearHeaderPrefix, idx, isSortByIndex) : false
+        isSortable: headerItem.headerLabel
+          ? isSortable(clearHeaderPrefix, idx, isSortByIndex)
+          : false
       }
     })
   }, [isSortableByIndex, headers, isSortable])

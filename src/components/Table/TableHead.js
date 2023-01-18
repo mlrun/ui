@@ -55,10 +55,10 @@ const TableHead = React.forwardRef(
             !isSortable || !sortProps ? (
               <div
                 className={getHeaderCellClasses(tableItem, index)}
-                key={`${tableItem.header}${index}`}
+                key={`${tableItem.headerLabel}${index}`}
               >
-                <Tooltip template={<TextTooltipTemplate text={tableItem.header} />}>
-                  {tableItem.header}
+                <Tooltip template={<TextTooltipTemplate text={tableItem.headerLabel} />}>
+                  {tableItem.headerLabel}
                 </Tooltip>
                 {tableItem.tip && <Tip text={tableItem.tip} />}
               </div>
@@ -66,10 +66,10 @@ const TableHead = React.forwardRef(
               <Button
                 className={getSortableHeaderCellClasses(tableItem.class, headerId, index)}
                 icon={sortProps.getSortingIcon(headerId)}
-                key={`${tableItem.header}${index}`}
-                label={tableItem.header}
+                key={`${tableItem.headerLabel}${index}`}
+                label={tableItem.headerLabel}
                 onClick={() => sortProps.sortTable(headerId)}
-                tooltip={tableItem.header}
+                tooltip={tableItem.headerLabel}
               />
             )
           ) : null

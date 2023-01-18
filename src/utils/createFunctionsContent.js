@@ -31,7 +31,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
           content: [
             {
               id: `name.${func.ui.identifierUnique}`,
-              header: 'Name',
+              headerLabel: 'Name',
               value: func.name,
               class: 'functions_medium',
               getLink: hash => {
@@ -50,14 +50,14 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `kind.${func.ui.identifierUnique}`,
-              header: 'Type',
+              headerLabel: 'Type',
               value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
               class: 'functions_medium',
               type: 'type'
             },
             {
               id: `function.${func.ui.identifierUnique}`,
-              header: 'Function',
+              headerLabel: 'Function',
               value: func.name,
               class: 'functions_big',
               getLink: tab =>
@@ -81,7 +81,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
           content: [
             {
               id: `name.${func.ui.identifierUnique}`,
-              header: 'Name',
+              headerLabel: 'Name',
               value: func.name,
               class: 'functions_medium',
               getLink: (hash, tab) => {
@@ -100,21 +100,21 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `kind.${func.ui.identifierUnique}`,
-              header: 'Kind',
+              headerLabel: 'Kind',
               value: func.type,
               class: 'functions_small',
               type: 'type'
             },
             {
               id: `hash.${func.ui.identifierUnique}`,
-              header: 'Hash',
+              headerLabel: 'Hash',
               value: func.hash,
               class: 'functions_small',
               type: 'hash'
             },
             {
               id: `updated.${func.ui.identifierUnique}`,
-              header: 'Updated',
+              headerLabel: 'Updated',
               value: formatDatetime(func.updated, 'N/A'),
               class: 'functions_small',
               type: 'date',
@@ -123,19 +123,19 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `command.${func.ui.identifierUnique}`,
-              header: 'Command',
+              headerLabel: 'Command',
               value: func.command,
               class: 'functions_big'
             },
             {
               id: `image.${func.ui.identifierUnique}`,
-              header: 'Image',
+              headerLabel: 'Image',
               value: func.image,
               class: 'functions_big'
             },
             {
               id: `description.${func.ui.identifierUnique}`,
-              header: 'Description',
+              headerLabel: 'Description',
               value: func.description,
               class: 'functions_small'
             },
