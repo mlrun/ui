@@ -28,6 +28,7 @@ import Details from '../Details/Details'
 import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 import NoData from '../../common/NoData/NoData'
+import TableHead from './TableHead'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
@@ -43,7 +44,7 @@ import {
   REAL_TIME_PIPELINES_TAB
 } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
-import TableHead from './TableHead'
+import { SORT_PROPS } from 'igz-controls/types'
 
 const TableView = ({
   actionsMenu,
@@ -258,7 +259,8 @@ TableView.defaultProps = {
   applyDetailsChanges: () => {},
   applyDetailsChangesCallback: () => {},
   getCloseDetailsLink: null,
-  groupLatestJob: {}
+  groupLatestJob: {},
+  sortProps: null
 }
 
 TableView.propTypes = {
@@ -274,6 +276,7 @@ TableView.propTypes = {
   params: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),

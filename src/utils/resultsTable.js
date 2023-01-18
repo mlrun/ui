@@ -20,7 +20,9 @@ such restriction.
 import { capitalize } from 'lodash'
 
 export const resultsTableHeaders = array => {
-  const [headers] = (array.iterationStats ?? []).slice(0, 1).map(item => {
+  if (!array.iterationStats || !array.iterationStats.length) return []
+
+  const [headers] = array.iterationStats.slice(0, 1).map(item => {
     return [item[1], item[0]].concat(item.slice(2)).map(header => {
       const clearHeaderPrefix = String(header).replace(/^.+\./, '').toLocaleLowerCase()
 
@@ -35,7 +37,9 @@ export const resultsTableHeaders = array => {
 }
 
 export const resultsTableContent = array => {
-  return (array.iterationStats ?? []).slice(1).map(contentItem => {
+  if (!array.iterationStats || !array.iterationStats.length) return []
+
+  return array.iterationStats.slice(1).map(contentItem => {
     return [contentItem[1], contentItem[0]].concat(contentItem.slice(2)).map(item => item ?? '')
   })
 }

@@ -65,7 +65,7 @@ import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-const Models = ({ allowSortBy, excludeSortBy, defaultSortBy, fetchModelFeatureVector }) => {
+const Models = ({ fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE)

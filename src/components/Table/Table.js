@@ -30,6 +30,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
+import { SORT_PROPS } from 'igz-controls/types'
 import { GROUP_BY_NAME, GROUP_BY_NONE, MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
 
 import './table.scss'
@@ -183,6 +184,7 @@ Table.defaultProps = {
   handleSelectItem: () => {},
   retryRequest: () => {},
   selectedItem: {},
+  sortProps: null,
   tab: '',
   tableHeaders: []
 }
@@ -200,6 +202,7 @@ Table.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}),
+  sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableHeaders: PropTypes.array
 }

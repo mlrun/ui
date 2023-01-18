@@ -20,6 +20,7 @@ such restriction.
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import classNames from 'classnames'
 
 import NoData from '../../common/NoData/NoData'
 import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -31,7 +32,6 @@ import { useSortTable } from '../../hooks/useSortTable.hook'
 import { ReactComponent as BestIteration } from 'igz-controls/images/best-iteration-icon.svg'
 
 import './detailsResults.scss'
-import classNames from 'classnames'
 
 const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
   const tableHeaders = useMemo(() => {
@@ -42,7 +42,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
     return isEmpty(job.error) ? resultsTableContent(job) : []
   }, [job])
 
-  const [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaers] =
+  const [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders] =
     useSortTable({
       headers: tableHeaders,
       content: tableContent,
@@ -59,11 +59,11 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
   return (
     <div className="table__item-results">
       <div className="results-table">
-        {(job.iterationStats && job.iterationStats.length !== 0) || !job.error ? (
+        {job.iterationStats && job.iterationStats.length !== 0 && !job.error ? (
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {sortedTableHeaers.map(({ header, headerId, isSortable }) => {
+                {sortedTableHeaders.map(({ header, headerId, isSortable }) => {
                   return !isSortable ? (
                     <div className="results-table__header-item" key={headerId}>
                       <Tooltip template={<TextTooltipTemplate text={header} />}>{header}</Tooltip>
@@ -90,10 +90,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
                       contentItemValue.match(/completed|running|error/gi)
                     ) {
                       return (
-                        <div
-                          className="results-table__cell results-table__cell"
-                          key={`${contentItemValue}${idx}`}
-                        >
+                        <div className="results-table__cell" key={`${contentItemValue}${idx}`}>
                           <Tooltip
                             template={
                               <TextTooltipTemplate
@@ -118,7 +115,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
                           className="results-table__medal results-table__cell"
                         >
                           {contentItemValue}
-                          <span className="best_iteration">
+                          <span className="best-iteration">
                             <Tooltip template={<TextTooltipTemplate text={'Best iteration'} />}>
                               <BestIteration />
                             </Tooltip>
@@ -170,10 +167,24 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
   )
 }
 
+DetailsResults.defaultProps = {
+  allowSortBy: null,
+  defaultSortBy: null,
+  excludeSortBy: null
+}
+
 DetailsResults.propTypes = {
-  // allowSortBy: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
-  // defaultSortBy: PropTypes.oneOf(),
-  // excludeSortBy: PropTypes.oneOf(),
+  allowSortBy: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.arrayOf(PropTypes.string, PropTypes.number)
+  ]),
+  defaultSortBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  excludeSortBy: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.arrayOf(PropTypes.string, PropTypes.number)
+  ]),
   job: PropTypes.shape({}).isRequired
 }
 

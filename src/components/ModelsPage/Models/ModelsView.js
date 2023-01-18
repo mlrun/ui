@@ -26,6 +26,7 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
 import { MODELS_PAGE, MODELS_TAB } from '../../../constants'
+import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { filters } from './models.util'
 
@@ -102,6 +103,10 @@ const ModelsView = React.forwardRef(
   }
 )
 
+ModelsView.defaultProps = {
+  sortProps: null
+}
+
 ModelsView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
   artifactsStore: PropTypes.object.isRequired,
@@ -115,6 +120,7 @@ ModelsView.propTypes = {
   selectedModel: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setSelectedModel: PropTypes.func.isRequired,
+  sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 

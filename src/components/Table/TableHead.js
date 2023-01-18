@@ -25,30 +25,38 @@ import classNames from 'classnames'
 
 import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
+import { SORT_PROPS } from 'igz-controls/types'
+
 const TableHead = React.forwardRef(
   ({ content, mainRowItemsCount, selectedItem, sortProps }, ref) => {
-    const { selectedColumnName, getSortingIcon, sortTable } = sortProps
-
-    const getHeaderClasses = (tableItemClass, headerId) =>
+    const getSortableHeaderCellClasses = (tableItemClass, headerId, index) =>
       classNames(
         'table-head__item',
         tableItemClass,
         'table__header-item-sortable',
-        selectedColumnName === headerId && 'table__header-item-sortable-active'
+        sortProps &&
+          sortProps.selectedColumnName &&
+          sortProps.selectedColumnName === headerId &&
+          'table__header-item-sortable-active',
+        !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
+      )
+
+    const getHeaderCellClasses = (tableItem, index) =>
+      classnames(
+        'table-head__item',
+        tableItem.class,
+        !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
       )
 
     return (
       <div className="table-head" ref={ref}>
         {content.map(({ headerId, isSortable, ...tableItem }, index) => {
-          const cellClassNames = classnames(
-            'table-head__item',
-            tableItem.class,
-            !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
-          )
-
           return tableItem.type !== 'hidden' && !tableItem.hidden ? (
-            !isSortable ? (
-              <div className={cellClassNames} key={`${tableItem.header}${index}`}>
+            !isSortable || !sortProps ? (
+              <div
+                className={getHeaderCellClasses(tableItem, index)}
+                key={`${tableItem.header}${index}`}
+              >
                 <Tooltip template={<TextTooltipTemplate text={tableItem.header} />}>
                   {tableItem.header}
                 </Tooltip>
@@ -56,11 +64,11 @@ const TableHead = React.forwardRef(
               </div>
             ) : (
               <Button
-                className={getHeaderClasses(tableItem.class, headerId)}
-                icon={getSortingIcon(headerId)}
+                className={getSortableHeaderCellClasses(tableItem.class, headerId, index)}
+                icon={sortProps.getSortingIcon(headerId)}
                 key={`${tableItem.header}${index}`}
                 label={tableItem.header}
-                onClick={() => sortTable(headerId)}
+                onClick={() => sortProps.sortTable(headerId)}
                 tooltip={tableItem.header}
               />
             )
@@ -73,14 +81,14 @@ const TableHead = React.forwardRef(
 )
 
 TableHead.defaultProps = {
-  sortProps: {}
+  sortProps: null
 }
 
 TableHead.propTypes = {
   content: PropTypes.array.isRequired,
   mainRowItemsCount: PropTypes.number.isRequired,
   selectedItem: PropTypes.object.isRequired,
-  sortProps: PropTypes.object
+  sortProps: SORT_PROPS
 }
 
 export default TableHead

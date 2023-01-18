@@ -115,7 +115,6 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         id: `key.${artifact.ui.identifierUnique}`,
         header: 'Name',
         headerId: 'name',
-        isSortable: true,
         value: artifact.db_key,
         class: 'artifacts_medium',
         getLink: tab =>
@@ -152,7 +151,6 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         id: `producer.${artifact.ui.identifierUnique}`,
         header: 'Producer',
         headerId: 'producer',
-        isSortable: true,
         value: artifact.producer,
         class: 'artifacts_small',
         type: 'producer'
@@ -161,7 +159,6 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         id: `owner.${artifact.ui.identifierUnique}`,
         header: 'Owner',
         headerId: 'owner',
-        isSortable: true,
         value: artifact.producer?.owner,
         class: 'artifacts_small',
         type: 'owner'
@@ -170,7 +167,6 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         id: `updated.${artifact.ui.identifierUnique}`,
         header: 'Updated',
         headerId: 'updated',
-        isSortable: true,
         value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_big'
       },
@@ -178,7 +174,6 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         id: `metrics.${artifact.ui.identifierUnique}`,
         header: 'Metrics',
         headerId: 'metrics',
-        isSortable: true,
         value: parseKeyValues(artifact.metrics),
         class: 'artifacts_small',
         type: 'metrics'
@@ -193,7 +188,6 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
           </span>
         ),
         headerId: 'frameWorkAndAlgorithm',
-        isSortable: true,
         value:
           artifact.framework || artifact.algorithm ? (
             <span>

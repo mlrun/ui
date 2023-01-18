@@ -24,11 +24,13 @@ import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
 export const useSortTable = ({ headers, content, sortConfig }) => {
   const [direction, setDirection] = useState(null)
-  const [selectedColumnName, setSelectedColumnName] = useState(null)
+  const [selectedColumnName, setSelectedColumnName] = useState('')
   const [sortedTableContent, setSortedTableContent] = useState(content)
   const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
 
   const { allowSortBy, excludeSortBy, defaultSortBy } = sortConfig
+    ? sortConfig
+    : { allowSortBy: null, excludeSortBy: null, defaultSortBy: null }
 
   const isDateValid = dateString => {
     if (Date.parse(dateString)) {
@@ -188,7 +190,7 @@ export const useSortTable = ({ headers, content, sortConfig }) => {
     if (defaultSortBy !== null && !direction && content.length > 0) {
       sortTable(isNumber(defaultSortBy) ? headers[defaultSortBy].headerId : defaultSortBy)
     }
-  }, [content, defaultSortBy, direction, headers, sortTable])
+  }, [content, defaultSortBy, direction, headers, sortConfig, sortTable])
 
   useEffect(() => {
     if (headers && headers.length > 0 && (excludeSortBy || allowSortBy)) {
