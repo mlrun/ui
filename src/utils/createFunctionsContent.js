@@ -31,6 +31,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
           content: [
             {
               id: `name.${func.ui.identifierUnique}`,
+              headerId: 'name',
               headerLabel: 'Name',
               value: func.name,
               class: 'functions_medium',
@@ -50,6 +51,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `kind.${func.ui.identifierUnique}`,
+              headerId: 'type',
               headerLabel: 'Type',
               value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
               class: 'functions_medium',
@@ -57,6 +59,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `function.${func.ui.identifierUnique}`,
+              headerId: 'function',
               headerLabel: 'Function',
               value: func.name,
               class: 'functions_big',
@@ -65,6 +68,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `updated.${func.ui.identifierUnique}`,
+              headerId: 'updated',
               value: formatDatetime(func.updated, 'N/A'),
               class: 'functions_medium',
               type: 'date',
@@ -81,6 +85,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
           content: [
             {
               id: `name.${func.ui.identifierUnique}`,
+              headerId: 'name',
               headerLabel: 'Name',
               value: func.name,
               class: 'functions_medium',
@@ -100,6 +105,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `kind.${func.ui.identifierUnique}`,
+              headerId: 'kind',
               headerLabel: 'Kind',
               value: func.type,
               class: 'functions_small',
@@ -107,6 +113,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `hash.${func.ui.identifierUnique}`,
+              headerId: 'hash',
               headerLabel: 'Hash',
               value: func.hash,
               class: 'functions_small',
@@ -114,6 +121,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `updated.${func.ui.identifierUnique}`,
+              headerId: 'updated',
               headerLabel: 'Updated',
               value: formatDatetime(func.updated, 'N/A'),
               class: 'functions_small',
@@ -123,24 +131,28 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `command.${func.ui.identifierUnique}`,
+              headerId: 'command',
               headerLabel: 'Command',
               value: func.command,
               class: 'functions_big'
             },
             {
               id: `image.${func.ui.identifierUnique}`,
+              headerId: 'image',
               headerLabel: 'Image',
               value: func.image,
               class: 'functions_big'
             },
             {
               id: `description.${func.ui.identifierUnique}`,
+              headerId: 'description',
               headerLabel: 'Description',
               value: func.description,
               class: 'functions_small'
             },
             {
               id: `tag.${func.ui.identifierUnique}`,
+              headerId: 'tag',
               value: func.tag,
               type: 'hidden'
             }
