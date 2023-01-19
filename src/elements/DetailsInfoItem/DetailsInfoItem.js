@@ -17,20 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import Prism from 'prismjs'
+import { useSelector } from 'react-redux'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import { FormInput } from 'igz-controls/components'
 
 import { CHIP_OPTIONS } from '../../types'
 import { copyToClipboard } from '../../utils/copyToClipboard'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -47,6 +50,7 @@ const DetailsInfoItem = React.forwardRef(
       currentField,
       detailsInfoDispatch,
       editableFieldType,
+      formState,
       func,
       handleDiscardChanges,
       handleFinishEdit,
@@ -62,6 +66,16 @@ const DetailsInfoItem = React.forwardRef(
     ref
   ) => {
     const [inputIsValid, setInputIsValid] = useState(true)
+    const detailsStore = useSelector(store => store.detailsStore)
+
+    const discardChanges = () => {
+      handleDiscardChanges(currentField)
+      item.handleDiscardChanges && item.handleDiscardChanges(formState, detailsStore)
+    }
+
+    const chipsOnClick = useCallback(() => {
+      onClick(currentField, item?.editModeType, chipsData.chips)
+    }, [chipsData.chips, currentField, item?.editModeType, onClick])
 
     if (item?.editModeEnabled && item?.editModeType === 'chips') {
       return (
@@ -80,36 +94,47 @@ const DetailsInfoItem = React.forwardRef(
         />
       )
     } else if (item?.editModeEnabled && isFieldInEditMode) {
-      if (editableFieldType === 'input' || editableFieldType === 'textarea') {
-        return (
-          <div className="details-item__input-wrapper" ref={ref}>
-            {editableFieldType === 'input' && (
-              <Input
-                focused
-                onChange={item.onChange}
-                invalid={!inputIsValid}
-                setInvalid={value => setInputIsValid(value)}
-                value={info}
-                validationRules={item.validationRules}
+      return (
+        <div className="details-item__input-wrapper" ref={ref}>
+          {editableFieldType === 'input' && (
+            <Input
+              focused
+              onChange={item.onChange}
+              invalid={!inputIsValid}
+              setInvalid={value => setInputIsValid(value)}
+              value={info}
+              validationRules={item.validationRules}
+            />
+          )}
+          {editableFieldType === 'textarea' && (
+            <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
+          )}
+          {editableFieldType === 'formInput' && (
+            <>
+              <FormInput
+                async={item.fieldData.async}
+                name={item.fieldData.name}
+                validationRules={getValidationRules(
+                  item.fieldData.validationRules.name,
+                  item.fieldData.validationRules.additionalRules ?? []
+                )}
               />
-            )}
-            {editableFieldType === 'textarea' && (
-              <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
-            )}
+              {item.fieldData.onChange && item.fieldData.onChange}
+            </>
+          )}
+          <RoundedIcon
+            disabled={!inputIsValid || formState.invalid || formState.validating}
+            onClick={handleFinishEdit}
+            tooltipText="Apply"
+          >
+            <Checkmark />
+          </RoundedIcon>
 
-            <RoundedIcon disabled={!inputIsValid} onClick={handleFinishEdit} tooltipText="Apply">
-              <Checkmark />
-            </RoundedIcon>
-
-            <RoundedIcon
-              onClick={() => handleDiscardChanges(currentField)}
-              tooltipText="Discard changes"
-            >
-              <Close />
-            </RoundedIcon>
-          </div>
-        )
-      }
+          <RoundedIcon onClick={discardChanges} tooltipText="Discard changes">
+            <Close />
+          </RoundedIcon>
+        </div>
+      )
     } else if (chipsData?.chips?.length) {
       return (
         <div className="details-item__data">
@@ -118,7 +143,7 @@ const DetailsInfoItem = React.forwardRef(
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             elements={chipsData.chips}
-            onClick={() => onClick(currentField, item?.editModeType, chipsData.chips)}
+            onClick={chipsOnClick}
             visibleChipsMaxLength="all"
           />
         </div>
@@ -271,6 +296,7 @@ DetailsInfoItem.propTypes = {
   currentField: PropTypes.string,
   detailsInfoDispatch: PropTypes.func,
   editableFieldType: PropTypes.string,
+  formState: PropTypes.shape({}),
   func: PropTypes.string,
   handleFinishEdit: PropTypes.func,
   info: PropTypes.any,
@@ -283,4 +309,4 @@ DetailsInfoItem.propTypes = {
   state: PropTypes.string
 }
 
-export default DetailsInfoItem
+export default React.memo(DetailsInfoItem)

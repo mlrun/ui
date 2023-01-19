@@ -21,8 +21,12 @@ import React, { useEffect, useMemo, useCallback, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { createForm } from 'final-form'
+import arrayMutators from 'final-form-arrays'
+import { Form } from 'react-final-form'
 
 import DetailsView from './DetailsView'
+import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
 
 import detailsActions from '../../actions/details'
 import {
@@ -39,12 +43,12 @@ import {
   generateArtifactsContent,
   generateFeatureStoreContent,
   generateFunctionsContent,
-  generateJobsContent,
-  renderContent
+  generateJobsContent
 } from './details.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { useBlockHistory } from '../../hooks/useBlockHistory.hook'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { setFieldState } from 'igz-controls/utils/form.util'
 
 import './details.scss'
 
@@ -81,6 +85,21 @@ const Details = ({
   const [historyIsBlocked, setHistoryIsBlocked] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
+
+  const initialValues = useMemo(
+    () => ({
+      tag: selectedItem.tag
+    }),
+    [selectedItem.tag]
+  )
+
+  const formRef = React.useRef(
+    createForm({
+      initialValues,
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
+    })
+  )
 
   const handlePreview = useCallback(() => {
     dispatch(
@@ -157,7 +176,8 @@ const Details = ({
             handleEditChips,
             handleEditInput,
             pageData.details.type,
-            selectedItem
+            selectedItem,
+            params.projectName
           )
         )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
@@ -181,6 +201,7 @@ const Details = ({
     handleEditChips,
     handleEditInput,
     pageData.details.type,
+    params.projectName,
     selectedItem,
     setInfoContent
   ])
@@ -247,7 +268,13 @@ const Details = ({
     historyIsBlocked
   ])
 
-  const detailsMenuClick = () => {
+  useEffect(() => {
+    if (formRef.current) {
+      formRef.current.reset(initialValues)
+    }
+  }, [initialValues])
+
+  const detailsMenuClick = useCallback(() => {
     let changesData = {}
 
     if (
@@ -271,26 +298,34 @@ const Details = ({
     if (historyIsBlocked) {
       unblockHistory()
     }
-  }
+  }, [detailsStore.changes.data, historyIsBlocked, setChangesData, unblockHistory])
 
-  const applyChanges = () => {
+  const applyChanges = useCallback(() => {
     applyDetailsChanges(detailsStore.changes).then(() => {
       resetChanges()
       unblockHistory()
       setHistoryIsBlocked(false)
       applyDetailsChangesCallback(detailsStore.changes, selectedItem)
     })
-  }
+  }, [
+    applyDetailsChanges,
+    applyDetailsChangesCallback,
+    detailsStore.changes,
+    resetChanges,
+    selectedItem,
+    unblockHistory
+  ])
 
-  const cancelChanges = () => {
+  const cancelChanges = useCallback(() => {
     if (detailsStore.changes.counter > 0) {
       resetChanges()
       unblockHistory()
       setHistoryIsBlocked(false)
+      formRef.current.reset()
     }
-  }
+  }, [detailsStore.changes.counter, resetChanges, unblockHistory])
 
-  const leavePage = () => {
+  const leavePage = useCallback(() => {
     cancelChanges()
     handleShowWarning(false)
 
@@ -302,61 +337,64 @@ const Details = ({
     }
 
     window.dispatchEvent(new CustomEvent('discardChanges'))
-  }
-
-  const tabsContent = useMemo(() => {
-    return renderContent(
-      applyChangesRef,
-      params.tab,
-      detailsStore,
-      selectedItem,
-      pageData,
-      handlePreview,
-      handleEditInput,
-      setChanges,
-      setChangesData,
-      setChangesCounter,
-      setIteration,
-      setIterationOption
-    )
   }, [
-    detailsStore,
-    handleEditInput,
-    handlePreview,
-    pageData,
-    params.tab,
-    selectedItem,
-    setChanges,
-    setChangesCounter,
-    setChangesData,
-    setIteration,
-    setIterationOption
+    cancelChanges,
+    detailsStore.filtersWasHandled,
+    filtersStore,
+    handleShowWarning,
+    retryRequest,
+    setFiltersWasHandled,
+    unblockHistory
   ])
 
   return (
-    <DetailsView
-      actionsMenu={actionsMenu}
-      applyChanges={applyChanges}
-      applyChangesRef={applyChangesRef}
-      cancelChanges={cancelChanges}
-      detailsMenu={detailsMenu}
-      detailsMenuClick={detailsMenuClick}
-      detailsStore={detailsStore}
-      getCloseDetailsLink={getCloseDetailsLink}
-      handleCancel={handleCancel}
-      handleRefresh={handleRefresh}
-      handleShowWarning={handleShowWarning}
-      isDetailsScreen={isDetailsScreen}
-      leavePage={leavePage}
-      pageData={pageData}
-      params={params}
-      ref={detailsRef}
-      selectedItem={selectedItem}
-      setIteration={setIteration}
-      setFiltersWasHandled={setFiltersWasHandled}
-      tabsContent={tabsContent}
-      tab={tab}
-    />
+    <Form form={formRef.current} onSubmit={() => {}}>
+      {formState => (
+        <DetailsView
+          actionsMenu={actionsMenu}
+          applyChanges={applyChanges}
+          applyChangesRef={applyChangesRef}
+          cancelChanges={cancelChanges}
+          detailsMenu={detailsMenu}
+          detailsMenuClick={detailsMenuClick}
+          detailsStore={detailsStore}
+          formState={formState}
+          getCloseDetailsLink={getCloseDetailsLink}
+          handleCancel={handleCancel}
+          handleEditInput={handleEditInput}
+          handlePreview={handlePreview}
+          handleRefresh={handleRefresh}
+          handleShowWarning={handleShowWarning}
+          isDetailsScreen={isDetailsScreen}
+          leavePage={leavePage}
+          pageData={pageData}
+          params={params}
+          ref={detailsRef}
+          selectedItem={selectedItem}
+          setChanges={setChanges}
+          setChangesCounter={setChangesCounter}
+          setChangesData={setChangesData}
+          setIteration={setIteration}
+          setIterationOption={setIterationOption}
+          setFiltersWasHandled={setFiltersWasHandled}
+          tab={tab}
+        >
+          <DetailsTabsContent
+            applyChangesRef={applyChangesRef}
+            formState={formState}
+            handleEditInput={handleEditInput}
+            handlePreview={handlePreview}
+            pageData={pageData}
+            selectedItem={selectedItem}
+            setChanges={setChanges}
+            setChangesCounter={setChangesCounter}
+            setChangesData={setChangesData}
+            setIteration={setIteration}
+            setIterationOption={setIterationOption}
+          />
+        </DetailsView>
+      )}
+    </Form>
   )
 }
 

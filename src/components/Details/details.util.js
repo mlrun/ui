@@ -19,27 +19,10 @@ such restriction.
 */
 import React from 'react'
 import { isEmpty, isEqual, cloneDeep } from 'lodash'
+import { OnChange } from 'react-final-form-listeners'
 
 import {
   DATASETS_PAGE,
-  DETAILS_ANALYSIS_TAB,
-  DETAILS_ARTIFACTS_TAB,
-  DETAILS_BUILD_LOG_TAB,
-  DETAILS_CODE_TAB,
-  DETAILS_DRIFT_ANALYSIS_TAB,
-  DETAILS_INPUTS_TAB,
-  DETAILS_LOGS_TAB,
-  DETAILS_METADATA_TAB,
-  DETAILS_FEATURES_ANALYSIS_TAB,
-  DETAILS_FEATURES_TAB,
-  DETAILS_OVERVIEW_TAB,
-  DETAILS_PODS_TAB,
-  DETAILS_PREVIEW_TAB,
-  DETAILS_REQUESTED_FEATURES_TAB,
-  DETAILS_RESULTS_TAB,
-  DETAILS_RETURNED_FEATURES_TAB,
-  DETAILS_STATISTICS_TAB,
-  DETAILS_TRANSFORMATIONS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
@@ -48,24 +31,7 @@ import {
   MODELS_TAB
 } from '../../constants'
 import { formatDatetime, generateLinkPath } from '../../utils'
-import { getValidationRules } from 'igz-controls/utils/validation.util'
-
-import DetailsInfo from '../DetailsInfo/DetailsInfo'
-import DetailsPreview from '../DetailsPreview/DetailsPreview'
-import DetailsInputs from '../DetailsInputs/DetailsInputs'
-import DetailsArtifacts from '../DetailsArtifacts/DetailsArtifacts'
-import DetailsResults from '../DetailsResults/DetailsResults'
-import DetailsLogs from '../DetailsLogs/DetailsLogs'
-import DetailsCode from '../DetailsCode/DetailsCode'
-import DetailsMetadata from '../DetailsMetadata/DetailsMetadata'
-import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
-import DetailsStatistics from '../DetailsStatistics/DetailsStatistics'
-import DetailsRequestedFeatures from '../DetailsRequestedFeatures/DetailsRequestedFeatures'
-import DetailsTransformations from '../DetailsTransformations/DetailsTransformations'
-import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
-import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
-import DetailsPods from '../DetailsPods/DetailsPods'
-import NoData from '../../common/NoData/NoData'
+import { isArtifactTagUnique } from '../../utils/artifacts.util'
 
 export const generateArtifactsContent = (
   addChip,
@@ -73,7 +39,8 @@ export const generateArtifactsContent = (
   editChips,
   editInput,
   detailsType,
-  selectedItem
+  selectedItem,
+  projectName
 ) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     return {
@@ -123,9 +90,23 @@ export const generateArtifactsContent = (
       tag: {
         value: selectedItem.tag ?? '',
         editModeEnabled: true,
-        editModeType: 'input',
-        validationRules: getValidationRules('common.tag'),
-        onChange: value => editInput(value, 'tag')
+        editModeType: 'formInput',
+        fieldData: {
+          async: true,
+          name: 'tag',
+          validationRules: {
+            name: 'common.tag',
+            additionalRules: {
+              name: 'tagUniqueness',
+              label: 'Artifact tag should be unique',
+              pattern: isArtifactTagUnique(projectName, detailsType, selectedItem),
+              async: true
+            }
+          },
+          onChange: <OnChange name="tag">{value => editInput(value, 'tag')}</OnChange>
+        },
+        handleDiscardChanges: (formState, detailsStore) =>
+          formState.form.change('tag', detailsStore.changes.data.tag.previousFieldValue)
       },
       iter: {
         value: selectedItem.iter || '0'
@@ -274,134 +255,6 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.description
   }
 })
-
-export const renderContent = (
-  applyChangesRef,
-  tab,
-  detailsStore,
-  selectedItem,
-  pageData,
-  handlePreview,
-  handleEditInput,
-  setChanges,
-  setChangesData,
-  setChangesCounter,
-  setIteration,
-  setIterationOption
-) => {
-  switch (tab) {
-    case DETAILS_OVERVIEW_TAB:
-      return (
-        <DetailsInfo
-          detailsStore={detailsStore}
-          pageData={pageData}
-          ref={applyChangesRef}
-          selectedItem={selectedItem}
-          setChangesData={setChangesData}
-          setChangesCounter={setChangesCounter}
-        />
-      )
-    case DETAILS_DRIFT_ANALYSIS_TAB:
-      return <DetailsDriftAnalysis />
-    case DETAILS_PODS_TAB:
-      return <DetailsPods />
-    case DETAILS_FEATURES_ANALYSIS_TAB:
-      return <DetailsFeatureAnalysis />
-    case DETAILS_PREVIEW_TAB:
-      return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
-    case DETAILS_INPUTS_TAB:
-      return <DetailsInputs inputs={selectedItem.inputs} />
-    case DETAILS_ARTIFACTS_TAB:
-      return (
-        <DetailsArtifacts
-          iteration={detailsStore.iteration}
-          selectedItem={selectedItem}
-          setIteration={setIteration}
-          setIterationOption={setIterationOption}
-        />
-      )
-    case DETAILS_RESULTS_TAB:
-      return <DetailsResults job={selectedItem} />
-    case DETAILS_LOGS_TAB:
-    case DETAILS_BUILD_LOG_TAB:
-      return (
-        <DetailsLogs
-          item={selectedItem}
-          refreshLogs={pageData.details.refreshLogs}
-          removeLogs={pageData.details.removeLogs}
-          withLogsRefreshBtn={pageData.details.withLogsRefreshBtn}
-        />
-      )
-    case DETAILS_CODE_TAB:
-      return (
-        <DetailsCode
-          code={
-            selectedItem.build.functionSourceCode ??
-            selectedItem.base_spec.spec?.build?.functionSourceCode
-          }
-        />
-      )
-    case DETAILS_METADATA_TAB:
-    case DETAILS_FEATURES_TAB:
-    case DETAILS_RETURNED_FEATURES_TAB:
-      return detailsStore.modelFeatureVectorData.features ??
-        (selectedItem.schema ||
-          selectedItem.entities ||
-          selectedItem.features ||
-          selectedItem.inputs ||
-          selectedItem.outputs) ? (
-        <DetailsMetadata
-          selectedItem={
-            selectedItem.schema ||
-            selectedItem.entities ||
-            selectedItem.features ||
-            selectedItem.inputs ||
-            selectedItem.outputs ||
-            !detailsStore.modelFeatureVectorData.features
-              ? selectedItem
-              : detailsStore.modelFeatureVectorData
-          }
-        />
-      ) : null
-    case DETAILS_TRANSFORMATIONS_TAB:
-      return <DetailsTransformations selectedItem={selectedItem} />
-    case DETAILS_ANALYSIS_TAB:
-      if ((selectedItem.kind === 'dataset' && selectedItem.extra_data) || selectedItem.analysis) {
-        return <DetailsAnalysis artifact={selectedItem} />
-      } else return <NoData />
-    case DETAILS_STATISTICS_TAB:
-      if (
-        detailsStore.modelFeatureVectorData.stats ||
-        selectedItem.stats ||
-        selectedItem.feature_stats
-      ) {
-        return (
-          <DetailsStatistics
-            selectedItem={
-              selectedItem?.stats ||
-              selectedItem.feature_stats ||
-              !detailsStore.modelFeatureVectorData.stats
-                ? selectedItem
-                : detailsStore.modelFeatureVectorData.stats
-            }
-          />
-        )
-      } else return <NoData />
-    case DETAILS_REQUESTED_FEATURES_TAB:
-      return (
-        <DetailsRequestedFeatures
-          changes={detailsStore.changes}
-          selectedItem={selectedItem}
-          handleEditInput={(value, field) => handleEditInput(value, field)}
-          setChanges={setChanges}
-          setChangesData={setChangesData}
-          setChangesCounter={setChangesCounter}
-        />
-      )
-    default:
-      return null
-  }
-}
 
 export const generateFeatureSetsOverviewContent = (
   addChip,
