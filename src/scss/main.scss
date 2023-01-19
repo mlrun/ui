@@ -205,6 +205,7 @@ main {
         align-items: flex-start;
         border: 0;
         border-radius: 0;
+        cursor: pointer;
 
         & > * {
           display: flex;

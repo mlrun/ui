@@ -19,59 +19,43 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
-import { isEmpty } from 'lodash'
 import classNames from 'classnames'
+import { isEmpty } from 'lodash'
 
-import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { SORT_PROPS } from 'igz-controls/types'
 
 const TableHead = React.forwardRef(
   ({ content, mainRowItemsCount, selectedItem, sortProps }, ref) => {
-    const getSortableHeaderCellClasses = (tableItemClass, headerId, index) =>
+    const getHeaderCellClasses = (headerId, isSortable, tableItemClass, index) =>
       classNames(
         'table-head__item',
         tableItemClass,
-        'table__header-item-sortable',
-        sortProps &&
+        isSortable && 'table__header-item-sortable',
+        isSortable &&
+          sortProps &&
           sortProps.selectedColumnName &&
           sortProps.selectedColumnName === headerId &&
           'table__header-item-sortable-active',
         !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
       )
 
-    const getHeaderCellClasses = (tableItem, index) =>
-      classnames(
-        'table-head__item',
-        tableItem.class,
-        !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
-      )
-
     return (
       <div className="table-head" ref={ref}>
-        {content.map(({ headerId, isSortable, ...tableItem }, index) => {
+        {content.map(({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
           return tableItem.type !== 'hidden' && !tableItem.hidden ? (
-            !isSortable || !sortProps ? (
-              <div
-                className={getHeaderCellClasses(tableItem, index)}
-                key={`${tableItem.headerLabel}${index}`}
-              >
-                <Tooltip template={<TextTooltipTemplate text={tableItem.headerLabel} />}>
-                  {tableItem.headerLabel}
-                </Tooltip>
-                {tableItem.tip && <Tip text={tableItem.tip} />}
-              </div>
-            ) : (
-              <Button
-                className={getSortableHeaderCellClasses(tableItem.class, headerId, index)}
-                icon={sortProps.getSortingIcon(headerId)}
-                key={`${tableItem.headerLabel}${index}`}
-                label={tableItem.headerLabel}
-                onClick={() => sortProps.sortTable(headerId)}
-                tooltip={tableItem.headerLabel}
-              />
-            )
+            <div
+              className={getHeaderCellClasses(headerId, isSortable, tableItem.class, index)}
+              key={headerId}
+              onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
+            >
+              <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                {isSortable && sortProps.getSortingIcon(headerId)}
+                {headerLabel}
+              </Tooltip>
+              {tableItem.tip && <Tip text={tableItem.tip} />}
+            </div>
           ) : null
         })}
         <div className="table-body__cell action_cell" />

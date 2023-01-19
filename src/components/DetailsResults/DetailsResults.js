@@ -23,7 +23,7 @@ import { isEmpty } from 'lodash'
 import classNames from 'classnames'
 
 import NoData from '../../common/NoData/NoData'
-import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { roundFloats } from '../../utils/roundFloats'
 import { resultsTableContent, resultsTableHeaders } from '../../utils/resultsTable'
@@ -49,11 +49,11 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
       sortConfig: { allowSortBy, excludeSortBy, defaultSortBy }
     })
 
-  const getHeaderClasses = headerId =>
+  const getHeaderCellClasses = (headerId, isSortable) =>
     classNames(
       'results-table__header-item',
-      'table__header-item-sortable',
-      selectedColumnName === headerId && 'table__header-item-sortable-active'
+      isSortable && 'table__header-item-sortable',
+      isSortable && selectedColumnName === headerId && 'table__header-item-sortable-active'
     )
 
   return (
@@ -63,22 +63,19 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {sortedTableHeaders.map(({ headerLabel, headerId, isSortable }) => {
-                  return !isSortable ? (
-                    <div className="results-table__header-item" key={headerId}>
+                {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => {
+                  return (
+                    <div
+                      className={getHeaderCellClasses(headerId, isSortable)}
+                      key={headerId}
+                      onClick={isSortable ? () => sortTable(headerId) : null}
+                    >
                       <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                        {isSortable && getSortingIcon(headerId)}
                         {headerLabel}
                       </Tooltip>
+                      {tableItem.tip && <Tip text={tableItem.tip} />}
                     </div>
-                  ) : (
-                    <Button
-                      className={getHeaderClasses(headerId)}
-                      icon={getSortingIcon(headerId)}
-                      key={headerId}
-                      label={headerLabel}
-                      onClick={() => sortTable(headerId)}
-                      tooltip={headerLabel}
-                    />
                   )
                 })}
               </div>
