@@ -32,12 +32,8 @@ const TableHead = React.forwardRef(
       classNames(
         'table-head__item',
         tableItemClass,
-        isSortable && 'table__header-item-sortable',
-        isSortable &&
-          sortProps &&
-          sortProps.selectedColumnName &&
-          sortProps.selectedColumnName === headerId &&
-          'table__header-item-sortable-active',
+        isSortable && 'sortable-header-cell',
+        isSortable && sortProps?.selectedColumnName === headerId && 'sortable-header-cell_active',
         !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
       )
 
@@ -47,7 +43,7 @@ const TableHead = React.forwardRef(
           return tableItem.type !== 'hidden' && !tableItem.hidden ? (
             <div
               className={getHeaderCellClasses(headerId, isSortable, tableItem.class, index)}
-              key={headerId}
+              key={`${headerId}${index}`}
               onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
             >
               <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>

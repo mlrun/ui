@@ -22,15 +22,13 @@ import { isEmpty, isNumber, orderBy } from 'lodash'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
-export const useSortTable = ({ headers, content, sortConfig }) => {
+export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   const [direction, setDirection] = useState(null)
   const [selectedColumnName, setSelectedColumnName] = useState('')
   const [sortedTableContent, setSortedTableContent] = useState(content)
   const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
 
-  const { allowSortBy, excludeSortBy, defaultSortBy } = sortConfig
-    ? sortConfig
-    : { allowSortBy: null, excludeSortBy: null, defaultSortBy: null }
+  const { allowSortBy = null, excludeSortBy = null, defaultSortBy = null } = sortConfig
 
   const isDateValid = dateString => {
     if (Date.parse(dateString)) {
@@ -166,7 +164,6 @@ export const useSortTable = ({ headers, content, sortConfig }) => {
 
       if (columnName) {
         const sorted = orderBy(content, getValueByType(columnIndex), sortDirection)
-
         setSortedTableContent(sorted)
       }
 
@@ -185,6 +182,12 @@ export const useSortTable = ({ headers, content, sortConfig }) => {
       />
     )
   }
+
+  useEffect(() => {
+    if (content.length && !direction) {
+      setSortedTableContent(content)
+    }
+  }, [content, direction])
 
   useEffect(() => {
     if (direction && (!content || content.length === 0)) {

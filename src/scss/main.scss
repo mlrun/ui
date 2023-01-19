@@ -197,45 +197,39 @@ main {
   }
 }
 
-.table {
-  &__header {
-    &-item {
-      &-sortable {
-        position: relative;
-        align-items: flex-start;
-        border: 0;
-        border-radius: 0;
-        cursor: pointer;
+.sortable-header-cell {
+  position: relative;
+  align-items: flex-start;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
 
-        & > * {
-          display: flex;
-          align-items: center;
-          min-width: 100%;
-        }
+  & > * {
+    display: flex;
+    align-items: center;
+    min-width: 100%;
+  }
 
-        .sort-icon {
-          display: none;
-          position: absolute;
-          top: auto;
-          bottom: auto;
-          left: 5px;
-          margin: 0;
-        }
+  .sort-icon {
+    display: none;
+    position: absolute;
+    top: auto;
+    bottom: auto;
+    left: 5px;
+    margin: 0;
+  }
 
-        &-active {
-          background-color: $alabaster;
+  &_active {
+    background-color: $alabaster;
 
-          .sort-icon {
-            display: block;
-          }
-        }
+    .sort-icon {
+      display: block;
+    }
+  }
 
-        &:hover {
-          .sort-icon {
-            display: block;
-          }
-        }
-      }
+  &:hover {
+    .sort-icon {
+      display: block;
     }
   }
 }

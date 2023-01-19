@@ -28,6 +28,7 @@ import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { roundFloats } from '../../utils/roundFloats'
 import { resultsTableContent, resultsTableHeaders } from '../../utils/resultsTable'
 import { useSortTable } from '../../hooks/useSortTable.hook'
+import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'
 
 import { ReactComponent as BestIteration } from 'igz-controls/images/best-iteration-icon.svg'
 
@@ -52,8 +53,8 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
   const getHeaderCellClasses = (headerId, isSortable) =>
     classNames(
       'results-table__header-item',
-      isSortable && 'table__header-item-sortable',
-      isSortable && selectedColumnName === headerId && 'table__header-item-sortable-active'
+      isSortable && 'sortable-header-cell',
+      isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
     )
 
   return (
@@ -63,21 +64,23 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => {
-                  return (
-                    <div
-                      className={getHeaderCellClasses(headerId, isSortable)}
-                      key={headerId}
-                      onClick={isSortable ? () => sortTable(headerId) : null}
-                    >
-                      <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                        {isSortable && getSortingIcon(headerId)}
-                        {headerLabel}
-                      </Tooltip>
-                      {tableItem.tip && <Tip text={tableItem.tip} />}
-                    </div>
-                  )
-                })}
+                {sortedTableHeaders.map(
+                  ({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
+                    return (
+                      <div
+                        className={getHeaderCellClasses(headerId, isSortable)}
+                        key={`${headerId}${index}`}
+                        onClick={isSortable ? () => sortTable(headerId) : null}
+                      >
+                        <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                          {isSortable && getSortingIcon(headerId)}
+                          {headerLabel}
+                        </Tooltip>
+                        {tableItem.tip && <Tip text={tableItem.tip} />}
+                      </div>
+                    )
+                  }
+                )}
               </div>
             </div>
             <div className="results-table__body">
@@ -173,17 +176,9 @@ DetailsResults.defaultProps = {
 }
 
 DetailsResults.propTypes = {
-  allowSortBy: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.arrayOf(PropTypes.string, PropTypes.number)
-  ]),
-  defaultSortBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  excludeSortBy: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.arrayOf(PropTypes.string, PropTypes.number)
-  ]),
+  allowSortBy: ALLOW_SORT_BY,
+  defaultSortBy: DEFAULT_SORT_BY,
+  excludeSortBy: EXCLUDE_SORT_BY,
   job: PropTypes.shape({}).isRequired
 }
 
