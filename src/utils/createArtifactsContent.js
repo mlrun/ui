@@ -167,7 +167,6 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         id: `updated.${artifact.ui.identifierUnique}`,
         headerId: 'updated',
         headerLabel: 'Updated',
-        isSortable: true,
         value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_big'
       },
