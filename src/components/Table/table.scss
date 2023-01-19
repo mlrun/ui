@@ -137,16 +137,10 @@
     border-bottom: $secondaryBorder;
 
     &__item {
-      @include tableDet;
-      @include tableHeader(5px);
+      position: relative;
 
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-      height: auto;
-      min-height: 40px;
-      margin: 0 1px;
-      padding: 5px 15px 5px 30px;
+      @include tableDet;
+      @include tableHeader(8px, 15px, 8px, 30px);
 
       &.buttonPopout,
       &.buttonDownload {

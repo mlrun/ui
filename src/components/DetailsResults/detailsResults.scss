@@ -47,19 +47,10 @@
 
       &-item {
         position: relative;
-        display: flex;
-        flex: 0 0 auto;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        height: auto;
-        min-height: 40px;
         min-width: 150px;
 
-        @include tableHeader(16px);
-
-        margin: 0 1px;
-        padding: 5px 15px 5px 30px;
+        @include tableDet;
+        @include tableHeader(8px, 15px, 8px, 30px);
       }
 
       .results-table__row {
