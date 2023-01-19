@@ -64,23 +64,21 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {sortedTableHeaders.map(
-                  ({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
-                    return (
-                      <div
-                        className={getHeaderCellClasses(headerId, isSortable)}
-                        key={`${headerId}`}
-                        onClick={isSortable ? () => sortTable(headerId) : null}
-                      >
-                        <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                          {isSortable && getSortingIcon(headerId)}
-                          {headerLabel}
-                        </Tooltip>
-                        {tableItem.tip && <Tip text={tableItem.tip} />}
-                      </div>
-                    )
-                  }
-                )}
+                {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => {
+                  return (
+                    <div
+                      className={getHeaderCellClasses(headerId, isSortable)}
+                      key={`${headerId}`}
+                      onClick={isSortable ? () => sortTable(headerId) : null}
+                    >
+                      <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                        {isSortable && getSortingIcon(headerId)}
+                        {headerLabel}
+                      </Tooltip>
+                      {tableItem.tip && <Tip text={tableItem.tip} />}
+                    </div>
+                  )
+                })}
               </div>
             </div>
             <div className="results-table__body">
