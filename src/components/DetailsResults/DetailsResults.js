@@ -69,7 +69,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
                     return (
                       <div
                         className={getHeaderCellClasses(headerId, isSortable)}
-                        key={`${headerId}${index}`}
+                        key={`${headerId}`}
                         onClick={isSortable ? () => sortTable(headerId) : null}
                       >
                         <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>

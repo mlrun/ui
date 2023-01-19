@@ -43,7 +43,7 @@ const TableHead = React.forwardRef(
           return tableItem.type !== 'hidden' && !tableItem.hidden ? (
             <div
               className={getHeaderCellClasses(headerId, isSortable, tableItem.class, index)}
-              key={`${headerId}${index}`}
+              key={`${headerId}`}
               onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
             >
               <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
