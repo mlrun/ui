@@ -191,24 +191,11 @@ const functionsActions = {
     return functionsApi
       .getFunctionTemplatesCatalog()
       .then(({ data: functionTemplates }) => {
-        const templates = Object.entries(functionTemplates).map(([key, value]) => ({
-          kind: value?.kind,
-          metadata: {
-            name: key,
-            hash: '',
-            description: value?.description,
-            categories: value?.categories,
-            versions: value?.versions,
-            tag: ''
-          },
-          status: {
-            state: ''
-          }
-        }))
-        const templatesCategories = generateCategories(templates)
-        dispatch(functionsActions.setFunctionsTemplates(templatesCategories))
+        const templatesData = generateCategories(functionTemplates)
 
-        return { templatesCategories, templates }
+        dispatch(functionsActions.setFunctionsTemplates(templatesData))
+
+        return templatesData
       })
       .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
   },
@@ -313,9 +300,9 @@ const functionsActions = {
   resetNewFunctionCodeCustomImage: () => ({
     type: RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
   }),
-  setFunctionsTemplates: templates => ({
+  setFunctionsTemplates: payload => ({
     type: SET_FUNCTIONS_TEMPLATES,
-    payload: templates
+    payload
   }),
   setLoading: loading => ({
     type: SET_LOADING,
