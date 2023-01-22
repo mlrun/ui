@@ -125,7 +125,8 @@ export const generateModelsDetailsMenu = selectedModel => [
   },
   {
     label: 'preview',
-    id: 'preview'
+    id: 'preview',
+    hidden: isEmpty(selectedModel.extra_data)
   },
   {
     label: 'features',
