@@ -35,7 +35,7 @@ import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
 import { copyToClipboard } from './copyToClipboard'
 import { generateUri } from './resources'
-import { generateLinkPath, parseUri, truncateUid } from '../utils'
+import { generateLinkPath, parseUri } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
@@ -129,8 +129,12 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
           ),
         expandedCellContent: {
           class: 'artifacts_medium',
-          value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
-          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
+          showTag: true,
+          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
+          type: 'date',
+          value: formatDatetime(artifact.updated, 'N/A')
+
+          // value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`
         },
         rowExpanded: {
           getLink: false
@@ -248,8 +252,10 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
           ),
         expandedCellContent: {
           class: 'artifacts_medium',
-          value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
-          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
+          showTag: true,
+          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
+          type: 'date',
+          value: formatDatetime(artifact.updated, 'N/A')
         },
         rowExpanded: {
           getLink: false
@@ -444,7 +450,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
 
   return {
     data: {
-      ...artifact,
+      ...artifact
     },
     content: [
       {
@@ -465,8 +471,12 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
           ),
         expandedCellContent: {
           class: 'artifacts_medium',
-          value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
-          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`
+          showTag: true,
+          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
+          type: 'date',
+          value: formatDatetime(artifact.updated, 'N/A')
+
+          //  value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
         },
         rowExpanded: {
           getLink: false
