@@ -26,7 +26,7 @@
       }
 
       & > *:first-child {
-        padding-left: 40px;
+        margin-left: 15px;
       }
     }
 
@@ -46,27 +46,27 @@
       background-color: $white;
 
       &-item {
-        display: flex;
-        flex: 0 0 150px;
-        flex-direction: column;
-        width: 150px;
+        position: relative;
+        min-width: 150px;
 
+        @include tableDet;
         @include tableHeader(8px, 15px, 8px, 30px);
-
-        padding: 5px 15px 5px 25px;
       }
 
-      .results-table__row:hover {
-        background-color: transparent;
+      .results-table__row {
+        &:hover {
+          background-color: transparent;
+        }
       }
     }
 
     &__cell {
       display: flex;
-      flex: 0 0 150px;
+      flex: 0 0 auto;
       flex-direction: column;
-      width: 150px;
-      padding: 19px 15px 19px 25px;
+      min-width: 150px;
+      margin: 0 1px;
+      padding: 19px 15px 19px 30px;
     }
 
     .table__cell-wide {
@@ -89,10 +89,12 @@
       flex-direction: row;
       align-items: center;
 
-      svg {
+      .best-iteration {
         position: absolute;
-        top: 15px;
-        left: 8px;
+        top: auto;
+        bottom: auto;
+        left: 3px;
+        margin-top: 2px;
       }
     }
   }

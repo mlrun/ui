@@ -197,6 +197,43 @@ main {
   }
 }
 
+.sortable-header-cell {
+  position: relative;
+  align-items: flex-start;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+
+  & > * {
+    display: flex;
+    align-items: center;
+    min-width: 100%;
+  }
+
+  .sort-icon {
+    display: none;
+    position: absolute;
+    top: auto;
+    bottom: auto;
+    left: 5px;
+    margin: 0;
+  }
+
+  &_active {
+    background-color: $alabaster;
+
+    .sort-icon {
+      display: block;
+    }
+  }
+
+  &:hover {
+    .sort-icon {
+      display: block;
+    }
+  }
+}
+
 .navbar {
   &.has-header {
     margin-top: $headerHeight;
@@ -489,6 +526,19 @@ iframe {
         margin-left: 5px;
       }
     }
+  }
+}
+
+.sort-icon {
+  width: 20px;
+  transition: transform 0.3s ease-in-out;
+
+  &_down {
+    transform: rotate(-90deg);
+  }
+
+  &_up {
+    transform: rotate(90deg);
   }
 }
 

@@ -1,19 +1,9 @@
-@import '~igz-controls/scss/mixins';
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/shadows';
+@import 'igz-controls/scss/mixins';
+@import 'igz-controls/scss/colors';
+@import 'igz-controls/scss/borders';
+@import 'igz-controls/scss/shadows';
 
 .sort {
   position: relative;
   background-color: transparent;
-
-  &_down {
-    width: 20px;
-    transform: rotate(-90deg);
-  }
-
-  &_up {
-    width: 20px;
-    transform: rotate(90deg);
-  }
 }

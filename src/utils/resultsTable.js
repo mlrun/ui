@@ -19,24 +19,27 @@ such restriction.
 */
 import { capitalize } from 'lodash'
 
-export const resultsTable = array => {
-  let headers = (array.iterationStats ? array.iterationStats[0] ?? [] : []).map(
-    item => {
-      return capitalize(String(item).replace(/^.+\./, ''))
-    }
-  )
-  const changedHeaders = [headers[1], headers[0]]
-  headers = changedHeaders.concat(headers.slice(2))
-  const tableContent = (array.iterationStats ?? [])
-    .slice(1)
-    .map(contentItem => {
-      return [contentItem[1], contentItem[0]]
-        .concat(contentItem.slice(2))
-        .map(item => item ?? '')
-    })
+export const resultsTableHeaders = array => {
+  if (!array.iterationStats || !array.iterationStats.length) return []
 
-  return {
-    headers,
-    tableContent
-  }
+  const [headers] = array.iterationStats.slice(0, 1).map(item => {
+    return [item[1], item[0]].concat(item.slice(2)).map(header => {
+      const clearHeaderPrefix = String(header).replace(/^.+\./, '').toLocaleLowerCase()
+
+      return {
+        headerId: clearHeaderPrefix,
+        headerLabel: capitalize(clearHeaderPrefix)
+      }
+    })
+  })
+
+  return headers
+}
+
+export const resultsTableContent = array => {
+  if (!array.iterationStats || !array.iterationStats.length) return []
+
+  return array.iterationStats.slice(1).map(contentItem => {
+    return [contentItem[1], contentItem[0]].concat(contentItem.slice(2)).map(item => item ?? '')
+  })
 }
