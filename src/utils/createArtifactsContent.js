@@ -134,8 +134,6 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
           value: formatDatetime(artifact.updated, 'N/A')
-
-          // value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`
         },
         rowExpanded: {
           getLink: false
@@ -509,8 +507,6 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
           value: formatDatetime(artifact.updated, 'N/A')
-
-          //  value: artifact.tag ? `${artifact.tag}${iter}` : `${truncateUid(artifact.tree)}${iter}`,
         },
         rowExpanded: {
           getLink: false
