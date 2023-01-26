@@ -17,7 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const aliasToCategory = {
+const excludeCategoryKinds = ['serving', 'nuclio', 'remote']
+
+export const aliasToCategory = {
   BERT: 'other',
   'concept-drift': 'other',
   'data-movement': 'data-source',
@@ -29,23 +31,42 @@ const aliasToCategory = {
   test: 'other',
   utils: 'other'
 }
-const excludeCategoryKinds = ['serving', 'nuclio', 'remote']
-export const generateCategories = templates => {
+
+export const generateCategories = functionTemplates => {
+  const templates = Object.entries(functionTemplates)
+    .map(([key, value]) => ({
+      kind: value?.kind,
+      metadata: {
+        name: key,
+        hash: '',
+        description: value?.description,
+        docfile: value?.docfile,
+        categories: value?.categories,
+        versions: value?.versions,
+        tag: ''
+      },
+      status: {
+        state: ''
+      },
+      ui: {
+        categories: value?.categories.map(category => aliasToCategory[category] ?? category)
+      }
+    }))
+    .filter(template => !excludeCategoryKinds.includes(template.kind))
+
   const templatesCategories = {}
 
-  templates
-    .filter(template => !excludeCategoryKinds.includes(template.kind))
-    .forEach(template => {
-      if (template.metadata.categories) {
-        template.metadata.categories.forEach(category => {
-          const valueToAdd = aliasToCategory[category] ?? category
-          templatesCategories[valueToAdd] ??= []
-          if (!templatesCategories[valueToAdd].includes(template)) {
-            templatesCategories[valueToAdd].push(template)
-          }
-        })
-      }
-    })
+  templates.forEach(template => {
+    if (template.metadata.categories) {
+      template.metadata.categories.forEach(category => {
+        const valueToAdd = aliasToCategory[category] ?? category
+        templatesCategories[valueToAdd] ??= []
+        if (!templatesCategories[valueToAdd].includes(template)) {
+          templatesCategories[valueToAdd].push(template)
+        }
+      })
+    }
+  })
 
-  return templatesCategories
+  return { templates, templatesCategories }
 }

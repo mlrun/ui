@@ -449,11 +449,6 @@ export const STATE_FILTER_ALL_ITEMS = 'all'
 export const TAG_FILTER_ALL_ITEMS = 'All'
 export const TAG_FILTER_LATEST = 'latest'
 
-export const REMOVE_FILTERS = 'REMOVE_FILTERS'
-export const SET_FILTERS = 'SET_FILTERS'
-export const SET_FILTER_TAG_OPTIONS = 'SET_FILTER_TAG_OPTIONS'
-export const SET_FILTER_PROJECT_OPTIONS = 'SET_FILTER_PROJECT_OPTIONS'
-
 export const DATE_RANGE_TIME_FILTER = 'dateRangeTime'
 export const ENTITIES_FILTER = 'entities'
 export const GROUP_BY_FILTER = 'groupBy'
@@ -466,6 +461,10 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
+
+export const FILTER_MENU_MODAL = 'filterMenuModal'
+export const JOB_WIZARD_FILTERS = 'jobWizardFilters'
+export const HUB_CATEGORIES_FILTER = 'hubCategories'
 
 /*=========== PANEL =============*/
 
