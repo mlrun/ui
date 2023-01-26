@@ -78,7 +78,7 @@
 
       &__toolbar {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         margin-bottom: 15px;
 
@@ -118,6 +118,13 @@
               }
             }
           }
+        }
+
+        &-actions {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          justify-content: flex-end;
         }
 
         .refresh {
