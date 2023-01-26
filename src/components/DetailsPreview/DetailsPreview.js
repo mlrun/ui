@@ -77,7 +77,8 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   }
 
   const isPopupButtonDisplayed =
-    extraData.length > 0 || (!preview[0]?.error && !preview.every(item => item.hidden))
+    artifact.target_path &&
+    (extraData.length > 0 || (!preview[0]?.error && !preview.every(item => item.hidden)))
 
   return (
     <div className="preview_container">
