@@ -76,9 +76,12 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
     previewRef.current?.cancel && previewRef.current.cancel(message)
   }
 
+  const isPopupButtonDisplayed =
+    extraData.length > 0 || (!preview[0]?.error && !preview.every(item => item.hidden))
+
   return (
     <div className="preview_container">
-      {artifact.target_path && (
+      {isPopupButtonDisplayed && (
         <button onClick={() => handlePreview()} className="preview_popout">
           <Tooltip template={<TextTooltipTemplate text="Pop-out" />}>
             <Popout />
