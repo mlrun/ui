@@ -51,7 +51,7 @@
         flex-direction: column;
         width: 150px;
 
-        @include tableHeader(16px);
+        @include tableHeader(8px, 15px, 8px, 30px);
 
         padding: 5px 15px 5px 25px;
       }
