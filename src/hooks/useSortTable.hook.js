@@ -31,11 +31,13 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   const { allowSortBy = null, excludeSortBy = null, defaultSortBy = null } = sortConfig
 
   const isDateValid = dateString => {
-    return Date.parse(dateString)
-      ? dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char))
+    if (Date.parse(dateString)) {
+      return dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char))
         ? false
         : true
-      : false
+    } else {
+      return false
+    }
   }
 
   const getValueByType = useCallback(
