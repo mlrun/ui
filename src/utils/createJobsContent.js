@@ -45,7 +45,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           header: jobName ? 'UID' : 'Name',
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
-          class: 'table-cell-2',
+          class: 'job_medium',
           type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
           getLink: tab => {
             return jobName
