@@ -32,12 +32,10 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
 
   const isDateValid = dateString => {
     if (Date.parse(dateString)) {
-      return dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char))
-        ? false
-        : true
-    } else {
-      return false
+      return !(dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char)))
     }
+
+    return false
   }
 
   const getValueByType = useCallback(
