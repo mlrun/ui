@@ -113,7 +113,8 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
     content: [
       {
         id: `key.${artifact.ui.identifierUnique}`,
-        header: 'Name',
+        headerId: 'name',
+        headerLabel: 'Name',
         value: artifact.db_key,
         class: 'artifacts_medium',
         getLink: tab =>
@@ -144,41 +145,47 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
-        header: 'Labels',
+        headerId: 'labels',
+        headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'artifacts_extra-small',
+        class: 'artifacts_small',
         type: 'labels'
       },
       {
         id: `producer.${artifact.ui.identifierUnique}`,
-        header: 'Producer',
+        headerId: 'producer',
+        headerLabel: 'Producer',
         value: artifact.producer,
         class: 'artifacts_small',
         type: 'producer'
       },
       {
         id: `owner.${artifact.ui.identifierUnique}`,
-        header: 'Owner',
+        headerId: 'owner',
+        headerLabel: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
         type: 'owner'
       },
       {
         id: `updated.${artifact.ui.identifierUnique}`,
-        header: 'Updated',
+        headerId: 'updated',
+        headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'artifacts_small'
+        class: 'artifacts_big'
       },
       {
         id: `metrics.${artifact.ui.identifierUnique}`,
-        header: 'Metrics',
+        headerId: 'metrics',
+        headerLabel: 'Metrics',
         value: parseKeyValues(artifact.metrics),
-        class: 'artifacts_big',
+        class: 'artifacts_small',
         type: 'metrics'
       },
       {
         id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
-        header: (
+        headerId: 'frameWorkAndAlgorithm',
+        headerLabel: (
           <span>
             <span>Framework &</span>
             <br />
@@ -199,24 +206,28 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
+        headerId: 'tag',
         value: artifact.tag,
         class: 'artifacts_small',
         type: 'hidden'
       },
       {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
+        headerId: 'popupt',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
+        headerId: 'download',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
+        headerId: 'copy',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
@@ -236,7 +247,8 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
     content: [
       {
         id: `key.${artifact.ui.identifierUnique}`,
-        header: 'Name',
+        headerId: 'name',
+        headerLabel: 'Name',
         value: artifact.db_key,
         class: 'artifacts_medium',
         getLink: tab =>
@@ -265,63 +277,73 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
+        headerId: 'tag',
         value: artifact.tag,
         class: 'artifacts_small',
         type: 'hidden'
       },
       {
         id: `kind.${artifact.ui.identifierUnique}`,
-        header: 'Type',
+        headerId: 'type',
+        headerLabel: 'Type',
         value: artifact.kind,
         class: 'artifacts_extra-small'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
-        header: 'Labels',
+        headerId: 'labels',
+        headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
         class: 'artifacts_big',
         type: 'labels'
       },
       {
         id: `producer.${artifact.ui.identifierUnique}`,
-        header: 'Producer',
+        headerId: 'producer',
+        headerLabel: 'Producer',
         value: artifact.producer || {},
         class: 'artifacts_small',
         type: 'producer'
       },
       {
         id: `owner.${artifact.ui.identifierUnique}`,
-        header: 'Owner',
+        headerId: 'owner',
+        headerLabel: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
         type: 'owner'
       },
       {
         id: `updated.${artifact.ui.identifierUnique}`,
-        header: 'Updated',
+        headerId: 'updated',
+        headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       {
         id: `size.${artifact.ui.identifierUnique}`,
-        header: 'Size',
+        headerId: 'size',
+        headerLabel: 'Size',
         value: artifact.size ? convertBytes(artifact.size) : 'N/A',
         class: 'artifacts_small'
       },
       {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
+        headerId: 'popout',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
+        headerId: 'download',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
+        headerId: 'copy',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
@@ -353,7 +375,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
     ? `store://functions/${artifact.spec.function_uri}`
     : ''
   const { key: functionName } = parseUri(functionUri)
-  const averageLatency = artifact.status?.metrics?.latency_avg_1h?.values?.[0]?.[1]
+  const averageLatency = artifact.status?.metrics?.real_time?.latency_avg_1h?.[0]?.[1]
 
   return {
     data: {
@@ -362,7 +384,8 @@ export const createModelEndpointsRowData = (artifact, project) => {
     content: [
       {
         id: `key.${artifact.ui.identifierUnique}`,
-        header: 'Name',
+        headerId: 'name',
+        headerLabel: 'Name',
         value: name,
         class: 'artifacts_medium',
         getLink: tab =>
@@ -379,7 +402,8 @@ export const createModelEndpointsRowData = (artifact, project) => {
       },
       {
         id: `functionName.${artifact.ui.identifierUnique}`,
-        header: 'Function',
+        headerId: 'function',
+        headerLabel: 'Function',
         value: functionName,
         class: 'artifacts_small',
         link: `${generateLinkPath(functionUri)}/overview`,
@@ -387,56 +411,65 @@ export const createModelEndpointsRowData = (artifact, project) => {
       },
       {
         id: `state.${artifact.ui.identifierUnique}`,
+        headerId: 'state',
         value: artifact.status?.state,
         class: 'artifacts_extra-small',
         type: 'hidden'
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
-        header: 'Version',
+        headerId: 'version',
+        headerLabel: 'Version',
         value: artifact?.status?.children ? 'Router' : tag,
         class: 'artifacts_extra-small'
       },
       {
         id: `modelClass.${artifact.ui.identifierUnique}`,
-        header: 'Class',
+        headerId: 'class',
+        headerLabel: 'Class',
         value: artifact.spec?.model_class,
         class: 'artifacts_small'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
-        header: 'Labels',
+        headerId: 'labels',
+        headerLabel: 'Labels',
         value: parseKeyValues(artifact.metadata?.labels),
         class: 'artifacts_medium',
         type: 'labels'
       },
       {
         id: `firstRequest.${artifact.ui.identifierUnique}`,
-        header: 'Uptime',
+        headerId: 'uptime',
+        headerLabel: 'Uptime',
         value: formatDatetime(artifact.status?.first_request, '-'),
         class: 'artifacts_medium'
       },
       {
         id: `lastRequest.${artifact.ui.identifierUnique}`,
-        header: 'Last prediction',
+        headerId: 'lastprediction',
+        headerLabel: 'Last prediction',
         value: formatDatetime(artifact.status?.last_request, '-'),
         class: 'artifacts_medium'
       },
       {
         id: `averageLatency.${artifact.ui.identifierUnique}`,
-        header: 'Average latency',
+        headerId: 'averagelatency',
+        headerLabel: 'Average latency',
         value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
         class: 'artifacts_small'
       },
       {
         id: `errorCount.${artifact.ui.identifierUnique}`,
-        header: 'Error count',
+        headerId: 'errorcount',
+        headerLabel: 'Error count',
         value: artifact.status?.error_count ?? '-',
         class: 'artifacts_small'
       },
       {
         id: `driftStatus.${artifact.ui.identifierUnique}`,
-        header: 'Drift',
+        headerId: 'drift',
+        headerLabel: 'Drift',
         value: driftStatusIcons[artifact.status?.drift_status]?.value,
         class: 'artifacts_extra-small',
         tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
@@ -455,7 +488,8 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
     content: [
       {
         id: `key.${artifact.ui.identifierUnique}`,
-        header: 'Name',
+        headerId: 'name',
+        headerLabel: 'Name',
         value: artifact.db_key,
         class: 'artifacts_medium',
         getLink: tab =>
@@ -486,57 +520,66 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
-        header: 'Labels',
+        headerId: 'labels',
+        headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
         class: 'artifacts_big',
         type: 'labels'
       },
       {
         id: `producer.${artifact.ui.identifierUnique}`,
-        header: 'Producer',
+        headerId: 'producer',
+        headerLabel: 'Producer',
         value: artifact.producer,
         class: 'artifacts_small',
         type: 'producer'
       },
       {
         id: `owner.${artifact.ui.identifierUnique}`,
-        header: 'Owner',
+        headerId: 'owner',
+        headerLabel: 'Owner',
         value: artifact.producer?.owner,
         class: 'artifacts_small',
         type: 'owner'
       },
       {
         id: `updated.${artifact.ui.identifierUnique}`,
-        header: 'Updated',
+        headerId: 'updated',
+        headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       {
         id: `size.${artifact.ui.identifierUnique}`,
-        header: 'Size',
+        headerId: 'size',
+        headerLabel: 'Size',
         value: convertBytes(artifact.size || 0),
         class: 'artifacts_small'
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
+        headerId: 'tag',
         value: artifact.tag,
         class: 'artifacts_small',
         type: 'hidden'
       },
       {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
+        headerId: 'popout',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
+        headerId: 'download',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
+        headerId: 'copy',
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
         type: BUTTON_COPY_URI_CELL_TYPE,

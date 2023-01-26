@@ -41,12 +41,14 @@ import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
 import { MODAL_MAX } from 'igz-controls/constants'
 import { generateJobRequestData, getNewJobErrorMsg, getSaveJobErrorMsg } from './JobWizard.util'
+import { resetModalFilter } from '../../reducers/filtersReducer'
 import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { useMode } from '../../hooks/mode.hook'
 import {
+  JOB_WIZARD_FILTERS,
   MONITOR_JOBS_TAB,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
@@ -81,11 +83,10 @@ const JobWizard = ({
   const isEditMode = useMemo(() => mode === PANEL_EDIT_MODE || mode === PANEL_RERUN_MODE, [mode])
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
-  const [filteredTemplatesCategories, setFilteredTemplatesCategories] = useState({})
+  const [filteredTemplates, setFilteredTemplates] = useState([])
   const [functions, setFunctions] = useState([])
-  const [templatesCategories, setTemplatesCategories] = useState(functionsStore.templatesCatalog)
+  const [templatesCategories, setTemplatesCategories] = useState({})
   const [templates, setTemplates] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState('')
   const [jobAdditionalData, setJobAdditionalData] = useState({})
   const [showSchedule, setShowSchedule] = useState(false)
   const location = useLocation()
@@ -95,9 +96,10 @@ const JobWizard = ({
   const scheduleButtonRef = useRef()
 
   const closeModal = useCallback(() => {
+    dispatch(resetModalFilter(JOB_WIZARD_FILTERS))
     onResolve()
     onWizardClose && onWizardClose()
-  }, [onResolve, onWizardClose])
+  }, [dispatch, onResolve, onWizardClose])
 
   const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
 
@@ -259,25 +261,24 @@ const JobWizard = ({
               size={MODAL_MAX}
               stepsConfig={stepsConfig}
               title={wizardTitle}
+              subTitle={formState.values?.jobDetails?.name}
             >
               {!isEditMode && (
                 <JobWizardFunctionSelection
                   defaultData={defaultData}
                   filteredFunctions={filteredFunctions}
-                  filteredTemplatesCategories={filteredTemplatesCategories}
+                  filteredTemplates={filteredTemplates}
                   formState={formState}
                   frontendSpec={frontendSpec}
                   functions={functions}
                   isEditMode={isEditMode}
                   isStagingMode={isStagingMode}
                   params={params}
-                  selectedCategory={selectedCategory}
                   selectedFunctionData={selectedFunctionData}
                   setFilteredFunctions={setFilteredFunctions}
-                  setFilteredTemplatesCategories={setFilteredTemplatesCategories}
+                  setFilteredTemplates={setFilteredTemplates}
                   setFunctions={setFunctions}
                   setJobAdditionalData={setJobAdditionalData}
-                  setSelectedCategory={setSelectedCategory}
                   setSelectedFunctionData={setSelectedFunctionData}
                   setTemplates={setTemplates}
                   setTemplatesCategories={setTemplatesCategories}
@@ -324,7 +325,7 @@ JobWizard.defaultProps = {
   mode: PANEL_CREATE_MODE,
   onSuccessRequest: () => {},
   onWizardClose: () => {},
-  wizardTitle: 'New job'
+  wizardTitle: 'Batch run'
 }
 
 JobWizard.propTypes = {

@@ -17,38 +17,72 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
+import classNames from 'classnames'
 
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { roundFloats } from '../../utils/roundFloats'
-import { resultsTable } from '../../utils/resultsTable'
+import { resultsTableContent, resultsTableHeaders } from '../../utils/resultsTable'
+import { useSortTable } from '../../hooks/useSortTable.hook'
+import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'
 
 import { ReactComponent as BestIteration } from 'igz-controls/images/best-iteration-icon.svg'
 
 import './detailsResults.scss'
 
-const DetailsResults = ({ job }) => {
-  const result = resultsTable(job)
+const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
+  const tableHeaders = useMemo(() => {
+    return isEmpty(job.error) ? resultsTableHeaders(job) : []
+  }, [job])
+
+  const tableContent = useMemo(() => {
+    return isEmpty(job.error) ? resultsTableContent(job) : []
+  }, [job])
+
+  const [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders] =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { allowSortBy, excludeSortBy, defaultSortBy }
+    })
+
+  const getHeaderCellClasses = (headerId, isSortable) =>
+    classNames(
+      'results-table__header-item',
+      isSortable && 'sortable-header-cell',
+      isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
+    )
 
   return (
     <div className="table__item-results">
       <div className="results-table">
-        {job.iterationStats && job.iterationStats.length !== 0 ? (
+        {job.iterationStats && job.iterationStats.length !== 0 && !job.error ? (
           <>
             <div className="results-table__header">
               <div className="results-table__row">
-                {result.headers.map((item, i) => (
-                  <div className="results-table__header-item" key={i}>
-                    <Tooltip template={<TextTooltipTemplate text={item} />}>{item}</Tooltip>
-                  </div>
-                ))}
+                {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => {
+                  return (
+                    <div
+                      className={getHeaderCellClasses(headerId, isSortable)}
+                      key={`${headerId}`}
+                      onClick={isSortable ? () => sortTable(headerId) : null}
+                    >
+                      <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                        {isSortable && getSortingIcon(headerId)}
+                        {headerLabel}
+                      </Tooltip>
+                      {tableItem.tip && <Tip text={tableItem.tip} />}
+                    </div>
+                  )
+                })}
               </div>
             </div>
             <div className="results-table__body">
-              {result.tableContent.map((tableContentItem, index) => (
+              {sortedTableContent.map((tableContentItem, index) => (
                 <div className="results-table__row" key={index}>
                   {tableContentItem.map((contentItemValue, idx) => {
                     if (
@@ -81,9 +115,11 @@ const DetailsResults = ({ job }) => {
                           className="results-table__medal results-table__cell"
                         >
                           {contentItemValue}
-                          <Tooltip template={<TextTooltipTemplate text={'Best iteration'} />}>
-                            <BestIteration />
-                          </Tooltip>
+                          <span className="best-iteration">
+                            <Tooltip template={<TextTooltipTemplate text={'Best iteration'} />}>
+                              <BestIteration />
+                            </Tooltip>
+                          </span>
                         </div>
                       )
                     } else {
@@ -93,7 +129,7 @@ const DetailsResults = ({ job }) => {
                             className="data-ellipsis"
                             template={<TextTooltipTemplate text={contentItemValue.toString()} />}
                           >
-                            {roundFloats(contentItemValue)}
+                            {roundFloats(contentItemValue, 4)}
                           </Tooltip>
                         </div>
                       )
@@ -112,11 +148,14 @@ const DetailsResults = ({ job }) => {
                     {key}
                   </Tooltip>
                 </div>
-                  <div className="results-table__cell table__cell-wide">
-                      <Tooltip className="data-ellipsis" template={<TextTooltipTemplate text={job.results[key]} />}>
-                          {job.results[key]}
-                      </Tooltip>
-                  </div>
+                <div className="results-table__cell table__cell-full">
+                  <Tooltip
+                    className="data-ellipsis"
+                    template={<TextTooltipTemplate text={job.results[key]} />}
+                  >
+                    {job.results[key]}
+                  </Tooltip>
+                </div>
               </div>
             )
           })
@@ -128,7 +167,16 @@ const DetailsResults = ({ job }) => {
   )
 }
 
+DetailsResults.defaultProps = {
+  allowSortBy: null,
+  defaultSortBy: null,
+  excludeSortBy: null
+}
+
 DetailsResults.propTypes = {
+  allowSortBy: ALLOW_SORT_BY,
+  defaultSortBy: DEFAULT_SORT_BY,
+  excludeSortBy: EXCLUDE_SORT_BY,
   job: PropTypes.shape({}).isRequired
 }
 

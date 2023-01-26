@@ -18,10 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { set } from 'lodash'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
   DATE_FILTER_ANY_TIME,
+  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   MODEL_TYPE,
   SHOW_ITERATIONS,
@@ -45,7 +47,8 @@ const initialState = {
   sortBy: '',
   tag: TAG_FILTER_LATEST,
   tagOptions: [],
-  projectOptions: []
+  projectOptions: [],
+  [FILTER_MENU_MODAL]: {}
 }
 
 export const getFilterTagOptions = createAsyncThunk(
@@ -75,10 +78,31 @@ const filtersSlice = createSlice({
         state[filterProp] = initialState[filterProp]
       }
     },
+    resetModalFilter(state, action) {
+      delete state[FILTER_MENU_MODAL][action.payload]
+    },
     setFilters(state, action) {
       for (let filterProp in action.payload) {
         state[filterProp] = action.payload[filterProp]
       }
+    },
+    setModalFiltersValues(state, action) {
+      const payloadValue = action.payload.value ?? {}
+      const newFilterValues = {
+        ...state[FILTER_MENU_MODAL][action.payload.name]?.values,
+        ...payloadValue
+      }
+
+      set(state, [FILTER_MENU_MODAL, action.payload.name, 'values'], newFilterValues)
+    },
+    setModalFiltersInitialValues(state, action) {
+      const payloadValue = action.payload.value ?? {}
+      const newFilterInitialValues = {
+        ...state[FILTER_MENU_MODAL][action.payload.name]?.initialValues,
+        ...payloadValue
+      }
+
+      set(state, [FILTER_MENU_MODAL, action.payload.name, 'initialValues'], newFilterInitialValues)
     },
     setFilterProjectOptions(state, action) {
       state.projectOptions = action.payload
@@ -91,6 +115,13 @@ const filtersSlice = createSlice({
   }
 })
 
-export const { removeFilters, setFilters, setFilterProjectOptions } = filtersSlice.actions
+export const {
+  removeFilters,
+  resetModalFilter,
+  setFilters,
+  setModalFiltersValues,
+  setModalFiltersInitialValues,
+  setFilterProjectOptions
+} = filtersSlice.actions
 
 export default filtersSlice.reducer

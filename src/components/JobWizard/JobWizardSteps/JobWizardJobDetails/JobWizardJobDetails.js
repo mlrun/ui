@@ -123,10 +123,6 @@ const JobWizardJobDetails = ({
         <h5 className="form-step-title">Job Details</h5>
       </div>
       <div className="form-row">
-        This is a paragraph explaining what the user will find here and what he or she should do
-        next, here we can throw in all the jargon words that normal people would glaze over.
-      </div>
-      <div className="form-row">
         <div className="form-col-2">
           <FormInput
             label="Name"

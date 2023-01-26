@@ -122,6 +122,7 @@ const initialState = {
     }
   },
   templatesCatalog: {},
+  templates: [],
   template: {}
 }
 
@@ -207,7 +208,8 @@ const functionReducer = (state = initialState, { type, payload }) => {
     case SET_FUNCTIONS_TEMPLATES:
       return {
         ...state,
-        templates: payload
+        templates: payload.templates,
+        templatesCatalog: payload.templatesCategories
       }
     case FETCH_FUNCTION_TEMPLATE_BEGIN:
       return {
