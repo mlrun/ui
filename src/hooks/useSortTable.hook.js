@@ -31,14 +31,11 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   const { allowSortBy = null, excludeSortBy = null, defaultSortBy = null } = sortConfig
 
   const isDateValid = dateString => {
-    if (Date.parse(dateString)) {
-      if (dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char))) {
-        return false
-      }
-      return true
-    } else {
-      return false
-    }
+    return Date.parse(dateString)
+      ? dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char))
+        ? false
+        : true
+      : false
   }
 
   const getValueByType = useCallback(
@@ -50,7 +47,7 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
       ) {
         let valueToTest = rowData.content[columnIndex].value
 
-        if (valueToTest !== null || valueToTest !== undefined) {
+        if (!isEmpty(valueToTest)) {
           if (valueToTest instanceof Array && valueToTest.length > 0) {
             if (valueToTest[0].match(/:/g)) {
               return valueToTest[0].split(':')[0].trim()
@@ -156,9 +153,9 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   }, [isSortableByIndex, headers, isSortable])
 
   const sortTable = useCallback(
-    (columnName, tempDirection) => {
-      const sortDirection = tempDirection
-        ? tempDirection
+    (columnName, existingDirection) => {
+      const sortDirection = existingDirection
+        ? existingDirection
         : columnName === selectedColumnName && direction === 'desc'
         ? 'asc'
         : 'desc'
@@ -187,19 +184,9 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   }
 
   useEffect(() => {
-    if (content.length && !direction) {
-      setSortedTableContent(content)
-    }
-  }, [content, direction])
-
-  useEffect(() => {
     if (direction && selectedColumnName) {
       sortTable(selectedColumnName, direction)
-    }
-  }, [direction, selectedColumnName, sortTable])
-
-  useEffect(() => {
-    if (defaultSortBy !== null && !direction && content.length > 0) {
+    } else if (defaultSortBy !== null && !direction && content.length > 0) {
       sortTable(
         selectedColumnName
           ? selectedColumnName
@@ -207,8 +194,10 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
           ? headers[defaultSortBy].headerId
           : defaultSortBy
       )
+    } else {
+      setSortedTableContent(content)
     }
-  }, [content, defaultSortBy, direction, headers, selectedColumnName, sortConfig, sortTable])
+  }, [content, defaultSortBy, direction, headers, selectedColumnName, sortTable])
 
   useEffect(() => {
     if (headers && headers.length > 0 && (excludeSortBy || allowSortBy)) {
