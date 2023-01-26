@@ -347,7 +347,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
     ? `store://functions/${artifact.spec.function_uri}`
     : ''
   const { key: functionName } = parseUri(functionUri)
-  const averageLatency = artifact.status?.metrics?.latency_avg_1h?.values?.[0]?.[1]
+  const averageLatency = artifact.status?.metrics?.real_time?.latency_avg_1h?.[0]?.[1]
 
   return {
     data: {
@@ -444,7 +444,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
 
   return {
     data: {
-      ...artifact,
+      ...artifact
     },
     content: [
       {
