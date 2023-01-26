@@ -41,8 +41,12 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const previewRef = useRef({ current: {} })
   const params = useParams()
 
+  const isPopupButtonDisplayed =
+    artifact.target_path &&
+    (extraData.length > 0 || (!preview[0]?.error && !preview.every(item => item.hidden)))
+
   const artifactsPreviewClassNames = classnames(
-    artifact.target_path && 'artifact-preview__with-popout'
+    isPopupButtonDisplayed && 'artifact-preview__with-popout'
   )
 
   useEffect(() => {
@@ -75,10 +79,6 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const cancelRequest = message => {
     previewRef.current?.cancel && previewRef.current.cancel(message)
   }
-
-  const isPopupButtonDisplayed =
-    artifact.target_path &&
-    (extraData.length > 0 || (!preview[0]?.error && !preview.every(item => item.hidden)))
 
   return (
     <div className="preview_container">
