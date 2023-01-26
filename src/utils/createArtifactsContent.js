@@ -64,7 +64,7 @@ const createArtifactsRowData = artifact => {
   return {
     key: {
       value: artifact.db_key,
-      class: 'artifacts_medium',
+      class: 'table-cell-medium',
       link: 'overview'
     },
     kind: {
@@ -116,7 +116,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: artifact.db_key,
-        class: 'artifacts_medium',
+        class: 'table-cell-medium',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -129,7 +129,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
             artifact.iter
           ),
         expandedCellContent: {
-          class: 'artifacts_medium',
+          class: 'table-cell-medium',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
@@ -250,7 +250,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: artifact.db_key,
-        class: 'artifacts_medium',
+        class: 'table-cell-medium',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -263,7 +263,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
             artifact.iter
           ),
         expandedCellContent: {
-          class: 'artifacts_medium',
+          class: 'table-cell-medium',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
@@ -387,7 +387,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: name,
-        class: 'artifacts_medium',
+        class: 'table-cell-medium',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -435,7 +435,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.metadata?.labels),
-        class: 'artifacts_medium',
+        class: 'table-cell-medium',
         type: 'labels'
       },
       {
@@ -443,14 +443,14 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'uptime',
         headerLabel: 'Uptime',
         value: formatDatetime(artifact.status?.first_request, '-'),
-        class: 'artifacts_medium'
+        class: 'table-cell-medium'
       },
       {
         id: `lastRequest.${artifact.ui.identifierUnique}`,
         headerId: 'lastprediction',
         headerLabel: 'Last prediction',
         value: formatDatetime(artifact.status?.last_request, '-'),
-        class: 'artifacts_medium'
+        class: 'table-cell-medium'
       },
       {
         id: `averageLatency.${artifact.ui.identifierUnique}`,
@@ -491,7 +491,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: artifact.db_key,
-        class: 'artifacts_medium',
+        class: 'table-cell-medium',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -504,7 +504,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
             artifact.iter
           ),
         expandedCellContent: {
-          class: 'artifacts_medium',
+          class: 'table-cell-medium',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',

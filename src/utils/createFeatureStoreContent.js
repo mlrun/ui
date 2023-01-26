@@ -63,7 +63,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         headerId: 'name',
         headerLabel: 'Name',
         value: featureSet.name,
-        class: 'table-cell-2',
+        class: 'table-cell-medium',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -77,7 +77,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         showTag: true,
         showStatus: true,
         expandedCellContent: {
-          class: 'table-cell-2',
+          class: 'table-cell-medium',
           value: featureSet.tag || truncateUid(featureSet.uid),
           tooltip: featureSet.tag || featureSet.uid,
           showTag: true,

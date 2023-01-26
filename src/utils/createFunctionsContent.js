@@ -34,7 +34,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'name',
               headerLabel: 'Name',
               value: func.name,
-              class: 'functions_medium',
+              class: 'table-cell-medium',
               getLink: hash => {
                 return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${hash}`
               },
@@ -42,7 +42,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               showStatus: true,
               expandedCellContent: {
                 value: formatDatetime(func.updated, 'N/A'),
-                class: 'functions_medium',
+                class: 'table-cell-medium',
                 type: 'date',
                 showTag: true,
                 showStatus: true
@@ -54,7 +54,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'type',
               headerLabel: 'Type',
               value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
-              class: 'functions_medium',
+              class: 'table-cell-medium',
               type: 'type'
             },
             {
@@ -70,7 +70,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               id: `updated.${func.ui.identifierUnique}`,
               headerId: 'updated',
               value: formatDatetime(func.updated, 'N/A'),
-              class: 'functions_medium',
+              class: 'table-cell-medium',
               type: 'date',
               showTag: true,
               showStatus: true,
@@ -88,13 +88,13 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'name',
               headerLabel: 'Name',
               value: func.name,
-              class: 'functions_medium',
+              class: 'table-cell-medium',
               getLink: (hash, tab) => {
                 return `/projects/${projectName}/functions/${hash}${`/${tab}`}`
               },
               expandedCellContent: {
                 value: formatDatetime(func.updated, 'N/A'),
-                class: 'functions_medium',
+                class: 'table-cell-medium',
                 type: 'date',
                 showTag: true,
                 showStatus: true
