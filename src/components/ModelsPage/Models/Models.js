@@ -26,8 +26,6 @@ import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifa
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 
-import { useSortTable } from '../../../hooks/useSortTable.hook'
-
 import {
   fetchArtifactTags,
   fetchModel,
@@ -62,6 +60,7 @@ import { setNotification } from '../../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
+import { useSortTable } from '../../../hooks/useSortTable.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 

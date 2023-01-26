@@ -23,7 +23,7 @@ import { isEmpty, isNumber, orderBy } from 'lodash'
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
 export const useSortTable = ({ headers, content, sortConfig = {} }) => {
-  const [direction, setDirection] = useState(null)
+  const [direction, setDirection] = useState('')
   const [selectedColumnName, setSelectedColumnName] = useState('')
   const [sortedTableContent, setSortedTableContent] = useState(content)
   const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
@@ -156,9 +156,12 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   }, [isSortableByIndex, headers, isSortable])
 
   const sortTable = useCallback(
-    columnName => {
-      const sortDirection =
-        columnName === selectedColumnName && direction === 'desc' ? 'asc' : 'desc'
+    (columnName, tempDirection) => {
+      const sortDirection = tempDirection
+        ? tempDirection
+        : columnName === selectedColumnName && direction === 'desc'
+        ? 'asc'
+        : 'desc'
 
       const columnIndex = headers && headers.findIndex(header => header.headerId === columnName)
 
@@ -190,14 +193,22 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   }, [content, direction])
 
   useEffect(() => {
-    if (direction && (!content || content.length === 0)) {
-      setDirection('')
+    if (direction && selectedColumnName) {
+      sortTable(selectedColumnName, direction)
     }
+  }, [direction, selectedColumnName, sortTable])
 
+  useEffect(() => {
     if (defaultSortBy !== null && !direction && content.length > 0) {
-      sortTable(isNumber(defaultSortBy) ? headers[defaultSortBy].headerId : defaultSortBy)
+      sortTable(
+        selectedColumnName
+          ? selectedColumnName
+          : isNumber(defaultSortBy)
+          ? headers[defaultSortBy].headerId
+          : defaultSortBy
+      )
     }
-  }, [content, defaultSortBy, direction, headers, sortConfig, sortTable])
+  }, [content, defaultSortBy, direction, headers, selectedColumnName, sortConfig, sortTable])
 
   useEffect(() => {
     if (headers && headers.length > 0 && (excludeSortBy || allowSortBy)) {
