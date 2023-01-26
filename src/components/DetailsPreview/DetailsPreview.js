@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { isEqual } from 'lodash'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -41,8 +41,15 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const previewRef = useRef({ current: {} })
   const params = useParams()
 
+  const popupButtonIsDisplayed = useMemo(() => {
+    return (
+      artifact.target_path &&
+      (extraData.length > 0 || (!preview[0]?.error && !preview.every(item => item.hidden)))
+    )
+  }, [artifact.target_path, extraData.length, preview])
+
   const artifactsPreviewClassNames = classnames(
-    artifact.target_path && 'artifact-preview__with-popout'
+    popupButtonIsDisplayed && 'artifact-preview__with-popout'
   )
 
   useEffect(() => {
@@ -78,7 +85,7 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
 
   return (
     <div className="preview_container">
-      {artifact.target_path && (
+      {popupButtonIsDisplayed && (
         <button onClick={() => handlePreview()} className="preview_popout">
           <Tooltip template={<TextTooltipTemplate text="Pop-out" />}>
             <Popout />
