@@ -74,6 +74,11 @@
       width: 250px;
     }
 
+    .table__cell-full {
+      flex: 1 0 auto;
+      width: auto;
+    }
+
     i {
       margin: 0 15px;
     }
