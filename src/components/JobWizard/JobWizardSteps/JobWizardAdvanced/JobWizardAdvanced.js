@@ -55,10 +55,6 @@ const JobWizardAdvanced = ({
       <div className="form-row">
         <h5 className="form-step-title">Advanced</h5>
       </div>
-      <div className="form-row">
-        This is a paragraph explaining what the user will find here and what he or she should do
-        next, here we can throw in all the jargon words that normal people would glaze over.
-      </div>
       <div className="form-row form-table-title">Environment variables</div>
       <div className="form-row">
         {isStagingMode ? (
@@ -78,8 +74,8 @@ const JobWizardAdvanced = ({
           />
         )}
       </div>
-
-      {isStagingMode && (
+      {/* secretSourcesTable - currently not shown*/}
+      {isStagingMode && false && (
         <>
           <div className="form-row form-table-title">Secrets</div>
           <div className="form-row">
@@ -96,6 +92,14 @@ const JobWizardAdvanced = ({
           </div>
         </>
       )}
+      <div className="form-row">
+        <div className="form-col-1">
+          <FormInput name="advanced.inputPath" label="Default input path" />
+        </div>
+        <div className="form-col-1">
+          <FormInput name="advanced.outputPath" label="Default artifact path" required />
+        </div>
+      </div>
       <div className="form-row align-stretch">
         <div className="access-key-checkbox">
           <FormCheckBox label="Auto-generate access key" name="advanced.accessKey" />

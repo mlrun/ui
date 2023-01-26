@@ -148,7 +148,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
                     {key}
                   </Tooltip>
                 </div>
-                <div className="results-table__cell table__cell-wide">
+                <div className="results-table__cell table__cell-full">
                   <Tooltip
                     className="data-ellipsis"
                     template={<TextTooltipTemplate text={job.results[key]} />}

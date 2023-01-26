@@ -1,0 +1,15 @@
+@import '~igz-controls/scss/colors';
+
+.filters-wizard {
+  .pop-up-dialog {
+    width: auto;
+  }
+}
+
+.filters-button_active {
+  svg {
+    rect {
+      fill: $malibu;
+    }
+  }
+}

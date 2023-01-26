@@ -55,14 +55,7 @@ const Chip = React.forwardRef(
   ) => {
     const chipRef = React.useRef()
     const { chipLabel, chipValue } = getChipLabelAndValue(chip)
-    const {
-      background,
-      boldValue,
-      borderColor,
-      density,
-      font,
-      borderRadius
-    } = chipOptions
+    const { background, boldValue, borderColor, density, font, borderRadius } = chipOptions
 
     const chipClassNames = classnames(
       'chip',
@@ -136,7 +129,11 @@ const Chip = React.forwardRef(
     }
 
     return (
-      <span className={`${chipClassNames} chips_button`} onClick={onClick} ref={hiddenChipCounterRef}>
+      <span
+        className={`${chipClassNames} chips_button`}
+        onClick={onClick}
+        ref={hiddenChipCounterRef}
+      >
         {chip.value}
       </span>
     )
