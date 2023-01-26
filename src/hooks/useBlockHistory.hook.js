@@ -52,7 +52,7 @@ export const useBlockHistory = () => {
       unblockRef.current = null
     }
 
-    retryNavigation && historyRetry.current()
+    retryNavigation && historyRetry.current && historyRetry.current()
   }, [])
 
   return {

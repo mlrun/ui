@@ -52,6 +52,10 @@ body {
 .ml-app {
   display: flex;
   width: 100%;
+
+  &-version {
+    font-size: 0.75rem;
+  }
 }
 
 .content {
@@ -249,6 +253,10 @@ a {
 
 [class^='state-omitted'] {
   @include statusState($silver);
+}
+
+[class^='state-archived'] {
+  @include statusState($topaz);
 }
 
 .state-created-job,

@@ -52,12 +52,21 @@ export const setArtifactPreviewFromPreviewData = (artifact, noData, setNoData, s
   ])
 }
 
-export const fetchArtifactPreviewFromExtraData = (artifact, noData, setNoData, setPreview, cancelToken) => {
+export const fetchArtifactPreviewFromExtraData = (
+  projectName,
+  artifact,
+  noData,
+  setNoData,
+  setPreview,
+  cancelToken
+) => {
   artifact.extra_data.forEach(previewItem => {
     fetchArtifactPreview(
+      projectName,
       previewItem.path,
       previewItem.path.startsWith('/User') && (artifact.user || artifact.producer.owner),
       previewItem.path.replace(/.*\./g, ''),
+      artifact.db_key,
       cancelToken
     )
       .then(content => {
@@ -83,11 +92,19 @@ export const fetchArtifactPreviewFromExtraData = (artifact, noData, setNoData, s
   })
 }
 
-export const fetchArtifactPreviewFromTargetPath = (artifact, noData, setNoData, setPreview) => {
+export const fetchArtifactPreviewFromTargetPath = (
+  projectName,
+  artifact,
+  noData,
+  setNoData,
+  setPreview
+) => {
   fetchArtifactPreview(
+    projectName,
     artifact.target_path,
     artifact.target_path.startsWith('/User') && (artifact.user || artifact.producer?.owner),
-    artifact.target_path.replace(/.*\./g, '')
+    artifact.target_path.replace(/.*\./g, ''),
+    artifact.db_key
   )
     .then(content => {
       setPreview([content])
@@ -110,9 +127,16 @@ export const fetchArtifactPreviewFromTargetPath = (artifact, noData, setNoData, 
     })
 }
 
-export const fetchArtifactPreview = (path, user, fileFormat, cancelToken) => {
-  return api.getArtifactPreview(path, user, fileFormat, cancelToken).then(res => {
-    return createArtifactPreviewContent(res, fileFormat)
+export const fetchArtifactPreview = (
+  projectName,
+  path,
+  user,
+  fileFormat,
+  artifactName,
+  cancelToken
+) => {
+  return api.getArtifactPreview(projectName, path, user, fileFormat, cancelToken).then(res => {
+    return createArtifactPreviewContent(res, fileFormat, path, artifactName)
   })
 }
 
@@ -133,6 +157,7 @@ const handleSetArtifactPreviewObject = (previewContent, artifactIndex, setPrevie
 }
 
 export const getArtifactPreview = (
+  projectName,
   artifact,
   noData,
   setNoData,
@@ -147,7 +172,7 @@ export const getArtifactPreview = (
         : setPreview(previewContent)
     )
   } else if (artifact.target_path) {
-    fetchArtifactPreviewFromTargetPath(artifact, noData, setNoData, previewContent =>
+    fetchArtifactPreviewFromTargetPath(projectName, artifact, noData, setNoData, previewContent =>
       previewIsObject
         ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
         : setPreview(previewContent)

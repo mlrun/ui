@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 
@@ -28,19 +29,22 @@ import { createArtifactPreviewContent } from '../../utils/createArtifactPreviewC
 const DetailsAnalysis = ({ artifact }) => {
   const [preview, setPreview] = useState([])
   const [noData, setNoData] = useState(false)
+  const params = useParams()
 
-  const getArtifactPreview = useCallback((path, user, fileFormat) => {
-    return api.getArtifactPreview(path, user, fileFormat).then(res => {
-      return createArtifactPreviewContent(res, fileFormat)
-    })
-  }, [])
+  const getArtifactPreview = useCallback(
+    (path, user, fileFormat) => {
+      return api.getArtifactPreview(params.projectName, path, user, fileFormat).then(res => {
+        return createArtifactPreviewContent(res, fileFormat)
+      })
+    },
+    [params.projectName]
+  )
 
   const fetchPreviewFromAnalysis = useCallback(() => {
     Object.entries(artifact.analysis).forEach(([key, value]) => {
       getArtifactPreview(
         value,
-        String(value).startsWith('/User') &&
-          (artifact.user || artifact.producer?.owner),
+        String(value).startsWith('/User') && (artifact.user || artifact.producer?.owner),
         String(value).replace(/.*\./g, '')
       )
         .then(content => {
@@ -65,13 +69,7 @@ const DetailsAnalysis = ({ artifact }) => {
           ])
         })
     })
-  }, [
-    artifact.analysis,
-    artifact.producer,
-    artifact.user,
-    getArtifactPreview,
-    noData
-  ])
+  }, [artifact.analysis, artifact.producer, artifact.user, getArtifactPreview, noData])
 
   useEffect(() => {
     if (artifact.analysis && preview.length === 0) {

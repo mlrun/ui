@@ -55,6 +55,7 @@ import {
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
 import { generateProjectsList } from '../../utils/projects'
 import { removeFilters, setFilterProjectOptions, setFilters } from '../../reducers/filtersReducer'
+import detailsActions from '../../actions/details'
 
 import './filterMenu.scss'
 
@@ -64,6 +65,7 @@ const FilterMenu = ({
   expand,
   filters,
   handleExpandAll,
+  hidden,
   onChange,
   page,
   tab,
@@ -163,51 +165,78 @@ const FilterMenu = ({
     }
   }
 
-  const handleSelectOption = (item, filter) => {
-    if (filter.type === STATUS_FILTER) {
-      dispatch(setFilters({ state: item }))
-      applyChanges({
-        ...filtersStore,
-        state: item
+  const filtersHelper = async (changes, dispatch) => {
+    let handleChangeFilters = Promise.resolve(true)
+
+    if (changes.counter > 0) {
+      handleChangeFilters = await new Promise(resolve => {
+        const handleDiscardChanges = () => {
+          window.removeEventListener('discardChanges', handleDiscardChanges)
+          resolve(true)
+        }
+        window.addEventListener('discardChanges', handleDiscardChanges)
+
+        dispatch(detailsActions.setFiltersWasHandled(true))
+        dispatch(detailsActions.showWarning(true))
       })
-    } else if (filter.type === SORT_BY) {
-      dispatch(setFilters({ sortBy: item }))
-    } else if (filter.type === GROUP_BY_FILTER) {
-      dispatch(setFilters({ groupBy: item }))
-    } else if (filter.type === TAG_FILTER && item !== filtersStore.tag) {
-      dispatch(setFilters({ tag: item }))
-      applyChanges({
-        ...filtersStore,
-        tag: item
-      })
-    } else if (filter.type === PROJECT_FILTER) {
-      dispatch(
-        setFilters({
-          project: item
+    }
+
+    return handleChangeFilters
+  }
+
+  const handleSelectOption = async (item, filter) => {
+    const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+    if (filtersHelperResult) {
+      if (filter.type === STATUS_FILTER) {
+        dispatch(setFilters({ state: item }))
+        applyChanges({
+          ...filtersStore,
+          state: item
         })
-      )
-      applyChanges({
-        ...filtersStore,
-        project: item.toLowerCase()
-      })
+      } else if (filter.type === SORT_BY) {
+        dispatch(setFilters({ sortBy: item }))
+      } else if (filter.type === GROUP_BY_FILTER) {
+        dispatch(setFilters({ groupBy: item }))
+      } else if (filter.type === TAG_FILTER && item !== filtersStore.tag) {
+        dispatch(setFilters({ tag: item }))
+        applyChanges({
+          ...filtersStore,
+          tag: item
+        })
+      } else if (filter.type === PROJECT_FILTER) {
+        dispatch(
+          setFilters({
+            project: item
+          })
+        )
+        applyChanges({
+          ...filtersStore,
+          project: item.toLowerCase()
+        })
+      }
     }
   }
 
-  const onKeyDown = event => {
+  const onKeyDown = async event => {
     if (event.keyCode === KEY_CODES.ENTER) {
-      dispatch(
-        setFilters({
+      const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+      if (filtersHelperResult) {
+        dispatch(
+          setFilters({
+            labels,
+            name,
+            entities
+          })
+        )
+        applyChanges({
+          ...filtersStore,
           labels,
           name,
           entities
         })
-      )
-      applyChanges({
-        ...filtersStore,
-        labels,
-        name,
-        entities
-      })
+      }
     }
   }
 
@@ -245,187 +274,196 @@ const FilterMenu = ({
     })
   }
 
-  const handleIter = iteration => {
+  const handleIter = async iteration => {
     const iterValue = filtersStore.iter !== iteration ? SHOW_ITERATIONS : ''
+    const filtersHelperResult = await filtersHelper(changes, dispatch)
 
-    dispatch(
-      setFilters({
+    if (filtersHelperResult) {
+      dispatch(
+        setFilters({
+          iter: iterValue
+        })
+      )
+      applyChanges({
+        ...filtersStore,
         iter: iterValue
       })
-    )
-    applyChanges({
-      ...filtersStore,
-      iter: iterValue
-    })
+    }
   }
 
-  const handleShowUntagged = showUntagged => {
+  const handleShowUntagged = async showUntagged => {
     const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
-    dispatch(
-      setFilters({
+    const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+    if (filtersHelperResult) {
+      dispatch(
+        setFilters({
+          showUntagged: showUntaggedValue
+        })
+      )
+      applyChanges({
+        ...filtersStore,
         showUntagged: showUntaggedValue
       })
-    )
-    applyChanges({
-      ...filtersStore,
-      showUntagged: showUntaggedValue
-    })
+    }
   }
 
   return (
-    <>
-      <div className="filters">
-        {filters.map(filter => {
-          if (!filter.hidden) {
-            switch (filter.type) {
-              case TAG_FILTER:
-                return (
-                  <TagFilter
-                    key={filter.type}
-                    label={filter.label}
-                    onChange={item => handleSelectOption(item, filter)}
-                    page={page}
-                    tagFilterOptions={tagOptions}
-                    value={filtersStore[TAG_FILTER]}
-                  />
-                )
-              case LABELS_FILTER:
-                return (
-                  <Input
-                    density="dense"
-                    key={filter.type}
-                    label={filter.label}
-                    onChange={setLabels}
-                    onBlur={onBlur}
-                    onKeyDown={onKeyDown}
-                    placeholder="key1,key2=value,..."
-                    type="text"
-                    value={labels}
-                  />
-                )
-              case NAME_FILTER:
-                return (
-                  <Input
-                    density="dense"
-                    key={filter.type}
-                    label={filter.label}
-                    onChange={setName}
-                    onBlur={onBlur}
-                    onKeyDown={onKeyDown}
-                    type="text"
-                    value={name}
-                  />
-                )
-              case ENTITIES_FILTER:
-                return (
-                  <Input
-                    density="dense"
-                    key={filter.type}
-                    label={filter.label}
-                    onChange={setEntities}
-                    onBlur={onBlur}
-                    onKeyDown={onKeyDown}
-                    type="text"
-                    value={entities}
-                  />
-                )
-              case DATE_RANGE_TIME_FILTER:
-                return (
-                  <DatePicker
-                    date={filtersStore.dates.value[0]}
-                    dateTo={filtersStore.dates.value[1]}
-                    key={filter.type}
-                    label={filter.label}
-                    onChange={handleChangeDates}
-                    type="date-range-time"
-                    withOptions
-                  />
-                )
-              case ITERATIONS_FILTER:
-                return (
-                  <CheckBox
-                    key={filter.type}
-                    item={{ label: filter.label, id: 'iter' }}
-                    onChange={handleIter}
-                    selectedId={filtersStore.iter}
-                  />
-                )
-              case SHOW_UNTAGGED_FILTER:
-                return (
-                  <CheckBox
-                    key={filter.type}
-                    className="filters-checkbox"
-                    item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
-                    onChange={handleShowUntagged}
-                    selectedId={filtersStore.showUntagged}
-                  />
-                )
-              case PROJECT_FILTER:
-                return (
-                  <Select
-                    density="dense"
-                    className={''}
-                    label={filter.label}
-                    key={filter.type}
-                    onClick={project => handleSelectOption(project, filter)}
-                    options={filtersStore.projectOptions}
-                    selectedId={filtersStore.project}
-                  />
-                )
-              default:
-                return (
-                  <Select
-                    density="dense"
-                    className={filter.type === PERIOD_FILTER ? 'period-filter' : ''}
-                    label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
-                    key={filter.type}
-                    onClick={item => handleSelectOption(item, filter)}
-                    options={filter.options || selectOptions[filter.type]}
-                    selectedId={
-                      (filter.type === STATUS_FILTER && filtersStore.state) ||
-                      (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
-                      (filter.type === SORT_BY && filtersStore.sortBy)
-                    }
-                  />
-                )
+    !hidden && (
+      <>
+        <div className="filters">
+          {filters.map(filter => {
+            if (!filter.hidden) {
+              switch (filter.type) {
+                case TAG_FILTER:
+                  return (
+                    <TagFilter
+                      key={filter.type}
+                      label={filter.label}
+                      onChange={item => handleSelectOption(item, filter)}
+                      page={page}
+                      tagFilterOptions={tagOptions}
+                      value={filtersStore[TAG_FILTER]}
+                    />
+                  )
+                case LABELS_FILTER:
+                  return (
+                    <Input
+                      density="dense"
+                      key={filter.type}
+                      label={filter.label}
+                      onChange={setLabels}
+                      onBlur={onBlur}
+                      onKeyDown={onKeyDown}
+                      placeholder="key1,key2=value,..."
+                      type="text"
+                      value={labels}
+                    />
+                  )
+                case NAME_FILTER:
+                  return (
+                    <Input
+                      density="dense"
+                      key={filter.type}
+                      label={filter.label}
+                      onChange={setName}
+                      onBlur={onBlur}
+                      onKeyDown={onKeyDown}
+                      type="text"
+                      value={name}
+                    />
+                  )
+                case ENTITIES_FILTER:
+                  return (
+                    <Input
+                      density="dense"
+                      key={filter.type}
+                      label={filter.label}
+                      onChange={setEntities}
+                      onBlur={onBlur}
+                      onKeyDown={onKeyDown}
+                      type="text"
+                      value={entities}
+                    />
+                  )
+                case DATE_RANGE_TIME_FILTER:
+                  return (
+                    <DatePicker
+                      date={filtersStore.dates.value[0]}
+                      dateTo={filtersStore.dates.value[1]}
+                      key={filter.type}
+                      label={filter.label}
+                      onChange={handleChangeDates}
+                      type="date-range-time"
+                      withOptions
+                    />
+                  )
+                case ITERATIONS_FILTER:
+                  return (
+                    <CheckBox
+                      key={filter.type}
+                      item={{ label: filter.label, id: 'iter' }}
+                      onChange={handleIter}
+                      selectedId={filtersStore.iter}
+                    />
+                  )
+                case SHOW_UNTAGGED_FILTER:
+                  return (
+                    <CheckBox
+                      key={filter.type}
+                      className="filters-checkbox"
+                      item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
+                      onChange={handleShowUntagged}
+                      selectedId={filtersStore.showUntagged}
+                    />
+                  )
+                case PROJECT_FILTER:
+                  return (
+                    <Select
+                      density="dense"
+                      className={''}
+                      label={filter.label}
+                      key={filter.type}
+                      onClick={project => handleSelectOption(project, filter)}
+                      options={filtersStore.projectOptions}
+                      selectedId={filtersStore.project}
+                    />
+                  )
+                default:
+                  return (
+                    <Select
+                      density="dense"
+                      className={filter.type === PERIOD_FILTER ? 'period-filter' : ''}
+                      label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
+                      key={filter.type}
+                      onClick={item => handleSelectOption(item, filter)}
+                      options={filter.options || selectOptions[filter.type]}
+                      selectedId={
+                        (filter.type === STATUS_FILTER && filtersStore.state) ||
+                        (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
+                        (filter.type === SORT_BY && filtersStore.sortBy)
+                      }
+                    />
+                  )
+              }
+            } else {
+              return null
             }
-          } else {
-            return null
-          }
-        })}
-      </div>
-      {actionButton &&
-        !actionButton.hidden &&
-        (actionButton.getCustomTemplate ? (
-          actionButton.getCustomTemplate(actionButton)
-        ) : (
-          <Button
-            variant={actionButton.variant}
-            label={actionButton.label}
-            tooltip={actionButton.tooltip}
-            disabled={actionButton.disabled}
-            onClick={actionButton.onClick}
-          />
-        ))}
+          })}
+        </div>
+        {actionButton &&
+          !actionButton.hidden &&
+          (actionButton.getCustomTemplate ? (
+            actionButton.getCustomTemplate(actionButton)
+          ) : (
+            <Button
+              variant={actionButton.variant}
+              label={actionButton.label}
+              tooltip={actionButton.tooltip}
+              disabled={actionButton.disabled}
+              onClick={actionButton.onClick}
+            />
+          ))}
 
-      <div className="actions">
-        <RoundedIcon
-          tooltipText="Refresh"
-          onClick={() => applyChanges(filtersStore, true)}
-          id="refresh"
-        >
-          <RefreshIcon />
-        </RoundedIcon>
-        {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
+        <div className="actions">
           <RoundedIcon
-            tooltipText={expand ? 'Collapse' : 'Expand all'}
-            onClick={() => handleExpandAll()}
+            tooltipText="Refresh"
+            onClick={() => applyChanges(filtersStore, true)}
+            id="refresh"
           >
-            {expand ? <CollapseIcon /> : <ExpandIcon />}
+            <RefreshIcon />
           </RoundedIcon>
-        )}
-      </div>
-    </>
+          {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
+            <RoundedIcon
+              tooltipText={expand ? 'Collapse' : 'Expand all'}
+              onClick={() => handleExpandAll()}
+            >
+              {expand ? <CollapseIcon /> : <ExpandIcon />}
+            </RoundedIcon>
+          )}
+        </div>
+      </>
+    )
   )
 }
 
@@ -435,6 +473,7 @@ FilterMenu.defaultProps = {
   changes: {},
   expand: false,
   handleExpandAll: () => {},
+  hidden: false,
   tab: '',
   withoutExpandButton: false
 }
@@ -446,6 +485,7 @@ FilterMenu.propTypes = {
   expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandAll: PropTypes.func,
+  hidden: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired,
   tab: PropTypes.string,

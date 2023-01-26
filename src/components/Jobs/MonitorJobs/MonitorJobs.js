@@ -337,6 +337,7 @@ const MonitorJobs = ({
       openPopUp(JobWizard, {
         params,
         onWizardClose: () => {
+          setEditableItem(null)
           setJobWizardMode(null)
           setJobWizardIsOpened(false)
         },
@@ -355,6 +356,7 @@ const MonitorJobs = ({
     jobWizardMode,
     params,
     refreshJobs,
+    setEditableItem,
     setJobWizardIsOpened,
     setJobWizardMode
   ])
@@ -377,6 +379,7 @@ const MonitorJobs = ({
             onClick: () => handleMonitoring()
           }}
           filters={filters}
+          hidden={Boolean(params.jobId)}
           onChange={refreshJobs}
           page={JOBS_PAGE}
           withoutExpandButton

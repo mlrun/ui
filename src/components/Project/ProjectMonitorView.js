@@ -28,6 +28,7 @@ import Loader from '../../common/Loader/Loader'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
+import ProjectDetailsHeader from '../../common/ProjectDetailsHeader/ProjectDetailsHeader'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
 import Select from '../../common/Select/Select'
@@ -54,6 +55,7 @@ const ProjectMonitorView = ({
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
   isNuclioModeDisabled,
+  isDemoMode,
   nuclioStreamsAreEnabled,
   params,
   project,
@@ -94,43 +96,57 @@ const ProjectMonitorView = ({
       ) : (
         <div className="project__content">
           <div className="main-info">
+            {/* TODO: remove isDemoMode in 1.4 */}
+            {isDemoMode && (
+              <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
+            )}
             <div className="main-info__toolbar">
-              <div>
-                {project.data.status.state && (
-                  <div className="general-info__row status-row">
+              {/* TODO: remove HTML in 1.4 */}
+              {!isDemoMode && (
+                <div>
+                  {project.data.status.state && (
+                    <div className="general-info__row status-row">
+                      <div className="row-value">
+                        <span className="row-label">Status:</span>
+                        <span className="row-name">{project.data.status.state}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className="general-info__row created-at-row">
                     <div className="row-value">
-                      <span className="row-label">Status:</span>
-                      <span className="row-name">{project.data.status.state}</span>
+                      <span className="row-label">Created at:</span>
+                      <span className="row-name">
+                        {formatDatetime(project.data.metadata.created, '-')}
+                      </span>
                     </div>
                   </div>
-                )}
-                <div className="general-info__row created-at-row">
-                  <div className="row-value">
-                    <span className="row-label">Created at:</span>
-                    <span className="row-name">
-                      {formatDatetime(project.data.metadata.created, '-')}
-                    </span>
-                  </div>
                 </div>
+              )}
+              <div className="main-info__toolbar-actions">
+                <Select
+                  className="main-info__toolbar-menu launch-menu"
+                  density="dense"
+                  hideSelectedOption
+                  label="Launch IDE"
+                  onClick={handleLaunchIDE}
+                  options={launchIDEOptions}
+                />
+                <Select
+                  className="main-info__toolbar-menu create-new-menu"
+                  density="dense"
+                  hideSelectedOption
+                  label="Create new"
+                  options={createNewOptions}
+                />
+                <RoundedIcon
+                  onClick={refresh}
+                  id="refresh"
+                  tooltipText="Refresh"
+                  className="refresh"
+                >
+                  <RefreshIcon />
+                </RoundedIcon>
               </div>
-              <RoundedIcon onClick={refresh} id="refresh" tooltipText="Refresh" className="refresh">
-                <RefreshIcon />
-              </RoundedIcon>
-              <Select
-                className="main-info__toolbar-menu launch-menu"
-                density="dense"
-                hideSelectedOption
-                label="Launch IDE"
-                onClick={handleLaunchIDE}
-                options={launchIDEOptions}
-              />
-              <Select
-                className="main-info__toolbar-menu create-new-menu"
-                density="dense"
-                hideSelectedOption
-                label="Create new"
-                options={createNewOptions}
-              />
             </div>
             <div className="main-info__statistics-section">
               <ProjectSummaryCard

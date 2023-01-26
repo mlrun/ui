@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { ReactComponent as Logo } from 'igz-controls/images/mlrun-blue-logo.svg'
@@ -27,6 +28,8 @@ import { ReactComponent as SlackIcon } from 'igz-controls/images/slack-icon.svg'
 import './header.scss'
 
 const Header = () => {
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+
   return (
     <header className="header">
       <div className="header__brand">
@@ -74,6 +77,9 @@ const Header = () => {
         >
           <GithubIcon />
         </a>
+        {frontendSpec.ce?.version && (
+          <span className="ml-app-version">Version: {frontendSpec.ce.version}</span>
+        )}
       </div>
     </header>
   )

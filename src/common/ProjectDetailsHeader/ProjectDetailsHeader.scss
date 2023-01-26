@@ -1,0 +1,57 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/mixins';
+
+.project-details {
+  line-height: 1.4;
+
+  &__row {
+    display: flex;
+    flex-flow: column nowrap;
+
+    @media screen and (min-width: 1024px) {
+      flex-flow: row nowrap;
+    }
+  }
+
+  &__col {
+    flex: 1;
+  }
+
+  &__title {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    margin: 0 0 0.5rem 0;
+    font-weight: 300;
+    font-size: 3.2em;
+  }
+
+  &__description {
+    max-width: 75%;
+    margin: 0;
+  }
+
+  .data-ellipsis {
+    display: flex;
+    margin-left: 0.3em;
+  }
+
+  &__details {
+    display: flex;
+    flex-flow: column nowrap;
+    list-style-type: none;
+    margin: 1rem 0;
+    padding: 0;
+    line-height: 1.5;
+
+    li {
+      margin-bottom: 0.2rem;
+    }
+
+    &-label {
+      margin-right: 10px;
+      font-weight: 700;
+    }
+  }
+}

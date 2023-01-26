@@ -27,16 +27,22 @@ import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 
-import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/function2-icon.svg'
-import { ReactComponent as DataSetIcon } from 'igz-controls/images/overview-icon.svg'
-import { ReactComponent as FeatureSetIcon } from 'igz-controls/images/set-icon.svg'
-import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/flow-icon.svg'
-import { ReactComponent as CreateJobIcon } from 'igz-controls/images/run2-icon.svg'
+import { ReactComponent as BatchInferenceIcon } from 'igz-controls/images/ic-batch-inference.svg'
+import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/ic-create-new-function.svg'
+import { ReactComponent as CreateWorkflowIcon } from 'igz-controls/images/ic-create-workflow.svg'
+import { ReactComponent as DataSetIcon } from 'igz-controls/images/ic-register-dataset.svg'
+import { ReactComponent as DefineAlertsIcon } from 'igz-controls/images/ic-define-alerts.svg'
+import { ReactComponent as FeatureSetIcon } from 'igz-controls/images/ic-create-featureset.svg'
+import { ReactComponent as RegisterArtifactIcon } from 'igz-controls/images/ic-register-artifact.svg'
+import { ReactComponent as CreateJobIcon } from 'igz-controls/images/ic-run-batch.svg'
 // import { ReactComponent as DeployModelIcon } from 'igz-controls/images/rocket-icon.svg'
-import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/vector-icon.svg'
-import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/model-icon.svg'
-import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/realtime-icon-b.svg'
-import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/serving-icon.svg'
+import { ReactComponent as FeatureVectorIcon } from 'igz-controls/images/ic-feature-vector.svg'
+import { ReactComponent as RegisterModelIcon } from 'igz-controls/images/ic-register-model.svg'
+import { ReactComponent as RTFunctionIcon } from 'igz-controls/images/ic-create-realtime-function.svg'
+import { ReactComponent as RunWorkflowIcon } from 'igz-controls/images/ic-run-workflow.svg'
+import { ReactComponent as ServingFunctionIcon } from 'igz-controls/images/ic-deploy-model-serving.svg'
+import { ReactComponent as TrainModelIcon } from 'igz-controls/images/ic-train-model.svg'
+
 // import { ReactComponent as UploadIcon } from 'igz-controls/images/upload-icon.svg'
 
 export const handleClick = (navigate, openPopUp) => handler => {
@@ -53,9 +59,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
 
   return {
     collection: {
-      title: 'Data',
-      subTitle:
-        'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
+      title: 'Ingest and process data',
+      subTitle: 'Register, upload data directly, or define features using the feature store.',
       actions: [
         //TODO: un-comment after wizard ready
         // {
@@ -73,8 +78,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/feature-store/feature-sets?openPanel=true`
           }),
-          label: 'Create Features Set',
-          tooltip: ''
+          label: 'Create feature set',
+          tooltip: 'Create a new feature set as part of the MLRun feature store.'
         },
         {
           icon: <DataSetIcon />,
@@ -125,8 +130,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Dataset',
-          tooltip: ''
+          label: 'Register dataset',
+          tooltip:
+            'Register an existing dataset in the MLRun database so it can be referenced by other processes.'
         },
         {
           icon: <RegisterArtifactIcon />,
@@ -176,8 +182,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Artifact',
-          tooltip: ''
+          label: 'Register artifact',
+          tooltip:
+            'Register an existing artifact in the MLRun database so it can be referenced by other processes.'
         },
         {
           icon: <FeatureVectorIcon />,
@@ -185,8 +192,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/feature-store/feature-vectors?openPanel=true`
           }),
-          label: 'Create a Feature Vector',
-          tooltip: ''
+          label: 'Create feature vector',
+          tooltip:
+            'Create a feature vector that combines different features across one or more feature sets as part of the MLRun feature store.'
         }
       ],
       additionalLinks: [
@@ -221,21 +229,22 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
       ]
     },
     development: {
-      title: 'Jobs and Workflows',
+      title: 'Develop and train model',
       subTitle:
-        'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more. This is not the final version.',
+        'Define your code in a function and train your models. You can also run any additional code in batch, as well as define and run workflows.',
       actions: [
         {
-          id: 'createnewfunction',
+          id: 'createBatchFunction',
           icon: <CreatFunctionIcon />,
           handleClick: () => ({
             path: `${base_url}/functions?openPanel=true`
           }),
-          label: 'Create New Function',
-          tooltip: ''
+          label: 'Create batch function',
+          tooltip:
+            'Define the code and other properties to run later in batch. Batch runs are typically used for processes such as data preparation and model training.'
         },
         {
-          id: 'createnewjob',
+          id: 'createnBatchRun',
           icon: <CreateJobIcon />,
           handleClick: () =>
             isDemoMode
@@ -250,11 +259,12 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   // todo: delete this object when the job wizard is out of the demo mode
                   path: `${base_url}/jobs/monitor-jobs/create-new-job`
                 },
-          label: 'Create New Job',
-          tooltip: ''
+          label: 'Create batch run',
+          tooltip:
+            'Run a function in a batch process either immediately or define a schedule. You can also define hyperparameters to execute and compare'
         },
         {
-          id: 'registeramodel',
+          id: 'registerModel',
           icon: <RegisterModelIcon />,
           handleClick: () => ({
             component: RegisterModelModal,
@@ -298,8 +308,36 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             },
             type: 'modal'
           }),
-          label: 'Register Model',
-          tooltip: ''
+          label: 'Register model',
+          tooltip:
+            'Store a model (with its metadata) in the MLRun database for subsequent use in functions.',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'trainModel',
+          icon: <TrainModelIcon />,
+          handleClick: () => {},
+          label: 'Train model',
+          tooltip:
+            'Train a new model based on an input dataset. You can also define hyperparameters to execute and compare multiple models.',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'createWorkflow',
+          icon: <CreateWorkflowIcon />,
+          handleClick: () => {},
+          label: 'Create workflow',
+          tooltip:
+            'Create a flow of multiple steps to execute, such as batch run, model deployment, and model testing.',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'runWorkflow',
+          icon: <RunWorkflowIcon />,
+          handleClick: () => {},
+          label: 'Run workflow',
+          tooltip: 'Specify the workflow and its input arguments.',
+          hidden: !isDemoMode
         }
       ],
       additionalLinks: [
@@ -334,19 +372,20 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
       ]
     },
     deployment: {
-      title: 'Deployment',
+      title: 'Deploy and monitor',
       subTitle:
-        'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale. This is not the final version.',
+        'Deploy online serving models or perform batch inference, as well as define data and model monitoring and notification.',
       actions: [
         {
           id: 'createRealTimeFunction',
           icon: <RTFunctionIcon />,
-          label: 'Create RT function',
+          label: 'Create real-time function',
           handleClick: () => ({
             path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
           }),
-          tooltip: ''
+          tooltip:
+            'These are typically used for serving, APIs, and stream processing. Specify the code, resources, and triggers.'
         },
         {
           id: 'deployServingFunction',
@@ -354,8 +393,28 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/functions?openPanel=true&runtime=serving`
           }),
-          label: 'Deploy serving function',
-          tooltip: ''
+          label: 'Deploy serving model',
+          tooltip:
+            'Deploy model for real-time inference. The model can receive data as HTTP, stream, as well as execute a real-time serving pipeline.',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'batchInference',
+          icon: <BatchInferenceIcon />,
+          handleClick: () => {},
+          label: 'Batch inference',
+          tooltip:
+            'Run your model on a large dataset, usually read from an offline source, such as files or databases. The results are written to offline targets.',
+          hidden: !isDemoMode
+        },
+        {
+          id: 'defineAlerts',
+          icon: <DefineAlertsIcon />,
+          handleClick: () => {},
+          label: 'Define alerts',
+          tooltip:
+            'Use alerts to notify about operational performance metrics, or to automate a call to a CI/CD pipeline when drift is detected.',
+          hidden: !isDemoMode
         }
         // {
         //   id: 'deployModel',
@@ -380,7 +439,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/models/real-time-pipelines`
           }),
-          label: 'Real Time Pipelines'
+          label: 'RT Pipelines'
         },
         {
           id: 'nuclioFunctions',

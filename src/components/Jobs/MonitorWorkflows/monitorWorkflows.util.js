@@ -31,6 +31,7 @@ import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '
 import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
 import workflowsActions from '../../../actions/workflow'
+import detailsActions from '../../../actions/details'
 import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
@@ -131,6 +132,7 @@ export const monitorWorkflowsActionCreator = {
   fetchJob: jobsActions.fetchJob,
   fetchJobFunction: jobsActions.fetchJobFunction,
   fetchJobLogs: jobsActions.fetchJobLogs,
+  fetchJobPods: detailsActions.fetchJobPods,
   fetchJobs: jobsActions.fetchJobs,
   fetchWorkflow: workflowsActions.fetchWorkflow,
   fetchWorkflows: workflowsActions.fetchWorkflows,
@@ -139,6 +141,7 @@ export const monitorWorkflowsActionCreator = {
   removeFunction: functionsActions.removeFunction,
   removeFunctionLogs: functionsActions.removeFunctionLogs,
   removeJobLogs: jobsActions.removeJobLogs,
+  removePods: detailsActions.removePods,
   removeNewJob: jobsActions.removeNewJob,
   resetWorkflow: workflowsActions.resetWorkflow
 }

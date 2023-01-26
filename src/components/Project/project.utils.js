@@ -88,7 +88,9 @@ export const generateCreateNewOptions = (
     id: 'registerModel',
     handler: () => {
       openRegisterModelModal()
-    }
+    },
+    // TODO: remove hidden in 1.4
+    hidden: true
   },
   {
     label: 'Register Dataset',

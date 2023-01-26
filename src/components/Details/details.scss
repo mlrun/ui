@@ -135,6 +135,7 @@
 
         div {
           min-width: 237px;
+          padding: 0 5px;
         }
       }
     }
@@ -143,7 +144,7 @@
       position: relative;
       width: 100%;
       min-height: 400px;
-      padding: 0 5px;
+      padding: 10px 80px 10px 20px;
       color: $white;
       font-family: 'Source Code Pro', 'Courier New', monospace;
       white-space: pre-wrap;
@@ -156,28 +157,13 @@
 
       .logs_refresh {
         position: absolute;
-        top: 30px;
-        right: 30px;
-        display: flex;
-        align-items: center;
-        padding: 8px 12px;
-        color: $cornflowerBlue;
-        background-color: $white;
-        border: 1px solid $cornflowerBlue;
-        border-radius: 16px;
-        box-shadow: $previewBoxShadow;
-        cursor: pointer;
+        top: 20px;
+        right: 20px;
 
-        svg {
-          path {
-            fill: $cornflowerBlue;
-          }
-        }
-
-        &:active,
-        &:focus {
-          outline: none;
-          box-shadow: none;
+        .btn {
+          min-width: 40px;
+          padding: 0;
+          border-radius: 50%;
         }
       }
     }

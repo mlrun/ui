@@ -174,6 +174,7 @@ const RegisterArtifactModal = ({
               formState={formState}
               initialValues={initialValues}
               messageByKind={messagesByKind[artifactKind.toLowerCase()]}
+              projectName={projectName}
               setFieldState={formState.form.mutators.setFieldState}
               showType={artifactKind === ARTIFACT_TYPE}
             />

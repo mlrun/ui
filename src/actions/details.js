@@ -34,10 +34,10 @@ import {
   SET_CHANGES,
   SET_CHANGES_COUNTER,
   SET_CHANGES_DATA,
+  SET_FILTERS_WAS_HANDLED,
   SET_INFO_CONTENT,
   SET_ITERATION,
   SET_ITERATION_OPTIONS,
-  SET_REFRESH_WAS_HANDLED,
   SHOW_WARNING
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
@@ -87,9 +87,7 @@ const detailsActions = {
     return detailsApi
       .getModelFeatureVector(project, name, reference)
       .then(response => {
-        dispatch(
-          detailsActions.fetchModelFeatureVectorSuccess(response.data.status)
-        )
+        dispatch(detailsActions.fetchModelFeatureVectorSuccess(response.data.status))
 
         return response.data.status
       })
@@ -140,8 +138,8 @@ const detailsActions = {
     type: SET_ITERATION_OPTIONS,
     payload: option
   }),
-  setRefreshWasHandled: isHandled => ({
-    type: SET_REFRESH_WAS_HANDLED,
+  setFiltersWasHandled: isHandled => ({
+    type: SET_FILTERS_WAS_HANDLED,
     payload: isHandled
   }),
   showWarning: show => ({
