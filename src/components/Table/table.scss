@@ -137,11 +137,10 @@
     border-bottom: $secondaryBorder;
 
     &__item {
-      @include tableDet;
-      @include tableHeader(5px);
+      position: relative;
 
-      height: 50px;
-      line-height: 18px;
+      @include tableDet;
+      @include tableHeader(8px, 15px, 8px, 30px);
 
       &.buttonPopout,
       &.buttonDownload {
@@ -178,7 +177,8 @@
       @include tableDet;
 
       flex-wrap: wrap;
-      padding: 4px 5px;
+      margin: 0 1px;
+      padding: 5px 15px 5px 30px;
       font-weight: 400;
       font-size: 15px;
       line-height: 18px;

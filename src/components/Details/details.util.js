@@ -243,7 +243,12 @@ export const generateJobsContent = selectedItem => {
       value: selectedItem.outputPath
     },
     iterations: {
-      value: selectedItem.iterationStats?.length ? selectedItem.iterationStats.length - 1 : 'N/A'
+      value:
+        selectedItem.iteration >= 0
+          ? selectedItem.iteration
+          : selectedItem.iterationStats?.length
+          ? selectedItem.iterationStats.length - 1
+          : 'N/A'
     }
   }
 }
@@ -321,7 +326,7 @@ export const renderContent = (
         />
       )
     case DETAILS_RESULTS_TAB:
-      return <DetailsResults job={selectedItem} />
+      return <DetailsResults job={selectedItem} defaultSortBy="accuracy" excludeSortBy="state" />
     case DETAILS_LOGS_TAB:
     case DETAILS_BUILD_LOG_TAB:
       return (
