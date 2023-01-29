@@ -12,46 +12,48 @@
   border-top: $secondaryBorder;
 
   & [class*='table-cell-'] {
-    flex: 0 1;
-    min-width: 90px;
-    width: 100%;
+    flex: 0 0 auto;
+    min-width: 80px;
   }
 
   .table-cell {
     &-1 {
-      flex-grow: 1;
+      flex: 1;
     }
 
     &-2 {
-      flex-grow: 2;
+      flex: 2;
     }
 
     &-3 {
-      flex-grow: 3;
+      flex: 3;
     }
 
     &-4 {
-      flex-grow: 4;
+      flex: 4;
     }
 
     &-5 {
-      flex-grow: 5;
+      flex: 5;
     }
 
     &-extra-small {
+      flex: 1;
       max-width: 85px;
-
-      @include tableColumnFlex(0, 65px);
     }
 
     &-small {
+      flex: 1;
       max-width: 150px;
-
-      @include tableColumnFlex(0, 85px);
     }
 
     &-medium {
-      @include tableColumnFlex(0, 240px);
+      flex: 1;
+      max-width: 240px;
+    }
+
+    &-name {
+      width: 240px;
     }
 
     &-icons {
@@ -59,7 +61,7 @@
       padding: 5px 10px;
       max-width: 85px;
 
-      @include tableColumnFlex(0, 65px);
+      @include tableColumnFlex(0, 70px);
     }
   }
 
@@ -73,60 +75,6 @@
 
     .text-bold {
       font-weight: 500;
-    }
-
-    .artifacts {
-      &_medium {
-        max-width: 240px;
-
-        @include tableColumnFlex(1, 240px);
-      }
-
-      &_small {
-        max-width: 150px;
-
-        @include tableColumnFlex(0.5, 50px);
-
-        a {
-          display: inline;
-        }
-      }
-
-      &_big {
-        @include tableColumnFlex(1, 80px);
-      }
-
-      &_extra-small {
-        max-width: 85px;
-
-        @include tableColumnFlex(0.3, 65px);
-      }
-
-      &__icon {
-        justify-content: center;
-      }
-
-      &__targets-icon {
-        .tooltip-wrapper {
-          margin-right: 8px;
-        }
-      }
-    }
-
-    .functions {
-      &_medium {
-        max-width: 240px;
-
-        @include tableColumnFlex(1, 240px);
-      }
-
-      &_small {
-        @include tableColumnFlex(1, 80px);
-      }
-
-      &_big {
-        @include tableColumnFlex(2, 80px);
-      }
     }
   }
 
@@ -151,7 +99,7 @@
   &-head {
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     background-color: $white;
     border-bottom: $secondaryBorder;
@@ -279,6 +227,7 @@
       display: flex;
       flex-direction: row;
       min-height: 50px;
+
       border-bottom: $secondaryBorder;
 
       &.parent-row {

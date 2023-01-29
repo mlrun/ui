@@ -64,7 +64,7 @@ const createArtifactsRowData = artifact => {
   return {
     key: {
       value: artifact.db_key,
-      class: 'table-cell-medium',
+      class: 'table-cell-name',
       link: 'overview'
     },
     kind: {
@@ -73,7 +73,7 @@ const createArtifactsRowData = artifact => {
     },
     labels: {
       value: parseKeyValues(artifact.labels),
-      class: 'table-cell-2',
+      class: 'table-cell-medium',
       type: 'labels'
     },
     producer: {
@@ -116,7 +116,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: artifact.db_key,
-        class: 'table-cell-medium',
+        class: 'table-cell-name',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -129,7 +129,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
             artifact.iter
           ),
         expandedCellContent: {
-          class: 'table-cell-medium',
+          class: 'table-cell-name',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
@@ -146,7 +146,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'table-cell-1',
+        class: 'table-cell-medium',
         type: 'labels'
       },
       {
@@ -248,7 +248,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: artifact.db_key,
-        class: 'table-cell-medium',
+        class: 'table-cell-name',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -261,7 +261,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
             artifact.iter
           ),
         expandedCellContent: {
-          class: 'table-cell-medium',
+          class: 'table-cell-name',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
@@ -292,7 +292,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'table-cell-2',
+        class: 'table-cell-medium',
         type: 'labels'
       },
       {
@@ -385,7 +385,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: name,
-        class: 'table-cell-medium',
+        class: 'table-cell-name',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -489,7 +489,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: artifact.db_key,
-        class: 'table-cell-medium',
+        class: 'table-cell-name',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -502,7 +502,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
             artifact.iter
           ),
         expandedCellContent: {
-          class: 'table-cell-medium',
+          class: 'table-cell-name',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
@@ -519,7 +519,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'table-cell-2',
+        class: 'table-cell-medium',
         type: 'labels'
       },
       {

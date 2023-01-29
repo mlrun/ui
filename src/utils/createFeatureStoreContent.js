@@ -63,7 +63,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         headerId: 'name',
         headerLabel: 'Name',
         value: featureSet.name,
-        class: 'table-cell-medium',
+        class: 'table-cell-name',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -77,7 +77,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         showTag: true,
         showStatus: true,
         expandedCellContent: {
-          class: 'table-cell-medium',
+          class: 'table-cell-name',
           value: featureSet.tag || truncateUid(featureSet.uid),
           tooltip: featureSet.tag || featureSet.uid,
           showTag: true,
@@ -120,7 +120,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         id: `buttonCopy.${featureSet.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'table-cell-1',
+        class: 'table-cell-icons',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => {
           copyToClipboard(generateUri(item, pageTab))
@@ -265,7 +265,7 @@ const getFeatureSetTargetCellValue = (targets, identifierUnique) => ({
     )
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   id: `targets.${identifierUnique}`,
-  class: 'table-cell-1',
+  class: 'table-cell-icons',
   type: 'icons'
 })
 
@@ -280,7 +280,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         headerId: 'name',
         headerLabel: 'Name',
         value: featureVector.name,
-        class: 'table-cell-3',
+        class: 'table-cell-name',
         getLink: tab =>
           generateLinkToDetailsPanel(
             project,
@@ -294,7 +294,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         showTag: true,
         showStatus: true,
         expandedCellContent: {
-          class: 'table-cell-3',
+          class: 'table-cell-name',
           value: featureVector.tag || truncateUid(featureVector.uid),
           tooltip: featureVector.tag || featureVector.uid,
           showTag: true,
@@ -344,7 +344,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         id: `buttonCopy.${featureVector.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'table-cell-1',
+        class: 'table-cell-icons',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, pageTab))
       },
