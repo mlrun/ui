@@ -51,7 +51,7 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
         <>
           {preview?.type === 'table-results' && (
             <div className="artifact-preview__table">
-              <DetailsResults job={preview} defaultSortBy="accuracy" excludeSortBy="state" />
+              <DetailsResults job={preview} excludeSortBy="state" />
             </div>
           )}
           {preview?.type === 'table' && (
