@@ -13,7 +13,7 @@
 
   & [class*='table-cell-'] {
     flex: 0 1;
-    min-width: 70px;
+    min-width: 90px;
     width: 100%;
   }
 
@@ -38,12 +38,28 @@
       flex-grow: 5;
     }
 
+    &-extra-small {
+      max-width: 85px;
+
+      @include tableColumnFlex(0, 65px);
+    }
+
     &-small {
       max-width: 150px;
+
+      @include tableColumnFlex(0, 85px);
     }
 
     &-medium {
       @include tableColumnFlex(0, 240px);
+    }
+
+    &-icons {
+      justify-content: center;
+      padding: 5px 10px;
+      max-width: 85px;
+
+      @include tableColumnFlex(0, 65px);
     }
   }
 
@@ -144,7 +160,7 @@
       position: relative;
 
       @include tableDet;
-      @include tableHeader(8px, 15px, 8px, 30px);
+      @include tableHeader(8px, 5px, 8px, 30px);
 
       &.buttonPopout,
       &.buttonDownload {
@@ -182,7 +198,7 @@
 
       flex-wrap: wrap;
       margin: 0 1px;
-      padding: 5px 15px 5px 30px;
+      padding: 5px 5px 5px 30px;
       font-weight: 400;
       font-size: 15px;
       line-height: 18px;

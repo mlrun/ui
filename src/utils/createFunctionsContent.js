@@ -62,7 +62,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'function',
               headerLabel: 'Function',
               value: func.name,
-              class: 'functions_big',
+              class: 'table-cell-2',
               getLink: tab =>
                 generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
             },
@@ -108,7 +108,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'kind',
               headerLabel: 'Kind',
               value: func.type,
-              class: 'functions_small',
+              class: 'table-cell-1',
               type: 'type'
             },
             {
@@ -116,7 +116,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'hash',
               headerLabel: 'Hash',
               value: func.hash,
-              class: 'functions_small',
+              class: 'table-cell-1',
               type: 'hash'
             },
             {
@@ -124,7 +124,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'updated',
               headerLabel: 'Updated',
               value: formatDatetime(func.updated, 'N/A'),
-              class: 'functions_small',
+              class: 'table-cell-2',
               type: 'date',
               showTag: true,
               showStatus: true
@@ -134,21 +134,21 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'command',
               headerLabel: 'Command',
               value: func.command,
-              class: 'functions_big'
+              class: 'table-cell-1'
             },
             {
               id: `image.${func.ui.identifierUnique}`,
               headerId: 'image',
               headerLabel: 'Image',
               value: func.image,
-              class: 'functions_big'
+              class: 'table-cell-1'
             },
             {
               id: `description.${func.ui.identifierUnique}`,
               headerId: 'description',
               headerLabel: 'Description',
               value: func.description,
-              class: 'functions_small'
+              class: 'table-cell-2'
             },
             {
               id: `tag.${func.ui.identifierUnique}`,

@@ -120,7 +120,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         id: `buttonCopy.${featureSet.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'table-cell-1 artifacts__icon',
+        class: 'table-cell-1',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => {
           copyToClipboard(generateUri(item, pageTab))
@@ -265,7 +265,7 @@ const getFeatureSetTargetCellValue = (targets, identifierUnique) => ({
     )
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   id: `targets.${identifierUnique}`,
-  class: 'table-cell-2 artifacts__targets-icon',
+  class: 'table-cell-1',
   type: 'icons'
 })
 
@@ -344,7 +344,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         id: `buttonCopy.${featureVector.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'table-cell-1 artifacts__icon',
+        class: 'table-cell-1',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, pageTab))
       },

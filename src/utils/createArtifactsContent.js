@@ -69,35 +69,35 @@ const createArtifactsRowData = artifact => {
     },
     kind: {
       value: artifact.kind,
-      class: 'artifacts_extra-small'
+      class: 'table-cell-small'
     },
     labels: {
       value: parseKeyValues(artifact.labels),
-      class: 'artifacts_big',
+      class: 'table-cell-2',
       type: 'labels'
     },
     producer: {
       value: artifact.producer,
-      class: 'artifacts_small',
+      class: 'table-cell-1',
       type: 'producer'
     },
     owner: {
       value: artifact.producer?.owner,
-      class: 'artifacts_small',
+      class: 'table-cell-1',
       type: 'owner'
     },
     updated: {
       value: formatDatetime(artifact.updated, 'N/A'),
-      class: 'artifacts_small'
+      class: 'table-cell-1'
     },
     buttonPopout: {
       value: '',
-      class: 'artifacts_extra-small artifacts__icon',
+      class: 'table-cell-icons',
       type: 'buttonPopout'
     },
     buttonDownload: {
       value: '',
-      class: 'artifacts_extra-small artifacts__icon',
+      class: 'table-cell-icons',
       type: 'buttonDownload'
     }
   }
@@ -146,7 +146,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'labels'
       },
       {
@@ -154,7 +154,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'producer',
         headerLabel: 'Producer',
         value: artifact.producer,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'producer'
       },
       {
@@ -162,7 +162,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'owner',
         headerLabel: 'Owner',
         value: artifact.producer?.owner,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'owner'
       },
       {
@@ -170,14 +170,14 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'artifacts_big'
+        class: 'table-cell-2'
       },
       {
         id: `metrics.${artifact.ui.identifierUnique}`,
         headerId: 'metrics',
         headerLabel: 'Metrics',
         value: parseKeyValues(artifact.metrics),
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'metrics'
       },
       {
@@ -200,34 +200,34 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
           ) : (
             ''
           ),
-        class: 'artifacts_small'
+        class: 'table-cell-1'
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'tag',
         value: artifact.tag,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'hidden'
       },
       {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
         headerId: 'popupt',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, MODELS_TAB))
       }
@@ -277,7 +277,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'tag',
         value: artifact.tag,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'hidden'
       },
       {
@@ -285,14 +285,14 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'type',
         headerLabel: 'Type',
         value: artifact.kind,
-        class: 'artifacts_extra-small'
+        class: 'table-cell-small'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'artifacts_big',
+        class: 'table-cell-2',
         type: 'labels'
       },
       {
@@ -300,7 +300,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'producer',
         headerLabel: 'Producer',
         value: artifact.producer || {},
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'producer'
       },
       {
@@ -308,7 +308,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'owner',
         headerLabel: 'Owner',
         value: artifact.producer?.owner,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'owner'
       },
       {
@@ -316,34 +316,34 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'artifacts_small'
+        class: 'table-cell-1'
       },
       {
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
         value: artifact.size ? convertBytes(artifact.size) : 'N/A',
-        class: 'artifacts_small'
+        class: 'table-cell-1'
       },
       {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
         headerId: 'popout',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, ARTIFACTS))
       }
@@ -403,7 +403,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'function',
         headerLabel: 'Function',
         value: functionName,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         link: `${generateLinkPath(functionUri)}/overview`,
         tooltip: functionUri
       },
@@ -411,7 +411,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `state.${artifact.ui.identifierUnique}`,
         headerId: 'state',
         value: artifact.status?.state,
-        class: 'artifacts_extra-small',
+        class: 'table-cell-small',
         type: 'hidden'
       },
       {
@@ -419,14 +419,14 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'version',
         headerLabel: 'Version',
         value: artifact?.status?.children ? 'Router' : tag,
-        class: 'artifacts_extra-small'
+        class: 'table-cell-small'
       },
       {
         id: `modelClass.${artifact.ui.identifierUnique}`,
         headerId: 'class',
         headerLabel: 'Class',
         value: artifact.spec?.model_class,
-        class: 'artifacts_small'
+        class: 'table-cell-1'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
@@ -455,21 +455,21 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'averagelatency',
         headerLabel: 'Average latency',
         value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
-        class: 'artifacts_small'
+        class: 'table-cell-1'
       },
       {
         id: `errorCount.${artifact.ui.identifierUnique}`,
         headerId: 'errorcount',
         headerLabel: 'Error count',
         value: artifact.status?.error_count ?? '-',
-        class: 'artifacts_small'
+        class: 'table-cell-1'
       },
       {
         id: `driftStatus.${artifact.ui.identifierUnique}`,
         headerId: 'drift',
         headerLabel: 'Drift',
         value: driftStatusIcons[artifact.status?.drift_status]?.value,
-        class: 'artifacts_extra-small',
+        class: 'table-cell-small',
         tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
       }
     ]
@@ -519,7 +519,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'artifacts_big',
+        class: 'table-cell-2',
         type: 'labels'
       },
       {
@@ -527,7 +527,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'producer',
         headerLabel: 'Producer',
         value: artifact.producer,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'producer'
       },
       {
@@ -535,7 +535,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'owner',
         headerLabel: 'Owner',
         value: artifact.producer?.owner,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'owner'
       },
       {
@@ -543,41 +543,41 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'artifacts_small'
+        class: 'table-cell-1'
       },
       {
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
         value: convertBytes(artifact.size || 0),
-        class: 'artifacts_small'
+        class: 'table-cell-1'
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'tag',
         value: artifact.tag,
-        class: 'artifacts_small',
+        class: 'table-cell-1',
         type: 'hidden'
       },
       {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
         headerId: 'popout',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'artifacts_extra-small artifacts__icon',
+        class: 'table-cell-icons',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, DATASETS))
       }

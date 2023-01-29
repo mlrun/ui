@@ -106,7 +106,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
           value: job.labels,
-          class: 'table-cell-1 table-cell-small',
+          class: 'table-cell-1',
           type: 'labels'
         },
         {
@@ -114,7 +114,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Parameters',
           id: `parameters.${identifierUnique}`,
           value: job.parametersChips,
-          class: 'table-cell-1 table-cell-small',
+          class: 'table-cell-1',
           type: 'parameters'
         },
         {
