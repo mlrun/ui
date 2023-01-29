@@ -38,7 +38,8 @@ import {
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_EDIT_MODE,
-  PANEL_RERUN_MODE
+  PANEL_RERUN_MODE,
+  WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
 import {
   generateActionsMenu,
@@ -80,7 +81,7 @@ const MonitorWorkflows = ({
   resetWorkflow
 }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
-  const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
+  const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobs, setJobs] = useState([])

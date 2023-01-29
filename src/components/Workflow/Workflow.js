@@ -45,7 +45,9 @@ import {
   ML_EDGE,
   ML_NODE,
   MONITOR_WORKFLOWS_TAB,
-  PRIMARY_NODE
+  PRIMARY_NODE,
+  WORKFLOW_GRAPH_VIEW,
+  WORKFLOW_LIST_VIEW
 } from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 import { createJobsWorkflowsTabContent } from '../../utils/createJobsContent'
@@ -95,6 +97,34 @@ const Workflow = ({
       ),
     [isStagingMode, jobsContent, params.projectName, params.workflowId, selectedJob]
   )
+
+  useEffect(() => {
+    if (workflowsViewMode === WORKFLOW_LIST_VIEW) {
+      let closeDetailsPanel = false
+
+      if (!isEmpty(selectedFunction)) {
+        closeDetailsPanel = !tableContent.find(
+          contentItem => contentItem.data?.hash === selectedFunction.hash
+        )
+      } else if (!isEmpty(selectedJob)) {
+        closeDetailsPanel = !tableContent.find(
+          contentItem => contentItem.data?.uid === selectedJob.uid
+        )
+      }
+
+      if (closeDetailsPanel) {
+        navigate(getCloseDetailsLink(location, params.workflowId))
+      }
+    }
+  }, [
+    location,
+    navigate,
+    params.workflowId,
+    selectedFunction,
+    selectedJob,
+    tableContent,
+    workflowsViewMode
+  ])
 
   useEffect(() => {
     if (workflowJobsIds.length > 0 && content.length > 0) {
@@ -206,22 +236,28 @@ const Workflow = ({
             template={
               <TextTooltipTemplate
                 text={
-                  workflowsViewMode === 'graph' ? 'Switch to list view' : 'Switch to graph view'
+                  workflowsViewMode === WORKFLOW_GRAPH_VIEW
+                    ? 'Switch to list view'
+                    : 'Switch to graph view'
                 }
               />
             }
           >
             <button
               className="toggle-view-btn"
-              onClick={() => setWorkflowsViewMode(workflowsViewMode === 'graph' ? 'list' : 'graph')}
+              onClick={() =>
+                setWorkflowsViewMode(
+                  workflowsViewMode === WORKFLOW_GRAPH_VIEW ? WORKFLOW_LIST_VIEW : 'graph'
+                )
+              }
             >
-              {workflowsViewMode === 'graph' ? <ListView /> : <Pipelines />}
+              {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? <ListView /> : <Pipelines />}
             </button>
           </Tooltip>
         </div>
       </TableTop>
       <div className="graph-container workflow-content">
-        {workflowsViewMode === 'graph' ? (
+        {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
           <>
             <div className={graphViewClassNames}>
               <MlReactFlow

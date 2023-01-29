@@ -139,7 +139,12 @@ export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
-/*=========== JOB  WIZARD=============*/
+/*=========== JOB WORKFLOWS =============*/
+
+export const WORKFLOW_LIST_VIEW = 'list'
+export const WORKFLOW_GRAPH_VIEW = 'graph'
+
+/*=========== JOB WIZARD =============*/
 
 export const PARAMETER_TYPE_SIMPLE = 'Simple'
 export const PARAMETER_TYPE_HYPER = 'Hyper'
