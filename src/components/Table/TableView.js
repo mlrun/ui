@@ -76,8 +76,8 @@ const TableView = ({
   return (
     <div className="table">
       <div className="table__content" ref={tableContentRef}>
-        <div className="table__item table__item_big">
-          <div className="table__item-wrapper">
+        <div className="table__wrapper">
+          <div className="table__wrapper-row">
             {pageData.tableHeaders && (
               <>
                 <div className="table-head" ref={tableHeadRef}>

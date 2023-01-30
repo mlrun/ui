@@ -78,6 +78,27 @@
     }
   }
 
+  &__wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    color: $mulledWine;
+    background-color: $white;
+    border-left: $secondaryBorder;
+
+    &-row {
+      display: flex;
+      flex-flow: column wrap;
+    }
+  }
+
   &__panel-container {
     position: sticky;
     top: 0;

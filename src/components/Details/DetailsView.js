@@ -93,7 +93,7 @@ const DetailsView = React.forwardRef(
     } = selectedItem.state || {}
 
     return (
-      <div className={detailsPanelClassNames} ref={ref}>
+      <div className={detailsPanelClassNames} ref={ref} data-testid="detailsPanel">
         {detailsStore.loading && <Loader />}
         {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
         <div className="item-header">
