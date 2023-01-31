@@ -73,7 +73,7 @@ const createArtifactsRowData = artifact => {
     },
     labels: {
       value: parseKeyValues(artifact.labels),
-      class: 'table-cell-medium',
+      class: 'table-cell-1',
       type: 'labels'
     },
     producer: {
@@ -146,7 +146,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'table-cell-medium',
+        class: 'table-cell-1',
         type: 'labels'
       },
       {
@@ -292,7 +292,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'table-cell-medium',
+        class: 'table-cell-1',
         type: 'labels'
       },
       {
@@ -433,7 +433,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.metadata?.labels),
-        class: 'table-cell-medium',
+        class: 'table-cell-1',
         type: 'labels'
       },
       {
@@ -441,14 +441,14 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'uptime',
         headerLabel: 'Uptime',
         value: formatDatetime(artifact.status?.first_request, '-'),
-        class: 'table-cell-medium'
+        class: 'table-cell-1'
       },
       {
         id: `lastRequest.${artifact.ui.identifierUnique}`,
         headerId: 'lastprediction',
         headerLabel: 'Last prediction',
         value: formatDatetime(artifact.status?.last_request, '-'),
-        class: 'table-cell-medium'
+        class: 'table-cell-1'
       },
       {
         id: `averageLatency.${artifact.ui.identifierUnique}`,
@@ -519,7 +519,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'table-cell-medium',
+        class: 'table-cell-1',
         type: 'labels'
       },
       {

@@ -114,7 +114,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
                           key={`${contentItemValue}${idx}`}
                           className="results-table__medal results-table__cell"
                         >
-                          {contentItemValue}
+                          <span>{contentItemValue}</span>
                           <span className="best-iteration">
                             <Tooltip template={<TextTooltipTemplate text={'Best iteration'} />}>
                               <BestIteration />
