@@ -51,7 +51,7 @@
         min-width: 140px;
 
         @include tableDet;
-        @include tableHeader(8px, 10px, 8px, 20px);
+        @include tableHeader(8px, 5px, 8px, 20px);
 
         & > :first-child {
           padding-left: 10px;
@@ -72,7 +72,7 @@
       justify-content: center;
       min-width: 140px;
       margin: 0 1px;
-      padding: 8px 10px 8px 20px;
+      padding: 8px 5px 8px 20px;
 
       & > :first-child {
         padding-left: 10px;
@@ -100,7 +100,7 @@
         position: absolute;
         top: auto;
         bottom: auto;
-        left: 3px;
+        left: 0;
         margin-top: 2px;
         padding: 0;
       }

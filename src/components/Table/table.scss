@@ -13,7 +13,7 @@
 
   & [class*='table-cell-'] {
     flex: 0 0 auto;
-    min-width: 80px;
+    min-width: 75px;
   }
 
   .table-cell {
@@ -48,17 +48,17 @@
     }
 
     &-name {
-      width: 240px;
+      width: 230px;
     }
 
     &-icons {
       justify-content: center;
-      padding: 5px 10px;
+      padding: 5px;
       max-width: 85px;
 
-      @include tableColumnFlex(0, 70px);
+      @include tableColumnFlex(0, 50px);
 
-      & > * {
+      & > :first-child {
         padding: 0;
       }
     }
@@ -130,10 +130,10 @@
       position: relative;
 
       @include tableDet;
-      @include tableHeader(8px, 10px, 8px, 20px);
+      @include tableHeader(8px, 5px, 8px, 20px);
 
       & > :first-child {
-        padding-left: 10px;
+        padding-left: 5px;
       }
 
       &.buttonPopout,
@@ -152,10 +152,14 @@
   }
 
   .action_cell {
-    flex: 1 0 60px;
-    width: 60px;
-    max-width: 60px;
-    padding: 0 10px;
+    flex: 1 0 47px;
+    width: 47px;
+    max-width: 47px;
+    padding: 0 5px;
+
+    & > :first-child {
+      padding-left: 0;
+    }
 
     &__run-icon {
       margin-bottom: -2px;
@@ -172,14 +176,14 @@
 
       flex-wrap: wrap;
       margin: 0 1px;
-      padding: 8px 10px 8px 20px;
+      padding: 8px 5px 8px 20px;
       font-weight: 400;
       font-size: 15px;
       line-height: 18px;
       border-bottom: none;
 
       & > :first-child {
-        padding-left: 10px;
+        padding-left: 5px;
       }
 
       &_hidden {

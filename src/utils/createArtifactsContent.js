@@ -170,7 +170,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'table-cell-2'
+        class: 'table-cell-1'
       },
       {
         id: `metrics.${artifact.ui.identifierUnique}`,
