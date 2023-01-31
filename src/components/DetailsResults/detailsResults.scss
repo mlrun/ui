@@ -53,7 +53,7 @@
         @include tableDet;
         @include tableHeader(8px, 10px, 8px, 20px);
 
-        & > * {
+        & > :first-child {
           padding-left: 10px;
         }
       }
@@ -74,7 +74,7 @@
       margin: 0 1px;
       padding: 8px 10px 8px 20px;
 
-      & > * {
+      & > :first-child {
         padding-left: 10px;
       }
     }

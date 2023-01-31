@@ -132,7 +132,7 @@
       @include tableDet;
       @include tableHeader(8px, 10px, 8px, 20px);
 
-      & > * {
+      & > :first-child {
         padding-left: 10px;
       }
 
@@ -178,7 +178,7 @@
       line-height: 18px;
       border-bottom: none;
 
-      & > * {
+      & > :first-child {
         padding-left: 10px;
       }
 
