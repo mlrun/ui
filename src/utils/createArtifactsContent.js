@@ -92,12 +92,12 @@ const createArtifactsRowData = artifact => {
     },
     buttonPopout: {
       value: '',
-      class: 'table-cell-icons',
+      class: 'table-cell-icon',
       type: 'buttonPopout'
     },
     buttonDownload: {
       value: '',
-      class: 'table-cell-icons',
+      class: 'table-cell-icon',
       type: 'buttonDownload'
     }
   }
@@ -213,21 +213,21 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
         headerId: 'popupt',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, MODELS_TAB))
       }
@@ -329,21 +329,21 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
         headerId: 'popout',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, ARTIFACTS))
       }
@@ -563,21 +563,21 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         id: `buttonPopout.${artifact.ui.identifierUnique}`,
         headerId: 'popout',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: 'buttonPopout'
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: 'buttonDownload'
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
-        class: 'table-cell-icons',
+        class: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
         actionHandler: item => copyToClipboard(generateUri(item, DATASETS))
       }
