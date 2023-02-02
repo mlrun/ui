@@ -87,7 +87,7 @@ export const generateActionsMenu = (
   job?.uid
     ? [
         {
-          label: 'Re-run',
+          label: 'Batch re-run',
           icon: <Run />,
           hidden: ['local', ''].includes(job?.ui?.originalContent.metadata.labels.kind),
           onClick: handleRerunJob

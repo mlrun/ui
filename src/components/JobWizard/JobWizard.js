@@ -30,7 +30,7 @@ import FormDirtySpy from '../../common/FormDirtySpy/FormDirtySpy'
 import JobWizardAdvanced from './JobWizardSteps/JobWizardAdvanced/JobWizardAdvanced'
 import JobWizardDataInputs from './JobWizardSteps/JobWizardDataInputs/JobWizardDataInputs'
 import JobWizardFunctionSelection from './JobWizardSteps/JobWizardFunctionSelection/JobWizardFunctionSelection'
-import JobWizardJobDetails from './JobWizardSteps/JobWizardJobDetails/JobWizardJobDetails'
+import JobWizardRunDetails from './JobWizardSteps/JobWizardRunDetails/JobWizardRunDetails'
 import JobWizardParameters from './JobWizardSteps/JobWizardParameters/JobWizardParameters'
 import JobWizardResources from './JobWizardSteps/JobWizardResources/JobWizardResources'
 import Loader from '../../common/Loader/Loader'
@@ -123,8 +123,8 @@ const JobWizard = ({
         ]
       },
       {
-        id: 'jobDetails',
-        label: 'Job Details'
+        id: 'runDetails',
+        label: 'Run Details'
       },
       {
         id: 'dataInputs',
@@ -261,7 +261,7 @@ const JobWizard = ({
               size={MODAL_MAX}
               stepsConfig={stepsConfig}
               title={wizardTitle}
-              subTitle={formState.values?.jobDetails?.name}
+              subTitle={formState.values?.runDetails?.name}
             >
               {!isEditMode && (
                 <JobWizardFunctionSelection
@@ -286,7 +286,7 @@ const JobWizard = ({
                   templatesCategories={templatesCategories}
                 />
               )}
-              <JobWizardJobDetails
+              <JobWizardRunDetails
                 defaultData={defaultData}
                 formState={formState}
                 frontendSpec={frontendSpec}

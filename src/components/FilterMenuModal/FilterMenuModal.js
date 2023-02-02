@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
-import { has, isEqual } from 'lodash'
+import { has, isEqual, reduce } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { PopUpDialog, RoundedIcon } from 'igz-controls/components'
@@ -49,7 +49,7 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
   )
   const filtersIconClassnames = classnames(
     'filters-button',
-    !isEqual(filtersData?.values, filtersData?.initialValues) && 'filters-button_active'
+    !isEqual(filtersData?.values, filtersData?.initialValues) && 'filters-button_applied'
   )
 
   useEffect(() => {
@@ -80,18 +80,31 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
     }
   }, [hideFiltersWizard])
 
+  const getFilterCounter = formState => {
+    return reduce(
+      formState.values,
+      (acc, filterValue, filterName) => {
+        return !isEqual(filterValue, formState.initialValues[filterName]) ? ++acc : acc
+      },
+      0
+    )
+  }
+
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
-      {() => {
+      {formState => {
+        const counter = getFilterCounter(formState)
+
         return (
           <FilterMenuWizardContext.Provider value={{ filterMenuName }}>
             <RoundedIcon
               ref={filtersIconButtonRef}
               className={filtersIconClassnames}
+              isActive={filtersWizardIsShown}
               onClick={() => {
                 setFiltersWizardIsShown(true)
               }}
-              tooltipText="Open filters"
+              tooltipText={counter > 0 ? `Filter (${counter})` : 'Filter'}
             >
               <FilterIcon />
             </RoundedIcon>

@@ -37,7 +37,7 @@ export const generateFunctionCardData = functionData => {
   return {
     header: functionData.name,
     subHeader: functionData.functions?.[0]?.metadata?.project ?? '',
-    description: '',
+    description: functionData.functions?.[0]?.spec?.description ?? '',
     sideTag: ''
   }
 }

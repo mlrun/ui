@@ -6,10 +6,21 @@
   }
 }
 
-.filters-button_active {
-  svg {
-    rect {
-      fill: $malibu;
+.filters-button_applied {
+  .round-icon-cp__circle {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      height: 10px;
+      width: 10px;
+      border: 2px solid $white;
+      border-radius: 50%;
+      background: $brightTurquoise;
+      z-index: 2;
     }
   }
 }

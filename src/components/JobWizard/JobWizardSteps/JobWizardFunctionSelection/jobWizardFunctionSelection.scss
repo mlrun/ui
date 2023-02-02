@@ -6,7 +6,6 @@
   .functions-tab, .hub-tab {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     min-height: 300px;
   }
 
@@ -15,7 +14,6 @@
   }
 
   .functions-list {
-    overflow: auto;
     display: flex;
     flex-wrap: wrap;
     padding: 1px;

@@ -12,9 +12,10 @@
   border: $primaryBorder;
   border-radius: 8px;
   cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out;
 
   &:hover {
-    box-shadow: $jobsShadow
+    box-shadow: $previewBoxShadow;
   }
 
   &.selected {
