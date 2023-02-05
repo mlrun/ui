@@ -12,34 +12,55 @@
   border-top: $secondaryBorder;
 
   & [class*='table-cell-'] {
-    flex: 0;
-    min-width: 70px;
-    width: 100%;
+    flex: 0 0 auto;
+    min-width: 75px;
   }
 
   .table-cell {
     &-1 {
-      flex-grow: 1;
+      flex: 1;
     }
 
     &-2 {
-      flex-grow: 2;
+      flex: 2;
     }
 
     &-3 {
-      flex-grow: 3;
+      flex: 3;
     }
 
     &-4 {
-      flex-grow: 4;
+      flex: 4;
     }
 
     &-5 {
-      flex-grow: 5;
+      flex: 5;
+    }
+
+    &-extra-small {
+      flex: 1;
+      max-width: 85px;
     }
 
     &-small {
+      flex: 1;
       max-width: 150px;
+    }
+
+    &-name {
+      width: 230px;
+    }
+
+    &-icon {
+      justify-content: center;
+      padding: 5px;
+      max-width: 85px;
+
+      @include tableColumnFlex(0, 50px);
+
+      & > :first-child {
+        padding: 0;
+      }
     }
   }
 
@@ -54,59 +75,28 @@
     .text-bold {
       font-weight: 500;
     }
+  }
 
-    .artifacts {
-      &_medium {
-        max-width: 240px;
-
-        @include tableColumnFlex(1, 240px);
-      }
-
-      &_small {
-        max-width: 150px;
-
-        @include tableColumnFlex(0.5, 50px);
-
-        a {
-          display: inline;
-        }
-      }
-
-      &_big {
-        @include tableColumnFlex(1, 80px);
-      }
-
-      &_extra-small {
-        max-width: 85px;
-
-        @include tableColumnFlex(0.3, 65px);
-      }
-
-      &__icon {
-        justify-content: center;
-      }
-
-      &__targets-icon {
-        .tooltip-wrapper {
-          margin-right: 8px;
-        }
-      }
+  &__wrapper {
+    .content & {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      color: $mulledWine;
+      background-color: $white;
+      border-left: $secondaryBorder;
     }
 
-    .functions {
-      &_medium {
-        max-width: 240px;
-
-        @include tableColumnFlex(1, 240px);
-      }
-
-      &_small {
-        @include tableColumnFlex(1, 80px);
-      }
-
-      &_big {
-        @include tableColumnFlex(2, 80px);
-      }
+    &-row {
+      display: flex;
+      flex-flow: column wrap;
     }
   }
 
@@ -131,7 +121,7 @@
   &-head {
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     background-color: $white;
     border-bottom: $secondaryBorder;
@@ -140,7 +130,11 @@
       position: relative;
 
       @include tableDet;
-      @include tableHeader(8px, 15px, 8px, 30px);
+      @include tableHeader(8px, 5px, 8px, 20px);
+
+      & > :first-child {
+        padding-left: 5px;
+      }
 
       &.buttonPopout,
       &.buttonDownload {
@@ -158,10 +152,14 @@
   }
 
   .action_cell {
-    flex: 1 0 40px;
-    width: 40px;
-    max-width: 40px;
-    padding: 0;
+    flex: 1 0 47px;
+    width: 47px;
+    max-width: 47px;
+    padding: 0 5px;
+
+    & > :first-child {
+      padding-left: 0;
+    }
 
     &__run-icon {
       margin-bottom: -2px;
@@ -178,11 +176,15 @@
 
       flex-wrap: wrap;
       margin: 0 1px;
-      padding: 5px 15px 5px 30px;
+      padding: 8px 5px 8px 20px;
       font-weight: 400;
       font-size: 15px;
       line-height: 18px;
       border-bottom: none;
+
+      & > :first-child {
+        padding-left: 5px;
+      }
 
       &_hidden {
         visibility: hidden;
@@ -259,6 +261,7 @@
       display: flex;
       flex-direction: row;
       min-height: 50px;
+
       border-bottom: $secondaryBorder;
 
       &.parent-row {

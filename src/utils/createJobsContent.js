@@ -46,7 +46,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: jobName ? 'UID' : 'Name',
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
-          class: 'table-cell-2',
+          class: 'table-cell-name',
           type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
           getLink: tab => {
             return jobName
@@ -106,7 +106,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
           value: job.labels,
-          class: 'table-cell-1 table-cell-small',
+          class: 'table-cell-1',
           type: 'labels'
         },
         {
@@ -114,7 +114,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Parameters',
           id: `parameters.${identifierUnique}`,
           value: job.parametersChips,
-          class: 'table-cell-1 table-cell-small',
+          class: 'table-cell-1',
           type: 'parameters'
         },
         {
@@ -164,7 +164,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerLabel: 'Name',
           id: `name.${identifierUnique}`,
           value: job.name,
-          class: 'table-cell-1',
+          class: 'table-cell-name',
           showStatus: true,
           getLink: tab =>
             generateLinkToDetailsPanel(
@@ -267,7 +267,7 @@ export const createJobsWorkflowsTabContent = (
                 headerLabel: 'Name',
                 id: `name.${identifierUnique}`,
                 value: jobName,
-                class: 'table-cell-3',
+                class: 'table-cell-name',
                 type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
                 getLink: tab => {
                   return getWorkflowDetailsLink(
@@ -371,7 +371,7 @@ export const createJobsWorkflowsTabContent = (
                 headerLabel: 'Name',
                 id: `name.${identifierUnique}`,
                 value: jobName,
-                class: 'table-cell-1',
+                class: 'table-cell-name',
                 getLink: () => {
                   return getWorkflowDetailsLink(
                     projectName,

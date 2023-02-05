@@ -61,7 +61,7 @@ body {
 .content {
   position: relative;
   flex-direction: column;
-  min-width: 900px;
+  min-width: 800px;
   margin: 15px 24px;
 
   @include jobsFlex;
@@ -215,7 +215,7 @@ main {
     position: absolute;
     top: auto;
     bottom: auto;
-    left: 5px;
+    left: 2px;
     margin: 0;
   }
 
