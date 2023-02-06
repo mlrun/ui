@@ -51,8 +51,8 @@ export const generateCreateNewOptions = (
   isDemoMode
 ) => [
   {
-    label: 'Job',
-    id: 'job',
+    label: 'Batch run',
+    id: 'batchRun',
     handler: () => {
       if (isDemoMode) {
         openPopUp(JobWizard, {

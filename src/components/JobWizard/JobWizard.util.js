@@ -93,7 +93,7 @@ export const generateJobWizardData = (
   const currentRequest = parseRequests(requests, defaultResources.requests)
 
   const jobFormData = {
-    jobDetails: {
+    runDetails: {
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
@@ -177,7 +177,7 @@ export const generateJobWizardDefaultData = (
     : scheduleDataInitialState
 
   const jobFormData = {
-    jobDetails: {
+    runDetails: {
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
@@ -796,7 +796,7 @@ export const generateJobRequestData = (
   isSchedule
 ) => {
   let selectedFunction = selectedFunctionData?.functions?.find(
-    func => func.metadata.tag === formData.jobDetails.version
+    func => func.metadata.tag === formData.runDetails.version
   )
   selectedFunction ??= selectedFunctionData?.functions?.[0]
   const [volume_mounts, volumes] = generateVolumes(formData.resources.volumesTable)
@@ -805,8 +805,8 @@ export const generateJobRequestData = (
     task: {
       metadata: {
         project: params.projectName,
-        name: formData.jobDetails.name,
-        labels: convertChipsData(formData.jobDetails.labels)
+        name: formData.runDetails.name,
+        labels: convertChipsData(formData.runDetails.labels)
       },
       spec: {
         inputs: generateDataInputs(formData.dataInputs.dataInputsTable),
@@ -818,7 +818,7 @@ export const generateJobRequestData = (
         // }),
         param_file: formData.parameters.hyperParameters?.paramFile ?? '',
         tuning_strategy: formData.parameters.hyperParameters?.tuningStrategy,
-        handler: formData.jobDetails.method ?? '',
+        handler: formData.runDetails.method ?? '',
         input_path: formData.advanced.inputPath ?? '',
         output_path: formData.advanced.outputPath,
         function:

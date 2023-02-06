@@ -343,7 +343,7 @@ const MonitorJobs = ({
         },
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
         mode: jobWizardMode,
-        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Re-run job' : undefined,
+        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
         onSuccessRequest: () => refreshJobs(filtersStore)
       })
 

@@ -191,9 +191,9 @@ const DetailsView = React.forwardRef(
                 <Tooltip
                   template={
                     <TextTooltipTemplate
-                      text={`${detailsStore.changes.counter} change${
-                        detailsStore.changes.counter === 1 ? '' : 's'
-                      } pending`}
+                      text={`${detailsStore.changes.counter} ${
+                        detailsStore.changes.counter === 1 ? 'change pending' : 'changes pending'
+                      }`}
                     />
                   }
                 >
