@@ -102,7 +102,7 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
               className={filtersIconClassnames}
               isActive={filtersWizardIsShown}
               onClick={() => {
-                setFiltersWizardIsShown(true)
+                setFiltersWizardIsShown(prevValue => !prevValue)
               }}
               tooltipText={counter > 0 ? `Filter (${counter})` : 'Filter'}
             >
