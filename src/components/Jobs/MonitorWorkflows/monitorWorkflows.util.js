@@ -133,7 +133,7 @@ export const monitorWorkflowsActionCreator = {
   fetchJobFunction: jobsActions.fetchJobFunction,
   fetchJobLogs: jobsActions.fetchJobLogs,
   fetchJobPods: detailsActions.fetchJobPods,
-  fetchJobs: jobsActions.fetchJobs,
+  fetchSpecificJobs: jobsActions.fetchSpecificJobs,
   fetchWorkflow: workflowsActions.fetchWorkflow,
   fetchWorkflows: workflowsActions.fetchWorkflows,
   getFunction: functionsActions.getFunction,
