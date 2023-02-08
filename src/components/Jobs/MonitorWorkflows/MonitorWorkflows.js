@@ -18,9 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { find, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { compact, find, isEmpty } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -69,7 +69,7 @@ const MonitorWorkflows = ({
   fetchJob,
   fetchJobLogs,
   fetchJobPods,
-  fetchJobs,
+  fetchSpecificJobs,
   fetchWorkflow,
   fetchWorkflows,
   getFunction,
@@ -170,24 +170,34 @@ const MonitorWorkflows = ({
 
   const refreshJobs = useCallback(
     filters => {
-      fetchJobs(params.projectName, filters, false)
-        .then(jobs => {
-          const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
+      const workflowJobsIds = compact(workflowsStore.activeWorkflow.workflowJobsIds)
 
-          setJobs(parsedJobs)
-        })
-        .catch(error => {
-          dispatch(
-            setNotification({
-              status: error?.response?.status || 400,
-              id: Math.random(),
-              message: 'Failed to fetch jobs',
-              retry: () => refreshJobs(filters)
-            })
-          )
-        })
+      if (params.workflowId && !isEmpty(workflowJobsIds)) {
+        fetchSpecificJobs(params.projectName, filters, workflowJobsIds)
+          .then(jobs => {
+            const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
+
+            setJobs(parsedJobs)
+          })
+          .catch(error => {
+            dispatch(
+              setNotification({
+                status: error?.response?.status || 400,
+                id: Math.random(),
+                message: 'Failed to fetch jobs',
+                retry: () => refreshJobs(filters)
+              })
+            )
+          })
+      }
     },
-    [dispatch, fetchJobs, params.projectName]
+    [
+      dispatch,
+      fetchSpecificJobs,
+      params.projectName,
+      params.workflowId,
+      workflowsStore.activeWorkflow.workflowJobsIds
+    ]
   )
 
   const onAbortJob = useCallback(
@@ -429,9 +439,7 @@ const MonitorWorkflows = ({
   }, [params.functionHash, params.jobId])
 
   useEffect(() => {
-    if (params.workflowId) {
-      refreshJobs({ iter: 'false' })
-    }
+    refreshJobs()
   }, [params.workflowId, refreshJobs])
 
   useEffect(() => {
@@ -468,8 +476,7 @@ const MonitorWorkflows = ({
           setJobWizardIsOpened(false)
         },
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
-        mode: jobWizardMode,
-        onSuccessRequest: () => refreshJobs(filtersStore)
+        mode: jobWizardMode
       })
 
       setJobWizardIsOpened(true)

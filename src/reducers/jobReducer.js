@@ -36,7 +36,7 @@ import {
   REMOVE_NEW_JOB,
   RUN_NEW_JOB_FAILURE,
   REMOVE_SCHEDULED_JOB_FAILURE,
-  SET_ALL_JOBS_DATA,
+  SET_JOBS_DATA,
   SET_LOADING,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
   SET_NEW_JOB_INPUTS,
@@ -68,7 +68,7 @@ import {
 } from '../constants'
 
 const initialState = {
-  allJobsData: [],
+  jobsData: [],
   job: {},
   jobRuns: [],
   jobs: [],
@@ -288,10 +288,10 @@ const jobReducer = (state = initialState, { type, payload }) => {
         loading: false,
         error: payload
       }
-    case SET_ALL_JOBS_DATA:
+    case SET_JOBS_DATA:
       return {
         ...state,
-        allJobsData: payload
+        jobsData: payload
       }
     case SET_LOADING: {
       return {

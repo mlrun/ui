@@ -63,11 +63,7 @@ const workflowActions = {
     return workflowApi
       .getWorkflows(project, filter)
       .then(response =>
-        dispatch(
-          workflowActions.fetchWorkflowsSuccess(
-            parseWorkflows(response.data.runs)
-          )
-        )
+        dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(response.data.runs)))
       )
       .catch(error => dispatch(workflowActions.fetchWorkflowsFailure(error)))
   },

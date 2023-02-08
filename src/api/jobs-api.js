@@ -71,15 +71,28 @@ const jobsApi = {
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
       postData
     ),
-  getAllJobs: (project, filters) => {
+  getJobs: (project, filters, isAllJobs) => {
     const params = {
       project,
-      'partition-by': 'name',
-      'partition-sort-by': 'updated',
       ...generateRequestParams(filters)
     }
 
+    if (!isAllJobs) {
+      params['partition-by'] = 'name'
+      params['partition-sort-by'] = 'updated'
+    }
+
     return mainHttpClient.get('/runs', { params })
+  },
+  getSpecificJobs: (project, filters, jobList) => {
+    const params = {
+      project,
+      ...generateRequestParams(filters)
+    }
+
+    const jobListQuery = jobList.map(value => `uid=${value}`).join('&')
+
+    return mainHttpClient.get(`/runs?${jobListQuery}`, { params })
   },
   getAllJobRuns: (project, jobName, filters) => {
     const params = {
