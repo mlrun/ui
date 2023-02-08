@@ -261,7 +261,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                 },
           label: 'Create batch run',
           tooltip:
-            'Run a function in a batch process either immediately or define a schedule. You can also define hyperparameters to execute and compare'
+            'Run a function in a batch process either immediately or define a schedule. You can also define hyperparameters to execute and compare multiple runs. Batch runs are typically used for processes such as data preparation and model training.'
         },
         {
           id: 'registerModel',
