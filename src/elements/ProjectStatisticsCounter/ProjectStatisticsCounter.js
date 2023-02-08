@@ -30,18 +30,12 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
   const dataCardStatisticsValueClassNames = classnames(
     'project-data-card__statistics-value',
     `statistics_${counterObject.className}`,
-    typeof counterObject.value !== 'number' &&
-      'project-data-card__statistics-value_not-available'
+    typeof counterObject.value !== 'number' && 'project-data-card__statistics-value_not-available'
   )
 
   return counterObject.counterTooltip ? (
-    <Tooltip
-      template={<TextTooltipTemplate text={counterObject.counterTooltip} />}
-      textShow
-    >
-      <div
-        className={`project-data-card__statistics-value statistics_${counterObject.className}`}
-      >
+    <Tooltip template={<TextTooltipTemplate text={counterObject.counterTooltip} />} textShow>
+      <div className={dataCardStatisticsValueClassNames}>
         {counterObject.loading ? (
           <Loader section small secondary />
         ) : (
@@ -62,10 +56,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
     </Tooltip>
   ) : (
     [
-      <div
-        key={counterObject.value + Math.random()}
-        className={dataCardStatisticsValueClassNames}
-      >
+      <div key={counterObject.value + Math.random()} className={dataCardStatisticsValueClassNames}>
         {counterObject.loading ? (
           <Loader section small secondary />
         ) : (
