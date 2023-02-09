@@ -52,6 +52,7 @@ export const getFunctionLogs = (
           projectName,
           name,
           tag,
+          setDetailsLogs,
           currentOffset,
           navigate,
           refreshFunctions,
