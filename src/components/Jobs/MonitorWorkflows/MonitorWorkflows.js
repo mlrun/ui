@@ -54,6 +54,7 @@ import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
@@ -131,13 +132,13 @@ const MonitorWorkflows = ({
   )
 
   const handleFetchFunctionLogs = useCallback(
-    (projectName, name, tag, setDetailsLogs, offset) => {
+    (item, projectName, setDetailsLogs, offset) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
         projectName,
-        name,
-        tag,
+        item.name,
+        item.tag,
         setDetailsLogs,
         offset
       )
@@ -145,21 +146,24 @@ const MonitorWorkflows = ({
     [fetchFunctionLogs, fetchFunctionLogsTimeout]
   )
 
+  const handleFetchJobLogs = useCallback((item, projectName, setDetailsLogs, streamLogsRef) => {
+    return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+  }, [fetchJobLogs])
+
   const handleRemoveFunctionLogs = useCallback(() => {
     clearTimeout(fetchFunctionLogsTimeout.current)
-    removeFunctionLogs()
-  }, [fetchFunctionLogsTimeout, removeFunctionLogs])
+  }, [fetchFunctionLogsTimeout])
 
   const pageData = useMemo(
     () =>
       generatePageData(
         selectedFunction,
         handleFetchFunctionLogs,
-        fetchJobLogs,
+        handleFetchJobLogs,
         handleRemoveFunctionLogs
       ),
     [
-      fetchJobLogs,
+      handleFetchJobLogs,
       handleFetchFunctionLogs,
       handleRemoveFunctionLogs,
       selectedFunction

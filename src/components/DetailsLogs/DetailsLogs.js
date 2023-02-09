@@ -41,20 +41,14 @@ const DetailsLogs = ({
   const streamLogsRef = useRef()
 
   useEffect(() => {
-    if (withLogsRefreshBtn) {
-      refreshLogs(item.uid, params.projectName, streamLogsRef, setDetailsLogs)
-    } else {
-      refreshLogs(params.projectName, item.name, item.tag, setDetailsLogs)
-    }
+    refreshLogs(item, params.projectName, setDetailsLogs, streamLogsRef)
 
     return () => {
       setDetailsLogs('')
       removeLogs()
     }
   }, [
-    item.name,
-    item.tag,
-    item.uid,
+    item,
     params.projectName,
     refreshLogs,
     removeLogs,
@@ -86,7 +80,7 @@ const DetailsLogs = ({
             tooltip="Refresh"
             onClick={() => {
               setDetailsLogs('')
-              refreshLogs(item.uid, params.projectName, streamLogsRef, setDetailsLogs)
+              refreshLogs(item, params.projectName, setDetailsLogs, streamLogsRef)
             }}
           />
         </div>

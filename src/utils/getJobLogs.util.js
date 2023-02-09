@@ -1,4 +1,4 @@
-export const getJobLogs = (uid, projectName, fetchJobLogs, streamLogsRef, setDetailsLogs) => {
+export const getJobLogs = (uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs) => {
   fetchJobLogs(uid, projectName).then(res => {
     const reader = res.body?.getReader()
 

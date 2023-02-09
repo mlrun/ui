@@ -157,13 +157,13 @@ const Functions = ({
   )
 
   const handleFetchFunctionLogs = useCallback(
-    (projectName, name, tag, setDetailsLogs, offset) => {
+    (item, projectName, setDetailsLogs, offset) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
         projectName,
-        name,
-        tag,
+        item.name,
+        item.tag,
         setDetailsLogs,
         offset,
         navigate,
