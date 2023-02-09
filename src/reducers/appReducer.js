@@ -25,7 +25,22 @@ const initialState = {
 }
 
 export const fetchFrontendSpec = createAsyncThunk('fetchFrontendSpec', () => {
-  return appApi.getFrontendSpec().then(({ data }) => {
+  const headers = {}
+  const mlrunVersion = localStorage.getItem('mlrunVersion')
+
+  if (mlrunVersion) {
+    headers['x-mlrun-ui-version'] = mlrunVersion
+  }
+
+  return appApi.getFrontendSpec({ headers }).then(({ data, headers }) => {
+    if (headers['x-mlrun-be-version']) {
+      localStorage.setItem('mlrunVersion', headers['x-mlrun-be-version'])
+    }
+
+    if (headers['x-mlrun-ui-clear-cache']) {
+      window.location.reload(true)
+    }
+
     return data
   })
 })
