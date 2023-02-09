@@ -32,7 +32,6 @@ import {
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
   REMOVE_JOB_ERROR,
-  REMOVE_JOB_LOGS,
   REMOVE_NEW_JOB,
   RUN_NEW_JOB_FAILURE,
   REMOVE_SCHEDULED_JOB_FAILURE,
@@ -73,7 +72,6 @@ const initialState = {
   jobRuns: [],
   jobs: [],
   logs: {
-    data: '',
     loading: false,
     error: null
   },
@@ -210,7 +208,6 @@ const jobReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: {
-          data: payload,
           loading: false,
           error: null
         }
@@ -247,11 +244,6 @@ const jobReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         job: {}
-      }
-    case REMOVE_JOB_LOGS:
-      return {
-        ...state,
-        logs: initialState.logs
       }
     case REMOVE_JOB_ERROR:
       return {

@@ -41,6 +41,7 @@ import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import {getJobLogs} from '../../../utils/getJobLogs.util'
 
 export const generateFilters = () => [
   { type: PERIOD_FILTER, label: 'Period:' },
@@ -53,8 +54,7 @@ export const generatePageData = (
   selectedFunction,
   handleFetchFunctionLogs,
   fetchJobLogs,
-  handleRemoveFunctionLogs,
-  removeJobLogs
+  handleRemoveFunctionLogs
 ) => {
   return {
     page: JOBS_PAGE,
@@ -66,10 +66,8 @@ export const generatePageData = (
         : getInfoHeaders(false),
       refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
         ? handleFetchFunctionLogs
-        : fetchJobLogs,
-      removeLogs: !isEveryObjectValueEmpty(selectedFunction)
-        ? handleRemoveFunctionLogs
-        : removeJobLogs,
+        : (uid, projectName, streamLogsRef, setDetailsLogs) => getJobLogs(uid, projectName, fetchJobLogs, streamLogsRef, setDetailsLogs),
+      removeLogs: !isEveryObjectValueEmpty(selectedFunction) ? handleRemoveFunctionLogs : () => {},
       withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
     }
   }

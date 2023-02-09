@@ -75,7 +75,6 @@ const MonitorWorkflows = ({
   getFunction,
   getFunctionWithHash,
   removeFunctionLogs,
-  removeJobLogs,
   removePods,
   removeNewJob,
   resetWorkflow
@@ -132,13 +131,14 @@ const MonitorWorkflows = ({
   )
 
   const handleFetchFunctionLogs = useCallback(
-    (projectName, name, tag, offset) => {
+    (projectName, name, tag, setDetailsLogs, offset) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
         projectName,
         name,
         tag,
+        setDetailsLogs,
         offset
       )
     },
@@ -156,14 +156,12 @@ const MonitorWorkflows = ({
         selectedFunction,
         handleFetchFunctionLogs,
         fetchJobLogs,
-        handleRemoveFunctionLogs,
-        removeJobLogs
+        handleRemoveFunctionLogs
       ),
     [
       fetchJobLogs,
       handleFetchFunctionLogs,
       handleRemoveFunctionLogs,
-      removeJobLogs,
       selectedFunction
     ]
   )

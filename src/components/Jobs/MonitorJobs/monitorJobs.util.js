@@ -29,6 +29,7 @@ import {
   STATUS_FILTER
 } from '../../../constants'
 import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import { getJobLogs } from '../../../utils/getJobLogs.util'
 import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
 
@@ -44,15 +45,15 @@ export const generateFilters = jobName => [
   { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
 ]
 
-export const generatePageData = (fetchJobLogs, removeJobLogs, selectedJob) => {
+export const generatePageData = (fetchJobLogs, selectedJob) => {
   return {
     page: JOBS_PAGE,
     details: {
       menu: detailsMenu,
       type: JOBS_PAGE,
       infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
-      refreshLogs: fetchJobLogs,
-      removeLogs: removeJobLogs,
+      refreshLogs: (uid, projectName, streamLogsRef, setDetailsLogs) => getJobLogs(uid, projectName, fetchJobLogs, streamLogsRef, setDetailsLogs),
+      removeLogs: () => {},
       withLogsRefreshBtn: true
     }
   }

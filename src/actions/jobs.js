@@ -33,7 +33,6 @@ import {
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
   REMOVE_JOB_ERROR,
-  REMOVE_JOB_LOGS,
   REMOVE_NEW_JOB,
   REMOVE_SCHEDULED_JOB_FAILURE,
   RUN_NEW_JOB_FAILURE,
@@ -177,7 +176,9 @@ const jobsActions = {
     return jobsApi
       .getJobLogs(id, project)
       .then(result => {
-        dispatch(jobsActions.fetchJobLogsSuccess(result.data))
+        dispatch(jobsActions.fetchJobLogsSuccess())
+
+        return result
       })
       .catch(error => dispatch(jobsActions.fetchJobLogsFailure(error)))
   },
@@ -188,9 +189,8 @@ const jobsActions = {
     type: FETCH_JOB_LOGS_FAILURE,
     payload: error
   }),
-  fetchJobLogsSuccess: logs => ({
-    type: FETCH_JOB_LOGS_SUCCESS,
-    payload: logs
+  fetchJobLogsSuccess: () => ({
+    type: FETCH_JOB_LOGS_SUCCESS
   }),
   fetchJobs: (project, filters, scheduled) => dispatch => {
     const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getJobs
@@ -214,7 +214,7 @@ const jobsActions = {
         throw error
       })
   },
-  fetchSpecificJobs: (project, filters, jobList) => dispatch => {
+  fetchSpecificJobs: (project, filters, jobList) => () => {
     return jobsApi.getSpecificJobs(project, filters, jobList).then(({ data }) => {
       return data.runs
     })
@@ -258,9 +258,6 @@ const jobsActions = {
   }),
   removeJobError: () => ({
     type: REMOVE_JOB_ERROR
-  }),
-  removeJobLogs: () => ({
-    type: REMOVE_JOB_LOGS
   }),
   removeNewJob: () => ({
     type: REMOVE_NEW_JOB

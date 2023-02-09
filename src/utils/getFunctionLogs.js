@@ -29,6 +29,7 @@ export const getFunctionLogs = (
   projectName,
   name,
   tag,
+  setDetailsLogs,
   offset,
   navigate,
   refreshFunctions,
@@ -77,5 +78,7 @@ export const getFunctionLogs = (
 
       clearTimeout(fetchFunctionLogsTimeout.current)
     }
+
+    setDetailsLogs(result.data || '')
   })
 }

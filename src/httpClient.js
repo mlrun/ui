@@ -20,8 +20,10 @@ such restriction.
 import axios from 'axios'
 import qs from 'qs'
 
+export const mainBaseUrl = `${process.env.PUBLIC_URL}/api/v1`
+
 export const mainHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/api/v1`,
+  baseURL: mainBaseUrl,
 
   // serialize a param with an array value as a repeated param, for example:
   // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
