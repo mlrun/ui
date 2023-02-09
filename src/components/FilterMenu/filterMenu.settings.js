@@ -29,6 +29,19 @@ import {
   TAG_FILTER_LATEST
 } from '../../constants'
 
+export const generateStatusFilter = useFailedStatus => {
+  const status = useFailedStatus ? 'failed' : 'error'
+
+  return [
+    { label: 'All', id: STATE_FILTER_ALL_ITEMS, status: 'all' },
+    { label: 'Completed', id: 'completed', status: 'completed' },
+    { label: 'Running', id: 'running', status: 'running' },
+    { label: 'Pending', id: 'pending', status: 'pending' },
+    { label: 'Error', id: status, status: status },
+    { label: 'Aborted', id: 'aborted', status: 'aborted' }
+  ]
+}
+
 export const filterSelectOptions = {
   [PERIOD_FILTER]: [
     { label: 'Last 7 days', id: 'last7Days' },
@@ -36,14 +49,7 @@ export const filterSelectOptions = {
     { label: 'Last months', id: 'lastMonths' },
     { label: 'Last 6 months', id: 'last6Months' }
   ],
-  [STATUS_FILTER]: [
-    { label: 'All', id: STATE_FILTER_ALL_ITEMS, status: 'all' },
-    { label: 'Completed', id: 'completed', status: 'completed' },
-    { label: 'Running', id: 'running', status: 'running' },
-    { label: 'Pending', id: 'pending', status: 'pending' },
-    { label: 'Error', id: 'error', status: 'error' },
-    { label: 'Aborted', id: 'aborted', status: 'aborted' }
-  ],
+  [STATUS_FILTER]: generateStatusFilter(false),
   [GROUP_BY_FILTER]: [
     { label: 'None', id: GROUP_BY_NONE },
     { label: 'Name', id: GROUP_BY_NAME }
