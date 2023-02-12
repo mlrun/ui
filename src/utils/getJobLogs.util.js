@@ -17,27 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import axios from 'axios'
-import qs from 'qs'
+export const getJobLogs = (uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs) => {
+  fetchJobLogs(uid, projectName).then(res => {
+    const reader = res.body?.getReader()
 
-export const mainBaseUrl = `${process.env.PUBLIC_URL}/api/v1`
+    if (reader) {
+      const decoder = new TextDecoder()
+      const read = () => {
+        reader.read().then(({ done, value }) => {
+          if (done) {
+            return
+          }
 
-export const mainHttpClient = axios.create({
-  baseURL: mainBaseUrl,
+          setDetailsLogs(prevState => prevState + decoder.decode(value))
+        })
+      }
 
-  // serialize a param with an array value as a repeated param, for example:
-  // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
-  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
-})
-
-export const functionTemplatesHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/function-catalog`
-})
-
-export const nuclioHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/nuclio/api`
-})
-
-export const iguazioHttpClient = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? '/api' : '/iguazio/api'
-})
+      streamLogsRef.current = read
+      read()
+    }
+  })
+}

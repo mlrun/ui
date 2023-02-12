@@ -52,9 +52,8 @@ export const generateFilters = () => [
 export const generatePageData = (
   selectedFunction,
   handleFetchFunctionLogs,
-  fetchJobLogs,
-  handleRemoveFunctionLogs,
-  removeJobLogs
+  handleFetchJobLogs,
+  handleRemoveFunctionLogs
 ) => {
   return {
     page: JOBS_PAGE,
@@ -66,10 +65,8 @@ export const generatePageData = (
         : getInfoHeaders(false),
       refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
         ? handleFetchFunctionLogs
-        : fetchJobLogs,
-      removeLogs: !isEveryObjectValueEmpty(selectedFunction)
-        ? handleRemoveFunctionLogs
-        : removeJobLogs,
+        : handleFetchJobLogs,
+      removeLogs: !isEveryObjectValueEmpty(selectedFunction) ? handleRemoveFunctionLogs : () => {},
       withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
     }
   }

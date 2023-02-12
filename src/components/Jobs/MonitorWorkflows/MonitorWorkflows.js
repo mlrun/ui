@@ -54,6 +54,7 @@ import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
@@ -75,7 +76,6 @@ const MonitorWorkflows = ({
   getFunction,
   getFunctionWithHash,
   removeFunctionLogs,
-  removeJobLogs,
   removePods,
   removeNewJob,
   resetWorkflow
@@ -132,38 +132,40 @@ const MonitorWorkflows = ({
   )
 
   const handleFetchFunctionLogs = useCallback(
-    (projectName, name, tag, offset) => {
+    (item, projectName, setDetailsLogs, offset) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
         projectName,
-        name,
-        tag,
+        item.name,
+        item.tag,
+        setDetailsLogs,
         offset
       )
     },
     [fetchFunctionLogs, fetchFunctionLogsTimeout]
   )
 
+  const handleFetchJobLogs = useCallback((item, projectName, setDetailsLogs, streamLogsRef) => {
+    return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+  }, [fetchJobLogs])
+
   const handleRemoveFunctionLogs = useCallback(() => {
     clearTimeout(fetchFunctionLogsTimeout.current)
-    removeFunctionLogs()
-  }, [fetchFunctionLogsTimeout, removeFunctionLogs])
+  }, [fetchFunctionLogsTimeout])
 
   const pageData = useMemo(
     () =>
       generatePageData(
         selectedFunction,
         handleFetchFunctionLogs,
-        fetchJobLogs,
-        handleRemoveFunctionLogs,
-        removeJobLogs
+        handleFetchJobLogs,
+        handleRemoveFunctionLogs
       ),
     [
-      fetchJobLogs,
+      handleFetchJobLogs,
       handleFetchFunctionLogs,
       handleRemoveFunctionLogs,
-      removeJobLogs,
       selectedFunction
     ]
   )

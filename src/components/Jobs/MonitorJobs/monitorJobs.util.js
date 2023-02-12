@@ -44,15 +44,15 @@ export const generateFilters = jobName => [
   { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
 ]
 
-export const generatePageData = (fetchJobLogs, removeJobLogs, selectedJob) => {
+export const generatePageData = (handleFetchJobLogs, selectedJob) => {
   return {
     page: JOBS_PAGE,
     details: {
       menu: detailsMenu,
       type: JOBS_PAGE,
       infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
-      refreshLogs: fetchJobLogs,
-      removeLogs: removeJobLogs,
+      refreshLogs: handleFetchJobLogs,
+      removeLogs: () => {},
       withLogsRefreshBtn: true
     }
   }

@@ -55,6 +55,7 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
@@ -69,7 +70,6 @@ const MonitorJobs = ({
   fetchJobLogs,
   fetchJobPods,
   fetchJobs,
-  removeJobLogs,
   removeNewJob,
   removePods
 }) => {
@@ -114,9 +114,13 @@ const MonitorJobs = ({
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
+  const handleFetchJobLogs = useCallback((item, projectName, setDetailsLogs, streamLogsRef) => {
+    return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+  }, [fetchJobLogs])
+
   const pageData = useMemo(
-    () => generatePageData(fetchJobLogs, removeJobLogs, selectedJob),
-    [fetchJobLogs, removeJobLogs, selectedJob]
+    () => generatePageData(handleFetchJobLogs, selectedJob),
+    [handleFetchJobLogs, selectedJob]
   )
 
   const refreshJobs = useCallback(

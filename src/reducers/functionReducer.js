@@ -54,7 +54,6 @@ import {
   FETCH_FUNCTION_LOGS_BEGIN,
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_SUCCESS,
-  REMOVE_FUNCTION_LOGS,
   SET_NEW_FUNCTION,
   SET_NEW_FUNCTION_KIND,
   SET_NEW_FUNCTION_GRAPH,
@@ -81,7 +80,6 @@ const initialState = {
   functions: [],
   func: {},
   logs: {
-    data: '',
     loading: false,
     error: null
   },
@@ -191,7 +189,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: {
-          data: initialState.logs.data,
           loading: false,
           error: payload
         }
@@ -200,7 +197,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: {
-          data: `${state.logs.data}${payload}`,
           loading: false,
           error: null
         }
@@ -271,11 +267,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         func: {}
-      }
-    case REMOVE_FUNCTION_LOGS:
-      return {
-        ...state,
-        logs: initialState.logs
       }
     case REMOVE_FUNCTION_TEMPLATE:
       return {

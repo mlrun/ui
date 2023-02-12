@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
@@ -38,41 +38,37 @@ const DetailsLogs = ({
 }) => {
   const [detailsLogs, setDetailsLogs] = useState('')
   const params = useParams()
+  const streamLogsRef = useRef()
 
   useEffect(() => {
-    setDetailsLogs(jobsStore.logs.data || functionsStore.logs.data)
+    refreshLogs(item, params.projectName, setDetailsLogs, streamLogsRef)
 
     return () => {
       setDetailsLogs('')
-    }
-  }, [functionsStore.logs.data, jobsStore.logs.data])
-
-  useEffect(() => {
-    if (withLogsRefreshBtn) {
-      refreshLogs(item.uid, params.projectName)
-    } else {
-      refreshLogs(params.projectName, item.name, item.tag)
-    }
-
-    return () => {
       removeLogs()
     }
   }, [
-    item.name,
-    item.tag,
-    item.uid,
+    item,
     params.projectName,
     refreshLogs,
     removeLogs,
     withLogsRefreshBtn
   ])
 
+  const handleScroll = event => {
+    if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
+      streamLogsRef.current()
+    }
+  }
+
   return (
     <div className="table__item_logs">
       {functionsStore.logs.loading || jobsStore.logs.loading ? (
         <Loader section secondary />
       ) : detailsLogs.length > 0 ? (
-        <div className="table__item_logs__content">{detailsLogs}</div>
+        <div className="table__item_logs__content" onScroll={handleScroll}>
+          {detailsLogs}
+        </div>
       ) : (
         <NoData />
       )}
@@ -82,7 +78,10 @@ const DetailsLogs = ({
             icon={<RefreshIcon />}
             label=""
             tooltip="Refresh"
-            onClick={() => refreshLogs(item.uid, params.projectName)}
+            onClick={() => {
+              setDetailsLogs('')
+              refreshLogs(item, params.projectName, setDetailsLogs, streamLogsRef)
+            }}
           />
         </div>
       )}
