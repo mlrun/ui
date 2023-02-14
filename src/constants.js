@@ -49,15 +49,17 @@ export const NAVBAR_WIDTH = 245
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
+export const PROJECTS_PAGE_PATH = 'projects'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
 export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
 export const PROJECTS_SETTINGS_MEMBERS_TAB = 'members'
 export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
 
+export const INACTIVE_JOBS_TAB = 'monitor'
 export const JOBS_PAGE = 'JOBS'
-export const SCHEDULE_TAB = 'schedule'
 export const MONITOR_JOBS_TAB = 'monitor-jobs'
 export const MONITOR_WORKFLOWS_TAB = 'monitor-workflows'
+export const SCHEDULE_TAB = 'schedule'
 export const WORKFLOW_SUB_PAGE = 'workflow'
 
 export const MODELS_PAGE = 'MODELS'

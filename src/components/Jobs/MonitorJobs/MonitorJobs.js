@@ -114,9 +114,12 @@ const MonitorJobs = ({
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const handleFetchJobLogs = useCallback((item, projectName, setDetailsLogs, streamLogsRef) => {
-    return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
-  }, [fetchJobLogs])
+  const handleFetchJobLogs = useCallback(
+    (item, projectName, setDetailsLogs, streamLogsRef) => {
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+    },
+    [fetchJobLogs]
+  )
 
   const pageData = useMemo(
     () => generatePageData(handleFetchJobLogs, selectedJob),
@@ -257,6 +260,18 @@ const MonitorJobs = ({
     },
     [dispatch, filtersStore, refreshJobs, setEditableItem]
   )
+
+  useEffect(() => {
+    if (selectedJob.name) {
+      const urlPathArray = location.pathname.split('/')
+      const jobNameIndex = urlPathArray.indexOf(selectedJob.uid) - 1
+      
+      if (urlPathArray[jobNameIndex] !== selectedJob.name) {
+        navigate([...urlPathArray.slice(0, jobNameIndex + 1), selectedJob.name, ...urlPathArray.slice(jobNameIndex + 1)].join('/'), { replace: true })
+      }
+    }
+
+  }, [navigate, selectedJob.name, selectedJob.uid, location])
 
   useEffect(() => {
     if (params.jobId && pageData.details.menu.length > 0) {
