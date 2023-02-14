@@ -19,9 +19,10 @@ such restriction.
 */
 const convertNoneValueToNA = statObj =>
   Object.entries(statObj).reduce(
-    (data, [key, value]) => ({
-      ...data,
-      [key]: typeof value === 'string' && value.toLowerCase() === 'none' ? 'N/A' : value
+    (newStatObj, [statKey, statValue]) => ({
+      ...newStatObj,
+      [statKey]:
+        typeof statValue === 'string' && statValue.toLowerCase() === 'none' ? 'N/A' : statValue
     }),
     {}
   )
