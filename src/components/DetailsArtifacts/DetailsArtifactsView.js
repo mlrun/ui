@@ -66,10 +66,10 @@ const DetailsArtifactsView = ({
                 <div className="item-artifacts__row-item">
                   <Tooltip
                     className="item-artifacts__name"
-                    template={<TextTooltipTemplate text={artifact.key} />}
+                    template={<TextTooltipTemplate text={artifact.db_key} />}
                   >
                     <span className="link" onClick={() => showArtifact(index)}>
-                      {artifact.key}
+                      {artifact.db_key}
                     </span>
                   </Tooltip>
                 </div>
