@@ -219,10 +219,10 @@ const Models = ({ fetchModelFeatureVector }) => {
       : models.map(contentItem => createModelsRowData(contentItem, params.projectName))
   }, [filtersStore.groupBy, latestItems, models, params.projectName])
 
-  const [sortTable, selectedColumnName, getSortingIcon, sortedTableContent] = useSortTable({
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent } = useSortTable({
     headers: tableContent[0]?.content,
     content: tableContent,
-    sortConfig: { defaultSortBy: 'updated' }
+    sortConfig: { defaultSortBy: 'updated', defaultDirection: 'desc' }
   })
 
   useEffect(() => {

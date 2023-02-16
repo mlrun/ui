@@ -20,15 +20,46 @@ such restriction.
 import { page } from '../Jobs/jobs.util'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
-export const getWorkflowDetailsLink = (
-  projectName,
-  paramsWorkflowId,
-  workflowId,
-  jobId,
-  tab,
-  pageTab
-) => {
-  return `/projects/${projectName}/${page.toLowerCase()}/${pageTab}/workflow/${
-    workflowId ?? paramsWorkflowId
-  }${jobId ? `/${jobId}/${tab ?? DETAILS_OVERVIEW_TAB}` : ''}`
+/**
+ * Gets Details panel link depending on the item's type
+ *
+ * @param {String} projectName
+ * @param {String} workflowId
+ * @param {Object} jobItem
+ * @param {String} tab
+ * @param {String} pageTab
+ * @returns {String}
+ */
+export const getWorkflowDetailsLink = (projectName, workflowId, jobItem, tab, pageTab) => {
+  let jobPath = null
+
+  if (jobItem) {
+    if (jobItem.run_uid) {
+      jobPath = jobItem.run_uid
+    } else if (isFunctionTypeSelectable(jobItem) && jobItem.functionName && jobItem.functionHash) {
+      jobPath = `${jobItem.functionName}/${jobItem.functionHash}`
+    } else {
+      return null
+    }
+  }
+
+  return `/projects/${projectName}/${page.toLowerCase()}/${pageTab}/workflow/${workflowId}${
+    jobPath ? `/${jobPath}/${tab ?? DETAILS_OVERVIEW_TAB}` : ''
+  }`
+}
+
+export const isFunctionTypeSelectable = (jobItem = {}) => {
+  return (
+    (jobItem.run_type === 'deploy' || jobItem.run_type === 'build') &&
+    jobItem.function &&
+    jobItem.function.includes('@')
+  )
+}
+
+export const isWorkflowJobSelected = (job, selectedJob) => {
+  return (
+    (job.run_uid && selectedJob.uid === job.run_uid) ||
+    (job.run_type === 'deploy' && job.function.includes(selectedJob.hash)) ||
+    (job.run_type === 'build' && job.function.includes(selectedJob.name))
+  )
 }

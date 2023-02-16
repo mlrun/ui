@@ -28,7 +28,12 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   const [sortedTableContent, setSortedTableContent] = useState(content)
   const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
 
-  const { allowSortBy = null, excludeSortBy = null, defaultSortBy = null } = sortConfig
+  const {
+    allowSortBy = null,
+    excludeSortBy = null,
+    defaultSortBy = null,
+    defaultDirection = null
+  } = sortConfig
 
   const isDateValid = dateString => {
     if (Date.parse(dateString)) {
@@ -156,9 +161,9 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
     (columnName, existingDirection) => {
       const sortDirection = existingDirection
         ? existingDirection
-        : columnName === selectedColumnName && direction === 'desc'
-        ? 'asc'
-        : 'desc'
+        : columnName === selectedColumnName && direction === 'asc'
+        ? 'desc'
+        : 'asc'
 
       const columnIndex = headers && headers.findIndex(header => header.headerId === columnName)
 
@@ -186,18 +191,19 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   useEffect(() => {
     if (direction && selectedColumnName) {
       sortTable(selectedColumnName, direction)
-    } else if (defaultSortBy !== null && !direction && content.length > 0) {
+    } else if (defaultSortBy !== null && (!direction || defaultDirection) && content.length > 0) {
       sortTable(
         selectedColumnName
           ? selectedColumnName
           : isNumber(defaultSortBy)
           ? headers[defaultSortBy].headerId
-          : defaultSortBy
+          : defaultSortBy,
+        defaultDirection
       )
     } else {
       setSortedTableContent(content)
     }
-  }, [content, defaultSortBy, direction, headers, selectedColumnName, sortTable])
+  }, [content, defaultDirection, defaultSortBy, direction, headers, selectedColumnName, sortTable])
 
   useEffect(() => {
     if (headers && headers.length > 0 && (excludeSortBy || allowSortBy)) {
@@ -207,5 +213,5 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
     }
   }, [allowSortBy, excludeSortBy, getSortableHeaders, headers])
 
-  return [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders]
+  return { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders }
 }

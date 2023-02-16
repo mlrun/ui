@@ -47,6 +47,7 @@ const Table = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
+  hideActionsMenu,
   pageData,
   retryRequest,
   selectedItem,
@@ -153,6 +154,7 @@ const Table = ({
       handleCancel={handleCancel}
       handleExpandRow={handleExpandRow}
       handleSelectItem={handleSelectItem}
+      hideActionsMenu={hideActionsMenu}
       isTablePanelOpen={tableStore.isTablePanelOpen}
       mainRowItemsCount={tableContent.mainRowItemsCount}
       pageData={pageData}
@@ -182,6 +184,7 @@ Table.defaultProps = {
   handleCancel: () => {},
   handleExpandRow: () => {},
   handleSelectItem: () => {},
+  hideActionsMenu: false,
   retryRequest: () => {},
   selectedItem: {},
   sortProps: null,
@@ -199,6 +202,7 @@ Table.propTypes = {
   handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
+  hideActionsMenu: PropTypes.bool,
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}),

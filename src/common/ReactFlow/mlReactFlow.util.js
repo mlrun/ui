@@ -174,5 +174,6 @@ const nodeStates = {
   failed: 'Error',
   skipped: 'Skipped',
   error: 'Error',
-  running: 'Running'
+  running: 'Running',
+  omitted: 'Omitted'
 }

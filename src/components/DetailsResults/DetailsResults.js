@@ -34,7 +34,7 @@ import { ReactComponent as BestIteration } from 'igz-controls/images/best-iterat
 
 import './detailsResults.scss'
 
-const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
+const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeSortBy, job }) => {
   const tableHeaders = useMemo(() => {
     return isEmpty(job.error) ? resultsTableHeaders(job) : []
   }, [job])
@@ -43,11 +43,11 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, excludeSortBy, job }) => {
     return isEmpty(job.error) ? resultsTableContent(job) : []
   }, [job])
 
-  const [sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders] =
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
       headers: tableHeaders,
       content: tableContent,
-      sortConfig: { allowSortBy, excludeSortBy, defaultSortBy }
+      sortConfig: { allowSortBy, excludeSortBy, defaultSortBy, defaultDirection }
     })
 
   const getHeaderCellClasses = (headerId, isSortable) =>

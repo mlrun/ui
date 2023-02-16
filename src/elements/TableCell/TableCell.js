@@ -49,6 +49,7 @@ const TableCell = ({
   showExpandButton
 }) => {
   const dispatch = useDispatch()
+  const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 
   if (link && data.type !== 'hidden') {
     return (
@@ -66,7 +67,12 @@ const TableCell = ({
   } else if (firstCell && !link) {
     return (
       <div className={`table-body__cell ${data.class} ${className}`}>
-        {item.status && (
+        {item.state && stateValue && stateLabel && (
+          <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
+            <i className={stateClassName} />
+          </Tooltip>
+        )}
+        {!item.state && item.status && (
           <Tooltip className="status" template={<TextTooltipTemplate text={item.status} />}>
             <i className={`${item.status[0].toLowerCase()}${item.status.slice(1)}`} />
           </Tooltip>
