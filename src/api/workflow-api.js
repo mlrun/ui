@@ -73,8 +73,8 @@ const generateQueryParams = filter => {
 }
 
 const workflowsApi = {
-  getWorkflow: workflowId => {
-    return mainHttpClient.get(`/pipelines/${workflowId}`)
+  getWorkflow: (project, workflowId) => {
+    return mainHttpClient.get(`/projects/${project}/pipelines/${workflowId}`)
   },
   getWorkflows: (project, filter) => {
     let queryParams = ''
