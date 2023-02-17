@@ -230,3 +230,5 @@ export const monitorJob = (jobs_dashboard_url, item, projectName) => {
 
   window.open(redirectUrl, '_blank')
 }
+
+export const limitedFunctionKinds = ['handler', 'local', 'serving', '']
