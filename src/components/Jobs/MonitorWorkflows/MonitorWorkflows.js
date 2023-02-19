@@ -312,9 +312,16 @@ const MonitorWorkflows = ({
   useEffect(() => {
     const workflow = { ...workflowsStore.activeWorkflow.data }
     const getWorkflow = () => {
-      fetchWorkflow(params.workflowId).catch(() =>
+      fetchWorkflow(params.projectName, params.workflowId).catch(error => {
         navigate(`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`, { replace: true })
-      )
+        dispatch(
+          setNotification({
+            status: error?.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to fetch workflow'
+          })
+        )
+      })
     }
 
     if (!params.workflowId && workflow.graph) {
@@ -336,6 +343,7 @@ const MonitorWorkflows = ({
       return () => clearTimeout(timeout)
     }
   }, [
+    dispatch,
     dataIsLoaded,
     fetchWorkflow,
     navigate,
