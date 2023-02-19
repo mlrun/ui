@@ -34,10 +34,11 @@ import { FormSelect } from 'igz-controls/components'
 import functionsActions from '../../../../actions/functions'
 import jobsActions from '../../../../actions/jobs'
 import projectsAction from '../../../../actions/projects'
+import { FILTER_MENU_MODAL, HUB_CATEGORIES_FILTER, JOB_WIZARD_FILTERS } from '../../../../constants'
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
+import { limitedFunctionKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
-import { FILTER_MENU_MODAL, HUB_CATEGORIES_FILTER, JOB_WIZARD_FILTERS } from '../../../../constants'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
@@ -213,7 +214,7 @@ const JobWizardFunctionSelection = ({
 
     fetchFunctions(currentValue).then(functions => {
       const validFunctions = functions.filter(func => {
-        return !includes(['', 'handler', 'local', 'serving'], func.kind)
+        return !includes(limitedFunctionKinds, func.kind)
       })
 
       const groupedFunctions = Object.values(
