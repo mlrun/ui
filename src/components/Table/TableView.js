@@ -59,6 +59,7 @@ const TableView = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
+  hideActionsMenu,
   isTablePanelOpen,
   mainRowItemsCount,
   pageData,
@@ -226,6 +227,7 @@ const TableView = ({
             {tableHeaders?.length > 0 && (
               <TableHead
                 content={tableHeaders}
+                hideActionsMenu={hideActionsMenu}
                 mainRowItemsCount={mainRowItemsCount}
                 ref={tableHeadRef}
                 selectedItem={selectedItem}
@@ -275,6 +277,7 @@ TableView.propTypes = {
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
+  hideActionsMenu: PropTypes.bool.isRequired,
   isTablePanelOpen: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   params: PropTypes.shape({}).isRequired,

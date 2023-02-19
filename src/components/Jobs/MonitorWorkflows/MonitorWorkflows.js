@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { compact, find, isEmpty } from 'lodash'
+import { find, isEmpty } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -63,6 +63,7 @@ import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
+import { useSortTable } from '../../../hooks/useSortTable.hook'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -70,7 +71,6 @@ const MonitorWorkflows = ({
   fetchJob,
   fetchJobLogs,
   fetchJobPods,
-  fetchSpecificJobs,
   fetchWorkflow,
   fetchWorkflows,
   getFunction,
@@ -84,7 +84,6 @@ const MonitorWorkflows = ({
   const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
-  const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const { isDemoMode } = useMode()
@@ -118,18 +117,17 @@ const MonitorWorkflows = ({
       createJobsWorkflowsTabContent(
         workflowsStore.workflows.data,
         params.projectName,
-        params.workflowId,
         isStagingMode,
         !isEmpty(selectedJob)
       ),
-    [
-      isStagingMode,
-      params.projectName,
-      params.workflowId,
-      selectedJob,
-      workflowsStore.workflows.data
-    ]
+    [isStagingMode, params.projectName, selectedJob, workflowsStore.workflows.data]
   )
+
+  const { sortedTableContent } = useSortTable({
+    headers: tableContent[0]?.content,
+    content: tableContent,
+    sortConfig: { defaultSortBy: 'startedAt' }
+  })
 
   const handleFetchFunctionLogs = useCallback(
     (item, projectName, setDetailsLogs, offset) => {
@@ -146,9 +144,12 @@ const MonitorWorkflows = ({
     [fetchFunctionLogs, fetchFunctionLogsTimeout]
   )
 
-  const handleFetchJobLogs = useCallback((item, projectName, setDetailsLogs, streamLogsRef) => {
-    return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
-  }, [fetchJobLogs])
+  const handleFetchJobLogs = useCallback(
+    (item, projectName, setDetailsLogs, streamLogsRef) => {
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+    },
+    [fetchJobLogs]
+  )
 
   const handleRemoveFunctionLogs = useCallback(() => {
     clearTimeout(fetchFunctionLogsTimeout.current)
@@ -162,45 +163,12 @@ const MonitorWorkflows = ({
         handleFetchJobLogs,
         handleRemoveFunctionLogs
       ),
-    [
-      handleFetchJobLogs,
-      handleFetchFunctionLogs,
-      handleRemoveFunctionLogs,
-      selectedFunction
-    ]
+    [handleFetchJobLogs, handleFetchFunctionLogs, handleRemoveFunctionLogs, selectedFunction]
   )
 
-  const refreshJobs = useCallback(
-    filters => {
-      const workflowJobsIds = compact(workflowsStore.activeWorkflow.workflowJobsIds)
-
-      if (params.workflowId && !isEmpty(workflowJobsIds)) {
-        fetchSpecificJobs(params.projectName, filters, workflowJobsIds)
-          .then(jobs => {
-            const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
-
-            setJobs(parsedJobs)
-          })
-          .catch(error => {
-            dispatch(
-              setNotification({
-                status: error?.response?.status || 400,
-                id: Math.random(),
-                message: 'Failed to fetch jobs',
-                retry: () => refreshJobs(filters)
-              })
-            )
-          })
-      }
-    },
-    [
-      dispatch,
-      fetchSpecificJobs,
-      params.projectName,
-      params.workflowId,
-      workflowsStore.activeWorkflow.workflowJobsIds
-    ]
-  )
+  const refreshJobs = useCallback(() => {
+    fetchWorkflow(params.workflowId)
+  }, [fetchWorkflow, params.workflowId])
 
   const onAbortJob = useCallback(
     job => {
@@ -441,10 +409,6 @@ const MonitorWorkflows = ({
   }, [params.functionHash, params.jobId])
 
   useEffect(() => {
-    refreshJobs()
-  }, [params.workflowId, refreshJobs])
-
-  useEffect(() => {
     if (params.workflowId) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     } else {
@@ -456,7 +420,6 @@ const MonitorWorkflows = ({
   useEffect(() => {
     return () => {
       setDataIsLoaded(false)
-      setJobs([])
       setItemIsSelected(false)
       setSelectedJob({})
       setSelectedFunction({})
@@ -489,7 +452,6 @@ const MonitorWorkflows = ({
     jobWizardIsOpened,
     jobWizardMode,
     params,
-    refreshJobs,
     setEditableItem,
     setJobWizardIsOpened,
     setJobWizardMode
@@ -517,7 +479,6 @@ const MonitorWorkflows = ({
           {params.workflowId ? (
             <Workflow
               actionsMenu={actionsMenu}
-              content={jobs}
               handleCancel={handleCancel}
               handleSelectItem={handleSelectJob}
               itemIsSelected={itemIsSelected}
@@ -528,7 +489,6 @@ const MonitorWorkflows = ({
               selectedJob={selectedJob}
               setWorkflowsViewMode={setWorkflowsViewMode}
               workflow={workflowsStore.activeWorkflow.data}
-              workflowJobsIds={workflowsStore.activeWorkflow.workflowJobsIds}
               workflowsViewMode={workflowsViewMode}
             />
           ) : (
@@ -541,9 +501,9 @@ const MonitorWorkflows = ({
               retryRequest={getWorkflows}
               selectedItem={selectedJob}
               tab={MONITOR_JOBS_TAB}
-              tableHeaders={tableContent[0]?.content ?? []}
+              tableHeaders={sortedTableContent[0]?.content ?? []}
             >
-              {tableContent.map((tableItem, index) => (
+              {sortedTableContent.map((tableItem, index) => (
                 <JobsTableRow
                   actionsMenu={actionsMenu}
                   handleSelectJob={handleSelectJob}
