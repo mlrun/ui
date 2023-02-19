@@ -259,7 +259,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   // todo: delete this object when the job wizard is out of the demo mode
                   path: `${base_url}/jobs/monitor-jobs/create-new-job`
                 },
-          label: 'Create batch run',
+          label: 'Batch run',
           tooltip:
             'Run a function in a batch process either immediately or define a schedule. You can also define hyperparameters to execute and compare multiple runs. Batch runs are typically used for processes such as data preparation and model training.'
         },
@@ -367,7 +367,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/jobs/monitor-workflows`
           }),
-          label: 'Workflow'
+          label: 'Workflows'
         }
       ]
     },
