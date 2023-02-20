@@ -53,6 +53,7 @@ import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { handleAbortJob } from '../jobs.util'
+import { isWorkflowStepExecutable } from '../../Workflow/workflow.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -310,7 +311,7 @@ const MonitorWorkflows = ({
   }, [navigate, pageData.details.menu, location, params.jobId, params.functionHash, params.tab])
 
   useEffect(() => {
-    const workflow = { ...workflowsStore.activeWorkflow.data }
+    const workflow = { ...workflowsStore.activeWorkflow?.data }
     const getWorkflow = () => {
       fetchWorkflow(params.projectName, params.workflowId).catch(error => {
         navigate(`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`, { replace: true })
@@ -353,42 +354,79 @@ const MonitorWorkflows = ({
     workflowsStore.activeWorkflow
   ])
 
+  const findSelectedWorkflowFunction = useCallback(() => {
+    if (workflowsStore.activeWorkflow?.data) {
+      const workflow = { ...workflowsStore.activeWorkflow.data }
+
+      return find(workflow.graph, workflowItem => {
+        return (
+          workflowItem.function?.includes(`${params.functionName}@${params.functionHash}`) ||
+          workflowItem.function?.includes(params.functionName) ||
+          workflowItem.function?.includes(params.jobId)
+        )
+      })
+    }
+  }, [params.functionName, params.functionHash, params.jobId, workflowsStore.activeWorkflow.data])
+
+  const checkIfWorkflowItemIsJob = useCallback(() => {
+    if (workflowsStore.activeWorkflow?.data?.graph) {
+      return !['deploy', 'build'].includes(findSelectedWorkflowFunction()?.run_type)
+    }
+  }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
+
   useEffect(() => {
-    if (params.jobId && (isEmpty(selectedJob) || params.jobId !== selectedJob.uid)) {
+    if (
+      params.jobId &&
+      (isEmpty(selectedJob) || params.jobId !== selectedJob.uid) &&
+      checkIfWorkflowItemIsJob()
+    ) {
       fetchCurrentJob().then(() => {
         if (!isEmpty(selectedFunction)) {
           setSelectedFunction({})
         }
       })
     }
-  }, [fetchCurrentJob, params.jobId, selectedFunction, selectedJob])
+  }, [fetchCurrentJob, params.jobId, selectedFunction, selectedJob, checkIfWorkflowItemIsJob])
 
   useEffect(() => {
-    const workflow = { ...workflowsStore.activeWorkflow.data }
+    const functionToBeSelected = findSelectedWorkflowFunction()
 
-    if (
-      workflow.graph &&
-      params.functionHash &&
-      (isEmpty(selectedFunction) || params.functionHash !== selectedFunction.hash)
-    ) {
-      const selectedWorkflowFunction = find(workflow.graph, workflowItem => {
-        return (
-          workflowItem.function?.includes(`${params.functionName}@${params.functionHash}`) ||
-          workflowItem.function?.includes(params.functionName)
-        )
-      })
-      const customFunctionState = selectedWorkflowFunction?.phase?.toLowerCase()
+    if (isWorkflowStepExecutable(functionToBeSelected)) {
+      const workflow = { ...workflowsStore.activeWorkflow?.data }
 
-      if (params.functionHash === 'latest' && params.functionName !== selectedFunction.name) {
-        getFunction(params.projectName, params.functionName)
-          .then(func => {
-            setSelectedFunction(parseFunction(func, params.projectName, customFunctionState))
-            setItemIsSelected(true)
-            setSelectedJob({})
-          })
-          .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
-      } else if (params.functionName !== selectedFunction.name) {
-        getFunctionWithHash(params.projectName, params.functionName, params.functionHash)
+      if (
+        workflow.graph &&
+        params.functionHash &&
+        (isEmpty(selectedFunction) || params.functionHash !== selectedFunction.hash)
+      ) {
+        const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
+
+        if (params.functionHash === 'latest' && params.functionName !== selectedFunction.name) {
+          getFunction(params.projectName, params.functionName)
+            .then(func => {
+              setSelectedFunction(parseFunction(func, params.projectName, customFunctionState))
+              setItemIsSelected(true)
+              setSelectedJob({})
+            })
+            .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+        } else if (params.functionName !== selectedFunction.name) {
+          getFunctionWithHash(params.projectName, params.functionName, params.functionHash)
+            .then(func => {
+              setSelectedFunction(parseFunction(func, params.projectName, customFunctionState))
+              setItemIsSelected(true)
+              setSelectedJob({})
+            })
+            .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+        }
+      } else if (
+        workflow.graph &&
+        params.jobId &&
+        isEmpty(selectedFunction) &&
+        !checkIfWorkflowItemIsJob()
+      ) {
+        const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
+
+        getFunction(params.projectName, params.jobId)
           .then(func => {
             setSelectedFunction(parseFunction(func, params.projectName, customFunctionState))
             setItemIsSelected(true)
@@ -398,6 +436,7 @@ const MonitorWorkflows = ({
       }
     }
   }, [
+    findSelectedWorkflowFunction,
     getFunction,
     getFunctionWithHash,
     handleCatchRequest,
@@ -405,7 +444,9 @@ const MonitorWorkflows = ({
     params.functionName,
     params.projectName,
     selectedFunction,
-    workflowsStore.activeWorkflow
+    workflowsStore.activeWorkflow,
+    checkIfWorkflowItemIsJob,
+    params.jobId
   ])
 
   useEffect(() => {
@@ -496,7 +537,7 @@ const MonitorWorkflows = ({
               selectedFunction={selectedFunction}
               selectedJob={selectedJob}
               setWorkflowsViewMode={setWorkflowsViewMode}
-              workflow={workflowsStore.activeWorkflow.data}
+              workflow={workflowsStore.activeWorkflow?.data}
               workflowsViewMode={workflowsViewMode}
             />
           ) : (
