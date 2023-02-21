@@ -17,14 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useLayoutEffect,
-  useReducer
-} from 'react'
+import React, { useState, useRef, useEffect, useCallback, useLayoutEffect, useReducer } from 'react'
 import PropTypes from 'prop-types'
 
 import DatePickerView from './DatePickerView'
@@ -43,11 +36,7 @@ import {
   getWeekStart,
   months
 } from '../../utils/datePicker.util'
-import {
-  initialState,
-  datePickerActions,
-  datePickerReducer
-} from './datePickerReducer'
+import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
 
 const DatePicker = ({
   className,
@@ -67,15 +56,10 @@ const DatePicker = ({
   type,
   withOptions
 }) => {
-  const [datePickerState, datePickerDispatch] = useReducer(
-    datePickerReducer,
-    initialState
-  )
+  const [datePickerState, datePickerDispatch] = useReducer(datePickerReducer, initialState)
   const [isCalendarInvalid, setIsCalendarInvalid] = useState(false)
   const [isDatePickerOpened, setIsDatePickerOpened] = useState(false)
-  const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(
-    false
-  )
+  const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(false)
   const [isRange] = useState(type.includes('range'))
   const [isTime] = useState(type.includes('time'))
   const [isTopPosition, setIsTopPosition] = useState(false)
@@ -98,10 +82,7 @@ const DatePicker = ({
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
-      if (
-        datePickerRef.current &&
-        !datePickerRef.current.contains(event.target)
-      ) {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
         if (isDatePickerOptionsOpened) {
           setIsDatePickerOptionsOpened(false)
         } else if (isDatePickerOpened) {
@@ -147,10 +128,7 @@ const DatePicker = ({
   useLayoutEffect(() => {
     if (isDatePickerOpened) {
       const { top, bottom } = datePickerViewRef.current.getBoundingClientRect()
-      if (
-        bottom > window.innerHeight &&
-        top > datePickerViewRef.current.offsetHeight
-      ) {
+      if (bottom > window.innerHeight && top > datePickerViewRef.current.offsetHeight) {
         setIsTopPosition(true)
       }
     } else {
@@ -173,9 +151,7 @@ const DatePicker = ({
   }, [dateTo])
 
   useEffect(() => {
-    setValueDatePickerInput(
-      formatDate(isRange, isTime, splitCharacter, date, dateTo)
-    )
+    setValueDatePickerInput(formatDate(isRange, isTime, splitCharacter, date, dateTo))
   }, [date, dateTo, isRange, isTime, splitCharacter])
 
   useEffect(() => {
@@ -199,43 +175,28 @@ const DatePicker = ({
     }
 
     setIsCalendarInvalid(isCalendarInvalid)
-  }, [
-    datePickerState.configFrom.selectedDate,
-    datePickerState.configTo.selectedDate,
-    isRange
-  ])
+  }, [datePickerState.configFrom.selectedDate, datePickerState.configTo.selectedDate, isRange])
 
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_CALENDAR_FROM,
-      payload: generateCalendar(
-        datePickerState.configFrom.visibleDate || new Date(),
-        startWeek
-      )
+      payload: generateCalendar(datePickerState.configFrom.visibleDate || new Date(), startWeek)
     })
   }, [datePickerState.configFrom.visibleDate, startWeek])
 
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_CALENDAR_TO,
-      payload: generateCalendar(
-        datePickerState.configTo.visibleDate || new Date(),
-        startWeek
-      )
+      payload: generateCalendar(datePickerState.configTo.visibleDate || new Date(), startWeek)
     })
   }, [datePickerState.configTo.visibleDate, startWeek])
 
   useEffect(() => {
     if (isDatePickerOpened || isDatePickerOptionsOpened) {
       window.addEventListener('click', handleCloseDatePickerOutside)
-      return () =>
-        window.removeEventListener('click', handleCloseDatePickerOutside)
+      return () => window.removeEventListener('click', handleCloseDatePickerOutside)
     }
-  }, [
-    handleCloseDatePickerOutside,
-    isDatePickerOpened,
-    isDatePickerOptionsOpened
-  ])
+  }, [handleCloseDatePickerOutside, isDatePickerOpened, isDatePickerOptionsOpened])
 
   useEffect(() => {
     if (isInvalid !== invalid) {
@@ -246,25 +207,11 @@ const DatePicker = ({
         setIsInvalid(invalid)
       }
     }
-  }, [
-    getInputValueValidity,
-    invalid,
-    isInvalid,
-    required,
-    setInvalid,
-    valueDatePickerInput
-  ])
+  }, [getInputValueValidity, invalid, isInvalid, required, setInvalid, valueDatePickerInput])
 
   const isRangeDateValid = day => {
-    const dateFromMs = new Date(
-      datePickerState.configFrom.selectedDate
-    ).setHours(0, 0, 0, 0)
-    const dateToMs = new Date(datePickerState.configTo.selectedDate).setHours(
-      0,
-      0,
-      0,
-      0
-    )
+    const dateFromMs = new Date(datePickerState.configFrom.selectedDate).setHours(0, 0, 0, 0)
+    const dateToMs = new Date(datePickerState.configTo.selectedDate).setHours(0, 0, 0, 0)
     const dayMs = day.setHours(0, 0, 0, 0)
 
     return isRange && dayMs >= dateFromMs && dayMs <= dateToMs
@@ -272,12 +219,9 @@ const DatePicker = ({
 
   const onChangeNextMonth = configId => {
     datePickerDispatch({
-      type:
-        datePickerActions[
-          configId === 'configFrom'
-            ? 'UPDATE_VISIBLE_DATE_FROM'
-            : 'UPDATE_VISIBLE_DATE_TO'
-        ],
+      type: datePickerActions[
+        configId === 'configFrom' ? 'UPDATE_VISIBLE_DATE_FROM' : 'UPDATE_VISIBLE_DATE_TO'
+      ],
       payload: new Date(
         datePickerState[configId].visibleDate.getFullYear(),
         datePickerState[configId].visibleDate.getMonth() + 1,
@@ -288,12 +232,9 @@ const DatePicker = ({
 
   const onChangePreviousMonth = configId => {
     datePickerDispatch({
-      type:
-        datePickerActions[
-          configId === 'configFrom'
-            ? 'UPDATE_VISIBLE_DATE_FROM'
-            : 'UPDATE_VISIBLE_DATE_TO'
-        ],
+      type: datePickerActions[
+        configId === 'configFrom' ? 'UPDATE_VISIBLE_DATE_FROM' : 'UPDATE_VISIBLE_DATE_TO'
+      ],
       payload: new Date(
         datePickerState[configId].visibleDate.getFullYear(),
         datePickerState[configId].visibleDate.getMonth() - 1,
@@ -346,9 +287,7 @@ const DatePicker = ({
       let dates = DATE_FILTER_ANY_TIME
 
       if (!isValueEmpty) {
-        dates = event.target.value
-          .split(datesDivider)
-          .map(date => new Date(date))
+        dates = event.target.value.split(datesDivider).map(date => new Date(date))
 
         setIsInvalid(false)
         setInvalid && setInvalid(true)
@@ -368,9 +307,7 @@ const DatePicker = ({
       let dates = DATE_FILTER_ANY_TIME
 
       if (!isValueEmpty) {
-        dates = event.target.value
-          .split(datesDivider)
-          .map(date => new Date(date))
+        dates = event.target.value.split(datesDivider).map(date => new Date(date))
       }
 
       onBlur(dates)
@@ -404,12 +341,7 @@ const DatePicker = ({
 
       setSelectedDate(
         configId,
-        new Date(
-          new Date(selectedDate).setHours(
-            parseInt(timeParsed[0]),
-            parseInt(timeParsed[1])
-          )
-        )
+        new Date(new Date(selectedDate).setHours(parseInt(timeParsed[0]), parseInt(timeParsed[1])))
       )
     }
   }
@@ -426,12 +358,9 @@ const DatePicker = ({
 
   const setSelectedDate = (configId, newDate, selectedDate) => {
     datePickerDispatch({
-      type:
-        datePickerActions[
-          configId === 'configFrom'
-            ? 'UPDATE_SELECTED_DATE_FROM'
-            : 'UPDATE_SELECTED_DATE_TO'
-        ],
+      type: datePickerActions[
+        configId === 'configFrom' ? 'UPDATE_SELECTED_DATE_FROM' : 'UPDATE_SELECTED_DATE_TO'
+      ],
       payload: selectedDate
         ? new Date(
             newDate.setHours(
@@ -508,8 +437,7 @@ DatePicker.defaultProps = {
 
 DatePicker.propTypes = {
   className: PropTypes.string,
-  date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string])
-    .isRequired,
+  date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
   invalid: PropTypes.bool,
