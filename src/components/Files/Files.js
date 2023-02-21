@@ -176,6 +176,7 @@ const Files = () => {
     getArtifactIdentifier,
     handleRemoveRowData,
     handleRequestOnExpand,
+    null,
     FILES_PAGE
   )
 

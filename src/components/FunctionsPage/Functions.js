@@ -146,6 +146,7 @@ const Functions = ({
     getFunctionIdentifier,
     handleCollapse,
     handleExpand,
+    null,
     FUNCTIONS_PAGE,
     null,
     handleExpandAllCallback

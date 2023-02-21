@@ -79,6 +79,7 @@ const Content = ({
     getIdentifier,
     handleRemoveRequestData,
     pageData.handleRequestOnExpand,
+    null,
     pageData.page,
     params.pageTab
   )

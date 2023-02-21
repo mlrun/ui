@@ -205,6 +205,7 @@ const Datasets = () => {
     getArtifactIdentifier,
     handleRemoveRowData,
     handleRequestOnExpand,
+    null,
     DATASETS_PAGE
   )
 

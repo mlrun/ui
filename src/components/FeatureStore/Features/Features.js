@@ -194,6 +194,7 @@ const Features = ({
     getFeatureIdentifier,
     handleRemoveFeature,
     handleRequestOnExpand,
+    null,
     FEATURE_STORE_PAGE,
     FEATURES_TAB
   )
