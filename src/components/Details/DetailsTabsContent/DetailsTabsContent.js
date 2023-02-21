@@ -87,7 +87,6 @@ const DetailsTabsContent = ({
           selectedItem={selectedItem}
           setChangesCounter={setChangesCounter}
           setChangesData={setChangesData}
-          handleEditInput={handleEditInput}
         />
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:

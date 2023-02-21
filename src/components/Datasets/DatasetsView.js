@@ -46,6 +46,7 @@ const DatasetsView = React.forwardRef(
       artifactsStore,
       convertedYaml,
       datasets,
+      detailsFormInitialValues,
       filtersStore,
       handleExpandRow,
       handleRefresh,
@@ -98,6 +99,7 @@ const DatasetsView = React.forwardRef(
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     actionsMenu={actionsMenu}
                     content={datasets}
+                    detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedDataset({})}
                     pageData={pageData}
                     retryRequest={handleRefresh}
@@ -108,7 +110,6 @@ const DatasetsView = React.forwardRef(
                       <ArtifactsTableRow
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
-                        handleSelectItem={setSelectedDataset}
                         key={index}
                         rowItem={tableItem}
                         selectedItem={selectedDataset}
@@ -139,6 +140,7 @@ DatasetsView.propTypes = {
   artifactsStore: PropTypes.object.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  detailsFormInitialValues: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,

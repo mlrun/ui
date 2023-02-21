@@ -190,8 +190,8 @@ export const handleApplyDetailsChanges = (
     Object.keys(changes.data).forEach(key => {
       if (key === 'labels') {
         isNewFormat
-          ? (artifactItem.metadata[key] = changes.data[key].previousFieldValue)
-          : (artifactItem[key] = changes.data[key].previousFieldValue)
+          ? (artifactItem.metadata[key] = changes.data[key].currentFieldValue)
+          : (artifactItem[key] = changes.data[key].currentFieldValue)
       }
     })
 

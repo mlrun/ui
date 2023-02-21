@@ -60,6 +60,7 @@ import { setNotification } from '../../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
+import { parseChipsData } from '../../../utils/convertChipsData'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -77,6 +78,14 @@ const Models = ({ fetchModelFeatureVector }) => {
   const modelsRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
   const { fetchData, models, setModels, toggleConvertedYaml } = useModelsPage()
+
+  const detailsFormInitialValues = useMemo(
+    () => ({
+      tag: selectedModel.tag,
+      labels: parseChipsData(selectedModel.labels)
+    }),
+    [selectedModel.labels, selectedModel.tag]
+  )
 
   const handleDeployModel = useCallback(model => {
     openPopUp(DeployModelPopUp, { model })
@@ -298,6 +307,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
+      detailsFormInitialValues={detailsFormInitialValues}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}

@@ -17,9 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
-import { isEmpty, isEqual, cloneDeep } from 'lodash'
-import { OnChange } from 'react-final-form-listeners'
+import { isEmpty, isEqual, cloneDeep, isNil } from 'lodash'
 
 import {
   DATASETS_PAGE,
@@ -33,15 +31,7 @@ import {
 import { formatDatetime, generateLinkPath } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 
-export const generateArtifactsContent = (
-  addChip,
-  deleteChip,
-  editChips,
-  editInput,
-  detailsType,
-  selectedItem,
-  projectName
-) => {
+export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     return {
       uid: {
@@ -102,11 +92,14 @@ export const generateArtifactsContent = (
               pattern: isArtifactTagUnique(projectName, detailsType, selectedItem),
               async: true
             }
-          },
-          onChange: <OnChange name="tag">{value => editInput(value, 'tag')}</OnChange>
+          }
         },
-        handleDiscardChanges: (formState, detailsStore) =>
-          formState.form.change('tag', detailsStore.changes.data.tag.previousFieldValue)
+        handleDiscardChanges: (formState, detailsStore) => {
+          formState.form.change(
+            'tag',
+            detailsStore.changes.data.tag?.currentFieldValue ?? formState.initialValues.tag
+          )
+        }
       },
       iter: {
         value: selectedItem.iter || '0'
@@ -154,11 +147,11 @@ export const generateArtifactsContent = (
       },
       labels: {
         value: selectedItem.labels ?? [],
+        fieldData: {
+          name: 'labels'
+        },
         editModeEnabled: detailsType === MODELS_TAB,
-        editModeType: 'chips',
-        onChange: (chip, field) => editChips(chip, field),
-        onAdd: (chip, chips, field) => addChip(chip, chips, field),
-        handleDelete: (chips, field) => deleteChip(chips, field)
+        editModeType: 'chips'
       },
       sources: {
         value: selectedItem.sources
@@ -167,22 +160,9 @@ export const generateArtifactsContent = (
   }
 }
 
-export const generateFeatureStoreContent = (
-  addChip,
-  deleteChip,
-  editChips,
-  editInput,
-  detailsType,
-  selectedItem
-) => {
+export const generateFeatureStoreContent = (detailsType, selectedItem) => {
   if (detailsType === FEATURE_SETS_TAB) {
-    return generateFeatureSetsOverviewContent(
-      addChip,
-      deleteChip,
-      editChips,
-      editInput,
-      selectedItem
-    )
+    return generateFeatureSetsOverviewContent(selectedItem)
   } else if (detailsType === FEATURE_VECTORS_TAB) {
     return generateFeatureVectorsOverviewContent(selectedItem)
   }
@@ -256,26 +236,29 @@ export const generateFunctionsContent = selectedItem => ({
   }
 })
 
-export const generateFeatureSetsOverviewContent = (
-  addChip,
-  deleteChip,
-  editChips,
-  editInput,
-  selectedItem
-) => ({
+export const generateFeatureSetsOverviewContent = selectedItem => ({
   description: {
     value: selectedItem.description ?? '',
     editModeEnabled: true,
     editModeType: 'textarea',
-    onChange: value => editInput(value, 'description')
+    fieldData: {
+      name: 'description'
+    },
+    handleDiscardChanges: (formState, detailsStore) => {
+      formState.form.change(
+        'description',
+        detailsStore.changes.data.description?.currentFieldValue ??
+          formState.initialValues.description
+      )
+    }
   },
   labels: {
-    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
+    value: selectedItem.labels ?? [],
     editModeEnabled: true,
     editModeType: 'chips',
-    onChange: (chip, field) => editChips(chip, field),
-    onAdd: (chip, chips, field) => addChip(chip, chips, field),
-    handleDelete: (chips, field) => deleteChip(chips, field)
+    fieldData: {
+      name: 'labels'
+    }
   },
   tag: {
     value: selectedItem.tag
@@ -333,13 +316,14 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   }
 })
 export const handleFinishEdit = (
-  fields,
   changes,
   detailsTabActions,
   detailsTabDispatch,
-  detailsTabState,
   setChangesData,
-  setChangesCounter
+  setChangesCounter,
+  currentField,
+  formState,
+  fields
 ) => {
   detailsTabDispatch({
     type: detailsTabActions.RESET_EDIT_MODE
@@ -347,19 +331,30 @@ export const handleFinishEdit = (
 
   const changesData = cloneDeep(changes.data)
 
-  fields.forEach(field => {
-    if (changes.data[field]) {
-      if (isEqual(changesData[field]?.initialFieldValue, changesData[field]?.currentFieldValue)) {
-        delete changesData[field]
-      } else {
-        changesData[field] = {
-          initialFieldValue: changesData[field].initialFieldValue,
-          currentFieldValue: changesData[field].currentFieldValue,
-          previousFieldValue: changesData[field].currentFieldValue
-        }
+  if (!isNil(formState?.initialValues[currentField])) {
+    if (isEqual(formState.initialValues[currentField], formState.values[currentField])) {
+      delete changesData[currentField]
+    } else {
+      changesData[currentField] = {
+        initialFieldValue: formState.initialValues[currentField],
+        currentFieldValue: formState.values[currentField]
       }
     }
-  })
+  } else {
+    fields.forEach(field => {
+      if (changes.data[field]) {
+        if (isEqual(changesData[field]?.initialFieldValue, changesData[field]?.currentFieldValue)) {
+          delete changesData[field]
+        } else {
+          changesData[field] = {
+            initialFieldValue: changesData[field].initialFieldValue,
+            currentFieldValue: changesData[field].currentFieldValue,
+            previousFieldValue: changesData[field].currentFieldValue
+          }
+        }
+      }
+    })
+  }
 
   setChangesCounter(countChanges(changesData))
   setChangesData({ ...changesData })

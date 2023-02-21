@@ -29,6 +29,7 @@ import {
 } from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { truncateUid } from '../../utils'
+import { convertChipsData } from '../../utils/convertChipsData'
 
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
@@ -58,22 +59,14 @@ export const handleApplyDetailsChanges = (
 
   Object.keys(changes.data).forEach(key => {
     if (metadataFields.includes(key)) {
-      data.metadata[key] = changes.data[key].previousFieldValue
+      data.metadata[key] = changes.data[key].currentFieldValue
     } else {
-      data.spec[key] = changes.data[key].previousFieldValue
+      data.spec[key] = changes.data[key].currentFieldValue
     }
   })
 
-  if (data.metadata.labels && Array.isArray(data.metadata.labels)) {
-    const objectLabels = {}
-
-    data.metadata.labels.forEach(label => {
-      const splitedLabel = label.split(':')
-
-      objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
-    })
-
-    data.metadata.labels = { ...objectLabels }
+  if (data.metadata.labels && changes.data.labels) {
+    data.metadata.labels = convertChipsData(data.metadata.labels)
   }
 
   return updateFeatureStoreData(

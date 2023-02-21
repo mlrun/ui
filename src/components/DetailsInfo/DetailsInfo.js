@@ -19,7 +19,6 @@ such restriction.
 */
 import React, { useReducer, useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { isNil } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
@@ -54,11 +53,7 @@ const DetailsInfo = React.forwardRef(
     )
 
     useEffect(() => {
-      if (!isEveryObjectValueEmpty(detailsInfoState.editMode)) {
-        dispatch(detailsActions.setEditMode(true))
-      } else {
-        dispatch(detailsActions.setEditMode(false))
-      }
+      dispatch(detailsActions.setEditMode(!isEveryObjectValueEmpty(detailsInfoState.editMode)))
     }, [detailsInfoState.editMode, dispatch])
 
     useEffect(() => {
@@ -77,21 +72,11 @@ const DetailsInfo = React.forwardRef(
       }
     }, [onApplyChanges])
 
-    const handleDiscardChanges = useCallback(
-      field => {
-        detailsInfoDispatch({
-          type: detailsInfoActions.RESET_EDIT_MODE
-        })
-        setChangesData({
-          ...detailsStore.changes.data,
-          [field]: {
-            ...detailsStore.changes.data[field],
-            currentFieldValue: detailsStore.changes.data[field]?.previousFieldValue
-          }
-        })
-      },
-      [detailsStore.changes.data, setChangesData]
-    )
+    const handleDiscardChanges = useCallback(field => {
+      detailsInfoDispatch({
+        type: detailsInfoActions.RESET_EDIT_MODE
+      })
+    }, [])
 
     const handleInfoItemClick = useCallback(
       (field, fieldType, info) => {
@@ -103,28 +88,9 @@ const DetailsInfo = React.forwardRef(
               fieldType
             }
           })
-
-          if (isNil(detailsStore.changes.data[field]?.initialFieldValue)) {
-            setChangesData({
-              ...detailsStore.changes.data,
-              [field]: {
-                initialFieldValue: info,
-                currentFieldValue: info,
-                previousFieldValue: info
-              }
-            })
-          } else {
-            setChangesData({
-              ...detailsStore.changes.data,
-              [field]: {
-                ...detailsStore.changes.data[field],
-                currentFieldValue: info
-              }
-            })
-          }
         }
       },
-      [detailsInfoState.editMode, detailsStore.changes.data, setChangesData]
+      [detailsInfoState.editMode]
     )
 
     const sources = useMemo(
@@ -140,17 +106,20 @@ const DetailsInfo = React.forwardRef(
       [selectedItem.sources]
     )
 
-    const finishEdit = useCallback(() => {
-      return handleFinishEdit(
-        Object.keys(detailsStore.changes.data),
-        detailsStore.changes,
-        detailsInfoActions,
-        detailsInfoDispatch,
-        detailsInfoState,
-        setChangesData,
-        setChangesCounter
-      )
-    }, [detailsInfoState, detailsStore.changes, setChangesCounter, setChangesData])
+    const finishEdit = useCallback(
+      currentField => {
+        return handleFinishEdit(
+          detailsStore.changes,
+          detailsInfoActions,
+          detailsInfoDispatch,
+          setChangesData,
+          setChangesCounter,
+          currentField,
+          formState
+        )
+      },
+      [detailsStore.changes, formState, setChangesCounter, setChangesData]
+    )
 
     return (
       <DetailsInfoView

@@ -40,6 +40,7 @@ const Table = ({
   applyDetailsChangesCallback,
   children,
   content,
+  detailsFormInitialValues,
   filtersStore,
   getCloseDetailsLink,
   groupedContent,
@@ -140,6 +141,7 @@ const Table = ({
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       content={content}
+      detailsFormInitialValues={detailsFormInitialValues}
       getCloseDetailsLink={getCloseDetailsLink}
       groupFilter={filtersStore.groupBy}
       groupLatestItem={
@@ -174,6 +176,7 @@ const Table = ({
 Table.defaultProps = {
   applyDetailsChanges: () => {},
   applyDetailsChangesCallback: () => {},
+  detailsFormInitialValues: {},
   getCloseDetailsLink: null,
   groupedContent: {},
   handleCancel: () => {},
@@ -190,6 +193,7 @@ Table.propTypes = {
   applyDetailsChanges: PropTypes.func,
   applyDetailsChangesCallback: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  detailsFormInitialValues: PropTypes.object,
   getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),
   handleCancel: PropTypes.func,

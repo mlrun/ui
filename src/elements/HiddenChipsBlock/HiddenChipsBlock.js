@@ -22,9 +22,8 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Chip from '../../common/Chip/Chip'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import ChipTooltip from '../../common/ChipCell/ChipTooltip/ChipTooltip'
 
-import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import { getFirstScrollableParent } from '../../utils/getFirstScrollableParent'
 import localStorageService from '../../utils/localStorageService'
 import { CHIP_OPTIONS, CHIPS } from '../../types'
@@ -83,7 +82,11 @@ const HiddenChipsBlock = React.forwardRef(
           setIsTop(true)
         }
 
-        setIsRight(isNavbarPinned ? left - NAVBAR_WIDTH <= hiddenChipBlockWidth : left <= hiddenChipBlockWidth)
+        setIsRight(
+          isNavbarPinned
+            ? left - NAVBAR_WIDTH <= hiddenChipBlockWidth
+            : left <= hiddenChipBlockWidth
+        )
         setIsVisible(true)
       }
     }, [hiddenRef, hiddenChipCounterRef, isNavbarPinned])
@@ -109,27 +112,8 @@ const HiddenChipsBlock = React.forwardRef(
     return (
       <div ref={hiddenRef} className={hiddenChipsBlockClassNames}>
         {chips?.map((element, index) => {
-          const { chipLabel, chipValue } = getChipLabelAndValue(element)
-
           return (
-            <Tooltip
-              key={element.value}
-              template={
-                <TextTooltipTemplate
-                  text={
-                    element.delimiter ? (
-                      <span className="chip__content">
-                        {chipLabel}
-                        <span className="chip__delimiter">{element.delimiter}</span>
-                        {chipValue}
-                      </span>
-                    ) : (
-                      element.value
-                    )
-                  }
-                />
-              }
-            >
+            <ChipTooltip chip={element} key={element.value}>
               <Chip
                 chip={element}
                 chipIndex={index + chipIndex}
@@ -146,7 +130,7 @@ const HiddenChipsBlock = React.forwardRef(
                 showChips={true}
                 textOverflowEllipsis
               />
-            </Tooltip>
+            </ChipTooltip>
           )
         })}
       </div>

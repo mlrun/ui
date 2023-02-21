@@ -25,11 +25,10 @@ import Prism from 'prismjs'
 import { useSelector } from 'react-redux'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
-import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
 import Input from '../../common/Input/Input'
-import TextArea from '../../common/TextArea/TextArea'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
-import { FormInput } from 'igz-controls/components'
+import { FormInput, FormTextarea } from 'igz-controls/components'
+import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
 
 import { CHIP_OPTIONS } from '../../types'
 import { copyToClipboard } from '../../utils/copyToClipboard'
@@ -44,11 +43,11 @@ const DetailsInfoItem = React.forwardRef(
   (
     {
       changesData,
-      chipOptions,
       chipsClassName,
       chipsData,
       currentField,
       detailsInfoDispatch,
+      detailsInfoState,
       editableFieldType,
       formState,
       func,
@@ -81,16 +80,17 @@ const DetailsInfoItem = React.forwardRef(
       return (
         <DetailsInfoItemChip
           changesData={changesData}
-          chipOptions={chipOptions}
           chipsClassName={chipsClassName}
           chipsData={chipsData}
           currentField={currentField}
           detailsInfoDispatch={detailsInfoDispatch}
+          detailsInfoState={detailsInfoState}
           editableFieldType={editableFieldType}
           handleFinishEdit={handleFinishEdit}
           isFieldInEditMode={isFieldInEditMode}
           item={item}
           setChangesData={setChangesData}
+          formState={formState}
         />
       )
     } else if (item?.editModeEnabled && isFieldInEditMode) {
@@ -107,12 +107,13 @@ const DetailsInfoItem = React.forwardRef(
             />
           )}
           {editableFieldType === 'textarea' && (
-            <TextArea focused maxLength={500} onChange={item.onChange} type="text" value={info} />
+            <FormTextarea focused maxLength={500} name={item.fieldData.name} />
           )}
           {editableFieldType === 'formInput' && (
             <>
               <FormInput
                 async={item.fieldData.async}
+                focused
                 name={item.fieldData.name}
                 validationRules={getValidationRules(
                   item.fieldData.validationRules.name,
@@ -124,7 +125,7 @@ const DetailsInfoItem = React.forwardRef(
           )}
           <RoundedIcon
             disabled={!inputIsValid || formState.invalid || formState.validating}
-            onClick={handleFinishEdit}
+            onClick={() => handleFinishEdit(item.fieldData.name)}
             tooltipText="Apply"
           >
             <Checkmark />
@@ -139,7 +140,7 @@ const DetailsInfoItem = React.forwardRef(
       return (
         <div className="details-item__data">
           <ChipCell
-            chipOptions={chipOptions}
+            chipOptions={chipsData.chipOptions}
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             elements={chipsData.chips}
@@ -272,6 +273,7 @@ DetailsInfoItem.defaultProps = {
   },
   currentField: '',
   detailsInfoDispatch: () => {},
+  detailsInfoState: {},
   editableFieldType: null,
   func: '',
   handleFinishEdit: () => {},
@@ -295,6 +297,7 @@ DetailsInfoItem.propTypes = {
   }),
   currentField: PropTypes.string,
   detailsInfoDispatch: PropTypes.func,
+  detailsInfoState: PropTypes.object,
   editableFieldType: PropTypes.string,
   formState: PropTypes.shape({}),
   func: PropTypes.string,
@@ -309,4 +312,4 @@ DetailsInfoItem.propTypes = {
   state: PropTypes.string
 }
 
-export default React.memo(DetailsInfoItem)
+export default DetailsInfoItem

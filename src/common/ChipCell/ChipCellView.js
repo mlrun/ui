@@ -23,12 +23,11 @@ import classnames from 'classnames'
 
 import Chip from '../Chip/Chip'
 import HiddenChipsBlock from '../../elements/HiddenChipsBlock/HiddenChipsBlock'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import ChipTooltip from './ChipTooltip/ChipTooltip'
 
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import { CHIP_OPTIONS, CHIPS } from '../../types'
 
 import './chipCell.scss'
@@ -57,47 +56,21 @@ const ChipCellView = React.forwardRef(
     const buttonAddClassNames = classnames(
       'button-add',
       className,
-      chipOptions.background &&
-        `button-add-background_${chipOptions.background}`,
+      chipOptions.background && `button-add-background_${chipOptions.background}`,
       chipOptions.borderColor && `button-add-border_${chipOptions.borderColor}`,
       chipOptions.font && `button-add-font_${chipOptions.font}`,
       chipOptions.density && `button-add-density_${chipOptions.density}`
     )
-    const wrapperClassNames = classnames(
-      'chips-wrapper',
-      isEditMode && 'fixed-max-width'
-    )
+    const wrapperClassNames = classnames('chips-wrapper', isEditMode && 'fixed-max-width')
 
     return (
       (isEditMode || !isEveryObjectValueEmpty(chips)) && (
         <div className="chips-cell" ref={chipsCellRef}>
           <div className={wrapperClassNames} ref={chipsWrapperRef}>
             {chips.visibleChips.map((chip, index) => {
-              const { chipLabel, chipValue } = getChipLabelAndValue(chip)
-
               return (
                 <div className="chip-block" key={`${chip.value}${index}`}>
-                  <Tooltip
-                    hidden={editConfig.isEdit || /^\+ [\d]+/g.test(chip.value)}
-                    key={chip.value}
-                    template={
-                      <TextTooltipTemplate
-                        text={
-                          chip.delimiter ? (
-                            <span className="chip__content">
-                              {chipLabel}
-                              <span className="chip__delimiter">
-                                {chip.delimiter}
-                              </span>
-                              {chipValue}
-                            </span>
-                          ) : (
-                            chip.value
-                          )
-                        }
-                      />
-                    }
-                  >
+                  <ChipTooltip chip={chip} editConfig={editConfig} key={chip.value}>
                     <Chip
                       chip={chip}
                       chipIndex={index}
@@ -116,33 +89,29 @@ const ChipCellView = React.forwardRef(
                       showChips={showChips}
                       textOverflowEllipsis
                     />
-                  </Tooltip>
-                  {chips.visibleChips.length - 1 === index &&
-                    showHiddenChips && (
-                      <HiddenChipsBlock
-                        chipOptions={chipOptions}
-                        className={className}
-                        chips={chips.hiddenChips}
-                        chipIndex={index}
-                        editConfig={editConfig}
-                        handleEditChip={handleEditChip}
-                        handleIsEdit={handleIsEdit}
-                        handleRemoveChip={handleRemoveChip}
-                        handleShowElements={handleShowElements}
-                        isEditMode={isEditMode}
-                        setEditConfig={setEditConfig}
-                        setChipsSizes={setChipsSizes}
-                        ref={hiddenChipCounterRef}
-                      />
-                    )}
+                  </ChipTooltip>
+                  {chips.visibleChips.length - 1 === index && showHiddenChips && (
+                    <HiddenChipsBlock
+                      chipOptions={chipOptions}
+                      className={className}
+                      chips={chips.hiddenChips}
+                      chipIndex={index}
+                      editConfig={editConfig}
+                      handleEditChip={handleEditChip}
+                      handleIsEdit={handleIsEdit}
+                      handleRemoveChip={handleRemoveChip}
+                      handleShowElements={handleShowElements}
+                      isEditMode={isEditMode}
+                      setEditConfig={setEditConfig}
+                      setChipsSizes={setChipsSizes}
+                      ref={hiddenChipCounterRef}
+                    />
+                  )}
                 </div>
               )
             })}
             {isEditMode && (
-              <button
-                className={buttonAddClassNames}
-                onClick={e => handleAddNewChip(e, ':')}
-              >
+              <button className={buttonAddClassNames} onClick={e => handleAddNewChip(e, ':')}>
                 <Add />
               </button>
             )}

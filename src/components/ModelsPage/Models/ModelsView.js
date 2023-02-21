@@ -36,6 +36,7 @@ const ModelsView = React.forwardRef(
       artifactsStore,
       applyDetailsChanges,
       applyDetailsChangesCallback,
+      detailsFormInitialValues,
       filtersStore,
       handleExpandRow,
       handleRefresh,
@@ -71,6 +72,7 @@ const ModelsView = React.forwardRef(
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
                   content={models}
                   handleCancel={() => setSelectedModel({})}
+                  detailsFormInitialValues={detailsFormInitialValues}
                   pageData={pageData}
                   retryRequest={handleRefresh}
                   selectedItem={selectedModel}
@@ -82,7 +84,6 @@ const ModelsView = React.forwardRef(
                       <ArtifactsTableRow
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
-                        handleSelectItem={setSelectedModel}
                         key={index}
                         rowItem={tableItem}
                         selectedItem={selectedModel}

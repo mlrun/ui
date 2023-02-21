@@ -17,17 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useCallback, useRef, useState } from 'react'
+import React, { useEffect, useCallback, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
+import classnames from 'classnames'
 
-import DetailsView from './DetailsView'
 import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
+import { ConfirmDialog } from 'igz-controls/components'
+import Loader from '../../common/Loader/Loader'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import DetailsHeader from './DetailsHeader/DetailsHeader'
+import TabsSlider from '../../common/TabsSlider/TabsSlider'
 
+import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
@@ -57,6 +63,7 @@ const Details = ({
   applyDetailsChanges,
   applyDetailsChangesCallback,
   detailsMenu,
+  formInitialValues,
   getCloseDetailsLink,
   handleCancel,
   handleRefresh,
@@ -86,29 +93,19 @@ const Details = ({
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
 
-  const initialValues = useMemo(
-    () => ({
-      tag: selectedItem.tag
-    }),
-    [selectedItem.tag]
+  const detailsPanelClassNames = classnames(
+    'table__item',
+    detailsStore.showWarning && 'pop-up-dialog-opened',
+    isDetailsScreen && 'table__item_big'
   )
 
   const formRef = React.useRef(
     createForm({
-      initialValues,
+      initialValues: formInitialValues,
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
   )
-
-  const handlePreview = useCallback(() => {
-    dispatch(
-      showArtifactsPreview({
-        isPreview: true,
-        selectedItem
-      })
-    )
-  }, [dispatch, selectedItem])
 
   const setNewChangesData = useCallback(
     (value, field) => {
@@ -130,26 +127,14 @@ const Details = ({
     [setNewChangesData]
   )
 
-  const handleEditChips = useCallback(
-    (chips, field) => {
-      setNewChangesData(chips, field)
-    },
-    [setNewChangesData]
-  )
-
-  const handleAddChip = useCallback(
-    (chip, chips, field) => {
-      setNewChangesData([...chips, ...chip], field)
-    },
-    [setNewChangesData]
-  )
-
-  const handleDeleteChip = useCallback(
-    (chips, field) => {
-      setNewChangesData(chips, field)
-    },
-    [setNewChangesData]
-  )
+  const handlePreview = useCallback(() => {
+    dispatch(
+      showArtifactsPreview({
+        isPreview: true,
+        selectedItem
+      })
+    )
+  }, [dispatch, selectedItem])
 
   useEffect(() => {
     return () => {
@@ -170,41 +155,15 @@ const Details = ({
         pageData.details.type === DATASETS
       ) {
         setInfoContent(
-          generateArtifactsContent(
-            handleAddChip,
-            handleDeleteChip,
-            handleEditChips,
-            handleEditInput,
-            pageData.details.type,
-            selectedItem,
-            params.projectName
-          )
+          generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)
         )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
         setInfoContent(generateFunctionsContent(selectedItem))
       } else {
-        setInfoContent(
-          generateFeatureStoreContent(
-            handleAddChip,
-            handleDeleteChip,
-            handleEditChips,
-            handleEditInput,
-            pageData.details.type,
-            selectedItem
-          )
-        )
+        setInfoContent(generateFeatureStoreContent(pageData.details.type, selectedItem))
       }
     }
-  }, [
-    handleAddChip,
-    handleDeleteChip,
-    handleEditChips,
-    handleEditInput,
-    pageData.details.type,
-    params.projectName,
-    selectedItem,
-    setInfoContent
-  ])
+  }, [pageData.details.type, params.projectName, selectedItem, setInfoContent])
 
   useEffect(() => {
     return () => {
@@ -216,13 +175,7 @@ const Details = ({
       removeInfoContent()
       setHistoryIsBlocked(false)
     }
-  }, [
-    pageData.details.type,
-    removeInfoContent,
-    removeModelFeatureVector,
-    selectedItem,
-    setChangesData
-  ])
+  }, [pageData.details.type, removeInfoContent, removeModelFeatureVector, selectedItem])
 
   const handleShowWarning = useCallback(
     show => {
@@ -270,35 +223,16 @@ const Details = ({
 
   useEffect(() => {
     if (formRef.current) {
-      formRef.current.reset(initialValues)
+      formRef.current.restart(formInitialValues)
     }
-  }, [initialValues])
+  }, [formInitialValues])
 
   const detailsMenuClick = useCallback(() => {
-    let changesData = {}
-
-    if (
-      Object.keys(detailsStore.changes.data).some(key => {
-        return (
-          detailsStore.changes.data[key].currentFieldValue !==
-          detailsStore.changes.data[key].previousFieldValue
-        )
-      })
-    ) {
-      Object.keys(detailsStore.changes.data).forEach(key => {
-        changesData[key] = {
-          initialFieldValue: detailsStore.changes.data[key].initialFieldValue,
-          previousFieldValue: detailsStore.changes.data[key].previousFieldValue,
-          currentFieldValue: detailsStore.changes.data[key].previousFieldValue
-        }
-      })
-      setChangesData({ ...changesData })
-    }
-
     if (historyIsBlocked) {
       unblockHistory()
+      setHistoryIsBlocked(false)
     }
-  }, [detailsStore.changes.data, historyIsBlocked, setChangesData, unblockHistory])
+  }, [historyIsBlocked, unblockHistory])
 
   const applyChanges = useCallback(() => {
     applyDetailsChanges(detailsStore.changes).then(() => {
@@ -350,35 +284,25 @@ const Details = ({
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
-        <DetailsView
-          actionsMenu={actionsMenu}
-          applyChanges={applyChanges}
-          applyChangesRef={applyChangesRef}
-          cancelChanges={cancelChanges}
-          detailsMenu={detailsMenu}
-          detailsMenuClick={detailsMenuClick}
-          detailsStore={detailsStore}
-          formState={formState}
-          getCloseDetailsLink={getCloseDetailsLink}
-          handleCancel={handleCancel}
-          handleEditInput={handleEditInput}
-          handlePreview={handlePreview}
-          handleRefresh={handleRefresh}
-          handleShowWarning={handleShowWarning}
-          isDetailsScreen={isDetailsScreen}
-          leavePage={leavePage}
-          pageData={pageData}
-          params={params}
-          ref={detailsRef}
-          selectedItem={selectedItem}
-          setChanges={setChanges}
-          setChangesCounter={setChangesCounter}
-          setChangesData={setChangesData}
-          setIteration={setIteration}
-          setIterationOption={setIterationOption}
-          setFiltersWasHandled={setFiltersWasHandled}
-          tab={tab}
-        >
+        <div className={detailsPanelClassNames} ref={detailsRef}>
+          {detailsStore.loading && <Loader />}
+          {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
+          <DetailsHeader
+            actionsMenu={actionsMenu}
+            applyChanges={applyChanges}
+            applyChangesRef={applyChangesRef}
+            cancelChanges={cancelChanges}
+            getCloseDetailsLink={getCloseDetailsLink}
+            handleCancel={handleCancel}
+            handleRefresh={handleRefresh}
+            handleShowWarning={handleShowWarning}
+            isDetailsScreen={isDetailsScreen}
+            pageData={pageData}
+            selectedItem={selectedItem}
+            setIteration={setIteration}
+            tab={tab}
+          />
+          <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
           <DetailsTabsContent
             applyChangesRef={applyChangesRef}
             formState={formState}
@@ -392,7 +316,33 @@ const Details = ({
             setIteration={setIteration}
             setIterationOption={setIterationOption}
           />
-        </DetailsView>
+          {detailsStore.showWarning && (
+            <ConfirmDialog
+              cancelButton={{
+                handler: () => {
+                  handleShowWarning(false)
+                  setFiltersWasHandled(false)
+                },
+                label: detailsStore.filtersWasHandled ? "Don't refresh" : "Don't Leave",
+                variant: TERTIARY_BUTTON
+              }}
+              closePopUp={() => {
+                handleShowWarning(false)
+                setFiltersWasHandled(false)
+              }}
+              confirmButton={{
+                handler: leavePage,
+                label: detailsStore.filtersWasHandled ? 'Refresh' : 'Leave',
+                variant: PRIMARY_BUTTON
+              }}
+              header="You have unsaved changes."
+              isOpen={detailsStore.showWarning}
+              message={`${
+                detailsStore.filtersWasHandled ? 'Refreshing the list' : 'Leaving this page'
+              } will discard your changes.`}
+            />
+          )}
+        </div>
       )}
     </Form>
   )
@@ -402,6 +352,7 @@ Details.defaultProps = {
   applyDetailsChanges: () => {},
   applyDetailsChangesCallback: () => {},
   cancelRequest: () => {},
+  formInitialValues: {},
   getCloseDetailsLink: null,
   handleRefresh: () => {},
   isDetailsScreen: false,
@@ -423,6 +374,7 @@ Details.propTypes = {
       hidden: PropTypes.bool
     })
   ).isRequired,
+  formInitialValues: PropTypes.object,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func,

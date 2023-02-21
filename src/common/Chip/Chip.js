@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -54,15 +54,8 @@ const Chip = React.forwardRef(
     { chipsCellRef, hiddenChipCounterRef }
   ) => {
     const chipRef = React.useRef()
-    const { chipLabel, chipValue } = getChipLabelAndValue(chip)
-    const {
-      background,
-      boldValue,
-      borderColor,
-      density,
-      font,
-      borderRadius
-    } = chipOptions
+    const { chipLabel, chipValue } = useMemo(() => getChipLabelAndValue(chip), [chip])
+    const { background, boldValue, borderColor, density, font, borderRadius } = chipOptions
 
     const chipClassNames = classnames(
       'chip',
@@ -136,7 +129,11 @@ const Chip = React.forwardRef(
     }
 
     return (
-      <span className={`${chipClassNames} chips_button`} onClick={onClick} ref={hiddenChipCounterRef}>
+      <span
+        className={`${chipClassNames} chips_button`}
+        onClick={onClick}
+        ref={hiddenChipCounterRef}
+      >
         {chip.value}
       </span>
     )

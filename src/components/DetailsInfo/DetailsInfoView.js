@@ -115,8 +115,8 @@ const DetailsInfoView = React.forwardRef(
                 pageData.page === FEATURE_STORE_PAGE
               ) {
                 if (header.id === 'labels') {
-                  chipsData.chips = !isNil(detailsStore.changes.data[header.id])
-                    ? detailsStore.changes.data[header.id].currentFieldValue
+                  chipsData.chips = formState.values.labels
+                    ? parseKeyValues(formState.values.labels)
                     : parseKeyValues(detailsStore.infoContent[header.id]?.value)
                   chipsData.chipOptions = getChipOptions(header.id)
                 }
@@ -153,9 +153,9 @@ const DetailsInfoView = React.forwardRef(
                         changesData={detailsStore.changes.data}
                         chipsClassName={chipsClassName}
                         chipsData={chipsData}
-                        chipOptions={chipsData.chipOptions}
                         currentField={header.id}
                         detailsInfoDispatch={detailsInfoDispatch}
+                        detailsInfoState={detailsInfoState}
                         editableFieldType={detailsInfoState.editMode.fieldType}
                         formState={formState}
                         func={func}
