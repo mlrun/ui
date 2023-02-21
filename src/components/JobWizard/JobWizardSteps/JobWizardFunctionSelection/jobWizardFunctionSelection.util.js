@@ -17,8 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+// import { set } from 'lodash'
+
 export const FUNCTIONS_SELECTION_FUNCTIONS_TAB = 'functions'
-export const FUNCTIONS_SELECTION_MARKETPLACE_TAB = 'marketplace'
+export const FUNCTIONS_SELECTION_HUB_TAB = 'hub'
 
 export const functionsSelectionTabs = [
   {
@@ -26,8 +28,8 @@ export const functionsSelectionTabs = [
     label: 'Functions'
   },
   {
-    id: FUNCTIONS_SELECTION_MARKETPLACE_TAB,
-    label: 'Marketplace'
+    id: FUNCTIONS_SELECTION_HUB_TAB,
+    label: 'Hub'
   }
 ]
 
@@ -35,16 +37,27 @@ export const generateFunctionCardData = functionData => {
   return {
     header: functionData.name,
     subHeader: functionData.functions?.[0]?.metadata?.project ?? '',
-    description: '',
+    description: functionData.functions?.[0]?.spec?.description ?? '',
     sideTag: ''
   }
 }
 
 export const generateFunctionTemplateCardData = templateData => {
-  return {
+  const functionTemplateCardData = {
     header: templateData.metadata.name,
     subHeader: '',
     description: templateData.metadata.description,
-    sideTag: ''
+    sideTag: '',
+    labelsName: `functionSelection.templatesLabels.${templateData.metadata.name}`
   }
+
+  // todo: add links when the backend is ready
+  // if (templateData.metadata.docfile) {
+  //   set(functionTemplateCardData, 'links.documentation', '')
+  // }
+  // if (templateData.metadata.versions?.latest) {
+  //   set(functionTemplateCardData, 'links.examples', '')
+  // }
+
+  return functionTemplateCardData
 }

@@ -24,15 +24,18 @@ export const generatePageData = () => {
     page: CONSUMER_GROUPS_PAGE,
     tableHeaders: [
       {
-        header: 'Consumer group name',
+        headerId: 'name',
+        headerLabel: 'Consumer group name',
         class: 'table-cell-1'
       },
       {
-        header: 'Stream Path',
+        headerId: 'path',
+        headerLabel: 'Stream Path',
         class: 'table-cell-1'
       },
       {
-        header: 'Real time functions',
+        headerId: 'functions',
+        headerLabel: 'Real time functions',
         class: 'table-cell-1'
       }
     ]

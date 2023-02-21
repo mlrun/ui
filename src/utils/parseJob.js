@@ -20,10 +20,13 @@ such restriction.
 import { JOBS_PAGE, SCHEDULE_TAB } from '../constants'
 import getState from './getState'
 import { parseKeyValues } from './object'
+import { getJobIdentifier } from './getUniqueIdentifier'
 
 export const parseJob = (job, tab) => {
+  let jobItem = null
+
   if (tab === SCHEDULE_TAB) {
-    return {
+    jobItem = {
       createdTime: new Date(job.creation_time),
       func: job.scheduled_object.task.spec.function,
       name: job.name,
@@ -39,7 +42,7 @@ export const parseJob = (job, tab) => {
       }
     }
   } else {
-    return {
+    jobItem = {
       artifacts: job.status.artifacts || [],
       error: job.status.error ?? '',
       function: job?.spec?.function ?? '',
@@ -67,9 +70,15 @@ export const parseJob = (job, tab) => {
       ui_run: job.status.ui_url,
       uid: job.metadata.uid,
       updated: new Date(job.status.last_update),
-      ui: {
-        originalContent: job
-      }
+      ui: {}
     }
   }
+
+  jobItem.ui = {
+    originalContent: job,
+    identifier: getJobIdentifier(jobItem),
+    identifierUnique: getJobIdentifier(jobItem, true)
+  }
+
+  return jobItem
 }

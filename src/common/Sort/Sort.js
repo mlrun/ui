@@ -27,16 +27,11 @@ import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
 import './sort.scss'
 
-const Sort = ({
-  isDescendingOrder,
-  onSelectOption,
-  options,
-  selectedId,
-  setIsDescendingOrder
-}) => {
+const Sort = ({ isDescendingOrder, onSelectOption, options, selectedId, setIsDescendingOrder }) => {
   const [selectedOption, setSelectedOption] = useState(null)
   const arrowDirectionClassName = classNames(
-    isDescendingOrder ? 'sort_down' : 'sort_up'
+    'sort-icon',
+    isDescendingOrder ? 'sort-icon_down' : 'sort-icon_up'
   )
 
   useEffect(() => {

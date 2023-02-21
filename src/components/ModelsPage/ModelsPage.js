@@ -37,6 +37,7 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { actionsMenuHeader } from './Models/models.util'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import { useMode } from '../../hooks/mode.hook'
 
 import './modelsPage.scss'
 
@@ -44,6 +45,7 @@ const ModelsPage = () => {
   const location = useLocation()
   const artifactsStore = useSelector(store => store.artifactsStore)
   const params = useParams()
+  const { isDemoMode } = useMode()
   const { convertedYaml, fetchData, toggleConvertedYaml } = useModelsPage()
 
   const handleRegisterModel = useCallback(() => {
@@ -54,11 +56,14 @@ const ModelsPage = () => {
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
-          <PageActionsMenu
-            actionsMenuHeader={actionsMenuHeader}
-            onClick={handleRegisterModel}
-            showActionsMenu={params['*'].includes(MODELS_TAB)}
-          />
+          {/* TODO: remove from demo in 1.4 */}
+          {isDemoMode && (
+            <PageActionsMenu
+              actionsMenuHeader={actionsMenuHeader}
+              onClick={handleRegisterModel}
+              showActionsMenu={params['*'].includes(MODELS_TAB)}
+            />
+          )}
         </div>
         <div className="content">
           <ContentMenu

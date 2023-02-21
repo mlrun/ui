@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+import { mainBaseUrl, mainHttpClient} from '../httpClient'
 import { STATE_FILTER_ALL_ITEMS } from '../constants'
 
 const generateRequestParams = filters => {
@@ -71,15 +71,28 @@ const jobsApi = {
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
       postData
     ),
-  getAllJobs: (project, filters) => {
+  getJobs: (project, filters, isAllJobs) => {
     const params = {
       project,
-      'partition-by': 'name',
-      'partition-sort-by': 'updated',
       ...generateRequestParams(filters)
     }
 
+    if (!isAllJobs) {
+      params['partition-by'] = 'name'
+      params['partition-sort-by'] = 'updated'
+    }
+
     return mainHttpClient.get('/runs', { params })
+  },
+  getSpecificJobs: (project, filters, jobList) => {
+    const params = {
+      project,
+      ...generateRequestParams(filters)
+    }
+
+    const jobListQuery = jobList.map(value => `uid=${value}`).join('&')
+
+    return mainHttpClient.get(`/runs?${jobListQuery}`, { params })
   },
   getAllJobRuns: (project, jobName, filters) => {
     const params = {
@@ -101,7 +114,9 @@ const jobsApi = {
   },
   getJobFunction: (project, functionName, hash) =>
     mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
-  getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
+  getJobLogs: (id, project) => fetch(`${mainBaseUrl}/log/${project}/${id}`, {
+    method: 'get'
+  }),
   getScheduledJobAccessKey: (project, job) =>
     mainHttpClient.get(`/projects/${project}/schedules/${job}?include-credentials=true`),
   getScheduledJobs: (project, filters) => {

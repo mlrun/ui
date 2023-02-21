@@ -18,9 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { find, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { find, isEmpty } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -38,7 +38,8 @@ import {
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_EDIT_MODE,
-  PANEL_RERUN_MODE
+  PANEL_RERUN_MODE,
+  WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
 import {
   generateActionsMenu,
@@ -53,6 +54,7 @@ import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
@@ -61,6 +63,7 @@ import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
+import { useSortTable } from '../../../hooks/useSortTable.hook'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -68,22 +71,19 @@ const MonitorWorkflows = ({
   fetchJob,
   fetchJobLogs,
   fetchJobPods,
-  fetchJobs,
   fetchWorkflow,
   fetchWorkflows,
   getFunction,
   getFunctionWithHash,
   removeFunctionLogs,
-  removeJobLogs,
   removePods,
   removeNewJob,
   resetWorkflow
 }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
-  const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
+  const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
-  const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const { isDemoMode } = useMode()
@@ -117,77 +117,58 @@ const MonitorWorkflows = ({
       createJobsWorkflowsTabContent(
         workflowsStore.workflows.data,
         params.projectName,
-        params.workflowId,
         isStagingMode,
         !isEmpty(selectedJob)
       ),
-    [
-      isStagingMode,
-      params.projectName,
-      params.workflowId,
-      selectedJob,
-      workflowsStore.workflows.data
-    ]
+    [isStagingMode, params.projectName, selectedJob, workflowsStore.workflows.data]
   )
 
+  const { sortedTableContent } = useSortTable({
+    headers: tableContent[0]?.content,
+    content: tableContent,
+    sortConfig: { defaultSortBy: 'startedAt' }
+  })
+
   const handleFetchFunctionLogs = useCallback(
-    (projectName, name, tag, offset) => {
+    (item, projectName, setDetailsLogs, offset) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
         projectName,
-        name,
-        tag,
+        item.name,
+        item.tag,
+        setDetailsLogs,
         offset
       )
     },
     [fetchFunctionLogs, fetchFunctionLogsTimeout]
   )
 
+  const handleFetchJobLogs = useCallback(
+    (item, projectName, setDetailsLogs, streamLogsRef) => {
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+    },
+    [fetchJobLogs]
+  )
+
   const handleRemoveFunctionLogs = useCallback(() => {
     clearTimeout(fetchFunctionLogsTimeout.current)
-    removeFunctionLogs()
-  }, [fetchFunctionLogsTimeout, removeFunctionLogs])
+  }, [fetchFunctionLogsTimeout])
 
   const pageData = useMemo(
     () =>
       generatePageData(
         selectedFunction,
         handleFetchFunctionLogs,
-        fetchJobLogs,
-        handleRemoveFunctionLogs,
-        removeJobLogs
+        handleFetchJobLogs,
+        handleRemoveFunctionLogs
       ),
-    [
-      fetchJobLogs,
-      handleFetchFunctionLogs,
-      handleRemoveFunctionLogs,
-      removeJobLogs,
-      selectedFunction
-    ]
+    [handleFetchJobLogs, handleFetchFunctionLogs, handleRemoveFunctionLogs, selectedFunction]
   )
 
-  const refreshJobs = useCallback(
-    filters => {
-      fetchJobs(params.projectName, filters, false)
-        .then(jobs => {
-          const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
-
-          setJobs(parsedJobs)
-        })
-        .catch(error => {
-          dispatch(
-            setNotification({
-              status: error?.response?.status || 400,
-              id: Math.random(),
-              message: 'Failed to fetch jobs',
-              retry: () => refreshJobs(filters)
-            })
-          )
-        })
-    },
-    [dispatch, fetchJobs, params.projectName]
-  )
+  const refreshJobs = useCallback(() => {
+    fetchWorkflow(params.workflowId)
+  }, [fetchWorkflow, params.workflowId])
 
   const onAbortJob = useCallback(
     job => {
@@ -331,9 +312,16 @@ const MonitorWorkflows = ({
   useEffect(() => {
     const workflow = { ...workflowsStore.activeWorkflow.data }
     const getWorkflow = () => {
-      fetchWorkflow(params.workflowId).catch(() =>
+      fetchWorkflow(params.projectName, params.workflowId).catch(error => {
         navigate(`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`, { replace: true })
-      )
+        dispatch(
+          setNotification({
+            status: error?.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to fetch workflow'
+          })
+        )
+      })
     }
 
     if (!params.workflowId && workflow.graph) {
@@ -355,6 +343,7 @@ const MonitorWorkflows = ({
       return () => clearTimeout(timeout)
     }
   }, [
+    dispatch,
     dataIsLoaded,
     fetchWorkflow,
     navigate,
@@ -429,12 +418,6 @@ const MonitorWorkflows = ({
 
   useEffect(() => {
     if (params.workflowId) {
-      refreshJobs({ iter: 'false' })
-    }
-  }, [params.workflowId, refreshJobs])
-
-  useEffect(() => {
-    if (params.workflowId) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     } else {
       getWorkflows()
@@ -445,7 +428,6 @@ const MonitorWorkflows = ({
   useEffect(() => {
     return () => {
       setDataIsLoaded(false)
-      setJobs([])
       setItemIsSelected(false)
       setSelectedJob({})
       setSelectedFunction({})
@@ -467,8 +449,7 @@ const MonitorWorkflows = ({
           setJobWizardIsOpened(false)
         },
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
-        mode: jobWizardMode,
-        onSuccessRequest: () => refreshJobs(filtersStore)
+        mode: jobWizardMode
       })
 
       setJobWizardIsOpened(true)
@@ -479,7 +460,6 @@ const MonitorWorkflows = ({
     jobWizardIsOpened,
     jobWizardMode,
     params,
-    refreshJobs,
     setEditableItem,
     setJobWizardIsOpened,
     setJobWizardMode
@@ -507,7 +487,6 @@ const MonitorWorkflows = ({
           {params.workflowId ? (
             <Workflow
               actionsMenu={actionsMenu}
-              content={jobs}
               handleCancel={handleCancel}
               handleSelectItem={handleSelectJob}
               itemIsSelected={itemIsSelected}
@@ -518,7 +497,6 @@ const MonitorWorkflows = ({
               selectedJob={selectedJob}
               setWorkflowsViewMode={setWorkflowsViewMode}
               workflow={workflowsStore.activeWorkflow.data}
-              workflowJobsIds={workflowsStore.activeWorkflow.workflowJobsIds}
               workflowsViewMode={workflowsViewMode}
             />
           ) : (
@@ -531,9 +509,9 @@ const MonitorWorkflows = ({
               retryRequest={getWorkflows}
               selectedItem={selectedJob}
               tab={MONITOR_JOBS_TAB}
-              tableHeaders={tableContent[0]?.content ?? []}
+              tableHeaders={sortedTableContent[0]?.content ?? []}
             >
-              {tableContent.map((tableItem, index) => (
+              {sortedTableContent.map((tableItem, index) => (
                 <JobsTableRow
                   actionsMenu={actionsMenu}
                   handleSelectJob={handleSelectJob}

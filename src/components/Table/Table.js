@@ -30,6 +30,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
+import { SORT_PROPS } from 'igz-controls/types'
 import { GROUP_BY_NAME, GROUP_BY_NONE, MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
 
 import './table.scss'
@@ -47,9 +48,11 @@ const Table = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
+  hideActionsMenu,
   pageData,
   retryRequest,
   selectedItem,
+  sortProps,
   tab,
   tableHeaders
 }) => {
@@ -153,12 +156,14 @@ const Table = ({
       handleCancel={handleCancel}
       handleExpandRow={handleExpandRow}
       handleSelectItem={handleSelectItem}
+      hideActionsMenu={hideActionsMenu}
       isTablePanelOpen={tableStore.isTablePanelOpen}
       mainRowItemsCount={tableContent.mainRowItemsCount}
       pageData={pageData}
       params={params}
       retryRequest={retryRequest}
       selectedItem={selectedItem}
+      sortProps={sortProps}
       tableContent={
         tab === MONITOR_JOBS_TAB || tab === SCHEDULE_TAB ? content : tableContent.content
       }
@@ -182,8 +187,10 @@ Table.defaultProps = {
   handleCancel: () => {},
   handleExpandRow: () => {},
   handleSelectItem: () => {},
+  hideActionsMenu: false,
   retryRequest: () => {},
   selectedItem: {},
+  sortProps: null,
   tab: '',
   tableHeaders: []
 }
@@ -199,9 +206,11 @@ Table.propTypes = {
   handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
+  hideActionsMenu: PropTypes.bool,
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}),
+  sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableHeaders: PropTypes.array
 }

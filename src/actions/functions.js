@@ -57,7 +57,6 @@ import {
   FETCH_FUNCTION_LOGS_SUCCESS,
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_BEGIN,
-  REMOVE_FUNCTION_LOGS,
   SET_NEW_FUNCTION,
   SET_NEW_FUNCTION_KIND,
   SET_NEW_FUNCTION_GRAPH,
@@ -147,7 +146,7 @@ const functionsActions = {
     return functionsApi
       .getFunctionLogs(project, name, tag, offset)
       .then(result => {
-        dispatch(functionsActions.fetchFunctionLogsSuccess(result.data))
+        dispatch(functionsActions.fetchFunctionLogsSuccess())
 
         return result
       })
@@ -160,9 +159,8 @@ const functionsActions = {
     type: FETCH_FUNCTION_LOGS_FAILURE,
     payload: error
   }),
-  fetchFunctionLogsSuccess: logs => ({
-    type: FETCH_FUNCTION_LOGS_SUCCESS,
-    payload: logs
+  fetchFunctionLogsSuccess: () => ({
+    type: FETCH_FUNCTION_LOGS_SUCCESS
   }),
   fetchFunctions: (project, filters) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
@@ -191,24 +189,11 @@ const functionsActions = {
     return functionsApi
       .getFunctionTemplatesCatalog()
       .then(({ data: functionTemplates }) => {
-        const templates = Object.entries(functionTemplates).map(([key, value]) => ({
-          kind: value?.kind,
-          metadata: {
-            name: key,
-            hash: '',
-            description: value?.description,
-            categories: value?.categories,
-            versions: value?.versions,
-            tag: ''
-          },
-          status: {
-            state: ''
-          }
-        }))
-        const templatesCategories = generateCategories(templates)
-        dispatch(functionsActions.setFunctionsTemplates(templatesCategories))
+        const templatesData = generateCategories(functionTemplates)
 
-        return { templatesCategories, templates }
+        dispatch(functionsActions.setFunctionsTemplates(templatesData))
+
+        return templatesData
       })
       .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
   },
@@ -298,9 +283,6 @@ const functionsActions = {
   removeFunction: () => ({
     type: REMOVE_FUNCTION
   }),
-  removeFunctionLogs: () => ({
-    type: REMOVE_FUNCTION_LOGS
-  }),
   removeFunctionTemplate: () => ({
     type: REMOVE_FUNCTION_TEMPLATE
   }),
@@ -313,9 +295,9 @@ const functionsActions = {
   resetNewFunctionCodeCustomImage: () => ({
     type: RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
   }),
-  setFunctionsTemplates: templates => ({
+  setFunctionsTemplates: payload => ({
     type: SET_FUNCTIONS_TEMPLATES,
-    payload: templates
+    payload
   }),
   setLoading: loading => ({
     type: SET_LOADING,

@@ -121,10 +121,16 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
 
   const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
-      fetchProjectMembersVisibility(params.projectName)
       fetchProjectOwnerVisibility(params.projectName)
       fetchProjectIdAndOwner()
-        .then(fetchProjectMembers)
+        .then(projectId => {
+          fetchProjectMembersVisibility(params.projectName)
+
+          return fetchProjectMembers(projectId)
+        })
+        .catch(() => {
+          setProjectMembersIsShown(false)
+        })
         .finally(() =>
           membersDispatch({
             type: membersActions.GET_PROJECT_USERS_DATA_END

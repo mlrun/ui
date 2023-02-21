@@ -49,15 +49,17 @@ export const NAVBAR_WIDTH = 245
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
+export const PROJECTS_PAGE_PATH = 'projects'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
 export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
 export const PROJECTS_SETTINGS_MEMBERS_TAB = 'members'
 export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
 
+export const INACTIVE_JOBS_TAB = 'monitor'
 export const JOBS_PAGE = 'JOBS'
-export const SCHEDULE_TAB = 'schedule'
 export const MONITOR_JOBS_TAB = 'monitor-jobs'
 export const MONITOR_WORKFLOWS_TAB = 'monitor-workflows'
+export const SCHEDULE_TAB = 'schedule'
 export const WORKFLOW_SUB_PAGE = 'workflow'
 
 export const MODELS_PAGE = 'MODELS'
@@ -121,7 +123,7 @@ export const REMOVE_SCHEDULED_JOB_FAILURE = 'REMOVE_SCHEDULED_JOB_FAILURE'
 export const RUN_NEW_JOB_BEGIN = 'RUN_NEW_JOB_BEGIN'
 export const RUN_NEW_JOB_FAILURE = 'RUN_NEW_JOB_FAILURE'
 export const RUN_NEW_JOB_SUCCESS = 'RUN_NEW_JOB_SUCCESS'
-export const SET_ALL_JOBS_DATA = 'SET_ALL_JOBS_DATA'
+export const SET_JOBS_DATA = 'SET_JOBS_DATA'
 export const SET_NEW_JOB = 'SET_NEW_JOB'
 export const SET_NEW_JOB_CREDENTIALS_ACCESS_KEY = 'SET_NEW_JOB_CREDENTIALS_ACCESS_KEY'
 export const SET_NEW_JOB_ENVIRONMENT_VARIABLES = 'SET_NEW_JOB_ENVIRONMENT_VARIABLES'
@@ -139,7 +141,12 @@ export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
-/*=========== JOB  WIZARD=============*/
+/*=========== JOB WORKFLOWS =============*/
+
+export const WORKFLOW_LIST_VIEW = 'list'
+export const WORKFLOW_GRAPH_VIEW = 'graph'
+
+/*=========== JOB WIZARD =============*/
 
 export const PARAMETER_TYPE_SIMPLE = 'Simple'
 export const PARAMETER_TYPE_HYPER = 'Hyper'
@@ -181,7 +188,6 @@ export const NEW_FUNCTION_SECRETS_SECTION = 'secrets'
 export const NEW_FUNCTION_TOPOLOGY_SECTION = 'topology'
 export const REMOVE_FUNCTION = 'REMOVE_FUNCTION'
 export const REMOVE_FUNCTIONS_ERROR = 'REMOVE_FUNCTIONS_ERROR'
-export const REMOVE_FUNCTION_LOGS = 'REMOVE_FUNCTION_LOGS'
 export const REMOVE_FUNCTION_TEMPLATE = 'REMOVE_FUNCTION_TEMPLATE'
 export const REMOVE_NEW_FUNCTION = 'REMOVE_NEW_FUNCTION'
 export const RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE = 'RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE'
@@ -351,7 +357,6 @@ export const FETCH_PROJECTS_SUMMARY_SUCCESS = 'FETCH_PROJECTS_SUMMARY_SUCCESS'
 export const FETCH_PROJECT_WORKFLOWS_BEGIN = 'FETCH_PROJECT_WORKFLOWS_BEGIN'
 export const FETCH_PROJECT_WORKFLOWS_FAILURE = 'FETCH_PROJECT_WORKFLOWS_FAILURE'
 export const FETCH_PROJECT_WORKFLOWS_SUCCESS = 'FETCH_PROJECT_WORKFLOWS_SUCCESS'
-export const REMOVE_JOB_LOGS = 'REMOVE_JOB_LOGS'
 export const REMOVE_NEW_PROJECT = 'REMOVE_NEW_PROJECT'
 export const REMOVE_NEW_PROJECT_ERROR = 'REMOVE_NEW_PROJECT_ERROR'
 export const REMOVE_PROJECTS = 'REMOVE_PROJECTS'
@@ -450,11 +455,6 @@ export const STATE_FILTER_ALL_ITEMS = 'all'
 export const TAG_FILTER_ALL_ITEMS = 'All'
 export const TAG_FILTER_LATEST = 'latest'
 
-export const REMOVE_FILTERS = 'REMOVE_FILTERS'
-export const SET_FILTERS = 'SET_FILTERS'
-export const SET_FILTER_TAG_OPTIONS = 'SET_FILTER_TAG_OPTIONS'
-export const SET_FILTER_PROJECT_OPTIONS = 'SET_FILTER_PROJECT_OPTIONS'
-
 export const DATE_RANGE_TIME_FILTER = 'dateRangeTime'
 export const ENTITIES_FILTER = 'entities'
 export const GROUP_BY_FILTER = 'groupBy'
@@ -467,6 +467,10 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
+
+export const FILTER_MENU_MODAL = 'filterMenuModal'
+export const JOB_WIZARD_FILTERS = 'jobWizardFilters'
+export const HUB_CATEGORIES_FILTER = 'hubCategories'
 
 /*=========== PANEL =============*/
 

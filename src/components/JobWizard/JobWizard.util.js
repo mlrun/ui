@@ -93,7 +93,7 @@ export const generateJobWizardData = (
   const currentRequest = parseRequests(requests, defaultResources.requests)
 
   const jobFormData = {
-    jobDetails: {
+    runDetails: {
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
@@ -108,9 +108,7 @@ export const generateJobWizardData = (
       parametersTable: {}
     },
     dataInputs: {
-      dataInputsTable: [],
-      inputPath: null,
-      outputPath: JOB_DEFAULT_OUTPUT_PATH
+      dataInputsTable: []
     },
     resources: {
       preemptionMode,
@@ -120,10 +118,13 @@ export const generateJobWizardData = (
       volumesTable
     },
     advanced: {
+      inputPath: null,
+      outputPath: JOB_DEFAULT_OUTPUT_PATH,
       accessKey: true,
       accessKeyInput: '',
-      environmentVariablesTable: parseEnvironmentVariables(environmentVariables, isStagingMode),
-      secretSourcesTable: []
+      environmentVariablesTable: parseEnvironmentVariables(environmentVariables, isStagingMode)
+      // secretSourcesTable - currently not shown
+      // secretSourcesTable: []
     },
     function: null,
     scheduleData
@@ -176,7 +177,7 @@ export const generateJobWizardDefaultData = (
     : scheduleDataInitialState
 
   const jobFormData = {
-    jobDetails: {
+    runDetails: {
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
@@ -184,8 +185,6 @@ export const generateJobWizardDefaultData = (
       labels: functionInfo.labels
     },
     dataInputs: {
-      inputPath: defaultData.task.spec.input_path,
-      outputPath: defaultData.task.spec.output_path,
       dataInputsTable: []
     },
     parameters: {
@@ -210,6 +209,8 @@ export const generateJobWizardDefaultData = (
       )
     },
     advanced: {
+      inputPath: defaultData.task.spec.input_path,
+      outputPath: defaultData.task.spec.output_path,
       accessKey:
         defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY,
       accessKeyInput:
@@ -219,8 +220,9 @@ export const generateJobWizardDefaultData = (
       environmentVariablesTable: parseEnvironmentVariables(
         defaultData.function?.spec?.env ?? [],
         isStagingMode
-      ),
-      secretSourcesTable: parseSecretSources(defaultData.task.spec.secret_sources)
+      )
+      // secretSourcesTable - currently not shown
+      // secretSourcesTable: parseSecretSources(defaultData.task.spec.secret_sources)
     },
     scheduleData,
     function: defaultData.task.spec.function
@@ -249,13 +251,16 @@ const getFunctionInfo = selectedFunctionData => {
     const versionOptions = getVersionOptions(functions)
     const methodOptions = getMethodOptions(functions)
     const { defaultMethod, defaultVersion } = getDefaultMethodAndVersion(versionOptions, functions)
+    const currentFunctionVersion = selectedFunctionData.tag || defaultVersion
+    const currentFunction =
+      functions.find(func => func.metadata.tag === currentFunctionVersion) ?? functions[0]
 
     return {
-      labels: parseChipsData(functions[0].metadata.labels),
+      labels: parseChipsData(currentFunction?.metadata.labels),
       name: selectedFunctionData.name,
       method: defaultMethod || (methodOptions[0]?.id ?? ''),
       methodDescription: methodOptions[0]?.subLabel ?? '',
-      version: selectedFunctionData.tag || defaultVersion,
+      version: currentFunctionVersion,
       methodOptions,
       versionOptions
     }
@@ -451,14 +456,19 @@ export const getCategoryName = categoryId => {
   const categoriesNames = {
     'data-prep': 'Data Preparation',
     'data-source': 'ETL',
+    'model-prep': 'Model Prep',
+    'model-test': 'Model Test',
+    'model-testing': 'Model Testing',
     NLP: 'NLP',
-    ml: 'Machine Learning',
-    serving: 'Model Serving',
-    training: 'Model Training',
     analysis: 'Data Analysis',
-    simulators: 'Simulators',
+    dask: 'Dask',
+    dl: 'Deep Learning',
+    ml: 'Machine Learning',
     notifications: 'Alerts and Notifications',
-    dl: 'Deep Learning'
+    other: 'Other',
+    serving: 'Model Serving',
+    simulators: 'Simulators',
+    training: 'Model Training'
   }
 
   return categoriesNames[categoryId] ?? categoryId
@@ -618,16 +628,17 @@ const parseEnvironmentVariables = (envVariables, isStagingMode) => {
   })
 }
 
-const parseSecretSources = secretSources => {
-  return secretSources.map(secretSource => {
-    return {
-      data: {
-        key: secretSource.kind,
-        value: secretSource.source
-      }
-    }
-  })
-}
+// secretSourcesTable - currently not shown
+// const parseSecretSources = secretSources => {
+//   return secretSources.map(secretSource => {
+//     return {
+//       data: {
+//         key: secretSource.kind,
+//         value: secretSource.source
+//       }
+//     }
+//   })
+// }
 
 const convertParameterValue = (value, type) => {
   if ([parameterTypeInt, parameterTypeFloat].includes(type) && Number.isFinite(Number(value))) {
@@ -785,7 +796,7 @@ export const generateJobRequestData = (
   isSchedule
 ) => {
   let selectedFunction = selectedFunctionData?.functions?.find(
-    func => func.metadata.tag === formData.jobDetails.version
+    func => func.metadata.tag === formData.runDetails.version
   )
   selectedFunction ??= selectedFunctionData?.functions?.[0]
   const [volume_mounts, volumes] = generateVolumes(formData.resources.volumesTable)
@@ -794,21 +805,22 @@ export const generateJobRequestData = (
     task: {
       metadata: {
         project: params.projectName,
-        name: formData.jobDetails.name,
-        labels: convertChipsData(formData.jobDetails.labels)
+        name: formData.runDetails.name,
+        labels: convertChipsData(formData.runDetails.labels)
       },
       spec: {
         inputs: generateDataInputs(formData.dataInputs.dataInputsTable),
         parameters: generateParameters(formData.parameters.parametersTable),
         hyperparams: generateHyperParameters(formData.parameters.parametersTable),
-        secret_sources: formData.advanced.secretSourcesTable.map(secretSource => {
-          return { kind: secretSource.data.key, source: secretSource.data.value }
-        }),
+        // secretSourcesTable - currently not shown
+        // secret_sources: formData.advanced.secretSourcesTable.map(secretSource => {
+        //   return { kind: secretSource.data.key, source: secretSource.data.value }
+        // }),
         param_file: formData.parameters.hyperParameters?.paramFile ?? '',
         tuning_strategy: formData.parameters.hyperParameters?.tuningStrategy,
-        handler: formData.jobDetails.method ?? '',
-        input_path: formData.dataInputs.inputPath ?? '',
-        output_path: formData.dataInputs.outputPath,
+        handler: formData.runDetails.method ?? '',
+        input_path: formData.advanced.inputPath ?? '',
+        output_path: formData.advanced.outputPath,
         function:
           selectedFunction && !has(selectedFunction, 'status')
             ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`

@@ -408,7 +408,10 @@ const MembersPopUp = ({
               )
             })
             .map(member => (
-              <div className={membersTableRowClassNames} key={`${member.name}${member.role}`}>
+              <div
+                className={membersTableRowClassNames}
+                key={`${member.name}${member.role}${member.type}`}
+              >
                 <div className="member-info">
                   <div className={`member-status ${member.modification ? 'visible' : ''}`} />
                   <div className="member-symbol">{member.name[0].toUpperCase()}</div>

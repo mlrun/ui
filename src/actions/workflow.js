@@ -30,11 +30,11 @@ import {
 import { parseWorkflows } from '../utils/parseWorkflows'
 
 const workflowActions = {
-  fetchWorkflow: workflowId => dispatch => {
+  fetchWorkflow: (project, workflowId) => dispatch => {
     dispatch(workflowActions.fetchWorkflowBegin())
 
     return workflowApi
-      .getWorkflow(workflowId)
+      .getWorkflow(project, workflowId)
       .then(response => {
         const workflow = response.data
         dispatch(workflowActions.fetchWorkflowSuccess(workflow))
@@ -63,11 +63,7 @@ const workflowActions = {
     return workflowApi
       .getWorkflows(project, filter)
       .then(response =>
-        dispatch(
-          workflowActions.fetchWorkflowsSuccess(
-            parseWorkflows(response.data.runs)
-          )
-        )
+        dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(response.data.runs)))
       )
       .catch(error => dispatch(workflowActions.fetchWorkflowsFailure(error)))
   },

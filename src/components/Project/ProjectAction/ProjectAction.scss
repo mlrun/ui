@@ -25,6 +25,7 @@
       align-items: center;
       position: relative;
       margin: 0 1.2em;
+      min-width: 105px;
       cursor: pointer;
 
       &:hover,
@@ -41,7 +42,7 @@
       .tip-container {
         position: absolute;
         top: 0;
-        right: -7px;
+        right: 8px;
       }
     }
 

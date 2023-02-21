@@ -31,9 +31,10 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
           content: [
             {
               id: `name.${func.ui.identifierUnique}`,
-              header: 'Name',
+              headerId: 'name',
+              headerLabel: 'Name',
               value: func.name,
-              class: 'functions_medium',
+              class: 'table-cell-name',
               getLink: hash => {
                 return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${hash}`
               },
@@ -41,7 +42,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               showStatus: true,
               expandedCellContent: {
                 value: formatDatetime(func.updated, 'N/A'),
-                class: 'functions_medium',
+                class: 'table-cell-name',
                 type: 'date',
                 showTag: true,
                 showStatus: true
@@ -50,23 +51,26 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `kind.${func.ui.identifierUnique}`,
-              header: 'Type',
+              headerId: 'type',
+              headerLabel: 'Type',
               value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
-              class: 'functions_medium',
+              class: 'table-cell-small',
               type: 'type'
             },
             {
               id: `function.${func.ui.identifierUnique}`,
-              header: 'Function',
+              headerId: 'function',
+              headerLabel: 'Function',
               value: func.name,
-              class: 'functions_big',
+              class: 'table-cell-2',
               getLink: tab =>
                 generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
             },
             {
               id: `updated.${func.ui.identifierUnique}`,
+              headerId: 'updated',
               value: formatDatetime(func.updated, 'N/A'),
-              class: 'functions_medium',
+              class: 'table-cell-2',
               type: 'date',
               showTag: true,
               showStatus: true,
@@ -81,15 +85,16 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
           content: [
             {
               id: `name.${func.ui.identifierUnique}`,
-              header: 'Name',
+              headerId: 'name',
+              headerLabel: 'Name',
               value: func.name,
-              class: 'functions_medium',
+              class: 'table-cell-name',
               getLink: (hash, tab) => {
                 return `/projects/${projectName}/functions/${hash}${`/${tab}`}`
               },
               expandedCellContent: {
                 value: formatDatetime(func.updated, 'N/A'),
-                class: 'functions_medium',
+                class: 'table-cell-name',
                 type: 'date',
                 showTag: true,
                 showStatus: true
@@ -100,47 +105,54 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
             },
             {
               id: `kind.${func.ui.identifierUnique}`,
-              header: 'Kind',
+              headerId: 'kind',
+              headerLabel: 'Kind',
               value: func.type,
-              class: 'functions_small',
+              class: 'table-cell-small',
               type: 'type'
             },
             {
               id: `hash.${func.ui.identifierUnique}`,
-              header: 'Hash',
+              headerId: 'hash',
+              headerLabel: 'Hash',
               value: func.hash,
-              class: 'functions_small',
+              class: 'table-cell-1',
               type: 'hash'
             },
             {
               id: `updated.${func.ui.identifierUnique}`,
-              header: 'Updated',
+              headerId: 'updated',
+              headerLabel: 'Updated',
               value: formatDatetime(func.updated, 'N/A'),
-              class: 'functions_small',
+              class: 'table-cell-2',
               type: 'date',
               showTag: true,
               showStatus: true
             },
             {
               id: `command.${func.ui.identifierUnique}`,
-              header: 'Command',
+              headerId: 'command',
+              headerLabel: 'Command',
               value: func.command,
-              class: 'functions_big'
+              class: 'table-cell-1'
             },
             {
               id: `image.${func.ui.identifierUnique}`,
-              header: 'Image',
+              headerId: 'image',
+              headerLabel: 'Image',
               value: func.image,
-              class: 'functions_big'
+              class: 'table-cell-1'
             },
             {
               id: `description.${func.ui.identifierUnique}`,
-              header: 'Description',
+              headerId: 'description',
+              headerLabel: 'Description',
               value: func.description,
-              class: 'functions_small'
+              class: 'table-cell-2'
             },
             {
               id: `tag.${func.ui.identifierUnique}`,
+              headerId: 'tag',
               value: func.tag,
               type: 'hidden'
             }

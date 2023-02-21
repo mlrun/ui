@@ -28,7 +28,13 @@ import {
   PERIOD_FILTER,
   STATUS_FILTER
 } from '../../../constants'
-import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import {
+  JOB_STEADY_STATES,
+  detailsMenu,
+  getInfoHeaders,
+  isJobAbortable,
+  limitedFunctionKinds
+} from '../jobs.util'
 import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
 
@@ -44,15 +50,15 @@ export const generateFilters = jobName => [
   { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
 ]
 
-export const generatePageData = (fetchJobLogs, removeJobLogs, selectedJob) => {
+export const generatePageData = (handleFetchJobLogs, selectedJob) => {
   return {
     page: JOBS_PAGE,
     details: {
       menu: detailsMenu,
       type: JOBS_PAGE,
       infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
-      refreshLogs: fetchJobLogs,
-      removeLogs: removeJobLogs,
+      refreshLogs: handleFetchJobLogs,
+      removeLogs: () => {},
       withLogsRefreshBtn: true
     }
   }
@@ -70,9 +76,9 @@ export const generateActionsMenu = (
   return job?.uid
     ? [
         {
-          label: 'Re-run',
+          label: 'Batch re-run',
           icon: <Run />,
-          hidden: ['local', 'serving', ''].includes(job?.ui?.originalContent.metadata.labels?.kind),
+          hidden: limitedFunctionKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
           onClick: handleRerunJob
         },
         {

@@ -61,7 +61,7 @@ export const generateTableContent = (
         ? createFeatureStoreContent(group, params.pageTab, params.projectName, isTablePanelOpen)
         : createArtifactsContent(group, page, params.pageTab, params.projectName)
     )
-  } else if (groupFilter === GROUP_BY_NONE || !groupFilter) {
+  } else if (!isEmpty(content) && (groupFilter === GROUP_BY_NONE || !groupFilter)) {
     return page === CONSUMER_GROUP_PAGE
       ? createConsumerGroupContent(content)
       : page === CONSUMER_GROUPS_PAGE
@@ -74,5 +74,7 @@ export const generateTableContent = (
       : page === FEATURE_STORE_PAGE
       ? createFeatureStoreContent(content, params.pageTab, params.projectName, isTablePanelOpen)
       : createFunctionsContent(content, isSelectedItem, params)
-  } else return []
+  } else {
+    return []
+  }
 }

@@ -52,6 +52,25 @@ export const getJobIdentifier = (job, unique) => {
   return identifier
 }
 
+export const getWorkflowJobIdentifier = (job, unique) => {
+  let identifier = ''
+  let jobId = ''
+
+  if (job.customData.run_uid) {
+    identifier = job.name
+  } else if (job.customData?.function && job.customData?.functionName) {
+    identifier = job.customData?.functionName
+  }
+
+  if (unique) {
+    jobId = job.customData.run_uid ? job.customData.run_uid : job.customData?.functionHash ?? ''
+  }
+
+  if (jobId) identifier += `.${jobId}`
+
+  return identifier
+}
+
 export const getFeatureIdentifier = (feature, unique) => {
   let identifier = `${feature?.name || ''}`
 

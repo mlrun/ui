@@ -51,8 +51,8 @@ export const generateCreateNewOptions = (
   isDemoMode
 ) => [
   {
-    label: 'Job',
-    id: 'job',
+    label: 'Batch run',
+    id: 'batchRun',
     handler: () => {
       if (isDemoMode) {
         openPopUp(JobWizard, {
@@ -88,7 +88,9 @@ export const generateCreateNewOptions = (
     id: 'registerModel',
     handler: () => {
       openRegisterModelModal()
-    }
+    },
+    // TODO: remove hidden in 1.4
+    hidden: true
   },
   {
     label: 'Register Dataset',

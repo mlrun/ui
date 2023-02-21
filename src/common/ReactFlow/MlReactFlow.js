@@ -54,14 +54,14 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
       const { position, zoom } = reactFlowInstance.toObject()
 
       reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
-    })
+    }, 20)
   }, [reactFlowInstance])
 
   useEffect(() => {
     if (reactFlowInstance && !initialGraphViewGenerated && elements.length > 0) {
       setInitialGraphViewGenerated(true)
     }
-  }, [elements.length, handleFitGraphView, initialGraphViewGenerated, reactFlowInstance])
+  }, [elements.length, initialGraphViewGenerated, reactFlowInstance])
 
   useEffect(() => {
     if (reactFlowInstance && initialGraphViewGenerated) {

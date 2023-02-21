@@ -24,19 +24,23 @@ export const generatePageData = () => {
     page: CONSUMER_GROUP_PAGE,
     tableHeaders: [
       {
-        header: 'Shard/Partition name',
+        headerId: 'name',
+        headerLabel: 'Shard/Partition name',
         class: 'table-cell-1'
       },
       {
-        header: 'Lag (message behind)',
+        headerId: 'lag',
+        headerLabel: 'Lag (message behind)',
         class: 'table-cell-1'
       },
       {
-        header: 'Last sequence',
+        headerId: 'sequence',
+        headerLabel: 'Last sequence',
         class: 'table-cell-1'
       },
       {
-        header: 'Committed offset',
+        headerId: 'offset',
+        headerLabel: 'Committed offset',
         class: 'table-cell-1'
       }
     ]

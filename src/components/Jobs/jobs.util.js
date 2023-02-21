@@ -56,7 +56,7 @@ export const getInfoHeaders = isSpark =>
         { label: 'Output path', id: 'outputPath' },
         { label: 'Total iterations', id: 'iterations' }
       ]
-export const actionsMenuHeader = 'New Job'
+export const actionsMenuHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
@@ -230,3 +230,5 @@ export const monitorJob = (jobs_dashboard_url, item, projectName) => {
 
   window.open(redirectUrl, '_blank')
 }
+
+export const limitedFunctionKinds = ['handler', 'local', 'serving', '']

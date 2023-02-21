@@ -36,6 +36,7 @@ import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
 import { PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
+import { formatDatetime } from '../../utils'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
@@ -54,6 +55,7 @@ const ProjectMonitorView = ({
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
   isNuclioModeDisabled,
+  isDemoMode,
   nuclioStreamsAreEnabled,
   params,
   project,
@@ -94,26 +96,57 @@ const ProjectMonitorView = ({
       ) : (
         <div className="project__content">
           <div className="main-info">
-            <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
+            {/* TODO: remove isDemoMode in 1.4 */}
+            {isDemoMode && (
+              <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
+            )}
             <div className="main-info__toolbar">
-              <Select
-                className="main-info__toolbar-menu launch-menu"
-                density="dense"
-                hideSelectedOption
-                label="Launch IDE"
-                onClick={handleLaunchIDE}
-                options={launchIDEOptions}
-              />
-              <Select
-                className="main-info__toolbar-menu create-new-menu"
-                density="dense"
-                hideSelectedOption
-                label="Create new"
-                options={createNewOptions}
-              />
-              <RoundedIcon onClick={refresh} id="refresh" tooltipText="Refresh" className="refresh">
-                <RefreshIcon />
-              </RoundedIcon>
+              {/* TODO: remove HTML in 1.4 */}
+              {!isDemoMode && (
+                <div>
+                  {project.data.status.state && (
+                    <div className="general-info__row status-row">
+                      <div className="row-value">
+                        <span className="row-label">Status:</span>
+                        <span className="row-name">{project.data.status.state}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className="general-info__row created-at-row">
+                    <div className="row-value">
+                      <span className="row-label">Created at:</span>
+                      <span className="row-name">
+                        {formatDatetime(project.data.metadata.created, '-')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="main-info__toolbar-actions">
+                <Select
+                  className="main-info__toolbar-menu launch-menu"
+                  density="dense"
+                  hideSelectedOption
+                  label="Launch IDE"
+                  onClick={handleLaunchIDE}
+                  options={launchIDEOptions}
+                />
+                <Select
+                  className="main-info__toolbar-menu create-new-menu"
+                  density="dense"
+                  hideSelectedOption
+                  label="Create new"
+                  options={createNewOptions}
+                />
+                <RoundedIcon
+                  onClick={refresh}
+                  id="refresh"
+                  tooltipText="Refresh"
+                  className="refresh"
+                >
+                  <RefreshIcon />
+                </RoundedIcon>
+              </div>
             </div>
             <div className="main-info__statistics-section">
               <ProjectSummaryCard

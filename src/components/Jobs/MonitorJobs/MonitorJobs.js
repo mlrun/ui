@@ -55,6 +55,7 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
@@ -69,7 +70,6 @@ const MonitorJobs = ({
   fetchJobLogs,
   fetchJobPods,
   fetchJobs,
-  removeJobLogs,
   removeNewJob,
   removePods
 }) => {
@@ -114,9 +114,16 @@ const MonitorJobs = ({
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
+  const handleFetchJobLogs = useCallback(
+    (item, projectName, setDetailsLogs, streamLogsRef) => {
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+    },
+    [fetchJobLogs]
+  )
+
   const pageData = useMemo(
-    () => generatePageData(fetchJobLogs, removeJobLogs, selectedJob),
-    [fetchJobLogs, removeJobLogs, selectedJob]
+    () => generatePageData(handleFetchJobLogs, selectedJob),
+    [handleFetchJobLogs, selectedJob]
   )
 
   const refreshJobs = useCallback(
@@ -255,6 +262,18 @@ const MonitorJobs = ({
   )
 
   useEffect(() => {
+    if (selectedJob.name) {
+      const urlPathArray = location.pathname.split('/')
+      const jobNameIndex = urlPathArray.indexOf(selectedJob.uid) - 1
+      
+      if (urlPathArray[jobNameIndex] !== selectedJob.name) {
+        navigate([...urlPathArray.slice(0, jobNameIndex + 1), selectedJob.name, ...urlPathArray.slice(jobNameIndex + 1)].join('/'), { replace: true })
+      }
+    }
+
+  }, [navigate, selectedJob.name, selectedJob.uid, location])
+
+  useEffect(() => {
     if (params.jobId && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
@@ -343,7 +362,7 @@ const MonitorJobs = ({
         },
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
         mode: jobWizardMode,
-        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Re-run job' : undefined,
+        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
         onSuccessRequest: () => refreshJobs(filtersStore)
       })
 

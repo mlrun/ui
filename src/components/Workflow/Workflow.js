@@ -21,7 +21,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { forEach, isEmpty, intersectionWith } from 'lodash'
+import { forEach, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Details from '../Details/Details'
@@ -29,27 +29,30 @@ import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import Table from '../Table/Table'
 import TableTop from '../../elements/TableTop/TableTop'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
-import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
+import JobsFunctionsTableRow from './JobsFunctionsTableRow/JobsFunctionsTableRow'
 
 import {
   getLayoutedElements,
   getWorkflowSourceHandle
 } from '../../common/ReactFlow/mlReactFlow.util'
-import { getWorkflowDetailsLink } from './workflow.util'
+import { getWorkflowDetailsLink, isFunctionTypeSelectable } from './workflow.util'
 import functionsActions from '../../actions/functions'
-import { page } from '../Jobs/jobs.util'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
-  DETAILS_OVERVIEW_TAB,
+  JOBS_PAGE,
   ML_EDGE,
   ML_NODE,
   MONITOR_WORKFLOWS_TAB,
-  PRIMARY_NODE
+  PRIMARY_NODE,
+  WORKFLOW_GRAPH_VIEW,
+  WORKFLOW_LIST_VIEW
 } from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
-import { createJobsWorkflowsTabContent } from '../../utils/createJobsContent'
+import { createJobsWorkflowContent } from '../../utils/createJobsContent'
 import { useMode } from '../../hooks/mode.hook'
+import getState from '../../utils/getState'
+import { useSortTable } from '../../hooks/useSortTable.hook'
 
 import { ReactComponent as ListView } from 'igz-controls/images/listview.svg'
 import { ReactComponent as Pipelines } from 'igz-controls/images/pipelines.svg'
@@ -58,7 +61,6 @@ import './workflow.scss'
 
 const Workflow = ({
   actionsMenu,
-  content,
   handleCancel,
   handleSelectItem,
   itemIsSelected,
@@ -69,7 +71,6 @@ const Workflow = ({
   selectedJob,
   setWorkflowsViewMode,
   workflow,
-  workflowJobsIds,
   workflowsViewMode
 }) => {
   const [jobsContent, setJobsContent] = useState([])
@@ -84,54 +85,52 @@ const Workflow = ({
     (selectedJob?.uid || selectedFunction?.hash) && 'with-selected-job'
   )
 
-  const tableContent = useMemo(
-    () =>
-      createJobsWorkflowsTabContent(
-        jobsContent,
-        params.projectName,
-        params.workflowId,
-        isStagingMode,
-        !isEmpty(selectedJob)
-      ),
-    [isStagingMode, jobsContent, params.projectName, params.workflowId, selectedJob]
-  )
+  const tableContent = useMemo(() => {
+    return createJobsWorkflowContent(
+      jobsContent,
+      params.projectName,
+      params.workflowId,
+      isStagingMode,
+      !isEmpty(selectedJob)
+    )
+  }, [isStagingMode, jobsContent, params.projectName, params.workflowId, selectedJob])
 
-  useEffect(() => {
-    if (workflowJobsIds.length > 0 && content.length > 0) {
-      setJobsContent(
-        intersectionWith(
-          content,
-          workflowJobsIds,
-          (contentItem, jobId) => contentItem.uid === jobId
-        )
-      )
-    }
-  }, [content, workflowJobsIds])
+  const { sortedTableContent } = useSortTable({
+    headers: tableContent[0]?.content,
+    content: tableContent,
+    sortConfig: { defaultSortBy: 'startedAt' }
+  })
 
   useEffect(() => {
     const edges = []
     const nodes = []
+    const jobs = []
 
     forEach(workflow.graph, job => {
       const sourceHandle = getWorkflowSourceHandle(job.phase)
 
       if (job.type === 'DAG') return
 
+      const customData = {
+        function: job.function,
+        run_uid: job.run_uid,
+        run_type: job.run_type
+      }
+
+      if (job.function) {
+        const [, , functionName = '', functionHash = ''] =
+          job.function?.match(/(.+)\/([^@]+)(?:@(.+))?/) ?? []
+
+        customData.functionName = functionName
+        customData.functionHash = functionHash
+      }
+
       let nodeItem = {
         id: job.id,
         type: ML_NODE,
         data: {
-          customData: {
-            function: job.function,
-            run_uid: job.run_uid,
-            run_type: job.run_type
-          },
-          isSelectable: Boolean(
-            job.run_uid ||
-              ((job.run_type === 'deploy' || job.run_type === 'build') &&
-                job.function &&
-                job.function.includes('@'))
-          ),
+          customData,
+          isSelectable: Boolean(job.run_uid || isFunctionTypeSelectable(customData)),
           label: job.name,
           sourceHandle,
           subType: PRIMARY_NODE
@@ -158,40 +157,29 @@ const Workflow = ({
         })
       })
 
+      jobs.push({
+        ...job,
+        customData,
+        state: getState(job.phase?.toLowerCase(), JOBS_PAGE, 'job')
+      })
       nodes.push(nodeItem)
     })
 
     setElements(getLayoutedElements(nodes.concat(edges)))
+    setJobsContent(jobs)
   }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
 
   const onElementClick = (event, element) => {
-    if (element.data?.customData?.run_uid) {
-      navigate(
-        getWorkflowDetailsLink(
-          params.projectName,
-          params.workflowId,
-          null,
-          element.data.customData.run_uid,
-          null,
-          MONITOR_WORKFLOWS_TAB
-        )
-      )
-    } else if (
-      (element.data?.customData?.run_type === 'deploy' ||
-        element.data?.customData?.run_type === 'build') &&
-      element.data?.customData?.function &&
-      element.data?.customData?.function.includes('@')
-    ) {
-      const funcName = element.data.customData.function.match(/\/(.*?)@/i)[1]
-      const funcHash = element.data.customData.function.replace(/.*@/g, '')
+    const detailsLink = getWorkflowDetailsLink(
+      params.projectName,
+      params.workflowId,
+      element.data.customData,
+      null,
+      MONITOR_WORKFLOWS_TAB
+    )
 
-      const link = `/projects/${
-        params.projectName
-      }/${page.toLowerCase()}/${MONITOR_WORKFLOWS_TAB}/workflow/${
-        params.workflowId
-      }/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
-
-      navigate(link)
+    if (detailsLink) {
+      navigate(detailsLink)
     }
   }
 
@@ -206,22 +194,30 @@ const Workflow = ({
             template={
               <TextTooltipTemplate
                 text={
-                  workflowsViewMode === 'graph' ? 'Switch to list view' : 'Switch to graph view'
+                  workflowsViewMode === WORKFLOW_GRAPH_VIEW
+                    ? 'Switch to list view'
+                    : 'Switch to graph view'
                 }
               />
             }
           >
             <button
               className="toggle-view-btn"
-              onClick={() => setWorkflowsViewMode(workflowsViewMode === 'graph' ? 'list' : 'graph')}
+              onClick={() =>
+                setWorkflowsViewMode(
+                  workflowsViewMode === WORKFLOW_GRAPH_VIEW
+                    ? WORKFLOW_LIST_VIEW
+                    : WORKFLOW_GRAPH_VIEW
+                )
+              }
             >
-              {workflowsViewMode === 'graph' ? <ListView /> : <Pipelines />}
+              {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? <ListView /> : <Pipelines />}
             </button>
           </Tooltip>
         </div>
       </TableTop>
       <div className="graph-container workflow-content">
-        {workflowsViewMode === 'graph' ? (
+        {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
           <>
             <div className={graphViewClassNames}>
               <MlReactFlow
@@ -246,22 +242,23 @@ const Workflow = ({
         ) : (
           <Table
             actionsMenu={actionsMenu}
-            content={jobsContent}
+            content={[]}
             getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
             handleCancel={handleCancel}
             handleSelectItem={handleSelectItem}
+            hideActionsMenu
             pageData={pageData}
             retryRequest={refresh}
-            selectedItem={selectedJob}
-            tableHeaders={tableContent[0]?.content ?? []}
+            selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+            tableHeaders={sortedTableContent[0]?.content ?? []}
           >
-            {tableContent.map((tableItem, index) => (
-              <JobsTableRow
+            {sortedTableContent.map((tableItem, index) => (
+              <JobsFunctionsTableRow
                 actionsMenu={actionsMenu}
                 handleSelectJob={handleSelectItem}
                 key={index}
                 rowItem={tableItem}
-                selectedJob={selectedJob}
+                selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
               />
             ))}
           </Table>
@@ -274,13 +271,11 @@ const Workflow = ({
 Workflow.defaultProps = {
   selectedFunction: {},
   selectedJob: {},
-  workflow: {},
-  workflowJobsIds: []
+  workflow: {}
 }
 
 Workflow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
@@ -291,7 +286,6 @@ Workflow.propTypes = {
   selectedJob: PropTypes.shape({}),
   setWorkflowsViewMode: PropTypes.func.isRequired,
   workflow: PropTypes.shape({}),
-  workflowJobsIds: PropTypes.arrayOf(PropTypes.string),
   workflowsViewMode: PropTypes.string.isRequired
 }
 

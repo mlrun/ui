@@ -284,7 +284,7 @@ const Details = ({
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
-        <div className={detailsPanelClassNames} ref={detailsRef}>
+        <div className={detailsPanelClassNames} ref={detailsRef} data-testid="detailsPanel">
           {detailsStore.loading && <Loader />}
           {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
           <DetailsHeader

@@ -109,6 +109,9 @@ const FunctionsTableRow = ({
                       )
                     )
                   })}
+                  <div className="table-body__cell action_cell">
+                    <ActionsMenu dataItem={rowItem.data} menu={actionsMenu} />
+                  </div>
                 </div>
               )
             })}

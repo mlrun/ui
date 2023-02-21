@@ -204,7 +204,12 @@ export const generateJobsContent = selectedItem => {
       value: selectedItem.outputPath
     },
     iterations: {
-      value: selectedItem.iterationStats?.length ? selectedItem.iterationStats.length - 1 : 'N/A'
+      value:
+        selectedItem.iteration >= 0
+          ? selectedItem.iteration
+          : selectedItem.iterationStats?.length
+          ? selectedItem.iterationStats.length - 1
+          : 'N/A'
     }
   }
 }
@@ -220,7 +225,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.hash
   },
   codeOrigin: {
-    value: selectedItem.build.code_origin ?? ''
+    value: selectedItem.build?.code_origin ?? ''
   },
   updated: {
     value: formatDatetime(selectedItem.updated, 'N/A')

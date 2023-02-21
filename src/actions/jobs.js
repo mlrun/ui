@@ -33,11 +33,10 @@ import {
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
   REMOVE_JOB_ERROR,
-  REMOVE_JOB_LOGS,
   REMOVE_NEW_JOB,
   REMOVE_SCHEDULED_JOB_FAILURE,
   RUN_NEW_JOB_FAILURE,
-  SET_ALL_JOBS_DATA,
+  SET_JOBS_DATA,
   SET_LOADING,
   SET_NEW_JOB,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
@@ -177,7 +176,9 @@ const jobsActions = {
     return jobsApi
       .getJobLogs(id, project)
       .then(result => {
-        dispatch(jobsActions.fetchJobLogsSuccess(result.data))
+        dispatch(jobsActions.fetchJobLogsSuccess())
+
+        return result
       })
       .catch(error => dispatch(jobsActions.fetchJobLogsFailure(error)))
   },
@@ -188,12 +189,11 @@ const jobsActions = {
     type: FETCH_JOB_LOGS_FAILURE,
     payload: error
   }),
-  fetchJobLogsSuccess: logs => ({
-    type: FETCH_JOB_LOGS_SUCCESS,
-    payload: logs
+  fetchJobLogsSuccess: () => ({
+    type: FETCH_JOB_LOGS_SUCCESS
   }),
   fetchJobs: (project, filters, scheduled) => dispatch => {
-    const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getAllJobs
+    const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getJobs
 
     dispatch(jobsActions.fetchJobsBegin())
 
@@ -204,7 +204,7 @@ const jobsActions = {
           : (data || {}).runs.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
-        dispatch(jobsActions.setAllJobsData(data.runs || []))
+        dispatch(jobsActions.setJobsData(data.runs || []))
 
         return newJobs
       })
@@ -213,6 +213,11 @@ const jobsActions = {
 
         throw error
       })
+  },
+  fetchSpecificJobs: (project, filters, jobList) => () => {
+    return jobsApi.getSpecificJobs(project, filters, jobList).then(({ data }) => {
+      return data.runs
+    })
   },
   fetchJobsBegin: () => ({
     type: FETCH_JOBS_BEGIN
@@ -254,9 +259,6 @@ const jobsActions = {
   removeJobError: () => ({
     type: REMOVE_JOB_ERROR
   }),
-  removeJobLogs: () => ({
-    type: REMOVE_JOB_LOGS
-  }),
   removeNewJob: () => ({
     type: REMOVE_NEW_JOB
   }),
@@ -296,8 +298,8 @@ const jobsActions = {
   runNewJobSuccess: () => ({
     type: RUN_NEW_JOB_SUCCESS
   }),
-  setAllJobsData: data => ({
-    type: SET_ALL_JOBS_DATA,
+  setJobsData: data => ({
+    type: SET_JOBS_DATA,
     payload: data
   }),
   setLoading: isLoading => ({

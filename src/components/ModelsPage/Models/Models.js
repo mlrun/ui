@@ -60,6 +60,7 @@ import { setNotification } from '../../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
+import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { parseChipsData } from '../../../utils/convertChipsData'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -227,6 +228,12 @@ const Models = ({ fetchModelFeatureVector }) => {
       : models.map(contentItem => createModelsRowData(contentItem, params.projectName))
   }, [filtersStore.groupBy, latestItems, models, params.projectName])
 
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent } = useSortTable({
+    headers: tableContent[0]?.content,
+    content: tableContent,
+    sortConfig: { defaultSortBy: 'updated', defaultDirection: 'desc' }
+  })
+
   useEffect(() => {
     return () => {
       setModels([])
@@ -317,7 +324,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
       setSelectedModel={setSelectedModel}
-      tableContent={tableContent}
+      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+      tableContent={sortedTableContent}
     />
   )
 }
