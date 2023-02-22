@@ -254,6 +254,7 @@ const FeatureVectors = ({
     getFeatureVectorIdentifier,
     handleRemoveFeatureVector,
     handleRequestOnExpand,
+    null,
     FEATURE_STORE_PAGE,
     FEATURE_VECTORS_TAB
   )

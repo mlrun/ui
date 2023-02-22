@@ -109,11 +109,7 @@ const Table = ({
     if (filtersStore.groupBy === GROUP_BY_NAME) {
       setTableContent({
         content: generatedTableContent,
-        groupLatestItem: generateGroupLatestItem(
-          pageData.page,
-          generatedTableContent,
-          params.pageTab
-        ),
+        groupLatestItem: generateGroupLatestItem(generatedTableContent),
         groupWorkflowItems: [],
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })

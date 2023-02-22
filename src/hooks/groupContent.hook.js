@@ -28,6 +28,7 @@ export const useGroupContent = (
   getIdentifier,
   handleRemoveRequestData,
   handleRequestOnExpand,
+  selectedItem,
   page,
   pageTab,
   handleExpandAllCallback
@@ -50,8 +51,8 @@ export const useGroupContent = (
     })
 
     setGroupedContent(groupedItems)
-    setLatestItems(generateGroupLatestItem(page, Object.values(groupedItems), pageTab))
-  }, [content, getIdentifier, page, pageTab])
+    setLatestItems(generateGroupLatestItem(groupedItems, getIdentifier, selectedItem))
+  }, [content, getIdentifier, selectedItem])
 
   const handleGroupByNone = useCallback(() => {
     const rows = [...document.getElementsByClassName('parent-row')]
