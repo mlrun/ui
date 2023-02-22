@@ -143,6 +143,7 @@ export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
 /*=========== JOB WORKFLOWS =============*/
 
+export const WORKFLOW_TYPE_SKIPPED = 'Skipped'
 export const WORKFLOW_LIST_VIEW = 'list'
 export const WORKFLOW_GRAPH_VIEW = 'graph'
 

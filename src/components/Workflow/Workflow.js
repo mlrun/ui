@@ -35,7 +35,7 @@ import {
   getLayoutedElements,
   getWorkflowSourceHandle
 } from '../../common/ReactFlow/mlReactFlow.util'
-import { getWorkflowDetailsLink, isFunctionTypeSelectable } from './workflow.util'
+import { getWorkflowDetailsLink, isWorkflowStepExecutable } from './workflow.util'
 import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
@@ -46,7 +46,8 @@ import {
   MONITOR_WORKFLOWS_TAB,
   PRIMARY_NODE,
   WORKFLOW_GRAPH_VIEW,
-  WORKFLOW_LIST_VIEW
+  WORKFLOW_LIST_VIEW,
+  WORKFLOW_TYPE_SKIPPED
 } from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 import { createJobsWorkflowContent } from '../../utils/createJobsContent'
@@ -114,7 +115,8 @@ const Workflow = ({
       const customData = {
         function: job.function,
         run_uid: job.run_uid,
-        run_type: job.run_type
+        run_type: job.run_type,
+        type: job.type
       }
 
       if (job.function) {
@@ -130,14 +132,17 @@ const Workflow = ({
         type: ML_NODE,
         data: {
           customData,
-          isSelectable: Boolean(job.run_uid || isFunctionTypeSelectable(customData)),
+          isSelectable: isWorkflowStepExecutable(job),
+          isOpacity: job?.type === WORKFLOW_TYPE_SKIPPED,
           label: job.name,
           sourceHandle,
           subType: PRIMARY_NODE
         },
         className: classnames(
           ((job.run_uid && selectedJob.uid === job.run_uid) ||
-            (job.run_type === 'deploy' && job.function.includes(selectedFunction.hash)) ||
+            (job.run_type === 'deploy' &&
+              (job.function.includes(selectedFunction.hash) ||
+                job.function.includes(selectedFunction.name))) ||
             (job.run_type === 'build' && job.function.includes(selectedFunction.name))) &&
             `${sourceHandle.className} selected`
         ),
