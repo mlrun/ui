@@ -48,7 +48,11 @@ import {
   parameterTypeMap,
   parameterTypeStr
 } from '../../elements/FormParametersTable/formParametersTable.util'
-import { CONFLICT_ERROR_STATUS_CODE, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import {
+  CONFLICT_ERROR_STATUS_CODE,
+  FORBIDDEN_ERROR_STATUS_CODE,
+  NOTFOUND_ERROR_STATUS_CODE
+} from 'igz-controls/constants'
 import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/utils/form.util'
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -865,7 +869,9 @@ export const generateJobRequestData = (
 }
 
 export const getNewJobErrorMsg = error => {
-  return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+  return error.response.status === NOTFOUND_ERROR_STATUS_CODE
+    ? 'To run a job, the selected function needs to be built. Make sure to build the function before running the job.'
+    : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
     ? 'You are not permitted to run new job.'
     : error.response.status === CONFLICT_ERROR_STATUS_CODE
     ? 'This job is already scheduled'
