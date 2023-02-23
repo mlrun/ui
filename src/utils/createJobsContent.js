@@ -354,10 +354,10 @@ export const createJobsWorkflowContent = (
           showStatus: true
         },
         {
-          headerId: 'type',
-          headerLabel: 'Type',
-          id: `type.${identifierUnique}`,
-          value: job.type,
+          headerId: 'kind',
+          headerLabel: 'Kind',
+          id: `kind.${identifierUnique}`,
+          value: job.run_type,
           class: 'table-cell-1',
           type: 'type',
           hidden: isSelectedItem
