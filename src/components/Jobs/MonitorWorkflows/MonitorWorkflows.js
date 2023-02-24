@@ -47,15 +47,15 @@ import {
   generatePageData,
   monitorWorkflowsActionCreator
 } from './monitorWorkflows.util'
+import { enrichRunWithFunctionTag, handleAbortJob } from '../jobs.util'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { handleAbortJob } from '../jobs.util'
-import { isWorkflowStepExecutable } from '../../Workflow/workflow.util'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { isWorkflowStepExecutable } from '../../Workflow/workflow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
@@ -63,20 +63,19 @@ import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
-import { useYaml } from '../../../hooks/yaml.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
+import { useYaml } from '../../../hooks/yaml.hook'
 
 const MonitorWorkflows = ({
   abortJob,
   fetchFunctionLogs,
   fetchJob,
+  fetchJobFunctions,
   fetchJobLogs,
   fetchJobPods,
   fetchWorkflow,
   fetchWorkflows,
   getFunction,
-  getFunctionWithHash,
-  removeFunctionLogs,
   removePods,
   removeNewJob,
   resetWorkflow
@@ -108,6 +107,7 @@ const MonitorWorkflows = ({
     setJobWizardMode
   } = React.useContext(JobsContext)
   let fetchFunctionLogsTimeout = useRef(null)
+  const fetchJobFunctionsPromiseRef = useRef()
 
   usePods(fetchJobPods, removePods, selectedJob)
 
@@ -245,19 +245,30 @@ const MonitorWorkflows = ({
     toggleConvertedYaml
   ])
 
-  const handleSelectJob = useCallback(
+  const modifyAndSelectRun = useCallback(
+    jobRun => {
+      return enrichRunWithFunctionTag(jobRun, fetchJobFunctions, fetchJobFunctionsPromiseRef).then(
+        jobRun => {
+          setSelectedJob(jobRun)
+          setSelectedFunction({})
+          setItemIsSelected(true)
+        }
+      )
+    },
+    [fetchJobFunctions]
+  )
+
+  const handleSelectRun = useCallback(
     item => {
       if (params.jobName) {
         if (document.getElementsByClassName('view')[0]) {
           document.getElementsByClassName('view')[0].classList.remove('view')
         }
 
-        setSelectedJob(item)
-        setSelectedFunction({})
-        setItemIsSelected(true)
+        modifyAndSelectRun(item)
       }
     },
-    [params.jobName]
+    [modifyAndSelectRun, params.jobName]
   )
 
   const handleCancel = () => {
@@ -266,18 +277,18 @@ const MonitorWorkflows = ({
     setItemIsSelected(false)
   }
 
-  const fetchCurrentJob = useCallback(() => {
+  const fetchRun = useCallback(() => {
     return fetchJob(params.projectName, params.jobId)
       .then(job => {
-        setSelectedJob(parseJob(job))
-        setItemIsSelected(true)
-
-        return job
+        return modifyAndSelectRun(parseJob(job))
       })
       .catch(() =>
         navigate(`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`, { replace: true })
       )
-  }, [fetchJob, navigate, params.jobId, params.projectName])
+      .finally(() => {
+        fetchJobFunctionsPromiseRef.current = null
+      })
+  }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
 
   const handleSuccessRerunJob = useCallback(
     tab => {
@@ -376,17 +387,14 @@ const MonitorWorkflows = ({
 
   useEffect(() => {
     if (
+      !fetchJobFunctionsPromiseRef.current &&
       params.jobId &&
       (isEmpty(selectedJob) || params.jobId !== selectedJob.uid) &&
       checkIfWorkflowItemIsJob()
     ) {
-      fetchCurrentJob().then(() => {
-        if (!isEmpty(selectedFunction)) {
-          setSelectedFunction({})
-        }
-      })
+      fetchRun()
     }
-  }, [fetchCurrentJob, params.jobId, selectedFunction, selectedJob, checkIfWorkflowItemIsJob])
+  }, [fetchRun, params.jobId, selectedFunction, selectedJob, checkIfWorkflowItemIsJob])
 
   useEffect(() => {
     const functionToBeSelected = findSelectedWorkflowFunction()
@@ -401,16 +409,12 @@ const MonitorWorkflows = ({
       ) {
         const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
 
-        if (params.functionHash === 'latest' && params.functionName !== selectedFunction.name) {
-          getFunction(params.projectName, params.functionName)
-            .then(func => {
-              setSelectedFunction(parseFunction(func, params.projectName, customFunctionState))
-              setItemIsSelected(true)
-              setSelectedJob({})
-            })
-            .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
-        } else if (params.functionName !== selectedFunction.name) {
-          getFunctionWithHash(params.projectName, params.functionName, params.functionHash)
+        if (params.functionName !== selectedFunction.name) {
+          getFunction(
+            params.projectName,
+            params.functionName,
+            params.functionHash === 'latest' ? '' : params.functionHash
+          )
             .then(func => {
               setSelectedFunction(parseFunction(func, params.projectName, customFunctionState))
               setItemIsSelected(true)
@@ -438,7 +442,6 @@ const MonitorWorkflows = ({
   }, [
     findSelectedWorkflowFunction,
     getFunction,
-    getFunctionWithHash,
     handleCatchRequest,
     params.functionHash,
     params.functionName,
@@ -529,7 +532,7 @@ const MonitorWorkflows = ({
             <Workflow
               actionsMenu={actionsMenu}
               handleCancel={handleCancel}
-              handleSelectItem={handleSelectJob}
+              handleSelectItem={handleSelectRun}
               itemIsSelected={itemIsSelected}
               pageData={pageData}
               refresh={getWorkflows}
@@ -545,7 +548,7 @@ const MonitorWorkflows = ({
               actionsMenu={actionsMenu}
               content={workflowsStore.workflows.data}
               handleCancel={handleCancel}
-              handleSelectItem={handleSelectJob}
+              handleSelectItem={handleSelectRun}
               pageData={pageData}
               retryRequest={getWorkflows}
               selectedItem={selectedJob}
@@ -555,7 +558,7 @@ const MonitorWorkflows = ({
               {sortedTableContent.map((tableItem, index) => (
                 <JobsTableRow
                   actionsMenu={actionsMenu}
-                  handleSelectJob={handleSelectJob}
+                  handleSelectJob={handleSelectRun}
                   key={index}
                   rowItem={tableItem}
                   selectedJob={selectedJob}

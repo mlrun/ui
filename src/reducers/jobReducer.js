@@ -63,7 +63,10 @@ import {
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
   SET_NEW_JOB_PREEMTION_MODE,
-  SET_NEW_JOB_PRIORITY_CLASS_NAME
+  SET_NEW_JOB_PRIORITY_CLASS_NAME,
+  FETCH_JOB_FUNCTIONS_SUCCESS,
+  FETCH_JOB_FUNCTIONS_FAILURE,
+  FETCH_JOB_FUNCTIONS_BEGIN
 } from '../constants'
 
 const initialState = {
@@ -190,6 +193,23 @@ const jobReducer = (state = initialState, { type, payload }) => {
         error: payload
       }
     case FETCH_JOB_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
+      }
+    case FETCH_JOB_FUNCTIONS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_JOB_FUNCTIONS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_JOB_FUNCTIONS_SUCCESS:
       return {
         ...state,
         loading: false,

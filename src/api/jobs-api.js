@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainBaseUrl, mainHttpClient} from '../httpClient'
+import { mainBaseUrl, mainHttpClient } from '../httpClient'
 import { STATE_FILTER_ALL_ITEMS } from '../constants'
 
 const generateRequestParams = filters => {
@@ -112,11 +112,10 @@ const jobsApi = {
 
     return mainHttpClient.get(`/run/${project}/${jobId}`, { params })
   },
-  getJobFunction: (project, functionName, hash) =>
-    mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
-  getJobLogs: (id, project) => fetch(`${mainBaseUrl}/log/${project}/${id}`, {
-    method: 'get'
-  }),
+  getJobLogs: (id, project) =>
+    fetch(`${mainBaseUrl}/log/${project}/${id}`, {
+      method: 'get'
+    }),
   getScheduledJobAccessKey: (project, job) =>
     mainHttpClient.get(`/projects/${project}/schedules/${job}?include-credentials=true`),
   getScheduledJobs: (project, filters) => {
