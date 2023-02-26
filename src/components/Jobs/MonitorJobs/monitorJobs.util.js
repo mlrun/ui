@@ -120,6 +120,7 @@ export const monitorJobsActionCreator = {
   abortJob: jobsActions.abortJob,
   fetchAllJobRuns: jobsActions.fetchAllJobRuns,
   fetchJob: jobsActions.fetchJob,
+  fetchJobFunctions: jobsActions.fetchJobFunctions,
   fetchJobLogs: jobsActions.fetchJobLogs,
   fetchJobPods: detailsActions.fetchJobPods,
   fetchJobs: jobsActions.fetchJobs,

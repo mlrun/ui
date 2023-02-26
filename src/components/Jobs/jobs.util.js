@@ -27,6 +27,7 @@ import {
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues } from '../../utils'
 import { setNotification } from '../../reducers/notificationReducer'
+import { map, set, uniq } from 'lodash'
 
 export const page = JOBS_PAGE
 export const getInfoHeaders = isSpark =>
@@ -37,6 +38,7 @@ export const getInfoHeaders = isSpark =>
         { label: 'Last Updated', id: 'updated' },
         { label: 'Parameters', id: 'parameters' },
         { label: 'Function', id: 'function' },
+        { label: 'Function tag', id: 'functionTag' },
         { label: 'Results', id: 'resultsChips' },
         { label: 'Labels', id: 'labels' },
         { label: 'SPARK UI URL', id: 'sparkUiUrl' },
@@ -50,6 +52,7 @@ export const getInfoHeaders = isSpark =>
         { label: 'Last Updated', id: 'updated' },
         { label: 'Parameters', id: 'parameters' },
         { label: 'Function', id: 'function' },
+        { label: 'Function tag', id: 'functionTag' },
         { label: 'Results', id: 'resultsChips' },
         { label: 'Labels', id: 'labels' },
         { label: 'Log level', id: 'logLevel' },
@@ -229,6 +232,50 @@ export const monitorJob = (jobs_dashboard_url, item, projectName) => {
     .replace('{filter_value}', item ? item.uid : projectName)
 
   window.open(redirectUrl, '_blank')
+}
+
+/**
+ * Enriches a job run object with the associated function tag(s)
+ * @param {Object} jobRun - The job run object to enrich
+ * @param {Function} fetchJobFunctions - The function to fetch job functions from an API
+ * @param {Object} fetchJobFunctionsPromiseRef - A ref object used to store a reference to
+ * the promise returned by the `fetchJobFunctions` function.
+ * @returns {Promise<Object>} A Promise that resolves with the enriched job run object
+ */
+export const enrichRunWithFunctionTag = (
+  jobRun,
+  fetchJobFunctions,
+  fetchJobFunctionsPromiseRef
+) => {
+  fetchJobFunctionsPromiseRef.current = Promise.resolve()
+
+  if (jobRun?.function) {
+    const [, functionProject = '', functionName = '', functionHash = ''] =
+      jobRun.function?.match?.(/(.+)\/(.+)@(.+)/) || []
+
+    if (functionProject && functionName && functionHash) {
+      fetchJobFunctionsPromiseRef.current = fetchJobFunctions(functionProject, functionHash)
+    }
+  }
+
+  return fetchJobFunctionsPromiseRef.current
+    .then(funcs => {
+      if (funcs) {
+        const tagsList = uniq(map(funcs, 'metadata.tag'))
+        set(jobRun, 'ui.functionTag', tagsList.join(', '))
+      } else {
+        set(jobRun, 'ui.functionTag', '')
+      }
+
+      return jobRun
+    })
+    .catch(error => {
+      setNotification({
+        status: error.response?.status || 400,
+        id: Math.random(),
+        message: 'Failed to fetch function tag'
+      })
+    })
 }
 
 export const limitedFunctionKinds = ['handler', 'local', 'serving', '']

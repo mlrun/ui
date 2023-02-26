@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import jobsApi from '../api/jobs-api'
+import functionsApi from '../api/functions-api'
 import {
   ABORT_JOB_BEGIN,
   ABORT_JOB_FAILURE,
@@ -64,7 +65,10 @@ import {
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
   SET_NEW_JOB_PREEMTION_MODE,
-  SET_NEW_JOB_PRIORITY_CLASS_NAME
+  SET_NEW_JOB_PRIORITY_CLASS_NAME,
+  FETCH_JOB_FUNCTIONS_BEGIN,
+  FETCH_JOB_FUNCTIONS_FAILURE,
+  FETCH_JOB_FUNCTIONS_SUCCESS
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 
@@ -149,8 +153,8 @@ const jobsActions = {
   fetchJobFunction: (project, functionName, hash) => dispatch => {
     dispatch(jobsActions.fetchJobFunctionBegin())
 
-    return jobsApi
-      .getJobFunction(project, functionName, hash)
+    return functionsApi
+      .getFunction(project, functionName, hash)
       .then(res => {
         dispatch(jobsActions.fetchJobFunctionSuccess())
 
@@ -169,6 +173,30 @@ const jobsActions = {
   }),
   fetchJobFunctionSuccess: () => ({
     type: FETCH_JOB_FUNCTION_SUCCESS
+  }),
+  fetchJobFunctions: (project, hash) => dispatch => {
+    dispatch(jobsActions.fetchJobFunctionsBegin())
+
+    return functionsApi
+      .getFunctions(project, null, hash)
+      .then(res => {
+        dispatch(jobsActions.fetchJobFunctionsSuccess())
+
+        return res.data?.funcs
+      })
+      .catch(error => {
+        dispatch(jobsActions.fetchJobFunctionsFailure(error.message))
+      })
+  },
+  fetchJobFunctionsBegin: () => ({
+    type: FETCH_JOB_FUNCTIONS_BEGIN
+  }),
+  fetchJobFunctionsFailure: error => ({
+    type: FETCH_JOB_FUNCTIONS_FAILURE,
+    payload: error
+  }),
+  fetchJobFunctionsSuccess: () => ({
+    type: FETCH_JOB_FUNCTIONS_SUCCESS
   }),
   fetchJobLogs: (id, project) => dispatch => {
     dispatch(jobsActions.fetchJobLogsBegin())
