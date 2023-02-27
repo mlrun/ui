@@ -44,24 +44,22 @@ const FunctionCardTemplate = ({
 
   return (
     <div className={templateClassName} onClick={event => onSelectCard(event)}>
-      <div className="job-card-template__header data-ellipsis">
+      <div className="job-card-template__header">
         <Tooltip template={<TextTooltipTemplate text={functionData.header} />}>
           {functionData.header}
         </Tooltip>
-      </div>
-      <div className="job-card-template__sub-header">
-        <Tooltip template={<TextTooltipTemplate text={functionData.subHeader} />}>
-          {functionData.subHeader}
-        </Tooltip>
+        {functionData.subHeader && (
+          <div className="job-card-template__sub-header">
+            <Tooltip template={<TextTooltipTemplate text={functionData.subHeader} />}>
+              {functionData.subHeader}
+            </Tooltip>
+          </div>
+        )}
       </div>
       {functionData.sideTag && (
         <div className="job-card-template__side-tag">{functionData.sideTag}</div>
       )}
-      <div className="job-card-template__description">
-        <Tooltip template={<TextTooltipTemplate text={functionData.description} />}>
-          {functionData.description}
-        </Tooltip>
-      </div>
+      <div className="job-card-template__description">{functionData.description}</div>
       {functionData.labelsName && get(formState?.values, functionData.labelsName, null) && (
         <FormChipCell
           chipOptions={getChipOptions('metrics')}
