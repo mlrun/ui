@@ -82,8 +82,8 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const detailsFormInitialValues = useMemo(
     () => ({
-      tag: selectedModel.tag,
-      labels: parseChipsData(selectedModel.labels)
+      tag: selectedModel.tag ?? '',
+      labels: parseChipsData(selectedModel.labels ?? {})
     }),
     [selectedModel.labels, selectedModel.tag]
   )

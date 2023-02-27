@@ -23,6 +23,7 @@ import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
 import artifactApi from '../api/artifacts-api'
 import { ARTIFACT_TYPE, DATASET_TYPE, MODEL_TYPE } from '../constants'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
+import { parseArtifacts } from './parseArtifacts'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
@@ -126,7 +127,8 @@ export const isArtifactTagUnique = (projectName, category, artifact) => async va
 
   if (
     artifacts.length === 1 &&
-    getArtifactIdentifier(artifacts[0], true) === getArtifactIdentifier(artifact, true)
+    getArtifactIdentifier(parseArtifacts(artifacts)[0], true) ===
+      getArtifactIdentifier(artifact, true)
   ) {
     return true
   }
