@@ -65,9 +65,6 @@ import {
   GET_FUNCTION_SUCCESS,
   GET_FUNCTION_FAILURE,
   GET_FUNCTION_BEGIN,
-  GET_FUNCTION_WITH_HASH_BEGIN,
-  GET_FUNCTION_WITH_HASH_FAILURE,
-  GET_FUNCTION_WITH_HASH_SUCCESS,
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
   PANEL_DEFAULT_ACCESS_KEY,
@@ -238,25 +235,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
         error: payload
       }
     case GET_FUNCTION_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        template: payload,
-        error: null
-      }
-    case GET_FUNCTION_WITH_HASH_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case GET_FUNCTION_WITH_HASH_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        func: {},
-        error: payload
-      }
-    case GET_FUNCTION_WITH_HASH_SUCCESS:
       return {
         ...state,
         loading: false,

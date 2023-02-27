@@ -69,9 +69,6 @@ import {
   GET_FUNCTION_SUCCESS,
   GET_FUNCTION_FAILURE,
   GET_FUNCTION_BEGIN,
-  GET_FUNCTION_WITH_HASH_BEGIN,
-  GET_FUNCTION_WITH_HASH_FAILURE,
-  GET_FUNCTION_WITH_HASH_SUCCESS,
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_FORCE_BUILD,
   SET_NEW_FUNCTION_PREEMTION_MODE,
@@ -228,11 +225,11 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  getFunction: (project, name) => dispatch => {
+  getFunction: (project, name, hash) => dispatch => {
     dispatch(functionsActions.getFunctionBegin())
 
     return functionsApi
-      .getFunction(project, name)
+      .getFunction(project, name, hash)
       .then(result => {
         dispatch(functionsActions.getFunctionSuccess(result.data.func))
 
@@ -252,32 +249,6 @@ const functionsActions = {
   }),
   getFunctionSuccess: func => ({
     type: GET_FUNCTION_SUCCESS,
-    payload: func
-  }),
-  getFunctionWithHash: (project, name, hash) => dispatch => {
-    dispatch(functionsActions.getFunctionWithHashBegin())
-
-    return functionsApi
-      .getFunctionWithHash(project, name, hash)
-      .then(result => {
-        dispatch(functionsActions.getFunctionWithHashSuccess(result.data.func))
-
-        return result.data.func
-      })
-      .catch(error => {
-        dispatch(functionsActions.getFunctionWithHashFailure(error.message))
-        throw error
-      })
-  },
-  getFunctionWithHashBegin: () => ({
-    type: GET_FUNCTION_WITH_HASH_BEGIN
-  }),
-  getFunctionWithHashFailure: error => ({
-    type: GET_FUNCTION_WITH_HASH_FAILURE,
-    payload: error
-  }),
-  getFunctionWithHashSuccess: func => ({
-    type: GET_FUNCTION_WITH_HASH_SUCCESS,
     payload: func
   }),
   removeFunction: () => ({

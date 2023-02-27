@@ -77,7 +77,7 @@ const Datasets = () => {
 
   const detailsFormInitialValues = useMemo(
     () => ({
-      tag: selectedDataset.tag
+      tag: selectedDataset.tag ?? ''
     }),
     [selectedDataset.tag]
   )
@@ -212,6 +212,7 @@ const Datasets = () => {
     getArtifactIdentifier,
     handleRemoveRowData,
     handleRequestOnExpand,
+    null,
     DATASETS_PAGE
   )
 

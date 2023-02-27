@@ -17,27 +17,37 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isEmpty } from 'lodash'
+
 import { page } from '../Jobs/jobs.util'
-import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { DETAILS_OVERVIEW_TAB, WORKFLOW_TYPE_SKIPPED } from '../../constants'
 
 /**
  * Gets Details panel link depending on the item's type
  *
  * @param {String} projectName
  * @param {String} workflowId
- * @param {Object} jobItem
+ * @param {Object} job
  * @param {String} tab
  * @param {String} pageTab
  * @returns {String}
  */
-export const getWorkflowDetailsLink = (projectName, workflowId, jobItem, tab, pageTab) => {
+export const getWorkflowDetailsLink = (projectName, workflowId, job, tab, pageTab) => {
   let jobPath = null
 
-  if (jobItem) {
-    if (jobItem.run_uid) {
-      jobPath = jobItem.run_uid
-    } else if (isFunctionTypeSelectable(jobItem) && jobItem.functionName && jobItem.functionHash) {
-      jobPath = `${jobItem.functionName}/${jobItem.functionHash}`
+  if (job) {
+    if (job.run_uid) {
+      jobPath = job.run_uid
+    } else if (
+      isFunctionTypeSelectable(job) &&
+      job.functionName &&
+      job?.type !== WORKFLOW_TYPE_SKIPPED
+    ) {
+      if (job.function.includes('@') && job.functionHash) {
+        jobPath = `${job.functionName}/${job.functionHash}`
+      } else {
+        jobPath = `${job.functionName}`
+      }
     } else {
       return null
     }
@@ -48,12 +58,8 @@ export const getWorkflowDetailsLink = (projectName, workflowId, jobItem, tab, pa
   }`
 }
 
-export const isFunctionTypeSelectable = (jobItem = {}) => {
-  return (
-    (jobItem.run_type === 'deploy' || jobItem.run_type === 'build') &&
-    jobItem.function &&
-    jobItem.function.includes('@')
-  )
+const isFunctionTypeSelectable = (job = {}) => {
+  return (job?.run_type === 'deploy' || job?.run_type === 'build') && job?.function
 }
 
 export const isWorkflowJobSelected = (job, selectedJob) => {
@@ -61,5 +67,19 @@ export const isWorkflowJobSelected = (job, selectedJob) => {
     (job.run_uid && selectedJob.uid === job.run_uid) ||
     (job.run_type === 'deploy' && job.function.includes(selectedJob.hash)) ||
     (job.run_type === 'build' && job.function.includes(selectedJob.name))
+  )
+}
+
+/**
+ * Determines whether the given workflow step is executable based on its data.
+ *
+ * @param {Object} job - The job associated with the workflow step.
+ * @returns {boolean} - Whether the workflow step is executable or not.
+ */
+export const isWorkflowStepExecutable = job => {
+  return Boolean(
+    !isEmpty(job) &&
+      job?.type !== 'DAG' &&
+      (job?.run_uid || (isFunctionTypeSelectable(job) && job?.type !== WORKFLOW_TYPE_SKIPPED))
   )
 }

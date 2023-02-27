@@ -77,7 +77,7 @@ const Files = () => {
 
   const detailsFormInitialValues = useMemo(
     () => ({
-      tag: selectedFile.tag
+      tag: selectedFile.tag ?? ''
     }),
     [selectedFile.tag]
   )
@@ -183,6 +183,7 @@ const Files = () => {
     getArtifactIdentifier,
     handleRemoveRowData,
     handleRequestOnExpand,
+    null,
     FILES_PAGE
   )
 

@@ -191,6 +191,9 @@ export const generateJobsContent = selectedItem => {
     function: {
       value: selectedItem.function
     },
+    functionTag: {
+      value: selectedItem.ui?.functionTag ?? ''
+    },
     resultsChips: {
       value: selectedItem.resultsChips
     },
@@ -223,6 +226,9 @@ export const generateFunctionsContent = selectedItem => ({
   },
   hash: {
     value: selectedItem.hash
+  },
+  tag: {
+    value: selectedItem.tag
   },
   codeOrigin: {
     value: selectedItem.build?.code_origin ?? ''

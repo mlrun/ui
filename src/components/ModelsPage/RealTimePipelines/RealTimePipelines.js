@@ -117,6 +117,7 @@ const RealTimePipelines = () => {
     getFunctionIdentifier,
     handleCollapse,
     handleExpand,
+    null,
     MODELS_PAGE,
     REAL_TIME_PIPELINES_TAB,
     handleExpandAllCallback

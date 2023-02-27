@@ -183,6 +183,7 @@ const FeatureSets = ({
     getFeatureSetIdentifier,
     handleRemoveFeatureSet,
     handleRequestOnExpand,
+    null,
     FEATURE_STORE_PAGE,
     FEATURE_SETS_TAB
   )

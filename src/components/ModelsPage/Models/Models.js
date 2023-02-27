@@ -216,6 +216,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     getArtifactIdentifier,
     handleRemoveRowData,
     handleRequestOnExpand,
+    null,
     MODELS_PAGE,
     MODELS_TAB
   )
