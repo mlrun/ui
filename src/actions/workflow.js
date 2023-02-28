@@ -28,6 +28,7 @@ import {
   RESET_WORKFLOW
 } from '../constants'
 import { parseWorkflows } from '../utils/parseWorkflows'
+import { parseWorkflow } from '../components/Workflow/workflow.util'
 
 const workflowActions = {
   fetchWorkflow: (project, workflowId) => dispatch => {
@@ -36,7 +37,7 @@ const workflowActions = {
     return workflowApi
       .getWorkflow(project, workflowId)
       .then(response => {
-        const workflow = response.data
+        const workflow = parseWorkflow(response.data)
         dispatch(workflowActions.fetchWorkflowSuccess(workflow))
 
         return workflow
