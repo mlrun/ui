@@ -45,6 +45,7 @@ const FilesView = React.forwardRef(
       applyDetailsChangesCallback,
       artifactsStore,
       convertedYaml,
+      detailsFormInitialValues,
       files,
       filtersStore,
       handleExpandRow,
@@ -98,6 +99,7 @@ const FilesView = React.forwardRef(
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     content={files}
+                    detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
                     retryRequest={handleRefresh}
@@ -108,7 +110,6 @@ const FilesView = React.forwardRef(
                       <ArtifactsTableRow
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
-                        handleSelectItem={setSelectedFile}
                         key={index}
                         rowItem={tableItem}
                         selectedItem={selectedFile}
@@ -138,6 +139,7 @@ FilesView.propTypes = {
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   convertedYaml: PropTypes.string.isRequired,
+  detailsFormInitialValues: PropTypes.object.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,

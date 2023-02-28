@@ -20,8 +20,8 @@ such restriction.
 import React from 'react'
 
 import {
-  FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
+  FEATURE_VECTORS_TAB,
   LABELS_FILTER,
   NAME_FILTER,
   TAG_FILTER
@@ -84,7 +84,7 @@ export const generatePageData = selectedFeatureSet => {
   return {
     page: FEATURE_STORE_PAGE,
     details: {
-      type: FEATURE_SETS_TAB,
+      type: FEATURE_VECTORS_TAB,
       menu: generateFeatureVectorsDetailsMenu(selectedFeatureSet),
       infoHeaders: featureSetsInfoHeaders
     }

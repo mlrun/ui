@@ -75,6 +75,13 @@ const Files = () => {
   const filesRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedFile), [selectedFile])
 
+  const detailsFormInitialValues = useMemo(
+    () => ({
+      tag: selectedFile.tag ?? ''
+    }),
+    [selectedFile.tag]
+  )
+
   const fetchData = useCallback(
     filters => {
       dispatch(fetchFiles({ project: params.projectName, filters }))
@@ -283,6 +290,7 @@ const Files = () => {
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       convertedYaml={convertedYaml}
+      detailsFormInitialValues={detailsFormInitialValues}
       files={files}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}

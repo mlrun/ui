@@ -169,6 +169,7 @@ const ArtifactsTableRow = ({
 
 ArtifactsTableRow.defaultProps = {
   handleExpandRow: null,
+  handleSelectItem: () => {},
   hideActionsMenu: false,
   tableContent: null,
   mainRowItemsCount: 1
@@ -177,7 +178,7 @@ ArtifactsTableRow.defaultProps = {
 ArtifactsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   handleExpandRow: PropTypes.func,
-  handleSelectItem: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func,
   mainRowItemsCount: PropTypes.number,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

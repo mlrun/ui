@@ -52,6 +52,7 @@ const TableView = ({
   applyDetailsChangesCallback,
   children,
   content,
+  detailsFormInitialValues,
   getCloseDetailsLink,
   groupFilter,
   groupLatestItem,
@@ -250,6 +251,7 @@ const TableView = ({
           applyDetailsChangesCallback={applyDetailsChangesCallback}
           getCloseDetailsLink={getCloseDetailsLink}
           detailsMenu={pageData.details.menu}
+          formInitialValues={detailsFormInitialValues}
           handleCancel={handleCancel}
           pageData={pageData}
           retryRequest={retryRequest}
@@ -274,6 +276,7 @@ TableView.propTypes = {
   applyDetailsChanges: PropTypes.func,
   applyDetailsChangesCallback: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  detailsFormInitialValues: PropTypes.object.isRequired,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,

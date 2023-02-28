@@ -159,13 +159,15 @@ const DetailsRequestedFeatures = ({
     setLabelFeatureIsEditable(false)
     setCurrentData(changesData.data.features.currentFieldValue)
     handleFinishEdit(
-      Object.keys(changes.data),
       changesData,
       detailsRequestedFeaturesActions,
       detailsRequestedFeaturesDispatch,
-      detailsRequestedFeaturesState,
       setChangesData,
-      setChangesCounter
+      setChangesCounter,
+      null,
+      null,
+      Object.keys(changes.data),
+      detailsRequestedFeaturesState
     )
   }
 

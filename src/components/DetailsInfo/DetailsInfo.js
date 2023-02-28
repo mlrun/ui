@@ -17,28 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useReducer, useCallback, useEffect } from 'react'
+import React, { useReducer, useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { isNil } from 'lodash'
 import { useParams } from 'react-router-dom'
-
-import { handleFinishEdit } from '../Details/details.util'
-
-import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { useDispatch } from 'react-redux'
 
 import DetailsInfoView from './DetailsInfoView'
+
+import { handleFinishEdit } from '../Details/details.util'
+import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import detailsActions from '../../actions/details'
 
 import './detailsInfo.scss'
 
 const DetailsInfo = React.forwardRef(
   (
-    { detailsStore, pageData, selectedItem, setChangesData, setChangesCounter },
+    { detailsStore, formState, pageData, selectedItem, setChangesData, setChangesCounter },
     applyChangesRef
   ) => {
     const [detailsInfoState, detailsInfoDispatch] = useReducer(detailsInfoReducer, initialState)
     const params = useParams()
     const editItemRef = React.createRef()
+    const dispatch = useDispatch()
 
     const onApplyChanges = useCallback(
       event => {
@@ -50,6 +51,10 @@ const DetailsInfo = React.forwardRef(
       },
       [applyChangesRef]
     )
+
+    useEffect(() => {
+      dispatch(detailsActions.setEditMode(!isEveryObjectValueEmpty(detailsInfoState.editMode)))
+    }, [detailsInfoState.editMode, dispatch])
 
     useEffect(() => {
       return () => {
@@ -67,77 +72,63 @@ const DetailsInfo = React.forwardRef(
       }
     }, [onApplyChanges])
 
-    const handleDiscardChanges = field => {
+    const handleDiscardChanges = useCallback(field => {
       detailsInfoDispatch({
         type: detailsInfoActions.RESET_EDIT_MODE
       })
+    }, [])
 
-      setChangesData({
-        ...detailsStore.changes.data,
-        [field]: {
-          ...detailsStore.changes.data[field],
-          currentFieldValue: detailsStore.changes.data[field]?.previousFieldValue
-        }
-      })
-    }
-
-    const handleInfoItemClick = (field, fieldType, info) => {
-      if (isEveryObjectValueEmpty(detailsInfoState.editMode)) {
-        detailsInfoDispatch({
-          type: detailsInfoActions.SET_EDIT_MODE,
-          payload: {
-            field,
-            fieldType
-          }
-        })
-
-        if (isNil(detailsStore.changes.data[field]?.initialFieldValue)) {
-          setChangesData({
-            ...detailsStore.changes.data,
-            [field]: {
-              initialFieldValue: info,
-              currentFieldValue: info,
-              previousFieldValue: info
-            }
-          })
-        } else {
-          setChangesData({
-            ...detailsStore.changes.data,
-            [field]: {
-              ...detailsStore.changes.data[field],
-              currentFieldValue: info
+    const handleInfoItemClick = useCallback(
+      (field, fieldType, info) => {
+        if (isEveryObjectValueEmpty(detailsInfoState.editMode)) {
+          detailsInfoDispatch({
+            type: detailsInfoActions.SET_EDIT_MODE,
+            payload: {
+              field,
+              fieldType
             }
           })
         }
-      }
-    }
+      },
+      [detailsInfoState.editMode]
+    )
 
-    const sources = Array.isArray(selectedItem.sources)
-      ? selectedItem.sources.reduce((prev, cur) => {
-          let source = {}
-          source[cur.name] = cur.path
+    const sources = useMemo(
+      () =>
+        Array.isArray(selectedItem.sources)
+          ? selectedItem.sources.reduce((prev, cur) => {
+              let source = {}
+              source[cur.name] = cur.path
 
-          return { ...prev, ...source }
-        }, {})
-      : selectedItem.sources
+              return { ...prev, ...source }
+            }, {})
+          : selectedItem.sources,
+      [selectedItem.sources]
+    )
+
+    const finishEdit = useCallback(
+      currentField => {
+        return handleFinishEdit(
+          detailsStore.changes,
+          detailsInfoActions,
+          detailsInfoDispatch,
+          setChangesData,
+          setChangesCounter,
+          currentField,
+          formState
+        )
+      },
+      [detailsStore.changes, formState, setChangesCounter, setChangesData]
+    )
 
     return (
       <DetailsInfoView
         detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
         detailsStore={detailsStore}
+        formState={formState}
         handleDiscardChanges={handleDiscardChanges}
-        handleFinishEdit={() =>
-          handleFinishEdit(
-            Object.keys(detailsStore.changes.data),
-            detailsStore.changes,
-            detailsInfoActions,
-            detailsInfoDispatch,
-            detailsInfoState,
-            setChangesData,
-            setChangesCounter
-          )
-        }
+        handleFinishEdit={finishEdit}
         handleInfoItemClick={handleInfoItemClick}
         pageData={pageData}
         params={params}
@@ -152,8 +143,11 @@ const DetailsInfo = React.forwardRef(
 
 DetailsInfo.propTypes = {
   detailsStore: PropTypes.shape({}).isRequired,
+  formState: PropTypes.shape({}),
   pageData: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  setChangesData: PropTypes.func.isRequired,
+  setChangesCounter: PropTypes.func.isRequired
 }
 
 export default DetailsInfo

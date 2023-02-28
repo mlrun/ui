@@ -37,7 +37,8 @@ import {
   SHOW_WARNING,
   REMOVE_INFO_CONTENT,
   RESET_CHANGES,
-  SET_FILTERS_WAS_HANDLED
+  SET_FILTERS_WAS_HANDLED,
+  SET_EDIT_MODE
 } from '../constants'
 
 const initialState = {
@@ -45,6 +46,7 @@ const initialState = {
     counter: 0,
     data: {}
   },
+  editMode: false,
   error: null,
   infoContent: {},
   iteration: '',
@@ -168,6 +170,16 @@ const detailsReducer = (state = initialState, { type, payload }) => {
           data: payload
         }
       }
+    case SET_EDIT_MODE:
+      return {
+        ...state,
+        editMode: payload
+      }
+    case SET_FILTERS_WAS_HANDLED:
+      return {
+        ...state,
+        filtersWasHandled: payload
+      }
     case SET_INFO_CONTENT:
       return {
         ...state,
@@ -182,11 +194,6 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         iterationOptions: payload
-      }
-    case SET_FILTERS_WAS_HANDLED:
-      return {
-        ...state,
-        filtersWasHandled: payload
       }
     case SHOW_WARNING:
       return {

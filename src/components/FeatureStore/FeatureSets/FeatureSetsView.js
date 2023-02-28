@@ -39,6 +39,7 @@ const FeatureSetsView = React.forwardRef(
       applyDetailsChangesCallback,
       closePanel,
       createFeatureSetSuccess,
+      detailsFormInitialValues,
       featureSets,
       featureSetsPanelIsOpen,
       featureStore,
@@ -82,6 +83,7 @@ const FeatureSetsView = React.forwardRef(
               applyDetailsChanges={applyDetailsChanges}
               applyDetailsChangesCallback={applyDetailsChangesCallback}
               content={featureSets}
+              detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureSet({})}
               pageData={pageData}
               retryRequest={handleRefresh}
@@ -93,7 +95,6 @@ const FeatureSetsView = React.forwardRef(
                 <FeatureStoreTableRow
                   actionsMenu={actionsMenu}
                   handleExpandRow={handleExpandRow}
-                  handleSelectItem={setSelectedFeatureSet}
                   key={index}
                   pageTab={FEATURE_SETS_TAB}
                   rowItem={tableItem}
@@ -122,6 +123,7 @@ FeatureSetsView.propTypes = {
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   closePanel: PropTypes.func.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
+  detailsFormInitialValues: PropTypes.object.isRequired,
   featureSets: PropTypes.arrayOf(PropTypes.object).isRequired,
   featureSetsPanelIsOpen: PropTypes.bool.isRequired,
   featureStore: PropTypes.object.isRequired,
