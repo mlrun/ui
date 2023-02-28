@@ -17,11 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty } from 'lodash'
+import { cloneDeep, forEach, isEmpty } from 'lodash'
 
 import { page } from '../Jobs/jobs.util'
 import { DETAILS_OVERVIEW_TAB, WORKFLOW_TYPE_SKIPPED } from '../../constants'
 
+export const hiddenWorkflowStepTypes = ['DAG', 'Retry']
 /**
  * Gets Details panel link depending on the item's type
  *
@@ -58,10 +59,21 @@ export const getWorkflowDetailsLink = (projectName, workflowId, job, tab, pageTa
   }`
 }
 
+/**
+ * Checks whether a job's run_type is 'deploy' or 'build', and if it has a function property.
+ * @param {Object} job - The job object to check.
+ * @returns {boolean} - Whether the function type is selectable.
+ */
 const isFunctionTypeSelectable = (job = {}) => {
   return (job?.run_type === 'deploy' || job?.run_type === 'build') && job?.function
 }
 
+/**
+ * Checks whether a job is selected based on its run_uid or function.
+ * @param {Object} job - The job object to check.
+ * @param {Object} selectedJob - The selected job object to compare against.
+ * @returns {boolean} - Whether the job is selected.
+ */
 export const isWorkflowJobSelected = (job, selectedJob) => {
   return (
     (job.run_uid && selectedJob.uid === job.run_uid) ||
@@ -79,7 +91,51 @@ export const isWorkflowJobSelected = (job, selectedJob) => {
 export const isWorkflowStepExecutable = job => {
   return Boolean(
     !isEmpty(job) &&
-      job?.type !== 'DAG' &&
+      !hiddenWorkflowStepTypes.includes(job?.type) &&
       (job?.run_uid || (isFunctionTypeSelectable(job) && job?.type !== WORKFLOW_TYPE_SKIPPED))
   )
+}
+
+/**
+ * Parses a workflow by removing all Retry nodes and moving their children to their respective parents.
+ * @param {Object} workflow - The workflow to parse.
+ * @returns {Object} The parsed workflow.
+ */
+export const parseWorkflow = workflow => {
+  const newWorkflow = cloneDeep(workflow)
+  const parentsMap = {}
+
+  // Loop through each node in the graph and create the parent map
+  forEach(newWorkflow.graph, workflowStep => {
+    workflowStep.children.forEach(childId => {
+      // If the child already exists in the map, add the current node as a parent
+      if (parentsMap[childId]) {
+        parentsMap[childId].push(workflowStep.id)
+      } else {
+        // Otherwise, create a new entry in the map with the current node as the parent
+        parentsMap[childId] = [workflowStep.id]
+      }
+    })
+  })
+
+  // Loop through each Retry node in the graph and modify the parent-child relationships
+  forEach(newWorkflow.graph, workflowStep => {
+    if (workflowStep.type === 'Retry') {
+      const retryParentIds = parentsMap[workflowStep.id]
+
+      // Loop through each parent node and modify its children array
+      retryParentIds.forEach(retryParentId => {
+        const retryParent = newWorkflow.graph[retryParentId]
+
+        // Remove the Retry node from the parent's children array
+        const retryNodeIndex = retryParent.children.indexOf(workflowStep.id)
+        retryParent.children.splice(retryNodeIndex, 1)
+
+        // Add the Retry node's children to the parent's children array
+        retryParent.children.push(...workflowStep.children)
+      })
+    }
+  })
+
+  return newWorkflow
 }

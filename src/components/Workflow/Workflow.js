@@ -35,7 +35,11 @@ import {
   getLayoutedElements,
   getWorkflowSourceHandle
 } from '../../common/ReactFlow/mlReactFlow.util'
-import { getWorkflowDetailsLink, isWorkflowStepExecutable } from './workflow.util'
+import {
+  getWorkflowDetailsLink,
+  hiddenWorkflowStepTypes,
+  isWorkflowStepExecutable
+} from './workflow.util'
 import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
@@ -109,7 +113,7 @@ const Workflow = ({
     forEach(workflow.graph, job => {
       const sourceHandle = getWorkflowSourceHandle(job.phase)
 
-      if (job.type === 'DAG') return
+      if (hiddenWorkflowStepTypes.includes(job.type)) return
 
       const customData = {
         function: job.function,
