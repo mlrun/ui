@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
@@ -41,6 +41,7 @@ const DetailsArtifacts = ({
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
   const [preview, setPreview] = useState({})
   const [noData, setNoData] = useState(false)
+  const iterationOptions = useSelector(store => store.detailsStore.iterationOptions)
   const params = useParams()
 
   const dispatch = useDispatch()
@@ -49,16 +50,6 @@ const DetailsArtifacts = ({
     () => selectedItem.results?.best_iteration,
     [selectedItem.results?.best_iteration]
   )
-
-  useEffect(() => {
-    if (!isNaN(parseInt(bestIteration))) {
-      setIteration(`${bestIteration}`)
-    }
-
-    return () => {
-      setIteration('')
-    }
-  }, [bestIteration, setIteration])
 
   useEffect(() => {
     if (selectedItem.iterationStats.length > 0) {
@@ -82,6 +73,18 @@ const DetailsArtifacts = ({
       )
     }
   }, [bestIteration, selectedItem.iterationStats, setIterationOption])
+
+  useEffect(() => {
+    if (!isNaN(parseInt(bestIteration))) {
+      setIteration(`${bestIteration}`)
+    } else if (selectedItem.iterationStats.length > 0 && iterationOptions.length > 0) {
+      setIteration(iterationOptions[0].id)
+    }
+
+    return () => {
+      setIteration('')
+    }
+  }, [bestIteration, setIteration, selectedItem.iterationStats, iterationOptions])
 
   useEffect(() => {
     if (selectedItem.iterationStats.length > 0 && iteration) {
