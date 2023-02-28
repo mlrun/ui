@@ -344,16 +344,16 @@ const JobWizardFunctionSelection = ({
               <FormSelect name="functionSelection.projectName" options={projects} />
             </div>
           </div>
-          <div className="functions-list">
-            {(filterByName.length > 0 &&
-              (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
-            functions.length === 0 ? (
-              <NoData />
-            ) : (
-              (filteredFunctions.length > 0 ? filteredFunctions : functions).map(functionData => {
+
+          {(filterByName.length > 0 &&
+            (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
+          functions.length === 0 ? (
+            <NoData />
+          ) : (
+            <div className="functions-list">
+              {(filteredFunctions.length > 0 ? filteredFunctions : functions).map(functionData => {
                 return (
                   <FunctionCardTemplate
-                    dense
                     selected={
                       functionData?.functions?.[0].metadata?.hash ===
                       selectedFunctionData?.functions?.[0].metadata.hash
@@ -364,9 +364,9 @@ const JobWizardFunctionSelection = ({
                     key={functionData.name}
                   />
                 )
-              })
-            )}
-          </div>
+              })}
+            </div>
+          )}
         </div>
       )}
       {activeTab === FUNCTIONS_SELECTION_HUB_TAB && (

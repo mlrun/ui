@@ -3,7 +3,8 @@
   flex-direction: column;
   height: 100%;
 
-  .functions-tab, .hub-tab {
+  .functions-tab,
+  .hub-tab {
     display: flex;
     flex-direction: column;
     min-height: 300px;
@@ -14,9 +15,10 @@
   }
 
   .functions-list {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 1px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0;
   }
 
   .content-menu {
