@@ -46,8 +46,7 @@ import {
   MONITOR_WORKFLOWS_TAB,
   PRIMARY_NODE,
   WORKFLOW_GRAPH_VIEW,
-  WORKFLOW_LIST_VIEW,
-  WORKFLOW_TYPE_SKIPPED
+  WORKFLOW_LIST_VIEW
 } from '../../constants'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 import { createJobsWorkflowContent } from '../../utils/createJobsContent'
@@ -133,7 +132,7 @@ const Workflow = ({
         data: {
           customData,
           isSelectable: isWorkflowStepExecutable(job),
-          isOpacity: job?.type === WORKFLOW_TYPE_SKIPPED,
+          isOpacity: !isWorkflowStepExecutable(job),
           label: job.name,
           sourceHandle,
           subType: PRIMARY_NODE
