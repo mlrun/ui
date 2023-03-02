@@ -291,7 +291,7 @@ const FeatureVectors = ({
         selectedFeatureVector,
         setNotification,
         updateFeatureStoreData,
-        filtersStore.CancelToken,
+        filtersStore,
         dispatch
       )
     },
