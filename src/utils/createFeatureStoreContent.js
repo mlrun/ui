@@ -265,7 +265,7 @@ const getFeatureSetTargetCellValue = (targets, identifierUnique) => ({
     )
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   id: `targets.${identifierUnique}`,
-  class: 'table-cell-icon',
+  class: 'table-cell-icon targets-cell',
   type: 'icons'
 })
 
