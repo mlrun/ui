@@ -64,6 +64,10 @@
     }
   }
 
+  .targets-cell {
+    min-width: 75px;
+  }
+
   &__content {
     position: relative;
     width: 100%;
