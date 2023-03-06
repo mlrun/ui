@@ -26,7 +26,7 @@ import Download from '../../common/Download/Download'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
 import TableProducerCell from '../TableProducerCell/TableProducerCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { BUTTON_COPY_URI_CELL_TYPE } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
@@ -150,7 +150,9 @@ const TableCell = ({
       <div className={`table-body__cell ${data.class} ${className}`}>
         <button onClick={() => data.actionHandler(item)}>
           <Tooltip template={<TextTooltipTemplate text="Copy URI" />}>
-            <Copy />
+            <RoundedIcon>
+              <Copy />
+            </RoundedIcon>
           </Tooltip>
         </button>
       </div>

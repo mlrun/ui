@@ -65,7 +65,13 @@
   }
 
   .targets-cell {
-    min-width: 75px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    min-width: 130px;
+
+    svg {
+      margin: 0 5px;
+    }
   }
 
   &__content {
