@@ -29,10 +29,12 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
 import {
+  INACTIVE_JOBS_TAB,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_CREATE_MODE,
+  PROJECTS_PAGE_PATH,
   SCHEDULE_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -95,9 +97,13 @@ const Jobs = ({ fetchJobFunction }) => {
   )
 
   useEffect(() => {
-    if (location.pathname.match('\\b\\monitor(?!-)\\b')) {
+    const urlPathArray = location.pathname.split('/')
+    const monitorJobsIndex = urlPathArray.indexOf(PROJECTS_PAGE_PATH) + 3
+
+    if (urlPathArray[monitorJobsIndex] === INACTIVE_JOBS_TAB) {
       /*/!* Adding the next redirect for backwards compatability *!/*/
-      navigate(location.pathname.replace('monitor', MONITOR_JOBS_TAB), { replace: true })
+      urlPathArray[monitorJobsIndex] = MONITOR_JOBS_TAB
+      navigate(urlPathArray.join('/'), { replace: true })
     } else {
       const pageTab = location.pathname.includes(MONITOR_WORKFLOWS_TAB)
         ? MONITOR_WORKFLOWS_TAB

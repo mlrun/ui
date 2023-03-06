@@ -55,14 +55,7 @@ const Chip = React.forwardRef(
   ) => {
     const chipRef = React.useRef()
     const { chipLabel, chipValue } = getChipLabelAndValue(chip)
-    const {
-      background,
-      boldValue,
-      borderColor,
-      density,
-      font,
-      borderRadius
-    } = chipOptions
+    const { background, boldValue, borderColor, density, font, borderRadius } = chipOptions
 
     const chipClassNames = classnames(
       'chip',
@@ -91,9 +84,14 @@ const Chip = React.forwardRef(
 
     useEffect(() => {
       if (chipRef.current && setChipsSizes) {
+        const { marginLeft, marginRight } = getComputedStyle(chipRef.current)
+
         setChipsSizes(state => ({
           ...state,
-          [chipIndex]: chipRef.current.getBoundingClientRect().width
+          [chipIndex]:
+            chipRef.current.getBoundingClientRect().width +
+            parseFloat(marginLeft) +
+            parseFloat(marginRight)
         }))
       }
     }, [chipIndex, setChipsSizes])
@@ -136,7 +134,11 @@ const Chip = React.forwardRef(
     }
 
     return (
-      <span className={`${chipClassNames} chips_button`} onClick={onClick} ref={hiddenChipCounterRef}>
+      <span
+        className={`${chipClassNames} chips_button`}
+        onClick={onClick}
+        ref={hiddenChipCounterRef}
+      >
         {chip.value}
       </span>
     )

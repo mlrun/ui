@@ -20,12 +20,21 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { get } from 'lodash'
 
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { FormChipCell, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { getChipOptions } from '../../utils/getChipOptions'
 
 import './functionCardTemplate.scss'
 
-const FunctionCardTemplate = ({ className, dense, functionData, onSelectCard, selected }) => {
+const FunctionCardTemplate = ({
+  className,
+  formState,
+  dense,
+  functionData,
+  onSelectCard,
+  selected
+}) => {
   const templateClassName = classnames(
     'job-card-template',
     dense && 'dense',
@@ -34,22 +43,52 @@ const FunctionCardTemplate = ({ className, dense, functionData, onSelectCard, se
   )
 
   return (
-    <div className={templateClassName} onClick={() => onSelectCard()}>
+    <div className={templateClassName} onClick={event => onSelectCard(event)}>
       <div className="job-card-template__header">
         <Tooltip template={<TextTooltipTemplate text={functionData.header} />}>
           {functionData.header}
         </Tooltip>
-      </div>
-      <div className="job-card-template__sub-header">
-        <Tooltip template={<TextTooltipTemplate text={functionData.subHeader} />}>
-          {functionData.subHeader}
-        </Tooltip>
+        {functionData.subHeader && (
+          <div className="job-card-template__sub-header">
+            <Tooltip template={<TextTooltipTemplate text={functionData.subHeader} />}>
+              {functionData.subHeader}
+            </Tooltip>
+          </div>
+        )}
       </div>
       {functionData.sideTag && (
         <div className="job-card-template__side-tag">{functionData.sideTag}</div>
       )}
-      {functionData.description && (
-        <div className="job-card-template__description">{functionData.description}</div>
+      <div className="job-card-template__description">{functionData.description}</div>
+      {functionData.labelsName && get(formState?.values, functionData.labelsName, null) && (
+        <FormChipCell
+          chipOptions={getChipOptions('metrics')}
+          formState={formState}
+          initialValues={formState.initialValues}
+          name={functionData.labelsName}
+        />
+      )}
+      {functionData.links && (
+        <div className="job-card-template__links">
+          <a
+            className="link"
+            href={functionData.links.documentation}
+            target="_blank"
+            rel="noreferrer"
+            onClick={event => event.stopPropagation()}
+          >
+            Documentation
+          </a>
+          <a
+            className="link"
+            href={functionData.links.examples}
+            target="_blank"
+            rel="noreferrer"
+            onClick={event => event.stopPropagation()}
+          >
+            Examples
+          </a>
+        </div>
       )}
     </div>
   )
@@ -58,12 +97,14 @@ const FunctionCardTemplate = ({ className, dense, functionData, onSelectCard, se
 FunctionCardTemplate.defaultProps = {
   className: '',
   dense: false,
+  formState: {},
   selected: false
 }
 
 FunctionCardTemplate.propTypes = {
   className: PropTypes.string,
   dense: PropTypes.bool,
+  formState: PropTypes.shape({}),
   functionData: PropTypes.shape({
     header: PropTypes.string.isRequired,
     subHeader: PropTypes.string,

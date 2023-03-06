@@ -36,9 +36,9 @@ import {
   parsePredefinedParameters
 } from '../../JobWizard.util'
 
-import './jobWizardJobDetails.scss'
+import './jobWizardRunDetails.scss'
 
-const JobWizardJobDetails = ({
+const JobWizardRunDetails = ({
   defaultData,
   formState,
   frontendSpec,
@@ -48,7 +48,7 @@ const JobWizardJobDetails = ({
   selectedFunctionData,
   setJobAdditionalData
 }) => {
-  const methodPath = 'jobDetails.method'
+  const methodPath = 'runDetails.method'
   const [spyOnMethodChange, setSpyOnMethodChange] = useState(true)
 
   useEffect(() => {
@@ -118,19 +118,15 @@ const JobWizardJobDetails = ({
   }
 
   return (
-    <div className="job-wizard__job-details form">
+    <div className="job-wizard__run-details form">
       <div className="form-row">
-        <h5 className="form-step-title">Job Details</h5>
-      </div>
-      <div className="form-row">
-        This is a paragraph explaining what the user will find here and what he or she should do
-        next, here we can throw in all the jargon words that normal people would glaze over.
+        <h5 className="form-step-title">Run Details</h5>
       </div>
       <div className="form-row">
         <div className="form-col-2">
           <FormInput
             label="Name"
-            name="jobDetails.name"
+            name="runDetails.name"
             disabled={isEditMode}
             required
             validationRules={getValidationRules('common.name')}
@@ -139,7 +135,7 @@ const JobWizardJobDetails = ({
         {jobAdditionalData.versionOptions?.length !== 0 && (
           <div className="form-col-1">
             <FormSelect
-              name="jobDetails.version"
+              name="runDetails.version"
               label="Version"
               options={jobAdditionalData.versionOptions || []}
             />
@@ -162,7 +158,7 @@ const JobWizardJobDetails = ({
           initialValues={formState.initialValues}
           isEditable
           label="labels"
-          name="jobDetails.labels"
+          name="runDetails.labels"
           shortChips
           visibleChipsMaxLength="all"
           validationRules={{
@@ -176,7 +172,7 @@ const JobWizardJobDetails = ({
   )
 }
 
-JobWizardJobDetails.propTypes = {
+JobWizardRunDetails.propTypes = {
   defaultData: PropTypes.shape({}).isRequired,
   formState: PropTypes.shape({}).isRequired,
   frontendSpec: PropTypes.shape({}).isRequired,
@@ -187,4 +183,4 @@ JobWizardJobDetails.propTypes = {
   setJobAdditionalData: PropTypes.func.isRequired
 }
 
-export default JobWizardJobDetails
+export default JobWizardRunDetails

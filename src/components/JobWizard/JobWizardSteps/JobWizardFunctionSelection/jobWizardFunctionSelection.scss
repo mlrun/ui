@@ -3,27 +3,27 @@
   flex-direction: column;
   height: 100%;
 
-  .functions-tab, .marketplace-tab {
+  .functions-tab,
+  .hub-tab {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     min-height: 300px;
   }
 
+  .hub-search {
+    margin-right: 10px;
+  }
+
   .functions-list {
-    overflow: auto;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 1px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0;
   }
 
   .content-menu {
     margin-bottom: 15px;
     min-width: unset;
-  }
-
-  .slider-row {
-    flex-direction: column;
   }
 
   .form-row__project-name {

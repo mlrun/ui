@@ -17,11 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classnames from 'classnames'
-import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import JobWizard from '../../JobWizard/JobWizard'
 import Details from '../../Details/Details'
@@ -52,9 +52,10 @@ import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { handleAbortJob } from '../jobs.util'
+import { enrichRunWithFunctionTag, handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
@@ -66,10 +67,10 @@ const MonitorJobs = ({
   abortJob,
   fetchAllJobRuns,
   fetchJob,
+  fetchJobFunctions,
   fetchJobLogs,
   fetchJobPods,
   fetchJobs,
-  removeJobLogs,
   removeNewJob,
   removePods
 }) => {
@@ -87,6 +88,7 @@ const MonitorJobs = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const { isDemoMode, isStagingMode } = useMode()
+  const fetchJobFunctionsPromiseRef = useRef()
   const {
     editableItem,
     handleMonitoring,
@@ -114,9 +116,16 @@ const MonitorJobs = ({
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
+  const handleFetchJobLogs = useCallback(
+    (item, projectName, setDetailsLogs, streamLogsRef) => {
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+    },
+    [fetchJobLogs]
+  )
+
   const pageData = useMemo(
-    () => generatePageData(fetchJobLogs, removeJobLogs, selectedJob),
-    [fetchJobLogs, removeJobLogs, selectedJob]
+    () => generatePageData(handleFetchJobLogs, selectedJob),
+    [handleFetchJobLogs, selectedJob]
   )
 
   const refreshJobs = useCallback(
@@ -206,30 +215,42 @@ const MonitorJobs = ({
     toggleConvertedYaml
   ])
 
-  const handleSelectJob = useCallback(
+  const modifyAndSelectRun = useCallback(
+    jobRun => {
+      return enrichRunWithFunctionTag(jobRun, fetchJobFunctions, fetchJobFunctionsPromiseRef).then(
+        jobRun => {
+          setSelectedJob(jobRun)
+        }
+      )
+    },
+    [fetchJobFunctions]
+  )
+
+  const handleSelectRun = useCallback(
     item => {
       if (params.jobName) {
         if (document.getElementsByClassName('view')[0]) {
           document.getElementsByClassName('view')[0].classList.remove('view')
         }
 
-        setSelectedJob(item)
+        modifyAndSelectRun(item)
       }
     },
-    [params.jobName]
+    [modifyAndSelectRun, params.jobName]
   )
 
-  const fetchCurrentJob = useCallback(() => {
-    return fetchJob(params.projectName, params.jobId)
+  const fetchRun = useCallback(() => {
+    fetchJob(params.projectName, params.jobId)
       .then(job => {
-        setSelectedJob(parseJob(job))
-
-        return job
+        return modifyAndSelectRun(parseJob(job))
       })
       .catch(() =>
         navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`, { replace: true })
       )
-  }, [fetchJob, navigate, params.jobId, params.projectName])
+      .finally(() => {
+        fetchJobFunctionsPromiseRef.current = null
+      })
+  }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
 
   const isJobDataEmpty = useCallback(
     () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
@@ -255,16 +276,38 @@ const MonitorJobs = ({
   )
 
   useEffect(() => {
+    if (selectedJob.name) {
+      const urlPathArray = location.pathname.split('/')
+      const jobNameIndex = urlPathArray.indexOf(selectedJob.uid) - 1
+
+      if (urlPathArray[jobNameIndex] !== selectedJob.name) {
+        navigate(
+          [
+            ...urlPathArray.slice(0, jobNameIndex + 1),
+            selectedJob.name,
+            ...urlPathArray.slice(jobNameIndex + 1)
+          ].join('/'),
+          { replace: true }
+        )
+      }
+    }
+  }, [navigate, selectedJob.name, selectedJob.uid, location])
+
+  useEffect(() => {
     if (params.jobId && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
   }, [navigate, pageData.details.menu, location, params.jobId, params.tab])
 
   useEffect(() => {
-    if (params.jobId && (isEmpty(selectedJob) || params.jobId !== selectedJob.uid)) {
-      fetchCurrentJob()
+    if (
+      !fetchJobFunctionsPromiseRef.current &&
+      params.jobId &&
+      (isEmpty(selectedJob) || params.jobId !== selectedJob.uid)
+    ) {
+      fetchRun()
     }
-  }, [fetchCurrentJob, params.jobId, selectedJob])
+  }, [fetchRun, params.jobId, selectedJob])
 
   useEffect(() => {
     if (!params.jobId && !isEmpty(selectedJob)) {
@@ -343,7 +386,7 @@ const MonitorJobs = ({
         },
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
         mode: jobWizardMode,
-        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Re-run job' : undefined,
+        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
         onSuccessRequest: () => refreshJobs(filtersStore)
       })
 
@@ -395,7 +438,7 @@ const MonitorJobs = ({
             actionsMenu={actionsMenu}
             content={params.jobName ? jobRuns : jobs}
             handleCancel={() => setSelectedJob({})}
-            handleSelectItem={handleSelectJob}
+            handleSelectItem={handleSelectRun}
             pageData={pageData}
             retryRequest={refreshJobs}
             selectedItem={selectedJob}
@@ -405,7 +448,7 @@ const MonitorJobs = ({
             {tableContent.map((tableItem, index) => (
               <JobsTableRow
                 actionsMenu={actionsMenu}
-                handleSelectJob={handleSelectJob}
+                handleSelectJob={handleSelectRun}
                 key={index}
                 rowItem={tableItem}
                 selectedJob={selectedJob}
@@ -420,7 +463,7 @@ const MonitorJobs = ({
           detailsMenu={pageData.details.menu}
           getCloseDetailsLink={() => getCloseDetailsLink(location, params.jobName)}
           handleCancel={() => setSelectedJob({})}
-          handleRefresh={fetchCurrentJob}
+          handleRefresh={fetchRun}
           isDetailsScreen
           pageData={pageData}
           selectedItem={selectedJob}

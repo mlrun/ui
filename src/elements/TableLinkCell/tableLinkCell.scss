@@ -31,13 +31,14 @@
   .date-uid-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-weight: normal;
     font-size: 12px;
     font-family: Roboto, sans-serif;
     font-style: normal;
     line-height: 18px;
 
-    & > span:not(:last-child) {
+    & > span {
       margin-right: 10px;
     }
 

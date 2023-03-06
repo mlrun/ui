@@ -45,7 +45,9 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
 
   const handlerOverall = useCallback(
     event => {
-      if (!event.path.includes(tagFilterRef.current)) {
+      const elementPath = event.path ?? event.composedPath?.()
+
+      if (!elementPath.includes(tagFilterRef.current)) {
         if (tagFilter.length <= 0) {
           onChange(TAG_FILTER_LATEST)
           setTagFilter(tagFilterOptions.find(tag => tag.id === TAG_FILTER_LATEST).label)

@@ -47,6 +47,7 @@ import { setNotification } from '../../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
+import { parseChipsData } from '../../../utils/convertChipsData'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -73,6 +74,14 @@ const FeatureSets = ({
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+
+  const detailsFormInitialValues = useMemo(
+    () => ({
+      description: selectedFeatureSet.description,
+      labels: parseChipsData(selectedFeatureSet.labels)
+    }),
+    [selectedFeatureSet.description, selectedFeatureSet.labels]
+  )
 
   const { featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen, toggleConvertedYaml } =
     React.useContext(FeatureStoreContext)
@@ -174,6 +183,7 @@ const FeatureSets = ({
     getFeatureSetIdentifier,
     handleRemoveFeatureSet,
     handleRequestOnExpand,
+    null,
     FEATURE_STORE_PAGE,
     FEATURE_SETS_TAB
   )
@@ -334,6 +344,7 @@ const FeatureSets = ({
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       closePanel={closePanel}
       createFeatureSetSuccess={createFeatureSetSuccess}
+      detailsFormInitialValues={detailsFormInitialValues}
       featureSets={featureSets}
       featureSetsPanelIsOpen={featureSetsPanelIsOpen}
       featureStore={featureStore}

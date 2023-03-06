@@ -65,7 +65,6 @@ const Functions = ({
   fetchFunctionLogs,
   fetchFunctions,
   functionsStore,
-  removeFunctionLogs,
   removeFunctionsError,
   removeNewFunction,
   removeNewJob
@@ -147,6 +146,7 @@ const Functions = ({
     getFunctionIdentifier,
     handleCollapse,
     handleExpand,
+    null,
     FUNCTIONS_PAGE,
     null,
     handleExpandAllCallback
@@ -158,13 +158,14 @@ const Functions = ({
   )
 
   const handleFetchFunctionLogs = useCallback(
-    (projectName, name, tag, offset) => {
+    (item, projectName, setDetailsLogs, offset) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
         projectName,
-        name,
-        tag,
+        item.name,
+        item.tag,
+        setDetailsLogs,
         offset,
         navigate,
         refreshFunctions
@@ -175,8 +176,7 @@ const Functions = ({
 
   const handleRemoveLogs = useCallback(() => {
     clearTimeout(fetchFunctionLogsTimeout.current)
-    removeFunctionLogs()
-  }, [fetchFunctionLogsTimeout, removeFunctionLogs])
+  }, [fetchFunctionLogsTimeout])
 
   const removeFunction = useCallback(
     func => {

@@ -97,6 +97,8 @@ import {
   INTERNAL_SERVER_ERROR_STATUS_CODE
 } from 'igz-controls/constants'
 
+import { parseSummaryData } from '../utils/parseSummaryData'
+
 const projectsAction = {
   addProjectLabel: (label, labels) => ({
     type: ADD_PROJECT_LABEL,
@@ -327,7 +329,7 @@ const projectsAction = {
       'partition-sort-by': 'updated',
       'rows-per-partition': '5',
       'max-partitions': '5',
-      'iter': 'false'
+      iter: 'false'
     }
 
     return projectsApi
@@ -464,7 +466,7 @@ const projectsAction = {
     return projectsApi
       .getProjectSummary(project)
       .then(({ data }) => {
-        return dispatch(projectsAction.fetchProjectSummarySuccess(data))
+        return dispatch(projectsAction.fetchProjectSummarySuccess(parseSummaryData(data)))
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectSummaryFailure(error.message))
@@ -535,9 +537,9 @@ const projectsAction = {
     return projectsApi
       .getProjectSummaries(cancelToken)
       .then(({ data: { project_summaries } }) => {
-        dispatch(projectsAction.fetchProjectsSummarySuccess(project_summaries))
+        dispatch(projectsAction.fetchProjectsSummarySuccess(parseSummaryData(project_summaries)))
 
-        return project_summaries
+        return parseSummaryData(project_summaries)
       })
       .catch(err => {
         dispatch(projectsAction.fetchProjectsSummaryFailure(err))

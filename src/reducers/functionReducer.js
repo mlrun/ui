@@ -54,7 +54,6 @@ import {
   FETCH_FUNCTION_LOGS_BEGIN,
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_SUCCESS,
-  REMOVE_FUNCTION_LOGS,
   SET_NEW_FUNCTION,
   SET_NEW_FUNCTION_KIND,
   SET_NEW_FUNCTION_GRAPH,
@@ -66,9 +65,6 @@ import {
   GET_FUNCTION_SUCCESS,
   GET_FUNCTION_FAILURE,
   GET_FUNCTION_BEGIN,
-  GET_FUNCTION_WITH_HASH_BEGIN,
-  GET_FUNCTION_WITH_HASH_FAILURE,
-  GET_FUNCTION_WITH_HASH_SUCCESS,
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
   PANEL_DEFAULT_ACCESS_KEY,
@@ -81,7 +77,6 @@ const initialState = {
   functions: [],
   func: {},
   logs: {
-    data: '',
     loading: false,
     error: null
   },
@@ -122,6 +117,7 @@ const initialState = {
     }
   },
   templatesCatalog: {},
+  templates: [],
   template: {}
 }
 
@@ -190,7 +186,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: {
-          data: initialState.logs.data,
           loading: false,
           error: payload
         }
@@ -199,7 +194,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: {
-          data: `${state.logs.data}${payload}`,
           loading: false,
           error: null
         }
@@ -207,7 +201,8 @@ const functionReducer = (state = initialState, { type, payload }) => {
     case SET_FUNCTIONS_TEMPLATES:
       return {
         ...state,
-        templates: payload
+        templates: payload.templates,
+        templatesCatalog: payload.templatesCategories
       }
     case FETCH_FUNCTION_TEMPLATE_BEGIN:
       return {
@@ -246,34 +241,10 @@ const functionReducer = (state = initialState, { type, payload }) => {
         template: payload,
         error: null
       }
-    case GET_FUNCTION_WITH_HASH_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case GET_FUNCTION_WITH_HASH_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        func: {},
-        error: payload
-      }
-    case GET_FUNCTION_WITH_HASH_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        template: payload,
-        error: null
-      }
     case REMOVE_FUNCTION:
       return {
         ...state,
         func: {}
-      }
-    case REMOVE_FUNCTION_LOGS:
-      return {
-        ...state,
-        logs: initialState.logs
       }
     case REMOVE_FUNCTION_TEMPLATE:
       return {

@@ -86,8 +86,8 @@ const artifactsApi = {
   getArtifact: (project, artifact) => {
     return mainHttpClient.get(`/projects/${project}/artifacts?name=${artifact}`)
   },
-  getArtifacts: (project, filters) => {
-    return fetchArtifacts(project, filters)
+  getArtifacts: (project, filters, config) => {
+    return fetchArtifacts(project, filters, config)
   },
   getDataSet: (project, dataSet, iter, tag) => {
     return fetchArtifacts(

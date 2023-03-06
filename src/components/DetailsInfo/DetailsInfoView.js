@@ -47,6 +47,7 @@ const DetailsInfoView = React.forwardRef(
       detailsInfoDispatch,
       detailsInfoState,
       detailsStore,
+      formState,
       handleDiscardChanges,
       handleFinishEdit,
       handleInfoItemClick,
@@ -114,8 +115,8 @@ const DetailsInfoView = React.forwardRef(
                 pageData.page === FEATURE_STORE_PAGE
               ) {
                 if (header.id === 'labels') {
-                  chipsData.chips = !isNil(detailsStore.changes.data[header.id])
-                    ? detailsStore.changes.data[header.id].currentFieldValue
+                  chipsData.chips = formState.values.labels
+                    ? parseKeyValues(formState.values.labels)
                     : parseKeyValues(detailsStore.infoContent[header.id]?.value)
                   chipsData.chipOptions = getChipOptions(header.id)
                 }
@@ -152,10 +153,11 @@ const DetailsInfoView = React.forwardRef(
                         changesData={detailsStore.changes.data}
                         chipsClassName={chipsClassName}
                         chipsData={chipsData}
-                        chipOptions={chipsData.chipOptions}
                         currentField={header.id}
                         detailsInfoDispatch={detailsInfoDispatch}
+                        detailsInfoState={detailsInfoState}
                         editableFieldType={detailsInfoState.editMode.fieldType}
+                        formState={formState}
                         func={func}
                         handleDiscardChanges={handleDiscardChanges}
                         handleFinishEdit={handleFinishEdit}
@@ -195,6 +197,7 @@ DetailsInfoView.propTypes = {
   detailsInfoDispatch: PropTypes.func.isRequired,
   detailsInfoState: PropTypes.shape({}).isRequired,
   detailsStore: PropTypes.shape({}).isRequired,
+  formState: PropTypes.shape({}),
   handleFinishEdit: PropTypes.func.isRequired,
   handleInfoItemClick: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,

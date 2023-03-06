@@ -32,11 +32,10 @@ import {
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
   REMOVE_JOB_ERROR,
-  REMOVE_JOB_LOGS,
   REMOVE_NEW_JOB,
   RUN_NEW_JOB_FAILURE,
   REMOVE_SCHEDULED_JOB_FAILURE,
-  SET_ALL_JOBS_DATA,
+  SET_JOBS_DATA,
   SET_LOADING,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
   SET_NEW_JOB_INPUTS,
@@ -64,16 +63,18 @@ import {
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
   SET_NEW_JOB_PREEMTION_MODE,
-  SET_NEW_JOB_PRIORITY_CLASS_NAME
+  SET_NEW_JOB_PRIORITY_CLASS_NAME,
+  FETCH_JOB_FUNCTIONS_SUCCESS,
+  FETCH_JOB_FUNCTIONS_FAILURE,
+  FETCH_JOB_FUNCTIONS_BEGIN
 } from '../constants'
 
 const initialState = {
-  allJobsData: [],
+  jobsData: [],
   job: {},
   jobRuns: [],
   jobs: [],
   logs: {
-    data: '',
     loading: false,
     error: null
   },
@@ -197,6 +198,23 @@ const jobReducer = (state = initialState, { type, payload }) => {
         loading: false,
         error: null
       }
+    case FETCH_JOB_FUNCTIONS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_JOB_FUNCTIONS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_JOB_FUNCTIONS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
+      }
     case FETCH_JOB_LOGS_FAILURE:
       return {
         ...state,
@@ -210,7 +228,6 @@ const jobReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: {
-          data: payload,
           loading: false,
           error: null
         }
@@ -248,11 +265,6 @@ const jobReducer = (state = initialState, { type, payload }) => {
         ...state,
         job: {}
       }
-    case REMOVE_JOB_LOGS:
-      return {
-        ...state,
-        logs: initialState.logs
-      }
     case REMOVE_JOB_ERROR:
       return {
         ...state,
@@ -288,10 +300,10 @@ const jobReducer = (state = initialState, { type, payload }) => {
         loading: false,
         error: payload
       }
-    case SET_ALL_JOBS_DATA:
+    case SET_JOBS_DATA:
       return {
         ...state,
-        allJobsData: payload
+        jobsData: payload
       }
     case SET_LOADING: {
       return {

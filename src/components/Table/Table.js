@@ -30,6 +30,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
+import { SORT_PROPS } from 'igz-controls/types'
 import { GROUP_BY_NAME, GROUP_BY_NONE, MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
 
 import './table.scss'
@@ -40,15 +41,18 @@ const Table = ({
   applyDetailsChangesCallback,
   children,
   content,
+  detailsFormInitialValues,
   filtersStore,
   getCloseDetailsLink,
   groupedContent,
   handleCancel,
   handleExpandRow,
   handleSelectItem,
+  hideActionsMenu,
   pageData,
   retryRequest,
   selectedItem,
+  sortProps,
   tab,
   tableHeaders
 }) => {
@@ -106,11 +110,7 @@ const Table = ({
     if (filtersStore.groupBy === GROUP_BY_NAME) {
       setTableContent({
         content: generatedTableContent,
-        groupLatestItem: generateGroupLatestItem(
-          pageData.page,
-          generatedTableContent,
-          params.pageTab
-        ),
+        groupLatestItem: generateGroupLatestItem(generatedTableContent),
         groupWorkflowItems: [],
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
@@ -140,6 +140,7 @@ const Table = ({
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       content={content}
+      detailsFormInitialValues={detailsFormInitialValues}
       getCloseDetailsLink={getCloseDetailsLink}
       groupFilter={filtersStore.groupBy}
       groupLatestItem={
@@ -151,12 +152,14 @@ const Table = ({
       handleCancel={handleCancel}
       handleExpandRow={handleExpandRow}
       handleSelectItem={handleSelectItem}
+      hideActionsMenu={hideActionsMenu}
       isTablePanelOpen={tableStore.isTablePanelOpen}
       mainRowItemsCount={tableContent.mainRowItemsCount}
       pageData={pageData}
       params={params}
       retryRequest={retryRequest}
       selectedItem={selectedItem}
+      sortProps={sortProps}
       tableContent={
         tab === MONITOR_JOBS_TAB || tab === SCHEDULE_TAB ? content : tableContent.content
       }
@@ -174,13 +177,16 @@ const Table = ({
 Table.defaultProps = {
   applyDetailsChanges: () => {},
   applyDetailsChangesCallback: () => {},
+  detailsFormInitialValues: {},
   getCloseDetailsLink: null,
   groupedContent: {},
   handleCancel: () => {},
   handleExpandRow: () => {},
   handleSelectItem: () => {},
+  hideActionsMenu: false,
   retryRequest: () => {},
   selectedItem: {},
+  sortProps: null,
   tab: '',
   tableHeaders: []
 }
@@ -190,14 +196,17 @@ Table.propTypes = {
   applyDetailsChanges: PropTypes.func,
   applyDetailsChangesCallback: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  detailsFormInitialValues: PropTypes.object,
   getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),
   handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
+  hideActionsMenu: PropTypes.bool,
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}),
+  sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableHeaders: PropTypes.array
 }

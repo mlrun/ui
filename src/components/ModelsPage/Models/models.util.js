@@ -125,7 +125,12 @@ export const generateModelsDetailsMenu = selectedModel => [
   },
   {
     label: 'preview',
-    id: 'preview'
+    id: 'preview',
+    hidden:
+      isEmpty(selectedModel.extra_data) &&
+      isEmpty(selectedModel.preview) &&
+      isEmpty(selectedModel.schema) &&
+      !selectedModel.target_path
   },
   {
     label: 'features',
@@ -190,8 +195,8 @@ export const handleApplyDetailsChanges = (
     Object.keys(changes.data).forEach(key => {
       if (key === 'labels') {
         isNewFormat
-          ? (artifactItem.metadata[key] = changes.data[key].previousFieldValue)
-          : (artifactItem[key] = changes.data[key].previousFieldValue)
+          ? (artifactItem.metadata[key] = changes.data[key].currentFieldValue)
+          : (artifactItem[key] = changes.data[key].currentFieldValue)
       }
     })
 

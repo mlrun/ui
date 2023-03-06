@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import jobsApi from '../api/jobs-api'
+import functionsApi from '../api/functions-api'
 import {
   ABORT_JOB_BEGIN,
   ABORT_JOB_FAILURE,
@@ -33,11 +34,10 @@ import {
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
   REMOVE_JOB_ERROR,
-  REMOVE_JOB_LOGS,
   REMOVE_NEW_JOB,
   REMOVE_SCHEDULED_JOB_FAILURE,
   RUN_NEW_JOB_FAILURE,
-  SET_ALL_JOBS_DATA,
+  SET_JOBS_DATA,
   SET_LOADING,
   SET_NEW_JOB,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
@@ -65,7 +65,10 @@ import {
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
   SET_NEW_JOB_PREEMTION_MODE,
-  SET_NEW_JOB_PRIORITY_CLASS_NAME
+  SET_NEW_JOB_PRIORITY_CLASS_NAME,
+  FETCH_JOB_FUNCTIONS_BEGIN,
+  FETCH_JOB_FUNCTIONS_FAILURE,
+  FETCH_JOB_FUNCTIONS_SUCCESS
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 
@@ -150,8 +153,8 @@ const jobsActions = {
   fetchJobFunction: (project, functionName, hash) => dispatch => {
     dispatch(jobsActions.fetchJobFunctionBegin())
 
-    return jobsApi
-      .getJobFunction(project, functionName, hash)
+    return functionsApi
+      .getFunction(project, functionName, hash)
       .then(res => {
         dispatch(jobsActions.fetchJobFunctionSuccess())
 
@@ -171,13 +174,39 @@ const jobsActions = {
   fetchJobFunctionSuccess: () => ({
     type: FETCH_JOB_FUNCTION_SUCCESS
   }),
+  fetchJobFunctions: (project, hash) => dispatch => {
+    dispatch(jobsActions.fetchJobFunctionsBegin())
+
+    return functionsApi
+      .getFunctions(project, null, hash)
+      .then(res => {
+        dispatch(jobsActions.fetchJobFunctionsSuccess())
+
+        return res.data?.funcs
+      })
+      .catch(error => {
+        dispatch(jobsActions.fetchJobFunctionsFailure(error.message))
+      })
+  },
+  fetchJobFunctionsBegin: () => ({
+    type: FETCH_JOB_FUNCTIONS_BEGIN
+  }),
+  fetchJobFunctionsFailure: error => ({
+    type: FETCH_JOB_FUNCTIONS_FAILURE,
+    payload: error
+  }),
+  fetchJobFunctionsSuccess: () => ({
+    type: FETCH_JOB_FUNCTIONS_SUCCESS
+  }),
   fetchJobLogs: (id, project) => dispatch => {
     dispatch(jobsActions.fetchJobLogsBegin())
 
     return jobsApi
       .getJobLogs(id, project)
       .then(result => {
-        dispatch(jobsActions.fetchJobLogsSuccess(result.data))
+        dispatch(jobsActions.fetchJobLogsSuccess())
+
+        return result
       })
       .catch(error => dispatch(jobsActions.fetchJobLogsFailure(error)))
   },
@@ -188,12 +217,11 @@ const jobsActions = {
     type: FETCH_JOB_LOGS_FAILURE,
     payload: error
   }),
-  fetchJobLogsSuccess: logs => ({
-    type: FETCH_JOB_LOGS_SUCCESS,
-    payload: logs
+  fetchJobLogsSuccess: () => ({
+    type: FETCH_JOB_LOGS_SUCCESS
   }),
   fetchJobs: (project, filters, scheduled) => dispatch => {
-    const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getAllJobs
+    const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getJobs
 
     dispatch(jobsActions.fetchJobsBegin())
 
@@ -204,7 +232,7 @@ const jobsActions = {
           : (data || {}).runs.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
-        dispatch(jobsActions.setAllJobsData(data.runs || []))
+        dispatch(jobsActions.setJobsData(data.runs || []))
 
         return newJobs
       })
@@ -213,6 +241,11 @@ const jobsActions = {
 
         throw error
       })
+  },
+  fetchSpecificJobs: (project, filters, jobList) => () => {
+    return jobsApi.getSpecificJobs(project, filters, jobList).then(({ data }) => {
+      return data.runs
+    })
   },
   fetchJobsBegin: () => ({
     type: FETCH_JOBS_BEGIN
@@ -254,9 +287,6 @@ const jobsActions = {
   removeJobError: () => ({
     type: REMOVE_JOB_ERROR
   }),
-  removeJobLogs: () => ({
-    type: REMOVE_JOB_LOGS
-  }),
   removeNewJob: () => ({
     type: REMOVE_NEW_JOB
   }),
@@ -296,8 +326,8 @@ const jobsActions = {
   runNewJobSuccess: () => ({
     type: RUN_NEW_JOB_SUCCESS
   }),
-  setAllJobsData: data => ({
-    type: SET_ALL_JOBS_DATA,
+  setJobsData: data => ({
+    type: SET_JOBS_DATA,
     payload: data
   }),
   setLoading: isLoading => ({

@@ -75,6 +75,13 @@ const Datasets = () => {
   const location = useLocation()
   const dispatch = useDispatch()
 
+  const detailsFormInitialValues = useMemo(
+    () => ({
+      tag: selectedDataset.tag ?? ''
+    }),
+    [selectedDataset.tag]
+  )
+
   const fetchData = useCallback(
     filters => {
       dispatch(fetchDataSets({ project: params.projectName, filters }))
@@ -205,6 +212,7 @@ const Datasets = () => {
     getArtifactIdentifier,
     handleRemoveRowData,
     handleRequestOnExpand,
+    null,
     DATASETS_PAGE
   )
 
@@ -286,6 +294,7 @@ const Datasets = () => {
       artifactsStore={artifactsStore}
       convertedYaml={convertedYaml}
       datasets={datasets}
+      detailsFormInitialValues={detailsFormInitialValues}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}

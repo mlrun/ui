@@ -57,7 +57,6 @@ import {
   FETCH_FUNCTION_LOGS_SUCCESS,
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_BEGIN,
-  REMOVE_FUNCTION_LOGS,
   SET_NEW_FUNCTION,
   SET_NEW_FUNCTION_KIND,
   SET_NEW_FUNCTION_GRAPH,
@@ -70,9 +69,6 @@ import {
   GET_FUNCTION_SUCCESS,
   GET_FUNCTION_FAILURE,
   GET_FUNCTION_BEGIN,
-  GET_FUNCTION_WITH_HASH_BEGIN,
-  GET_FUNCTION_WITH_HASH_FAILURE,
-  GET_FUNCTION_WITH_HASH_SUCCESS,
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_FORCE_BUILD,
   SET_NEW_FUNCTION_PREEMTION_MODE,
@@ -147,7 +143,7 @@ const functionsActions = {
     return functionsApi
       .getFunctionLogs(project, name, tag, offset)
       .then(result => {
-        dispatch(functionsActions.fetchFunctionLogsSuccess(result.data))
+        dispatch(functionsActions.fetchFunctionLogsSuccess())
 
         return result
       })
@@ -160,9 +156,8 @@ const functionsActions = {
     type: FETCH_FUNCTION_LOGS_FAILURE,
     payload: error
   }),
-  fetchFunctionLogsSuccess: logs => ({
-    type: FETCH_FUNCTION_LOGS_SUCCESS,
-    payload: logs
+  fetchFunctionLogsSuccess: () => ({
+    type: FETCH_FUNCTION_LOGS_SUCCESS
   }),
   fetchFunctions: (project, filters) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
@@ -191,24 +186,11 @@ const functionsActions = {
     return functionsApi
       .getFunctionTemplatesCatalog()
       .then(({ data: functionTemplates }) => {
-        const templates = Object.entries(functionTemplates).map(([key, value]) => ({
-          kind: value?.kind,
-          metadata: {
-            name: key,
-            hash: '',
-            description: value?.description,
-            categories: value?.categories,
-            versions: value?.versions,
-            tag: ''
-          },
-          status: {
-            state: ''
-          }
-        }))
-        const templatesCategories = generateCategories(templates)
-        dispatch(functionsActions.setFunctionsTemplates(templatesCategories))
+        const templatesData = generateCategories(functionTemplates)
 
-        return { templatesCategories, templates }
+        dispatch(functionsActions.setFunctionsTemplates(templatesData))
+
+        return templatesData
       })
       .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
   },
@@ -243,11 +225,11 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  getFunction: (project, name) => dispatch => {
+  getFunction: (project, name, hash) => dispatch => {
     dispatch(functionsActions.getFunctionBegin())
 
     return functionsApi
-      .getFunction(project, name)
+      .getFunction(project, name, hash)
       .then(result => {
         dispatch(functionsActions.getFunctionSuccess(result.data.func))
 
@@ -269,37 +251,8 @@ const functionsActions = {
     type: GET_FUNCTION_SUCCESS,
     payload: func
   }),
-  getFunctionWithHash: (project, name, hash) => dispatch => {
-    dispatch(functionsActions.getFunctionWithHashBegin())
-
-    return functionsApi
-      .getFunctionWithHash(project, name, hash)
-      .then(result => {
-        dispatch(functionsActions.getFunctionWithHashSuccess(result.data.func))
-
-        return result.data.func
-      })
-      .catch(error => {
-        dispatch(functionsActions.getFunctionWithHashFailure(error.message))
-        throw error
-      })
-  },
-  getFunctionWithHashBegin: () => ({
-    type: GET_FUNCTION_WITH_HASH_BEGIN
-  }),
-  getFunctionWithHashFailure: error => ({
-    type: GET_FUNCTION_WITH_HASH_FAILURE,
-    payload: error
-  }),
-  getFunctionWithHashSuccess: func => ({
-    type: GET_FUNCTION_WITH_HASH_SUCCESS,
-    payload: func
-  }),
   removeFunction: () => ({
     type: REMOVE_FUNCTION
-  }),
-  removeFunctionLogs: () => ({
-    type: REMOVE_FUNCTION_LOGS
   }),
   removeFunctionTemplate: () => ({
     type: REMOVE_FUNCTION_TEMPLATE
@@ -313,9 +266,9 @@ const functionsActions = {
   resetNewFunctionCodeCustomImage: () => ({
     type: RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
   }),
-  setFunctionsTemplates: templates => ({
+  setFunctionsTemplates: payload => ({
     type: SET_FUNCTIONS_TEMPLATES,
-    payload: templates
+    payload
   }),
   setLoading: loading => ({
     type: SET_LOADING,

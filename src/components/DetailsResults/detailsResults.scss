@@ -19,6 +19,7 @@
     &__row {
       display: flex;
       min-width: 100%;
+      min-height: 50px;
       border-bottom: $secondaryBorder;
 
       &:hover {
@@ -26,7 +27,7 @@
       }
 
       & > *:first-child {
-        padding-left: 40px;
+        margin-left: 10px;
       }
     }
 
@@ -46,27 +47,36 @@
       background-color: $white;
 
       &-item {
-        display: flex;
-        flex: 0 0 150px;
-        flex-direction: column;
-        width: 150px;
+        position: relative;
+        min-width: 140px;
 
-        @include tableHeader(16px);
+        @include tableDet;
+        @include tableHeader(8px, 5px, 8px, 20px);
 
-        padding: 5px 15px 5px 25px;
+        & > :first-child {
+          padding-left: 5px;
+        }
       }
 
-      .results-table__row:hover {
-        background-color: transparent;
+      .results-table__row {
+        &:hover {
+          background-color: transparent;
+        }
       }
     }
 
     &__cell {
       display: flex;
-      flex: 0 0 150px;
+      flex: 0 0 auto;
       flex-direction: column;
-      width: 150px;
-      padding: 19px 15px 19px 25px;
+      justify-content: center;
+      min-width: 140px;
+      margin: 0 1px;
+      padding: 8px 5px 8px 20px;
+
+      & > :first-child {
+        padding-left: 5px;
+      }
     }
 
     .table__cell-wide {
@@ -85,14 +95,14 @@
 
     &__medal {
       position: relative;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
 
-      svg {
+      .best-iteration {
         position: absolute;
-        top: 15px;
-        left: 8px;
+        top: auto;
+        bottom: auto;
+        left: 0;
+        margin-top: 2px;
+        padding: 0;
       }
     }
   }

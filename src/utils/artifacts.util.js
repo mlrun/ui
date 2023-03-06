@@ -21,6 +21,9 @@ import { cloneDeep } from 'lodash'
 import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
 
 import artifactApi from '../api/artifacts-api'
+import { ARTIFACT_TYPE, DATASET_TYPE, MODEL_TYPE } from '../constants'
+import { getArtifactIdentifier } from './getUniqueIdentifier'
+import { parseArtifacts } from './parseArtifacts'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
@@ -94,6 +97,41 @@ export const isArtifactNameUnique = projectName => async value => {
   const {
     data: { artifacts }
   } = await artifactApi.getArtifact(projectName, value)
+
+  return artifacts.length === 0
+}
+
+export const isArtifactTagUnique = (projectName, category, artifact) => async value => {
+  const artifactCategory = {
+    MODELS_TAB: MODEL_TYPE,
+    ARTIFACTS_PAGE: ARTIFACT_TYPE,
+    DATASETS_PAGE: DATASET_TYPE
+  }
+
+  if (!value) return
+
+  const {
+    data: { artifacts }
+  } = await artifactApi.getArtifacts(
+    projectName,
+    {},
+    {
+      params: {
+        category: artifactCategory[category],
+        format: 'full',
+        name: artifact.db_key,
+        tag: value
+      }
+    }
+  )
+
+  if (
+    artifacts.length === 1 &&
+    getArtifactIdentifier(parseArtifacts(artifacts)[0], true) ===
+      getArtifactIdentifier(artifact, true)
+  ) {
+    return true
+  }
 
   return artifacts.length === 0
 }

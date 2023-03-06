@@ -37,6 +37,7 @@ import {
   infoHeaders as functionsInfoHeaders
 } from '../../FunctionsPage/functions.util'
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
+import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
 
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
@@ -44,7 +45,11 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 export const generateFilters = () => [
   { type: PERIOD_FILTER, label: 'Period:' },
-  { type: STATUS_FILTER, label: 'Status:' },
+  {
+    type: STATUS_FILTER,
+    label: 'Status:',
+    options: generateStatusFilter(true)
+  },
   { type: NAME_FILTER, label: 'Name:' },
   { type: DATE_RANGE_TIME_FILTER, label: 'Created at:' }
 ]
@@ -52,9 +57,8 @@ export const generateFilters = () => [
 export const generatePageData = (
   selectedFunction,
   handleFetchFunctionLogs,
-  fetchJobLogs,
-  handleRemoveFunctionLogs,
-  removeJobLogs
+  handleFetchJobLogs,
+  handleRemoveFunctionLogs
 ) => {
   return {
     page: JOBS_PAGE,
@@ -66,10 +70,8 @@ export const generatePageData = (
         : getInfoHeaders(false),
       refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
         ? handleFetchFunctionLogs
-        : fetchJobLogs,
-      removeLogs: !isEveryObjectValueEmpty(selectedFunction)
-        ? handleRemoveFunctionLogs
-        : removeJobLogs,
+        : handleFetchJobLogs,
+      removeLogs: !isEveryObjectValueEmpty(selectedFunction) ? handleRemoveFunctionLogs : () => {},
       withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
     }
   }
@@ -87,7 +89,7 @@ export const generateActionsMenu = (
   job?.uid
     ? [
         {
-          label: 'Re-run',
+          label: 'Batch re-run',
           icon: <Run />,
           hidden: ['local', ''].includes(job?.ui?.originalContent.metadata.labels.kind),
           onClick: handleRerunJob
@@ -130,17 +132,12 @@ export const monitorWorkflowsActionCreator = {
   abortJob: jobsActions.abortJob,
   fetchFunctionLogs: functionsActions.fetchFunctionLogs,
   fetchJob: jobsActions.fetchJob,
-  fetchJobFunction: jobsActions.fetchJobFunction,
+  fetchJobFunctions: jobsActions.fetchJobFunctions,
   fetchJobLogs: jobsActions.fetchJobLogs,
   fetchJobPods: detailsActions.fetchJobPods,
-  fetchJobs: jobsActions.fetchJobs,
   fetchWorkflow: workflowsActions.fetchWorkflow,
   fetchWorkflows: workflowsActions.fetchWorkflows,
   getFunction: functionsActions.getFunction,
-  getFunctionWithHash: functionsActions.getFunctionWithHash,
-  removeFunction: functionsActions.removeFunction,
-  removeFunctionLogs: functionsActions.removeFunctionLogs,
-  removeJobLogs: jobsActions.removeJobLogs,
   removePods: detailsActions.removePods,
   removeNewJob: jobsActions.removeNewJob,
   resetWorkflow: workflowsActions.resetWorkflow

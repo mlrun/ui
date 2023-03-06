@@ -30,7 +30,7 @@ const functionsApi = {
   deleteSelectedFunction: (func, project) =>
     mainHttpClient.delete(`/projects/${project}/functions/${func}`),
   deployFunction: data => mainHttpClient.post('/build/function', data),
-  getFunctions: (project, filters) => {
+  getFunctions: (project, filters, hash) => {
     const params = {
       project
     }
@@ -39,12 +39,19 @@ const functionsApi = {
       params.name = `~${filters.name}`
     }
 
+    if (hash) {
+      params.hash_key = hash
+    }
+
     return mainHttpClient.get('/funcs', { params })
   },
-  getFunction: (project, name) =>
-    mainHttpClient.get(`/func/${project}/${name}`),
-  getFunctionWithHash: (project, name, hash) =>
-    mainHttpClient.get(`/func/${project}/${name}?hash_key=${hash}`),
+  getFunction: (project, functionName, hash) => {
+    const params = {}
+
+    if (hash) params.hash_key = hash
+
+    return mainHttpClient.get(`/func/${project}/${functionName}`, { params })
+  },
   getFunctionLogs: (project, name, tag, offset) => {
     const params = {
       project,
@@ -60,8 +67,7 @@ const functionsApi = {
     return mainHttpClient.get('/build/status', { params })
   },
   getFunctionTemplate: path => functionTemplatesHttpClient.get(path),
-  getFunctionTemplatesCatalog: () =>
-    functionTemplatesHttpClient.get('catalog.json')
+  getFunctionTemplatesCatalog: () => functionTemplatesHttpClient.get('catalog.json')
 }
 
 export default functionsApi

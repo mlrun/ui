@@ -1,17 +1,23 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/shadows';
 
 .job-card-template {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  min-height: 165px;
   position: relative;
-  width: 250px;
-  height: 150px;
-  margin-right: 20px;
-  margin-bottom: 20px;
   padding: 15px;
   background-color: $white;
   border: $primaryBorder;
   border-radius: 8px;
   cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    box-shadow: $previewBoxShadow;
+  }
 
   &.selected {
     border: 1px solid $malibu;
@@ -24,17 +30,13 @@
   }
 
   &__header {
-    display: inline-block;
-    width: 100%;
-    padding-right: 15px;
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 8px;
+    padding-right: 50px;
   }
 
   &__sub-header {
-    display: inline-block;
-    margin-bottom: 8px;
-    width: 100%;
     font-size: 15px;
     font-weight: 500;
   }
@@ -47,8 +49,7 @@
     justify-content: center;
     align-items: center;
     margin: 0;
-    height: 20px;
-    width: 28px;
+    padding: 6px;
     border-radius: 4px 0 0 4px;
     color: $amethyst;
     background-color: $frenchLilac;
@@ -59,10 +60,21 @@
   &__description {
     color: $topaz;
     font-size: 13px;
-    line-height: 21px;
+    height: 100%;
+    margin-bottom: 10px;
+
+    .data-ellipsis {
+      height: 100%;
+    }
+  }
+
+  &__links {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
   }
 
   &.dense {
-    height: 110px;
+    min-height: 110px;
   }
 }

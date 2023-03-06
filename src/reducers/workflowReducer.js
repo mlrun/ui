@@ -59,9 +59,7 @@ const workflowReducer = (state = initialState, { type, payload }) => {
           data: payload,
           loading: false,
           error: null,
-          workflowJobsIds: Object.values(payload.graph).map(
-            jobData => jobData.run_uid
-          )
+          workflowJobsIds: Object.values(payload.graph).map(jobData => jobData.run_uid)
         }
       }
     case FETCH_WORKFLOW_FAILURE:
@@ -71,7 +69,8 @@ const workflowReducer = (state = initialState, { type, payload }) => {
           ...state.activeWorkflow,
           data: {},
           loading: false,
-          error: payload
+          error: payload,
+          workflowJobsIds: []
         }
       }
     case FETCH_WORKFLOWS_BEGIN:
@@ -107,7 +106,8 @@ const workflowReducer = (state = initialState, { type, payload }) => {
         ...state,
         activeWorkflow: {
           ...state.activeWorkflow,
-          data: {}
+          data: {},
+          workflowJobsIds: []
         }
       }
     default:

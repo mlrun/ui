@@ -34,6 +34,7 @@ import {
   SET_CHANGES,
   SET_CHANGES_COUNTER,
   SET_CHANGES_DATA,
+  SET_EDIT_MODE,
   SET_FILTERS_WAS_HANDLED,
   SET_INFO_CONTENT,
   SET_ITERATION,
@@ -114,6 +115,18 @@ const detailsActions = {
     type: FETCH_JOB_PODS_FAILURE,
     payload: error
   }),
+  removeInfoContent: () => ({
+    type: REMOVE_INFO_CONTENT
+  }),
+  removeModelFeatureVector: () => ({
+    type: REMOVE_MODEL_FEATURE_VECTOR
+  }),
+  removePods: () => ({
+    type: REMOVE_JOB_PODS
+  }),
+  resetChanges: () => ({
+    type: RESET_CHANGES
+  }),
   setChanges: data => ({
     type: SET_CHANGES,
     payload: data
@@ -125,6 +138,14 @@ const detailsActions = {
   setChangesData: data => ({
     type: SET_CHANGES_DATA,
     payload: data
+  }),
+  setEditMode: value => ({
+    type: SET_EDIT_MODE,
+    payload: value
+  }),
+  setFiltersWasHandled: isHandled => ({
+    type: SET_FILTERS_WAS_HANDLED,
+    payload: isHandled
   }),
   setInfoContent: content => ({
     type: SET_INFO_CONTENT,
@@ -138,25 +159,9 @@ const detailsActions = {
     type: SET_ITERATION_OPTIONS,
     payload: option
   }),
-  setFiltersWasHandled: isHandled => ({
-    type: SET_FILTERS_WAS_HANDLED,
-    payload: isHandled
-  }),
   showWarning: show => ({
     type: SHOW_WARNING,
     payload: show
-  }),
-  removeInfoContent: () => ({
-    type: REMOVE_INFO_CONTENT
-  }),
-  removeModelFeatureVector: () => ({
-    type: REMOVE_MODEL_FEATURE_VECTOR
-  }),
-  removePods: () => ({
-    type: REMOVE_JOB_PODS
-  }),
-  resetChanges: () => ({
-    type: RESET_CHANGES
   })
 }
 

@@ -18,27 +18,27 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { OnChange } from 'react-final-form-listeners'
 
-import ChipCell from '../../common/ChipCell/ChipCell'
-import { RoundedIcon } from 'igz-controls/components'
+import { RoundedIcon, FormChipCell } from 'igz-controls/components'
 
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
 
 const DetailsInfoItemChip = ({
-  changesData,
-  chipOptions,
-  chipsClassName,
   chipsData,
   currentField,
   detailsInfoDispatch,
+  detailsInfoState,
   editableFieldType,
   handleFinishEdit,
   isFieldInEditMode,
   item,
-  setChangesData
+  formState
 }) => {
   const chipFieldClassName = classnames(
     'details-item__data',
@@ -47,77 +47,38 @@ const DetailsInfoItemChip = ({
   )
 
   const setEditMode = () => {
-    detailsInfoDispatch({
-      type: detailsInfoActions.SET_EDIT_MODE,
-      payload: {
-        field: currentField,
-        fieldType: item?.editModeType
-      }
-    })
-  }
-
-  const setChanges = (initialValue, currentValue) => {
-    setChangesData({
-      ...changesData,
-      [currentField]: {
-        initialFieldValue: changesData[currentField]?.initialFieldValue || initialValue,
-        currentFieldValue: currentValue,
-        previousFieldValue: initialValue
-      }
-    })
-  }
-
-  const handleAddChip = (chip, chips) => {
-    if (!isFieldInEditMode) {
-      setEditMode()
-      setChanges(chips, [...chips, chip])
-    } else {
-      item.onAdd(chip, chips, currentField)
-    }
-  }
-
-  const handleEditChip = chips => {
-    item.onChange(chips, currentField)
-  }
-
-  const handleRemoveChip = chips => {
-    if (!isFieldInEditMode) {
-      const initialChips = Object.keys(item.value).map(key => `${key}: ${item.value[key]}`)
-
-      setEditMode()
-      setChanges(initialChips, chips)
-    } else {
-      item.handleDelete(chips, currentField)
-    }
-  }
-
-  const handleClick = () => {
-    if (!isFieldInEditMode) {
-      const chips = Object.keys(item.value).map(key => `${key}: ${item.value[key]}`)
-
-      setEditMode()
-      setChanges(chips, chips)
+    if (!detailsInfoState.editMode.field && !formState.pristine) {
+      detailsInfoDispatch({
+        type: detailsInfoActions.SET_EDIT_MODE,
+        payload: {
+          field: currentField,
+          fieldType: item?.editModeType
+        }
+      })
     }
   }
 
   return (
     <div className={chipFieldClassName}>
-      <ChipCell
-        addChip={handleAddChip}
-        chipOptions={chipOptions}
-        className={`details-item__${chipsClassName}`}
-        delimiter={chipsData.delimiter}
-        editChip={handleEditChip}
-        elements={chipsData.chips}
-        isEditMode
-        onClick={handleClick}
-        removeChip={handleRemoveChip}
+      <FormChipCell
+        chipOptions={chipsData.chipOptions}
+        formState={formState}
+        initialValues={formState.initialValues}
+        isEditable
+        name={item.fieldData.name}
+        shortChips
+        visibleChipsMaxLength="all"
+        validationRules={{
+          key: getValidationRules('common.tag'),
+          value: getValidationRules('common.tag')
+        }}
       />
+      <OnChange name={item.fieldData.name}>{setEditMode}</OnChange>
       {isFieldInEditMode && (
         <div className="details-item__apply-btn-wrapper">
           <RoundedIcon
             className="details-item__apply-btn"
-            onClick={handleFinishEdit}
+            onClick={() => handleFinishEdit(item.fieldData.name)}
             tooltipText="Apply"
           >
             <Checkmark />
@@ -126,6 +87,18 @@ const DetailsInfoItemChip = ({
       )}
     </div>
   )
+}
+
+DetailsInfoItemChip.propTypes = {
+  chipsData: PropTypes.object.isRequired,
+  currentField: PropTypes.string.isRequired,
+  detailsInfoDispatch: PropTypes.func.isRequired,
+  detailsInfoState: PropTypes.object.isRequired,
+  editableFieldType: PropTypes.string.isRequired,
+  handleFinishEdit: PropTypes.func.isRequired,
+  isFieldInEditMode: PropTypes.bool.isRequired,
+  item: PropTypes.object.isRequired,
+  formState: PropTypes.object.isRequired
 }
 
 export default DetailsInfoItemChip

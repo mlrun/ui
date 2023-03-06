@@ -61,6 +61,7 @@ export const infoHeaders = [
   { label: 'Name', id: 'name' },
   { label: 'Kind', id: 'type' },
   { label: 'Hash', id: 'hash' },
+  { label: 'Version tag', id: 'tag' },
   { label: 'Code origin', id: 'codeOrigin' },
   { label: 'Updated', id: 'updated' },
   { label: 'Command', id: 'command' },
