@@ -185,13 +185,13 @@ export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
             value: value?.hist ?? [[], []],
             type: 'chart',
             className:
-              'features-analysis__table-cell_medium features-analysis__table-cell-chart'
+              'features-analysis__table-cell_medium features-analysis__table-cell__chart'
           },
           {
             value: currentStats[key]?.hist ?? [[], []],
             type: 'chart',
             className:
-              'features-analysis__table-cell_medium features-analysis__table-cell-chart'
+              'features-analysis__table-cell_medium features-analysis__table-cell__chart'
           }
         ]
       }
