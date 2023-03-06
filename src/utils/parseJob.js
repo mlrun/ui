@@ -34,8 +34,8 @@ export const parseJob = (job, tab) => {
       lastRunUri: job.last_run_uri,
       project: job.project,
       scheduled_object: job.scheduled_object,
-      start_time: new Date(job.last_run?.status.start_time),
-      state: getState(job.last_run?.status.state, JOBS_PAGE, 'job'),
+      startTime: new Date(job.last_run?.status?.start_time),
+      state: getState(job.last_run?.status?.state, JOBS_PAGE, 'job'),
       type: job.kind === 'pipeline' ? 'workflow' : job.kind,
       ui: {
         originalContent: job
@@ -45,7 +45,7 @@ export const parseJob = (job, tab) => {
     jobItem = {
       artifacts: job.status.artifacts || [],
       error: job.status.error ?? '',
-      function: job?.spec?.function ?? '',
+      function: job.spec?.function ?? '',
       handler: job.spec?.handler ?? '',
       hyperparams: job.spec?.hyperparams || {},
       inputs: job.spec?.inputs || {},
@@ -63,13 +63,13 @@ export const parseJob = (job, tab) => {
         ...parseKeyValues(job.spec?.hyperparams || {})
       ],
       project: job.metadata.project,
-      results: job.status.results || {},
-      resultsChips: parseKeyValues(job.status.results || {}),
-      startTime: new Date(job.status.start_time),
-      state: getState(job.status.state, JOBS_PAGE, 'job'),
-      ui_run: job.status.ui_url,
+      results: job.status?.results || {},
+      resultsChips: parseKeyValues(job.status?.results || {}),
+      startTime: new Date(job.status?.start_time),
+      state: getState(job.status?.state, JOBS_PAGE, 'job'),
+      ui_run: job.status?.ui_url,
       uid: job.metadata.uid,
-      updated: new Date(job.status.last_update),
+      updated: new Date(job.status?.last_update),
       ui: {}
     }
   }

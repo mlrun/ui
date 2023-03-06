@@ -213,7 +213,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerId: 'lastrun',
           headerLabel: 'Last run (Local TZ)',
           id: `lastRun.${identifierUnique}`,
-          value: formatDatetime(job.start_time),
+          value: formatDatetime(job.startTime),
           class: 'table-cell-1',
           getLink: lastRunLink
         },
