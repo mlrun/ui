@@ -34,11 +34,8 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
     <div className="project-details">
       <div className="project-details__row">
         <div className="project-details__col">
-          <div className="project-details__title">
-            {projectName}
-            <Tooltip template={<TextTooltipTemplate text={projectData.status.state} />}>
-              <i className={`state-${projectData.status.state}`} />
-            </Tooltip>
+          <div className="project-details__header">
+            <span className="project-details__title">{projectName}</span>
           </div>
           <p className="project-details__description">{projectData.spec.description ?? ''}</p>
         </div>
@@ -52,6 +49,12 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
           <li>
             <span className="project-details__details-label">Owner:</span>
             <span>{projectData.spec.owner}</span>
+          </li>
+          <li>
+            <span className="project-details__details-label">Status:</span>
+            <Tooltip template={<TextTooltipTemplate text={projectData.status.state} />}>
+              <i className={`state-${projectData.status.state}`} />
+            </Tooltip>
           </li>
           <li>
             {location.pathname.includes(PROJECT_MONITOR) ? (
