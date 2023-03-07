@@ -29,6 +29,7 @@ const notificationSlice = createSlice({
   reducers: {
     setNotification(state, { payload }) {
       if (payload.error) {
+        /* eslint-disable-next-line no-console */
         console.error(payload.error)
       }
 
