@@ -18,11 +18,11 @@
     flex: 1;
   }
 
-  &__title {
+  &__header {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    margin: 0 0 0.5rem 0;
+    margin: 0 1em 0.5rem 0;
     font-weight: 300;
     font-size: 3.2em;
   }
@@ -30,11 +30,6 @@
   &__description {
     max-width: 75%;
     margin: 0;
-  }
-
-  .data-ellipsis {
-    display: flex;
-    margin-left: 0.3em;
   }
 
   &__details {
@@ -46,12 +41,15 @@
     line-height: 1.5;
 
     li {
+      display: flex;
+      align-items: center;
       margin-bottom: 0.2rem;
     }
 
     &-label {
       margin-right: 10px;
       font-weight: 700;
+      min-width: 60px;
     }
   }
 }
