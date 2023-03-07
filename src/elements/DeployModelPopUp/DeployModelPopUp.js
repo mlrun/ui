@@ -27,6 +27,7 @@ import arrayMutators from 'final-form-arrays'
 import { OnChange } from 'react-final-form-listeners'
 import { useLocation } from 'react-router-dom'
 
+import Loader from '../../common/Loader/Loader'
 import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
 
 import { setNotification } from '../../reducers/notificationReducer'
@@ -38,8 +39,9 @@ import { setFieldState } from 'igz-controls/utils/form.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { buildFunction, fetchArtifactsFunctions } from '../../reducers/artifactsReducer'
 
+import { ReactComponent as QuestionMarkIcon } from 'igz-controls/images/question-mark.svg'
+
 import './deployModelPopUp.scss'
-import Loader from '../../common/Loader/Loader'
 
 const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
   const [functionList, setFunctionList] = useState([])
@@ -229,6 +231,18 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
               title="Deploy model"
             >
               <div className="form">
+                {functionOptionList.length === 0 && !showLoader && (
+                  <div className="form-row">
+                    <div className="form-text info-container">
+                      <QuestionMarkIcon />
+                      <span>
+                        A model can only be deployed to an existing serving function with "router"
+                        topology. <br /> To deploy the model to a new function, first deploy the
+                        serving function.
+                      </span>
+                    </div>
+                  </div>
+                )}
                 <div className="form-row">
                   <div className="form-col-2">
                     <FormSelect
@@ -247,7 +261,6 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
                       label="Tag"
                       name="selectedTag"
                       options={tagOptionList}
-                      required
                       search
                     />
                   </div>

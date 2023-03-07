@@ -71,10 +71,10 @@ export const getMemoryData = (currentMemory, defaultMemory) => {
 
   if (isFinite(currentMemoryValue)) {
     memory = String(currentMemoryValue)
-    memoryUnit = currentMemory.replace(memory, '')
+    memoryUnit = String(currentMemory).replace(memory, '')
   } else if (isFinite(defaultMemoryValue)) {
     memory = String(defaultMemoryValue)
-    memoryUnit = defaultMemory.replace(memory, '')
+    memoryUnit = String(defaultMemory).replace(memory, '')
   }
 
   if (memoryUnit) {
@@ -98,10 +98,10 @@ export const getCpuData = (currentCpu, defaultCpu) => {
 
   if (isFinite(currentCpuValue)) {
     cpu = String(currentCpuValue)
-    cpuUnit = currentCpu.replace(cpu, '')
+    cpuUnit = String(currentCpu).replace(cpu, '')
   } else if (isFinite(defaultCpuValue)) {
     cpu = String(defaultCpuValue)
-    cpuUnit = defaultCpu.replace(cpu, '')
+    cpuUnit = String(defaultCpu).replace(cpu, '')
   }
 
   if (cpuUnit) {
