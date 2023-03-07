@@ -18,31 +18,29 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import classnames from 'classnames'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import './FeatureValidator.scss'
+import { validatorStates } from './featureValidatior.utils'
 
-const validatorStates = {
-  info: 'Info',
-  warn: 'Warning',
-  fail: 'Fail'
-}
+import './featureValidator.scss'
 
 const FeatureValidator = ({ validator = {} }) => {
   const validatorEntries = Object.entries(validator)
     .filter(([key]) => !['severity', 'kind'].includes(key))
     .map(([key, value]) => `${key}=${value}`)
+
   return (
     <div className="feature-validator">
-      <Tooltip
-        className="status"
-        template={
-          <TextTooltipTemplate text={validatorStates[validator.severity]} />
-        }
-      >
-        <i className={validator.severity} />
-      </Tooltip>
+      {validator.severity && (
+        <Tooltip
+          className="status"
+          template={<TextTooltipTemplate text={validatorStates[validator.severity]} />}
+        >
+          <i className={classnames(`state-${validator.severity}`)} />
+        </Tooltip>
+      )}
       {validator.kind}
       {validatorEntries.length > 0 && ` (${validatorEntries})`}
     </div>
