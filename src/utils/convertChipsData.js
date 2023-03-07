@@ -19,7 +19,7 @@ such restriction.
 */
 
 // [{key: "", value: ""}] --> {key: 'value'}
-export const convertChipsData = chips => {
+export const convertChipsData = (chips = []) => {
   return chips.reduce((list, label) => {
     list[label.key] = label.value
 
