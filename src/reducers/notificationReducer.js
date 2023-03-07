@@ -28,6 +28,10 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {
     setNotification(state, { payload }) {
+      if (payload.error) {
+        console.error(payload.error)
+      }
+
       state.notification.push(payload)
     },
     removeNotification(state, { payload }) {

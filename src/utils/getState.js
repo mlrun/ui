@@ -30,7 +30,7 @@ const getState = (state, page, kind) => {
     return {
       value: state ?? null,
       label: state ? commonStateLabels[state] : '',
-      className: `state-${state ?? ''}${kind ? '-' + kind : ''}`
+      className: `state${state ? '-' + state : ''}${kind ? '-' + kind : ''}`
     }
   }
 }
