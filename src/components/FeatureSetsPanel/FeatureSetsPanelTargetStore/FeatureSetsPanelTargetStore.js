@@ -79,9 +79,9 @@ const FeatureSetsPanelTargetStore = ({
           path: generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
+            NOSQL,
             featureStore.newFeatureSet.metadata.name,
-            featureStore.newFeatureSet.spec.source.kind,
-            NOSQL
+            ''
           )
         }
       }))
@@ -95,8 +95,8 @@ const FeatureSetsPanelTargetStore = ({
           path: generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
+            PARQUET,
             featureStore.newFeatureSet.metadata.name,
-            featureStore.newFeatureSet.spec.source.kind,
             PARQUET
           )
         }
@@ -130,17 +130,17 @@ const FeatureSetsPanelTargetStore = ({
           target.path = generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
+            PARQUET,
             featureStore.newFeatureSet.metadata.name,
-            featureStore.newFeatureSet.spec.source.kind,
             PARQUET
           )
         } else if (target.kind === NOSQL && !targetsPathEditData.online.isModified) {
           target.path = generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
+            NOSQL,
             featureStore.newFeatureSet.metadata.name,
-            featureStore.newFeatureSet.spec.source.kind,
-            NOSQL
+            ''
           )
         }
 
@@ -442,9 +442,9 @@ const FeatureSetsPanelTargetStore = ({
           : generatePath(
               frontendSpec.feature_store_data_prefixes,
               project,
+              dataInitialState[kindId].kind,
               featureStore.newFeatureSet.metadata.name,
-              featureStore.newFeatureSet.spec.source.kind,
-              dataInitialState[kindId].kind
+              dataInitialState[kindId].kind === PARQUET ? PARQUET : ''
             )
       if (kindId === checkboxModels[kindId].id) {
         setData(state => ({
