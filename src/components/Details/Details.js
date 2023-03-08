@@ -140,8 +140,9 @@ const Details = ({
     return () => {
       //TODO
       resetChanges()
+      unblockHistory()
     }
-  }, [resetChanges])
+  }, [resetChanges, unblockHistory])
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(selectedItem)) {

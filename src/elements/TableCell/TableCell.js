@@ -148,13 +148,9 @@ const TableCell = ({
   } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
       <div className={`table-body__cell ${data.class} ${className}`}>
-        <button onClick={() => data.actionHandler(item)}>
-          <Tooltip template={<TextTooltipTemplate text="Copy URI" />}>
-            <RoundedIcon>
-              <Copy />
-            </RoundedIcon>
-          </Tooltip>
-        </button>
+        <RoundedIcon tooltipText="Copy URI" onClick={() => data.actionHandler(item)}>
+          <Copy />
+        </RoundedIcon>
       </div>
     )
   } else if (data.type === 'hash') {
