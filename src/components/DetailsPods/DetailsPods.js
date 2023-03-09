@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Prism from 'prismjs'
 import classnames from 'classnames'
@@ -30,7 +31,7 @@ import { generatePods } from './detailsPods.util'
 
 import './detailsPods.scss'
 
-const DetailsPods = ({ detailsStore }) => {
+const DetailsPods = ({ detailsStore, noDataMessage }) => {
   const [selectedPod, setSelectedPod] = useState(null)
   const [table, setTable] = useState([])
   const params = useParams()
@@ -105,10 +106,18 @@ const DetailsPods = ({ detailsStore }) => {
           </div>
         </>
       ) : (
-        <NoData />
+        <NoData message={noDataMessage} />
       )}
     </div>
   )
+}
+
+DetailsPods.defaultProps = {
+  noDataMessage: ''
+}
+
+DetailsPods.propTypes = {
+  noDataMessage: PropTypes.string
 }
 
 export default connect(({ detailsStore }) => ({

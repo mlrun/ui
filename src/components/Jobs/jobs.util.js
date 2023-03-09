@@ -63,32 +63,35 @@ export const actionsMenuHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
-export const detailsMenu = [
-  {
-    label: 'overview',
-    id: 'overview'
-  },
-  {
-    label: 'inputs',
-    id: 'inputs'
-  },
-  {
-    label: 'artifacts',
-    id: 'artifacts'
-  },
-  {
-    label: 'results',
-    id: 'results'
-  },
-  {
-    label: 'logs',
-    id: 'logs'
-  },
-  {
-    label: 'pods',
-    id: 'pods'
-  }
-]
+export const getJobsDetailsMenu = (jobLabels = []) => {
+  return [
+    {
+      label: 'overview',
+      id: 'overview'
+    },
+    {
+      label: 'inputs',
+      id: 'inputs'
+    },
+    {
+      label: 'artifacts',
+      id: 'artifacts'
+    },
+    {
+      label: 'results',
+      id: 'results'
+    },
+    {
+      label: 'logs',
+      id: 'logs'
+    },
+    {
+      label: 'pods',
+      id: 'pods',
+      hidden: isJobKindDask(jobLabels)
+    }
+  ]
+}
 
 export const tabs = [
   { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
@@ -100,6 +103,11 @@ export const isJobAbortable = (job, abortableFunctionKinds) =>
   (abortableFunctionKinds ?? [])
     .map(kind => `kind: ${kind}`)
     .some(kindLabel => job?.labels?.includes(kindLabel))
+
+
+export const isJobKindDask = (jobLabels = []) => {
+  return jobLabels?.includes('kind: dask')
+}
 
 export const actionCreator = {
   fetchJobFunction: jobsActions.fetchJobFunction
