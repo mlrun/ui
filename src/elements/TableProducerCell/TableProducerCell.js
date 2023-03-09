@@ -24,13 +24,14 @@ import PropTypes from 'prop-types'
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import { Tooltip } from 'igz-controls/components'
 
-import { DETAILS_OVERVIEW_TAB, MONITOR_JOBS_TAB } from '../../constants'
-import { detailsMenu } from '../../components/Jobs/jobs.util'
+import { getJobsDetailsMenu } from '../../components/Jobs/jobs.util'
 
-const TableProducerCell = ({ className, data }) => {
+import { DETAILS_OVERVIEW_TAB, MONITOR_JOBS_TAB } from '../../constants'
+
+const TableProducerCell = ({ data }) => {
   const [project, uid] = data.value.uri?.split('/') || []
   const { name } = data.value
-  const overviewTab = detailsMenu.find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
+  const overviewTab = getJobsDetailsMenu().find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
 
   return (
     <div className={`table-body__cell ${data.class}`}>
@@ -57,12 +58,7 @@ const TableProducerCell = ({ className, data }) => {
   )
 }
 
-TableProducerCell.defaultProps = {
-  className: ''
-}
-
 TableProducerCell.propTypes = {
-  className: PropTypes.string,
   data: PropTypes.shape({}).isRequired
 }
 

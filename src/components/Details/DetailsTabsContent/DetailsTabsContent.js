@@ -39,6 +39,8 @@ import NoData from '../../../common/NoData/NoData'
 import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
 import DetailsRequestedFeatures from '../../DetailsRequestedFeatures/DetailsRequestedFeatures'
 
+import {isJobKindDask, JOB_STEADY_STATES} from '../../Jobs/jobs.util'
+
 import {
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
@@ -92,7 +94,21 @@ const DetailsTabsContent = ({
     case DETAILS_DRIFT_ANALYSIS_TAB:
       return <DetailsDriftAnalysis />
     case DETAILS_PODS_TAB:
-      return <DetailsPods />
+      return (
+        !isJobKindDask(selectedItem?.labels) && (
+          <DetailsPods
+            noDataMessage={
+              selectedItem.reason
+                ? selectedItem.reason
+                : `Pods not found, it is likely because Kubernetes removed these pods listing ${
+                    JOB_STEADY_STATES.includes(selectedItem.state.value)
+                      ? 'after their completion'
+                      : ''
+                  }`
+            }
+          />
+        )
+      )
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
     case DETAILS_PREVIEW_TAB:

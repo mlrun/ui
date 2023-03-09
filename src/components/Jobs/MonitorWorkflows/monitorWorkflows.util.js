@@ -27,7 +27,13 @@ import {
   PERIOD_FILTER,
   STATUS_FILTER
 } from '../../../constants'
-import { detailsMenu, getInfoHeaders, isJobAbortable, JOB_STEADY_STATES } from '../jobs.util'
+import {
+  getJobsDetailsMenu,
+  getInfoHeaders,
+  isJobAbortable,
+  JOB_STEADY_STATES,
+  isJobKindDask
+} from '../jobs.util'
 import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
 import workflowsActions from '../../../actions/workflow'
@@ -58,13 +64,16 @@ export const generatePageData = (
   selectedFunction,
   handleFetchFunctionLogs,
   handleFetchJobLogs,
-  handleRemoveFunctionLogs
+  handleRemoveFunctionLogs,
+  selectedJobLabels
 ) => {
   return {
     page: JOBS_PAGE,
     details: {
       type: !isEveryObjectValueEmpty(selectedFunction) ? FUNCTIONS_PAGE : JOBS_PAGE,
-      menu: !isEveryObjectValueEmpty(selectedFunction) ? functionsDetailsMenu : detailsMenu,
+      menu: !isEveryObjectValueEmpty(selectedFunction)
+        ? functionsDetailsMenu
+        : getJobsDetailsMenu(selectedJobLabels),
       infoHeaders: !isEveryObjectValueEmpty(selectedFunction)
         ? functionsInfoHeaders
         : getInfoHeaders(false),
@@ -98,10 +107,10 @@ export const generateActionsMenu = (
           label: 'Monitoring',
           tooltip: !jobs_dashboard_url
             ? 'Grafana service unavailable'
-            : job?.labels?.includes('kind: dask')
+            : isJobKindDask(job?.labels)
             ? 'Unavailable for Dask jobs'
             : '',
-          disabled: !jobs_dashboard_url || job?.labels?.includes('kind: dask'),
+          disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
           onClick: handleMonitoring
         },
         {

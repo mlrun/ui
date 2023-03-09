@@ -30,10 +30,11 @@ import {
 } from '../../../constants'
 import {
   JOB_STEADY_STATES,
-  detailsMenu,
   getInfoHeaders,
   isJobAbortable,
-  limitedFunctionKinds
+  limitedFunctionKinds,
+  getJobsDetailsMenu,
+  isJobKindDask
 } from '../jobs.util'
 import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
@@ -54,7 +55,7 @@ export const generatePageData = (handleFetchJobLogs, selectedJob) => {
   return {
     page: JOBS_PAGE,
     details: {
-      menu: detailsMenu,
+      menu: getJobsDetailsMenu(selectedJob?.labels),
       type: JOBS_PAGE,
       infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
       refreshLogs: handleFetchJobLogs,
@@ -85,10 +86,10 @@ export const generateActionsMenu = (
           label: 'Monitoring',
           tooltip: !jobs_dashboard_url
             ? 'Grafana service unavailable'
-            : job?.labels?.includes('kind: dask')
+            : isJobKindDask(job?.labels)
             ? 'Unavailable for Dask jobs'
             : '',
-          disabled: !jobs_dashboard_url || job?.labels?.includes('kind: dask'),
+          disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
           onClick: handleMonitoring
         },
         {

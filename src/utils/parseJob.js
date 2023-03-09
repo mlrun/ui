@@ -63,6 +63,7 @@ export const parseJob = (job, tab) => {
         ...parseKeyValues(job.spec?.hyperparams || {})
       ],
       project: job.metadata.project,
+      reason: job.status?.reason ?? '',
       results: job.status?.results || {},
       resultsChips: parseKeyValues(job.status?.results || {}),
       startTime: new Date(job.status?.start_time),
