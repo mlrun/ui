@@ -27,6 +27,12 @@
   }
 
   .form-row__project-name {
-    min-width: 200px;
+    width: 250px;
+  }
+}
+
+.hub-filter {
+  .pop-up-dialog {
+    max-height: 420px;
   }
 }

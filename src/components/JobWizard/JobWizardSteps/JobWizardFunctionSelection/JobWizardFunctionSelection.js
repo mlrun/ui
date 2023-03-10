@@ -381,6 +381,7 @@ const JobWizardFunctionSelection = ({
               setMatches={setFilterMatches}
             />
             <FilterMenuModal
+              wizardClassName="hub-filter"
               filterMenuName={JOB_WIZARD_FILTERS}
               initialValues={hubFiltersInitialValues}
               values={hubFiltersInitialValues}
