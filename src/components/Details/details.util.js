@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get, isEmpty, isEqual, cloneDeep, isNil } from 'lodash'
+import { get, isEmpty, isEqual, cloneDeep } from 'lodash'
 
 import {
   DATASETS_PAGE,
@@ -343,7 +343,7 @@ export const handleFinishEdit = (
   const changesData = cloneDeep(changes.data)
   const currentFieldValue = get(formState, ['values', currentField], '')
 
-  if (!isNil(formState?.initialValues[currentField])) {
+  if (currentField in get(formState, 'initialValues', {})) {
     if (isEqual(formState.initialValues[currentField], currentFieldValue)) {
       delete changesData[currentField]
     } else {
