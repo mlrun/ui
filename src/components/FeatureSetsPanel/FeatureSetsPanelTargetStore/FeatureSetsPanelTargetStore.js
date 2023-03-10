@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useMemo, useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 
 import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 
@@ -37,7 +37,9 @@ import {
   partitionRadioButtonsInitialState,
   selectedPartitionKindInitialState,
   selectedTargetKindInitialState,
-  targetsPathEditDataInitialState
+  targetsPathEditDataInitialState,
+  handlePathChange,
+  ONLINE
 } from './featureSetsPanelTargetStore.util'
 
 const FeatureSetsPanelTargetStore = ({
@@ -166,6 +168,32 @@ const FeatureSetsPanelTargetStore = ({
     targetsPathEditData.parquet.isModified
   ])
 
+  useEffect(() => {
+    if (isEmpty(frontendSpec.feature_store_data_prefixes)) {
+      setTargetsPathEditData(state => ({
+        ...state,
+        [PARQUET]: {
+          ...state[PARQUET],
+          isEditMode: true
+        },
+        [ONLINE]: {
+          ...state[ONLINE],
+          isEditMode: true
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOfflineTargetPathEditModeClosed: false,
+        isOnlineTargetPathEditModeClosed: false
+      }))
+      setValidation(state => ({
+        ...state,
+        isOfflineTargetPathValid: false,
+        isOnlineTargetPathValid: false
+      }))
+    }
+  }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
+
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
       ...prev,
@@ -194,87 +222,35 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleOfflineKindPathChange = () => {
-    if (targetsPathEditData.parquet.isEditMode && validation.isOfflineTargetPathValid) {
-      setTargetsPathEditData(state => ({
-        ...state,
-        parquet: {
-          isEditMode: false,
-          isModified: targetsPathEditData.parquet.isModified
-            ? state.parquet.isModified
-            : offlineTarget.path !== data.parquet.path
-        }
-      }))
-      setDisableButtons(state => ({
-        ...state,
-        isOfflineTargetPathEditModeClosed: true
-      }))
-
-      if (offlineTarget.path !== data.parquet.path) {
-        setNewFeatureSetTarget(
-          featureStore.newFeatureSet.spec.targets.map(targetKind => {
-            if (targetKind.name === PARQUET) {
-              return { ...targetKind, path: data.parquet.path }
-            }
-
-            return targetKind
-          })
-        )
-      }
-    } else {
-      setTargetsPathEditData(state => ({
-        ...state,
-        parquet: {
-          ...state.parquet,
-          isEditMode: true
-        }
-      }))
-      setDisableButtons(state => ({
-        ...state,
-        isOfflineTargetPathEditModeClosed: false
-      }))
-    }
+    handlePathChange(
+      PARQUET,
+      PARQUET,
+      validation.isOfflineTargetPathValid,
+      targetsPathEditData,
+      data,
+      offlineTarget,
+      featureStore.newFeatureSet.spec.targets,
+      'isOfflineTargetPathEditModeClosed',
+      setTargetsPathEditData,
+      setDisableButtons,
+      setNewFeatureSetTarget
+    )
   }
 
   const handleOnlineKindPathChange = () => {
-    if (targetsPathEditData.online.isEditMode && validation.isOnlineTargetPathValid) {
-      setTargetsPathEditData(state => ({
-        ...state,
-        online: {
-          isEditMode: false,
-          isModified: targetsPathEditData.online.isModified
-            ? state.online.isModified
-            : onlineTarget.path !== data.online.path
-        }
-      }))
-      setDisableButtons(state => ({
-        ...state,
-        isOnlineTargetPathEditModeClosed: true
-      }))
-
-      if (onlineTarget.path !== data.online.path) {
-        setNewFeatureSetTarget(
-          featureStore.newFeatureSet.spec.targets.map(targetKind => {
-            if (targetKind.name === NOSQL) {
-              return { ...targetKind, path: data.online.path }
-            }
-
-            return targetKind
-          })
-        )
-      }
-    } else {
-      setTargetsPathEditData(state => ({
-        ...state,
-        online: {
-          ...state.online,
-          isEditMode: true
-        }
-      }))
-      setDisableButtons(state => ({
-        ...state,
-        isOnlineTargetPathEditModeClosed: false
-      }))
-    }
+    handlePathChange(
+      ONLINE,
+      NOSQL,
+      validation.isOnlineTargetPathValid,
+      targetsPathEditData,
+      data,
+      onlineTarget,
+      featureStore.newFeatureSet.spec.targets,
+      'isOnlineTargetPathEditModeClosed',
+      setTargetsPathEditData,
+      setDisableButtons,
+      setNewFeatureSetTarget
+    )
   }
 
   const handleExternalOfflineKindPathOnBlur = event => {
@@ -295,31 +271,33 @@ const FeatureSetsPanelTargetStore = ({
     }
   }
 
-  const handleDiscardPathChange = kind => {
-    setData(state => ({
-      ...state,
-      [kind]: {
-        ...state[kind],
-        path: kind === PARQUET ? offlineTarget.path : onlineTarget.path
-      }
-    }))
-    setTargetsPathEditData(state => ({
-      ...state,
-      [kind]: {
-        ...state[kind],
-        isEditMode: false
-      }
-    }))
-    setDisableButtons(state => ({
-      ...state,
-      [kind === PARQUET
-        ? 'isOfflineTargetPathEditModeClosed'
-        : 'isOnlineTargetPathEditModeClosed']: true
-    }))
-    setValidation(state => ({
-      ...state,
-      [kind === PARQUET ? 'isOfflineTargetPathValid' : 'isOnlineTargetPathValid']: true
-    }))
+  const handleDiscardPathChange = (kind, value) => {
+    if (targetsPathEditData[kind].isModified) {
+      setData(state => ({
+        ...state,
+        [kind]: {
+          ...state[kind],
+          path: kind === PARQUET ? offlineTarget.path : onlineTarget.path
+        }
+      }))
+      setTargetsPathEditData(state => ({
+        ...state,
+        [kind]: {
+          ...state[kind],
+          isEditMode: false
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        [kind === PARQUET
+          ? 'isOfflineTargetPathEditModeClosed'
+          : 'isOnlineTargetPathEditModeClosed']: true
+      }))
+      setValidation(state => ({
+        ...state,
+        [kind === PARQUET ? 'isOfflineTargetPathValid' : 'isOnlineTargetPathValid']: true
+      }))
+    }
   }
 
   const handleExternalOfflineKindTypeChange = kind => {
@@ -667,6 +645,7 @@ const FeatureSetsPanelTargetStore = ({
       handleSelectTargetKind={handleSelectTargetKind}
       handleTimePartitioningGranularityChange={handleTimePartitioningGranularityChange}
       partitionRadioButtonsState={partitionRadioButtonsState}
+      frontendSpecIsNotEmpty={!isEmpty(frontendSpec.feature_store_data_prefixes)}
       selectedPartitionKind={selectedPartitionKind}
       selectedTargetKind={selectedTargetKind}
       setData={setData}

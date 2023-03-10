@@ -180,7 +180,7 @@ const featureStoreActions = {
         return response.data?.feature_sets
       })
       .catch(err => {
-        dispatch(featureStoreActions.fetchFeatureSetsFailure(err))
+        dispatch(featureStoreActions.fetchFeatureSetsFailure(err.message))
       })
   },
   fetchFeatureSetsBegin: () => ({

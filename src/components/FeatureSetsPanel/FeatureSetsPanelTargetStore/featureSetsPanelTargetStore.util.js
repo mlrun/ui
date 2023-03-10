@@ -137,11 +137,74 @@ export const targetsPathEditDataInitialState = {
 }
 
 export const generatePath = (prefixes, project, name, suffix, kind) => {
-  const path = prefixes[kind] || prefixes.default
+  if (prefixes) {
+    const path = prefixes[kind] || prefixes.default
 
-  return `${path.replace(
-    /{project}|{name}|{kind}/gi,
-    matchToReplace =>
-      ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
-  )}/sets/${name || '{name}'}.${suffix}`
+    return `${path.replace(
+      /{project}|{name}|{kind}/gi,
+      matchToReplace =>
+        ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
+    )}/sets/${name || '{name}'}.${suffix}`
+  }
+
+  return ''
+}
+
+export const handlePathChange = (
+  targetType,
+  targetKindName,
+  isValid,
+  targetsPathEditData,
+  data,
+  target,
+  targets,
+  targetEditModeIsClosed,
+  setTargetsPathEditData,
+  setDisableButtons,
+  setNewFeatureSetTarget
+) => {
+  const currentTargetPathEditData = targetsPathEditData[targetType]
+
+  if (currentTargetPathEditData.isEditMode && isValid) {
+    const isTargetPathModified = target.path !== data[targetType].path
+
+    setTargetsPathEditData(state => ({
+      ...state,
+      [targetType]: {
+        isEditMode: false,
+        isModified: currentTargetPathEditData.isModified
+          ? state[targetType].isModified
+          : isTargetPathModified
+      }
+    }))
+
+    setDisableButtons(state => ({
+      ...state,
+      [targetEditModeIsClosed]: true
+    }))
+
+    if (isTargetPathModified) {
+      const updatedTargets = targets.map(targetKind => {
+        if (targetKind.name === targetKindName) {
+          return { ...targetKind, path: data[targetType].path }
+        }
+        return targetKind
+      })
+
+      setNewFeatureSetTarget(updatedTargets)
+    }
+  } else {
+    setTargetsPathEditData(state => ({
+      ...state,
+      [targetType]: {
+        ...currentTargetPathEditData,
+        isEditMode: true
+      }
+    }))
+
+    setDisableButtons(state => ({
+      ...state,
+      [targetEditModeIsClosed]: false
+    }))
+  }
 }

@@ -44,6 +44,7 @@ import {
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { PANEL_CREATE_MODE } from '../../constants'
+import { getPreemptionMode } from '../../utils/getPreemptionMode'
 
 const FunctionsPanelResources = ({
   defaultData,
@@ -67,20 +68,23 @@ const FunctionsPanelResources = ({
   const [podsPriorityClassName, setPodsPriorityClassName] = useState(
     defaultData.priority_class_name ||
       functionsStore.newFunction.spec.priority_class_name ||
-      frontendSpec.default_function_priority_class_name
+      frontendSpec.default_function_priority_class_name ||
+      ''
   )
   const defaultPodsResources = useMemo(() => {
-    return frontendSpec?.default_function_pod_resources
+    return frontendSpec?.default_function_pod_resources ?? {}
   }, [frontendSpec.default_function_pod_resources])
 
   const preemptionMode = useMemo(() => {
-    return frontendSpec.feature_flags.preemption_nodes === 'enabled'
-      ? defaultData.preemption_mode || frontendSpec.default_function_preemption_mode || 'prevent'
-      : ''
+    return getPreemptionMode(
+      frontendSpec.feature_flags?.preemption_nodes,
+      defaultData.preemption_mode,
+      frontendSpec.default_function_preemption_mode
+    )
   }, [
     defaultData.preemption_mode,
     frontendSpec.default_function_preemption_mode,
-    frontendSpec.feature_flags.preemption_nodes
+    frontendSpec.feature_flags
   ])
 
   const [data, setData] = useState({
@@ -92,30 +96,31 @@ const FunctionsPanelResources = ({
     volumeMount: VOLUME_MOUNT_AUTO_TYPE,
     volumes: defaultData.volumes ?? [],
     limits: {
-      cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits.cpu ?? '',
+      cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits?.cpu ?? '',
       cpuUnit: getDefaultCpuUnit(
         defaultData.resources?.limits ?? {},
-        defaultPodsResources?.limits.cpu
+        defaultPodsResources?.limits?.cpu
       ),
-      memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits.memory ?? '',
-      [gpuType]: defaultData.resources?.limits?.[gpuType] ?? defaultPodsResources?.limits.gpu ?? '',
+      memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits?.memory ?? '',
+      [gpuType]:
+        defaultData.resources?.limits?.[gpuType] ?? defaultPodsResources?.limits?.gpu ?? '',
       memoryUnit: getDefaultMemoryUnit(
         defaultData.resources?.limits ?? {},
-        defaultPodsResources?.limits.memory
+        defaultPodsResources?.limits?.memory
       )
     },
     preemptionMode,
     requests: {
-      cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests.cpu ?? '',
+      cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests?.cpu ?? '',
       cpuUnit: getDefaultCpuUnit(
         defaultData.resources?.requests ?? {},
-        defaultPodsResources?.requests.cpu
+        defaultPodsResources?.requests?.cpu
       ),
       memory:
-        defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests.memory ?? '',
+        defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests?.memory ?? '',
       memoryUnit: getDefaultMemoryUnit(
         defaultData.resources?.requests ?? {},
-        defaultPodsResources?.requests.memory
+        defaultPodsResources?.requests?.memory
       )
     }
   })
@@ -146,23 +151,16 @@ const FunctionsPanelResources = ({
   useEffect(() => {
     setNewFunctionResources({
       limits: {
-        cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits.cpu ?? '',
-        memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits.memory ?? ''
+        cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits?.cpu ?? '',
+        memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits?.memory ?? ''
       },
       requests: {
-        cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests.cpu ?? '',
+        cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests?.cpu ?? '',
         memory:
-          defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests.memory ?? ''
+          defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests?.memory ?? ''
       }
     })
-  }, [
-    defaultData.resources,
-    defaultPodsResources.limits.cpu,
-    defaultPodsResources.limits.memory,
-    defaultPodsResources.requests.cpu,
-    defaultPodsResources.requests.memory,
-    setNewFunctionResources
-  ])
+  }, [defaultData.resources, defaultPodsResources, setNewFunctionResources])
 
   const handleAddNewVolume = newVolume => {
     const generatedVolume = createNewVolume(newVolume)

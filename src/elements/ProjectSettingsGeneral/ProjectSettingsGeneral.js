@@ -270,7 +270,7 @@ const ProjectSettingsGeneral = ({
   return (
     <ProjectSettingsGeneralView
       changeOwnerCallback={changeOwnerCallback}
-      defaultArtifactPath={frontendSpec.default_artifact_path}
+      defaultArtifactPath={frontendSpec.default_artifact_path ?? ''}
       editProjectData={editProjectData}
       generalParams={generalParams}
       handleAddNewParameter={handleAddNewParameter}

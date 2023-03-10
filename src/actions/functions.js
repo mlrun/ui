@@ -169,7 +169,9 @@ const functionsActions = {
 
         return data.funcs
       })
-      .catch(err => dispatch(functionsActions.fetchFunctionsFailure(err)))
+      .catch(err => {
+        dispatch(functionsActions.fetchFunctionsFailure(err.message))
+      })
   },
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
