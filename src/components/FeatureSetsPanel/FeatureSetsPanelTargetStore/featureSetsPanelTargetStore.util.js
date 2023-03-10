@@ -110,7 +110,8 @@ export const onlineKindDataInitialState = {
 export const offlineKindDataInitialState = {
   name: 'parquet',
   kind: 'parquet',
-  path: ''
+  path: '',
+  partitioned: ''
 }
 
 export const externalOfflineKindDataInitialState = {
@@ -150,6 +151,7 @@ export const generatePath = (prefixes, project, kind, name = '{name}', suffix = 
 
   return `${path.replace(
     /{project}|{name}|{kind}/gi,
-    matchToReplace => ({ '{project}': project, '{name}': name, '{kind}': kind }[matchToReplace])
+    matchToReplace =>
+      ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
   )}/sets/${name || '{name}'}${suffix ? '.' + suffix : ''}`
 }
