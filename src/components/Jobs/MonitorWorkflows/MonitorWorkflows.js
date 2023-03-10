@@ -162,9 +162,10 @@ const MonitorWorkflows = ({
         selectedFunction,
         handleFetchFunctionLogs,
         handleFetchJobLogs,
-        handleRemoveFunctionLogs
+        handleRemoveFunctionLogs,
+        selectedJob?.labels
       ),
-    [handleFetchJobLogs, handleFetchFunctionLogs, handleRemoveFunctionLogs, selectedFunction]
+    [handleFetchJobLogs, handleFetchFunctionLogs, handleRemoveFunctionLogs, selectedFunction, selectedJob]
   )
 
   const refreshJobs = useCallback(() => {

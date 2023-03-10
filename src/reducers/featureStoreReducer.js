@@ -126,7 +126,8 @@ const initialState = {
         {
           kind: 'parquet',
           name: 'parquet',
-          path: ''
+          path: '',
+          partitioned: ''
         },
         {
           name: 'nosql',

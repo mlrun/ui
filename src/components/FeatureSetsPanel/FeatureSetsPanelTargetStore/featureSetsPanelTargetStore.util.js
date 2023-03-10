@@ -110,7 +110,8 @@ export const onlineKindDataInitialState = {
 export const offlineKindDataInitialState = {
   name: 'parquet',
   kind: 'parquet',
-  path: ''
+  path: '',
+  partitioned: ''
 }
 
 export const externalOfflineKindDataInitialState = {
@@ -136,6 +137,15 @@ export const targetsPathEditDataInitialState = {
   }
 }
 
+/**
+ * Generates a path based on the given parameters.
+ * @param {Object} prefixes - An object containing prefix paths for each kind of path or a default path.
+ * @param {string} project - The project name to include in the path.
+ * @param {string} kind - The kind of path to generate.
+ * @param {string} [name] - Optional. The name to include in the path. If not provided, "{name}" will be used.
+ * @param {string} [suffix] - Optional. The suffix to add to the end of the path.
+ * @returns {string} The generated path.
+ */
 export const generatePath = (prefixes, project, name, suffix, kind) => {
   if (prefixes) {
     const path = prefixes[kind] || prefixes.default
@@ -144,7 +154,7 @@ export const generatePath = (prefixes, project, name, suffix, kind) => {
       /{project}|{name}|{kind}/gi,
       matchToReplace =>
         ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
-    )}/sets/${name || '{name}'}.${suffix}`
+    )}/sets/${name || '{name}'}${suffix ? '.' + suffix : ''}`
   }
 
   return ''
