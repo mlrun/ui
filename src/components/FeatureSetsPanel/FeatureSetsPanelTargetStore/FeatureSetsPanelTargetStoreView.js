@@ -48,6 +48,7 @@ import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
   data,
+  frontendSpecIsNotEmpty,
   handleAdvancedLinkClick,
   handleDiscardPathChange,
   handleExternalOfflineKindPathOnBlur,
@@ -96,7 +97,7 @@ const FeatureSetsPanelTargetStoreView = ({
                     <Input
                       density="normal"
                       floatingLabel
-                      focused
+                      focused={frontendSpecIsNotEmpty}
                       invalid={!validation.isOnlineTargetPathValid}
                       label="Path"
                       onChange={path =>
@@ -127,7 +128,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         />
                       </RoundedIcon>
                       <RoundedIcon
-                        onClick={() => handleDiscardPathChange(ONLINE)}
+                        onClick={() => handleDiscardPathChange(ONLINE, data.online.path)}
                         tooltipText="Discard changes"
                       >
                         <Close />
@@ -176,7 +177,7 @@ const FeatureSetsPanelTargetStoreView = ({
                     <Input
                       density="normal"
                       floatingLabel
-                      focused
+                      focused={frontendSpecIsNotEmpty}
                       invalid={!validation.isOfflineTargetPathValid}
                       label="Path"
                       onChange={path =>
@@ -204,7 +205,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         <Checkmark className="target-store__apply-btn" />
                       </RoundedIcon>
                       <RoundedIcon
-                        onClick={() => handleDiscardPathChange(PARQUET)}
+                        onClick={() => handleDiscardPathChange(PARQUET, data.parquet.path)}
                         tooltipText="Discard changes"
                       >
                         <Close />
@@ -393,6 +394,7 @@ const FeatureSetsPanelTargetStoreView = ({
 
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,

@@ -146,12 +146,75 @@ export const targetsPathEditDataInitialState = {
  * @param {string} [suffix] - Optional. The suffix to add to the end of the path.
  * @returns {string} The generated path.
  */
-export const generatePath = (prefixes, project, kind, name = '{name}', suffix = '') => {
-  const path = prefixes[kind] || prefixes.default
+export const generatePath = (prefixes, project, name, suffix, kind) => {
+  if (prefixes) {
+    const path = prefixes[kind] || prefixes.default
 
-  return `${path.replace(
-    /{project}|{name}|{kind}/gi,
-    matchToReplace =>
-      ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
-  )}/sets/${name || '{name}'}${suffix ? '.' + suffix : ''}`
+    return `${path.replace(
+      /{project}|{name}|{kind}/gi,
+      matchToReplace =>
+        ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
+    )}/sets/${name || '{name}'}${suffix ? '.' + suffix : ''}`
+  }
+
+  return ''
+}
+
+export const handlePathChange = (
+  targetType,
+  targetKindName,
+  isValid,
+  targetsPathEditData,
+  data,
+  target,
+  targets,
+  targetEditModeIsClosed,
+  setTargetsPathEditData,
+  setDisableButtons,
+  setNewFeatureSetTarget
+) => {
+  const currentTargetPathEditData = targetsPathEditData[targetType]
+
+  if (currentTargetPathEditData.isEditMode && isValid) {
+    const isTargetPathModified = target.path !== data[targetType].path
+
+    setTargetsPathEditData(state => ({
+      ...state,
+      [targetType]: {
+        isEditMode: false,
+        isModified: currentTargetPathEditData.isModified
+          ? state[targetType].isModified
+          : isTargetPathModified
+      }
+    }))
+
+    setDisableButtons(state => ({
+      ...state,
+      [targetEditModeIsClosed]: true
+    }))
+
+    if (isTargetPathModified) {
+      const updatedTargets = targets.map(targetKind => {
+        if (targetKind.name === targetKindName) {
+          return { ...targetKind, path: data[targetType].path }
+        }
+        return targetKind
+      })
+
+      setNewFeatureSetTarget(updatedTargets)
+    }
+  } else {
+    setTargetsPathEditData(state => ({
+      ...state,
+      [targetType]: {
+        ...currentTargetPathEditData,
+        isEditMode: true
+      }
+    }))
+
+    setDisableButtons(state => ({
+      ...state,
+      [targetEditModeIsClosed]: false
+    }))
+  }
 }

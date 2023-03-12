@@ -31,10 +31,9 @@ import { NAVBAR_WIDTH } from '../../constants'
 import './Page.scss'
 
 const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
-  const params = useParams()
+  const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
-  const projectName = params.projectName
   const transitionEndEventName = getTransitionEndEventName()
   const pinnedClasses = classNames(
     !(isNavbarPinned && projectName) && 'unpinned',
@@ -60,7 +59,9 @@ const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
 
     const interval = setInterval(() => dispatch(fetchFrontendSpec()), 60000)
 
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+    }
   }, [dispatch])
 
   return (

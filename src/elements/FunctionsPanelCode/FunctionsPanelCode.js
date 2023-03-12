@@ -72,9 +72,7 @@ const FunctionsPanelCode = ({
       !functionsStore.newFunction.spec.build.functionSourceCode &&
       isNil(defaultData.build?.functionSourceCode)
     ) {
-      setNewFunctionSourceCode(
-        sourceCodeInBase64[functionsStore.newFunction.kind]
-      )
+      setNewFunctionSourceCode(sourceCodeInBase64[functionsStore.newFunction.kind])
     }
   }, [
     defaultData.build,
@@ -85,55 +83,39 @@ const FunctionsPanelCode = ({
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE && imageType.length === 0) {
-      if (
-        appStore.frontendSpec.default_function_image_by_kind?.[
-          functionsStore.newFunction.kind
-        ]
-      ) {
+      if (appStore.frontendSpec.default_function_image_by_kind?.[functionsStore.newFunction.kind]) {
         setNewFunctionImage(
-          appStore.frontendSpec.default_function_image_by_kind[
-            functionsStore.newFunction.kind
-          ]
+          appStore.frontendSpec.default_function_image_by_kind[functionsStore.newFunction.kind]
         )
         setImageType(EXISTING_IMAGE)
         setData(state => ({
           ...state,
           image:
-            appStore.frontendSpec?.default_function_image_by_kind?.[
-              functionsStore.newFunction.kind
-            ]
+            appStore.frontendSpec?.default_function_image_by_kind?.[functionsStore.newFunction.kind]
         }))
       } else {
-        const buildImage = (
-          appStore.frontendSpec?.function_deployment_target_image_template || ''
-        )
+        const buildImage = (appStore.frontendSpec?.function_deployment_target_image_template || '')
           .replace('{project}', params.projectName)
           .replace('{name}', functionsStore.newFunction.metadata.name)
-          .replace(
-            '{tag}',
-            functionsStore.newFunction.metadata.tag || TAG_LATEST
-          )
+          .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
 
         setNewFunctionCommands(
-          trimSplit(
-            appStore.frontendSpec?.function_deployment_mlrun_command,
-            '\n'
-          )
+          trimSplit(appStore.frontendSpec?.function_deployment_mlrun_command ?? '', '\n')
         )
         setImageType(NEW_IMAGE)
         setNewFunctionBaseImage(
           appStore.frontendSpec?.default_function_image_by_kind?.[
             functionsStore.newFunction.kind
-          ]
+          ] ?? ''
         )
         setNewFunctionBuildImage(buildImage)
         setData(state => ({
           ...state,
-          commands: appStore.frontendSpec?.function_deployment_mlrun_command,
+          commands: appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
           base_image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ],
+            ] ?? '',
           build_image: buildImage
         }))
       }
@@ -195,7 +177,7 @@ const FunctionsPanelCode = ({
           image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ]
+            ] ?? ''
         }))
       } else {
         setData(state => ({
@@ -204,19 +186,19 @@ const FunctionsPanelCode = ({
             state.image ||
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ]
+            ] ||
+            ''
         }))
       }
       setNewFunctionImage(
         data.image ||
           appStore.frontendSpec?.default_function_image_by_kind?.[
             functionsStore.newFunction.kind
-          ]
+          ] ||
+          ''
       )
     } else if (type === NEW_IMAGE) {
-      const buildImage = (
-        appStore.frontendSpec?.function_deployment_target_image_template || ''
-      )
+      const buildImage = (appStore.frontendSpec?.function_deployment_target_image_template || '')
         .replace('{project}', params.projectName)
         .replace('{name}', functionsStore.newFunction.metadata.name)
         .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
@@ -226,25 +208,24 @@ const FunctionsPanelCode = ({
         setData(state => ({
           ...state,
           image: '',
-          commands:
-            appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
+          commands: appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
           base_image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ],
+            ] || '',
           build_image: buildImage
         }))
       } else {
         setData(state => ({
           ...state,
           commands:
-            state.commands ||
-            (appStore.frontendSpec?.function_deployment_mlrun_command ?? ''),
+            state.commands || (appStore.frontendSpec?.function_deployment_mlrun_command ?? ''),
           base_image:
             state.base_image ||
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ],
+            ] ||
+            '',
           build_image: state.build_image || buildImage
         }))
       }
@@ -252,16 +233,14 @@ const FunctionsPanelCode = ({
       setNewFunctionCommands(
         data.commands.length > 0
           ? trimSplit(data.commands, '\n')
-          : trimSplit(
-              appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
-              '\n'
-            )
+          : trimSplit(appStore.frontendSpec?.function_deployment_mlrun_command ?? '', '\n')
       )
       setNewFunctionBaseImage(
         data.base_image ||
           appStore.frontendSpec?.default_function_image_by_kind?.[
             functionsStore.newFunction.kind
-          ]
+          ] ||
+          ''
       )
       setNewFunctionBuildImage(data.build_image || buildImage)
     }
@@ -313,9 +292,6 @@ FunctionsPanelCode.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  (functionsStore, appStore) => ({ ...functionsStore, ...appStore }),
-  {
-    ...functionsActions
-  }
-)(FunctionsPanelCode)
+export default connect((functionsStore, appStore) => ({ ...functionsStore, ...appStore }), {
+  ...functionsActions
+})(FunctionsPanelCode)

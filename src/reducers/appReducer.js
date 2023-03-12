@@ -19,6 +19,9 @@ such restriction.
 */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import appApi from '../api/app-api'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { ConfirmDialog } from 'igz-controls/components'
+import { GATEWAY_TIMEOUT_STATUS_CODE } from 'igz-controls/constants'
 
 const initialState = {
   frontendSpec: {}
@@ -32,17 +35,33 @@ export const fetchFrontendSpec = createAsyncThunk('fetchFrontendSpec', () => {
     headers['x-mlrun-ui-version'] = mlrunVersion
   }
 
-  return appApi.getFrontendSpec({ headers }).then(({ data, headers }) => {
-    if (headers['x-mlrun-be-version']) {
-      localStorage.setItem('mlrunVersion', headers['x-mlrun-be-version'])
-    }
+  return appApi
+    .getFrontendSpec({ headers })
+    .then(({ data, headers }) => {
+      if (headers['x-mlrun-be-version']) {
+        localStorage.setItem('mlrunVersion', headers['x-mlrun-be-version'])
+      }
 
-    if (headers['x-mlrun-ui-clear-cache']) {
-      window.location.reload(true)
-    }
+      if (headers['x-mlrun-ui-clear-cache']) {
+        window.location.reload(true)
+      }
 
-    return data
-  })
+      return data
+    })
+    .catch(error => {
+      if (error.response.status === GATEWAY_TIMEOUT_STATUS_CODE) {
+        openPopUp(ConfirmDialog, {
+          header: 'Something went wrong.',
+          message: `There is a problem fetching the data. Check your network connection and try to refresh the browser.${
+            window.localStorage.getItem('mlrunUi.headerHidden') === 'true'
+              ? ' If the problem persists, contact customer support.'
+              : ''
+          }`
+        })
+      }
+
+      throw error
+    })
 })
 
 const appSlice = createSlice({
