@@ -109,7 +109,8 @@ const ScheduledJobs = ({
               status: error?.response?.status || 400,
               id: Math.random(),
               message: 'Failed to fetch jobs',
-              retry: () => refreshJobs(filters)
+              retry: () => refreshJobs(filters),
+              error
             })
           )
         })
@@ -144,7 +145,8 @@ const ScheduledJobs = ({
               message:
                 error.response.status === FORBIDDEN_ERROR_STATUS_CODE
                   ? 'You are not permitted to run new job.'
-                  : 'Job failed to start.'
+                  : 'Job failed to start.',
+              error
             })
           )
         })
@@ -241,13 +243,14 @@ const ScheduledJobs = ({
             setJobWizardMode(PANEL_EDIT_MODE)
           }
         })
-        .catch(() => {
+        .catch(error => {
           dispatch(
             setNotification({
               status: 400,
               id: Math.random(),
               retry: () => handleEditScheduleJob(editableItem),
-              message: 'Failed to fetch job access key'
+              message: 'Failed to fetch job access key',
+              error
             })
           )
         })

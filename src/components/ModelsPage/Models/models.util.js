@@ -35,6 +35,7 @@ import { generateProducerDetailsInfo } from '../../../utils/generateProducerDeta
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { fetchModel, updateArtifact } from '../../../reducers/artifactsReducer'
+import { convertChipsData } from '../../../utils/convertChipsData'
 
 export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
@@ -200,20 +201,12 @@ export const handleApplyDetailsChanges = (
       }
     })
 
-    const labels = artifactItem.metadata?.labels || artifactItem.labels
+    const labels = convertChipsData(artifactItem.metadata?.labels || artifactItem.labels)
 
-    if (labels && Array.isArray(labels)) {
-      const objectLabels = {}
-
-      labels.forEach(label => {
-        const splitedLabel = label.split(':')
-
-        objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
-      })
-
-      isNewFormat
-        ? (artifactItem.metadata.labels = { ...objectLabels })
-        : (artifactItem.labels = { ...objectLabels })
+    if (isNewFormat) {
+      artifactItem.metadata.labels = labels
+    } else {
+      artifactItem.labels = labels
     }
 
     updateArtifactPromise = dispatch(updateArtifact({ project: projectName, data: artifactItem }))

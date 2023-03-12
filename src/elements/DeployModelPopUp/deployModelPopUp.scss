@@ -18,4 +18,12 @@
       }
     }
   }
+
+  .info-container {
+    display: flex;
+
+    svg {
+      margin-right: 5px;
+    }
+  }
 }

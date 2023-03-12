@@ -17,30 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
-  notification: []
+export const validatorStates = {
+  info: 'info',
+  warn: 'warning',
+  fail: 'fail'
 }
-
-const notificationSlice = createSlice({
-  name: 'notification',
-  initialState,
-  reducers: {
-    setNotification(state, { payload }) {
-      if (payload.error) {
-        /* eslint-disable-next-line no-console */
-        console.error(payload.error)
-      }
-
-      state.notification.push(payload)
-    },
-    removeNotification(state, { payload }) {
-      state.notification = state.notification.filter(item => item.id !== payload)
-    }
-  }
-})
-
-export const { setNotification, removeNotification } = notificationSlice.actions
-
-export default notificationSlice.reducer

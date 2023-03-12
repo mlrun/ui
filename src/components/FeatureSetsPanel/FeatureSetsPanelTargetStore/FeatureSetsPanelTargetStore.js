@@ -79,9 +79,9 @@ const FeatureSetsPanelTargetStore = ({
           path: generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
+            NOSQL,
             featureStore.newFeatureSet.metadata.name,
-            featureStore.newFeatureSet.spec.source.kind,
-            NOSQL
+            ''
           )
         }
       }))
@@ -95,9 +95,9 @@ const FeatureSetsPanelTargetStore = ({
           path: generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
+            PARQUET,
             featureStore.newFeatureSet.metadata.name,
-            featureStore.newFeatureSet.spec.source.kind,
-            PARQUET
+            state.parquet?.partitioned ? '' : PARQUET
           )
         }
       }))
@@ -130,17 +130,17 @@ const FeatureSetsPanelTargetStore = ({
           target.path = generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
+            PARQUET,
             featureStore.newFeatureSet.metadata.name,
-            featureStore.newFeatureSet.spec.source.kind,
-            PARQUET
+            data.parquet.partitioned ? '' : PARQUET
           )
         } else if (target.kind === NOSQL && !targetsPathEditData.online.isModified) {
           target.path = generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
+            NOSQL,
             featureStore.newFeatureSet.metadata.name,
-            featureStore.newFeatureSet.spec.source.kind,
-            NOSQL
+            ''
           )
         }
 
@@ -150,6 +150,7 @@ const FeatureSetsPanelTargetStore = ({
     }
   }, [
     data.online.path,
+    data.parquet.partitioned,
     data.parquet.path,
     featureStore.newFeatureSet.metadata.name,
     featureStore.newFeatureSet.spec.source.kind,
@@ -442,9 +443,9 @@ const FeatureSetsPanelTargetStore = ({
           : generatePath(
               frontendSpec.feature_store_data_prefixes,
               project,
+              dataInitialState[kindId].kind,
               featureStore.newFeatureSet.metadata.name,
-              featureStore.newFeatureSet.spec.source.kind,
-              dataInitialState[kindId].kind
+              dataInitialState[kindId].kind === PARQUET ? PARQUET : ''
             )
       if (kindId === checkboxModels[kindId].id) {
         setData(state => ({
@@ -584,12 +585,28 @@ const FeatureSetsPanelTargetStore = ({
   const triggerPartitionCheckbox = (id, kind) => {
     if (kind === EXTERNAL_OFFLINE || kind === PARQUET) {
       setData(state => {
-        return data[kind].partitioned
+        let path = state[kind].path
+
+        if (
+          kind === PARQUET &&
+          !targetsPathEditData.parquet.isEditMode &&
+          !targetsPathEditData.parquet.isModified
+        ) {
+          path = generatePath(
+            frontendSpec.feature_store_data_prefixes,
+            project,
+            data[kind].kind,
+            featureStore.newFeatureSet.metadata.name,
+            data[kind].partitioned ? PARQUET : ''
+          )
+        }
+
+        return data[kind]?.partitioned
           ? {
               ...state,
               [kind]: {
                 ...dataInitialState[kind],
-                path: state[kind].path,
+                path,
                 kind: PARQUET
               }
             }
@@ -597,6 +614,7 @@ const FeatureSetsPanelTargetStore = ({
               ...state,
               [kind]: {
                 ...state[kind],
+                path,
                 partitioned: state[kind].partitioned === id ? '' : id,
                 key_bucketing_number: '',
                 partition_cols: '',
