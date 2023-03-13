@@ -22,55 +22,71 @@ import appApi from '../api/app-api'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { ConfirmDialog } from 'igz-controls/components'
 import { GATEWAY_TIMEOUT_STATUS_CODE } from 'igz-controls/constants'
+import { isEmpty } from 'lodash'
 
 const initialState = {
-  frontendSpec: {}
+  frontendSpec: {},
+  frontendSpecPopupIsOpened: false
 }
 
-export const fetchFrontendSpec = createAsyncThunk('fetchFrontendSpec', () => {
-  const headers = {}
-  const mlrunVersion = localStorage.getItem('mlrunVersion')
+export const fetchFrontendSpec = createAsyncThunk(
+  'fetchFrontendSpec',
+  ({ frontendSpec, frontendSpecPopupIsOpened }) => {
+    const headers = {}
+    const mlrunVersion = localStorage.getItem('mlrunVersion')
 
-  if (mlrunVersion) {
-    headers['x-mlrun-ui-version'] = mlrunVersion
+    if (mlrunVersion) {
+      headers['x-mlrun-ui-version'] = mlrunVersion
+    }
+
+    return appApi
+      .getFrontendSpec({ headers })
+      .then(({ data, headers }) => {
+        if (headers['x-mlrun-be-version']) {
+          localStorage.setItem('mlrunVersion', headers['x-mlrun-be-version'])
+        }
+
+        if (headers['x-mlrun-ui-clear-cache']) {
+          window.location.reload(true)
+        }
+
+        return data
+      })
+      .catch(error => {
+        if (
+          error.response.status === GATEWAY_TIMEOUT_STATUS_CODE &&
+          isEmpty(frontendSpec) &&
+          !frontendSpecPopupIsOpened
+        ) {
+          openPopUp(ConfirmDialog, {
+            header: 'Something went wrong.',
+            message: `There is a problem fetching the data. Check your network connection and try to refresh the browser.${
+              window.localStorage.getItem('mlrunUi.headerHidden') === 'true'
+                ? ' If the problem persists, contact customer support.'
+                : ''
+            }`
+          })
+        }
+
+        throw error
+      })
   }
-
-  return appApi
-    .getFrontendSpec({ headers })
-    .then(({ data, headers }) => {
-      if (headers['x-mlrun-be-version']) {
-        localStorage.setItem('mlrunVersion', headers['x-mlrun-be-version'])
-      }
-
-      if (headers['x-mlrun-ui-clear-cache']) {
-        window.location.reload(true)
-      }
-
-      return data
-    })
-    .catch(error => {
-      if (error.response.status === GATEWAY_TIMEOUT_STATUS_CODE) {
-        openPopUp(ConfirmDialog, {
-          header: 'Something went wrong.',
-          message: `There is a problem fetching the data. Check your network connection and try to refresh the browser.${
-            window.localStorage.getItem('mlrunUi.headerHidden') === 'true'
-              ? ' If the problem persists, contact customer support.'
-              : ''
-          }`
-        })
-      }
-
-      throw error
-    })
-})
+)
 
 const appSlice = createSlice({
   name: 'app',
   initialState,
-  reducers: {},
+  reducers: {
+    toggleFrontendSpecPopup(state, action) {
+      state.frontendSpecPopupIsOpened = action.payload
+    }
+  },
   extraReducers: builder => {
     builder.addCase(fetchFrontendSpec.fulfilled, (state, { payload }) => {
       state.frontendSpec = payload
+    })
+    builder.addCase(fetchFrontendSpec.rejected, (state, action) => {
+      state.frontendSpecPopupIsOpened = true
     })
   }
 })
