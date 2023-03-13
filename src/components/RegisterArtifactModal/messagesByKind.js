@@ -18,9 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 export const messagesByKind = {
-  artifact:
-    'This dialog enable users to register an artifact in Iguazio database. Once a artifact is registered it can be consumed by jobs and workflows.',
-  model: '',
-  dataset:
-    'This dialog enable users to register an artifact as a dataset in Iguazio database. Once the dataset is registered it can be consumed by jobs and workflows.'
+  artifact: {
+    title: 'This dialog enable users to register an artifact in Iguazio database. Once a artifact is registered it can be consumed by jobs and workflows.',
+    subTitle: 'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).',
+    nameTip: 'Artifact names in the same project must be unique'
+  },
+  dataset: {
+    title: 'This dialog enable users to register an artifact as a dataset in Iguazio database. Once the dataset is registered it can be consumed by jobs and workflows.',
+    subTitle: 'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).',
+    nameTip: 'Dataset names in the same project must be unique'
+  }
 }
