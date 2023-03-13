@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { isNumber } from 'lodash'
 
 import {
   ARTIFACTS_PAGE,
@@ -322,7 +323,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
-        value: artifact.size ? convertBytes(artifact.size) : 'N/A',
+        value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
         class: 'table-cell-1'
       },
       {
@@ -549,7 +550,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
-        value: convertBytes(artifact.size || 0),
+        value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
         class: 'table-cell-1'
       },
       {
