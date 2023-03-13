@@ -46,7 +46,7 @@ const initialState = {
   state: STATE_FILTER_ALL_ITEMS,
   sortBy: '',
   tag: TAG_FILTER_LATEST,
-  tagOptions: [],
+  tagOptions: null,
   projectOptions: [],
   [FILTER_MENU_MODAL]: {}
 }

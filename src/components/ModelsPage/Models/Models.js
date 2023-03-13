@@ -19,26 +19,19 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 
-import {
-  fetchArtifactTags,
-  fetchModel,
-  removeModel,
-  removeModels
-} from '../../../reducers/artifactsReducer'
+import { fetchModel, removeModel, removeModels } from '../../../reducers/artifactsReducer'
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   MODELS_PAGE,
   MODELS_TAB,
-  MODEL_TYPE,
-  SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import {
@@ -53,22 +46,22 @@ import detailsActions from '../../../actions/details'
 import { cancelRequest } from '../../../utils/cancelRequest'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
-import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseChipsData } from '../../../utils/convertChipsData'
+import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
-import { parseChipsData } from '../../../utils/convertChipsData'
+import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE)
+  const [urlTagOption] = useGetTagOptions(null, filters)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -78,7 +71,8 @@ const Models = ({ fetchModelFeatureVector }) => {
   const dispatch = useDispatch()
   const modelsRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
-  const { fetchData, models, setModels, toggleConvertedYaml } = useModelsPage()
+  const { fetchData, models, allModels, setModels, setAllModels, toggleConvertedYaml } =
+    useModelsPage()
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -94,20 +88,13 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const handleRefresh = useCallback(
     filters => {
-      dispatch(
-        getFilterTagOptions({
-          dispatch,
-          fetchTags: fetchArtifactTags,
-          project: params.projectName,
-          category: MODEL_TYPE
-        })
-      )
       setSelectedRowData({})
       setModels([])
+      setAllModels([])
 
       return fetchData(filters)
     },
-    [dispatch, fetchData, params.projectName, setModels]
+    [fetchData, setAllModels, setModels]
   )
 
   const handleAddTag = useCallback(
@@ -177,40 +164,6 @@ const Models = ({ fetchModelFeatureVector }) => {
     [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
   )
 
-  const applyDetailsChanges = useCallback(
-    changes => {
-      return handleApplyDetailsChanges(
-        changes,
-        params.projectName,
-        selectedModel,
-        setNotification,
-        dispatch
-      )
-    },
-    [dispatch, params.projectName, selectedModel]
-  )
-
-  const applyDetailsChangesCallback = changes => {
-    if ('tag' in changes.data) {
-      setSelectedRowData({})
-      setModels([])
-
-      if (changes.data.tag.currentFieldValue) {
-        navigate(
-          `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
-          { replace: true }
-        )
-      }
-    }
-
-    handleRefresh(filtersStore)
-  }
-
-  useEffect(() => {
-    dispatch(removeModel({}))
-    setSelectedRowData({})
-  }, [filtersStore.iter, filtersStore.tag, dispatch])
-
   const { latestItems, handleExpandRow } = useGroupContent(
     models,
     getArtifactIdentifier,
@@ -235,14 +188,62 @@ const Models = ({ fetchModelFeatureVector }) => {
     sortConfig: { defaultSortBy: 'updated', defaultDirection: 'desc' }
   })
 
+  const applyDetailsChanges = useCallback(
+    changes => {
+      return handleApplyDetailsChanges(
+        changes,
+        params.projectName,
+        selectedModel,
+        setNotification,
+        dispatch
+      )
+    },
+    [dispatch, params.projectName, selectedModel]
+  )
+
+  const applyDetailsChangesCallback = changes => {
+    if ('tag' in changes.data) {
+      setSelectedRowData({})
+      setModels([])
+      setAllModels([])
+
+      if (changes.data.tag.currentFieldValue) {
+        navigate(
+          `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          { replace: true }
+        )
+      }
+    }
+
+    handleRefresh(filtersStore)
+  }
+
+  useEffect(() => {
+    dispatch(removeModel({}))
+    setSelectedRowData({})
+  }, [filtersStore.iter, filtersStore.tag, dispatch])
+
+  useEffect(() => {
+    if (params.name && params.tag && pageData.details.menu.length > 0) {
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
+    }
+  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
+
+  useEffect(() => {
+    if (isNil(filtersStore.tagOptions) && urlTagOption) {
+      fetchData({ ...filtersStore, tag: urlTagOption })
+    }
+  }, [fetchData, filtersStore, urlTagOption])
+
   useEffect(() => {
     return () => {
       setModels([])
+      setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
       cancelRequest(modelsRef, 'cancel')
     }
-  }, [dispatch, setModels])
+  }, [dispatch, setModels, setAllModels])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
@@ -253,19 +254,10 @@ const Models = ({ fetchModelFeatureVector }) => {
   }, [dispatch, filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name])
 
   useEffect(() => {
-    if (urlTagOption) {
-      fetchData({
-        tag: urlTagOption,
-        iter: SHOW_ITERATIONS
-      })
-    }
-  }, [fetchData, urlTagOption])
-
-  useEffect(() => {
     checkForSelectedModel(
       params.name,
       selectedRowData,
-      models,
+      allModels,
       params.tag,
       params.iter,
       params.uid,
@@ -274,7 +266,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedModel
     )
   }, [
-    models,
+    allModels,
     navigate,
     params.iter,
     params.name,
@@ -283,14 +275,6 @@ const Models = ({ fetchModelFeatureVector }) => {
     params.uid,
     selectedRowData
   ])
-
-  useEffect(() => setModels([]), [filtersStore.tag, setModels])
-
-  useEffect(() => {
-    if (params.name && params.tag && pageData.details.menu.length > 0) {
-      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
-    }
-  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
     if (

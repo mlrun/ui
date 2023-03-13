@@ -157,25 +157,27 @@ export const checkForSelectedFile = (
   projectName,
   setSelectedFile
 ) => {
-  if (name) {
-    const artifacts = selectedRowData?.[name]?.content || files
+  queueMicrotask(() => {
+    if (name) {
+      const artifacts = selectedRowData?.[name]?.content || files
 
-    if (artifacts.length > 0) {
-      const searchItem = searchArtifactItem(
-        artifacts.map(artifact => artifact.data ?? artifact),
-        name,
-        tag,
-        iter,
-        uid
-      )
+      if (artifacts.length > 0) {
+        const searchItem = searchArtifactItem(
+          artifacts.map(artifact => artifact.data ?? artifact),
+          name,
+          tag,
+          iter,
+          uid
+        )
 
-      if (!searchItem) {
-        navigate(`/projects/${projectName}/files`, { replace: true })
-      } else {
-        setSelectedFile(searchItem)
+        if (!searchItem) {
+          navigate(`/projects/${projectName}/files`, { replace: true })
+        } else {
+          setSelectedFile(searchItem)
+        }
       }
+    } else {
+      setSelectedFile({})
     }
-  } else {
-    setSelectedFile({})
-  }
+  })
 }
