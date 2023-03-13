@@ -272,8 +272,11 @@ const FeatureSetsPanelTargetStore = ({
     }
   }
 
-  const handleDiscardPathChange = (kind, value) => {
-    if (targetsPathEditData[kind].isModified) {
+  const handleDiscardPathChange = kind => {
+    const currentStoreType = kind === ONLINE ? NOSQL : kind
+    const currentKind = featureStore.newFeatureSet.spec.targets.find(el => el.kind === currentStoreType)
+
+    if (currentKind .path.length > 0) {
       setData(state => ({
         ...state,
         [kind]: {

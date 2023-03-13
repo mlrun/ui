@@ -128,7 +128,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         />
                       </RoundedIcon>
                       <RoundedIcon
-                        onClick={() => handleDiscardPathChange(ONLINE, data.online.path)}
+                        onClick={() => handleDiscardPathChange(ONLINE)}
                         tooltipText="Discard changes"
                       >
                         <Close />
@@ -205,7 +205,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         <Checkmark className="target-store__apply-btn" />
                       </RoundedIcon>
                       <RoundedIcon
-                        onClick={() => handleDiscardPathChange(PARQUET, data.parquet.path)}
+                        onClick={() => handleDiscardPathChange(PARQUET)}
                         tooltipText="Discard changes"
                       >
                         <Close />
