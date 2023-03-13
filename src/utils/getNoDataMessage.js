@@ -36,6 +36,7 @@ import {
   LABELS_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB,
+  MONITOR_WORKFLOWS_TAB,
   NAME_FILTER,
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
@@ -116,6 +117,10 @@ const generateEmptyListMessage = (messageNames, tab) => {
 
   if ([FEATURES_TAB, ADD_TO_FEATURE_VECTOR_TAB].includes(tab)) {
     return 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.'
+  }
+
+  if (MONITOR_WORKFLOWS_TAB === tab) {
+    return 'No Workflows created yet.'
   }
 
   return `No ${messageNames.plural} yet. Create your first ${messageNames.single} now.`
