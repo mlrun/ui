@@ -146,7 +146,7 @@ export const targetsPathEditDataInitialState = {
  * @param {string} [suffix] - Optional. The suffix to add to the end of the path.
  * @returns {string} The generated path.
  */
-export const generatePath = (prefixes, project, name, suffix, kind) => {
+export const generatePath = (prefixes, project, kind, name, suffix) => {
   if (prefixes) {
     const path = prefixes[kind] || prefixes.default
 
