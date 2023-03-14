@@ -51,7 +51,7 @@ export const generateCreateNewOptions = (
   isDemoMode
 ) => [
   {
-    label: 'Batch run',
+    label: isDemoMode ? 'Batch run' : 'Job',
     id: 'batchRun',
     handler: () => {
       if (isDemoMode) {
