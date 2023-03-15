@@ -165,7 +165,7 @@ const FeatureSetsPanelTargetStoreView = ({
               <Offline /> Offline
               <Tip
                 className="checkbox__label-tip"
-                text="Store the feature set as a Parquet file in Iguazio object store"
+                text="Store the feature set as a Parquet file or a partitioned Parquet directory"
               />
             </CheckBox>
           </div>
