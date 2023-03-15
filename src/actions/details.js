@@ -19,6 +19,7 @@ such restriction.
 */
 import detailsApi from '../api/details-api'
 import {
+  FETCH_JOB_PODS_BEGIN,
   FETCH_JOB_PODS_FAILURE,
   FETCH_JOB_PODS_SUCCESS,
   FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN,
@@ -44,20 +45,6 @@ import {
 import { generatePods } from '../utils/generatePods'
 
 const detailsActions = {
-  fetchJobPods: (project, uid) => dispatch => {
-    return detailsApi
-      .getJobPods(project)
-      .then(({ data }) => {
-        let podsData = generatePods(project, uid, data)
-
-        dispatch(detailsActions.fetchPodsSuccess(podsData))
-
-        return podsData
-      })
-      .catch(err => {
-        dispatch(detailsActions.fetchPodsFailure(err))
-      })
-  },
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
     dispatch(detailsActions.fetchModelEndpointWithAnalysisBegin())
 
@@ -107,13 +94,32 @@ const detailsActions = {
     type: FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
     payload: featureSets
   }),
-  fetchPodsSuccess: pods => ({
-    type: FETCH_JOB_PODS_SUCCESS,
-    payload: pods
+  fetchJobPods: (project, uid) => dispatch => {
+    dispatch(detailsActions.fetchPodsBegin())
+
+    return detailsApi
+      .getJobPods(project)
+      .then(({ data }) => {
+        let podsData = generatePods(project, uid, data)
+
+        dispatch(detailsActions.fetchPodsSuccess(podsData))
+
+        return podsData
+      })
+      .catch(err => {
+        dispatch(detailsActions.fetchPodsFailure(err))
+      })
+  },
+  fetchPodsBegin: () => ({
+    type: FETCH_JOB_PODS_BEGIN
   }),
   fetchPodsFailure: error => ({
     type: FETCH_JOB_PODS_FAILURE,
     payload: error
+  }),
+  fetchPodsSuccess: pods => ({
+    type: FETCH_JOB_PODS_SUCCESS,
+    payload: pods
   }),
   removeInfoContent: () => ({
     type: REMOVE_INFO_CONTENT
