@@ -7,5 +7,11 @@
     &__label {
       text-transform: none;
     }
+
+    &__wrapper {
+      input {
+        padding: 0 16px;
+      }
+    }
   }
 }
