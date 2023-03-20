@@ -283,6 +283,9 @@ export const generateFeatureSetsOverviewContent = selectedItem => ({
   entities: {
     value: selectedItem.entities?.map(entity => entity.name).join(', ')
   },
+  engineType: {
+    value: selectedItem?.engine ?? ''
+  },
   target_uri: {
     value: selectedItem.URI,
     copyToClipboard: true
