@@ -223,14 +223,14 @@ export const isParquetPathValid = (validation, parquet) => {
   return (
     !validation ||
     Boolean(parquet.partitioned && /\.\w*\s*$/.test(parquet.path)) ||
-    Boolean(!parquet.partitioned && !/\.parquet\s*$/.test(parquet.path))
+    Boolean(!parquet.partitioned && !/\.parquet\s*$|\.pq\s*$/.test(parquet.path))
   )
 }
 
 export const getInvalidParquetPathMessage = parquet => {
   return parquet.partitioned && /\.\w*\s*$/.test(parquet.path)
-    ? 'Partitioned Parquet target for storey engine must be a directory.'
-    : !parquet.partitioned && !/\.parquet\s*$/.test(parquet.path)
-    ? "Parquet target for storey engine should be '.parquet' type."
+    ? 'The partitioned Parquet target for storey engine must be a directory. (The directory name must not end in .parquet/.pq.)'
+    : !parquet.partitioned && !/\.parquet\s*$|\.pq\s*$/.test(parquet.path)
+    ? 'The Parquet target for storey engine file path must have a .parquet/.pq suffix.'
     : 'This field is invalid.'
 }
