@@ -24,12 +24,15 @@ import { Link, useParams } from 'react-router-dom'
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+
+import { copyToClipboard } from '../../utils/copyToClipboard'
 
 import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
 import './detailsArtifacts.scss'
 
@@ -88,8 +91,14 @@ const DetailsArtifactsView = ({
                     {artifact.date}
                   </Tooltip>
                 </div>
-                <div className="item-artifacts__row-item item-artifacts__row-item_short">
-                  <Tooltip template={<TextTooltipTemplate text="Show Details" />}>
+                <div className="item-artifacts__row-item">
+                  <RoundedIcon
+                    onClick={() => copyToClipboard(artifact.target_path)}
+                    tooltipText="Copy URI"
+                  >
+                    <Copy />
+                  </RoundedIcon>
+                  <RoundedIcon tooltipText="Show Details">
                     <Link
                       target="_blank"
                       to={
@@ -101,9 +110,7 @@ const DetailsArtifactsView = ({
                     >
                       <DetailsIcon />
                     </Link>
-                  </Tooltip>
-                </div>
-                <div className="item-artifacts__row-item item-artifacts__row-item_short">
+                  </RoundedIcon>
                   <Download
                     className="icon-download"
                     path={artifact.target_path}
