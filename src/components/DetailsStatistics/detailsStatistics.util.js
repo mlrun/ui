@@ -68,6 +68,18 @@ export const generateStatistics = selectedItem => {
           value: metrics?.min ?? '',
           type: 'text'
         },
+        '25%': {
+          value: metrics?.['25%'] ?? '',
+          type: 'text'
+        },
+        median: {
+          value: metrics?.['50%'] ?? '',
+          type: 'text'
+        },
+        '75%': {
+          value: metrics?.['75%'] ?? '',
+          type: 'text'
+        },
         max: {
           value: metrics?.max ?? '',
           type: 'text'
