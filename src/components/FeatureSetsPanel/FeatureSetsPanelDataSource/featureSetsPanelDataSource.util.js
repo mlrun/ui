@@ -76,9 +76,7 @@ export const generateComboboxMatchesList = (
   urlProjectItemTypeEntered
 ) => {
   if (!urlProjectItemTypeEntered) {
-    return projectItemsPathTypes.some(type =>
-      type.id.startsWith(url.projectItemType)
-    )
+    return projectItemsPathTypes.some(type => type.id.startsWith(url.projectItemType))
       ? projectItemsPathTypes
       : []
   } else if (
@@ -105,20 +103,19 @@ export const projectItemsPathTypes = [
   {
     label: 'Artifacts',
     id: 'artifacts'
+  },
+  {
+    label: 'Datasets',
+    id: 'datasets'
   }
 ]
 
-export const isUrlInputValid = (
-  pathInputType,
-  pathInputValue,
-  dataSourceKind
-) => {
+export const isUrlInputValid = (pathInputType, pathInputValue, dataSourceKind) => {
   const regExp =
     dataSourceKind === CSV
       ? /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
       : /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
-  const defaultValidation =
-    pathInputValue.length > 0 && /.*?\/(.*?)/.test(pathInputValue)
+  const defaultValidation = pathInputValue.length > 0 && /.*?\/(.*?)/.test(pathInputValue)
 
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
