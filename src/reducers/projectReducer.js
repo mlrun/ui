@@ -251,59 +251,7 @@ const projectReducer = (state = initialState, { type, payload }) => {
         error: null,
         loading: false,
         project: {
-          data: null,
-          error: null,
-          loading: false,
-          dataSets: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          failedJobs: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          featureSets: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          files: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          jobs: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          functions: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          models: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          runningJobs: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          scheduledJobs: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          workflows: {
-            data: [],
-            error: null,
-            loading: false
-          }
+          ...initialState.project
         }
       }
     case FETCH_PROJECT_BEGIN:
