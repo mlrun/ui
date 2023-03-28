@@ -40,7 +40,7 @@ import {
 } from './targetPath.util'
 import featureStoreActions from '../../actions/featureStore'
 import projectAction from '../../actions/projects'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { ARTIFACT_OTHER_TYPE, DATASET_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getFeatureReference } from '../../utils/resources'
 
@@ -141,8 +141,22 @@ const TargetPath = ({
       dataInputState.storePathType &&
       dataInputState.project
     ) {
-      if (dataInputState.storePathType === 'artifacts' && dataInputState.artifacts.length === 0) {
-        dispatch(fetchArtifacts({ project: dataInputState.project }))
+      if (
+        dataInputState.storePathType !== 'feature-vectors' &&
+        dataInputState.artifacts.length === 0
+      ) {
+        dispatch(
+          fetchArtifacts({
+            project: dataInputState.project,
+            filters: null,
+            config: {
+              params: {
+                category:
+                  dataInputState.storePathType === 'artifacts' ? ARTIFACT_OTHER_TYPE : DATASET_TYPE
+              }
+            }
+          })
+        )
           .unwrap()
           .then(artifacts => {
             setDataInputState(prev => ({
@@ -189,7 +203,7 @@ const TargetPath = ({
     const projectItem = dataInputState.projectItem
 
     if (dataInputState.inputProjectItemPathEntered && storePathType && projectName && projectItem) {
-      if (storePathType === 'artifacts' && dataInputState.artifactsReferences.length === 0) {
+      if (storePathType !== 'feature-vectors' && dataInputState.artifactsReferences.length === 0) {
         dispatch(fetchArtifact({ project: projectName, artifact: projectItem }))
           .unwrap()
           .then(artifacts => {

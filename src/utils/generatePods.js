@@ -26,12 +26,10 @@ export const generatePods = (project, uid, pods) => {
       {value?.name}
       {value?.status?.phase?.toLowerCase?.() === 'pending'
         ? ' (pending...)'
-        : ''}
+        : value?.status?.phase?.toLowerCase ?? ''}
     </p>
   ))
-  const podsPending = podsList.filter(
-    pod => pod?.status?.phase?.toLowerCase?.() === 'pending'
-  )
+  const podsPending = podsList.filter(pod => pod?.status?.phase?.toLowerCase?.() === 'pending')
 
   return {
     podsList,
