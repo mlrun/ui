@@ -124,8 +124,13 @@ const MonitorJobs = ({
   )
 
   const pageData = useMemo(
-    () => generatePageData(handleFetchJobLogs, selectedJob),
-    [handleFetchJobLogs, selectedJob]
+    () => generatePageData(
+      handleFetchJobLogs,
+      selectedJob,
+      appStore.frontendSpec.jobs_dashboard_url,
+      handleMonitoring
+    ),
+    [handleFetchJobLogs, selectedJob, appStore.frontendSpec.jobs_dashboard_url, handleMonitoring]
   )
 
   const refreshJobs = useCallback(
@@ -205,7 +210,8 @@ const MonitorJobs = ({
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
         toggleConvertedYaml,
-        isDemoMode
+        isDemoMode,
+        selectedJob
       )
   }, [
     handleRerunJob,
@@ -214,7 +220,8 @@ const MonitorJobs = ({
     handleMonitoring,
     handleConfirmAbortJob,
     toggleConvertedYaml,
-    isDemoMode
+    isDemoMode,
+    selectedJob
   ])
 
   const modifyAndSelectRun = useCallback(

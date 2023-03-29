@@ -63,6 +63,7 @@ const DetailsHeader = ({
   const detailsStore = useSelector(store => store.detailsStore)
   const location = useLocation()
   const params = useParams()
+  const { actionButton } = pageData.details
 
   const {
     value: stateValue,
@@ -214,6 +215,15 @@ const DetailsHeader = ({
               />
             </Tooltip>
           )}
+        {actionButton && !actionButton.hidden && (
+          <Button
+            disabled={actionButton.disabled}
+            label={actionButton.label}
+            onClick={actionButton.onClick}
+            tooltip={actionButton.tooltip}
+            variant={actionButton.variant}
+          />
+        )}
         {isDetailsScreen && (
           <RoundedIcon id="refresh" onClick={handleRefresh} tooltipText="Refresh">
             <Refresh />
