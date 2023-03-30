@@ -25,7 +25,7 @@ import './NavbarLink.scss'
 
 const NavbarLink = ({ externalLink, icon, label, link, ...props }) => {
   return (
-    <li className="nav-link">
+    <li className="nav-link" data-testid={`nav-link-${props.id}`}>
       {externalLink ? (
         <a href={link} target="_top" className="nav-link__button btn btn-secondary">
           {icon}

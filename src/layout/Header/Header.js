@@ -31,7 +31,7 @@ const Header = () => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   return (
-    <header className="header">
+    <header className="header" data-testid="header">
       <div className="header__brand">
         <Link to="/">
           <Logo className="header__logo" alt="MLRun" />
