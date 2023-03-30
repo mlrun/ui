@@ -70,7 +70,7 @@ const CopyToClipboard = ({ children, className, onClick, tooltipText }) => {
       tooltipText={tooltipText}
       onClick={() => copyToClipboard(onClick())}
     >
-      {children ? children : <Copy />}
+      <Copy />
     </RoundedIcon>
   )
 }
