@@ -30,7 +30,6 @@ import {
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
-import { copyToClipboard } from './copyToClipboard'
 import { generateUri } from './resources'
 import { truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
@@ -122,9 +121,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         value: '',
         class: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => {
-          copyToClipboard(generateUri(item, pageTab))
-        }
+        actionHandler: item => generateUri(item, pageTab)
       }
     ]
   }
@@ -345,7 +342,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         value: '',
         class: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => copyToClipboard(generateUri(item, pageTab))
+        actionHandler: item => generateUri(item, pageTab)
       },
       {
         id: `uid.${featureVector.ui.identifierUnique}`,

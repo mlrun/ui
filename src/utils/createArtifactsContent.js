@@ -34,7 +34,6 @@ import {
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
-import { copyToClipboard } from './copyToClipboard'
 import { generateUri } from './resources'
 import { generateLinkPath, parseUri } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
@@ -230,7 +229,7 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         value: '',
         class: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => copyToClipboard(generateUri(item, MODELS_TAB))
+        actionHandler: item => generateUri(item, MODELS_TAB)
       }
     ]
   }
@@ -346,7 +345,7 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         value: '',
         class: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => copyToClipboard(generateUri(item, ARTIFACTS))
+        actionHandler: item => generateUri(item, ARTIFACTS)
       }
     ]
   }
@@ -580,7 +579,7 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         value: '',
         class: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => copyToClipboard(generateUri(item, DATASETS))
+        actionHandler: item => generateUri(item, DATASETS)
       }
     ]
   }
