@@ -60,18 +60,18 @@ const CopyToClipboard = ({ children, className, onClick, tooltipText }) => {
       .catch(err => console.error('Write access denied!', err))
   }
 
-  return children ? (
-    <Tooltip className={className} template={<TextTooltipTemplate text={tooltipText} />}>
-      <span onClick={() => copyToClipboard(onClick())}>{children}</span>
-    </Tooltip>
-  ) : (
-    <RoundedIcon
-      className={className}
-      tooltipText={tooltipText}
-      onClick={() => copyToClipboard(onClick())}
-    >
-      <Copy />
-    </RoundedIcon>
+  return (
+    <div className={className} data-testid="copy-to-clipboard">
+      {children ? (
+        <Tooltip template={<TextTooltipTemplate text={tooltipText} />}>
+          <span onClick={() => copyToClipboard(onClick())}>{children}</span>
+        </Tooltip>
+      ) : (
+        <RoundedIcon tooltipText={tooltipText} onClick={() => copyToClipboard(onClick())}>
+          <Copy />
+        </RoundedIcon>
+      )}
+    </div>
   )
 }
 
