@@ -21,7 +21,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEqual } from 'lodash'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
 import DatePicker from '../../common/DatePicker/DatePicker'
@@ -84,45 +84,37 @@ const FilterMenu = ({
   const changes = useSelector(store => store.detailsStore.changes)
 
   useEffect(() => {
-    return () => {
-      dispatch(removeFilters())
-      setLabels('')
-      setName('')
-      setEntities('')
-      setTagOptions(tagFilterOptions)
-    }
-  }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
-
-  useEffect(() => {
     setLabels(filtersStore.labels)
     setName(filtersStore.name)
-  }, [filtersStore.labels, filtersStore.name])
+    setEntities(filtersStore.entities)
+  }, [filtersStore.entities, filtersStore.labels, filtersStore.name])
 
   useEffect(() => {
     if (filters.find(filter => filter.type === TAG_FILTER)) {
-      if (filtersStore.tagOptions.length > 0) {
-        setTagOptions(() => {
-          const defaultOptionsTags = tagFilterOptions.map(option => option.id)
+      let newTagOptions = tagFilterOptions
 
-          return [
-            ...tagFilterOptions,
-            ...filtersStore.tagOptions.reduce((acc, tag) => {
-              if (!defaultOptionsTags.includes(tag)) {
-                acc.push({
-                  label: tag,
-                  id: tag
-                })
-              }
+      if (filtersStore.tagOptions?.length > 0) {
+        const defaultOptionsTags = tagFilterOptions.map(option => option.id)
+        newTagOptions = [
+          ...tagFilterOptions,
+          ...filtersStore.tagOptions.reduce((acc, tag) => {
+            if (!defaultOptionsTags.includes(tag)) {
+              acc.push({
+                label: tag,
+                id: tag
+              })
+            }
 
-              return acc
-            }, [])
-          ]
-        })
-      } else {
-        setTagOptions(tagFilterOptions)
+            return acc
+          }, [])
+        ]
+      }
+
+      if (!isEqual(newTagOptions, filtersStore.tagOptions)) {
+        setTagOptions(() => newTagOptions)
       }
     }
-  }, [filters, filtersStore.tagOptions])
+  }, [dispatch, filters, filtersStore.tagOptions])
 
   useEffect(() => {
     if (
@@ -308,6 +300,12 @@ const FilterMenu = ({
     }
   }
 
+  useEffect(() => {
+    return () => {
+      dispatch(removeFilters())
+    }
+  }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
+
   return (
     !hidden && (
       <>
@@ -492,4 +490,4 @@ FilterMenu.propTypes = {
   withoutExpandButton: PropTypes.bool
 }
 
-export default FilterMenu
+export default React.memo(FilterMenu)

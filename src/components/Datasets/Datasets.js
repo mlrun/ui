@@ -20,21 +20,13 @@ such restriction.
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
+import { DATASETS_PAGE, GROUP_BY_NAME, GROUP_BY_NONE, TAG_FILTER_ALL_ITEMS } from '../../constants'
 import {
-  DATASETS_PAGE,
-  DATASET_TYPE,
-  GROUP_BY_NAME,
-  GROUP_BY_NONE,
-  SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS
-} from '../../constants'
-import {
-  fetchArtifactTags,
   fetchDataSet,
   fetchDataSets,
   removeDataSet,
@@ -52,7 +44,8 @@ import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { setArtifactTags } from '../../utils/artifacts.util'
+import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -62,13 +55,14 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
+  const [allDatasets, setAllDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
+  const [urlTagOption] = useGetTagOptions(null, filters)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, DATASET_TYPE)
   const pageData = useMemo(() => generatePageData(selectedDataset), [selectedDataset])
   const params = useParams()
   const navigate = useNavigate()
@@ -86,12 +80,10 @@ const Datasets = () => {
     filters => {
       dispatch(fetchDataSets({ project: params.projectName, filters }))
         .unwrap()
-        .then(result => {
-          if (result) {
-            setDatasets(result)
-          }
+        .then(dataSetsResponse => {
+          setArtifactTags(dataSetsResponse, setDatasets, setAllDatasets, filters, dispatch)
 
-          return result
+          return dataSetsResponse
         })
     },
     [dispatch, params.projectName]
@@ -99,20 +91,13 @@ const Datasets = () => {
 
   const handleRefresh = useCallback(
     filters => {
-      dispatch(
-        getFilterTagOptions({
-          dispatch,
-          fetchTags: fetchArtifactTags,
-          project: params.projectName,
-          category: DATASET_TYPE
-        })
-      )
       setSelectedRowData({})
       setDatasets([])
+      setAllDatasets([])
 
       return fetchData(filters)
     },
-    [dispatch, fetchData, params.projectName]
+    [fetchData]
   )
 
   const handleAddTag = useCallback(
@@ -165,6 +150,7 @@ const Datasets = () => {
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setDatasets([])
+      setAllDatasets([])
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
@@ -236,13 +222,10 @@ const Datasets = () => {
   }, [location, navigate, pageData.details.menu, params.name, params.tab, params.tag])
 
   useEffect(() => {
-    if (urlTagOption) {
-      fetchData({
-        tag: urlTagOption,
-        iter: SHOW_ITERATIONS
-      })
+    if (isNil(filtersStore.tagOptions) && urlTagOption) {
+      fetchData({ ...filtersStore, tag: urlTagOption })
     }
-  }, [fetchData, urlTagOption])
+  }, [fetchData, filtersStore, urlTagOption])
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
@@ -256,7 +239,7 @@ const Datasets = () => {
     checkForSelectedDataset(
       params.name,
       selectedRowData,
-      datasets,
+      allDatasets,
       params.tag,
       params.iter,
       params.uid,
@@ -265,7 +248,7 @@ const Datasets = () => {
       navigate
     )
   }, [
-    datasets,
+    allDatasets,
     navigate,
     params.iter,
     params.name,
@@ -278,13 +261,12 @@ const Datasets = () => {
   useEffect(() => {
     return () => {
       setDatasets([])
+      setAllDatasets([])
       dispatch(removeDataSets())
       setSelectedDataset({})
       cancelRequest(datasetsRef, 'cancel')
     }
   }, [dispatch])
-
-  useEffect(() => setDatasets([]), [filtersStore.tag])
 
   return (
     <DatasetsView

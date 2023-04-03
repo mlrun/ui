@@ -39,6 +39,7 @@ const initialState = {
   artifacts: [],
   dataSets: {
     allData: [],
+    filteredData: [],
     selectedRowData: {
       content: {}
     }
@@ -46,6 +47,7 @@ const initialState = {
   error: null,
   files: {
     allData: [],
+    filteredData: [],
     selectedRowData: {
       content: {}
     }
@@ -53,6 +55,7 @@ const initialState = {
   modelEndpoints: [],
   models: {
     allData: [],
+    filteredData: [],
     selectedRowData: {
       content: {}
     }

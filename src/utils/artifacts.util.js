@@ -18,12 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { cloneDeep } from 'lodash'
-import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
 
+import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
+import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
 import artifactApi from '../api/artifacts-api'
 import { ARTIFACT_TYPE, DATASET_TYPE, MODEL_TYPE } from '../constants'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { parseArtifacts } from './parseArtifacts'
+import { setFilters } from '../reducers/filtersReducer'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
@@ -134,4 +136,45 @@ export const isArtifactTagUnique = (projectName, category, artifact) => async va
   }
 
   return artifacts.length === 0
+}
+
+/**
+ * Sets artifact tags for filtering and dispatches a filter update action
+ *
+ * @param {Array.<Object>} artifacts - Array of artifact objects
+ * @param {Function} setArtifacts - Setter function for filtered artifacts
+ * @param {Function} setAllArtifacts - Setter function for all artifacts
+ * @param {Object} filters - Object containing current filter settings
+ * @param {Function} dispatch - Redux dispatch function
+ */
+export const setArtifactTags = (artifacts, setArtifacts, setAllArtifacts, filters, dispatch) => {
+  if (artifacts) {
+    const tagOptions = generateArtifactTags(artifacts)
+    const tag = !filters.tag ? TAG_FILTER_LATEST : filters.tag
+
+    if (tag && tag !== TAG_FILTER_ALL_ITEMS) {
+      const newArtifacts = artifacts.filter(artifact => artifact.tag === tag)
+
+      setArtifacts(newArtifacts)
+    } else {
+      setArtifacts(artifacts)
+    }
+
+    setAllArtifacts(artifacts)
+
+    dispatch(setFilters({ tagOptions, tag }))
+  }
+}
+
+/**
+ * Generates an array of unique artifact tags from an array of artifacts.
+ *
+ * @param {Array.<Object>} artifacts - An array of artifacts, where each artifact is an object with a `tag` property.
+ * @returns {Array.<string>} An array of unique tag strings, with any falsy values (e.g. empty strings or nulls) filtered out.
+ */
+const generateArtifactTags = artifacts => {
+  const uniqueTags = new Set()
+  artifacts.forEach(artifact => uniqueTags.add(artifact.tag))
+
+  return Array.from(uniqueTags).filter(Boolean)
 }

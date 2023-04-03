@@ -250,25 +250,27 @@ export const checkForSelectedModel = (
   projectName,
   setSelectedModel
 ) => {
-  if (name) {
-    const artifacts = selectedRowData?.[name]?.content || models
+  queueMicrotask(() => {
+    if (name) {
+      const artifacts = selectedRowData?.[name]?.content || models
 
-    if (artifacts.length > 0) {
-      const searchItem = searchArtifactItem(
-        artifacts.map(artifact => artifact.data ?? artifact),
-        name,
-        tag,
-        iter,
-        uid
-      )
+      if (artifacts.length > 0) {
+        const searchItem = searchArtifactItem(
+          artifacts.map(artifact => artifact.data ?? artifact),
+          name,
+          tag,
+          iter,
+          uid
+        )
 
-      if (!searchItem) {
-        navigate(`/projects/${projectName}/models/models}`, { replace: true })
-      } else {
-        setSelectedModel(searchItem)
+        if (!searchItem) {
+          navigate(`/projects/${projectName}/models/models}`, { replace: true })
+        } else {
+          setSelectedModel(searchItem)
+        }
       }
+    } else {
+      setSelectedModel({})
     }
-  } else {
-    setSelectedModel({})
-  }
+  })
 }

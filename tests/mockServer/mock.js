@@ -1464,7 +1464,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsS
 app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
-app.get(`${mlrunAPIIngress}/pipelines/:pipelineID`, getPipeline)
+app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipeline)
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngress}/projects/:project/artifacts`, getArtifacts)

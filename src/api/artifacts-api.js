@@ -23,11 +23,10 @@ import {
   DATASET_TYPE,
   MODEL_TYPE,
   SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../constants'
 
-const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
+const fetchArtifacts = (project, filters, config = {}) => {
   const params = {}
 
   if (filters?.labels) {
@@ -36,10 +35,6 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
 
   if (filters?.iter === SHOW_ITERATIONS) {
     params['best-iteration'] = true
-  }
-
-  if (filters?.tag && (withLatestTag || filters.tag !== TAG_FILTER_LATEST)) {
-    params.tag = filters.tag === TAG_FILTER_ALL_ITEMS ? '*' : filters.tag
   }
 
   if (filters?.name) {
@@ -104,7 +99,7 @@ const artifactsApi = {
     )
   },
   getDataSets: (project, filters, config) => {
-    return fetchArtifacts(project, filters, { ...config, params: { category: DATASET_TYPE } }, true)
+    return fetchArtifacts(project, filters, { ...config, params: { category: DATASET_TYPE } })
   },
   getFile: (project, file, iter, tag) => {
     return fetchArtifacts(
@@ -121,12 +116,9 @@ const artifactsApi = {
     )
   },
   getFiles: (project, filters) => {
-    return fetchArtifacts(
-      project,
-      filters,
-      { params: { category: ARTIFACT_OTHER_TYPE, format: 'full' } },
-      true
-    )
+    return fetchArtifacts(project, filters, {
+      params: { category: ARTIFACT_OTHER_TYPE, format: 'full' }
+    })
   },
   getModel: (project, model, iter, tag) => {
     return fetchArtifacts(
@@ -152,12 +144,7 @@ const artifactsApi = {
     })
   },
   getModels: (project, filters) => {
-    return fetchArtifacts(
-      project,
-      filters,
-      { params: { category: MODEL_TYPE, format: 'full' } },
-      true
-    )
+    return fetchArtifacts(project, filters, { params: { category: MODEL_TYPE, format: 'full' } })
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(
