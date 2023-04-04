@@ -3,19 +3,19 @@
 @import '~igz-controls/scss/borders';
 
 .navbar {
+  display: flex;
   flex-grow: 1;
   flex-shrink: 0;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 20;
-  display: flex;
+  z-index: 11;
   height: 100%;
   border-right: $tertiaryBorder;
   transition: max-width 0.3s ease-in-out;
 
-  &.hovered,
-  &.pinned {
+  &.navbar_hovered,
+  &.navbar_pinned {
     .navbar__body {
       padding: 0.5rem 1rem 0;
       overflow-y: auto;

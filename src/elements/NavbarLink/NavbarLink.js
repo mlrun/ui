@@ -29,7 +29,7 @@ const NavbarLink = ({ externalLink, icon, label, link, ...props }) => {
       {externalLink ? (
         <a href={link} target="_top" className="nav-link__button btn btn-secondary">
           {icon}
-          <span className="nav-link-label">{label}</span>
+          <span className="nav-link__label">{label}</span>
         </a>
       ) : (
         <NavLink
@@ -39,7 +39,7 @@ const NavbarLink = ({ externalLink, icon, label, link, ...props }) => {
           activeclassname="active"
         >
           {icon}
-          <span className="nav-link-label">{label}</span>
+          <span className="nav-link__label">{label}</span>
         </NavLink>
       )}
     </li>

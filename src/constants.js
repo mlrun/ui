@@ -45,7 +45,7 @@ export const DENSITY_MEDIUM = 'medium'
 export const DENSITY_CHUNKY = 'chunky'
 
 export const NAVBAR_WIDTH_CLOSED = 57
-export const NAVBAR_WIDTH_OPEN = 245
+export const NAVBAR_WIDTH_OPENED = 245
 
 /*=========== PAGES & TABS =============*/
 

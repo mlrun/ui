@@ -27,7 +27,7 @@ import Notification from '../../common/Notification/Notification'
 
 import { getTransitionEndEventName } from '../../utils/getTransitionEndEventName'
 import { fetchFrontendSpec } from '../../reducers/appReducer'
-import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPEN } from '../../constants'
+import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 
 import './Page.scss'
 
@@ -41,7 +41,7 @@ const Page = ({ isNavbarPinned, setProjectName }) => {
     marginLeft: !projectName
       ? 0
       : isNavbarPinned
-      ? `${NAVBAR_WIDTH_OPEN}px`
+      ? `${NAVBAR_WIDTH_OPENED}px`
       : `${NAVBAR_WIDTH_CLOSED}px`
   }
   const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)

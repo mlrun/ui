@@ -26,7 +26,7 @@ import { RoundedIcon } from 'igz-controls/components'
 
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
-import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPEN } from '../../constants'
+import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 
 import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
@@ -35,21 +35,20 @@ import { ReactComponent as SettingsIcon } from 'igz-controls/images/navbar/mlrun
 import './Navbar.scss'
 
 const Navbar = ({ projectName, setIsNavbarPinned }) => {
-  const [navabrState, setNavbarState] = useState({
-    isHovered: false,
-    isPinned: localStorageService.getStorageValue('mlrunUi.navbarStatic', true)
-  })
+  const [isHovered, setIsHovered] = useState(false)
+  const [isPinned, setIsPinned] = useState(
+    localStorageService.getStorageValue('mlrunUi.navbarStatic', false)
+  )
 
   const navbarClasses = classNames(
     'navbar',
-    (navabrState.isHovered || navabrState.isPinned) && 'hovered',
-    navabrState.isPinned && 'pinned'
+    isHovered && 'navbar_hovered',
+    isPinned && 'navbar_pinned'
   )
   const navbarStyles = {
-    flexBasis: `${NAVBAR_WIDTH_OPEN}px`,
-    width: `${NAVBAR_WIDTH_OPEN}px`,
-    maxWidth:
-      navabrState.isHovered || navabrState.isPinned ? NAVBAR_WIDTH_OPEN : NAVBAR_WIDTH_CLOSED + 'px'
+    flexBasis: NAVBAR_WIDTH_OPENED,
+    width: NAVBAR_WIDTH_OPENED,
+    maxWidth: isHovered || isPinned ? NAVBAR_WIDTH_OPENED : NAVBAR_WIDTH_CLOSED
   }
 
   const links = useMemo(() => {
@@ -57,25 +56,23 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
   }, [projectName])
 
   const handlePinClick = () => {
-    setNavbarState(prevNavbarState => ({ ...prevNavbarState, isPinned: !prevNavbarState.isPinned }))
-    localStorageService.setStorageValue('mlrunUi.navbarStatic', !navabrState.isPinned)
+    setIsPinned(prevIsPinned => {
+      localStorageService.setStorageValue('mlrunUi.navbarStatic', !prevIsPinned)
+      return !prevIsPinned
+    })
   }
 
   const handleOnMouseEnter = () => {
-    if (navabrState.isPinned) return
-
-    setNavbarState(prevNavbarState => ({ ...prevNavbarState, isHovered: true }))
+    if (!isPinned) setIsHovered(true)
   }
 
   const handleOnMouseLeave = () => {
-    if (navabrState.isPinned) return
-
-    setNavbarState(prevNavbarState => ({ ...prevNavbarState, isHovered: false }))
+    if (!isPinned) setIsHovered(false)
   }
 
   useEffect(() => {
-    setIsNavbarPinned(navabrState.isPinned)
-  }, [navabrState.isPinned, setIsNavbarPinned])
+    setIsNavbarPinned(isPinned)
+  }, [isPinned, setIsNavbarPinned])
 
   return (
     <nav
@@ -90,9 +87,9 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
           <div className="navbar__pin-icon">
             <RoundedIcon
               onClick={handlePinClick}
-              tooltipText={`${navabrState.isPinned ? 'Unpin' : 'Pin'} Menu`}
+              tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
             >
-              {navabrState.isPinned ? <UnPinIcon /> : <PinIcon />}
+              {isPinned ? <UnPinIcon /> : <PinIcon />}
             </RoundedIcon>
           </div>
 
