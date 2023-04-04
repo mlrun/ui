@@ -26,7 +26,7 @@ import {
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
-import { isNil } from 'lodash'
+import { isNil, uniqBy } from 'lodash'
 import { getArtifactReference, getParsedResource } from '../../utils/resources'
 
 export const pathPlaceholders = {
@@ -54,7 +54,12 @@ export const targetPathInitialState = {
 }
 
 export const pathTips = storePathType => {
-  const pathType = storePathType === 'feature-vectors' ? 'feature-vector' : 'artifact'
+  const pathType =
+    storePathType === 'feature-vectors'
+      ? 'feature-vector'
+      : storePathType === 'artifacts'
+      ? 'artifact'
+      : 'dataset'
 
   return {
     [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${pathType}s/my-project/my-${pathType}:my-tag" or "${pathType}s/my-project/my-${pathType}@my-uid`,
@@ -71,6 +76,10 @@ export const storePathTypes = [
     id: 'artifacts'
   },
   {
+    label: 'Datasets',
+    id: 'datasets'
+  },
+  {
     label: 'Feature vectors',
     id: 'feature-vectors'
   }
@@ -80,11 +89,11 @@ export const handleStoreInputPathChange = (targetPathState, setTargetPathState, 
   const pathItems = value.split('/')
   const [projectItem, projectItemReference] = getParsedResource(pathItems[2])
   const projectItems =
-    targetPathState[pathItems[0] === 'artifacts' ? 'artifacts' : 'featureVectors']
+    targetPathState[pathItems[0] !== 'feature-vectors' ? 'artifacts' : 'featureVectors']
   const projectItemIsEntered = projectItems.find(project => project.id === projectItem)
   const projectItemsReferences =
     targetPathState[
-      pathItems[0] === 'artifacts' ? 'artifactsReferences' : 'featureVectorsReferences'
+      pathItems[0] !== 'feature-vectors' ? 'artifactsReferences' : 'featureVectorsReferences'
     ]
   const projectItemReferenceIsEntered = projectItemsReferences.find(
     projectItemRef => projectItemRef.id === projectItemReference
@@ -206,23 +215,12 @@ export const generateComboboxMatchesList = (
   } else if (!inputProjectPathEntered && storePathTypes.some(type => type.id === storePathType)) {
     return projects.filter(proj => proj.id.startsWith(project))
   } else if (!inputProjectItemPathEntered) {
-    const selectedStorePathType = storePathType
-    const projectItems =
-      selectedStorePathType === 'artifacts'
-        ? artifacts
-        : selectedStorePathType === 'feature-vectors'
-        ? featureVectors
-        : null
+    const projectItems = storePathType === 'feature-vectors' ? featureVectors : artifacts
 
     return projectItems ? projectItems.filter(projItem => projItem.id.startsWith(projectItem)) : []
   } else if (!inputProjectItemReferencePathEntered) {
-    const selectedStorePathType = storePathType
     const projectItemsReferences =
-      selectedStorePathType === 'artifacts'
-        ? artifactsReferences
-        : selectedStorePathType === 'feature-vectors'
-        ? featureVectorsReferences
-        : null
+      storePathType === 'feature-vectors' ? featureVectorsReferences : artifactsReferences
 
     return projectItemsReferences
       ? projectItemsReferences.filter(projectItem =>
@@ -234,8 +232,8 @@ export const generateComboboxMatchesList = (
   }
 }
 
-export const generateArtifactsList = artifacts =>
-  artifacts
+export const generateArtifactsList = artifacts => {
+  const generatedArtifacts = artifacts
     .map(artifact => {
       const key = artifact.link_iteration ? artifact.link_iteration.db_key : artifact.key ?? ''
       return {
@@ -246,8 +244,11 @@ export const generateArtifactsList = artifacts =>
     .filter(artifact => artifact.label !== '')
     .sort((prevArtifact, nextArtifact) => prevArtifact.id.localeCompare(nextArtifact.id))
 
-export const generateArtifactsReferencesList = artifacts =>
-  artifacts
+  return uniqBy(generatedArtifacts, 'id')
+}
+
+export const generateArtifactsReferencesList = artifacts => {
+  const generatedArtifacts = artifacts
     .map(artifact => {
       const artifactReference = getArtifactReference(artifact)
 
@@ -268,3 +269,6 @@ export const generateArtifactsReferencesList = artifacts =>
         return prevRefTree.localeCompare(nextRefTree)
       }
     })
+
+  return uniqBy(generatedArtifacts, 'id')
+}

@@ -34,7 +34,9 @@ import {
   externalOfflineKindOptions,
   ONLINE,
   PARQUET,
-  checkboxModels
+  checkboxModels,
+  isParquetPathValid,
+  getInvalidParquetPathMessage
 } from './featureSetsPanelTargetStore.util'
 
 import { ReactComponent as Online } from 'igz-controls/images/nosql.svg'
@@ -48,6 +50,7 @@ import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
   data,
+  frontendSpecIsNotEmpty,
   handleAdvancedLinkClick,
   handleDiscardPathChange,
   handleExternalOfflineKindPathOnBlur,
@@ -96,7 +99,7 @@ const FeatureSetsPanelTargetStoreView = ({
                     <Input
                       density="normal"
                       floatingLabel
-                      focused
+                      focused={frontendSpecIsNotEmpty}
                       invalid={!validation.isOnlineTargetPathValid}
                       label="Path"
                       onChange={path =>
@@ -164,7 +167,7 @@ const FeatureSetsPanelTargetStoreView = ({
               <Offline /> Offline
               <Tip
                 className="checkbox__label-tip"
-                text="Store the feature set as a Parquet file in Iguazio object store"
+                text="Store the feature set as a Parquet file or a partitioned Parquet directory"
               />
             </CheckBox>
           </div>
@@ -176,15 +179,19 @@ const FeatureSetsPanelTargetStoreView = ({
                     <Input
                       density="normal"
                       floatingLabel
-                      focused
-                      invalid={!validation.isOfflineTargetPathValid}
+                      focused={frontendSpecIsNotEmpty}
+                      invalid={isParquetPathValid(
+                        validation.isOfflineTargetPathValid,
+                        data.parquet
+                      )}
+                      invalidText={getInvalidParquetPathMessage(data.parquet)}
                       label="Path"
-                      onChange={path =>
+                      onChange={path => {
                         setData(state => ({
                           ...state,
                           parquet: { ...state.parquet, path }
                         }))
-                      }
+                      }}
                       placeholder={
                         'v3io:///projects/{project}/FeatureStore/{name}/{run_id}/parquet/sets/{name}.parquet'
                       }
@@ -200,7 +207,14 @@ const FeatureSetsPanelTargetStoreView = ({
                       wrapperClassName="offline-path"
                     />
                     <div className="target-store__path-actions editable">
-                      <RoundedIcon onClick={handleOfflineKindPathChange} tooltipText="Apply">
+                      <RoundedIcon
+                        disabled={isParquetPathValid(
+                          validation.isOfflineTargetPathValid,
+                          data.parquet
+                        )}
+                        onClick={handleOfflineKindPathChange}
+                        tooltipText="Apply"
+                      >
                         <Checkmark className="target-store__apply-btn" />
                       </RoundedIcon>
                       <RoundedIcon
@@ -228,6 +242,7 @@ const FeatureSetsPanelTargetStoreView = ({
                   </>
                 )}
                 <CheckBox
+                  disabled={targetsPathEditData.parquet.isEditMode}
                   item={{ id: 'partitioned', label: 'Partition' }}
                   onChange={id => triggerPartitionCheckbox(id, PARQUET)}
                   selectedId={data.parquet.partitioned}
@@ -393,6 +408,7 @@ const FeatureSetsPanelTargetStoreView = ({
 
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,

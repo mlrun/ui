@@ -91,10 +91,6 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
 
   const handleSelectFilter = tag => {
     if (tag.id !== tagFilter) {
-      if (params.jobId || params.name) {
-        navigate(`/projects/${params.projectName}/${page.toLowerCase()}`)
-      }
-
       setTagFilter(tag.id)
       onChange(tag.id)
     }

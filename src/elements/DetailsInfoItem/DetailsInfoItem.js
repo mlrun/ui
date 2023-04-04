@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
@@ -71,10 +71,6 @@ const DetailsInfoItem = React.forwardRef(
       handleDiscardChanges(currentField)
       item.handleDiscardChanges && item.handleDiscardChanges(formState, detailsStore)
     }
-
-    const chipsOnClick = useCallback(() => {
-      onClick(currentField, item?.editModeType, chipsData.chips)
-    }, [chipsData.chips, currentField, item?.editModeType, onClick])
 
     if (item?.editModeEnabled && item?.editModeType === 'chips') {
       return (
@@ -144,7 +140,6 @@ const DetailsInfoItem = React.forwardRef(
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             elements={chipsData.chips}
-            onClick={chipsOnClick}
             visibleChipsMaxLength="all"
           />
         </div>

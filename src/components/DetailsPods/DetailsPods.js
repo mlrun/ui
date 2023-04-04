@@ -23,6 +23,7 @@ import { connect } from 'react-redux'
 import Prism from 'prismjs'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
+import Loader from '../../common/Loader/Loader'
 
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -52,9 +53,11 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
 
   return (
     <div className="pods">
-      {detailsStore.pods.error ? (
+      {detailsStore.pods.loading ? (
+        <Loader />
+      ) : detailsStore.pods.error ? (
         <div className="pods__error">Failed to fetch data. Please try again later.</div>
-      ) : table.length ? (
+      ) : table.length > 0 ? (
         <>
           <div className="pods__table">
             <div className="pods__table-body">
@@ -63,6 +66,10 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
                   'pods__table-row',
                   selectedPod?.value === row.value && 'row_active'
                 )
+                const podStatus =
+                  row.status?.phase?.toLowerCase() === 'pending'
+                    ? 'pending...'
+                    : row.status?.phase?.toLowerCase() ?? ''
 
                 return (
                   <div className={rowClassNames} key={rowIndex} onClick={() => setSelectedPod(row)}>
@@ -72,12 +79,12 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
                     >
                       {row.value}
                     </Tooltip>
-                    {row.pending && (
+                    {row.status?.phase && (
                       <Tooltip
                         className="data-ellipsis"
-                        template={<TextTooltipTemplate text="pending..." />}
+                        template={<TextTooltipTemplate text={podStatus} />}
                       >
-                        pending...
+                        {podStatus}
                       </Tooltip>
                     )}
                   </div>
@@ -106,7 +113,7 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
           </div>
         </>
       ) : (
-        <NoData message={noDataMessage} />
+        detailsStore.pods.podsList.length === 0 && <NoData message={noDataMessage} />
       )}
     </div>
   )

@@ -35,6 +35,7 @@ import {
 } from '../../constants'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
+import { getPreemptionMode } from '../../utils/getPreemptionMode'
 
 export const getParameters = functionParameters => {
   return functionParameters
@@ -153,7 +154,7 @@ export const getNodeSelectors = selectedFunction => {
     .value()
 }
 
-export const getPreemptionMode = selectedFunction => {
+export const getFunctionPreemptionMode = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
@@ -247,15 +248,15 @@ export const generateTableData = (
   mode,
   frontendSpec
 ) => {
-  const defaultResources = frontendSpec?.default_function_pod_resources
+  const defaultResources = frontendSpec?.default_function_pod_resources ?? {}
   const functionParameters = getFunctionParameters(selectedFunction, method)
   const [functionPriorityClassName] = getFunctionPriorityClass(selectedFunction)
   const [limits] = getLimits(selectedFunction)
   const [requests] = getRequests(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
-  const [preemptionMode] = getPreemptionMode(selectedFunction)
+  const [preemptionMode] = getFunctionPreemptionMode(selectedFunction)
   const jobPriorityClassName =
-    functionPriorityClassName || frontendSpec.default_function_priority_class_name
+    functionPriorityClassName || frontendSpec.default_function_priority_class_name || ''
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
   const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
@@ -279,12 +280,14 @@ export const generateTableData = (
     memoryUnit: getDefaultMemoryUnit(requests ?? {}, defaultResources?.requests.memory)
   }
 
-  if (frontendSpec.feature_flags.preemption_nodes === 'enabled') {
-    panelDispatch({
-      type: panelActions.SET_PREEMPTION_MODE,
-      payload: preemptionMode || frontendSpec.default_function_preemption_mode || 'prevent'
-    })
-  }
+  panelDispatch({
+    type: panelActions.SET_PREEMPTION_MODE,
+    payload: getPreemptionMode(
+      frontendSpec.feature_flags?.preemption_nodes,
+      preemptionMode,
+      frontendSpec.default_function_preemption_mode
+    )
+  })
 
   if (jobPriorityClassName) {
     panelDispatch({

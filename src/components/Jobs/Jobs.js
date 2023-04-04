@@ -38,7 +38,14 @@ import {
   SCHEDULE_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
+import {
+  actionCreator,
+  actionsMenuHeader,
+  actionsMenuHeaderDemo,
+  monitorJob,
+  rerunJob,
+  tabs
+} from './jobs.util'
 import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
 import { useMode } from '../../hooks/mode.hook'
 
@@ -130,7 +137,7 @@ const Jobs = ({ fetchJobFunction }) => {
         <div className="content__header">
           <Breadcrumbs />
           <PageActionsMenu
-            actionsMenuHeader={actionsMenuHeader}
+            actionsMenuHeader={isDemoMode ? actionsMenuHeaderDemo : actionsMenuHeader}
             onClick={handleActionsMenuClick}
             showActionsMenu={true}
           />

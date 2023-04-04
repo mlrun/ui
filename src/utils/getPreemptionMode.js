@@ -17,10 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const messagesByKind = {
-  artifact:
-    'This dialog enable users to register an artifact in Iguazio database. Once a artifact is registered it can be consumed by jobs and workflows.',
-  model: '',
-  dataset:
-    'This dialog enable users to register an artifact as a dataset in Iguazio database. Once the dataset is registered it can be consumed by jobs and workflows.'
+export const getPreemptionMode = (preemption_nodes, defaultData, frontendSpecPreemptionMode) => {
+  return preemption_nodes === 'enabled'
+    ? defaultData || frontendSpecPreemptionMode || 'prevent'
+    : ''
 }

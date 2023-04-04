@@ -59,7 +59,8 @@ export const getInfoHeaders = isSpark =>
         { label: 'Output path', id: 'outputPath' },
         { label: 'Total iterations', id: 'iterations' }
       ]
-export const actionsMenuHeader = 'Batch run'
+export const actionsMenuHeaderDemo = 'Batch run'
+export const actionsMenuHeader = 'New job'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
@@ -103,7 +104,6 @@ export const isJobAbortable = (job, abortableFunctionKinds) =>
   (abortableFunctionKinds ?? [])
     .map(kind => `kind: ${kind}`)
     .some(kindLabel => job?.labels?.includes(kindLabel))
-
 
 export const isJobKindDask = (jobLabels = []) => {
   return jobLabels?.includes('kind: dask')

@@ -204,15 +204,17 @@ const MonitorJobs = ({
         handleMonitoring,
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
-        toggleConvertedYaml
+        toggleConvertedYaml,
+        isDemoMode
       )
   }, [
-    appStore.frontendSpec.abortable_function_kinds,
-    appStore.frontendSpec.jobs_dashboard_url,
-    handleMonitoring,
     handleRerunJob,
+    appStore.frontendSpec.jobs_dashboard_url,
+    appStore.frontendSpec.abortable_function_kinds,
+    handleMonitoring,
     handleConfirmAbortJob,
-    toggleConvertedYaml
+    toggleConvertedYaml,
+    isDemoMode
   ])
 
   const modifyAndSelectRun = useCallback(

@@ -18,9 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Outlet } from 'react-router-dom'
 import classNames from 'classnames'
+import { isEmpty } from 'lodash'
 
 import Notification from '../../common/Notification/Notification'
 
@@ -31,16 +32,16 @@ import { NAVBAR_WIDTH } from '../../constants'
 import './Page.scss'
 
 const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
-  const params = useParams()
+  const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
-  const projectName = params.projectName
   const transitionEndEventName = getTransitionEndEventName()
   const pinnedClasses = classNames(
     !(isNavbarPinned && projectName) && 'unpinned',
     isHeaderShown && 'has-header'
   )
   const mainStyles = { marginLeft: isNavbarPinned && projectName ? `${NAVBAR_WIDTH}px` : 0 }
+  const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)
 
   useEffect(() => {
     setProjectName(projectName)
@@ -56,12 +57,21 @@ const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
   }, [isNavbarPinned, transitionEndEventName])
 
   useEffect(() => {
-    dispatch(fetchFrontendSpec())
+    if (isEmpty(frontendSpec)) {
+      dispatch(fetchFrontendSpec({ frontendSpec, frontendSpecPopupIsOpened }))
+    }
+  }, [dispatch, frontendSpec, frontendSpecPopupIsOpened])
 
-    const interval = setInterval(() => dispatch(fetchFrontendSpec()), 60000)
+  useEffect(() => {
+    const interval = setInterval(
+      () => dispatch(fetchFrontendSpec({ frontendSpec, frontendSpecPopupIsOpened })),
+      60000
+    )
 
-    return () => clearInterval(interval)
-  }, [dispatch])
+    return () => {
+      clearInterval(interval)
+    }
+  }, [dispatch, frontendSpec, frontendSpecPopupIsOpened])
 
   return (
     <>

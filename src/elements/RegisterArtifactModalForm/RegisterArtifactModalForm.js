@@ -31,7 +31,7 @@ import { getChipOptions } from '../../utils/getChipOptions'
 const RegisterArtifactModalForm = ({
   formState,
   initialValues,
-  messageByKind,
+  messagesByKind,
   projectName,
   setFieldState,
   showType
@@ -61,14 +61,11 @@ const RegisterArtifactModalForm = ({
   return (
     <div className="form">
       <div className="form-row">
-        {messageByKind && (
+        {messagesByKind?.title && (
           <div className="form-text">
-            <span>{messageByKind}</span>
+            <span>{messagesByKind.title}</span>
             <div>
-              <p>
-                All you need to do is enter the name of the artifact and the URL (e.g.
-                s3://my-bucket/path).
-              </p>
+              <p>{messagesByKind?.subTitle}</p>
               <a
                 href="https://docs.mlrun.org/en/latest/store/artifacts.html"
                 target="_blank"
@@ -88,7 +85,7 @@ const RegisterArtifactModalForm = ({
             label="Name"
             name="metadata.key"
             required
-            tip="Artifact names in the same project must be unique"
+            tip={messagesByKind?.nameTip}
             validationRules={getValidationRules('artifact.name', {
               name: 'ArtifactExists',
               label: 'Artifact name should be unique',
@@ -147,7 +144,7 @@ RegisterArtifactModalForm.propTypes = {
   formState: PropTypes.object.isRequired,
   showType: PropTypes.bool,
   projectName: PropTypes.string.isRequired,
-  messageByKind: PropTypes.string,
+  messagesByKind: PropTypes.object,
   initialValues: PropTypes.object.isRequired,
   setFieldState: PropTypes.func.isRequired
 }

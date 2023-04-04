@@ -38,7 +38,8 @@ import {
   REMOVE_INFO_CONTENT,
   RESET_CHANGES,
   SET_FILTERS_WAS_HANDLED,
-  SET_EDIT_MODE
+  SET_EDIT_MODE,
+  FETCH_JOB_PODS_BEGIN
 } from '../constants'
 
 const initialState = {
@@ -57,6 +58,7 @@ const initialState = {
   },
   modelFeatureVectorData: {},
   pods: {
+    loading: true,
     podsList: [],
     podsPending: [],
     podsTooltip: []
@@ -67,12 +69,12 @@ const initialState = {
 
 const detailsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case FETCH_JOB_PODS_SUCCESS:
+    case FETCH_JOB_PODS_BEGIN:
       return {
         ...state,
-        error: null,
         pods: {
-          ...payload
+          ...state.pods,
+          loading: true
         }
       }
     case FETCH_JOB_PODS_FAILURE:
@@ -80,7 +82,17 @@ const detailsReducer = (state = initialState, { type, payload }) => {
         ...state,
         error: payload,
         pods: {
-          ...initialState.pods
+          ...initialState.pods,
+          loading: false
+        }
+      }
+    case FETCH_JOB_PODS_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        pods: {
+          ...payload,
+          loading: false
         }
       }
     case FETCH_MODEL_FEATURE_VECTOR_BEGIN:

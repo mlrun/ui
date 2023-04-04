@@ -57,6 +57,7 @@ import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
+import { getPreemptionMode } from '../../utils/getPreemptionMode'
 
 const volumeTypesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
@@ -80,9 +81,9 @@ export const generateJobWizardData = (
   const [limits] = getLimits(functions)
   const [requests] = getRequests(functions)
   const environmentVariables = getEnvironmentVariables(functions)
-  const [preemptionMode] = getPreemptionMode(functions)
+  const [preemptionMode] = getFunctionPreemptionMode(functions)
   const jobPriorityClassName =
-    functionPriorityClassName || frontendSpec.default_function_priority_class_name
+    functionPriorityClassName || frontendSpec.default_function_priority_class_name || ''
   const nodeSelectorTable = getNodeSelectors(functions)
   const volumesTable = getVolumesData(functions)
   const gpuType = getLimitsGpuType(limits)
@@ -134,10 +135,11 @@ export const generateJobWizardData = (
     scheduleData
   }
 
-  if (frontendSpec.feature_flags.preemption_nodes === 'enabled') {
-    jobFormData.resources.preemptionMode =
-      preemptionMode || frontendSpec.default_function_preemption_mode || 'prevent'
-  }
+  jobFormData.resources.preemptionMode = getPreemptionMode(
+    frontendSpec.feature_flags?.preemption_nodes,
+    preemptionMode,
+    frontendSpec.default_function_preemption_mode
+  )
 
   if (jobPriorityClassName) {
     jobFormData.resources.jobPriorityClassName = jobPriorityClassName
@@ -201,8 +203,8 @@ export const generateJobWizardDefaultData = (
       parametersTable: {}
     },
     resources: {
-      preemptionMode: defaultData.function?.spec?.preemption_mode,
-      jobPriorityClassName: defaultData.function?.spec?.priority_class_name,
+      preemptionMode: defaultData.function?.spec?.preemption_mode || '',
+      jobPriorityClassName: defaultData.function?.spec?.priority_class_name || '',
       currentLimits,
       currentRequest,
       nodeSelectorTable: parseObjectToKeyValue(defaultData.function?.spec?.node_selector ?? []),
@@ -382,7 +384,7 @@ const getEnvironmentVariables = selectedFunction => {
     .value()
 }
 
-const getPreemptionMode = selectedFunction => {
+const getFunctionPreemptionMode = selectedFunction => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {

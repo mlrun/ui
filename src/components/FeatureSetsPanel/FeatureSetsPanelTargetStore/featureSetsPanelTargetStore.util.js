@@ -146,12 +146,91 @@ export const targetsPathEditDataInitialState = {
  * @param {string} [suffix] - Optional. The suffix to add to the end of the path.
  * @returns {string} The generated path.
  */
-export const generatePath = (prefixes, project, kind, name = '{name}', suffix = '') => {
-  const path = prefixes[kind] || prefixes.default
+export const generatePath = (prefixes, project, kind, name, suffix) => {
+  if (prefixes) {
+    const path = prefixes[kind] || prefixes.default
 
-  return `${path.replace(
-    /{project}|{name}|{kind}/gi,
-    matchToReplace =>
-      ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
-  )}/sets/${name || '{name}'}${suffix ? '.' + suffix : ''}`
+    return `${path.replace(
+      /{project}|{name}|{kind}/gi,
+      matchToReplace =>
+        ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
+    )}/sets/${name || '{name}'}${suffix ? '.' + suffix : ''}`
+  }
+
+  return ''
+}
+
+export const handlePathChange = (
+  targetType,
+  targetKindName,
+  isValid,
+  targetsPathEditData,
+  data,
+  target,
+  targets,
+  targetEditModeIsClosed,
+  setTargetsPathEditData,
+  setDisableButtons,
+  setNewFeatureSetTarget
+) => {
+  const currentTargetPathEditData = targetsPathEditData[targetType]
+
+  if (currentTargetPathEditData.isEditMode && isValid) {
+    const isTargetPathModified = target.path !== data[targetType].path
+
+    setTargetsPathEditData(state => ({
+      ...state,
+      [targetType]: {
+        isEditMode: false,
+        isModified: currentTargetPathEditData.isModified
+          ? state[targetType].isModified
+          : isTargetPathModified
+      }
+    }))
+
+    setDisableButtons(state => ({
+      ...state,
+      [targetEditModeIsClosed]: true
+    }))
+
+    if (isTargetPathModified) {
+      const updatedTargets = targets.map(targetKind => {
+        if (targetKind.name === targetKindName) {
+          return { ...targetKind, path: data[targetType].path }
+        }
+        return targetKind
+      })
+
+      setNewFeatureSetTarget(updatedTargets)
+    }
+  } else {
+    setTargetsPathEditData(state => ({
+      ...state,
+      [targetType]: {
+        ...currentTargetPathEditData,
+        isEditMode: true
+      }
+    }))
+
+    setDisableButtons(state => ({
+      ...state,
+      [targetEditModeIsClosed]: false
+    }))
+  }
+}
+
+export const isParquetPathValid = (validation, parquet) => {
+  return (
+    !validation ||
+    Boolean(parquet.partitioned && /\.\w*\s*$/.test(parquet.path)) ||
+    Boolean(!parquet.partitioned && !/\.parquet\s*$|\.pq\s*$/.test(parquet.path))
+  )
+}
+
+export const getInvalidParquetPathMessage = parquet => {
+  return parquet.partitioned && /\.\w*\s*$/.test(parquet.path)
+    ? 'The partitioned Parquet target for storey engine must be a directory. (The directory name must not end in .parquet/.pq.)'
+    : !parquet.partitioned && !/\.parquet\s*$|\.pq\s*$/.test(parquet.path)
+    ? 'The Parquet target for storey engine file path must have a .parquet/.pq suffix.'
+    : 'This field is invalid.'
 }

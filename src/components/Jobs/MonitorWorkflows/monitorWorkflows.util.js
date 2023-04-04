@@ -93,12 +93,13 @@ export const generateActionsMenu = (
   handleMonitoring,
   abortable_function_kinds,
   handleConfirmAbortJob,
-  toggleConvertedYaml
+  toggleConvertedYaml,
+  isDemoMode
 ) =>
   job?.uid
     ? [
         {
-          label: 'Batch re-run',
+          label: isDemoMode ? 'Batch re-run' : 'Re-run',
           icon: <Run />,
           hidden: ['local', ''].includes(job?.ui?.originalContent.metadata.labels.kind),
           onClick: handleRerunJob

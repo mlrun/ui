@@ -165,7 +165,13 @@ const MonitorWorkflows = ({
         handleRemoveFunctionLogs,
         selectedJob?.labels
       ),
-    [handleFetchJobLogs, handleFetchFunctionLogs, handleRemoveFunctionLogs, selectedFunction, selectedJob]
+    [
+      handleFetchJobLogs,
+      handleFetchFunctionLogs,
+      handleRemoveFunctionLogs,
+      selectedFunction,
+      selectedJob
+    ]
   )
 
   const refreshJobs = useCallback(() => {
@@ -235,15 +241,17 @@ const MonitorWorkflows = ({
         handleMonitoring,
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
-        toggleConvertedYaml
+        toggleConvertedYaml,
+        isDemoMode
       )
   }, [
-    appStore.frontendSpec.abortable_function_kinds,
-    appStore.frontendSpec.jobs_dashboard_url,
-    handleMonitoring,
     handleRerunJob,
+    appStore.frontendSpec.jobs_dashboard_url,
+    appStore.frontendSpec.abortable_function_kinds,
+    handleMonitoring,
     handleConfirmAbortJob,
-    toggleConvertedYaml
+    toggleConvertedYaml,
+    isDemoMode
   ])
 
   const modifyAndSelectRun = useCallback(

@@ -154,7 +154,7 @@ const FunctionsPanel = ({
         const data = {
           function: { ...functionsStore.newFunction },
           with_mlrun: functionsStore.newFunction.spec.build.commands.includes(
-            appStore.frontendSpec.function_deployment_mlrun_command
+            appStore.frontendSpec?.function_deployment_mlrun_command
           )
         }
 

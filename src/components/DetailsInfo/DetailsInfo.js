@@ -72,14 +72,14 @@ const DetailsInfo = React.forwardRef(
       }
     }, [onApplyChanges])
 
-    const handleDiscardChanges = useCallback(field => {
+    const handleDiscardChanges = useCallback(() => {
       detailsInfoDispatch({
         type: detailsInfoActions.RESET_EDIT_MODE
       })
     }, [])
 
     const handleInfoItemClick = useCallback(
-      (field, fieldType, info) => {
+      (field, fieldType) => {
         if (isEveryObjectValueEmpty(detailsInfoState.editMode)) {
           detailsInfoDispatch({
             type: detailsInfoActions.SET_EDIT_MODE,

@@ -52,7 +52,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
             />
           </div>
         )}
-        {frontendSpec.feature_flags.preemption_nodes === 'enabled' && (
+        {frontendSpec.feature_flags?.preemption_nodes === 'enabled' && (
           <div className="form-col-auto resources__select">
             <FormSelect
               label="Spot Instances"
