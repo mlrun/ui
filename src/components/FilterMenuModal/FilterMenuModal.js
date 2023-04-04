@@ -36,7 +36,7 @@ import './filterMenuModal.scss'
 
 export const FilterMenuWizardContext = React.createContext({})
 
-const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) => {
+const FilterMenuModal = ({ children, filterMenuName, initialValues, values, wizardClassName }) => {
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
   const filtersIconButtonRef = useRef()
   const dispatch = useDispatch()
@@ -50,6 +50,11 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
   const filtersIconClassnames = classnames(
     'filters-button',
     !isEqual(filtersData?.values, filtersData?.initialValues) && 'filters-button_applied'
+  )
+
+  const filtersWizardClassnames = classnames(
+    'filters-wizard',
+    wizardClassName
   )
 
   useEffect(() => {
@@ -110,7 +115,7 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
             </RoundedIcon>
             {filtersWizardIsShown && (
               <PopUpDialog
-                className="filters-wizard"
+                className={filtersWizardClassnames}
                 headerIsHidden
                 customPosition={{
                   element: filtersIconButtonRef,
@@ -127,10 +132,15 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
   )
 }
 
+FilterMenuModal.defaultProps = {
+  wizardClassName: ''
+}
+
 FilterMenuModal.propTypes = {
   filterMenuName: PropTypes.string.isRequired,
   initialValues: PropTypes.shape({}).isRequired,
-  values: PropTypes.shape({}).isRequired
+  values: PropTypes.shape({}).isRequired,
+  wizardClassName: PropTypes.string
 }
 
 export default FilterMenuModal
