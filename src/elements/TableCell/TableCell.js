@@ -148,7 +148,7 @@ const TableCell = ({
   } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
       <div className={`table-body__cell ${data.class} ${className}`}>
-        <CopyToClipboard tooltipText="Copy URI" onClick={() => data.actionHandler(item)} />
+        <CopyToClipboard tooltipText="Copy URI" textToCopy={data.actionHandler(item)} />
       </div>
     )
   } else if (data.type === 'hash') {

@@ -147,8 +147,8 @@ const DetailsInfoItem = React.forwardRef(
       return (
         <CopyToClipboard
           className="details-item__data details-item__copy-to-clipboard"
+          textToCopy={info}
           tooltipText="Click to copy"
-          onClick={() => info}
         >
           {info}
         </CopyToClipboard>
@@ -162,8 +162,8 @@ const DetailsInfoItem = React.forwardRef(
                 {infoItem.title}
                 <CopyToClipboard
                   className="details-item__btn-copy"
+                  textToCopy={infoItem.code}
                   tooltipText="Copy"
-                  onClick={() => infoItem.code}
                 />
               </div>
               <pre>

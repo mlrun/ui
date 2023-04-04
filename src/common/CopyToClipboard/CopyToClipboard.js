@@ -26,7 +26,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
-const CopyToClipboard = ({ children, className, onClick, tooltipText }) => {
+const CopyToClipboard = ({ children, className, textToCopy, tooltipText }) => {
   const dispatch = useDispatch()
 
   const copyToClipboard = textToCopy => {
@@ -34,40 +34,37 @@ const CopyToClipboard = ({ children, className, onClick, tooltipText }) => {
       .query({ name: 'clipboard-read', allowWithoutGesture: false })
       .then(result => {
         if (result.state === 'granted' || result.state === 'prompt') {
-          navigator.clipboard
-            .writeText(textToCopy)
-            .then(() => {
-              dispatch(
-                setNotification({
-                  status: 200,
-                  id: Math.random(),
-                  message: 'Copied to clipboard successfully'
-                })
-              )
-            })
-            .catch(err => {
-              dispatch(
-                setNotification({
-                  status: 400,
-                  id: Math.random(),
-                  message: 'Copy to clipboard failed'
-                })
-              )
-              console.error('Failed to copy: ', err)
-            })
+          return navigator.clipboard.writeText(textToCopy).then(() => {
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Copied to clipboard successfully'
+              })
+            )
+          })
         }
       })
-      .catch(err => console.error('Write access denied!', err))
+      .catch(err => {
+        dispatch(
+          setNotification({
+            error: err,
+            status: 400,
+            id: Math.random(),
+            message: 'Copy to clipboard failed'
+          })
+        )
+      })
   }
 
   return (
     <div className={className} data-testid="copy-to-clipboard">
       {children ? (
         <Tooltip template={<TextTooltipTemplate text={tooltipText} />}>
-          <span onClick={() => copyToClipboard(onClick())}>{children}</span>
+          <span onClick={() => copyToClipboard(textToCopy)}>{children}</span>
         </Tooltip>
       ) : (
-        <RoundedIcon tooltipText={tooltipText} onClick={() => copyToClipboard(onClick())}>
+        <RoundedIcon tooltipText={tooltipText} onClick={() => copyToClipboard(textToCopy)}>
           <Copy />
         </RoundedIcon>
       )}
@@ -75,10 +72,15 @@ const CopyToClipboard = ({ children, className, onClick, tooltipText }) => {
   )
 }
 
+CopyToClipboard.defaultProps = {
+  children: null,
+  className: ''
+}
+
 CopyToClipboard.propTypes = {
   children: PropTypes.string,
   className: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  textToCopy: PropTypes.string.isRequired,
   tooltipText: PropTypes.string.isRequired
 }
 

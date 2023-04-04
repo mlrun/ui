@@ -90,7 +90,7 @@ const DetailsArtifactsView = ({
                   </Tooltip>
                 </div>
                 <div className="item-artifacts__row-item">
-                  <CopyToClipboard onClick={() => artifact.target_path} tooltipText="Copy URI" />
+                  <CopyToClipboard textToCopy={artifact.target_path} tooltipText="Copy URI" />
                   <RoundedIcon tooltipText="Show Details">
                     <Link
                       target="_blank"
