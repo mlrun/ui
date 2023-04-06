@@ -20,8 +20,6 @@ such restriction.
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
-
 import { getDateAndTimeByFormat } from '../../utils/'
 import { PROJECT_MONITOR } from '../../constants'
 
@@ -52,9 +50,10 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
           </li>
           <li>
             <span className="project-details__details-label">Status:</span>
-            <Tooltip template={<TextTooltipTemplate text={projectData.status.state} />}>
+            <div>
               <i className={`state-${projectData.status.state}`} />
-            </Tooltip>
+              <span>{projectData.status.state}</span>
+            </div>
           </li>
           <li>
             {location.pathname.includes(PROJECT_MONITOR) ? (

@@ -3,17 +3,24 @@
 .nav-link {
   margin-bottom: 10px;
 
+  &:last-child {
+    margin: 0;
+  }
+
   &__button {
     &.btn {
       flex-flow: row nowrap;
       justify-content: flex-start;
       width: 100%;
       min-height: 48px;
+      min-width: 48px;
+      padding: 0 16px 0 13px;
       color: $poloBlue;
       font-weight: normal;
       background-color: transparent;
       border: 2px solid transparent;
       border-radius: 8px;
+      white-space: nowrap;
       cursor: pointer;
       transition: border-color 0.3s ease-in-out;
 
@@ -64,6 +71,16 @@
       &.btn {
         border-color: transparent;
       }
+    }
+  }
+
+  &__label {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+
+    .navbar.navbar_hovered &,
+    .navbar.navbar_pinned & {
+      opacity: 1;
     }
   }
 }

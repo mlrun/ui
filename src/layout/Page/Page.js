@@ -27,20 +27,23 @@ import Notification from '../../common/Notification/Notification'
 
 import { getTransitionEndEventName } from '../../utils/getTransitionEndEventName'
 import { fetchFrontendSpec } from '../../reducers/appReducer'
-import { NAVBAR_WIDTH } from '../../constants'
+import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 
 import './Page.scss'
 
-const Page = ({ isHeaderShown, isNavbarPinned, setProjectName }) => {
+const Page = ({ isNavbarPinned, setProjectName }) => {
   const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
   const transitionEndEventName = getTransitionEndEventName()
-  const pinnedClasses = classNames(
-    !(isNavbarPinned && projectName) && 'unpinned',
-    isHeaderShown && 'has-header'
-  )
-  const mainStyles = { marginLeft: isNavbarPinned && projectName ? `${NAVBAR_WIDTH}px` : 0 }
+  const pinnedClasses = classNames(!(isNavbarPinned && projectName) && 'unpinned')
+  const mainStyles = {
+    marginLeft: !projectName
+      ? 0
+      : isNavbarPinned
+      ? `${NAVBAR_WIDTH_OPENED}px`
+      : `${NAVBAR_WIDTH_CLOSED}px`
+  }
   const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)
 
   useEffect(() => {

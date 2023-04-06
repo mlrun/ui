@@ -53,6 +53,17 @@ body {
   display: flex;
   width: 100%;
 
+  &-container {
+    display: flex;
+    position: relative;
+    width: 100%;
+
+    &.has-header {
+      height: calc(100vh - #{$headerHeight});
+      margin-top: $headerHeight;
+    }
+  }
+
   &-version {
     font-size: 0.75rem;
   }
@@ -128,11 +139,6 @@ main {
   padding: 0;
   overflow: hidden;
   transition: margin-left 0.3s ease-in-out;
-
-  &.has-header {
-    height: calc(100vh - #{$headerHeight});
-    margin-top: $headerHeight;
-  }
 
   &.unpinned {
     .create-container__header,
@@ -230,22 +236,6 @@ main {
   &:hover {
     .sort-icon {
       display: block;
-    }
-  }
-}
-
-.navbar {
-  &.has-header {
-    margin-top: $headerHeight;
-    padding-bottom: $headerHeight;
-  }
-
-  &.pinned {
-    transform: translateX(0);
-
-    .navbar__toggler {
-      right: 0;
-      opacity: 0;
     }
   }
 }

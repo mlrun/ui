@@ -32,7 +32,7 @@ const Loader = ({ secondary, section, small }) => {
   )
 
   return (
-    <div className={wrapperClassNames}>
+    <div className={wrapperClassNames} data-testid="loader">
       <div className="loader" />
     </div>
   )
