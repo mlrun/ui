@@ -23,6 +23,7 @@
       border-bottom: $secondaryBorder;
 
       &__btn-copy {
+        display: inline-flex;
         vertical-align: middle;
       }
 
