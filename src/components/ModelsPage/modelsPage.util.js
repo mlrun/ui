@@ -23,6 +23,6 @@ import { MODEL_ENDPOINTS_TAB, MODELS_TAB, REAL_TIME_PIPELINES_TAB } from '../../
 export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB]
 export const tabs = [
   { id: MODELS_TAB, label: 'Models' },
-  { id: MODEL_ENDPOINTS_TAB, label: 'Model endpoints', preview: true },
+  { id: MODEL_ENDPOINTS_TAB, label: 'Model endpoints' },
   { id: REAL_TIME_PIPELINES_TAB, label: 'Real-time pipelines' }
 ]

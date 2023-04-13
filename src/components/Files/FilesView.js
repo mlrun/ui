@@ -21,7 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 
-import FilterMenu from '../FilterMenu/FilterMenu'
+import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -36,6 +36,7 @@ import { ARTIFACT_TYPE, FILES_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './files.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { removeFile } from '../../reducers/artifactsReducer'
 
 const FilesView = React.forwardRef(
   (
@@ -53,7 +54,9 @@ const FilesView = React.forwardRef(
       pageData,
       selectedFile,
       selectedRowData,
+      setFiles,
       setSelectedFile,
+      setSelectedRowData,
       tableContent,
       toggleConvertedYaml
     },
@@ -82,12 +85,14 @@ const FilesView = React.forwardRef(
           <div className="content">
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
-              <div className="content__action-bar">
-                <FilterMenu
-                  filters={filters}
-                  onChange={handleRefresh}
+              <div className="content__action-bar-wrapper">
+                <ArtifactsActionBar
+                  filterMenuName={FILES_PAGE}
+                  handleRefresh={handleRefresh}
                   page={FILES_PAGE}
-                  withoutExpandButton
+                  removeSelectedItem={removeFile}
+                  setContent={setFiles}
+                  setSelectedRowData={setSelectedRowData}
                 />
               </div>
               {artifactsStore.loading ? null : files.length === 0 ? (

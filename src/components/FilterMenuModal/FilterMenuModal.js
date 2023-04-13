@@ -22,10 +22,10 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
-import { has, isEqual, reduce } from 'lodash'
+import { has, isEmpty, isEqual, reduce } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { PopUpDialog, RoundedIcon } from 'igz-controls/components'
+import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 
 import { FILTER_MENU_MODAL } from '../../constants'
 import { setModalFiltersInitialValues, setModalFiltersValues } from '../../reducers/filtersReducer'
@@ -36,7 +36,16 @@ import './filterMenuModal.scss'
 
 export const FilterMenuWizardContext = React.createContext({})
 
-const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) => {
+const FilterMenuModal = ({
+  applyChanges,
+  applyButton,
+  cancelButton,
+  children,
+  filterMenuName,
+  initialValues,
+  values,
+  wizardClassName
+}) => {
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
   const filtersIconButtonRef = useRef()
   const dispatch = useDispatch()
@@ -51,6 +60,8 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
     'filters-button',
     !isEqual(filtersData?.values, filtersData?.initialValues) && 'filters-button_applied'
   )
+
+  const filtersWizardClassnames = classnames('filters-wizard', wizardClassName)
 
   useEffect(() => {
     if (!has(filtersData, 'initialValues')) {
@@ -81,13 +92,44 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
   }, [hideFiltersWizard])
 
   const getFilterCounter = formState => {
+    const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues
+    const currentValues = applyChanges ? filtersData?.values : formState.values
+
     return reduce(
-      formState.values,
+      currentValues,
       (acc, filterValue, filterName) => {
-        return !isEqual(filterValue, formState.initialValues[filterName]) ? ++acc : acc
+        return !isEqual(filterValue, initialValues[filterName]) &&
+          isEmpty(formState.errors[filterName])
+          ? ++acc
+          : acc
       },
       0
     )
+  }
+
+  const handleApplyFilters = formState => {
+    dispatch(
+      setModalFiltersValues({
+        name: filterMenuName,
+        value: { ...formState.values }
+      })
+    )
+    applyChanges(formState.values)
+    setFiltersWizardIsShown(false)
+  }
+
+  const handleClearFilters = formState => {
+    if (!isEqual(initialValues, formState.values)) {
+      formRef.current.restart(initialValues)
+      applyChanges(initialValues)
+      setFiltersWizardIsShown(false)
+      dispatch(
+        setModalFiltersValues({
+          name: filterMenuName,
+          value: initialValues
+        })
+      )
+    }
   }
 
   return (
@@ -110,14 +152,34 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
             </RoundedIcon>
             {filtersWizardIsShown && (
               <PopUpDialog
-                className="filters-wizard"
-                headerIsHidden
+                className={filtersWizardClassnames}
                 customPosition={{
                   element: filtersIconButtonRef,
                   position: 'bottom-left'
                 }}
+                headerIsHidden
               >
-                {children}
+                <>
+                  {children}
+                  {(applyButton || cancelButton) && (
+                    <div className="filters-wizard__modal-buttons">
+                      {cancelButton && (
+                        <Button
+                          label={cancelButton.label}
+                          onClick={() => handleClearFilters(formState)}
+                          variant={cancelButton.variant}
+                        />
+                      )}
+                      {applyButton && (
+                        <Button
+                          variant={applyButton.variant}
+                          label={applyButton.label}
+                          onClick={() => handleApplyFilters(formState)}
+                        />
+                      )}
+                    </div>
+                  )}
+                </>
               </PopUpDialog>
             )}
           </FilterMenuWizardContext.Provider>
@@ -127,10 +189,27 @@ const FilterMenuModal = ({ children, filterMenuName, initialValues, values }) =>
   )
 }
 
+FilterMenuModal.defaultProps = {
+  applyChanges: null,
+  applyButton: null,
+  cancelButton: null,
+  wizardClassName: ''
+}
+
 FilterMenuModal.propTypes = {
+  applyChanges: PropTypes.func,
+  applyButton: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    variant: PropTypes.string.isRequired
+  }),
+  cancelButton: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    variant: PropTypes.string.isRequired
+  }),
   filterMenuName: PropTypes.string.isRequired,
   initialValues: PropTypes.shape({}).isRequired,
-  values: PropTypes.shape({}).isRequired
+  values: PropTypes.shape({}).isRequired,
+  wizardClassName: PropTypes.string
 }
 
 export default FilterMenuModal

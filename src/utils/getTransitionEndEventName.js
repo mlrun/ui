@@ -18,13 +18,15 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 export const getTransitionEndEventName = () => {
-  var transitions = {
+  const transitions = {
     transition: 'transitionend',
     OTransition: 'oTransitionEnd',
     MozTransition: 'transitionend',
     WebkitTransition: 'webkitTransitionEnd'
   }
+
   let bodyStyle = document.body.style
+
   for (let transition in transitions) {
     if (bodyStyle[transition] !== undefined) {
       return transitions[transition]

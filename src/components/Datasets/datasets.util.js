@@ -165,25 +165,27 @@ export const checkForSelectedDataset = (
   setSelectedDataset,
   navigate
 ) => {
-  if (name) {
-    const artifacts = selectedRowData?.[name]?.content || datasets
+  queueMicrotask(() => {
+    if (name) {
+      const artifacts = selectedRowData?.[name]?.content || datasets
 
-    if (artifacts.length > 0) {
-      const searchItem = searchArtifactItem(
-        artifacts.map(artifact => artifact.data ?? artifact),
-        name,
-        tag,
-        iter,
-        uid
-      )
+      if (artifacts.length > 0) {
+        const searchItem = searchArtifactItem(
+          artifacts.map(artifact => artifact.data ?? artifact),
+          name,
+          tag,
+          iter,
+          uid
+        )
 
-      if (!searchItem) {
-        navigate(`/projects/${projectName}/datasets`, { replace: true })
-      } else {
-        setSelectedDataset(searchItem)
+        if (!searchItem) {
+          navigate(`/projects/${projectName}/datasets`, { replace: true })
+        } else {
+          setSelectedDataset(searchItem)
+        }
       }
+    } else {
+      setSelectedDataset({})
     }
-  } else {
-    setSelectedDataset({})
-  }
+  })
 }

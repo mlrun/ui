@@ -21,13 +21,16 @@ import React, { useContext, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { useYaml } from '../../hooks/yaml.hook'
 import { fetchModels } from '../../reducers/artifactsReducer'
+import { setArtifactTags } from '../../utils/artifacts.util'
+import { useYaml } from '../../hooks/yaml.hook'
+import { MODELS_TAB } from '../../constants'
 
 export const ModelsPageContext = React.createContext({})
 
 export const ModelsPageProvider = ({ children }) => {
   const [models, setModels] = useState([])
+  const [allModels, setAllModels] = useState([])
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const dispatch = useDispatch()
   const params = useParams()
@@ -36,12 +39,10 @@ export const ModelsPageProvider = ({ children }) => {
     async filters => {
       return dispatch(fetchModels({ project: params.projectName, filters: filters }))
         .unwrap()
-        .then(result => {
-          if (result) {
-            setModels(result)
-          }
+        .then(modelsResponse => {
+          setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
 
-          return result
+          return modelsResponse
         })
     },
     [dispatch, setModels, params.projectName]
@@ -53,7 +54,9 @@ export const ModelsPageProvider = ({ children }) => {
         fetchData,
         convertedYaml,
         models,
+        allModels,
         setModels,
+        setAllModels,
         toggleConvertedYaml
       }}
     >

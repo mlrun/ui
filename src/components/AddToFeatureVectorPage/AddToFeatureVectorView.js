@@ -60,7 +60,7 @@ const AddToFeatureVectorView = React.forwardRef(
         {(featureStore.loading || featureStore.features.loading) && <Loader />}
         <div className="content">
           <div className="table-container">
-            <div className="content__action-bar">
+            <div className="content__action-bar-wrapper">
               <FilterMenu
                 filters={filters}
                 onChange={fetchData}
@@ -82,6 +82,7 @@ const AddToFeatureVectorView = React.forwardRef(
                 <Table
                   actionsMenu={actionsMenu}
                   content={content}
+                  hideActionsMenu={tableStore.isTablePanelOpen}
                   pageData={pageData}
                   retryRequest={fetchData}
                   tab={ADD_TO_FEATURE_VECTOR_TAB}

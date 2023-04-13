@@ -1,0 +1,11 @@
+.artifacts-filters {
+  &__overlay {
+    .pop-up-dialog {
+      overflow-y: visible;
+    }
+  }
+
+  &__header {
+    margin: 0 0 20px;
+  }
+}

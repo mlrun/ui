@@ -50,8 +50,8 @@ const RealTimePipelinesView = React.forwardRef(
     ref
   ) => {
     const filterMenuClassNames = classnames(
-      'content__action-bar',
-      params.pipelineId && 'content__action-bar_hidden'
+      'content__action-bar-wrapper',
+      params.pipelineId && 'content__action-bar-wrapper_hidden'
     )
 
     return (

@@ -86,8 +86,8 @@ const Content = ({
 
   const contentClassName = classnames('content')
   const filterMenuClassNames = classnames(
-    'content__action-bar',
-    pageData.hideFilterMenu && 'content__action-bar_hidden'
+    'content__action-bar-wrapper',
+    pageData.hideFilterMenu && 'content__action-bar-wrapper_hidden'
   )
 
   const actionsMenu = useMemo(() => {

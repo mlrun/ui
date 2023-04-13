@@ -27,7 +27,7 @@ import ChipTooltip from '../../common/ChipCell/ChipTooltip/ChipTooltip'
 import { getFirstScrollableParent } from '../../utils/getFirstScrollableParent'
 import localStorageService from '../../utils/localStorageService'
 import { CHIP_OPTIONS, CHIPS } from '../../types'
-import { NAVBAR_WIDTH } from '../../constants'
+import { NAVBAR_WIDTH_OPENED } from '../../constants'
 
 import './hiddenChipsBlock.scss'
 
@@ -84,7 +84,7 @@ const HiddenChipsBlock = React.forwardRef(
 
         setIsRight(
           isNavbarPinned
-            ? left - NAVBAR_WIDTH <= hiddenChipBlockWidth
+            ? left - NAVBAR_WIDTH_OPENED <= hiddenChipBlockWidth
             : left <= hiddenChipBlockWidth
         )
         setIsVisible(true)

@@ -44,7 +44,8 @@ export const DENSITY_NORMAL = 'normal'
 export const DENSITY_MEDIUM = 'medium'
 export const DENSITY_CHUNKY = 'chunky'
 
-export const NAVBAR_WIDTH = 245
+export const NAVBAR_WIDTH_CLOSED = 57
+export const NAVBAR_WIDTH_OPENED = 245
 
 /*=========== PAGES & TABS =============*/
 
@@ -460,7 +461,7 @@ export const TAG_FILTER_LATEST = 'latest'
 export const DATE_RANGE_TIME_FILTER = 'dateRangeTime'
 export const ENTITIES_FILTER = 'entities'
 export const GROUP_BY_FILTER = 'groupBy'
-export const ITERATIONS_FILTER = 'iterations'
+export const ITERATIONS_FILTER = 'iter'
 export const LABELS_FILTER = 'labels'
 export const NAME_FILTER = 'name'
 export const PERIOD_FILTER = 'period'

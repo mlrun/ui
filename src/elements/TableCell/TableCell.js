@@ -22,11 +22,12 @@ import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
+import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
 import TableProducerCell from '../TableProducerCell/TableProducerCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { BUTTON_COPY_URI_CELL_TYPE } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
@@ -35,7 +36,6 @@ import { truncateUid } from '../../utils'
 
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
-import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
 const TableCell = ({
   className,
@@ -148,9 +148,7 @@ const TableCell = ({
   } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
       <div className={`table-body__cell ${data.class} ${className}`}>
-        <RoundedIcon tooltipText="Copy URI" onClick={() => data.actionHandler(item)}>
-          <Copy />
-        </RoundedIcon>
+        <CopyToClipboard tooltipText="Copy URI" textToCopy={data.actionHandler(item)} />
       </div>
     )
   } else if (data.type === 'hash') {

@@ -39,6 +39,7 @@ const initialState = {
   artifacts: [],
   dataSets: {
     allData: [],
+    filteredData: [],
     selectedRowData: {
       content: {}
     }
@@ -46,6 +47,7 @@ const initialState = {
   error: null,
   files: {
     allData: [],
+    filteredData: [],
     selectedRowData: {
       content: {}
     }
@@ -53,6 +55,7 @@ const initialState = {
   modelEndpoints: [],
   models: {
     allData: [],
+    filteredData: [],
     selectedRowData: {
       content: {}
     }
@@ -86,9 +89,11 @@ export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artif
     return filterArtifacts(data.artifacts)
   })
 })
-export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, filters }) => {
-  return artifactsApi.getArtifacts(project, filters).then(({ data }) => {
-    return filterArtifacts(data.artifacts)
+export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, filters, config }) => {
+  return artifactsApi.getArtifacts(project, filters, config).then(({ data }) => {
+    const result = parseArtifacts(data.artifacts)
+
+    return generateArtifacts(filterArtifacts(result))
   })
 })
 export const fetchArtifactTags = createAsyncThunk('fetchArtifactTags', ({ project, category }) => {

@@ -23,10 +23,11 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { TAG_FILTER, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
 import { getFilterTagOptions, setFilters } from '../reducers/filtersReducer'
+import { isNil } from 'lodash'
 
 export const useGetTagOptions = (fetchTags, filters, category) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
-  const { projectName, tag } = useParams()
+  const { projectName, tag: paramTag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
   const dispatch = useDispatch()
 
@@ -34,36 +35,41 @@ export const useGetTagOptions = (fetchTags, filters, category) => {
     if (
       filters.length > 0 &&
       filters.find(filter => filter.type === TAG_FILTER) &&
-      tagOptions.length === 0
+      isNil(tagOptions)
     ) {
-      if (!tag) {
+      if (!paramTag) {
         setUrlTagOption(TAG_FILTER_LATEST)
       }
 
-      dispatch(
-        getFilterTagOptions({
-          dispatch,
-          fetchTags,
-          project: projectName,
-          category
-        })
-      )
-        .unwrap()
-        .then(tags => {
-          if (tag) {
-            if (tags.find(filterTag => filterTag === tag)) {
-              setUrlTagOption(tag)
-              dispatch(setFilters({ tag }))
-            } else {
-              setUrlTagOption(TAG_FILTER_ALL_ITEMS)
-              dispatch(setFilters({ tag: TAG_FILTER_ALL_ITEMS }))
+      if (fetchTags) {
+        dispatch(
+          getFilterTagOptions({
+            dispatch,
+            fetchTags,
+            project: projectName,
+            category
+          })
+        )
+          .unwrap()
+          .then(tags => {
+            if (paramTag) {
+              if (tags.find(filterTag => filterTag === paramTag)) {
+                setUrlTagOption(paramTag)
+                dispatch(setFilters({ paramTag }))
+              } else {
+                setUrlTagOption(TAG_FILTER_ALL_ITEMS)
+                dispatch(setFilters({ tag: TAG_FILTER_ALL_ITEMS }))
+              }
             }
-          }
-        })
+          })
+      } else if (paramTag) {
+        setUrlTagOption(paramTag)
+        dispatch(setFilters({ paramTag }))
+      }
     } else {
       setUrlTagOption(null)
     }
-  }, [category, dispatch, fetchTags, filters, projectName, tag, tagOptions.length])
+  }, [category, dispatch, fetchTags, filters, paramTag, projectName, tagOptions])
 
   return [urlTagOption]
 }

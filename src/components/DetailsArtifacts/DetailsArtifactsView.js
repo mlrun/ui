@@ -22,9 +22,10 @@ import PropTypes from 'prop-types'
 import { Link, useParams } from 'react-router-dom'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
+import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 
@@ -88,8 +89,9 @@ const DetailsArtifactsView = ({
                     {artifact.date}
                   </Tooltip>
                 </div>
-                <div className="item-artifacts__row-item item-artifacts__row-item_short">
-                  <Tooltip template={<TextTooltipTemplate text="Show Details" />}>
+                <div className="item-artifacts__row-item">
+                  <CopyToClipboard textToCopy={artifact.target_path} tooltipText="Copy URI" />
+                  <RoundedIcon tooltipText="Show Details">
                     <Link
                       target="_blank"
                       to={
@@ -101,9 +103,7 @@ const DetailsArtifactsView = ({
                     >
                       <DetailsIcon />
                     </Link>
-                  </Tooltip>
-                </div>
-                <div className="item-artifacts__row-item item-artifacts__row-item_short">
+                  </RoundedIcon>
                   <Download
                     className="icon-download"
                     path={artifact.target_path}

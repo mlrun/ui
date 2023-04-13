@@ -26,7 +26,7 @@
 
   &__header {
     margin-bottom: 0.5rem;
-    padding-right: 1rem;
+    padding-right: 1.5rem;
 
     &-title {
       display: flex;
@@ -149,7 +149,7 @@
   &__actions-menu {
     position: absolute;
     top: 22px;
-    right: 0;
+    right: 7px;
     z-index: 4;
     transition: opacity 0.3s ease-in-out;
 

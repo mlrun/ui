@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -26,7 +26,7 @@ import { RoundedIcon } from 'igz-controls/components'
 
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
-import { NAVBAR_WIDTH } from '../../constants'
+import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 
 import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
@@ -34,46 +34,65 @@ import { ReactComponent as SettingsIcon } from 'igz-controls/images/navbar/mlrun
 
 import './Navbar.scss'
 
-const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned }) => {
+const Navbar = ({ projectName, setIsNavbarPinned }) => {
+  const [isHovered, setIsHovered] = useState(false)
+  const [isPinned, setIsPinned] = useState(
+    localStorageService.getStorageValue('mlrunUi.navbarStatic', false)
+  )
+
   const navbarClasses = classNames(
     'navbar',
-    isNavbarPinned && 'pinned',
-    isHeaderShown && 'has-header'
+    isHovered && 'navbar_hovered',
+    isPinned && 'navbar_pinned'
   )
   const navbarStyles = {
-    flex: `1, 0, ${NAVBAR_WIDTH}px`,
-    width: `${NAVBAR_WIDTH}px`,
-    maxWidth: `${NAVBAR_WIDTH}px`
+    flexBasis: NAVBAR_WIDTH_OPENED,
+    width: NAVBAR_WIDTH_OPENED,
+    maxWidth: isHovered || isPinned ? NAVBAR_WIDTH_OPENED : NAVBAR_WIDTH_CLOSED
   }
 
-  const { links } = useMemo(() => {
-    let links = projectName ? getLinks(projectName) : []
-    return {
-      links
-    }
+  const links = useMemo(() => {
+    return projectName ? getLinks(projectName) : []
   }, [projectName])
 
   const handlePinClick = () => {
-    setIsNavbarPinned(!isNavbarPinned)
-    localStorageService.setStorageValue('mlrunUi.navbarStatic', !isNavbarPinned)
+    setIsPinned(prevIsPinned => {
+      localStorageService.setStorageValue('mlrunUi.navbarStatic', !prevIsPinned)
+      return !prevIsPinned
+    })
   }
 
+  const handleOnMouseEnter = () => {
+    if (!isPinned) setIsHovered(true)
+  }
+
+  const handleOnMouseLeave = () => {
+    if (!isPinned) setIsHovered(false)
+  }
+
+  useEffect(() => {
+    setIsNavbarPinned(isPinned)
+  }, [isPinned, setIsNavbarPinned])
+
   return (
-    <nav className={navbarClasses} style={navbarStyles}>
-      <div className="navbar__toggler">
-        <button className="navbar__toggler-button">
-          <span className="navbar__toggler-icon" />
-        </button>
-      </div>
+    <nav
+      className={navbarClasses}
+      data-testid="navbar"
+      onMouseEnter={handleOnMouseEnter}
+      onMouseLeave={handleOnMouseLeave}
+      style={navbarStyles}
+    >
       <div className="navbar__body">
         <div className="navbar__content">
-          <RoundedIcon
-            onClick={handlePinClick}
-            className="navbar__pin-icon"
-            tooltipText={`${isNavbarPinned ? 'Unpin' : 'Pin'} Menu`}
-          >
-            {isNavbarPinned ? <UnPinIcon /> : <PinIcon />}
-          </RoundedIcon>
+          <div className="navbar__pin-icon">
+            <RoundedIcon
+              onClick={handlePinClick}
+              tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
+            >
+              {isPinned ? <UnPinIcon /> : <PinIcon />}
+            </RoundedIcon>
+          </div>
+
           <ul className="navbar-links">
             {links.map(link => !link.hidden && <NavbarLink key={link.id} {...link} />)}
           </ul>
@@ -93,8 +112,6 @@ const Navbar = ({ isHeaderShown, isNavbarPinned, projectName, setIsNavbarPinned 
 }
 
 Navbar.propTypes = {
-  isHeaderShown: PropTypes.bool.isRequired,
-  isNavbarPinned: PropTypes.bool.isRequired,
   projectName: PropTypes.string.isRequired,
   setIsNavbarPinned: PropTypes.func.isRequired
 }

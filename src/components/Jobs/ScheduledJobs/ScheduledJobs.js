@@ -348,7 +348,7 @@ const ScheduledJobs = ({
 
   return (
     <>
-      <div className="content__action-bar">
+      <div className="content__action-bar-wrapper">
         <FilterMenu filters={filters} onChange={refreshJobs} page={JOBS_PAGE} withoutExpandButton />
       </div>
       {jobsStore.loading ? null : jobs.length === 0 ? (

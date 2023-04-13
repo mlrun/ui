@@ -25,18 +25,17 @@ import Prism from 'prismjs'
 import { useSelector } from 'react-redux'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
+import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Input from '../../common/Input/Input'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 import { FormInput, FormTextarea } from 'igz-controls/components'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
 
 import { CHIP_OPTIONS } from '../../types'
-import { copyToClipboard } from '../../utils/copyToClipboard'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
-import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 
 const DetailsInfoItem = React.forwardRef(
@@ -146,29 +145,27 @@ const DetailsInfoItem = React.forwardRef(
       )
     } else if (item?.copyToClipboard) {
       return (
-        <Tooltip
+        <CopyToClipboard
           className="details-item__data details-item__copy-to-clipboard"
-          template={<TextTooltipTemplate text="Click to copy" />}
+          textToCopy={info}
+          tooltipText="Click to copy"
         >
-          <span onClick={() => copyToClipboard(info)}>{info}</span>
-        </Tooltip>
+          {info}
+        </CopyToClipboard>
       )
     } else if (currentField === 'usage_example') {
       return (
         <div className="details-item__data details-item__usage-example">
           {info.map((infoItem, index) => (
             <div key={index}>
-              <p>
+              <div>
                 {infoItem.title}
-                <button
+                <CopyToClipboard
                   className="details-item__btn-copy"
-                  onClick={() => copyToClipboard(infoItem.code)}
-                >
-                  <Tooltip template={<TextTooltipTemplate text="copy" />}>
-                    <Copy />
-                  </Tooltip>
-                </button>
-              </p>
+                  textToCopy={infoItem.code}
+                  tooltipText="Copy"
+                />
+              </div>
               <pre>
                 <code
                   dangerouslySetInnerHTML={{

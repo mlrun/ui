@@ -90,14 +90,14 @@ const FeatureStoreTableRow = ({
             })}
             <div className="table-body__cell action_cell" />
           </div>
-          {selectedRowData[rowItem.data.ui.identifier].loading ? (
+          {selectedRowData[rowItem.data.ui.identifier]?.loading ? (
             <div className="table-body__row">
               <Loader />
             </div>
-          ) : selectedRowData[rowItem.data.ui.identifier].error ? (
+          ) : selectedRowData[rowItem.data.ui.identifier]?.error ? (
             <ErrorMessage message={selectedRowData[rowItem.data.ui.identifier]?.error?.message} />
           ) : (
-            selectedRowData[rowItem.data.ui.identifier].content.map((tableContentItem, index) => {
+            selectedRowData[rowItem.data.ui.identifier]?.content.map((tableContentItem, index) => {
               const subRowClassNames = classnames(
                 'table-body__row',
                 selectedItem.name &&

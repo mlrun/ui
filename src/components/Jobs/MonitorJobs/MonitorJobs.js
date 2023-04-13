@@ -104,8 +104,8 @@ const MonitorJobs = ({
     return generateFilters(params.jobName)
   }, [params.jobName])
   const filterMenuClassNames = classnames(
-    'content__action-bar',
-    params.jobId && 'content__action-bar_hidden'
+    'content__action-bar-wrapper',
+    params.jobId && 'content__action-bar-wrapper_hidden'
   )
 
   usePods(fetchJobPods, removePods, selectedJob)

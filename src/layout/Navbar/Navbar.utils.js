@@ -89,20 +89,20 @@ export const getLinks = projectName => {
     //  },
     {
       icon: <FunctionIcon />,
-      id: 'functions',
+      id: 'ml-functions',
       label: 'ML functions',
       link: `${pathname}/functions`
     },
     {
       icon: <NuclioIcon />,
-      id: 'Real-time functions',
+      id: 'real-time-functions',
       label: 'Real-time functions',
       link: generateNuclioLink(`${pathname}/functions`),
       externalLink: true
     },
     {
       icon: <APIIcon />,
-      id: 'API gateways',
+      id: 'api-gateways',
       label: 'API gateways',
       link: generateNuclioLink(`${pathname}/api-gateways`),
       externalLink: true

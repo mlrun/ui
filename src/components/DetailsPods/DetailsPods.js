@@ -66,6 +66,10 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
                   'pods__table-row',
                   selectedPod?.value === row.value && 'row_active'
                 )
+                const podStatus =
+                  row.status?.phase?.toLowerCase() === 'pending'
+                    ? 'pending...'
+                    : row.status?.phase?.toLowerCase() ?? ''
 
                 return (
                   <div className={rowClassNames} key={rowIndex} onClick={() => setSelectedPod(row)}>
@@ -75,12 +79,12 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
                     >
                       {row.value}
                     </Tooltip>
-                    {row.pending && (
+                    {row.status?.phase && (
                       <Tooltip
                         className="data-ellipsis"
-                        template={<TextTooltipTemplate text="pending..." />}
+                        template={<TextTooltipTemplate text={podStatus} />}
                       >
-                        pending...
+                        {podStatus}
                       </Tooltip>
                     )}
                   </div>

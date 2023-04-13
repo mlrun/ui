@@ -301,7 +301,6 @@ const ProjectMonitor = ({
         handleLaunchIDE={handleLaunchIDE}
         isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
         isNuclioModeDisabled={isNuclioModeDisabled}
-        isDemoMode={isDemoMode}
         navigate={navigate}
         nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
         params={params}

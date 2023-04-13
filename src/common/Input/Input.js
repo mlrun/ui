@@ -318,7 +318,7 @@ const Input = React.forwardRef(
             })}
           </ul>
         )}
-        {!isEmpty(validationRules) && (
+        {isInvalid && !isEmpty(validationRules) && (
           <OptionsMenu show={showValidationRules} ref={ref}>
             {renderValidationRules}
           </OptionsMenu>
