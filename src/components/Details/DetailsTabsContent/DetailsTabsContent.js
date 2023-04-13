@@ -195,6 +195,7 @@ const DetailsTabsContent = ({
       return (
         <DetailsRequestedFeatures
           changes={detailsStore.changes}
+          formState={formState}
           selectedItem={selectedItem}
           handleEditInput={(value, field) => handleEditInput(value, field)}
           setChanges={setChanges}

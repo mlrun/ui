@@ -256,9 +256,9 @@ const Details = ({
       resetChanges()
       unblockHistory()
       setHistoryIsBlocked(false)
-      formRef.current.reset()
+      formRef.current.reset(formInitialValues)
     }
-  }, [detailsStore.changes.counter, resetChanges, unblockHistory])
+  }, [detailsStore.changes.counter, formInitialValues, resetChanges, unblockHistory])
 
   const leavePage = useCallback(() => {
     cancelChanges()

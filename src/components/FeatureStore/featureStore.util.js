@@ -60,6 +60,11 @@ export const handleApplyDetailsChanges = (
   Object.keys(changes.data).forEach(key => {
     if (metadataFields.includes(key)) {
       data.metadata[key] = changes.data[key].currentFieldValue
+    } else if ( key === 'features') {
+      data.spec[key] = changes.data.features.currentFieldValue.map((item) => {
+        const { featureSet, feature, alias} = item
+        return `${featureSet}.${feature}${alias === '' ? '' : ` as ${alias}`}`
+      })
     } else {
       data.spec[key] = changes.data[key].currentFieldValue
     }

@@ -326,6 +326,7 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     value: selectedItem.label_feature ?? ''
   }
 })
+
 export const handleFinishEdit = (
   changes,
   detailsTabActions,
@@ -377,8 +378,8 @@ export const countChanges = changesData => {
 
   Object.keys(changesData).forEach(field => {
     if (field === 'features') {
-      changesData[field].initialFieldValue.forEach(item => {
-        if (!changesData[field].currentFieldValue.includes(item)) {
+      changesData.features.initialFieldValue.forEach(item => {
+        if (!JSON.stringify(changesData.features.currentFieldValue).includes(JSON.stringify(item))) {
           changesCounter++
         }
       })
