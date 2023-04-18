@@ -28,8 +28,8 @@ import Table from '../../Table/Table'
 import { MODELS_PAGE, MODELS_TAB } from '../../../constants'
 import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { filters } from './models.util'
 import { removeModel } from '../../../reducers/artifactsReducer'
+import { filters } from './models.util'
 
 const ModelsView = React.forwardRef(
   (
