@@ -1,11 +1,30 @@
+@import '~igz-controls/scss/colors';
+
 .artifacts-filters {
-  &__overlay {
+  &__wrapper {
     .pop-up-dialog {
+      padding: 16px;
       overflow-y: visible;
     }
   }
 
   &__header {
-    margin: 0 0 20px;
+    margin: 0 0 16px;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23.44px;
+    color: $mulledWine;
+  }
+
+  .form-row {
+    margin-bottom: 8px;
+  }
+
+  &__iter {
+    margin-top: 5px;
+
+    input[type=checkbox] ~ label {
+      text-transform: unset;
+    }
   }
 }

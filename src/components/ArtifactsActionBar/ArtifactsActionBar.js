@@ -26,18 +26,17 @@ import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import { RoundedIcon, FormInput } from 'igz-controls/components'
+import { RoundedIcon } from 'igz-controls/components'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
 import ArtifactsFilters from './ArtifactsFilters'
+import NameFilter from '../../common/NameFilter/NameFilter'
 
 import { setFieldState } from 'igz-controls/utils/form.util'
 import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   ITERATIONS_FILTER,
-  KEY_CODES,
   LABELS_FILTER,
-  NAME_FILTER,
   SHOW_ITERATIONS,
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
@@ -48,9 +47,6 @@ import { removeFilters, setFilters } from '../../reducers/filtersReducer'
 import detailsActions from '../../actions/details'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
-import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
-
-import './artifactsActionBar.scss'
 
 function ArtifactsActionBar({
   cancelRequest,
@@ -132,13 +128,6 @@ function ArtifactsActionBar({
     return handleChangeFilters
   }
 
-  const handleNameChange = event => {
-    if (event.keyCode === KEY_CODES.ENTER) {
-      applyChanges(event.target.value, filtersStore.filterMenuModal[filterMenuName].values)
-      dispatch(setFilters({ name: event.target.value }))
-    }
-  }
-
   const refresh = formState => {
     if (changes.counter > 0 && cancelRequest) {
       cancelRequest('cancel')
@@ -154,26 +143,24 @@ function ArtifactsActionBar({
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
         <div className="action-bar">
-          <div className="form-row name-filter">
-            <FormInput
-              inputIcon={<SearchIcon />}
-              name={NAME_FILTER}
-              onKeyDown={handleNameChange}
-              placeholder="Search by name"
+          <div className="action-bar__filters">
+            <NameFilter
+              applyChanges={applyChanges}
+              filters={filtersStore.filterMenuModal[filterMenuName].values}
             />
+            <FilterMenuModal
+              applyButton={{ label: 'Apply', variant: 'secondary' }}
+              applyChanges={filterMenuModal => applyChanges(formState.values.name, filterMenuModal)}
+              cancelButton={{ label: 'Clear', variant: 'tertiary' }}
+              filterMenuName={filterMenuName}
+              initialValues={filtersInitialState}
+              values={filtersInitialState}
+              wizardClassName="artifacts-filters__wrapper"
+            >
+              <ArtifactsFilters filterMenuName={filterMenuName} page={page} />
+            </FilterMenuModal>
           </div>
-          <FilterMenuModal
-            applyButton={{ label: 'Apply', variant: 'secondary' }}
-            applyChanges={filterMenuModal => applyChanges(formState.values.name, filterMenuModal)}
-            cancelButton={{ label: 'Clear', variant: 'tertiary' }}
-            filterMenuName={filterMenuName}
-            initialValues={filtersInitialState}
-            values={filtersInitialState}
-            wizardClassName="artifacts-filters__overlay"
-          >
-            <ArtifactsFilters filterMenuName={filterMenuName} page={page} />
-          </FilterMenuModal>
-          <div className="actions">
+          <div className="action-bar__actions">
             <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
               <RefreshIcon />
             </RoundedIcon>

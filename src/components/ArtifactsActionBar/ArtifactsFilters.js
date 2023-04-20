@@ -36,7 +36,7 @@ const ArtifactsFilters = () => {
   }
 
   return (
-    <div className="artifacts-filters action-bar__filters">
+    <div className="artifacts-filters">
       <h3 className="artifacts-filters__header">Filter by</h3>
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} />
@@ -45,7 +45,11 @@ const ArtifactsFilters = () => {
         <FormTagFilter label="Version tag" name={TAG_FILTER} />
       </div>
       <div className="form-row">
-        <FormCheckBox label="Show best iteration only" name={ITERATIONS_FILTER} />
+        <FormCheckBox
+          className="artifacts-filters__iter"
+          label="Show best iteration only"
+          name={ITERATIONS_FILTER}
+        />
         <OnChange name={ITERATIONS_FILTER}>{handleIter}</OnChange>
       </div>
     </div>

@@ -539,6 +539,18 @@ iframe {
   }
 }
 
+.action-bar {
+  padding: 20px 0;
+
+  .filters-button {
+    margin-left: 15px;
+  }
+
+  &__filters {
+    display: flex;
+  }
+}
+
 //TODO: Delete after removing Textarea and Input and using DRC components
 @mixin fieldWrapperOld {
   position: relative;
