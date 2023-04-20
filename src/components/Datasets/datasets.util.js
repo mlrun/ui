@@ -105,7 +105,8 @@ export const fetchDataSetRowData = async (
   setSelectedRowData,
   iter,
   tag,
-  projectName
+  projectName,
+  frontendSpec
 ) => {
   const dataSetIdentifier = getArtifactIdentifier(dataSet)
 
@@ -124,7 +125,9 @@ export const fetchDataSetRowData = async (
           return {
             ...state,
             [dataSetIdentifier]: {
-              content: result.map(artifact => createDatasetsRowData(artifact, projectName)),
+              content: result.map(artifact =>
+                createDatasetsRowData(artifact, projectName, frontendSpec)
+              ),
               error: null,
               loading: false
             }
