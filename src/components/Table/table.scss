@@ -252,7 +252,14 @@
         font-size: 15px;
         background-color: transparent;
         border: none;
-        cursor: pointer;
+
+        &:disabled {
+          cursor: default;
+        }
+
+        &:not(:disabled) {
+          cursor: pointer;
+        }
       }
 
       .expand-arrow {
