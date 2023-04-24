@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isNil } from 'lodash'
+import { isNil, isEmpty } from 'lodash'
 
 import {
   DATE_RANGE_TIME_FILTER,
@@ -36,6 +36,7 @@ import {
   getJobsDetailsMenu,
   isJobKindDask
 } from '../jobs.util'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
 
@@ -51,7 +52,7 @@ export const generateFilters = jobName => [
   { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
 ]
 
-export const generatePageData = (handleFetchJobLogs, selectedJob) => {
+export const generatePageData = (handleFetchJobLogs, selectedJob, jobsDashboardUrl, handleMonitoring) => {
   return {
     page: JOBS_PAGE,
     details: {
@@ -60,7 +61,14 @@ export const generatePageData = (handleFetchJobLogs, selectedJob) => {
       infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
       refreshLogs: handleFetchJobLogs,
       removeLogs: () => {},
-      withLogsRefreshBtn: true
+      withLogsRefreshBtn: true,
+      actionButton: {
+        label: 'Resource monitoring',
+        tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+        variant: TERTIARY_BUTTON,
+        disabled: !jobsDashboardUrl,
+        onClick: () => handleMonitoring(selectedJob)
+      }
     }
   }
 }
@@ -73,7 +81,8 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   toggleConvertedYaml,
-  isDemoMode
+  isDemoMode,
+  selectedJob
 ) => {
   return job?.uid
     ? [
@@ -91,7 +100,8 @@ export const generateActionsMenu = (
             ? 'Unavailable for Dask jobs'
             : '',
           disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
-          onClick: handleMonitoring
+          onClick: handleMonitoring,
+          hidden: !isEmpty(selectedJob)
         },
         {
           label: 'Abort',
