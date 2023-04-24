@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import Combobox from '../../common/Combobox/Combobox'
@@ -31,13 +31,11 @@ import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDat
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { COMBOBOX_MATCHES } from '../../types'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
-import {
-  isPathInputValid,
-  pathTips
-} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import { isPathInputValid } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { pathTips } from '../../utils/panelPathScheme'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
@@ -54,6 +52,10 @@ export const JobsPanelDataInputsTable = ({
   setValidation,
   validation
 }) => {
+  const generatedPathTips = useMemo(() => {
+    return pathTips(inputsState.newInput.path.projectItem)
+  }, [inputsState.newInput.path.projectItem])
+
   return (
     <JobsPanelTable
       addNewItem={inputsState.addNewInput}
@@ -83,10 +85,7 @@ export const JobsPanelDataInputsTable = ({
               floatingLabel
               invalid={
                 !validation.isNameValid ||
-                isNameNotUnique(
-                  inputsState.newInput.name,
-                  panelState.tableData.dataInputs
-                )
+                isNameNotUnique(inputsState.newInput.name, panelState.tableData.dataInputs)
               }
               invalidText="Name already exists"
               label="Input name"
@@ -115,14 +114,11 @@ export const JobsPanelDataInputsTable = ({
               inputPlaceholder={inputsState.pathPlaceholder}
               invalid={!validation.isPathValid}
               invalidText={`Field must be in "${
-                pathTips[inputsState.newInput.path.pathType]
+                generatedPathTips[inputsState.newInput.path.pathType]
               }" format`}
               matches={comboboxMatchesList}
               maxSuggestedMatches={
-                inputsState.newInput.path.pathType ===
-                MLRUN_STORAGE_INPUT_PATH_SCHEME
-                  ? 3
-                  : 2
+                inputsState.newInput.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? 3 : 2
               }
               onBlur={(selectValue, inputValue) => {
                 setValidation(prevState => ({
@@ -142,10 +138,7 @@ export const JobsPanelDataInputsTable = ({
           <button
             className="btn-add"
             disabled={
-              isNameNotUnique(
-                inputsState.newInput.name,
-                panelState.tableData.dataInputs
-              ) ||
+              isNameNotUnique(inputsState.newInput.name, panelState.tableData.dataInputs) ||
               !validation.isNameValid ||
               !validation.isPathValid
             }
@@ -155,9 +148,7 @@ export const JobsPanelDataInputsTable = ({
               <Plus />
             </Tooltip>
           </button>
-          <button
-            onClick={() => resetDataInputsData(inputsDispatch, setValidation)}
-          >
+          <button onClick={() => resetDataInputsData(inputsDispatch, setValidation)}>
             <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
               <Delete />
             </Tooltip>
