@@ -74,6 +74,7 @@ const Datasets = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -185,10 +186,11 @@ const Datasets = () => {
         setSelectedRowData,
         filtersStore.iter,
         filtersStore.tag,
-        params.projectName
+        params.projectName,
+        frontendSpec
       )
     },
-    [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
+    [dispatch, filtersStore.iter, filtersStore.tag, frontendSpec, params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -219,10 +221,12 @@ const Datasets = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createDatasetsRowData(contentItem, params.projectName, true)
+          return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
         })
-      : datasets.map(contentItem => createDatasetsRowData(contentItem, params.projectName))
-  }, [datasets, filtersStore.groupBy, latestItems, params.projectName])
+      : datasets.map(contentItem =>
+          createDatasetsRowData(contentItem, params.projectName, frontendSpec)
+        )
+  }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   useEffect(() => {
     dispatch(removeDataSet({}))
