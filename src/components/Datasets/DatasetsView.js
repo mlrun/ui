@@ -29,13 +29,14 @@ import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRo
 import YamlModal from '../../common/YamlModal/YamlModal'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import Loader from '../../common/Loader/Loader'
-import FilterMenu from '../FilterMenu/FilterMenu'
+import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 
 import { DATASET_TYPE, DATASETS_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './datasets.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { removeDataSet } from '../../reducers/artifactsReducer'
 
 const DatasetsView = React.forwardRef(
   (
@@ -53,7 +54,9 @@ const DatasetsView = React.forwardRef(
       pageData,
       selectedDataset,
       selectedRowData,
+      setDatasets,
       setSelectedDataset,
+      setSelectedRowData,
       tableContent,
       toggleConvertedYaml
     },
@@ -82,12 +85,14 @@ const DatasetsView = React.forwardRef(
           <div className="content">
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
-              <div className="content__action-bar">
-                <FilterMenu
-                  filters={filters}
-                  onChange={handleRefresh}
+              <div className="content__action-bar-wrapper">
+                <ArtifactsActionBar
+                  filterMenuName={DATASETS_PAGE}
+                  handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
-                  withoutExpandButton
+                  removeSelectedItem={removeDataSet}
+                  setContent={setDatasets}
+                  setSelectedRowData={setSelectedRowData}
                 />
               </div>
               {artifactsStore.loading ? null : datasets.length === 0 ? (
@@ -147,7 +152,9 @@ DatasetsView.propTypes = {
   pageData: PropTypes.object.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setDatasets: PropTypes.func.isRequired,
   setSelectedDataset: PropTypes.func.isRequired,
+  setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired
 }

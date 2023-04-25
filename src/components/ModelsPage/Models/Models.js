@@ -29,10 +29,11 @@ import ModelsView from './ModelsView'
 import { fetchModel, removeModel, removeModels } from '../../../reducers/artifactsReducer'
 import {
   GROUP_BY_NAME,
-  GROUP_BY_NONE,
   MODELS_PAGE,
   MODELS_TAB,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  FILTER_MENU_MODAL,
+  GROUP_BY_NONE
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -74,6 +75,10 @@ const Models = ({ fetchModelFeatureVector }) => {
   const { fetchData, models, allModels, setModels, setAllModels, toggleConvertedYaml } =
     useModelsPage()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const modelsFilters = useMemo(
+    () => filtersStore[FILTER_MENU_MODAL][MODELS_TAB].values,
+    [filtersStore]
+  )
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -157,13 +162,13 @@ const Models = ({ fetchModelFeatureVector }) => {
         dispatch,
         model,
         setSelectedRowData,
-        filtersStore.iter,
-        filtersStore.tag,
+        modelsFilters.iter,
+        modelsFilters.tag,
         params.projectName,
         frontendSpec
       )
     },
-    [dispatch, filtersStore.iter, filtersStore.tag, frontendSpec, params.projectName]
+    [dispatch, modelsFilters.iter, modelsFilters.tag, frontendSpec, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -213,7 +218,7 @@ const Models = ({ fetchModelFeatureVector }) => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/models/models/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/${MODELS_PAGE}/${MODELS_TAB}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
           { replace: true }
         )
       }
@@ -221,11 +226,6 @@ const Models = ({ fetchModelFeatureVector }) => {
 
     handleRefresh(filtersStore)
   }
-
-  useEffect(() => {
-    dispatch(removeModel({}))
-    setSelectedRowData({})
-  }, [filtersStore.iter, filtersStore.tag, dispatch])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -250,12 +250,8 @@ const Models = ({ fetchModelFeatureVector }) => {
   }, [dispatch, setModels, setAllModels])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
-    } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-    }
-  }, [dispatch, filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   useEffect(() => {
     checkForSelectedModel(
@@ -312,7 +308,9 @@ const Models = ({ fetchModelFeatureVector }) => {
       ref={modelsRef}
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
+      setModels={setModels}
       setSelectedModel={setSelectedModel}
+      setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
     />

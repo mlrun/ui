@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
+import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
@@ -28,6 +28,7 @@ import Table from '../../Table/Table'
 import { MODELS_PAGE, MODELS_TAB } from '../../../constants'
 import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { removeModel } from '../../../reducers/artifactsReducer'
 import { filters } from './models.util'
 
 const ModelsView = React.forwardRef(
@@ -45,7 +46,9 @@ const ModelsView = React.forwardRef(
       pageData,
       selectedModel,
       selectedRowData,
+      setModels,
       setSelectedModel,
+      setSelectedRowData,
       sortProps,
       tableContent
     },
@@ -55,13 +58,15 @@ const ModelsView = React.forwardRef(
       <>
         <div className="models" ref={ref}>
           <div className="table-container">
-            <div className="content__action-bar">
-              <FilterMenu
-                filters={filters}
-                onChange={handleRefresh}
+            <div className="content__action-bar-wrapper">
+              <ArtifactsActionBar
+                filterMenuName={MODELS_TAB}
+                handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
+                removeSelectedItem={removeModel}
+                setContent={setModels}
+                setSelectedRowData={setSelectedRowData}
                 tab={MODELS_TAB}
-                withoutExpandButton
               />
             </div>
             {artifactsStore.loading ? null : models.length === 0 ? (
@@ -120,7 +125,9 @@ ModelsView.propTypes = {
   pageData: PropTypes.object.isRequired,
   selectedModel: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setModels: PropTypes.func.isRequired,
   setSelectedModel: PropTypes.func.isRequired,
+  setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
 }
