@@ -74,6 +74,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
   const { fetchData, models, allModels, setModels, setAllModels, toggleConvertedYaml } =
     useModelsPage()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const modelsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][MODELS_TAB].values,
     [filtersStore]
@@ -163,10 +164,11 @@ const Models = ({ fetchModelFeatureVector }) => {
         setSelectedRowData,
         modelsFilters.iter,
         modelsFilters.tag,
-        params.projectName
+        params.projectName,
+        frontendSpec
       )
     },
-    [dispatch, modelsFilters.iter, modelsFilters.tag, params.projectName]
+    [dispatch, modelsFilters.iter, modelsFilters.tag, frontendSpec, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -182,10 +184,12 @@ const Models = ({ fetchModelFeatureVector }) => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createModelsRowData(contentItem, params.projectName, true)
+          return createModelsRowData(contentItem, params.projectName, frontendSpec, true)
         })
-      : models.map(contentItem => createModelsRowData(contentItem, params.projectName))
-  }, [filtersStore.groupBy, latestItems, models, params.projectName])
+      : models.map(contentItem =>
+          createModelsRowData(contentItem, params.projectName, frontendSpec)
+        )
+  }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
 
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent } = useSortTable({
     headers: tableContent[0]?.content,

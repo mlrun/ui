@@ -74,6 +74,7 @@ const Datasets = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const datasetsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][DATASETS_PAGE].values,
     [filtersStore]
@@ -188,10 +189,11 @@ const Datasets = () => {
         setSelectedRowData,
         datasetsFilters.iter,
         datasetsFilters.tag,
-        params.projectName
+        params.projectName,
+        frontendSpec
       )
     },
-    [datasetsFilters.iter, datasetsFilters.tag, dispatch, params.projectName]
+    [datasetsFilters.iter, datasetsFilters.tag, dispatch, frontendSpec, params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -222,10 +224,12 @@ const Datasets = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createDatasetsRowData(contentItem, params.projectName, true)
+          return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
         })
-      : datasets.map(contentItem => createDatasetsRowData(contentItem, params.projectName))
-  }, [datasets, filtersStore.groupBy, latestItems, params.projectName])
+      : datasets.map(contentItem =>
+          createDatasetsRowData(contentItem, params.projectName, frontendSpec)
+        )
+  }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {

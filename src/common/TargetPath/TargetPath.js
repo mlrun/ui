@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { get, isNil, uniqBy } from 'lodash'
@@ -252,6 +252,10 @@ const TargetPath = ({
     setDataInputState
   ])
 
+  const generatedPathTips = useMemo(() => {
+    return pathTips(dataInputState.storePathType)
+  }, [dataInputState.storePathType])
+
   return (
     <>
       <FormCombobox
@@ -262,9 +266,7 @@ const TargetPath = ({
           pathPlaceholders[get(formState.values, `${formStateFieldInfo}.pathType`)] ?? ''
         }
         invalidText={`Field must be in "${
-          pathTips(dataInputState.storePathType)[
-            get(formState.values, `${formStateFieldInfo}.pathType`)
-          ]
+          generatedPathTips[get(formState.values, `${formStateFieldInfo}.pathType`)]
         }" format`}
         label={label}
         maxSuggestedMatches={

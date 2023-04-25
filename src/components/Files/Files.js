@@ -69,6 +69,7 @@ const Files = () => {
   const dispatch = useDispatch()
   const filesRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedFile), [selectedFile])
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][FILES_PAGE].values,
     [filtersStore]
@@ -162,10 +163,11 @@ const Files = () => {
         dispatch,
         params.projectName,
         filesFilters.iter,
-        filesFilters.tag
+        filesFilters.tag,
+        frontendSpec
       )
     },
-    [dispatch, filesFilters.iter, filesFilters.tag, params.projectName]
+    [dispatch, filesFilters.iter, filesFilters.tag, frontendSpec, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -180,10 +182,10 @@ const Files = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFilesRowData(contentItem, params.projectName, true)
+          return createFilesRowData(contentItem, params.projectName, frontendSpec, true)
         })
-      : files.map(contentItem => createFilesRowData(contentItem, params.projectName))
-  }, [files, filtersStore.groupBy, latestItems, params.projectName])
+      : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
+  }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   const applyDetailsChanges = useCallback(
     changes => {
