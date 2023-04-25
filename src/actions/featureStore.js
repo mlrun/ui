@@ -62,6 +62,7 @@ import {
   SET_NEW_FEATURE_SET_DESCRIPTION,
   SET_NEW_FEATURE_SET_LABELS,
   SET_NEW_FEATURE_SET_NAME,
+  SET_NEW_FEATURE_SET_PASSTHROUGH,
   SET_NEW_FEATURE_SET_SCHEDULE,
   SET_NEW_FEATURE_SET_SCHEMA_TIMESTAMP_KEY,
   SET_NEW_FEATURE_SET_TARGET,
@@ -414,6 +415,10 @@ const featureStoreActions = {
   setNewFeatureSetName: name => ({
     type: SET_NEW_FEATURE_SET_NAME,
     payload: name
+  }),
+  setNewFeatureSetPassthrough: isChecked => ({
+    type: SET_NEW_FEATURE_SET_PASSTHROUGH,
+    payload: isChecked
   }),
   setNewFeatureSetSchedule: schedule => ({
     type: SET_NEW_FEATURE_SET_SCHEDULE,

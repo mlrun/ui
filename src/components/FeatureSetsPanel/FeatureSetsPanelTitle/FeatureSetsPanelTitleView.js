@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import CheckBox from '../../../common/CheckBox/CheckBox'
 import ChipCell from '../../../common/ChipCell/ChipCell'
 import Input from '../../../common/Input/Input'
 import TextArea from '../../../common/TextArea/TextArea'
@@ -37,6 +38,7 @@ const FeatureSetsPanelTitleView = ({
   featureStore,
   handleAddLabel,
   handleChangeLabels,
+  handleCheckPassthrough,
   handleNameOnBlur,
   setData,
   setNewFeatureSetDescription,
@@ -120,6 +122,11 @@ const FeatureSetsPanelTitleView = ({
             />
           </div>
         </div>
+        <CheckBox
+          item={{ id: 'passthrough', label: 'Passthrough' }}
+          onChange={id => handleCheckPassthrough(id)}
+          selectedId={data.passthrough}
+        />
       </div>
       <RoundedIcon
         onClick={() => closePanel({})}
