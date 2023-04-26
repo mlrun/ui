@@ -24,6 +24,7 @@ import { useParams } from 'react-router-dom'
 import { fetchModels } from '../../reducers/artifactsReducer'
 import { setArtifactTags } from '../../utils/artifacts.util'
 import { useYaml } from '../../hooks/yaml.hook'
+import { MODELS_TAB } from '../../constants'
 
 export const ModelsPageContext = React.createContext({})
 
@@ -39,7 +40,7 @@ export const ModelsPageProvider = ({ children }) => {
       return dispatch(fetchModels({ project: params.projectName, filters: filters }))
         .unwrap()
         .then(modelsResponse => {
-          setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch)
+          setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
 
           return modelsResponse
         })

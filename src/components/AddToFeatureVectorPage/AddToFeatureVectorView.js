@@ -60,7 +60,7 @@ const AddToFeatureVectorView = React.forwardRef(
         {(featureStore.loading || featureStore.features.loading) && <Loader />}
         <div className="content">
           <div className="table-container">
-            <div className="content__action-bar">
+            <div className="content__action-bar-wrapper">
               <FilterMenu
                 filters={filters}
                 onChange={fetchData}

@@ -89,3 +89,20 @@ export const pathPlaceholders = {
   [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
   [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
 }
+
+export const pathTips = projectItem => {
+  const pathType =
+    projectItem === 'feature-vectors'
+      ? 'feature-vector'
+      : projectItem === 'artifacts'
+      ? 'artifact'
+      : 'dataset'
+
+  return {
+    [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${pathType}s/my-project/my-${pathType}:my-tag" or "${pathType}s/my-project/my-${pathType}@my-uid`,
+    [S3_INPUT_PATH_SCHEME]: 'bucket/path',
+    [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
+    [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
+    [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
+  }
+}

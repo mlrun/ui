@@ -117,13 +117,20 @@ body {
     min-width: 100%;
   }
 
-  &__action-bar {
+  &__action-bar-wrapper {
     display: flex;
     align-items: center;
     padding: 4px 24px;
 
     &_hidden {
       display: none;
+    }
+
+    .action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
     }
   }
 }
@@ -529,6 +536,18 @@ iframe {
 
   &_up {
     transform: rotate(90deg);
+  }
+}
+
+.action-bar {
+  padding: 20px 0;
+
+  .filters-button {
+    margin-left: 15px;
+  }
+
+  &__filters {
+    display: flex;
   }
 }
 

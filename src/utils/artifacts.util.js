@@ -25,7 +25,7 @@ import artifactApi from '../api/artifacts-api'
 import { ARTIFACT_TYPE, DATASET_TYPE, MODEL_TYPE } from '../constants'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { parseArtifacts } from './parseArtifacts'
-import { setFilters } from '../reducers/filtersReducer'
+import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
@@ -146,8 +146,16 @@ export const isArtifactTagUnique = (projectName, category, artifact) => async va
  * @param {Function} setAllArtifacts - Setter function for all artifacts
  * @param {Object} filters - Object containing current filter settings
  * @param {Function} dispatch - Redux dispatch function
+ * @param {String} page - Current page value
  */
-export const setArtifactTags = (artifacts, setArtifacts, setAllArtifacts, filters, dispatch) => {
+export const setArtifactTags = (
+  artifacts,
+  setArtifacts,
+  setAllArtifacts,
+  filters,
+  dispatch,
+  page
+) => {
   if (artifacts) {
     const tagOptions = generateArtifactTags(artifacts)
     const tag = !filters.tag ? TAG_FILTER_LATEST : filters.tag
@@ -162,7 +170,13 @@ export const setArtifactTags = (artifacts, setArtifacts, setAllArtifacts, filter
 
     setAllArtifacts(artifacts)
 
-    dispatch(setFilters({ tagOptions, tag }))
+    dispatch(setFilters({ tagOptions }))
+    dispatch(
+      setModalFiltersValues({
+        name: page,
+        value: { tag }
+      })
+    )
   }
 }
 

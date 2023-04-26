@@ -20,12 +20,18 @@ such restriction.
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isEmpty, isNil } from 'lodash'
+import { isNil } from 'lodash'
 
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
-import { DATASETS_PAGE, GROUP_BY_NAME, GROUP_BY_NONE, TAG_FILTER_ALL_ITEMS } from '../../constants'
+import {
+  DATASETS_PAGE,
+  FILTER_MENU_MODAL,
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  TAG_FILTER_ALL_ITEMS
+} from '../../constants'
 import {
   fetchDataSet,
   fetchDataSets,
@@ -68,6 +74,11 @@ const Datasets = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const datasetsFilters = useMemo(
+    () => filtersStore[FILTER_MENU_MODAL][DATASETS_PAGE].values,
+    [filtersStore]
+  )
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -81,7 +92,14 @@ const Datasets = () => {
       dispatch(fetchDataSets({ project: params.projectName, filters }))
         .unwrap()
         .then(dataSetsResponse => {
-          setArtifactTags(dataSetsResponse, setDatasets, setAllDatasets, filters, dispatch)
+          setArtifactTags(
+            dataSetsResponse,
+            setDatasets,
+            setAllDatasets,
+            filters,
+            dispatch,
+            DATASETS_PAGE
+          )
 
           return dataSetsResponse
         })
@@ -154,7 +172,7 @@ const Datasets = () => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/datasets/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/${DATASETS_PAGE}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
           { replace: true }
         )
       }
@@ -169,12 +187,13 @@ const Datasets = () => {
         dispatch,
         dataset,
         setSelectedRowData,
-        filtersStore.iter,
-        filtersStore.tag,
-        params.projectName
+        datasetsFilters.iter,
+        datasetsFilters.tag,
+        params.projectName,
+        frontendSpec
       )
     },
-    [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
+    [datasetsFilters.iter, datasetsFilters.tag, dispatch, frontendSpec, params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -205,15 +224,12 @@ const Datasets = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createDatasetsRowData(contentItem, params.projectName, true)
+          return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
         })
-      : datasets.map(contentItem => createDatasetsRowData(contentItem, params.projectName))
-  }, [datasets, filtersStore.groupBy, latestItems, params.projectName])
-
-  useEffect(() => {
-    dispatch(removeDataSet({}))
-    setSelectedRowData({})
-  }, [filtersStore.iter, filtersStore.tag, dispatch])
+      : datasets.map(contentItem =>
+          createDatasetsRowData(contentItem, params.projectName, frontendSpec)
+        )
+  }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -228,12 +244,8 @@ const Datasets = () => {
   }, [fetchData, filtersStore, urlTagOption])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
-    } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-    }
-  }, [filtersStore.groupBy, filtersStore.iter, filtersStore.tag, params.name, dispatch])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   useEffect(() => {
     checkForSelectedDataset(
@@ -284,7 +296,9 @@ const Datasets = () => {
       ref={datasetsRef}
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
+      setDatasets={setDatasets}
       setSelectedDataset={setSelectedDataset}
+      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
     />

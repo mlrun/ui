@@ -28,23 +28,18 @@ const TagFilterDropdown = ({
   tagFilterOptions
 }) => {
   return (
-    <div
-      className="tag-filter__dropdown"
-      onClick={() => setIsDropDownMenuOpen(false)}
-    >
+    <div className="tag-filter__dropdown" onClick={() => setIsDropDownMenuOpen(false)}>
       {tagFilterOptions.map(tag => {
         const dropdownItemClassName = classnames(
           'tag-filter__dropdown-item',
-          tagFilter.length !== 0 &&
-            tagFilter === tag.id &&
-            'tag-filter__dropdown-item_selected'
+          tagFilter.length !== 0 && tagFilter === tag.id && 'tag-filter__dropdown-item_selected'
         )
 
         return (
           <div
             key={tag.id}
             className={dropdownItemClassName}
-            onClick={() => handleSelectFilter(tag)}
+            onClick={event => handleSelectFilter(event, tag)}
           >
             {tag.label}
           </div>

@@ -26,7 +26,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 
 import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
 
-const CopyToClipboard = ({ children, className, textToCopy, tooltipText }) => {
+const CopyToClipboard = ({ children, className, disabled, textToCopy, tooltipText }) => {
   const dispatch = useDispatch()
 
   const copyToClipboard = textToCopy => {
@@ -64,7 +64,11 @@ const CopyToClipboard = ({ children, className, textToCopy, tooltipText }) => {
           <span onClick={() => copyToClipboard(textToCopy)}>{children}</span>
         </Tooltip>
       ) : (
-        <RoundedIcon tooltipText={tooltipText} onClick={() => copyToClipboard(textToCopy)}>
+        <RoundedIcon
+          tooltipText={tooltipText}
+          onClick={() => copyToClipboard(textToCopy)}
+          disabled={disabled}
+        >
           <Copy />
         </RoundedIcon>
       )}
@@ -74,12 +78,14 @@ const CopyToClipboard = ({ children, className, textToCopy, tooltipText }) => {
 
 CopyToClipboard.defaultProps = {
   children: null,
-  className: ''
+  className: '',
+  disabled: false
 }
 
 CopyToClipboard.propTypes = {
   children: PropTypes.string,
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   textToCopy: PropTypes.string.isRequired,
   tooltipText: PropTypes.string.isRequired
 }

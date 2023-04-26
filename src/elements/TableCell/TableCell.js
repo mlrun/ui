@@ -27,7 +27,7 @@ import Download from '../../common/Download/Download'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
 import TableProducerCell from '../TableProducerCell/TableProducerCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { BUTTON_COPY_URI_CELL_TYPE } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
@@ -118,7 +118,9 @@ const TableCell = ({
   } else if (data.type === 'buttonPopout') {
     return (
       <div className={`table-body__cell ${data.class} ${className}`}>
-        <button
+        <RoundedIcon
+          tooltipText={data.disabled ? '' : 'Artifact Preview'}
+          disabled={data.disabled}
           onClick={() => {
             dispatch(
               showArtifactsPreview({
@@ -128,19 +130,18 @@ const TableCell = ({
             )
           }}
         >
-          <Tooltip template={<TextTooltipTemplate text="Artifact Preview" />}>
-            <ArtifactView />
-          </Tooltip>
-        </button>
+          <ArtifactView />
+        </RoundedIcon>
       </div>
     )
   } else if (data.type === 'buttonDownload') {
     return (
       <div className={`table-body__cell ${data.class} ${className}`}>
-        <Tooltip template={<TextTooltipTemplate text="Download" />}>
+        <Tooltip hidden={data.disabled} template={<TextTooltipTemplate text="Download" />}>
           <Download
             path={`${item?.target_path}${item?.model_file ? item.model_file : ''}`}
             user={item?.producer?.owner || item.user}
+            disabled={data.disabled}
           />
         </Tooltip>
       </div>
@@ -148,7 +149,11 @@ const TableCell = ({
   } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
       <div className={`table-body__cell ${data.class} ${className}`}>
-        <CopyToClipboard tooltipText="Copy URI" textToCopy={data.actionHandler(item)} />
+        <CopyToClipboard
+          tooltipText="Copy URI"
+          textToCopy={data.actionHandler(item)}
+          disabled={data.disabled}
+        />
       </div>
     )
   } else if (data.type === 'hash') {

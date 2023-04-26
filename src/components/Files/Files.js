@@ -20,12 +20,18 @@ such restriction.
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isEmpty, isNil } from 'lodash'
+import { isNil } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
 
-import { FILES_PAGE, GROUP_BY_NAME, GROUP_BY_NONE, TAG_FILTER_ALL_ITEMS } from '../../constants'
+import {
+  FILES_PAGE,
+  FILTER_MENU_MODAL,
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  TAG_FILTER_ALL_ITEMS
+} from '../../constants'
 import {
   checkForSelectedFile,
   fetchFilesRowData,
@@ -63,6 +69,11 @@ const Files = () => {
   const dispatch = useDispatch()
   const filesRef = useRef(null)
   const pageData = useMemo(() => generatePageData(selectedFile), [selectedFile])
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const filesFilters = useMemo(
+    () => filtersStore[FILTER_MENU_MODAL][FILES_PAGE].values,
+    [filtersStore]
+  )
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -76,7 +87,7 @@ const Files = () => {
       dispatch(fetchFiles({ project: params.projectName, filters }))
         .unwrap()
         .then(filesResponse => {
-          setArtifactTags(filesResponse, setFiles, setAllFiles, filters, dispatch)
+          setArtifactTags(filesResponse, setFiles, setAllFiles, filters, dispatch, FILES_PAGE)
 
           return filesResponse
         })
@@ -151,11 +162,12 @@ const Files = () => {
         setSelectedRowData,
         dispatch,
         params.projectName,
-        filtersStore.iter,
-        filtersStore.tag
+        filesFilters.iter,
+        filesFilters.tag,
+        frontendSpec
       )
     },
-    [dispatch, filtersStore.iter, filtersStore.tag, params.projectName]
+    [dispatch, filesFilters.iter, filesFilters.tag, frontendSpec, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -170,10 +182,10 @@ const Files = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFilesRowData(contentItem, params.projectName, true)
+          return createFilesRowData(contentItem, params.projectName, frontendSpec, true)
         })
-      : files.map(contentItem => createFilesRowData(contentItem, params.projectName))
-  }, [files, filtersStore.groupBy, latestItems, params.projectName])
+      : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
+  }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -206,11 +218,6 @@ const Files = () => {
   }
 
   useEffect(() => {
-    dispatch(removeFile({}))
-    setSelectedRowData({})
-  }, [filtersStore.iter, filtersStore.tag, dispatch])
-
-  useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
@@ -233,12 +240,8 @@ const Files = () => {
   }, [params.projectName, dispatch])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filtersStore.iter)) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
-    } else if (filtersStore.groupBy === GROUP_BY_NAME) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-    }
-  }, [filtersStore.tag, filtersStore.iter, filtersStore.groupBy, dispatch])
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  }, [dispatch])
 
   useEffect(() => {
     checkForSelectedFile(
@@ -279,7 +282,9 @@ const Files = () => {
       ref={filesRef}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
+      setFiles={setFiles}
       setSelectedFile={setSelectedFile}
+      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
     />

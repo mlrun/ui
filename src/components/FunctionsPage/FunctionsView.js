@@ -75,7 +75,7 @@ const FunctionsView = ({
         </div>
         <div className="content">
           <div className="table-container">
-            <div className="content__action-bar">
+            <div className="content__action-bar-wrapper">
               <FilterMenu
                 actionButton={{
                   getCustomTemplate: getPopUpTemplate,
