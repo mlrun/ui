@@ -46,8 +46,7 @@ const generateQueryParams = filter => {
     queryParams.predicates.push({
       key: 'status',
       op: 1,
-      string_value:
-        filter.state === 'completed' ? 'Succeeded' : capitalize(filter.state)
+      string_value: filter.state === 'completed' ? 'Succeeded' : capitalize(filter.state)
     })
   }
 
@@ -69,7 +68,7 @@ const generateQueryParams = filter => {
     }
   }
 
-  return `?filter=${encodeURI(JSON.stringify(queryParams))}`
+  return `&filter=${encodeURI(JSON.stringify(queryParams))}`
 }
 
 const workflowsApi = {
@@ -77,7 +76,7 @@ const workflowsApi = {
     return mainHttpClient.get(`/projects/${project}/pipelines/${workflowId}`)
   },
   getWorkflows: (project, filter) => {
-    let queryParams = ''
+    let queryParams = '?sort_by=created_at desc'
 
     if (filter?.groupBy === GROUP_BY_WORKFLOW) {
       queryParams = generateQueryParams(filter)
