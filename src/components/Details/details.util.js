@@ -389,3 +389,13 @@ export const countChanges = changesData => {
 
   return changesCounter
 }
+
+export const generateArtifactIndexes = (artifactsIndexes, index, setArtifactsIndexes) => {
+  const newArtifactsIndexes = artifactsIndexes.filter(artifactIndex => artifactIndex !== index)
+
+  if (!artifactsIndexes.includes(index)) {
+    newArtifactsIndexes.push(index)
+  }
+
+  setArtifactsIndexes(newArtifactsIndexes)
+}

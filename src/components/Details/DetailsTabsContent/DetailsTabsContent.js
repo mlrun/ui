@@ -114,7 +114,7 @@ const DetailsTabsContent = ({
     case DETAILS_PREVIEW_TAB:
       return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:
-      return <DetailsInputs inputs={selectedItem.inputs} />
+      return <DetailsInputs inputs={selectedItem.inputs}/>
     case DETAILS_ARTIFACTS_TAB:
       return (
         <DetailsArtifacts

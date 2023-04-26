@@ -18,16 +18,16 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import PropTypes from 'prop-types'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
 
-import jobsActions from '../../actions/jobs'
-import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import { generateContent, getJobAccordingIteration } from './detailsArtifacts.util'
-import { showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { generateArtifactIndexes } from '../Details/details.util'
+
+import jobsActions from '../../actions/jobs'
 
 const DetailsArtifacts = ({
   fetchJob,
@@ -39,12 +39,8 @@ const DetailsArtifacts = ({
 }) => {
   const [content, setContent] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
-  const [preview, setPreview] = useState({})
-  const [noData, setNoData] = useState(false)
   const iterationOptions = useSelector(store => store.detailsStore.iterationOptions)
   const params = useParams()
-
-  const dispatch = useDispatch()
 
   const bestIteration = useMemo(
     () => selectedItem.results?.best_iteration,
@@ -99,49 +95,15 @@ const DetailsArtifacts = ({
 
     return () => {
       setContent([])
-      setPreview({})
       setArtifactsIndexes([])
     }
   }, [fetchJob, iteration, params.jobId, params.projectName, selectedItem])
 
-  useEffect(() => {
-    if (artifactsIndexes.length > 0) {
-      artifactsIndexes.forEach(artifactIndex => {
-        if (!preview[artifactIndex]) {
-          getArtifactPreview(
-            params.projectName,
-            content[artifactIndex],
-            noData,
-            setNoData,
-            setPreview,
-            true,
-            artifactIndex
-          )
-        }
-      })
-    }
-  }, [artifactsIndexes, content, noData, params.projectName, preview])
-
-  const showPreview = artifact => {
-    dispatch(
-      showArtifactsPreview({
-        isPreview: true,
-        selectedItem: artifact
-      })
-    )
-  }
-
   const showArtifact = useCallback(
     index => {
-      const newArtifactsIndexes = artifactsIndexes.filter(artifactIndex => artifactIndex !== index)
-
-      if (!artifactsIndexes.includes(index)) {
-        newArtifactsIndexes.push(index)
-      }
-
-      setArtifactsIndexes(newArtifactsIndexes)
+      generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
     },
-    [artifactsIndexes]
+    [artifactsIndexes, setArtifactsIndexes]
   )
 
   return (
@@ -150,10 +112,7 @@ const DetailsArtifacts = ({
       content={content}
       iteration={iteration}
       loading={jobsStore.loading}
-      noData={noData}
-      preview={preview}
       showArtifact={showArtifact}
-      showPreview={showPreview}
     />
   )
 }
