@@ -49,7 +49,7 @@ const FeaturesView = React.forwardRef(
   ) => {
     return (
       <div className="feature-store" ref={ref}>
-        <div className="content__action-bar">
+        <div className="content__action-bar-wrapper">
           <FilterMenu
             actionButton={{
               label: 'Add to feature vector',

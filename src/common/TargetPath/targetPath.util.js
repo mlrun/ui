@@ -59,11 +59,11 @@ export const targetPathInitialState = {
   storePathType: ''
 }
 
-export const pathTips = storePathType => {
+export const pathTips = projectItem => {
   const pathType =
-    storePathType === 'feature-vectors'
+    projectItem === 'feature-vectors'
       ? 'feature-vector'
-      : storePathType === 'artifacts'
+      : projectItem === 'artifacts'
       ? 'artifact'
       : 'dataset'
 

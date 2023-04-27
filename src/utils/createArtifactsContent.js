@@ -42,21 +42,21 @@ import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.sv
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as SeverityError } from 'igz-controls/images/severity-error.svg'
 
-export const createArtifactsContent = (artifacts, page, pageTab, project) => {
+export const createArtifactsContent = (artifacts, page, pageTab, project, frontendSpec) => {
   return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
     if (page === ARTIFACTS_PAGE) {
       return createArtifactsRowData(artifact)
     } else if (page === MODELS_PAGE) {
       if (pageTab === MODELS_TAB) {
-        return createModelsRowData(artifact, project)
+        return createModelsRowData(artifact, project, frontendSpec)
       } else if (pageTab === MODEL_ENDPOINTS_TAB) {
         return createModelEndpointsRowData(artifact, project)
       }
     } else if (page === FILES_PAGE) {
-      return createFilesRowData(artifact, project)
+      return createFilesRowData(artifact, project, frontendSpec)
     }
 
-    return createDatasetsRowData(artifact, project)
+    return createDatasetsRowData(artifact, project, frontendSpec)
   })
 }
 
@@ -103,8 +103,11 @@ const createArtifactsRowData = artifact => {
   }
 }
 
-export const createModelsRowData = (artifact, project, showExpandButton) => {
+export const createModelsRowData = (artifact, project, frontendSpec, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+  const isTargetPathValid = frontendSpec.allowed_artifact_path_prefixes_list.some(prefix => {
+    return artifact.target_path?.startsWith?.(prefix)
+  })
 
   return {
     data: {
@@ -214,14 +217,16 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
         headerId: 'popupt',
         value: '',
         class: 'table-cell-icon',
-        type: 'buttonPopout'
+        type: 'buttonPopout',
+        disabled: !isTargetPathValid
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
         class: 'table-cell-icon',
-        type: 'buttonDownload'
+        type: 'buttonDownload',
+        disabled: !isTargetPathValid
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
@@ -235,8 +240,11 @@ export const createModelsRowData = (artifact, project, showExpandButton) => {
   }
 }
 
-export const createFilesRowData = (artifact, project, showExpandButton) => {
+export const createFilesRowData = (artifact, project, frontendSpec, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+  const isTargetPathValid = frontendSpec.allowed_artifact_path_prefixes_list.some(prefix => {
+    return artifact.target_path?.startsWith?.(prefix)
+  })
 
   return {
     data: {
@@ -330,14 +338,16 @@ export const createFilesRowData = (artifact, project, showExpandButton) => {
         headerId: 'popout',
         value: '',
         class: 'table-cell-icon',
-        type: 'buttonPopout'
+        type: 'buttonPopout',
+        disabled: !isTargetPathValid
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
         class: 'table-cell-icon',
-        type: 'buttonDownload'
+        type: 'buttonDownload',
+        disabled: !isTargetPathValid
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,
@@ -476,8 +486,11 @@ export const createModelEndpointsRowData = (artifact, project) => {
   }
 }
 
-export const createDatasetsRowData = (artifact, project, showExpandButton) => {
+export const createDatasetsRowData = (artifact, project, frontendSpec, showExpandButton) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+  const isTargetPathValid = frontendSpec.allowed_artifact_path_prefixes_list.some(prefix => {
+    return artifact.target_path?.startsWith?.(prefix)
+  })
 
   return {
     data: {
@@ -564,14 +577,16 @@ export const createDatasetsRowData = (artifact, project, showExpandButton) => {
         headerId: 'popout',
         value: '',
         class: 'table-cell-icon',
-        type: 'buttonPopout'
+        type: 'buttonPopout',
+        disabled: !isTargetPathValid
       },
       {
         id: `buttonDownload.${artifact.ui.identifierUnique}`,
         headerId: 'download',
         value: '',
         class: 'table-cell-icon',
-        type: 'buttonDownload'
+        type: 'buttonDownload',
+        disabled: !isTargetPathValid
       },
       {
         id: `buttonCopy.${artifact.ui.identifierUnique}`,

@@ -20,6 +20,7 @@ such restriction.
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
+import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
@@ -34,10 +35,14 @@ import colors from 'igz-controls/scss/colors.scss'
 
 const DEFAULT_FILE_NAME = 'mlrun-file'
 
-const Download = ({ fileName, path, user }) => {
+const Download = ({ disabled, fileName, path, user }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
   const params = useParams()
+  const downloadContainerClassnames = classnames(
+    'download-container',
+    disabled && 'download-container_disabled'
+  )
 
   const downloadRef = useRef(null)
   const dispatch = useDispatch()
@@ -149,14 +154,17 @@ const Download = ({ fileName, path, user }) => {
   }, [downloadCallback, downloadRef])
 
   const handleClick = () => {
-    if (downloadRef.current?.cancel) {
-      return downloadRef.current.cancel('cancel')
+    if (!disabled) {
+      if (downloadRef.current?.cancel) {
+        return downloadRef.current.cancel('cancel')
+      }
+
+      setDownload(!isDownload)
     }
-    setDownload(!isDownload)
   }
 
   return (
-    <div className="download-container" ref={downloadRef} onClick={handleClick}>
+    <div className={downloadContainerClassnames} ref={downloadRef} onClick={handleClick}>
       <ProgressRing
         radius={progressRingRadius}
         stroke={progressRingStroke}
@@ -166,7 +174,7 @@ const Download = ({ fileName, path, user }) => {
         <g className={!isDownload ? 'download' : 'downloading'}>
           <circle r="12" cx="20px" cy="20px" />
           {!isDownload ? (
-            <g className="download-container">
+            <g className="download-container__icon">
               <rect
                 width="9.05318"
                 height="1.50886"

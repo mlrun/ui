@@ -521,7 +521,7 @@ const MonitorWorkflows = ({
   return (
     <>
       {!params.workflowId && (
-        <div className="content__action-bar">
+        <div className="content__action-bar-wrapper">
           <FilterMenu
             filters={filters}
             onChange={getWorkflows}
