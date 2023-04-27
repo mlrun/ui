@@ -31,11 +31,11 @@ import {
   generateArtifactsReferencesList,
   generateComboboxMatchesList,
   generateProjectsList,
+  getTargetPathInvalidText,
   getTargetPathOptions,
   handleStoreInputPathChange,
   isPathInputInvalid,
   pathPlaceholders,
-  pathTips,
   targetPathInitialState
 } from './targetPath.util'
 import featureStoreActions from '../../actions/featureStore'
@@ -261,11 +261,7 @@ const TargetPath = ({
         inputPlaceholder={
           pathPlaceholders[get(formState.values, `${formStateFieldInfo}.pathType`)] ?? ''
         }
-        invalidText={`Field must be in "${
-          pathTips(dataInputState.storePathType)[
-            get(formState.values, `${formStateFieldInfo}.pathType`)
-          ]
-        }" format`}
+        invalidText={getTargetPathInvalidText(dataInputState, formState, formStateFieldInfo)}
         label={label}
         maxSuggestedMatches={
           get(formState.values, `${formStateFieldInfo}.pathType`) ===
@@ -292,7 +288,10 @@ const TargetPath = ({
       <OnChange name={name}>
         {value => {
           if (value.length !== 0) {
-            formState.form.change(`${formStateFieldInfo}.value`, value.replace(/.*:[/]{2,3}/g, ''))
+            formState.form.change(
+              `${formStateFieldInfo}.value`,
+              value.replace(/[^:/]*:[/]{2,3}/, '')
+            )
             formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
           }
         }}
