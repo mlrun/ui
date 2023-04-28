@@ -22,7 +22,6 @@ import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { FieldArray } from 'react-final-form-arrays'
 
-
 import NoData from '../../common/NoData/NoData'
 import { ConfirmDialog, Tooltip, TextTooltipTemplate, RoundedIcon, FormInput } from 'igz-controls/components'
 
@@ -127,7 +126,7 @@ const DetailsRequestedFeaturesView = ({
                             <div className="cell_actions cell_actions-visible">
                               <RoundedIcon
                                 disabled={formState.invalid || formState.validating}
-                                onClick={() => onFinishEdit('features')}
+                                onClick={onFinishEdit}
                                 tooltipText="Apply"
                               >
                                 <Checkmark className="details-item__apply-btn" />
@@ -173,7 +172,7 @@ const DetailsRequestedFeaturesView = ({
                                     'features',
                                     'input',
                                     index,
-                                    editableItemIndex
+                                    originalTemplate
                                   )
                                 }
                                 tooltipText="Click to add an alias"

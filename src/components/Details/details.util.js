@@ -383,8 +383,6 @@ export const countChanges = changesData => {
           changesCounter++
         }
       })
-    } else {
-      changesCounter++
     }
   })
 

@@ -61,10 +61,18 @@ export const handleApplyDetailsChanges = (
     if (metadataFields.includes(key)) {
       data.metadata[key] = changes.data[key].currentFieldValue
     } else if ( key === 'features') {
-      data.spec[key] = changes.data.features.currentFieldValue.map((item) => {
-        const { featureSet, feature, alias} = item
+      data.spec.features = changes.data.features.currentFieldValue.map((item) => {
+        const { featureSet, feature, alias } = item
         return `${featureSet}.${feature}${alias === '' ? '' : ` as ${alias}`}`
       })
+    } else if ( key === 'label_feature') {
+      if (typeof changes.data.label_feature.currentFieldValue === 'string') {
+        data.spec.label_feature = changes.data.label_feature.currentFieldValue
+      } else {
+        const { featureSet, feature, alias } =
+          changes.data.label_feature.currentFieldValue
+        data.spec.label_feature = `${featureSet}.${feature}${alias === '' ? '' : ` as ${alias}`}`
+      }
     } else {
       data.spec[key] = changes.data[key].currentFieldValue
     }
