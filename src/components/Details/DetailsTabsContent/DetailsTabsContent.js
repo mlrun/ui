@@ -65,7 +65,6 @@ import {
 const DetailsTabsContent = ({
   applyChangesRef,
   formState,
-  handleEditInput,
   handlePreview,
   pageData,
   selectedItem,
@@ -197,7 +196,6 @@ const DetailsTabsContent = ({
           changes={detailsStore.changes}
           formState={formState}
           selectedItem={selectedItem}
-          handleEditInput={(value, field) => handleEditInput(value, field)}
           setChanges={setChanges}
           setChangesData={setChangesData}
           setChangesCounter={setChangesCounter}
@@ -209,7 +207,6 @@ const DetailsTabsContent = ({
 }
 
 DetailsTabsContent.propTypes = {
-  handleEditInput: PropTypes.func.isRequired,
   handlePreview: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

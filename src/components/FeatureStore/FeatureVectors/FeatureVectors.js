@@ -88,13 +88,11 @@ const FeatureVectors = ({
 
   const detailsFormInitialValues = useMemo(
     () => {
-      if(selectedFeatureVector.specFeatures) {
         return {
-          features: selectedFeatureVector.specFeatures.map( featureData => {
+          features: (selectedFeatureVector.specFeatures ?? []).map( featureData => {
               return {...parseFeatureTemplate(featureData)}
           })
         }
-      }
     },
     [selectedFeatureVector.specFeatures]
   )

@@ -21,6 +21,7 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { FieldArray } from 'react-final-form-arrays'
+import { OnChange } from 'react-final-form-listeners'
 
 import NoData from '../../common/NoData/NoData'
 import { ConfirmDialog, Tooltip, TextTooltipTemplate, RoundedIcon, FormInput } from 'igz-controls/components'
@@ -121,6 +122,14 @@ const DetailsRequestedFeaturesView = ({
                                   name={`${featureData}.alias`}
                                   validationRules={getValidationRules('feature.vector.alias')}
                                 />
+                                <OnChange name={`${featureData}.alias`}>
+                                  {value => {
+                                    formState.form.change(
+                                      `${featureData}.alias`,
+                                      value.length === 0 ? '' : value
+                                    )
+                                  }}
+                                </OnChange>
                               </div>
                             </div>
                             <div className="cell_actions cell_actions-visible">

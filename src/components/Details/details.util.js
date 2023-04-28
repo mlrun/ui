@@ -383,6 +383,8 @@ export const countChanges = changesData => {
           changesCounter++
         }
       })
+    } else if (field !== 'label_feature') {
+      changesCounter++
     }
   })
 
