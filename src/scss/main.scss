@@ -99,7 +99,6 @@ body {
     display: flex;
     flex: 1;
     flex-direction: column;
-    min-height: 620px;
     background-color: $white;
     border-radius: $mainBorderRadius;
     box-shadow: $jobsShadow;
@@ -121,6 +120,7 @@ body {
     display: flex;
     align-items: center;
     padding: 4px 24px;
+    border-bottom: $secondaryBorder;
 
     &_hidden {
       display: none;
@@ -192,17 +192,15 @@ main {
     .table {
       border-top: none;
 
-      .table-head__item,
+      .table-header-item,
       .table-body__cell {
         color: $primaryTextColor;
       }
 
-      .table-head {
-        background-color: $titanWhite;
-        border-radius: $mainBorderRadius;
-
-        .table-head__item {
-          height: 40px;
+      .table-header {
+        .table__row {
+          background-color: $titanWhite;
+          border-radius: $mainBorderRadius;
           border-bottom: none;
         }
       }
@@ -210,40 +208,166 @@ main {
   }
 }
 
-.sortable-header-cell {
+.table {
   position: relative;
-  align-items: flex-start;
-  border: 0;
-  border-radius: 0;
-  cursor: pointer;
+  text-align: left;
+  width: 100%;
 
-  & > * {
+  &__row {
+    display: flex;
+    flex-direction: row;
+    min-width: 100%;
+    min-height: 50px;
+    background-color: $white;
+    border-bottom: $secondaryBorder;
+
+    &:not(.parent-row-expanded) > * {
+      position: relative;
+      display: inline-flex;
+      flex: 1;
+      align-items: center;
+
+      @include tableDet(8px, 5px, 8px, 10px);
+
+      &:first-child {
+        margin-left: 10px;
+        padding-left: 25px;
+      }
+    }
+
+    &.parent-row {
+      &.row_active {
+        background-color: $alabaster;
+      }
+
+      &:not(.parent-row-expanded) {
+        &:hover {
+          background-color: $alabaster;
+        }
+
+        &:not(.parent-row_without-actions) {
+          &:hover {
+            .table-cell-icon {
+              .actions-menu {
+                &__container {
+                  display: block;
+
+                  .btn {
+                    min-width: 24px;
+                    padding: 0;
+                    border: none;
+
+                    &:hover {
+                      background-color: transparent;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .expand-arrow {
+        position: absolute;
+        left: 0;
+        cursor: pointer;
+      }
+
+      .best-iteration {
+        position: absolute;
+        top: auto;
+        bottom: auto;
+        left: 0;
+      }
+
+      &-expanded {
+        flex-direction: column;
+        border: 0;
+
+        .table__row {
+          &:hover {
+            background-color: $alabaster;
+
+            .table-cell-icon {
+              .actions-menu {
+                &__container {
+                  display: block;
+                }
+              }
+            }
+          }
+        }
+
+        .row_grouped-by {
+          position: sticky;
+          top: 50px;
+          background-color: $white;
+          padding: 0;
+          z-index: 3;
+
+          .expand-arrow {
+            transform: rotate(90deg);
+          }
+        }
+      }
+    }
+  }
+
+  &-header {
+    position: sticky;
+    top: 0;
+    min-width: 100%;
+    background-color: $white;
+    z-index: 3;
+
+    &-item {
+      min-width: 75px;
+
+      @include tableHeader;
+    }
+  }
+}
+
+.sortable-header {
+  &-cell {
+    position: relative;
+    border: 0;
+    border-radius: 0;
+    cursor: pointer;
+
+    .sort-icon {
+      display: none;
+      position: absolute;
+      right: 2px;
+      top: auto;
+      bottom: auto;
+    }
+
+    &_active {
+      background-color: $alabaster;
+
+      .sort-icon {
+        display: block;
+      }
+    }
+
+    &:hover {
+      .sort-icon {
+        display: block;
+      }
+    }
+
+    label {
+      cursor: pointer;
+    }
+  }
+
+  &-label {
+    position: relative;
     display: flex;
     align-items: center;
-    min-width: 100%;
-  }
-
-  .sort-icon {
-    display: none;
-    position: absolute;
-    top: auto;
-    bottom: auto;
-    left: 2px;
-    margin: 0;
-  }
-
-  &_active {
-    background-color: $alabaster;
-
-    .sort-icon {
-      display: block;
-    }
-  }
-
-  &:hover {
-    .sort-icon {
-      display: block;
-    }
+    padding-right: 25px;
   }
 }
 

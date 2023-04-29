@@ -30,7 +30,7 @@ const TableHead = React.forwardRef(
   ({ content, hideActionsMenu, mainRowItemsCount, selectedItem, sortProps }, ref) => {
     const getHeaderCellClasses = (headerId, isSortable, tableItemClass, index) =>
       classNames(
-        'table-head__item',
+        'table-header-item',
         tableItemClass,
         isSortable && 'sortable-header-cell',
         isSortable && sortProps?.selectedColumnName === headerId && 'sortable-header-cell_active',
@@ -38,24 +38,29 @@ const TableHead = React.forwardRef(
       )
 
     return (
-      <div className="table-head" ref={ref}>
-        {content.map(({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
-          return tableItem.type !== 'hidden' && !tableItem.hidden ? (
-            <div
-              className={getHeaderCellClasses(headerId, isSortable, tableItem.class, index)}
-              key={`${headerId}`}
-              onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
-            >
-              <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                {isSortable && sortProps.getSortingIcon(headerId)}
-                {headerLabel}
-              </Tooltip>
-              {tableItem.tip && <Tip text={tableItem.tip} />}
-            </div>
-          ) : null
-        })}
-        {!hideActionsMenu && <div className="table-body__cell action_cell" />}
-      </div>
+      <thead className="table-header">
+        <tr className="table__row" ref={ref}>
+          {content.map(({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
+            return tableItem.type !== 'hidden' && !tableItem.hidden ? (
+              <th
+                className={getHeaderCellClasses(headerId, isSortable, tableItem.class, index)}
+                key={`${headerId}`}
+                onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
+              >
+                <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                  <label className="sortable-header-label">
+                    <span className="data-ellipsis">{headerLabel}</span>
+                    {isSortable && sortProps.getSortingIcon(headerId)}
+                  </label>
+                </Tooltip>
+
+                {tableItem.tip && <Tip text={tableItem.tip} />}
+              </th>
+            ) : null
+          })}
+          {!hideActionsMenu && <th className="table-body__cell table-cell-icon" />}
+        </tr>
+      </thead>
     )
   }
 )

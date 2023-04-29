@@ -2,9 +2,6 @@
 @import '~igz-controls/scss/borders';
 
 .tabs-slider {
-  position: sticky;
-  top: 0;
-  z-index: 6;
   display: flex;
   align-items: stretch;
   background-color: $white;
@@ -44,7 +41,7 @@
     min-width: fit-content;
     max-width: 24px;
     display: flex;
-    width:30px;
+    width: 30px;
 
     &_left {
       padding-top: 3px;

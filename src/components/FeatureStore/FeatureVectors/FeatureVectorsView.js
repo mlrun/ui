@@ -84,19 +84,17 @@ const FeatureVectorsView = React.forwardRef(
               tab={FEATURE_VECTORS_TAB}
               tableHeaders={tableContent[0]?.content ?? []}
             >
-              <div className="table-body">
-                {tableContent.map((tableItem, index) => (
-                  <FeatureStoreTableRow
-                    actionsMenu={actionsMenu}
-                    handleExpandRow={handleExpandRow}
-                    key={index}
-                    pageTab={FEATURE_VECTORS_TAB}
-                    rowItem={tableItem}
-                    selectedItem={selectedFeatureVector}
-                    selectedRowData={selectedRowData}
-                  />
-                ))}
-              </div>
+              {tableContent.map((tableItem, index) => (
+                <FeatureStoreTableRow
+                  actionsMenu={actionsMenu}
+                  handleExpandRow={handleExpandRow}
+                  key={index}
+                  pageTab={FEATURE_VECTORS_TAB}
+                  rowItem={tableItem}
+                  selectedItem={selectedFeatureVector}
+                  selectedRowData={selectedRowData}
+                />
+              ))}
             </Table>
           </>
         )}

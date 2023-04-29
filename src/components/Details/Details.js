@@ -288,22 +288,24 @@ const Details = ({
         <div className={detailsPanelClassNames} ref={detailsRef} data-testid="detailsPanel">
           {detailsStore.loading && <Loader />}
           {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
-          <DetailsHeader
-            actionsMenu={actionsMenu}
-            applyChanges={applyChanges}
-            applyChangesRef={applyChangesRef}
-            cancelChanges={cancelChanges}
-            getCloseDetailsLink={getCloseDetailsLink}
-            handleCancel={handleCancel}
-            handleRefresh={handleRefresh}
-            handleShowWarning={handleShowWarning}
-            isDetailsScreen={isDetailsScreen}
-            pageData={pageData}
-            selectedItem={selectedItem}
-            setIteration={setIteration}
-            tab={tab}
-          />
-          <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
+          <div className="item-header-wrapper">
+            <DetailsHeader
+              actionsMenu={actionsMenu}
+              applyChanges={applyChanges}
+              applyChangesRef={applyChangesRef}
+              cancelChanges={cancelChanges}
+              getCloseDetailsLink={getCloseDetailsLink}
+              handleCancel={handleCancel}
+              handleRefresh={handleRefresh}
+              handleShowWarning={handleShowWarning}
+              isDetailsScreen={isDetailsScreen}
+              pageData={pageData}
+              selectedItem={selectedItem}
+              setIteration={setIteration}
+              tab={tab}
+            />
+            <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
+          </div>
           <DetailsTabsContent
             applyChangesRef={applyChangesRef}
             formState={formState}

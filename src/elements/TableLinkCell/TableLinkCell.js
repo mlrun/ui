@@ -45,7 +45,7 @@ const TableLinkCell = ({
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 
   return (
-    <div className={tableCellClassNames}>
+    <td className={tableCellClassNames}>
       {data.showStatus && stateValue && stateLabel && (
         <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
           <i className={stateClassName} />
@@ -115,7 +115,7 @@ const TableLinkCell = ({
           className="expand-arrow"
         />
       )}
-    </div>
+    </td>
   )
 }
 

@@ -363,11 +363,9 @@ const ScheduledJobs = ({
             tab={SCHEDULE_TAB}
             tableHeaders={tableContent[0]?.content ?? []}
           >
-            <div className="table-body">
-              {tableContent.map((tableItem, index) => (
-                <JobsTableRow actionsMenu={actionsMenu} key={index} rowItem={tableItem} />
-              ))}
-            </div>
+            {tableContent.map((tableItem, index) => (
+              <JobsTableRow actionsMenu={actionsMenu} key={index} rowItem={tableItem} />
+            ))}
           </Table>
         </>
       )}

@@ -5,12 +5,6 @@
 @import '~igz-controls/scss/shadows';
 
 .table {
-  @include jobsFlex;
-
-  position: relative;
-  width: 100%;
-  border-top: $secondaryBorder;
-
   & [class*='table-cell-'] {
     flex: 0 0 auto;
     min-width: 75px;
@@ -48,7 +42,11 @@
     }
 
     &-name {
+      position: sticky;
+      left: 10px;
+      background-color: inherit;
       width: 230px;
+      z-index: 1;
     }
 
     &-icon {
@@ -108,9 +106,12 @@
       border-left: $secondaryBorder;
     }
 
-    &-row {
-      display: flex;
-      flex-flow: column wrap;
+    &__row {
+      & > * {
+        display: inline-flex;
+        flex: 1;
+        align-items: center;
+      }
     }
   }
 
@@ -132,24 +133,8 @@
     overflow: hidden auto;
   }
 
-  &-head {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    display: flex;
-    background-color: $white;
-    border-bottom: $secondaryBorder;
-
-    &__item {
-      position: relative;
-
-      @include tableDet;
-      @include tableHeader(8px, 5px, 8px, 20px);
-
-      & > :first-child {
-        padding-left: 5px;
-      }
-
+  &-header {
+    &-item {
       &.buttonPopout,
       &.buttonDownload {
         @include tableColumnFlex(0.5, 80px);
@@ -165,12 +150,7 @@
     }
   }
 
-  .action_cell {
-    flex: 1 0 47px;
-    width: 47px;
-    max-width: 47px;
-    padding: 0 5px;
-
+  .table-cell-icon {
     & > :first-child {
       padding-left: 0;
     }
@@ -186,20 +166,6 @@
     background-color: $white;
 
     &__cell {
-      @include tableDet;
-
-      flex-wrap: wrap;
-      margin: 0 1px;
-      padding: 8px 5px 8px 20px;
-      font-weight: 400;
-      font-size: 15px;
-      line-height: 18px;
-      border-bottom: none;
-
-      & > :first-child {
-        padding-left: 5px;
-      }
-
       &_hidden {
         visibility: hidden;
         .chip {
@@ -230,8 +196,7 @@
 
       a {
         position: relative;
-        display: flex;
-        flex: 1;
+        display: inline-flex;
         flex-direction: column;
         margin: 0;
         text-decoration: none;
@@ -262,12 +227,6 @@
         }
       }
 
-      .expand-arrow {
-        position: absolute;
-        left: 10px;
-        cursor: pointer;
-      }
-
       .path-tooltip {
         cursor: pointer;
       }
@@ -278,62 +237,19 @@
     }
 
     &__row {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      min-height: 50px;
-
-      border-bottom: $secondaryBorder;
-
       &.parent-row {
-        &:not(.parent-row-expanded) {
-          &:hover {
-            background-color: $alabaster;
-          }
-
-          &:not(.parent-row_without-actions) {
-            &:hover {
-              .action_cell {
-                .actions-menu {
-                  &__container {
-                    display: block;
-
-                    .btn {
-                      min-width: 24px;
-                      padding: 0;
-                      border: none;
-
-                      &:hover {
-                        background-color: transparent;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        &-expanded {
-          flex-direction: column;
-        }
-
         .row_grouped-by {
           width: 100%;
 
-          .table-body__row {
+          .table__row {
             &:first-child {
               position: sticky;
               top: 50px;
               z-index: 1;
               background-color: $white;
 
-              .table-body__cell {
+              .table__cell {
                 border-bottom: none;
-
-                .expand-arrow {
-                  transform: rotate(90deg);
-                }
               }
             }
 
@@ -343,18 +259,6 @@
 
             &__cell {
               display: flex;
-            }
-
-            &:hover {
-              background-color: $alabaster;
-
-              .action_cell {
-                .actions-menu {
-                  &__container {
-                    display: block;
-                  }
-                }
-              }
             }
           }
         }

@@ -84,20 +84,18 @@ const FeaturesView = React.forwardRef(
               tableHeaders={tableContent[0]?.content ?? []}
             >
               <>
-                <div className="table-body">
-                  {tableContent.map((tableItem, index) => (
-                    <FeatureStoreTableRow
-                      actionsMenu={actionsMenu}
-                      handleExpandRow={handleExpandRow}
-                      key={index}
-                      hideActionsMenu={tableStore.isTablePanelOpen}
-                      mainRowItemsCount={2}
-                      pageTab={FEATURES_TAB}
-                      rowItem={tableItem}
-                      selectedRowData={selectedRowData}
-                    />
-                  ))}
-                </div>
+                {tableContent.map((tableItem, index) => (
+                  <FeatureStoreTableRow
+                    actionsMenu={actionsMenu}
+                    handleExpandRow={handleExpandRow}
+                    key={index}
+                    hideActionsMenu={tableStore.isTablePanelOpen}
+                    mainRowItemsCount={2}
+                    pageTab={FEATURES_TAB}
+                    rowItem={tableItem}
+                    selectedRowData={selectedRowData}
+                  />
+                ))}
               </>
             </Table>
           </>
