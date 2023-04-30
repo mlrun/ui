@@ -230,8 +230,7 @@ main {
       @include tableDet(8px, 5px, 8px, 10px);
 
       &:first-child {
-        margin-left: 10px;
-        padding-left: 25px;
+        padding-left: 30px;
       }
     }
 
@@ -270,7 +269,7 @@ main {
 
       .expand-arrow {
         position: absolute;
-        left: 0;
+        left: 5px;
         cursor: pointer;
       }
 
@@ -278,7 +277,8 @@ main {
         position: absolute;
         top: auto;
         bottom: auto;
-        left: 0;
+        left: 5px;
+        margin-top: 3px;
       }
 
       &-expanded {
