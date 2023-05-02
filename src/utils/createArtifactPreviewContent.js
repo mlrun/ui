@@ -79,6 +79,8 @@ export const createArtifactPreviewContent = (res, fileFormat, path, artifactName
       }
     }
   }
+  // console.log('res.data', res.data)
+  // console.log('artifact', artifact)
 
   return artifact
 }
