@@ -24,6 +24,7 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
+import { isEqual, pickBy } from 'lodash'
 import classnames from 'classnames'
 
 import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
@@ -223,10 +224,14 @@ const Details = ({
   ])
 
   useEffect(() => {
-    if (formRef.current) {
+    if (
+      formRef.current &&
+      detailsStore.changes.counter === 0 &&
+      !isEqual(pickBy(formInitialValues), pickBy(formRef.current.getState()?.values))
+    ) {
       formRef.current.restart(formInitialValues)
     }
-  }, [formInitialValues])
+  }, [formInitialValues, detailsStore.changes.counter])
 
   const detailsMenuClick = useCallback(() => {
     if (historyIsBlocked) {
