@@ -78,7 +78,7 @@ const ProjectsView = ({
 
   return (
     <div className={projectsClassNames}>
-      {projectStore.loading && <Loader />}
+      {(projectStore.loading || projectStore.project.loading) && <Loader />}
       {createProject && (
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}
