@@ -219,7 +219,7 @@ main {
       min-width: 100%;
       min-height: 50px;
       background-color: inherit;
-      border-bottom: $secondaryBorder;
+      border-bottom: $tableRowBorder;
 
       &:not(.parent-row-expanded) > * {
         position: relative;
@@ -349,7 +349,6 @@ main {
 
       &-item {
         min-width: 75px;
-        background-color: $titanWhite;
 
         @include tableHeader;
 
@@ -371,7 +370,7 @@ main {
         background-color: $white;
 
         &:hover {
-          background-color: #f6f7ff;
+          background-color: $zircon;
         }
 
         & > * {
