@@ -25,7 +25,6 @@ import { isEmpty } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
@@ -45,7 +44,7 @@ const ArtifactsTableRow = ({
   const parent = useRef()
   const params = useParams()
   const rowClassNames = classnames(
-    'table__row',
+    'table-row',
     'parent-row',
     (selectedItem.db_key || selectedItem?.spec?.model) &&
       getArtifactIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
@@ -63,8 +62,8 @@ const ArtifactsTableRow = ({
               ${parent.current?.classList.contains('parent-row-expanded') && 'row_grouped-by'}`}
           >
             <table cellPadding="0" cellSpacing="0" className="table">
-              <tbody>
-                <tr className="table__row">
+              <tbody className="table-body">
+                <tr className="table-row">
                   {rowItem.content.map((data, index) => {
                     return index < mainRowItemsCount ? (
                       <TableCell
@@ -88,18 +87,14 @@ const ArtifactsTableRow = ({
               </tbody>
             </table>
           </td>
-          {selectedRowData[rowItem.data.ui.identifier]?.loading ? (
-            <td className="table-body__cell">
-              <Loader />
-            </td>
-          ) : selectedRowData[rowItem.data.ui.identifier]?.error ? (
+          {selectedRowData[rowItem.data.ui.identifier]?.error ? (
             <td className="table-body__cell">
               <ErrorMessage message={selectedRowData[rowItem.data.ui.identifier]?.error?.message} />
             </td>
           ) : (
             selectedRowData[rowItem.data.ui.identifier]?.content.map((tableContentItem, index) => {
               const subRowClassNames = classnames(
-                'table__row',
+                'table-row',
                 selectedItem.key &&
                   tableContentItem.data.ui.identifierUnique ===
                     getArtifactIdentifier(selectedItem, true) &&
@@ -109,7 +104,7 @@ const ArtifactsTableRow = ({
               return (
                 <td className="table-body__cell" key={index}>
                   <table cellPadding="0" cellSpacing="0" className="table">
-                    <tbody>
+                    <tbody className="table-body">
                       <tr className={subRowClassNames}>
                         {
                           <>

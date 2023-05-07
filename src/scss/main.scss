@@ -73,9 +73,14 @@ body {
   position: relative;
   flex-direction: column;
   min-width: 800px;
-  margin: 15px 24px;
+  padding: 15px 24px 60px;
+  background-color: $white;
 
   @include jobsFlex;
+
+  @media screen and (min-width: 1200px) {
+    padding: 15px 64px 60px;
+  }
 
   &__header {
     display: flex;
@@ -100,8 +105,6 @@ body {
     flex: 1;
     flex-direction: column;
     background-color: $white;
-    border-radius: $mainBorderRadius;
-    box-shadow: $jobsShadow;
 
     .no_data {
       margin: auto;
@@ -119,8 +122,7 @@ body {
   &__action-bar-wrapper {
     display: flex;
     align-items: center;
-    padding: 4px 24px;
-    border-bottom: $secondaryBorder;
+    padding: 4px 0;
 
     &_hidden {
       display: none;
@@ -159,7 +161,6 @@ main {
 
     .content,
     .settings__content {
-      margin-left: 40px;
       transition: margin 0.3s ease-in-out;
     }
   }
@@ -198,9 +199,7 @@ main {
       }
 
       .table-header {
-        .table__row {
-          background-color: $titanWhite;
-          border-radius: $mainBorderRadius;
+        .table-row {
           border-bottom: none;
         }
       }
@@ -213,51 +212,76 @@ main {
   text-align: left;
   width: 100%;
 
-  &__row {
-    display: flex;
-    flex-direction: row;
-    min-width: 100%;
-    min-height: 50px;
-    background-color: $white;
-    border-bottom: $secondaryBorder;
+  .table {
+    &-row {
+      display: flex;
+      flex-direction: row;
+      min-width: 100%;
+      min-height: 50px;
+      background-color: inherit;
+      border-bottom: $secondaryBorder;
 
-    &:not(.parent-row-expanded) > * {
-      position: relative;
-      display: inline-flex;
-      flex: 1;
-      align-items: center;
+      &:not(.parent-row-expanded) > * {
+        position: relative;
+        display: inline-flex;
+        flex: 1;
+        align-items: center;
 
-      @include tableDet(8px, 5px, 8px, 10px);
+        @include tableDet(8px, 5px, 8px, 10px);
 
-      &:first-child {
-        padding-left: 30px;
-      }
-    }
-
-    &.parent-row {
-      &.row_active {
-        background-color: $alabaster;
-      }
-
-      &:not(.parent-row-expanded) {
-        &:hover {
-          background-color: $alabaster;
+        &:first-child {
+          padding-left: 30px;
         }
 
-        &:not(.parent-row_without-actions) {
-          &:hover {
-            .table-cell-icon {
-              .actions-menu {
-                &__container {
-                  display: block;
+        &.table-cell {
+          &-name {
+            position: sticky;
+            left: 0;
+            flex-basis: 240px;
+            max-width: 240px;
+            z-index: 1;
+          }
 
-                  .btn {
-                    min-width: 24px;
-                    padding: 0;
-                    border: none;
+          &-icon {
+            justify-content: center;
+            padding: 5px;
+            max-width: 85px;
 
-                    &:hover {
-                      background-color: transparent;
+            @include tableColumnFlex(0, 50px);
+
+            & > :first-child {
+              padding: 0;
+            }
+
+            &__run-icon {
+              margin-bottom: -2px;
+              transform: rotate(-90deg) scale(1.2);
+            }
+          }
+        }
+      }
+
+      &.parent-row {
+        &.row_active {
+          background-color: #f6f7ff;
+        }
+
+        &:not(.parent-row-expanded) {
+          &:not(.parent-row_without-actions) {
+            &:hover {
+              .table-cell-icon {
+                .actions-menu {
+                  &__container {
+                    display: block;
+
+                    .btn {
+                      min-width: 24px;
+                      padding: 0;
+                      border: none;
+
+                      &:hover {
+                        background-color: transparent;
+                      }
                     }
                   }
                 }
@@ -265,66 +289,95 @@ main {
             }
           }
         }
-      }
 
-      .expand-arrow {
-        position: absolute;
-        left: 5px;
-        cursor: pointer;
-      }
+        .expand-arrow {
+          position: absolute;
+          left: 5px;
+          cursor: pointer;
+        }
 
-      .best-iteration {
-        position: absolute;
-        top: auto;
-        bottom: auto;
-        left: 5px;
-        margin-top: 3px;
-      }
+        .best-iteration {
+          position: absolute;
+          top: auto;
+          bottom: auto;
+          left: 5px;
+          margin-top: 3px;
+        }
 
-      &-expanded {
-        flex-direction: column;
-        border: 0;
+        &-expanded {
+          flex-direction: column;
+          border: 0;
 
-        .table__row {
-          &:hover {
-            background-color: $alabaster;
-
-            .table-cell-icon {
-              .actions-menu {
-                &__container {
-                  display: block;
+          .table-row {
+            &:hover {
+              .table-cell-icon {
+                .actions-menu {
+                  &__container {
+                    display: block;
+                  }
                 }
               }
             }
           }
-        }
 
-        .row_grouped-by {
-          position: sticky;
-          top: 50px;
-          background-color: $white;
-          padding: 0;
-          z-index: 3;
+          .row_grouped-by {
+            position: sticky;
+            top: 50px;
+            background-color: $white;
+            padding: 0;
+            z-index: 3;
 
-          .expand-arrow {
-            transform: rotate(90deg);
+            .expand-arrow {
+              transform: rotate(90deg);
+            }
           }
         }
       }
+
+      .checkbox {
+        position: absolute;
+        left: 8px;
+        margin: 0;
+      }
     }
-  }
 
-  &-header {
-    position: sticky;
-    top: 0;
-    min-width: 100%;
-    background-color: $white;
-    z-index: 3;
+    &-header {
+      position: sticky;
+      top: 0;
+      min-width: 100%;
+      z-index: 3;
 
-    &-item {
-      min-width: 75px;
+      &-item {
+        min-width: 75px;
+        background-color: $titanWhite;
 
-      @include tableHeader;
+        @include tableHeader;
+
+        &:first-child {
+          border-radius: 4px 0 0 0;
+        }
+
+        &:last-child {
+          border-radius: 0 4px 0 0;
+        }
+      }
+    }
+
+    &-body {
+      position: relative;
+      z-index: 2;
+
+      & > * {
+        background-color: $white;
+
+        &:hover {
+          background-color: #f6f7ff;
+        }
+
+        & > * {
+          background-color: inherit;
+        }
+      }
     }
   }
 }

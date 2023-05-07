@@ -27,7 +27,7 @@ import { getV3ioStreamShardLagIdentifier } from '../../utils/getUniqueIdentifier
 
 const ConsumerGroupShardLagTableRow = ({ content, rowItem }) => {
   const parent = useRef()
-  const rowClassNames = classnames('table__row', 'parent-row')
+  const rowClassNames = classnames('table-row', 'parent-row')
   const currentItem = content.find(
     contentItem =>
       getV3ioStreamShardLagIdentifier(contentItem) === rowItem.shardLagId?.identifierUnique

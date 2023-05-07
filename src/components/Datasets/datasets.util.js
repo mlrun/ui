@@ -112,9 +112,7 @@ export const fetchDataSetRowData = async (
 
   setSelectedRowData(state => ({
     ...state,
-    [dataSetIdentifier]: {
-      loading: true
-    }
+    loading: true
   }))
 
   dispatch(fetchDataSet({ project: dataSet.project, dataSet: dataSet.db_key, iter, tag }))
@@ -127,10 +125,10 @@ export const fetchDataSetRowData = async (
             [dataSetIdentifier]: {
               content: result.map(artifact =>
                 createDatasetsRowData(artifact, projectName, frontendSpec)
-              ),
-              error: null,
-              loading: false
-            }
+              )
+            },
+            error: null,
+            loading: false
           }
         })
       }
@@ -139,10 +137,10 @@ export const fetchDataSetRowData = async (
       setSelectedRowData(state => ({
         ...state,
         [dataSetIdentifier]: {
-          ...state[dataSetIdentifier],
-          error,
-          loading: false
-        }
+          ...state[dataSetIdentifier]
+        },
+        error,
+        loading: false
       }))
     })
 }

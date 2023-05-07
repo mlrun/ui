@@ -5,6 +5,36 @@
 @import '~igz-controls/scss/shadows';
 
 .table {
+  &__content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    [class*='icon'] {
+      flex-wrap: nowrap;
+    }
+
+    .text-bold {
+      font-weight: 500;
+    }
+  }
+
+  &__wrapper {
+    .content & {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      color: $mulledWine;
+      background-color: $white;
+    }
+  }
+
   & [class*='table-cell-'] {
     flex: 0 0 auto;
     min-width: 75px;
@@ -40,25 +70,12 @@
       flex: 1;
       max-width: 150px;
     }
+  }
 
-    &-name {
-      position: sticky;
-      left: 0;
-      background-color: inherit;
-      width: 230px;
-      z-index: 1;
-    }
-
-    &-icon {
-      justify-content: center;
-      padding: 5px;
-      max-width: 85px;
-
-      @include tableColumnFlex(0, 50px);
-
-      & > :first-child {
-        padding: 0;
-      }
+  &__scrolled {
+    .table-cell-name {
+      border-right: $secondaryBorder;
+      box-shadow: 2px 0 5px -2px rgba($black, 0.2);
     }
   }
 
@@ -71,46 +88,6 @@
 
       &:first-child {
         margin-left: 0;
-      }
-    }
-  }
-
-  &__content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-
-    [class*='icon'] {
-      flex-wrap: nowrap;
-    }
-
-    .text-bold {
-      font-weight: 500;
-    }
-  }
-
-  &__wrapper {
-    .content & {
-      position: absolute;
-      top: 0;
-      right: 0;
-      z-index: 2;
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      color: $mulledWine;
-      background-color: $white;
-      border-left: $secondaryBorder;
-    }
-
-    &__row {
-      & > * {
-        display: inline-flex;
-        flex: 1;
-        align-items: center;
       }
     }
   }
@@ -133,145 +110,6 @@
     overflow: hidden auto;
   }
 
-  &-header {
-    &-item {
-      &.buttonPopout,
-      &.buttonDownload {
-        @include tableColumnFlex(0.5, 80px);
-      }
-
-      &.align-right {
-        justify-content: flex-end;
-      }
-
-      .tip-container {
-        margin-left: 2px;
-      }
-    }
-  }
-
-  .table-cell-icon {
-    & > :first-child {
-      padding-left: 0;
-    }
-
-    &__run-icon {
-      margin-bottom: -2px;
-      transform: rotate(-90deg) scale(1.2);
-    }
-  }
-
-  &-body {
-    color: $mulledWine;
-    background-color: $white;
-
-    &__cell {
-      &_hidden {
-        visibility: hidden;
-        .chip {
-          visibility: hidden;
-        }
-      }
-
-      .cell_name {
-        position: relative;
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        margin: 0;
-      }
-
-      .text_small {
-        min-width: 100%;
-        max-width: 50px;
-      }
-
-      &.align-right {
-        justify-content: flex-end;
-      }
-
-      &_type {
-        text-transform: capitalize;
-      }
-
-      a {
-        position: relative;
-        display: inline-flex;
-        flex-direction: column;
-        margin: 0;
-        text-decoration: none;
-
-        span {
-          display: block;
-          width: 100%;
-        }
-      }
-
-      i {
-        margin-right: 5px;
-      }
-
-      button {
-        display: flex;
-        padding: 0;
-        font-size: 15px;
-        background-color: transparent;
-        border: none;
-
-        &:disabled {
-          cursor: default;
-        }
-
-        &:not(:disabled) {
-          cursor: pointer;
-        }
-      }
-
-      .path-tooltip {
-        cursor: pointer;
-      }
-
-      .chip_short {
-        max-width: 100px;
-      }
-    }
-
-    &__row {
-      &.parent-row {
-        .row_grouped-by {
-          width: 100%;
-
-          .table__row {
-            &:first-child {
-              position: sticky;
-              top: 50px;
-              z-index: 1;
-              background-color: $white;
-
-              .table__cell {
-                border-bottom: none;
-              }
-            }
-
-            &:last-child {
-              border-bottom: none;
-            }
-
-            &__cell {
-              display: flex;
-            }
-          }
-        }
-      }
-
-      .checkbox {
-        position: absolute;
-        left: 8px;
-        margin: 0;
-      }
-    }
-  }
-
   .row_active {
     background-color: $alabaster;
   }
@@ -279,5 +117,100 @@
   .error-message {
     justify-content: center;
     width: 100%;
+  }
+
+  .table {
+    &-header {
+      &-item {
+        &.buttonPopout,
+        &.buttonDownload {
+          @include tableColumnFlex(0.5, 80px);
+        }
+
+        &.align-right {
+          justify-content: flex-end;
+        }
+
+        .tip-container {
+          margin-left: 2px;
+        }
+      }
+    }
+
+    &-body {
+      color: $mulledWine;
+
+      &__cell {
+        &_hidden {
+          visibility: hidden;
+          .chip {
+            visibility: hidden;
+          }
+        }
+
+        .cell_name {
+          position: relative;
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          margin: 0;
+        }
+
+        .text_small {
+          min-width: 100%;
+          max-width: 50px;
+        }
+
+        &.align-right {
+          justify-content: flex-end;
+        }
+
+        &_type {
+          text-transform: capitalize;
+        }
+
+        a {
+          position: relative;
+          display: inline-flex;
+          flex: 1;
+          flex-direction: column;
+          margin: 0;
+          text-decoration: none;
+
+          span {
+            display: block;
+            width: 100%;
+          }
+        }
+
+        i {
+          margin-right: 5px;
+        }
+
+        button {
+          display: flex;
+          padding: 0;
+          font-size: 15px;
+          background-color: transparent;
+          border: none;
+
+          &:disabled {
+            cursor: default;
+          }
+
+          &:not(:disabled) {
+            cursor: pointer;
+          }
+        }
+
+        .path-tooltip {
+          cursor: pointer;
+        }
+
+        .chip_short {
+          max-width: 100px;
+        }
+      }
+    }
   }
 }

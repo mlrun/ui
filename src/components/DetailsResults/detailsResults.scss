@@ -9,42 +9,26 @@
   width: 100%;
 
   .table {
-    &-body {
-      flex: 1;
-      min-width: 100%;
-    }
-
-    &-header {
-      .results-table__row {
-        &:hover {
-          background-color: transparent;
+    .table {
+      &-header {
+        &-item {
+          background-color: $white;
         }
       }
-    }
 
-    &__cell {
-      min-width: 140px;
-      margin: 0 1px;
-      padding: 8px 10px 8px 5px;
-      border-bottom: $secondaryBorder;
-
-      & > :first-child {
-        padding-left: 5px;
+      .table-cell-wide {
+        flex: 0 0 250px;
+        width: 250px;
       }
-    }
 
-    .table__cell-wide {
-      flex: 0 0 250px;
-      width: 250px;
-    }
+      .table-cell-full {
+        flex: 1 0 auto;
+        width: auto;
+      }
 
-    .table__cell-full {
-      flex: 1 0 auto;
-      width: auto;
-    }
-
-    i {
-      margin: 0 5px;
+      i {
+        margin: 0 5px;
+      }
     }
   }
 }

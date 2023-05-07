@@ -39,7 +39,7 @@ const TableHead = React.forwardRef(
 
     return (
       <thead className="table-header">
-        <tr className="table__row" ref={ref}>
+        <tr className="table-row" ref={ref}>
           {content.map(({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
             return tableItem.type !== 'hidden' && !tableItem.hidden ? (
               <th
@@ -58,7 +58,7 @@ const TableHead = React.forwardRef(
               </th>
             ) : null
           })}
-          {!hideActionsMenu && <th className="table-body__cell table-cell-icon" />}
+          {!hideActionsMenu && <th className="table-header-item table-cell-icon" />}
         </tr>
       </thead>
     )

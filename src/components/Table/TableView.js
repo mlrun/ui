@@ -70,6 +70,7 @@ const TableView = ({
   sortProps,
   tab,
   tableContent,
+  tableRef,
   tableContentRef,
   tableHeaders,
   tableHeadRef,
@@ -78,11 +79,11 @@ const TableView = ({
   return (
     <div className="table__content" ref={tableContentRef}>
       <div className="table__wrapper">
-        <table className="table" cellPadding="0" cellSpacing="0">
+        <table className="table" cellPadding="0" cellSpacing="0" ref={tableRef}>
           {pageData.tableHeaders && (
             <>
               <thead className="table-header">
-                <tr className="table__row">
+                <tr className="table-row">
                   {pageData.tableHeaders?.map(
                     (item, index) =>
                       !item.hidden && (

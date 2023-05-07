@@ -66,6 +66,7 @@ const ModelsPage = () => {
           )}
         </div>
         <div className="content">
+          {artifactsStore.loading && <Loader />}
           <ContentMenu
             activeTab={
               location.pathname.includes(REAL_TIME_PIPELINES_TAB)
@@ -79,7 +80,6 @@ const ModelsPage = () => {
           />
           <div className="table-container">
             <Outlet />
-            {artifactsStore.loading && <Loader />}
           </div>
         </div>
       </div>

@@ -65,7 +65,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
             {job.iterationStats && job.iterationStats.length !== 0 && !job.error ? (
               <>
                 <thead className="table-header">
-                  <tr className="table__row">
+                  <tr className="table-row">
                     {sortedTableHeaders.map(
                       ({ headerLabel, headerId, isSortable, ...tableItem }) => {
                         return (
@@ -89,14 +89,14 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                 </thead>
                 <tbody className="table-body">
                   {sortedTableContent.map((tableContentItem, index) => (
-                    <tr className="table__row parent-row" key={index}>
+                    <tr className="table-row parent-row" key={index}>
                       {tableContentItem.map((contentItemValue, idx) => {
                         if (
                           typeof value === 'string' &&
                           contentItemValue.match(/completed|running|error/gi)
                         ) {
                           return (
-                            <td className="table-body__cell" key={`${contentItemValue}${idx}`}>
+                            <td className="table-body-cell" key={`${contentItemValue}${idx}`}>
                               <Tooltip
                                 template={
                                   <TextTooltipTemplate
@@ -118,7 +118,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                           return (
                             <td
                               key={`${contentItemValue}${idx}`}
-                              className="results-table__medal table-body__cell"
+                              className="results-table__medal table-body-cell"
                             >
                               <span>{contentItemValue}</span>
                               <Tooltip
@@ -131,7 +131,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                           )
                         } else {
                           return (
-                            <td className="table-body__cell" key={`${contentItemValue}${idx}`}>
+                            <td className="table-body-cell" key={`${contentItemValue}${idx}`}>
                               <Tooltip
                                 className="data-ellipsis"
                                 template={
@@ -151,8 +151,8 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
             ) : job.iterations?.length === 0 && Object.keys(job.results ?? {}).length !== 0 ? (
               Object.keys(job.results).map(key => {
                 return (
-                  <tr key={key} className="table__row">
-                    <td className="table-body__cell table__cell-wide">
+                  <tr key={key} className="table-row">
+                    <td className="table-body-cell table-cell-wide">
                       <Tooltip
                         className="data-ellipsis"
                         template={<TextTooltipTemplate text={key} />}
@@ -160,7 +160,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                         {key}
                       </Tooltip>
                     </td>
-                    <td className="table-body__cell table__cell-full">
+                    <td className="table-body-cell table-cell-full">
                       <Tooltip
                         className="data-ellipsis"
                         template={<TextTooltipTemplate text={job.results[key]} />}

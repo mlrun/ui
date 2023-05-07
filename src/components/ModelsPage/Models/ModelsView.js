@@ -22,6 +22,7 @@ import PropTypes from 'prop-types'
 
 import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
@@ -73,6 +74,7 @@ const ModelsView = React.forwardRef(
               <NoData message={getNoDataMessage(filtersStore, filters, MODELS_PAGE, MODELS_TAB)} />
             ) : (
               <>
+                {selectedRowData.loading && <Loader />}
                 <Table
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}

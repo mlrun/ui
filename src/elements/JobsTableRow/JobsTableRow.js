@@ -32,7 +32,7 @@ import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) => {
   const params = useParams()
   const rowClassNames = classnames(
-    'table__row',
+    'table-row',
     'parent-row',
     getJobIdentifier(selectedJob, true) === rowItem.data.ui.identifierUnique && 'row_active'
   )

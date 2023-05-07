@@ -48,7 +48,7 @@ const FeatureStoreTableRow = ({
 
   const getIdentifier = useMemo(() => getIdentifierMethod(pageTab), [pageTab])
   const rowClassNames = classnames(
-    'table__row',
+    'table-row',
     'parent-row',
     selectedItem?.name &&
       getIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
@@ -66,8 +66,8 @@ const FeatureStoreTableRow = ({
               ${parent.current?.classList.contains('parent-row-expanded') && 'row_grouped-by'}`}
           >
             <table cellPadding="0" cellSpacing="0" className="table">
-              <tbody>
-                <tr className="table__row">
+              <tbody className="table-body">
+                <tr className="table-row">
                   {rowItem.content.map((data, index) => {
                     const cellClassName = classnames(
                       index >= mainRowItemsCount && 'table-body__cell_hidden'
@@ -110,7 +110,7 @@ const FeatureStoreTableRow = ({
           ) : (
             selectedRowData[rowItem.data.ui.identifier]?.content.map((tableContentItem, index) => {
               const subRowClassNames = classnames(
-                'table__row',
+                'table-row',
                 selectedItem.name &&
                   getIdentifier(selectedItem, true) === tableContentItem.data.ui.identifierUnique &&
                   'row_active'
@@ -119,7 +119,7 @@ const FeatureStoreTableRow = ({
               return (
                 <td className="table-body__cell" key={index}>
                   <table cellPadding="0" cellSpacing="0" className="table">
-                    <tbody>
+                    <tbody className="table-body">
                       <tr className={subRowClassNames}>
                         {
                           <>

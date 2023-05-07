@@ -41,7 +41,7 @@ const FunctionsTableRow = ({
   const parent = useRef()
   const params = useParams()
   const rowClassNames = classnames(
-    'table__row',
+    'table-row',
     'parent-row',
     getFunctionIdentifier(selectedItem, true) === rowItem.data?.ui?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -58,8 +58,8 @@ const FunctionsTableRow = ({
               ${parent.current?.classList.contains('parent-row-expanded') && 'row_grouped-by'}`}
           >
             <table cellPadding="0" cellSpacing="0" className="table">
-              <tbody>
-                <tr className="table__row">
+              <tbody className="table-body">
+                <tr className="table-row">
                   {rowItem.content.map((data, index) => {
                     const cellClassName = classnames(
                       index >= mainRowItemsCount && 'table-body__cell_hidden'
@@ -89,7 +89,7 @@ const FunctionsTableRow = ({
 
           {selectedRowData[rowItem.data.ui.identifier]?.content.map((func, index) => {
             const subRowClassNames = classnames(
-              'table__row',
+              'table-row',
               selectedItem.name &&
                 getFunctionIdentifier(selectedItem, true) === func.data.ui.identifierUnique &&
                 'row_active'
@@ -98,7 +98,7 @@ const FunctionsTableRow = ({
             return (
               <td className="table-body__cell" key={index}>
                 <table cellPadding="0" cellSpacing="0" className="table">
-                  <tbody>
+                  <tbody className="table-body">
                     <tr className={subRowClassNames}>
                       {func.content.map((value, index) => {
                         const cellClassNames = classnames(

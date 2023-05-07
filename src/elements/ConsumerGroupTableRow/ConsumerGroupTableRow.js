@@ -27,7 +27,7 @@ import { getV3ioStreamIdentifier } from '../../utils/getUniqueIdentifier'
 
 const ConsumerGroupTableRow = ({ content, rowItem }) => {
   const parent = useRef()
-  const rowClassNames = classnames('table__row', 'parent-row')
+  const rowClassNames = classnames('table-row', 'parent-row')
   const currentItem = content.find(
     contentItem => getV3ioStreamIdentifier(contentItem) === rowItem.consumerGroup?.identifierUnique
   )

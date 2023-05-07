@@ -10,14 +10,17 @@
     right: 0;
     z-index: 2;
     display: flex;
-    flex: 1;
     flex-direction: column;
     width: calc(100% - 240px);
     height: 100%;
     overflow-y: auto;
     color: $mulledWine;
     background-color: $white;
-    border-left: $secondaryBorder;
+
+    .table__content & {
+      border: 1px solid #e7ebff;
+      border-radius: 0 4px 4px 0;
+    }
 
     &_big {
       width: 100%;
@@ -30,6 +33,13 @@
         justify-content: space-between;
         width: 100%;
         margin-bottom: 16px;
+
+        &-wrapper {
+          position: sticky;
+          top: 0;
+          background-color: inherit;
+          z-index: 6;
+        }
 
         &__title {
           display: flex;
@@ -78,13 +88,6 @@
           .error-container {
             margin-left: 20px;
           }
-        }
-
-        &-wrapper {
-          position: sticky;
-          top: 0;
-          background-color: $white;
-          z-index: 6;
         }
 
         &__buttons {
