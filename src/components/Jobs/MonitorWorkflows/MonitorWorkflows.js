@@ -522,12 +522,14 @@ const MonitorWorkflows = ({
     <>
       {!params.workflowId && (
         <div className="content__action-bar-wrapper">
-          <FilterMenu
-            filters={filters}
-            onChange={getWorkflows}
-            page={JOBS_PAGE}
-            withoutExpandButton
-          />
+          <div className="action-bar">
+            <FilterMenu
+              filters={filters}
+              onChange={getWorkflows}
+              page={JOBS_PAGE}
+              withoutExpandButton
+            />
+          </div>
         </div>
       )}
       {workflowsStore.workflows.loading ? null : !params.workflowId &&

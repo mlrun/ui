@@ -59,15 +59,17 @@ const RealTimePipelinesView = React.forwardRef(
         <div className="models" ref={ref}>
           <div className="table-container">
             <div className={filterMenuClassNames}>
-              <FilterMenu
-                expand={expand}
-                filters={filters}
-                handleExpandAll={handleExpandAll}
-                hidden={Boolean(params.pipelineId)}
-                onChange={fetchData}
-                page={MODELS_PAGE}
-                tab={REAL_TIME_PIPELINES_TAB}
-              />
+              <div className="action-bar">
+                <FilterMenu
+                  expand={expand}
+                  filters={filters}
+                  handleExpandAll={handleExpandAll}
+                  hidden={Boolean(params.pipelineId)}
+                  onChange={fetchData}
+                  page={MODELS_PAGE}
+                  tab={REAL_TIME_PIPELINES_TAB}
+                />
+              </div>
             </div>
             {artifactsStore.loading ? null : pipelines.length === 0 ? (
               <NoData

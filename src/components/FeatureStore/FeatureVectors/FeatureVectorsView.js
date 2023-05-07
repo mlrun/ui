@@ -54,13 +54,15 @@ const FeatureVectorsView = React.forwardRef(
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
-          <FilterMenu
-            filters={featureVectorsFilters}
-            onChange={handleRefresh}
-            page={FEATURE_STORE_PAGE}
-            tab={FEATURE_VECTORS_TAB}
-            withoutExpandButton
-          />
+          <div className="action-bar">
+            <FilterMenu
+              filters={featureVectorsFilters}
+              onChange={handleRefresh}
+              page={FEATURE_STORE_PAGE}
+              tab={FEATURE_VECTORS_TAB}
+              withoutExpandButton
+            />
+          </div>
         </div>
         {featureStore.loading ? null : featureVectors.length === 0 ? (
           <NoData

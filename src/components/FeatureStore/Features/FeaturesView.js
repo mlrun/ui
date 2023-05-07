@@ -50,18 +50,20 @@ const FeaturesView = React.forwardRef(
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
-          <FilterMenu
-            actionButton={{
-              label: 'Add to feature vector',
-              variant: SECONDARY_BUTTON,
-              getCustomTemplate: getPopUpTemplate
-            }}
-            filters={featuresFilters}
-            onChange={handleRefresh}
-            page={FEATURE_STORE_PAGE}
-            tab={FEATURES_TAB}
-            withoutExpandButton
-          />
+          <div className="action-bar">
+            <FilterMenu
+              actionButton={{
+                label: 'Add to feature vector',
+                variant: SECONDARY_BUTTON,
+                getCustomTemplate: getPopUpTemplate
+              }}
+              filters={featuresFilters}
+              onChange={handleRefresh}
+              page={FEATURE_STORE_PAGE}
+              tab={FEATURES_TAB}
+              withoutExpandButton
+            />
+          </div>
         </div>
         {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
           0 ? (

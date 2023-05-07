@@ -49,13 +49,15 @@ const ModelEndpointsView = React.forwardRef(
         <div className="models" ref={ref}>
           <div className="table-container">
             <div className="content__action-bar-wrapper">
-              <FilterMenu
-                filters={filters}
-                onChange={fetchData}
-                page={MODELS_PAGE}
-                tab={MODEL_ENDPOINTS_TAB}
-                withoutExpandButton
-              />
+              <div className="action-bar">
+                <FilterMenu
+                  filters={filters}
+                  onChange={fetchData}
+                  page={MODELS_PAGE}
+                  tab={MODEL_ENDPOINTS_TAB}
+                  withoutExpandButton
+                />
+              </div>
             </div>
             {artifactsStore.loading ? null : modelEndpoints.length === 0 ? (
               <NoData

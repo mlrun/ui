@@ -349,7 +349,14 @@ const ScheduledJobs = ({
   return (
     <>
       <div className="content__action-bar-wrapper">
-        <FilterMenu filters={filters} onChange={refreshJobs} page={JOBS_PAGE} withoutExpandButton />
+        <div className="action-bar">
+          <FilterMenu
+            filters={filters}
+            onChange={refreshJobs}
+            page={JOBS_PAGE}
+            withoutExpandButton
+          />
+        </div>
       </div>
       {jobsStore.loading ? null : jobs.length === 0 ? (
         <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, SCHEDULE_TAB)} />
