@@ -177,6 +177,8 @@ const projectsAction = {
       .getProject(project)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
+
+        return response?.data
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFailure(error))
@@ -327,7 +329,7 @@ const projectsAction = {
       'partition-sort-by': 'updated',
       'rows-per-partition': '5',
       'max-partitions': '5',
-      'iter': 'false'
+      iter: 'false'
     }
 
     return projectsApi
@@ -483,11 +485,11 @@ const projectsAction = {
     type: FETCH_PROJECT_SUMMARY_SUCCESS,
     payload: summary
   }),
-  fetchProjects: () => dispatch => {
+  fetchProjects: params => dispatch => {
     dispatch(projectsAction.fetchProjectsBegin())
 
     return projectsApi
-      .getProjects()
+      .getProjects(params)
       .then(response => {
         dispatch(projectsAction.fetchProjectsSuccess(response.data.projects))
 
@@ -506,7 +508,7 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectsNamesBegin())
 
     return projectsApi
-      .getProjectsNames()
+      .getProjects({ format: 'name_only' })
       .then(({ data: { projects } }) => {
         dispatch(projectsAction.fetchProjectsNamesSuccess(projects))
 
