@@ -29,7 +29,7 @@ export const pageData = {
 }
 export const generateProjectActionsMenu = (
   projects,
-  toggleConvertToYaml,
+  viewYaml,
   archiveProject,
   unarchiveProject,
   deleteProject
@@ -41,7 +41,7 @@ export const generateProjectActionsMenu = (
       {
         label: 'View YAML',
         icon: <Yaml />,
-        onClick: toggleConvertToYaml
+        onClick: viewYaml
       },
       {
         label: 'Archive',

@@ -28,14 +28,14 @@ import ProjectsView from './ProjectsView'
 
 import {
   generateProjectActionsMenu,
-  successProjectDeletingMessage,
+  handleDeleteProjectError,
   projectsSortOptions,
-  handleDeleteProjectError
+  successProjectDeletingMessage
 } from './projectsData'
 import nuclioActions from '../../actions/nuclio'
-import { setNotification } from '../../reducers/notificationReducer'
 import projectsAction from '../../actions/projects'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { setNotification } from '../../reducers/notificationReducer'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
@@ -44,6 +44,7 @@ const Projects = ({
   createNewProject,
   deleteProject,
   fetchNuclioFunctions,
+  fetchProject,
   fetchProjects,
   fetchProjectsNames,
   fetchProjectsSummary,
@@ -71,6 +72,10 @@ const Projects = ({
   const dispatch = useDispatch()
 
   const { isNuclioModeDisabled } = useNuclioMode()
+
+  const fetchMinimalProjects = useCallback(() => {
+    fetchProjects({ format: 'minimal' })
+  }, [fetchProjects])
 
   const isValidProjectState = useCallback(
     project => {
@@ -106,12 +111,12 @@ const Projects = ({
     }
 
     removeProjects()
-    fetchProjects()
+    fetchMinimalProjects()
     fetchProjectsNames()
     fetchProjectsSummary(source.token)
   }, [
     fetchNuclioFunctions,
-    fetchProjects,
+    fetchMinimalProjects,
     fetchProjectsNames,
     fetchProjectsSummary,
     isNuclioModeDisabled,
@@ -135,7 +140,7 @@ const Projects = ({
     project => {
       changeProjectState(project.metadata.name, 'archived')
         .then(() => {
-          fetchProjects()
+          fetchMinimalProjects()
         })
         .catch(error => {
           dispatch(
@@ -152,7 +157,7 @@ const Projects = ({
         })
       setConfirmData(null)
     },
-    [changeProjectState, dispatch, fetchProjects]
+    [changeProjectState, dispatch, fetchMinimalProjects]
   )
 
   const handleDeleteProject = useCallback(
@@ -160,7 +165,7 @@ const Projects = ({
       setConfirmData(null)
       deleteProject(project.metadata.name, deleteNonEmpty)
         .then(() => {
-          fetchProjects()
+          fetchMinimalProjects()
           dispatch(
             setNotification({
               status: 200,
@@ -180,16 +185,16 @@ const Projects = ({
           )
         })
     },
-    [deleteProject, dispatch, fetchProjects]
+    [deleteProject, dispatch, fetchMinimalProjects]
   )
 
   const handleUnarchiveProject = useCallback(
     project => {
       changeProjectState(project.metadata.name, 'online').then(() => {
-        fetchProjects()
+        fetchMinimalProjects()
       })
     },
-    [changeProjectState, fetchProjects]
+    [changeProjectState, fetchMinimalProjects]
   )
 
   const convertToYaml = useCallback(
@@ -239,11 +244,37 @@ const Projects = ({
     [handleDeleteProject]
   )
 
+  const viewYaml = useCallback(
+    projectMinimal => {
+      if (projectMinimal?.metadata?.name) {
+        fetchProject(projectMinimal.metadata.name)
+          .then(project => {
+            convertToYaml(project)
+          })
+          .catch(() => {
+            setConvertedYaml('')
+
+            dispatch(
+              setNotification({
+                status: 400,
+                id: Math.random(),
+                retry: () => viewYaml(projectMinimal),
+                message: "Failed to fetch project's YAML"
+              })
+            )
+          })
+      } else {
+        setConvertedYaml('')
+      }
+    },
+    [convertToYaml, dispatch, fetchProject]
+  )
+
   useEffect(() => {
     setActionsMenu(
       generateProjectActionsMenu(
         projectStore.projects,
-        convertToYaml,
+        viewYaml,
         onArchiveProject,
         handleUnarchiveProject,
         onDeleteProject
@@ -254,7 +285,8 @@ const Projects = ({
     onArchiveProject,
     onDeleteProject,
     handleUnarchiveProject,
-    projectStore.projects
+    projectStore.projects,
+    viewYaml
   ])
 
   useEffect(() => {
@@ -262,12 +294,12 @@ const Projects = ({
       fetchNuclioFunctions()
     }
 
-    fetchProjects()
+    fetchMinimalProjects()
     fetchProjectsNames()
     fetchProjectsSummary(source.token)
   }, [
+    fetchMinimalProjects,
     fetchNuclioFunctions,
-    fetchProjects,
     fetchProjectsNames,
     fetchProjectsSummary,
     isNuclioModeDisabled,
