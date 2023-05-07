@@ -70,12 +70,9 @@ const projectsApi = {
   getProjectScheduledJobs: project => mainHttpClient.get(`/projects/${project}/schedules`),
   getProjectSecrets: project =>
     mainHttpClient.get(`/projects/${project}/secret-keys?provider=kubernetes`),
-  getProjects: () => mainHttpClient.get('/projects'),
-  getProjectsNames: () =>
+  getProjects: params =>
     mainHttpClient.get('/projects', {
-      params: {
-        format: 'name_only'
-      }
+      params
     }),
   getProjectSummaries: cancelToken =>
     mainHttpClient.get('/project-summaries', {
