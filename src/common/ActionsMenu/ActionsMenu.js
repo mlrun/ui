@@ -44,10 +44,7 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
     'actions-menu__container',
     isShowMenu && 'actions-menu__container-active'
   )
-  const dropDownMenuClassNames = classnames(
-    'actions-menu__body',
-    isShowMenu && 'show'
-  )
+  const dropDownMenuClassNames = classnames('actions-menu__body', isShowMenu && 'show')
   let idTimeout = null
   const offset = 15
 
@@ -67,21 +64,18 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
     const dropDownMenuRect = dropDownMenuRef.current.getBoundingClientRect()
 
     if (
-      actionMenuRect.top +
-        actionMenuRect.height +
-        offset +
-        dropDownMenuRect.height >=
+      actionMenuRect.top + actionMenuRect.height + offset + dropDownMenuRect.height >=
       window.innerHeight
     ) {
-      dropDownMenuRef.current.style.top = `${actionMenuRect.top -
-        dropDownMenuRect.height}px`
-      dropDownMenuRef.current.style.left = `${actionMenuRect.left -
-        dropDownMenuRect.width +
-        offset}px`
+      dropDownMenuRef.current.style.top = `${actionMenuRect.top - dropDownMenuRect.height}px`
+      dropDownMenuRef.current.style.left = `${
+        actionMenuRect.left - dropDownMenuRect.width + offset
+      }px`
     } else {
       dropDownMenuRef.current.style.top = `${actionMenuRect.bottom}px`
-      dropDownMenuRef.current.style.left = `${actionMenuRect.left -
-        (dropDownMenuRect.width - offset)}px`
+      dropDownMenuRef.current.style.left = `${
+        actionMenuRect.left - (dropDownMenuRect.width - offset)
+      }px`
     }
   }
 
@@ -128,7 +122,11 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
           <div
             data-testid="actions-drop-down-menu"
             className={dropDownMenuClassNames}
-            onClick={() => setIsShowMenu(false)}
+            onClick={event => {
+              setIsShowMenu(false)
+              setRenderMenu(false)
+              event.stopPropagation()
+            }}
             ref={dropDownMenuRef}
           >
             {actionMenu.map(
