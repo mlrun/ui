@@ -23,6 +23,7 @@ import PropTypes from 'prop-types'
 import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Loader from '../../../common/Loader/Loader'
+import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
@@ -60,6 +61,7 @@ const ModelsView = React.forwardRef(
         <div className="models" ref={ref}>
           <div className="table-container">
             <div className="content__action-bar-wrapper">
+              <ModelsPageTabs />
               <ArtifactsActionBar
                 filterMenuName={MODELS_TAB}
                 handleRefresh={handleRefresh}

@@ -22,9 +22,10 @@ import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import Table from '../../Table/Table'
-import Pipeline from '../../Pipeline/Pipeline'
 import FunctionsTableRow from '../../../elements/FunctionsTableRow/FunctionsTableRow'
+import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
+import Pipeline from '../../Pipeline/Pipeline'
+import Table from '../../Table/Table'
 
 import { filters } from './realTimePipelines.util'
 import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
@@ -59,6 +60,7 @@ const RealTimePipelinesView = React.forwardRef(
         <div className="models" ref={ref}>
           <div className="table-container">
             <div className={filterMenuClassNames}>
+              <ModelsPageTabs />
               <div className="action-bar">
                 <FilterMenu
                   expand={expand}

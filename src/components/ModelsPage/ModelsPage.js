@@ -18,19 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback } from 'react'
-import { Outlet, useLocation, useParams } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
-import {
-  MODEL_ENDPOINTS_TAB,
-  MODELS_PAGE,
-  MODELS_TAB,
-  REAL_TIME_PIPELINES_TAB
-} from '../../constants'
-import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+import { MODELS_TAB } from '../../constants'
+
 import Loader from '../../common/Loader/Loader'
-import { tabs } from './modelsPage.util'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -42,7 +36,6 @@ import { useMode } from '../../hooks/mode.hook'
 import './modelsPage.scss'
 
 const ModelsPage = () => {
-  const location = useLocation()
   const artifactsStore = useSelector(store => store.artifactsStore)
   const params = useParams()
   const { isDemoMode } = useMode()
@@ -67,17 +60,7 @@ const ModelsPage = () => {
         </div>
         <div className="content">
           {artifactsStore.loading && <Loader />}
-          <ContentMenu
-            activeTab={
-              location.pathname.includes(REAL_TIME_PIPELINES_TAB)
-                ? REAL_TIME_PIPELINES_TAB
-                : location.pathname.includes(MODEL_ENDPOINTS_TAB)
-                ? MODEL_ENDPOINTS_TAB
-                : MODELS_TAB
-            }
-            screen={MODELS_PAGE}
-            tabs={tabs}
-          />
+
           <div className="table-container">
             <Outlet />
           </div>

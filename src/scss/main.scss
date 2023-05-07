@@ -73,13 +73,13 @@ body {
   position: relative;
   flex-direction: column;
   min-width: 800px;
-  padding: 15px 24px 60px;
+  padding: 15px 24px 30px;
   background-color: $white;
 
   @include jobsFlex;
 
   @media screen and (min-width: 1200px) {
-    padding: 15px 64px 60px;
+    padding: 15px 64px 30px;
   }
 
   &__header {
