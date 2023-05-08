@@ -103,13 +103,17 @@ const createArtifactsRowData = artifact => {
   }
 }
 
-export const createModelsRowData = (artifact, project, frontendSpec, showExpandButton) => {
-  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const isTargetPathValid = frontendSpec?.allowed_artifact_path_prefixes_list
+const getIter = artifact => (isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`)
+const getIsTargetPathValid = (artifact, frontendSpec) =>
+  frontendSpec?.allowed_artifact_path_prefixes_list
     ? frontendSpec.allowed_artifact_path_prefixes_list.some(prefix => {
         return artifact.target_path?.startsWith?.(prefix)
       })
     : false
+
+export const createModelsRowData = (artifact, project, frontendSpec, showExpandButton) => {
+  const iter = getIter(artifact)
+  const isTargetPathValid = getIsTargetPathValid(artifact, frontendSpec)
 
   return {
     data: {
@@ -243,12 +247,9 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
 }
 
 export const createFilesRowData = (artifact, project, frontendSpec, showExpandButton) => {
-  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const isTargetPathValid = frontendSpec?.allowed_artifact_path_prefixes_list
-    ? frontendSpec.allowed_artifact_path_prefixes_list.some(prefix => {
-        return artifact.target_path?.startsWith?.(prefix)
-      })
-    : false
+  const iter = getIter(artifact)
+  const isTargetPathValid = getIsTargetPathValid(artifact, frontendSpec)
+
   return {
     data: {
       ...artifact
@@ -490,12 +491,8 @@ export const createModelEndpointsRowData = (artifact, project) => {
 }
 
 export const createDatasetsRowData = (artifact, project, frontendSpec, showExpandButton) => {
-  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const isTargetPathValid = frontendSpec?.allowed_artifact_path_prefixes_list
-    ? frontendSpec.allowed_artifact_path_prefixes_list.some(prefix => {
-        return artifact.target_path?.startsWith?.(prefix)
-      })
-    : false
+  const iter = getIter(artifact)
+  const isTargetPathValid = getIsTargetPathValid(artifact, frontendSpec)
 
   return {
     data: {
