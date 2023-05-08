@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { cloneDeep } from 'lodash'
+
 import {
   DETAILS_ANALYSIS_TAB,
   DETAILS_METADATA_TAB,
@@ -40,6 +42,11 @@ export const tabs = [
   { id: FEATURE_VECTORS_TAB, label: 'Feature vectors' }
 ]
 
+const joinFeatureTemplate = featureItem => {
+  const { featureSet, feature, alias } = featureItem
+  return `${featureSet ? `${featureSet}.` : ''}${feature}${alias === '' ? '' : ` as ${alias}`}`
+}
+
 export const handleApplyDetailsChanges = (
   changes,
   fetchData,
@@ -55,17 +62,32 @@ export const handleApplyDetailsChanges = (
   const data = {
     ...selectedItem.ui.originalContent
   }
+  const changesData = cloneDeep(changes.data)
   const metadataFields = ['labels']
 
-  Object.keys(changes.data).forEach(key => {
+  if (changesData.features) {
+    changesData.features.currentFieldValue = changes.data.features.currentFieldValue.map(
+      feature => {
+        return joinFeatureTemplate(feature)
+      }
+    )
+
+    if (changesData.label_feature) {
+      changesData.label_feature.currentFieldValue = joinFeatureTemplate(
+        changesData.label_feature.currentFieldValue
+      )
+    }
+  }
+
+  Object.keys(changesData).forEach(key => {
     if (metadataFields.includes(key)) {
-      data.metadata[key] = changes.data[key].currentFieldValue
+      data.metadata[key] = changesData[key].currentFieldValue
     } else {
-      data.spec[key] = changes.data[key].currentFieldValue
+      data.spec[key] = changesData[key].currentFieldValue
     }
   })
 
-  if (data.metadata.labels && changes.data.labels) {
+  if (data.metadata.labels && changesData.labels) {
     data.metadata.labels = convertChipsData(data.metadata.labels)
   }
 

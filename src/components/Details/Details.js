@@ -107,26 +107,6 @@ const Details = ({
     })
   )
 
-  const setNewChangesData = useCallback(
-    (value, field) => {
-      setChangesData({
-        ...detailsStore.changes.data,
-        [field]: {
-          ...detailsStore.changes.data[field],
-          currentFieldValue: value
-        }
-      })
-    },
-    [detailsStore.changes.data, setChangesData]
-  )
-
-  const handleEditInput = useCallback(
-    (value, field) => {
-      setNewChangesData(value, field)
-    },
-    [setNewChangesData]
-  )
-
   const handlePreview = useCallback(() => {
     dispatch(
       showArtifactsPreview({
@@ -256,9 +236,9 @@ const Details = ({
       resetChanges()
       unblockHistory()
       setHistoryIsBlocked(false)
-      formRef.current.reset()
+      formRef.current.reset(formInitialValues)
     }
-  }, [detailsStore.changes.counter, resetChanges, unblockHistory])
+  }, [detailsStore.changes.counter, formInitialValues, resetChanges, unblockHistory])
 
   const leavePage = useCallback(() => {
     cancelChanges()
@@ -307,7 +287,6 @@ const Details = ({
           <DetailsTabsContent
             applyChangesRef={applyChangesRef}
             formState={formState}
-            handleEditInput={handleEditInput}
             handlePreview={handlePreview}
             pageData={pageData}
             selectedItem={selectedItem}

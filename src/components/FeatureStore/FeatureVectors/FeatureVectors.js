@@ -48,6 +48,7 @@ import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
+import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
@@ -84,6 +85,17 @@ const FeatureVectors = ({
   } = React.useContext(FeatureStoreContext)
 
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
+
+  const detailsFormInitialValues = useMemo(
+    () => {
+        return {
+          features: (selectedFeatureVector.specFeatures ?? []).map( featureData => {
+              return {...parseFeatureTemplate(featureData)}
+          })
+        }
+    },
+    [selectedFeatureVector.specFeatures]
+  )
 
   const fetchData = useCallback(
     filters => {
@@ -412,6 +424,7 @@ const FeatureVectors = ({
       applyDetailsChanges={applyDetailsChanges}
       createFeatureVector={createFeatureVector}
       createVectorPopUpIsOpen={createVectorPopUpIsOpen}
+      detailsFormInitialValues={detailsFormInitialValues}
       featureStore={featureStore}
       featureVectors={featureVectors}
       filtersStore={filtersStore}
