@@ -5,10 +5,15 @@
 @import '~igz-controls/scss/shadows';
 
 .table {
+  &__flex {
+    display: flex;
+    flex: 1;
+    flex-flow: row wrap;
+  }
+
   &__content {
+    flex: 1;
     position: relative;
-    width: 100%;
-    height: 100%;
 
     [class*='icon'] {
       flex-wrap: nowrap;
