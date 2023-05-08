@@ -401,7 +401,17 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
         {
           id: 'batchInference',
           icon: <BatchInferenceIcon />,
-          handleClick: () => {},
+          handleClick: () => {
+            return {
+              component: JobWizard,
+              props: {
+                params,
+                isBatchInference: true,
+                wizardTitle: 'Batch inference'
+              },
+              type: 'modal'
+            }
+          },
           label: 'Batch inference',
           tooltip:
             'Run your model on a large dataset, usually read from an offline source, such as files or databases. The results are written to offline targets.',

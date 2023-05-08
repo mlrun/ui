@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty, omit } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
@@ -30,6 +30,7 @@ import { getChipOptions } from '../../../../utils/getChipOptions'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
+  generateJobWizardData,
   generateJobWizardDefaultData,
   getFunctionParameters,
   parseDataInputs,
@@ -42,6 +43,7 @@ const JobWizardRunDetails = ({
   defaultData,
   formState,
   frontendSpec,
+  isBatchInference,
   isEditMode,
   isStagingMode,
   jobAdditionalData,
@@ -51,6 +53,19 @@ const JobWizardRunDetails = ({
   const methodPath = 'runDetails.method'
   const [spyOnMethodChange, setSpyOnMethodChange] = useState(true)
 
+  const setJobData = useCallback(
+    (jobFormData, jobAdditionalData) => {
+      const newInitial = {
+        ...formState.initialValues,
+        ...jobFormData
+      }
+
+      formState.form.reset(newInitial)
+      setJobAdditionalData(jobAdditionalData)
+    },
+    [formState.form, formState.initialValues, setJobAdditionalData]
+  )
+
   useEffect(() => {
     if (isEditMode && !isEmpty(defaultData) && isEmpty(jobAdditionalData)) {
       const [jobFormData, jobAdditionalData] = generateJobWizardDefaultData(
@@ -59,23 +74,29 @@ const JobWizardRunDetails = ({
         isEditMode,
         isStagingMode
       )
-      const newInitial = {
-        ...formState.initialValues,
-        ...jobFormData
-      }
-
-      formState.form.reset(newInitial)
-      setJobAdditionalData(jobAdditionalData)
+      setJobData(jobFormData, jobAdditionalData)
+    } else if (isBatchInference && !isEmpty(selectedFunctionData) && isEmpty(jobAdditionalData)) {
+      const [jobFormData, jobAdditionalData] = generateJobWizardData(
+        frontendSpec,
+        selectedFunctionData,
+        null,
+        isEditMode,
+        isStagingMode
+      )
+      setJobData(jobFormData, jobAdditionalData)
     }
   }, [
     defaultData,
     formState.form,
     formState.initialValues,
     frontendSpec,
+    isBatchInference,
     isEditMode,
     isStagingMode,
     jobAdditionalData,
-    setJobAdditionalData
+    selectedFunctionData,
+    setJobAdditionalData,
+    setJobData
   ])
 
   const onMethodChange = (value, prevValue) => {
@@ -118,57 +139,59 @@ const JobWizardRunDetails = ({
   }
 
   return (
-    <div className="job-wizard__run-details form">
-      <div className="form-row">
-        <h5 className="form-step-title">Run Details</h5>
-      </div>
-      <div className="form-row">
-        <div className="form-col-2">
-          <FormInput
-            label="Name"
-            name="runDetails.name"
-            disabled={isEditMode}
-            required
-            validationRules={getValidationRules('common.name')}
+    !isEmpty(jobAdditionalData) && (
+      <div className="job-wizard__run-details form">
+        <div className="form-row">
+          <h5 className="form-step-title">Run Details</h5>
+        </div>
+        <div className="form-row">
+          <div className="form-col-2">
+            <FormInput
+              label="Name"
+              name="runDetails.name"
+              disabled={isEditMode}
+              required
+              validationRules={getValidationRules('common.name')}
+            />
+          </div>
+          {jobAdditionalData.versionOptions?.length !== 0 && (
+            <div className="form-col-1">
+              <FormSelect
+                name="runDetails.version"
+                label="Version"
+                options={jobAdditionalData.versionOptions || []}
+              />
+            </div>
+          )}
+          {jobAdditionalData.methodOptions?.length !== 0 && !isBatchInference && (
+            <div className="form-col-1">
+              <FormSelect
+                name={methodPath}
+                label="Method"
+                options={jobAdditionalData.methodOptions || []}
+              />
+            </div>
+          )}
+        </div>
+        <div className="form-row">
+          <FormChipCell
+            chipOptions={getChipOptions('metrics')}
+            formState={formState}
+            initialValues={formState.initialValues}
+            isEditable
+            label="labels"
+            name="runDetails.labels"
+            shortChips
+            visibleChipsMaxLength="all"
+            validationRules={{
+              key: getValidationRules('common.tag'),
+              value: getValidationRules('common.tag')
+            }}
           />
         </div>
-        {jobAdditionalData.versionOptions?.length !== 0 && (
-          <div className="form-col-1">
-            <FormSelect
-              name="runDetails.version"
-              label="Version"
-              options={jobAdditionalData.versionOptions || []}
-            />
-          </div>
-        )}
-        {jobAdditionalData.methodOptions?.length !== 0 && (
-          <div className="form-col-1">
-            <FormSelect
-              name={methodPath}
-              label="Method"
-              options={jobAdditionalData.methodOptions || []}
-            />
-          </div>
-        )}
+        {spyOnMethodChange && <OnChange name={methodPath}>{onMethodChange}</OnChange>}
       </div>
-      <div className="form-row">
-        <FormChipCell
-          chipOptions={getChipOptions('metrics')}
-          formState={formState}
-          initialValues={formState.initialValues}
-          isEditable
-          label="labels"
-          name="runDetails.labels"
-          shortChips
-          visibleChipsMaxLength="all"
-          validationRules={{
-            key: getValidationRules('common.tag'),
-            value: getValidationRules('common.tag')
-          }}
-        />
-      </div>
-      {spyOnMethodChange && <OnChange name={methodPath}>{onMethodChange}</OnChange>}
-    </div>
+    )
   )
 }
 
@@ -176,6 +199,7 @@ JobWizardRunDetails.propTypes = {
   defaultData: PropTypes.shape({}).isRequired,
   formState: PropTypes.shape({}).isRequired,
   frontendSpec: PropTypes.shape({}).isRequired,
+  isBatchInference: PropTypes.bool.isRequired,
   isEditMode: PropTypes.bool.isRequired,
   isStagingMode: PropTypes.bool.isRequired,
   jobAdditionalData: PropTypes.shape({}).isRequired,
