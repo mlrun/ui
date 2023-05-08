@@ -31,6 +31,7 @@ const FeatureSetsPanelTitle = ({
   setNewFeatureSetDescription,
   setNewFeatureSetLabels,
   setNewFeatureSetName,
+  setNewFeatureSetPassthrough,
   setNewFeatureSetVersion,
   setValidation,
   validation
@@ -38,6 +39,7 @@ const FeatureSetsPanelTitle = ({
   const [data, setData] = useState({
     name: '',
     description: '',
+    passthrough: '',
     version: '',
     labels: []
   })
@@ -73,6 +75,16 @@ const FeatureSetsPanelTitle = ({
     }))
   }
 
+  const handleCheckPassthrough = id => {
+    const isPassthroughChecked = !featureStore.newFeatureSet.spec.passthrough
+
+    setNewFeatureSetPassthrough(isPassthroughChecked)
+    setData(state => ({
+      ...state,
+      passthrough: isPassthroughChecked ? id : ''
+    }))
+  }
+
   return (
     <FeatureSetsPanelTitleView
       closePanel={closePanel}
@@ -80,6 +92,7 @@ const FeatureSetsPanelTitle = ({
       featureStore={featureStore}
       handleAddLabel={handleAddLabel}
       handleChangeLabels={handleChangeLabels}
+      handleCheckPassthrough={handleCheckPassthrough}
       handleNameOnBlur={handleNameOnBlur}
       setData={setData}
       setNewFeatureSetDescription={setNewFeatureSetDescription}
