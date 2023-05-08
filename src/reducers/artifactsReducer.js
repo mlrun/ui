@@ -205,7 +205,7 @@ const artifactsSlice = createSlice({
     },
     removeModel(state, action) {
       state.models.selectedRowData = {
-        content: initialState.models.selectedRowData.con,
+        content: initialState.models.selectedRowData.content,
         error: null,
         loading: false
       }

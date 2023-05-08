@@ -263,7 +263,7 @@ main {
 
       &.parent-row {
         &.row_active {
-          background-color: #f6f7ff;
+          background-color: $zircon;
         }
 
         &:not(.parent-row-expanded) {
