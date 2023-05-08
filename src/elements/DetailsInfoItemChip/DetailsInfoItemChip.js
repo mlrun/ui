@@ -55,6 +55,8 @@ const DetailsInfoItemChip = ({
           fieldType: item?.editModeType
         }
       })
+    } else if (formState.pristine) {
+      handleFinishEdit(item.fieldData.name)
     }
   }
 
@@ -78,6 +80,7 @@ const DetailsInfoItemChip = ({
         <div className="details-item__apply-btn-wrapper">
           <RoundedIcon
             className="details-item__apply-btn"
+            disabled={!formState.valid}
             onClick={() => handleFinishEdit(item.fieldData.name)}
             tooltipText="Apply"
           >
