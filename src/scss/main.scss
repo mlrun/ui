@@ -261,6 +261,10 @@ main {
         }
       }
 
+      &.row_active {
+        background-color: $zircon;
+      }
+
       &.parent-row {
         &.row_active {
           background-color: $zircon;
@@ -366,7 +370,7 @@ main {
       position: relative;
       z-index: 2;
 
-      & > * {
+      .table-row {
         background-color: $white;
 
         &:hover {

@@ -82,6 +82,15 @@
       border-right: $secondaryBorder;
       box-shadow: 2px 0 5px -2px rgba($black, 0.2);
     }
+
+    .parent-row-expanded {
+      .row_grouped-by {
+        .table-cell-name {
+          border-right: none;
+          box-shadow: none;
+        }
+      }
+    }
   }
 
   .targets-cell {
@@ -113,10 +122,6 @@
   &__panel {
     height: 100%;
     overflow: hidden auto;
-  }
-
-  .row_active {
-    background-color: $alabaster;
   }
 
   .error-message {
