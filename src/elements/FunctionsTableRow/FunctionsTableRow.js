@@ -41,7 +41,7 @@ const FunctionsTableRow = ({
   const parent = useRef()
   const params = useParams()
   const rowClassNames = classnames(
-    'table-body__row',
+    'table-row',
     'parent-row',
     getFunctionIdentifier(selectedItem, true) === rowItem.data?.ui?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -50,73 +50,90 @@ const FunctionsTableRow = ({
   )
 
   return (
-    <div className={rowClassNames} ref={parent}>
+    <tr className={rowClassNames} ref={parent}>
       {parent.current?.classList.contains('parent-row-expanded') ? (
-        <div className="row_grouped-by">
-          <div className="table-body__row">
-            {rowItem.content.map((data, index) => {
-              const cellClassName = classnames(
-                index >= mainRowItemsCount && 'table-body__cell_hidden'
-              )
-
-              return (
-                !data.hidden && (
-                  <TableCell
-                    className={cellClassName}
-                    data={data}
-                    firstCell
-                    handleExpandRow={handleExpandRow}
-                    item={rowItem}
-                    key={data.id}
-                    selectItem={handleSelectItem}
-                    selectedItem={selectedItem}
-                    showExpandButton
-                  />
-                )
-              )
-            })}
-            <div className="table-body__cell action_cell" />
-          </div>
-          <>
-            {selectedRowData[rowItem.data.ui.identifier]?.content.map((func, index) => {
-              const subRowClassNames = classnames(
-                'table-body__row',
-                selectedItem.name &&
-                  getFunctionIdentifier(selectedItem, true) === func.data.ui.identifierUnique &&
-                  'row_active'
-              )
-
-              return (
-                <div className={subRowClassNames} key={index}>
-                  {func.content.map((value, index) => {
-                    const cellClassNames = classnames(
-                      !isEmpty(selectedItem) &&
-                        index >= mainRowItemsCount &&
-                        'table-body__cell_hidden'
+        <>
+          <td
+            className={`table-body__cell
+              ${parent.current?.classList.contains('parent-row-expanded') && 'row_grouped-by'}`}
+          >
+            <table cellPadding="0" cellSpacing="0" className="table">
+              <tbody className="table-body">
+                <tr className="table-row">
+                  {rowItem.content.map((data, index) => {
+                    const cellClassName = classnames(
+                      index >= mainRowItemsCount && 'table-body__cell_hidden'
                     )
 
                     return (
-                      !value.hidden && (
+                      !data.hidden && (
                         <TableCell
-                          className={cellClassNames}
-                          data={value.expandedCellContent ? value.expandedCellContent : value}
-                          item={func.data}
-                          link={value.getLink?.(func.data.hash, params.tab ?? DETAILS_OVERVIEW_TAB)}
-                          key={value.id}
+                          className={cellClassName}
+                          data={data}
+                          firstCell
+                          handleExpandRow={handleExpandRow}
+                          item={rowItem}
+                          key={data.id}
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
+                          showExpandButton
                         />
                       )
                     )
                   })}
-                  <div className="table-body__cell action_cell">
-                    <ActionsMenu dataItem={func.data} menu={actionsMenu} />
-                  </div>
-                </div>
-              )
-            })}
-          </>
-        </div>
+                  <td className="table-body__cell table-cell-icon" />
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          {selectedRowData[rowItem.data.ui.identifier]?.content.map((func, index) => {
+            const subRowClassNames = classnames(
+              'table-row',
+              selectedItem.name &&
+                getFunctionIdentifier(selectedItem, true) === func.data.ui.identifierUnique &&
+                'row_active'
+            )
+
+            return (
+              <td className="table-body__cell" key={index}>
+                <table cellPadding="0" cellSpacing="0" className="table">
+                  <tbody className="table-body">
+                    <tr className={subRowClassNames}>
+                      {func.content.map((value, index) => {
+                        const cellClassNames = classnames(
+                          !isEmpty(selectedItem) &&
+                            index >= mainRowItemsCount &&
+                            'table-body__cell_hidden'
+                        )
+
+                        return (
+                          !value.hidden && (
+                            <TableCell
+                              className={cellClassNames}
+                              data={value.expandedCellContent ? value.expandedCellContent : value}
+                              item={func.data}
+                              link={value.getLink?.(
+                                func.data.hash,
+                                params.tab ?? DETAILS_OVERVIEW_TAB
+                              )}
+                              key={value.id}
+                              selectItem={handleSelectItem}
+                              selectedItem={selectedItem}
+                            />
+                          )
+                        )
+                      })}
+                      <td className="table-body__cell table-cell-icon">
+                        <ActionsMenu dataItem={func.data} menu={actionsMenu} />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            )
+          })}
+        </>
       ) : (
         <>
           {rowItem.content.map((value, index) => {
@@ -136,12 +153,12 @@ const FunctionsTableRow = ({
               )
             )
           })}
-          <div className="table-body__cell action_cell">
+          <td className="table-body__cell table-cell-icon">
             <ActionsMenu dataItem={rowItem.data} menu={actionsMenu} />
-          </div>
+          </td>
         </>
       )}
-    </div>
+    </tr>
   )
 }
 

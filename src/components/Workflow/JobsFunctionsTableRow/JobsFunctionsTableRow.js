@@ -30,13 +30,13 @@ import { isWorkflowJobSelected } from '../workflow.util'
 const JobsFunctionsTableRow = ({ handleSelectItem, rowItem, selectedItem }) => {
   const params = useParams()
   const rowClassNames = classnames(
-    'table-body__row',
+    'table-row',
     'parent-row',
     isWorkflowJobSelected(rowItem.data, selectedItem) && 'row_active'
   )
 
   return (
-    <div className={rowClassNames}>
+    <tr className={rowClassNames}>
       {rowItem.content.map((rowItemProp, index) => {
         return (
           !rowItemProp.hidden && (
@@ -56,7 +56,7 @@ const JobsFunctionsTableRow = ({ handleSelectItem, rowItem, selectedItem }) => {
           )
         )
       })}
-    </div>
+    </tr>
   )
 }
 

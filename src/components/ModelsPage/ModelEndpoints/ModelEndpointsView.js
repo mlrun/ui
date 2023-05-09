@@ -20,10 +20,11 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
-import Table from '../../Table/Table'
-import NoData from '../../../common/NoData/NoData'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import FilterMenu from '../../FilterMenu/FilterMenu'
+import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
+import NoData from '../../../common/NoData/NoData'
+import Table from '../../Table/Table'
 
 import { filters } from './modelEndpoints.util'
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE } from '../../../constants'
@@ -49,13 +50,16 @@ const ModelEndpointsView = React.forwardRef(
         <div className="models" ref={ref}>
           <div className="table-container">
             <div className="content__action-bar-wrapper">
-              <FilterMenu
-                filters={filters}
-                onChange={fetchData}
-                page={MODELS_PAGE}
-                tab={MODEL_ENDPOINTS_TAB}
-                withoutExpandButton
-              />
+              <ModelsPageTabs />
+              <div className="action-bar">
+                <FilterMenu
+                  filters={filters}
+                  onChange={fetchData}
+                  page={MODELS_PAGE}
+                  tab={MODEL_ENDPOINTS_TAB}
+                  withoutExpandButton
+                />
+              </div>
             </div>
             {artifactsStore.loading ? null : modelEndpoints.length === 0 ? (
               <NoData

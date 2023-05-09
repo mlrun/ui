@@ -99,6 +99,7 @@ const DatasetsView = React.forwardRef(
                 <NoData message={getNoDataMessage(filtersStore, filters, DATASETS_PAGE)} />
               ) : (
                 <>
+                  {selectedRowData.loading && <Loader />}
                   <Table
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}

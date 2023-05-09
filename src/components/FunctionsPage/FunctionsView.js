@@ -76,18 +76,20 @@ const FunctionsView = ({
         <div className="content">
           <div className="table-container">
             <div className="content__action-bar-wrapper">
-              <FilterMenu
-                actionButton={{
-                  getCustomTemplate: getPopUpTemplate,
-                  label: 'New',
-                  variant: SECONDARY_BUTTON
-                }}
-                expand={expand}
-                filters={filters}
-                handleExpandAll={handleExpandAll}
-                onChange={filtersChangeCallback}
-                page={FUNCTIONS_PAGE}
-              />
+              <div className="action-bar">
+                <FilterMenu
+                  actionButton={{
+                    getCustomTemplate: getPopUpTemplate,
+                    label: 'New',
+                    variant: SECONDARY_BUTTON
+                  }}
+                  expand={expand}
+                  filters={filters}
+                  handleExpandAll={handleExpandAll}
+                  onChange={filtersChangeCallback}
+                  page={FUNCTIONS_PAGE}
+                />
+              </div>
             </div>
             {functionsStore.loading ? (
               <Loader />

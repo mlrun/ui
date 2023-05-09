@@ -70,34 +70,38 @@ const TableView = ({
   sortProps,
   tab,
   tableContent,
+  tableRef,
   tableContentRef,
   tableHeaders,
   tableHeadRef,
   tablePanelRef
 }) => {
   return (
-    <div className="table">
+    <div className="table__flex">
       <div className="table__content" ref={tableContentRef}>
         <div className="table__wrapper">
-          <div className="table__wrapper-row">
+          <table className="table" cellPadding="0" cellSpacing="0" ref={tableRef}>
             {pageData.tableHeaders && (
               <>
-                <div className="table-head" ref={tableHeadRef}>
-                  {pageData.tableHeaders?.map(
-                    (item, index) =>
-                      !item.hidden && (
-                        <div
-                          className={`table-head__item ${item.class}`}
-                          key={`${item.headerLabel}${index}`}
-                        >
-                          <Tooltip template={<TextTooltipTemplate text={item.headerLabel} />}>
-                            {item.headerLabel}
-                          </Tooltip>
-                        </div>
-                      )
-                  )}
-                </div>
-                <div className="table-body">
+                <thead className="table-header">
+                  <tr className="table-row">
+                    {pageData.tableHeaders?.map(
+                      (item, index) =>
+                        !item.hidden && (
+                          <th
+                            className={`table-header-item ${item.class}`}
+                            key={`${item.headerLabel}${index}`}
+                            ref={tableHeadRef}
+                          >
+                            <Tooltip template={<TextTooltipTemplate text={item.headerLabel} />}>
+                              {item.headerLabel}
+                            </Tooltip>
+                          </th>
+                        )
+                    )}
+                  </tr>
+                </thead>
+                <tbody className="table-body">
                   {!groupFilter ||
                   isEmpty(groupedContent) ||
                   (groupFilter === GROUP_BY_NONE && isEmpty(groupLatestItem)) ? (
@@ -222,7 +226,7 @@ const TableView = ({
                   ) : (
                     <NoData />
                   )}
-                </div>
+                </tbody>
               </>
             )}
             {tableHeaders?.length > 0 && (
@@ -235,29 +239,29 @@ const TableView = ({
                 sortProps={sortProps}
               />
             )}
-            {!pageData.tableHeaders && <div className="table-body">{children}</div>}
-          </div>
+            {!pageData.tableHeaders && <tbody className="table-body">{children}</tbody>}
+          </table>
         </div>
+        {!isEmpty(selectedItem) && (
+          <Details
+            actionsMenu={actionsMenu}
+            applyDetailsChanges={applyDetailsChanges}
+            applyDetailsChangesCallback={applyDetailsChangesCallback}
+            getCloseDetailsLink={getCloseDetailsLink}
+            detailsMenu={pageData.details.menu}
+            formInitialValues={detailsFormInitialValues}
+            handleCancel={handleCancel}
+            pageData={pageData}
+            retryRequest={retryRequest}
+            selectedItem={selectedItem}
+            tab={tab}
+          />
+        )}
       </div>
       {isTablePanelOpen && (
         <div className="table__panel-container" ref={tablePanelRef}>
           <div className="table__panel">{pageData.tablePanel}</div>
         </div>
-      )}
-      {!isEmpty(selectedItem) && (
-        <Details
-          actionsMenu={actionsMenu}
-          applyDetailsChanges={applyDetailsChanges}
-          applyDetailsChangesCallback={applyDetailsChangesCallback}
-          getCloseDetailsLink={getCloseDetailsLink}
-          detailsMenu={pageData.details.menu}
-          formInitialValues={detailsFormInitialValues}
-          handleCancel={handleCancel}
-          pageData={pageData}
-          retryRequest={retryRequest}
-          selectedItem={selectedItem}
-          tab={tab}
-        />
       )}
     </div>
   )

@@ -30,23 +30,25 @@ import './projectTable.scss'
 const ProjectTable = ({ params, table }) => {
   return (
     <>
-      <div className="project-data-card__table">
-        <div className="project-data-card__table-header">
-          {table.header.map(header => (
-            <div
-              key={header.value}
-              className={`project-data-card__table-cell ${header.className} table-header__item`}
-            >
-              <Tooltip template={<TextTooltipTemplate text={header.value} />}>
-                {header.value}
-              </Tooltip>
-            </div>
-          ))}
-        </div>
-        <div className="project-data-card__table-body">
+      <table className="project-data-card__table" cellPadding="0" cellSpacing="0">
+        <thead>
+          <tr className="project-data-card__table-header">
+            {table.header.map(header => (
+              <th
+                key={header.value}
+                className={`project-data-card__table-cell ${header.className} table-header-item`}
+              >
+                <Tooltip template={<TextTooltipTemplate text={header.value} />}>
+                  {header.value}
+                </Tooltip>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="project-data-card__table-body">
           {table.body.map((body, index) => {
             return (
-              <div key={index} className="project-data-card__table-row">
+              <tr key={index} className="project-data-card__table-row">
                 {Object.keys(body).map((key, index) => {
                   const tableValueClassName = classnames(
                     'project-data-card__table-cell',
@@ -57,15 +59,9 @@ const ProjectTable = ({ params, table }) => {
                       `status_${body[key].value.toLowerCase()} capitalize`
                   )
                   return key === 'type' ? (
-                    <TableTypeCell
-                      key={body[key].value + index}
-                      data={body[key]}
-                    />
+                    <TableTypeCell key={body[key].value + index} data={body[key]} />
                   ) : (
-                    <div
-                      key={body[key].value + index}
-                      className={tableValueClassName}
-                    >
+                    <td key={body[key].value + index} className={tableValueClassName}>
                       {key === 'name' ? (
                         body[key].href ? (
                           <a
@@ -74,30 +70,17 @@ const ProjectTable = ({ params, table }) => {
                             className="link project-data-card__table-link"
                           >
                             <Tooltip
-                              template={
-                                <TextTooltipTemplate text={body[key].value} />
-                              }
+                              template={<TextTooltipTemplate text={body[key].value} />}
                               textShow={true}
                             >
-                              {body[key].value.startsWith(
-                                params.projectName
-                              )
-                                ? body[key].value.slice(
-                                    params.projectName.length + 1
-                                  )
+                              {body[key].value.startsWith(params.projectName)
+                                ? body[key].value.slice(params.projectName.length + 1)
                                 : body[key].value}
                             </Tooltip>
                           </a>
                         ) : (
-                          <Link
-                            className="link project-data-card__table-link"
-                            to={body[key].link}
-                          >
-                            <Tooltip
-                              template={
-                                <TextTooltipTemplate text={body[key].value} />
-                              }
-                            >
+                          <Link className="link project-data-card__table-link" to={body[key].link}>
+                            <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
                               {body[key].value}
                             </Tooltip>
                           </Link>
@@ -109,43 +92,31 @@ const ProjectTable = ({ params, table }) => {
                               return (
                                 <Tooltip
                                   key={index}
-                                  template={
-                                    <TextTooltipTemplate text={status} />
-                                  }
+                                  template={<TextTooltipTemplate text={status} />}
                                 >
-                                  <i
-                                    className={`state-${status}-job status-icon`}
-                                  />
+                                  <i className={`state-${status}-job status-icon`} />
                                 </Tooltip>
                               )
                             })
                           ) : (
-                            <Tooltip
-                              template={
-                                <TextTooltipTemplate text={body[key].value} />
-                              }
-                            >
+                            <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
                               {body[key].value}
                             </Tooltip>
                           )}
                         </>
                       ) : (
-                        <Tooltip
-                          template={
-                            <TextTooltipTemplate text={body[key].value} />
-                          }
-                        >
+                        <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
                           {body[key].value}
                         </Tooltip>
                       )}
-                    </div>
+                    </td>
                   )
                 })}
-              </div>
+              </tr>
             )
           })}
-        </div>
-      </div>
+        </tbody>
+      </table>
     </>
   )
 }

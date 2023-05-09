@@ -5,11 +5,40 @@
 @import '~igz-controls/scss/shadows';
 
 .table {
-  @include jobsFlex;
+  &__flex {
+    display: flex;
+    flex: 1;
+    flex-flow: row wrap;
+  }
 
-  position: relative;
-  width: 100%;
-  border-top: $secondaryBorder;
+  &__content {
+    flex: 1;
+    position: relative;
+
+    [class*='icon'] {
+      flex-wrap: nowrap;
+    }
+
+    .text-bold {
+      font-weight: 500;
+    }
+  }
+
+  &__wrapper {
+    .content & {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      color: $mulledWine;
+      background-color: $white;
+    }
+  }
 
   & [class*='table-cell-'] {
     flex: 0 0 auto;
@@ -46,20 +75,20 @@
       flex: 1;
       max-width: 150px;
     }
+  }
 
-    &-name {
-      width: 230px;
+  &__scrolled {
+    .table-cell-name {
+      border-right: $secondaryBorder;
+      box-shadow: 2px 0 5px -2px rgba($black, 0.2);
     }
 
-    &-icon {
-      justify-content: center;
-      padding: 5px;
-      max-width: 85px;
-
-      @include tableColumnFlex(0, 50px);
-
-      & > :first-child {
-        padding: 0;
+    .parent-row-expanded {
+      .row_grouped-by {
+        .table-cell-name {
+          border-right: none;
+          box-shadow: none;
+        }
       }
     }
   }
@@ -74,43 +103,6 @@
       &:first-child {
         margin-left: 0;
       }
-    }
-  }
-
-  &__content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-
-    [class*='icon'] {
-      flex-wrap: nowrap;
-    }
-
-    .text-bold {
-      font-weight: 500;
-    }
-  }
-
-  &__wrapper {
-    .content & {
-      position: absolute;
-      top: 0;
-      right: 0;
-      z-index: 2;
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      color: $mulledWine;
-      background-color: $white;
-      border-left: $secondaryBorder;
-    }
-
-    &-row {
-      display: flex;
-      flex-flow: column wrap;
     }
   }
 
@@ -132,248 +124,103 @@
     overflow: hidden auto;
   }
 
-  &-head {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    display: flex;
-    background-color: $white;
-    border-bottom: $secondaryBorder;
-
-    &__item {
-      position: relative;
-
-      @include tableDet;
-      @include tableHeader(8px, 5px, 8px, 20px);
-
-      & > :first-child {
-        padding-left: 5px;
-      }
-
-      &.buttonPopout,
-      &.buttonDownload {
-        @include tableColumnFlex(0.5, 80px);
-      }
-
-      &.align-right {
-        justify-content: flex-end;
-      }
-
-      .tip-container {
-        margin-left: 2px;
-      }
-    }
-  }
-
-  .action_cell {
-    flex: 1 0 47px;
-    width: 47px;
-    max-width: 47px;
-    padding: 0 5px;
-
-    & > :first-child {
-      padding-left: 0;
-    }
-
-    &__run-icon {
-      margin-bottom: -2px;
-      transform: rotate(-90deg) scale(1.2);
-    }
-  }
-
-  &-body {
-    color: $mulledWine;
-    background-color: $white;
-
-    &__cell {
-      @include tableDet;
-
-      flex-wrap: wrap;
-      margin: 0 1px;
-      padding: 8px 5px 8px 20px;
-      font-weight: 400;
-      font-size: 15px;
-      line-height: 18px;
-      border-bottom: none;
-
-      & > :first-child {
-        padding-left: 5px;
-      }
-
-      &_hidden {
-        visibility: hidden;
-        .chip {
-          visibility: hidden;
-        }
-      }
-
-      .cell_name {
-        position: relative;
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        margin: 0;
-      }
-
-      .text_small {
-        min-width: 100%;
-        max-width: 50px;
-      }
-
-      &.align-right {
-        justify-content: flex-end;
-      }
-
-      &_type {
-        text-transform: capitalize;
-      }
-
-      a {
-        position: relative;
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        margin: 0;
-        text-decoration: none;
-
-        span {
-          display: block;
-          width: 100%;
-        }
-      }
-
-      i {
-        margin-right: 5px;
-      }
-
-      button {
-        display: flex;
-        padding: 0;
-        font-size: 15px;
-        background-color: transparent;
-        border: none;
-
-        &:disabled {
-          cursor: default;
-        }
-
-        &:not(:disabled) {
-          cursor: pointer;
-        }
-      }
-
-      .expand-arrow {
-        position: absolute;
-        left: 10px;
-        cursor: pointer;
-      }
-
-      .path-tooltip {
-        cursor: pointer;
-      }
-
-      .chip_short {
-        max-width: 100px;
-      }
-    }
-
-    &__row {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      min-height: 50px;
-
-      border-bottom: $secondaryBorder;
-
-      &.parent-row {
-        &:not(.parent-row-expanded) {
-          &:hover {
-            background-color: $alabaster;
-          }
-
-          &:not(.parent-row_without-actions) {
-            &:hover {
-              .action_cell {
-                .actions-menu {
-                  &__container {
-                    display: block;
-
-                    .btn {
-                      min-width: 24px;
-                      padding: 0;
-                      border: none;
-
-                      &:hover {
-                        background-color: transparent;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        &-expanded {
-          flex-direction: column;
-        }
-
-        .row_grouped-by {
-          width: 100%;
-
-          .table-body__row {
-            &:first-child {
-              position: sticky;
-              top: 50px;
-              z-index: 3;
-              background-color: $white;
-
-              .table-body__cell {
-                border-bottom: none;
-
-                .expand-arrow {
-                  transform: rotate(90deg);
-                }
-              }
-            }
-
-            &:last-child {
-              border-bottom: none;
-            }
-
-            &__cell {
-              display: flex;
-            }
-
-            &:hover {
-              background-color: $alabaster;
-
-              .action_cell {
-                .actions-menu {
-                  &__container {
-                    display: block;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .checkbox {
-        position: absolute;
-        left: 8px;
-        margin: 0;
-      }
-    }
-  }
-
-  .row_active {
-    background-color: $alabaster;
-  }
-
   .error-message {
     justify-content: center;
     width: 100%;
+  }
+
+  .table {
+    &-header {
+      &-item {
+        &.buttonPopout,
+        &.buttonDownload {
+          @include tableColumnFlex(0.5, 80px);
+        }
+
+        &.align-right {
+          justify-content: flex-end;
+        }
+
+        .tip-container {
+          margin-left: 2px;
+        }
+      }
+    }
+
+    &-body {
+      color: $mulledWine;
+
+      &__cell {
+        &_hidden {
+          visibility: hidden;
+          .chip {
+            visibility: hidden;
+          }
+        }
+
+        .cell_name {
+          position: relative;
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          margin: 0;
+        }
+
+        .text_small {
+          min-width: 100%;
+          max-width: 50px;
+        }
+
+        &.align-right {
+          justify-content: flex-end;
+        }
+
+        &_type {
+          text-transform: capitalize;
+        }
+
+        a {
+          position: relative;
+          display: inline-flex;
+          flex: 1;
+          flex-direction: column;
+          margin: 0;
+          text-decoration: none;
+
+          span {
+            display: block;
+            width: 100%;
+          }
+        }
+
+        i {
+          margin-right: 5px;
+        }
+
+        button {
+          display: flex;
+          padding: 0;
+          font-size: 15px;
+          background-color: transparent;
+          border: none;
+
+          &:disabled {
+            cursor: default;
+          }
+
+          &:not(:disabled) {
+            cursor: pointer;
+          }
+        }
+
+        .path-tooltip {
+          cursor: pointer;
+        }
+
+        .chip_short {
+          max-width: 100px;
+        }
+      }
+    }
   }
 }

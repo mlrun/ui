@@ -87,9 +87,7 @@ export const fetchModelsRowData = async (
 
   setSelectedRowData(state => ({
     ...state,
-    [modelIdentifier]: {
-      loading: true
-    }
+    loading: true
   }))
 
   dispatch(fetchModel({ project: model.project, model: model.db_key, iter, tag }))
@@ -102,10 +100,10 @@ export const fetchModelsRowData = async (
             [modelIdentifier]: {
               content: result.map(artifact =>
                 createModelsRowData(artifact, projectName, frontendSpec)
-              ),
-              error: null,
-              loading: false
-            }
+              )
+            },
+            error: null,
+            loading: false
           }
         })
       }
@@ -114,10 +112,10 @@ export const fetchModelsRowData = async (
       setSelectedRowData(state => ({
         ...state,
         [modelIdentifier]: {
-          ...state[modelIdentifier],
-          error,
-          loading: false
-        }
+          ...state[modelIdentifier]
+        },
+        error,
+        loading: false
       }))
     })
 }

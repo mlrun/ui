@@ -113,9 +113,7 @@ export const fetchFilesRowData = (
 
   setSelectedRowData(state => ({
     ...state,
-    [fileIdentifier]: {
-      loading: true
-    }
+    loading: true
   }))
 
   dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter, tag }))
@@ -125,12 +123,10 @@ export const fetchFilesRowData = (
         setSelectedRowData(state => ({
           ...state,
           [fileIdentifier]: {
-            content: result.map(artifact =>
-              createFilesRowData(artifact, projectName, frontendSpec)
-            ),
-            error: null,
-            loading: false
-          }
+            content: result.map(artifact => createFilesRowData(artifact, projectName, frontendSpec))
+          },
+          error: null,
+          loading: false
         }))
       }
     })
@@ -138,10 +134,10 @@ export const fetchFilesRowData = (
       setSelectedRowData(state => ({
         ...state,
         [fileIdentifier]: {
-          ...state[fileIdentifier],
-          error,
-          loading: false
-        }
+          ...state[fileIdentifier]
+        },
+        error,
+        loading: false
       }))
     })
 }

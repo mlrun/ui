@@ -3,7 +3,7 @@
 .table-top {
   display: flex;
   justify-content: space-between;
-  height: 50px;
+  min-height: 50px;
   padding: 5px 10px;
   border-bottom: $secondaryBorder;
 

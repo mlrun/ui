@@ -62,6 +62,8 @@ const Table = ({
     content: [],
     mainRowItemsCount: 1
   })
+
+  const tableRef = useRef(null)
   const tableContentRef = useRef(null)
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
@@ -137,6 +139,22 @@ const Table = ({
     frontendSpec
   ])
 
+  const handleTableHScroll = e => {
+    const tableScrollPosition = e.target.scrollLeft
+
+    if (tableScrollPosition > 0) {
+      tableRef.current.classList.add('table__scrolled')
+    } else {
+      tableRef.current.classList.remove('table__scrolled')
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleTableHScroll, true)
+
+    return () => window.removeEventListener('scroll', handleTableHScroll, true)
+  }, [])
+
   return (
     <TableView
       actionsMenu={actionsMenu}
@@ -167,6 +185,7 @@ const Table = ({
         tab === MONITOR_JOBS_TAB || tab === SCHEDULE_TAB ? content : tableContent.content
       }
       tab={tab}
+      tableRef={tableRef}
       tableContentRef={tableContentRef}
       tableHeaders={tableHeaders}
       tableHeadRef={tableHeadRef}
@@ -186,6 +205,7 @@ Table.defaultProps = {
   handleCancel: () => {},
   handleExpandRow: () => {},
   handleSelectItem: () => {},
+  handleTableHScroll: () => {},
   hideActionsMenu: false,
   retryRequest: () => {},
   selectedItem: {},
@@ -205,6 +225,7 @@ Table.propTypes = {
   handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
+  handleTableHScroll: PropTypes.func,
   hideActionsMenu: PropTypes.bool,
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
