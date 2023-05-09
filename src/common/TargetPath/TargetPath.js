@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { get, isNil, uniqBy } from 'lodash'
@@ -31,11 +31,11 @@ import {
   generateArtifactsReferencesList,
   generateComboboxMatchesList,
   generateProjectsList,
+  getTargetPathInvalidText,
   getTargetPathOptions,
   handleStoreInputPathChange,
   isPathInputInvalid,
   pathPlaceholders,
-  pathTips,
   targetPathInitialState
 } from './targetPath.util'
 import featureStoreActions from '../../actions/featureStore'
@@ -252,10 +252,6 @@ const TargetPath = ({
     setDataInputState
   ])
 
-  const generatedPathTips = useMemo(() => {
-    return pathTips(dataInputState.storePathType)
-  }, [dataInputState.storePathType])
-
   return (
     <>
       <FormCombobox
@@ -265,9 +261,7 @@ const TargetPath = ({
         inputPlaceholder={
           pathPlaceholders[get(formState.values, `${formStateFieldInfo}.pathType`)] ?? ''
         }
-        invalidText={`Field must be in "${
-          generatedPathTips[get(formState.values, `${formStateFieldInfo}.pathType`)]
-        }" format`}
+        invalidText={getTargetPathInvalidText(dataInputState, formState, formStateFieldInfo)}
         label={label}
         maxSuggestedMatches={
           get(formState.values, `${formStateFieldInfo}.pathType`) ===
@@ -294,7 +288,10 @@ const TargetPath = ({
       <OnChange name={name}>
         {value => {
           if (value.length !== 0) {
-            formState.form.change(`${formStateFieldInfo}.value`, value.replace(/.*:[/]{2,3}/g, ''))
+            formState.form.change(
+              `${formStateFieldInfo}.value`,
+              value.replace(/[^:/]*:[/]{2,3}/, '')
+            )
             formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
           }
         }}

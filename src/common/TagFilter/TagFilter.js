@@ -89,7 +89,7 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
     }
   }
 
-  const handleSelectFilter = tag => {
+  const handleSelectFilter = (event, tag) => {
     if (tag.id !== tagFilter) {
       setTagFilter(tag.id)
       onChange(tag.id)

@@ -26,8 +26,14 @@ import {
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
-import { isNil, uniqBy } from 'lodash'
+import { get, isNil, uniqBy } from 'lodash'
 import { getArtifactReference, getParsedResource } from '../../utils/resources'
+
+const targetPathRegex =
+  /^(store|v3io|s3|az|gs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:?#[\]@!$&'()*+,;=]+)\/([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
+const httpTargetPathRegex =
+  /^(http|https):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
+const mlrunTargetPathRegex = /^(artifacts|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
 
 export const pathPlaceholders = {
   [MLRUN_STORAGE_INPUT_PATH_SCHEME]: 'artifacts/my-project/my-artifact:my-tag',
@@ -84,6 +90,15 @@ export const storePathTypes = [
     id: 'feature-vectors'
   }
 ]
+
+export const getTargetPathInvalidText = (dataInputState, formState, formStateFieldInfo) => {
+  const pathType = get(formState.values, `${formStateFieldInfo}.pathType`)
+  const pathTipsList = pathTips(dataInputState.storePathType)
+
+  return pathTipsList[pathType]
+    ? `Invalid URL. Field must be in "${pathTipsList[pathType]}" format`
+    : 'The field is invalid'
+}
 
 export const handleStoreInputPathChange = (targetPathState, setTargetPathState, value) => {
   const pathItems = value.split('/')
@@ -165,15 +180,19 @@ export const isPathInputInvalid = (pathInputType, pathInputValue) => {
 
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
-      return valueIsNotEmpty &&
-        /^(artifacts|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(pathInputValue)
+      return valueIsNotEmpty && mlrunTargetPathRegex.test(pathInputValue)
         ? false
         : 'This field is invalid'
     case V3IO_INPUT_PATH_SCHEME:
     case AZURE_STORAGE_INPUT_PATH_SCHEME:
     case GOOGLE_STORAGE_INPUT_PATH_SCHEME:
     case S3_INPUT_PATH_SCHEME:
-      return valueIsNotEmpty && pathInputValue.split('/')?.[1]?.length > 0
+      return valueIsNotEmpty && targetPathRegex.test(`${pathInputType}${pathInputValue}`)
+        ? false
+        : 'This field is invalid'
+    case HTTP_STORAGE_INPUT_PATH_SCHEME:
+    case HTTPS_STORAGE_INPUT_PATH_SCHEME:
+      return valueIsNotEmpty && httpTargetPathRegex.test(`${pathInputType}${pathInputValue}`)
         ? false
         : 'This field is invalid'
     default:

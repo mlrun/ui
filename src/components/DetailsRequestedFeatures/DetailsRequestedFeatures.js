@@ -17,248 +17,151 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { cloneDeep, isNil } from 'lodash'
+import { cloneDeep, isEqual, isNil } from 'lodash'
 
 import DetailsRequestedFeaturesView from './DetailsRequestedFeaturesView'
 
-import { handleFinishEdit, countChanges } from '../Details/details.util.js'
-import {
-  detailsRequestedFeaturesActions,
-  detailsRequestedFeaturesReducer,
-  initialState
-} from './detailsRequestedFeaturesReducer.js'
+import { countChanges } from '../Details/details.util.js'
 
 const DetailsRequestedFeatures = ({
   changes,
-  handleEditInput,
+  formState,
   selectedItem,
   setChanges,
   setChangesData,
   setChangesCounter
 }) => {
-  const [detailsRequestedFeaturesState, detailsRequestedFeaturesDispatch] = useReducer(
-    detailsRequestedFeaturesReducer,
-    initialState
-  )
-  const [currentData, setCurrentData] = useState([])
   const [confirmDialogData, setConfirmDialogData] = useState({
     index: null,
     feature: null
   })
   const [editableItemIndex, setEditableItemIndex] = useState(null)
   const [labelFeatureIsEditable, setLabelFeatureIsEditable] = useState(false)
-  const [isAliasNameValid, setIsAliasNameValid] = useState(true)
-  const [generatedFeaturesArray, setGeneratedFeaturesArray] = useState([])
 
   useEffect(() => {
     return () => {
       setEditableItemIndex(null)
       setLabelFeatureIsEditable(false)
-      setGeneratedFeaturesArray([])
     }
   }, [selectedItem])
 
   useEffect(() => {
-    setCurrentData(
-      !isNil(changes.data.features)
-        ? changes.data.features.currentFieldValue
-        : selectedItem.specFeatures
-    )
-
     return () => {
       setConfirmDialogData({ index: null, feature: null })
-      setCurrentData([])
-      detailsRequestedFeaturesDispatch({
-        type: detailsRequestedFeaturesActions.RESET_EDIT_MODE
-      })
     }
   }, [changes.data.features, selectedItem.specFeatures])
 
-  useEffect(() => {
-    if (
-      labelFeatureIsEditable &&
-      !isNil(editableItemIndex) &&
-      !isNil(changes.data.label_feature) &&
-      !isNil(changes.data.features) &&
-      changes.data.features.currentFieldValue[editableItemIndex] !==
-        changes.data.label_feature.currentFieldValue
-    ) {
-      handleEditInput(changes.data.features.currentFieldValue[editableItemIndex], 'label_feature')
-    }
-  }, [
-    changes.data.features,
-    changes.data.label_feature,
-    editableItemIndex,
-    handleEditInput,
-    labelFeatureIsEditable
-  ])
-
-  const handleAliasChange = (index, alias) => {
-    setGeneratedFeaturesArray(generateChangedArray(index, alias))
-  }
-
-  const handleItemClick = (field, fieldType, info, index, featureTemplate) => {
+  const handleItemClick = (field, fieldType, index, featureTemplate) => {
     if (isNil(editableItemIndex) || editableItemIndex !== index) {
-      setIsAliasNameValid(true)
-      setEditableItemIndex(index)
-      setGeneratedFeaturesArray(currentData)
-      detailsRequestedFeaturesDispatch({
-        type: detailsRequestedFeaturesActions.SET_EDIT_MODE,
-        payload: {
-          field,
-          fieldType
-        }
-      })
-
       const changesData = cloneDeep(changes.data)
+
+      setEditableItemIndex(index)
 
       if (isNil(changesData.label_feature) && featureTemplate === selectedItem.label_feature) {
         setLabelFeatureIsEditable(true)
-
-        changesData.label_feature = {
-          initialFieldValue: selectedItem.label_feature,
-          currentFieldValue: selectedItem.label_feature,
-          previousFieldValue: selectedItem.label_feature
-        }
       } else if (!isNil(changesData.label_feature)) {
         setLabelFeatureIsEditable(featureTemplate === changesData.label_feature.currentFieldValue)
-
-        changesData.label_feature = {
-          ...changesData.label_feature,
-          currentFieldValue: changesData.label_feature.previousFieldValue
-        }
-      }
-
-      if (isNil(changesData[field]?.initialFieldValue)) {
-        changesData[field] = {
-          initialFieldValue: selectedItem.specFeatures,
-          currentFieldValue: selectedItem.specFeatures,
-          previousFieldValue: selectedItem.specFeatures
-        }
-
-        setChangesData(changesData)
-      } else {
-        changesData[field] = {
-          ...changesData[field],
-          currentFieldValue: changesData[field].previousFieldValue
-        }
-
-        setCurrentData(changesData.features.currentFieldValue)
-        setChangesData(changesData)
       }
     }
   }
 
-  const onFinishEdit = () => {
-    const changesData = cloneDeep(changes)
-    changesData.data.features.currentFieldValue = generatedFeaturesArray
+  const onFinishEdit = useCallback(() => {
+    const changesData = cloneDeep(changes.data)
 
     setEditableItemIndex(null)
     setLabelFeatureIsEditable(false)
-    setCurrentData(changesData.data.features.currentFieldValue)
-    handleFinishEdit(
-      changesData,
-      detailsRequestedFeaturesActions,
-      detailsRequestedFeaturesDispatch,
-      setChangesData,
+
+    if (isEqual(formState.initialValues.features, formState.values.features)) {
+      delete changesData.features
+    } else {
+      changesData.features = {
+        initialFieldValue: formState.initialValues.features,
+        currentFieldValue: formState.values.features
+      }
+
+      if (labelFeatureIsEditable) {
+        changesData.label_feature = {
+          initialFieldValue: formState.initialValues.features[editableItemIndex],
+          currentFieldValue: formState.values.features[editableItemIndex]
+        }
+      }
+    }
+
+    setChangesCounter(countChanges(changesData))
+    setChangesData({ ...changesData })
+  },
+    [
+      changes.data,
+      editableItemIndex,
+      formState,
+      labelFeatureIsEditable,
       setChangesCounter,
-      null,
-      null,
-      Object.keys(changes.data),
-      detailsRequestedFeaturesState
-    )
-  }
+      setChangesData
+    ]
+  )
 
   const handleDelete = index => {
+    const changesData = cloneDeep(changes.data)
+    const formStateFeatures = cloneDeep(formState.values.features)
+    const [deletedFeature] = [...formStateFeatures].splice(index, 1)
+
     if (!isNil(editableItemIndex)) setEditableItemIndex(null)
+
     if (labelFeatureIsEditable) setLabelFeatureIsEditable(false)
 
-    const changesData = cloneDeep(changes.data)
-    const editedFeatures = [...currentData]
-    const [deletedFeature] = editedFeatures.splice(index, 1)
+    const updatedFeatures = formStateFeatures.filter(
+      (feature, featureIndex) => featureIndex !== index
+    )
 
     changesData.features = {
-      initialFieldValue: selectedItem.specFeatures,
-      currentFieldValue: editedFeatures,
-      previousFieldValue: editedFeatures
+      initialFieldValue: formState.initialValues.features,
+      currentFieldValue: updatedFeatures
     }
 
     if (
       (changesData.label_feature &&
-        deletedFeature === changesData.label_feature.currentFieldValue) ||
-      deletedFeature === selectedItem.label_feature
+        deletedFeature.originalTemplate === changesData.label_feature.currentFieldValue) ||
+      deletedFeature.originalTemplate === selectedItem.label_feature
     ) {
       changesData.label_feature = {
-        initialFieldValue: selectedItem.label_feature,
-        currentFieldValue: '',
-        previousFieldValue: ''
+        initialFieldValue: formState.initialValues.features[editableItemIndex],
+        currentFieldValue: { featureSet: '', feature: '', alias: '' }
       }
     }
 
+    formState.form.change('features', updatedFeatures)
     setChanges({
       data: changesData,
       counter: countChanges(changesData)
     })
-
     setConfirmDialogData({ index: null, feature: null })
   }
 
-  const handleDiscardChanges = index => {
-    const changesData = cloneDeep(changes.data)
-
-    changesData.features.currentFieldValue[index] = changesData.features.previousFieldValue[index]
-
-    if (
-      changesData.label_feature &&
-      changesData.label_feature.currentFieldValue === currentData[index]
-    ) {
-      changesData.label_feature = {
-        ...changesData.label_feature,
-        currentFieldValue: changesData.label_feature.previousFieldValue
-      }
-    }
-
+  const handleDiscardChanges = () => {
     if (labelFeatureIsEditable) {
       setLabelFeatureIsEditable(false)
     }
+
+    const resetValue = changes.data.features
+      ? changes.data.features.currentFieldValue
+      : formState.initialValues.features
+
+    formState.form.reset({ ...formState.values, features: resetValue })
     setEditableItemIndex(null)
-    setIsAliasNameValid(true)
-    setCurrentData(changesData.features.currentFieldValue)
-    setChangesData(changesData)
-  }
-
-  const generateChangedArray = (index, changedAlias) => {
-    return currentData.map((item, idx) => {
-      if (idx === index) {
-        if (currentData?.[index].match(/\s+as\s+(?<alias>.*)$/)) {
-          item = currentData?.[index].replace(
-            /\s+as\s+(?<alias>.*)$/,
-            changedAlias === '' ? '' : ` as ${changedAlias}`
-          )
-        } else if (changedAlias !== '') {
-          item = `${currentData?.[index]} as ${changedAlias}`
-        }
-      }
-
-      return item
-    })
   }
 
   return (
     <DetailsRequestedFeaturesView
       confirmDialogData={confirmDialogData}
-      currentData={currentData}
       editableItemIndex={editableItemIndex}
-      handleAliasChange={handleAliasChange}
+      formState={formState}
       handleDiscardChanges={handleDiscardChanges}
       handleDelete={handleDelete}
       handleItemClick={handleItemClick}
-      isAliasNameValid={isAliasNameValid}
       onFinishEdit={onFinishEdit}
       setConfirmDialogData={setConfirmDialogData}
-      setIsAliasNameValid={setIsAliasNameValid}
       selectedItem={selectedItem}
     />
   )
@@ -266,8 +169,11 @@ const DetailsRequestedFeatures = ({
 
 DetailsRequestedFeatures.propTypes = {
   changes: PropTypes.object.isRequired,
-  handleEditInput: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  formState: PropTypes.object.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired,
+  setChanges: PropTypes.func.isRequired,
+  setChangesData: PropTypes.func.isRequired,
+  setChangesCounter: PropTypes.func.isRequired
 }
 
 export default DetailsRequestedFeatures

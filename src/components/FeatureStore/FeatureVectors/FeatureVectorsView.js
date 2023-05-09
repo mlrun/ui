@@ -37,6 +37,7 @@ const FeatureVectorsView = React.forwardRef(
       applyDetailsChanges,
       createFeatureVector,
       createVectorPopUpIsOpen,
+      detailsFormInitialValues,
       featureStore,
       featureVectors,
       filtersStore,
@@ -79,6 +80,7 @@ const FeatureVectorsView = React.forwardRef(
               actionsMenu={actionsMenu}
               applyDetailsChanges={applyDetailsChanges}
               content={featureVectors}
+              detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureVector({})}
               pageData={pageData}
               retryRequest={handleRefresh}
