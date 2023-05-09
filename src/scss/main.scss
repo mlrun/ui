@@ -262,12 +262,12 @@ main {
       }
 
       &.row_active {
-        background-color: $zircon;
+        background-color: $ghostWhite;
       }
 
       &.parent-row {
         &.row_active {
-          background-color: $zircon;
+          background-color: $ghostWhite;
         }
 
         &:not(.parent-row-expanded) {
@@ -374,7 +374,7 @@ main {
         background-color: $white;
 
         &:hover {
-          background-color: $zircon;
+          background-color: $ghostWhite;
         }
 
         & > * {
