@@ -17,17 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Field, useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import { isEqual } from 'lodash'
-import { useParams } from 'react-router-dom'
 
 import TagFilterDropdown from '../TagFilter/TagFilterDropdown'
 
 import { tagFilterOptions } from '../../components/FilterMenu/filterMenu.settings'
-import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../../constants'
+import { TAG_FILTER_LATEST } from '../../constants'
 
 import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 
@@ -39,10 +38,9 @@ const FormTagFilter = ({ label, name }) => {
   const [tagFilter, setTagFilter] = useState(input.value)
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const tagFilterRef = useRef()
-  const params = useParams()
   const filtersStore = useSelector(store => store.filtersStore)
 
-  useEffect(() => {
+  const options = useMemo(() => {
     let newTagOptions = tagFilterOptions
 
     if (filtersStore.tagOptions?.length > 0) {
@@ -62,21 +60,27 @@ const FormTagFilter = ({ label, name }) => {
       ]
     }
 
-    if (!isEqual(newTagOptions, filtersStore.tagOptions)) {
-      setTagOptions(() => newTagOptions)
-    }
+    return newTagOptions
   }, [filtersStore.tagOptions])
 
   useEffect(() => {
-    if (params.tag && params.tag !== tagFilter && tagFilter !== TAG_FILTER_ALL_ITEMS) {
-      setTagFilter(params.tag)
-      input.onChange(params.tag)
+    if (!isEqual(options, filtersStore.tagOptions)) {
+      setTagOptions(options)
     }
-  }, [input, params.tag, tagFilter])
+  }, [filtersStore.tagOptions, options])
 
   const handleInputChange = event => {
+    const filteredOptions = options.filter(tag => tag.label.startsWith(event.target.value))
     input.onChange(event.target.value)
     setTagFilter(event.target.value)
+
+    if (filteredOptions.length === 0) {
+      setIsDropDownMenuOpen(false)
+    } else {
+      setIsDropDownMenuOpen(true)
+    }
+
+    setTagOptions(filteredOptions)
   }
 
   const handleSelectFilter = (event, tag) => {
@@ -85,8 +89,9 @@ const FormTagFilter = ({ label, name }) => {
     if (tag.id !== tagFilter) {
       input.onChange(tag.id)
       setTagFilter(tag.id)
-      setIsDropDownMenuOpen(false)
     }
+
+    setIsDropDownMenuOpen(false)
   }
 
   const handlerOverall = useCallback(
@@ -119,29 +124,23 @@ const FormTagFilter = ({ label, name }) => {
     }
   }, [isDropDownMenuOpen, handlerOverall])
 
-  useEffect(() => {
-    if (filtersStore.tagOptions.length > 0) {
-      setTagOptions(() => {
-        const defaultOptionsTags = tagFilterOptions.map(option => option.id)
+  const handleLabelClick = event => {
+    event.stopPropagation()
+    setIsDropDownMenuOpen(false)
+  }
 
-        return [
-          ...tagFilterOptions,
-          ...filtersStore.tagOptions.reduce((acc, tag) => {
-            if (!defaultOptionsTags.includes(tag)) {
-              acc.push({
-                label: tag,
-                id: tag
-              })
-            }
+  const toggleDropdown = event => {
+    event.stopPropagation()
 
-            return acc
-          }, [])
-        ]
-      })
-    } else {
-      setTagOptions(tagFilterOptions)
+    if (tagOptions.length > 0) {
+      setIsDropDownMenuOpen(state => !state)
+
+      if (tagFilter.length === 0) {
+        input.onChange(TAG_FILTER_LATEST)
+        setTagFilter(tagFilterOptions.find(tag => tag.id === TAG_FILTER_LATEST).label)
+      }
     }
-  }, [filtersStore.tagOptions])
+  }
 
   return (
     <Field name={name}>
@@ -150,10 +149,12 @@ const FormTagFilter = ({ label, name }) => {
           className="form-tag-filter"
           ref={tagFilterRef}
           onClick={() => {
-            !isDropDownMenuOpen && setIsDropDownMenuOpen(true)
+            !isDropDownMenuOpen && tagOptions.length > 0 && setIsDropDownMenuOpen(true)
           }}
         >
-          <div className="form-tag-filter__label">{label}</div>
+          <div className="form-tag-filter__label" onClick={handleLabelClick}>
+            {label}
+          </div>
           <div className="form-tag-filter__input-wrapper">
             <input
               className="form-tag-filter__input"
@@ -166,10 +167,7 @@ const FormTagFilter = ({ label, name }) => {
                 }
               }}
             />
-            <div
-              className="tag-filter__dropdown-button"
-              onClick={() => setIsDropDownMenuOpen(state => !state)}
-            >
+            <div className="tag-filter__dropdown-button" onClick={toggleDropdown}>
               <Caret />
             </div>
           </div>

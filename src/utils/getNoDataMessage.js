@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEqual } from 'lodash'
+import { isEqual, isNil } from 'lodash'
 import { formatDate } from '../utils/datePicker.util'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
@@ -98,14 +98,20 @@ const messageNamesList = {
 
 export const getNoDataMessage = (filtersStore, filters, page, tab) => {
   const messageNames = messageNamesList[tab] || messageNamesList[page] || messageNamesList.default
+  const filtersStoreKey = tab ?? page
 
   if (!messageNames) {
     return 'No data to show'
   } else {
-    const changedFiltersList = getChangedFiltersList(filters, filtersStore)
+    const changedFiltersList = getChangedFiltersList(filters, filtersStore, filtersStoreKey)
 
     return changedFiltersList.length > 0
-      ? generateNoEntriesFoundMessage(changedFiltersList, filtersStore, messageNames)
+      ? generateNoEntriesFoundMessage(
+          changedFiltersList,
+          filtersStore,
+          messageNames,
+          filtersStoreKey
+        )
       : generateEmptyListMessage(messageNames, tab)
   }
 }
@@ -126,7 +132,12 @@ const generateEmptyListMessage = (messageNames, tab) => {
   return `No ${messageNames.plural} yet. Create your first ${messageNames.single} now.`
 }
 
-const generateNoEntriesFoundMessage = (changedFilters, filtersStore, messageNames) => {
+const generateNoEntriesFoundMessage = (
+  changedFilters,
+  filtersStore,
+  messageNames,
+  filtersStoreKey
+) => {
   return changedFilters.reduce((message, filter, index) => {
     const label = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
       ? `${filter.label}:`
@@ -145,26 +156,34 @@ const generateNoEntriesFoundMessage = (changedFilters, filtersStore, messageName
         )
       : filter.type === STATUS_FILTER
       ? filtersStore['state']
-      : filtersStore[filter.type]
+      : filtersStore.filterMenuModal[filtersStoreKey]?.values?.[filter.type] ??
+        filtersStore[filter.type]
     const isLastElement = index === changedFilters.length - 1
 
     return message + `${label} ${value}${isLastElement ? '"' : ', '}`
   }, `There is no ${messageNames.plural} data to show for "`)
 }
 
-const getChangedFiltersList = (filters, filtersStore) => {
+const getChangedFiltersList = (filters, filtersStore, page) => {
   if (!filters || !filtersStore) {
     return []
   }
 
   return filters.filter(({ type }) => {
+    const isTagChanged =
+      filtersStore.tag !== TAG_FILTER_ALL_ITEMS ||
+      filtersStore.filterMenuModal[page]?.values?.tag !== TAG_FILTER_ALL_ITEMS
+    const isIterChanged = !isNil(filtersStore.filterMenuModal[page]?.values?.iter)
+      ? filtersStore.filterMenuModal[page].values.iter === SHOW_ITERATIONS
+      : filtersStore.iter === SHOW_ITERATIONS
+
     return (
-      (type === TAG_FILTER && filtersStore.tag !== TAG_FILTER_ALL_ITEMS) ||
+      (type === TAG_FILTER && isTagChanged) ||
       ((type === NAME_FILTER || type === LABELS_FILTER) && filtersStore[type].length > 0) ||
       (type === STATUS_FILTER && filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||
       (type === DATE_RANGE_TIME_FILTER &&
         !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
-      (type === ITERATIONS_FILTER && filtersStore.iter === SHOW_ITERATIONS) ||
+      (type === ITERATIONS_FILTER && isIterChanged) ||
       (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged === SHOW_UNTAGGED_ITEMS) ||
       (type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE)
     )

@@ -33,6 +33,7 @@ import { setModalFiltersInitialValues, setModalFiltersValues } from '../../reduc
 import { ReactComponent as FilterIcon } from 'igz-controls/images/filter.svg'
 
 import './filterMenuModal.scss'
+import { useParams } from 'react-router-dom'
 
 export const FilterMenuWizardContext = React.createContext({})
 
@@ -43,6 +44,8 @@ const FilterMenuModal = ({
   children,
   filterMenuName,
   initialValues,
+  page,
+  tab,
   values,
   wizardClassName
 }) => {
@@ -50,6 +53,7 @@ const FilterMenuModal = ({
   const filtersIconButtonRef = useRef()
   const dispatch = useDispatch()
   const filtersData = useSelector(store => store.filtersStore[FILTER_MENU_MODAL][filterMenuName])
+  const params = useParams()
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {},
@@ -91,6 +95,14 @@ const FilterMenuModal = ({
     }
   }, [hideFiltersWizard])
 
+  useEffect(() => {
+    const ref = formRef.current
+
+    return () => {
+      ref.restart(initialValues)
+    }
+  }, [params.pageTab, params.projectName, page, tab, dispatch, initialValues])
+
   const getFilterCounter = formState => {
     const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues
     const currentValues = applyChanges ? filtersData?.values : formState.values
@@ -118,17 +130,20 @@ const FilterMenuModal = ({
     setFiltersWizardIsShown(false)
   }
 
-  const handleClearFilters = formState => {
+  const handleClearFilters = (formState, counter) => {
     if (!isEqual(initialValues, formState.values)) {
       formRef.current.restart(initialValues)
-      applyChanges(initialValues)
       setFiltersWizardIsShown(false)
-      dispatch(
-        setModalFiltersValues({
-          name: filterMenuName,
-          value: initialValues
-        })
-      )
+
+      if (counter > 0) {
+        applyChanges(initialValues)
+        dispatch(
+          setModalFiltersValues({
+            name: filterMenuName,
+            value: initialValues
+          })
+        )
+      }
     }
   }
 
@@ -165,13 +180,15 @@ const FilterMenuModal = ({
                     <div className="filters-wizard__modal-buttons">
                       {cancelButton && (
                         <Button
+                          disabled={isEqual(formState.initialValues, formState.values)}
                           label={cancelButton.label}
-                          onClick={() => handleClearFilters(formState)}
+                          onClick={() => handleClearFilters(formState, counter)}
                           variant={cancelButton.variant}
                         />
                       )}
                       {applyButton && (
                         <Button
+                          disabled={isEqual(formState.initialValues, formState.values)}
                           variant={applyButton.variant}
                           label={applyButton.label}
                           onClick={() => handleApplyFilters(formState)}
@@ -193,6 +210,8 @@ FilterMenuModal.defaultProps = {
   applyChanges: null,
   applyButton: null,
   cancelButton: null,
+  page: '',
+  tab: '',
   wizardClassName: ''
 }
 
@@ -208,6 +227,8 @@ FilterMenuModal.propTypes = {
   }),
   filterMenuName: PropTypes.string.isRequired,
   initialValues: PropTypes.shape({}).isRequired,
+  page: PropTypes.string,
+  tab: PropTypes.string,
   values: PropTypes.shape({}).isRequired,
   wizardClassName: PropTypes.string
 }

@@ -71,15 +71,19 @@ function ArtifactsActionBar({
     })
   )
 
+  const filtersInitialState = useMemo(() => {
+    return {
+      [TAG_FILTER]: params.tag ?? TAG_LATEST,
+      [LABELS_FILTER]: '',
+      [ITERATIONS_FILTER]: SHOW_ITERATIONS
+    }
+  }, [params.tag])
+
   useEffect(() => {
     return () => {
       dispatch(removeFilters())
     }
-  }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
-
-  const filtersInitialState = useMemo(() => {
-    return { [TAG_FILTER]: TAG_LATEST, [LABELS_FILTER]: '', [ITERATIONS_FILTER]: SHOW_ITERATIONS }
-  }, [])
+  }, [params.pageTab, params.projectName, page, dispatch])
 
   const applyChanges = async (name, filterMenuModal) => {
     const filtersHelperResult = await filtersHelper(changes, dispatch)
@@ -154,6 +158,8 @@ function ArtifactsActionBar({
               cancelButton={{ label: 'Clear', variant: 'tertiary' }}
               filterMenuName={filterMenuName}
               initialValues={filtersInitialState}
+              page={page}
+              tab={tab}
               values={filtersInitialState}
               wizardClassName="artifacts-filters__wrapper"
             >
