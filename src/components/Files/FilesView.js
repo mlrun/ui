@@ -99,6 +99,7 @@ const FilesView = React.forwardRef(
                 <NoData message={getNoDataMessage(filtersStore, filters, FILES_PAGE)} />
               ) : (
                 <>
+                  {selectedRowData.loading && <Loader />}
                   <Table
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}

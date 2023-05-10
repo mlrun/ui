@@ -241,14 +241,12 @@ const MembersPopUp = ({
   const generateUsersSuggestionList = debounce(searchQuery => {
     const getUsersPromise = projectsIguazioApi.getScrubbedUsers({
       params: {
-        'filter[username]': `[$match-i]^.*${searchQuery}.*$`,
-        'page[size]': 200
+        'filter[username]': `[$contains_istr]${searchQuery}`
       }
     })
     const getUserGroupsPromise = projectsIguazioApi.getScrubbedUserGroups({
       params: {
-        'filter[name]': `[$match-i]^.*${searchQuery}.*$`,
-        'page[size]': 200
+        'filter[name]': `[$contains_istr]${searchQuery}`
       }
     })
     const suggestionList = []

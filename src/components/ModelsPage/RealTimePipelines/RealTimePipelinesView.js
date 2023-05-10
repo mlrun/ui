@@ -22,9 +22,10 @@ import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import Table from '../../Table/Table'
-import Pipeline from '../../Pipeline/Pipeline'
 import FunctionsTableRow from '../../../elements/FunctionsTableRow/FunctionsTableRow'
+import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
+import Pipeline from '../../Pipeline/Pipeline'
+import Table from '../../Table/Table'
 
 import { filters } from './realTimePipelines.util'
 import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
@@ -59,15 +60,18 @@ const RealTimePipelinesView = React.forwardRef(
         <div className="models" ref={ref}>
           <div className="table-container">
             <div className={filterMenuClassNames}>
-              <FilterMenu
-                expand={expand}
-                filters={filters}
-                handleExpandAll={handleExpandAll}
-                hidden={Boolean(params.pipelineId)}
-                onChange={fetchData}
-                page={MODELS_PAGE}
-                tab={REAL_TIME_PIPELINES_TAB}
-              />
+              <ModelsPageTabs />
+              <div className="action-bar">
+                <FilterMenu
+                  expand={expand}
+                  filters={filters}
+                  handleExpandAll={handleExpandAll}
+                  hidden={Boolean(params.pipelineId)}
+                  onChange={fetchData}
+                  page={MODELS_PAGE}
+                  tab={REAL_TIME_PIPELINES_TAB}
+                />
+              </div>
             </div>
             {artifactsStore.loading ? null : pipelines.length === 0 ? (
               <NoData

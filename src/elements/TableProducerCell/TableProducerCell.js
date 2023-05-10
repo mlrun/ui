@@ -34,7 +34,7 @@ const TableProducerCell = ({ data }) => {
   const overviewTab = getJobsDetailsMenu().find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
 
   return (
-    <div className={`table-body__cell ${data.class}`}>
+    <td className={`table-body__cell ${data.class}`}>
       {data.value.name && uid && (
         <Tooltip
           template={
@@ -54,7 +54,7 @@ const TableProducerCell = ({ data }) => {
           </Link>
         </Tooltip>
       )}
-    </div>
+    </td>
   )
 }
 

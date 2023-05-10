@@ -59,13 +59,15 @@ const FeatureSetsView = React.forwardRef(
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
-          <FilterMenu
-            filters={featureSetsFilters}
-            onChange={handleRefresh}
-            page={FEATURE_STORE_PAGE}
-            tab={FEATURE_SETS_TAB}
-            withoutExpandButton
-          />
+          <div className="action-bar">
+            <FilterMenu
+              filters={featureSetsFilters}
+              onChange={handleRefresh}
+              page={FEATURE_STORE_PAGE}
+              tab={FEATURE_SETS_TAB}
+              withoutExpandButton
+            />
+          </div>
         </div>
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData

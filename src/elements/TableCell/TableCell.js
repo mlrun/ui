@@ -66,7 +66,7 @@ const TableCell = ({
     )
   } else if (firstCell && !link) {
     return (
-      <div className={`table-body__cell ${data.class} ${className}`}>
+      <td className={`table-body__cell ${data.class} ${className}`}>
         {item.state && stateValue && stateLabel && (
           <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
             <i className={stateClassName} />
@@ -90,13 +90,13 @@ const TableCell = ({
         {showExpandButton && (
           <Arrow onClick={e => handleExpandRow(e, item)} className="expand-arrow" />
         )}
-      </div>
+      </td>
     )
   } else if (data.type === 'type') {
     return <TableTypeCell className={className} data={data} />
   } else if (data.type === 'icons') {
     return (
-      <div className={`table-body__cell ${data.class} ${className}`}>
+      <td className={`table-body__cell ${data.class} ${className}`}>
         {data.value.map((valueItem, index) => (
           <Tooltip
             key={valueItem.tooltip + index}
@@ -105,19 +105,19 @@ const TableCell = ({
             {valueItem.icon}
           </Tooltip>
         ))}
-      </div>
+      </td>
     )
   } else if (Array.isArray(data.value)) {
     return (
-      <div className={`table-body__cell ${data.class} ${className}`}>
+      <td className={`table-body__cell ${data.class} ${className}`}>
         <ChipCell chipOptions={getChipOptions(data.type)} elements={data.value} tooltip />
-      </div>
+      </td>
     )
   } else if (data.type === 'producer') {
     return <TableProducerCell className={className} data={data} />
   } else if (data.type === 'buttonPopout') {
     return (
-      <div className={`table-body__cell ${data.class} ${className}`}>
+      <td className={`table-body__cell ${data.class} ${className}`}>
         <RoundedIcon
           tooltipText={data.disabled ? '' : 'Artifact Preview'}
           disabled={data.disabled}
@@ -132,11 +132,11 @@ const TableCell = ({
         >
           <ArtifactView />
         </RoundedIcon>
-      </div>
+      </td>
     )
   } else if (data.type === 'buttonDownload') {
     return (
-      <div className={`table-body__cell ${data.class} ${className}`}>
+      <td className={`table-body__cell ${data.class} ${className}`}>
         <Tooltip hidden={data.disabled} template={<TextTooltipTemplate text="Download" />}>
           <Download
             path={`${item?.target_path}${item?.model_file ? item.model_file : ''}`}
@@ -144,40 +144,40 @@ const TableCell = ({
             disabled={data.disabled}
           />
         </Tooltip>
-      </div>
+      </td>
     )
   } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
-      <div className={`table-body__cell ${data.class} ${className}`}>
+      <td className={`table-body__cell ${data.class} ${className}`}>
         <CopyToClipboard
           tooltipText="Copy URI"
           textToCopy={data.actionHandler(item)}
           disabled={data.disabled}
         />
-      </div>
+      </td>
     )
   } else if (data.type === 'hash') {
     return (
-      <div className={`table-body__cell ${data.class} ${className}`}>
+      <td className={`table-body__cell ${data.class} ${className}`}>
         <Tooltip template={<TextTooltipTemplate text={data.value} />}>
           <span>{truncateUid(data.value)}</span>
         </Tooltip>
-      </div>
+      </td>
     )
   } else if (data.type === 'hidden') {
     return null
   } else if (data.type === 'component') {
-    return <div className={`table-body__cell ${data.class} ${className}`}>{data.value}</div>
+    return <td className={`table-body__cell ${data.class} ${className}`}>{data.value}</td>
   } else {
     return (
-      <div className={`table-body__cell ${data.class} ${className}`}>
+      <td className={`table-body__cell ${data.class} ${className}`}>
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
         >
           {data.value}
         </Tooltip>
-      </div>
+      </td>
     )
   }
 }

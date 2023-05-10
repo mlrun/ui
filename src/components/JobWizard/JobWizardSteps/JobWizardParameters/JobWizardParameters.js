@@ -29,7 +29,7 @@ import { selectOptions } from './jobWizardParameters.util'
 
 import './jobWizardParameters.scss'
 
-const JobWizardParameters = ({ formState }) => {
+const JobWizardParameters = ({ formState, isBatchInference }) => {
   const paramFilePath = 'parameters.hyperParameters.paramFile'
   const tuningStrategyPath = 'parameters.hyperParameters.tuningStrategy'
   const resultPath = 'parameters.hyperParameters.result'
@@ -49,9 +49,10 @@ const JobWizardParameters = ({ formState }) => {
 
   useEffect(() => {
     setIsHyperOptionDisabled(
-      get(formState, 'values.parameters.hyperParameters.paramFile', '').length > 0
+      get(formState, 'values.parameters.hyperParameters.paramFile', '').length > 0 ||
+        isBatchInference
     )
-  }, [formState])
+  }, [formState, isBatchInference])
 
   return (
     <div className="job-wizard__parameters form">
@@ -64,53 +65,58 @@ const JobWizardParameters = ({ formState }) => {
         isHyperOptionDisabled={isHyperOptionDisabled}
         setIsParametersEditModeEnabled={setIsParametersEditModeEnabled}
       />
-      <div className="form-row hyper-parameters">
-        <h6 className="form-step-subtitle">Hyper parameters</h6>
-      </div>
-      <div className="form-row">
-        <div className="form-col-3">
-          <FormInput
-            disabled={isParamFileDisabled || isParametersEditModeEnabled}
-            label="Read hyper params from a file"
-            placeholder="v3io:///projects/my-proj/param.txt"
-            type="text"
-            name={paramFilePath}
-          />
-        </div>
-        <div className="form-col-1">
-          <FormSelect
-            disabled={
-              (!get(formState.values, paramFilePath.split('.')) && !isParamFileDisabled) ||
-              isParametersEditModeEnabled
-            }
-            label="Tuning strategy"
-            name={tuningStrategyPath}
-            options={selectOptions.hyperStrategyType}
-          />
-        </div>
-        <div className="form-col-3">
-          <FormInput
-            disabled={isParametersEditModeEnabled}
-            label="Result"
-            type="text"
-            name={resultPath}
-          />
-        </div>
-        <div className="form-col-1">
-          <FormSelect
-            disabled={isParametersEditModeEnabled}
-            label="Criteria"
-            name={criteriaPath}
-            options={selectOptions.selectorCriteria}
-          />
-        </div>
-      </div>
+      {!isBatchInference && (
+        <>
+          <div className="form-row hyper-parameters">
+            <h6 className="form-step-subtitle">Hyper parameters</h6>
+          </div>
+          <div className="form-row">
+            <div className="form-col-3">
+              <FormInput
+                disabled={isParamFileDisabled || isParametersEditModeEnabled}
+                label="Read hyper params from a file"
+                placeholder="v3io:///projects/my-proj/param.txt"
+                type="text"
+                name={paramFilePath}
+              />
+            </div>
+            <div className="form-col-1">
+              <FormSelect
+                disabled={
+                  (!get(formState.values, paramFilePath.split('.')) && !isParamFileDisabled) ||
+                  isParametersEditModeEnabled
+                }
+                label="Tuning strategy"
+                name={tuningStrategyPath}
+                options={selectOptions.hyperStrategyType}
+              />
+            </div>
+            <div className="form-col-3">
+              <FormInput
+                disabled={isParametersEditModeEnabled}
+                label="Result"
+                type="text"
+                name={resultPath}
+              />
+            </div>
+            <div className="form-col-1">
+              <FormSelect
+                disabled={isParametersEditModeEnabled}
+                label="Criteria"
+                name={criteriaPath}
+                options={selectOptions.selectorCriteria}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
 
 JobWizardResources.propTypes = {
-  formState: PropTypes.shape({}).isRequired
+  formState: PropTypes.shape({}).isRequired,
+  isBatchInference: PropTypes.bool.isRequired
 }
 
 export default JobWizardParameters

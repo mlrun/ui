@@ -124,12 +124,13 @@ const MonitorJobs = ({
   )
 
   const pageData = useMemo(
-    () => generatePageData(
-      handleFetchJobLogs,
-      selectedJob,
-      appStore.frontendSpec.jobs_dashboard_url,
-      handleMonitoring
-    ),
+    () =>
+      generatePageData(
+        handleFetchJobLogs,
+        selectedJob,
+        appStore.frontendSpec.jobs_dashboard_url,
+        handleMonitoring
+      ),
     [handleFetchJobLogs, selectedJob, appStore.frontendSpec.jobs_dashboard_url, handleMonitoring]
   )
 
@@ -422,20 +423,24 @@ const MonitorJobs = ({
         />
       )}
       <div className={filterMenuClassNames}>
-        <FilterMenu
-          actionButton={{
-            label: 'Resource monitoring',
-            tooltip: !appStore.frontendSpec.jobs_dashboard_url ? 'Grafana service unavailable' : '',
-            variant: TERTIARY_BUTTON,
-            disabled: !appStore.frontendSpec.jobs_dashboard_url,
-            onClick: () => handleMonitoring()
-          }}
-          filters={filters}
-          hidden={Boolean(params.jobId)}
-          onChange={refreshJobs}
-          page={JOBS_PAGE}
-          withoutExpandButton
-        />
+        <div className="action-bar">
+          <FilterMenu
+            actionButton={{
+              label: 'Resource monitoring',
+              tooltip: !appStore.frontendSpec.jobs_dashboard_url
+                ? 'Grafana service unavailable'
+                : '',
+              variant: TERTIARY_BUTTON,
+              disabled: !appStore.frontendSpec.jobs_dashboard_url,
+              onClick: () => handleMonitoring()
+            }}
+            filters={filters}
+            hidden={Boolean(params.jobId)}
+            onChange={refreshJobs}
+            page={JOBS_PAGE}
+            withoutExpandButton
+          />
+        </div>
       </div>
 
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||

@@ -124,10 +124,11 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     }
   }
 
-  const generateSuggestionList = debounce(async resolve => {
+  const generateSuggestionList = debounce(async (memberName, resolve) => {
     const response = await projectsIguazioApi.getScrubbedUsers({
       params: {
-        'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
+        'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
+        'filter[username]': `[$contains_istr]${memberName}`
       }
     })
     const {
@@ -154,7 +155,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     setSearchValue(memberNameEscaped)
 
     if (memberNameEscaped !== '') {
-      generateSuggestionList(() => {
+      generateSuggestionList(memberName, () => {
         setShowSuggestionList(true)
       })
     } else {

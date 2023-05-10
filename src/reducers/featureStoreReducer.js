@@ -59,6 +59,7 @@ import {
   SET_NEW_FEATURE_SET_DESCRIPTION,
   SET_NEW_FEATURE_SET_LABELS,
   SET_NEW_FEATURE_SET_NAME,
+  SET_NEW_FEATURE_SET_PASSTHROUGH,
   SET_NEW_FEATURE_SET_SCHEDULE,
   SET_NEW_FEATURE_SET_SCHEMA_TIMESTAMP_KEY,
   SET_NEW_FEATURE_SET_TARGET,
@@ -111,6 +112,7 @@ const initialState = {
     spec: {
       description: '',
       entities: [],
+      passthrough: false,
       source: {
         attributes: {},
         end_time: '',
@@ -589,6 +591,17 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFeatureSet.metadata,
             labels: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_PASSTHROUGH:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            passthrough: payload
           }
         }
       }

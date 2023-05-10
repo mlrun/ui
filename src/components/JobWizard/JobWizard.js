@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
@@ -61,8 +61,10 @@ import './jobWizard.scss'
 const JobWizard = ({
   defaultData,
   editJob,
+  fetchFunctionTemplate,
   frontendSpec,
   functionsStore,
+  isBatchInference,
   isOpen,
   jobsStore,
   mode,
@@ -108,7 +110,7 @@ const JobWizard = ({
       {
         id: 'functionSelection',
         label: 'Function Selection',
-        isHidden: isEditMode,
+        isHidden: isEditMode || isBatchInference,
         getActions: ({ handleSubmit }) => [
           {
             label: 'Back',
@@ -158,7 +160,22 @@ const JobWizard = ({
         ]
       }
     ]
-  }, [isEditMode, mode, selectedFunctionData])
+  }, [isBatchInference, isEditMode, mode, selectedFunctionData])
+
+  useEffect(() => {
+    if (isBatchInference) {
+      fetchFunctionTemplate('batch_inference/function.yaml').then(functionData => {
+        setSelectedFunctionData(functionData)
+      })
+    }
+  }, [
+    defaultData,
+    fetchFunctionTemplate,
+    frontendSpec,
+    isBatchInference,
+    isEditMode,
+    isStagingMode
+  ])
 
   const runJobHandler = (formData, selectedFunctionData, params, isSchedule) => {
     const jobRequestData = generateJobRequestData(
@@ -263,7 +280,7 @@ const JobWizard = ({
               title={wizardTitle}
               subTitle={formState.values?.runDetails?.name}
             >
-              {!isEditMode && (
+              {!isEditMode && !isBatchInference && (
                 <JobWizardFunctionSelection
                   defaultData={defaultData}
                   filteredFunctions={filteredFunctions}
@@ -290,6 +307,7 @@ const JobWizard = ({
                 defaultData={defaultData}
                 formState={formState}
                 frontendSpec={frontendSpec}
+                isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
                 isStagingMode={isStagingMode}
                 jobAdditionalData={jobAdditionalData}
@@ -297,7 +315,7 @@ const JobWizard = ({
                 setJobAdditionalData={setJobAdditionalData}
               />
               <JobWizardDataInputs formState={formState} />
-              <JobWizardParameters formState={formState} />
+              <JobWizardParameters formState={formState} isBatchInference={isBatchInference} />
               <JobWizardResources formState={formState} frontendSpec={frontendSpec} />
               <JobWizardAdvanced
                 editJob={editJobHandler}
@@ -322,6 +340,7 @@ const JobWizard = ({
 
 JobWizard.defaultProps = {
   defaultData: {},
+  isBatchInference: false,
   mode: PANEL_CREATE_MODE,
   onSuccessRequest: () => {},
   onWizardClose: () => {},
@@ -330,6 +349,7 @@ JobWizard.defaultProps = {
 
 JobWizard.propTypes = {
   defaultData: PropTypes.shape({}),
+  isBatchInference: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
   mode: PropTypes.string,
   onResolve: PropTypes.func.isRequired,

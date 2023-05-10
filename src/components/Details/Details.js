@@ -24,6 +24,7 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
+import { isEqual, pickBy } from 'lodash'
 import classnames from 'classnames'
 
 import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
@@ -105,26 +106,6 @@ const Details = ({
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
-  )
-
-  const setNewChangesData = useCallback(
-    (value, field) => {
-      setChangesData({
-        ...detailsStore.changes.data,
-        [field]: {
-          ...detailsStore.changes.data[field],
-          currentFieldValue: value
-        }
-      })
-    },
-    [detailsStore.changes.data, setChangesData]
-  )
-
-  const handleEditInput = useCallback(
-    (value, field) => {
-      setNewChangesData(value, field)
-    },
-    [setNewChangesData]
   )
 
   const handlePreview = useCallback(() => {
@@ -223,10 +204,14 @@ const Details = ({
   ])
 
   useEffect(() => {
-    if (formRef.current) {
+    if (
+      formRef.current &&
+      detailsStore.changes.counter === 0 &&
+      !isEqual(pickBy(formInitialValues), pickBy(formRef.current.getState()?.values))
+    ) {
       formRef.current.restart(formInitialValues)
     }
-  }, [formInitialValues])
+  }, [formInitialValues, detailsStore.changes.counter])
 
   const detailsMenuClick = useCallback(() => {
     if (historyIsBlocked) {
@@ -256,9 +241,9 @@ const Details = ({
       resetChanges()
       unblockHistory()
       setHistoryIsBlocked(false)
-      formRef.current.reset()
+      formRef.current.reset(formInitialValues)
     }
-  }, [detailsStore.changes.counter, resetChanges, unblockHistory])
+  }, [detailsStore.changes.counter, formInitialValues, resetChanges, unblockHistory])
 
   const leavePage = useCallback(() => {
     cancelChanges()
@@ -288,26 +273,27 @@ const Details = ({
         <div className={detailsPanelClassNames} ref={detailsRef} data-testid="detailsPanel">
           {detailsStore.loading && <Loader />}
           {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
-          <DetailsHeader
-            actionsMenu={actionsMenu}
-            applyChanges={applyChanges}
-            applyChangesRef={applyChangesRef}
-            cancelChanges={cancelChanges}
-            getCloseDetailsLink={getCloseDetailsLink}
-            handleCancel={handleCancel}
-            handleRefresh={handleRefresh}
-            handleShowWarning={handleShowWarning}
-            isDetailsScreen={isDetailsScreen}
-            pageData={pageData}
-            selectedItem={selectedItem}
-            setIteration={setIteration}
-            tab={tab}
-          />
-          <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
+          <div className="item-header-wrapper">
+            <DetailsHeader
+              actionsMenu={actionsMenu}
+              applyChanges={applyChanges}
+              applyChangesRef={applyChangesRef}
+              cancelChanges={cancelChanges}
+              getCloseDetailsLink={getCloseDetailsLink}
+              handleCancel={handleCancel}
+              handleRefresh={handleRefresh}
+              handleShowWarning={handleShowWarning}
+              isDetailsScreen={isDetailsScreen}
+              pageData={pageData}
+              selectedItem={selectedItem}
+              setIteration={setIteration}
+              tab={tab}
+            />
+            <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
+          </div>
           <DetailsTabsContent
             applyChangesRef={applyChangesRef}
             formState={formState}
-            handleEditInput={handleEditInput}
             handlePreview={handlePreview}
             pageData={pageData}
             selectedItem={selectedItem}

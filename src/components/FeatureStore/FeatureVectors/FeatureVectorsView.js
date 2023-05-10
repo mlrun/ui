@@ -37,6 +37,7 @@ const FeatureVectorsView = React.forwardRef(
       applyDetailsChanges,
       createFeatureVector,
       createVectorPopUpIsOpen,
+      detailsFormInitialValues,
       featureStore,
       featureVectors,
       filtersStore,
@@ -54,13 +55,15 @@ const FeatureVectorsView = React.forwardRef(
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
-          <FilterMenu
-            filters={featureVectorsFilters}
-            onChange={handleRefresh}
-            page={FEATURE_STORE_PAGE}
-            tab={FEATURE_VECTORS_TAB}
-            withoutExpandButton
-          />
+          <div className="action-bar">
+            <FilterMenu
+              filters={featureVectorsFilters}
+              onChange={handleRefresh}
+              page={FEATURE_STORE_PAGE}
+              tab={FEATURE_VECTORS_TAB}
+              withoutExpandButton
+            />
+          </div>
         </div>
         {featureStore.loading ? null : featureVectors.length === 0 ? (
           <NoData
@@ -77,6 +80,7 @@ const FeatureVectorsView = React.forwardRef(
               actionsMenu={actionsMenu}
               applyDetailsChanges={applyDetailsChanges}
               content={featureVectors}
+              detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureVector({})}
               pageData={pageData}
               retryRequest={handleRefresh}
@@ -84,19 +88,17 @@ const FeatureVectorsView = React.forwardRef(
               tab={FEATURE_VECTORS_TAB}
               tableHeaders={tableContent[0]?.content ?? []}
             >
-              <div className="table-body">
-                {tableContent.map((tableItem, index) => (
-                  <FeatureStoreTableRow
-                    actionsMenu={actionsMenu}
-                    handleExpandRow={handleExpandRow}
-                    key={index}
-                    pageTab={FEATURE_VECTORS_TAB}
-                    rowItem={tableItem}
-                    selectedItem={selectedFeatureVector}
-                    selectedRowData={selectedRowData}
-                  />
-                ))}
-              </div>
+              {tableContent.map((tableItem, index) => (
+                <FeatureStoreTableRow
+                  actionsMenu={actionsMenu}
+                  handleExpandRow={handleExpandRow}
+                  key={index}
+                  pageTab={FEATURE_VECTORS_TAB}
+                  rowItem={tableItem}
+                  selectedItem={selectedFeatureVector}
+                  selectedRowData={selectedRowData}
+                />
+              ))}
             </Table>
           </>
         )}

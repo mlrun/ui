@@ -41,7 +41,9 @@ const initialState = {
     allData: [],
     filteredData: [],
     selectedRowData: {
-      content: {}
+      content: {},
+      error: null,
+      loading: false
     }
   },
   error: null,
@@ -49,7 +51,9 @@ const initialState = {
     allData: [],
     filteredData: [],
     selectedRowData: {
-      content: {}
+      content: {},
+      error: null,
+      loading: false
     }
   },
   modelEndpoints: [],
@@ -57,7 +61,9 @@ const initialState = {
     allData: [],
     filteredData: [],
     selectedRowData: {
-      content: {}
+      content: {},
+      error: null,
+      loading: false
     }
   },
   pipelines: [],
@@ -195,17 +201,17 @@ const artifactsSlice = createSlice({
       }
     },
     removeFiles(state) {
-      state.files = initialState.dataSets
+      state.files = initialState.files
     },
     removeModel(state, action) {
       state.models.selectedRowData = {
-        content: action.payload,
+        content: initialState.models.selectedRowData.content,
         error: null,
         loading: false
       }
     },
     removeModels(state) {
-      state.models = initialState.dataSets
+      state.models = initialState.models
     },
     removeModelEndpoints(state) {
       state.modelEndpoints = initialState.modelEndpoints
@@ -275,10 +281,28 @@ const artifactsSlice = createSlice({
       state.modelEndpoints = []
       state.loading = false
     })
+
+    builder.addCase(fetchModel.pending, (state, action) => {
+      state.models.selectedRowData = {
+        content: initialState.models.selectedRowData.content,
+        error: null,
+        loading: true
+      }
+    })
     builder.addCase(fetchModel.fulfilled, (state, action) => {
+      state.models.selectedRowData.error = null
       state.models.selectedRowData.content[getArtifactIdentifier(action.payload[0])] =
         action.payload
+      state.models.selectedRowData.loading = false
     })
+    builder.addCase(fetchModel.rejected, (state, action) => {
+      state.models.selectedRowData.error = {
+        content: initialState.models.selectedRowData.content,
+        error: action.payload,
+        loading: true
+      }
+    })
+
     builder.addCase(fetchModels.pending, defaultPendingHandler)
     builder.addCase(fetchModels.fulfilled, (state, action) => {
       state.error = null

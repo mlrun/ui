@@ -139,9 +139,9 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         headerLabel: 'Feature Name',
         type: feature.ui.type,
         value: feature.name,
-        class: 'table-cell-2',
+        class: 'table-cell-name',
         expandedCellContent: {
-          class: 'table-cell-2',
+          class: 'table-cell-name',
           value: feature.metadata?.tag
         },
         showExpandButton
@@ -151,7 +151,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         headerId: 'featureset',
         headerLabel: 'Feature set',
         value: feature.metadata?.name,
-        class: 'table-cell-1',
+        class: 'table-cell-2',
         getLink: tab =>
           generateLinkToDetailsPanel(
             feature.metadata?.project,
@@ -162,7 +162,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
             tab
           ),
         expandedCellContent: {
-          class: 'table-cell-1',
+          class: 'table-cell-2',
           value: ''
         },
         rowExpanded: {

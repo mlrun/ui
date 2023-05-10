@@ -32,13 +32,13 @@ import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) => {
   const params = useParams()
   const rowClassNames = classnames(
-    'table-body__row',
+    'table-row',
     'parent-row',
     getJobIdentifier(selectedJob, true) === rowItem.data.ui.identifierUnique && 'row_active'
   )
 
   return (
-    <div className={rowClassNames}>
+    <tr className={rowClassNames}>
       {rowItem.content.map((rowItemProp, index) => {
         return (
           !rowItemProp.hidden && (
@@ -57,10 +57,10 @@ const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) =>
           )
         )
       })}
-      <div className="table-body__cell action_cell">
+      <td className="table-body__cell table-cell-icon">
         <ActionsMenu dataItem={rowItem.data} menu={actionsMenu} />
-      </div>
-    </div>
+      </td>
+    </tr>
   )
 }
 

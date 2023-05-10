@@ -50,18 +50,20 @@ const FeaturesView = React.forwardRef(
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
-          <FilterMenu
-            actionButton={{
-              label: 'Add to feature vector',
-              variant: SECONDARY_BUTTON,
-              getCustomTemplate: getPopUpTemplate
-            }}
-            filters={featuresFilters}
-            onChange={handleRefresh}
-            page={FEATURE_STORE_PAGE}
-            tab={FEATURES_TAB}
-            withoutExpandButton
-          />
+          <div className="action-bar">
+            <FilterMenu
+              actionButton={{
+                label: 'Add to feature vector',
+                variant: SECONDARY_BUTTON,
+                getCustomTemplate: getPopUpTemplate
+              }}
+              filters={featuresFilters}
+              onChange={handleRefresh}
+              page={FEATURE_STORE_PAGE}
+              tab={FEATURES_TAB}
+              withoutExpandButton
+            />
+          </div>
         </div>
         {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
           0 ? (
@@ -84,20 +86,18 @@ const FeaturesView = React.forwardRef(
               tableHeaders={tableContent[0]?.content ?? []}
             >
               <>
-                <div className="table-body">
-                  {tableContent.map((tableItem, index) => (
-                    <FeatureStoreTableRow
-                      actionsMenu={actionsMenu}
-                      handleExpandRow={handleExpandRow}
-                      key={index}
-                      hideActionsMenu={tableStore.isTablePanelOpen}
-                      mainRowItemsCount={2}
-                      pageTab={FEATURES_TAB}
-                      rowItem={tableItem}
-                      selectedRowData={selectedRowData}
-                    />
-                  ))}
-                </div>
+                {tableContent.map((tableItem, index) => (
+                  <FeatureStoreTableRow
+                    actionsMenu={actionsMenu}
+                    handleExpandRow={handleExpandRow}
+                    key={index}
+                    hideActionsMenu={tableStore.isTablePanelOpen}
+                    mainRowItemsCount={2}
+                    pageTab={FEATURES_TAB}
+                    rowItem={tableItem}
+                    selectedRowData={selectedRowData}
+                  />
+                ))}
               </>
             </Table>
           </>
