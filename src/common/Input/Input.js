@@ -44,6 +44,7 @@ const Input = React.forwardRef(
       floatingLabel,
       focused,
       iconClass,
+      iconOnClick,
       infoLabel,
       inputIcon,
       invalid,
@@ -272,7 +273,6 @@ const Input = React.forwardRef(
             )}
           </div>
         )}
-
         {isInvalid && !isEmpty(validationRules) && (
           <i className="input__warning" onClick={toggleValidationRulesMenu}>
             <WarningIcon />
@@ -293,7 +293,7 @@ const Input = React.forwardRef(
         )}
         {tip && <Tip text={tip} className="input__tip" />}
         {inputIcon && (
-          <span data-testid="input-icon" className={iconClass}>
+          <span data-testid="input-icon" className={iconClass} onClick={iconOnClick}>
             {inputIcon}
           </span>
         )}
@@ -335,6 +335,7 @@ Input.defaultProps = {
   floatingLabel: false,
   focused: false,
   iconClass: '',
+  iconOnClick: () => {},
   infoLabel: false,
   inputIcon: null,
   invalid: false,
@@ -366,6 +367,7 @@ Input.propTypes = {
   floatingLabel: PropTypes.bool,
   focused: PropTypes.bool,
   iconClass: PropTypes.string,
+  iconOnClick: PropTypes.func,
   infoLabel: PropTypes.bool,
   inputIcon: PropTypes.element,
   invalid: PropTypes.bool,

@@ -87,6 +87,15 @@ const Search = ({
     setInputFocused(false)
   }
 
+  const handleSearchIconClick = event => {
+    event.stopPropagation()
+
+    if (searchValue.length > 0) {
+      onChange(searchValue)
+      setInputFocused(false)
+    }
+  }
+
   return (
     <div
       data-testid="search-container"
@@ -103,6 +112,7 @@ const Search = ({
         placeholder={placeholder}
         inputIcon={<SearchIcon />}
         iconClass="search-icon"
+        iconOnClick={handleSearchIconClick}
         onChange={searchOnChange}
         onFocus={onFocus}
         focused={inputIsFocused}
