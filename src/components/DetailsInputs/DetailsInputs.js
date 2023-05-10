@@ -17,29 +17,161 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useParams } from 'react-router-dom'
+import classnames from 'classnames'
 
+import ArtifactsPreviewController from '../ArtifactsPreview/ArtifactsPreviewController'
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import Loader from '../../common/Loader/Loader'
+
+import { fetchArtifacts } from '../../reducers/artifactsReducer'
+import { generateArtifactIndexes } from '../Details/details.util'
+import {
+  DATASETS,
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  MODELS_TAB,
+  TAG_FILTER_LATEST
+} from '../../constants'
+
+import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
+
+import './detailsInputs.scss'
 
 const DetailsInputs = ({ inputs }) => {
+  const [artifactsIndexes, setArtifactsIndexes] = useState([])
+  const [content, setContent] = useState([])
+
+  const artifactsStore = useSelector(store => store.artifactsStore)
+  const dispatch = useDispatch()
+  const params = useParams()
+
+  const generateArtifactLink = useCallback(
+    artifact => {
+      const artifactLinks = {
+        model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
+          artifact.db_key || artifact.key
+        }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`,
+        dataset: `/projects/${params.projectName}/${DATASETS}/${
+          artifact.db_key || artifact.key
+        }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`,
+        files: `/projects/${params.projectName}/files/${
+          artifact.db_key || artifact.key
+        }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`
+      }
+
+      return artifactLinks[artifact.kind ?? 'files']
+    },
+    [params.projectName]
+  )
+
+  useEffect(() => {
+    Object.entries(inputs || {}).forEach(([key, value]) => {
+      if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
+        const [, , , project, dbKeyWithHash] = value.split('/')
+        const [dbKey, hash] = dbKeyWithHash.split(':')
+
+        dispatch(
+          fetchArtifacts({
+            project,
+            filters: { name: dbKey },
+            config: {
+              params: {
+                tag: hash ?? TAG_FILTER_LATEST
+              }
+            }
+          })
+        )
+          .unwrap()
+          .then(artifacts => {
+            setContent(state => [
+              ...state,
+              {
+                ...artifacts[0],
+                key,
+                value,
+                ui: {
+                  artifactLink: generateArtifactLink(artifacts[0]),
+                  isPreviewable: artifacts.length > 0
+                }
+              }
+            ])
+          })
+      } else {
+        setContent(state => [
+          ...state,
+          {
+            key,
+            value,
+            ui: {
+              isPreviewable: false
+            }
+          }
+        ])
+      }
+    })
+
+    return () => {
+      setContent([])
+      setArtifactsIndexes([])
+    }
+  }, [inputs, dispatch, generateArtifactLink])
+
+  const showArtifact = useCallback(
+    index => {
+      generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
+    },
+    [artifactsIndexes, setArtifactsIndexes]
+  )
+
   return (
-    <div className="inputs_container">
-      {isEmpty(inputs) ? (
+    <div className="item-inputs">
+      {artifactsStore.loading ? (
+        <Loader />
+      ) : isEmpty(inputs) ? (
         <NoData />
       ) : (
-        <ul className="table__item_inputs">
-          {Object.entries(inputs || {}).map(([key, value]) => (
-            <li className="table__item_inputs_item" key={key}>
-              <div>
-                <Tooltip template={<TextTooltipTemplate text={key} />}>{key}</Tooltip>
+        content.map((artifact, index) => {
+          const keyClassNames = classnames(artifact.ui.isPreviewable && 'item-inputs__name link')
+
+          return (
+            <div className="item-inputs__row-wrapper" key={artifact.key}>
+              <div className="item-inputs__row">
+                <div className="item-inputs__row-item">
+                  <Tooltip template={<TextTooltipTemplate text={artifact.key} />}>
+                    <span
+                      className={keyClassNames}
+                      onClick={() => artifact.ui.isPreviewable && showArtifact(index)}
+                    >
+                      {artifact.key}
+                    </span>
+                  </Tooltip>
+                </div>
+                <div className="item-inputs__row-item item-inputs__row-item_path">
+                  {artifact.value}
+                </div>
+                {artifact.ui.isPreviewable && (
+                  <div className="item-inputs__row-item item-inputs__row-item_preview">
+                    <RoundedIcon tooltipText="Show Details">
+                      <Link target="_blank" to={artifact.ui.artifactLink}>
+                        <DetailsIcon />
+                      </Link>
+                    </RoundedIcon>
+                  </div>
+                )}
               </div>
-              <div>{value}</div>
-            </li>
-          ))}
-        </ul>
+              <ArtifactsPreviewController
+                artifactsIndexes={artifactsIndexes}
+                content={content}
+                index={index}
+              />
+            </div>
+          )
+        })
       )}
     </div>
   )

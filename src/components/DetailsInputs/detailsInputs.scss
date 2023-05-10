@@ -1,0 +1,31 @@
+@import '~igz-controls/scss/borders';
+
+.item-inputs {
+  &__row {
+    position: relative;
+    display: flex;
+    min-height: 70px;
+    padding-left: 13px;
+    border-bottom: $secondaryBorder;
+
+    &-item {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      min-width: 100px;
+      padding: 12px 26px;
+
+      &_path {
+        flex: 2;
+      }
+
+      &_preview {
+        flex: 0.2;
+      }
+    }
+  }
+
+  &__name {
+    cursor: pointer;
+  }
+}
