@@ -95,7 +95,7 @@ const DetailsInputs = ({ inputs }) => {
                 key,
                 value,
                 ui: {
-                  artifactLink: generateArtifactLink(artifacts[0]),
+                  artifactLink: artifacts[0] ? generateArtifactLink(artifacts[0]) : '',
                   isPreviewable: artifacts.length > 0
                 }
               }
