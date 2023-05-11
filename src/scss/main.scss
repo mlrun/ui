@@ -261,15 +261,7 @@ main {
         }
       }
 
-      &.row_active {
-        background-color: $ghostWhite;
-      }
-
       &.parent-row {
-        &.row_active {
-          background-color: $ghostWhite;
-        }
-
         &:not(.parent-row-expanded) {
           &:not(.parent-row_without-actions) {
             &:hover {
@@ -373,7 +365,8 @@ main {
       .table-row {
         background-color: $white;
 
-        &:hover {
+        &:hover,
+        &.row_active {
           background-color: $ghostWhite;
         }
 
