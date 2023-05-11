@@ -39,11 +39,6 @@ export const generateProjectActionsMenu = (
   projects.forEach(project => {
     actionsMenu[project.metadata.name] = [
       {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: viewYaml
-      },
-      {
         label: 'Archive',
         hidden: project.status.state === 'archived',
         onClick: archiveProject
@@ -56,8 +51,14 @@ export const generateProjectActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
+        className: 'delete',
         hidden: window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
         onClick: deleteProject
+      },
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: viewYaml
       }
     ]
   })

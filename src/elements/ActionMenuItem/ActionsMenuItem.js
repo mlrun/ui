@@ -32,6 +32,7 @@ const ActionsMenuItem = ({ dataItem, isIconDisplayed, menuItem }) => {
   )
   const menuClassNames = classnames(
     'actions-menu__option',
+    menuItem.className && 'actions-menu__option_' + menuItem.className,
     menuItem.disabled && 'actions-menu__option_disabled'
   )
 
