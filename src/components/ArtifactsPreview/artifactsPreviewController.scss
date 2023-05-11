@@ -1,0 +1,15 @@
+@import '~igz-controls/scss/borders';
+
+.artifacts__preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  padding: 21px 26px;
+  border-bottom: $secondaryBorder;
+}
+
+.icon-popout {
+  text-align: end;
+  cursor: pointer;
+}

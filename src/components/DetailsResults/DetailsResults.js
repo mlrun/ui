@@ -149,28 +149,30 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                 </tbody>
               </>
             ) : job.iterations?.length === 0 && Object.keys(job.results ?? {}).length !== 0 ? (
-              Object.keys(job.results).map(key => {
-                return (
-                  <tr key={key} className="table-row">
-                    <td className="table-body-cell table-cell-wide">
-                      <Tooltip
-                        className="data-ellipsis"
-                        template={<TextTooltipTemplate text={key} />}
-                      >
-                        {key}
-                      </Tooltip>
-                    </td>
-                    <td className="table-body-cell table-cell-full">
-                      <Tooltip
-                        className="data-ellipsis"
-                        template={<TextTooltipTemplate text={job.results[key]} />}
-                      >
-                        {job.results[key]}
-                      </Tooltip>
-                    </td>
-                  </tr>
-                )
-              })
+              <tbody className="table-body">
+                {Object.keys(job.results).map(key => {
+                  return (
+                    <tr key={key} className="table-row">
+                      <td className="table-body-cell table-cell-wide">
+                        <Tooltip
+                          className="data-ellipsis"
+                          template={<TextTooltipTemplate text={key} />}
+                        >
+                          {key}
+                        </Tooltip>
+                      </td>
+                      <td className="table-body-cell table-cell-full">
+                        <Tooltip
+                          className="data-ellipsis"
+                          template={<TextTooltipTemplate text={job.results[key]} />}
+                        >
+                          {job.results[key]}
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
             ) : (
               <NoData />
             )}

@@ -40,15 +40,8 @@
     }
   }
 
-  .icon {
-    &-dowload {
-      cursor: pointer;
-    }
-
-    &-popout {
-      text-align: end;
-      cursor: pointer;
-    }
+  .icon-download {
+    cursor: pointer;
   }
 
   &__name {
@@ -58,14 +51,5 @@
 
   .accordion__container.open {
     box-shadow: $previewBoxShadow;
-  }
-
-  &__preview {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    padding: 21px 26px;
-    border-bottom: $secondaryBorder;
   }
 }

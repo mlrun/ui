@@ -21,7 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, useParams } from 'react-router-dom'
 
-import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
+import ArtifactsPreviewController from '../ArtifactsPreview/ArtifactsPreviewController'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
 import NoData from '../../common/NoData/NoData'
@@ -29,21 +29,11 @@ import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/componen
 
 import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 
-import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
 import './detailsArtifacts.scss'
 
-const DetailsArtifactsView = ({
-  artifactsIndexes,
-  content,
-  iteration,
-  loading,
-  noData,
-  preview,
-  showArtifact,
-  showPreview
-}) => {
+const DetailsArtifactsView = ({ artifactsIndexes, content, iteration, loading, showArtifact }) => {
   const params = useParams()
 
   return (
@@ -111,21 +101,11 @@ const DetailsArtifactsView = ({
                   />
                 </div>
               </div>
-              {artifactsIndexes.includes(index) && (
-                <div className="item-artifacts__preview">
-                  <Tooltip
-                    template={<TextTooltipTemplate text="Artifacts Preview" />}
-                    className="icon-popout"
-                  >
-                    <Popout
-                      onClick={() => {
-                        showPreview(artifact)
-                      }}
-                    />
-                  </Tooltip>
-                  <ArtifactsPreview noData={noData} preview={preview[index] || []} />
-                </div>
-              )}
+              <ArtifactsPreviewController
+                artifactsIndexes={artifactsIndexes}
+                content={content}
+                index={index}
+              />
             </div>
           )
         })
@@ -138,10 +118,7 @@ DetailsArtifactsView.propTypes = {
   artifactsIndexes: PropTypes.array.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   iteration: PropTypes.string.isRequired,
-  noData: PropTypes.bool.isRequired,
-  preview: PropTypes.shape({}).isRequired,
-  showArtifact: PropTypes.func.isRequired,
-  showPreview: PropTypes.func.isRequired
+  showArtifact: PropTypes.func.isRequired
 }
 
 export default DetailsArtifactsView
