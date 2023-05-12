@@ -25,6 +25,7 @@ import Accordion from '../../common/Accordion/Accordion'
 import DetailsResults from '../DetailsResults/DetailsResults'
 import PreviewError from './PreviewError/PreviewError'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import { ARTIFACT_PREVIEW_TABLE_ROW_LIMIT } from '../../constants'
@@ -35,8 +36,8 @@ const ArtifactsPreviewView = ({
   className,
   preview,
   setShowErrorBody,
-  showErrorBody,
-  withAccordion
+  showAccordion,
+  showErrorBody
 }) => {
   const content = useMemo(
     () =>
@@ -49,10 +50,10 @@ const ArtifactsPreviewView = ({
   return (
     !preview?.hidden && (
       <Accordion
-        icon={withAccordion ? <Arrow /> : <></>}
+        icon={showAccordion ? <Arrow /> : null}
         iconClassName="expand-icon"
-        alwaysOpened={!withAccordion}
-        openByDefault={!withAccordion}
+        alwaysOpened={!showAccordion}
+        openByDefault={!showAccordion}
       >
         <div className="artifact-preview__wrapper">
           <div className="artifact-preview__header">
@@ -122,7 +123,7 @@ const ArtifactsPreviewView = ({
                 {preview?.type === 'html' && (
                   <iframe srcDoc={preview?.data.content} frameBorder="0" title="Preview" />
                 )}
-                {preview?.type === 'json' && !preview?.hidden && (
+                {preview?.type === 'json' && (
                   <div className="json">
                     <pre className="json-content">
                       <code
@@ -174,15 +175,15 @@ const ArtifactsPreviewView = ({
 }
 
 ArtifactsPreviewView.defaultProps = {
-  withAccordion: false
+  showAccordion: false
 }
 
 ArtifactsPreviewView.propTypes = {
   className: PropTypes.string.isRequired,
   preview: PropTypes.shape({}).isRequired,
   setShowErrorBody: PropTypes.func.isRequired,
-  showErrorBody: PropTypes.bool.isRequired,
-  withAccordion: PropTypes.bool
+  showAccordion: PropTypes.bool,
+  showErrorBody: PropTypes.bool.isRequired
 }
 
 export default ArtifactsPreviewView

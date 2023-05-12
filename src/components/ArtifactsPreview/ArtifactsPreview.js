@@ -55,8 +55,8 @@ const ArtifactsPreview = ({ className, extraData, noData, preview, showExtraData
               key={index}
               preview={extraDataItem}
               setShowErrorBody={setShowErrorBody}
+              showAccordion
               showErrorBody={showErrorBody}
-              withAccordion
             />
           ))}
         </div>

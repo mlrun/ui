@@ -109,7 +109,7 @@ const PreviewModal = ({ item }) => {
               extraData={extraData}
               noData={noData}
               preview={preview}
-              showExtraDataLoader={extraData.length !== (item.extra_data ?? []).length}
+              showExtraDataLoader={item.extra_data && extraData.length !== item.extra_data.length}
             />
           </div>
         </div>
