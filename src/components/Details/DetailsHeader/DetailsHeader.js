@@ -100,9 +100,9 @@ const DetailsHeader = ({
               }
               onClick={handleBackClick}
             >
-              <Tooltip template={<TextTooltipTemplate text="Go to list" />}>
+              <RoundedIcon id="refresh" tooltipText="Go to list">
                 <Back />
-              </Tooltip>
+              </RoundedIcon>
             </Link>
           )}
           <Tooltip
@@ -123,7 +123,7 @@ const DetailsHeader = ({
             }
           </Tooltip>
         </h3>
-        <span className="left-margin">
+        <div className="item-header__status">
           {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
             The job contains startTime property.*/}
           <span className="updated">
@@ -163,7 +163,7 @@ const DetailsHeader = ({
           {detailsStore.pods.error && (
             <span className="item-header__pods-error left-margin">Failed to load pods</span>
           )}
-        </span>
+        </div>
       </div>
       <div className="item-header__buttons">
         {detailsStore.changes.counter > 0 && (

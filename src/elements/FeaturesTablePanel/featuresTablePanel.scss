@@ -17,7 +17,7 @@
   }
 
   .features-panel__header-project {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     color: $topaz;
     font-weight: bold;
     font-size: 14px;
@@ -27,22 +27,28 @@
     display: flex;
     align-items: baseline;
 
-    .features-panel__header-vector-name {
-      font-weight: bold;
-      font-size: 24px;
-    }
+    .features-panel__header-vector {
+      &-name {
+        font-weight: bold;
+        font-size: 24px;
+      }
 
-    .features-panel__header-vector-tag {
-      min-width: 25px;
-      margin-left: 5px;
-      color: $topaz;
-      font-weight: normal;
-      font-size: 16px;
-    }
+      &-tag {
+        min-width: 25px;
+        margin-left: 5px;
+        color: $topaz;
+        font-weight: normal;
+        font-size: 16px;
+      }
 
-    .features-panel__header-vector-tooltip {
-      width: 20px;
-      margin-left: auto;
+      &-tooltip {
+        width: 20px;
+        margin-left: auto;
+      }
+
+      &-actions {
+        align-self: center;
+      }
     }
   }
 

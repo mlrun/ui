@@ -16,14 +16,10 @@
     color: $mulledWine;
   }
 
-  .form-row {
-    margin-bottom: 8px;
-  }
-
   &__iter {
     margin-top: 5px;
 
-    input[type=checkbox] ~ label {
+    input[type='checkbox'] ~ label {
       text-transform: unset;
     }
   }

@@ -38,10 +38,7 @@ import {
   NEW_IMAGE,
   EXISTING_IMAGE
 } from './functionsPanelCode.util'
-import {
-  FUNCTION_TYPE_SERVING,
-  PANEL_EDIT_MODE
-} from '../../constants'
+import { FUNCTION_TYPE_SERVING, PANEL_EDIT_MODE } from '../../constants'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
@@ -89,9 +86,10 @@ const FunctionsPanelCodeView = ({
             <Button
               className="btn_edit"
               label={
-                <span>
-                  <Edit /> Edit source
-                </span>
+                <>
+                  <Edit />
+                  <span>Edit source</span>
+                </>
               }
               onClick={() => setEditCode(true)}
               variant={LABEL_BUTTON}
@@ -106,9 +104,7 @@ const FunctionsPanelCodeView = ({
                   floatingLabel
                   invalid={!validation.isDefaultCLassValid}
                   label="Default class"
-                  onChange={default_class =>
-                    setData(state => ({ ...state, default_class }))
-                  }
+                  onChange={default_class => setData(state => ({ ...state, default_class }))}
                   onBlur={handleClassOnBlur}
                   setInvalid={value =>
                     setValidation(state => ({
@@ -125,9 +121,7 @@ const FunctionsPanelCodeView = ({
                   floatingLabel
                   invalid={!validation.isHandlerValid}
                   label="Default handler"
-                  onChange={handler =>
-                    setData(state => ({ ...state, handler }))
-                  }
+                  onChange={handler => setData(state => ({ ...state, handler }))}
                   onBlur={handleHandlerOnBlur}
                   setInvalid={value =>
                     setValidation(state => ({
@@ -146,13 +140,9 @@ const FunctionsPanelCodeView = ({
                 <CheckBox
                   item={{ id: 'enabled', label: 'Force build' }}
                   onChange={() =>
-                    setNewFunctionForceBuild(
-                      !functionsStore.newFunction.skip_deployed
-                    )
+                    setNewFunctionForceBuild(!functionsStore.newFunction.skip_deployed)
                   }
-                  selectedId={
-                    functionsStore.newFunction.skip_deployed ? 'enabled' : ''
-                  }
+                  selectedId={functionsStore.newFunction.skip_deployed ? 'enabled' : ''}
                 />
               </div>
             )}
@@ -170,15 +160,10 @@ const FunctionsPanelCodeView = ({
                   className="input__wide"
                   disabled={imageType !== EXISTING_IMAGE}
                   floatingLabel
-                  invalid={
-                    !validation.isCodeImageValid && imageType === EXISTING_IMAGE
-                  }
+                  invalid={!validation.isCodeImageValid && imageType === EXISTING_IMAGE}
                   label="Image name"
                   onBlur={event => {
-                    if (
-                      event.target.value !==
-                      functionsStore.newFunction.spec.image
-                    ) {
+                    if (event.target.value !== functionsStore.newFunction.spec.image) {
                       setNewFunctionImage(data.image)
                     }
                   }}
@@ -201,16 +186,11 @@ const FunctionsPanelCodeView = ({
                   invalid={!validation.isBuildImageValid}
                   label="Resulting Image"
                   onBlur={event => {
-                    if (
-                      event.target.value !==
-                      functionsStore.newFunction.spec.build.image
-                    ) {
+                    if (event.target.value !== functionsStore.newFunction.spec.build.image) {
                       setNewFunctionBuildImage(data.build_image)
                     }
                   }}
-                  onChange={build_image =>
-                    setData(state => ({ ...state, build_image }))
-                  }
+                  onChange={build_image => setData(state => ({ ...state, build_image }))}
                   setInvalid={value =>
                     setValidation(state => ({
                       ...state,
@@ -226,21 +206,14 @@ const FunctionsPanelCodeView = ({
                   className="input__wide"
                   disabled={imageType !== NEW_IMAGE}
                   floatingLabel
-                  invalid={
-                    !validation.isBaseImageValid && imageType === NEW_IMAGE
-                  }
+                  invalid={!validation.isBaseImageValid && imageType === NEW_IMAGE}
                   label="Base image"
                   onBlur={event => {
-                    if (
-                      event.target.value !==
-                      functionsStore.newFunction.spec.build.base_image
-                    ) {
+                    if (event.target.value !== functionsStore.newFunction.spec.build.base_image) {
                       setNewFunctionBaseImage(data.base_image)
                     }
                   }}
-                  onChange={base_image =>
-                    setData(state => ({ ...state, base_image }))
-                  }
+                  onChange={base_image => setData(state => ({ ...state, base_image }))}
                   required={imageType === NEW_IMAGE}
                   setInvalid={value =>
                     setValidation(state => ({
@@ -292,9 +265,7 @@ const FunctionsPanelCodeView = ({
         {editCode && (
           <EditorModal
             closeModal={() => setEditCode(false)}
-            defaultData={
-              functionsStore.newFunction.spec.build.functionSourceCode
-            }
+            defaultData={functionsStore.newFunction.spec.build.functionSourceCode}
             handleSaveCode={value => {
               setEditCode(false)
               setNewFunctionSourceCode(value)

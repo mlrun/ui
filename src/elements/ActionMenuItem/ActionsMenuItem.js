@@ -43,6 +43,9 @@ const ActionsMenuItem = ({ dataItem, isIconDisplayed, menuItem }) => {
       key={menuItem.label}
     >
       <div
+        data-testid={`actions-menu__option-${menuItem.label
+          .replace(/\s/g, '')
+          .toLocaleLowerCase()}`}
         className={menuClassNames}
         onClick={event => {
           if (!menuItem.disabled) {

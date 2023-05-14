@@ -81,82 +81,85 @@ const KeyValueTableView = ({
         {content.map((contentItem, index) => {
           return isEditMode && index === selectedItem.index && !disabled ? (
             <div className="table-row table-row_edit" key={index}>
-              <div className="table-cell table-cell__key">
-                {!isKeyEditable ? (
-                  <Tooltip template={<TextTooltipTemplate text={contentItem.key} />}>
-                    {contentItem.key}
-                  </Tooltip>
-                ) : keyType === 'select' ? (
-                  <Select
-                    density="dense"
-                    onClick={key =>
-                      setSelectedItem({
-                        ...selectedItem,
-                        newKey: key,
-                        index
-                      })
-                    }
-                    options={keyOptions}
-                    selectedId={selectedItem.newKey ?? selectedItem.key}
-                  />
-                ) : (
+              <div className="table-cell__inputs-wrapper">
+                <div className="table-cell table-cell__key">
+                  {!isKeyEditable ? (
+                    <Tooltip template={<TextTooltipTemplate text={contentItem.key} />}>
+                      {contentItem.key}
+                    </Tooltip>
+                  ) : keyType === 'select' ? (
+                    <Select
+                      density="dense"
+                      onClick={key =>
+                        setSelectedItem({
+                          ...selectedItem,
+                          newKey: key,
+                          index
+                        })
+                      }
+                      options={keyOptions}
+                      selectedId={selectedItem.newKey ?? selectedItem.key}
+                    />
+                  ) : (
+                    <Input
+                      className="input_edit"
+                      density="dense"
+                      invalid={
+                        (selectedItem.newKey !== selectedItem.key &&
+                          isKeyNotUnique(selectedItem.newKey, content)) ||
+                        !validation.isEditKeyValid
+                      }
+                      invalidText={
+                        isKeyNotUnique(selectedItem.newKey, content)
+                          ? 'Name already exists'
+                          : 'This field is invalid'
+                      }
+                      onChange={key =>
+                        setSelectedItem({
+                          ...selectedItem,
+                          newKey: key,
+                          index
+                        })
+                      }
+                      required={isKeyRequired}
+                      setInvalid={value =>
+                        setValidation(state => ({
+                          ...state,
+                          isEditKeyValid: value
+                        }))
+                      }
+                      type="text"
+                      value={selectedItem.newKey ?? selectedItem.key}
+                    />
+                  )}
+                </div>
+                <div className="table-cell table-cell__value">
                   <Input
                     className="input_edit"
                     density="dense"
-                    invalid={
-                      (selectedItem.newKey !== selectedItem.key &&
-                        isKeyNotUnique(selectedItem.newKey, content)) ||
-                      !validation.isEditKeyValid
-                    }
-                    invalidText={
-                      isKeyNotUnique(selectedItem.newKey, content)
-                        ? 'Name already exists'
-                        : 'This field is invalid'
-                    }
-                    onChange={key =>
+                    invalid={!validation.isEditValueValid}
+                    onChange={value =>
                       setSelectedItem({
                         ...selectedItem,
-                        newKey: key,
+                        value,
                         index
                       })
                     }
-                    required={isKeyRequired}
+                    required={isValueRequired}
                     setInvalid={value =>
                       setValidation(state => ({
                         ...state,
-                        isEditKeyValid: value
+                        isEditValueValid: value
                       }))
                     }
-                    type="text"
-                    value={selectedItem.newKey ?? selectedItem.key}
+                    type={valueType}
+                    value={
+                      valueType === 'password' ? '' : selectedItem.newValue ?? selectedItem.value
+                    }
                   />
-                )}
+                </div>
               </div>
-              <div className="table-cell table-cell__value">
-                <Input
-                  className="input_edit"
-                  density="dense"
-                  invalid={!validation.isEditValueValid}
-                  onChange={value =>
-                    setSelectedItem({
-                      ...selectedItem,
-                      value,
-                      index
-                    })
-                  }
-                  required={isValueRequired}
-                  setInvalid={value =>
-                    setValidation(state => ({
-                      ...state,
-                      isEditValueValid: value
-                    }))
-                  }
-                  type={valueType}
-                  value={
-                    valueType === 'password' ? '' : selectedItem.newValue ?? selectedItem.value
-                  }
-                />
-              </div>
+
               <div className="table-cell table-cell__actions">
                 <RoundedIcon
                   className="key-value-table__btn"
