@@ -130,11 +130,12 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
             ref={dropDownMenuRef}
           >
             {actionMenu.map(
-              menuItem =>
+              (menuItem, idx) =>
                 !menuItem.hidden && (
                   <ActionsMenuItem
                     dataItem={dataItem}
                     isIconDisplayed={isIconDisplayed}
+                    index={idx}
                     key={menuItem.label}
                     menuItem={menuItem}
                   />

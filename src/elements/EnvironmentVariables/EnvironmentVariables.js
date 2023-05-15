@@ -142,7 +142,7 @@ const EnvironmentVariables = ({
       {
         label: 'Delete',
         icon: <Delete />,
-        className: 'delete',
+        className: 'danger',
         onClick: variable => {
           deleteEnvVariable(variable)
         }

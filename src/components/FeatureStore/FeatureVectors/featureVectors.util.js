@@ -95,7 +95,7 @@ export const generateActionsMenu = (onDeleteFeatureVector, toggleConvertedYaml) 
   {
     label: 'Delete',
     icon: <Delete />,
-    className: 'delete',
+    className: 'danger',
     onClick: onDeleteFeatureVector
   },
   {

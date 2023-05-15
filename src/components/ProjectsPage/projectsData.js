@@ -55,7 +55,7 @@ export const generateProjectActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        className: 'delete',
+        className: 'danger',
         hidden: window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
         onClick: deleteProject
       },
