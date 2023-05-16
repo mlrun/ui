@@ -34,7 +34,7 @@ import { getChipOptions } from '../../utils/getChipOptions'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { truncateUid } from '../../utils'
 
-import { ReactComponent as ArtifactView } from 'igz-controls/images/eye.svg'
+import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 const TableCell = ({

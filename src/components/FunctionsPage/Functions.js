@@ -266,6 +266,7 @@ const Functions = ({
         {
           label: 'Delete',
           icon: <Delete />,
+          className: 'danger',
           onClick: onRemoveFunction
         },
         {

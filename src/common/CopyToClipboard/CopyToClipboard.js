@@ -24,7 +24,7 @@ import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/componen
 
 import { setNotification } from '../../reducers/notificationReducer'
 
-import { ReactComponent as Copy } from 'igz-controls/images/ic_copy-to-clipboard.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 
 const CopyToClipboard = ({ children, className, disabled, textToCopy, tooltipText }) => {
   const dispatch = useDispatch()

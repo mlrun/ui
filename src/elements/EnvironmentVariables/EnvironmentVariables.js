@@ -28,10 +28,7 @@ import {
   SECRET_NAME,
   validationInitialState
 } from './environmentVariables.util'
-import {
-  ENV_VARIABLE_TYPE_SECRET,
-  ENV_VARIABLE_TYPE_VALUE
-} from '../../constants'
+import { ENV_VARIABLE_TYPE_SECRET, ENV_VARIABLE_TYPE_VALUE } from '../../constants'
 
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -46,9 +43,7 @@ const EnvironmentVariables = ({
 }) => {
   const [newEnvVariable, setNewEnvVariable] = useState(newVariableInitialState)
   const [validation, setValidation] = useState(validationInitialState)
-  const [showAddNewEnvVariableRow, setShowAddNewEnvVariableRow] = useState(
-    false
-  )
+  const [showAddNewEnvVariableRow, setShowAddNewEnvVariableRow] = useState(false)
   const [selectedEnvVariable, setSelectedEnvVariable] = useState(null)
 
   const addEnvVariable = () => {
@@ -100,12 +95,8 @@ const EnvironmentVariables = ({
 
         if (selectedEnvVariable.type === ENV_VARIABLE_TYPE_SECRET) {
           const [secretName, secretKey] = selectedEnvVariable.value.split(':')
-          const isSecretKeyPropertyExist = Object.keys(
-            selectedEnvVariable
-          ).includes(SECRET_KEY)
-          const isSecretNamePropertyExist = Object.keys(
-            selectedEnvVariable
-          ).includes(SECRET_NAME)
+          const isSecretKeyPropertyExist = Object.keys(selectedEnvVariable).includes(SECRET_KEY)
+          const isSecretNamePropertyExist = Object.keys(selectedEnvVariable).includes(SECRET_NAME)
 
           if (selectedEnvVariable.secretName && !isSecretKeyPropertyExist) {
             env.value = `${selectedEnvVariable.secretName}:${secretKey}`
@@ -128,9 +119,7 @@ const EnvironmentVariables = ({
 
   const deleteEnvVariable = useCallback(
     selectedEnv => {
-      handleDeleteEnv(
-        envVariables.filter(variable => variable.name !== selectedEnv.name)
-      )
+      handleDeleteEnv(envVariables.filter(variable => variable.name !== selectedEnv.name))
     },
     [envVariables, handleDeleteEnv]
   )
@@ -151,8 +140,9 @@ const EnvironmentVariables = ({
         }
       },
       {
-        label: 'Remove',
+        label: 'Delete',
         icon: <Delete />,
+        className: 'danger',
         onClick: variable => {
           deleteEnvVariable(variable)
         }

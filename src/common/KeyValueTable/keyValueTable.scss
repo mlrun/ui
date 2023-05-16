@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/borders';
 @import '~igz-controls/scss/colors';
-$actionsBlockWidth: 72px;
+@import '~igz-controls/scss/borders';
+@import '~igz-controls/scss/variables';
 
 .key-value-table {
   max-height: 280px;
@@ -68,7 +68,7 @@ $actionsBlockWidth: 72px;
 
   .table-cell__actions {
     justify-content: flex-end;
-    min-width: $actionsBlockWidth;
+    min-width: $actionsCellWidth;
     padding: 0;
 
     & > * {

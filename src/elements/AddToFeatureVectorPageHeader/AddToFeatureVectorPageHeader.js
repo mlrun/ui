@@ -25,13 +25,20 @@ import { FEATURE_VECTORS_TAB } from '../../constants'
 
 import { ReactComponent as BackArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
+import { RoundedIcon } from 'igz-controls/components'
+
 import './addToFeatureVectorPageHeader.scss'
 
 const AddToFeatureVectorPageHeader = ({ params }) => {
   return (
     <div className="add-to-feature-vector-header">
-      <Link to={`/projects/${params.projectName}/feature-store/${FEATURE_VECTORS_TAB}`}>
-        <BackArrowIcon />
+      <Link
+        to={`/projects/${params.projectName}/feature-store/${FEATURE_VECTORS_TAB}`}
+        data-testid="feature-vector-back-btn"
+      >
+        <RoundedIcon tooltipText="Go to list">
+          <BackArrowIcon />
+        </RoundedIcon>
       </Link>
       <h3 className="add-to-feature-vector-header__title">Add to feature vector</h3>
     </div>

@@ -40,6 +40,7 @@ import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
 
+import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -52,7 +53,12 @@ export const generateFilters = jobName => [
   { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
 ]
 
-export const generatePageData = (handleFetchJobLogs, selectedJob, jobsDashboardUrl, handleMonitoring) => {
+export const generatePageData = (
+  handleFetchJobLogs,
+  selectedJob,
+  jobsDashboardUrl,
+  handleMonitoring
+) => {
   return {
     page: JOBS_PAGE,
     details: {
@@ -94,6 +100,7 @@ export const generateActionsMenu = (
         },
         {
           label: 'Monitoring',
+          icon: <MonitorIcon />,
           tooltip: !jobs_dashboard_url
             ? 'Grafana service unavailable'
             : isJobKindDask(job?.labels)

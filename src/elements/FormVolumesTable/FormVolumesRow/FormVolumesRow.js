@@ -63,7 +63,7 @@ const FormVolumesRow = ({
       case 'input':
         return (
           <FormInput
-            density="dense"
+            density="normal"
             disabled={inputData.inputDisabled}
             label={inputData.label}
             tip={inputData.tip}
@@ -77,7 +77,7 @@ const FormVolumesRow = ({
       case 'select':
         return (
           <FormSelect
-            density="dense"
+            density="normal"
             disabled={inputData.inputDisabled}
             label={inputData.label}
             name={`${rowPath}.${inputData.fieldPath}`}

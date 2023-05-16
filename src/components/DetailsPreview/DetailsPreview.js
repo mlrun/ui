@@ -92,12 +92,9 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
           </Tooltip>
         </button>
       )}
-      <ArtifactsPreview
-        className={artifactsPreviewClassNames}
-        extraData={extraData}
-        noData={noData}
-        preview={preview}
-      />
+      <div className={artifactsPreviewClassNames}>
+        <ArtifactsPreview extraData={extraData} noData={noData} preview={preview} />
+      </div>
     </div>
   )
 }

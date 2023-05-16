@@ -30,7 +30,7 @@ import { useDetectOutsideClick } from 'igz-controls/hooks'
 import { DENSITY_OPTIONS, INPUT_LINK } from '../../types'
 
 import { ReactComponent as InvalidIcon } from 'igz-controls/images/invalid.svg'
-import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
+import { ReactComponent as LinkIcon } from 'igz-controls/images/link-icon.svg'
 import { ReactComponent as WarningIcon } from 'igz-controls/images/warning.svg'
 
 import './input.scss'
@@ -265,7 +265,7 @@ const Input = React.forwardRef(
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <Popout />
+                    <LinkIcon />
                   </a>
                 </Tooltip>
               </div>

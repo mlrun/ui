@@ -133,7 +133,7 @@ const FormParametersRow = ({
             <div className={tableRowClassNames} key={index}>
               <div className="form-table__cell form-table__cell_1">
                 <FormInput
-                  density="dense"
+                  density="normal"
                   disabled={fields.value[index].isDefault}
                   name={`${rowPath}.data.name`}
                   placeholder="Name"
@@ -149,7 +149,7 @@ const FormParametersRow = ({
               </div>
               <div className="form-table__cell form-table__cell_1">
                 <FormSelect
-                  density="dense"
+                  density="normal"
                   disabled={fields.value[index].isDefault}
                   name={`${rowPath}.data.type`}
                   options={parametersValueTypeOptions}
@@ -158,7 +158,7 @@ const FormParametersRow = ({
               </div>
               <div className="form-table__cell form-table__cell_1">
                 <FormSelect
-                  density="dense"
+                  density="normal"
                   name={`${rowPath}.data.parameterType`}
                   options={parameterTypeOptions}
                   required
@@ -166,7 +166,7 @@ const FormParametersRow = ({
               </div>
               <div className="form-table__cell form-table__cell_1">
                 <FormInput
-                  density="dense"
+                  density="normal"
                   name={`${rowPath}.data.value`}
                   placeholder="Value/S"
                   required

@@ -59,8 +59,8 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
 
   return (
     <div className="table__item-results">
-      <div className="table__wrapper">
-        <div className="table__content">
+      <div className="table__content">
+        <div className="table__wrapper">
           <table className="table results-table" cellPadding="0" cellSpacing="0">
             {job.iterationStats && job.iterationStats.length !== 0 && !job.error ? (
               <>
@@ -174,7 +174,13 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                 })}
               </tbody>
             ) : (
-              <NoData />
+              <tbody className="table-body">
+                <tr>
+                  <td>
+                    <NoData />
+                  </td>
+                </tr>
+              </tbody>
             )}
           </table>
         </div>

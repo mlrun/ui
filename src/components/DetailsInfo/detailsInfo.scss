@@ -3,6 +3,8 @@
 @import '~igz-controls/scss/mixins';
 
 .item-info {
+  overflow: auto;
+
   &__header {
     margin: 0;
     padding: 21.5px 36px;
