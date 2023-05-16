@@ -93,7 +93,13 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
         </button>
       )}
       <div className={artifactsPreviewClassNames}>
-        <ArtifactsPreview extraData={extraData} noData={noData} preview={preview} />
+        <ArtifactsPreview
+          className={artifactsPreviewClassNames}
+          extraData={extraData}
+          noData={noData}
+          preview={preview}
+          showExtraDataLoader={artifact.extra_data && extraData.length !== artifact.extra_data.length}
+        />
       </div>
     </div>
   )

@@ -19,6 +19,7 @@ such restriction.
 */
 import yaml from 'js-yaml'
 import { useCallback, useState } from 'react'
+import { set, cloneDeep, omit } from 'lodash'
 
 export const useYaml = initialState => {
   const [yamlContent, setYamlContent] = useState(initialState)
@@ -28,7 +29,12 @@ export const useYaml = initialState => {
       return setYamlContent('')
     }
 
-    const json = item.ui?.originalContent ?? {}
+    const json = cloneDeep(item.ui?.originalContent) ?? {}
+
+    if (json) {
+      // removes "model_spec.yaml" from "spec.extra_data"
+      set(json, 'spec.extra_data', omit(json.spec.extra_data, 'model_spec.yaml'))
+    }
 
     setYamlContent(yaml.dump(json, { lineWidth: -1 }))
   }, [])

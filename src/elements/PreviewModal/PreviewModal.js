@@ -105,7 +105,12 @@ const PreviewModal = ({ item }) => {
             </div>
           </div>
           <div className="item-artifacts__preview">
-            <ArtifactsPreview extraData={extraData} noData={noData} preview={preview} />
+            <ArtifactsPreview
+              extraData={extraData}
+              noData={noData}
+              preview={preview}
+              showExtraDataLoader={item.extra_data && extraData.length !== item.extra_data.length}
+            />
           </div>
         </div>
       </div>

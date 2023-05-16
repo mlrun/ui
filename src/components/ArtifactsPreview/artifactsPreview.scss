@@ -1,10 +1,18 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/borders';
 
+.accordion__container {
+  height: 40px;
+
+  &.open {
+    height: auto;
+  }
+}
+
 .artifact {
   &-extra-data {
     &__header {
-      margin: 15px 0;
+      margin: 15px;
     }
   }
 
@@ -19,7 +27,19 @@
     }
 
     &__header {
-      margin: 0 0 15px 0;
+      margin-bottom: 30px;
+      padding-top: 3px;
+      padding-left: 45px;
+
+      &-title {
+        display: flex;
+        align-items: center;
+        margin: 0 0 15px 0;
+        color: $topaz;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 23px;
+      }
     }
 
     .json-content {
@@ -107,6 +127,12 @@
       min-height: 560px;
     }
   }
+}
+
+.expand-icon {
+  position: absolute;
+  top: -3px;
+  left: 0;
 }
 
 .loader-container {

@@ -64,7 +64,7 @@ const DetailsInputs = ({ inputs }) => {
         }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`
       }
 
-      return artifactLinks[artifact.kind ?? 'files']
+      return artifact ? artifactLinks[artifact.kind ?? 'files'] : ''
     },
     [params.projectName]
   )
