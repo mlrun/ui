@@ -10,8 +10,10 @@
     margin-right: 5px;
 
     svg {
-      path:first-child {
-        fill: $topaz;
+      path {
+        &:first-child {
+          fill: $topaz;
+        }
       }
     }
 
@@ -37,11 +39,21 @@
       color: $spunPearl;
       cursor: not-allowed;
 
-      .action-menu__icon {
+      .actions-menu__icon {
         svg {
           path:first-child {
             fill: rgba($black, 0.2);
           }
+        }
+      }
+    }
+
+    &_danger {
+      color: $amaranth;
+
+      svg {
+        path:first-child {
+          fill: $amaranth;
         }
       }
     }

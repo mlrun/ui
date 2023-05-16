@@ -21,7 +21,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 
@@ -32,15 +32,13 @@ const TableTop = ({ children, link, text }) => {
     <div className="table-top">
       <div className="link-back">
         <Link to={link} className="link-back__icon">
-          <Tooltip template={<TextTooltipTemplate text="Back" />}>
+          <RoundedIcon id="refresh" tooltipText="Back">
             <Back />
-          </Tooltip>
+          </RoundedIcon>
         </Link>
         {text && (
           <div className="link-back__title">
-            <Tooltip template={<TextTooltipTemplate text={text} />}>
-              {text}
-            </Tooltip>
+            <Tooltip template={<TextTooltipTemplate text={text} />}>{text}</Tooltip>
           </div>
         )}
       </div>

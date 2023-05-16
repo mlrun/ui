@@ -31,8 +31,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        width: 100%;
-        margin-bottom: 16px;
+        margin: 27px 16px 16px 24px;
 
         &-wrapper {
           position: sticky;
@@ -47,9 +46,17 @@
           align-items: center;
         }
 
+        &__status {
+          display: flex;
+          align-items: center;
+        }
+
         &__back-btn {
           margin-right: 5px;
-          margin-bottom: -5px;
+          margin-left: -10px;
+          & > * {
+            margin: 0;
+          }
         }
 
         &__pods {
@@ -63,15 +70,9 @@
           max-width: calc(100% - 330px);
 
           h3 {
-            margin: 27px 24px 10px;
+            margin: 0 0 10px 0;
             font-size: 24px;
             line-height: 28px;
-          }
-
-          .left-margin {
-            display: flex;
-            align-items: center;
-            margin-left: 24px;
           }
 
           .updated {
@@ -95,7 +96,6 @@
           z-index: 7;
           display: flex;
           align-items: center;
-          margin-right: 18px;
 
           a {
             display: inline-block;
@@ -212,7 +212,8 @@
       display: flex;
       flex: 1;
       flex-direction: column;
-      padding: 10px 21px;
+      padding: 0 21px;
+      overflow: auto;
 
       .inputs_container {
         width: 100%;
@@ -247,6 +248,7 @@
     }
 
     &_code {
+      overflow: auto;
       flex: 1;
 
       h3 {

@@ -17,6 +17,7 @@ such restriction.
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import { useField } from 'react-final-form'
 
 import { FormInput } from 'igz-controls/components'
 
@@ -25,7 +26,10 @@ import { setFilters } from '../../reducers/filtersReducer'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
+import './nameFilter.scss'
+
 const NameFilter = ({ applyChanges, filters }) => {
+  const { input } = useField(NAME_FILTER)
   const dispatch = useDispatch()
 
   const handleNameChange = event => {
@@ -34,10 +38,18 @@ const NameFilter = ({ applyChanges, filters }) => {
       dispatch(setFilters({ name: event.target.value }))
     }
   }
+  const handleIconClick = () => {
+    if (input.value.length > 0) {
+      applyChanges(input.value, filters)
+      dispatch(setFilters({ name: input.value }))
+    }
+  }
 
   return (
     <div className="name-filter">
       <FormInput
+        iconClass="name-filter__icon"
+        iconClick={handleIconClick}
         inputIcon={<SearchIcon />}
         name={NAME_FILTER}
         onKeyDown={handleNameChange}

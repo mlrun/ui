@@ -3,6 +3,7 @@
 @import '~igz-controls/scss/mixins';
 
 .table__item-results {
+  display: flex;
   flex: 1;
   position: relative;
   overflow: auto;

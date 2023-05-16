@@ -34,12 +34,13 @@ const ScheduleWizardSimple = ({ daysOfWeek, handleDaysOfWeek, scheduleData }) =>
   return (
     <>
       <div className="form-row">
-        <FormSelect
-          label="Time unit"
-          options={selectOptions.repeatInterval}
-          name="scheduleData.activeOption"
-          className="form-col-1"
-        />
+        <div className="form-col-1">
+          <FormSelect
+            label="Time unit"
+            options={selectOptions.repeatInterval}
+            name="scheduleData.activeOption"
+          />
+        </div>
         {activeOption === 'week' && (
           <div className="schedule-repeat schedule-repeat-week form-col-1">
             {daysOfWeek.map(day => (
@@ -56,19 +57,23 @@ const ScheduleWizardSimple = ({ daysOfWeek, handleDaysOfWeek, scheduleData }) =>
           </div>
         )}
         {['minute', 'hour'].includes(activeOption) && (
-          <FormSelect
-            name={`scheduleData.${activeOption}`}
-            label="Intervals"
-            options={selectOptions[activeOption]}
-            className="form-col-1"
-          />
+          <div className="form-col-1">
+            <FormSelect
+              name={`scheduleData.${activeOption}`}
+              label="Intervals"
+              options={selectOptions[activeOption]}
+              className="form-col-1"
+            />
+          </div>
         )}
         {['day', 'month', 'week'].includes(activeOption) && (
-          <FormTimePicker
-            name={`scheduleData.${activeOption}.time`}
-            label={activeOption === 'month' ? 'On the 1st day of every month at' : 'At time'}
-            className="form-col-1"
-          />
+          <div className="form-col-1">
+            <FormTimePicker
+              name={`scheduleData.${activeOption}.time`}
+              label={activeOption === 'month' ? 'On the 1st day of every month at' : 'At time'}
+              className="form-col-1"
+            />
+          </div>
         )}
       </div>
     </>

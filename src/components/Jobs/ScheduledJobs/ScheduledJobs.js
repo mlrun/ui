@@ -289,6 +289,7 @@ const ScheduledJobs = ({
       {
         label: 'Delete',
         icon: <Delete />,
+        className: 'danger',
         onClick: onRemoveScheduledJob
       },
       {

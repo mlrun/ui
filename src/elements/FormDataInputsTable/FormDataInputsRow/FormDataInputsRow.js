@@ -68,7 +68,7 @@ const FormDataInputsRow = ({
         <div className={tableRowClassNames} key={index}>
           <div className="form-table__cell form-table__cell_1">
             <FormInput
-              density="dense"
+              density="normal"
               name={`${rowPath}.data.name`}
               placeholder="Name"
               required
@@ -83,6 +83,7 @@ const FormDataInputsRow = ({
           </div>
           <div className="form-table__cell form-table__cell_1">
             <TargetPath
+              density="normal"
               formState={formState}
               formStateFieldInfo={`${rowPath}.data.fieldInfo`}
               inputDefaultValue={editingItem.data.fieldInfo?.value}
