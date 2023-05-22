@@ -17,13 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isNil } from 'lodash'
 
 // {key: 'value'} --> ["key: value", "key: value"]
 export const parseKeyValues = (object = {}) =>
   object == null
     ? []
     : Object.entries(object).map(([key, value]) => {
-        return Array.isArray(value) && value.every(item => item)
+        return Array.isArray(value) && value.every(item => !isNil(item))
           ? `${key}: [${value.map(arrayItem => {
               return typeof arrayItem === 'object'
                 ? ` {${Object.entries(arrayItem).map(
