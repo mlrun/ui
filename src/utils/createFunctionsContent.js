@@ -18,7 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { formatDatetime } from './datetime'
-import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
+import {
+  FUNCTION_TYPE_NUCLIO,
+  FUNCTION_TYPE_SERVING,
+  FUNCTIONS_PAGE,
+  MODELS_PAGE,
+  REAL_TIME_PIPELINES_TAB
+} from '../constants'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 const createFunctionsContent = (functions, pageTab, projectName, showExpandButton) =>
@@ -140,7 +146,10 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               id: `image.${func.ui.identifierUnique}`,
               headerId: 'image',
               headerLabel: 'Image',
-              value: func.image,
+              value:
+                func.type === FUNCTION_TYPE_NUCLIO || func.type === FUNCTION_TYPE_SERVING
+                  ? func.container_image
+                  : func.image,
               class: 'table-cell-1'
             },
             {
