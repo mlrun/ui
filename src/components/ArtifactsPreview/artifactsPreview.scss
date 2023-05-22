@@ -1,12 +1,8 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/borders';
 
-.accordion__container {
-  height: 40px;
-
-  &.open {
-    height: auto;
-  }
+.accordion__container.open {
+  height: auto;
 }
 
 .artifact {
