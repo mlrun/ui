@@ -23,6 +23,11 @@
           }
         }
       }
+
+      .link {
+        display: flex;
+        width: 100%;
+      }
     }
 
     .link-subtext {
@@ -52,7 +57,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 5px;
+      margin-left: 5px;
     }
   }
 }
