@@ -310,7 +310,7 @@ const FeatureSetsPanelTargetStoreView = ({
               <span className="checkbox__label">External offline</span>
               <Tip
                 className="checkbox__label-tip"
-                text="Store the feature set in a remote object store (e.g. AWS S3 or Azure storage)"
+                text="Store the feature set in a remote object store (e.g. AWS S3 Google or Azure storage)"
               />
             </CheckBox>
           </div>
