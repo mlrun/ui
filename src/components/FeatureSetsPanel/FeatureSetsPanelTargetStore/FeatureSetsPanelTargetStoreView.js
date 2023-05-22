@@ -30,6 +30,8 @@ import Select from '../../../common/Select/Select'
 import UrlPath from '../UrlPath'
 import { Tip, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME, V3IO_INPUT_PATH_SCHEME } from '../../../constants'
+
 import {
   EXTERNAL_OFFLINE,
   externalOfflineKindOptions,
@@ -325,9 +327,12 @@ const FeatureSetsPanelTargetStoreView = ({
                   options={externalOfflineKindOptions}
                   selectedId={data.externalOffline.kind}
                 />
-
                 <UrlPath
-                  comboboxSelectList={comboboxSelectList.slice(1)}
+                  comboboxSelectList={comboboxSelectList.filter(
+                    option =>
+                      option.id !== MLRUN_STORAGE_INPUT_PATH_SCHEME &&
+                      option.id !== V3IO_INPUT_PATH_SCHEME
+                  )}
                   invalid={!validation.isExternalOfflineTargetPathValid}
                   handleUrlOnBlur={handleExternalOfflineKindPathOnBlur}
                   handleUrlOnFocus={handleExternalOfflineKindPathOnFocus}
