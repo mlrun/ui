@@ -252,7 +252,14 @@
         font-size: 15px;
         background-color: transparent;
         border: none;
-        cursor: pointer;
+
+        &:disabled {
+          cursor: default;
+        }
+
+        &:not(:disabled) {
+          cursor: pointer;
+        }
       }
 
       .expand-arrow {
@@ -318,7 +325,7 @@
             &:first-child {
               position: sticky;
               top: 50px;
-              z-index: 1;
+              z-index: 3;
               background-color: $white;
 
               .table-body__cell {

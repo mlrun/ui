@@ -25,6 +25,7 @@ import {
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
 } from '../constants'
+import { uniqBy } from 'lodash'
 
 export const generateProjectsList = (projectsList, currentProject) =>
   projectsList
@@ -40,24 +41,23 @@ export const generateProjectsList = (projectsList, currentProject) =>
         : prevProject.id.localeCompare(nextProject.id)
     })
 
-export const generateArtifactsList = artifacts =>
-  artifacts
+export const generateArtifactsList = artifacts => {
+  const generatedArtifacts = artifacts
     .map(artifact => {
-      const key = artifact.link_iteration
-        ? artifact.link_iteration.db_key
-        : artifact.key ?? ''
+      const key = artifact.link_iteration ? artifact.link_iteration.db_key : artifact.key ?? ''
       return {
         label: key,
         id: key
       }
     })
     .filter(artifact => artifact.label !== '')
-    .sort((prevArtifact, nextArtifact) =>
-      prevArtifact.id.localeCompare(nextArtifact.id)
-    )
+    .sort((prevArtifact, nextArtifact) => prevArtifact.id.localeCompare(nextArtifact.id))
 
-export const generateArtifactsReferencesList = artifacts =>
-  artifacts
+  return uniqBy(generatedArtifacts, 'id')
+}
+
+export const generateArtifactsReferencesList = artifacts => {
+  const generatedArtifacts = artifacts
     .map(artifact => {
       const artifactReference = getArtifactReference(artifact)
 
@@ -79,10 +79,30 @@ export const generateArtifactsReferencesList = artifacts =>
       }
     })
 
+  return uniqBy(generatedArtifacts, 'id')
+}
+
 export const pathPlaceholders = {
   [MLRUN_STORAGE_INPUT_PATH_SCHEME]: 'artifacts/my-project/my-artifact:my-tag',
   [S3_INPUT_PATH_SCHEME]: 'bucket/path',
   [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
   [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
   [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
+}
+
+export const pathTips = projectItem => {
+  const pathType =
+    projectItem === 'feature-vectors'
+      ? 'feature-vector'
+      : projectItem === 'artifacts'
+      ? 'artifact'
+      : 'dataset'
+
+  return {
+    [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${pathType}s/my-project/my-${pathType}:my-tag" or "${pathType}s/my-project/my-${pathType}@my-uid`,
+    [S3_INPUT_PATH_SCHEME]: 'bucket/path',
+    [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
+    [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
+    [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
+  }
 }
