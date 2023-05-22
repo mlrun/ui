@@ -62,6 +62,7 @@ export const featureSetsInfoHeaders = [
   { label: 'Version tag', id: 'tag' },
   { label: 'Last updated', id: 'updated' },
   { label: 'Entities', id: 'entities' },
+  { label: 'Engine type', id: 'engineType' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Timestamp key', id: 'timestamp_key' },
   { label: 'Relations', id: 'relations', hidden: true },
