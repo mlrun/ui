@@ -27,6 +27,7 @@ import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanel
 import Input from '../../../common/Input/Input'
 import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
 import Select from '../../../common/Select/Select'
+import UrlPath from '../UrlPath'
 import { Tip, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import {
@@ -38,6 +39,8 @@ import {
   isParquetPathValid,
   getInvalidParquetPathMessage
 } from './featureSetsPanelTargetStore.util'
+
+import { comboboxSelectList } from '../UrlPath.utils'
 
 import { ReactComponent as Online } from 'igz-controls/images/nosql.svg'
 import { ReactComponent as Offline } from 'igz-controls/images/db-icon.svg'
@@ -54,6 +57,7 @@ const FeatureSetsPanelTargetStoreView = ({
   handleAdvancedLinkClick,
   handleDiscardPathChange,
   handleExternalOfflineKindPathOnBlur,
+  handleExternalOfflineKindPathOnFocus,
   handleKeyBucketingNumberChange,
   handleOfflineKindPathChange,
   handleOnlineKindPathChange,
@@ -63,6 +67,7 @@ const FeatureSetsPanelTargetStoreView = ({
   handlePartitionRadioButtonClick,
   handleSelectTargetKind,
   handleTimePartitioningGranularityChange,
+  handleUrlSelectOnChange,
   partitionRadioButtonsState,
   selectedPartitionKind,
   selectedTargetKind,
@@ -313,44 +318,21 @@ const FeatureSetsPanelTargetStoreView = ({
             <div className="target-store__inputs-container">
               <div className="target-store__item v-center">
                 <Select
-                  density="normal"
+                  density="medium"
                   floatingLabel
                   label="File type"
                   onClick={handleExternalOfflineKindTypeChange}
                   options={externalOfflineKindOptions}
                   selectedId={data.externalOffline.kind}
                 />
-                <Input
-                  density="normal"
-                  floatingLabel
+
+                <UrlPath
+                  comboboxSelectList={comboboxSelectList.slice(1)}
                   invalid={!validation.isExternalOfflineTargetPathValid}
-                  label="URL"
-                  onBlur={handleExternalOfflineKindPathOnBlur}
-                  onChange={path =>
-                    setData(state => ({
-                      ...state,
-                      externalOffline: { ...state.externalOffline, path }
-                    }))
-                  }
-                  placeholder="s3://bucket/path"
-                  required
-                  setInvalid={value =>
-                    setValidation(state => ({
-                      ...state,
-                      isExternalOfflineTargetPathValid: value
-                    }))
-                  }
-                  type="text"
-                  value={data.externalOffline.path}
-                  wrapperClassName="url"
+                  handleUrlOnBlur={handleExternalOfflineKindPathOnBlur}
+                  handleUrlOnFocus={handleExternalOfflineKindPathOnFocus}
+                  handleUrlSelectOnChange={handleUrlSelectOnChange}
                 />
-                {data.externalOffline.kind === PARQUET && (
-                  <CheckBox
-                    item={{ id: 'partitioned', label: 'Partition' }}
-                    onChange={id => triggerPartitionCheckbox(id, EXTERNAL_OFFLINE)}
-                    selectedId={data.externalOffline.partitioned}
-                  />
-                )}
               </div>
               {data.externalOffline.partitioned && (
                 <div className="partition-fields">
@@ -412,6 +394,7 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,
+  handleExternalOfflineKindPathOnFocus: PropTypes.func.isRequired,
   handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,
   handleOfflineKindPathChange: PropTypes.func.isRequired,
