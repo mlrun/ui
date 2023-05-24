@@ -185,6 +185,15 @@ export const generateJobsContent = selectedItem => {
     updated: {
       value: formatDatetime(selectedItem.updated, 'N/A')
     },
+    runOnSpot: {
+      value: selectedItem.runOnSpot
+    },
+    nodeSelectorChips: {
+      value: selectedItem.nodeSelectorChips
+    },
+    priority: {
+      value: selectedItem.priority
+    },
     parameters: {
       value: selectedItem.parametersChips
     },
@@ -382,7 +391,9 @@ export const countChanges = changesData => {
   Object.keys(changesData).forEach(field => {
     if (field === 'features') {
       changesData.features.initialFieldValue.forEach(item => {
-        if (!JSON.stringify(changesData.features.currentFieldValue).includes(JSON.stringify(item))) {
+        if (
+          !JSON.stringify(changesData.features.currentFieldValue).includes(JSON.stringify(item))
+        ) {
           changesCounter++
         }
       })

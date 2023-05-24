@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classnames from 'classnames'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { capitalize, isEmpty } from 'lodash'
 
 import JobWizard from '../../JobWizard/JobWizard'
 import Details from '../../Details/Details'
@@ -52,11 +52,13 @@ import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { generateFunctionPriorityLabel } from '../../../utils/generateFunctionPriorityLabel'
 import { enrichRunWithFunctionTag, handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { parseJob } from '../../../utils/parseJob'
+import { parseKeyValues } from '../../../utils/object'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
@@ -229,7 +231,17 @@ const MonitorJobs = ({
     jobRun => {
       return enrichRunWithFunctionTag(jobRun, fetchJobFunctions, fetchJobFunctionsPromiseRef).then(
         jobRun => {
-          setSelectedJob(jobRun)
+          fetchJobFunctionsPromiseRef.current.then(func => {
+            if (func && func[0].spec) {
+              jobRun = {
+                ...jobRun,
+                runOnSpot: capitalize(func[0].spec.preemption_mode ?? ''),
+                nodeSelectorChips: parseKeyValues(func[0].spec.node_selector || {}),
+                priority: generateFunctionPriorityLabel(func[0].spec.priority_class_name ?? '')
+              }
+            }
+            setSelectedJob(jobRun)
+          })
         }
       )
     },
