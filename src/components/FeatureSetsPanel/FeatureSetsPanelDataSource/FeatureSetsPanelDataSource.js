@@ -28,7 +28,6 @@ import featureStoreActions from '../../../actions/featureStore'
 import projectsAction from '../../../actions/projects'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 
-// Move to utils general
 import { CSV, PARQUET } from './featureSetsPanelDataSource.util'
 import { isUrlInputValid } from '../UrlPath.utils'
 
