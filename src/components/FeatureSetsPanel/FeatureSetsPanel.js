@@ -29,6 +29,10 @@ import { FEATURE_SETS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { setNotification } from '../../reducers/notificationReducer'
 import { checkValidation } from './featureSetPanel.util'
+import {
+  EXTERNAL_OFFLINE,
+  PARQUET
+} from './FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
 
 const FeatureSetsPanel = ({
   closePanel,
@@ -68,13 +72,26 @@ const FeatureSetsPanel = ({
   const dispatch = useDispatch()
 
   const handleSave = () => {
-    const data = {
+    let data = {
       kind: 'FeatureSet',
       ...featureStore.newFeatureSet,
       metadata: {
         ...featureStore.newFeatureSet.metadata,
         tag: featureStore.newFeatureSet.metadata.tag || TAG_FILTER_LATEST
       }
+    }
+
+    if (featureStore.newFeatureSet.spec.passthrough) {
+      data = {
+        ...data,
+        spec: {
+          ...data.spec,
+          targets: data.spec.targets.filter(
+            target => ![EXTERNAL_OFFLINE, PARQUET].includes(target.name)
+          )
+        }
+      }
+      return
     }
 
     delete data.credentials

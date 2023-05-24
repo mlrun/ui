@@ -195,6 +195,17 @@ const FeatureSetsPanelTargetStore = ({
     }
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
 
+  useEffect(() => {
+    setTargetsPathEditData(state => ({
+      ...state,
+      [PARQUET]: {
+        ...state[PARQUET],
+        isEditMode: false,
+        isModified: state[PARQUET].isModified
+      }
+    }))
+  }, [featureStore.newFeatureSet.spec.passthrough, setDisableButtons, setValidation])
+
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
       ...prev,
@@ -655,6 +666,7 @@ const FeatureSetsPanelTargetStore = ({
   return (
     <FeatureSetsPanelTargetStoreView
       data={data}
+      featureStore={featureStore}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleDiscardPathChange={handleDiscardPathChange}
       handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}

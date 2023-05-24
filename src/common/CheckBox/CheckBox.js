@@ -30,11 +30,7 @@ const CheckBox = ({ children, className, disabled, item, onChange, selectedId })
   const checkboxClassName = classnames('checkbox', className, disabled && 'checkbox_disabled')
 
   return (
-    <span
-      className={checkboxClassName}
-      onClick={() => !disabled && onChange(item.id)
-      }
-    >
+    <span className={checkboxClassName} onClick={() => !disabled && onChange(item.id)}>
       {item.id === selectedId ? (
         <Checkbox className="checked" />
       ) : (
