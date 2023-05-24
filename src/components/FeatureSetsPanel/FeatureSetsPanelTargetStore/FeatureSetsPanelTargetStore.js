@@ -705,6 +705,7 @@ const FeatureSetsPanelTargetStore = ({
 }
 
 FeatureSetsPanelTargetStore.propTypes = {
+  featureStore: PropTypes.shape({}).isRequired,
   project: PropTypes.string.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
