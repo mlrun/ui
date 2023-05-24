@@ -104,18 +104,17 @@ export const checkValidation = (
     isValid = false
   }
 
-  if (!newFeatureSet.spec.passthrough) {
-    if (
-      externalOfflineTarget &&
-      (externalOfflineTarget.path.length === 0 || !validation.isExternalOfflineTargetPathValid)
-    ) {
-      setValidation(prevState => ({
-        ...prevState,
-        isExternalOfflineTargetPathValid: false
-      }))
+  if (
+    !newFeatureSet.spec.passthrough &&
+    externalOfflineTarget &&
+    (externalOfflineTarget.path.length === 0 || !validation.isExternalOfflineTargetPathValid)
+  ) {
+    setValidation(prevState => ({
+      ...prevState,
+      isExternalOfflineTargetPathValid: false
+    }))
 
-      isValid = false
-    }
+    isValid = false
   }
 
   if (isPartitionByTimeExist && newFeatureSet.spec.timestamp_key.length === 0) {

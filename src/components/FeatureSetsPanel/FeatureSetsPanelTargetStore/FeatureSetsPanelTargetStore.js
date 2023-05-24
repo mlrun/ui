@@ -196,14 +196,24 @@ const FeatureSetsPanelTargetStore = ({
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
 
   useEffect(() => {
-    setTargetsPathEditData(state => ({
-      ...state,
-      [PARQUET]: {
-        ...state[PARQUET],
-        isEditMode: false,
-        isModified: state[PARQUET].isModified
-      }
-    }))
+    if (featureStore.newFeatureSet.spec.passthrough) {
+      setTargetsPathEditData(state => ({
+        ...state,
+        [PARQUET]: {
+          ...state[PARQUET],
+          isEditMode: false,
+          isModified: state[PARQUET].isModified
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOfflineTargetPathEditModeClosed: true
+      }))
+      setValidation(state => ({
+        ...state,
+        isExternalOfflineTargetPathValid: true
+      }))
+    }
   }, [featureStore.newFeatureSet.spec.passthrough, setDisableButtons, setValidation])
 
   const handleAdvancedLinkClick = kind => {

@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
+import classNames from 'classnames'
 
 import CheckBox from '../../../common/CheckBox/CheckBox'
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
@@ -231,9 +232,10 @@ const FeatureSetsPanelTargetStoreView = ({
                 {!targetsPathEditData.parquet.isEditMode && (
                   <>
                     <Tooltip
-                      className={`path-data offline-path ${
-                        featureStore.newFeatureSet.spec.passthrough ? 'offline-path__disabled' : ''
-                      }`}
+                      className={classNames(
+                        'path-data offline-path',
+                        featureStore.newFeatureSet.spec.passthrough && 'offline-path__disabled'
+                      )}
                       template={<TextTooltipTemplate text={data.parquet.path} />}
                     >
                       {data.parquet.path}
@@ -347,6 +349,7 @@ const FeatureSetsPanelTargetStoreView = ({
                   placeholder="s3://bucket/path"
                   required
                   setInvalid={value =>
+                    !featureStore.newFeatureSet.spec.passthrough &&
                     setValidation(state => ({
                       ...state,
                       isExternalOfflineTargetPathValid: value
