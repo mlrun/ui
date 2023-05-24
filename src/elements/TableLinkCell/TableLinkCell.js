@@ -41,16 +41,11 @@ const TableLinkCell = ({
   showExpandButton
 }) => {
   const tableCellClassNames = classnames('table-body__cell', data.class, className)
-  const itemNameClassNames = classnames('link', 'item-name')
+  const itemNameClassNames = classnames('item-name')
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 
   return (
     <td className={tableCellClassNames}>
-      {data.showStatus && stateValue && stateLabel && (
-        <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
-          <i className={stateClassName} />
-        </Tooltip>
-      )}
       {data.linkIsExternal ? (
         <span className="data-ellipsis">
           <a href={link} className="link" target="blank">
@@ -60,19 +55,31 @@ const TableLinkCell = ({
             >
               {data.value}
             </Tooltip>
+
+            {data.showStatus && stateValue && stateLabel && (
+              <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
+                <i className={stateClassName} />
+              </Tooltip>
+            )}
           </a>
         </span>
       ) : (
         <Link to={link} onClick={() => selectItem(item)} className="data-ellipsis">
           <div className="name-wrapper">
-            <span className="link">
+            <div className="link">
               <Tooltip
                 className={itemNameClassNames}
                 template={<TextTooltipTemplate text={data.tooltip || data.value} />}
               >
                 {data.value}
               </Tooltip>
-            </span>
+
+              {data.showStatus && stateValue && stateLabel && (
+                <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
+                  <i className={stateClassName} />
+                </Tooltip>
+              )}
+            </div>
             {data.showTag && data.value !== item.tag && (
               <Tooltip className="item-tag" template={<TextTooltipTemplate text={item.tag} />}>
                 <span className="link-subtext">{item.tag}</span>
