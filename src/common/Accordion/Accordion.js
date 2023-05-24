@@ -99,6 +99,7 @@ const Accordion = ({
 Accordion.defaultProps = {
   alwaysOpened: false,
   closeOnBlur: null,
+  icon: null,
   openByDefault: false
 }
 

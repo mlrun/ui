@@ -3,9 +3,7 @@
 .table-top {
   display: flex;
   justify-content: space-between;
-  min-height: 50px;
-  padding: 5px 10px;
-  border-bottom: $secondaryBorder;
+  margin: 27px 10px 5px 0;
 
   .link-back {
     display: flex;
@@ -19,6 +17,7 @@
 
     &__title {
       margin: 0 5px;
+      font-size: 24px;
       overflow: hidden;
       font-weight: bold;
     }

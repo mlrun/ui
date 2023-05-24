@@ -64,7 +64,7 @@ const DetailsInputs = ({ inputs }) => {
         }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`
       }
 
-      return artifactLinks[artifact.kind ?? 'files']
+      return artifact ? artifactLinks[artifact.kind ?? 'files'] : ''
     },
     [params.projectName]
   )
@@ -88,18 +88,20 @@ const DetailsInputs = ({ inputs }) => {
         )
           .unwrap()
           .then(artifacts => {
-            setContent(state => [
-              ...state,
-              {
-                ...artifacts[0],
-                key,
-                value,
-                ui: {
-                  artifactLink: generateArtifactLink(artifacts[0]),
-                  isPreviewable: artifacts.length > 0
+            if (artifacts.length) {
+              setContent(state => [
+                ...state,
+                {
+                  ...artifacts[0],
+                  key,
+                  value,
+                  ui: {
+                    artifactLink: generateArtifactLink(artifacts[0]),
+                    isPreviewable: artifacts.length > 0
+                  }
                 }
-              }
-            ])
+              ])
+            }
           })
       } else {
         setContent(state => [
@@ -128,51 +130,49 @@ const DetailsInputs = ({ inputs }) => {
     [artifactsIndexes, setArtifactsIndexes]
   )
 
-  return (
+  return artifactsStore.loading ? (
+    <Loader />
+  ) : isEmpty(inputs) || isEmpty(content) ? (
+    <NoData />
+  ) : (
     <div className="item-inputs">
-      {artifactsStore.loading ? (
-        <Loader />
-      ) : isEmpty(inputs) ? (
-        <NoData />
-      ) : (
-        content.map((artifact, index) => {
-          const keyClassNames = classnames(artifact.ui.isPreviewable && 'item-inputs__name link')
+      {content.map((artifact, index) => {
+        const keyClassNames = classnames(artifact.ui.isPreviewable && 'item-inputs__name link')
 
-          return (
-            <div className="item-inputs__row-wrapper" key={artifact.key}>
-              <div className="item-inputs__row">
-                <div className="item-inputs__row-item">
-                  <Tooltip template={<TextTooltipTemplate text={artifact.key} />}>
-                    <span
-                      className={keyClassNames}
-                      onClick={() => artifact.ui.isPreviewable && showArtifact(index)}
-                    >
-                      {artifact.key}
-                    </span>
-                  </Tooltip>
-                </div>
-                <div className="item-inputs__row-item item-inputs__row-item_path">
-                  {artifact.value}
-                </div>
-                {artifact.ui.isPreviewable && (
-                  <div className="item-inputs__row-item item-inputs__row-item_preview">
-                    <RoundedIcon tooltipText="Show Details">
-                      <Link target="_blank" to={artifact.ui.artifactLink}>
-                        <DetailsIcon />
-                      </Link>
-                    </RoundedIcon>
-                  </div>
-                )}
+        return (
+          <div className="item-inputs__row-wrapper" key={artifact.key}>
+            <div className="item-inputs__row">
+              <div className="item-inputs__row-item">
+                <Tooltip template={<TextTooltipTemplate text={artifact.key} />}>
+                  <span
+                    className={keyClassNames}
+                    onClick={() => artifact.ui.isPreviewable && showArtifact(index)}
+                  >
+                    {artifact.key}
+                  </span>
+                </Tooltip>
               </div>
-              <ArtifactsPreviewController
-                artifactsIndexes={artifactsIndexes}
-                content={content}
-                index={index}
-              />
+              <div className="item-inputs__row-item item-inputs__row-item_path">
+                {artifact.value}
+              </div>
+              {artifact.ui.isPreviewable && (
+                <div className="item-inputs__row-item item-inputs__row-item_preview">
+                  <RoundedIcon tooltipText="Show Details">
+                    <Link target="_blank" to={artifact.ui.artifactLink}>
+                      <DetailsIcon />
+                    </Link>
+                  </RoundedIcon>
+                </div>
+              )}
             </div>
-          )
-        })
-      )}
+            <ArtifactsPreviewController
+              artifactsIndexes={artifactsIndexes}
+              content={content}
+              index={index}
+            />
+          </div>
+        )
+      })}
     </div>
   )
 }

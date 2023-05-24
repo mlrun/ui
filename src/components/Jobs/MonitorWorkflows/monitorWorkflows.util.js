@@ -45,6 +45,7 @@ import {
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
 
+import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -106,6 +107,7 @@ export const generateActionsMenu = (
         },
         {
           label: 'Monitoring',
+          icon: <MonitorIcon />,
           tooltip: !jobs_dashboard_url
             ? 'Grafana service unavailable'
             : isJobKindDask(job?.labels)

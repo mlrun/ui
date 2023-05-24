@@ -16,8 +16,7 @@
   &__row {
     position: relative;
     display: flex;
-    min-height: 70px;
-    padding-left: 13px;
+    min-height: 50px;
     border-bottom: $secondaryBorder;
 
     &-item {
@@ -25,7 +24,7 @@
       flex: 1;
       align-items: center;
       min-width: 100px;
-      padding: 12px 26px;
+      padding: 8px 26px;
 
       &:first-child {
         flex-direction: column;
@@ -47,9 +46,5 @@
   &__name {
     width: 100%;
     cursor: pointer;
-  }
-
-  .accordion__container.open {
-    box-shadow: $previewBoxShadow;
   }
 }

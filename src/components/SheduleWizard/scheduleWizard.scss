@@ -12,7 +12,7 @@
       flex: 1;
 
       &__item {
-        padding: 10px 24px;
+        padding: 10px 24px 5px;
         color: $topaz;
         font-weight: 400;
         font-size: 24px;
@@ -44,7 +44,7 @@
 
   .schedule-repeat {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     margin-bottom: 5px;
 
     &-week {

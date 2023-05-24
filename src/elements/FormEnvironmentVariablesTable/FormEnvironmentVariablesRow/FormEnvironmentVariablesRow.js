@@ -78,7 +78,7 @@ const FormEnvironmentVariablesRow = ({
         <div className={tableRowClassNames} key={index}>
           <div className="form-table__cell form-table__cell_1">
             <FormInput
-              density="dense"
+              density="normal"
               name={`${rowPath}.data.key`}
               placeholder="Name"
               required
@@ -93,7 +93,7 @@ const FormEnvironmentVariablesRow = ({
           </div>
           <div className="form-table__cell form-table__cell_1">
             <FormSelect
-              density="dense"
+              density="normal"
               name={`${rowPath}.data.type`}
               options={environmentVariablesTypeOptions}
               required
@@ -102,7 +102,7 @@ const FormEnvironmentVariablesRow = ({
           <div className="form-table__cell form-table__cell_1">
             {fieldData.data.type === 'value' && (
               <FormInput
-                density="dense"
+                density="normal"
                 name={`${rowPath}.data.value`}
                 placeholder="Value"
                 required
@@ -112,14 +112,14 @@ const FormEnvironmentVariablesRow = ({
               <>
                 <FormInput
                   className="secret-name"
-                  density="dense"
+                  density="normal"
                   name={`${rowPath}.data.secretName`}
                   placeholder="Secret Name"
                   required
                   validationRules={getValidationRules('environmentVariables.secretName')}
                 />
                 <FormInput
-                  density="dense"
+                  density="normal"
                   name={`${rowPath}.data.secretKey`}
                   placeholder="Secret Key"
                   validationRules={getValidationRules('environmentVariables.secretKey')}

@@ -21,8 +21,10 @@ import React from 'react'
 
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
-import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as UnarchiveIcon } from 'igz-controls/images/unarchive-icon.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 export const pageData = {
   page: 'PROJECTS'
@@ -39,25 +41,28 @@ export const generateProjectActionsMenu = (
   projects.forEach(project => {
     actionsMenu[project.metadata.name] = [
       {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: viewYaml
-      },
-      {
         label: 'Archive',
+        icon: <ArchiveIcon />,
         hidden: project.status.state === 'archived',
         onClick: archiveProject
       },
       {
         label: 'Unarchive',
+        icon: <UnarchiveIcon />,
         hidden: project.status.state === 'online',
         onClick: unarchiveProject
       },
       {
         label: 'Delete',
         icon: <Delete />,
+        className: 'danger',
         hidden: window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
         onClick: deleteProject
+      },
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: viewYaml
       }
     ]
   })

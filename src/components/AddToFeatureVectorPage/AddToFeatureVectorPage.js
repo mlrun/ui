@@ -275,6 +275,12 @@ const AddToFeatureVectorPage = ({
     }
   }, [dispatch, navigateToFeatureVectorsScreen, tableStore.features.featureVector])
 
+  useEffect(() => {
+    return () => {
+      dispatch(setTablePanelOpen(false))
+    }
+  }, [dispatch])
+
   return (
     <AddToFeatureVectorView
       actionsMenu={actionsMenu}

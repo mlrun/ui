@@ -57,7 +57,8 @@ import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
-import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
+import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
@@ -139,13 +140,14 @@ const Datasets = () => {
   const actionsMenu = useMemo(
     () => [
       {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
       },
       {
-        label: 'Add a tag',
-        onClick: handleAddTag
+        label: 'View YAML',
+        icon: <YamlIcon />,
+        onClick: toggleConvertedYaml
       }
     ],
     [handleAddTag, toggleConvertedYaml]

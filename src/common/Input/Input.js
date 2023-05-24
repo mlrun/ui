@@ -30,7 +30,7 @@ import { useDetectOutsideClick } from 'igz-controls/hooks'
 import { DENSITY_OPTIONS, INPUT_LINK } from '../../types'
 
 import { ReactComponent as InvalidIcon } from 'igz-controls/images/invalid.svg'
-import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
+import { ReactComponent as LinkIcon } from 'igz-controls/images/link-icon.svg'
 import { ReactComponent as WarningIcon } from 'igz-controls/images/warning.svg'
 
 import './input.scss'
@@ -44,6 +44,7 @@ const Input = React.forwardRef(
       floatingLabel,
       focused,
       iconClass,
+      iconOnClick,
       infoLabel,
       inputIcon,
       invalid,
@@ -265,14 +266,13 @@ const Input = React.forwardRef(
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <Popout />
+                    <LinkIcon />
                   </a>
                 </Tooltip>
               </div>
             )}
           </div>
         )}
-
         {isInvalid && !isEmpty(validationRules) && (
           <i className="input__warning" onClick={toggleValidationRulesMenu}>
             <WarningIcon />
@@ -293,7 +293,7 @@ const Input = React.forwardRef(
         )}
         {tip && <Tip text={tip} className="input__tip" />}
         {inputIcon && (
-          <span data-testid="input-icon" className={iconClass}>
+          <span data-testid="input-icon" className={iconClass} onClick={iconOnClick}>
             {inputIcon}
           </span>
         )}
@@ -335,6 +335,7 @@ Input.defaultProps = {
   floatingLabel: false,
   focused: false,
   iconClass: '',
+  iconOnClick: () => {},
   infoLabel: false,
   inputIcon: null,
   invalid: false,
@@ -366,6 +367,7 @@ Input.propTypes = {
   floatingLabel: PropTypes.bool,
   focused: PropTypes.bool,
   iconClass: PropTypes.string,
+  iconOnClick: PropTypes.func,
   infoLabel: PropTypes.bool,
   inputIcon: PropTypes.element,
   invalid: PropTypes.bool,

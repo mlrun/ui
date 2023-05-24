@@ -57,7 +57,9 @@ import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 
-import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
+import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
+import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
@@ -125,15 +127,17 @@ const Models = ({ fetchModelFeatureVector }) => {
     () => [
       {
         label: 'Deploy',
+        icon: <DeployIcon />,
         onClick: handleDeployModel
       },
       {
         label: 'Add a tag',
+        icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'View YAML',
-        icon: <Yaml />,
+        icon: <YamlIcon />,
         onClick: toggleConvertedYaml
       }
     ],

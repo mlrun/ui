@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Chart, registerables } from 'chart.js'
 import Loader from '../Loader/Loader'
@@ -32,7 +32,7 @@ const MlChart = ({ config }) => {
   const [isLoading, setIsLoading] = useState(true)
   const canvasClassNames = classnames(isLoading && 'hidden')
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = canvasRef.current.getContext('2d')
     const mlChartInstance = new Chart(ctx, {
       ...config,

@@ -72,6 +72,8 @@
     top: 50%;
     left: 5px;
     transform: translateY(-45%);
+    cursor: pointer;
+    z-index: 3;
 
     & * {
       fill: $spunPearl;

@@ -25,11 +25,11 @@ import ArtifactsPreviewView from './ArtifactsPreviewView'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 
-const ArtifactsPreview = ({ className, extraData, noData, preview }) => {
+const ArtifactsPreview = ({ className, extraData, noData, preview, showExtraDataLoader }) => {
   const [showErrorBody, setShowErrorBody] = useState(false)
   const artifactsPreviewClasses = classnames('artifact-preview', className)
 
-  return preview.length === 0 && !noData ? (
+  return !noData && (preview.length === 0 || showExtraDataLoader) ? (
     <div className="loader-container">
       <Loader />
     </div>
@@ -55,6 +55,7 @@ const ArtifactsPreview = ({ className, extraData, noData, preview }) => {
               key={index}
               preview={extraDataItem}
               setShowErrorBody={setShowErrorBody}
+              showAccordion
               showErrorBody={showErrorBody}
             />
           ))}
@@ -66,7 +67,8 @@ const ArtifactsPreview = ({ className, extraData, noData, preview }) => {
 
 ArtifactsPreview.defaultProps = {
   className: '',
-  extraData: []
+  extraData: [],
+  showExtraDataLoader: false
 }
 
 ArtifactsPreview.propTypes = {
@@ -86,7 +88,8 @@ ArtifactsPreview.propTypes = {
         content: PropTypes.any.isRequired
       })
     })
-  ).isRequired
+  ).isRequired,
+  showExtraDataLoader: PropTypes.bool
 }
 
 export default ArtifactsPreview
