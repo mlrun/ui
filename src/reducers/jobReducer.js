@@ -86,13 +86,15 @@ const initialState = {
         parameters: {},
         inputs: {},
         hyperparams: {},
-        secret_sources: [],
-        param_file: '',
-        selector: {
-          criteria: 'max',
-          result: ''
+        hyper_param_options: {
+          strategy: 'list',
+          param_file: '',
+          selector: {
+            criteria: 'max',
+            result: ''
+          }
         },
-        tuning_strategy: 'list'
+        secret_sources: []
       }
     },
     function: {
@@ -512,9 +514,12 @@ const jobReducer = (state = initialState, { type, payload }) => {
             ...state.newJob.task,
             spec: {
               ...state.newJob.task.spec,
-              selector: {
-                ...state.newJob.task.spec.selector,
-                criteria: payload
+              hyper_param_options: {
+                ...state.newJob.task.spec.hyper_param_options,
+                selector: {
+                  ...state.newJob.task.spec.hyper_param_options.selector,
+                  criteria: payload
+                }
               }
             }
           }
@@ -530,9 +535,12 @@ const jobReducer = (state = initialState, { type, payload }) => {
             ...state.newJob.task,
             spec: {
               ...state.newJob.task.spec,
-              selector: {
-                ...state.newJob.task.spec.selector,
-                result: payload
+              hyper_param_options: {
+                ...state.newJob.task.spec.hyper_param_options,
+                selector: {
+                  ...state.newJob.task.spec.hyper_param_options.selector,
+                  result: payload
+                }
               }
             }
           }
@@ -548,7 +556,10 @@ const jobReducer = (state = initialState, { type, payload }) => {
             ...state.newJob.task,
             spec: {
               ...state.newJob.task.spec,
-              tuning_strategy: payload
+              hyper_param_options: {
+                ...state.newJob.task.spec.hyper_param_options,
+                strategy: payload
+              }
             }
           }
         }
@@ -563,7 +574,10 @@ const jobReducer = (state = initialState, { type, payload }) => {
             ...state.newJob.task,
             spec: {
               ...state.newJob.task.spec,
-              param_file: payload
+              hyper_param_options: {
+                ...state.newJob.task.spec.hyper_param_options,
+                param_file: payload
+              }
             }
           }
         }

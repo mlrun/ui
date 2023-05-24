@@ -24,22 +24,14 @@ import { parametersActions } from './jobsPanelParametersReducer'
 export const convertParamValue = (value, type) =>
   ['int', 'float', 'number'].includes(type) && Number.isFinite(Number(value))
     ? Number(value)
-    : type === 'bool' && value.toLowerCase() === 'true'
+    : type === 'bool' && String(value).toLowerCase() === 'true'
     ? true
-    : type === 'bool' && value.toLowerCase() === 'false'
+    : type === 'bool' && String(value).toLowerCase() === 'false'
     ? false
     : String(value)
 
-export const editHyperParams = (
-  hyperParams,
-  selectedParameter,
-  newName,
-  convertedValue
-) => {
-  const value =
-    typeof convertedValue === 'string'
-      ? convertedValue.split(',')
-      : [convertedValue]
+export const editHyperParams = (hyperParams, selectedParameter, newName, convertedValue) => {
+  const value = typeof convertedValue === 'string' ? convertedValue.split(',') : [convertedValue]
 
   if (newName) {
     if (hyperParams[selectedParameter.name]) {
@@ -159,9 +151,7 @@ export const editNewJobParams = (
 ) => {
   const params = { ...newJobTaskSpec.parameters }
 
-  if (
-    selectedParameter.data.parameterType !== panelData.newParameterType[0].id
-  ) {
+  if (selectedParameter.data.parameterType !== panelData.newParameterType[0].id) {
     delete params[selectedParameter.data.name]
 
     setNewJobHyperParameters(
@@ -186,12 +176,7 @@ export const editNewJobParams = (
   return params
 }
 
-export const setTableData = (
-  panelState,
-  panelDispatch,
-  selectedParameter,
-  parametersDispatch
-) => {
+export const setTableData = (panelState, panelDispatch, selectedParameter, parametersDispatch) => {
   const newParametersArray = panelState.tableData.parameters.map(param => {
     if (param.data.name === selectedParameter.data.name) {
       if (selectedParameter.newName) {
