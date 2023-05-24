@@ -125,11 +125,20 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
   }
 
   const generateSuggestionList = debounce(async (memberName, resolve) => {
-    const response = await projectsIguazioApi.getScrubbedUsers({
+    const igzFullVersion = window.localStorage.getItem('igzFullVersion')
+    const params = {
       params: {
         'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
         'filter[username]': `[$contains_istr]${memberName}`
       }
+    }
+
+    if (igzFullVersion && Number(igzFullVersion.split('-')[0].split('.').join('')) <= 352) {
+      delete params['filter[username]']
+    }
+
+    const response = await projectsIguazioApi.getScrubbedUsers({
+      params
     })
     const {
       data: { data: users }
