@@ -393,6 +393,10 @@ const FeatureSetsPanelTargetStoreView = ({
   )
 }
 
+FeatureSetsPanelTargetStoreView.defualtProps = {
+  handleUrlSelectOnChange: null
+}
+
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
@@ -409,6 +413,7 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   handlePartitionRadioButtonClick: PropTypes.func.isRequired,
   handleSelectTargetKind: PropTypes.func.isRequired,
   handleTimePartitioningGranularityChange: PropTypes.func.isRequired,
+  handleUrlSelectOnChange: PropTypes.func,
   partitionRadioButtonsState: PropTypes.shape({
     parquet: PropTypes.string.isRequired,
     externalOffline: PropTypes.string.isRequired

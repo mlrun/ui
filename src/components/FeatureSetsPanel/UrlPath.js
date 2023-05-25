@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
+import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { isNil } from 'lodash'
@@ -243,6 +244,19 @@ const UrlPath = ({
       selectPlaceholder="URL"
     />
   )
+}
+
+UrlPath.defaultProps = {
+  handleUrlSelectOnChange: null,
+  invalid: false
+}
+
+UrlPath.propTypes = {
+  comboboxSelectList: PropTypes.array.isRequired,
+  handleUrlOnBlur: PropTypes.func.isRequired,
+  handleUrlOnFocus: PropTypes.func.isRequired,
+  handleUrlSelectOnChange: PropTypes.func,
+  invalid: PropTypes.bool
 }
 
 export default UrlPath

@@ -159,7 +159,6 @@ const FeatureSetsPanelDataSource = ({
 }
 
 FeatureSetsPanelDataSource.propTypes = {
-  project: PropTypes.string.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
