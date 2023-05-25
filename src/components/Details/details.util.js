@@ -186,13 +186,13 @@ export const generateJobsContent = selectedItem => {
       value: formatDatetime(selectedItem.updated, 'N/A')
     },
     runOnSpot: {
-      value: selectedItem.runOnSpot
+      value: selectedItem.ui.runOnSpot
     },
     nodeSelectorChips: {
-      value: selectedItem.nodeSelectorChips
+      value: selectedItem.ui.nodeSelectorChips
     },
     priority: {
-      value: selectedItem.priority
+      value: selectedItem.ui.priority
     },
     parameters: {
       value: selectedItem.parametersChips

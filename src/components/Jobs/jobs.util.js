@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { capitalize, map, set, uniq } from 'lodash'
 import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
@@ -27,8 +28,6 @@ import {
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues } from '../../utils'
 import { setNotification } from '../../reducers/notificationReducer'
-import { capitalize, map, set, uniq } from 'lodash'
-
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { parseKeyValues } from '../../utils/object'
 
@@ -280,17 +279,17 @@ export const enrichRunWithFunctionFields = (
       if (funcs) {
         const tagsList = uniq(map(funcs, 'metadata.tag'))
         set(jobRun, 'ui.functionTag', tagsList.join(', '))
-
-        jobRun = {
-          ...jobRun,
-          runOnSpot: capitalize(funcs[0].spec.preemption_mode ?? ''),
-          nodeSelectorChips: parseKeyValues(funcs[0].spec.node_selector || {}),
-          priority: generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
-        }
+        set(jobRun, 'ui.runOnSpot', capitalize(funcs[0].spec.preemption_mode ?? ''))
+        set(jobRun, 'ui.nodeSelectorChips', parseKeyValues(funcs[0].spec.node_selector || {}))
+        set(
+          jobRun,
+          'ui.priority',
+          generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
+        )
       } else {
         set(jobRun, 'ui.functionTag', '')
       }
-
+      console.log('jobRun', jobRun)
       return jobRun
     })
     .catch(error => {

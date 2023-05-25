@@ -97,9 +97,9 @@ const DetailsInfoView = React.forwardRef(
                   chipsData.chips = selectedItem.labels
                   chipsData.chipOptions = getChipOptions('labels')
                 } else if (
-                  detailsStore.infoContent[header.id]?.value === selectedItem.nodeSelectorChips
+                  detailsStore.infoContent[header.id]?.value === selectedItem.ui.nodeSelectorChips
                 ) {
-                  chipsData.chips = selectedItem.nodeSelectorChips
+                  chipsData.chips = selectedItem.ui.nodeSelectorChips
                   chipsData.chipOptions = getChipOptions('results')
                 }
 
@@ -143,6 +143,7 @@ const DetailsInfoView = React.forwardRef(
                     ? detailsStore.infoContent[header.id]?.value || 'Local'
                     : detailsStore.infoContent[header.id]?.value || ''
               }
+
               return (
                 <li className={detailsItemClassNames} key={header.id}>
                   {header.id === 'sources' ? (

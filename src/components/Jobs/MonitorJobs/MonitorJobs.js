@@ -52,7 +52,6 @@ import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-
 import { enrichRunWithFunctionFields, handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
