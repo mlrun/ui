@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, map, set, uniq } from 'lodash'
+import { capitalize, defaultsDeep, map, uniq } from 'lodash'
 import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
@@ -278,18 +278,25 @@ export const enrichRunWithFunctionFields = (
     .then(funcs => {
       if (funcs) {
         const tagsList = uniq(map(funcs, 'metadata.tag'))
-        set(jobRun, 'ui.functionTag', tagsList.join(', '))
-        set(jobRun, 'ui.runOnSpot', capitalize(funcs[0].spec.preemption_mode ?? ''))
-        set(jobRun, 'ui.nodeSelectorChips', parseKeyValues(funcs[0].spec.node_selector || {}))
-        set(
-          jobRun,
-          'ui.priority',
-          generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
-        )
+        defaultsDeep(jobRun, {
+          ui: {
+            functionTag: tagsList.join(', '),
+            runOnSpot: capitalize(funcs[0].spec.preemption_mode ?? ''),
+            nodeSelectorChips: parseKeyValues(funcs[0].spec.node_selector || {}),
+            priority: generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
+          }
+        })
       } else {
-        set(jobRun, 'ui.functionTag', '')
+        defaultsDeep(jobRun, {
+          ui: {
+            functionTag: '',
+            runOnSpot: '',
+            nodeSelectorChips: [],
+            priority: ''
+          }
+        })
       }
-      console.log('jobRun', jobRun)
+
       return jobRun
     })
     .catch(error => {
