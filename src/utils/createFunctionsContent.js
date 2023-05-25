@@ -20,6 +20,7 @@ such restriction.
 import { formatDatetime } from './datetime'
 import {
   FUNCTION_TYPE_NUCLIO,
+  FUNCTION_TYPE_REMOTE,
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
   MODELS_PAGE,
@@ -147,7 +148,9 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'image',
               headerLabel: 'Image',
               value:
-                func.type === FUNCTION_TYPE_NUCLIO || func.type === FUNCTION_TYPE_SERVING
+                func.type === FUNCTION_TYPE_NUCLIO ||
+                func.type === FUNCTION_TYPE_SERVING ||
+                func.type === FUNCTION_TYPE_REMOTE
                   ? func.container_image
                   : func.image,
               class: 'table-cell-1'
