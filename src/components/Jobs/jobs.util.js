@@ -27,7 +27,10 @@ import {
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues } from '../../utils'
 import { setNotification } from '../../reducers/notificationReducer'
-import { map, set, uniq } from 'lodash'
+import { capitalize, map, set, uniq } from 'lodash'
+
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
+import { parseKeyValues } from '../../utils/object'
 
 export const page = JOBS_PAGE
 export const getInfoHeaders = isSpark =>
@@ -256,7 +259,7 @@ export const monitorJob = (jobs_dashboard_url, item, projectName) => {
  * the promise returned by the `fetchJobFunctions` function.
  * @returns {Promise<Object>} A Promise that resolves with the enriched job run object
  */
-export const enrichRunWithFunctionTag = (
+export const enrichRunWithFunctionFields = (
   jobRun,
   fetchJobFunctions,
   fetchJobFunctionsPromiseRef
@@ -277,6 +280,13 @@ export const enrichRunWithFunctionTag = (
       if (funcs) {
         const tagsList = uniq(map(funcs, 'metadata.tag'))
         set(jobRun, 'ui.functionTag', tagsList.join(', '))
+
+        jobRun = {
+          ...jobRun,
+          runOnSpot: capitalize(funcs[0].spec.preemption_mode ?? ''),
+          nodeSelectorChips: parseKeyValues(funcs[0].spec.node_selector || {}),
+          priority: generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
+        }
       } else {
         set(jobRun, 'ui.functionTag', '')
       }
