@@ -96,9 +96,8 @@ const messageNamesList = {
   default: ''
 }
 
-export const getNoDataMessage = (filtersStore, filters, page, tab) => {
+export const getNoDataMessage = (filtersStore, filters, page, tab, filtersStoreKey) => {
   const messageNames = messageNamesList[tab] || messageNamesList[page] || messageNamesList.default
-  const filtersStoreKey = tab ?? page
 
   if (!messageNames) {
     return 'No data to show'
@@ -164,17 +163,17 @@ const generateNoEntriesFoundMessage = (
   }, `There is no ${messageNames.plural} data to show for "`)
 }
 
-const getChangedFiltersList = (filters, filtersStore, page) => {
+const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
   if (!filters || !filtersStore) {
     return []
   }
 
   return filters.filter(({ type }) => {
     const isTagChanged =
-      filtersStore.tag !== TAG_FILTER_ALL_ITEMS ||
-      filtersStore.filterMenuModal[page]?.values?.tag !== TAG_FILTER_ALL_ITEMS
-    const isIterChanged = !isNil(filtersStore.filterMenuModal[page]?.values?.iter)
-      ? filtersStore.filterMenuModal[page].values.iter === SHOW_ITERATIONS
+      filtersStore.tag !== TAG_FILTER_ALL_ITEMS &&
+      filtersStore.filterMenuModal[filtersStoreKey]?.values?.tag !== TAG_FILTER_ALL_ITEMS
+    const isIterChanged = !isNil(filtersStore.filterMenuModal[filtersStoreKey]?.values?.iter)
+      ? filtersStore.filterMenuModal[filtersStoreKey].values.iter === SHOW_ITERATIONS
       : filtersStore.iter === SHOW_ITERATIONS
 
     return (

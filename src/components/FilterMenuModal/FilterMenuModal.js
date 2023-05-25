@@ -24,6 +24,7 @@ import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { has, isEmpty, isEqual, reduce } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 
@@ -33,7 +34,6 @@ import { setModalFiltersInitialValues, setModalFiltersValues } from '../../reduc
 import { ReactComponent as FilterIcon } from 'igz-controls/images/filter.svg'
 
 import './filterMenuModal.scss'
-import { useParams } from 'react-router-dom'
 
 export const FilterMenuWizardContext = React.createContext({})
 
@@ -44,10 +44,9 @@ const FilterMenuModal = ({
   children,
   filterMenuName,
   initialValues,
-  page,
-  tab,
   values,
-  wizardClassName
+  wizardClassName,
+  updateForm
 }) => {
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
   const filtersIconButtonRef = useRef()
@@ -101,7 +100,7 @@ const FilterMenuModal = ({
     return () => {
       ref.restart(initialValues)
     }
-  }, [params.pageTab, params.projectName, page, tab, dispatch, initialValues])
+  }, [params.pageTab, params.projectName, updateForm, dispatch, initialValues])
 
   const getFilterCounter = formState => {
     const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues
@@ -210,8 +209,6 @@ FilterMenuModal.defaultProps = {
   applyChanges: null,
   applyButton: null,
   cancelButton: null,
-  page: '',
-  tab: '',
   wizardClassName: ''
 }
 
@@ -227,8 +224,6 @@ FilterMenuModal.propTypes = {
   }),
   filterMenuName: PropTypes.string.isRequired,
   initialValues: PropTypes.shape({}).isRequired,
-  page: PropTypes.string,
-  tab: PropTypes.string,
   values: PropTypes.shape({}).isRequired,
   wizardClassName: PropTypes.string
 }

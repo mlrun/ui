@@ -26,6 +26,7 @@ import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
 import {
+  DATASETS_FILTERS,
   DATASETS_PAGE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
@@ -76,7 +77,7 @@ const Datasets = () => {
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const datasetsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][DATASETS_PAGE].values,
+    () => filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values,
     [filtersStore]
   )
 

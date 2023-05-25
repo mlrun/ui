@@ -89,6 +89,7 @@ export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 
 /*=========== DATASETS =============*/
 export const DATASETS = 'datasets'
+export const DATASETS_FILTERS = 'DATASETS_FILTERS'
 
 /*=========== JOBS =============*/
 
@@ -227,11 +228,13 @@ export const SET_NEW_FUNCTION_VOLUME_MOUNTS = 'SET_NEW_FUNCTION_VOLUME_MOUNTS'
 /*=========== ARTIFACTS =============*/
 
 export const ARTIFACTS = 'artifacts'
+export const FILES_FILTERS = 'FILES_FILTERS'
 export const ARTIFACT_PREVIEW_TABLE_ROW_LIMIT = 100
 
 /*=========== MODELS =============*/
 
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN = 'FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN'
+export const MODELS_FILTERS = 'MODELS_FILTERS'
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE =
   'FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE'
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS =

@@ -83,7 +83,7 @@ function ArtifactsActionBar({
     return () => {
       dispatch(removeFilters())
     }
-  }, [params.pageTab, params.projectName, page, dispatch])
+  }, [params.pageTab, params.projectName, page, tab, dispatch])
 
   const applyChanges = async (name, filterMenuModal) => {
     const filtersHelperResult = await filtersHelper(changes, dispatch)
@@ -158,10 +158,9 @@ function ArtifactsActionBar({
               cancelButton={{ label: 'Clear', variant: 'tertiary' }}
               filterMenuName={filterMenuName}
               initialValues={filtersInitialState}
-              page={page}
-              tab={tab}
               values={filtersInitialState}
               wizardClassName="artifacts-filters__wrapper"
+              updateForm={tab ?? page}
             >
               <ArtifactsFilters filterMenuName={filterMenuName} page={page} />
             </FilterMenuModal>

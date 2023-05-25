@@ -27,7 +27,7 @@ import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
-import { MODELS_PAGE, MODELS_TAB } from '../../../constants'
+import { MODELS_FILTERS, MODELS_PAGE, MODELS_TAB } from '../../../constants'
 import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { removeModel } from '../../../reducers/artifactsReducer'
@@ -63,7 +63,7 @@ const ModelsView = React.forwardRef(
             <div className="content__action-bar-wrapper">
               <ModelsPageTabs />
               <ArtifactsActionBar
-                filterMenuName={MODELS_TAB}
+                filterMenuName={MODELS_FILTERS}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
                 removeSelectedItem={removeModel}
@@ -73,7 +73,15 @@ const ModelsView = React.forwardRef(
               />
             </div>
             {artifactsStore.loading ? null : models.length === 0 ? (
-              <NoData message={getNoDataMessage(filtersStore, filters, MODELS_PAGE, MODELS_TAB)} />
+              <NoData
+                message={getNoDataMessage(
+                  filtersStore,
+                  filters,
+                  MODELS_PAGE,
+                  MODELS_TAB,
+                  MODELS_FILTERS
+                )}
+              />
             ) : (
               <>
                 {selectedRowData.loading && <Loader />}
