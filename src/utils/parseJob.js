@@ -47,6 +47,7 @@ export const parseJob = (job, tab) => {
       error: job.status.error ?? '',
       function: job.spec?.function ?? '',
       handler: job.spec?.handler ?? '',
+      hyper_param_options: job.spec?.hyper_param_options || {},
       hyperparams: job.spec?.hyperparams || {},
       inputs: job.spec?.inputs || {},
       iteration: job.metadata.iteration,

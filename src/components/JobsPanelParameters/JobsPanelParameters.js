@@ -51,10 +51,7 @@ const JobsPanelParameters = ({
   setTuningStrategy,
   setUrl
 }) => {
-  const [parametersState, parametersDispatch] = useReducer(
-    jobsPanelParametersReducer,
-    initialState
-  )
+  const [parametersState, parametersDispatch] = useReducer(jobsPanelParametersReducer, initialState)
   const [validation, setValidation] = useState({
     isNameValid: true,
     isValueValid: true
@@ -70,9 +67,7 @@ const JobsPanelParameters = ({
           if (parameter.data.name === item && !parameter.isChecked) {
             parameter.isChecked = true
 
-            if (
-              parameter.data.parameterType !== panelData.newParameterType[0].id
-            ) {
+            if (parameter.data.parameterType !== panelData.newParameterType[0].id) {
               setHyperParams(
                 parameter.data,
                 jobsStore.newJob.task.spec.hyperparams,
@@ -95,9 +90,7 @@ const JobsPanelParameters = ({
               ...params
             })
 
-            if (
-              parameter.data.parameterType !== panelData.newParameterType[0].id
-            ) {
+            if (parameter.data.parameterType !== panelData.newParameterType[0].id) {
               const hyperParams = { ...jobsStore.newJob.task.spec.hyperparams }
 
               delete hyperParams[parameter.data.name]
@@ -133,14 +126,8 @@ const JobsPanelParameters = ({
   )
 
   const handleAddNewParameter = () => {
-    if (
-      parametersState.newParameter.name.length &&
-      parametersState.newParameter.value.length
-    ) {
-      if (
-        parametersState.newParameter.parameterType ===
-        panelData.newParameterType[0].id
-      ) {
+    if (parametersState.newParameter.name.length && parametersState.newParameter.value.length) {
+      if (parametersState.newParameter.parameterType === panelData.newParameterType[0].id) {
         setNewJobParameters({
           ...jobsStore.newJob.task.spec.parameters,
           [parametersState.newParameter.name]: convertParamValue(
@@ -165,10 +152,7 @@ const JobsPanelParameters = ({
             }
           ]
         })
-      } else if (
-        parametersState.newParameter.parameterType !==
-        panelData.newParameterType[0].id
-      ) {
+      } else if (parametersState.newParameter.parameterType !== panelData.newParameterType[0].id) {
         setHyperParams(
           parametersState.newParameter,
           jobsStore.newJob.task.spec.hyperparams,
@@ -202,10 +186,8 @@ const JobsPanelParameters = ({
       })
     } else {
       setValidation(state => ({
-        isNameValid:
-          state.isNameValid && parametersState.newParameter.name.length > 0,
-        isValueValid:
-          state.isValueValid && parametersState.newParameter.value.length > 0
+        isNameValid: state.isNameValid && parametersState.newParameter.name.length > 0,
+        isValueValid: state.isValueValid && parametersState.newParameter.value.length > 0
       }))
     }
   }
@@ -243,8 +225,7 @@ const JobsPanelParameters = ({
     }
 
     if (
-      parametersState.selectedParameter.data.parameterType ===
-        panelData.newParameterType[0].id &&
+      parametersState.selectedParameter.data.parameterType === panelData.newParameterType[0].id &&
       hyperParamsObj[parametersState.selectedParameter.data.name] &&
       parametersState.selectedParameter.isChecked
     ) {
@@ -252,12 +233,7 @@ const JobsPanelParameters = ({
       setNewJobHyperParameters({ ...hyperParamsObj })
     }
 
-    setTableData(
-      panelState,
-      panelDispatch,
-      parametersState.selectedParameter,
-      parametersDispatch
-    )
+    setTableData(panelState, panelDispatch, parametersState.selectedParameter, parametersDispatch)
   }
 
   const handleDeleteParameter = (item, index) => {
@@ -311,16 +287,16 @@ const JobsPanelParameters = ({
       parameters={panelState.tableData.parameters}
       parametersDispatch={parametersDispatch}
       parametersState={parametersState}
-      selectorCriteria={jobsStore.newJob.task.spec.selector.criteria}
+      selectorCriteria={jobsStore.newJob.task.spec.hyper_param_options.selector?.criteria}
       setNewJobSelectorCriteria={setNewJobSelectorCriteria}
       setNewJobSelectorResult={setNewJobSelectorResult}
       setTuningStrategy={setTuningStrategy}
       setUrl={setUrl}
       setValidation={setValidation}
       tableContent={tableContent}
-      tuningStrategy={jobsStore.newJob.task.spec.tuning_strategy}
+      tuningStrategy={jobsStore.newJob.task.spec.hyper_param_options.strategy}
       undoParameterCreation={undoParameterCreation}
-      url={jobsStore.newJob.task.spec.param_file}
+      url={jobsStore.newJob.task.spec.hyper_param_options.param_file}
       validation={validation}
     />
   )
@@ -331,6 +307,4 @@ JobsPanelParameters.propTypes = {
   panelState: PropTypes.shape({}).isRequired
 }
 
-export default connect(jobsStore => ({ ...jobsStore }), { ...jobsActions })(
-  JobsPanelParameters
-)
+export default connect(jobsStore => ({ ...jobsStore }), { ...jobsActions })(JobsPanelParameters)

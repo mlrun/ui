@@ -140,17 +140,19 @@ export const generateEditableItem = (functionData, job) => {
           project: job.project
         },
         spec: {
+          hyper_param_options: {
+            param_file: job.param_file ?? '',
+            selector: job.selector ?? 'max.',
+            strategy: job.strategy ?? 'list'
+          },
           function: job.function,
           handler: job?.handler ?? '',
           hyperparams: job.hyperparams,
           input_path: job.input_path ?? '',
           inputs: job.inputs ?? {},
           output_path: job.outputPath,
-          param_file: job.param_file ?? '',
           parameters: job.parameters ?? {},
-          secret_sources: job.secret_sources ?? [],
-          selector: job.selector ?? 'max.',
-          tuning_strategy: job.tuning_strategy ?? 'list'
+          secret_sources: job.secret_sources ?? []
         }
       }
     }
