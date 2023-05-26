@@ -2,8 +2,12 @@
 @import '~igz-controls/scss/borders';
 
 .item-requested-features {
+  overflow: auto;
+
   &__table {
     &-header {
+      position: sticky;
+      top: 0;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -12,7 +16,9 @@
       font-weight: 700;
       font-size: 14px;
       line-height: 24px;
+      background-color: $white;
       border-bottom: $secondaryBorder;
+      z-index: 3;
     }
 
     &-cell {
