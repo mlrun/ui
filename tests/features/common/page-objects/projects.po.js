@@ -99,12 +99,12 @@ module.exports = {
     '.projects__wrapper .projects-content-header .projects-content-header-item .content-menu .content-menu__list li[data-testid=archived] a'
   ),
   Projects_Sorter: By.css(
-    '.projects-content-header-item .sort .split-btn__button:nth-of-type(1) button > svg'
+    '.projects-content-header-item .sort .split-btn__button:nth-of-type(1)'
   ),
   Projects_Sort_Dropdown: dropdownComponent(
     generateDropdownGroup(
       '.projects-content-header-item .sort .split-btn__button:nth-of-type(2)',
-      'button > svg', // Open Component
+      'button .tooltip-wrapper svg', // Open Component
       '.select__item', // Options
       '.data-ellipsis > .tooltip-wrapper' // Option value
     )

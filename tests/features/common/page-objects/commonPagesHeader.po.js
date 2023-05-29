@@ -37,7 +37,8 @@ const generalInfoQuickLinks = {
 
 module.exports = {
   loader: By.css('.loader-wrapper .loader'),
-  See_On_Github: By.css('header.header a.header__link'),
+  See_On_Github: By.css('header.header a[alt="MLRUN on Gihub"]'),
+  See_On_Slack: By.css('header.header a[alt="MLRUN on Slack"]'),
   Common_Hint: By.css('#overlay_container .tip'),
   Common_Tolltip: By.css('#overlay_container .tooltip'),
   Common_Options: By.css(
