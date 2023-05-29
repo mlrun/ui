@@ -49,10 +49,13 @@ module.exports = {
   Breadcrumbs: breadcrumbsComponent,
   General_Info_Quick_Links: commonTable(generalInfoQuickLinks),
   Project_Navigation_Toggler: By.css(
-    '.navbar .navbar__toggler-button .navbar__toggler-icon'
+    '.ml-app .navbar'
   ),
   Project_Settings_Button: By.css(
     '.navbar .navbar__body .navbar__additional .navbar-links .nav-link__button'
+  ),
+  Project_Monitoring_Button: By.css(
+    '.navbar .navbar__body .navbar__content .navbar-links #monitor'
   ),
   Pin_Quick_Link_Button: By.css(
     '.navbar .navbar__body .tooltip-wrapper button.round-icon-cp__circle'
