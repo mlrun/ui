@@ -60,11 +60,7 @@ export const checkValidation = (
   if (newFeatureSet.spec.source.kind === 'parquet') {
     const { time_field, start_time, end_time } = newFeatureSet.spec.source
 
-    if (
-      time_field.length === 0 &&
-      start_time.length === 0 &&
-      end_time.length === 0
-    ) {
+    if (time_field.length === 0 && start_time.length === 0 && end_time.length === 0) {
       setValidation(prevState => ({
         ...prevState,
         isTimeFieldValid: true,
@@ -91,6 +87,14 @@ export const checkValidation = (
         }))
 
         isValid = false
+      } else if ((end_time && !start_time) || (start_time && !end_time)) {
+        setValidation(prevState => ({
+          ...prevState,
+          isStartTimeValid: end_time.length === 0,
+          isEndTimeValid: start_time.length === 0
+        }))
+
+        isValid = false
       }
 
       if (!validation.isStartTimeValid || !validation.isEndTimeValid) {
@@ -110,8 +114,7 @@ export const checkValidation = (
 
   if (
     externalOfflineTarget &&
-    (externalOfflineTarget.path.length === 0 ||
-      !validation.isExternalOfflineTargetPathValid)
+    (externalOfflineTarget.path.length === 0 || !validation.isExternalOfflineTargetPathValid)
   ) {
     setValidation(prevState => ({
       ...prevState,
