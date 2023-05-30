@@ -77,7 +77,6 @@ const DatePickerView = React.forwardRef(
     const datePickerClassNames = classnames('date-picker-container', className)
     const inputClassNames = classnames(
       'input',
-      'input-short',
       'date-picker__input',
       'active-input',
       isRange && 'long-input',
@@ -85,7 +84,7 @@ const DatePickerView = React.forwardRef(
       disabled && 'date-picker__input_disabled',
       isInvalid && 'input_invalid'
     )
-    const inputLabelClassNames = classnames('input__label', label && 'active-label')
+    const inputLabelClassNames = classnames('input__label')
 
     return (
       <div

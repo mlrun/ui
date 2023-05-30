@@ -96,14 +96,6 @@ const FilterParameters = ({
     }
   }
 
-  const validateDates = (startTime, endTime) => {
-    if (startTime && endTime) {
-      return startTime.toISOString() < endTime.toISOString()
-    } else {
-      return true
-    }
-  }
-
   const handleChangeDates = (date, type) => {
     const setTime =
       type === START_TIME ? setNewFeatureSetDataSourceStartTime : setNewFeatureSetDataSourceEndTime
@@ -111,26 +103,26 @@ const FilterParameters = ({
     if (date[0]) {
       setTime(date[0].toISOString())
 
-      if (type === START_TIME) {
-        setValidation(prevState => ({
-          ...prevState,
-          isEndTimeValid: true,
-          isStartTimeValid: validateDates(date[0], data.endTime)
-        }))
-      } else {
-        setValidation(prevState => ({
-          ...prevState,
-          isEndTimeValid: validateDates(data.startTime, date[0]),
-          isStartTimeValid: true
-        }))
+      if (data.timeField.length > 0) {
+        if (type === START_TIME) {
+          setValidation(prevState => ({
+            ...prevState,
+            isEndTimeValid: true
+          }))
+        } else {
+          setValidation(prevState => ({
+            ...prevState,
+            isStartTimeValid: true
+          }))
+        }
       }
     } else {
       setTime('')
       setValidation(prevState => ({
         ...prevState,
         isTimeFieldValid: true,
-        isStartTimeValid: type === START_TIME && data.endTime ? false : true,
-        isEndTimeValid: type === END_TIME && data.startTime ? false : true
+        isStartTimeValid: true,
+        isEndTimeValid: true
       }))
     }
 
@@ -178,7 +170,9 @@ const FilterParameters = ({
           invalidText="Start time is invalid"
           label="Start time"
           onChange={date => handleChangeDates(date, START_TIME)}
-          required={Boolean((data.timeField || data.endTime) && !data.startTime)}
+          required={Boolean(
+            (data.timeField.length > 0 || data.startTime.length > 0) && data.endTime.length === 0
+          )}
           setInvalid={value =>
             setValidation(state => ({
               ...state,
@@ -195,7 +189,9 @@ const FilterParameters = ({
           invalidText="End time is invalid"
           label="End time"
           onChange={date => handleChangeDates(date, END_TIME)}
-          required={Boolean((data.timeField || data.startTime) && !data.endTime)}
+          required={Boolean(
+            (data.timeField.length > 0 || data.endTime.length > 0) && data.startTime.length === 0
+          )}
           setInvalid={value =>
             setValidation(state => ({
               ...state,
