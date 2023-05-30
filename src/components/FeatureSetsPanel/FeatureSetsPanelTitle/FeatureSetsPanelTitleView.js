@@ -128,7 +128,10 @@ const FeatureSetsPanelTitleView = ({
           selectedId={data.passthrough}
         >
           <span>Passthrough</span>
-          <Tip className="checkbox__label-tip" text="Text Text Text Text Text Text " />
+          <Tip
+            className="checkbox__label-tip"
+            text="Select Passthrough to read data directly from the source without ingesting the data to the offline target. Transformations (computation graph, aggregations, etc.) are invalid when this feature is enabled."
+          />
         </CheckBox>
       </div>
       <RoundedIcon
