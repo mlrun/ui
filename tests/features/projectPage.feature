@@ -8,6 +8,9 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Refresh_Button" element visibility on "Project" wizard
@@ -21,26 +24,92 @@ Feature: MLRun Project Page
 
     @passive
     @sanity
-    Scenario: Check all mandatory components on demo mode
+    Scenario: Check all mandatory components on demo mode on Navigation Bar
         * set tear-down property "project" created with "automation-test-1000" value
         * create "automation-test-1000" MLRun Project with code 201
         Given open url
         And click on row root with value "automation-test-1000" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
-        Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
+        #check the default state of 'Navigation_Bar'
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        #check visibility of menu buttons with pinned 'Navigation_Bar'
         Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        Then verify "General_Info_Quick_Links" element invisibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
-        When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Home_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Button_Text" element visibility on "commonPagesHeader" wizard
+        Then verify "Feature_Store_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Datasets_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Artifacts_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Models_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Jobs_And_Workflows_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "ML_Functions_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Real_Time_Functions_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "API_Gateways_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
+        #check invisibility of menu buttons and visibility of menu icons with unpinned 'Navigation_Bar'
+        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Home_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Project_Home_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Button_Text" element invisibility on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Feature_Store_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Feature_Store_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Datasets_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Datasets_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Artifacts_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Artifacts_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Models_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Models_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Jobs_And_Workflows_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Jobs_And_Workflows_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "ML_Functions_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "ML_Functions_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Real_Time_Functions_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Real_Time_Functions_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "API_Gateways_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "API_Gateways_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Project_Settings_Icon" element visibility on "commonPagesHeader" wizard
+        #check that 'Navigation_Bar' save the state through different pages
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        Then click on "ML_Functions_Icon" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        Then click on "Jobs_And_Workflows_Icon" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        Then click on "Feature_Store_Icon" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
+        Then click on "Datasets_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
+
 
     @passive
     @sanity

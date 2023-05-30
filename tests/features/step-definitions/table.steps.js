@@ -693,11 +693,13 @@ When(
 
         if (pageComponents[indx].includes('Input')) {
           await typeValue(this.driver, pageObjects[wizardName][pageComponents[indx]], row[indx])
+          await this.driver.sleep(250)
         }
 
         if (pageComponents[indx].includes('Button')) {
           if (row[indx] === 'yes') {
             await clickOnComponent(this.driver, pageObjects[wizardName][pageComponents[indx]])
+            await this.driver.sleep(250)
           }
         }
       }

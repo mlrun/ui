@@ -52,7 +52,10 @@ module.exports = {
     '.ml-app .navbar'
   ),
   Project_Settings_Button: By.css(
-    '.navbar .navbar__body .navbar__additional .navbar-links .nav-link__button'
+    '.navbar .navbar__body .navbar__additional .navbar-links .nav-link__button .nav-link__label'
+  ),
+  Project_Settings_Icon: By.css(
+    '.ml-app .navbar .navbar__additional .navbar-links svg'
   ),
   Project_Monitoring_Button: By.css(
     '.navbar .navbar__body .navbar__content .navbar-links #monitor'
@@ -60,5 +63,26 @@ module.exports = {
   Pin_Quick_Link_Button: By.css(
     '.navbar .navbar__body .tooltip-wrapper button.round-icon-cp__circle'
   ),
-  Navigation_Bar: By.css('.ml-app .navbar')
+  Navigation_Bar: By.css('.ml-app .navbar'),
+  Project_Home_Button: By.css('#home > span'),
+  Project_Home_Icon: By.css('#home > svg'),
+  Project_Monitoring_Button_Text: By.css('#monitor > span'),
+  Project_Monitoring_Icon: By.css('#monitor > svg'),
+  Feature_Store_Button: By.css('#feature-store > span'),
+  Feature_Store_Icon: By.css('#feature-store > svg'),
+  Datasets_Button: By.css('#datasets > span'),
+  Datasets_Icon: By.css('#datasets > svg'),
+  Artifacts_Button: By.css('#files > span'),
+  Artifacts_Icon: By.css('#files > svg'),
+  Models_Button: By.css('#models > span'),
+  Models_Icon: By.css('#models > svg'),
+  Jobs_And_Workflows_Button: By.css('#jobs > span'),
+  Jobs_And_Workflows_Icon: By.css('#jobs > svg'),
+  ML_Functions_Button: By.css('#ml-functions > span'),
+  ML_Functions_Icon: By.css('#ml-functions > svg'),
+  Real_Time_Functions_Button: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(9) span'),
+  Real_Time_Functions_Icon: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(9) svg'),
+  API_Gateways_Button: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(10) span'),
+  API_Gateways_Icon: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(10) svg'),
+  General_Info_Quick_Panel: By.css('.ml-app .navbar .navbar__body')
 }

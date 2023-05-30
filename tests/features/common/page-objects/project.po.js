@@ -96,7 +96,7 @@ const projectJobsAndWorkflows = {
 }
 
 const generalInfoMonoValueCards = {
-  root: '.main-info__statistics-section:nth-of-type(2)',
+  root: '.main-info__statistics-section:nth-of-type(3)',
   header: {},
   body: {
     row: {
