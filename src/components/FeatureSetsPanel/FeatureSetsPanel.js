@@ -92,7 +92,6 @@ const FeatureSetsPanel = ({
           )
         }
       }
-      return
     }
 
     delete data.credentials

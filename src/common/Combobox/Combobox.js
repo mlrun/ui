@@ -28,6 +28,7 @@ import './combobox.scss'
 
 const Combobox = ({
   comboboxClassName,
+  disabled,
   hideSearchInput,
   inputPlaceholder,
   inputDefaultValue,
@@ -64,26 +65,14 @@ const Combobox = ({
   const inputRef = useRef()
 
   useEffect(() => {
-    if (
-      inputDefaultValue.length > 0 &&
-      selectValue.id.length > 0 &&
-      inputValue.length === 0
-    ) {
+    if (inputDefaultValue.length > 0 && selectValue.id.length > 0 && inputValue.length === 0) {
       setInputValue(inputDefaultValue)
       inputOnChange(inputDefaultValue)
     }
-  }, [
-    inputDefaultValue,
-    inputOnChange,
-    inputValue.length,
-    selectValue.id.length
-  ])
+  }, [inputDefaultValue, inputOnChange, inputValue.length, selectValue.id.length])
 
   useEffect(() => {
-    if (
-      selectDefaultValue?.label.length > 0 &&
-      selectValue.label.length === 0
-    ) {
+    if (selectDefaultValue?.label.length > 0 && selectValue.label.length === 0) {
       setSelectValue(selectDefaultValue)
     }
   }, [selectDefaultValue, selectValue.label.length])
@@ -154,10 +143,8 @@ const Combobox = ({
     const inputValueItems = inputValue.split('/')
     const valueIndex = inputValueItems.length - 1
     let formattedValue = option.customDelimiter
-      ? inputValueItems[valueIndex].replace(
-          new RegExp(`${option.customDelimiter}.*`),
-          ''
-        ) + option.id
+      ? inputValueItems[valueIndex].replace(new RegExp(`${option.customDelimiter}.*`), '') +
+        option.id
       : option.id
 
     if (inputValueItems.length <= maxSuggestedMatches - 1) formattedValue += '/'
@@ -199,15 +186,17 @@ const Combobox = ({
   }
 
   const handleIconClick = () => {
-    if (showMatchesDropdown) {
-      setShowMatchesDropdown(false)
-    }
+    if (!disabled) {
+      if (showMatchesDropdown) {
+        setShowMatchesDropdown(false)
+      }
 
-    setDropdownStyle({
-      left: 0,
-      paddingTop: '10px'
-    })
-    setShowSelectDropdown(state => !state)
+      setDropdownStyle({
+        left: 0,
+        paddingTop: '10px'
+      })
+      setShowSelectDropdown(state => !state)
+    }
   }
 
   const inputOnFocus = () => {
@@ -253,6 +242,7 @@ const Combobox = ({
   return (
     <ComboboxView
       comboboxClassName={comboboxClassName}
+      disabled={disabled}
       dropdownList={dropdownList}
       dropdownStyle={dropdownStyle}
       handleIconClick={handleIconClick}
@@ -285,6 +275,7 @@ const Combobox = ({
 
 Combobox.defaultProps = {
   comboboxClassName: '',
+  disabled: false,
   hideSearchInput: false,
   inputDefaultValue: '',
   inputPlaceholder: '',
@@ -301,6 +292,7 @@ Combobox.defaultProps = {
 
 Combobox.propTypes = {
   comboboxClassName: PropTypes.string,
+  disabled: PropTypes.bool,
   hideSearchInput: PropTypes.bool,
   inputDefaultValue: PropTypes.string,
   inputOnChange: PropTypes.func.isRequired,

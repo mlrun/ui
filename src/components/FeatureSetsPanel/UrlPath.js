@@ -42,6 +42,7 @@ import projectsAction from '../../actions/projects'
 
 const UrlPath = ({
   comboboxSelectList,
+  disabled,
   handleUrlOnBlur,
   handleUrlOnFocus,
   handleUrlSelectOnChange,
@@ -225,6 +226,7 @@ const UrlPath = ({
   return (
     <Combobox
       comboboxClassName="url"
+      disabled={disabled}
       hideSearchInput={!urlProjectItemTypeEntered}
       inputDefaultValue={
         urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? urlData.projectItemType : ''
@@ -247,12 +249,14 @@ const UrlPath = ({
 }
 
 UrlPath.defaultProps = {
+  disabled: false,
   handleUrlSelectOnChange: null,
   invalid: false
 }
 
 UrlPath.propTypes = {
   comboboxSelectList: PropTypes.array.isRequired,
+  disabled: PropTypes.bool,
   handleUrlOnBlur: PropTypes.func.isRequired,
   handleUrlOnFocus: PropTypes.func.isRequired,
   handleUrlSelectOnChange: PropTypes.func,

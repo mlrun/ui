@@ -115,6 +115,7 @@
 
   &.disabled {
     cursor: not-allowed;
+    border-color: $spunPearl;
 
     .select__label,
     .select__value {
