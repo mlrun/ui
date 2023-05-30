@@ -25,9 +25,11 @@
     .checkbox {
       margin-right: 10px;
 
-      .unchecked {
-        path {
-          fill: $malibu;
+      &:not(.checkbox_disabled) {
+        svg.unchecked {
+          path {
+            fill: $malibu;
+          }
         }
       }
     }
@@ -59,8 +61,11 @@
     }
 
     .offline-path {
-      width: 460px;
       margin-right: 5px;
+
+      &__disabled {
+        color: $spunPearl;
+      }
     }
 
     .input {

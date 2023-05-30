@@ -113,6 +113,7 @@ export const checkValidation = (
   }
 
   if (
+    !newFeatureSet.spec.passthrough &&
     externalOfflineTarget &&
     (externalOfflineTarget.path.length === 0 || !validation.isExternalOfflineTargetPathValid)
   ) {

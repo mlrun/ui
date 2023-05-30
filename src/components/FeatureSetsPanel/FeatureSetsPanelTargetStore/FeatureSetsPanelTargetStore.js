@@ -195,6 +195,27 @@ const FeatureSetsPanelTargetStore = ({
     }
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
 
+  useEffect(() => {
+    if (featureStore.newFeatureSet.spec.passthrough) {
+      setTargetsPathEditData(state => ({
+        ...state,
+        [PARQUET]: {
+          ...state[PARQUET],
+          isEditMode: false,
+          isModified: state[PARQUET].isModified
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOfflineTargetPathEditModeClosed: true
+      }))
+      setValidation(state => ({
+        ...state,
+        isExternalOfflineTargetPathValid: true
+      }))
+    }
+  }, [featureStore.newFeatureSet.spec.passthrough, setDisableButtons, setValidation])
+
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
       ...prev,
@@ -655,6 +676,7 @@ const FeatureSetsPanelTargetStore = ({
   return (
     <FeatureSetsPanelTargetStoreView
       data={data}
+      featureStore={featureStore}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleDiscardPathChange={handleDiscardPathChange}
       handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
@@ -683,6 +705,7 @@ const FeatureSetsPanelTargetStore = ({
 }
 
 FeatureSetsPanelTargetStore.propTypes = {
+  featureStore: PropTypes.shape({}).isRequired,
   project: PropTypes.string.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
