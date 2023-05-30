@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
+import classNames from 'classnames'
 
 import CheckBox from '../../../common/CheckBox/CheckBox'
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
@@ -55,6 +56,7 @@ import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
   data,
+  featureStore,
   frontendSpecIsNotEmpty,
   handleAdvancedLinkClick,
   handleDiscardPathChange,
@@ -167,6 +169,7 @@ const FeatureSetsPanelTargetStoreView = ({
         <div className="target-store__item">
           <div className="target-store__checkbox-container">
             <CheckBox
+              disabled={featureStore.newFeatureSet.spec.passthrough}
               item={checkboxModels.parquet}
               onChange={handleSelectTargetKind}
               selectedId={selectedTargetKind.find(kind => checkboxModels.parquet.id === kind)}
@@ -236,20 +239,28 @@ const FeatureSetsPanelTargetStoreView = ({
                 {!targetsPathEditData.parquet.isEditMode && (
                   <>
                     <Tooltip
-                      className="path-data offline-path"
+                      className={classNames(
+                        'path-data offline-path',
+                        featureStore.newFeatureSet.spec.passthrough && 'offline-path__disabled'
+                      )}
                       template={<TextTooltipTemplate text={data.parquet.path} />}
                     >
                       {data.parquet.path}
                     </Tooltip>
-                    <div className="target-store__path-actions">
-                      <RoundedIcon onClick={handleOfflineKindPathChange} tooltipText="Edit">
-                        <Edit />
-                      </RoundedIcon>
-                    </div>
+                    {!featureStore.newFeatureSet.spec.passthrough && (
+                      <div className="target-store__path-actions">
+                        <RoundedIcon onClick={handleOfflineKindPathChange} tooltipText="Edit">
+                          <Edit />
+                        </RoundedIcon>
+                      </div>
+                    )}
                   </>
                 )}
                 <CheckBox
-                  disabled={targetsPathEditData.parquet.isEditMode}
+                  disabled={
+                    targetsPathEditData.parquet.isEditMode ||
+                    featureStore.newFeatureSet.spec.passthrough
+                  }
                   item={{ id: 'partitioned', label: 'Partition' }}
                   onChange={id => triggerPartitionCheckbox(id, PARQUET)}
                   selectedId={data.parquet.partitioned}
@@ -302,6 +313,7 @@ const FeatureSetsPanelTargetStoreView = ({
         <div className="target-store__item">
           <div className="target-store__checkbox-container">
             <CheckBox
+              disabled={featureStore.newFeatureSet.spec.passthrough}
               item={checkboxModels.externalOffline}
               onChange={handleSelectTargetKind}
               selectedId={selectedTargetKind.find(
@@ -321,12 +333,14 @@ const FeatureSetsPanelTargetStoreView = ({
               <div className="target-store__item v-center">
                 <Select
                   density="medium"
+                  disabled={featureStore.newFeatureSet.spec.passthrough}
                   floatingLabel
                   label="File type"
                   onClick={handleExternalOfflineKindTypeChange}
                   options={externalOfflineKindOptions}
                   selectedId={data.externalOffline.kind}
                 />
+
                 <UrlPath
                   comboboxSelectList={comboboxSelectList.filter(
                     option =>

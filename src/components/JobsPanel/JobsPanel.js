@@ -346,10 +346,10 @@ const JobsPanel = ({
 
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
-      : groupedFunctions.functions
+      : !isEmpty(groupedFunctions.functions)
       ? groupedFunctions.functions.find(
           func => func.metadata.tag === panelState.currentFunctionInfo.version
-        )
+        ) ?? groupedFunctions.functions[0]
       : defaultData
     const isFunctionTemplate = !isEmpty(functionsStore.template)
     const labels = {}

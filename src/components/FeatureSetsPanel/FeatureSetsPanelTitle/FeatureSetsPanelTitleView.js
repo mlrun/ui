@@ -24,7 +24,7 @@ import CheckBox from '../../../common/CheckBox/CheckBox'
 import ChipCell from '../../../common/ChipCell/ChipCell'
 import Input from '../../../common/Input/Input'
 import TextArea from '../../../common/TextArea/TextArea'
-import { RoundedIcon } from 'igz-controls/components'
+import { RoundedIcon, Tip } from 'igz-controls/components'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
@@ -126,7 +126,13 @@ const FeatureSetsPanelTitleView = ({
           item={{ id: 'passthrough', label: 'Passthrough' }}
           onChange={id => handleCheckPassthrough(id)}
           selectedId={data.passthrough}
-        />
+        >
+          <span>Passthrough</span>
+          <Tip
+            className="checkbox__label-tip"
+            text="Select Passthrough to read data directly from the source without ingesting the data to the offline target. Transformations (computation graph, aggregations, etc.) are invalid when this feature is enabled."
+          />
+        </CheckBox>
       </div>
       <RoundedIcon
         onClick={() => closePanel({})}

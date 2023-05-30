@@ -47,7 +47,7 @@ import {
   generatePageData,
   monitorWorkflowsActionCreator
 } from './monitorWorkflows.util'
-import { enrichRunWithFunctionTag, handleAbortJob } from '../jobs.util'
+import { enrichRunWithFunctionFields, handleAbortJob } from '../jobs.util'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
@@ -256,13 +256,15 @@ const MonitorWorkflows = ({
 
   const modifyAndSelectRun = useCallback(
     jobRun => {
-      return enrichRunWithFunctionTag(jobRun, fetchJobFunctions, fetchJobFunctionsPromiseRef).then(
-        jobRun => {
-          setSelectedJob(jobRun)
-          setSelectedFunction({})
-          setItemIsSelected(true)
-        }
-      )
+      return enrichRunWithFunctionFields(
+        jobRun,
+        fetchJobFunctions,
+        fetchJobFunctionsPromiseRef
+      ).then(jobRun => {
+        setSelectedJob(jobRun)
+        setSelectedFunction({})
+        setItemIsSelected(true)
+      })
     },
     [fetchJobFunctions]
   )

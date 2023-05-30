@@ -53,9 +53,9 @@ const PipelineView = ({
             }`}
             className="link-back__icon"
           >
-            <Tooltip template={<TextTooltipTemplate text="Back" />}>
+            <RoundedIcon id="pipeline-back-btn" tooltipText="Back">
               <Back />
-            </Tooltip>
+            </RoundedIcon>
           </Link>
           <div className="link-back__title">
             <Tooltip template={<TextTooltipTemplate text={linkBackTitle} />}>
@@ -64,6 +64,7 @@ const PipelineView = ({
           </div>
         </div>
       </div>
+
       <div className="graph-container pipeline-content">
         <div className={graphViewClassNames}>
           <MlReactFlow
