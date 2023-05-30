@@ -21,7 +21,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { forEach, isEmpty } from 'lodash'
+import { cloneDeep, forEach, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Details from '../Details/Details'
@@ -109,11 +109,34 @@ const Workflow = ({
     const edges = []
     const nodes = []
     const jobs = []
+    const modifiedWorkflowGraph = cloneDeep(workflow.graph)
 
-    forEach(workflow.graph, job => {
+    const setHiddenJobVisibility = (job, ancestorIsTaskGroup) => {
+      if (job.type === 'TaskGroup' && !ancestorIsTaskGroup) {
+        setHiddenJobVisibility(job, true)
+      }
+
+      job.children?.forEach(jobChildId => {
+        let jobChild = modifiedWorkflowGraph[jobChildId]
+
+        if (hiddenWorkflowStepTypes.includes(jobChild.type) && ancestorIsTaskGroup) {
+          jobChild.isHiddenJobVisible = true
+        }
+
+        if (jobChild.type === 'TaskGroup' || ancestorIsTaskGroup) {
+          setHiddenJobVisibility(jobChild, true)
+        }
+      })
+    }
+
+    forEach(modifiedWorkflowGraph, job => {
+      setHiddenJobVisibility(job)
+    })
+
+    forEach(modifiedWorkflowGraph, job => {
       const sourceHandle = getWorkflowSourceHandle(job.phase)
 
-      if (hiddenWorkflowStepTypes.includes(job.type)) return
+      if (hiddenWorkflowStepTypes.includes(job.type) && !job.isHiddenJobVisible) return
 
       const customData = {
         function: job.function,
@@ -173,8 +196,10 @@ const Workflow = ({
       nodes.push(nodeItem)
     })
 
-    setElements(getLayoutedElements(nodes.concat(edges)))
-    setJobsContent(jobs)
+    if (!isEmpty(nodes)) {
+      setElements(getLayoutedElements(nodes.concat(edges)))
+      setJobsContent(jobs)
+    }
   }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
 
   const onElementClick = (event, element) => {
