@@ -38,7 +38,7 @@ import {
   SECONDARY_BUTTON
 } from 'igz-controls/constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import localStorageService from '../../utils/localStorageService'
+import { isIgzVersionValid } from '../../utils/isIgzVersionValid'
 
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -240,11 +240,11 @@ const MembersPopUp = ({
   }
 
   const generateUsersSuggestionList = debounce(searchQuery => {
-    const igzFullVersion = localStorageService.getStorageValue('igzFullVersion')
+    const validIgzVersionArray = ['3', '5', '3']
     let paramsScrubbedUsers = { 'filter[username]': `[$contains_istr]${searchQuery}` }
     let paramsUserGroups = { 'filter[name]': `[$contains_istr]${searchQuery}` }
 
-    if (igzFullVersion && Number(igzFullVersion.split('-')[0].split('.').join('')) <= 352) {
+    if (!isIgzVersionValid(validIgzVersionArray)) {
       paramsScrubbedUsers = {
         'filter[username]': `[$match-i]^.*${searchQuery}.*$`,
         'page[size]': 200

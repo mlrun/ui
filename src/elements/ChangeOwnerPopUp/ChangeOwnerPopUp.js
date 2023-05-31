@@ -31,7 +31,7 @@ import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
 import { FORBIDDEN_ERROR_STATUS_CODE, SECONDARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
-import localStorageService from '../../utils/localStorageService'
+import { isIgzVersionValid } from '../../utils/isIgzVersionValid'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
@@ -126,15 +126,15 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
   }
 
   const generateSuggestionList = debounce(async (memberName, resolve) => {
-    const igzFullVersion = localStorageService.getStorageValue('igzFullVersion')
     const params = {
       params: {
         'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
         'filter[username]': `[$contains_istr]${memberName}`
       }
     }
+    const validIgzVersionArray = ['3', '5', '3']
 
-    if (igzFullVersion && Number(igzFullVersion.split('-')[0].split('.').join('')) <= 352) {
+    if (!isIgzVersionValid(validIgzVersionArray)) {
       delete params['filter[username]']
     }
 
