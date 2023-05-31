@@ -400,15 +400,16 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerLabel: 'Name',
         value: name,
         class: 'table-cell-name',
-        getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            MODELS_TAB,
-            MODEL_ENDPOINTS_TAB,
-            name,
-            artifact.metadata?.uid,
-            tab
-          ),
+        getLink: tab => artifact.metadata?.uid && name
+          ? generateLinkToDetailsPanel(
+              project,
+              MODELS_TAB,
+              MODEL_ENDPOINTS_TAB,
+              name,
+              artifact.metadata?.uid,
+              tab
+            )
+          : '',
         showStatus: true,
         tooltip: artifact.spec?.model_uri ? `${name} - ${artifact.spec?.model_uri}` : name
       },
