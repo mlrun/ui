@@ -19,10 +19,10 @@ such restriction.
 */
 const getStorageValue = (key, defaultValue) => {
   if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem(key)
-
     try {
-      return saved !== null ? JSON.parse(JSON.stringify(saved)) : defaultValue
+      const saved = localStorage.getItem(key)
+
+      return saved !== null ? saved : defaultValue
     } catch (err) {
       console.log(err)
     }

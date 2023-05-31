@@ -63,7 +63,7 @@ export const fetchFrontendSpec = createAsyncThunk(
           openPopUp(ConfirmDialog, {
             header: 'Something went wrong.',
             message: `There is a problem fetching the data. Check your network connection and try to refresh the browser.${
-              localStorageService.getStorageValue('mlrunUi.headerHidden')
+              localStorageService.getStorageValue('mlrunUi.headerHidden') === 'true'
                 ? ' If the problem persists, contact customer support.'
                 : ''
             }`
