@@ -28,7 +28,10 @@ import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanel
 import Input from '../../../common/Input/Input'
 import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
 import Select from '../../../common/Select/Select'
+import UrlPath from '../UrlPath'
 import { Tip, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME, V3IO_INPUT_PATH_SCHEME } from '../../../constants'
 
 import {
   EXTERNAL_OFFLINE,
@@ -39,6 +42,8 @@ import {
   isParquetPathValid,
   getInvalidParquetPathMessage
 } from './featureSetsPanelTargetStore.util'
+
+import { comboboxSelectList } from '../UrlPath.utils'
 
 import { ReactComponent as Online } from 'igz-controls/images/nosql.svg'
 import { ReactComponent as Offline } from 'igz-controls/images/db-icon.svg'
@@ -56,6 +61,7 @@ const FeatureSetsPanelTargetStoreView = ({
   handleAdvancedLinkClick,
   handleDiscardPathChange,
   handleExternalOfflineKindPathOnBlur,
+  handleExternalOfflineKindPathOnFocus,
   handleKeyBucketingNumberChange,
   handleOfflineKindPathChange,
   handleOnlineKindPathChange,
@@ -65,6 +71,7 @@ const FeatureSetsPanelTargetStoreView = ({
   handlePartitionRadioButtonClick,
   handleSelectTargetKind,
   handleTimePartitioningGranularityChange,
+  handleUrlSelectOnChange,
   partitionRadioButtonsState,
   selectedPartitionKind,
   selectedTargetKind,
@@ -317,7 +324,7 @@ const FeatureSetsPanelTargetStoreView = ({
               <span className="checkbox__label">External offline</span>
               <Tip
                 className="checkbox__label-tip"
-                text="Store the feature set in a remote object store (e.g. AWS S3 or Azure storage)"
+                text="Store the feature set in a remote object store (e.g. AWS S3 Google or Azure storage)"
               />
             </CheckBox>
           </div>
@@ -325,47 +332,27 @@ const FeatureSetsPanelTargetStoreView = ({
             <div className="target-store__inputs-container">
               <div className="target-store__item v-center">
                 <Select
+                  density="medium"
                   disabled={featureStore.newFeatureSet.spec.passthrough}
-                  density="normal"
                   floatingLabel
                   label="File type"
                   onClick={handleExternalOfflineKindTypeChange}
                   options={externalOfflineKindOptions}
                   selectedId={data.externalOffline.kind}
                 />
-                <Input
+
+                <UrlPath
+                  comboboxSelectList={comboboxSelectList.filter(
+                    option =>
+                      option.id !== MLRUN_STORAGE_INPUT_PATH_SCHEME &&
+                      option.id !== V3IO_INPUT_PATH_SCHEME
+                  )}
                   disabled={featureStore.newFeatureSet.spec.passthrough}
-                  density="normal"
-                  floatingLabel
                   invalid={!validation.isExternalOfflineTargetPathValid}
-                  label="URL"
-                  onBlur={handleExternalOfflineKindPathOnBlur}
-                  onChange={path =>
-                    setData(state => ({
-                      ...state,
-                      externalOffline: { ...state.externalOffline, path }
-                    }))
-                  }
-                  placeholder="s3://bucket/path"
-                  required
-                  setInvalid={value =>
-                    !featureStore.newFeatureSet.spec.passthrough &&
-                    setValidation(state => ({
-                      ...state,
-                      isExternalOfflineTargetPathValid: value
-                    }))
-                  }
-                  type="text"
-                  value={data.externalOffline.path}
-                  wrapperClassName="url"
+                  handleUrlOnBlur={handleExternalOfflineKindPathOnBlur}
+                  handleUrlOnFocus={handleExternalOfflineKindPathOnFocus}
+                  handleUrlSelectOnChange={handleUrlSelectOnChange}
                 />
-                {data.externalOffline.kind === PARQUET && (
-                  <CheckBox
-                    item={{ id: 'partitioned', label: 'Partition' }}
-                    onChange={id => triggerPartitionCheckbox(id, EXTERNAL_OFFLINE)}
-                    selectedId={data.externalOffline.partitioned}
-                  />
-                )}
               </div>
               {data.externalOffline.partitioned && (
                 <div className="partition-fields">
@@ -421,12 +408,17 @@ const FeatureSetsPanelTargetStoreView = ({
   )
 }
 
+FeatureSetsPanelTargetStoreView.defualtProps = {
+  handleUrlSelectOnChange: null
+}
+
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,
+  handleExternalOfflineKindPathOnFocus: PropTypes.func.isRequired,
   handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,
   handleOfflineKindPathChange: PropTypes.func.isRequired,
@@ -436,6 +428,7 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   handlePartitionRadioButtonClick: PropTypes.func.isRequired,
   handleSelectTargetKind: PropTypes.func.isRequired,
   handleTimePartitioningGranularityChange: PropTypes.func.isRequired,
+  handleUrlSelectOnChange: PropTypes.func,
   partitionRadioButtonsState: PropTypes.shape({
     parquet: PropTypes.string.isRequired,
     externalOffline: PropTypes.string.isRequired

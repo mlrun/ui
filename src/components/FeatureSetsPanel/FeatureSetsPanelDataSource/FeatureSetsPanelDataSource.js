@@ -17,39 +17,22 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
-import { isNil } from 'lodash'
+import React, { useCallback, useState } from 'react'
+import { connect } from 'react-redux'
+
 import PropTypes from 'prop-types'
 
 import FeatureSetsPanelDataSourceView from './FeatureSetsPanelDataSourceView'
 
 import featureStoreActions from '../../../actions/featureStore'
-import {
-  ARTIFACT_OTHER_TYPE,
-  DATASET_TYPE,
-  MLRUN_STORAGE_INPUT_PATH_SCHEME
-} from '../../../constants'
-import { getParsedResource } from '../../../utils/resources'
-import {
-  CSV,
-  generateComboboxMatchesList,
-  isUrlInputValid,
-  PARQUET
-} from './featureSetsPanelDataSource.util'
 import projectsAction from '../../../actions/projects'
-import {
-  generateArtifactsList,
-  generateArtifactsReferencesList,
-  generateProjectsList,
-  pathPlaceholders
-} from '../../../utils/panelPathScheme'
-import { fetchArtifact, fetchArtifacts } from '../../../reducers/artifactsReducer'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+
+import { CSV, PARQUET } from './featureSetsPanelDataSource.util'
+import { isUrlInputValid } from '../UrlPath.utils'
 
 const FeatureSetsPanelDataSource = ({
   featureStore,
-  fetchProjectsNames,
-  project,
   setDisableButtons,
   setNewFeatureSetDataSourceKind,
   setNewFeatureSetDataSourceParseDates,
@@ -64,186 +47,12 @@ const FeatureSetsPanelDataSource = ({
     parseDates: '',
     url: {
       pathType: '',
-      projectItemType: '',
-      project: '',
-      artifact: '',
-      placeholder: '',
       path: '',
-      artifactReference: '',
       fullPath: ''
     },
     schedule: ''
   })
   const [showSchedule, setShowSchedule] = useState(false)
-  const [comboboxMatches, setComboboxMatches] = useState([])
-  const [projects, setProjects] = useState([])
-  const [artifacts, setArtifacts] = useState([])
-  const [artifactsReferences, setArtifactsReferences] = useState([])
-  const [urlProjectItemTypeEntered, setUrlProjectItemTypeEntered] = useState(false)
-  const [urlProjectPathEntered, setUrlProjectPathEntered] = useState(false)
-  const [urlArtifactPathEntered, setUrlArtifactPathEntered] = useState(false)
-  const [urlArtifactReferencePathEntered, setUrlArtifactReferencePathEntered] = useState(false)
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    if (
-      data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME &&
-      urlProjectItemTypeEntered &&
-      projects.length === 0
-    ) {
-      fetchProjectsNames().then(projects => {
-        setProjects(generateProjectsList(projects, project))
-      })
-    }
-  }, [data.url.pathType, fetchProjectsNames, project, projects.length, urlProjectItemTypeEntered])
-
-  useEffect(() => {
-    if (urlProjectItemTypeEntered && urlProjectPathEntered && artifacts.length === 0) {
-      dispatch(
-        fetchArtifacts({
-          project: data.url.project,
-          filters: null,
-          config: {
-            params: {
-              category:
-                data.url.projectItemType === 'artifacts' ? ARTIFACT_OTHER_TYPE : DATASET_TYPE
-            }
-          }
-        })
-      )
-        .unwrap()
-        .then(artifacts => {
-          if (artifacts?.length > 0) {
-            setArtifacts(generateArtifactsList(artifacts))
-          }
-        })
-    }
-  }, [
-    artifacts.length,
-    data.url.project,
-    data.url.projectItemType,
-    dispatch,
-    urlProjectItemTypeEntered,
-    urlProjectPathEntered
-  ])
-
-  useEffect(() => {
-    if (
-      urlProjectItemTypeEntered &&
-      urlProjectPathEntered &&
-      urlArtifactPathEntered &&
-      artifactsReferences.length === 0
-    ) {
-      dispatch(fetchArtifact({ project: data.url.project, artifact: data.url.artifact }))
-        .unwrap()
-        .then(artifacts => {
-          if (artifacts.length > 0 && artifacts[0].data) {
-            setArtifactsReferences(generateArtifactsReferencesList(artifacts[0].data))
-          }
-        })
-    }
-  }, [
-    artifactsReferences.length,
-    data.url.artifact,
-    data.url.project,
-    dispatch,
-    urlArtifactPathEntered,
-    urlProjectItemTypeEntered,
-    urlProjectPathEntered
-  ])
-
-  useEffect(() => {
-    if (data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
-      setComboboxMatches(
-        generateComboboxMatchesList(
-          data.url,
-          artifacts,
-          projects,
-          project,
-          urlProjectPathEntered,
-          urlArtifactPathEntered,
-          urlArtifactReferencePathEntered,
-          artifactsReferences,
-          urlProjectItemTypeEntered
-        )
-      )
-    }
-  }, [
-    artifacts,
-    artifactsReferences,
-    data.url,
-    project,
-    projects,
-    urlArtifactPathEntered,
-    urlArtifactReferencePathEntered,
-    urlProjectItemTypeEntered,
-    urlProjectPathEntered
-  ])
-
-  const handleUrlPathTypeChange = path => {
-    setData(state => ({
-      ...state,
-      url: {
-        ...state.url,
-        placeholder: pathPlaceholders[path] || '',
-        path: '',
-        pathType: path,
-        project: '',
-        artifact: '',
-        artifactReference: '',
-        projectItemType: 'artifacts'
-      }
-    }))
-    setValidation(state => ({
-      ...state,
-      isUrlValid: true
-    }))
-    setUrlProjectItemTypeEntered(false)
-    setUrlProjectPathEntered(false)
-    setUrlArtifactPathEntered(false)
-    setUrlArtifactReferencePathEntered(false)
-    setNewFeatureSetDataSourceUrl('')
-  }
-
-  const handleUrlPathChange = path => {
-    if (data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
-      const pathItems = path.split('/')
-      const [artifact, artifactReference] = getParsedResource(pathItems[2])
-
-      if (isNil(pathItems[2]) && artifacts.length > 0) {
-        setArtifacts([])
-      }
-
-      if (!artifactReference && artifactsReferences.length > 0) {
-        setArtifactsReferences([])
-      }
-
-      setData(state => ({
-        ...state,
-        url: {
-          ...state.url,
-          projectItemType: pathItems[0],
-          project: pathItems[1] ?? '',
-          artifact: artifact ?? '',
-          artifactReference: artifactReference ?? ''
-        }
-      }))
-      setUrlProjectItemTypeEntered(typeof pathItems[1] === 'string')
-      setUrlProjectPathEntered(typeof pathItems[2] === 'string')
-      setUrlArtifactPathEntered(artifacts.some(artifactItem => artifactItem.id === artifact))
-      setUrlArtifactReferencePathEntered(
-        artifactsReferences.some(projectItemRef => projectItemRef.id === artifactReference)
-      )
-    } else {
-      setData(state => ({
-        ...state,
-        url: {
-          ...state.url,
-          path
-        }
-      }))
-    }
-  }
 
   const handleKindOnChange = useCallback(
     kind => {
@@ -282,7 +91,16 @@ const FeatureSetsPanelDataSource = ({
     ]
   )
 
-  const handleUrlOnBlur = (selectValue, inputValue) => {
+  const handleUrlSelectOnChange = () => {
+    setValidation(state => ({
+      ...state,
+      isUrlValid: true
+    }))
+
+    setNewFeatureSetDataSourceUrl('')
+  }
+
+  const handleUrlOnBlur = ({ selectValue, inputValue, urlData }) => {
     if (!isUrlInputValid(selectValue, inputValue, data.kind)) {
       setValidation(prevState => ({
         ...prevState,
@@ -303,9 +121,11 @@ const FeatureSetsPanelDataSource = ({
       ...state,
       url: {
         ...state.url,
+        ...urlData,
         fullPath: `${selectValue}${inputValue}`
       }
     }))
+
     setDisableButtons(state => ({
       ...state,
       isUrlEditModeClosed: true
@@ -321,28 +141,24 @@ const FeatureSetsPanelDataSource = ({
 
   return (
     <FeatureSetsPanelDataSourceView
-      comboboxMatches={data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? comboboxMatches : []}
       data={data}
       featureStore={featureStore}
       handleKindOnChange={handleKindOnChange}
       handleUrlOnBlur={handleUrlOnBlur}
       handleUrlOnFocus={handleUrlOnFocus}
-      handleUrlPathTypeChange={handleUrlPathTypeChange}
-      handleUrlPathChange={handleUrlPathChange}
+      handleUrlSelectOnChange={handleUrlSelectOnChange}
       setData={setData}
       setNewFeatureSetDataSourceParseDates={setNewFeatureSetDataSourceParseDates}
       setShowSchedule={setShowSchedule}
       setValidation={setValidation}
       showSchedule={showSchedule}
       setNewFeatureSetSchedule={setNewFeatureSetSchedule}
-      urlProjectItemTypeEntered={urlProjectItemTypeEntered}
       validation={validation}
     />
   )
 }
 
 FeatureSetsPanelDataSource.propTypes = {
-  project: PropTypes.string.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired

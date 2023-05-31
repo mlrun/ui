@@ -68,21 +68,10 @@
       }
     }
 
-    .input {
-      width: 100%;
-
-      &-wrapper {
-        &.url {
-          width: 300px;
-          margin-right: 5px;
-          margin-bottom: 5px;
-        }
-
-        &.partition-cols {
-          flex: unset;
-          width: 250px;
-        }
-      }
+    .url {
+      height: 52px;
+      margin-right: 5px;
+      margin-bottom: 5px;
     }
 
     .partition-fields {

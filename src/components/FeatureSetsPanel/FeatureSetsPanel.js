@@ -62,6 +62,7 @@ const FeatureSetsPanel = ({
     isAccessKeyValid: true
   })
   const [disableButtons, setDisableButtons] = useState({
+    isExternalOfflineTargetPathEditModeClosed: true,
     isOnlineTargetPathEditModeClosed: true,
     isOfflineTargetPathEditModeClosed: true,
     isUrlEditModeClosed: true
@@ -91,7 +92,6 @@ const FeatureSetsPanel = ({
           )
         }
       }
-      return
     }
 
     delete data.credentials
