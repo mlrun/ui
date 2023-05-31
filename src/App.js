@@ -92,7 +92,7 @@ const App = () => {
 
   const { isNuclioModeDisabled } = useNuclioMode()
 
-  const isHeaderShown = localStorageService.getStorageValue('mlrunUi.headerHidden') !== 'true'
+  const isHeaderShown = !localStorageService.getStorageValue('mlrunUi.headerHidden')
 
   const mlAppContainerClasses = classNames('ml-app-container', isHeaderShown && 'has-header')
 

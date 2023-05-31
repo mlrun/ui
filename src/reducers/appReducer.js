@@ -24,6 +24,8 @@ import { ConfirmDialog } from 'igz-controls/components'
 import { GATEWAY_TIMEOUT_STATUS_CODE } from 'igz-controls/constants'
 import { isEmpty } from 'lodash'
 
+import localStorageService from '../utils/localStorageService'
+
 const initialState = {
   frontendSpec: {},
   frontendSpecPopupIsOpened: false
@@ -33,7 +35,7 @@ export const fetchFrontendSpec = createAsyncThunk(
   'fetchFrontendSpec',
   ({ frontendSpec, frontendSpecPopupIsOpened }) => {
     const headers = {}
-    const mlrunVersion = localStorage.getItem('mlrunVersion')
+    const mlrunVersion = localStorageService.getStorageValue('mlrunVersion')
 
     if (mlrunVersion) {
       headers['x-mlrun-ui-version'] = mlrunVersion
@@ -43,7 +45,7 @@ export const fetchFrontendSpec = createAsyncThunk(
       .getFrontendSpec({ headers })
       .then(({ data, headers }) => {
         if (headers['x-mlrun-be-version']) {
-          localStorage.setItem('mlrunVersion', headers['x-mlrun-be-version'])
+          localStorageService.setStorageValue('mlrunVersion', headers['x-mlrun-be-version'])
         }
 
         if (headers['x-mlrun-ui-clear-cache']) {
@@ -61,7 +63,7 @@ export const fetchFrontendSpec = createAsyncThunk(
           openPopUp(ConfirmDialog, {
             header: 'Something went wrong.',
             message: `There is a problem fetching the data. Check your network connection and try to refresh the browser.${
-              window.localStorage.getItem('mlrunUi.headerHidden') === 'true'
+              localStorageService.getStorageValue('mlrunUi.headerHidden')
                 ? ' If the problem persists, contact customer support.'
                 : ''
             }`
