@@ -44,9 +44,9 @@ const FilterMenuModal = ({
   children,
   filterMenuName,
   initialValues,
+  restartFormTrigger,
   values,
-  wizardClassName,
-  updateForm
+  wizardClassName
 }) => {
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
   const filtersIconButtonRef = useRef()
@@ -100,7 +100,7 @@ const FilterMenuModal = ({
     return () => {
       ref.restart(initialValues)
     }
-  }, [params.pageTab, params.projectName, updateForm, dispatch, initialValues])
+  }, [params.pageTab, params.projectName, restartFormTrigger, dispatch, initialValues])
 
   const getFilterCounter = formState => {
     const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues
@@ -209,6 +209,7 @@ FilterMenuModal.defaultProps = {
   applyChanges: null,
   applyButton: null,
   cancelButton: null,
+  restartFormTrigger: null,
   wizardClassName: ''
 }
 
@@ -224,6 +225,7 @@ FilterMenuModal.propTypes = {
   }),
   filterMenuName: PropTypes.string.isRequired,
   initialValues: PropTypes.shape({}).isRequired,
+  restartFormTrigger: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   values: PropTypes.shape({}).isRequired,
   wizardClassName: PropTypes.string
 }

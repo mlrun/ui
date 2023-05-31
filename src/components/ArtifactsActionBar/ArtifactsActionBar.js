@@ -158,9 +158,9 @@ function ArtifactsActionBar({
               cancelButton={{ label: 'Clear', variant: 'tertiary' }}
               filterMenuName={filterMenuName}
               initialValues={filtersInitialState}
+              restartFormTrigger={tab ?? page}
               values={filtersInitialState}
               wizardClassName="artifacts-filters__wrapper"
-              updateForm={tab ?? page}
             >
               <ArtifactsFilters filterMenuName={filterMenuName} page={page} />
             </FilterMenuModal>

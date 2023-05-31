@@ -73,13 +73,7 @@ const FormTagFilter = ({ label, name }) => {
     const filteredOptions = options.filter(tag => tag.label.startsWith(event.target.value))
     input.onChange(event.target.value)
     setTagFilter(event.target.value)
-
-    if (filteredOptions.length === 0) {
-      setIsDropDownMenuOpen(false)
-    } else {
-      setIsDropDownMenuOpen(true)
-    }
-
+    setIsDropDownMenuOpen(filteredOptions.length !== 0)
     setTagOptions(filteredOptions)
   }
 
