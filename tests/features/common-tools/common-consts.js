@@ -29,14 +29,16 @@ module.exports = {
     ],
     Online_Status: 'online',
     Data_Collection_Description:
-      'This section enable users to upload data , crate features and register external data. Keep in mind that this ' +
-      'explaination is only temporary and should be replaced soon enough. This is not the final version.',
+      'Register, upload data directly, or define ' +
+      'features using the feature store.',
     Development_Description:
-      'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various ' +
-      'processing types including model training, data processing and more. This is not the final version.',
+      'Define your code in a function and train your ' +
+      'models. You can also run any additional code ' +
+      'in batch, as well as define and run workflows.',
     Deployment_Description:
-      'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale. ' +
-      'This is not the final version.'
+      'Deploy online serving models or perform batch ' +
+      'inference, as well as define data and model ' +
+      'monitoring and notification.'
   },
   Feature_Store: {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors']

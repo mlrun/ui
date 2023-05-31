@@ -110,79 +110,50 @@ Feature: MLRun Project Page
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
 
-
     @passive
     @sanity
-    @demo
-    Scenario: Check all mandatory components on demo mode
-        * set tear-down property "project" created with "automation-test-1001" value
-        * create "automation-test-1001" MLRun Project with code 201
-        Given open url
-        * turn on demo mode
-        And click on row root with value "automation-test-1001" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
-        Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
-        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        Then verify "General_Info_Quick_Links" element invisibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
-        When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
-        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
-
-    @passive
-    @sanity
-    @demo
     Scenario: Check all mandatory components on demo mode
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
         Given open url
-        * turn on demo mode
         And click on row root with value "automation-test-1002" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Header_Name_Label" element visibility on "Demo_Project" wizard
         Then verify "Header_Created_Time" element visibility on "Demo_Project" wizard
         Then verify "Header_Project_Description" element visibility on "Demo_Project" wizard
-        Then verify "Header_Name_Label" on "Demo_Project" wizard should display "Project"."Online_Status" in "Common_Tolltip"
+        #Then verify "Header_Name_Label" on "Demo_Project" wizard should display "Project"."Online_Status" in "Common_Tolltip"  doesn't exist
         Then verify value should equal "automation-test-1002" in "Header_Name_Label" on "Demo_Project" wizard
         Then verify value should equal "automation test description" in "Header_Project_Description" on "Demo_Project" wizard
-        Then verify value should equal "Data" in "Data_Collection_Header" on "Demo_Project" wizard
+        Then verify value should equal "Ingest and process data" in "Data_Collection_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Data_Collection_Description" in "Data_Collection_Description" on "Demo_Project" wizard
         Then verify "Data_Collection_Additional_Actions_Button" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Links_Table" element visibility on "Demo_Project" wizard
-        Then verify value should equal "Jobs and Workflows" in "Development_Header" on "Demo_Project" wizard
+        Then verify value should equal "Develop and train model" in "Development_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Development_Description" in "Development_Description" on "Demo_Project" wizard
         Then verify "Development_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Development_Links_Table" element visibility on "Demo_Project" wizard
-        Then verify value should equal "Deployment" in "Deployment_Header" on "Demo_Project" wizard
+        Then verify value should equal "Deploy and monitor" in "Deployment_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Deployment_Description" in "Deployment_Description" on "Demo_Project" wizard
         Then verify "Deployment_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Deployment_Links_Table" element visibility on "Demo_Project" wizard
         Then click on "Data_Collection_Additional_Actions_Button" element on "Demo_Project" wizard
         Then verify values in "Data_Collection_Actions_Table" table on "Demo_Project" wizard
             |          name           |
-            |   Create Features Set   |
-            |     Register Dataset    |
-            |     Register Artifact   |
-        Then verify values in "Data_Collection_Additional_Actions_Table" table on "Demo_Project" wizard
-            |          name           |
-            | Create a Feature Vector |
+            |    Create feature set   |
+            |     Register dataset    |
+            |     Register artifact   |
+            |  Create feature vector  |
+        # Then verify values in "Data_Collection_Additional_Actions_Table" table on "Demo_Project" wizard   - doesn't exist
+        #     |          name           |
+        #     | Create a Feature Vector |
         Then verify values in "Development_Actions_Table" table on "Demo_Project" wizard
             |          name           |
-            |   Create New Function   |
-            |      Create New Job     |
-            |      Register Model     |
+            |  Create batch function  |
+            |        Create job       |
         Then verify values in "Deployment_Actions_Table" table on "Demo_Project" wizard
-            |          name           |
-            |   Create RT function    |
-            | Deploy serving function |
+            |           name            |
+            | Create real-time function |
         Then verify values in "Data_Collection_Links_Table" table on "Demo_Project" wizard
             |      name       |
             |   Feature Sets  |
@@ -194,11 +165,11 @@ Feature: MLRun Project Page
             | ML Functions |
             |     Jobs     |
             |    Models    |
-            |   Workflow   |
+            |   Workflows  |
         Then verify values in "Deployment_Links_Table" table on "Demo_Project" wizard
             |        name         |
             |   Model Endpoints   |
-            | Real Time Pipelines |
+            |     RT Pipelines    |
             |  Nuclio Functions   |
             |     Monitoring      |
 

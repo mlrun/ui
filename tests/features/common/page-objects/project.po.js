@@ -315,20 +315,20 @@ module.exports = {
   demoProject: {
     Header_Name_Label: labelComponent(
       generateLabelGroup(
-        '.project-overview .project-overview__header .project-overview__header-title',
+        '.project-overview .project-overview__header .project-details__title',
         ' ',
-        '.status-icon'
+        ' '//'.status-icon'
       )
     ),
     Header_Created_Time: labelComponent(
       generateLabelGroup(
-        '.project-overview .project-overview__header .project-overview__header-subtitle',
+        '.project-overview .project-overview__header .project-details__title',
         'div:nth-of-type(1)'
       )
     ),
     Header_Project_Description: labelComponent(
       generateLabelGroup(
-        '.project-overview .project-overview__header .project-overview__header-description',
+        '.project-overview .project-overview__header .project-details__description',
         ' '
       )
     ),
@@ -350,7 +350,7 @@ module.exports = {
     ),
     Data_Collection_Links_Table: commonTable(DataCollectionLinksTable),
     Data_Collection_Additional_Actions_Button: By.css(
-      '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__actions .project-overview-card__actions-toogler'
+      '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__actions'
     ),
     Development_Header: labelComponent(
       generateLabelGroup(
