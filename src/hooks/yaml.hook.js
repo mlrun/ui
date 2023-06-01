@@ -31,7 +31,7 @@ export const useYaml = initialState => {
 
     const json = cloneDeep(item.ui?.originalContent) ?? {}
 
-    if (json) {
+    if (json?.spec?.extra_data) {
       // removes "model_spec.yaml" from "spec.extra_data"
       set(json, 'spec.extra_data', omit(json.spec.extra_data, 'model_spec.yaml'))
     }

@@ -42,6 +42,8 @@ import {
   ONLINE
 } from './featureSetsPanelTargetStore.util'
 
+import { isUrlInputValid } from '../UrlPath.utils'
+
 const FeatureSetsPanelTargetStore = ({
   featureStore,
   project,
@@ -195,6 +197,27 @@ const FeatureSetsPanelTargetStore = ({
     }
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
 
+  useEffect(() => {
+    if (featureStore.newFeatureSet.spec.passthrough) {
+      setTargetsPathEditData(state => ({
+        ...state,
+        [PARQUET]: {
+          ...state[PARQUET],
+          isEditMode: false,
+          isModified: state[PARQUET].isModified
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOfflineTargetPathEditModeClosed: true
+      }))
+      setValidation(state => ({
+        ...state,
+        isExternalOfflineTargetPathValid: true
+      }))
+    }
+  }, [featureStore.newFeatureSet.spec.passthrough, setDisableButtons, setValidation])
+
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
       ...prev,
@@ -254,22 +277,64 @@ const FeatureSetsPanelTargetStore = ({
     )
   }
 
-  const handleExternalOfflineKindPathOnBlur = event => {
-    const target = featureStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === EXTERNAL_OFFLINE
-    )
+  const handleUrlSelectOnChange = () => {
+    setValidation(state => ({
+      ...state,
+      isExternalOfflineTargetPathValid: true
+    }))
 
-    if (event.target.value !== target.path) {
+    setNewFeatureSetTarget(
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
+        if (targetKind.name === EXTERNAL_OFFLINE) {
+          return { ...targetKind, path: '' }
+        }
+
+        return targetKind
+      })
+    )
+  }
+
+  const handleExternalOfflineKindPathOnFocus = () => {
+    setDisableButtons(state => ({
+      ...state,
+      isExternalOfflineTargetPathEditModeClosed: false
+    }))
+  }
+
+  const handleExternalOfflineKindPathOnBlur = ({ selectValue, inputValue }) => {
+    if (!isUrlInputValid(selectValue, inputValue, data[EXTERNAL_OFFLINE].kind)) {
+      setValidation(prevState => ({
+        ...prevState,
+        isExternalOfflineTargetPathValid: false
+      }))
+    } else {
+      if (!validation.isExternalOfflineTargetPathValid) {
+        setValidation(prevState => ({
+          ...prevState,
+          isExternalOfflineTargetPathValid: true
+        }))
+      }
+
       setNewFeatureSetTarget(
         featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === EXTERNAL_OFFLINE) {
-            return { ...targetKind, path: event.target.value }
+            return { ...targetKind, path: `${selectValue}${inputValue}` }
           }
 
           return targetKind
         })
       )
     }
+
+    setData(state => ({
+      ...state,
+      [EXTERNAL_OFFLINE]: { ...state[EXTERNAL_OFFLINE], path: `${selectValue}${inputValue}` }
+    }))
+
+    setDisableButtons(state => ({
+      ...state,
+      isExternalOfflineTargetPathEditModeClosed: true
+    }))
   }
 
   const handleDiscardPathChange = kind => {
@@ -310,9 +375,8 @@ const FeatureSetsPanelTargetStore = ({
     setData(state => ({
       ...state,
       externalOffline: {
-        ...dataInitialState.externalOffline,
-        kind,
-        path: state.externalOffline.path
+        ...state.externalOffline,
+        kind
       }
     }))
     setNewFeatureSetTarget(
@@ -655,9 +719,11 @@ const FeatureSetsPanelTargetStore = ({
   return (
     <FeatureSetsPanelTargetStoreView
       data={data}
+      featureStore={featureStore}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleDiscardPathChange={handleDiscardPathChange}
       handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
+      handleExternalOfflineKindPathOnFocus={handleExternalOfflineKindPathOnFocus}
       handleExternalOfflineKindTypeChange={handleExternalOfflineKindTypeChange}
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
       handleOfflineKindPathChange={handleOfflineKindPathChange}
@@ -667,6 +733,7 @@ const FeatureSetsPanelTargetStore = ({
       handlePartitionRadioButtonClick={handlePartitionRadioButtonClick}
       handleSelectTargetKind={handleSelectTargetKind}
       handleTimePartitioningGranularityChange={handleTimePartitioningGranularityChange}
+      handleUrlSelectOnChange={handleUrlSelectOnChange}
       partitionRadioButtonsState={partitionRadioButtonsState}
       frontendSpecIsNotEmpty={!isEmpty(frontendSpec.feature_store_data_prefixes)}
       selectedPartitionKind={selectedPartitionKind}
@@ -683,6 +750,7 @@ const FeatureSetsPanelTargetStore = ({
 }
 
 FeatureSetsPanelTargetStore.propTypes = {
+  featureStore: PropTypes.shape({}).isRequired,
   project: PropTypes.string.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
