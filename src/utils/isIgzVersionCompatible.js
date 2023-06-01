@@ -20,15 +20,29 @@ such restriction.
 
 import localStorageService from './localStorageService'
 
-export const isIgzVersionValid = validIgzVersionArray => {
+export const isIgzVersionCompatible = requiredIgzVersion => {
   const igzFullVersion = localStorageService.getStorageValue('igzFullVersion')
+  let requiredIgzVersionArray = requiredIgzVersion.split('.')
 
   if (igzFullVersion) {
-    const currentIgzVersionArray = igzFullVersion.split('-')[0].split('.')
+    let currentIgzVersionArray = igzFullVersion.split('-')[0].split('.')
+    requiredIgzVersionArray = requiredIgzVersionArray.map(item => Number(item))
+    currentIgzVersionArray = currentIgzVersionArray.map(item => Number(item))
 
-    return !currentIgzVersionArray.some((item, index) => {
-      return item < validIgzVersionArray[index]
-    })
+    if (currentIgzVersionArray[0] < requiredIgzVersionArray[0]) {
+      return false
+    } else if (
+      currentIgzVersionArray[1] < requiredIgzVersionArray[1] &&
+      currentIgzVersionArray[0] === requiredIgzVersionArray[0]
+    ) {
+      return false
+    } else if (
+      currentIgzVersionArray[2] < requiredIgzVersionArray[2] &&
+      currentIgzVersionArray[1] === requiredIgzVersionArray[1] &&
+      currentIgzVersionArray[0] === requiredIgzVersionArray[0]
+    ) {
+      return false
+    }
   }
 
   return true
