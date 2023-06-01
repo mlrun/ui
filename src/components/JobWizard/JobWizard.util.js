@@ -861,6 +861,7 @@ export const generateJobRequestData = (
     !isEmpty(formData.parameters.hyperParameters?.criteria)
   ) {
     postData.task.spec.selector = `${formData.parameters.hyperParameters.criteria}.${formData.parameters.hyperParameters.result}`
+    postData.task.spec.hyperParameters.selector = `${formData.parameters.hyperParameters.criteria}.${formData.parameters.hyperParameters.result}`
   }
 
   if (isSchedule) {
