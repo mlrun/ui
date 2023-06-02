@@ -268,7 +268,7 @@ const featuresByProjectsTable = {
 
 // Datasets
 const datasetsTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -278,9 +278,9 @@ const datasetsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a span.link',
+        name: '.table-body__cell:nth-of-type(1) a .link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         labels: {
           componentType: dropdownComponent,
@@ -310,11 +310,11 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css('.content__action-bar .actions #refresh')
+const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar__actions #refresh')
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar .input-wrapper:nth-of-type(2)',
+    '.content .content__action-bar-wrapper .name-filter .form-field__control',
     true,
     false,
     true

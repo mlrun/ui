@@ -735,6 +735,7 @@ Then(
       tabName
     )
     const indx = arr[0]
+    
     await isTabActive(this.driver, pageObjects[wizard][tabSelector], indx)
   }
 )

@@ -8,6 +8,9 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -23,6 +26,7 @@ Feature: ML Functions
         Then verify "Functions_Table" element visibility on "ML_Functions" wizard
 
     @passive
+    #@uniqueTag
     Scenario: verify filtering by function name on Functions page
         Given open url
         And wait load page

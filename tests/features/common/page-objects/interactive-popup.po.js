@@ -97,7 +97,7 @@ const deployModelTable = {
   },
   body: {
     offset: 0,
-    add_row_btn: 'button.add-new-item-btn',
+    add_row_btn: 'button',
     row: {
       root: '.table-row',
       fields: {
@@ -183,7 +183,7 @@ const commonNameInput = generateInputGroup(
 )
 
 const commonTargetPathInput = generateInputGroup(
-  '.form .form-row:nth-of-type(3) .form-field-input',
+  '.form .form-row:nth-of-type(4) .form-field__wrapper',
   true,
   false,
   '.form-field__warning'
@@ -292,7 +292,7 @@ module.exports = {
     Cross_Cancel_Button: commonCloseButton,
     New_File_Name_Input: inputGroup(
       generateInputGroup(
-        '.modal__body .register-model__row:nth-of-type(1) .form-field__wrapper-normal',
+        '.modal__body .form-row:nth-of-type(1) .form-field__wrapper-normal',
         true,
         true,
         '.form-field__warning'
@@ -300,7 +300,7 @@ module.exports = {
     ),
     New_File_Target_Path_Input: inputGroup(
       generateInputGroup(
-        '.modal__body .register-model__row:nth-of-type(2) .form-field__wrapper-normal',
+        '.modal__body .form-row:nth-of-type(3) .form-field__wrapper-normal',
         true,
         true,
         '.form-field__warning'
@@ -308,7 +308,7 @@ module.exports = {
     ),
     New_File_Description_Input: textAreaGroup(
       generateTextAreaGroup(
-        '.modal__body .register-model__row:nth-of-type(3) .form-field-textarea',
+        '.modal__body .form-row:nth-of-type(2) .form-field-textarea',
         '.form-field__counter'
       )
     ),

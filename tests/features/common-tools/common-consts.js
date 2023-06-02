@@ -44,7 +44,7 @@ module.exports = {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors']
   },
   Models: {
-    Tab_List: ['Models', 'Model Endpoints (Beta)', 'Real-Time Pipelines']
+    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines']
   },
   Real_Time_Pipeline_Pane: {
     Overview_Headers: [
@@ -90,7 +90,7 @@ module.exports = {
     Overview_General_Headers: [
       'Hash',
       'Key',
-      'Tag',
+      'Version tag',
       'Iter',
       'Size',
       'Path',
@@ -133,12 +133,12 @@ module.exports = {
     ]
   },
   Models_Info_Pane: {
-    Tab_List: ['Overview', 'Preview'],
+    Tab_List: ['Overview'], //'Preview'],  //delete 'Preview'
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
       'Hash',
       'Key',
-      'Tag',
+      'Version tag',
       'Iter',
       'Kind',
       'Size',
@@ -161,6 +161,7 @@ module.exports = {
       'Model class',
       'Model artifact',
       'Function URI',
+      'Feature set',
       'Last prediction',
       'Error count',
       'Accuracy',
@@ -200,6 +201,13 @@ module.exports = {
     Form_Subtext:
       'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).'
   },
+  Register_Dataset: {
+    Type_Options: ['General', 'Chart', 'Plot', 'Table'],
+    Form_Text:
+      /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
+    Form_Subtext:
+      'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).'
+  },
   Project_Settings: {
     Tab_List: ['General', 'Members', 'Secrets'],
     Secrets_Hint:
@@ -208,6 +216,7 @@ module.exports = {
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
     Artifacts_Names_Unique: 'Artifacts names in the same project must be unique.',
+    Dataset_Names_Unique: 'Dataset names in the same project must be unique',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
       'This field is required',

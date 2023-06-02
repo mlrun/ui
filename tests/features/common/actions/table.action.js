@@ -32,6 +32,7 @@ async function getColumnValues(driver, table, columnName) {
   return await driver
     .findElements(table.tableColumns[columnName])
     .then(function(elements) {
+
       return Promise.all(elements.map(element => element.getText()))
     })
 }
