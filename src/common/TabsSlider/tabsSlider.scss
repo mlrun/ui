@@ -5,7 +5,7 @@
   display: flex;
   align-items: stretch;
   background-color: $white;
-  border-bottom: $secondaryBorder;
+  padding-bottom: 30px;
 
   &__tabs-wrapper {
     overflow-x: hidden;
@@ -28,7 +28,7 @@
     cursor: pointer;
 
     &_active {
-      color: $cornflowerBlue;
+      color: $primary;
       border-bottom-color: $cornflowerBlue;
     }
 

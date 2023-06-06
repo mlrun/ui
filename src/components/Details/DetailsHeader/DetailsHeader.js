@@ -236,48 +236,50 @@ const DetailsHeader = ({
           </RoundedIcon>
         )}
         <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
-        {!pageData.details.hideBackBtn && (
-          <Link
-            className="details-close-btn"
-            data-testid="details-close-btn"
-            to={
-              getCloseDetailsLink
-                ? getCloseDetailsLink(selectedItem.name)
-                : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                    params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                  }`
-            }
-            onClick={handleCancelClick}
-          >
-            <RoundedIcon tooltipText="Close">
-              <Close />
-            </RoundedIcon>
-          </Link>
-        )}
-        {withToggleViewBtn && (
-          <>
-            {viewMode !== FULL_VIEW_MODE && (
-              <RoundedIcon
-                onClick={() => {
-                  navigate(`${location.pathname}${location.search ? '&' : '?'}view=full`)
-                }}
-                tooltipText="Full view"
-              >
-                <Popout />
+        <div className="item-header__navigation-buttons">
+          {withToggleViewBtn && (
+            <>
+              {viewMode !== FULL_VIEW_MODE && (
+                <RoundedIcon
+                  onClick={() => {
+                    navigate(`${location.pathname}${location.search ? '&' : '?'}view=full`)
+                  }}
+                  tooltipText="Full view"
+                >
+                  <Popout />
+                </RoundedIcon>
+              )}
+              {viewMode === FULL_VIEW_MODE && (
+                <RoundedIcon
+                  onClick={() => {
+                    navigate(`${location.pathname.replace(/(\?|&)view=full(&|$)/, '$1')}`)
+                  }}
+                  tooltipText="Table view"
+                >
+                  <Popin />
+                </RoundedIcon>
+              )}
+            </>
+          )}
+          {!pageData.details.hideBackBtn && (
+            <Link
+              className="details-close-btn"
+              data-testid="details-close-btn"
+              to={
+                getCloseDetailsLink
+                  ? getCloseDetailsLink(selectedItem.name)
+                  : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
+                      params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+                    }`
+              }
+              onClick={handleCancelClick}
+            >
+              <RoundedIcon tooltipText="Close">
+                <Close />
               </RoundedIcon>
-            )}
-            {viewMode === FULL_VIEW_MODE && (
-              <RoundedIcon
-                onClick={() => {
-                  navigate(`${location.pathname.replace(/(\?|&)view=full(&|$)/, '$1')}`)
-                }}
-                tooltipText="Table view"
-              >
-                <Popin />
-              </RoundedIcon>
-            )}
-          </>
-        )}
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   )

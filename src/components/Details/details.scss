@@ -59,6 +59,11 @@
           }
         }
 
+        &__navigation-buttons {
+          display: flex;
+          margin-left: 20px;
+        }
+
         &__pods {
           &-error {
             color: $spunPearl;
