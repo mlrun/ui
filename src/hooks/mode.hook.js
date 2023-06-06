@@ -37,12 +37,12 @@ import { getUrlMode } from '../utils/helper'
  */
 
 export const useMode = () => {
-  const [mode, setMode] = useState(JSON.parse(localStorageService.getStorageValue('mode')))
+  const [mode, setMode] = useState(localStorageService.getStorageValue('mode'))
   const urlMode = getUrlMode(window.location.search)
 
   useLayoutEffect(() => {
     if (urlMode) {
-      localStorageService.setStorageValue('mode', JSON.stringify(urlMode))
+      localStorageService.setStorageValue('mode', urlMode)
       setMode(urlMode)
     }
   }, [urlMode])
