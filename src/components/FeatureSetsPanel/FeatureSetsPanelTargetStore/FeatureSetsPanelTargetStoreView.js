@@ -353,6 +353,13 @@ const FeatureSetsPanelTargetStoreView = ({
                   handleUrlOnFocus={handleExternalOfflineKindPathOnFocus}
                   handleUrlSelectOnChange={handleUrlSelectOnChange}
                 />
+                {data.externalOffline.kind === PARQUET && (
+                  <CheckBox
+                    item={{ id: 'partitioned', label: 'Partition' }}
+                    onChange={id => triggerPartitionCheckbox(id, EXTERNAL_OFFLINE)}
+                    selectedId={data.externalOffline.partitioned}
+                  />
+                )}
               </div>
               {data.externalOffline.partitioned && (
                 <div className="partition-fields">
