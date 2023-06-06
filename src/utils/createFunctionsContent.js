@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { every, isNil } from 'lodash'
+
 import { formatDatetime } from './datetime'
 import {
   FUNCTION_TYPE_NUCLIO,
@@ -27,6 +29,8 @@ import {
   REAL_TIME_PIPELINES_TAB
 } from '../constants'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+
+const getIsArgumentsValid = (...args) => every(args, arg => !isNil(arg) && arg !== '')
 
 const createFunctionsContent = (functions, pageTab, projectName, showExpandButton) =>
   functions.map(func => {
@@ -70,8 +74,9 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerLabel: 'Function',
               value: func.name,
               class: 'table-cell-2',
-              getLink: tab =>
-                generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
+              getLink: tab => getIsArgumentsValid(func.hash, tab)
+                ? generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
+                : ''
             },
             {
               id: `updated.${func.ui.identifierUnique}`,

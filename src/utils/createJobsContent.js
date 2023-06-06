@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
+import { every, isNil } from 'lodash'
+
 import { FUNCTIONS_PAGE, JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB } from '../constants'
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
@@ -25,6 +27,8 @@ import { parseKeyValues } from './object'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
 import { getWorkflowDetailsLink } from '../components/Workflow/workflow.util'
+
+const getIsArgumentsValid = (...args) => every(args, arg => !isNil(arg) && arg !== '')
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
@@ -50,7 +54,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
           getLink: tab => {
             return jobName
-              ? generateLinkToDetailsPanel(
+              ? getIsArgumentsValid(job.uid, tab, job.name) ? generateLinkToDetailsPanel(
                   job.project,
                   JOBS_PAGE,
                   MONITOR_JOBS_TAB,
@@ -60,7 +64,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
                   null,
                   null,
                   job.name
-                )
+                ) : ''
               : `/projects/${job.project}/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${
                   job.name
                 }`
@@ -166,15 +170,16 @@ export const createJobsScheduleTabContent = jobs => {
           value: job.name,
           class: 'table-cell-name',
           showStatus: true,
-          getLink: tab =>
-            generateLinkToDetailsPanel(
-              job.project,
-              FUNCTIONS_PAGE,
-              null,
-              scheduleJobFunctionUid,
-              null,
-              tab
-            ),
+          getLink: tab => getIsArgumentsValid(scheduleJobFunctionUid, tab)
+            ? generateLinkToDetailsPanel(
+                job.project,
+                FUNCTIONS_PAGE,
+                null,
+                scheduleJobFunctionUid,
+                null,
+                tab
+              )
+            : '',
           type: 'link'
         },
         {

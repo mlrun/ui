@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { every, isNil } from 'lodash'
 
 import AddFeatureButton from '../elements/AddFeatureButton/AddFeatureButton'
 import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
@@ -38,6 +39,8 @@ import { ReactComponent as Nosql } from 'igz-controls/images/nosql.svg'
 import { ReactComponent as Stream } from 'igz-controls/images/stream.svg'
 import { ReactComponent as TsdbIcon } from 'igz-controls/images/tsdb-icon.svg'
 import { ReactComponent as DbIcon } from 'igz-controls/images/db-icon.svg'
+
+const getIsArgumentsValid = (...args) => every(args, arg => !isNil(arg) && arg !== '')
 
 export const createFeatureStoreContent = (content, pageTab, project, isTablePanelOpen) => {
   return content.map(contentItem => {
@@ -63,16 +66,17 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         headerLabel: 'Name',
         value: featureSet.name,
         class: 'table-cell-name',
-        getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            FEATURE_STORE_PAGE,
-            FEATURE_SETS_TAB,
-            featureSet.name,
-            featureSet.tag,
-            tab,
-            featureSet.uid
-          ),
+        getLink: tab => getIsArgumentsValid(featureSet.name, featureSet.tag, tab)
+          ? generateLinkToDetailsPanel(
+              project,
+              FEATURE_STORE_PAGE,
+              FEATURE_SETS_TAB,
+              featureSet.name,
+              featureSet.tag,
+              tab,
+              featureSet.uid
+            )
+          : '',
         showTag: true,
         showStatus: true,
         expandedCellContent: {
@@ -152,22 +156,8 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         headerLabel: 'Feature set',
         value: feature.metadata?.name,
         class: 'table-cell-2',
-        getLink: tab =>
-          generateLinkToDetailsPanel(
-            feature.metadata?.project,
-            FEATURE_STORE_PAGE,
-            FEATURE_SETS_TAB,
-            feature.metadata?.name,
-            feature.metadata?.tag,
-            tab
-          ),
-        expandedCellContent: {
-          class: 'table-cell-2',
-          value: ''
-        },
-        rowExpanded: {
-          getLink: tab =>
-            generateLinkToDetailsPanel(
+        getLink: tab => getIsArgumentsValid(feature.metadata?.name, feature.metadata?.tag, tab)
+          ? generateLinkToDetailsPanel(
               feature.metadata?.project,
               FEATURE_STORE_PAGE,
               FEATURE_SETS_TAB,
@@ -175,6 +165,22 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
               feature.metadata?.tag,
               tab
             )
+          : '',
+        expandedCellContent: {
+          class: 'table-cell-2',
+          value: ''
+        },
+        rowExpanded: {
+          getLink: tab => getIsArgumentsValid(feature.metadata?.name, feature.metadata?.tag, tab)
+            ? generateLinkToDetailsPanel(
+                feature.metadata?.project,
+                FEATURE_STORE_PAGE,
+                FEATURE_SETS_TAB,
+                feature.metadata?.name,
+                feature.metadata?.tag,
+                tab
+              )
+            : ''
         }
       },
       {
@@ -277,16 +283,17 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         headerLabel: 'Name',
         value: featureVector.name,
         class: 'table-cell-name',
-        getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            FEATURE_STORE_PAGE,
-            FEATURE_VECTORS_TAB,
-            featureVector.name,
-            featureVector.tag,
-            tab,
-            featureVector.uid
-          ),
+        getLink: tab => getIsArgumentsValid(featureVector.name, featureVector.tag, tab)
+          ? generateLinkToDetailsPanel(
+              project,
+              FEATURE_STORE_PAGE,
+              FEATURE_VECTORS_TAB,
+              featureVector.name,
+              featureVector.tag,
+              tab,
+              featureVector.uid
+            )
+          : '',
         showTag: true,
         showStatus: true,
         expandedCellContent: {

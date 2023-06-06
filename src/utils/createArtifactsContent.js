@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isNumber } from 'lodash'
+import { isNumber, every, isNil } from 'lodash'
 
 import {
   ARTIFACTS_PAGE,
@@ -111,6 +111,8 @@ const getIsTargetPathValid = (artifact, frontendSpec) =>
       })
     : false
 
+const getIsArgumentsValid = (...args) => every(args, arg => !isNil(arg) && arg !== '')
+
 export const createModelsRowData = (artifact, project, frontendSpec, showExpandButton) => {
   const iter = getIter(artifact)
   const isTargetPathValid = getIsTargetPathValid(artifact, frontendSpec)
@@ -126,17 +128,18 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
         headerLabel: 'Name',
         value: artifact.db_key,
         class: 'table-cell-name',
-        getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            MODELS_TAB,
-            MODELS_TAB,
-            artifact.db_key,
-            artifact.tag,
-            tab,
-            artifact.tree,
-            artifact.iter
-          ),
+        getLink: tab => getIsArgumentsValid(artifact.db_key, tab, artifact.tree)
+          ? generateLinkToDetailsPanel(
+              project,
+              MODELS_TAB,
+              MODELS_TAB,
+              artifact.db_key,
+              artifact.tag,
+              tab,
+              artifact.tree,
+              artifact.iter
+            )
+          : '',
         expandedCellContent: {
           class: 'table-cell-name',
           showTag: true,
@@ -261,17 +264,18 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerLabel: 'Name',
         value: artifact.db_key,
         class: 'table-cell-name',
-        getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            FILES_PAGE,
-            null,
-            artifact.db_key,
-            artifact.tag,
-            tab,
-            artifact.tree,
-            artifact.iter
-          ),
+        getLink: tab => getIsArgumentsValid(artifact.db_key, tab, artifact.tree)
+          ? generateLinkToDetailsPanel(
+              project,
+              FILES_PAGE,
+              null,
+              artifact.db_key,
+              artifact.tag,
+              tab,
+              artifact.tree,
+              artifact.iter
+            )
+          : '',
         expandedCellContent: {
           class: 'table-cell-name',
           showTag: true,
@@ -400,7 +404,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerLabel: 'Name',
         value: name,
         class: 'table-cell-name',
-        getLink: tab => artifact.metadata?.uid && name
+        getLink: tab => getIsArgumentsValid(artifact.metadata?.uid, name)
           ? generateLinkToDetailsPanel(
               project,
               MODELS_TAB,
@@ -506,17 +510,18 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerLabel: 'Name',
         value: artifact.db_key,
         class: 'table-cell-name',
-        getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            DATASETS_PAGE,
-            null,
-            artifact.db_key,
-            artifact.tag,
-            tab,
-            artifact.tree,
-            artifact.iter
-          ),
+        getLink: tab => getIsArgumentsValid(artifact.db_key, tab, artifact.tree)
+          ? generateLinkToDetailsPanel(
+              project,
+              DATASETS_PAGE,
+              null,
+              artifact.db_key,
+              artifact.tag,
+              tab,
+              artifact.tree,
+              artifact.iter
+            )
+          : '',
         expandedCellContent: {
           class: 'table-cell-name',
           showTag: true,
