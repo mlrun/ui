@@ -11,6 +11,11 @@
   border: $primaryBorder;
   border-radius: 4px;
 
+  &_disabled {
+    cursor: not-allowed;
+    border-color: $spunPearl;
+  }
+
   &_invalid {
     border: $errorBorder;
   }
@@ -19,6 +24,8 @@
     min-width: 140px;
     margin: 0;
     list-style-type: none;
+    max-height: 300px;
+    overflow: auto;
 
     &__option {
       padding: 8px 15px;
@@ -98,6 +105,14 @@
       min-height: 17px;
       cursor: pointer;
 
+      .combobox_disabled & {
+        cursor: not-allowed;
+
+        & > * {
+          color: $spunPearl;
+        }
+      }
+
       &-label {
         color: $topaz;
         user-select: none;
@@ -118,6 +133,14 @@
 
   &-icon {
     cursor: pointer;
+
+    .combobox_disabled & {
+      cursor: not-allowed;
+
+      & > * {
+        fill: $spunPearl;
+      }
+    }
 
     &_open {
       transform: rotate(90deg);
@@ -145,6 +168,7 @@
 
     &:disabled {
       background-color: transparent;
+      color: $spunPearl;
     }
   }
 

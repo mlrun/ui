@@ -26,6 +26,7 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import FilesView from './FilesView'
 
 import {
+  FILES_FILTERS,
   FILES_PAGE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
@@ -74,7 +75,7 @@ const Files = () => {
   const pageData = useMemo(() => generatePageData(selectedFile, viewMode), [selectedFile, viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][FILES_PAGE].values,
+    () => filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values,
     [filtersStore]
   )
 

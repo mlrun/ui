@@ -37,7 +37,7 @@ import './Navbar.scss'
 const Navbar = ({ projectName, setIsNavbarPinned }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isPinned, setIsPinned] = useState(
-    localStorageService.getStorageValue('mlrunUi.navbarStatic', false)
+    localStorageService.getStorageValue('mlrunUi.navbarStatic', false) === 'true'
   )
 
   const navbarClasses = classNames(

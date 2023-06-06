@@ -21,7 +21,7 @@ import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
 
 const functionsApi = {
   createNewFunction: (project, data) =>
-    mainHttpClient.post(`/func/${project}/${data.metadata.name}`, data, {
+    mainHttpClient.post(`/projects/${project}/functions/${data.metadata.name}`, data, {
       params: {
         tag: data.metadata.tag,
         versioned: true
@@ -31,9 +31,7 @@ const functionsApi = {
     mainHttpClient.delete(`/projects/${project}/functions/${func}`),
   deployFunction: data => mainHttpClient.post('/build/function', data),
   getFunctions: (project, filters, hash) => {
-    const params = {
-      project
-    }
+    const params = {}
 
     if (filters?.name) {
       params.name = `~${filters.name}`
@@ -43,14 +41,14 @@ const functionsApi = {
       params.hash_key = hash
     }
 
-    return mainHttpClient.get('/funcs', { params })
+    return mainHttpClient.get(`/projects/${project}/functions`, { params })
   },
   getFunction: (project, functionName, hash) => {
     const params = {}
 
     if (hash) params.hash_key = hash
 
-    return mainHttpClient.get(`/func/${project}/${functionName}`, { params })
+    return mainHttpClient.get(`/projects/${project}/functions/${functionName}`, { params })
   },
   getFunctionLogs: (project, name, tag, offset) => {
     const params = {

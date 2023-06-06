@@ -17,49 +17,41 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import cronstrue from 'cronstrue'
 
-import Combobox from '../../../common/Combobox/Combobox'
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import FilterParameters from './FilterParameters'
 import Input from '../../../common/Input/Input'
 import ScheduleFeatureSet from '../ScheduleFeatureSet/ScheduleFeatureSet'
 import Select from '../../../common/Select/Select'
+import UrlPath from '../UrlPath'
 import { Button } from 'igz-controls/components'
 
-import { comboboxSelectList, CSV, kindOptions, PARQUET } from './featureSetsPanelDataSource.util'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+import { CSV, kindOptions, PARQUET } from './featureSetsPanelDataSource.util'
+import { comboboxSelectList } from '../UrlPath.utils'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { pathTips } from '../../../utils/panelPathScheme'
 
 import { ReactComponent as Pencil } from 'igz-controls/images/edit.svg'
 
 import './featureSetsPanelDataSource.scss'
 
 const FeatureSetsPanelDataSourceView = ({
-  comboboxMatches,
   data,
   featureStore,
   handleKindOnChange,
   handleUrlOnBlur,
   handleUrlOnFocus,
-  handleUrlPathTypeChange,
-  handleUrlPathChange,
+  handleUrlSelectOnChange,
   setData,
   setNewFeatureSetDataSourceParseDates,
   setShowSchedule,
   setValidation,
   showSchedule,
   setNewFeatureSetSchedule,
-  urlProjectItemTypeEntered,
   validation
 }) => {
-  const generatedPathTips = useMemo(() => {
-    return pathTips(data.url.projectItemType)
-  }, [data.url.projectItemType])
-
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
       <FeatureSetsPanelSection title="Data Source">
@@ -73,29 +65,12 @@ const FeatureSetsPanelDataSourceView = ({
             options={kindOptions}
             selectedId={data.kind}
           />
-          <Combobox
-            comboboxClassName="url"
-            hideSearchInput={!urlProjectItemTypeEntered}
-            inputDefaultValue={
-              data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? data.url.projectItemType : ''
-            }
-            inputOnChange={path => {
-              handleUrlPathChange(path)
-            }}
-            inputPlaceholder={data.url.placeholder}
+          <UrlPath
+            comboboxSelectList={comboboxSelectList}
             invalid={!validation.isUrlValid}
-            invalidText={`Field must be in "${generatedPathTips[data.url.pathType]}" format`}
-            matches={comboboxMatches}
-            maxSuggestedMatches={3}
-            onBlur={handleUrlOnBlur}
-            onFocus={handleUrlOnFocus}
-            required
-            requiredText="This field is required"
-            selectDropdownList={comboboxSelectList}
-            selectOnChange={path => {
-              handleUrlPathTypeChange(path)
-            }}
-            selectPlaceholder="URL"
+            handleUrlOnBlur={handleUrlOnBlur}
+            handleUrlOnFocus={handleUrlOnFocus}
+            handleUrlSelectOnChange={handleUrlSelectOnChange}
           />
         </div>
         {data.kind !== CSV && (
@@ -152,22 +127,23 @@ const FeatureSetsPanelDataSourceView = ({
   )
 }
 
+FeatureSetsPanelDataSourceView.defaultProps = {
+  handleUrlSelectOnChange: null
+}
+
 FeatureSetsPanelDataSourceView.propTypes = {
-  comboboxMatches: PropTypes.arrayOf(PropTypes.shape({}).isRequired),
   data: PropTypes.shape({}).isRequired,
   featureStore: PropTypes.shape({}).isRequired,
   handleKindOnChange: PropTypes.func.isRequired,
   handleUrlOnBlur: PropTypes.func.isRequired,
   handleUrlOnFocus: PropTypes.func.isRequired,
-  handleUrlPathTypeChange: PropTypes.func.isRequired,
-  handleUrlPathChange: PropTypes.func.isRequired,
+  handleUrlSelectOnChange: PropTypes.func,
   setData: PropTypes.func.isRequired,
   setNewFeatureSetDataSourceParseDates: PropTypes.func.isRequired,
   setNewFeatureSetSchedule: PropTypes.func.isRequired,
   setShowSchedule: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   showSchedule: PropTypes.bool.isRequired,
-  urlProjectItemTypeEntered: PropTypes.bool.isRequired,
   validation: PropTypes.shape({}).isRequired
 }
 

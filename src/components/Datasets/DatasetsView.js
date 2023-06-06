@@ -33,7 +33,7 @@ import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Details from '../Details/Details'
 
-import { DATASET_TYPE, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { DATASET_TYPE, DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './datasets.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -89,7 +89,7 @@ const DatasetsView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
-                  filterMenuName={DATASETS_PAGE}
+                  filterMenuName={DATASETS_FILTERS}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
                   removeSelectedItem={removeDataSet}
@@ -98,7 +98,15 @@ const DatasetsView = React.forwardRef(
                 />
               </div>
               {artifactsStore.loading ? null : datasets.length === 0 ? (
-                <NoData message={getNoDataMessage(filtersStore, filters, DATASETS_PAGE)} />
+                <NoData
+                  message={getNoDataMessage(
+                    filtersStore,
+                    filters,
+                    DATASETS_PAGE,
+                    null,
+                    DATASETS_FILTERS
+                  )}
+                />
               ) : (
                 <>
                   {selectedRowData.loading && <Loader />}

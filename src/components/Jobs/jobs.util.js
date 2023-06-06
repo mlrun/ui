@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { capitalize, defaultsDeep, map, uniq } from 'lodash'
 import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
@@ -27,7 +28,8 @@ import {
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues } from '../../utils'
 import { setNotification } from '../../reducers/notificationReducer'
-import { map, set, uniq } from 'lodash'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
+import { parseKeyValues } from '../../utils/object'
 
 export const page = JOBS_PAGE
 export const getInfoHeaders = isSpark =>
@@ -36,6 +38,9 @@ export const getInfoHeaders = isSpark =>
         { label: 'UID', id: 'uid' },
         { label: 'Start time', id: 'startTime' },
         { label: 'Last Updated', id: 'updated' },
+        { label: 'Run on spot', id: 'runOnSpot' },
+        { label: 'Node selector', id: 'nodeSelectorChips' },
+        { label: 'Priority', id: 'priority' },
         { label: 'Parameters', id: 'parameters' },
         { label: 'Function', id: 'function' },
         { label: 'Function tag', id: 'functionTag' },
@@ -50,6 +55,9 @@ export const getInfoHeaders = isSpark =>
         { label: 'UID', id: 'uid' },
         { label: 'Start time', id: 'startTime' },
         { label: 'Last Updated', id: 'updated' },
+        { label: 'Run on spot', id: 'runOnSpot' },
+        { label: 'Node selector', id: 'nodeSelectorChips' },
+        { label: 'Priority', id: 'priority' },
         { label: 'Parameters', id: 'parameters' },
         { label: 'Function', id: 'function' },
         { label: 'Function tag', id: 'functionTag' },
@@ -140,17 +148,19 @@ export const generateEditableItem = (functionData, job) => {
           project: job.project
         },
         spec: {
+          hyper_param_options: {
+            param_file: job.param_file ?? '',
+            selector: job.selector ?? 'max.',
+            strategy: job.strategy ?? 'list'
+          },
           function: job.function,
           handler: job?.handler ?? '',
           hyperparams: job.hyperparams,
           input_path: job.input_path ?? '',
           inputs: job.inputs ?? {},
           output_path: job.outputPath,
-          param_file: job.param_file ?? '',
           parameters: job.parameters ?? {},
-          secret_sources: job.secret_sources ?? [],
-          selector: job.selector ?? 'max.',
-          tuning_strategy: job.tuning_strategy ?? 'list'
+          secret_sources: job.secret_sources ?? []
         }
       }
     }
@@ -250,7 +260,7 @@ export const monitorJob = (jobs_dashboard_url, item, projectName) => {
  * the promise returned by the `fetchJobFunctions` function.
  * @returns {Promise<Object>} A Promise that resolves with the enriched job run object
  */
-export const enrichRunWithFunctionTag = (
+export const enrichRunWithFunctionFields = (
   jobRun,
   fetchJobFunctions,
   fetchJobFunctionsPromiseRef
@@ -270,9 +280,23 @@ export const enrichRunWithFunctionTag = (
     .then(funcs => {
       if (funcs) {
         const tagsList = uniq(map(funcs, 'metadata.tag'))
-        set(jobRun, 'ui.functionTag', tagsList.join(', '))
+        defaultsDeep(jobRun, {
+          ui: {
+            functionTag: tagsList.join(', '),
+            runOnSpot: capitalize(funcs[0].spec.preemption_mode ?? ''),
+            nodeSelectorChips: parseKeyValues(funcs[0].spec.node_selector || {}),
+            priority: generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
+          }
+        })
       } else {
-        set(jobRun, 'ui.functionTag', '')
+        defaultsDeep(jobRun, {
+          ui: {
+            functionTag: '',
+            runOnSpot: '',
+            nodeSelectorChips: [],
+            priority: ''
+          }
+        })
       }
 
       return jobRun

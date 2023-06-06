@@ -25,11 +25,7 @@ import Input from '../../../common/Input/Input'
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import DatePicker from '../../../common/DatePicker/DatePicker'
 
-import {
-  END_TIME,
-  START_TIME,
-  TIME_FIELD
-} from './featureSetsPanelDataSource.util'
+import { END_TIME, START_TIME, TIME_FIELD } from './featureSetsPanelDataSource.util'
 import featureStoreActions from '../../../actions/featureStore'
 
 const FilterParameters = ({
@@ -72,9 +68,7 @@ const FilterParameters = ({
   ])
 
   const handleTimestampColumnOnBlur = event => {
-    if (
-      featureStore.newFeatureSet.spec.source.time_field !== event.target.value
-    ) {
+    if (featureStore.newFeatureSet.spec.source.time_field !== event.target.value) {
       setNewFeatureSetDataSourceTimestampColumn(event.target.value)
       setData(state => ({
         ...state,
@@ -82,11 +76,7 @@ const FilterParameters = ({
       }))
     }
 
-    if (
-      data.endTime.length === 0 &&
-      data.startTime.length === 0 &&
-      data.timeField.length === 0
-    ) {
+    if (data.endTime.length === 0 && data.startTime.length === 0 && data.timeField.length === 0) {
       setValidation(prevState => ({
         ...prevState,
         isTimeFieldValid: true,
@@ -108,9 +98,7 @@ const FilterParameters = ({
 
   const handleChangeDates = (date, type) => {
     const setTime =
-      type === START_TIME
-        ? setNewFeatureSetDataSourceStartTime
-        : setNewFeatureSetDataSourceEndTime
+      type === START_TIME ? setNewFeatureSetDataSourceStartTime : setNewFeatureSetDataSourceEndTime
 
     if (date[0]) {
       setTime(date[0].toISOString())
@@ -162,9 +150,7 @@ const FilterParameters = ({
               [TIME_FIELD]: value
             }))
           }
-          required={Boolean(
-            data.timeField.length > 0 || data.startTime || data.endTime
-          )}
+          required={Boolean(data.timeField.length > 0 || data.startTime || data.endTime)}
           requiredText="Timestamp key is required"
           setInvalid={value =>
             setValidation(state => ({
@@ -185,8 +171,7 @@ const FilterParameters = ({
           label="Start time"
           onChange={date => handleChangeDates(date, START_TIME)}
           required={Boolean(
-            (data.timeField.length > 0 || data.startTime.length > 0) &&
-              data.endTime.length === 0
+            (data.timeField.length > 0 || data.startTime.length > 0) && data.endTime.length === 0
           )}
           setInvalid={value =>
             setValidation(state => ({
@@ -205,8 +190,7 @@ const FilterParameters = ({
           label="End time"
           onChange={date => handleChangeDates(date, END_TIME)}
           required={Boolean(
-            (data.timeField.length > 0 || data.endTime.length > 0) &&
-              data.startTime.length === 0
+            (data.timeField.length > 0 || data.endTime.length > 0) && data.startTime.length === 0
           )}
           setInvalid={value =>
             setValidation(state => ({

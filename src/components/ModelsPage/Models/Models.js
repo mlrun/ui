@@ -33,7 +33,8 @@ import {
   MODELS_TAB,
   TAG_FILTER_ALL_ITEMS,
   FILTER_MENU_MODAL,
-  GROUP_BY_NONE
+  GROUP_BY_NONE,
+  MODELS_FILTERS
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -83,7 +84,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     useModelsPage()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const modelsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][MODELS_TAB].values,
+    () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
     [filtersStore]
   )
 

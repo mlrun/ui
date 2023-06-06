@@ -56,7 +56,7 @@ const projectsApi = {
     }),
   getProjectFiles: project => mainHttpClient.get(`/projects/${project}/artifacts?category=other`),
   getProjectFunctions: (project, cancelToken) =>
-    mainHttpClient.get(`/funcs?project=${project}`, {
+    mainHttpClient.get(`/projects/${project}/functions`, {
       cancelToken: cancelToken
     }),
   getProjectModels: (project, cancelToken) =>

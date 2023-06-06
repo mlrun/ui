@@ -32,7 +32,21 @@
   }
 
   &_disabled {
-    color: $doveGray;
+    color: $spunPearl;
     cursor: not-allowed;
+
+    svg {
+      &.checked {
+        path {
+          fill: $spunPearl;
+        }
+      }
+
+      &.unchecked {
+        path {
+          fill: $spunPearl;
+        }
+      }
+    }
   }
 }

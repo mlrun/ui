@@ -23,6 +23,11 @@
           }
         }
       }
+
+      .link {
+        display: flex;
+        width: 100%;
+      }
     }
 
     .link-subtext {
@@ -50,9 +55,14 @@
 
     .status {
       display: flex;
+      flex: 0 1 12px;
       align-items: center;
       justify-content: center;
-      margin-right: 5px;
+      margin-left: 5px;
+
+      & > * {
+        margin: 0;
+      }
     }
   }
 }

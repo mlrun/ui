@@ -32,7 +32,7 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 
-import { ARTIFACT_TYPE, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { ARTIFACT_TYPE, FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './files.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -89,7 +89,7 @@ const FilesView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
-                  filterMenuName={FILES_PAGE}
+                  filterMenuName={FILES_FILTERS}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
                   removeSelectedItem={removeFile}
@@ -98,7 +98,9 @@ const FilesView = React.forwardRef(
                 />
               </div>
               {artifactsStore.loading ? null : files.length === 0 ? (
-                <NoData message={getNoDataMessage(filtersStore, filters, FILES_PAGE)} />
+                <NoData
+                  message={getNoDataMessage(filtersStore, filters, FILES_PAGE, null, FILES_FILTERS)}
+                />
               ) : (
                 <>
                   {selectedRowData.loading && <Loader />}
