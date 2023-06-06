@@ -562,7 +562,6 @@ export const generateRequestData = (
   }
 
   if (jobsStore.newJob.task.spec.hyper_param_options.selector.result.length > 0) {
-    taskSpec.selector = `${jobsStore.newJob.task.spec.hyper_param_options.selector.criteria}.${jobsStore.newJob.task.spec.hyper_param_options.selector.result}`
     taskSpec.hyper_param_options.selector = `${jobsStore.newJob.task.spec.hyper_param_options.selector.criteria}.${jobsStore.newJob.task.spec.hyper_param_options.selector.result}`
   } else {
     delete taskSpec.hyper_param_options.selector
