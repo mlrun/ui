@@ -29,8 +29,6 @@ import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsI
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import detailsActions from '../../actions/details'
 
-import './detailsInfo.scss'
-
 const DetailsInfo = React.forwardRef(
   (
     { detailsStore, formState, pageData, selectedItem, setChangesData, setChangesCounter },

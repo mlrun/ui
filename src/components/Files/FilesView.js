@@ -32,11 +32,12 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 
-import { ARTIFACT_TYPE, FILES_FILTERS, FILES_PAGE } from '../../constants'
+import { ARTIFACT_TYPE, FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './files.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { removeFile } from '../../reducers/artifactsReducer'
+import Details from '../Details/Details'
 
 const FilesView = React.forwardRef(
   (
@@ -58,7 +59,8 @@ const FilesView = React.forwardRef(
       setSelectedFile,
       setSelectedRowData,
       tableContent,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      viewMode
     },
     ref
   ) => {
@@ -127,6 +129,16 @@ const FilesView = React.forwardRef(
                   </Table>
                 </>
               )}
+              {viewMode === FULL_VIEW_MODE && (
+                <Details
+                  actionsMenu={actionsMenu}
+                  detailsMenu={pageData.details.menu}
+                  handleRefresh={handleRefresh}
+                  isDetailsScreen
+                  pageData={pageData}
+                  selectedItem={selectedFile}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -140,6 +152,10 @@ const FilesView = React.forwardRef(
     )
   }
 )
+
+FilesView.defaultProps = {
+  viewMode: null
+}
 
 FilesView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -157,7 +173,8 @@ FilesView.propTypes = {
   selectedRowData: PropTypes.object.isRequired,
   setSelectedFile: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  toggleConvertedYaml: PropTypes.func.isRequired,
+  viewMode: PropTypes.string
 }
 
 export default FilesView

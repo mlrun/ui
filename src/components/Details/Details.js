@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useCallback, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
@@ -93,6 +93,7 @@ const Details = ({
   const [historyIsBlocked, setHistoryIsBlocked] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const location = useLocation()
 
   const detailsPanelClassNames = classnames(
     'table__item',
@@ -145,7 +146,7 @@ const Details = ({
         setInfoContent(generateFeatureStoreContent(pageData.details.type, selectedItem))
       }
     }
-  }, [pageData.details.type, params.projectName, selectedItem, setInfoContent])
+  }, [pageData.details.type, params.projectName, selectedItem, setInfoContent, location.search])
 
   useEffect(() => {
     return () => {
@@ -280,10 +281,10 @@ const Details = ({
               applyChangesRef={applyChangesRef}
               cancelChanges={cancelChanges}
               getCloseDetailsLink={getCloseDetailsLink}
+              isDetailsScreen={isDetailsScreen}
               handleCancel={handleCancel}
               handleRefresh={handleRefresh}
               handleShowWarning={handleShowWarning}
-              isDetailsScreen={isDetailsScreen}
               pageData={pageData}
               selectedItem={selectedItem}
               setIteration={setIteration}
@@ -341,6 +342,7 @@ Details.defaultProps = {
   cancelRequest: () => {},
   formInitialValues: {},
   getCloseDetailsLink: null,
+  handleCancel: null,
   handleRefresh: () => {},
   isDetailsScreen: false,
   item: {},
@@ -363,7 +365,7 @@ Details.propTypes = {
   ).isRequired,
   formInitialValues: PropTypes.object,
   getCloseDetailsLink: PropTypes.func,
-  handleCancel: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func,
   handleRefresh: PropTypes.func,
   isDetailsScreen: PropTypes.bool,
   pageData: PropTypes.shape({}).isRequired,

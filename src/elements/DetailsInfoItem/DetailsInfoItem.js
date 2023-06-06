@@ -215,7 +215,7 @@ const DetailsInfoItem = React.forwardRef(
     } else if (link && info) {
       return (
         <Link className="link details-item__data details-item__link" to={link}>
-          {info}
+          <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
         </Link>
       )
     } else if ((typeof info !== 'object' || Array.isArray(info)) && item?.editModeEnabled) {
@@ -234,7 +234,7 @@ const DetailsInfoItem = React.forwardRef(
             </span>
           ) : (
             <>
-              {info}
+              <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
               <RoundedIcon
                 className="details-item__data-btn-edit"
                 onClick={() => {
@@ -252,7 +252,15 @@ const DetailsInfoItem = React.forwardRef(
       )
     }
 
-    return <div className="details-item__data">{info}</div>
+    return (
+      <div className="details-item__data">
+        {typeof info === 'string' ? (
+          <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
+        ) : (
+          info
+        )}
+      </div>
+    )
   }
 )
 

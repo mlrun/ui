@@ -182,7 +182,9 @@ const TabsSlider = ({ initialTab, onClick, skipLink, sliderStyle, tabsList }) =>
                 <Link
                   className={tabClassName}
                   data-tab={tab.id}
-                  to={location.pathname?.replace(/^$|([^/]+$)/, tab.id)}
+                  to={`${location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${
+                    location.search ?? ''
+                  }`}
                   onClick={() => onSelectTab(tab)}
                   key={tab.id}
                 >

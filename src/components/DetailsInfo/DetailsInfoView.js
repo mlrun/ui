@@ -22,6 +22,10 @@ import PropTypes from 'prop-types'
 import { isNil } from 'lodash'
 import classnames from 'classnames'
 
+import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
+import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
+import { Tip } from 'igz-controls/components'
+
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   ARTIFACTS_PAGE,
@@ -36,10 +40,9 @@ import {
 import { parseKeyValues } from '../../utils'
 import { getChipOptions } from '../../utils/getChipOptions'
 
-import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
-import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
-import { Tip } from 'igz-controls/components'
 import { ReactComponent as RightArrow } from 'igz-controls/images/ic_arrow-right.svg'
+
+import './detailsInfo.scss'
 
 const DetailsInfoView = React.forwardRef(
   (
@@ -59,135 +62,145 @@ const DetailsInfoView = React.forwardRef(
     },
     ref
   ) => {
+    const wrapperClassNames = classnames(
+      pageData.details.additionalInfo &&
+        !pageData.details.additionalInfo.hidden &&
+        'item-info__details-wrapper'
+    )
+
     return (
       !isEveryObjectValueEmpty(detailsStore.infoContent) && (
         <div className="item-info">
-          {(pageData.page === ARTIFACTS_PAGE ||
-            pageData.page === DATASETS_PAGE ||
-            pageData.page === FILES_PAGE ||
-            pageData.page === MODELS_PAGE ||
-            pageData.page === FEATURE_STORE_PAGE) &&
-            params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
-          <ul className="item-info__details">
-            {pageData.details.infoHeaders?.map(header => {
-              let chipsData = {
-                chips: [],
-                chipOptions: {},
-                delimiter: null
-              }
-              let chipsClassName = ''
-              const detailsItemClassNames = classnames(
-                'details-item',
-                header.hidden && 'details-item_hidden'
-              )
-              let func = ''
-              let state = ''
-              let info = null
+          <div className={wrapperClassNames}>
+            {(pageData.page === ARTIFACTS_PAGE ||
+              pageData.page === DATASETS_PAGE ||
+              pageData.page === FILES_PAGE ||
+              pageData.page === MODELS_PAGE ||
+              pageData.page === FEATURE_STORE_PAGE) &&
+              params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
+            <ul className="item-info__details">
+              {pageData.details.infoHeaders?.map(header => {
+                let chipsData = {
+                  chips: [],
+                  chipOptions: {},
+                  delimiter: null
+                }
+                let chipsClassName = ''
+                const detailsItemClassNames = classnames(
+                  'details-item',
+                  header.hidden && 'details-item_hidden'
+                )
+                let func = ''
+                let state = ''
+                let info = null
 
-              if (pageData.page === JOBS_PAGE) {
-                if (detailsStore.infoContent[header.id]?.value === selectedItem.parametersChips) {
-                  chipsData.chips = selectedItem.parametersChips
-                  chipsData.chipOptions = getChipOptions('parameters')
-                } else if (
-                  detailsStore.infoContent[header.id]?.value === selectedItem.resultsChips
-                ) {
-                  chipsData.chips = selectedItem.resultsChips
-                  chipsData.chipOptions = getChipOptions('results')
-                } else if (detailsStore.infoContent[header.id]?.value === selectedItem.labels) {
-                  chipsData.chips = selectedItem.labels
-                  chipsData.chipOptions = getChipOptions('labels')
-                } else if (
+                if (pageData.page === JOBS_PAGE) {
+                  if (detailsStore.infoContent[header.id]?.value === selectedItem.parametersChips) {
+                    chipsData.chips = selectedItem.parametersChips
+                    chipsData.chipOptions = getChipOptions('parameters')
+                  } else if (
+                    detailsStore.infoContent[header.id]?.value === selectedItem.resultsChips
+                  ) {
+                    chipsData.chips = selectedItem.resultsChips
+                    chipsData.chipOptions = getChipOptions('results')
+                  } else if (detailsStore.infoContent[header.id]?.value === selectedItem.labels) {
+                    chipsData.chips = selectedItem.labels
+                    chipsData.chipOptions = getChipOptions('labels')
+                  } else if (
                   detailsStore.infoContent[header.id]?.value === selectedItem.ui.nodeSelectorChips
                 ) {
                   chipsData.chips = selectedItem.ui.nodeSelectorChips
                   chipsData.chipOptions = getChipOptions('results')
                 }
 
-                func =
-                  detailsStore.infoContent[header.id]?.value === selectedItem.function
-                    ? selectedItem.function
-                    : ''
-                state =
-                  detailsStore.infoContent[header.id]?.value === selectedItem.state?.value
-                    ? selectedItem.state?.value
-                    : ''
-                info = detailsStore.infoContent[header.id]?.value
-              } else if (
-                pageData.page === ARTIFACTS_PAGE ||
-                pageData.page === DATASETS_PAGE ||
-                pageData.page === FILES_PAGE ||
-                pageData.page === MODELS_PAGE ||
-                pageData.page === FEATURE_STORE_PAGE
-              ) {
-                if (header.id === 'labels') {
-                  chipsData.chips = formState.values.labels
-                    ? parseKeyValues(formState.values.labels)
-                    : parseKeyValues(detailsStore.infoContent[header.id]?.value)
-                  chipsData.chipOptions = getChipOptions(header.id)
-                }
-                if (header.id === 'metrics') {
-                  chipsData.chips = parseKeyValues(detailsStore.infoContent[header.id]?.value)
-                  chipsData.chipOptions = getChipOptions(header.id)
-                } else if (header.id === 'relations') {
-                  chipsData.chips = parseKeyValues(detailsStore.infoContent[header.id]?.value)
-                  chipsData.chipOptions = getChipOptions(header.id)
-                  chipsData.delimiter = <RightArrow />
+                  func =
+                    detailsStore.infoContent[header.id]?.value === selectedItem.function
+                      ? selectedItem.function
+                      : ''
+                  state =
+                    detailsStore.infoContent[header.id]?.value === selectedItem.state?.value
+                      ? selectedItem.state?.value
+                      : ''
+                  info = detailsStore.infoContent[header.id]?.value
+                } else if (
+                  pageData.page === ARTIFACTS_PAGE ||
+                  pageData.page === DATASETS_PAGE ||
+                  pageData.page === FILES_PAGE ||
+                  pageData.page === MODELS_PAGE ||
+                  pageData.page === FEATURE_STORE_PAGE
+                ) {
+                  if (header.id === 'labels') {
+                    chipsData.chips = formState.values.labels
+                      ? parseKeyValues(formState.values.labels)
+                      : parseKeyValues(detailsStore.infoContent[header.id]?.value)
+                    chipsData.chipOptions = getChipOptions(header.id)
+                  }
+                  if (header.id === 'metrics') {
+                    chipsData.chips = parseKeyValues(detailsStore.infoContent[header.id]?.value)
+                    chipsData.chipOptions = getChipOptions(header.id)
+                  } else if (header.id === 'relations') {
+                    chipsData.chips = parseKeyValues(detailsStore.infoContent[header.id]?.value)
+                    chipsData.chipOptions = getChipOptions(header.id)
+                    chipsData.delimiter = <RightArrow />
+                  }
+
+                  info = !isNil(detailsStore.changes.data[header.id])
+                    ? detailsStore.changes.data[header.id].currentFieldValue
+                    : selectedItem && detailsStore.infoContent[header.id]?.value
+                } else if (pageData.page === FUNCTIONS_PAGE) {
+                  info =
+                    header.id === 'kind'
+                      ? detailsStore.infoContent[header.id]?.value || 'Local'
+                      : detailsStore.infoContent[header.id]?.value || ''
                 }
 
-                info = !isNil(detailsStore.changes.data[header.id])
-                  ? detailsStore.changes.data[header.id].currentFieldValue
-                  : selectedItem && detailsStore.infoContent[header.id]?.value
-              } else if (pageData.page === FUNCTIONS_PAGE) {
-                info =
-                  header.id === 'kind'
-                    ? detailsStore.infoContent[header.id]?.value || 'Local'
-                    : detailsStore.infoContent[header.id]?.value || ''
-              }
-
-              return (
-                <li className={detailsItemClassNames} key={header.id}>
-                  {header.id === 'sources' ? (
-                    <ArtifactInfoSources header={header.label} sources={sources} />
-                  ) : (
-                    <>
-                      <div className="details-item__header">
-                        {header.label}
-                        {header.tip && <Tip className="details-item__tip" text={header.tip} />}
-                      </div>
-                      <DetailsInfoItem
-                        changesData={detailsStore.changes.data}
-                        chipsClassName={chipsClassName}
-                        chipsData={chipsData}
-                        currentField={header.id}
-                        detailsInfoDispatch={detailsInfoDispatch}
-                        detailsInfoState={detailsInfoState}
-                        editableFieldType={detailsInfoState.editMode.fieldType}
-                        formState={formState}
-                        func={func}
-                        handleDiscardChanges={handleDiscardChanges}
-                        handleFinishEdit={handleFinishEdit}
-                        info={info}
-                        isFieldInEditMode={detailsInfoState.editMode.field === header.id}
-                        item={detailsStore.infoContent[header.id]}
-                        link={detailsStore.infoContent[header.id]?.link}
-                        onClick={handleInfoItemClick}
-                        params={params}
-                        ref={ref}
-                        setChangesData={setChangesData}
-                        state={state}
-                      />
-                    </>
-                  )}
-                </li>
-              )
-            })}
-          </ul>
-          {pageData.details.additionalInfo && !pageData.details.additionalInfo.hidden && (
-            <>
-              <h3 className="item-info__header">{pageData.details.additionalInfo.header}</h3>
-              <ul className="item-info__details">{pageData.details.additionalInfo.body}</ul>
-            </>
-          )}
+                return (
+                  <li className={detailsItemClassNames} key={header.id}>
+                    {header.id === 'sources' ? (
+                      <ArtifactInfoSources header={header.label} sources={sources} />
+                    ) : (
+                      <>
+                        <div className="details-item__header">
+                          {header.label}
+                          {header.tip && <Tip className="details-item__tip" text={header.tip} />}
+                        </div>
+                        <DetailsInfoItem
+                          changesData={detailsStore.changes.data}
+                          chipsClassName={chipsClassName}
+                          chipsData={chipsData}
+                          currentField={header.id}
+                          detailsInfoDispatch={detailsInfoDispatch}
+                          detailsInfoState={detailsInfoState}
+                          editableFieldType={detailsInfoState.editMode.fieldType}
+                          formState={formState}
+                          func={func}
+                          handleDiscardChanges={handleDiscardChanges}
+                          handleFinishEdit={handleFinishEdit}
+                          info={info}
+                          isFieldInEditMode={detailsInfoState.editMode.field === header.id}
+                          item={detailsStore.infoContent[header.id]}
+                          link={detailsStore.infoContent[header.id]?.link}
+                          onClick={handleInfoItemClick}
+                          params={params}
+                          ref={ref}
+                          setChangesData={setChangesData}
+                          state={state}
+                        />
+                      </>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+          <div className={wrapperClassNames}>
+            {pageData.details.additionalInfo && !pageData.details.additionalInfo.hidden && (
+              <>
+                <h3 className="item-info__header">{pageData.details.additionalInfo.header}</h3>
+                <ul className="item-info__details">{pageData.details.additionalInfo.body}</ul>
+              </>
+            )}
+          </div>
         </div>
       )
     )

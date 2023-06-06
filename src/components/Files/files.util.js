@@ -20,6 +20,7 @@ such restriction.
 
 import {
   FILES_PAGE,
+  FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
@@ -76,7 +77,7 @@ export const infoHeaders = [
   { label: 'Sources', id: 'sources' }
 ]
 
-export const generatePageData = selectedFile => {
+export const generatePageData = (selectedFile, viewMode) => {
   return {
     page: FILES_PAGE,
     details: {
@@ -87,7 +88,9 @@ export const generatePageData = selectedFile => {
         header: 'Producer',
         body: generateProducerDetailsInfo(selectedFile),
         hidden: !selectedFile.producer
-      }
+      },
+      hideBackBtn: viewMode === FULL_VIEW_MODE,
+      withToggleViewBtn: true
     }
   }
 }
