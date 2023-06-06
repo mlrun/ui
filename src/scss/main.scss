@@ -366,6 +366,21 @@ main {
       position: relative;
       z-index: 2;
 
+      &__cell {
+        .status {
+          display: flex;
+          flex: 0 1 12px;
+          align-items: center;
+          justify-content: center;
+          margin-left: 5px;
+          min-width: 12px;
+
+          & > * {
+            margin: 0;
+          }
+        }
+      }
+
       .table-row {
         background-color: $white;
 

@@ -67,6 +67,13 @@ const TableCell = ({
   } else if (firstCell && !link) {
     return (
       <td className={`table-body__cell ${data.class} ${className}`}>
+        <div className="data-ellipsis">
+          {data && (
+            <Tooltip template={<TextTooltipTemplate text={data.tooltip || data.value} />}>
+              {data.value}
+            </Tooltip>
+          )}
+        </div>
         {item.state && stateValue && stateLabel && (
           <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
             <i className={stateClassName} />
@@ -77,16 +84,6 @@ const TableCell = ({
             <i className={`${item.status[0].toLowerCase()}${item.status.slice(1)}`} />
           </Tooltip>
         )}
-        <span className="cell_name data-ellipsis">
-          {data && (
-            <Tooltip
-              className="text_small"
-              template={<TextTooltipTemplate text={data.tooltip || data.value} />}
-            >
-              {data.value}
-            </Tooltip>
-          )}
-        </span>
         {showExpandButton && (
           <Arrow onClick={e => handleExpandRow(e, item)} className="expand-arrow" />
         )}

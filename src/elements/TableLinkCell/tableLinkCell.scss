@@ -52,17 +52,5 @@
         width: auto;
       }
     }
-
-    .status {
-      display: flex;
-      flex: 0 1 12px;
-      align-items: center;
-      justify-content: center;
-      margin-left: 5px;
-
-      & > * {
-        margin: 0;
-      }
-    }
   }
 }
