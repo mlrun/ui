@@ -269,7 +269,7 @@ main {
               .table-cell-icon {
                 .actions-menu {
                   &__container {
-                    display: block;
+                    display: flex;
 
                     .btn {
                       min-width: 24px;

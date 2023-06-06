@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
 
@@ -33,6 +33,7 @@ import {
   DATASETS_PAGE,
   DETAILS_ARTIFACTS_TAB,
   FILES_PAGE,
+  FULL_VIEW_MODE,
   JOBS_PAGE,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE
@@ -40,10 +41,13 @@ import {
 import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
+import { getViewMode } from '../../../utils/helper'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
+import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
+import { ReactComponent as Popin } from 'igz-controls/images/pop_in.svg'
 
 const DetailsHeader = ({
   actionsMenu,
@@ -63,7 +67,9 @@ const DetailsHeader = ({
   const detailsStore = useSelector(store => store.detailsStore)
   const location = useLocation()
   const params = useParams()
-  const { actionButton } = pageData.details
+  const navigate = useNavigate()
+  const viewMode = getViewMode(window.location.search)
+  const { actionButton, withToggleViewBtn } = pageData.details
 
   const {
     value: stateValue,
@@ -91,7 +97,7 @@ const DetailsHeader = ({
     <div className="item-header">
       <div className="item-header__data">
         <h3 className="item-header__title">
-          {isDetailsScreen && (
+          {isDetailsScreen && !pageData.details.hideBackBtn && (
             <Link
               className="item-header__back-btn"
               to={
@@ -230,32 +236,62 @@ const DetailsHeader = ({
           </RoundedIcon>
         )}
         <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
-        <Link
-          className="details-close-btn"
-          data-testid="details-close-btn"
-          to={
-            getCloseDetailsLink
-              ? getCloseDetailsLink(selectedItem.name)
-              : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                  params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                }`
-          }
-          onClick={handleCancelClick}
-        >
-          <RoundedIcon tooltipText="Close">
-            <Close />
-          </RoundedIcon>
-        </Link>
+        {!pageData.details.hideBackBtn && (
+          <Link
+            className="details-close-btn"
+            data-testid="details-close-btn"
+            to={
+              getCloseDetailsLink
+                ? getCloseDetailsLink(selectedItem.name)
+                : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
+                    params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+                  }`
+            }
+            onClick={handleCancelClick}
+          >
+            <RoundedIcon tooltipText="Close">
+              <Close />
+            </RoundedIcon>
+          </Link>
+        )}
+        {withToggleViewBtn && (
+          <>
+            {viewMode !== FULL_VIEW_MODE && (
+              <RoundedIcon
+                onClick={() => {
+                  navigate(`${location.pathname}${location.search ? '&' : '?'}view=full`)
+                }}
+                tooltipText="Full view"
+              >
+                <Popout />
+              </RoundedIcon>
+            )}
+            {viewMode === FULL_VIEW_MODE && (
+              <RoundedIcon
+                onClick={() => {
+                  navigate(`${location.pathname.replace(/(\?|&)view=full(&|$)/, '$1')}`)
+                }}
+                tooltipText="Table view"
+              >
+                <Popin />
+              </RoundedIcon>
+            )}
+          </>
+        )}
       </div>
     </div>
   )
+}
+
+DetailsHeader.defaultProps = {
+  handleCancel: null
 }
 
 DetailsHeader.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyChanges: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
-  handleCancel: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func,
   handleRefresh: PropTypes.func,
   handleShowWarning: PropTypes.func.isRequired,
   isDetailsScreen: PropTypes.bool.isRequired,

@@ -51,6 +51,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { getViewMode } from '../../utils/helper'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -69,7 +70,8 @@ const Files = () => {
   const location = useLocation()
   const dispatch = useDispatch()
   const filesRef = useRef(null)
-  const pageData = useMemo(() => generatePageData(selectedFile), [selectedFile])
+  const viewMode = getViewMode(window.location.search)
+  const pageData = useMemo(() => generatePageData(selectedFile, viewMode), [selectedFile, viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][FILES_PAGE].values,
@@ -289,6 +291,7 @@ const Files = () => {
       setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
+      viewMode={viewMode}
     />
   )
 }

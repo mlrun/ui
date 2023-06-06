@@ -25,6 +25,10 @@ export const getUrlMode = search => {
   return new URLSearchParams(search).get('mode')?.toLowerCase()
 }
 
+export const getViewMode = search => {
+  return new URLSearchParams(search).get('view')?.toLowerCase()
+}
+
 export const isPanelOpened = search => {
   return new URLSearchParams(search).get('openPanel')?.toLowerCase() === 'true'
 }

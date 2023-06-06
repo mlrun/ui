@@ -134,6 +134,10 @@
           }
         }
       }
+
+      &__content {
+        border-top: $secondaryBorder;
+      }
     }
 
     &_inputs {
