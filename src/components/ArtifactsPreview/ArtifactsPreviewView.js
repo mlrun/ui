@@ -56,11 +56,11 @@ const ArtifactsPreviewView = ({
         openByDefault={!showAccordion}
       >
         <div className="artifact-preview__wrapper">
-          <div className="artifact-preview__header">
-            <h5 className="artifact-preview__header-title">
-              {preview.header && preview.header}
-            </h5>
-          </div>
+          {preview.header && (
+            <div className="artifact-preview__header">
+              <h5 className="artifact-preview__header-title">{preview.header}</h5>
+            </div>
+          )}
           <div className={className}>
             {preview?.type === 'error' ? (
               <PreviewError
