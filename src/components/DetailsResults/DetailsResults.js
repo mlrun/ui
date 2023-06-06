@@ -57,7 +57,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
       isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
     )
 
-  return (!job.iterationStats.length && job.error) || !job.results ? (
+  return !job.iterationStats.length || job.error || isEmpty(job.results) ? (
     <NoData />
   ) : (
     <div className="table__item-results">
