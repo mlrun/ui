@@ -57,7 +57,11 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
       isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
     )
 
-  return (
+  return (!job.iterationStats.length && job.error) ||
+    (!job.iterationStats.length && isEmpty(job.results) && !job.iterations?.length) ||
+    job.error ? (
+    <NoData />
+  ) : (
     <div className="table__item-results">
       <div className="table__content">
         <div className="table__wrapper">
@@ -173,15 +177,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                   )
                 })}
               </tbody>
-            ) : (
-              <tbody className="table-body">
-                <tr>
-                  <td>
-                    <NoData />
-                  </td>
-                </tr>
-              </tbody>
-            )}
+            ) : null}
           </table>
         </div>
       </div>
