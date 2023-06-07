@@ -35,11 +35,16 @@ const ArtifactsFilters = () => {
     form.change(ITERATIONS_FILTER, value ? SHOW_ITERATIONS : '')
   }
 
+  const handleLabelsChange = value => {
+    form.change(LABELS_FILTER, value || '')
+  }
+
   return (
     <div className="artifacts-filters">
       <h3 className="artifacts-filters__header">Filter by</h3>
       <div className="form-row">
-        <FormInput label="Labels" name={LABELS_FILTER} />
+        <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
+        <OnChange name={LABELS_FILTER}>{handleLabelsChange}</OnChange>
       </div>
       <div className="form-row">
         <FormTagFilter label="Version tag" name={TAG_FILTER} />
