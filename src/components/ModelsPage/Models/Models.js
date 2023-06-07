@@ -57,6 +57,7 @@ import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
+import { getViewMode } from '../../../utils/helper'
 
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
@@ -74,7 +75,11 @@ const Models = ({ fetchModelFeatureVector }) => {
   const location = useLocation()
   const dispatch = useDispatch()
   const modelsRef = useRef(null)
-  const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
+  const viewMode = getViewMode(window.location.search)
+  const pageData = useMemo(
+    () => generatePageData(selectedModel, viewMode),
+    [selectedModel, viewMode]
+  )
   const { fetchData, models, allModels, setModels, setAllModels, toggleConvertedYaml } =
     useModelsPage()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -318,6 +323,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
+      viewMode={viewMode}
     />
   )
 }

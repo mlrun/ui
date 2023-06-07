@@ -31,8 +31,9 @@ import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModa
 import Loader from '../../common/Loader/Loader'
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
+import Details from '../Details/Details'
 
-import { DATASET_TYPE, DATASETS_FILTERS, DATASETS_PAGE } from '../../constants'
+import { DATASET_TYPE, DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './datasets.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -58,7 +59,8 @@ const DatasetsView = React.forwardRef(
       setSelectedDataset,
       setSelectedRowData,
       tableContent,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      viewMode
     },
     ref
   ) => {
@@ -133,6 +135,16 @@ const DatasetsView = React.forwardRef(
                   </Table>
                 </>
               )}
+              {viewMode === FULL_VIEW_MODE && (
+                <Details
+                  actionsMenu={actionsMenu}
+                  detailsMenu={pageData.details.menu}
+                  handleRefresh={handleRefresh}
+                  isDetailsScreen
+                  pageData={pageData}
+                  selectedItem={selectedDataset}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -146,6 +158,10 @@ const DatasetsView = React.forwardRef(
     )
   }
 )
+
+DatasetsView.defaultProps = {
+  viewMode: null
+}
 
 DatasetsView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -165,7 +181,8 @@ DatasetsView.propTypes = {
   setSelectedDataset: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  toggleConvertedYaml: PropTypes.func.isRequired,
+  viewMode: PropTypes.string
 }
 
 export default DatasetsView

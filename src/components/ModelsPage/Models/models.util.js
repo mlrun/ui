@@ -26,7 +26,8 @@ import {
   TAG_FILTER,
   MODELS_PAGE,
   MODELS_TAB,
-  TAG_LATEST
+  TAG_LATEST,
+  FULL_VIEW_MODE
 } from '../../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { applyTagChanges } from '../../../utils/artifacts.util'
@@ -151,7 +152,7 @@ export const generateModelsDetailsMenu = selectedModel => [
   }
 ]
 
-export const generatePageData = selectedItem => ({
+export const generatePageData = (selectedItem, viewMode) => ({
   page: MODELS_PAGE,
   details: {
     menu: generateModelsDetailsMenu(selectedItem),
@@ -161,7 +162,9 @@ export const generatePageData = selectedItem => ({
       header: 'Producer',
       body: generateProducerDetailsInfo(selectedItem),
       hidden: !selectedItem.producer
-    }
+    },
+    hideBackBtn: viewMode === FULL_VIEW_MODE,
+    withToggleViewBtn: true
   }
 })
 

@@ -24,6 +24,7 @@ import { generateProducerDetailsInfo } from '../../utils/generateProducerDetails
 import {
   DATASETS,
   DATASETS_PAGE,
+  FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
@@ -85,7 +86,7 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   }
 ]
 
-export const generatePageData = selectedItem => ({
+export const generatePageData = (selectedItem, viewMode) => ({
   page: DATASETS_PAGE,
   details: {
     menu: generateDataSetsDetailsMenu(selectedItem),
@@ -95,7 +96,9 @@ export const generatePageData = selectedItem => ({
       header: 'Producer',
       body: generateProducerDetailsInfo(selectedItem),
       hidden: !selectedItem.item?.producer
-    }
+    },
+    hideBackBtn: viewMode === FULL_VIEW_MODE,
+    withToggleViewBtn: true
   }
 })
 

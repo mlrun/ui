@@ -72,7 +72,8 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
   } else {
     return {
       hash: {
-        value: selectedItem.hash ?? ''
+        value: selectedItem.hash ?? '',
+        copyToClipboard: selectedItem.hash?.length > 0
       },
       db_key: {
         value: selectedItem.db_key
@@ -134,7 +135,8 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         link: `${generateLinkPath(selectedItem.feature_vector)}/overview`
       },
       tree: {
-        value: selectedItem.tree
+        value: selectedItem.tree,
+        copyToClipboard: selectedItem.tree?.length > 0
       },
       updated: {
         value: formatDatetime(selectedItem.updated, 'N/A')

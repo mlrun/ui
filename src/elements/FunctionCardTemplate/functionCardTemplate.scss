@@ -74,6 +74,10 @@
     padding: 10px 0;
   }
 
+  &__chips {
+    width: fit-content;
+  }
+
   &.dense {
     min-height: 110px;
   }

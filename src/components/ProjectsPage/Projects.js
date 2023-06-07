@@ -74,7 +74,7 @@ const Projects = ({
   const { isNuclioModeDisabled } = useNuclioMode()
 
   const fetchMinimalProjects = useCallback(() => {
-    fetchProjects({ format: 'minimal' })
+    fetchProjects()
   }, [fetchProjects])
 
   const isValidProjectState = useCallback(

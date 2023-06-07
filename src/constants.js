@@ -47,6 +47,8 @@ export const DENSITY_CHUNKY = 'chunky'
 export const NAVBAR_WIDTH_CLOSED = 57
 export const NAVBAR_WIDTH_OPENED = 245
 
+export const FULL_VIEW_MODE = 'full'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'

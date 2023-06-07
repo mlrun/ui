@@ -57,6 +57,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { getViewMode } from '../../utils/helper'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -71,7 +72,11 @@ const Datasets = () => {
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
-  const pageData = useMemo(() => generatePageData(selectedDataset), [selectedDataset])
+  const viewMode = getViewMode(window.location.search)
+  const pageData = useMemo(
+    () => generatePageData(selectedDataset, viewMode),
+    [selectedDataset, viewMode]
+  )
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -304,6 +309,7 @@ const Datasets = () => {
       setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
+      viewMode={viewMode}
     />
   )
 }

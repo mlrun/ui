@@ -20,7 +20,7 @@
   &__item {
     margin: 0 24px 0 0;
     color: $topaz;
-    font-weight: normal;
+    font-weight: 700;
     font-size: 20px;
     line-height: 1;
     text-align: center;
@@ -66,7 +66,7 @@
 
     &_active {
       color: $primary;
-      font-weight: bold;
+      font-weight: 700;
 
       &::after {
         transform: scale(1);
