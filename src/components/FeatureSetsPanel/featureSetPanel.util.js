@@ -87,6 +87,14 @@ export const checkValidation = (
         }))
 
         isValid = false
+      } else if ((end_time && !start_time) || (start_time && !end_time)) {
+        setValidation(prevState => ({
+          ...prevState,
+          isStartTimeValid: end_time.length === 0,
+          isEndTimeValid: start_time.length === 0
+        }))
+
+        isValid = false
       }
 
       if (!validation.isStartTimeValid || !validation.isEndTimeValid) {
