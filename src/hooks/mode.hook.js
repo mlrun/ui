@@ -42,7 +42,7 @@ export const useMode = () => {
 
   useLayoutEffect(() => {
     if (urlMode) {
-      localStorageService.setStorageValue('mode', JSON.stringify(urlMode))
+      localStorageService.setStorageValue('mode', urlMode)
       setMode(urlMode)
     }
   }, [urlMode])
