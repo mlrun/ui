@@ -187,7 +187,7 @@ const FilterMenuModal = ({
                       )}
                       {applyButton && (
                         <Button
-                          disabled={isEqual(formState.initialValues, formState.values)}
+                          disabled={isEqual(filtersData.values, formState.values)}
                           variant={applyButton.variant}
                           label={applyButton.label}
                           onClick={() => handleApplyFilters(formState)}
