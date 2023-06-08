@@ -113,7 +113,7 @@ const Workflow = ({
     forEach(workflow.graph, job => {
       const sourceHandle = getWorkflowSourceHandle(job.phase)
 
-      if (hiddenWorkflowStepTypes.includes(job.type)) return
+      if (hiddenWorkflowStepTypes.includes(job.type) && !job.ui?.isHiddenJobVisible) return
 
       const customData = {
         function: job.function,
@@ -123,11 +123,11 @@ const Workflow = ({
       }
 
       if (job.function) {
-        const [, , functionName = '', functionHash = ''] =
-          job.function?.match(/(.+)\/([^@]+)(?:@(.+))?/) ?? []
+        const [, , functionName = '', functionHash = '', functionTag = ''] =
+          job.function?.match(/^([\w.-]+)\/([\w.-]+)(?:@(\w+))?(?::(\w+))?$/) ?? []
 
         customData.functionName = functionName
-        customData.functionHash = functionHash
+        customData.functionHash = functionHash ?? functionTag
       }
 
       let nodeItem = {
@@ -173,8 +173,10 @@ const Workflow = ({
       nodes.push(nodeItem)
     })
 
-    setElements(getLayoutedElements(nodes.concat(edges)))
-    setJobsContent(jobs)
+    if (!isEmpty(nodes)) {
+      setElements(getLayoutedElements(nodes.concat(edges)))
+      setJobsContent(jobs)
+    }
   }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
 
   const onElementClick = (event, element) => {

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, forEach, isEmpty } from 'lodash'
+import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
 import { page } from '../Jobs/jobs.util'
 import { DETAILS_OVERVIEW_TAB, WORKFLOW_TYPE_SKIPPED } from '../../constants'
@@ -77,8 +77,8 @@ const isFunctionTypeSelectable = (job = {}) => {
 export const isWorkflowJobSelected = (job, selectedJob) => {
   return (
     (job.run_uid && selectedJob.uid === job.run_uid) ||
-    (job.run_type === 'deploy' && job.function.includes(selectedJob.hash)) ||
-    (job.run_type === 'build' && job.function.includes(selectedJob.name))
+    ((job.run_type === 'deploy' || job.run_type === 'build') &&
+      (job.function.includes(selectedJob.hash) || job.function.includes(selectedJob.name)))
   )
 }
 
@@ -102,6 +102,31 @@ export const isWorkflowStepExecutable = job => {
  * @returns {Object} The parsed workflow.
  */
 export const parseWorkflow = workflow => {
+  /**
+   * Sets the visibility of hidden jobs that have ancestor with type `TaskGroup`.
+   * @param {Object} job - The job to process.
+   * @param {boolean} ancestorIsTaskGroup - Indicates if the current job's ancestor is a task group.
+   */
+  const setHiddenJobVisibility = (job, ancestorIsTaskGroup) => {
+    if (job.type === 'TaskGroup' && !ancestorIsTaskGroup) {
+      setHiddenJobVisibility(job, true)
+    }
+
+    job.children?.forEach(jobChildId => {
+      let jobChild = newWorkflow.graph[jobChildId]
+
+      // Check if the jobChild's type is in the hiddenWorkflowStepTypes and the ancestor is a `TaskGroup`
+      if (hiddenWorkflowStepTypes.includes(jobChild.type) && ancestorIsTaskGroup) {
+        set(jobChild, 'ui.isHiddenJobVisible', true)
+      }
+
+      // Recursively call setHiddenJobVisibility for the jobChild if it's a TaskGroup or the ancestor is a task group
+      if (jobChild.type === 'TaskGroup' || ancestorIsTaskGroup) {
+        setHiddenJobVisibility(jobChild, true)
+      }
+    })
+  }
+
   const newWorkflow = cloneDeep(workflow)
   const parentsMap = {}
 
@@ -116,6 +141,9 @@ export const parseWorkflow = workflow => {
         parentsMap[childId] = [workflowStep.id]
       }
     })
+
+    // Define if hidden jobs should be visible
+    setHiddenJobVisibility(workflowStep)
   })
 
   // Loop through each Retry node in the graph and modify the parent-child relationships
