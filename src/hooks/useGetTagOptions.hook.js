@@ -22,10 +22,10 @@ import { useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { TAG_FILTER, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
-import { getFilterTagOptions, setFilters } from '../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { isNil } from 'lodash'
 
-export const useGetTagOptions = (fetchTags, filters, category) => {
+export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
   const { projectName, tag: paramTag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
@@ -56,20 +56,41 @@ export const useGetTagOptions = (fetchTags, filters, category) => {
               if (tags.find(filterTag => filterTag === paramTag)) {
                 setUrlTagOption(paramTag)
                 dispatch(setFilters({ paramTag }))
+                modalFiltersName &&
+                  dispatch(
+                    setModalFiltersValues({
+                      name: modalFiltersName,
+                      value: { tag: paramTag }
+                    })
+                  )
               } else {
                 setUrlTagOption(TAG_FILTER_ALL_ITEMS)
                 dispatch(setFilters({ tag: TAG_FILTER_ALL_ITEMS }))
+                modalFiltersName &&
+                  dispatch(
+                    setModalFiltersValues({
+                      name: modalFiltersName,
+                      value: { tag: TAG_FILTER_ALL_ITEMS }
+                    })
+                  )
               }
             }
           })
       } else if (paramTag) {
         setUrlTagOption(paramTag)
         dispatch(setFilters({ paramTag }))
+        modalFiltersName &&
+          dispatch(
+            setModalFiltersValues({
+              name: modalFiltersName,
+              value: { tag: paramTag }
+            })
+          )
       }
     } else {
       setUrlTagOption(null)
     }
-  }, [category, dispatch, fetchTags, filters, paramTag, projectName, tagOptions])
+  }, [category, dispatch, fetchTags, filters, modalFiltersName, paramTag, projectName, tagOptions])
 
   return [urlTagOption]
 }

@@ -66,7 +66,7 @@ import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 const Models = ({ fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [urlTagOption] = useGetTagOptions(null, filters)
+  const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -324,6 +324,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       viewMode={viewMode}
+      urlTagOption={urlTagOption}
     />
   )
 }
