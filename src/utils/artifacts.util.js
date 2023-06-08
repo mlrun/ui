@@ -161,7 +161,9 @@ export const setArtifactTags = (
     const tag = !filters.tag ? TAG_FILTER_LATEST : filters.tag
 
     if (tag && tag !== TAG_FILTER_ALL_ITEMS) {
-      const newArtifacts = artifacts.filter(artifact => artifact.tag === tag)
+      const newArtifacts = artifacts.filter(
+        artifact => artifact.tree === tag || artifact.tag === tag
+      )
 
       setArtifacts(newArtifacts)
     } else {
