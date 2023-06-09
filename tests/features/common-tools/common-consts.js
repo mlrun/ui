@@ -86,7 +86,7 @@ module.exports = {
     ]
   },
   Datasets_Info_Pane: {
-    Tab_List: ['Overview', 'Preview', 'Metadata'],
+    Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
     Overview_General_Headers: [
       'Hash',
       'Key',
@@ -122,7 +122,7 @@ module.exports = {
     Overview_General_Headers: [
       'Hash',
       'Key',
-      'Tag',
+      'Version tag',
       'Iter',
       'Size',
       'Path',
@@ -133,7 +133,7 @@ module.exports = {
     ]
   },
   Models_Info_Pane: {
-    Tab_List: ['Overview'], //'Preview'],  //delete 'Preview'
+    Tab_List: ['Overview', 'Preview'],  //delete 'Preview'
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
       'Hash',
@@ -219,7 +219,7 @@ module.exports = {
     Dataset_Names_Unique: 'Dataset names in the same project must be unique',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
-      'This field is required',
+      'This field is required\nArtifact name should be unique',
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
@@ -280,9 +280,9 @@ module.exports = {
     Start_Time_Input: 'Filter data by start date >= value',
     End_Time_Input: 'Filter data by start date <= value',
     Target_Store_Online: 'Store the feature set in Iguazio NoSQL database',
-    Target_Store_Offline: 'Store the feature set as a Parquet file in Iguazio object store',
+    Target_Store_Offline: 'Store the feature set as a Parquet file or a partitioned Parquet directory',
     Target_Store_External_Offline:
-      'Store the feature set in a remote object store (e.g. AWS S3 or Azure storage)',
+      'Store the feature set in a remote object store (e.g. AWS S3 Google or Azure storage)',
     Distinct_Keys: 'The partition is based on key.',
     Source_URL_Input:
       'Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from',
@@ -405,8 +405,8 @@ module.exports = {
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
-    Common_Message: 'No data to show',
-    No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first feature set.',
+    Common_Message: 'There is no Features data to show for "Tag: latest, Name: ccccc"',
+    No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet'
   }
 }

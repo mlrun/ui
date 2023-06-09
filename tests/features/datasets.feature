@@ -54,8 +54,6 @@ Feature: Datasets Page
     Then "Show_Iterations_Checkbox" element should be unchecked on "Datasets" wizard
     Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
 
-  @FAILED_TODO
-  #TODO: verify "Overview" tab is active in "Info_Pane_Tab_Selector" - invalid selector: An invalid or illegal selector was specified
   @passive
   @inProgress
   Scenario: Check all mandatory components in Item infopane on Overview tab table on Datasets page
@@ -268,7 +266,7 @@ Feature: Datasets Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
   @FAILED_TODO
-  #TODO: 'Preview_Header' is disabled
+  #TODO: 'artifact_preview_btn' is disabled so erroe with element visibility 'Preview_Header'
   @passive
   Scenario: Check all mandatory components on Artifact Preview on Datasets page
     Given open url
@@ -285,8 +283,7 @@ Feature: Datasets Page
     Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
   
   @FAILED_TODO
-  #TODO: select "Preview" tab in "Info_Pane_Tab_Selector" - invalid selector: An invalid or illegal selector was specified
-  @uniqueTag
+  #TODO: redirection from "projects/INVALID/datasets/test_ds/latest/0/overview" to "projects" - wrong redirect
   Scenario: Check broken link redirection
     * set tear-down property "dataset" created in "default" project with "test_ds" value
     * create "test_ds" Dataset with "latest" tag in "default" project with code 200

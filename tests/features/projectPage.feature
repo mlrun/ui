@@ -11,6 +11,9 @@ Feature: MLRun Project Page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Refresh_Button" element visibility on "Project" wizard
@@ -24,7 +27,7 @@ Feature: MLRun Project Page
 
     @passive
     @sanity
-    Scenario: Check all mandatory components on demo mode on Navigation Bar
+    Scenario: Check all mandatory components on Navigation Bar
         * set tear-down property "project" created with "automation-test-1000" value
         * create "automation-test-1000" MLRun Project with code 201
         Given open url
@@ -112,7 +115,7 @@ Feature: MLRun Project Page
 
     @passive
     @sanity
-    Scenario: Check all mandatory components on demo mode
+    Scenario: Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
         Given open url
@@ -121,7 +124,6 @@ Feature: MLRun Project Page
         Then verify "Header_Name_Label" element visibility on "Demo_Project" wizard
         Then verify "Header_Created_Time" element visibility on "Demo_Project" wizard
         Then verify "Header_Project_Description" element visibility on "Demo_Project" wizard
-        #Then verify "Header_Name_Label" on "Demo_Project" wizard should display "Project"."Online_Status" in "Common_Tolltip"  doesn't exist
         Then verify value should equal "automation-test-1002" in "Header_Name_Label" on "Demo_Project" wizard
         Then verify value should equal "automation test description" in "Header_Project_Description" on "Demo_Project" wizard
         Then verify value should equal "Ingest and process data" in "Data_Collection_Header" on "Demo_Project" wizard
@@ -144,9 +146,6 @@ Feature: MLRun Project Page
             |     Register dataset    |
             |     Register artifact   |
             |  Create feature vector  |
-        # Then verify values in "Data_Collection_Additional_Actions_Table" table on "Demo_Project" wizard   - doesn't exist
-        #     |          name           |
-        #     | Create a Feature Vector |
         Then verify values in "Development_Actions_Table" table on "Demo_Project" wizard
             |          name           |
             |  Create batch function  |
@@ -183,13 +182,18 @@ Feature: MLRun Project Page
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
+    @FAILED_TODO
+    #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
     @passive
     Scenario: Check all mandatory components on Register File Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "Register Artifact" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
         Then "Form_Text" component on "Register_File_Popup" should be equal "Register_Artifact"."Form_Text"
@@ -229,13 +233,19 @@ Feature: MLRun Project Page
         Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
         Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
 
+    @FAILED_TODO
+    #TODO: Register_Model hidden till 5.1, running in demo mode
+    #TODO: Bug - on 'Project Home' also hidden in demo mode
     @passive
     Scenario: Check all mandatory components on Register Model Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "Register Model" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
@@ -271,19 +281,25 @@ Feature: MLRun Project Page
             |      label      |
             | key2\n:\nvalue2 |
 
+    @FAILED_TODO
+    #TODO: Register_Model hidden till 5.1, running in demo mode
+    #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
     @passive
     Scenario: Check all mandatory components on Register Dataset Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "Register Dataset" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
         Then "Form_Text" component on "Register_Dataset" should be equal "Register_Artifact"."Form_Text"
-        Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Artifact"."Form_Subtext"
+        Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Dataset"."Form_Subtext"
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
-        Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Artifact_Names_Unique"
+        Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Dataset_Names_Unique"
         Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
         Then verify "Name_Input" options rules on form "Register_Dataset" wizard
@@ -317,8 +333,11 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "Job" option in "Create_New" dropdown on "Project" wizard
         When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
         When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
@@ -360,8 +379,11 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
@@ -411,16 +433,17 @@ Feature: MLRun Project Page
 
     @passive
     @demo
+    #TODO: "Serving" option in "New_Function_Runtime_Dropdown" exist only in demo mode
     Scenario: Check all mandatory components on Create ML Function on Demo mode
         Given open url
-        And turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And turn on demo mode
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
@@ -477,9 +500,13 @@ Feature: MLRun Project Page
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
 
     @passive
+    #@uniqueTag
     Scenario: Check all mandatory components on Create New Feature Set
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"

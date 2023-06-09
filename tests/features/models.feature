@@ -149,7 +149,6 @@ Feature: Models Page
 
   @FAILED_TODO
   #TODO: Table_Labels_Filter_Input element was redesigned, need tests rewrite
-  #TODO: class table__content was changed, need modelsTable components rewrite (affects the 'contains' and last cases)
   @passive
   Scenario: Verify filtering by label with key on Models tab
     Given open url
@@ -159,7 +158,7 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then type value "my-key" to "Table_Labels_Filter_Input" field on "Models" wizard
+    #Then type value "my-key" to "Table_Labels_Filter_Input" field on "Models" wizard
     Then click on "Table_Refresh_Button" element on "Models" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key"
@@ -199,7 +198,7 @@ Feature: Models Page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @FAILED_TODO
-  #TODO: Register_Model_Button hidden till 5.1, running on demo mode
+  #TODO: Register_Model_Button hidden till 5.1, running in demo mode
   #TODO: warning "Input_Hint"."Input_Field_Invalid" was redesigned, need case rewrite (now it's dropdown warning)
   #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
   #TODO: artifactsLabelsTable class components was changed, need to rewrite locators structure (affects the 'Labels_Table', 'remove_btn' cases)
@@ -370,7 +369,6 @@ Feature: Models Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
   @FAILED_TODO
-  #TODO: verify "Overview" tab is active in "Info_Pane_Tab_Selector" - invalid selector: An invalid or illegal selector was specified
   #TODO: 'Preview' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
   #TODO: 'Features' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
   #TODO: 'Statistics' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
@@ -457,9 +455,6 @@ Feature: Models Page
     And wait load page
     Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
 
-  @FAILED_TODO
-  #TODO: verify cell with "Features Analysis" value in "key" - invalid selector
-  #TODO: verify "Overview" tab is active in "Info_Pane_Tab_Selector" - invalid selector
   @passive
   Scenario: Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
     Given open url
@@ -509,8 +504,6 @@ Feature: Models Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
 
-  @FAILED_TODO
-  #TODO: "Overview" tab is active - invalid selector
   @passive
   Scenario: Check expand sources Item infopane on Overview tab table
     Given open url

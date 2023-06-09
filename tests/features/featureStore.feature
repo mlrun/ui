@@ -8,6 +8,9 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -33,6 +36,9 @@ Feature: Feature Store Page
     Scenario: Check all mandatory components on Features tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -62,6 +68,9 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify breadcrumbs "project" label should be equal "fsdemo-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -82,6 +91,11 @@ Feature: Feature Store Page
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
+    @FAILED_TODO
+    #TODO: 'Cancel_Button' - reimplemented, invisible before any changes
+    #TODO: 'Apply_Changes_Button' - reimplemented, invisible before any changes
+    #TODO: 'Action_Menu', 'Info_Pane_Tab_Selector' - reimplemented, invisible before any changes
+    #TODO: verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard - AssertionError: should be expected "key1:value1" but actual value ":"
     @passive
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Overview tab table on Feature Sets tab
@@ -147,12 +161,17 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
 
+    @FAILED_TODO
+    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, editing is not allowed in Overview tab
     @passive
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Overview tab table on Feature Vectors tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -178,6 +197,8 @@ Feature: Feature Store Page
         Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
 
+    @FAILED_TODO
+    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, editing is not allowed in Overview tab
     @passive
     @inProgress
     Scenario: Check all mandatory components in Item infopane with non-latest tag on Overview tab table on Feature Vectors tab
@@ -206,10 +227,15 @@ Feature: Feature Store Page
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Overview_General_Headers" on "Feature_Vectors_Info_Pane" wizard should contains "Feature_Vectors_Info_Pane"."Overview_General_Headers"
 
+    @FAILED_TODO
+    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     Scenario: Check all mandatory components in Item infopane on Features tab table
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -227,11 +253,16 @@ Feature: Feature Store Page
         Then verify "Cross_Close_Button" element visibility on "Features_Info_Pane" wizard
         Then verify "Features_Tab_Info_Pane_Table" element visibility on "Features_Info_Pane" wizard
 
+    @FAILED_TODO
+    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Transformations tab table
         Given open url
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -251,10 +282,15 @@ Feature: Feature Store Page
         Then verify arrow lines position on "Transformation_Graph" on "Transformations_Info_Pane" wizard
         # TO DO: configuration component for future work
 
+    @FAILED_TODO
+    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     Scenario: Check all mandatory components in Item infopane on Preview tab table
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -272,11 +308,16 @@ Feature: Feature Store Page
         Then verify "Cross_Close_Button" element visibility on "Preview_Info_Pane" wizard
         Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Preview_Info_Pane" wizard
 
+    @FAILED_TODO
+    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Statistics tab table
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -294,11 +335,16 @@ Feature: Feature Store Page
         Then verify "Apply_Changes_Button" element visibility on "Statistics_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Statistics_Info_Pane" wizard
 
+    @FAILED_TODO
+    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Analysis tab table
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -321,6 +367,9 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -333,11 +382,16 @@ Feature: Feature Store Page
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+    @FAILED_TODO
+    #TODO: test case will be passed if running on full screen (Labels could contain  'my-key' in dropdown on small screen)
     @passive
     Scenario: Check filtering by Label on Feature Store Feature Sets Tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -355,9 +409,13 @@ Feature: Feature Store Page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
     @passive
+    #TODO: should be updated with changeble Name "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message" 
     Scenario: Check filtering by Name on Feature Store Features Tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -376,6 +434,9 @@ Feature: Feature Store Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -399,6 +460,9 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -413,6 +477,9 @@ Feature: Feature Store Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -436,6 +503,9 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -448,6 +518,9 @@ Feature: Feature Store Page
     Scenario: Check filtering by Tag on Feature Store Feature Vectors Tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -463,6 +536,9 @@ Feature: Feature Store Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -486,11 +562,17 @@ Feature: Feature Store Page
         Then click on "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify if "Feature_Set_Schedule_Popup" popup dialog appears
 
+    @FAILED_TODO
+    #TODO: there are no any "clean" fragment "clean" in "key" in artifacts.json 
+    #TODO: URL_Combobox hint need change the text and behavior
     @passive
     Scenario: Verify behaviour of Combobox element on Feature Store Feature Set new item wizard on Data Source Accordion
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -533,6 +615,9 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -566,6 +651,9 @@ Feature: Feature Store Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -618,6 +706,9 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
@@ -641,6 +732,9 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
@@ -656,6 +750,9 @@ Feature: Feature Store Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -675,10 +772,14 @@ Feature: Feature Store Page
 
     @passive
     @inProgress
+    @uniqueTag
     Scenario: Check Target Store Accordion components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -742,10 +843,14 @@ Feature: Feature Store Page
         And wait load page
 
     @passive
+    #@uniqueTag
     Scenario: Verify behaviour of Online and Offline Target store on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -810,10 +915,14 @@ Feature: Feature Store Page
         Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/parquet/sets/test-fs3.parquet" value
 
     @passive
+    #@uniqueTag
     Scenario: Check Partition part in Target Store Accordion components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page

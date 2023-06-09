@@ -82,7 +82,7 @@ const featureSetsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a div.link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
@@ -116,7 +116,7 @@ const featureSetsTable = {
 
 // Features
 const featuresTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -133,7 +133,7 @@ const featuresTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         feature_name: '.table-body__cell:nth-of-type(1) div.data-ellipsis',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
@@ -164,7 +164,7 @@ const featuresTable = {
 
 // Feature Vectors
 const featureVectorTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -178,7 +178,7 @@ const featureVectorTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a div.link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
@@ -310,11 +310,11 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar__actions #refresh')
+const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar .actions #refresh')
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar-wrapper .name-filter .form-field__control',
+    '.content .content__action-bar-wrapper .filters .input-wrapper:nth-of-type(2)',
     true,
     false,
     true
@@ -322,7 +322,7 @@ const commonNameFilterInput = inputGroup(
 )
 const commonLabelFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar .input-wrapper:nth-of-type(3)',
+    '.content .content__action-bar-wrapper .filters .input-wrapper:nth-of-type(3)',
     true,
     false,
     true
@@ -330,7 +330,7 @@ const commonLabelFilterInput = inputGroup(
 )
 const commonTableTreeFilterDropdown = dropdownComponent(
   generateDropdownGroup(
-    '.content .content__action-bar .filters .tag-filter',
+    '.content .content__action-bar-wrapper .filters .tag-filter',
     'input',
     '.tag-filter__dropdown .tag-filter__dropdown-item',
     '',
@@ -354,7 +354,7 @@ module.exports = {
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Add_To_Feature_Vector_Button: By.css(
-      '.content__action-bar .data-ellipsis  button.btn-secondary'
+      '.content .content__action-bar-wrapper .action-bar  button.btn-secondary'
     ),
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,

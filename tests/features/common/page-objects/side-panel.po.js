@@ -864,7 +864,7 @@ module.exports = {
           true
         )
       ),
-      Online_Path: By.css('.target-store__item:nth-of-type(1) .online-path'),
+      Online_Path: By.css('.target-store__item:nth-of-type(1) .online-path [placeholder]'),
       Online_Path_Input: inputGroup(
         generateInputGroup(
           '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(1) .input-wrapper',
@@ -1010,7 +1010,7 @@ module.exports = {
       ),
       URL_Input: inputGroup(
         generateInputGroup(
-          '.feature-set-panel .accordion__container:nth-of-type(3) .input-wrapper',
+          '.target-store__item .target-store__inputs-container .url',
           true,
           false,
           false
@@ -1110,10 +1110,10 @@ module.exports = {
       '.feature-set-panel .new-item-side-panel__buttons-container .pop-up-dialog__btn_cancel'
     ),
     Save_Button: By.css(
-      '.feature-set-panel .new-item-side-panel__buttons-container div:nth-of-type(2) .btn-secondary'
+      '.feature-set-panel .new-item-side-panel__buttons-container .btn-secondary:nth-of-type(2)'
     ),
     Save_And_Ingest_Button: By.css(
-      '.feature-set-panel .new-item-side-panel__buttons-container .btn_start-ingestion'
+      '.feature-set-panel .new-item-side-panel__buttons-container .btn-secondary:nth-of-type(3)'
     )
   },
   newJobTemplateEdit: {
@@ -1525,10 +1525,10 @@ module.exports = {
     Access_Key_Checkbox: commonAccessKeyCheckbox,
     Access_Key_Input: commonAccessKeyInput,
     Schedule_For_Later_Button: By.css(
-      '.new-item-side-panel__body .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(1) button'
+      '.new-item-side-panel__body .new-item-side-panel__buttons-container .btn-tertiary .data-ellipsis:nth-of-type(1)'
     ),
     Run_Now_Button: By.css(
-      '.new-item-side-panel__body .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(2) button'
+      '.new-item-side-panel__body .new-item-side-panel__buttons-container .btn-secondary .data-ellipsis:nth-of-type(1)'
     ),
     Error_Message: By.css('.new-item-side-panel__buttons-container .error')
   },
@@ -2015,13 +2015,13 @@ module.exports = {
     Access_Key_Checkbox: commonAccessKeyCheckbox,
     Access_Key_Input: commonAccessKeyInput,
     Cancel_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(1) button'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-label .data-ellipsis:nth-of-type(1)'
     ),
     Save_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(2) button'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-tertiary .data-ellipsis:nth-of-type(1)'
     ),
     Deploy_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(3) button'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary .data-ellipsis:nth-of-type(1)'
     )
   }
 }

@@ -48,7 +48,7 @@ const infoPaneTabSelector = {
     row: {
       root: 'a',
       fields: {
-        key: '.details-menu__tab',
+        key: '', //'.details-menu__tab',
         hintButton: '.tip-container'
       }
     }

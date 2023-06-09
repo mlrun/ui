@@ -216,7 +216,9 @@ Then('type value {string} to {string} field on {string} wizard', async function(
   wizard
 ) {
   await typeValue(this.driver, pageObjects[wizard][inputField], value)
+  await this.driver.sleep(250)
   await verifyTypedValue(this.driver, pageObjects[wizard][inputField], value)
+  await this.driver.sleep(250)
 })
 
 Then('verify {string} element on {string} wizard is enabled', async function(

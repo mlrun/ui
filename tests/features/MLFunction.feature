@@ -3,6 +3,7 @@ Feature: ML Functions
     Testcases that verifies functionality on ML Functions Pages
 
     @passive
+    #@uniqueTag
     Scenario: Check all mandatory components on ML Functions Page
         Given open url
         And wait load page

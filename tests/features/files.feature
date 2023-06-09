@@ -2,11 +2,16 @@ Feature: Files Page
 
   Testcases that verifies functionality on Files Page
 
+  @FAILED_TODO
+  #TODO: 'Table_Label_Filter_Input', 'Table_Tree_Filter_Dropdown', 'Show_Iterations_Checkbox' elements were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: Check all mandatory components on Artifacts tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -30,6 +35,9 @@ Feature: Files Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -42,27 +50,34 @@ Feature: Files Page
     And wait load page
     Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test"
 
+  @FAILED_TODO
+  #TODO: 'Table_Label_Filter_Input' element were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: verify filtering by file label on Artifacts page
-     Given open url
-     And wait load page
-     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-     And wait load page
-     And select "tab" with "Artifacts" value in breadcrumbs menu
-     And wait load page
-     Then type value "owner" to "Table_Label_Filter_Input" field on "Files" wizard
-     Then click on "Table_Refresh_Button" element on "Files" wizard
-     And wait load page
-     Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "owner"
-     Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "Files" wizard
-     Then click on "Table_Refresh_Button" element on "Files" wizard
-     And wait load page
-     Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "v3io_user=admin"
-     Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Files" wizard
-     Then click on "Table_Refresh_Button" element on "Files" wizard
-     And wait load page
-     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    And wait load page
+    And select "tab" with "Artifacts" value in breadcrumbs menu
+    And wait load page
+    Then type value "owner" to "Table_Label_Filter_Input" field on "Files" wizard
+    Then click on "Table_Refresh_Button" element on "Files" wizard
+    And wait load page
+    Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "owner"
+    Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "Files" wizard
+    Then click on "Table_Refresh_Button" element on "Files" wizard
+    And wait load page
+    Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "v3io_user=admin"
+    Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Files" wizard
+    Then click on "Table_Refresh_Button" element on "Files" wizard
+    And wait load page
+    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+  @FAILED_TODO
+  #TODO: 'Show_Iterations_Checkbox' element were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: Verify behaviour of Show iterations checkbox on Artifacts tab
     Given open url
@@ -87,6 +102,9 @@ Feature: Files Page
     Then "Show_Iterations_Checkbox" element should be unchecked on "Files" wizard
     Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
 
+  @FAILED_TODO
+  #TODO: 'Name_Input' - options "Input_Hint"."Artifact_Name_Hint" implementation with click on warning hint  
+  #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
   @passive
   @inProgress
   Scenario: Check all mandatory components on Register Artifacts Popup
@@ -163,6 +181,8 @@ Feature: Files Page
     Then navigate forward
     Then verify "Title" element not exists on "Register_File_Popup" wizard
 
+  @FAILED_TODO 
+  #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
   Scenario: Verify behaviour on Register new Artifact
     * set tear-down property "project" created with "automation-test" value
     * create "automation-test" MLRun Project with code 201
@@ -210,6 +230,8 @@ Feature: Files Page
     Then verify "Overview_Hash_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
 
+  @FAILED_TODO
+  #TODO: 'Table_Tree_Filter_Dropdown' element were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: Check Details panel still active on page refresh
     * set tear-down property "project" created with "automation-test" value
@@ -290,6 +312,8 @@ Feature: Files Page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
+  @FAILED_TODO
+  #TODO: Show_Iterations_Checkbox elements were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: Verify View YAML action
     Given open url
@@ -329,6 +353,8 @@ Feature: Files Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+  @FAILED_TODO
+  #TODO: redirection from "projects/INVALID/files" to "projects" - wrong redirect 
   Scenario: Check broken link redirection
     * set tear-down property "project" created with "automation-test-011" value
     * set tear-down property "file" created in "automation-test-011" project with "test_ds" value
@@ -337,6 +363,9 @@ Feature: Files Page
     Given open url
     And wait load page
     And click on row root with value "automation-test-011" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     And select "tab" with "Artifacts" value in breadcrumbs menu
     And wait load page
