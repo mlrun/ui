@@ -107,11 +107,11 @@ const DetailsInfoView = React.forwardRef(
                     chipsData.chips = selectedItem.labels
                     chipsData.chipOptions = getChipOptions('labels')
                   } else if (
-                  detailsStore.infoContent[header.id]?.value === selectedItem.ui.nodeSelectorChips
-                ) {
-                  chipsData.chips = selectedItem.ui.nodeSelectorChips
-                  chipsData.chipOptions = getChipOptions('results')
-                }
+                    detailsStore.infoContent[header.id]?.value === selectedItem.ui.nodeSelectorChips
+                  ) {
+                    chipsData.chips = selectedItem.ui.nodeSelectorChips
+                    chipsData.chipOptions = getChipOptions('results')
+                  }
 
                   func =
                     detailsStore.infoContent[header.id]?.value === selectedItem.function
