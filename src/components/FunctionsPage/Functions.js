@@ -317,10 +317,18 @@ const Functions = ({
       if (!item || Object.keys(item).length === 0) {
         return navigate(`/projects/${params.projectName}/functions`, { replace: true })
       }
+    } else if (params.funcName && params.tag && functions.length > 0) {
+      item = functions.find(func => {
+        return isEqual(func.tag, params.tag) && isEqual(func.name, params.funcName)
+      })
+
+      if (!item || Object.keys(item).length === 0) {
+        return navigate(`/projects/${params.projectName}/functions`, { replace: true })
+      }
     }
 
     setSelectedFunction(item)
-  }, [functions, navigate, params.hash, params.projectName])
+  }, [functions, navigate, params.funcName, params.hash, params.projectName, params.tag])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS }))

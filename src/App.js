@@ -169,8 +169,15 @@ const App = () => {
                 <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
                 <Route path="*" element={<Navigate to={MONITOR_JOBS_TAB} />} replace />
               </Route>
-              <Route path="projects/:projectName/functions" element={<Functions />} />
-              <Route path="projects/:projectName/functions/:hash/:tab" element={<Functions />} />
+              {[
+                'projects/:projectName/functions',
+                'projects/:projectName/functions/:hash/:tab',
+                'projects/:projectName/functions/:funcName/:tag/:tab'
+              ].map((path, index) => (
+                <Fragment key={index}>
+                  <Route path={path} element={<Functions />} />
+                </Fragment>
+              ))}
               <Route
                 path="projects/:projectName/feature-store/datasets/*"
                 element={<Navigate to=":name/:tag/:iter/:tab" replace />}
