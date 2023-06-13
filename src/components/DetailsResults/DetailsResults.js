@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty, isObjectLike } from 'lodash'
 import classNames from 'classnames'
 
 import NoData from '../../common/NoData/NoData'
@@ -155,6 +155,10 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
             ) : job.iterations?.length === 0 && Object.keys(job.results ?? {}).length !== 0 ? (
               <tbody className="table-body">
                 {Object.keys(job.results).map(key => {
+                  const resultValue = isObjectLike(job.results[key])
+                    ? JSON.stringify(job.results[key])
+                    : job.results[key]
+
                   return (
                     <tr key={key} className="table-row">
                       <td className="table-body-cell table-cell-wide">
@@ -168,9 +172,9 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                       <td className="table-body-cell table-cell-full">
                         <Tooltip
                           className="data-ellipsis"
-                          template={<TextTooltipTemplate text={job.results[key]} />}
+                          template={<TextTooltipTemplate text={resultValue} />}
                         >
-                          {job.results[key]}
+                          {resultValue}
                         </Tooltip>
                       </td>
                     </tr>
