@@ -30,20 +30,16 @@ const CopyToClipboard = ({ children, className, disabled, textToCopy, tooltipTex
   const dispatch = useDispatch()
 
   const copyToClipboard = textToCopy => {
-    navigator.permissions
-      .query({ name: 'clipboard-read', allowWithoutGesture: false })
-      .then(result => {
-        if (result.state === 'granted' || result.state === 'prompt') {
-          return navigator.clipboard.writeText(textToCopy).then(() => {
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: 'Copied to clipboard successfully'
-              })
-            )
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Copied to clipboard successfully'
           })
-        }
+        )
       })
       .catch(err => {
         dispatch(
