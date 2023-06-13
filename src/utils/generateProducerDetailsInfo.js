@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { MONITOR_JOBS_TAB } from '../constants'
-import { capitalize } from 'lodash'
+import { capitalize, upperCase } from 'lodash'
 import { isEveryObjectValueEmpty } from './isEveryObjectValueEmpty'
 
 import DetailsInfoItem from '../elements/DetailsInfoItem/DetailsInfoItem'
@@ -37,7 +37,9 @@ export const generateProducerDetailsInfo = selectedItem => {
       }
       return (
         <li className="details-item" key={key}>
-          <div className="details-item__header">{capitalize(key)}</div>
+          <div className="details-item__header">
+            {key === 'uri' ? upperCase(key) : capitalize(key)}
+          </div>
           <DetailsInfoItem link={url} info={value} />
         </li>
       )
