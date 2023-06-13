@@ -60,7 +60,8 @@ const DatasetsView = React.forwardRef(
       setSelectedRowData,
       tableContent,
       toggleConvertedYaml,
-      viewMode
+      viewMode,
+      urlTagOption
     },
     ref
   ) => {
@@ -95,6 +96,7 @@ const DatasetsView = React.forwardRef(
                   removeSelectedItem={removeDataSet}
                   setContent={setDatasets}
                   setSelectedRowData={setSelectedRowData}
+                  urlTagOption={urlTagOption}
                 />
               </div>
               {artifactsStore.loading ? null : datasets.length === 0 ? (
@@ -160,7 +162,8 @@ const DatasetsView = React.forwardRef(
 )
 
 DatasetsView.defaultProps = {
-  viewMode: null
+  viewMode: null,
+  urlTagOption: null
 }
 
 DatasetsView.propTypes = {
@@ -182,7 +185,8 @@ DatasetsView.propTypes = {
   setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
-  viewMode: PropTypes.string
+  viewMode: PropTypes.string,
+  urlTagOption: PropTypes.string
 }
 
 export default DatasetsView
