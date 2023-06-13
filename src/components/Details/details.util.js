@@ -30,6 +30,7 @@ import {
 } from '../../constants'
 import { formatDatetime, generateLinkPath } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
+import { getFunctionImage } from '../FunctionsPage/functions.util'
 
 export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
@@ -251,7 +252,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.command
   },
   image: {
-    value: selectedItem.image
+    value: getFunctionImage(selectedItem)
   },
   description: {
     value: selectedItem.description
