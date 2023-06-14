@@ -60,7 +60,8 @@ const FilesView = React.forwardRef(
       setSelectedRowData,
       tableContent,
       toggleConvertedYaml,
-      viewMode
+      viewMode,
+      urlTagOption
     },
     ref
   ) => {
@@ -95,6 +96,7 @@ const FilesView = React.forwardRef(
                   removeSelectedItem={removeFile}
                   setContent={setFiles}
                   setSelectedRowData={setSelectedRowData}
+                  urlTagOption={urlTagOption}
                 />
               </div>
               {artifactsStore.loading ? null : files.length === 0 ? (
@@ -154,7 +156,8 @@ const FilesView = React.forwardRef(
 )
 
 FilesView.defaultProps = {
-  viewMode: null
+  viewMode: null,
+  urlTagOption: null
 }
 
 FilesView.propTypes = {
@@ -174,7 +177,8 @@ FilesView.propTypes = {
   setSelectedFile: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
-  viewMode: PropTypes.string
+  viewMode: PropTypes.string,
+  urlTagOption: PropTypes.string
 }
 
 export default FilesView

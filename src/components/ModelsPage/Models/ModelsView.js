@@ -55,7 +55,8 @@ const ModelsView = React.forwardRef(
       setSelectedRowData,
       sortProps,
       tableContent,
-      viewMode
+      viewMode,
+      urlTagOption
     },
     ref
   ) => {
@@ -73,6 +74,7 @@ const ModelsView = React.forwardRef(
                 setContent={setModels}
                 setSelectedRowData={setSelectedRowData}
                 tab={MODELS_TAB}
+                urlTagOption={urlTagOption}
               />
             </div>
             {artifactsStore.loading ? null : models.length === 0 ? (
@@ -138,7 +140,8 @@ const ModelsView = React.forwardRef(
 
 ModelsView.defaultProps = {
   sortProps: null,
-  viewMode: null
+  viewMode: null,
+  urlTagOption: null
 }
 
 ModelsView.propTypes = {
@@ -158,7 +161,8 @@ ModelsView.propTypes = {
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  viewMode: PropTypes.string
+  viewMode: PropTypes.string,
+  urlTagOption: PropTypes.string
 }
 
 export default ModelsView

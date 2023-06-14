@@ -68,7 +68,7 @@ const Datasets = () => {
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption] = useGetTagOptions(null, filters)
+  const [urlTagOption] = useGetTagOptions(null, filters, null, DATASETS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
@@ -310,6 +310,7 @@ const Datasets = () => {
       tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
+      urlTagOption={urlTagOption}
     />
   )
 }

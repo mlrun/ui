@@ -37,7 +37,9 @@ export const generateProducerDetailsInfo = selectedItem => {
       }
       return (
         <li className="details-item" key={key}>
-          <div className="details-item__header">{capitalize(key)}</div>
+          <div className="details-item__header">
+            {key === 'uri' ? key.toUpperCase() : capitalize(key)}
+          </div>
           <DetailsInfoItem link={url} info={value} />
         </li>
       )

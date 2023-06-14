@@ -20,11 +20,14 @@ such restriction.
 import {
   FUNCTION_TYPE_JOB,
   FUNCTION_TYPE_LOCAL,
+  FUNCTION_TYPE_NUCLIO,
+  FUNCTION_TYPE_REMOTE,
   FUNCTION_TYPE_SERVING,
   NAME_FILTER,
   SHOW_UNTAGGED_FILTER
 } from '../../constants'
 
+export const page = 'FUNCTIONS'
 export const detailsMenu = [
   {
     id: 'overview',
@@ -46,17 +49,6 @@ export const FUNCTIONS_EDITABLE_STATES = [
   ...FUNCTIONS_READY_STATES,
   ...FUNCTIONS_FAILED_STATES
 ]
-export const getFunctionsEditableTypes = isStagingMode => {
-  const editableTypes = [FUNCTION_TYPE_JOB, FUNCTION_TYPE_LOCAL, '']
-
-  if (isStagingMode) {
-    editableTypes.push(FUNCTION_TYPE_SERVING)
-  }
-
-  return editableTypes
-}
-
-export const page = 'FUNCTIONS'
 export const infoHeaders = [
   { label: 'Name', id: 'name' },
   { label: 'Kind', id: 'type' },
@@ -72,5 +64,21 @@ export const filters = [
   { type: NAME_FILTER, label: 'Name:' },
   { type: SHOW_UNTAGGED_FILTER, label: 'Show untagged' }
 ]
-
 export const TRANSIENT_FUNCTION_STATUSES = ['pending', 'running']
+
+export const getFunctionsEditableTypes = isStagingMode => {
+  const editableTypes = [FUNCTION_TYPE_JOB, FUNCTION_TYPE_LOCAL, '']
+
+  if (isStagingMode) {
+    editableTypes.push(FUNCTION_TYPE_SERVING)
+  }
+
+  return editableTypes
+}
+export const getFunctionImage = func => {
+  return func.type === FUNCTION_TYPE_NUCLIO ||
+    func.type === FUNCTION_TYPE_SERVING ||
+    func.type === FUNCTION_TYPE_REMOTE
+    ? func.container_image
+    : func.image
+}

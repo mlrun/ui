@@ -63,7 +63,7 @@ const Files = () => {
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption] = useGetTagOptions(null, filters)
+  const [urlTagOption] = useGetTagOptions(null, filters, null, FILES_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
@@ -293,6 +293,7 @@ const Files = () => {
       tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
+      urlTagOption={urlTagOption}
     />
   )
 }
