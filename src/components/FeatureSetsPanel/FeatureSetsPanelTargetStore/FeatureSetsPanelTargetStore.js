@@ -45,6 +45,7 @@ import {
 import { isUrlInputValid } from '../UrlPath.utils'
 
 const FeatureSetsPanelTargetStore = ({
+  disableButtons,
   featureStore,
   project,
   setDisableButtons,
@@ -719,6 +720,7 @@ const FeatureSetsPanelTargetStore = ({
   return (
     <FeatureSetsPanelTargetStoreView
       data={data}
+      disableButtons={disableButtons}
       featureStore={featureStore}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleDiscardPathChange={handleDiscardPathChange}
@@ -750,6 +752,7 @@ const FeatureSetsPanelTargetStore = ({
 }
 
 FeatureSetsPanelTargetStore.propTypes = {
+  disableButtons: PropTypes.shape({}).isRequired,
   featureStore: PropTypes.shape({}).isRequired,
   project: PropTypes.string.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
