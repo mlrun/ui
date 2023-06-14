@@ -133,7 +133,18 @@ export const handleApplyDetailsChanges = (
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'Permission denied.'
               : 'Failed to update.',
-          retry: handleApplyDetailsChanges
+          retry: () => handleApplyDetailsChanges(
+            changes,
+            fetchData,
+            projectName,
+            itemName,
+            pageTab,
+            selectedItem,
+            setNotification,
+            updateFeatureStoreData,
+            filters,
+            dispatch
+          )
         })
       )
     })
