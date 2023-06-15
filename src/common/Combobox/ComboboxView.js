@@ -33,6 +33,7 @@ const ComboboxView = React.forwardRef(
   (
     {
       comboboxClassName,
+      disabled,
       dropdownList,
       dropdownStyle,
       handleIconClick,
@@ -61,18 +62,14 @@ const ComboboxView = React.forwardRef(
     const comboboxClassNames = classnames(
       comboboxClassName,
       'combobox',
-      isInvalid && 'combobox_invalid'
+      isInvalid && !disabled && 'combobox_invalid',
+      disabled && 'combobox_disabled'
     )
-    const iconClassNames = classnames(
-      showSelectDropdown && 'combobox-icon_open',
-      'combobox-icon'
-    )
+    const iconClassNames = classnames(showSelectDropdown && 'combobox-icon_open', 'combobox-icon')
     const selectClassNames = classnames(
       'combobox-select',
       showSelectDropdown && 'combobox-select_open',
-      selectValue.id.length <= 5 &&
-        selectValue.id.length !== 0 &&
-        'combobox-select_short'
+      selectValue.id.length <= 5 && selectValue.id.length !== 0 && 'combobox-select_short'
     )
     const dropdownClassNames = classnames(
       'combobox-dropdown',
@@ -91,11 +88,7 @@ const ComboboxView = React.forwardRef(
             {selectValue.id.length === 0 && (
               <span className="combobox-select__header-label">
                 {selectPlaceholder}
-                {required && (
-                  <span className="combobox-select__header-label_mandatory">
-                    *
-                  </span>
-                )}
+                {required && <span className="combobox-select__header-label_mandatory">*</span>}
               </span>
             )}
           </div>
@@ -115,7 +108,7 @@ const ComboboxView = React.forwardRef(
         </div>
         <input
           className="combobox-input"
-          disabled={selectValue.id.length === 0}
+          disabled={selectValue.id.length === 0 || disabled}
           onChange={handleInputOnChange}
           onFocus={inputOnFocus}
           placeholder={inputPlaceholder}
@@ -159,16 +152,12 @@ const ComboboxView = React.forwardRef(
             )}
           </ul>
         </div>
-        {isInvalid && (
+        {isInvalid && !disabled && (
           <Tooltip
             className="combobox-warning"
             template={
               <TextTooltipTemplate
-                text={
-                  required && selectValue.id.length === 0
-                    ? requiredText
-                    : invalidText
-                }
+                text={required && selectValue.id.length === 0 ? requiredText : invalidText}
                 warning
               />
             }
@@ -183,6 +172,7 @@ const ComboboxView = React.forwardRef(
 
 ComboboxView.propTypes = {
   comboboxClassName: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
   dropdownList: COMBOBOX_MATCHES.isRequired,
   dropdownStyle: PropTypes.shape({}).isRequired,
   handleIconClick: PropTypes.func.isRequired,

@@ -32,16 +32,7 @@ import ArtifactsFilters from './ArtifactsFilters'
 import NameFilter from '../../common/NameFilter/NameFilter'
 
 import { setFieldState } from 'igz-controls/utils/form.util'
-import {
-  GROUP_BY_NAME,
-  GROUP_BY_NONE,
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
-  SHOW_ITERATIONS,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_LATEST
-} from '../../constants'
+import { GROUP_BY_NAME, GROUP_BY_NONE, TAG_FILTER, TAG_FILTER_ALL_ITEMS } from '../../constants'
 import { removeFilters, setFilters } from '../../reducers/filtersReducer'
 
 import detailsActions from '../../actions/details'
@@ -56,9 +47,11 @@ function ArtifactsActionBar({
   removeSelectedItem,
   setContent,
   setSelectedRowData,
-  tab
+  tab,
+  urlTagOption
 }) {
   const filtersStore = useSelector(store => store.filtersStore)
+  const filterMenuModal = useSelector(store => store.filtersStore.filterMenuModal[filterMenuName])
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
   const params = useParams()
@@ -71,15 +64,18 @@ function ArtifactsActionBar({
     })
   )
 
+  const filtersInitialState = useMemo(() => {
+    return {
+      ...filterMenuModal.initialValues,
+      [TAG_FILTER]: urlTagOption ?? filterMenuModal.initialValues.tag
+    }
+  }, [filterMenuModal.initialValues, urlTagOption])
+
   useEffect(() => {
     return () => {
       dispatch(removeFilters())
     }
-  }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
-
-  const filtersInitialState = useMemo(() => {
-    return { [TAG_FILTER]: TAG_LATEST, [LABELS_FILTER]: '', [ITERATIONS_FILTER]: SHOW_ITERATIONS }
-  }, [])
+  }, [params.pageTab, params.projectName, page, tab, dispatch])
 
   const applyChanges = async (name, filterMenuModal) => {
     const filtersHelperResult = await filtersHelper(changes, dispatch)
@@ -144,16 +140,14 @@ function ArtifactsActionBar({
       {formState => (
         <div className="action-bar">
           <div className="action-bar__filters">
-            <NameFilter
-              applyChanges={applyChanges}
-              filters={filtersStore.filterMenuModal[filterMenuName].values}
-            />
+            <NameFilter applyChanges={value => applyChanges(value, filterMenuModal.values)} />
             <FilterMenuModal
               applyButton={{ label: 'Apply', variant: 'secondary' }}
               applyChanges={filterMenuModal => applyChanges(formState.values.name, filterMenuModal)}
               cancelButton={{ label: 'Clear', variant: 'tertiary' }}
               filterMenuName={filterMenuName}
               initialValues={filtersInitialState}
+              restartFormTrigger={tab ?? page}
               values={filtersInitialState}
               wizardClassName="artifacts-filters__wrapper"
             >

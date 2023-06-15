@@ -26,12 +26,14 @@ import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import Details from '../../Details/Details'
 
-import { MODELS_PAGE, MODELS_TAB } from '../../../constants'
+import { FULL_VIEW_MODE, MODELS_FILTERS, MODELS_PAGE, MODELS_TAB } from '../../../constants'
 import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { removeModel } from '../../../reducers/artifactsReducer'
 import { filters } from './models.util'
+import { ACTIONS_MENU } from '../../../types'
 
 const ModelsView = React.forwardRef(
   (
@@ -52,7 +54,9 @@ const ModelsView = React.forwardRef(
       setSelectedModel,
       setSelectedRowData,
       sortProps,
-      tableContent
+      tableContent,
+      viewMode,
+      urlTagOption
     },
     ref
   ) => {
@@ -63,17 +67,26 @@ const ModelsView = React.forwardRef(
             <div className="content__action-bar-wrapper">
               <ModelsPageTabs />
               <ArtifactsActionBar
-                filterMenuName={MODELS_TAB}
+                filterMenuName={MODELS_FILTERS}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
                 removeSelectedItem={removeModel}
                 setContent={setModels}
                 setSelectedRowData={setSelectedRowData}
                 tab={MODELS_TAB}
+                urlTagOption={urlTagOption}
               />
             </div>
             {artifactsStore.loading ? null : models.length === 0 ? (
-              <NoData message={getNoDataMessage(filtersStore, filters, MODELS_PAGE, MODELS_TAB)} />
+              <NoData
+                message={getNoDataMessage(
+                  filtersStore,
+                  filters,
+                  MODELS_PAGE,
+                  MODELS_TAB,
+                  MODELS_FILTERS
+                )}
+              />
             ) : (
               <>
                 {selectedRowData.loading && <Loader />}
@@ -106,6 +119,18 @@ const ModelsView = React.forwardRef(
                 </Table>
               </>
             )}
+            {viewMode === FULL_VIEW_MODE && (
+              <Details
+                actionsMenu={actionsMenu}
+                detailsMenu={pageData.details.menu}
+                handleRefresh={handleRefresh}
+                isDetailsScreen
+                pageData={pageData}
+                selectedItem={selectedModel}
+                setSelectedItem={setSelectedModel}
+                tab={MODELS_TAB}
+              />
+            )}
           </div>
         </div>
       </>
@@ -114,11 +139,13 @@ const ModelsView = React.forwardRef(
 )
 
 ModelsView.defaultProps = {
-  sortProps: null
+  sortProps: null,
+  viewMode: null,
+  urlTagOption: null
 }
 
 ModelsView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
@@ -133,7 +160,9 @@ ModelsView.propTypes = {
   setSelectedModel: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  viewMode: PropTypes.string,
+  urlTagOption: PropTypes.string
 }
 
 export default ModelsView

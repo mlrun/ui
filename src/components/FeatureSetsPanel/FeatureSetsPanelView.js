@@ -107,6 +107,7 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelTargetStore
+              disableButtons={disableButtons}
               project={project}
               setDisableButtons={setDisableButtons}
               setValidation={setValidation}

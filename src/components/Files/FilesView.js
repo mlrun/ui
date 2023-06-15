@@ -32,11 +32,12 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 
-import { ARTIFACT_TYPE, FILES_PAGE } from '../../constants'
+import { ARTIFACT_TYPE, FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './files.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { removeFile } from '../../reducers/artifactsReducer'
+import Details from '../Details/Details'
 
 const FilesView = React.forwardRef(
   (
@@ -58,7 +59,9 @@ const FilesView = React.forwardRef(
       setSelectedFile,
       setSelectedRowData,
       tableContent,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      viewMode,
+      urlTagOption
     },
     ref
   ) => {
@@ -87,16 +90,19 @@ const FilesView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
-                  filterMenuName={FILES_PAGE}
+                  filterMenuName={FILES_FILTERS}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
                   removeSelectedItem={removeFile}
                   setContent={setFiles}
                   setSelectedRowData={setSelectedRowData}
+                  urlTagOption={urlTagOption}
                 />
               </div>
               {artifactsStore.loading ? null : files.length === 0 ? (
-                <NoData message={getNoDataMessage(filtersStore, filters, FILES_PAGE)} />
+                <NoData
+                  message={getNoDataMessage(filtersStore, filters, FILES_PAGE, null, FILES_FILTERS)}
+                />
               ) : (
                 <>
                   {selectedRowData.loading && <Loader />}
@@ -125,6 +131,16 @@ const FilesView = React.forwardRef(
                   </Table>
                 </>
               )}
+              {viewMode === FULL_VIEW_MODE && (
+                <Details
+                  actionsMenu={actionsMenu}
+                  detailsMenu={pageData.details.menu}
+                  handleRefresh={handleRefresh}
+                  isDetailsScreen
+                  pageData={pageData}
+                  selectedItem={selectedFile}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -138,6 +154,11 @@ const FilesView = React.forwardRef(
     )
   }
 )
+
+FilesView.defaultProps = {
+  viewMode: null,
+  urlTagOption: null
+}
 
 FilesView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -155,7 +176,9 @@ FilesView.propTypes = {
   selectedRowData: PropTypes.object.isRequired,
   setSelectedFile: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  toggleConvertedYaml: PropTypes.func.isRequired,
+  viewMode: PropTypes.string,
+  urlTagOption: PropTypes.string
 }
 
 export default FilesView

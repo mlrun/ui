@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { chain, isEmpty, unionBy, isEqual } from 'lodash'
+import { chain, isEmpty, unionBy, isEqual, cloneDeep } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -554,17 +554,17 @@ export const generateRequestData = (
   }
 
   const taskSpec = {
-    ...jobsStore.newJob.task.spec,
+    ...cloneDeep(jobsStore.newJob.task.spec),
     function: func,
     handler: mode === PANEL_EDIT_MODE ? defaultHandler : panelState.currentFunctionInfo.method,
     input_path: panelState.inputPath,
     output_path: panelState.outputPath
   }
 
-  if (jobsStore.newJob.task.spec.selector.result.length > 0) {
-    taskSpec.selector = `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
+  if (jobsStore.newJob.task.spec.hyper_param_options.selector.result.length > 0) {
+    taskSpec.hyper_param_options.selector = `${jobsStore.newJob.task.spec.hyper_param_options.selector.criteria}.${jobsStore.newJob.task.spec.hyper_param_options.selector.result}`
   } else {
-    delete taskSpec.selector
+    delete taskSpec.hyper_param_options.selector
   }
 
   return {

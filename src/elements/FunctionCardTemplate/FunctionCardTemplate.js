@@ -63,6 +63,7 @@ const FunctionCardTemplate = ({
       {functionData.labelsName && get(formState?.values, functionData.labelsName, null) && (
         <FormChipCell
           chipOptions={getChipOptions('metrics')}
+          className="job-card-template__chips"
           formState={formState}
           initialValues={formState.initialValues}
           name={functionData.labelsName}

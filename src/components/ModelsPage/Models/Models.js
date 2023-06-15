@@ -33,7 +33,8 @@ import {
   MODELS_TAB,
   TAG_FILTER_ALL_ITEMS,
   FILTER_MENU_MODAL,
-  GROUP_BY_NONE
+  GROUP_BY_NONE,
+  MODELS_FILTERS
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -56,6 +57,7 @@ import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
+import { getViewMode } from '../../../utils/helper'
 
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
@@ -64,7 +66,7 @@ import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 const Models = ({ fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [urlTagOption] = useGetTagOptions(null, filters)
+  const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -73,12 +75,16 @@ const Models = ({ fetchModelFeatureVector }) => {
   const location = useLocation()
   const dispatch = useDispatch()
   const modelsRef = useRef(null)
-  const pageData = useMemo(() => generatePageData(selectedModel), [selectedModel])
+  const viewMode = getViewMode(window.location.search)
+  const pageData = useMemo(
+    () => generatePageData(selectedModel, viewMode),
+    [selectedModel, viewMode]
+  )
   const { fetchData, models, allModels, setModels, setAllModels, toggleConvertedYaml } =
     useModelsPage()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const modelsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][MODELS_TAB].values,
+    () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
     [filtersStore]
   )
 
@@ -317,6 +323,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
+      viewMode={viewMode}
+      urlTagOption={urlTagOption}
     />
   )
 }

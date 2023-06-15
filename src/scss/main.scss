@@ -208,6 +208,8 @@ main {
 }
 
 .table {
+  display: flex;
+  flex-flow: column nowrap;
   flex: 1;
   position: relative;
   text-align: left;
@@ -239,6 +241,7 @@ main {
             position: sticky;
             left: 0;
             flex-basis: 240px;
+            min-width: 240px;
             max-width: 240px;
             z-index: 1;
           }
@@ -269,7 +272,7 @@ main {
               .table-cell-icon {
                 .actions-menu {
                   &__container {
-                    display: block;
+                    display: flex;
 
                     .btn {
                       min-width: 24px;
@@ -362,6 +365,21 @@ main {
     &-body {
       position: relative;
       z-index: 2;
+
+      &__cell {
+        .status {
+          display: flex;
+          flex: 0 1 12px;
+          align-items: center;
+          justify-content: center;
+          margin-left: 5px;
+          min-width: 12px;
+
+          & > * {
+            margin: 0;
+          }
+        }
+      }
 
       .table-row {
         background-color: $white;

@@ -36,23 +36,25 @@ const TableProducerCell = ({ data }) => {
   return (
     <td className={`table-body__cell ${data.class}`}>
       {data.value.name && uid && (
-        <Tooltip
-          template={
-            <ProducerTooltipTemplate
-              kind={data.value.kind}
-              owner={data.value.owner ? data.value.owner : ''}
-            />
-          }
+        <Link
+          className="data-ellipsis"
+          to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${name}/${uid.split('-')[0]}/${
+            overviewTab.id
+          }`}
         >
-          <Link
-            className="link"
-            to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${name}/${uid.split('-')[0]}/${
-              overviewTab.id
-            }`}
-          >
-            {data.value.name}
-          </Link>
-        </Tooltip>
+          <div className="link">
+            <Tooltip
+              template={
+                <ProducerTooltipTemplate
+                  kind={data.value.kind}
+                  owner={data.value.owner ? data.value.owner : ''}
+                />
+              }
+            >
+              {data.value.name}
+            </Tooltip>
+          </div>
+        </Link>
       )}
     </td>
   )

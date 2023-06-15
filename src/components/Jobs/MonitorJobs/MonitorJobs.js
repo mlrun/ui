@@ -52,7 +52,7 @@ import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { enrichRunWithFunctionTag, handleAbortJob } from '../jobs.util'
+import { enrichRunWithFunctionFields, handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
@@ -227,11 +227,13 @@ const MonitorJobs = ({
 
   const modifyAndSelectRun = useCallback(
     jobRun => {
-      return enrichRunWithFunctionTag(jobRun, fetchJobFunctions, fetchJobFunctionsPromiseRef).then(
-        jobRun => {
-          setSelectedJob(jobRun)
-        }
-      )
+      return enrichRunWithFunctionFields(
+        jobRun,
+        fetchJobFunctions,
+        fetchJobFunctionsPromiseRef
+      ).then(jobRun => {
+        setSelectedJob(jobRun)
+      })
     },
     [fetchJobFunctions]
   )

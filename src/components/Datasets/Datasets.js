@@ -26,6 +26,7 @@ import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
 import {
+  DATASETS_FILTERS,
   DATASETS_PAGE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
@@ -56,6 +57,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { getViewMode } from '../../utils/helper'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -66,18 +68,22 @@ const Datasets = () => {
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption] = useGetTagOptions(null, filters)
+  const [urlTagOption] = useGetTagOptions(null, filters, null, DATASETS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
-  const pageData = useMemo(() => generatePageData(selectedDataset), [selectedDataset])
+  const viewMode = getViewMode(window.location.search)
+  const pageData = useMemo(
+    () => generatePageData(selectedDataset, viewMode),
+    [selectedDataset, viewMode]
+  )
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const datasetsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][DATASETS_PAGE].values,
+    () => filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values,
     [filtersStore]
   )
 
@@ -303,6 +309,8 @@ const Datasets = () => {
       setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
+      viewMode={viewMode}
+      urlTagOption={urlTagOption}
     />
   )
 }

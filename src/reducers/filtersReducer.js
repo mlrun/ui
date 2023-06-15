@@ -22,13 +22,13 @@ import { set } from 'lodash'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
-  DATASETS_PAGE,
+  DATASETS_FILTERS,
   DATE_FILTER_ANY_TIME,
-  FILES_PAGE,
+  FILES_FILTERS,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   MODEL_TYPE,
-  MODELS_TAB,
+  MODELS_FILTERS,
   SHOW_ITERATIONS,
   STATE_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
@@ -52,15 +52,15 @@ const initialState = {
   tagOptions: null,
   projectOptions: [],
   [FILTER_MENU_MODAL]: {
-    [DATASETS_PAGE]: {
+    [DATASETS_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
     },
-    [FILES_PAGE]: {
+    [FILES_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
     },
-    [MODELS_TAB]: {
+    [MODELS_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
     }

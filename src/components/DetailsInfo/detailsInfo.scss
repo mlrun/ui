@@ -3,19 +3,32 @@
 @import '~igz-controls/scss/mixins';
 
 .item-info {
+  display: flex;
   overflow: auto;
+  flex-flow: column nowrap;
+
+  @media screen and (min-width: 1200px) {
+    flex-flow: row wrap;
+  }
 
   &__header {
     margin: 0;
     padding: 21.5px 36px;
     font-size: 25px;
-    border-bottom: $secondaryBorder;
   }
 
   &__details {
     margin: 0;
     padding: 0 30px;
     list-style-type: none;
+
+    &-wrapper {
+      width: 100%;
+
+      @media screen and (min-width: 1200px) {
+        width: 50%;
+      }
+    }
 
     .details-item {
       display: flex;
@@ -31,6 +44,7 @@
 
       &__header {
         display: flex;
+        width: 150px;
         min-width: 100px;
         font-weight: bold;
         font-size: 14px;
@@ -45,9 +59,8 @@
         display: flex;
         flex: 1;
         align-items: center;
-        min-width: 60px;
+        min-width: 110px;
         padding-left: 16px;
-        overflow-x: auto;
         word-break: break-word;
 
         &-btn-edit {

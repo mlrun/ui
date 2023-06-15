@@ -26,6 +26,7 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import FilesView from './FilesView'
 
 import {
+  FILES_FILTERS,
   FILES_PAGE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
@@ -51,6 +52,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { getViewMode } from '../../utils/helper'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -61,7 +63,7 @@ const Files = () => {
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption] = useGetTagOptions(null, filters)
+  const [urlTagOption] = useGetTagOptions(null, filters, null, FILES_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
@@ -69,10 +71,11 @@ const Files = () => {
   const location = useLocation()
   const dispatch = useDispatch()
   const filesRef = useRef(null)
-  const pageData = useMemo(() => generatePageData(selectedFile), [selectedFile])
+  const viewMode = getViewMode(window.location.search)
+  const pageData = useMemo(() => generatePageData(selectedFile, viewMode), [selectedFile, viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][FILES_PAGE].values,
+    () => filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values,
     [filtersStore]
   )
 
@@ -289,6 +292,8 @@ const Files = () => {
       setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       toggleConvertedYaml={toggleConvertedYaml}
+      viewMode={viewMode}
+      urlTagOption={urlTagOption}
     />
   )
 }

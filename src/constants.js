@@ -47,6 +47,8 @@ export const DENSITY_CHUNKY = 'chunky'
 export const NAVBAR_WIDTH_CLOSED = 57
 export const NAVBAR_WIDTH_OPENED = 245
 
+export const FULL_VIEW_MODE = 'full'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
@@ -89,6 +91,7 @@ export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 
 /*=========== DATASETS =============*/
 export const DATASETS = 'datasets'
+export const DATASETS_FILTERS = 'DATASETS_FILTERS'
 
 /*=========== JOBS =============*/
 
@@ -184,6 +187,7 @@ export const FUNCTION_TYPE_JOB = 'job'
 export const FUNCTION_TYPE_LOCAL = 'local'
 export const FUNCTION_TYPE_SERVING = 'serving'
 export const FUNCTION_TYPE_NUCLIO = 'nuclio'
+export const FUNCTION_TYPE_REMOTE = 'remote'
 export const GET_FUNCTION_BEGIN = 'GET_FUNCTION_BEGIN'
 export const GET_FUNCTION_FAILURE = 'GET_FUNCTION_FAILURE'
 export const GET_FUNCTION_SUCCESS = 'GET_FUNCTION_SUCCESS'
@@ -228,11 +232,13 @@ export const SET_NEW_FUNCTION_VOLUME_MOUNTS = 'SET_NEW_FUNCTION_VOLUME_MOUNTS'
 /*=========== ARTIFACTS =============*/
 
 export const ARTIFACTS = 'artifacts'
+export const FILES_FILTERS = 'FILES_FILTERS'
 export const ARTIFACT_PREVIEW_TABLE_ROW_LIMIT = 100
 
 /*=========== MODELS =============*/
 
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN = 'FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN'
+export const MODELS_FILTERS = 'MODELS_FILTERS'
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE =
   'FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE'
 export const FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS =

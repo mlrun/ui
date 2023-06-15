@@ -31,8 +31,9 @@ import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModa
 import Loader from '../../common/Loader/Loader'
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
+import Details from '../Details/Details'
 
-import { DATASET_TYPE, DATASETS_PAGE } from '../../constants'
+import { DATASET_TYPE, DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './datasets.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -58,7 +59,9 @@ const DatasetsView = React.forwardRef(
       setSelectedDataset,
       setSelectedRowData,
       tableContent,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      viewMode,
+      urlTagOption
     },
     ref
   ) => {
@@ -87,16 +90,25 @@ const DatasetsView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
-                  filterMenuName={DATASETS_PAGE}
+                  filterMenuName={DATASETS_FILTERS}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
                   removeSelectedItem={removeDataSet}
                   setContent={setDatasets}
                   setSelectedRowData={setSelectedRowData}
+                  urlTagOption={urlTagOption}
                 />
               </div>
               {artifactsStore.loading ? null : datasets.length === 0 ? (
-                <NoData message={getNoDataMessage(filtersStore, filters, DATASETS_PAGE)} />
+                <NoData
+                  message={getNoDataMessage(
+                    filtersStore,
+                    filters,
+                    DATASETS_PAGE,
+                    null,
+                    DATASETS_FILTERS
+                  )}
+                />
               ) : (
                 <>
                   {selectedRowData.loading && <Loader />}
@@ -125,6 +137,16 @@ const DatasetsView = React.forwardRef(
                   </Table>
                 </>
               )}
+              {viewMode === FULL_VIEW_MODE && (
+                <Details
+                  actionsMenu={actionsMenu}
+                  detailsMenu={pageData.details.menu}
+                  handleRefresh={handleRefresh}
+                  isDetailsScreen
+                  pageData={pageData}
+                  selectedItem={selectedDataset}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -138,6 +160,11 @@ const DatasetsView = React.forwardRef(
     )
   }
 )
+
+DatasetsView.defaultProps = {
+  viewMode: null,
+  urlTagOption: null
+}
 
 DatasetsView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -157,7 +184,9 @@ DatasetsView.propTypes = {
   setSelectedDataset: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  toggleConvertedYaml: PropTypes.func.isRequired,
+  viewMode: PropTypes.string,
+  urlTagOption: PropTypes.string
 }
 
 export default DatasetsView

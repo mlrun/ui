@@ -30,6 +30,7 @@ import {
 } from '../../constants'
 import { formatDatetime, generateLinkPath } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
+import { getFunctionImage } from '../FunctionsPage/functions.util'
 
 export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
@@ -72,7 +73,8 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
   } else {
     return {
       hash: {
-        value: selectedItem.hash ?? ''
+        value: selectedItem.hash ?? '',
+        copyToClipboard: selectedItem.hash?.length > 0
       },
       db_key: {
         value: selectedItem.db_key
@@ -134,7 +136,8 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         link: `${generateLinkPath(selectedItem.feature_vector)}/overview`
       },
       tree: {
-        value: selectedItem.tree
+        value: selectedItem.tree,
+        copyToClipboard: selectedItem.tree?.length > 0
       },
       updated: {
         value: formatDatetime(selectedItem.updated, 'N/A')
@@ -184,6 +187,15 @@ export const generateJobsContent = selectedItem => {
     },
     updated: {
       value: formatDatetime(selectedItem.updated, 'N/A')
+    },
+    runOnSpot: {
+      value: selectedItem.ui.runOnSpot
+    },
+    nodeSelectorChips: {
+      value: selectedItem.ui.nodeSelectorChips
+    },
+    priority: {
+      value: selectedItem.ui.priority
     },
     parameters: {
       value: selectedItem.parametersChips
@@ -240,7 +252,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.command
   },
   image: {
-    value: selectedItem.image
+    value: getFunctionImage(selectedItem)
   },
   description: {
     value: selectedItem.description
@@ -382,7 +394,9 @@ export const countChanges = changesData => {
   Object.keys(changesData).forEach(field => {
     if (field === 'features') {
       changesData.features.initialFieldValue.forEach(item => {
-        if (!JSON.stringify(changesData.features.currentFieldValue).includes(JSON.stringify(item))) {
+        if (
+          !JSON.stringify(changesData.features.currentFieldValue).includes(JSON.stringify(item))
+        ) {
           changesCounter++
         }
       })
