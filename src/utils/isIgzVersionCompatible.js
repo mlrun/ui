@@ -22,26 +22,17 @@ import localStorageService from './localStorageService'
 
 export const isIgzVersionCompatible = requiredIgzVersion => {
   const igzFullVersion = localStorageService.getStorageValue('igzFullVersion')
-  let requiredIgzVersionArray = requiredIgzVersion.split('.')
 
   if (igzFullVersion) {
-    let currentIgzVersionArray = igzFullVersion.split('-')[0].split('.')
-    requiredIgzVersionArray = requiredIgzVersionArray.map(item => Number(item))
-    currentIgzVersionArray = currentIgzVersionArray.map(item => Number(item))
+    const requiredIgzVersionArray = requiredIgzVersion.split('.').map(Number)
+    const currentIgzVersionArray = igzFullVersion.split('-')[0].split('.').map(Number)
 
-    if (currentIgzVersionArray[0] < requiredIgzVersionArray[0]) {
-      return false
-    } else if (
-      currentIgzVersionArray[1] < requiredIgzVersionArray[1] &&
-      currentIgzVersionArray[0] === requiredIgzVersionArray[0]
-    ) {
-      return false
-    } else if (
-      currentIgzVersionArray[2] < requiredIgzVersionArray[2] &&
-      currentIgzVersionArray[1] === requiredIgzVersionArray[1] &&
-      currentIgzVersionArray[0] === requiredIgzVersionArray[0]
-    ) {
-      return false
+    for (let i = 0; i < 3; i++) {
+      if (currentIgzVersionArray[i] < requiredIgzVersionArray[i]) {
+        return false
+      } else if (currentIgzVersionArray[i] > requiredIgzVersionArray[i]) {
+        break
+      }
     }
   }
 

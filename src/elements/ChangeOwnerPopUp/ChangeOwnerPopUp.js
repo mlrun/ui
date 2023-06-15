@@ -135,24 +135,35 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
       params['filter[username]'] = `[$contains_istr]${memberName}`
     }
 
-    const response = await projectsIguazioApi.getScrubbedUsers({
-      params
-    })
-    const {
-      data: { data: users }
-    } = response
-
-    setUsersList(
-      users.map(user => {
-        return {
-          name: `${user.attributes.first_name} ${user.attributes.last_name}`,
-          username: user.attributes.username,
-          label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
-          id: user.id,
-          role: ''
-        }
+    try {
+      const response = await projectsIguazioApi.getScrubbedUsers({
+        params
       })
-    )
+
+      const {
+        data: { data: users }
+      } = response
+
+      setUsersList(
+        users.map(user => {
+          return {
+            name: `${user.attributes.first_name} ${user.attributes.last_name}`,
+            username: user.attributes.username,
+            label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
+            id: user.id,
+            role: ''
+          }
+        })
+      )
+    } catch (error) {
+      dispatch(
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch users.'
+        })
+      )
+    }
 
     resolve()
   }, 200)
