@@ -122,7 +122,9 @@ const ModelsView = React.forwardRef(
             {viewMode === FULL_VIEW_MODE && (
               <Details
                 actionsMenu={actionsMenu}
+                applyDetailsChanges={applyDetailsChanges}
                 detailsMenu={pageData.details.menu}
+                formInitialValues={detailsFormInitialValues}
                 handleRefresh={handleRefresh}
                 isDetailsScreen
                 pageData={pageData}

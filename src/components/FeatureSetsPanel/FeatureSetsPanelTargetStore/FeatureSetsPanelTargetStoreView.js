@@ -56,6 +56,7 @@ import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
   data,
+  disableButtons,
   featureStore,
   frontendSpecIsNotEmpty,
   handleAdvancedLinkClick,
@@ -355,6 +356,7 @@ const FeatureSetsPanelTargetStoreView = ({
                 />
                 {data.externalOffline.kind === PARQUET && (
                   <CheckBox
+                    disabled={!disableButtons.isExternalOfflineTargetPathEditModeClosed}
                     item={{ id: 'partitioned', label: 'Partition' }}
                     onChange={id => triggerPartitionCheckbox(id, EXTERNAL_OFFLINE)}
                     selectedId={data.externalOffline.partitioned}
@@ -421,6 +423,7 @@ FeatureSetsPanelTargetStoreView.defualtProps = {
 
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  disableButtons: PropTypes.shape({}).isRequired,
   frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,

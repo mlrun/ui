@@ -100,7 +100,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                           contentItemValue.match(/completed|running|error/gi)
                         ) {
                           return (
-                            <td className="table-body-cell" key={`${contentItemValue}${idx}`}>
+                            <td className="table-body-cell" key={`${contentItemValue}-${idx}`}>
                               <Tooltip
                                 template={
                                   <TextTooltipTemplate
@@ -121,7 +121,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                         ) {
                           return (
                             <td
-                              key={`${contentItemValue}${idx}`}
+                              key={`${contentItemValue}-${idx}`}
                               className="results-table__medal table-body-cell"
                             >
                               <span>{contentItemValue}</span>
@@ -135,7 +135,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                           )
                         } else {
                           return (
-                            <td className="table-body-cell" key={`${contentItemValue}${idx}`}>
+                            <td className="table-body-cell" key={`${contentItemValue}-${idx}`}>
                               <Tooltip
                                 className="data-ellipsis"
                                 template={

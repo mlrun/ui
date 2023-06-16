@@ -27,7 +27,7 @@ export const generateModelEndpoints = endpoints =>
     state: getState(endpoint.status.state),
     ui: {
       originalContent: endpoint,
-      identifier: getArtifactIdentifier(endpoints),
-      identifierUnique: getArtifactIdentifier(endpoints, true)
+      identifier: getArtifactIdentifier(endpoint),
+      identifierUnique: getArtifactIdentifier(endpoint, true)
     }
   }))
