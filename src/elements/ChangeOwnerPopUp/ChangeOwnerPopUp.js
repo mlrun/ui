@@ -31,6 +31,7 @@ import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
 import { FORBIDDEN_ERROR_STATUS_CODE, SECONDARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
+import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
@@ -125,27 +126,44 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
   }
 
   const generateSuggestionList = debounce(async (memberName, resolve) => {
-    const response = await projectsIguazioApi.getScrubbedUsers({
-      params: {
-        'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
-        'filter[username]': `[$contains_istr]${memberName}`
-      }
-    })
-    const {
-      data: { data: users }
-    } = response
+    const params = {
+      'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
+    }
+    const requiredIgzVersion = '3.5.3'
 
-    setUsersList(
-      users.map(user => {
-        return {
-          name: `${user.attributes.first_name} ${user.attributes.last_name}`,
-          username: user.attributes.username,
-          label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
-          id: user.id,
-          role: ''
-        }
+    if (isIgzVersionCompatible(requiredIgzVersion)) {
+      params['filter[username]'] = `[$contains_istr]${memberName}`
+    }
+
+    try {
+      const response = await projectsIguazioApi.getScrubbedUsers({
+        params
       })
-    )
+
+      const {
+        data: { data: users }
+      } = response
+
+      setUsersList(
+        users.map(user => {
+          return {
+            name: `${user.attributes.first_name} ${user.attributes.last_name}`,
+            username: user.attributes.username,
+            label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
+            id: user.id,
+            role: ''
+          }
+        })
+      )
+    } catch (error) {
+      dispatch(
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch users.'
+        })
+      )
+    }
 
     resolve()
   }, 200)

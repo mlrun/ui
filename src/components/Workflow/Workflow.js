@@ -21,7 +21,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { cloneDeep, forEach, isEmpty } from 'lodash'
+import { forEach, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Details from '../Details/Details'
@@ -109,34 +109,11 @@ const Workflow = ({
     const edges = []
     const nodes = []
     const jobs = []
-    const modifiedWorkflowGraph = cloneDeep(workflow.graph)
 
-    const setHiddenJobVisibility = (job, ancestorIsTaskGroup) => {
-      if (job.type === 'TaskGroup' && !ancestorIsTaskGroup) {
-        setHiddenJobVisibility(job, true)
-      }
-
-      job.children?.forEach(jobChildId => {
-        let jobChild = modifiedWorkflowGraph[jobChildId]
-
-        if (hiddenWorkflowStepTypes.includes(jobChild.type) && ancestorIsTaskGroup) {
-          jobChild.isHiddenJobVisible = true
-        }
-
-        if (jobChild.type === 'TaskGroup' || ancestorIsTaskGroup) {
-          setHiddenJobVisibility(jobChild, true)
-        }
-      })
-    }
-
-    forEach(modifiedWorkflowGraph, job => {
-      setHiddenJobVisibility(job)
-    })
-
-    forEach(modifiedWorkflowGraph, job => {
+    forEach(workflow.graph, job => {
       const sourceHandle = getWorkflowSourceHandle(job.phase)
 
-      if (hiddenWorkflowStepTypes.includes(job.type) && !job.isHiddenJobVisible) return
+      if (hiddenWorkflowStepTypes.includes(job.type) && !job.ui?.isHiddenJobVisible) return
 
       const customData = {
         function: job.function,
@@ -146,11 +123,11 @@ const Workflow = ({
       }
 
       if (job.function) {
-        const [, , functionName = '', functionHash = ''] =
-          job.function?.match(/(.+)\/([^@]+)(?:@(.+))?/) ?? []
+        const [, , functionName = '', functionHash = '', functionTag = ''] =
+          job.function?.match(/^([\w.-]+)\/([\w.-]+)(?:@(\w+))?(?::(\w+))?$/) ?? []
 
         customData.functionName = functionName
-        customData.functionHash = functionHash
+        customData.functionHash = functionHash ?? functionTag
       }
 
       let nodeItem = {
