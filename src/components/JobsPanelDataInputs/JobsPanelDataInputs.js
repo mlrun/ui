@@ -42,7 +42,7 @@ import {
 } from './jobsPanelDataInputs.util'
 import featureStoreActions from '../../actions/featureStore'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { ARTIFACT_OTHER_TYPE, DATASET_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { getFeatureReference, getParsedResource } from '../../utils/resources'
 import {
   generateArtifactsList,
@@ -112,10 +112,21 @@ const JobsPanelDataInputs = ({
   useEffect(() => {
     const storePathType = getInputValue('storePathType')
     const projectName = getInputValue('project')
+    const projectItem = getInputValue('projectItem')
 
     if (inputsState.inputProjectPathEntered && storePathType && projectName) {
-      if (storePathType === 'artifacts' && inputsState.artifacts.length === 0) {
-        dispatch(fetchArtifacts({ project: projectName }))
+      if (storePathType !== 'feature-vectors' && inputsState.artifacts.length === 0) {
+        dispatch(
+          fetchArtifacts({
+            project: projectName,
+            filters: null,
+            config: {
+              params: {
+                category: projectItem === 'artifacts' ? ARTIFACT_OTHER_TYPE : DATASET_TYPE
+              }
+            }
+          })
+        )
           .unwrap()
           .then(artifacts => {
             inputsDispatch({
@@ -156,7 +167,7 @@ const JobsPanelDataInputs = ({
     const projectItem = getInputValue('projectItem')
 
     if (inputsState.inputProjectItemPathEntered && storePathType && projectName && projectItem) {
-      if (storePathType === 'artifacts' && inputsState.artifactsReferences.length === 0) {
+      if (storePathType !== 'feature-vectors' && inputsState.artifactsReferences.length === 0) {
         dispatch(fetchArtifact({ project: projectName, artifact: projectItem }))
           .unwrap()
           .then(artifacts => {

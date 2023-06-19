@@ -25,7 +25,11 @@ import PropTypes from 'prop-types'
 import FeatureSetsPanelDataSourceView from './FeatureSetsPanelDataSourceView'
 
 import featureStoreActions from '../../../actions/featureStore'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+import {
+  ARTIFACT_OTHER_TYPE,
+  DATASET_TYPE,
+  MLRUN_STORAGE_INPUT_PATH_SCHEME
+} from '../../../constants'
 import { getParsedResource } from '../../../utils/resources'
 import {
   CSV,
@@ -95,7 +99,18 @@ const FeatureSetsPanelDataSource = ({
 
   useEffect(() => {
     if (urlProjectItemTypeEntered && urlProjectPathEntered && artifacts.length === 0) {
-      dispatch(fetchArtifacts({ project: data.url.project }))
+      dispatch(
+        fetchArtifacts({
+          project: data.url.project,
+          filters: null,
+          config: {
+            params: {
+              category:
+                data.url.projectItemType === 'artifacts' ? ARTIFACT_OTHER_TYPE : DATASET_TYPE
+            }
+          }
+        })
+      )
         .unwrap()
         .then(artifacts => {
           if (artifacts?.length > 0) {
@@ -106,6 +121,7 @@ const FeatureSetsPanelDataSource = ({
   }, [
     artifacts.length,
     data.url.project,
+    data.url.projectItemType,
     dispatch,
     urlProjectItemTypeEntered,
     urlProjectPathEntered

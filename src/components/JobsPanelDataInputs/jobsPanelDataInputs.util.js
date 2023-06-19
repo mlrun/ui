@@ -50,9 +50,7 @@ export const generateComboboxMatchesList = (
   selectedDataInputPath
 ) => {
   if (!inputStorePathTypeEntered) {
-    return storePathTypes.some(type =>
-      type.id.startsWith(newInput.path.storePathType)
-    )
+    return storePathTypes.some(type => type.id.startsWith(newInput.path.storePathType))
       ? storePathTypes
       : []
   } else if (
@@ -71,32 +69,24 @@ export const generateComboboxMatchesList = (
   } else if (!inputProjectItemPathEntered) {
     const selectedStorePathType =
       newInput.path.storePathType || selectedDataInputPath.value.split('/')[0]
-    const projectItems =
-      selectedStorePathType === 'artifacts'
-        ? artifacts
-        : selectedStorePathType === 'feature-vectors'
-        ? featureVectors
-        : null
+    const projectItems = selectedStorePathType === 'feature-vectors' ? featureVectors : artifacts
 
     return projectItems
       ? projectItems.filter(projectItem => {
           return isEveryObjectValueEmpty(selectedDataInputPath)
             ? projectItem.id.startsWith(newInput.path.projectItem)
-            : projectItem.id.startsWith(
-                selectedDataInputPath.value.split('/')[2]
-              )
+            : projectItem.id.startsWith(selectedDataInputPath.value.split('/')[2])
         })
       : []
   } else if (!inputProjectItemReferencePathEntered) {
     const selectedStorePathType =
       newInput.path.storePathType || selectedDataInputPath.value.split('/')[0]
     const projectItemsReferences =
-      selectedStorePathType === 'artifacts'
+      selectedStorePathType !== 'feature-vectors'
         ? artifactsReferences
         : selectedStorePathType === 'feature-vectors'
         ? featureVectorsReferences
         : null
-
     return projectItemsReferences
       ? projectItemsReferences.filter(projectItem => {
           return isEveryObjectValueEmpty(selectedDataInputPath)
@@ -125,8 +115,7 @@ export const handleAddItem = (
   newInputUrlPath,
   setDataInputsValidations
 ) => {
-  const isMlRunStorePath =
-    newItemObj.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
+  const isMlRunStorePath = newItemObj.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
   let mlRunStorePath = ''
 
   if (isMlRunStorePath) {
@@ -145,9 +134,7 @@ export const handleAddItem = (
 
   if (newItemObj.name.length === 0 || !pathInputIsValid) {
     setDataInputsValidations({
-      isNameValid:
-        !isNameNotUnique(newItemObj.name, dataInputs) &&
-        newItemObj.name.length > 0,
+      isNameValid: !isNameNotUnique(newItemObj.name, dataInputs) && newItemObj.name.length > 0,
       isPathValid: pathInputIsValid
     })
   } else {
@@ -208,15 +195,9 @@ export const handleEdit = (
 
   if (selectedItem.newDataInputName) {
     delete currentDataObj[selectedItem.name]
-    currentDataObj[selectedItem.newDataInputName] = joinDataOfArrayOrObject(
-      selectedItem.path,
-      ''
-    )
+    currentDataObj[selectedItem.newDataInputName] = joinDataOfArrayOrObject(selectedItem.path, '')
   } else {
-    currentDataObj[selectedItem.name] = joinDataOfArrayOrObject(
-      selectedItem.path,
-      ''
-    )
+    currentDataObj[selectedItem.name] = joinDataOfArrayOrObject(selectedItem.path, '')
   }
 
   setCurrentPanelData({ ...currentDataObj })
@@ -242,10 +223,7 @@ export const handleEdit = (
   })
 }
 
-export const resetDataInputsData = (
-  inputsDispatch,
-  setDataInputsValidations
-) => {
+export const resetDataInputsData = (inputsDispatch, setDataInputsValidations) => {
   inputsDispatch({
     type: inputsActions.REMOVE_NEW_INPUT_DATA
   })
@@ -287,15 +265,11 @@ export const handleDelete = (
   setCurrentPanelData({ ...newInputs })
   panelDispatch({
     type: setPreviousPanelData,
-    payload: previousPanelData.filter(
-      dataItem => dataItem.data.name !== selectedItem.data.name
-    )
+    payload: previousPanelData.filter(dataItem => dataItem.data.name !== selectedItem.data.name)
   })
   panelDispatch({
     type: setCurrentTableData,
-    payload: currentTableData.filter(
-      dataItem => dataItem.data.name !== selectedItem.data.name
-    )
+    payload: currentTableData.filter(dataItem => dataItem.data.name !== selectedItem.data.name)
   })
 }
 
@@ -341,6 +315,10 @@ export const storePathTypes = [
   {
     label: 'Artifacts',
     id: 'artifacts'
+  },
+  {
+    label: 'Datasets',
+    id: 'datasets'
   },
   {
     label: 'Feature vectors',
@@ -389,10 +367,7 @@ export const handleInputPathTypeChange = (
 
 export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
   if (inputsState.newInput.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
-    if (
-      path.length === 0 &&
-      inputsState.newInputDefaultPathProject.length > 0
-    ) {
+    if (path.length === 0 && inputsState.newInputDefaultPathProject.length > 0) {
       inputsDispatch({
         type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
         payload: ''
@@ -408,12 +383,7 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
   }
 }
 
-export const handleStoreInputPathChange = (
-  isNewInput,
-  inputsDispatch,
-  inputsState,
-  path
-) => {
+export const handleStoreInputPathChange = (isNewInput, inputsDispatch, inputsState, path) => {
   const pathItems = path.split('/')
   const [projectItem, projectItemReference] = getParsedResource(pathItems[2])
 
@@ -457,29 +427,22 @@ export const handleStoreInputPathChange = (
         storePathType: pathItems[0] ?? inputsState.newInput.path.storePathType,
         project: pathItems[1] ?? inputsState.newInput.path.project,
         projectItem: projectItem ?? inputsState.newInput.path.projectItem,
-        projectItemReference:
-          projectItemReference ?? inputsState.newInput.path.projectItemReference
+        projectItemReference: projectItemReference ?? inputsState.newInput.path.projectItemReference
       }
     })
   }
 
   const projectItems =
-    inputsState[pathItems[0] === 'artifacts' ? 'artifacts' : 'featureVectors']
-  const projectItemIsEntered = projectItems.find(
-    project => project.id === projectItem
-  )
+    inputsState[pathItems[0] !== 'feature-vectors' ? 'artifacts' : 'featureVectors']
+  const projectItemIsEntered = projectItems.find(project => project.id === projectItem)
   const projectItemsReferences =
     inputsState[
-      pathItems[0] === 'artifacts'
-        ? 'artifactsReferences'
-        : 'featureVectorsReferences'
+      pathItems[0] !== 'feature-vectors' ? 'artifactsReferences' : 'featureVectorsReferences'
     ]
   const projectItemReferenceIsEntered = projectItemsReferences.find(
     projectItemRef => projectItemRef.id === projectItemReference
   )
-  const isInputStorePathTypeValid = storePathTypes.some(type =>
-    type.id.startsWith(pathItems[0])
-  )
+  const isInputStorePathTypeValid = storePathTypes.some(type => type.id.startsWith(pathItems[0]))
 
   inputsDispatch({
     type: inputsActions.SET_INPUT_STORE_PATH_TYPE_ENTERED,
@@ -505,7 +468,7 @@ export const isPathInputValid = (pathInputType, pathInputValue) => {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
       return (
         valueIsNotEmpty &&
-        /^(artifacts|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
+        /^(artifacts|datasets|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
           pathInputValue
         )
       )
@@ -515,13 +478,4 @@ export const isPathInputValid = (pathInputType, pathInputValue) => {
     default:
       return valueIsNotEmpty
   }
-}
-
-export const pathTips = {
-  [MLRUN_STORAGE_INPUT_PATH_SCHEME]:
-    'artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid',
-  [S3_INPUT_PATH_SCHEME]: 'bucket/path',
-  [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
-  [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
-  [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
 }

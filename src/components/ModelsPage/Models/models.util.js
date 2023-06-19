@@ -80,7 +80,8 @@ export const fetchModelsRowData = async (
   setSelectedRowData,
   iter,
   tag,
-  projectName
+  projectName,
+  frontendSpec
 ) => {
   const modelIdentifier = getArtifactIdentifier(model)
 
@@ -99,7 +100,9 @@ export const fetchModelsRowData = async (
           return {
             ...state,
             [modelIdentifier]: {
-              content: result.map(artifact => createModelsRowData(artifact, projectName)),
+              content: result.map(artifact =>
+                createModelsRowData(artifact, projectName, frontendSpec)
+              ),
               error: null,
               loading: false
             }

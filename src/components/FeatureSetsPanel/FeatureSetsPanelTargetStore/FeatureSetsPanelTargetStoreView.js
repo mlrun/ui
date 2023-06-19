@@ -34,7 +34,9 @@ import {
   externalOfflineKindOptions,
   ONLINE,
   PARQUET,
-  checkboxModels
+  checkboxModels,
+  isParquetPathValid,
+  getInvalidParquetPathMessage
 } from './featureSetsPanelTargetStore.util'
 
 import { ReactComponent as Online } from 'igz-controls/images/nosql.svg'
@@ -178,14 +180,18 @@ const FeatureSetsPanelTargetStoreView = ({
                       density="normal"
                       floatingLabel
                       focused={frontendSpecIsNotEmpty}
-                      invalid={!validation.isOfflineTargetPathValid}
+                      invalid={isParquetPathValid(
+                        validation.isOfflineTargetPathValid,
+                        data.parquet
+                      )}
+                      invalidText={getInvalidParquetPathMessage(data.parquet)}
                       label="Path"
-                      onChange={path =>
+                      onChange={path => {
                         setData(state => ({
                           ...state,
                           parquet: { ...state.parquet, path }
                         }))
-                      }
+                      }}
                       placeholder={
                         'v3io:///projects/{project}/FeatureStore/{name}/{run_id}/parquet/sets/{name}.parquet'
                       }
@@ -201,7 +207,14 @@ const FeatureSetsPanelTargetStoreView = ({
                       wrapperClassName="offline-path"
                     />
                     <div className="target-store__path-actions editable">
-                      <RoundedIcon onClick={handleOfflineKindPathChange} tooltipText="Apply">
+                      <RoundedIcon
+                        disabled={isParquetPathValid(
+                          validation.isOfflineTargetPathValid,
+                          data.parquet
+                        )}
+                        onClick={handleOfflineKindPathChange}
+                        tooltipText="Apply"
+                      >
                         <Checkmark className="target-store__apply-btn" />
                       </RoundedIcon>
                       <RoundedIcon
@@ -229,6 +242,7 @@ const FeatureSetsPanelTargetStoreView = ({
                   </>
                 )}
                 <CheckBox
+                  disabled={targetsPathEditData.parquet.isEditMode}
                   item={{ id: 'partitioned', label: 'Partition' }}
                   onChange={id => triggerPartitionCheckbox(id, PARQUET)}
                   selectedId={data.parquet.partitioned}

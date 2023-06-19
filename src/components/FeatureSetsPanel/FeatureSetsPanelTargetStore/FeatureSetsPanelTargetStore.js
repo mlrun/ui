@@ -274,9 +274,11 @@ const FeatureSetsPanelTargetStore = ({
 
   const handleDiscardPathChange = kind => {
     const currentStoreType = kind === ONLINE ? NOSQL : kind
-    const currentKind = featureStore.newFeatureSet.spec.targets.find(el => el.kind === currentStoreType)
+    const currentKind = featureStore.newFeatureSet.spec.targets.find(
+      el => el.kind === currentStoreType
+    )
 
-    if (currentKind .path.length > 0) {
+    if (currentKind.path.length > 0) {
       setData(state => ({
         ...state,
         [kind]: {
@@ -564,57 +566,57 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const triggerPartitionCheckbox = (id, kind) => {
-    if (kind === EXTERNAL_OFFLINE || kind === PARQUET) {
-      setData(state => {
-        let path = state[kind].path
+    setData(state => {
+      let path = state[kind].path
 
-        if (
-          kind === PARQUET &&
-          !targetsPathEditData.parquet.isEditMode &&
-          !targetsPathEditData.parquet.isModified
-        ) {
-          path = generatePath(
-            frontendSpec.feature_store_data_prefixes,
-            project,
-            data[kind].kind,
-            featureStore.newFeatureSet.metadata.name,
-            data[kind].partitioned ? PARQUET : ''
-          )
-        }
-
-        return data[kind]?.partitioned
-          ? {
-              ...state,
-              [kind]: {
-                ...dataInitialState[kind],
-                path,
-                kind: PARQUET
-              }
-            }
-          : {
-              ...state,
-              [kind]: {
-                ...state[kind],
-                path,
-                partitioned: state[kind].partitioned === id ? '' : id,
-                key_bucketing_number: '',
-                partition_cols: '',
-                time_partitioning_granularity: 'hour'
-              }
-            }
-      })
-
-      if (data[kind].partitioned) {
-        setShowAdvanced(state => ({ ...state, [kind]: false }))
-        setPartitionRadioButtonsState(state => ({
-          ...state,
-          [kind]: 'districtKeys'
-        }))
-        setSelectedPartitionKind(state => ({
-          ...state,
-          [kind]: [...selectedPartitionKindInitialState[kind]]
-        }))
+      if (
+        kind === PARQUET &&
+        !targetsPathEditData.parquet.isEditMode &&
+        !targetsPathEditData.parquet.isModified
+      ) {
+        path = generatePath(
+          frontendSpec.feature_store_data_prefixes,
+          project,
+          data[kind].kind,
+          featureStore.newFeatureSet.metadata.name,
+          data[kind].partitioned ? PARQUET : ''
+        )
+      } else if (kind === PARQUET && targetsPathEditData.parquet.isModified) {
+        path = state[kind].partitioned ? `${path}.parquet` : path.replace(/\.[^.]+$/, '')
       }
+
+      return data[kind]?.partitioned
+        ? {
+            ...state,
+            [kind]: {
+              ...dataInitialState[kind],
+              path,
+              kind: PARQUET
+            }
+          }
+        : {
+            ...state,
+            [kind]: {
+              ...state[kind],
+              path,
+              partitioned: state[kind].partitioned === id ? '' : id,
+              key_bucketing_number: '',
+              partition_cols: '',
+              time_partitioning_granularity: 'hour'
+            }
+          }
+    })
+
+    if (data[kind].partitioned) {
+      setShowAdvanced(state => ({ ...state, [kind]: false }))
+      setPartitionRadioButtonsState(state => ({
+        ...state,
+        [kind]: 'districtKeys'
+      }))
+      setSelectedPartitionKind(state => ({
+        ...state,
+        [kind]: [...selectedPartitionKindInitialState[kind]]
+      }))
     }
 
     const targets = cloneDeep(featureStore.newFeatureSet.spec.targets).map(targetKind => {

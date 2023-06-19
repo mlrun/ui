@@ -46,6 +46,7 @@ export const generateTableContent = (
   page,
   isTablePanelOpen,
   params,
+  frontendSpec,
   isStagingMode,
   isSelectedItem
 ) => {
@@ -59,7 +60,7 @@ export const generateTableContent = (
         ? createFunctionsContent(group, isSelectedItem, params.pageTab, params.projectName, true)
         : page === FEATURE_STORE_PAGE
         ? createFeatureStoreContent(group, params.pageTab, params.projectName, isTablePanelOpen)
-        : createArtifactsContent(group, page, params.pageTab, params.projectName)
+        : createArtifactsContent(group, page, params.pageTab, params.projectName, frontendSpec)
     )
   } else if (!isEmpty(content) && (groupFilter === GROUP_BY_NONE || !groupFilter)) {
     return page === CONSUMER_GROUP_PAGE
@@ -70,7 +71,7 @@ export const generateTableContent = (
         page === FILES_PAGE ||
         page === DATASETS_PAGE ||
         (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB)
-      ? createArtifactsContent(content, page, params.pageTab, params.projectName)
+      ? createArtifactsContent(content, page, params.pageTab, params.projectName, frontendSpec)
       : page === FEATURE_STORE_PAGE
       ? createFeatureStoreContent(content, params.pageTab, params.projectName, isTablePanelOpen)
       : createFunctionsContent(content, isSelectedItem, params)

@@ -68,6 +68,7 @@ const Table = ({
   const { isStagingMode } = useMode()
   const params = useParams()
   const tableStore = useSelector(store => store.tableStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   useEffect(() => {
     const calculatePanelHeight = () => {
@@ -103,6 +104,7 @@ const Table = ({
       pageData.page,
       tableStore.isTablePanelOpen,
       params,
+      frontendSpec,
       isStagingMode,
       !isEveryObjectValueEmpty(selectedItem)
     )
@@ -131,7 +133,8 @@ const Table = ({
     pageData.mainRowItemsCount,
     pageData.page,
     selectedItem,
-    tableStore.isTablePanelOpen
+    tableStore.isTablePanelOpen,
+    frontendSpec
   ])
 
   return (

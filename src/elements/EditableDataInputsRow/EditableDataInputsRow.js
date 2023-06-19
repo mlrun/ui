@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -25,18 +25,12 @@ import Combobox from '../../common/Combobox/Combobox'
 import Input from '../../common/Input/Input'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import {
-  comboboxSelectList,
-  pathTips
-} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import { comboboxSelectList } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import {
-  applyEditButtonHandler,
-  handleEditInputPath
-} from './EditableDataInputsRow.utils'
+import { applyEditButtonHandler, handleEditInputPath } from './EditableDataInputsRow.utils'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
-import { pathPlaceholders } from '../../utils/panelPathScheme'
+import { pathPlaceholders, pathTips } from '../../utils/panelPathScheme'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
@@ -64,24 +58,15 @@ const EditableDataInputsRow = ({
   })
   const tableRowRef = useRef(null)
 
-  const comboboxClassNames = classNames(
-    'input-row__item',
-    requiredField.path && 'required'
-  )
-  const inputNameClassNames = classNames(
-    'input',
-    requiredField.name && 'input_required'
-  )
+  const comboboxClassNames = classNames('input-row__item', requiredField.path && 'required')
+  const inputNameClassNames = classNames('input', requiredField.name && 'input_required')
 
   useEffect(() => {
     if (selectDefaultValue.label?.length === 0) {
       setSelectDefaultValue({
         id: selectedDataInput.data.path.pathType,
         label: selectedDataInput.data.path.pathType,
-        className: `path-type-${selectedDataInput.data.path.pathType?.replace(
-          /:\/\/.*$/g,
-          ''
-        )}`
+        className: `path-type-${selectedDataInput.data.path.pathType?.replace(/:\/\/.*$/g, '')}`
       })
     }
   }, [selectDefaultValue.label, selectedDataInput.data.path.pathType])
@@ -143,6 +128,10 @@ const EditableDataInputsRow = ({
     })
   }
 
+  const generatedPathTips = useMemo(() => {
+    return pathTips(selectedDataInput.data.path.projectItem)
+  }, [selectedDataInput.data.path.projectItem])
+
   return (
     <div className="table__row edit-row" ref={tableRowRef}>
       {selectedDataInput.isDefault ? (
@@ -155,8 +144,7 @@ const EditableDataInputsRow = ({
             className={inputNameClassNames}
             density="dense"
             invalid={
-              inputName !== selectedDataInput.data.name &&
-              isNameNotUnique(inputName, content)
+              inputName !== selectedDataInput.data.name && isNameNotUnique(inputName, content)
             }
             invalidText="Name already exists"
             onChange={name => {
@@ -182,12 +170,11 @@ const EditableDataInputsRow = ({
           inputPlaceholder={inputsState.pathPlaceholder}
           invalid={!isPathValid}
           invalidText={`Field must be in "${
-            pathTips[selectedDataInput.data.path.pathType]
+            generatedPathTips[selectedDataInput.data.path.pathType]
           }" format`}
           matches={comboboxMatchesList}
           maxSuggestedMatches={
-            inputsState.selectedDataInput.data.path.pathType ===
-            MLRUN_STORAGE_INPUT_PATH_SCHEME
+            inputsState.selectedDataInput.data.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
               ? 3
               : 2
           }
@@ -214,8 +201,7 @@ const EditableDataInputsRow = ({
         <button
           className="apply-edit-btn"
           disabled={
-            inputName !== selectedDataInput.data.name &&
-            isNameNotUnique(inputName, content)
+            inputName !== selectedDataInput.data.name && isNameNotUnique(inputName, content)
           }
           onClick={() => {
             applyEditButtonHandler(

@@ -100,7 +100,15 @@ export const filters = [
 ]
 export const actionsMenuHeader = 'Register artifact'
 
-export const fetchFilesRowData = (file, setSelectedRowData, dispatch, projectName, iter, tag) => {
+export const fetchFilesRowData = (
+  file,
+  setSelectedRowData,
+  dispatch,
+  projectName,
+  iter,
+  tag,
+  frontendSpec
+) => {
   const fileIdentifier = getArtifactIdentifier(file)
 
   setSelectedRowData(state => ({
@@ -117,7 +125,9 @@ export const fetchFilesRowData = (file, setSelectedRowData, dispatch, projectNam
         setSelectedRowData(state => ({
           ...state,
           [fileIdentifier]: {
-            content: result.map(artifact => createFilesRowData(artifact, projectName)),
+            content: result.map(artifact =>
+              createFilesRowData(artifact, projectName, frontendSpec)
+            ),
             error: null,
             loading: false
           }

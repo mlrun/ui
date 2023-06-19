@@ -2,13 +2,26 @@
 @import '~igz-controls/scss/shadows';
 
 .download-container {
-  .download {
-    cursor: pointer;
-    fill: $white;
+  &:not(.download-container_disabled) {
+    .download {
+      cursor: pointer;
 
-    &:hover {
-      fill: $alabaster;
+      &:hover {
+        fill: $mulledWineThree;
+      }
     }
+  }
+
+  &.download-container_disabled {
+    .download-container__icon {
+      rect {
+        fill: $spunPearl;
+      }
+    }
+  }
+
+  .download {
+    fill: transparent;
   }
 
   .downloading {
@@ -20,7 +33,7 @@
     }
   }
 
-  .download-container {
+  .download-container__icon {
     transform: translate(8px, 8px);
 
     rect {

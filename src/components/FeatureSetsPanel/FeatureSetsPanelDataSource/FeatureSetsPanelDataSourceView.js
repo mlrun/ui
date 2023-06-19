@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import cronstrue from 'cronstrue'
 
@@ -29,15 +29,10 @@ import ScheduleFeatureSet from '../ScheduleFeatureSet/ScheduleFeatureSet'
 import Select from '../../../common/Select/Select'
 import { Button } from 'igz-controls/components'
 
-import {
-  comboboxSelectList,
-  CSV,
-  kindOptions,
-  PARQUET
-} from './featureSetsPanelDataSource.util'
+import { comboboxSelectList, CSV, kindOptions, PARQUET } from './featureSetsPanelDataSource.util'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { pathPlaceholders } from '../../../utils/panelPathScheme'
+import { pathTips } from '../../../utils/panelPathScheme'
 
 import { ReactComponent as Pencil } from 'igz-controls/images/edit.svg'
 
@@ -61,6 +56,10 @@ const FeatureSetsPanelDataSourceView = ({
   urlProjectItemTypeEntered,
   validation
 }) => {
+  const generatedPathTips = useMemo(() => {
+    return pathTips(data.url.projectItemType)
+  }, [data.url.projectItemType])
+
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
       <FeatureSetsPanelSection title="Data Source">
@@ -78,18 +77,14 @@ const FeatureSetsPanelDataSourceView = ({
             comboboxClassName="url"
             hideSearchInput={!urlProjectItemTypeEntered}
             inputDefaultValue={
-              data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
-                ? data.url.projectItemType
-                : ''
+              data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? data.url.projectItemType : ''
             }
             inputOnChange={path => {
               handleUrlPathChange(path)
             }}
             inputPlaceholder={data.url.placeholder}
             invalid={!validation.isUrlValid}
-            invalidText={`Field must be in "${
-              pathPlaceholders[data.url.pathType]
-            }" format`}
+            invalidText={`Field must be in "${generatedPathTips[data.url.pathType]}" format`}
             matches={comboboxMatches}
             maxSuggestedMatches={3}
             onBlur={handleUrlOnBlur}
@@ -109,9 +104,7 @@ const FeatureSetsPanelDataSourceView = ({
               className="schedule-tumbler"
               label={
                 <>
-                  {data.schedule
-                    ? cronstrue.toString(data.schedule)
-                    : 'Schedule'}
+                  {data.schedule ? cronstrue.toString(data.schedule) : 'Schedule'}
                   <Pencil className="schedule-tumbler__icon" />
                 </>
               }
@@ -136,10 +129,7 @@ const FeatureSetsPanelDataSourceView = ({
             invalid={!validation.isParseDatesValid}
             label="Parse Dates"
             onBlur={event => {
-              if (
-                featureStore.newFeatureSet.spec.source.parse_dates !==
-                event.target.value
-              ) {
+              if (featureStore.newFeatureSet.spec.source.parse_dates !== event.target.value) {
                 setNewFeatureSetDataSourceParseDates(event.target.value)
               }
             }}
@@ -150,17 +140,12 @@ const FeatureSetsPanelDataSourceView = ({
               }))
             }
             placeholder="col_name1,col_name2,..."
-            setInvalid={value =>
-              setValidation(state => ({ ...state, isParseDatesValid: value }))
-            }
+            setInvalid={value => setValidation(state => ({ ...state, isParseDatesValid: value }))}
             type="text"
           />
         )}
         {data.kind === PARQUET && (
-          <FilterParameters
-            setValidation={setValidation}
-            validation={validation}
-          />
+          <FilterParameters setValidation={setValidation} validation={validation} />
         )}
       </FeatureSetsPanelSection>
     </div>

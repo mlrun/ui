@@ -28,6 +28,7 @@ export const parseFunction = (func, projectName, customState) => {
     base_spec: func.spec?.base_spec ?? {},
     build: func.spec?.build ?? {},
     command: func.spec?.command,
+    container_image: func?.status?.container_image ?? '',
     default_class: func.spec?.default_class ?? '',
     default_handler: func.spec?.default_handler ?? '',
     description: func.spec?.description ?? '',
@@ -51,7 +52,7 @@ export const parseFunction = (func, projectName, customState) => {
     type: func.kind,
     volume_mounts: func.spec?.volume_mounts ?? [],
     volumes: func.spec?.volumes ?? [],
-    updated: new Date(func.metadata?.updated ?? ''),
+    updated: new Date(func.metadata?.updated ?? '')
   }
 
   item.ui = {
