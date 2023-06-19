@@ -22,7 +22,7 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
-import { Tooltip } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { getJobsDetailsMenu } from '../../components/Jobs/jobs.util'
 
@@ -55,6 +55,11 @@ const TableProducerCell = ({ data }) => {
             </Tooltip>
           </div>
         </Link>
+      )}
+      {data.value.name && !uid && (
+        <Tooltip template={<TextTooltipTemplate text={data.value.name} />}>
+          {data.value.name}
+        </Tooltip>
       )}
     </td>
   )
