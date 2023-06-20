@@ -38,6 +38,7 @@ import {
   SECONDARY_BUTTON
 } from 'igz-controls/constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -47,6 +48,7 @@ import { ReactComponent as User } from 'igz-controls/images/user.svg'
 import { ReactComponent as Users } from 'igz-controls/images/users.svg'
 
 import './membersPopUp.scss'
+import { useDispatch } from 'react-redux'
 
 const MembersPopUp = ({
   changeMembersCallback,
@@ -65,7 +67,7 @@ const MembersPopUp = ({
     name: '',
     role: 'All'
   })
-
+  const dispatch = useDispatch()
   const membersTableRowClassNames = classnames('table-row', inviteNewMembers && 'inactive')
 
   const handleOnClose = () => {
@@ -239,50 +241,68 @@ const MembersPopUp = ({
   }
 
   const generateUsersSuggestionList = debounce(searchQuery => {
+    const requiredIgzVersion = '3.5.3'
+    let paramsScrubbedUsers = {
+      'filter[username]': `[$match-i]^.*${searchQuery}.*$`,
+      'page[size]': 200
+    }
+    let paramsUserGroups = { 'filter[name]': `[$match-i]^.*${searchQuery}.*$`, 'page[size]': 200 }
+
+    if (isIgzVersionCompatible(requiredIgzVersion)) {
+      paramsScrubbedUsers = { 'filter[username]': `[$contains_istr]${searchQuery}` }
+      paramsUserGroups = { 'filter[name]': `[$contains_istr]${searchQuery}` }
+    }
+
     const getUsersPromise = projectsIguazioApi.getScrubbedUsers({
-      params: {
-        'filter[username]': `[$contains_istr]${searchQuery}`
-      }
+      paramsScrubbedUsers
     })
     const getUserGroupsPromise = projectsIguazioApi.getScrubbedUserGroups({
-      params: {
-        'filter[name]': `[$contains_istr]${searchQuery}`
-      }
+      paramsUserGroups
     })
     const suggestionList = []
 
-    Promise.all([getUsersPromise, getUserGroupsPromise]).then(response => {
-      response.forEach(identityResponse => {
-        identityResponse.data.data.forEach(identity => {
-          const existingMember = membersState.members.find(
-            member => member.id === identity.id && member.modification !== 'delete'
-          )
+    Promise.all([getUsersPromise, getUserGroupsPromise])
+      .then(response => {
+        response.forEach(identityResponse => {
+          identityResponse.data.data.forEach(identity => {
+            const existingMember = membersState.members.find(
+              member => member.id === identity.id && member.modification !== 'delete'
+            )
 
-          suggestionList.push({
-            label:
-              identity.type === 'user' ? identity.attributes.username : identity.attributes.name,
-            id: identity.id,
-            subLabel: existingMember?.role ?? '',
-            disabled: Boolean(existingMember),
-            icon:
-              identity.type === 'user' ? (
-                <i data-identity-type="user">
-                  <User />
-                </i>
-              ) : (
-                <i data-identity-type="user_group">
-                  <Users />
-                </i>
-              ),
-            ui: {
-              type: identity.type
-            }
+            suggestionList.push({
+              label:
+                identity.type === 'user' ? identity.attributes.username : identity.attributes.name,
+              id: identity.id,
+              subLabel: existingMember?.role ?? '',
+              disabled: Boolean(existingMember),
+              icon:
+                identity.type === 'user' ? (
+                  <i data-identity-type="user">
+                    <User />
+                  </i>
+                ) : (
+                  <i data-identity-type="user_group">
+                    <Users />
+                  </i>
+                ),
+              ui: {
+                type: identity.type
+              }
+            })
           })
         })
-      })
 
-      setNewMembersSuggestionList(suggestionList)
-    })
+        setNewMembersSuggestionList(suggestionList)
+      })
+      .catch(error => {
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to fetch users.'
+          })
+        )
+      })
   }, 400)
 
   return (
