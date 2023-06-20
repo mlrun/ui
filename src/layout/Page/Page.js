@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Outlet } from 'react-router-dom'
 import classNames from 'classnames'
@@ -25,7 +25,7 @@ import { isEmpty } from 'lodash'
 
 import Notification from '../../common/Notification/Notification'
 
-import { getTransitionEndEventName } from '../../utils/getTransitionEndEventName'
+import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec } from '../../reducers/appReducer'
 import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 
@@ -35,7 +35,7 @@ const Page = ({ isNavbarPinned, setProjectName }) => {
   const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
-  const transitionEndEventName = getTransitionEndEventName()
+  const transitionEndEventName = useMemo(() => getTransitionEndEventName(), [])
   const pinnedClasses = classNames(!(isNavbarPinned && projectName) && 'unpinned')
   const mainStyles = {
     marginLeft: !projectName

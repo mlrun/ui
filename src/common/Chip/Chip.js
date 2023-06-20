@@ -51,7 +51,7 @@ const Chip = React.forwardRef(
       showChips,
       textOverflowEllipsis
     },
-    { chipsCellRef, hiddenChipCounterRef }
+    { chipsCellRef, hiddenChipsCounterRef }
   ) => {
     const chipRef = React.useRef()
     const { chipLabel, chipValue } = getChipLabelAndValue(chip)
@@ -137,7 +137,7 @@ const Chip = React.forwardRef(
       <span
         className={`${chipClassNames} chips_button`}
         onClick={onClick}
-        ref={hiddenChipCounterRef}
+        ref={hiddenChipsCounterRef}
       >
         {chip.value}
       </span>
