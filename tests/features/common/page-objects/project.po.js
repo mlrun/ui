@@ -255,7 +255,7 @@ const consumerGroupsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         consumer_group_name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
         stream: '.table-body__cell:nth-of-type(2) .data-ellipsis',
@@ -279,7 +279,7 @@ const shardLagsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         shard_name: '.table-body__cell:nth-of-type(1) .data-ellipsis',
         lag: '.table-body__cell:nth-of-type(2) .data-ellipsis',

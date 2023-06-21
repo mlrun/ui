@@ -20,6 +20,7 @@ such restriction.
 import { timeout } from '../../../config'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
+import { addConsoleHandler } from 'selenium-webdriver/lib/logging'
 
 async function scrollToWebElement(driver, element) {
   await driver.executeScript('arguments[0].scrollIntoView()', element)

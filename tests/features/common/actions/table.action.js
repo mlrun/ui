@@ -64,13 +64,7 @@ const action = {
     columnName,
     value
   ) {
-    console.log(columnName)
-    console.log('//////////////////////////////')
-    console.log(value)
-    console.log(table)
     const arr = await getColumnValues(driver, table, columnName)
-    console.log(')))))))))))))))))))))))))))))))')
-    console.log(arr)
     expect(arr.length > 0).equal(true)
     expect(arr.every(item => item.includes(value))).equal(
       true,
@@ -171,7 +165,6 @@ const action = {
         indexes.push(parseInt(indx) + 1)
       }
     }
-
     return indexes
   },
   findRowIndexesByColumnTooltipsValue: async function(

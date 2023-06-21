@@ -54,10 +54,10 @@ const functionsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',  //table-body__row
       fields: {
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper span.link',
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', //span.link
         tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
         status: '.table-body__cell:nth-of-type(1) .status i',
         kind: {
@@ -66,7 +66,7 @@ const functionsTable = {
             '.table-body__cell:nth-of-type(2)',
             '.data-ellipsis',
             true,
-            '.tooltip .tooltip__text span'
+            '.tooltip .tooltip__text span' 
           )
         },
         hash: '.table-body__cell:nth-of-type(3) .data-ellipsis span',

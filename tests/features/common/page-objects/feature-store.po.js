@@ -135,7 +135,7 @@ const featuresTable = {
     row: {
       root: '.table-row',
       fields: {
-        feature_name: '.table-body__cell:nth-of-type(1) div.data-ellipsis',
+        feature_name: '.table-body__cell:nth-of-type(1) [data-testid="tooltip-wrapper"]',  //div.data-ellipsis
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         feature_set: '.table-body__cell:nth-of-type(2) .link',
         type: '.table-body__cell:nth-of-type(3) .data-ellipsis',
@@ -210,7 +210,7 @@ const featureVectorTable = {
 }
 
 const addToFeatureVectorTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -310,7 +310,7 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar .actions #refresh')
+const tableRefreshButton = By.css('.content__action-bar-wrapper .actions #refresh')
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
@@ -393,7 +393,7 @@ module.exports = {
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Entity_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar .input-wrapper:nth-of-type(3)',
+        '.content .content__action-bar-wrapper .input-wrapper:nth-of-type(3)',
         true,
         false,
         true
@@ -401,7 +401,7 @@ module.exports = {
     ),
     Table_Label_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar .input-wrapper:nth-of-type(4)',
+        '.content .content__action-bar-wrapper .input-wrapper:nth-of-type(3)',
         true,
         false,
         true
@@ -409,7 +409,7 @@ module.exports = {
     ),
     Table_Projects_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '.content .content__action-bar .filters .select',
+        '.content .content__action-bar-wrapper .filters .select',
         'svg',
         '.select__options-list .select__item',
         ''

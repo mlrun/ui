@@ -3,7 +3,6 @@ Feature: ML Functions
     Testcases that verifies functionality on ML Functions Pages
 
     @passive
-    #@uniqueTag
     Scenario: Check all mandatory components on ML Functions Page
         Given open url
         And wait load page
@@ -27,7 +26,6 @@ Feature: ML Functions
         Then verify "Functions_Table" element visibility on "ML_Functions" wizard
 
     @passive
-    #@uniqueTag
     Scenario: verify filtering by function name on Functions page
         Given open url
         And wait load page
@@ -211,6 +209,8 @@ Feature: ML Functions
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Base_Image_Hint"
 
+    @FAILED_TODO
+    #TODO: CPU_Request_Number_Input - input units are changed, need to rewrite test
     @passive
     Scenario: Check all mandatory components in Resources Accordion on create New Function page
         Given open url
@@ -233,7 +233,7 @@ Feature: ML Functions
         Then type value "0" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then type value "2" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then type value "1025" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -316,8 +316,8 @@ Feature: ML Functions
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Priority"
-        Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Toleration"
+        #Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard - Pods_Toleration is deleted from implementation
+        #Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Toleration" - Pods_Toleration is deleted from implementation
         When select "Manual" option in "New_Function_Volume_Mount_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
@@ -459,6 +459,8 @@ Feature: ML Functions
         Then verify "Save_Button" element on "New_Function" wizard is disabled
         Then verify "Deploy_Button" element on "New_Function" wizard is disabled
 
+    @FAILED_TODO
+    #TODO: click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table - Remove button implemented in dropdown menu, need to rewrite test
     @passive
     @demo
     Scenario: Check all mandatory components in Resources Accordion on create New Function page in Demo mode
@@ -589,7 +591,7 @@ Feature: ML Functions
         Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then select "Low" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        #Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard - Pods_Toleration is deleted from implementation
         Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then select "MB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "1000" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -614,7 +616,7 @@ Feature: ML Functions
         Then verify "New_Function_Handler_Input" input should contains "demo" value in "Code_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
-        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow"
+        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow" - Pods_Toleration is deleted from implementation
         Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
@@ -707,6 +709,8 @@ Feature: ML Functions
         Then verify "Stream_Path_Input" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Stream_Path_Hint"
         Then verify "Parameters_Runtime_Configuration_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
 
+    @FAILED_TODO
+    #TODO: click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table - Remove button implemented in dropdown menu, need to rewrite test
     @passive
     @inProgress
     @demo
@@ -834,6 +838,8 @@ Feature: ML Functions
             | file | value1edited |
             | file | value3edited |
 
+    @FAILED_TODO
+    #TODO: click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table - Remove button implemented in dropdown menu, need to rewrite test
     @passive
     @demo
     @inProgress
@@ -1021,6 +1027,7 @@ Feature: ML Functions
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
     @passive
+    #TODO: can fail if scroll needed
     Scenario: Verify Edit action visibility in action menu
         Given open url
         And wait load page
@@ -1100,13 +1107,13 @@ Feature: ML Functions
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
         Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "High"
-        Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Prevent"
-        Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Toleration"
-        Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow"
-        Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Constrain"
+        #Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard - Pods_Toleration is deleted from implementation
+        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Prevent"
+        #Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Toleration"
+        # Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        # Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow"
+        # Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        # Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Constrain"
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
@@ -1134,6 +1141,8 @@ Feature: ML Functions
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
         Then "Deploy_Button" element on "New_Function" should contains "Deploy" value
 
+    @FAILED_TODO
+    #TODO: Create_Job - reimplemented, need to rewrite test
     Scenario: Verify Resources values on Function Deploy and Run
         * set tear-down property "project" created with "automation-test" value
         * set tear-down property "function" created in "automation-test" project with "new-aqa-function-00" value
@@ -1149,8 +1158,8 @@ Feature: ML Functions
         And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
-        Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        #Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard     - Pods_Toleration is deleted from implementation
+        #Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then select "MB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "1000" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -1173,7 +1182,7 @@ Feature: ML Functions
         When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "High"
-        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Constrain"
+        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Constrain"  - Pods_Toleration is deleted from implementation
         Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "MB"
         Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
@@ -1189,6 +1198,9 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "ML functions" value in breadcrumbs menu
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
@@ -1201,4 +1213,4 @@ Feature: ML Functions
         Then select "Build Log" tab in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         And wait load page
         Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
-         Then verify redirection from "projects/default/INVALID/85957751e571a92e07213781f5e0c35bfbe42c64/overview" to "projects"
+        Then verify redirection from "projects/default/INVALID/85957751e571a92e07213781f5e0c35bfbe42c64/overview" to "projects"

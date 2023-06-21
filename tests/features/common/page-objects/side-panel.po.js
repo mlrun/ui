@@ -396,7 +396,7 @@ const advancedEnvironmentVariablesTable = {
 
 const advancedEnvironmentVariablesDemoTable = {
   root:
-    '.new-item-side-panel__body .accordion__container:nth-of-type(4) .env-variables-table',
+    '.new-item-side-panel__body .accordion__container:nth-of-type(4) .key-value-table',
   header: {
     root: '.table__header',
     sorters: {
@@ -705,9 +705,9 @@ const commonPodsPriorityDropdown = dropdownComponent(
   )
 )
 
-const commonPodsTolerationDropdown = dropdownComponent(
+const commonPodsTolerationDropdown = dropdownComponent(        //Pods_Toleration is deleted from implementation
     generateDropdownGroup(
-        '.new-item-side-panel .accordion__container:nth-of-type(3) .pods-toleration',
+        '.new-item-side-panel .accordion__container:nth-of-type(3) .pods',
         '.select__value',
         '.select__body .select__item',
         '.data-ellipsis .data-ellipsis'
@@ -864,7 +864,7 @@ module.exports = {
           true
         )
       ),
-      Online_Path: By.css('.target-store__item:nth-of-type(1) .online-path [placeholder]'),
+      Online_Path: By.css('.target-store__item:nth-of-type(1) .online-path'),
       Online_Path_Input: inputGroup(
         generateInputGroup(
           '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(1) .input-wrapper',
@@ -2018,10 +2018,10 @@ module.exports = {
       '.new-item-side-panel .new-item-side-panel__buttons-container .btn-label .data-ellipsis:nth-of-type(1)'
     ),
     Save_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-tertiary .data-ellipsis:nth-of-type(1)'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-tertiary' //.data-ellipsis:nth-of-type(1)'
     ),
     Deploy_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary .data-ellipsis:nth-of-type(1)'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary' //.data-ellipsis:nth-of-type(1)'
     )
   }
 }

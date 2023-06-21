@@ -101,7 +101,7 @@ module.exports = {
     ]
   },
   ML_Functions_Tab: {
-    Common_Action_Menu_Options: ['View YAML', 'Edit', 'Delete'],
+    Common_Action_Menu_Options: ['Edit', 'Delete', 'View YAML'],
     Serving_Action_Menu_Options: ['View YAML', 'Delete']
   },
   ML_Function_Info_Pane: {
@@ -110,6 +110,7 @@ module.exports = {
       'Name',
       'Kind',
       'Hash',
+      'Version tag',
       'Code origin',
       'Updated',
       'Command',
@@ -336,8 +337,12 @@ module.exports = {
       'UID',
       'Start time',
       'Last Updated',
+      'Run on spot',
+      'Node selector',
+      'Priority',
       'Parameters',
       'Function',
+      'Function tag',
       'Results',
       'Labels',
       'Log level',
@@ -399,13 +404,17 @@ module.exports = {
     CPU_Unit_Options: ['cpu', 'millicpu'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
-    Pods_Toleration: ['Allow', 'Constrain', 'Prevent'],
+    //Pods_Toleration: ['Allow', 'Constrain', 'Prevent'], - Pods_Toleration is deleted from implementation
     Schedule_Variants: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
     Schedule_Minutes_Variants: ['10', '15', '20', '30'],
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
     Common_Message: 'There is no Features data to show for "Tag: latest, Name: ccccc"',
+    Common_Message_Feature: 'There is no Features data to show for "Tag: latest"',
+    Common_Message_Feature_Vector: 'There is no Feature-Vectors data to show for "Tag: latest"',
+    Common_Message_Feature_Sets: 'There is no Feature-Sets data to show for "Version Tag: latest"',
+    No_Data: 'No data to show',
     No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet'
   }

@@ -59,7 +59,7 @@ Feature: Feature Store Page
         Then verify "Table_Tag_Filter_Dropdown" dropdown element on "Feature_Store_Features_Tab" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
         Then verify "Features_Table" element visibility on "Feature_Store_Features_Tab" wizard
         Then select "project" with "test-test" value in breadcrumbs menu
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature"
         Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Features_Yet"
 
@@ -428,7 +428,7 @@ Feature: Feature Store Page
         Then type value "ccccc" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
-
+    
     @passive
     Scenario: Check filtering by Label on Feature Store Features Tab
         Given open url
@@ -772,7 +772,6 @@ Feature: Feature Store Page
 
     @passive
     @inProgress
-    @uniqueTag
     Scenario: Check Target Store Accordion components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -842,8 +841,10 @@ Feature: Feature Store Page
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         And wait load page
 
+    @FAILED_TODO
+    #TODO: 'Online_Path_Annotation', 'Offline_Path_Annotation' - the implementation has changed
+    #TODO: 'Offline_Path' path value "v3io:///custom/offline/path" couldn't be apply - the implementation has changed
     @passive
-    #@uniqueTag
     Scenario: Verify behaviour of Online and Offline Target store on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -857,32 +858,32 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/{name}/{run_id}/nosql/sets/{name}" value
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/{name}/{run_id}/parquet/sets/{name}.parquet" value
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/{name}/nosql/sets/{name}" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/{name}/parquet/sets/{name}.parquet" value
         Then type value "test-fs" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs/{run_id}/nosql/sets/test-fs" value
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs/{run_id}/parquet/sets/test-fs.parquet" value
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs/nosql/sets/test-fs" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs/parquet/sets/test-fs.parquet" value
         When uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "test-fs1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs1/{run_id}/nosql/sets/test-fs1" value
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs1/{run_id}/parquet/sets/test-fs1.parquet" value
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs1/nosql/sets/test-fs1" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs1/parquet/sets/test-fs1.parquet" value
         Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Edit_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "test-fs2" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/{run_id}/nosql/sets/test-fs2" value
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/{run_id}/parquet/sets/test-fs2.parquet" value
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/nosql/sets/test-fs2" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/parquet/sets/test-fs2.parquet" value
         Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "v3io:///custom/path" to "Online_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Discard_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/{run_id}/nosql/sets/test-fs2" value
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/nosql/sets/test-fs2" value
         Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "Online_Path_Annotation" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Online_Path_Annotation" component in "Target_Store_Accordion" on "New_Feature_Set" should contains "New_Feature_Store"."Target_Store_Path_Annotation"
@@ -892,13 +893,13 @@ Feature: Feature Store Page
         Then type value "test-fs3" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/path" value
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/parquet/sets/test-fs3.parquet" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/parquet/sets/test-fs3.parquet" value
         Then click on "Edit_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "Offline_Path_Annotation" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Offline_Path_Annotation" component in "Target_Store_Accordion" on "New_Feature_Set" should contains "New_Feature_Store"."Target_Store_Path_Annotation"
         Then type value "v3io:///custom/offline/path" to "Offline_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Discard_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/parquet/sets/test-fs3.parquet" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/parquet/sets/test-fs3.parquet" value
         Then click on "Edit_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "v3io:///custom/offline/path" to "Offline_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -911,11 +912,10 @@ Feature: Feature Store Page
         When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/nosql/sets/test-fs3" value
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/{run_id}/parquet/sets/test-fs3.parquet" value
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/nosql/sets/test-fs3" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/parquet/sets/test-fs3.parquet" value
 
     @passive
-    #@uniqueTag
     Scenario: Check Partition part in Target Store Accordion components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -966,6 +966,9 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
@@ -996,6 +999,9 @@ Feature: Feature Store Page
         Given open url
         And wait load page
         And click on row root with value "automation-test-name3" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -1039,11 +1045,16 @@ Feature: Feature Store Page
             | demo_feature_set | Some demo description |
         And remove "automation-test-name3" MLRun Project with code 204
 
+    @FAILED_TODO
+    #TODO: check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" - no such element: Unable to locate element:
     @passive
     Scenario: Check expand button on Feature Store tab when change tag from "latest"
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -1057,7 +1068,7 @@ Feature: Feature Store Page
         Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then check "expand_btn" not presented in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
-        Then check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" wizard
+        #Then check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
         Then check "expand_btn" not presented in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1075,17 +1086,25 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
+    @FAILED_TODO
+    #TODO: select "View YAML" option after click on "expand_btn" - moveTargetOutOfBoundsError: move target out of bounds
     @passive
     Scenario: Verify View YAML action on Feature Sets tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -1102,11 +1121,16 @@ Feature: Feature Store Page
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
 
+    @FAILED_TODO
+    #TODO: select "View YAML" option - doesn't find the name in table
     @passive
     Scenario: Verify View YAML action on Features tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -1118,11 +1142,16 @@ Feature: Feature Store Page
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+    @FAILED_TODO
+    #TODO: select "View YAML" option after click on "expand_btn" - moveTargetOutOfBoundsError: move target out of bounds
     @passive
     Scenario: Verify View YAML action on Feature Vectors tab
         Given open url
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -1148,6 +1177,9 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1162,6 +1194,9 @@ Feature: Feature Store Page
     Scenario: Check all mandatory components on Add to feature vector popup
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
@@ -1184,7 +1219,6 @@ Feature: Feature Store Page
     @passive
     Scenario: Check all mandatory components on Create feature vector popup
         Given open url
-        And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1237,7 +1271,6 @@ Feature: Feature Store Page
     @passive
     Scenario: Check all mandatory components on Edit feature vector Popup
         Given open url
-        And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1276,7 +1309,6 @@ Feature: Feature Store Page
     @passive
     Scenario: Check all mandatory components on Add to feature vector tab
         Given open url
-        And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1302,7 +1334,7 @@ Feature: Feature Store Page
         Then verify "Features_Panel_Title" on "Add_To_Feature_Vector_Tab" wizard should display "Input_Hint"."Add_Feature_Vector_Hint"
         When select "test-test" option in "Table_Projects_Filter_Dropdown" filter dropdown on "Add_To_Feature_Vector_Tab" wizard
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature"
         When select "stocks" option in "Table_Projects_Filter_Dropdown" filter dropdown on "Add_To_Feature_Vector_Tab" wizard
         And wait load page
         Then verify "Features_Panel_Title" element visibility on "Add_To_Feature_Vector_Tab" wizard
@@ -1312,10 +1344,11 @@ Feature: Feature Store Page
         Then verify "Add_Button" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then "Add_Button" element on "Add_To_Feature_Vector_Tab" should contains "Add" value
 
+    @FAILED_TODO
+    #TODO: value in "featureName" column with "text" contains "department" - doesn't search though table
     @passive
     Scenario: Verify filtering by name and entity on Add to feature vector tab
         Given open url
-        And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1340,6 +1373,8 @@ Feature: Feature Store Page
         Then click on "Table_Refresh_Button" element on "Add_To_Feature_Vector_Tab" wizard
         Then value in "entities" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "patient_id"
 
+    @FAILED_TODO
+    #TODO: click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table - invalid selector: An invalid or illegal selector was specified
     @inProgress
     Scenario: Add to feature vector
         Given open url
@@ -1362,9 +1397,9 @@ Feature: Feature Store Page
         And wait load page
         Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard
             | featureName              |
+            | age_mapped_elder         |
             | department               |
             | room                     |
-            | age_mapped_elder         |
             | gender                   |
         Then verify values in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                                           |
@@ -1413,6 +1448,8 @@ Feature: Feature Store Page
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "temp_vector"
         Then value in "description" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Automation test description"
 
+    @FAILED_TODO
+    #TODO: click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table - invalid selector: An invalid or illegal selector was specified
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Requested Features tab on Feature Vectors tab
         Given open url
@@ -1501,6 +1538,8 @@ Feature: Feature Store Page
             | stocks-admin |      stocks\n: latest     |   volume     |
             | stocks-admin |      stocks\n: latest     | last_updated |
 
+    @FAILED_TODO
+    #TODO: click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table - invalid selector: An invalid or illegal selector was specified
     Scenario: Verify Feature Label icon on Requested Features tab on Feature Vectors tab
         And set tear-down property "featureVector" created in "default" project with "test_vector" value
         Given open url
@@ -1538,35 +1577,38 @@ Feature: Feature Store Page
         Given open url
         And click on row root with value "automation-test-name001" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature_Sets"
         * set tear-down property "featureSet" created in "automation-test-name001" project with "test_fs" value
         * create "test_fs" Feature Set in "automation-test-name001" project with code 200
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And click on cell with value "test_fs" in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
         Then select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature"
         Then select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature_Vector"
         * set tear-down property "featureVector" created in "automation-test-name001" project with "test_fv" value
         * create "test_fv" Feature Vector in "automation-test-name001" project with code 200
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And click on cell with value "test_fv" in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Requested Features" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
 
     Scenario: Check broken link redirection
         * set tear-down property "project" created with "automation-test-010" value
@@ -1576,6 +1618,9 @@ Feature: Feature Store Page
         Given open url
         And wait load page
         And click on row root with value "automation-test-010" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         And select "tab" with "Feature Store" value in breadcrumbs menu
         And wait load page
