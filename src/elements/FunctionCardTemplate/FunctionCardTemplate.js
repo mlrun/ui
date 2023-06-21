@@ -23,6 +23,7 @@ import classnames from 'classnames'
 import { get } from 'lodash'
 
 import { FormChipCell, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
 import { getChipOptions } from '../../utils/getChipOptions'
 
 import './functionCardTemplate.scss'
