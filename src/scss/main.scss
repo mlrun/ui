@@ -449,6 +449,7 @@ a {
 [class^='state-succeeded'],
 [class^='state-active'],
 [class^='state-created'],
+[class^='state-creating'],
 [class^='state-info'],
 [class^='state-online'] {
   @include statusState($brightTurquoise);
@@ -487,6 +488,7 @@ a {
 
 .state-created-job,
 .state-created-function,
+.state-creating-function,
 .state-pending-job {
   @include statusState($topaz);
 }
