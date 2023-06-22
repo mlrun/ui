@@ -411,7 +411,9 @@ const FeatureSetsPanelTargetStoreView = ({
             </div>
           )}
         </div>
-        {!selectedTargetKind.length && <ErrorMessage message="Must select at least one" />}
+        {!selectedTargetKind.length && !featureStore.newFeatureSet.spec.passthrough && (
+          <ErrorMessage message="Must select at least one" />
+        )}
       </FeatureSetsPanelSection>
     </div>
   )
