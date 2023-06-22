@@ -62,10 +62,12 @@ const ProjectSettingsGeneral = ({
   const generalParams = useMemo(
     () =>
       projectStore.project.data?.spec.params
-        ? Object.entries(projectStore.project.data?.spec.params).map(([key, value]) => ({
-            key,
-            value
-          }))
+        ? Object.entries(projectStore.project.data?.spec.params).map(([key, value]) => {
+            return {
+              key: typeof key === 'object' ? JSON.stringify(key) : String(key),
+              value: typeof value === 'object' ? JSON.stringify(value) : String(value)
+            }
+          })
         : [],
     [projectStore.project.data]
   )
