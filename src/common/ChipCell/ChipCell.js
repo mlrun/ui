@@ -17,15 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import ChipCellView from './ChipCellView'
 
-import { cutChips } from '../../utils/cutChips'
 import { CHIP_OPTIONS } from '../../types'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { CLICK, TAB, TAB_SHIFT } from 'igz-controls/constants'
+import { cutChips } from '../../utils/cutChips'
+import { useChipCell } from 'igz-controls/hooks/useChipCell.hook'
 
 const ChipCell = ({
   addChip,
@@ -40,8 +40,19 @@ const ChipCell = ({
   shortChips,
   visibleChipsMaxLength
 }) => {
-  const [chipsSizes, setChipsSizes] = useState({})
-  const [showHiddenChips, setShowHiddenChips] = useState(false)
+  const {
+    chipsCellRef,
+    chipsWrapperRef,
+    handleShowElements,
+    hiddenChipsCounterRef,
+    hiddenChipsPopUpRef,
+    setChipsSizes,
+    setShowHiddenChips,
+    showChips,
+    showHiddenChips,
+    visibleChipsCount
+  } = useChipCell(isEditMode, visibleChipsMaxLength)
+
   const [editConfig, setEditConfig] = useState({
     chipIndex: null,
     isEdit: false,
@@ -49,11 +60,6 @@ const ChipCell = ({
     isValueFocused: false,
     isNewChip: false
   })
-  const [showChips, setShowChips] = useState(false)
-  const [visibleChipsCount, setVisibleChipsCount] = useState(8)
-  const chipsCellRef = useRef()
-  const chipsWrapperRef = useRef()
-  const hiddenChipCounterRef = useRef()
 
   let chips = useMemo(() => {
     return (isEditMode && !visibleChipsMaxLength) || visibleChipsMaxLength === 'all'
@@ -69,68 +75,6 @@ const ChipCell = ({
           delimiter
         )
   }, [delimiter, elements, isEditMode, visibleChipsCount, visibleChipsMaxLength])
-
-  const handleShowElements = useCallback(() => {
-    if (!isEditMode || (isEditMode && visibleChipsMaxLength)) {
-      setShowHiddenChips(state => !state)
-    }
-  }, [isEditMode, visibleChipsMaxLength])
-
-  useEffect(() => {
-    if (showHiddenChips) {
-      window.addEventListener('click', handleShowElements)
-      return () => window.removeEventListener('click', handleShowElements)
-    }
-  }, [showHiddenChips, handleShowElements])
-
-  const handleResize = useCallback(() => {
-    if (!isEditMode && !isEveryObjectValueEmpty(chipsSizes)) {
-      const parentSize = chipsCellRef.current?.getBoundingClientRect().width
-      let maxLength = 0
-      let chipIndex = 0
-      const padding = 65
-
-      Object.values(chipsSizes).every((chipSize, index) => {
-        if (
-          maxLength + chipSize > parentSize ||
-          (Object.values(chipsSizes).length > 1 && maxLength + chipSize + padding > parentSize)
-        ) {
-          chipIndex = index
-
-          return false
-        } else {
-          maxLength += chipSize
-
-          if (index === Object.values(chipsSizes).length - 1) {
-            chipIndex = 8
-          }
-
-          return true
-        }
-      })
-
-      setVisibleChipsCount(chipIndex)
-      setShowChips(true)
-    }
-  }, [chipsSizes, isEditMode])
-
-  useEffect(() => {
-    handleResize()
-  }, [handleResize, showChips])
-
-  useEffect(() => {
-    if (!isEditMode) {
-      window.addEventListener('resize', handleResize)
-
-      return () => window.removeEventListener('resize', handleResize)
-    }
-  }, [handleResize, isEditMode])
-
-  useEffect(() => {
-    window.addEventListener('mainResize', handleResize)
-
-    return () => window.removeEventListener('mainResize', handleResize)
-  }, [handleResize])
 
   const handleAddNewChip = useCallback(
     (event, chip) => {
@@ -152,7 +96,14 @@ const ChipCell = ({
         isNewChip: true
       })
     },
-    [editConfig.isEdit, editConfig.chipIndex, showHiddenChips, elements, addChip]
+    [
+      editConfig.isEdit,
+      editConfig.chipIndex,
+      showHiddenChips,
+      elements,
+      addChip,
+      setShowHiddenChips
+    ]
   )
 
   const handleRemoveChip = useCallback(
@@ -257,7 +208,7 @@ const ChipCell = ({
       handleRemoveChip={handleRemoveChip}
       handleShowElements={handleShowElements}
       isEditMode={isEditMode}
-      ref={{ chipsCellRef, chipsWrapperRef, hiddenChipCounterRef }}
+      ref={{ chipsCellRef, chipsWrapperRef, hiddenChipsCounterRef, hiddenChipsPopUpRef }}
       setChipsSizes={setChipsSizes}
       setEditConfig={setEditConfig}
       shortChips={shortChips}

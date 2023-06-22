@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Chip from '../Chip/Chip'
-import HiddenChipsBlock from '../../elements/HiddenChipsBlock/HiddenChipsBlock'
+import HiddenChipsBlock from './HiddenChipsBlock/HiddenChipsBlock'
 import ChipTooltip from './ChipTooltip/ChipTooltip'
 
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
@@ -51,7 +51,7 @@ const ChipCellView = React.forwardRef(
       showChips,
       showHiddenChips
     },
-    { chipsCellRef, chipsWrapperRef, hiddenChipCounterRef }
+    { chipsCellRef, chipsWrapperRef, hiddenChipsCounterRef, hiddenChipsPopUpRef }
   ) => {
     const buttonAddClassNames = classnames(
       'button-add',
@@ -82,7 +82,7 @@ const ChipCellView = React.forwardRef(
                       handleRemoveChip={handleRemoveChip}
                       isEditMode={isEditMode}
                       onClick={handleShowElements}
-                      ref={{ chipsCellRef, hiddenChipCounterRef }}
+                      ref={{ chipsCellRef, hiddenChipsCounterRef }}
                       setChipsSizes={setChipsSizes}
                       setEditConfig={setEditConfig}
                       shortChip={shortChips}
@@ -104,7 +104,7 @@ const ChipCellView = React.forwardRef(
                       isEditMode={isEditMode}
                       setEditConfig={setEditConfig}
                       setChipsSizes={setChipsSizes}
-                      ref={hiddenChipCounterRef}
+                      ref={{ hiddenChipsCounterRef, hiddenChipsPopUpRef }}
                     />
                   )}
                 </div>

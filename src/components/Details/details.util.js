@@ -360,7 +360,12 @@ export const handleFinishEdit = (
   })
 
   const changesData = cloneDeep(changes.data)
-  const currentFieldValue = get(formState, ['values', currentField], '')
+  const initialFieldValue = formState.initialValues[currentField]
+  let currentFieldValue = formState.values[currentField]
+
+  if (!currentFieldValue && isEmpty(initialFieldValue)) {
+    currentFieldValue = formState.initialValues[currentField]
+  }
 
   if (currentField in get(formState, 'initialValues', {})) {
     if (isEqual(formState.initialValues[currentField], currentFieldValue)) {

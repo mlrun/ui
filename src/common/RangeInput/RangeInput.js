@@ -48,7 +48,7 @@ const RangeInput = ({
   requiredText,
   value
 }) => {
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(0)
   const [isRequired, setIsRequired] = useState(false)
   const rangeClassName = classNames(
     'range',
@@ -122,8 +122,8 @@ const RangeInput = ({
         min={min}
         max={max}
         onChange={value => {
-          setInputValue(value)
-          onChange(value)
+          setInputValue(Number(value))
+          onChange(Number(value))
         }}
         tip={tip}
         required={required}
