@@ -18,6 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  FUNCTION_CREATING_STATE,
+  FUNCTION_ERROR_STATE,
+  FUNCTION_FAILED_STATE,
+  FUNCTION_PENDINDG_STATE,
+  FUNCTION_READY_STATE,
+  FUNCTION_RUNNING_STATE,
   FUNCTION_TYPE_JOB,
   FUNCTION_TYPE_LOCAL,
   FUNCTION_TYPE_NUCLIO,
@@ -42,10 +48,10 @@ export const detailsMenu = [
     label: 'build log'
   }
 ]
-export const FUNCTIONS_FAILED_STATES = ['failed', 'error']
-export const FUNCTIONS_READY_STATES = ['ready']
+export const FUNCTIONS_FAILED_STATES = [FUNCTION_FAILED_STATE, FUNCTION_ERROR_STATE]
+export const FUNCTIONS_READY_STATES = [FUNCTION_READY_STATE]
 export const FUNCTIONS_EDITABLE_STATES = [
-  'created',
+  FUNCTION_CREATING_STATE,
   ...FUNCTIONS_READY_STATES,
   ...FUNCTIONS_FAILED_STATES
 ]
@@ -64,7 +70,7 @@ export const filters = [
   { type: NAME_FILTER, label: 'Name:' },
   { type: SHOW_UNTAGGED_FILTER, label: 'Show untagged' }
 ]
-export const TRANSIENT_FUNCTION_STATUSES = ['pending', 'running']
+export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDINDG_STATE, FUNCTION_RUNNING_STATE]
 
 export const getFunctionsEditableTypes = isStagingMode => {
   const editableTypes = [FUNCTION_TYPE_JOB, FUNCTION_TYPE_LOCAL, '']

@@ -228,6 +228,12 @@ export const SET_NEW_FUNCTION_TAG = 'SET_NEW_FUNCTION_TAG'
 export const SET_NEW_FUNCTION_TRACK_MODELS = 'SET_NEW_FUNCTION_TRACK_MODELS'
 export const SET_NEW_FUNCTION_VOLUMES = 'SET_NEW_FUNCTION_VOLUMES'
 export const SET_NEW_FUNCTION_VOLUME_MOUNTS = 'SET_NEW_FUNCTION_VOLUME_MOUNTS'
+export const FUNCTION_CREATING_STATE = 'creating'
+export const FUNCTION_FAILED_STATE = 'failed'
+export const FUNCTION_ERROR_STATE = 'error'
+export const FUNCTION_READY_STATE = 'ready'
+export const FUNCTION_PENDINDG_STATE = 'pending'
+export const FUNCTION_RUNNING_STATE = 'running'
 
 /*=========== ARTIFACTS =============*/
 

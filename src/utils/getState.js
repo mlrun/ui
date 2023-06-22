@@ -17,14 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { FUNCTIONS_PAGE } from '../constants'
+import { FUNCTION_CREATING_STATE, FUNCTIONS_PAGE } from '../constants'
 
 const getState = (state, page, kind) => {
   if (page === FUNCTIONS_PAGE) {
     return {
-      value: state || 'created',
-      label: state ? functionStateLabels[state] : 'Created',
-      className: `state-${state || 'created'}${kind ? '-' + kind : ''}`
+      value: state || FUNCTION_CREATING_STATE,
+      label: state ? functionStateLabels[state] : 'Creating',
+      className: `state-${state || FUNCTION_CREATING_STATE}${kind ? '-' + kind : ''}`
     }
   } else {
     return {
@@ -40,6 +40,7 @@ const commonStateLabels = {
   active: 'Active',
   completed: 'Completed',
   created: 'Created',
+  creating: 'Creating',
   error: 'Error',
   fail: 'Error',
   failed: 'Error',
