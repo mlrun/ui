@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { connect, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { cloneDeep, isEmpty } from 'lodash'
@@ -429,85 +429,114 @@ const FeatureSetsPanelTargetStore = ({
     }))
   }
 
-  const handleSelectTargetKind = kindId => {
-    let newTargets = [...featureStore.newFeatureSet.spec.targets]
+  const handleSelectTargetKind = useCallback(
+    kindId => {
+      let newTargets = [...featureStore.newFeatureSet.spec.targets]
 
-    if (selectedTargetKind.find(kind => kind === kindId)) {
-      newTargets = newTargets.filter(kind => kind.name !== checkboxModels[kindId].data.name)
+      if (selectedTargetKind.find(kind => kind === kindId)) {
+        newTargets = newTargets.filter(kind => kind.name !== checkboxModels[kindId].data.name)
 
-      setSelectedTargetKind(state => state.filter(kind => kind !== kindId))
-      setTargetsPathEditData(state => ({
-        ...state,
-        [kindId]: {
-          isEditMode: false,
-          isModified: false
-        }
-      }))
-      setDisableButtons(state => ({
-        ...state,
-        [kindId === PARQUET
-          ? 'isOfflineTargetPathEditModeClosed'
-          : 'isOnlineTargetPathEditModeClosed']: true
-      }))
-      setValidation(state => ({
-        ...state,
-        [kindId === PARQUET ? 'isOfflineTargetPathValid' : 'isOnlineTargetPathValid']: true
-      }))
-
-      if (
-        kindId === checkboxModels.externalOffline.id &&
-        !validation.isExternalOfflineTargetPathValid
-      ) {
+        setSelectedTargetKind(state => state.filter(kind => kind !== kindId))
+        setTargetsPathEditData(state => ({
+          ...state,
+          [kindId]: {
+            isEditMode: false,
+            isModified: false
+          }
+        }))
+        setDisableButtons(state => ({
+          ...state,
+          [kindId === PARQUET
+            ? 'isOfflineTargetPathEditModeClosed'
+            : 'isOnlineTargetPathEditModeClosed']: true
+        }))
         setValidation(state => ({
           ...state,
-          isExternalOfflineTargetPathValid: true
+          [kindId === PARQUET ? 'isOfflineTargetPathValid' : 'isOnlineTargetPathValid']: true
         }))
-      }
 
-      if (kindId === checkboxModels.externalOffline.id || kindId === checkboxModels.parquet.id) {
-        setData(state => ({
-          ...state,
-          [kindId]: { ...dataInitialState[kindId] }
-        }))
-        setShowAdvanced(prev => ({
-          ...prev,
-          [kindId]: false
-        }))
-        setPartitionRadioButtonsState(state => ({
-          ...state,
-          [kindId]: 'districtKeys'
-        }))
-        setSelectedPartitionKind(state => {
-          return {
+        if (
+          kindId === checkboxModels.externalOffline.id &&
+          !validation.isExternalOfflineTargetPathValid
+        ) {
+          setValidation(state => ({
             ...state,
-            [kindId]: [...selectedPartitionKindInitialState[kindId]]
-          }
-        })
-      }
-    } else {
-      const path =
-        kindId === EXTERNAL_OFFLINE
-          ? ''
-          : generatePath(
-              frontendSpec.feature_store_data_prefixes,
-              project,
-              dataInitialState[kindId].kind,
-              featureStore.newFeatureSet.metadata.name,
-              dataInitialState[kindId].kind === PARQUET ? PARQUET : ''
-            )
-      if (kindId === checkboxModels[kindId].id) {
-        setData(state => ({
-          ...state,
-          [kindId]: { ...dataInitialState[kindId], path }
-        }))
+            isExternalOfflineTargetPathValid: true
+          }))
+        }
+
+        if (kindId === checkboxModels.externalOffline.id || kindId === checkboxModels.parquet.id) {
+          setData(state => ({
+            ...state,
+            [kindId]: { ...dataInitialState[kindId] }
+          }))
+          setShowAdvanced(prev => ({
+            ...prev,
+            [kindId]: false
+          }))
+          setPartitionRadioButtonsState(state => ({
+            ...state,
+            [kindId]: 'districtKeys'
+          }))
+          setSelectedPartitionKind(state => {
+            return {
+              ...state,
+              [kindId]: [...selectedPartitionKindInitialState[kindId]]
+            }
+          })
+        }
+      } else {
+        const path =
+          kindId === EXTERNAL_OFFLINE
+            ? ''
+            : generatePath(
+                frontendSpec.feature_store_data_prefixes,
+                project,
+                dataInitialState[kindId].kind,
+                featureStore.newFeatureSet.metadata.name,
+                dataInitialState[kindId].kind === PARQUET ? PARQUET : ''
+              )
+        if (kindId === checkboxModels[kindId].id) {
+          setData(state => ({
+            ...state,
+            [kindId]: { ...dataInitialState[kindId], path }
+          }))
+        }
+
+        newTargets.push({ ...dataInitialState[kindId], path })
+        setSelectedTargetKind(state => [...state, kindId])
       }
 
-      newTargets.push({ ...dataInitialState[kindId], path })
-      setSelectedTargetKind(state => [...state, kindId])
+      setNewFeatureSetTarget(newTargets)
+    },
+    [
+      featureStore.newFeatureSet.metadata.name,
+      featureStore.newFeatureSet.spec.targets,
+      frontendSpec.feature_store_data_prefixes,
+      project,
+      selectedTargetKind,
+      setDisableButtons,
+      setNewFeatureSetTarget,
+      setValidation,
+      validation.isExternalOfflineTargetPathValid
+    ]
+  )
+
+  useEffect(() => {
+    if (featureStore.newFeatureSet.spec.passthrough) {
+      if (selectedTargetKind.includes(PARQUET)) {
+        handleSelectTargetKind(PARQUET)
+      }
+
+      if (selectedTargetKind.includes(EXTERNAL_OFFLINE)) {
+        handleSelectTargetKind(EXTERNAL_OFFLINE)
+      }
+
+      if (selectedTargetKind.includes(ONLINE)) {
+        handleSelectTargetKind(ONLINE)
+      }
     }
-
-    setNewFeatureSetTarget(newTargets)
-  }
+  }, [featureStore.newFeatureSet.spec.passthrough, selectedTargetKind, handleSelectTargetKind])
 
   const handlePartitionRadioButtonClick = (value, target) => {
     const keyBucketingNumber = value === 'districtKeys' ? 0 : 1
