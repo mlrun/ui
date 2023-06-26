@@ -378,3 +378,28 @@ Feature: Files Page
     Then verify redirection from "projects/automation-test-011/files/test_file/latest/0/INVALID" to "projects/automation-test-011/files/test_file/latest/0/overview"
     Then verify redirection from "projects/automation-test-011/files/test_file/latest/IVNALID/overview" to "projects/automation-test-011/files"
     Then verify redirection from "projects/INVALID/files" to "projects"
+
+  Scenario: Check active/highlited items with details panel on Models tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 1 row from "Files_Table" table on "Files" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+	  Then verify that row index 1 is active in "Files_Table" table on "Files" wizard
+    Then verify that row index 2 is NOT active in "Files_Table" table on "Files" wizard
+    Then click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard  
+    Then verify that row index 2 is active in "Files_Table" table on "Files" wizard   
+    Then verify that row index 1 is NOT active in "Files_Table" table on "Files" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 2 row from "Files_Table" table on "Files" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value

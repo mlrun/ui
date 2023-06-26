@@ -1664,3 +1664,49 @@ Feature: Feature Store Page
         And wait load page
         Then verify redirection from "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/INVALID" to "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/overview"
         Then verify redirection from "projects/automation-test-010/INVALID/feature-vectors/test_fv/latest/overview" to "projects"
+
+    Scenario: Check active/highlited items with details panel on Feature Sets tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+        Then verify "Header" element visibility on "Models_Info_Pane" wizard
+        Then save to context "name" column on 1 row from "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+	    Then verify that row index 1 is active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify that row index 2 is NOT active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on cell with row index 2 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard  
+        Then verify that row index 2 is active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard   
+        Then verify that row index 1 is NOT active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+        Then verify "Header" element visibility on "Models_Info_Pane" wizard
+        Then save to context "name" column on 2 row from "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+    
+    Scenario: Check active/highlited items with details panel on Feature Vectors tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify that row index 1 is NOT active in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+        Then verify "Header" element visibility on "Models_Info_Pane" wizard
+        Then save to context "name" column on 1 row from "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+	    Then verify that row index 1 is active in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard

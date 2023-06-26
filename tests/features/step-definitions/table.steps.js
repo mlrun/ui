@@ -59,6 +59,7 @@ import {
 } from '../common/actions/dropdown.action'
 import pageObjectsConsts from '../common-tools/common-consts'
 import { expect } from 'chai'
+import { isRowActive } from '../common/actions/tab-selector.action'
 
 Then(
   'check {string} value in {string} column in {string} table on {string} wizard',
@@ -607,6 +608,20 @@ When(
   'click on cell with row index {int} in {string} column in {string} table on {string} wizard',
   async function (indx, columnName, table, wizard) {
     await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][columnName](indx))
+  }
+)
+
+Then( 
+  'verify that row index {int} is active in {string} table on {string} wizard',
+  async function (indx, table, wizard) {
+    await isRowActive(this.driver, pageObjects[wizard][table], indx) 
+  }
+)
+
+Then( 
+  'verify that row index {int} is NOT active in {string} table on {string} wizard',
+  async function (indx, table, wizard) {
+    await isRowActive(this.driver, pageObjects[wizard][table], indx)
   }
 )
 

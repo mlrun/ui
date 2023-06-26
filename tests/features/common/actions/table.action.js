@@ -337,7 +337,6 @@ const action = {
     )
 
     testContext[column] = await cellElement.getText()
-
     if (attribute) {
       testContext[attribute] = await cellElement.getAttribute(attribute)
     }

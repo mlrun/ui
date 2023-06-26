@@ -750,3 +750,57 @@ Feature: Models Page
     Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     Then verify redirection from "projects/default/models/real-time-pipelines/pipeline/INVALID" to "projects/default/models/real-time-pipelines"
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
+  
+  Scenario: Check active/highlited items with details panel on Model Endpoints tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
+    Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 1 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+	  Then verify that row index 1 is active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then verify that row index 2 is NOT active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then click on cell with row index 2 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard  
+    Then verify that row index 2 is active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard   
+    Then verify that row index 1 is NOT active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 2 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+
+  Scenario: Check active/highlited items with details panel on Models tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 1 row from "Models_Table" table on "Models" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+	  Then verify that row index 1 is active in "Models_Table" table on "Models" wizard
+    Then verify that row index 2 is NOT active in "Models_Table" table on "Models" wizard
+    Then click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard  
+    Then verify that row index 2 is active in "Models_Table" table on "Models" wizard   
+    Then verify that row index 1 is NOT active in "Models_Table" table on "Models" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 2 row from "Models_Table" table on "Models" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
