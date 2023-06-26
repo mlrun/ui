@@ -37,6 +37,7 @@ import { convertBytes } from './convertBytes'
 import { generateUri } from './resources'
 import { generateLinkPath, parseUri } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import { validateArguments } from './validateArguments'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
@@ -127,16 +128,18 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
         value: artifact.db_key,
         class: 'table-cell-name',
         getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            MODELS_TAB,
-            MODELS_TAB,
-            artifact.db_key,
-            artifact.tag,
-            tab,
-            artifact.tree,
-            artifact.iter
-          ),
+          validateArguments(artifact.db_key, tab, artifact.tree)
+            ? generateLinkToDetailsPanel(
+                project,
+                MODELS_TAB,
+                MODELS_TAB,
+                artifact.db_key,
+                artifact.tag,
+                tab,
+                artifact.tree,
+                artifact.iter
+              )
+            : '',
         expandedCellContent: {
           class: 'table-cell-name',
           showTag: true,
@@ -262,16 +265,18 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         value: artifact.db_key,
         class: 'table-cell-name',
         getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            FILES_PAGE,
-            null,
-            artifact.db_key,
-            artifact.tag,
-            tab,
-            artifact.tree,
-            artifact.iter
-          ),
+          validateArguments(artifact.db_key, tab, artifact.tree)
+            ? generateLinkToDetailsPanel(
+                project,
+                FILES_PAGE,
+                null,
+                artifact.db_key,
+                artifact.tag,
+                tab,
+                artifact.tree,
+                artifact.iter
+              )
+            : '',
         expandedCellContent: {
           class: 'table-cell-name',
           showTag: true,
@@ -401,14 +406,16 @@ export const createModelEndpointsRowData = (artifact, project) => {
         value: name,
         class: 'table-cell-name',
         getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            MODELS_TAB,
-            MODEL_ENDPOINTS_TAB,
-            name,
-            artifact.metadata?.uid,
-            tab
-          ),
+          validateArguments(artifact.metadata?.uid, name)
+            ? generateLinkToDetailsPanel(
+                project,
+                MODELS_TAB,
+                MODEL_ENDPOINTS_TAB,
+                name,
+                artifact.metadata?.uid,
+                tab
+              )
+            : '',
         showStatus: true,
         tooltip: artifact.spec?.model_uri ? `${name} - ${artifact.spec?.model_uri}` : name
       },
@@ -506,16 +513,18 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         value: artifact.db_key,
         class: 'table-cell-name',
         getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            DATASETS_PAGE,
-            null,
-            artifact.db_key,
-            artifact.tag,
-            tab,
-            artifact.tree,
-            artifact.iter
-          ),
+          validateArguments(artifact.db_key, tab, artifact.tree)
+            ? generateLinkToDetailsPanel(
+                project,
+                DATASETS_PAGE,
+                null,
+                artifact.db_key,
+                artifact.tag,
+                tab,
+                artifact.tree,
+                artifact.iter
+              )
+            : '',
         expandedCellContent: {
           class: 'table-cell-name',
           showTag: true,

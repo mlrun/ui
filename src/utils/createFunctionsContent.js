@@ -21,6 +21,7 @@ import { formatDatetime } from './datetime'
 import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getFunctionImage } from '../components/FunctionsPage/functions.util'
+import { validateArguments } from './validateArguments'
 
 const createFunctionsContent = (functions, pageTab, projectName, showExpandButton) =>
   functions.map(func => {
@@ -65,7 +66,16 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               value: func.name,
               class: 'table-cell-2',
               getLink: tab =>
-                generateLinkToDetailsPanel(func.project, FUNCTIONS_PAGE, null, func.hash, null, tab)
+                validateArguments(func.hash, tab)
+                  ? generateLinkToDetailsPanel(
+                      func.project,
+                      FUNCTIONS_PAGE,
+                      null,
+                      func.hash,
+                      null,
+                      tab
+                    )
+                  : ''
             },
             {
               id: `updated.${func.ui.identifierUnique}`,
