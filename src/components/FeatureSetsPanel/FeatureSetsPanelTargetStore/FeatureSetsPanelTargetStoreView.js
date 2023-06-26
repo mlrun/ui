@@ -97,7 +97,7 @@ const FeatureSetsPanelTargetStoreView = ({
               <Online /> Online
               <Tip
                 className="checkbox__label-tip"
-                text="Store the feature set in Iguazio NoSQL database"
+                text="Store the feature set in a NoSQL database"
               />
             </CheckBox>
           </div>
