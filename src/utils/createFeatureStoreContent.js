@@ -33,6 +33,7 @@ import { formatDatetime } from './datetime'
 import { generateUri } from './resources'
 import { truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import { validateArguments } from './validateArguments'
 
 import { ReactComponent as Nosql } from 'igz-controls/images/nosql.svg'
 import { ReactComponent as Stream } from 'igz-controls/images/stream.svg'
@@ -64,15 +65,17 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         value: featureSet.name,
         class: 'table-cell-name',
         getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            FEATURE_STORE_PAGE,
-            FEATURE_SETS_TAB,
-            featureSet.name,
-            featureSet.tag,
-            tab,
-            featureSet.uid
-          ),
+          validateArguments(featureSet.name, featureSet.tag, tab)
+            ? generateLinkToDetailsPanel(
+                project,
+                FEATURE_STORE_PAGE,
+                FEATURE_SETS_TAB,
+                featureSet.name,
+                featureSet.tag,
+                tab,
+                featureSet.uid
+              )
+            : '',
         showTag: true,
         showStatus: true,
         expandedCellContent: {
@@ -153,28 +156,32 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         value: feature.metadata?.name,
         class: 'table-cell-2',
         getLink: tab =>
-          generateLinkToDetailsPanel(
-            feature.metadata?.project,
-            FEATURE_STORE_PAGE,
-            FEATURE_SETS_TAB,
-            feature.metadata?.name,
-            feature.metadata?.tag,
-            tab
-          ),
+          validateArguments(feature.metadata?.name, feature.metadata?.tag, tab)
+            ? generateLinkToDetailsPanel(
+                feature.metadata?.project,
+                FEATURE_STORE_PAGE,
+                FEATURE_SETS_TAB,
+                feature.metadata?.name,
+                feature.metadata?.tag,
+                tab
+              )
+            : '',
         expandedCellContent: {
           class: 'table-cell-2',
           value: ''
         },
         rowExpanded: {
           getLink: tab =>
-            generateLinkToDetailsPanel(
-              feature.metadata?.project,
-              FEATURE_STORE_PAGE,
-              FEATURE_SETS_TAB,
-              feature.metadata?.name,
-              feature.metadata?.tag,
-              tab
-            )
+            validateArguments(feature.metadata?.name, feature.metadata?.tag, tab)
+              ? generateLinkToDetailsPanel(
+                  feature.metadata?.project,
+                  FEATURE_STORE_PAGE,
+                  FEATURE_SETS_TAB,
+                  feature.metadata?.name,
+                  feature.metadata?.tag,
+                  tab
+                )
+              : ''
         }
       },
       {
@@ -278,15 +285,17 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         value: featureVector.name,
         class: 'table-cell-name',
         getLink: tab =>
-          generateLinkToDetailsPanel(
-            project,
-            FEATURE_STORE_PAGE,
-            FEATURE_VECTORS_TAB,
-            featureVector.name,
-            featureVector.tag,
-            tab,
-            featureVector.uid
-          ),
+          validateArguments(featureVector.name, featureVector.tag, tab)
+            ? generateLinkToDetailsPanel(
+                project,
+                FEATURE_STORE_PAGE,
+                FEATURE_VECTORS_TAB,
+                featureVector.name,
+                featureVector.tag,
+                tab,
+                featureVector.uid
+              )
+            : '',
         showTag: true,
         showStatus: true,
         expandedCellContent: {

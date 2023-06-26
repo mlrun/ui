@@ -25,11 +25,31 @@ import { parseKeyValues } from './object'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
 import { getWorkflowDetailsLink } from '../components/Workflow/workflow.util'
+import { validateArguments } from './validateArguments'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
     const type = job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
+    const getLink = tab => {
+      if (jobName) {
+        return validateArguments(job.uid, tab, job.name)
+          ? generateLinkToDetailsPanel(
+              job.project,
+              JOBS_PAGE,
+              MONITOR_JOBS_TAB,
+              job.uid,
+              null,
+              tab,
+              null,
+              null,
+              job.name
+            )
+          : ''
+      } else {
+        return `/projects/${job.project}/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${job.name}`
+      }
+    }
 
     return {
       data: {
@@ -48,23 +68,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           value: jobName ? job.uid || job.id : job.name,
           class: 'table-cell-name',
           type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
-          getLink: tab => {
-            return jobName
-              ? generateLinkToDetailsPanel(
-                  job.project,
-                  JOBS_PAGE,
-                  MONITOR_JOBS_TAB,
-                  job.uid,
-                  null,
-                  tab,
-                  null,
-                  null,
-                  job.name
-                )
-              : `/projects/${job.project}/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${
-                  job.name
-                }`
-          },
+          getLink,
           showStatus: true
         },
         {
@@ -167,14 +171,16 @@ export const createJobsScheduleTabContent = jobs => {
           class: 'table-cell-name',
           showStatus: true,
           getLink: tab =>
-            generateLinkToDetailsPanel(
-              job.project,
-              FUNCTIONS_PAGE,
-              null,
-              scheduleJobFunctionUid,
-              null,
-              tab
-            ),
+            validateArguments(scheduleJobFunctionUid, tab)
+              ? generateLinkToDetailsPanel(
+                  job.project,
+                  FUNCTIONS_PAGE,
+                  null,
+                  scheduleJobFunctionUid,
+                  null,
+                  tab
+                )
+              : '',
           type: 'link'
         },
         {
