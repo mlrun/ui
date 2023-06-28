@@ -63,9 +63,9 @@ const DetailsInfoView = React.forwardRef(
     ref
   ) => {
     const wrapperClassNames = classnames(
-      pageData.details.additionalInfo &&
-        !pageData.details.additionalInfo.hidden &&
-        'item-info__details-wrapper'
+      pageData.details.additionalInfo && !pageData.details.additionalInfo.hidden
+        ? 'item-info__details-wrapper'
+        : 'item-info__full-width'
     )
 
     return (
@@ -193,14 +193,12 @@ const DetailsInfoView = React.forwardRef(
               })}
             </ul>
           </div>
-          <div className={wrapperClassNames}>
-            {pageData.details.additionalInfo && !pageData.details.additionalInfo.hidden && (
-              <>
-                <h3 className="item-info__header">{pageData.details.additionalInfo.header}</h3>
-                <ul className="item-info__details">{pageData.details.additionalInfo.body}</ul>
-              </>
-            )}
-          </div>
+          {pageData.details.additionalInfo && !pageData.details.additionalInfo.hidden && (
+            <div className={wrapperClassNames}>
+              <h3 className="item-info__header">{pageData.details.additionalInfo.header}</h3>
+              <ul className="item-info__details">{pageData.details.additionalInfo.body}</ul>
+            </div>
+          )}
         </div>
       )
     )
