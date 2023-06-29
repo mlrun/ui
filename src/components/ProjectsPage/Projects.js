@@ -46,7 +46,6 @@ const Projects = ({
   fetchNuclioFunctions,
   fetchProject,
   fetchProjects,
-  fetchProjectsNames,
   fetchProjectsSummary,
   projectStore,
   removeNewProject,
@@ -74,7 +73,7 @@ const Projects = ({
   const { isNuclioModeDisabled } = useNuclioMode()
 
   const fetchMinimalProjects = useCallback(() => {
-    fetchProjects()
+    fetchProjects({ format: 'minimal' })
   }, [fetchProjects])
 
   const isValidProjectState = useCallback(
@@ -112,12 +111,10 @@ const Projects = ({
 
     removeProjects()
     fetchMinimalProjects()
-    fetchProjectsNames()
     fetchProjectsSummary(source.token)
   }, [
     fetchNuclioFunctions,
     fetchMinimalProjects,
-    fetchProjectsNames,
     fetchProjectsSummary,
     isNuclioModeDisabled,
     removeProjects,
@@ -295,12 +292,10 @@ const Projects = ({
     }
 
     fetchMinimalProjects()
-    fetchProjectsNames()
     fetchProjectsSummary(source.token)
   }, [
     fetchMinimalProjects,
     fetchNuclioFunctions,
-    fetchProjectsNames,
     fetchProjectsSummary,
     isNuclioModeDisabled,
     source.token
