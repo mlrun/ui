@@ -63,6 +63,7 @@ const FeatureSetsPanelTargetStore = ({
     partitionRadioButtonsInitialState
   )
   const [targetsPathEditData, setTargetsPathEditData] = useState(targetsPathEditDataInitialState)
+  const [passthroughtEnabled, setPassThrouthEnabled] = useState(false)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const onlineTarget = useMemo(
@@ -523,7 +524,7 @@ const FeatureSetsPanelTargetStore = ({
   )
 
   useEffect(() => {
-    if (featureStore.newFeatureSet.spec.passthrough) {
+    if (featureStore.newFeatureSet.spec.passthrough && !passthroughtEnabled) {
       if (selectedTargetKind.includes(PARQUET)) {
         handleSelectTargetKind(PARQUET)
       }
@@ -535,8 +536,17 @@ const FeatureSetsPanelTargetStore = ({
       if (selectedTargetKind.includes(ONLINE)) {
         handleSelectTargetKind(ONLINE)
       }
+
+      setPassThrouthEnabled(true)
+    } else if (!featureStore.newFeatureSet.spec.passthrough && passthroughtEnabled) {
+      setPassThrouthEnabled(false)
     }
-  }, [featureStore.newFeatureSet.spec.passthrough, selectedTargetKind, handleSelectTargetKind])
+  }, [
+    featureStore.newFeatureSet.spec.passthrough,
+    selectedTargetKind,
+    handleSelectTargetKind,
+    passthroughtEnabled
+  ])
 
   const handlePartitionRadioButtonClick = (value, target) => {
     const keyBucketingNumber = value === 'districtKeys' ? 0 : 1
