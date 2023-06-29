@@ -81,3 +81,12 @@ export const getTimeElapsedByDate = creationDate => {
 export const getDateAndTimeByFormat = (date, dateFormat) => {
   return moment(date).format(dateFormat)
 }
+
+export const sortListByDate = (list, field, isAscending = true) => {
+  return [...list].sort((prevElem, nextElem) => {
+    const prev = Date.parse(prevElem[field])
+    const next = Date.parse(nextElem[field])
+
+    return isAscending ? prev - next : next - prev
+  })
+}
