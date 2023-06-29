@@ -310,11 +310,12 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css('.content__action-bar-wrapper .actions #refresh')
+const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar #refresh')
+const tableFilterByButton = By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar-wrapper .filters .input-wrapper:nth-of-type(2)',
+    '.content .content__action-bar-wrapper .action-bar__filters .name-filter',
     true,
     false,
     true
@@ -375,18 +376,9 @@ module.exports = {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Register_Dataset_Button: pageHeaderButton,
     Table_Name_Filter_Input: commonNameFilterInput,
-    Table_Label_Filter_Input: commonLabelFilterInput,
-    Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
     Datasets_Table: commonTable(datasetsTable),
-    Show_Iterations_Checkbox: checkboxComponent({
-      root: '.content .content__action-bar .filters .checkbox',
-      elements: {
-        checkbox: 'svg[class]',
-        name: '',
-        icon: ''
-      }
-    })
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,

@@ -205,6 +205,23 @@ const commonFormConfirmButton = By.css('.modal__footer-actions .btn-secondary')
 const commonFormText = By.css('.form-text span')
 const commonFormSubtext = By.css('.form-text div p')
 
+const commonLabelFilterInput = inputGroup(
+  generateInputGroup(
+    '#overlay_container .form-field__wrapper',
+    true,
+    false,
+    true
+  )
+)
+
+const commonTableTreeFilterDropdown = dropdownComponent(
+  generateDropdownGroup(
+    '#overlay_container .form-tag-filter .form-tag-filter__input-wrapper',
+    '.tag-filter__dropdown-button',
+    '.tag-filter__dropdown .tag-filter__dropdown-item'
+  )
+)
+
 module.exports = {
   createNewProject: {
     Title: commonTitle,
@@ -535,5 +552,21 @@ module.exports = {
     Title: By.css('.pop-up-dialog .pop-up-dialog__header-text'),
     No_Button: By.css('.pop-up-dialog .pop-up-dialog__btn_cancel'),
     Discard_Button: commonConfirmButton
+  },
+  artifactsFilterByPopup: {
+    Title: By.css('#overlay_container .artifacts-filters__wrapper h3'),
+    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Show_Iterations_Checkbox: checkboxComponent({
+      root: '#overlay_container .form-field-checkbox input',
+      elements: {
+        checkbox: '', 
+        name: '',
+        icon: ''
+      }
+    }),
+    Checkbox_Label: By.css('#overlay_container .form-field-checkbox label'),
+    Clear_Button: By.css('#overlay_container .btn-tertiary'),
+    Apply_Button: By.css('#overlay_container .btn-secondary')
   }
 }
