@@ -37,6 +37,7 @@ import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { fetchModel, updateArtifact } from '../../../reducers/artifactsReducer'
 import { convertChipsData } from '../../../utils/convertChipsData'
+import { sortListByDate } from '../../../utils'
 
 export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
@@ -99,7 +100,7 @@ export const fetchModelsRowData = async (
           return {
             ...state,
             [modelIdentifier]: {
-              content: result.map(artifact =>
+              content: sortListByDate(result, 'updated', false).map(artifact =>
                 createModelsRowData(artifact, projectName, frontendSpec)
               )
             },

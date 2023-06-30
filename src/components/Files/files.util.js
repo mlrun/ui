@@ -31,6 +31,7 @@ import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { sortListByDate } from '../../utils'
 import { fetchFile } from '../../reducers/artifactsReducer'
 
 export const pageDataInitialState = {
@@ -126,7 +127,9 @@ export const fetchFilesRowData = (
         setSelectedRowData(state => ({
           ...state,
           [fileIdentifier]: {
-            content: result.map(artifact => createFilesRowData(artifact, projectName, frontendSpec))
+            content: sortListByDate(result, 'updated', false).map(artifact =>
+              createFilesRowData(artifact, projectName, frontendSpec)
+            )
           },
           error: null,
           loading: false
