@@ -64,6 +64,7 @@ const FeatureSetsPanelTargetStore = ({
   )
   const [targetsPathEditData, setTargetsPathEditData] = useState(targetsPathEditDataInitialState)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const [passthroughtEnabled, setPassThrouthEnabled] = useState(false)
 
   const onlineTarget = useMemo(
     () => featureStore.newFeatureSet.spec.targets.find(targetKind => targetKind.name === NOSQL),
@@ -197,27 +198,6 @@ const FeatureSetsPanelTargetStore = ({
       }))
     }
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
-
-  useEffect(() => {
-    if (featureStore.newFeatureSet.spec.passthrough) {
-      setTargetsPathEditData(state => ({
-        ...state,
-        [PARQUET]: {
-          ...state[PARQUET],
-          isEditMode: false,
-          isModified: state[PARQUET].isModified
-        }
-      }))
-      setDisableButtons(state => ({
-        ...state,
-        isOfflineTargetPathEditModeClosed: true
-      }))
-      setValidation(state => ({
-        ...state,
-        isExternalOfflineTargetPathValid: true
-      }))
-    }
-  }, [featureStore.newFeatureSet.spec.passthrough, setDisableButtons, setValidation])
 
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
@@ -522,21 +502,67 @@ const FeatureSetsPanelTargetStore = ({
     ]
   )
 
+  const clearTargets = useCallback(() => {
+    setSelectedTargetKind([])
+    setNewFeatureSetTarget([])
+    setTargetsPathEditData(state => ({
+      ...state,
+      [PARQUET]: {
+        isEditMode: false,
+        isModified: false
+      },
+      [EXTERNAL_OFFLINE]: {
+        isEditMode: false,
+        isModified: false
+      },
+      [ONLINE]: {
+        isEditMode: false,
+        isModified: false
+      }
+    }))
+    setDisableButtons(state => ({
+      ...state,
+      isOfflineTargetPathEditModeClosed: true,
+      isOnlineTargetPathEditModeClosed: true
+    }))
+    setValidation(state => ({
+      ...state,
+      isOfflineTargetPathValid: true,
+      isOnlineTargetPathValid: true,
+      isExternalOfflineTargetPathValid: true
+    }))
+    setData(state => ({
+      ...state,
+      [PARQUET]: { ...dataInitialState[PARQUET] },
+      [EXTERNAL_OFFLINE]: { ...dataInitialState[EXTERNAL_OFFLINE] }
+    }))
+    setShowAdvanced(prev => ({
+      ...prev,
+      [PARQUET]: false,
+      [EXTERNAL_OFFLINE]: false
+    }))
+    setPartitionRadioButtonsState(state => ({
+      ...state,
+      [PARQUET]: 'districtKeys',
+      [EXTERNAL_OFFLINE]: 'districtKeys'
+    }))
+    setSelectedPartitionKind(state => {
+      return {
+        ...state,
+        [PARQUET]: [...selectedPartitionKindInitialState[PARQUET]],
+        [EXTERNAL_OFFLINE]: [...selectedPartitionKindInitialState[EXTERNAL_OFFLINE]]
+      }
+    })
+  }, [setDisableButtons, setNewFeatureSetTarget, setValidation])
+
   useEffect(() => {
-    if (featureStore.newFeatureSet.spec.passthrough) {
-      if (selectedTargetKind.includes(PARQUET)) {
-        handleSelectTargetKind(PARQUET)
-      }
-
-      if (selectedTargetKind.includes(EXTERNAL_OFFLINE)) {
-        handleSelectTargetKind(EXTERNAL_OFFLINE)
-      }
-
-      if (selectedTargetKind.includes(ONLINE)) {
-        handleSelectTargetKind(ONLINE)
-      }
+    if (featureStore.newFeatureSet.spec.passthrough && !passthroughtEnabled) {
+      clearTargets()
+      setPassThrouthEnabled(true)
+    } else if (!featureStore.newFeatureSet.spec.passthrough && passthroughtEnabled) {
+      setPassThrouthEnabled(false)
     }
-  }, [featureStore.newFeatureSet.spec.passthrough, selectedTargetKind, handleSelectTargetKind])
+  }, [clearTargets, featureStore.newFeatureSet.spec.passthrough, passthroughtEnabled])
 
   const handlePartitionRadioButtonClick = (value, target) => {
     const keyBucketingNumber = value === 'districtKeys' ? 0 : 1
