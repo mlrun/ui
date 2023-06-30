@@ -32,6 +32,7 @@ import {
 } from '../../constants'
 import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { sortListByDate } from '../../utils'
 import { fetchDataSet } from '../../reducers/artifactsReducer'
 
 export const infoHeaders = [
@@ -126,7 +127,7 @@ export const fetchDataSetRowData = async (
           return {
             ...state,
             [dataSetIdentifier]: {
-              content: result.map(artifact =>
+              content: sortListByDate(result, 'updated', false).map(artifact =>
                 createDatasetsRowData(artifact, projectName, frontendSpec)
               )
             },

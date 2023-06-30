@@ -63,8 +63,8 @@ const FeatureSetsPanelTargetStore = ({
     partitionRadioButtonsInitialState
   )
   const [targetsPathEditData, setTargetsPathEditData] = useState(targetsPathEditDataInitialState)
-  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [passthroughtEnabled, setPassThrouthEnabled] = useState(false)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const onlineTarget = useMemo(
     () => featureStore.newFeatureSet.spec.targets.find(targetKind => targetKind.name === NOSQL),
