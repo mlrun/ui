@@ -46,6 +46,7 @@ const Projects = ({
   fetchNuclioFunctions,
   fetchProject,
   fetchProjects,
+  fetchProjectsNames,
   fetchProjectsSummary,
   projectStore,
   removeNewProject,
@@ -351,6 +352,7 @@ const Projects = ({
           setCreateProject(false)
           removeNewProject()
           refreshProjects()
+          fetchProjectsNames()
         }
       })
     }
