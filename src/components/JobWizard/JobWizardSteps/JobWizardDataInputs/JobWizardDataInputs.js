@@ -29,11 +29,7 @@ const JobWizardDataInputs = ({ formState }) => {
         <h5 className="form-step-title">Data Inputs</h5>
       </div>
       <div className="form-row">
-        <FormDataInputsTable
-          className="form-col-1"
-          fieldsPath="dataInputs.dataInputsTable"
-          formState={formState}
-        />
+        <FormDataInputsTable fieldsPath="dataInputs.dataInputsTable" formState={formState} />
       </div>
     </div>
   )

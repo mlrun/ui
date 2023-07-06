@@ -70,7 +70,6 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
           addNewItemLabel="Add a node"
           fieldsPath="resources.nodeSelectorTable"
           formState={formState}
-          className="form-col-1"
         />
       </div>
       <FormResourcesUnits formState={formState} />

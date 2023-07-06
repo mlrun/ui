@@ -60,13 +60,11 @@ const JobWizardAdvanced = ({
         {isStagingMode ? (
           <FormEnvironmentVariablesTable
             fieldsPath="advanced.environmentVariablesTable"
-            className="form-col-1"
             formState={formState}
           />
         ) : (
           <FormKeyValueTable
             addNewItemLabel="Add environment variable"
-            className="form-col-1"
             fieldsPath="advanced.environmentVariablesTable"
             formState={formState}
             keyHeader="Name"
@@ -81,7 +79,6 @@ const JobWizardAdvanced = ({
           <div className="form-row">
             <FormKeyValueTable
               addNewItemLabel="Add secret"
-              className="form-col-1"
               defaultKey="file"
               fieldsPath="advanced.secretSourcesTable"
               formState={formState}
