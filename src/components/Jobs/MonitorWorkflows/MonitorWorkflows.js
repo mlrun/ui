@@ -301,23 +301,16 @@ const MonitorWorkflows = ({
       })
   }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
 
-  const handleSuccessRerunJob = useCallback(
-    tab => {
-      if (tab === MONITOR_JOBS_TAB) {
-        refreshJobs(filtersStore)
-      }
-
-      setEditableItem(null)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job started successfully'
-        })
-      )
-    },
-    [dispatch, filtersStore, refreshJobs, setEditableItem]
-  )
+  const handleSuccessRerunJob = useCallback(() => {
+    setEditableItem(null)
+    dispatch(
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Job started successfully'
+      })
+    )
+  }, [dispatch, setEditableItem])
 
   const getWorkflows = useCallback(
     filter => {
