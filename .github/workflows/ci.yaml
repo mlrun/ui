@@ -5,15 +5,20 @@ on:
     branches:
     - development
     - '[0-9]+.[0-9]+.x'
+    - 'feature/**'
 
 jobs:
   check-copyright:
     name: Check Copyright Existence
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Check License Lines
-        uses: kt3k/license_checker@v1.0.6
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Check
+        run: |
+          deno run --allow-read https://deno.land/x/license_checker@v3.2.3/main.ts
       - name: Instructions For Adding Copyright
         if: ${{ failure() }}
         run: |
