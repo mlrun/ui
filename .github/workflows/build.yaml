@@ -14,6 +14,11 @@
 #
 name: Build
 
+permissions:
+
+  # Allow the action to upload images to ghcr
+  packages: write
+
 on:
   push:
     branches:
@@ -44,50 +49,72 @@ jobs:
     if: github.repository == 'mlrun/ui' || github.event_name == 'workflow_dispatch'
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
     - name: Install curl and jq
       run: sudo apt-get install curl jq
+
     - name: Extract git hashes and latest version
       id: git_info
       run: |
-        echo "::set-output name=mlrun_commit_hash::$(git rev-parse --short=8 $GITHUB_SHA)"
-        echo "::set-output name=unstable_version_prefix::$(curl https://raw.githubusercontent.com/mlrun/mlrun/${GITHUB_REF##*/}/automation/version/unstable_version_prefix)"
+        echo "mlrun_commit_hash=$(git rev-parse --short=8 $GITHUB_SHA)" >> $GITHUB_OUTPUT
+        echo "unstable_version_prefix=$(curl https://raw.githubusercontent.com/mlrun/mlrun/${GITHUB_REF##*/}/automation/version/unstable_version_prefix)" >> $GITHUB_OUTPUT
+
     - name: Set computed versions params
       id: computed_params
       run: |
-        echo "::set-output name=mlrun_version::$( \
+        echo "mlrun_version=$( \
           input_mlrun_version=${{ github.event.inputs.version }} && \
           default_mlrun_version=$(echo ${{ steps.git_info.outputs.unstable_version_prefix }}-${{ steps.git_info.outputs.mlrun_commit_hash }}) && \
-          echo ${input_mlrun_version:-`echo $default_mlrun_version`})"
-        echo "::set-output name=mlrun_docker_repo::$( \
+          echo ${input_mlrun_version:-`echo $default_mlrun_version`})" >> $GITHUB_OUTPUT
+        echo "mlrun_docker_repo=$( \
           input_docker_repo=${{ github.event.inputs.docker_repo }} && \
           default_docker_repo=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]') && \
-          echo ${input_docker_repo:-`echo $default_docker_repo`})"
-        echo "::set-output name=mlrun_docker_registries::$( \
+          echo ${input_docker_repo:-`echo $default_docker_repo`})" >> $GITHUB_OUTPUT
+        echo "mlrun_docker_registries=$( \
           input_docker_registries=${{ github.event.inputs.docker_registries }} && \
-          echo ${input_docker_registries:-ghcr.io/})"
-    - name: Setup Node.js 12
-      uses: actions/setup-node@v1
+          echo ${input_docker_registries:-ghcr.io/})" >> $GITHUB_OUTPUT
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
       with:
-        node-version: '12'
-    - name: Docker login
-      # all suffixed with "| true" to allow failures if secrets are not defined (fork)
-      run: |
-        echo ${{ secrets.GHCR_DOCKER_REGISTRY_PASSWORD }} | \
-          docker login ghcr.io -u ${{ secrets.GHCR_DOCKER_REGISTRY_USERNAME }} --password-stdin | true
-        echo ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_PASSWORD }} | \
-          docker login registry.hub.docker.com -u ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_USERNAME }} \
-          --password-stdin | true
-        echo ${{ secrets.QUAY_IO_DOCKER_REGISTRY_PASSWORD }} | \
-          docker login quay.io -u ${{ secrets.QUAY_IO_DOCKER_REGISTRY_USERNAME }} \
-          --password-stdin | true
+        node-version: '16'
+
+    - name: Docker login (ghcr)
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Docker login (quay.io)
+      continue-on-error: true
+      uses: docker/login-action@v2
+      with:
+        registry: quay.io
+        username: ${{ secrets.QUAY_IO_DOCKER_REGISTRY_USERNAME }}
+        password: ${{ secrets.QUAY_IO_DOCKER_REGISTRY_PASSWORD }}
+
+    - name: Docker login (docker.com)
+      continue-on-error: true
+      uses: docker/login-action@v2
+      with:
+        registry: registry.hub.docker.com
+        username: ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_PASSWORD }}
+
     - name: Build & push image
       run: |
+
+        # if the provided version includes a "+" we replace it with "-" for the docker tag
+        tag=$(echo "$(MLRUN_VERSION)" | sed -E 's/\+/\-/g')
         for registry in $(echo ${{ steps.computed_params.outputs.mlrun_docker_registries }} | sed "s/,/ /g"); \
           do \
             MLRUN_DOCKER_REGISTRY=$registry \
             MLRUN_DOCKER_REPO=${{ steps.computed_params.outputs.mlrun_docker_repo }} \
-            MLRUN_DOCKER_TAG=${{ steps.computed_params.outputs.mlrun_version }} \
+            MLRUN_DOCKER_TAG=$tag \
             npm run docker; \
-            docker push ${registry}${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}; \
+            docker push ${registry}${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:$tag; \
           done;
+      env:
+        MLRUN_VERSION: ${{ steps.computed_params.outputs.mlrun_version }}
