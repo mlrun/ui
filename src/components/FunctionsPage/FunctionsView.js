@@ -112,6 +112,7 @@ const FunctionsView = ({
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
                         handleSelectItem={handleSelectFunction}
+                        rowIndex={index}
                         key={index}
                         rowItem={tableItem}
                         selectedItem={selectedFunction}
