@@ -107,7 +107,7 @@ jobs:
       run: |
 
         # if the provided version includes a "+" we replace it with "-" for the docker tag
-        tag=$(echo "$(MLRUN_VERSION)" | sed -E 's/\+/\-/g')
+        tag=$(echo "$MLRUN_VERSION" | sed -E 's/\+/\-/g')
         for registry in $(echo ${{ steps.computed_params.outputs.mlrun_docker_registries }} | sed "s/,/ /g"); \
           do \
             MLRUN_DOCKER_REGISTRY=$registry \
