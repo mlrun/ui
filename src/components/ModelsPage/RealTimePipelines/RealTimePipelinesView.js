@@ -101,6 +101,7 @@ const RealTimePipelinesView = React.forwardRef(
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
                         handleSelectItem={() => {}}
+                        rowIndex={index}
                         key={index}
                         rowItem={tableItem}
                         selectedItem={{}}
