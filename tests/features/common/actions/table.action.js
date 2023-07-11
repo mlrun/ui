@@ -32,6 +32,7 @@ async function getColumnValues(driver, table, columnName) {
   return await driver
     .findElements(table.tableColumns[columnName])
     .then(function(elements) {
+
       return Promise.all(elements.map(element => element.getText()))
     })
 }
@@ -164,7 +165,6 @@ const action = {
         indexes.push(parseInt(indx) + 1)
       }
     }
-
     return indexes
   },
   findRowIndexesByColumnTooltipsValue: async function(
@@ -337,7 +337,6 @@ const action = {
     )
 
     testContext[column] = await cellElement.getText()
-
     if (attribute) {
       testContext[attribute] = await cellElement.getAttribute(attribute)
     }

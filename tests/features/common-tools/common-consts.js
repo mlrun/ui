@@ -29,20 +29,22 @@ module.exports = {
     ],
     Online_Status: 'online',
     Data_Collection_Description:
-      'This section enable users to upload data , crate features and register external data. Keep in mind that this ' +
-      'explaination is only temporary and should be replaced soon enough. This is not the final version.',
+      'Register, upload data directly, or define ' +
+      'features using the feature store.',
     Development_Description:
-      'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various ' +
-      'processing types including model training, data processing and more. This is not the final version.',
+      'Define your code in a function and train your ' +
+      'models. You can also run any additional code ' +
+      'in batch, as well as define and run workflows.',
     Deployment_Description:
-      'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale. ' +
-      'This is not the final version.'
+      'Deploy online serving models or perform batch ' +
+      'inference, as well as define data and model ' +
+      'monitoring and notification.'
   },
   Feature_Store: {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors']
   },
   Models: {
-    Tab_List: ['Models', 'Model Endpoints (Beta)', 'Real-Time Pipelines']
+    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines']
   },
   Real_Time_Pipeline_Pane: {
     Overview_Headers: [
@@ -84,11 +86,11 @@ module.exports = {
     ]
   },
   Datasets_Info_Pane: {
-    Tab_List: ['Overview', 'Preview', 'Metadata'],
+    Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
     Overview_General_Headers: [
       'Hash',
       'Key',
-      'Tag',
+      'Version tag',
       'Iter',
       'Size',
       'Path',
@@ -99,7 +101,7 @@ module.exports = {
     ]
   },
   ML_Functions_Tab: {
-    Common_Action_Menu_Options: ['View YAML', 'Edit', 'Delete'],
+    Common_Action_Menu_Options: ['Edit', 'Delete', 'View YAML'],
     Serving_Action_Menu_Options: ['View YAML', 'Delete']
   },
   ML_Function_Info_Pane: {
@@ -108,6 +110,7 @@ module.exports = {
       'Name',
       'Kind',
       'Hash',
+      'Version tag',
       'Code origin',
       'Updated',
       'Command',
@@ -120,7 +123,7 @@ module.exports = {
     Overview_General_Headers: [
       'Hash',
       'Key',
-      'Tag',
+      'Version tag',
       'Iter',
       'Size',
       'Path',
@@ -131,12 +134,12 @@ module.exports = {
     ]
   },
   Models_Info_Pane: {
-    Tab_List: ['Overview', 'Preview'],
+    Tab_List: ['Overview', 'Preview'],  //delete 'Preview'
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
       'Hash',
       'Key',
-      'Tag',
+      'Version tag',
       'Iter',
       'Kind',
       'Size',
@@ -159,6 +162,7 @@ module.exports = {
       'Model class',
       'Model artifact',
       'Function URI',
+      'Feature set',
       'Last prediction',
       'Error count',
       'Accuracy',
@@ -198,6 +202,13 @@ module.exports = {
     Form_Subtext:
       'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).'
   },
+  Register_Dataset: {
+    Type_Options: ['General', 'Chart', 'Plot', 'Table'],
+    Form_Text:
+      /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
+    Form_Subtext:
+      'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).'
+  },
   Project_Settings: {
     Tab_List: ['General', 'Members', 'Secrets'],
     Secrets_Hint:
@@ -206,9 +217,10 @@ module.exports = {
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
     Artifacts_Names_Unique: 'Artifacts names in the same project must be unique.',
+    Dataset_Names_Unique: 'Dataset names in the same project must be unique',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
-      'This field is required',
+      'This field is required\nArtifact name should be unique',
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
@@ -269,9 +281,9 @@ module.exports = {
     Start_Time_Input: 'Filter data by start date >= value',
     End_Time_Input: 'Filter data by start date <= value',
     Target_Store_Online: 'Store the feature set in Iguazio NoSQL database',
-    Target_Store_Offline: 'Store the feature set as a Parquet file in Iguazio object store',
+    Target_Store_Offline: 'Store the feature set as a Parquet file or a partitioned Parquet directory',
     Target_Store_External_Offline:
-      'Store the feature set in a remote object store (e.g. AWS S3 or Azure storage)',
+      'Store the feature set in a remote object store (e.g. AWS S3 Google or Azure storage)',
     Distinct_Keys: 'The partition is based on key.',
     Source_URL_Input:
       'Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from',
@@ -325,8 +337,12 @@ module.exports = {
       'UID',
       'Start time',
       'Last Updated',
+      'Run on spot',
+      'Node selector',
+      'Priority',
       'Parameters',
       'Function',
+      'Function tag',
       'Results',
       'Labels',
       'Log level',
@@ -388,14 +404,18 @@ module.exports = {
     CPU_Unit_Options: ['cpu', 'millicpu'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
-    Pods_Toleration: ['Allow', 'Constrain', 'Prevent'],
+    //Pods_Toleration: ['Allow', 'Constrain', 'Prevent'], - Pods_Toleration is deleted from implementation
     Schedule_Variants: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
     Schedule_Minutes_Variants: ['10', '15', '20', '30'],
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
-    Common_Message: 'No data to show',
-    No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first feature set.',
+    Common_Message: 'There is no Features data to show for "Tag: latest, Name: ccccc"',
+    Common_Message_Feature: 'There is no Features data to show for "Tag: latest"',
+    Common_Message_Feature_Vector: 'There is no Feature-Vectors data to show for "Tag: latest"',
+    Common_Message_Feature_Sets: 'There is no Feature-Sets data to show for "Version Tag: latest"',
+    No_Data: 'No data to show',
+    No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet'
   }
 }

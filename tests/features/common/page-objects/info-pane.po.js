@@ -42,13 +42,13 @@ const actionMenuStructure = {
 }
 
 const infoPaneTabSelector = {
-  root: '.table__item .details-menu__tabs',
+  root: '.table__item .tabs-slider__tabs',
   header: {},
   body: {
     row: {
       root: 'a',
       fields: {
-        key: '.details-menu__tab',
+        key: '', //'.details-menu__tab',
         hintButton: '.tip-container'
       }
     }
@@ -451,7 +451,7 @@ const cancelButton = By.css(
   '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
 )
 const applyChangesButton = By.css(
-  '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(2) button'
+  '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
 )
 const commonActionMenu = actionMenu(actionMenuStructure)
 const crossCloseButton = By.css('.table__item .item-header__buttons a .data-ellipsis')

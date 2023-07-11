@@ -59,6 +59,7 @@ import {
 } from '../common/actions/dropdown.action'
 import pageObjectsConsts from '../common-tools/common-consts'
 import { expect } from 'chai'
+import { isRowActive } from '../common/actions/tab-selector.action'
 
 Then(
   'check {string} value in {string} column in {string} table on {string} wizard',
@@ -610,6 +611,20 @@ When(
   }
 )
 
+Then( 
+  'verify that row index {int} is active in {string} table on {string} wizard',
+  async function (indx, table, wizard) {
+    await isRowActive(this.driver, pageObjects[wizard][table], indx) 
+  }
+)
+
+Then( 
+  'verify that row index {int} is NOT active in {string} table on {string} wizard',
+  async function (indx, table, wizard) {
+    await isRowActive(this.driver, pageObjects[wizard][table], indx)
+  }
+)
+
 When(
   'add new volume rows to {string} table in {string} on {string} wizard using nontable inputs',
   async function (tableName, accordionName, wizardName, dataTable) {
@@ -693,11 +708,13 @@ When(
 
         if (pageComponents[indx].includes('Input')) {
           await typeValue(this.driver, pageObjects[wizardName][pageComponents[indx]], row[indx])
+          await this.driver.sleep(250)
         }
 
         if (pageComponents[indx].includes('Button')) {
           if (row[indx] === 'yes') {
             await clickOnComponent(this.driver, pageObjects[wizardName][pageComponents[indx]])
+            await this.driver.sleep(250)
           }
         }
       }

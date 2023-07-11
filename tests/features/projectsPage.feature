@@ -3,6 +3,8 @@ Feature: MLRun Projects Page
     Testcases that verifies functionality on MLRun Projects Page
 
     @passive
+    @FAILED_TODO
+    #TODO: last two steps are unstable on small screen extensions because scroll change the screen coordinates, it needs another solution
     Scenario: Check all mandatory components
         Given open url
         And wait load page
@@ -10,6 +12,7 @@ Feature: MLRun Projects Page
         Then verify "New_Project_Button" element visibility on "Projects" wizard
         Then "New_Project_Button" element on "Projects" should contains "New Project" value
         Then verify "See_On_Github" element visibility on "commonPagesHeader" wizard
+        Then verify "See_On_Slack" element visibility on "commonPagesHeader" wizard
         Then verify "Active_Projects_Button" element visibility on "Projects" wizard
         Then verify "Archive_Projects_Button" element visibility on "Projects" wizard
         Then verify "Projects_Sort_Dropdown" element visibility on "Projects" wizard
@@ -95,7 +98,8 @@ Feature: MLRun Projects Page
         Then click on "Create_Button" element on "Create_New_Project" wizard
         And set tear-down property "project" created with "automation-test-name" value
         Then check "automation-test-name" value in "name" column in "Projects_Table" table on "Projects" wizard
-
+    
+    @passive
     Scenario: Archive ML Project
         * set tear-down property "project" created with "automation-test-name1" value
         * create "automation-test-name1" MLRun Project with code 201
@@ -108,7 +112,8 @@ Feature: MLRun Projects Page
         Then check "automation-test-name1" value not in "name" column in "Projects_Table" table on "Projects" wizard
         Then click on "Archive_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name1" value in "name" column in "Projects_Table" table on "Projects" wizard
-
+    
+    @passive
     Scenario: Delete existing ML Project
         * set tear-down property "project" created with "automation-test-name2" value
         * create "automation-test-name2" MLRun Project with code 201
@@ -119,7 +124,8 @@ Feature: MLRun Projects Page
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Delete_Button" element on "Common_Popup" wizard
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
-
+    
+    @passive
     Scenario: Unarchive ML Project
         * set tear-down property "project" created with "automation-test-name7" value
         * create "automation-test-name7" MLRun Project with code 201

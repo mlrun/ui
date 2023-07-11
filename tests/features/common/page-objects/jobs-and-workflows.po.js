@@ -34,7 +34,7 @@ import {
 
 // Monitor tab
 const tabSelector = {
-  root: '.content_with-menu .content-menu',
+  root: '.content .content-menu',
   header: {},
   body: {
     root: '.content-menu__list',
@@ -70,7 +70,7 @@ const actionMenuStructure = {
 }
 
 const jobsMonitorTable = {
-  root: '.table .table__content',
+  root: '.table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -86,9 +86,9 @@ const jobsMonitorTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
+        name: '.table-body__cell:nth-of-type(1) a .link',//'.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -147,7 +147,7 @@ const jobsMonitorTable = {
 }
 
 const workflowsMonitorTable = {
-  root: '.table .table__content',
+  root: '.table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -160,7 +160,7 @@ const workflowsMonitorTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         status: {
           componentType: labelComponent,
@@ -227,7 +227,7 @@ const monitorWorkflowGraph = {
 }
 
 const scheduleMonitorTable = {
-  root: '.table .table__content',
+  root: '.table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -243,7 +243,7 @@ const scheduleMonitorTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a',
         type: {
@@ -411,11 +411,11 @@ const pageHeaderButton = By.css(
 )
 const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
-  '.content__action-bar .data-ellipsis:nth-of-type(1) button[id=refresh]'
+  '.content__action-bar-wrapper .action-bar .actions #refresh'
 )
 const commonStatusFilter = dropdownComponent(
   generateDropdownGroup(
-    '.content__action-bar .filters .select:nth-of-type(2)',
+    '.content__action-bar-wrapper .filters .select:nth-of-type(2)',
     '.select__header', // Open Component
     '.select__body .select__item', // Options
     '.data-ellipsis .data-ellipsis' // Option value
@@ -423,14 +423,14 @@ const commonStatusFilter = dropdownComponent(
 )
 const commonNameFilter = inputGroup(
   generateInputGroup(
-    '.content__action-bar .filters > .input-wrapper:nth-of-type(3)',
+    '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(3)',
     true,
     false
   )
 )
 const commonStartTimeFilter = dropdownComponent(
   generateDropdownGroup(
-    '.content__action-bar .filters .date-picker-container',
+    '.content__action-bar-wrapper .filters .date-picker-container',
     'input.date-picker__input',
     '.date-picker__pop-up .select__item',
     '.data-ellipsis .data-ellipsis',
@@ -444,20 +444,20 @@ module.exports = {
     New_Job_Button: pageHeaderButton,
     Arrow_Back: By.css('.link-back__icon'),
     Resource_Monitoring_Button: By.css(
-      '.content__action-bar > .data-ellipsis:nth-of-type(2) button'
+      '.content__action-bar-wrapper .action-bar button'
     ),
     Table_Refresh_Button: tableRefreshButton,
     Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(3)',
+        '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(3)',
         true,
         false
       )
     ),
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(4)',
+        '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(4)',
         true,
         false
       )
@@ -480,14 +480,14 @@ module.exports = {
   ScheduleMonitorTab: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(1)',
+        '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(1)',
         true,
         false
       )
     ),
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar .filters > .input-wrapper:nth-of-type(2)',
+        '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(2)',
         true,
         false
       )

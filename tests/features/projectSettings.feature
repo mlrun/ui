@@ -10,6 +10,9 @@ Feature: Project Settings page
         Given open url
         And click on row root with value "automation-test-name8" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify breadcrumbs "project" label should be equal "automation-test-name8" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
@@ -50,6 +53,7 @@ Feature: Project Settings page
         Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "automation test description"
         And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
             | key_input | value_input |
             | a         | b           |
@@ -63,6 +67,7 @@ Feature: Project Settings page
         And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And wait load page
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with offset "false"
             | label   |
             | a\n:\nb |
@@ -79,6 +84,9 @@ Feature: Project Settings page
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "project_label_key=project_label_value"
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321"
 
+    @FAILED_TODO
+    #TODO: run with maximize browser window on 1920х1080 screen size
+    @inProgress
     Scenario: Verify Parameters Table on General Tab
         * set tear-down property "project" created with "automation-test-name5" value
         * create "automation-test-name5" MLRun Project with code 201

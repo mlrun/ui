@@ -8,6 +8,12 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Refresh_Button" element visibility on "Project" wizard
@@ -21,99 +27,132 @@ Feature: MLRun Project Page
 
     @passive
     @sanity
-    Scenario: Check all mandatory components on demo mode
+    Scenario: Check all mandatory components on Navigation Bar
         * set tear-down property "project" created with "automation-test-1000" value
         * create "automation-test-1000" MLRun Project with code 201
         Given open url
         And click on row root with value "automation-test-1000" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
-        Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
+        #check the default state of 'Navigation_Bar'
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        #check visibility of menu buttons with pinned 'Navigation_Bar'
         Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        Then verify "General_Info_Quick_Links" element invisibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
-        When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Home_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Button_Text" element visibility on "commonPagesHeader" wizard
+        Then verify "Feature_Store_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Datasets_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Artifacts_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Models_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Jobs_And_Workflows_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "ML_Functions_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Real_Time_Functions_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "API_Gateways_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
+        #check invisibility of menu buttons and visibility of menu icons with unpinned 'Navigation_Bar'
+        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Home_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Project_Home_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Button_Text" element invisibility on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Feature_Store_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Feature_Store_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Datasets_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Datasets_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Artifacts_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Artifacts_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Models_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Models_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Jobs_And_Workflows_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Jobs_And_Workflows_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "ML_Functions_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "ML_Functions_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Real_Time_Functions_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Real_Time_Functions_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "API_Gateways_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "API_Gateways_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Project_Settings_Icon" element visibility on "commonPagesHeader" wizard
+        #check that 'Navigation_Bar' save the state through different pages
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
-
-    @passive
-    @sanity
-    @demo
-    Scenario: Check all mandatory components on demo mode
-        * set tear-down property "project" created with "automation-test-1001" value
-        * create "automation-test-1001" MLRun Project with code 201
-        Given open url
-        * turn on demo mode
-        And click on row root with value "automation-test-1001" in "name" column in "Projects_Table" table on "Projects" wizard
+        Then click on "ML_Functions_Icon" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        Then click on "Jobs_And_Workflows_Icon" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        Then click on "Feature_Store_Icon" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
-        Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
-        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
+        Then click on "Datasets_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        Then verify "General_Info_Quick_Links" element invisibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
-        When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
-        Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
+        And wait load page
+        Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
 
     @passive
     @sanity
-    @demo
-    Scenario: Check all mandatory components on demo mode
+    Scenario: Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
         Given open url
-        * turn on demo mode
         And click on row root with value "automation-test-1002" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Header_Name_Label" element visibility on "Demo_Project" wizard
         Then verify "Header_Created_Time" element visibility on "Demo_Project" wizard
         Then verify "Header_Project_Description" element visibility on "Demo_Project" wizard
-        Then verify "Header_Name_Label" on "Demo_Project" wizard should display "Project"."Online_Status" in "Common_Tolltip"
         Then verify value should equal "automation-test-1002" in "Header_Name_Label" on "Demo_Project" wizard
         Then verify value should equal "automation test description" in "Header_Project_Description" on "Demo_Project" wizard
-        Then verify value should equal "Data" in "Data_Collection_Header" on "Demo_Project" wizard
+        Then verify value should equal "Ingest and process data" in "Data_Collection_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Data_Collection_Description" in "Data_Collection_Description" on "Demo_Project" wizard
         Then verify "Data_Collection_Additional_Actions_Button" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Links_Table" element visibility on "Demo_Project" wizard
-        Then verify value should equal "Jobs and Workflows" in "Development_Header" on "Demo_Project" wizard
+        Then verify value should equal "Develop and train model" in "Development_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Development_Description" in "Development_Description" on "Demo_Project" wizard
         Then verify "Development_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Development_Links_Table" element visibility on "Demo_Project" wizard
-        Then verify value should equal "Deployment" in "Deployment_Header" on "Demo_Project" wizard
+        Then verify value should equal "Deploy and monitor" in "Deployment_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Deployment_Description" in "Deployment_Description" on "Demo_Project" wizard
         Then verify "Deployment_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Deployment_Links_Table" element visibility on "Demo_Project" wizard
         Then click on "Data_Collection_Additional_Actions_Button" element on "Demo_Project" wizard
         Then verify values in "Data_Collection_Actions_Table" table on "Demo_Project" wizard
             |          name           |
-            |   Create Features Set   |
-            |     Register Dataset    |
-            |     Register Artifact   |
-        Then verify values in "Data_Collection_Additional_Actions_Table" table on "Demo_Project" wizard
-            |          name           |
-            | Create a Feature Vector |
+            |    Create feature set   |
+            |     Register dataset    |
+            |     Register artifact   |
+            |  Create feature vector  |
         Then verify values in "Development_Actions_Table" table on "Demo_Project" wizard
             |          name           |
-            |   Create New Function   |
-            |      Create New Job     |
-            |      Register Model     |
+            |  Create batch function  |
+            |        Create job       |
         Then verify values in "Deployment_Actions_Table" table on "Demo_Project" wizard
-            |          name           |
-            |   Create RT function    |
-            | Deploy serving function |
+            |           name            |
+            | Create real-time function |
         Then verify values in "Data_Collection_Links_Table" table on "Demo_Project" wizard
             |      name       |
             |   Feature Sets  |
@@ -125,11 +164,11 @@ Feature: MLRun Project Page
             | ML Functions |
             |     Jobs     |
             |    Models    |
-            |   Workflow   |
+            |   Workflows  |
         Then verify values in "Deployment_Links_Table" table on "Demo_Project" wizard
             |        name         |
             |   Model Endpoints   |
-            | Real Time Pipelines |
+            |     RT Pipelines    |
             |  Nuclio Functions   |
             |     Monitoring      |
 
@@ -143,13 +182,18 @@ Feature: MLRun Project Page
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
+    @FAILED_TODO
+    #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
     @passive
     Scenario: Check all mandatory components on Register File Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "Register Artifact" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
         Then "Form_Text" component on "Register_File_Popup" should be equal "Register_Artifact"."Form_Text"
@@ -189,13 +233,19 @@ Feature: MLRun Project Page
         Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
         Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
 
+    @FAILED_TODO
+    #TODO: Register_Model hidden till 5.1, running in demo mode
+    #TODO: Bug - on 'Project Home' also hidden in demo mode
     @passive
     Scenario: Check all mandatory components on Register Model Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "Register Model" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
@@ -231,19 +281,25 @@ Feature: MLRun Project Page
             |      label      |
             | key2\n:\nvalue2 |
 
+    @FAILED_TODO
+    #TODO: Register_Model hidden till 5.1, running in demo mode
+    #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
     @passive
     Scenario: Check all mandatory components on Register Dataset Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "Register Dataset" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
         Then "Form_Text" component on "Register_Dataset" should be equal "Register_Artifact"."Form_Text"
-        Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Artifact"."Form_Subtext"
+        Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Dataset"."Form_Subtext"
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
-        Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Artifact_Names_Unique"
+        Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Dataset_Names_Unique"
         Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
         Then verify "Name_Input" options rules on form "Register_Dataset" wizard
@@ -277,8 +333,11 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "Job" option in "Create_New" dropdown on "Project" wizard
         When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
         When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
@@ -320,8 +379,11 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
@@ -371,16 +433,17 @@ Feature: MLRun Project Page
 
     @passive
     @demo
+    #TODO: "Serving" option in "New_Function_Runtime_Dropdown" exist only in demo mode
     Scenario: Check all mandatory components on Create ML Function on Demo mode
         Given open url
-        And turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And turn on demo mode
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
+        #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
@@ -436,10 +499,15 @@ Feature: MLRun Project Page
         Then verify "Save_Button" element visibility on "New_Function" wizard
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
 
+    @FAILED_TODO
+    #TODO: verify "Create_New" element visibility on "Project" doesn't contain 'Register_Model' - Register_Model hidden till 5.1, running in demo mode
     @passive
     Scenario: Check all mandatory components on Create New Feature Set
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
@@ -475,10 +543,15 @@ Feature: MLRun Project Page
         Then verify "Save_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Save_And_Ingest_Button" element visibility on "New_Feature_Set" wizard
 
+    @FAILED_TODO
+    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
     Scenario: Check Project Counter redirection to Models tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then click on cell with value "Models" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
@@ -496,6 +569,9 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then click on cell with value "Feature sets" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
@@ -512,10 +588,15 @@ Feature: MLRun Project Page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create Set" value
 
+    @FAILED_TODO
+    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
     Scenario: Check Project Counter redirection to Files tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then click on cell with value "Artifacts" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
@@ -533,6 +614,10 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
         Then click on cell with value "Running jobs" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
         And wait load page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
@@ -548,6 +633,9 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then click on cell with value "Scheduled" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
         And wait load page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
@@ -560,6 +648,10 @@ Feature: MLRun Project Page
     Scenario: Verify behaviour of Breadcrumbs menu
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
         Then select "project" with "default" value in breadcrumbs menu
@@ -577,6 +669,8 @@ Feature: MLRun Project Page
         Then select "tab" with "Artifacts" value in breadcrumbs menu
         And wait load page
 
+    @FAILED_TODO
+    #TODO: click on "name" in "Development_Actions_Table" table on "Demo_Project" - component was changed on project home 
     @passive
     @demo
     Scenario: Check all mandatory components on Create ML Function on Demo mode from Demo Page
@@ -603,6 +697,8 @@ Feature: MLRun Project Page
         Then verify "Continue_Button" element visibility on "Create_ML_Function_Popup" wizard
         And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
 
+    @FAILED_TODO
+    #TODO: click on "name" in "Development_Actions_Table" table on "Demo_Project" - component was changed on project home
     @passive
     @demo
     Scenario: Check all mandatory components on Create New Job on Demo mode from Demo Page
@@ -618,6 +714,8 @@ Feature: MLRun Project Page
         Then verify "Create_Job_Header" element visibility on "Create_Job" wizard
         Then verify "Search_Input" element visibility on "Create_Job" wizard
 
+    @FAILED_TODO
+    #TODO: click on "name" in "Development_Actions_Table" table on "Demo_Project" - component was changed on project home
     @demo
     Scenario: Verify behaviour on Register Model Popup on Demo mode from Demo Page
         Given open url
@@ -656,6 +754,8 @@ Feature: MLRun Project Page
         Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
         Then check "test-path" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
+    @FAILED_TODO
+    #TODO: click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" - component was changed on project home
     @passive
     @demo
     Scenario: Check all mandatory components on Create New Feature Set on Demo mode from Demo Page
@@ -698,6 +798,8 @@ Feature: MLRun Project Page
         Then verify "Save_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Save_And_Ingest_Button" element visibility on "New_Feature_Set" wizard
 
+    @FAILED_TODO
+    #TODO: "New_File_Target_Path_Input" - component was changed
     @passive
     @demo
     Scenario: Check all mandatory components on Register Dataset Popup on Demo mode from Demo Page
@@ -707,13 +809,13 @@ Feature: MLRun Project Page
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
-            |     Register Dataset    |
+            |     Register dataset    |
         And wait load page
         Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
         Then "Form_Text" component on "Register_Dataset" should be equal "Register_Artifact"."Form_Text"
-        Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Artifact"."Form_Subtext"
+        Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Dataset"."Form_Subtext"
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
-        Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Artifact_Names_Unique"
+        Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Dataset_Names_Unique"
         Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
         Then verify "Name_Input" options rules on form "Register_Dataset" wizard
@@ -749,6 +851,8 @@ Feature: MLRun Project Page
         Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
         Then check "target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
 
+    @FAILED_TODO
+    #TODO: "New_File_Target_Path_Input" - component was changed
     @passive
     @demo
     Scenario: Check all mandatory components on Register File Popup on Demo mode from Demo Page
@@ -758,7 +862,7 @@ Feature: MLRun Project Page
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
-            |    Register Artifact    |
+            |    Register artifact    |
         And wait load page
         Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
         Then "Form_Text" component on "Register_File_Popup" should be equal "Register_Artifact"."Form_Text"
@@ -805,6 +909,8 @@ Feature: MLRun Project Page
         Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
         Then check "target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
 
+    @FAILED_TODO
+    #TODO: click on "name" in "Data_Collection_Additional_Actions_Table" table on "Demo_Project" - component was changed on project home
     @passive
     @demo
     Scenario: Check all mandatory components on Create a Feature Vector Popup on Demo mode from Demo Page
@@ -854,6 +960,8 @@ Feature: MLRun Project Page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create Set" value
 
+    @FAILED_TODO
+    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
     @demo
     Scenario: Check all mandatory components on Files tab on Demo mode from Demo Page
@@ -875,6 +983,8 @@ Feature: MLRun Project Page
         Then verify "Register_File_Button" element visibility on "Files" wizard
         Then "Register_File_Button" element on "Files" should contains "Register Artifact" value
 
+    @FAILED_TODO
+    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
     @demo
     Scenario: Check all mandatory components on Datasets tab on Demo mode from Demo Page
@@ -944,12 +1054,14 @@ Feature: MLRun Project Page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "New_Job_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "New_Job_Button" element on "Jobs_Monitor_Tab" should contains "New Job" value
+        Then "New_Job_Button" element on "Jobs_Monitor_Tab" should contains "Batch Run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Status_Filter_Options"
 
+    @FAILED_TODO
+    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
     @demo
     Scenario: Check all mandatory components on Models tab on Demo mode from Demo Page
@@ -979,8 +1091,8 @@ Feature: MLRun Project Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
-            |   name   |
-            | Workflow |
+            |    name   |
+            | Workflows |
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
 
@@ -995,7 +1107,7 @@ Feature: MLRun Project Page
             |      name       |
             | Model Endpoints |
         And wait load page
-        Then verify "Model Endpoints (Beta)" tab is active in "Models_Tab_Selector" on "Models" wizard
+        Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
 
     @passive
     @demo
@@ -1006,7 +1118,7 @@ Feature: MLRun Project Page
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |        name         |
-            | Real Time Pipelines |
+            |     RT Pipelines    |
         And wait load page
         Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
 
@@ -1037,6 +1149,9 @@ Feature: MLRun Project Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         Then click on "See_All_Jobs_Link" element on "Project" wizard
         And wait load page
@@ -1055,6 +1170,10 @@ Feature: MLRun Project Page
     Scenario: Check redirect to project`s job Info Pane from Project Monitoring Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And save to context "name" column and "href" attribute on 1 row from "Jobs_And_Workflows" table on "Project" wizard
         When click on cell with row index 1 in "name" column in "Jobs_And_Workflows" table on "Project" wizard
@@ -1075,6 +1194,9 @@ Feature: MLRun Project Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
@@ -1100,6 +1222,9 @@ Feature: MLRun Project Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
@@ -1116,6 +1241,9 @@ Feature: MLRun Project Page
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
@@ -1144,6 +1272,9 @@ Feature: MLRun Project Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page

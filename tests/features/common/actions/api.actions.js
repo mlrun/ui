@@ -209,7 +209,8 @@ const action = {
 
     await mainHttpClient
       .post(
-        `${REACT_APP_MLRUN_API_URL}/func/${mlProjectName}/${mlFunctionName}?tag=&versioned=true`,
+        //`${REACT_APP_MLRUN_API_URL}/func/${mlProjectName}/${mlFunctionName}?tag=&versioned=true`,
+        `${REACT_APP_MLRUN_API_URL}/projects/${mlProjectName}/functions/${mlFunctionName}?tag=&versioned=true`,
         data
       )
       .then(res => {

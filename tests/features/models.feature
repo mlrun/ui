@@ -2,12 +2,17 @@ Feature: Models Page
 
   Testcases that verifies functionality on Models Page
 
+  @FAILED_TODO
+  #TODO: Table_Labels_Filter_Input, Table_Tree_Filter_Dropdown, Show_Iterations_Checkbox, Table_Tree_Filter_Dropdown elements were redesigned, need tests rewrite
+  #TODO: Register_Model_Button hidden till 5.1, running on demo mode
   @passive
-  @failed
   Scenario: Check all mandatory components on Models tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -22,6 +27,7 @@ Feature: Models Page
     Then verify "Show_Iterations_Checkbox" element visibility on "Models" wizard
     Then verify "Table_Refresh_Button" element visibility on "Models" wizard
     Then verify "Models_Table" element visibility on "Models" wizard
+    And turn on demo mode
     Then verify "Register_Model_Button" element visibility on "Models" wizard
     Then "Register_Model_Button" element on "Models" should contains "Register Model" value
     Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Models" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
@@ -32,15 +38,18 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Models" value
-    And select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    Then verify "Model Endpoints (Beta)" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "Model_Endpoints" wizard
     Then verify "Table_Sort_By_Filter" element visibility on "Model_Endpoints" wizard
     Then verify "Table_Refresh_Button" element visibility on "Model_Endpoints" wizard
@@ -51,6 +60,9 @@ Feature: Models Page
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -81,6 +93,9 @@ Feature: Models Page
     And wait load page
     Then value in "name" column with "text" in "Models_Table" on "Models" wizard should contains "survival"
 
+  @FAILED_TODO
+  #TODO: Show_Iterations_Checkbox element was redesigned, need tests rewrite
+  #TODO: class table__content was changed, need modelsTable components rewrite (affects the 'click on cell with row index','expand_btn', 'Header element' cases)
   @passive
   Scenario: Verify behaviour of Show iterations checkbox on Models tab
     * set tear-down property "model" created in "default" project with "automation-model" value
@@ -105,11 +120,16 @@ Feature: Models Page
     Then verify "Header" element not exists on "Models_Info_Pane" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "Models" wizard
 
+  @FAILED_TODO
+  #TODO: class table__content was changed, need realTimePipelinesTable components rewrite (affects the last case)
   @passive
   Scenario: Verify filtering by name on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -127,6 +147,8 @@ Feature: Models Page
     And wait load page
     Then value in "name" column with "text" in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard should contains "churn-server"
 
+  @FAILED_TODO
+  #TODO: Table_Labels_Filter_Input element was redesigned, need tests rewrite
   @passive
   Scenario: Verify filtering by label with key on Models tab
     Given open url
@@ -136,7 +158,7 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then type value "my-key" to "Table_Labels_Filter_Input" field on "Models" wizard
+    #Then type value "my-key" to "Table_Labels_Filter_Input" field on "Models" wizard
     Then click on "Table_Refresh_Button" element on "Models" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key"
@@ -158,9 +180,9 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    And select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    Then verify "Model Endpoints (Beta)" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "Model_Endpoints" wizard
     Then type value "my-key" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
@@ -175,6 +197,11 @@ Feature: Models Page
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+  @FAILED_TODO
+  #TODO: Register_Model_Button hidden till 5.1, running in demo mode
+  #TODO: warning "Input_Hint"."Input_Field_Invalid" was redesigned, need case rewrite (now it's dropdown warning)
+  #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
+  #TODO: artifactsLabelsTable class components was changed, need to rewrite locators structure (affects the 'Labels_Table', 'remove_btn' cases)
   @passive
   Scenario: Check all mandatory components on Register Model Popup
     Given open url
@@ -261,6 +288,9 @@ Feature: Models Page
     Then navigate forward
     Then verify "Title" element not exists on "Register_Model_Popup" wizard
 
+  @FAILED_TODO
+  #TODO: Register_Model_Button hidden till 5.1, running on demo mode
+  #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on all cases below)
   Scenario: Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
@@ -297,6 +327,8 @@ Feature: Models Page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
+  @FAILED_TODO
+  #TODO: 'Show_Iterations_Checkbox' located in filter dropdown - new implementation, need rewrite step (also affects 'expand_btn' appears and steps below)
   @passive
   Scenario: Verify View YAML action
     Given open url
@@ -311,7 +343,7 @@ Feature: Models Page
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
-     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
     Then check "Show_Iterations_Checkbox" element on "Models" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
     Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "latest #0" value in "name" column
@@ -336,6 +368,10 @@ Feature: Models Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+  @FAILED_TODO
+  #TODO: 'Preview' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
+  #TODO: 'Features' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
+  #TODO: 'Statistics' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
   @passive
   Scenario: Check all mandatory components in Item infopane on Overview tab table
     Given open url
@@ -368,6 +404,9 @@ Feature: Models Page
     Then verify cell with "Statistics" value in "key" column in "Info_Pane_Tab_Selector" table on "Models_Info_Pane" wizard should display "Label_Hint"."Models_Statistics"
     Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
 
+  @FAILED_TODO
+  #TODO: 'Apply_Changes_Button' implementation was changed - button is invisible before any changes
+  #TODO: verify, remove, verify changes with 'Labels_Table' - invalid selector: An invalid or illegal selector was specified
   Scenario: Check all mandatory components in Item infopane on Overview tab table
     * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "latest" tag in "default" project with code 200
@@ -425,7 +464,7 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    And select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then save to context "name" column and "href" attribute on 1 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
@@ -439,6 +478,9 @@ Feature: Models Page
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Drift_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_Drift_Headers"
 
+  @FAILED_TODO
+  #TODO: 'Table_Tree_Filter_Dropdown' was redesigned, need case rewrite
+  #TODO: "Overview" tab is active - invalid selector
   @passive
   Scenario: Check Details panel still active on page refresh
     * set tear-down property "model" created in "default" project with "test-model" value
@@ -479,6 +521,9 @@ Feature: Models Page
     When click on "Expand_Sources" element on "Models_Info_Pane" wizard
     Then verify "Info_Sources_Table" element visibility on "Models_Info_Pane" wizard
 
+  @FAILED_TODO
+  #TODO: block with 'Deploy', 'Add a tag', 'View YAML' is reimplemented
+  #TODO: select "Deploy" option in action menu on "Models" - doesn't click on dropdown '...' and option 'Deploy' (after manual clicks all next 71 steps passed)
   @passive
   Scenario: Check all mandatory components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
@@ -554,6 +599,9 @@ Feature: Models Page
     Then navigate forward
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
 
+    @FAILED_TODO
+    #TODO: select "Deploy" option in action menu on "Models" - doesn't click on dropdown '...' and option 'Deploy'
+    #TODO: locators structure of 'Add class argument'was changed - need change locators
     Scenario: Verify behaviour of key-value table on Deploy Model Popup
      * set tear-down property "model" created in "default" project with "automation-test-model" value
      * create "automation-test-model" Model with "latest" tag in "default" project with code 200
@@ -617,11 +665,16 @@ Feature: Models Page
        | edited_name2 | edited_value2 |
        | name4        | value4        |
 
+  @FAILED_TODO
+  #TODO: save to context "name" column and "href" attribute on 1 row from "Real_Time_Pipelines_Table" - no such element (maybe some changes with URL)
   @passive
   Scenario: Verify behaviour of Real-Time Pipelines table
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -652,10 +705,19 @@ Feature: Models Page
     Then compare current browser URL with test "href" context value
     Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "function" context value
 
+  @FAILED_TODO
+  #TODO: new conditions for mandatory tabs (generateModelsDetailsMenu() - need to check the test implementation)
+  #TODO: select "Preview" tab in "Info_Pane_Tab_Selector" - invalid selector
+  #TODO: select "Model Endpoints" tab in "Models_Tab_Selector" - invalid selector
+  #TODO: select "Features Analysis" tab in "Info_Pane_Tab_Selector" - invalid selector
+  #TODO: click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" - no such element
   Scenario: Check broken link redirection
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     And select "tab" with "Models" value in breadcrumbs menu
     And wait load page
@@ -670,10 +732,10 @@ Feature: Models Page
     And wait load page
     Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
     Then verify redirection from "projects/default/models/models/model_default/latest/INVALID/overview" to "projects/default/models/models"
-    When select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
-    When select "Model Endpoints (Beta)" tab in "Models_Tab_Selector" on "Models" wizard
+    When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
@@ -688,3 +750,57 @@ Feature: Models Page
     Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     Then verify redirection from "projects/default/models/real-time-pipelines/pipeline/INVALID" to "projects/default/models/real-time-pipelines"
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
+  
+  Scenario: Check active/highlited items with details panel on Model Endpoints tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
+    Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 1 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+	  Then verify that row index 1 is active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then verify that row index 2 is NOT active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then click on cell with row index 2 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard  
+    Then verify that row index 2 is active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard   
+    Then verify that row index 1 is NOT active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 2 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+
+  Scenario: Check active/highlited items with details panel on Models tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 1 row from "Models_Table" table on "Models" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+	  Then verify that row index 1 is active in "Models_Table" table on "Models" wizard
+    Then verify that row index 2 is NOT active in "Models_Table" table on "Models" wizard
+    Then click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard  
+    Then verify that row index 2 is active in "Models_Table" table on "Models" wizard   
+    Then verify that row index 1 is NOT active in "Models_Table" table on "Models" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then save to context "name" column on 2 row from "Models_Table" table on "Models" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value

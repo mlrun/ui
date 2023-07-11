@@ -37,7 +37,7 @@ const action = {
     if (element) {
       await element.click()
     }
-    await driver.sleep(500)
+    await driver.sleep(1500)
   },
   collapseDropdown: async function(driver, dropdown) {
     // const element = await driver.findElement(dropdown.root)

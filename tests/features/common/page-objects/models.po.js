@@ -40,7 +40,7 @@ const actionMenuStructure = {
 }
 
 const tabSelector = {
-  root: '.content_with-menu .content-menu',
+  root: '.content .content-menu', //'.content_with-menu .content-menu',
   header: {},
   body: {
     root: '.content-menu__list',
@@ -54,7 +54,7 @@ const tabSelector = {
 }
 
 const modelsTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -70,9 +70,9 @@ const modelsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper span.link',
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         labels: {
           componentType: dropdownComponent,
@@ -102,7 +102,7 @@ const modelsTable = {
 }
 
 const modelsEndpointTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -121,7 +121,7 @@ const modelsEndpointTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a',
         function: '.table-body__cell:nth-of-type(2) .data-ellipsis',
@@ -152,7 +152,7 @@ const modelsEndpointTable = {
 }
 
 const realTimePipelinesTable = {
-  root: '.table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -231,7 +231,7 @@ const realTimePipelinesGraph = {
 }
 
 // Common components
-const tableRefreshButton = By.css('.content .content__action-bar .actions #refresh')
+const tableRefreshButton = By.css('.content .action-bar .tooltip-wrapper #refresh')
 
 module.exports = {
   modelsTab: {
@@ -247,7 +247,7 @@ module.exports = {
     ),
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar .filters .input-wrapper:nth-of-type(2)',
+        '.content .content__action-bar-wrapper .action-bar .name-filter .form-field-input',
         true
       )
     ),
@@ -270,7 +270,7 @@ module.exports = {
     Table_Refresh_Button: tableRefreshButton,
     Table_Label_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar .input-wrapper:nth-of-type(1)',
+        '.content .content__action-bar-wrapper .input-wrapper:nth-of-type(1)',
         true,
         false,
         true
@@ -278,7 +278,7 @@ module.exports = {
     ),
     Table_Sort_By_Filter: dropdownComponent(
       generateDropdownGroup(
-        '.content__action-bar .filters .select:nth-of-type(2)',
+        '.content__action-bar-wrapper .filters .select:nth-of-type(2)',
         '.select__header',
         '.select__body .select__item',
         '.data-ellipsis .data-ellipsis'
@@ -288,7 +288,7 @@ module.exports = {
   },
   realTimePipelinesTab: {
     Table_Name_Filter_Input: inputGroup(
-      generateInputGroup('.content .content__action-bar .filters .input-wrapper', true, false, true)
+      generateInputGroup('.content .content__action-bar-wrapper .filters .input-wrapper', true, false, true)
     ),
     Table_Refresh_Button: tableRefreshButton,
     Real_Time_Pipelines_Table: commonTable(realTimePipelinesTable),
