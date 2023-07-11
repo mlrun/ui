@@ -29,6 +29,7 @@ async function verifyInputInvalid(driver, inputGroup) {
 
 async function verifyFormInputInvalid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.root)
+  await driver.sleep(500)
   const flag = await inputField.getAttribute('class')
   expect(flag.includes('form-field__wrapper-invalid')).equal(true)
 }
@@ -96,7 +97,6 @@ const action = {
 
     for (let string of validStrings) {
       await typeValue(driver, inputGroup, string)
-      await driver.sleep(250)
 
       if (isForm) {
         await verifyFormInputValid(driver, inputGroup)

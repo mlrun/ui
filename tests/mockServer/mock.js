@@ -775,8 +775,11 @@ function getPipeline(req, res) {
 }
 
 function getFuncs(req, res) {
+  console.log("TEST")
+  console.log(req.query)
+  //http://localhost:3000/api/v1/projects/default/functions?test=value
   const dt = parseInt(Date.now())
-
+  
   const collectedFuncsByPrjTime = funcs.funcs
     .filter(func => func.metadata.project === req.query.project)
     .filter(func => Date.parse(func.metadata.updated) > dt)
@@ -791,9 +794,14 @@ function getFuncs(req, res) {
         func.metadata.updated = new Date(dt).toISOString()
       }
     })
-  } else {
+  } 
+  else if (req.query['hash_key']){
     collectedFuncs = funcs.funcs
-      .filter(func => func.metadata.project === req.query.project)
+    .filter(func => func.metadata.hash === req.query.hash_key)
+  }
+  else {
+    collectedFuncs = funcs.funcs
+      .filter(func => func.metadata.project === req.params['project']) // req.query.project)
       .filter(func => func.metadata.tag === 'latest')
       .filter(func => func.status?.state === 'deploying')
 
@@ -801,7 +809,8 @@ function getFuncs(req, res) {
       func.status.state = 'ready'
     })
 
-    collectedFuncs = funcs.funcs.filter(func => func.metadata.project === req.query.project)
+    collectedFuncs = funcs.funcs.filter(func => func.metadata.project === req.params['project']) // req.query.project)
+    //.filter(func => func.metadata.name === req.params['func'])
   }
 
   if (req.query['name']) {
@@ -818,9 +827,11 @@ function getFuncs(req, res) {
 }
 
 function getFunc(req, res) {
+  console.log('//////////////////////')
   const collectedFunc = funcs.funcs
-    .filter(func => func.metadata.project === req.params['project'])
-    .filter(func => func.metadata.name === req.params['func'])
+    .filter(func => func.metadata.project === req.params['project']) // req.query.project) //req.params['project'])
+    .filter(func => func.metadata.name === req.params['func']) //req.params['func'])
+    .filter(func => func.metadata.hash === req.query.hash_key)
 
   let respBody = {}
   if (collectedFunc.length === 0) {
@@ -1492,10 +1503,12 @@ app.delete(
   deleteProjectsFeatureVectors
 )
 
-app.get(`${mlrunAPIIngress}/funcs`, getFuncs)
+app.get(`${mlrunAPIIngress}/projects/:project/functions`, getFuncs)
 
-app.get(`${mlrunAPIIngress}/func/:project/:func`, getFunc)
-app.post(`${mlrunAPIIngress}/func/:project/:func`, postFunc)
+app.get(`${mlrunAPIIngress}/projects/:project/functions/:func`, getFunc)
+//app.get(`${mlrunAPIIngress}/func/:project/:func`, getFunc) - earlier api
+//app.post(`${mlrunAPIIngress}/func/:project/:func`, postFunc) - earlier api
+app.post(`${mlrunAPIIngress}/projects/:project/functions/:func`, postFunc)
 
 app.get(
   `${mlrunAPIIngress}/projects/:project/:featureArtifact/*/tags`,

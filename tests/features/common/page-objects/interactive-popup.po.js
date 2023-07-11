@@ -97,7 +97,7 @@ const deployModelTable = {
   },
   body: {
     offset: 0,
-    add_row_btn: 'button.add-new-item-btn',
+    add_row_btn: 'button',
     row: {
       root: '.table-row',
       fields: {
@@ -183,7 +183,7 @@ const commonNameInput = generateInputGroup(
 )
 
 const commonTargetPathInput = generateInputGroup(
-  '.form .form-row:nth-of-type(3) .form-field-input',
+  '.form .form-row:nth-of-type(4) .form-field__wrapper',
   true,
   false,
   '.form-field__warning'
@@ -204,6 +204,23 @@ const commonFormCancelButton = By.css('.modal__footer-actions .btn-tertiary')
 const commonFormConfirmButton = By.css('.modal__footer-actions .btn-secondary')
 const commonFormText = By.css('.form-text span')
 const commonFormSubtext = By.css('.form-text div p')
+
+const commonLabelFilterInput = inputGroup(
+  generateInputGroup(
+    '#overlay_container .form-field__wrapper',
+    true,
+    false,
+    true
+  )
+)
+
+const commonTableTreeFilterDropdown = dropdownComponent(
+  generateDropdownGroup(
+    '#overlay_container .form-tag-filter .form-tag-filter__input-wrapper',
+    '.tag-filter__dropdown-button',
+    '.tag-filter__dropdown .tag-filter__dropdown-item'
+  )
+)
 
 module.exports = {
   createNewProject: {
@@ -292,7 +309,7 @@ module.exports = {
     Cross_Cancel_Button: commonCloseButton,
     New_File_Name_Input: inputGroup(
       generateInputGroup(
-        '.modal__body .register-model__row:nth-of-type(1) .form-field__wrapper-normal',
+        '.modal__body .form-row:nth-of-type(1) .form-field__wrapper-normal',
         true,
         true,
         '.form-field__warning'
@@ -300,7 +317,7 @@ module.exports = {
     ),
     New_File_Target_Path_Input: inputGroup(
       generateInputGroup(
-        '.modal__body .register-model__row:nth-of-type(2) .form-field__wrapper-normal',
+        '.modal__body .form-row:nth-of-type(3) .form-field__wrapper-normal',
         true,
         true,
         '.form-field__warning'
@@ -308,7 +325,7 @@ module.exports = {
     ),
     New_File_Description_Input: textAreaGroup(
       generateTextAreaGroup(
-        '.modal__body .register-model__row:nth-of-type(3) .form-field-textarea',
+        '.modal__body .form-row:nth-of-type(2) .form-field-textarea',
         '.form-field__counter'
       )
     ),
@@ -535,5 +552,21 @@ module.exports = {
     Title: By.css('.pop-up-dialog .pop-up-dialog__header-text'),
     No_Button: By.css('.pop-up-dialog .pop-up-dialog__btn_cancel'),
     Discard_Button: commonConfirmButton
+  },
+  artifactsFilterByPopup: {
+    Title: By.css('#overlay_container .artifacts-filters__wrapper h3'),
+    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Show_Iterations_Checkbox: checkboxComponent({
+      root: '#overlay_container .form-field-checkbox input',
+      elements: {
+        checkbox: '', 
+        name: '',
+        icon: ''
+      }
+    }),
+    Checkbox_Label: By.css('#overlay_container .form-field-checkbox label'),
+    Clear_Button: By.css('#overlay_container .btn-tertiary'),
+    Apply_Button: By.css('#overlay_container .btn-secondary')
   }
 }

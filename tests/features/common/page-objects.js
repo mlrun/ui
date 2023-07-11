@@ -89,5 +89,6 @@ module.exports = {
   View_YAML: interactivePopup['viewYamlPopup'],
   Workflows_Monitor_Tab: jobsAndWorkflows['WorkflowsMonitorTab'],
   Workflows_Monitor_Tab_Info_Pane: infoPane['workflowsMonitorTabInfoPane'],
-  commonPagesHeader: commonPagesHeader
+  commonPagesHeader: commonPagesHeader,
+  Artifacts_FilterBy_Popup: interactivePopup['artifactsFilterByPopup']
 }

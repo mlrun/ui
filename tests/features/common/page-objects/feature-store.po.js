@@ -82,7 +82,7 @@ const featureSetsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a div.link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
@@ -116,7 +116,7 @@ const featureSetsTable = {
 
 // Features
 const featuresTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -133,9 +133,9 @@ const featuresTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
-        feature_name: '.table-body__cell:nth-of-type(1) div.data-ellipsis',
+        feature_name: '.table-body__cell:nth-of-type(1) [data-testid="tooltip-wrapper"]',  //div.data-ellipsis
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         feature_set: '.table-body__cell:nth-of-type(2) .link',
         type: '.table-body__cell:nth-of-type(3) .data-ellipsis',
@@ -164,7 +164,7 @@ const featuresTable = {
 
 // Feature Vectors
 const featureVectorTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -178,7 +178,7 @@ const featureVectorTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a div.link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
@@ -210,7 +210,7 @@ const featureVectorTable = {
 }
 
 const addToFeatureVectorTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -268,7 +268,7 @@ const featuresByProjectsTable = {
 
 // Datasets
 const datasetsTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -278,9 +278,9 @@ const datasetsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a span.link',
+        name: '.table-body__cell:nth-of-type(1) a .link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         labels: {
           componentType: dropdownComponent,
@@ -310,11 +310,12 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css('.content__action-bar .actions #refresh')
+const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar #refresh')
+const tableFilterByButton = By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar .input-wrapper:nth-of-type(2)',
+    '.content .content__action-bar-wrapper .action-bar__filters .name-filter',
     true,
     false,
     true
@@ -322,7 +323,7 @@ const commonNameFilterInput = inputGroup(
 )
 const commonLabelFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar .input-wrapper:nth-of-type(3)',
+    '.content .content__action-bar-wrapper .filters .input-wrapper:nth-of-type(3)',
     true,
     false,
     true
@@ -330,7 +331,7 @@ const commonLabelFilterInput = inputGroup(
 )
 const commonTableTreeFilterDropdown = dropdownComponent(
   generateDropdownGroup(
-    '.content .content__action-bar .filters .tag-filter',
+    '.content .content__action-bar-wrapper .filters .tag-filter',
     'input',
     '.tag-filter__dropdown .tag-filter__dropdown-item',
     '',
@@ -354,7 +355,7 @@ module.exports = {
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Add_To_Feature_Vector_Button: By.css(
-      '.content__action-bar .data-ellipsis  button.btn-secondary'
+      '.content .content__action-bar-wrapper .action-bar  button.btn-secondary'
     ),
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
@@ -375,25 +376,16 @@ module.exports = {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Register_Dataset_Button: pageHeaderButton,
     Table_Name_Filter_Input: commonNameFilterInput,
-    Table_Label_Filter_Input: commonLabelFilterInput,
-    Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
     Datasets_Table: commonTable(datasetsTable),
-    Show_Iterations_Checkbox: checkboxComponent({
-      root: '.content .content__action-bar .filters .checkbox',
-      elements: {
-        checkbox: 'svg[class]',
-        name: '',
-        icon: ''
-      }
-    })
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Entity_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar .input-wrapper:nth-of-type(3)',
+        '.content .content__action-bar-wrapper .input-wrapper:nth-of-type(3)',
         true,
         false,
         true
@@ -401,7 +393,7 @@ module.exports = {
     ),
     Table_Label_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar .input-wrapper:nth-of-type(4)',
+        '.content .content__action-bar-wrapper .input-wrapper:nth-of-type(3)',
         true,
         false,
         true
@@ -409,7 +401,7 @@ module.exports = {
     ),
     Table_Projects_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '.content .content__action-bar .filters .select',
+        '.content .content__action-bar-wrapper .filters .select',
         'svg',
         '.select__options-list .select__item',
         ''

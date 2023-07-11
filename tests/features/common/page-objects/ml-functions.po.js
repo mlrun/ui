@@ -38,7 +38,7 @@ const actionMenuStructure = {
 }
 
 const functionsTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -54,10 +54,10 @@ const functionsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',  //table-body__row
       fields: {
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper span.link',
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', //span.link
         tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
         status: '.table-body__cell:nth-of-type(1) .status i',
         kind: {
@@ -66,7 +66,7 @@ const functionsTable = {
             '.table-body__cell:nth-of-type(2)',
             '.data-ellipsis',
             true,
-            '.tooltip .tooltip__text span'
+            '.tooltip .tooltip__text span' 
           )
         },
         hash: '.table-body__cell:nth-of-type(3) .data-ellipsis span',
@@ -87,25 +87,25 @@ module.exports = {
   mlFunctions: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar .filters .input-wrapper',
+        '.content .content__action-bar-wrapper .filters .input-wrapper',
         true,
         false
       )
     ),
     Show_Untagged_Functions_Checkbox: checkboxComponent(
       generateCheckboxGroup(
-        '.content .content__action-bar .checkbox.filters-checkbox',
+        '.content .content__action-bar-wrapper .checkbox.filters-checkbox',
         true,
         false,
         false
       )
     ),
-    New_Function_Button: By.css('.content .new-function .data-ellipsis button'),
+    New_Function_Button: By.css('.content .new-function button'),
     Table_Refresh_Button: By.css(
-      '.content .content__action-bar .actions .data-ellipsis:nth-of-type(1) button'
+      '.content .content__action-bar-wrapper .actions .data-ellipsis:nth-of-type(1) button'
     ),
     Table_Expand_Rows_Button: By.css(
-      '.content .content__action-bar .actions .data-ellipsis:nth-of-type(1) button'
+      '.content .content__action-bar-wrapper .actions .data-ellipsis:nth-of-type(1) button'
     ),
     Functions_Table: commonTable(functionsTable)
   }
