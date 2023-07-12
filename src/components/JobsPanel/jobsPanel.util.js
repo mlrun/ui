@@ -528,13 +528,18 @@ export const generateRequestData = (
   mode,
   defaultHandler
 ) => {
-  const func = isFunctionTemplate
-    ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
-    : defaultFunc ??
-      `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+  let func = ''
   const resources = {
     limits: {},
     requests: {}
+  }
+
+  if (isFunctionTemplate && selectedFunction) {
+    func = `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
+  } else if (defaultFunc) {
+    func = defaultFunc
+  } else if (selectedFunction) {
+    func = `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
   }
 
   if (!isEveryObjectValueEmpty(panelState.limits)) {
