@@ -109,6 +109,7 @@ const ModelsView = React.forwardRef(
                       <ArtifactsTableRow
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
+                        rowIndex={index}
                         key={index}
                         rowItem={tableItem}
                         selectedItem={selectedModel}
