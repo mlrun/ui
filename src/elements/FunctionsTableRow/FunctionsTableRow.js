@@ -26,6 +26,7 @@ import { isEmpty } from 'lodash'
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
+import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
 import { ACTIONS_MENU } from '../../types'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
@@ -33,6 +34,7 @@ const FunctionsTableRow = ({
   actionsMenu,
   handleExpandRow,
   handleSelectItem,
+  rowIndex,
   mainRowItemsCount,
   rowItem,
   selectedItem,
@@ -54,6 +56,7 @@ const FunctionsTableRow = ({
       {parent.current?.classList.contains('parent-row-expanded') ? (
         <>
           <td
+            data-testid={generateTableRowTestId(rowIndex)}
             className={`table-body__cell
               ${parent.current?.classList.contains('parent-row-expanded') && 'row_grouped-by'}`}
           >
@@ -96,7 +99,7 @@ const FunctionsTableRow = ({
             )
 
             return (
-              <td className="table-body__cell" key={index}>
+              <td data-testid={generateTableRowTestId(rowIndex, index)} className="table-body__cell" key={index}>
                 <table cellPadding="0" cellSpacing="0" className="table">
                   <tbody className="table-body">
                     <tr className={subRowClassNames}>
@@ -170,6 +173,7 @@ FunctionsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   mainRowItemsCount: PropTypes.number,
+  rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   selectedRowData: PropTypes.object.isRequired

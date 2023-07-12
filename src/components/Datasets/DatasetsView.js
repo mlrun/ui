@@ -129,6 +129,7 @@ const DatasetsView = React.forwardRef(
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
                         key={index}
+                        rowIndex={index}
                         rowItem={tableItem}
                         selectedItem={selectedDataset}
                         selectedRowData={selectedRowData}

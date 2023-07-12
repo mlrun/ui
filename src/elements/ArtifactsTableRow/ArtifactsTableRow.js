@@ -30,12 +30,14 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import { DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
 
 const ArtifactsTableRow = ({
   actionsMenu,
   handleExpandRow,
   handleSelectItem,
   hideActionsMenu,
+  rowIndex,
   mainRowItemsCount,
   rowItem,
   selectedItem,
@@ -58,6 +60,7 @@ const ArtifactsTableRow = ({
       {parent.current?.classList.contains('parent-row-expanded') ? (
         <>
           <td
+            data-testid={generateTableRowTestId(rowIndex)}
             className={`table-body__cell
               ${parent.current?.classList.contains('parent-row-expanded') && 'row_grouped-by'}`}
           >
@@ -102,7 +105,7 @@ const ArtifactsTableRow = ({
               )
 
               return (
-                <td className="table-body__cell" key={index}>
+                <td data-testid={generateTableRowTestId(rowIndex, index)} className="table-body__cell" key={index}>
                   <table cellPadding="0" cellSpacing="0" className="table">
                     <tbody className="table-body">
                       <tr className={subRowClassNames}>
@@ -194,6 +197,7 @@ ArtifactsTableRow.propTypes = {
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
   mainRowItemsCount: PropTypes.number,
+  rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.shape({}))
