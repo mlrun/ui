@@ -79,7 +79,7 @@ const modelsTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(2)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block .data-ellipsis.tooltip-wrapper', //'.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -132,7 +132,7 @@ const modelsEndpointTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(5)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block .data-ellipsis.tooltip-wrapper', //'.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -236,35 +236,17 @@ const tableRefreshButton = By.css('.content .action-bar .tooltip-wrapper #refres
 module.exports = {
   modelsTab: {
     Models_Tab_Selector: commonTable(tabSelector),
-    Table_Tree_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content .content__action-bar .filters .tag-filter',
-        'input',
-        '.tag-filter__dropdown div',
-        '',
-        true
-      )
-    ),
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
         '.content .content__action-bar-wrapper .action-bar .name-filter .form-field-input',
         true
       )
     ),
-    Table_Labels_Filter_Input: inputGroup(
-      generateInputGroup('.content .content__action-bar .input-wrapper:nth-of-type(3)', true)
-    ),
-    Show_Iterations_Checkbox: checkboxComponent({
-      root: '.content .content__action-bar .filters .checkbox',
-      elements: {
-        checkbox: 'svg[class]',
-        name: '',
-        icon: ''
-      }
-    }),
     Table_Refresh_Button: tableRefreshButton,
     Models_Table: commonTable(modelsTable),
-    Register_Model_Button: By.css('.page-actions-container .btn_register')
+    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
+    Register_Model_Button: By.css('.page-actions-container .btn_register'),
+    Table_FilterBy_Button: By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
   },
   modelEndpoints: {
     Table_Refresh_Button: tableRefreshButton,
@@ -284,7 +266,8 @@ module.exports = {
         '.data-ellipsis .data-ellipsis'
       )
     ),
-    Model_Endpoints_Table: commonTable(modelsEndpointTable)
+    Model_Endpoints_Table: commonTable(modelsEndpointTable),
+    Overlay: By.css('#overlay_container .chip-block-hidden_visible')
   },
   realTimePipelinesTab: {
     Table_Name_Filter_Input: inputGroup(

@@ -100,6 +100,36 @@ const action = {
 
     expect(flag).equal(true)
   },
+  isContainsSubstringInColumnDropdownCellsOverlay: async function(
+    driver,
+    table,
+    overlay,
+    column,
+    value
+  ) {
+    const subString = value.replace('=', '\n:\n')
+    const rows = await getTableRows(driver, table)
+    let flag = true
+
+    expect(rows).not.equal(0)
+
+    for (let i = 1; i <= rows; i++) {
+      await openDropdown(driver, table.tableFields[column](i))
+      const optionsRow = await getOptionValues(
+        driver,
+        table.tableFields[column](i).options
+      )
+      const optionsOverlay = await getOptionValues(
+        driver,
+        overlay
+      )
+      const options = optionsRow.concat(optionsOverlay);
+
+      flag = flag && options.some(item => item.includes(subString))
+    }
+
+    expect(flag).equal(true)
+  },
   isContainsSubstringInColumnTooltipCells: async function(
     driver,
     table,

@@ -86,39 +86,17 @@ const filesTable = {
 
 module.exports = {
   filesTab: {
-    Table_Tree_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content .content__action-bar .filters .tag-filter',
-        'input',
-        '.tag-filter__dropdown .tag-filter__dropdown-item',
-        '',
-        true
-      )
-    ),
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
         '.content .content__action-bar-wrapper .action-bar__filters .name-filter',
         true
       )
     ),
-    Table_Label_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content .content__action-bar .input-wrapper:nth-of-type(3)',
-        true
-      )
-    ),
-    Show_Iterations_Checkbox: checkboxComponent({
-      root: '.content .content__action-bar .filters .checkbox',
-      elements: {
-        checkbox: 'svg[class]',
-        name: '',
-        icon: ''
-      }
-    }),
     Table_Refresh_Button: By.css(
       '.content .content__action-bar-wrapper .action-bar__actions #refresh'
     ),
     Files_Table: commonTable(filesTable),
-    Register_File_Button: By.css('.page-actions-container .btn_register')
+    Register_File_Button: By.css('.page-actions-container .btn_register'),
+    Table_FilterBy_Button: By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
   }
 }

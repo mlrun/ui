@@ -280,7 +280,7 @@ module.exports = {
     Timestamp_Column: 'The field name for filtering the source data.',
     Start_Time_Input: 'Filter data by start date >= value',
     End_Time_Input: 'Filter data by start date <= value',
-    Target_Store_Online: 'Store the feature set in Iguazio NoSQL database',
+    Target_Store_Online: 'Store the feature set in a NoSQL database',
     Target_Store_Offline: 'Store the feature set as a Parquet file or a partitioned Parquet directory',
     Target_Store_External_Offline:
       'Store the feature set in a remote object store (e.g. AWS S3 Google or Azure storage)',

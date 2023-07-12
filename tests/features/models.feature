@@ -3,7 +3,6 @@ Feature: Models Page
   Testcases that verifies functionality on Models Page
 
   @FAILED_TODO
-  #TODO: Table_Labels_Filter_Input, Table_Tree_Filter_Dropdown, Show_Iterations_Checkbox, Table_Tree_Filter_Dropdown elements were redesigned, need tests rewrite
   #TODO: Register_Model_Button hidden till 5.1, running on demo mode
   @passive
   Scenario: Check all mandatory components on Models tab
@@ -22,15 +21,16 @@ Feature: Models Page
     Then verify breadcrumbs "tab" label should be equal "Models" value
     Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
     Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
-    Then verify "Table_Labels_Filter_Input" element visibility on "Models" wizard
-    Then verify "Table_Tree_Filter_Dropdown" element visibility on "Models" wizard
-    Then verify "Show_Iterations_Checkbox" element visibility on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Models" wizard
     Then verify "Models_Table" element visibility on "Models" wizard
     And turn on demo mode
     Then verify "Register_Model_Button" element visibility on "Models" wizard
     Then "Register_Model_Button" element on "Models" should contains "Register Model" value
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Models" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
 
   @passive
   Scenario: Check all mandatory components on Model Endpoints tab
@@ -93,9 +93,6 @@ Feature: Models Page
     And wait load page
     Then value in "name" column with "text" in "Models_Table" on "Models" wizard should contains "survival"
 
-  @FAILED_TODO
-  #TODO: Show_Iterations_Checkbox element was redesigned, need tests rewrite
-  #TODO: class table__content was changed, need modelsTable components rewrite (affects the 'click on cell with row index','expand_btn', 'Header element' cases)
   @passive
   Scenario: Verify behaviour of Show iterations checkbox on Models tab
     * set tear-down property "model" created in "default" project with "automation-model" value
@@ -106,22 +103,28 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then verify "Show_Iterations_Checkbox" element visibility on "Models" wizard
-    Then check "Show_Iterations_Checkbox" element on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then "Show_Iterations_Checkbox" element should be checked on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "Artifacts_FilterBy_Popup" wizard
     Then check "expand_btn" visibility in "Models_Table" on "Models" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
-    Then uncheck "Show_Iterations_Checkbox" element on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then check "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     Then verify "Header" element not exists on "Models_Info_Pane" wizard
-    Then "Show_Iterations_Checkbox" element should be unchecked on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Show_Iterations_Checkbox" element should be checked on "Artifacts_FilterBy_Popup" wizard
 
   @FAILED_TODO
-  #TODO: class table__content was changed, need realTimePipelinesTable components rewrite (affects the last case)
+  #TODO: no Real-time pipelines data to show for "Name: churn-server" - add data
   @passive
   Scenario: Verify filtering by name on Real-Time Pipelines tab
     Given open url
@@ -147,8 +150,6 @@ Feature: Models Page
     And wait load page
     Then value in "name" column with "text" in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard should contains "churn-server"
 
-  @FAILED_TODO
-  #TODO: Table_Labels_Filter_Input element was redesigned, need tests rewrite
   @passive
   Scenario: Verify filtering by label with key on Models tab
     Given open url
@@ -158,16 +159,19 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    #Then type value "my-key" to "Table_Labels_Filter_Input" field on "Models" wizard
-    Then click on "Table_Refresh_Button" element on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then type value "my-key" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key"
-    Then type value "my-key=my-value" to "Table_Labels_Filter_Input" field on "Models" wizard
-    Then click on "Table_Refresh_Button" element on "Models" wizard
+    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key" in "Overlay"
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key=my-value"
-    Then type value "MY-KEY" to "Table_Labels_Filter_Input" field on "Models" wizard
-    Then click on "Table_Refresh_Button" element on "Models" wizard
+    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key=my-value" in "Overlay"
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
@@ -187,11 +191,11 @@ Feature: Models Page
     Then type value "my-key" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value"
+    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value" in "Overlay"
     Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value"
+    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value" in "Overlay"
     Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
     And wait load page
@@ -330,6 +334,7 @@ Feature: Models Page
   @FAILED_TODO
   #TODO: 'Show_Iterations_Checkbox' located in filter dropdown - new implementation, need rewrite step (also affects 'expand_btn' appears and steps below)
   @passive
+  @uniqueTag
   Scenario: Verify View YAML action
     Given open url
     And wait load page
