@@ -20,6 +20,7 @@ such restriction.
 import React, { createRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { useDispatch } from 'react-redux'
 import { cloneDeep, debounce } from 'lodash'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
@@ -48,7 +49,6 @@ import { ReactComponent as User } from 'igz-controls/images/user.svg'
 import { ReactComponent as Users } from 'igz-controls/images/users.svg'
 
 import './membersPopUp.scss'
-import { useDispatch } from 'react-redux'
 
 const MembersPopUp = ({
   changeMembersCallback,
@@ -172,18 +172,20 @@ const MembersPopUp = ({
         changeMembersCallback(response.data.data.id)
       })
       .catch(error => {
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message:
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'Missing edit permission for the project.'
-              : 'Failed to edit project data.',
-          retry:
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? null
-              : () => applyMembersChanges(changesBody)
-        })
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message:
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? 'Missing edit permission for the project.'
+                : 'Failed to edit project data.',
+            retry:
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? null
+                : () => applyMembersChanges(changesBody)
+          })
+        )
       })
     handleOnClose()
   }

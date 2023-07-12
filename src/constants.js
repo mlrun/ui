@@ -125,6 +125,7 @@ export const FETCH_SCHEDULED_JOB_ACCESS_KEY_END = 'FETCH_SCHEDULED_JOB_ACCESS_KE
 export const JOB_DEFAULT_OUTPUT_PATH = 'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}'
 export const REMOVE_JOB = 'REMOVE_JOB'
 export const REMOVE_JOB_ERROR = 'REMOVE_JOB_ERROR'
+export const REMOVE_JOB_FUNCTION = 'REMOVE_JOB_FUNCTION'
 export const REMOVE_JOB_PODS = 'REMOVE_JOB_PODS'
 export const REMOVE_NEW_JOB = 'REMOVE_NEW_JOB'
 export const REMOVE_SCHEDULED_JOB_FAILURE = 'REMOVE_SCHEDULED_JOB_FAILURE'
@@ -157,14 +158,14 @@ export const WORKFLOW_GRAPH_VIEW = 'graph'
 
 /*=========== JOB WIZARD =============*/
 
-export const PARAMETER_TYPE_SIMPLE = 'Simple'
-export const PARAMETER_TYPE_HYPER = 'Hyper'
 export const MAX_SELECTOR_CRITERIA = 'max'
 export const LIST_TUNING_STRATEGY = 'list'
 export const V3IO_VOLUME_TYPE = 'flexVolume'
 export const CONFIG_MAP_VOLUME_TYPE = 'configMap'
 export const SECRET_VOLUME_TYPE = 'secret'
 export const PVC_VOLUME_TYPE = 'persistentVolumeClaim'
+export const PARAMETERS_FROM_UI_VALUE = 'fromUI'
+export const PARAMETERS_FROM_FILE_VALUE = 'fromFile'
 
 /*=========== ML FUNCTIONS =============*/
 

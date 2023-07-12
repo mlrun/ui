@@ -17,106 +17,62 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
 
+import { FormInput, FormRadio } from 'igz-controls/components'
 import FormParametersTable from '../../../../elements/FormParametersTable/FormParametersTable'
-import JobWizardResources from '../JobWizardResources/JobWizardResources'
-import { FormInput, FormSelect } from 'igz-controls/components'
 
-import { selectOptions } from './jobWizardParameters.util'
+import { PARAMETERS_FROM_UI_VALUE, PARAMETERS_FROM_FILE_VALUE } from '../../../../constants'
 
 import './jobWizardParameters.scss'
 
-const JobWizardParameters = ({ formState, isBatchInference }) => {
-  const paramFilePath = 'parameters.hyperParameters.paramFile'
-  const tuningStrategyPath = 'parameters.hyperParameters.tuningStrategy'
-  const resultPath = 'parameters.hyperParameters.result'
-  const criteriaPath = 'parameters.hyperParameters.criteria'
+const JobWizardParameters = ({ formState }) => {
+  const parametersFromPath = 'parameters.parametersFrom'
+  const parametersFromFileUrlPath = 'parameters.parametersFromFileUrl'
 
-  const [isParamFileDisabled, setIsParamFileDisabled] = useState(false)
-  const [isHyperOptionDisabled, setIsHyperOptionDisabled] = useState(false)
-  const [isParametersEditModeEnabled, setIsParametersEditModeEnabled] = useState(false)
-
-  useEffect(() => {
-    setIsParamFileDisabled(
-      get(formState, 'values.parameters.parametersTable.custom', []).some(
-        parameter => parameter.data.parameterType === 'Hyper'
-      )
-    )
-  }, [formState])
-
-  useEffect(() => {
-    setIsHyperOptionDisabled(
-      get(formState, 'values.parameters.hyperParameters.paramFile', '').length > 0 ||
-        isBatchInference
-    )
-  }, [formState, isBatchInference])
+  const selectedFromValue = useMemo(
+    () => get(formState.values, parametersFromPath, PARAMETERS_FROM_UI_VALUE),
+    [formState.values]
+  )
+  const hyperParametersAreEnabled = useMemo(() => {
+    return formState.values.runDetails?.hyperparameter
+  }, [formState.values.runDetails?.hyperparameter])
 
   return (
     <div className="job-wizard__parameters form">
       <div className="form-row">
         <h5 className="form-step-title">Parameters</h5>
       </div>
+      {hyperParametersAreEnabled && (
+        <div className="form-row">
+          <FormRadio name={parametersFromPath} value={PARAMETERS_FROM_UI_VALUE} label="From UI" />
+          <FormRadio
+            name={parametersFromPath}
+            value={PARAMETERS_FROM_FILE_VALUE}
+            label="From file"
+          />
+          <FormInput
+            name={parametersFromFileUrlPath}
+            placeholder="URL for a JSON or CSV file"
+            disabled={selectedFromValue !== PARAMETERS_FROM_FILE_VALUE}
+          />
+        </div>
+      )}
       <FormParametersTable
         fieldsPath="parameters.parametersTable"
         formState={formState}
-        isHyperOptionDisabled={isHyperOptionDisabled}
-        setIsParametersEditModeEnabled={setIsParametersEditModeEnabled}
+        withHyperparameters={
+          hyperParametersAreEnabled && selectedFromValue === PARAMETERS_FROM_UI_VALUE
+        }
       />
-      {!isBatchInference && (
-        <>
-          <div className="form-row hyper-parameters">
-            <h6 className="form-step-subtitle">Hyper parameters</h6>
-          </div>
-          <div className="form-row">
-            <div className="form-col-3">
-              <FormInput
-                disabled={isParamFileDisabled || isParametersEditModeEnabled}
-                label="Read hyper params from a file"
-                placeholder="v3io:///projects/my-proj/param.txt"
-                type="text"
-                name={paramFilePath}
-              />
-            </div>
-            <div className="form-col-1">
-              <FormSelect
-                disabled={
-                  (!get(formState.values, paramFilePath.split('.')) && !isParamFileDisabled) ||
-                  isParametersEditModeEnabled
-                }
-                label="Tuning strategy"
-                name={tuningStrategyPath}
-                options={selectOptions.hyperStrategyType}
-              />
-            </div>
-            <div className="form-col-3">
-              <FormInput
-                disabled={isParametersEditModeEnabled}
-                label="Result"
-                type="text"
-                name={resultPath}
-              />
-            </div>
-            <div className="form-col-1">
-              <FormSelect
-                disabled={isParametersEditModeEnabled}
-                label="Criteria"
-                name={criteriaPath}
-                options={selectOptions.selectorCriteria}
-              />
-            </div>
-          </div>
-        </>
-      )}
     </div>
   )
 }
 
-JobWizardResources.propTypes = {
-  formState: PropTypes.shape({}).isRequired,
-  isBatchInference: PropTypes.bool.isRequired
+JobWizardParameters.propTypes = {
+  formState: PropTypes.shape({}).isRequired
 }
 
 export default JobWizardParameters

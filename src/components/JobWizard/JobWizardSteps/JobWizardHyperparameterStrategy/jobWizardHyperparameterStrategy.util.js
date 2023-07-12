@@ -20,11 +20,7 @@ such restriction.
 import { LIST_TUNING_STRATEGY, MAX_SELECTOR_CRITERIA } from '../../../../constants'
 
 export const selectOptions = {
-  hyperStrategyType: [
-    {
-      label: 'List',
-      id: LIST_TUNING_STRATEGY
-    },
+  strategies: [
     {
       label: 'Grid',
       id: 'grid'
@@ -32,16 +28,22 @@ export const selectOptions = {
     {
       label: 'Random',
       id: 'random'
-    }
-  ],
-  selectorCriteria: [
-    {
-      label: 'Max',
-      id: MAX_SELECTOR_CRITERIA
     },
     {
-      label: 'Min',
-      id: 'min'
+      label: 'List',
+      id: LIST_TUNING_STRATEGY
+    },
+    {
+      label: 'Custom',
+      id: 'custom'
     }
+  ],
+  criteria: [
+    { label: 'Min', id: 'min' },
+    { label: 'Max', id: MAX_SELECTOR_CRITERIA }
+  ],
+  stopCondition: [
+    { label: '>', id: 'more' },
+    { label: '<', id: 'less' }
   ]
 }

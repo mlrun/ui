@@ -228,6 +228,7 @@ const MonitorJobs = ({
   const modifyAndSelectRun = useCallback(
     jobRun => {
       return enrichRunWithFunctionFields(
+        dispatch,
         jobRun,
         fetchJobFunctions,
         fetchJobFunctionsPromiseRef
@@ -235,7 +236,7 @@ const MonitorJobs = ({
         setSelectedJob(jobRun)
       })
     },
-    [fetchJobFunctions]
+    [dispatch, fetchJobFunctions]
   )
 
   const handleSelectRun = useCallback(

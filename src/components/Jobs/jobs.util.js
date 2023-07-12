@@ -121,7 +121,7 @@ export const actionCreator = {
   fetchJobFunction: jobsActions.fetchJobFunction
 }
 
-export const generateEditableItem = (functionData, job) => {
+const generateEditableItem = (functionData, job) => {
   return {
     rerun_object: {
       function: {
@@ -148,11 +148,7 @@ export const generateEditableItem = (functionData, job) => {
           project: job.project
         },
         spec: {
-          hyper_param_options: {
-            param_file: job.param_file ?? '',
-            selector: job.selector ?? 'max.',
-            strategy: job.strategy ?? 'list'
-          },
+          hyper_param_options: job.hyper_param_options,
           function: job.function,
           handler: job?.handler ?? '',
           hyperparams: job.hyperparams,
@@ -167,6 +163,47 @@ export const generateEditableItem = (functionData, job) => {
   }
 }
 
+export const getJobFunctionData = async (
+  job,
+  fetchJobFunction,
+  dispatch,
+  fetchFunctionTemplate,
+  fetchJobFunctionSuccess
+) => {
+  const functionPath = job?.function ?? job?.func
+  let functionProject = ''
+  let functionNameWithHash
+  let functionName = ''
+  let functionHash = ''
+  let promise = null
+
+  if (functionPath.startsWith('hub://') && fetchFunctionTemplate) {
+    functionName = functionPath.replace('hub://', '')
+
+    promise = fetchFunctionTemplate(`${functionName}/function.yaml`).then(result => {
+      const funcData = result?.functions[0]
+
+      if (funcData) {
+        if (fetchJobFunctionSuccess) {
+          dispatch(fetchJobFunctionSuccess(funcData))
+        }
+
+        return funcData
+      }
+    })
+  } else {
+    ;[functionProject = '', functionNameWithHash = ''] = functionPath?.split('/') ?? []
+    functionName = functionNameWithHash.replace(/@.*$/g, '')
+    functionHash = functionNameWithHash.replace(/.*@/g, '')
+
+    if (functionName && functionHash) {
+      promise = fetchJobFunction(functionProject, functionName, functionHash)
+    }
+  }
+
+  return promise
+}
+
 export const rerunJob = async (
   job,
   fetchJobFunction,
@@ -175,22 +212,7 @@ export const rerunJob = async (
   setJobWizardMode,
   dispatch
 ) => {
-  const [project = '', func = ''] = job?.function?.split('/') ?? []
-  const functionData = await fetchJobFunction(
-    project,
-    func.replace(/@.*$/g, ''),
-    func.replace(/.*@/g, '')
-  )
-
-  if (!functionData) {
-    dispatch(
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        message: 'Job’s function failed to load'
-      })
-    )
-  }
+  const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch)
 
   // todo: delete `if` condition when the job wizard is out of the demo mode
   if (isDemoMode) {
@@ -255,12 +277,14 @@ export const monitorJob = (jobs_dashboard_url, item, projectName) => {
 /**
  * Enriches a job run object with the associated function tag(s)
  * @param {Object} jobRun - The job run object to enrich
+ * @param {Object} dispatch - dispatch method
  * @param {Function} fetchJobFunctions - The function to fetch job functions from an API
  * @param {Object} fetchJobFunctionsPromiseRef - A ref object used to store a reference to
  * the promise returned by the `fetchJobFunctions` function.
  * @returns {Promise<Object>} A Promise that resolves with the enriched job run object
  */
 export const enrichRunWithFunctionFields = (
+  dispatch,
   jobRun,
   fetchJobFunctions,
   fetchJobFunctionsPromiseRef
@@ -302,11 +326,13 @@ export const enrichRunWithFunctionFields = (
       return jobRun
     })
     .catch(error => {
-      setNotification({
-        status: error.response?.status || 400,
-        id: Math.random(),
-        message: 'Failed to fetch function tag'
-      })
+      dispatch(
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch function tag'
+        })
+      )
     })
 }
 

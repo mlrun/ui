@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { get } from 'lodash'
 import jobsApi from '../api/jobs-api'
 import functionsApi from '../api/functions-api'
 import {
@@ -24,53 +25,55 @@ import {
   ABORT_JOB_FAILURE,
   ABORT_JOB_SUCCESS,
   EDIT_JOB_FAILURE,
+  FETCH_ALL_JOB_RUNS_BEGIN,
+  FETCH_ALL_JOB_RUNS_FAILURE,
+  FETCH_ALL_JOB_RUNS_SUCCESS,
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
+  FETCH_JOB_BEGIN,
+  FETCH_JOB_FAILURE,
+  FETCH_JOB_FUNCTIONS_BEGIN,
+  FETCH_JOB_FUNCTIONS_FAILURE,
+  FETCH_JOB_FUNCTIONS_SUCCESS,
   FETCH_JOB_FUNCTION_BEGIN,
   FETCH_JOB_FUNCTION_FAILURE,
   FETCH_JOB_FUNCTION_SUCCESS,
   FETCH_JOB_LOGS_BEGIN,
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
-  REMOVE_JOB_ERROR,
-  REMOVE_NEW_JOB,
-  REMOVE_SCHEDULED_JOB_FAILURE,
-  RUN_NEW_JOB_FAILURE,
-  SET_JOBS_DATA,
-  SET_LOADING,
-  SET_NEW_JOB,
-  SET_NEW_JOB_ENVIRONMENT_VARIABLES,
-  SET_NEW_JOB_HYPER_PARAMETERS,
-  SET_NEW_JOB_INPUTS,
-  SET_NEW_JOB_PARAMETERS,
-  SET_NEW_JOB_SECRET_SOURCES,
-  SET_NEW_JOB_VOLUMES,
-  SET_NEW_JOB_VOLUME_MOUNTS,
-  SET_TUNING_STRATEGY,
-  SET_URL,
-  SET_NEW_JOB_SELECTOR_CRITERIA,
-  SET_NEW_JOB_SELECTOR_RESULT,
-  RUN_NEW_JOB_BEGIN,
-  RUN_NEW_JOB_SUCCESS,
-  SET_NEW_JOB_NODE_SELECTOR,
   FETCH_JOB_SUCCESS,
-  FETCH_JOB_BEGIN,
-  FETCH_JOB_FAILURE,
-  SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
   REMOVE_JOB,
-  FETCH_ALL_JOB_RUNS_BEGIN,
-  FETCH_ALL_JOB_RUNS_FAILURE,
-  FETCH_ALL_JOB_RUNS_SUCCESS,
+  REMOVE_JOB_ERROR,
+  REMOVE_JOB_FUNCTION,
+  REMOVE_NEW_JOB,
+  REMOVE_SCHEDULED_JOB_FAILURE,
+  RUN_NEW_JOB_BEGIN,
+  RUN_NEW_JOB_FAILURE,
+  RUN_NEW_JOB_SUCCESS,
+  SET_JOBS_DATA,
+  SET_LOADING,
+  SET_NEW_JOB,
+  SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
+  SET_NEW_JOB_ENVIRONMENT_VARIABLES,
+  SET_NEW_JOB_HYPER_PARAMETERS,
+  SET_NEW_JOB_INPUTS,
+  SET_NEW_JOB_NODE_SELECTOR,
+  SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_PREEMTION_MODE,
   SET_NEW_JOB_PRIORITY_CLASS_NAME,
-  FETCH_JOB_FUNCTIONS_BEGIN,
-  FETCH_JOB_FUNCTIONS_FAILURE,
-  FETCH_JOB_FUNCTIONS_SUCCESS
+  SET_NEW_JOB_SECRET_SOURCES,
+  SET_NEW_JOB_SELECTOR_CRITERIA,
+  SET_NEW_JOB_SELECTOR_RESULT,
+  SET_NEW_JOB_VOLUMES,
+  SET_NEW_JOB_VOLUME_MOUNTS,
+  SET_TUNING_STRATEGY,
+  SET_URL
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
+import { setNotification } from '../reducers/notificationReducer'
 
 const jobsActions = {
   abortJob: (project, job) => dispatch => {
@@ -156,12 +159,24 @@ const jobsActions = {
     return functionsApi
       .getFunction(project, functionName, hash)
       .then(res => {
-        dispatch(jobsActions.fetchJobFunctionSuccess())
+        dispatch(jobsActions.fetchJobFunctionSuccess(res.data.func))
 
         return res.data.func
       })
       .catch(error => {
-        dispatch(jobsActions.fetchJobFunctionFailure(error.message))
+        const errorMsg = get(error, 'response.data.detail', 'Job’s function failed to load')
+
+        dispatch(jobsActions.fetchJobFunctionFailure(error))
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: errorMsg,
+            error
+          })
+        )
+
+        throw error
       })
   },
   fetchJobFunctionBegin: () => ({
@@ -171,8 +186,9 @@ const jobsActions = {
     type: FETCH_JOB_FUNCTION_FAILURE,
     payload: error
   }),
-  fetchJobFunctionSuccess: () => ({
-    type: FETCH_JOB_FUNCTION_SUCCESS
+  fetchJobFunctionSuccess: func => ({
+    type: FETCH_JOB_FUNCTION_SUCCESS,
+    payload: func
   }),
   fetchJobFunctions: (project, hash) => dispatch => {
     dispatch(jobsActions.fetchJobFunctionsBegin())
@@ -283,6 +299,9 @@ const jobsActions = {
     jobsApi.runScheduledJob(postData, project, job),
   removeJob: () => ({
     type: REMOVE_JOB
+  }),
+  removeJobFunction: () => ({
+    type: REMOVE_JOB_FUNCTION
   }),
   removeJobError: () => ({
     type: REMOVE_JOB_ERROR

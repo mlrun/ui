@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { FieldArray } from 'react-final-form-arrays'
@@ -28,15 +28,8 @@ import { FormActionButton } from 'igz-controls/elements'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
-import { PARAMETER_TYPE_SIMPLE } from '../../constants'
 
-const FormParametersTable = ({
-  disabled,
-  fieldsPath,
-  formState,
-  isHyperOptionDisabled,
-  setIsParametersEditModeEnabled
-}) => {
+const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparameters }) => {
   const predefinedPath = `${fieldsPath}.predefined`
   const customPath = `${fieldsPath}.custom`
   const tableClassNames = classnames('form-table', disabled && 'disabled')
@@ -64,24 +57,23 @@ const FormParametersTable = ({
     return !predefinedContainsName && !customContainsName
   }
 
-  useEffect(() => {
-    setIsParametersEditModeEnabled(Boolean(editingItem))
-  }, [editingItem, setIsParametersEditModeEnabled])
-
   return (
     <div className={tableClassNames}>
       <div className="form-table__row form-table__header-row no-hover">
-        <div className="form-table__cell form-table__cell_1">
+        <div className="form-table__cell form-table__cell_min"></div>
+        {withHyperparameters && (
+          <div className="form-table__cell form-table__cell_hyper">
+            <Tooltip template={<TextTooltipTemplate text="Hyper" />}>Hyper</Tooltip>
+          </div>
+        )}
+        <div className="form-table__cell form-table__cell_2">
           <Tooltip template={<TextTooltipTemplate text="Name" />}>Name</Tooltip>
         </div>
         <div className="form-table__cell form-table__cell_1">
           <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>
         </div>
-        <div className="form-table__cell form-table__cell_1">
-          <Tooltip template={<TextTooltipTemplate text="Simple/Hyper" />}>Simple/Hyper</Tooltip>
-        </div>
-        <div className="form-table__cell form-table__cell_1">
-          <Tooltip template={<TextTooltipTemplate text="Value/s" />}>Value/s</Tooltip>
+        <div className="form-table__cell form-table__cell_3">
+          <Tooltip template={<TextTooltipTemplate text="Value" />}>Value</Tooltip>
         </div>
         <div className="form-table__cell form-table__actions-cell" />
       </div>
@@ -108,10 +100,10 @@ const FormParametersTable = ({
                     formState={formState}
                     index={index}
                     isCurrentRowEditing={isCurrentRowEditing}
-                    isHyperOptionDisabled={isHyperOptionDisabled}
                     key={rowPath}
                     rowPath={rowPath}
                     uniquenessValidator={uniquenessValidator}
+                    withHyperparameters={withHyperparameters}
                   />
                 )
               })}
@@ -142,10 +134,10 @@ const FormParametersTable = ({
                     formState={formState}
                     index={index}
                     isCurrentRowEditing={isCurrentRowEditing}
-                    isHyperOptionDisabled={isHyperOptionDisabled}
                     key={rowPath}
                     rowPath={rowPath}
                     uniquenessValidator={uniquenessValidator}
+                    withHyperparameters={withHyperparameters}
                   />
                 )
               })}
@@ -162,11 +154,12 @@ const FormParametersTable = ({
                       name: '',
                       value: '',
                       type: 'str',
-                      parameterType: PARAMETER_TYPE_SIMPLE,
-                      isChecked: true
+                      isChecked: true,
+                      isHyper: false
                     },
                     doc: '',
-                    isDefault: false
+                    isDefault: false,
+                    isPredefined: false
                   })
                 }}
               />
@@ -179,15 +172,15 @@ const FormParametersTable = ({
 }
 
 FormParametersTable.defaultProps = {
-  disabled: false
+  disabled: false,
+  withHyperparameters: false
 }
 
 FormParametersTable.propTypes = {
   disabled: PropTypes.bool,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
-  isHyperOptionDisabled: PropTypes.bool.isRequired,
-  setIsParametersEditModeEnabled: PropTypes.func.isRequired
+  withHyperparameters: PropTypes.bool
 }
 
 export default FormParametersTable

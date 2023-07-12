@@ -66,12 +66,14 @@ import {
   SET_NEW_JOB_PRIORITY_CLASS_NAME,
   FETCH_JOB_FUNCTIONS_SUCCESS,
   FETCH_JOB_FUNCTIONS_FAILURE,
-  FETCH_JOB_FUNCTIONS_BEGIN
+  FETCH_JOB_FUNCTIONS_BEGIN,
+  REMOVE_JOB_FUNCTION
 } from '../constants'
 
 const initialState = {
   jobsData: [],
   job: {},
+  jobFunc: {},
   jobRuns: [],
   jobs: [],
   logs: {
@@ -186,19 +188,22 @@ const jobReducer = (state = initialState, { type, payload }) => {
     case FETCH_JOB_FUNCTION_BEGIN:
       return {
         ...state,
-        loading: true
+        loading: true,
+        jobFunc: {}
       }
     case FETCH_JOB_FUNCTION_FAILURE:
       return {
         ...state,
         loading: false,
-        error: payload
+        error: payload,
+        jobFunc: {}
       }
     case FETCH_JOB_FUNCTION_SUCCESS:
       return {
         ...state,
         loading: false,
-        error: null
+        error: null,
+        jobFunc: payload
       }
     case FETCH_JOB_FUNCTIONS_BEGIN:
       return {
@@ -271,6 +276,11 @@ const jobReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null
+      }
+    case REMOVE_JOB_FUNCTION:
+      return {
+        ...state,
+        jobFunc: {}
       }
     case REMOVE_NEW_JOB:
       return {

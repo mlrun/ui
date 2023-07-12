@@ -1,17 +1,9 @@
 .wizard-form {
   .form-table__name-cell {
+    justify-content: space-between;
+
     .tooltip-wrapper {
       margin-right: 10px;
-    }
-
-    .tip-container {
-      display: none;
-    }
-
-    &:hover {
-      .tip-container {
-        display: flex;
-      }
     }
   }
 }

@@ -18,28 +18,34 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import classnames from 'classnames'
 import { OnChange } from 'react-final-form-listeners'
-import { isEmpty } from 'lodash'
+import { isPlainObject } from 'lodash'
 
 import {
   FormCheckBox,
   FormInput,
+  FormRadio,
   FormSelect,
+  FormToggle,
   TextTooltipTemplate,
   Tip,
   Tooltip
 } from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
 
-import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 import {
-  getParameterTypeOptions,
   parameterTypeList,
   parameterTypeMap,
-  parametersValueTypeOptions
+  parametersValueTypeOptions,
+  parameterTypeBool,
+  parameterTypeInt,
+  parameterTypeFloat,
+  parameterTypeStr,
+  parameterTypeValueMap
 } from '../formParametersTable.util'
+import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 
 import './formParametersRow.scss'
 
@@ -55,19 +61,17 @@ const FormParametersRow = ({
   formState,
   index,
   isCurrentRowEditing,
-  isHyperOptionDisabled,
   rowPath,
-  uniquenessValidator
+  uniquenessValidator,
+  withHyperparameters
 }) => {
-  const parameterTypeOptions = useMemo(() => {
-    return getParameterTypeOptions(isHyperOptionDisabled)
-  }, [isHyperOptionDisabled])
   const [fieldData, setFieldData] = useState(fields.value[index])
+  const [typeIsChanging, setTypeIsChanging] = useState(false)
   const tableRowClassNames = classnames(
     'form-table__row',
     'form-table__parameter-row',
     fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active',
-    !fieldData.data.isChecked && 'excluded'
+    !fieldData.data?.isChecked && 'excluded'
   )
 
   const getValueValidationRules = parameterType => {
@@ -105,17 +109,113 @@ const FormParametersRow = ({
           }
         }
       ]
+    } else if (parameterType === parameterTypeInt) {
+      return [
+        {
+          name: 'invalidInt',
+          label: 'Value is not a valid `integer` type',
+          pattern: newValue => {
+            return parseInt(String(newValue)) === Number(newValue)
+          }
+        }
+      ]
     } else {
       return []
     }
   }
 
+  const getHyperValueValidationRules = parameterType => {
+    return [
+      {
+        name: 'invalidStructure',
+        label: `Not valid ${parameterTypeValueMap[parameterType] || ''} type`,
+        pattern: newValue => {
+          try {
+            const parsedValue = JSON.parse(String(newValue))
+            const valueIsArray = Array.isArray(parsedValue)
+
+            if (valueIsArray) {
+              return parsedValue.every(valueItem => {
+                switch (parameterType) {
+                  case parameterTypeStr:
+                    return typeof valueItem === 'string'
+                  case parameterTypeInt:
+                    return Number.isInteger(valueItem)
+                  case parameterTypeFloat:
+                    return Number.isFinite(valueItem) && valueItem % 1 !== 0
+                  case parameterTypeBool:
+                    return typeof valueItem === 'boolean'
+                  case parameterTypeList:
+                    return Array.isArray(valueItem)
+                  case parameterTypeMap:
+                    return isPlainObject(valueItem)
+                  default:
+                    return false
+                }
+              })
+            }
+
+            return false
+          } catch {
+            return false
+          }
+        }
+      }
+    ]
+  }
+
   const getValueTip = parameterType => {
-    return parameterType === parameterTypeMap
-      ? 'The valid `map` type should be in the JSON format\n e.g. {"hello": "world"}'
-      : parameterType === parameterTypeList
-      ? 'The valid `list` type should be in the JSON format\n e.g. ["hello", "world"]'
-      : ''
+    switch (parameterType) {
+      case parameterTypeMap:
+        return 'The valid `map` type should be in the JSON format\n e.g. {"hello": "world"}'
+      case parameterTypeList:
+        return 'The valid `list` type should be in the JSON format\n e.g. ["hello", "world"]'
+      default:
+        return ''
+    }
+  }
+
+  const getHyperValueTip = parameterType => {
+    switch (parameterType) {
+      case parameterTypeStr:
+        return 'Example: ["hello", "world"]'
+      case parameterTypeInt:
+        return 'Example: [1, 2, 3]'
+      case parameterTypeFloat:
+        return 'Example: [1.1, 1.2, 1.3]'
+      case parameterTypeBool:
+        return 'Example: [true, false]'
+      case parameterTypeList:
+        return 'Example: [["hello", "world"], [1, 2, 3]]'
+      case parameterTypeMap:
+        return 'Example: [{"hello": "world"}, {"test": true}]'
+      default:
+        return ''
+    }
+  }
+
+  const resetValue = () => {
+    if (isCurrentRowEditing(rowPath)) {
+      const fieldCurrentData = fields.value[index]
+
+      queueMicrotask(() => {
+        formState.form.change(
+          `${rowPath}.data.value`,
+          fieldCurrentData.data.type === parameterTypeBool && !fieldCurrentData.data.isHyper
+            ? 'false'
+            : fieldCurrentData.data.isHyper
+            ? '[]'
+            : ''
+        )
+        formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: false })
+
+        setTypeIsChanging(false)
+      })
+    }
+  }
+
+  const isRowDisabled = () => {
+    return disabled || !fieldData.data?.isChecked
   }
 
   useEffect(() => {
@@ -124,133 +224,183 @@ const FormParametersRow = ({
 
   return (
     <>
-      {!fieldData.isHidden && (
-        <>
-          {editingItem &&
-          index === editingItem.ui?.index &&
-          fieldsPath === editingItem.ui?.fieldsPath &&
-          !disabled ? (
-            <div className={tableRowClassNames} key={index}>
-              <div className="form-table__cell form-table__cell_1">
-                <FormInput
-                  density="normal"
-                  disabled={fields.value[index].isDefault}
-                  name={`${rowPath}.data.name`}
-                  placeholder="Name"
-                  required
-                  validationRules={[
-                    {
-                      name: 'uniqueness',
-                      label: 'Name should be unique',
-                      pattern: newValue => uniquenessValidator(fields, fieldsPath, newValue)
-                    }
-                  ]}
-                />
-              </div>
-              <div className="form-table__cell form-table__cell_1">
-                <FormSelect
-                  density="normal"
-                  disabled={fields.value[index].isDefault}
-                  name={`${rowPath}.data.type`}
-                  options={parametersValueTypeOptions}
-                  required
-                />
-              </div>
-              <div className="form-table__cell form-table__cell_1">
-                <FormSelect
-                  density="normal"
-                  name={`${rowPath}.data.parameterType`}
-                  options={parameterTypeOptions}
-                  required
-                />
-              </div>
-              <div className="form-table__cell form-table__cell_1">
-                <FormInput
-                  density="normal"
-                  name={`${rowPath}.data.value`}
-                  placeholder="Value/S"
-                  required
-                  tip={getValueTip(fields.value[index].data.type)}
-                  validationRules={getValueValidationRules(fields.value[index].data.type)}
-                />
-              </div>
-              <FormRowActions
-                applyChanges={applyChanges}
-                deleteRow={deleteRow}
-                discardOrDelete={discardOrDelete}
-                editingItem={editingItem}
-                fieldsPath={fieldsPath}
-                index={index}
-              />
-            </div>
-          ) : (
-            <div
-              className={tableRowClassNames}
-              key={index}
-              onClick={event => !disabled && enterEditMode(event, fields, fieldsPath, index)}
-            >
-              <div
-                className={classnames(
-                  'form-table__cell',
-                  'form-table__cell_1',
-                  'form-table__name-cell',
-                  fields.value[index].isDefault && 'disabled'
+      {!fieldData.isHidden &&
+        ((!fieldData.data.isHyper && !withHyperparameters) || withHyperparameters) && (
+          <>
+            {editingItem &&
+            index === editingItem.ui?.index &&
+            fieldsPath === editingItem.ui?.fieldsPath &&
+            !disabled ? (
+              <div className={tableRowClassNames} key={index}>
+                <div className="form-table__cell form-table__cell_min">
+                  <FormCheckBox
+                    name={`${rowPath}.data.isChecked`}
+                    onClick={event => event.stopPropagation()}
+                  />
+                </div>
+                {withHyperparameters && (
+                  <div className="form-table__cell form-table__cell_hyper">
+                    <FormToggle
+                      name={`${rowPath}.data.isHyper`}
+                      onChange={() => {
+                        setTypeIsChanging(true)
+                      }}
+                    />
+                  </div>
                 )}
-              >
-                <FormCheckBox
-                  name={`${rowPath}.data.isChecked`}
-                  onClick={event => event.stopPropagation()}
+                <div className="form-table__cell form-table__cell_2">
+                  <FormInput
+                    density="normal"
+                    label="Name"
+                    disabled={fieldData.isPredefined}
+                    name={`${rowPath}.data.name`}
+                    placeholder="Name"
+                    required
+                    validationRules={[
+                      {
+                        name: 'uniqueness',
+                        label: 'Name should be unique',
+                        pattern: newValue => uniquenessValidator(fields, fieldsPath, newValue)
+                      }
+                    ]}
+                  />
+                </div>
+                <div className="form-table__cell form-table__cell_1">
+                  <FormSelect
+                    density="normal"
+                    label="Type"
+                    onChange={() => {
+                      setTypeIsChanging(true)
+                    }}
+                    disabled={fieldData.isPredefined}
+                    name={`${rowPath}.data.type`}
+                    options={parametersValueTypeOptions}
+                    required
+                  />
+                </div>
+                <div className="form-table__cell form-table__cell_3">
+                  {fieldData.data.isHyper && !typeIsChanging ? (
+                    <FormInput
+                      density="normal"
+                      label="Values (Comma separated)"
+                      name={`${rowPath}.data.value`}
+                      placeholder="Values"
+                      required
+                      tip={getHyperValueTip(fieldData.data.type)}
+                      validationRules={getHyperValueValidationRules(fieldData.data.type)}
+                    />
+                  ) : fieldData.data.type === parameterTypeBool && !typeIsChanging ? (
+                    <div className="radio-buttons-container">
+                      <FormRadio name={`${rowPath}.data.value`} value="true" label="True" />
+                      <FormRadio name={`${rowPath}.data.value`} value="false" label="False" />
+                    </div>
+                  ) : !typeIsChanging ? (
+                    <FormInput
+                      type={
+                        [parameterTypeInt, parameterTypeFloat].includes(fieldData.data.type)
+                          ? 'number'
+                          : 'input'
+                      }
+                      density="normal"
+                      label="Value"
+                      name={`${rowPath}.data.value`}
+                      placeholder="Value"
+                      required
+                      tip={getValueTip(fieldData.data.type)}
+                      validationRules={getValueValidationRules(fieldData.data.type)}
+                    />
+                  ) : null}
+                </div>
+                <FormRowActions
+                  applyChanges={applyChanges}
+                  deleteRow={deleteRow}
+                  discardOrDelete={discardOrDelete}
+                  editingItem={editingItem}
+                  fieldsPath={fieldsPath}
+                  index={index}
                 />
-                <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
-                  {fieldData.data.name}
-                </Tooltip>
-                {fields.value[index].doc && <Tip text={fields.value[index].doc} />}
               </div>
+            ) : (
               <div
-                className={classnames(
-                  'form-table__cell',
-                  'form-table__cell_1',
-                  fields.value[index].isDefault && 'disabled'
-                )}
+                className={tableRowClassNames}
+                key={index}
+                onClick={event =>
+                  !isRowDisabled() && enterEditMode(event, fields, fieldsPath, index)
+                }
               >
-                <Tooltip template={<TextTooltipTemplate text={fieldData.data.type} />}>
-                  {fieldData.data.type}
-                </Tooltip>
+                <div className="form-table__cell form-table__cell_min">
+                  <FormCheckBox
+                    name={`${rowPath}.data.isChecked`}
+                    onClick={event => event.stopPropagation()}
+                  />
+                </div>
+                {withHyperparameters && (
+                  <div className="form-table__cell form-table__cell_hyper">
+                    <FormToggle name={`${rowPath}.data.isHyper`} readOnly />
+                  </div>
+                )}
+                <div
+                  className={classnames(
+                    'form-table__cell',
+                    'form-table__cell_2',
+                    'form-table__name-cell',
+                    fieldData.isPredefined && 'disabled'
+                  )}
+                >
+                  <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
+                    {fieldData.data.name}
+                  </Tooltip>
+                  {fieldData.doc && <Tip text={fieldData.doc} />}
+                </div>
+                <div
+                  className={classnames(
+                    'form-table__cell',
+                    'form-table__cell_1',
+                    fieldData.isPredefined && 'disabled'
+                  )}
+                >
+                  <Tooltip template={<TextTooltipTemplate text={fieldData.data.type} />}>
+                    {fieldData.data.type}
+                  </Tooltip>
+                </div>
+                <div className="form-table__cell form-table__cell_3">
+                  {fieldData.data.type === parameterTypeBool && !fieldData.data.isHyper ? (
+                    <div className="radio-buttons-container">
+                      <FormRadio
+                        readOnly
+                        name={`${rowPath}.data.value`}
+                        value="true"
+                        label="True"
+                      />
+                      <FormRadio
+                        readOnly
+                        name={`${rowPath}.data.value`}
+                        value="false"
+                        label="False"
+                      />
+                    </div>
+                  ) : (
+                    <Tooltip template={<TextTooltipTemplate text={String(fieldData.data.value)} />}>
+                      {String(fieldData.data.value)}
+                    </Tooltip>
+                  )}
+                </div>
+                <FormRowActions
+                  applyChanges={applyChanges}
+                  deleteIsDisabled={fieldData.isPredefined}
+                  deleteRow={deleteRow}
+                  disabled={isRowDisabled()}
+                  discardOrDelete={discardOrDelete}
+                  editingItem={editingItem}
+                  fieldsPath={fieldsPath}
+                  index={index}
+                />
               </div>
-              <div className="form-table__cell form-table__cell_1">
-                <Tooltip template={<TextTooltipTemplate text={fieldData.data.parameterType} />}>
-                  {fieldData.data.parameterType}
-                </Tooltip>
-              </div>
-              <div className="form-table__cell form-table__cell_1">
-                <Tooltip template={<TextTooltipTemplate text={String(fieldData.data.value)} />}>
-                  {String(fieldData.data.value)}
-                </Tooltip>
-              </div>
-              <FormRowActions
-                applyChanges={applyChanges}
-                deleteRow={deleteRow}
-                discardOrDelete={discardOrDelete}
-                editingItem={editingItem}
-                fieldsPath={fieldsPath}
-                index={index}
-              />
-            </div>
-          )}
-        </>
-      )}
-      <OnChange name={`${rowPath}.data.type`}>
-        {() => {
-          if (
-            isCurrentRowEditing(rowPath) &&
-            (!isEmpty(fieldData?.data?.value) || formState.modified[`${rowPath}.data.value`])
-          ) {
-            setTimeout(() => {
-              formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: true })
-            })
-          }
-        }}
-      </OnChange>
+            )}
+          </>
+        )}
+      <OnChange name={`${rowPath}.data.type`}>{resetValue}</OnChange>
+      <OnChange name={`${rowPath}.data.isHyper`}>{resetValue}</OnChange>
     </>
   )
 }
@@ -258,7 +408,7 @@ const FormParametersRow = ({
 FormParametersRow.defaultProps = {
   disabled: false,
   editingItem: null,
-  isHyperOptionDisabled: false
+  withHyperparameters: false
 }
 
 FormParametersRow.propTypes = {
@@ -272,9 +422,10 @@ FormParametersRow.propTypes = {
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
   index: PropTypes.number.isRequired,
-  isHyperOptionDisabled: PropTypes.bool,
+  isCurrentRowEditing: PropTypes.func.isRequired,
   rowPath: PropTypes.string.isRequired,
-  uniquenessValidator: PropTypes.func.isRequired
+  uniquenessValidator: PropTypes.func.isRequired,
+  withHyperparameters: PropTypes.bool
 }
 
 export default FormParametersRow

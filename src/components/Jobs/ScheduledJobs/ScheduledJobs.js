@@ -41,6 +41,7 @@ import {
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
+import { getJobFunctionData } from '../jobs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
@@ -58,6 +59,9 @@ import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 const ScheduledJobs = ({
   editJob,
   editJobFailure,
+  fetchFunctionTemplate,
+  fetchJobFunction,
+  fetchJobFunctionSuccess,
   fetchJobs,
   fetchScheduledJobAccessKey,
   handleRunScheduledJob,
@@ -217,7 +221,17 @@ const ScheduledJobs = ({
 
   const handleEditScheduleJob = useCallback(
     editableItem => {
-      fetchScheduledJobAccessKey(params.projectName, editableItem.name)
+      const getJobFunctionDataPromise = getJobFunctionData(
+        editableItem,
+        fetchJobFunction,
+        dispatch,
+        fetchFunctionTemplate,
+        fetchJobFunctionSuccess
+      )
+      const fetchScheduledJobAccessKeyPromise = fetchScheduledJobAccessKey(
+        params.projectName,
+        editableItem.name
+      )
         .then(result => {
           setEditableItem({
             ...editableItem,
@@ -238,10 +252,6 @@ const ScheduledJobs = ({
               }
             }
           })
-
-          if (isDemoMode) {
-            setJobWizardMode(PANEL_EDIT_MODE)
-          }
         })
         .catch(error => {
           dispatch(
@@ -253,9 +263,26 @@ const ScheduledJobs = ({
               error
             })
           )
+
+          throw error
         })
+
+      Promise.all([getJobFunctionDataPromise, fetchScheduledJobAccessKeyPromise]).then(() => {
+        if (isDemoMode) {
+          setJobWizardMode(PANEL_EDIT_MODE)
+        }
+      })
     },
-    [fetchScheduledJobAccessKey, params.projectName, isDemoMode, setJobWizardMode, dispatch]
+    [
+      fetchJobFunction,
+      dispatch,
+      fetchFunctionTemplate,
+      fetchJobFunctionSuccess,
+      fetchScheduledJobAccessKey,
+      params.projectName,
+      isDemoMode,
+      setJobWizardMode
+    ]
   )
 
   const handleSuccessRerunJob = useCallback(
@@ -265,13 +292,15 @@ const ScheduledJobs = ({
       }
 
       setEditableItem(null)
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Job started successfully'
-      })
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job started successfully'
+        })
+      )
     },
-    [filtersStore, refreshJobs]
+    [dispatch, filtersStore, refreshJobs]
   )
 
   const actionsMenu = useMemo(() => {

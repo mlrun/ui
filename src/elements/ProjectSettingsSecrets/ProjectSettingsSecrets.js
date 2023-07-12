@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import projectApi from '../../api/projects-api'
@@ -40,27 +40,32 @@ const ProjectSettingsSecrets = ({
 }) => {
   const [isUserAllowed, setIsUserAllowed] = useState(true)
   const params = useParams()
+  const dispatch = useDispatch()
 
   const fetchSecrets = useCallback(() => {
     setIsUserAllowed(true)
     fetchProjectSecrets(params.projectName).catch(error => {
       if (error.response?.status === FORBIDDEN_ERROR_STATUS_CODE) {
         setIsUserAllowed(false)
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message: 'Permission denied.'
-        })
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: 'Permission denied.'
+          })
+        )
       } else {
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message: 'Failed to fetch project data.',
-          retry: () => fetchSecrets()
-        })
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to fetch project data.',
+            retry: () => fetchSecrets()
+          })
+        )
       }
     })
-  }, [fetchProjectSecrets, params.projectName, setNotification])
+  }, [dispatch, fetchProjectSecrets, params.projectName, setNotification])
 
   useEffect(() => {
     fetchSecrets()
@@ -90,27 +95,31 @@ const ProjectSettingsSecrets = ({
 
       updateSecret(params.projectName, data)
         .then(() => {
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: `Secret ${
-              type === DELETE_PROJECT_SECRET
-                ? 'deleted'
-                : type === EDIT_PROJECT_SECRET
-                ? 'edited'
-                : 'added'
-            } successfully`
-          })
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: `Secret ${
+                type === DELETE_PROJECT_SECRET
+                  ? 'deleted'
+                  : type === EDIT_PROJECT_SECRET
+                  ? 'edited'
+                  : 'added'
+              } successfully`
+            })
+          )
         })
         .catch(err => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            message: err.message
-          })
+          dispatch(
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              message: err.message
+            })
+          )
         })
     },
-    [params.projectName, setNotification]
+    [dispatch, params.projectName, setNotification]
   )
 
   const handleAddNewSecret = useCallback(
@@ -134,9 +143,9 @@ const ProjectSettingsSecrets = ({
   )
 
   const handleSecretDelete = (index, secret) => {
-    const filteredArray = projectStore.project.secrets?.data[
-      'secret_keys'
-    ].filter((_, elementIndex) => elementIndex !== index)
+    const filteredArray = projectStore.project.secrets?.data['secret_keys'].filter(
+      (_, elementIndex) => elementIndex !== index
+    )
 
     setProjectSecrets(filteredArray)
     handleProjectSecret(DELETE_PROJECT_SECRET, secret.key) // api
