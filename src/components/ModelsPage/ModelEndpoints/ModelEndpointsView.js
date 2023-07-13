@@ -83,6 +83,7 @@ const ModelEndpointsView = React.forwardRef(
                         actionsMenu={actionsMenu}
                         handleSelectItem={setSelectedModelEndpoint}
                         key={index}
+                        rowIndex={index}
                         rowItem={tableItem}
                         selectedItem={selectedModelEndpoint}
                       />

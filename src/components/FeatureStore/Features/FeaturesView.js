@@ -95,6 +95,7 @@ const FeaturesView = React.forwardRef(
                     hideActionsMenu={tableStore.isTablePanelOpen}
                     mainRowItemsCount={2}
                     pageTab={FEATURES_TAB}
+                    rowIndex={index}
                     rowItem={tableItem}
                     selectedRowData={selectedRowData}
                   />
