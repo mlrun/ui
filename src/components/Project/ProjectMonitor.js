@@ -181,11 +181,13 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    return setNotification({
-      status: 200,
-      id: Math.random(),
-      message: 'Function created successfully'
-    })
+    return dispatch(
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function created successfully'
+      })
+    )
   }
 
   const handleDeployFunctionSuccess = async ready => {

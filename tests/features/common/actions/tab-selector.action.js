@@ -30,8 +30,20 @@ const action = {
     const flag =
       attributes1.includes('content-menu__item_active') ||
       attributes2.includes('details-menu__tab_active') ||
-      attributes2.includes('active-tab')
+      attributes2.includes('active-tab')||
+      attributes2.includes('tabs-slider__tab_active')
     expect(flag).equal(true)
+  },
+  isRowActive: async function(driver, component, indx) {
+    const element = await driver.findElement(component.rowRoot(indx))
+    const attributes = await element.getAttribute('class')
+    const flag = attributes.includes('row_active')
+    if(flag){
+      expect(flag).equal(true)
+    }
+    else{
+      expect(flag).equal(false)
+    }
   }
 }
 

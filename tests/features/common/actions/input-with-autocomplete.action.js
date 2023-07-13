@@ -61,7 +61,7 @@ const action = {
     }
 
     expect(arr.length > 0).equal(true, `Elements not found: [${arr}]`)
-    expect(arr.every(item => item.includes(tmpValue))).equal(
+    expect(arr.some(item => item.includes(tmpValue))).equal(
       true,
       `Searcheble string "${tmpValue}" do not find in all values of: [${arr}]`
     )

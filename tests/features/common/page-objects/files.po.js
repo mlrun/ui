@@ -37,7 +37,7 @@ const actionMenuStructure = {
 }
 
 const filesTable = {
-  root: '.table-container .table .table__content',
+  root: '.table-container .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -53,9 +53,9 @@ const filesTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper span',
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', //span',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         labels: {
@@ -97,7 +97,7 @@ module.exports = {
     ),
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar .filters .input-wrapper:nth-of-type(2)',
+        '.content .content__action-bar-wrapper .action-bar__filters .name-filter',
         true
       )
     ),
@@ -116,7 +116,7 @@ module.exports = {
       }
     }),
     Table_Refresh_Button: By.css(
-      '.content .content__action-bar .actions #refresh'
+      '.content .content__action-bar-wrapper .action-bar__actions #refresh'
     ),
     Files_Table: commonTable(filesTable),
     Register_File_Button: By.css('.page-actions-container .btn_register')

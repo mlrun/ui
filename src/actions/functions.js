@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { get } from 'lodash'
 import functionsApi from '../api/functions-api'
 import yaml from 'js-yaml'
 import {
@@ -76,6 +77,7 @@ import {
 } from '../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
+import { setNotification } from '../reducers/notificationReducer'
 
 const functionsActions = {
   createNewFunction: (project, data) => dispatch => {
@@ -212,8 +214,20 @@ const functionsActions = {
 
         return templates
       })
-      .catch(err => {
-        dispatch(functionsActions.fetchFunctionTemplateFailure(err))
+      .catch(error => {
+        const errorMsg = get(error, 'response.data.detail', "Function's template failed to load")
+
+        dispatch(functionsActions.fetchFunctionTemplateFailure(error))
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: errorMsg,
+            error
+          })
+        )
+
+        throw error
       })
   },
   fetchFunctionTemplateSuccess: selectFunction => ({

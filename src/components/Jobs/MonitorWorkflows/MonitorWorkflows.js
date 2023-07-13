@@ -257,6 +257,7 @@ const MonitorWorkflows = ({
   const modifyAndSelectRun = useCallback(
     jobRun => {
       return enrichRunWithFunctionFields(
+        dispatch,
         jobRun,
         fetchJobFunctions,
         fetchJobFunctionsPromiseRef
@@ -266,7 +267,7 @@ const MonitorWorkflows = ({
         setItemIsSelected(true)
       })
     },
-    [fetchJobFunctions]
+    [dispatch, fetchJobFunctions]
   )
 
   const handleSelectRun = useCallback(

@@ -653,11 +653,17 @@ iframe {
   color: $primary;
 
   [class*='form-col'] {
+    display: flex;
     flex: 1 0 0;
 
     &:not(:last-child) {
       margin-right: 15px;
     }
+  }
+
+  .justify-between {
+    display: flex;
+    justify-content: space-between;
   }
 
   &-row {
@@ -685,6 +691,18 @@ iframe {
 
       &-4 {
         flex-grow: 4;
+      }
+
+      &-5 {
+        flex-grow: 5;
+      }
+
+      &-6 {
+        flex-grow: 6;
+      }
+
+      &-7 {
+        flex-grow: 7;
       }
 
       &-auto {

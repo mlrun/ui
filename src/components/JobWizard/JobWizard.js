@@ -30,9 +30,10 @@ import FormDirtySpy from '../../common/FormDirtySpy/FormDirtySpy'
 import JobWizardAdvanced from './JobWizardSteps/JobWizardAdvanced/JobWizardAdvanced'
 import JobWizardDataInputs from './JobWizardSteps/JobWizardDataInputs/JobWizardDataInputs'
 import JobWizardFunctionSelection from './JobWizardSteps/JobWizardFunctionSelection/JobWizardFunctionSelection'
-import JobWizardRunDetails from './JobWizardSteps/JobWizardRunDetails/JobWizardRunDetails'
+import JobWizardHyperparameterStrategy from './JobWizardSteps/JobWizardHyperparameterStrategy/JobWizardHyperparameterStrategy'
 import JobWizardParameters from './JobWizardSteps/JobWizardParameters/JobWizardParameters'
 import JobWizardResources from './JobWizardSteps/JobWizardResources/JobWizardResources'
+import JobWizardRunDetails from './JobWizardSteps/JobWizardRunDetails/JobWizardRunDetails'
 import Loader from '../../common/Loader/Loader'
 import { Wizard } from 'igz-controls/components'
 
@@ -55,6 +56,7 @@ import {
   PANEL_RERUN_MODE,
   SCHEDULE_TAB
 } from '../../constants'
+import { JOB_WIZARD_MODE } from '../../types'
 
 import './jobWizard.scss'
 
@@ -72,6 +74,7 @@ const JobWizard = ({
   onSuccessRequest,
   onWizardClose,
   params,
+  removeJobFunction,
   runNewJob,
   wizardTitle
 }) => {
@@ -99,13 +102,14 @@ const JobWizard = ({
 
   const closeModal = useCallback(() => {
     dispatch(resetModalFilter(JOB_WIZARD_FILTERS))
+    removeJobFunction()
     onResolve()
     onWizardClose && onWizardClose()
-  }, [dispatch, onResolve, onWizardClose])
+  }, [dispatch, onResolve, onWizardClose, removeJobFunction])
 
   const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
 
-  const stepsConfig = useMemo(() => {
+  const getStepsConfig = formState => {
     return [
       {
         id: 'functionSelection',
@@ -137,6 +141,11 @@ const JobWizard = ({
         label: 'Parameters'
       },
       {
+        id: 'hyperparameterStrategy',
+        label: 'Hyperparameter strategy',
+        isHidden: !formState.values.runDetails?.hyperparameter || isBatchInference
+      },
+      {
         id: 'resources',
         label: 'Resources'
       },
@@ -160,7 +169,7 @@ const JobWizard = ({
         ]
       }
     ]
-  }, [isBatchInference, isEditMode, mode, selectedFunctionData])
+  }
 
   useEffect(() => {
     if (isBatchInference) {
@@ -168,14 +177,13 @@ const JobWizard = ({
         setSelectedFunctionData(functionData)
       })
     }
-  }, [
-    defaultData,
-    fetchFunctionTemplate,
-    frontendSpec,
-    isBatchInference,
-    isEditMode,
-    isStagingMode
-  ])
+  }, [fetchFunctionTemplate, isBatchInference])
+
+  useEffect(() => {
+    if ([PANEL_EDIT_MODE, PANEL_RERUN_MODE].includes(mode) && !isEmpty(jobsStore.jobFunc)) {
+      setSelectedFunctionData(jobsStore.jobFunc)
+    }
+  }, [editJob, jobsStore, mode])
 
   const runJobHandler = (formData, selectedFunctionData, params, isSchedule) => {
     const jobRequestData = generateJobRequestData(
@@ -237,21 +245,25 @@ const JobWizard = ({
       .then(() => {
         resolveModal()
         onSuccessRequest && onSuccessRequest()
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job saved successfully'
-        })
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Job saved successfully'
+          })
+        )
       })
       .then(() => {
         navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}`)
       })
       .catch(error => {
-        setNotification({
-          status: error.response.status || 400,
-          id: Math.random(),
-          message: getSaveJobErrorMsg(error)
-        })
+        dispatch(
+          setNotification({
+            status: error.response.status || 400,
+            id: Math.random(),
+            message: getSaveJobErrorMsg(error)
+          })
+        )
       })
   }
 
@@ -276,7 +288,7 @@ const JobWizard = ({
                 }
               }}
               size={MODAL_MAX}
-              stepsConfig={stepsConfig}
+              stepsConfig={getStepsConfig(formState)}
               title={wizardTitle}
               subTitle={formState.values?.runDetails?.name}
             >
@@ -315,7 +327,10 @@ const JobWizard = ({
                 setJobAdditionalData={setJobAdditionalData}
               />
               <JobWizardDataInputs formState={formState} />
-              <JobWizardParameters formState={formState} isBatchInference={isBatchInference} />
+              <JobWizardParameters formState={formState} />
+              {formState.values.runDetails?.hyperparameter && (
+                <JobWizardHyperparameterStrategy formState={formState} />
+              )}
               <JobWizardResources formState={formState} frontendSpec={frontendSpec} />
               <JobWizardAdvanced
                 editJob={editJobHandler}
@@ -351,7 +366,7 @@ JobWizard.propTypes = {
   defaultData: PropTypes.shape({}),
   isBatchInference: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
-  mode: PropTypes.string,
+  mode: JOB_WIZARD_MODE,
   onResolve: PropTypes.func.isRequired,
   onSuccessRequest: PropTypes.func,
   onWizardClose: PropTypes.func,

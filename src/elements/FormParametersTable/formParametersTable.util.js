@@ -17,14 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { PARAMETER_TYPE_HYPER, PARAMETER_TYPE_SIMPLE } from '../../constants'
-
-export const getParameterTypeOptions = paramFile => {
-  return [
-    { label: 'Simple', id: PARAMETER_TYPE_SIMPLE },
-    { label: 'Hyper', id: PARAMETER_TYPE_HYPER, disabled: Boolean(paramFile) }
-  ]
-}
 
 export const parameterTypeStr = 'str'
 export const parameterTypeInt = 'int'
@@ -33,6 +25,29 @@ export const parameterTypeBool = 'bool'
 export const parameterTypeList = 'list'
 export const parameterTypeMap = 'map'
 
+export const parameterOptionRange = 'range'
+export const parameterOptionRandomize = 'randomize'
+export const parameterOptionMultiple = 'multiple'
+export const parameterOptionLogarithmicScale = 'logarithmicScale'
+
+export const parameterTypeValueMap = {
+  [parameterTypeStr]: 'string',
+  [parameterTypeInt]: 'integer',
+  [parameterTypeFloat]: 'float',
+  [parameterTypeBool]: 'boolean',
+  [parameterTypeMap]: 'map',
+  [parameterTypeList]: 'list'
+}
+
+export const parametersValueOptionsList = [
+  {
+    label: 'Range',
+    id: parameterOptionRange
+  },
+  { label: 'Randomize', id: parameterOptionRandomize },
+  { label: 'Multiple', id: parameterOptionMultiple },
+  { label: 'LogarithmicScale', id: parameterOptionLogarithmicScale }
+]
 export const parametersValueTypeOptions = [
   {
     label: 'str',
