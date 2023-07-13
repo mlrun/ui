@@ -123,6 +123,7 @@ const FilesView = React.forwardRef(
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
                         key={index}
+                        rowIndex={index}
                         rowItem={tableItem}
                         selectedItem={selectedFile}
                         selectedRowData={selectedRowData}
