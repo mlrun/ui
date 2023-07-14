@@ -494,6 +494,7 @@ const projectsAction = {
       .getProjects(params)
       .then(response => {
         dispatch(projectsAction.fetchProjectsSuccess(response.data.projects))
+        dispatch(projectsAction.fetchProjectsNamesSuccess(response.data.projects.map(project => project.metadata.name)))
 
         return response.data.projects
       })
