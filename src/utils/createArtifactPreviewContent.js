@@ -19,6 +19,10 @@ such restriction.
 */
 import { has, isString } from 'lodash'
 
+const splitStringToArray = str => {
+  return str.split(/,(?! )/g)
+}
+
 export const createArtifactPreviewContent = (res, fileFormat, path, artifactName) => {
   const artifact = {}
 
@@ -30,13 +34,13 @@ export const createArtifactPreviewContent = (res, fileFormat, path, artifactName
       let content = data.slice(1)
 
       content.pop()
-      content = content.map(item => item.split(','))
+      content = content.map(item => splitStringToArray(item))
       artifact.type = 'table-results'
       artifact.iterationStats = [headers].concat(content)
     } else {
       let content = data.slice(1)
 
-      content = content.map(item => item.split(','))
+      content = content.map(item => splitStringToArray(item))
       content.pop()
       artifact.type = 'table'
       artifact.data = {
