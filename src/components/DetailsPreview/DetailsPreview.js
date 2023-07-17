@@ -98,7 +98,9 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
           extraData={extraData}
           noData={noData}
           preview={preview}
-          showExtraDataLoader={artifact.extra_data && extraData.length !== artifact.extra_data.length}
+          showExtraDataLoader={
+            artifact.extra_data && extraData.length !== artifact.extra_data.length
+          }
         />
       </div>
     </div>
