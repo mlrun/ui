@@ -21,9 +21,12 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import Accordion from '../../common/Accordion/Accordion'
 import ArtifactsPreviewView from './ArtifactsPreviewView'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
+
+import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 const ArtifactsPreview = ({ className, extraData, noData, preview, showExtraDataLoader }) => {
   const [showErrorBody, setShowErrorBody] = useState(false)
@@ -50,14 +53,20 @@ const ArtifactsPreview = ({ className, extraData, noData, preview, showExtraData
         <div className="artifact-extra-data">
           <h1 className="artifact-extra-data__header">Extra Data</h1>
           {extraData.map((extraDataItem, index) => (
-            <ArtifactsPreviewView
-              className={artifactsPreviewClasses}
-              key={index}
-              preview={extraDataItem}
-              setShowErrorBody={setShowErrorBody}
-              showAccordion
-              showErrorBody={showErrorBody}
-            />
+            <Accordion
+              icon={<Arrow />}
+              iconClassName="expand-icon"
+              alwaysOpened={false}
+              openByDefault={false}
+            >
+              <ArtifactsPreviewView
+                className={artifactsPreviewClasses}
+                key={index}
+                preview={extraDataItem}
+                setShowErrorBody={setShowErrorBody}
+                showErrorBody={showErrorBody}
+              />
+            </Accordion>
           ))}
         </div>
       )}
