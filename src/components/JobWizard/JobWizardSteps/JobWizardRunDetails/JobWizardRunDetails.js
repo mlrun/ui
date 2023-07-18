@@ -87,7 +87,7 @@ const JobWizardRunDetails = ({
         isStagingMode
       )
       setJobData(jobFormData, jobAdditionalData)
-    } else if (isBatchInference && !isEmpty(selectedFunctionData) && isEmpty(jobAdditionalData)) {
+    } else if (!isEmpty(selectedFunctionData) && isEmpty(jobAdditionalData)) {
       const [jobFormData, jobAdditionalData] = generateJobWizardData(
         frontendSpec,
         selectedFunctionData,
@@ -102,7 +102,6 @@ const JobWizardRunDetails = ({
     formState.form,
     formState.initialValues,
     frontendSpec,
-    isBatchInference,
     isEditMode,
     isStagingMode,
     jobAdditionalData,
