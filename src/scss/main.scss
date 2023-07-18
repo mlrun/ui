@@ -208,11 +208,10 @@ main {
 }
 
 .table {
-  display: flex;
-  flex-flow: column nowrap;
   flex: 1;
   position: relative;
   text-align: left;
+  width: 100%;
 
   .table {
     &-row {
@@ -363,6 +362,7 @@ main {
 
     &-body {
       position: relative;
+      min-width: 100%;
       z-index: 2;
 
       &__cell {

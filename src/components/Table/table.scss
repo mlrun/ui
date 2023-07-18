@@ -45,49 +45,62 @@
     min-width: 75px;
   }
 
-  .table-cell {
-    &-1 {
-      flex: 1;
-    }
+  .table-row {
+    .table-cell {
+      &-1 {
+        flex: 1;
+      }
 
-    &-2 {
-      flex: 2;
-    }
+      &-2 {
+        flex: 2;
+      }
 
-    &-3 {
-      flex: 3;
-    }
+      &-3 {
+        flex: 3;
+      }
 
-    &-4 {
-      flex: 4;
-    }
+      &-4 {
+        flex: 4;
+      }
 
-    &-5 {
-      flex: 5;
-    }
+      &-5 {
+        flex: 5;
+      }
 
-    &-extra-small {
-      flex: 1;
-      max-width: 85px;
-    }
+      &-extra-small {
+        flex: 1;
+        max-width: 85px;
+      }
 
-    &-small {
-      flex: 1;
-      max-width: 150px;
+      &-small {
+        flex: 1;
+        max-width: 150px;
+      }
     }
   }
 
-  &__scrolled {
-    .table-cell-name {
-      border-right: $secondaryBorder;
-      box-shadow: 2px 0 5px -2px rgba($black, 0.2);
-    }
+  &.table {
+    &__scrolled {
+      .table-cell-name {
+        &:after {
+          content: '';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: 5px;
+          background-color: inherit;
+          border-right: $secondaryBorder;
+          box-shadow: 2px 0px 2px -1px rgba($black, 0.2);
+        }
+      }
 
-    .parent-row-expanded {
-      .row_grouped-by {
-        .table-cell-name {
-          border-right: none;
-          box-shadow: none;
+      .parent-row-expanded {
+        .row_grouped-by {
+          .table-cell-name {
+            border-right: none;
+            box-shadow: none;
+          }
         }
       }
     }
@@ -181,11 +194,9 @@
 
         a {
           position: relative;
-          display: inline-flex;
-          flex: 1;
-          flex-direction: column;
           margin: 0;
           text-decoration: none;
+          width: 100%;
 
           span {
             display: block;

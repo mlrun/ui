@@ -34,7 +34,11 @@
 
       .link {
         margin-right: 40px;
-        cursor: pointer;
+        cursor: default;
+
+        &:hover {
+          text-decoration: none;
+        }
       }
     }
   }

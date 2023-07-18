@@ -70,8 +70,8 @@ const DetailsInfoView = React.forwardRef(
 
     return (
       !isEveryObjectValueEmpty(detailsStore.infoContent) && (
-        <div className="item-info">
-          <div className={wrapperClassNames}>
+        <>
+          <div className="item-info__details-wrapper">
             {(pageData.page === ARTIFACTS_PAGE ||
               pageData.page === DATASETS_PAGE ||
               pageData.page === FILES_PAGE ||
@@ -199,7 +199,7 @@ const DetailsInfoView = React.forwardRef(
               <ul className="item-info__details">{pageData.details.additionalInfo.body}</ul>
             </div>
           )}
-        </div>
+        </>
       )
     )
   }
