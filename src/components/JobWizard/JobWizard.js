@@ -53,6 +53,7 @@ import {
   MONITOR_JOBS_TAB,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
+  PANEL_FUNCTION_CREATE_MODE,
   PANEL_RERUN_MODE,
   SCHEDULE_TAB
 } from '../../constants'
@@ -114,7 +115,7 @@ const JobWizard = ({
       {
         id: 'functionSelection',
         label: 'Function Selection',
-        isHidden: isEditMode || isBatchInference,
+        isHidden: isEditMode || isBatchInference || mode === PANEL_FUNCTION_CREATE_MODE,
         getActions: ({ handleSubmit }) => [
           {
             label: 'Back',
@@ -180,8 +181,15 @@ const JobWizard = ({
   }, [fetchFunctionTemplate, isBatchInference])
 
   useEffect(() => {
-    if ([PANEL_EDIT_MODE, PANEL_RERUN_MODE].includes(mode) && !isEmpty(jobsStore.jobFunc)) {
-      setSelectedFunctionData(jobsStore.jobFunc)
+    if (!isEmpty(jobsStore.jobFunc)) {
+      if ([PANEL_EDIT_MODE, PANEL_RERUN_MODE].includes(mode)) {
+        setSelectedFunctionData(jobsStore.jobFunc)
+      } else if (mode === PANEL_FUNCTION_CREATE_MODE) {
+        setSelectedFunctionData({
+          name: jobsStore.jobFunc.metadata.name,
+          functions: [jobsStore.jobFunc]
+        })
+      }
     }
   }, [editJob, jobsStore, mode])
 
@@ -292,7 +300,7 @@ const JobWizard = ({
               title={wizardTitle}
               subTitle={formState.values?.runDetails?.name}
             >
-              {!isEditMode && !isBatchInference && (
+              {!isEditMode && !isBatchInference && mode !== PANEL_FUNCTION_CREATE_MODE && (
                 <JobWizardFunctionSelection
                   defaultData={defaultData}
                   filteredFunctions={filteredFunctions}

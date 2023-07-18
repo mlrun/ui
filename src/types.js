@@ -25,6 +25,7 @@ import {
   DENSITY_NORMAL,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
+  PANEL_FUNCTION_CREATE_MODE,
   PANEL_RERUN_MODE
 } from './constants'
 
@@ -202,6 +203,7 @@ export const DATA_INPUT_STATE = PropTypes.shape({
 
 export const JOB_WIZARD_MODE = PropTypes.oneOf([
   PANEL_CREATE_MODE,
+  PANEL_FUNCTION_CREATE_MODE,
   PANEL_EDIT_MODE,
   PANEL_RERUN_MODE
 ])

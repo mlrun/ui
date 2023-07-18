@@ -494,6 +494,7 @@ export const HUB_CATEGORIES_FILTER = 'hubCategories'
 
 export const PANEL_EDIT_MODE = 'EDIT'
 export const PANEL_CREATE_MODE = 'CREATE'
+export const PANEL_FUNCTION_CREATE_MODE = 'FUNCTION_CREATE'
 export const PANEL_RERUN_MODE = 'RERUN'
 
 export const ENV_VARIABLE_TYPE_VALUE = 'value'
