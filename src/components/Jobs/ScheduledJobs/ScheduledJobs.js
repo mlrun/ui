@@ -18,13 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { cloneDeep } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
-import JobsPanel from '../../JobsPanel/JobsPanel'
 import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
@@ -48,7 +46,6 @@ import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { useMode } from '../../../hooks/mode.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -57,25 +54,20 @@ import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const ScheduledJobs = ({
-  editJob,
-  editJobFailure,
   fetchFunctionTemplate,
   fetchJobFunction,
   fetchJobFunctionSuccess,
   fetchJobs,
   fetchScheduledJobAccessKey,
   handleRunScheduledJob,
-  removeNewJob,
   removeScheduledJob
 }) => {
   const [jobs, setJobs] = useState([])
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [editableItem, setEditableItem] = useState(null)
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const params = useParams()
-  const { isDemoMode } = useMode()
   const filtersStore = useSelector(store => store.filtersStore)
   const jobsStore = useSelector(store => store.jobsStore)
   const {
@@ -169,37 +161,6 @@ const ScheduledJobs = ({
     [filtersStore, params.projectName, refreshJobs, removeScheduledJob, setConfirmData]
   )
 
-  const onEditJob = (event, postData) => {
-    const generatedData = cloneDeep(postData)
-
-    delete generatedData.function.metadata
-
-    editJob(
-      {
-        credentials: postData.function.metadata.credentials,
-        scheduled_object: generatedData,
-        cron_trigger: generatedData.schedule
-      },
-      params.projectName
-    )
-      .then(() => {
-        removeNewJob()
-
-        navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}`)
-        setEditableItem(null)
-        refreshJobs(filtersStore)
-      })
-      .catch(error => {
-        dispatch(
-          editJobFailure(
-            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to run new job.'
-              : error.message
-          )
-        )
-      })
-  }
-
   const onRemoveScheduledJob = useCallback(
     scheduledJob => {
       setConfirmData({
@@ -268,9 +229,7 @@ const ScheduledJobs = ({
         })
 
       Promise.all([getJobFunctionDataPromise, fetchScheduledJobAccessKeyPromise]).then(() => {
-        if (isDemoMode) {
-          setJobWizardMode(PANEL_EDIT_MODE)
-        }
+        setJobWizardMode(PANEL_EDIT_MODE)
       })
     },
     [
@@ -280,27 +239,8 @@ const ScheduledJobs = ({
       fetchJobFunctionSuccess,
       fetchScheduledJobAccessKey,
       params.projectName,
-      isDemoMode,
       setJobWizardMode
     ]
-  )
-
-  const handleSuccessRerunJob = useCallback(
-    tab => {
-      if (tab === SCHEDULE_TAB) {
-        refreshJobs(filtersStore)
-      }
-
-      setEditableItem(null)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job started successfully'
-        })
-      )
-    },
-    [dispatch, filtersStore, refreshJobs]
   )
 
   const actionsMenu = useMemo(() => {
@@ -405,25 +345,6 @@ const ScheduledJobs = ({
             ))}
           </Table>
         </>
-      )}
-      {editableItem && !isDemoMode && (
-        // todo: delete when the job wizard is out of the demo mode
-        <JobsPanel
-          closePanel={() => {
-            setEditableItem(null)
-            removeNewJob()
-          }}
-          defaultData={editableItem?.scheduled_object}
-          mode={PANEL_EDIT_MODE}
-          onEditJob={onEditJob}
-          onSuccessRun={tab => {
-            if (editableItem) {
-              handleSuccessRerunJob(tab)
-            }
-          }}
-          project={params.projectName}
-          withSaveChanges
-        />
       )}
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
