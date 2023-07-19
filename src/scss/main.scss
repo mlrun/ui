@@ -208,6 +208,8 @@ main {
 }
 
 .table {
+  display: flex;
+  flex-flow: column nowrap;
   flex: 1;
   position: relative;
   text-align: left;
@@ -362,7 +364,6 @@ main {
 
     &-body {
       position: relative;
-      min-width: 100%;
       z-index: 2;
 
       &__cell {
