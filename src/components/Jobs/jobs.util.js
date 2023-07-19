@@ -67,8 +67,7 @@ export const getInfoHeaders = isSpark =>
         { label: 'Output path', id: 'outputPath' },
         { label: 'Total iterations', id: 'iterations' }
       ]
-export const actionsMenuHeaderDemo = 'Batch run'
-export const actionsMenuHeader = 'New job'
+export const actionsMenuHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
@@ -208,17 +207,12 @@ export const rerunJob = async (
   job,
   fetchJobFunction,
   setEditableItem,
-  isDemoMode,
   setJobWizardMode,
   dispatch
 ) => {
   const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch)
 
-  // todo: delete `if` condition when the job wizard is out of the demo mode
-  if (isDemoMode) {
-    setJobWizardMode(PANEL_RERUN_MODE)
-  }
-
+  setJobWizardMode(PANEL_RERUN_MODE)
   setEditableItem(generateEditableItem(functionData, job))
 }
 

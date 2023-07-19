@@ -27,7 +27,6 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
-import JobsPanel from '../JobsPanel/JobsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import { ConfirmDialog } from 'igz-controls/components'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -58,10 +57,8 @@ const FunctionsView = ({
   handleSelectFunction,
   pageData,
   refreshFunctions,
-  removeNewJob,
   selectedFunction,
   selectedRowData,
-  setEditableItem,
   tableContent,
   taggedFunctions,
   toggleConvertedYaml
@@ -126,25 +123,6 @@ const FunctionsView = ({
           </div>
         </div>
       </div>
-      {editableItem && !functionsPanelIsOpen && (
-        <JobsPanel
-          closePanel={() => {
-            setEditableItem(null)
-            removeNewJob()
-          }}
-          groupedFunctions={{
-            name: editableItem.name,
-            tag: editableItem.tag,
-            functions: functionsStore.functions.filter(
-              func =>
-                func.metadata.name === editableItem.name && func.metadata.hash === editableItem.hash
-            )
-          }}
-          mode={PANEL_EDIT_MODE}
-          project={params.projectName}
-          redirectToDetailsPane
-        />
-      )}
       {functionsPanelIsOpen && (
         <FunctionsPanel
           closePanel={closePanel}
@@ -207,10 +185,8 @@ FunctionsView.propTypes = {
   handleSelectFunction: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   refreshFunctions: PropTypes.func.isRequired,
-  removeNewJob: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
-  setEditableItem: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   taggedFunctions: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired

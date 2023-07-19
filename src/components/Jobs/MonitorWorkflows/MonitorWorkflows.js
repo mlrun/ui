@@ -24,7 +24,6 @@ import { find, isEmpty } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
-import JobsPanel from '../../JobsPanel/JobsPanel'
 import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
@@ -37,7 +36,6 @@ import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
-  PANEL_EDIT_MODE,
   PANEL_RERUN_MODE,
   WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
@@ -77,7 +75,6 @@ const MonitorWorkflows = ({
   fetchWorkflows,
   getFunction,
   removePods,
-  removeNewJob,
   resetWorkflow
 }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
@@ -86,7 +83,6 @@ const MonitorWorkflows = ({
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const { isDemoMode } = useMode()
   const appStore = useSelector(store => store.appStore)
   const workflowsStore = useSelector(state => state.workflowsStore)
   const filtersStore = useSelector(state => state.filtersStore)
@@ -241,8 +237,7 @@ const MonitorWorkflows = ({
         handleMonitoring,
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
-        toggleConvertedYaml,
-        isDemoMode
+        toggleConvertedYaml
       )
   }, [
     handleRerunJob,
@@ -250,8 +245,7 @@ const MonitorWorkflows = ({
     appStore.frontendSpec.abortable_function_kinds,
     handleMonitoring,
     handleConfirmAbortJob,
-    toggleConvertedYaml,
-    isDemoMode
+    toggleConvertedYaml
   ])
 
   const modifyAndSelectRun = useCallback(
@@ -301,17 +295,6 @@ const MonitorWorkflows = ({
         fetchJobFunctionsPromiseRef.current = null
       })
   }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
-
-  const handleSuccessRerunJob = useCallback(() => {
-    setEditableItem(null)
-    dispatch(
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Job started successfully'
-      })
-    )
-  }, [dispatch, setEditableItem])
 
   const getWorkflows = useCallback(
     filter => {
@@ -577,23 +560,6 @@ const MonitorWorkflows = ({
       )}
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
-      {editableItem && !isDemoMode && (
-        // todo: delete when the job wizard is out of the demo mode
-        <JobsPanel
-          closePanel={() => {
-            setEditableItem(null)
-            removeNewJob()
-          }}
-          defaultData={editableItem?.rerun_object}
-          mode={PANEL_EDIT_MODE}
-          onSuccessRun={tab => {
-            if (editableItem) {
-              handleSuccessRerunJob(tab)
-            }
-          }}
-          project={params.projectName}
-        />
       )}
     </>
   )
