@@ -119,7 +119,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         }))
                       }
                       placeholder={
-                        'v3io:///projects/{project}/FeatureStore/{name}/{run_id}/nosql/sets/{name}'
+                        'v3io:///projects/{project}/FeatureStore/{name}/nosql/sets/{name}'
                       }
                       required
                       setInvalid={value =>
@@ -204,7 +204,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         }))
                       }}
                       placeholder={
-                        'v3io:///projects/{project}/FeatureStore/{name}/{run_id}/parquet/sets/{name}.parquet'
+                        'v3io:///projects/{project}/FeatureStore/{name}/parquet/sets/{name}.parquet'
                       }
                       required
                       setInvalid={value =>
