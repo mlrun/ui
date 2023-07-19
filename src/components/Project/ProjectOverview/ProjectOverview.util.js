@@ -414,8 +414,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           },
           label: 'Batch inference',
           tooltip:
-            'Run your model on a large dataset, usually read from an offline source, such as files or databases. The results are written to offline targets.',
-          hidden: !isDemoMode
+            'Run your model on a large dataset, usually read from an offline source, such as files or databases. The results are written to offline targets.'
         },
         {
           id: 'defineAlerts',
