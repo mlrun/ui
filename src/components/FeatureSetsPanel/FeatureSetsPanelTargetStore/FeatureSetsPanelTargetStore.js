@@ -199,6 +199,13 @@ const FeatureSetsPanelTargetStore = ({
     }
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
 
+  useEffect(() => {
+    setValidation(state => ({
+      ...state,
+      isOnlineTargetPathValid: true
+    }))
+  }, [data.online.kind, setValidation])
+
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
       ...prev,
@@ -321,7 +328,7 @@ const FeatureSetsPanelTargetStore = ({
   const handleDiscardPathChange = kind => {
     const currentStoreType = kind === ONLINE ? NOSQL : kind
     const currentKind = featureStore.newFeatureSet.spec.targets.find(
-      el => el.kind === currentStoreType
+      el => el.name === currentStoreType
     )
 
     if (currentKind.path.length > 0) {
@@ -329,6 +336,7 @@ const FeatureSetsPanelTargetStore = ({
         ...state,
         [kind]: {
           ...state[kind],
+          kind: currentKind.kind,
           path: kind === PARQUET ? offlineTarget.path : onlineTarget.path
         }
       }))
@@ -378,6 +386,23 @@ const FeatureSetsPanelTargetStore = ({
         return targetKind
       })
     )
+  }
+
+  const handleOnlineKindTypeChange = kind => {
+    setData(state => ({
+      ...state,
+      online: {
+        ...state.online,
+        kind,
+        path: generatePath(
+          frontendSpec.feature_store_data_prefixes,
+          project,
+          kind,
+          featureStore.newFeatureSet.metadata.name,
+          ''
+        )
+      }
+    }))
   }
 
   const handlePartitionColsOnBlur = kind => {
@@ -785,6 +810,7 @@ const FeatureSetsPanelTargetStore = ({
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
       handleOfflineKindPathChange={handleOfflineKindPathChange}
       handleOnlineKindPathChange={handleOnlineKindPathChange}
+      handleOnlineKindTypeChange={handleOnlineKindTypeChange}
       handlePartitionColsOnChange={handlePartitionColsOnChange}
       handlePartitionColsOnBlur={handlePartitionColsOnBlur}
       handlePartitionRadioButtonClick={handlePartitionRadioButtonClick}

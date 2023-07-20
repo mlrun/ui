@@ -51,6 +51,11 @@ export const checkboxModels = {
   }
 }
 
+export const onlineKindOptions = [
+  { label: 'V3IO', id: NOSQL, icon: <DB /> },
+  { label: 'REDIS', id: 'redisnosql', icon: <DB /> }
+]
+
 export const externalOfflineKindOptions = [
   { label: 'CSV', id: 'csv', icon: <DB /> },
   { label: 'Parquet', id: 'parquet', icon: <DB /> }
@@ -196,7 +201,7 @@ export const handlePathChange = (
     if (isTargetPathModified) {
       const updatedTargets = targets.map(targetKind => {
         if (targetKind.name === targetKindName) {
-          return { ...targetKind, path: data[targetType].path }
+          return { ...targetKind, kind: data[targetType].kind, path: data[targetType].path }
         }
         return targetKind
       })
