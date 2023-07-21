@@ -1,0 +1,62 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/shadows';
+
+.download-container {
+  position: fixed;
+  right: 24px;
+  bottom: -100px;
+  opacity: 0;
+  z-index: 1000;
+  width: 220px;
+  min-height: 90px;
+  max-height: 200px;
+  padding: 15px;
+  color: $white;
+  background-color: $darkPurple;
+  border-radius: 2px;
+  box-shadow: $tooltipShadow;
+
+  &__header {
+    margin-bottom: 15px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+
+    .download-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 12px;
+
+      &__message {
+        &_succeed {
+          color: $brightTurquoise;
+        }
+
+        &_failed {
+          color: $burntSienna;
+        }
+      }
+
+      &__buttons {
+        min-width: 20px;
+
+        .round-icon-cp__circle {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+
+  .downloading {
+    cursor: pointer;
+  }
+
+  .cancel_container {
+    transform: translate(14px, 14px);
+  }
+}

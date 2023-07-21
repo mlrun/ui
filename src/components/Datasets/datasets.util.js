@@ -96,7 +96,7 @@ export const generatePageData = (selectedItem, viewMode) => ({
     additionalInfo: {
       header: 'Producer',
       body: generateProducerDetailsInfo(selectedItem),
-      hidden: !selectedItem.item?.producer
+      hidden: !selectedItem.producer
     },
     hideBackBtn: viewMode === FULL_VIEW_MODE,
     withToggleViewBtn: true
