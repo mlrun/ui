@@ -24,6 +24,7 @@ import { ReactComponent as DB } from 'igz-controls/images/db-icon.svg'
 export const EXTERNAL_OFFLINE = 'externalOffline'
 export const EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE = 'csv'
 export const NOSQL = 'nosql'
+export const REDISNOSQL = 'redisnosql'
 export const ONLINE = 'online'
 export const PARQUET = 'parquet'
 
@@ -53,7 +54,7 @@ export const checkboxModels = {
 
 export const onlineKindOptions = [
   { label: 'V3IO', id: NOSQL, icon: <DB /> },
-  { label: 'REDIS', id: 'redisnosql', icon: <DB /> }
+  { label: 'REDIS', id: REDISNOSQL, icon: <DB /> }
 ]
 
 export const externalOfflineKindOptions = [

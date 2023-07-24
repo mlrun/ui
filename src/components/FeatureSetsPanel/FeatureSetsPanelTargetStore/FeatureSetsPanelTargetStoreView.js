@@ -46,7 +46,8 @@ import {
   onlineKindOptions,
   NOSQL,
   ONLINE,
-  PARQUET
+  PARQUET,
+  REDISNOSQL
 } from './featureSetsPanelTargetStore.util'
 
 import { comboboxSelectList } from '../UrlPath.utils'
@@ -139,7 +140,9 @@ const FeatureSetsPanelTargetStoreView = ({
                         data.online.kind === NOSQL
                           ? V3IO_INPUT_PATH_SCHEME
                           : REDIS_INPUT_PATH_SCHEME
-                      }projects/{project}/FeatureStore/{name}/nosql/sets/{name}`}
+                      }projects/{project}/FeatureStore/{name}/${
+                        data.online.kind === NOSQL ? NOSQL : REDISNOSQL
+                      }/sets/{name}`}
                       required
                       setInvalid={value =>
                         setValidation(state => ({
