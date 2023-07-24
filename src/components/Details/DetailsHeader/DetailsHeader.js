@@ -142,6 +142,8 @@ const DetailsHeader = ({
                   selectedItem?.startTime,
                   stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                 )
+              : selectedItem?.created
+              ? formatDatetime(selectedItem?.created, 'N/A')
               : selectedItem?.updated
               ? formatDatetime(selectedItem?.updated, 'N/A')
               : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'

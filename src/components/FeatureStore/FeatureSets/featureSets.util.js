@@ -57,6 +57,8 @@ export const generateFeatureSetsDetailsMenu = selectedItem => [
 ]
 
 export const featureSetsInfoHeaders = [
+  { label: 'Created at', id: 'created' },
+  { label: 'Created by', id: 'created_by' },
   { label: 'Description', id: 'description' },
   { label: 'Labels', id: 'labels' },
   { label: 'Version tag', id: 'tag' },
