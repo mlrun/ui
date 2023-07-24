@@ -87,31 +87,33 @@ const TableLinkCell = ({
             )}
           </div>
           {(link.match(/jobs/) ||
-            ((link.match(/functions/) ||
-              link.match(/models/) ||
-              link.match(/files/) ||
-              link.match(/datasets/)) &&
-              Object.values(selectedItem).length !== 0)) && (
-            <div className="date-uid-row">
-              {(item.startTime || item.updated) && (
-                <span className="link-subtext">
-                  {data.type !== 'date' &&
-                    (link.match(/functions/) ||
-                    link.match(/models/) ||
-                    link.match(/files/) ||
-                    link.match(/datasets/)
-                      ? formatDatetime(item.updated, 'N/A')
-                      : formatDatetime(
-                          item.startTime,
-                          stateValue === 'aborted' ? 'N/A' : 'Not yet started'
-                        ))}
-                </span>
-              )}
-              {data.value !== item.uid && data.value !== item.hash && (
-                <span className="link-subtext">{truncateUid(item.uid || item.hash)}</span>
-              )}
-            </div>
-          )}
+            link.match(/feature-store/) ||
+            link.match(/functions/) ||
+            link.match(/models/) ||
+            link.match(/files/) ||
+            link.match(/datasets/)) &&
+            Object.values(selectedItem).length !== 0 && (
+              <div className="date-uid-row">
+                {(item.startTime || item.created || item.updated) && (
+                  <span className="link-subtext">
+                    {data.type !== 'date' &&
+                      (link.match(/feature-store/) ||
+                      link.match(/functions/) ||
+                      link.match(/models/) ||
+                      link.match(/files/) ||
+                      link.match(/datasets/)
+                        ? formatDatetime(item.created ?? item.updated, 'N/A')
+                        : formatDatetime(
+                            item.startTime,
+                            stateValue === 'aborted' ? 'N/A' : 'Not yet started'
+                          ))}
+                  </span>
+                )}
+                {data.value !== item.uid && data.value !== item.hash && (
+                  <span className="link-subtext">{truncateUid(item.uid || item.hash)}</span>
+                )}
+              </div>
+            )}
         </Link>
       )}
       {showExpandButton && (
