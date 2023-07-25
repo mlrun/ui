@@ -21,7 +21,6 @@ import React, { useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
-import { pick } from 'lodash'
 
 import { FormInput, FormSelect, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
@@ -167,11 +166,12 @@ const FormEnvironmentVariablesRow = ({
         </div>
       )}
       <OnChange name={`${rowPath}.data.type`}>
-        {() => {
+        {type => {
           if (isCurrentRowEditing(rowPath)) {
-            const fieldNewData = pick(fields.value[index].data, ['key', 'type'])
-
-            setFieldValue(`${rowPath}.data`, fieldNewData)
+            setFieldValue(`${rowPath}.data`, {
+              key: fields.value[index].data.key,
+              type
+            })
           }
         }}
       </OnChange>
