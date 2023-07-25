@@ -35,6 +35,15 @@ export const checkValidation = (
     Boolean(target.time_partitioning_granularity)
   )
 
+  if (!newFeatureSet.spec.targets.length && !newFeatureSet.spec.passthrough) {
+    setValidation(prevState => ({
+      ...prevState,
+      isTargetStoreValid: false
+    }))
+
+    isValid = false
+  }
+
   if (!Object.values(validation).every(value => value)) {
     isValid = false
   }
