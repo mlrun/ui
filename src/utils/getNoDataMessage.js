@@ -177,6 +177,8 @@ const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
       : filtersStore.iter === SHOW_ITERATIONS
 
     return (
+      (type === LABELS_FILTER &&
+        filtersStore.filterMenuModal[filtersStoreKey]?.values?.labels.length > 0) ||
       (type === TAG_FILTER && isTagChanged) ||
       ((type === NAME_FILTER || type === LABELS_FILTER) && filtersStore[type].length > 0) ||
       (type === STATUS_FILTER && filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||
