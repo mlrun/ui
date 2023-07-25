@@ -109,9 +109,13 @@ const TableLinkCell = ({
                           ))}
                   </span>
                 )}
-                {data.value !== item.uid && data.value !== item.hash && (
-                  <span className="link-subtext">{truncateUid(item.uid || item.hash)}</span>
-                )}
+                {data.value !== item.uid &&
+                  data.value !== item.hash &&
+                  data.value !== item.tree && (
+                    <span className="link-subtext">
+                      {truncateUid(item.uid || item.hash || item.tree)}
+                    </span>
+                  )}
               </div>
             )}
         </Link>
