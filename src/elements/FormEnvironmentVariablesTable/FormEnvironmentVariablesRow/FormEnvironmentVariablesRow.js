@@ -122,6 +122,7 @@ const FormEnvironmentVariablesRow = ({
                   density="normal"
                   name={`${rowPath}.data.secretKey`}
                   placeholder="Secret Key"
+                  required
                   validationRules={getValidationRules('environmentVariables.secretKey')}
                 />
               </>
