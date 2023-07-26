@@ -193,27 +193,6 @@ const ScheduledJobs = ({
         params.projectName,
         editableItem.name
       )
-        .then(result => {
-          setEditableItem({
-            ...editableItem,
-            scheduled_object: {
-              ...editableItem.scheduled_object,
-              credentials: {
-                access_key: result.data.credentials.access_key
-              },
-              function: {
-                ...editableItem.scheduled_object.function,
-                metadata: {
-                  ...editableItem.scheduled_object.function?.metadata,
-                  credentials: {
-                    ...editableItem.scheduled_object.function?.metadata?.credentials,
-                    access_key: result.data.credentials.access_key
-                  }
-                }
-              }
-            }
-          })
-        })
         .catch(error => {
           dispatch(
             setNotification({
@@ -228,7 +207,39 @@ const ScheduledJobs = ({
           throw error
         })
 
-      Promise.all([getJobFunctionDataPromise, fetchScheduledJobAccessKeyPromise]).then(() => {
+      Promise.all([getJobFunctionDataPromise, fetchScheduledJobAccessKeyPromise]).then((res) => {
+        const funcData = res[0]
+        const keyData = res[1]
+
+        setEditableItem({
+          ...editableItem,
+          scheduled_object: {
+            ...editableItem.scheduled_object,
+            credentials: {
+              access_key: keyData.data.credentials.access_key
+            },
+            function: {
+              ...editableItem.scheduled_object.function,
+              spec: {
+                ...editableItem.scheduled_object.function?.spec,
+                env: funcData?.spec.env,
+                resources: funcData?.spec.resources,
+                volume_mounts: funcData?.spec.volume_mounts,
+                volumes: funcData?.spec.volumes,
+                node_selector: funcData?.spec.node_selector,
+                preemption_mode: funcData?.spec.preemption_mode,
+                priority_class_name: funcData?.spec.priority_class_name
+              },
+              metadata: {
+                ...editableItem.scheduled_object.function?.metadata,
+                credentials: {
+                  ...editableItem.scheduled_object.function?.metadata?.credentials,
+                  access_key: keyData.data.credentials.access_key
+                }
+              }
+            }
+          }
+        })
         setJobWizardMode(PANEL_EDIT_MODE)
       })
     },
