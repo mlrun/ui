@@ -46,8 +46,8 @@ import { getViewMode } from '../../../utils/helper'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
-import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
-import { ReactComponent as Popin } from 'igz-controls/images/pop_in.svg'
+import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
+import { ReactComponent as MinimizeIcon } from 'igz-controls/images/ml-minimize.svg'
 
 const DetailsHeader = ({
   actionsMenu,
@@ -246,7 +246,7 @@ const DetailsHeader = ({
                   }}
                   tooltipText="Full view"
                 >
-                  <Popout />
+                  <EnlargeIcon />
                 </RoundedIcon>
               )}
               {viewMode === FULL_VIEW_MODE && (
@@ -256,7 +256,7 @@ const DetailsHeader = ({
                   }}
                   tooltipText="Table view"
                 >
-                  <Popin />
+                  <MinimizeIcon />
                 </RoundedIcon>
               )}
             </>
