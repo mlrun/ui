@@ -24,6 +24,7 @@ import { ReactComponent as DB } from 'igz-controls/images/db-icon.svg'
 export const EXTERNAL_OFFLINE = 'externalOffline'
 export const EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE = 'csv'
 export const NOSQL = 'nosql'
+export const REDISNOSQL = 'redisnosql'
 export const ONLINE = 'online'
 export const PARQUET = 'parquet'
 
@@ -50,6 +51,11 @@ export const checkboxModels = {
     data: { name: EXTERNAL_OFFLINE, kind: 'csv', path: '' }
   }
 }
+
+export const onlineKindOptions = [
+  { label: 'V3IO', id: NOSQL, icon: <DB /> },
+  { label: 'REDIS', id: REDISNOSQL, icon: <DB /> }
+]
 
 export const externalOfflineKindOptions = [
   { label: 'CSV', id: 'csv', icon: <DB /> },
@@ -197,7 +203,7 @@ export const handlePathChange = (
     if (isTargetPathModified) {
       const updatedTargets = targets.map(targetKind => {
         if (targetKind.name === targetKindName) {
-          return { ...targetKind, path: data[targetType].path }
+          return { ...targetKind, kind: data[targetType].kind, path: data[targetType].path }
         }
         return targetKind
       })
