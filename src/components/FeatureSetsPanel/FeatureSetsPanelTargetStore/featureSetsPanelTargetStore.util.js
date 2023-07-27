@@ -46,8 +46,8 @@ export const checkboxModels = {
     }
   },
   externalOffline: {
-    id: 'externalOffline',
-    data: { name: 'externalOffline', kind: 'csv', path: '' }
+    id: EXTERNAL_OFFLINE,
+    data: { name: EXTERNAL_OFFLINE, kind: 'csv', path: '' }
   }
 }
 
@@ -115,9 +115,10 @@ export const offlineKindDataInitialState = {
 }
 
 export const externalOfflineKindDataInitialState = {
-  name: 'externalOffline',
+  name: EXTERNAL_OFFLINE,
   kind: EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
-  path: ''
+  path: '',
+  partitioned: ''
 }
 
 export const dataInitialState = {

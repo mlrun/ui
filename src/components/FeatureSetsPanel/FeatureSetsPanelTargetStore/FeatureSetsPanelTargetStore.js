@@ -120,6 +120,21 @@ const FeatureSetsPanelTargetStore = ({
   ])
 
   useEffect(() => {
+    setValidation(prevState => ({
+      ...prevState,
+      isTargetStoreValid: featureStore.newFeatureSet.spec.passthrough
+        ? true
+        : selectedTargetKind.length &&
+          Object.values(selectedPartitionKind).every(partitionKind => partitionKind.length)
+    }))
+  }, [
+    featureStore.newFeatureSet.spec.passthrough,
+    selectedPartitionKind,
+    selectedTargetKind.length,
+    setValidation
+  ])
+
+  useEffect(() => {
     if (
       (onlineTarget &&
         onlineTarget.path !== data.online.path &&
@@ -529,7 +544,8 @@ const FeatureSetsPanelTargetStore = ({
       ...state,
       isOfflineTargetPathValid: true,
       isOnlineTargetPathValid: true,
-      isExternalOfflineTargetPathValid: true
+      isExternalOfflineTargetPathValid: true,
+      isTargetStoreValid: true
     }))
     setData(state => ({
       ...state,
