@@ -27,7 +27,7 @@ export const scheduledJobsActionCreator = {
   fetchJobFunction: jobsActions.fetchJobFunction,
   fetchJobFunctionSuccess: jobsActions.fetchJobFunctionSuccess,
   fetchJobs: jobsActions.fetchJobs,
-  fetchScheduledJobAccessKey: jobsActions.fetchScheduledJobAccessKey,
+  fetchScheduledJobData: jobsActions.fetchScheduledJobData,
   handleRunScheduledJob: jobsActions.handleRunScheduledJob,
   removeScheduledJob: jobsActions.removeScheduledJob,
   resetWorkflow: workflowsActions.resetWorkflow

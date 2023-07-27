@@ -274,7 +274,7 @@ const jobsActions = {
     type: FETCH_JOBS_SUCCESS,
     payload: jobsList
   }),
-  fetchScheduledJobAccessKey: (projectName, jobName) => dispatch => {
+  fetchScheduledJobData: (projectName, jobName) => dispatch => {
     dispatch(jobsActions.fetchScheduledJobAccessKeyBegin())
 
     return jobsApi

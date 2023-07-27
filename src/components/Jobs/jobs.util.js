@@ -191,7 +191,7 @@ export const getJobFunctionData = async (
       }
     })
   } else {
-    ;[functionProject = '', functionNameWithHash = ''] = functionPath?.split('/') ?? []
+    [functionProject = '', functionNameWithHash = ''] = functionPath?.split('/') ?? []
     functionName = functionNameWithHash.replace(/@.*$/g, '')
     functionHash = functionNameWithHash.replace(/.*@/g, '')
 
