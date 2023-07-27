@@ -54,14 +54,14 @@ const ArtifactsPreview = ({ className, extraData, noData, preview, showExtraData
           <h1 className="artifact-extra-data__header">Extra Data</h1>
           {extraData.map((extraDataItem, index) => (
             <Accordion
+              alwaysOpened={false}
               icon={<Arrow />}
               iconClassName="expand-icon"
-              alwaysOpened={false}
+              key={index}
               openByDefault={false}
             >
               <ArtifactsPreviewView
                 className={artifactsPreviewClasses}
-                key={index}
                 preview={extraDataItem}
                 setShowErrorBody={setShowErrorBody}
                 showErrorBody={showErrorBody}

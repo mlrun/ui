@@ -3,12 +3,13 @@
 @import '~igz-controls/scss/mixins';
 
 .details-metadata {
-  padding: 0 20px 20px;
-  overflow: auto;
-
   @include detailsMetadataStatisticsTable;
 
   &__table {
+    &-header {
+      padding: 15px 0;
+    }
+
     .metadata-cell {
       &__type {
         &_chip {
