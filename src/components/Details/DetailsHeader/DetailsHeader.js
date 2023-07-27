@@ -42,7 +42,6 @@ import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
-import { useMode } from '../../../hooks/mode.hook'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -70,7 +69,6 @@ const DetailsHeader = ({
   const params = useParams()
   const navigate = useNavigate()
   const viewMode = getViewMode(window.location.search)
-  const { isDemoMode } = useMode()
   const { actionButton, withToggleViewBtn } = pageData.details
 
   const {
@@ -239,7 +237,7 @@ const DetailsHeader = ({
         )}
         <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
         <div className="item-header__navigation-buttons">
-          {withToggleViewBtn && isDemoMode && (
+          {withToggleViewBtn && (
             <>
               {viewMode !== FULL_VIEW_MODE && (
                 <RoundedIcon
