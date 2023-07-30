@@ -36,7 +36,8 @@ export const generateProjectActionsMenu = (
   viewYaml,
   archiveProject,
   unarchiveProject,
-  deleteProject
+  deleteProject,
+  isDemoMode
 ) => {
   let actionsMenu = {}
 
@@ -64,6 +65,7 @@ export const generateProjectActionsMenu = (
       {
         label: 'Export YAML',
         icon: <DownloadIcon />,
+        hidden: !isDemoMode, // TODO: remove after QA test and approval
         onClick: exportYaml
       },
       {

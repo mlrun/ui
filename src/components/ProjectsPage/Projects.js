@@ -39,6 +39,7 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-
 import { setNotification } from '../../reducers/notificationReducer'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 const Projects = ({
   changeProjectState,
@@ -71,6 +72,7 @@ const Projects = ({
   const [source] = useState(axios.CancelToken.source())
   const urlParams = useParams()
   const dispatch = useDispatch()
+  const { isDemoMode } = useMode()
 
   const { isNuclioModeDisabled } = useNuclioMode()
 
@@ -301,16 +303,19 @@ const Projects = ({
         viewYaml,
         onArchiveProject,
         handleUnarchiveProject,
-        onDeleteProject
+        onDeleteProject,
+        isDemoMode
       )
     )
   }, [
     convertToYaml,
+    exportYaml,
     onArchiveProject,
     onDeleteProject,
     handleUnarchiveProject,
     projectStore.projects,
-    viewYaml
+    viewYaml,
+    isDemoMode
   ])
 
   useEffect(() => {
