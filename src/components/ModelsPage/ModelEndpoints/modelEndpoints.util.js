@@ -36,6 +36,7 @@ const infoHeaders = [
   { label: 'Model class', id: 'model_class' },
   { label: 'Model artifact', id: 'model_artifact' },
   { label: 'Function URI', id: 'function_uri' },
+  { label: 'Function Tag', id: 'function_tag' },
   { label: 'Feature set', id: 'monitoring_feature_set_uri' },
   { label: 'Last prediction', id: 'last_prediction' },
   { label: 'Error count', id: 'error_count' },

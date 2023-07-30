@@ -52,10 +52,13 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: selectedItem?.spec?.function_uri,
         //remove 'latest' when function_uri will contain hash or tag
         link: selectedItem?.spec?.function_uri
-          ? `${generateLinkPath(
-              `store://functions/${selectedItem?.spec?.function_uri}`
-            )}/latest/overview`
+          ? `${generateLinkPath(`store://functions/${selectedItem.spec.function_uri}`)}${
+              selectedItem.spec.function_uri.includes(':') ? '' : '/latest'
+            }/overview`
           : ''
+      },
+      function_tag: {
+        value: selectedItem?.spec?.function_uri?.match(/(?<=:)[^:]*$/) || 'latest'
       },
       monitoring_feature_set_uri: {
         value: selectedItem?.status?.monitoring_feature_set_uri,
