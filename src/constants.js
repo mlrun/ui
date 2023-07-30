@@ -30,6 +30,7 @@ export const FETCH_WORKFLOW_SUCCESS = 'FETCH_WORKFLOW_SUCCESS'
 export const RESET_WORKFLOW = 'RESET_WORKFLOW'
 
 export const AZURE_STORAGE_INPUT_PATH_SCHEME = 'az://'
+export const DBFS_STORAGE_INPUT_PATH_SCHEME = 'dbfs://'
 export const GOOGLE_STORAGE_INPUT_PATH_SCHEME = 'gs://'
 export const HTTP_STORAGE_INPUT_PATH_SCHEME = 'http://'
 export const HTTPS_STORAGE_INPUT_PATH_SCHEME = 'https://'

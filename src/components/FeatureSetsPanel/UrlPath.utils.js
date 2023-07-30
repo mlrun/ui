@@ -20,6 +20,7 @@ such restriction.
 
 import {
   AZURE_STORAGE_INPUT_PATH_SCHEME,
+  DBFS_STORAGE_INPUT_PATH_SCHEME,
   GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
   S3_INPUT_PATH_SCHEME,
@@ -87,6 +88,11 @@ export const comboboxSelectList = [
     className: 'path-type-gs',
     label: 'Google storage',
     id: GOOGLE_STORAGE_INPUT_PATH_SCHEME
+  },
+  {
+    className: 'path-type-dbfs',
+    label: 'Databricks filesystem',
+    id: DBFS_STORAGE_INPUT_PATH_SCHEME
   }
 ]
 
