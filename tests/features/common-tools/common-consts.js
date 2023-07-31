@@ -218,6 +218,9 @@ module.exports = {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
     Artifacts_Names_Unique: 'Artifacts names in the same project must be unique.',
     Dataset_Names_Unique: 'Dataset names in the same project must be unique',
+    Artifact_Name_Hint_Deploy_Model:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
+      'This field is required',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
       'This field is required\nArtifact name should be unique',
@@ -366,6 +369,7 @@ module.exports = {
     Projects_Limit_Reached:
       'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance',
     Must_Select_One: 'Must select at least one',
+    Must_Select_One_Partition: 'Must select at least one partitioning option',
     Already_Scheduled: 'This job is already scheduled'
   },
   Dropdown_Options: {

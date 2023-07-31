@@ -56,6 +56,7 @@ const filesTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', //span',
+        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         labels: {

@@ -3,7 +3,7 @@ Feature: Models Page
   Testcases that verifies functionality on Models Page
 
   @FAILED_TODO
-  #TODO: Register_Model_Button hidden till 5.1, running on demo mode
+  #TODO: Register_Model_Button hidden till 1.5, running on demo mode
   @passive
   Scenario: Check all mandatory components on Models tab
     Given open url
@@ -202,7 +202,7 @@ Feature: Models Page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @FAILED_TODO
-  #TODO: Register_Model_Button hidden till 5.1, running in demo mode
+  #TODO: Register_Model_Button hidden till 1.5, running in demo mode
   #TODO: warning "Input_Hint"."Input_Field_Invalid" was redesigned, need case rewrite (now it's dropdown warning)
   #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
   #TODO: artifactsLabelsTable class components was changed, need to rewrite locators structure (affects the 'Labels_Table', 'remove_btn' cases)
@@ -293,7 +293,7 @@ Feature: Models Page
     Then verify "Title" element not exists on "Register_Model_Popup" wizard
 
   @FAILED_TODO
-  #TODO: Register_Model_Button hidden till 5.1, running on demo mode
+  #TODO: Register_Model_Button hidden till 1.5, running on demo mode
   #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on all cases below)
   Scenario: Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
@@ -331,10 +331,7 @@ Feature: Models Page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
-  @FAILED_TODO
-  #TODO: 'Show_Iterations_Checkbox' located in filter dropdown - new implementation, need rewrite step (also affects 'expand_btn' appears and steps below)
   @passive
-  @uniqueTag
   Scenario: Verify View YAML action
     Given open url
     And wait load page
@@ -349,9 +346,12 @@ Feature: Models Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-    Then check "Show_Iterations_Checkbox" element on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
-    Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "latest #0" value in "name" column
+    Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "latest" value in "name_expand_btn" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
@@ -483,9 +483,6 @@ Feature: Models Page
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Drift_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_Drift_Headers"
 
-  @FAILED_TODO
-  #TODO: 'Table_Tree_Filter_Dropdown' was redesigned, need case rewrite
-  #TODO: "Overview" tab is active - invalid selector
   @passive
   Scenario: Check Details panel still active on page refresh
     * set tear-down property "model" created in "default" project with "test-model" value
@@ -497,7 +494,9 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
@@ -526,9 +525,6 @@ Feature: Models Page
     When click on "Expand_Sources" element on "Models_Info_Pane" wizard
     Then verify "Info_Sources_Table" element visibility on "Models_Info_Pane" wizard
 
-  @FAILED_TODO
-  #TODO: block with 'Deploy', 'Add a tag', 'View YAML' is reimplemented
-  #TODO: select "Deploy" option in action menu on "Models" - doesn't click on dropdown '...' and option 'Deploy' (after manual clicks all next 71 steps passed)
   @passive
   Scenario: Check all mandatory components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
@@ -544,6 +540,7 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
     Then verify if "Deploy_Model_Popup" popup dialog appears
     Then navigate back
@@ -560,7 +557,7 @@ Feature: Models Page
     Then verify "Model_Name_Input" element visibility on "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" input should contains "automation-test-model" value on "Deploy_Model_Popup" wizard
     Then type value "  " to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
-    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint_Deploy_Model"
     Then verify "Model_Name_Input" options rules on form "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display "Input_Hint"."Deploy_Model_Name_Hint"
     Then verify "Class_Name_Input" element visibility on "Deploy_Model_Popup" wizard
@@ -572,7 +569,7 @@ Feature: Models Page
     Then "Deploy_Button" element on "Deploy_Model_Popup" should contains "Deploy" value
     Then click on "Deploy_Button" element on "Deploy_Model_Popup" wizard
     Then verify "Deploy_Button" element on "Deploy_Model_Popup" wizard is disabled
-    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint_Deploy_Model"
     Then type value "automation-test-model" to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
     Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
     Then type value "Class" to "Class_Name_Input" field on "Deploy_Model_Popup" wizard
@@ -605,7 +602,6 @@ Feature: Models Page
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
 
     @FAILED_TODO
-    #TODO: select "Deploy" option in action menu on "Models" - doesn't click on dropdown '...' and option 'Deploy'
     #TODO: locators structure of 'Add class argument'was changed - need change locators
     Scenario: Verify behaviour of key-value table on Deploy Model Popup
      * set tear-down property "model" created in "default" project with "automation-test-model" value
@@ -617,6 +613,7 @@ Feature: Models Page
      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
      And wait load page
+     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
      Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
      Then verify if "Deploy_Model_Popup" popup dialog appears
      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
