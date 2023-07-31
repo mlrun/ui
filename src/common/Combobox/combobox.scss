@@ -78,7 +78,6 @@
   }
 
   &-select {
-    position: relative;
     display: flex;
     max-width: 95px;
 
@@ -88,9 +87,10 @@
 
     &__body {
       position: absolute;
-      top: 25px;
+      top: 100%;
       z-index: 5;
       display: none;
+      margin-top: 5px;
       max-width: 220px;
       background-color: $white;
       box-shadow: $previewBoxShadow;
