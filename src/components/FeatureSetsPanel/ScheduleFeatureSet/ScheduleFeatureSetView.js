@@ -39,6 +39,7 @@ const ScheduleFeatureSetView = ({
   cron,
   daysOfWeek,
   handleDaysOfWeek,
+  isWeekDaysEmpty,
   onSchedule,
   recurringDispatch,
   recurringState,
@@ -87,11 +88,7 @@ const ScheduleFeatureSetView = ({
         )}
         {activeTab === tabs[1].id && <ScheduleCron cron={cron} setCron={setCron} />}
 
-        {activeTab === tabs[0].id &&
-          recurringState.scheduleRepeat.activeOption === 'week' &&
-          recurringState.scheduleRepeat.week.days.length === 0 && (
-            <ErrorMessage message="Must select at least one day option" />
-          )}
+        {isWeekDaysEmpty && <ErrorMessage message="Must select at least one day option" />}
       </div>
       <Button
         variant={SECONDARY_BUTTON}
@@ -103,11 +100,7 @@ const ScheduleFeatureSetView = ({
         }
         onClick={onSchedule}
         className="btn__schedule"
-        disabled={
-          activeTab === tabs[0].id &&
-          recurringState.scheduleRepeat.activeOption === 'week' &&
-          recurringState.scheduleRepeat.week.days.length === 0
-        }
+        disabled={isWeekDaysEmpty}
       />
     </div>
   )
@@ -117,6 +110,7 @@ ScheduleFeatureSetView.propTypes = {
   activeTab: PropTypes.string.isRequired,
   cron: PropTypes.string.isRequired,
   daysOfWeek: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  isWeekDaysEmpty: PropTypes.bool.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   onSchedule: PropTypes.func.isRequired,
   recurringDispatch: PropTypes.func.isRequired,
