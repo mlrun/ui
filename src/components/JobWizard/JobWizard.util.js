@@ -678,30 +678,38 @@ const parseRequests = (requests = {}, defaultRequests = {}) => {
 }
 
 const parseEnvironmentVariables = (envVariables, isStagingMode) => {
-  return envVariables.map(envVariable => {
-    let env = {
-      key: envVariable.name
-    }
-
-    if (envVariable?.valueFrom?.secretKeyRef) {
-      const secretName = envVariable.valueFrom.secretKeyRef.name ?? ''
-      const secretKey = envVariable.valueFrom.secretKeyRef.key ?? ''
-
-      env.type = ENV_VARIABLE_TYPE_SECRET
-
-      if (isStagingMode) {
-        env.secretName = secretName
-        env.secretKey = secretKey
+  return envVariables
+    .filter(envVariable => {
+      if (envVariable?.valueFrom?.secretKeyRef) {
+        return envVariable.name && envVariable.valueFrom.secretKeyRef.name && envVariable.valueFrom.secretKeyRef.key
       } else {
-        env.value = secretName && secretKey ? `${secretName}:${secretKey}` : secretName
+        return envVariable.name && envVariable.value
       }
-    } else {
-      env.type = ENV_VARIABLE_TYPE_VALUE
-      env.value = envVariable.value
-    }
+    })
+    .map(envVariable => {
+      let env = {
+        key: envVariable.name
+      }
 
-    return { data: env }
-  })
+      if (envVariable?.valueFrom?.secretKeyRef) {
+        const secretName = envVariable.valueFrom.secretKeyRef.name
+        const secretKey = envVariable.valueFrom.secretKeyRef.key ?? ''
+
+        env.type = ENV_VARIABLE_TYPE_SECRET
+
+        if (isStagingMode) {
+          env.secretName = secretName
+          env.secretKey = secretKey
+        } else {
+          env.value = secretName && secretKey ? `${secretName}:${secretKey}` : secretName
+        }
+      } else {
+        env.type = ENV_VARIABLE_TYPE_VALUE
+        env.value = envVariable.value
+      }
+
+      return { data: env }
+    })
 }
 
 // secretSourcesTable - currently not shown
