@@ -10,7 +10,14 @@
 
   .repeat_container {
     display: flex;
+    align-items: center;
     margin: 15px 0;
+
+    & > * {
+      &:not(:last-child) {
+        margin: auto 10px auto 0;
+      }
+    }
 
     .range {
       margin-right: 15px;
@@ -21,8 +28,6 @@
       align-items: center;
 
       &-week {
-        margin-left: 16px;
-
         &_day {
           width: 32px;
           height: 32px;
@@ -40,15 +45,6 @@
             border: $transparentBorder;
           }
         }
-      }
-
-      .select {
-        margin-left: 5px;
-      }
-
-      &-text,
-      &__text {
-        margin: auto 5px;
       }
     }
   }
