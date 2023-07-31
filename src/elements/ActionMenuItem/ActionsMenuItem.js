@@ -53,8 +53,8 @@ const ActionsMenuItem = ({ dataItem, index, isIconDisplayed, menuItem }) => {
           }
         }}
       >
-        {menuItem.label}
         <span className={iconClassNames}>{menuItem.icon}</span>
+        {menuItem.label}
       </div>
     </Tooltip>
   )

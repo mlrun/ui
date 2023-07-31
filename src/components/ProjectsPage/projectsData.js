@@ -23,6 +23,7 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constan
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/ml-download.svg'
 import { ReactComponent as UnarchiveIcon } from 'igz-controls/images/unarchive-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -31,10 +32,12 @@ export const pageData = {
 }
 export const generateProjectActionsMenu = (
   projects,
+  exportYaml,
   viewYaml,
   archiveProject,
   unarchiveProject,
-  deleteProject
+  deleteProject,
+  isDemoMode
 ) => {
   let actionsMenu = {}
 
@@ -58,6 +61,12 @@ export const generateProjectActionsMenu = (
         className: 'danger',
         hidden: window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
         onClick: deleteProject
+      },
+      {
+        label: 'Export YAML',
+        icon: <DownloadIcon />,
+        hidden: !isDemoMode, // TODO: remove after QA test and approval
+        onClick: exportYaml
       },
       {
         label: 'View YAML',

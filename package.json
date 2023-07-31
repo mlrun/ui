@@ -19,6 +19,7 @@
     "dagre": "^0.8.5",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
+    "file-saver": "^2.0.5",
     "final-form": "^4.20.7",
     "final-form-arrays": "^3.0.2",
     "fs-extra": "^10.0.0",
