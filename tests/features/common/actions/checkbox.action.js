@@ -43,6 +43,16 @@ const action = {
     if (!classes.includes('unchecked')) {
       await checkboxElement.click()
     }
+  },
+  verifyCheckboxEnabled: async function(driver, component) {
+    const element = await driver.findElement(component)
+    const flag = await element.getAttribute('class')
+    expect(flag).equal('checkbox')
+  },
+  verifyCheckboxDisabled: async function(driver, component) {
+    const element = await driver.findElement(component)
+    const flag = await element.getAttribute('class') 
+    expect(flag).equal('checkbox checkbox_disabled')
   }
 }
 
