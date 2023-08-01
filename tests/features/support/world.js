@@ -40,6 +40,7 @@ class CustomWorld extends World {
 
     let browseConfigs
 
+    //browseConfigs = new chrome.Options().windowSize(screen_size) - can be used to define a specific screen size
     if (browser === 'chrome') {
       if (headless) {
         browseConfigs = new chrome.Options()
@@ -47,8 +48,7 @@ class CustomWorld extends World {
           .addArguments('no-sandbox')
           .addArguments("start-maximized")
           .addArguments('disable-gpu')
-          //.windowSize(screen_size)
-      } else browseConfigs = new chrome.Options().addArguments("start-maximized") //.windowSize(screen_size)
+      } else browseConfigs = new chrome.Options().addArguments("start-maximized")
     }
     if (browser === 'firefox') {
       if (headless) {
