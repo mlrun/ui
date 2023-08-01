@@ -94,6 +94,7 @@ const FeatureVectorsView = React.forwardRef(
                   handleExpandRow={handleExpandRow}
                   key={index}
                   pageTab={FEATURE_VECTORS_TAB}
+                  rowIndex={index}
                   rowItem={tableItem}
                   selectedItem={selectedFeatureVector}
                   selectedRowData={selectedRowData}

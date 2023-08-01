@@ -35,7 +35,6 @@ import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
@@ -62,7 +61,6 @@ const ProjectMonitor = ({
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
-  const { isDemoMode } = useMode()
   const dispatch = useDispatch()
   const { isNuclioModeDisabled } = useNuclioMode()
 
@@ -105,14 +103,13 @@ const ProjectMonitor = ({
       openRegisterArtifactModal,
       openRegisterModelModal,
       setCreateFeatureSetPanelIsOpen,
-      setIsNewFunctionPopUpOpen,
-      isDemoMode
+      setIsNewFunctionPopUpOpen
     )
 
     return {
       createNewOptions
     }
-  }, [navigate, params, openRegisterArtifactModal, openRegisterModelModal, isDemoMode])
+  }, [navigate, params, openRegisterArtifactModal, openRegisterModelModal])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {
@@ -181,11 +178,13 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    return setNotification({
-      status: 200,
-      id: Math.random(),
-      message: 'Function created successfully'
-    })
+    return dispatch(
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function created successfully'
+      })
+    )
   }
 
   const handleDeployFunctionSuccess = async ready => {

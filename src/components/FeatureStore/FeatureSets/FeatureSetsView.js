@@ -97,6 +97,7 @@ const FeatureSetsView = React.forwardRef(
                 <FeatureStoreTableRow
                   actionsMenu={actionsMenu}
                   handleExpandRow={handleExpandRow}
+                  rowIndex={index}
                   key={index}
                   pageTab={FEATURE_SETS_TAB}
                   rowItem={tableItem}

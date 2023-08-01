@@ -30,7 +30,7 @@ import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
 import { V3IO_VOLUME_TYPE } from '../../constants'
 
 const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
-  const tableClassNames = classnames('form-table', 'form-col-1', disabled && 'disabled')
+  const tableClassNames = classnames('form-table', disabled && 'disabled')
   const {
     addNewRow,
     applyChanges,

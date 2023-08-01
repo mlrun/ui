@@ -120,92 +120,98 @@ const FormResourcesUnits = ({ formState }) => {
   return (
     <>
       <div className="form-row resources-units">
-        <div className="form-col-1 resources-card">
-          <div className="resources-card__title">Memory</div>
-          <div className="resources-card__fields">
-            <FormInput
-              className="resources-card__fields-input"
-              name="resources.currentRequest.memory"
-              label="Request"
-              type="number"
-              min={1}
-              validator={(value, allValues) => validateMemory(value, allValues)}
-              required
-              invalidText="Request must be less than or equal to Limit and not be less than 1"
-            />
-            <FormSelect
-              className="resources-card__fields-select"
-              name="resources.currentRequest.memoryUnitId"
-              options={selectUnitOptions.unitMemory}
-            />
-          </div>
-          <div className="resources-card__fields">
-            <FormInput
-              className="resources-card__fields-input"
-              name="resources.currentLimits.memory"
-              label="Limit"
-              type="number"
-              min={1}
-              validator={(value, allValues) => validateMemory(value, allValues)}
-              required
-              invalidText="Limit must be bigger than or equal to Request and not be less than 1"
-            />
-            <FormSelect
-              className="resources-card__fields-select"
-              name="resources.currentLimits.memoryUnitId"
-              options={selectUnitOptions.unitMemory}
-            />
-          </div>
-        </div>
-        <div className="form-col-1 resources-card">
-          <div className="resources-card__title">CPU</div>
-          <div className="resources-card__fields">
-            <FormInput
-              className="resources-card__fields-input"
-              name="resources.currentRequest.cpu"
-              label="Request"
-              type="number"
-              min={selectedRequestUnit?.minValue}
-              step={selectedRequestUnit?.step}
-              validator={validateCpu}
-              required
-              invalidText={`Request must be less than or equal to Limit and not be less than ${selectedRequestUnit?.minValue}`}
-            />
-            <FormSelect
-              className="resources-card__fields-select"
-              name="resources.currentRequest.cpuUnitId"
-              options={selectUnitOptions.unitCpu}
-            />
-          </div>
-          <div className="resources-card__fields">
-            <FormInput
-              className="resources-card__fields-input"
-              name="resources.currentLimits.cpu"
-              label="Limit"
-              type="number"
-              min={selectedLimitUnit?.minValue}
-              step={selectedLimitUnit?.step}
-              validator={validateCpu}
-              required
-              invalidText={`Limit must be bigger than or equal to Request and not be less than ${selectedLimitUnit?.minValue}`}
-            />
-            <FormSelect
-              className="resources-card__fields-select"
-              name="resources.currentLimits.cpuUnitId"
-              options={selectUnitOptions.unitCpu}
-            />
+        <div className="form-col-1">
+          <div className="resources-card">
+            <div className="resources-card__title">Memory</div>
+            <div className="resources-card__fields">
+              <FormInput
+                className="resources-card__fields-input"
+                name="resources.currentRequest.memory"
+                label="Request"
+                type="number"
+                min={1}
+                validator={(value, allValues) => validateMemory(value, allValues)}
+                required
+                invalidText="Request must be less than or equal to Limit and not be less than 1"
+              />
+              <FormSelect
+                className="resources-card__fields-select"
+                name="resources.currentRequest.memoryUnitId"
+                options={selectUnitOptions.unitMemory}
+              />
+            </div>
+            <div className="resources-card__fields">
+              <FormInput
+                className="resources-card__fields-input"
+                name="resources.currentLimits.memory"
+                label="Limit"
+                type="number"
+                min={1}
+                validator={(value, allValues) => validateMemory(value, allValues)}
+                required
+                invalidText="Limit must be bigger than or equal to Request and not be less than 1"
+              />
+              <FormSelect
+                className="resources-card__fields-select"
+                name="resources.currentLimits.memoryUnitId"
+                options={selectUnitOptions.unitMemory}
+              />
+            </div>
           </div>
         </div>
-        <div className="form-col-1 resources-card">
-          <div className="resources-card__title">GPU</div>
-          <div className="resources-card__fields">
-            <FormInput
-              className="resources-card__fields-input gpu"
-              name={`resources.currentLimits[${gpuType}]`}
-              label="Limit"
-              type="number"
-              min={1}
-            />
+        <div className="form-col-1">
+          <div className="resources-card">
+            <div className="resources-card__title">CPU</div>
+            <div className="resources-card__fields">
+              <FormInput
+                className="resources-card__fields-input"
+                name="resources.currentRequest.cpu"
+                label="Request"
+                type="number"
+                min={selectedRequestUnit?.minValue}
+                step={selectedRequestUnit?.step}
+                validator={validateCpu}
+                required
+                invalidText={`Request must be less than or equal to Limit and not be less than ${selectedRequestUnit?.minValue}`}
+              />
+              <FormSelect
+                className="resources-card__fields-select"
+                name="resources.currentRequest.cpuUnitId"
+                options={selectUnitOptions.unitCpu}
+              />
+            </div>
+            <div className="resources-card__fields">
+              <FormInput
+                className="resources-card__fields-input"
+                name="resources.currentLimits.cpu"
+                label="Limit"
+                type="number"
+                min={selectedLimitUnit?.minValue}
+                step={selectedLimitUnit?.step}
+                validator={validateCpu}
+                required
+                invalidText={`Limit must be bigger than or equal to Request and not be less than ${selectedLimitUnit?.minValue}`}
+              />
+              <FormSelect
+                className="resources-card__fields-select"
+                name="resources.currentLimits.cpuUnitId"
+                options={selectUnitOptions.unitCpu}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="form-col-1">
+          <div className="resources-card">
+            <div className="resources-card__title">GPU</div>
+            <div className="resources-card__fields">
+              <FormInput
+                className="resources-card__fields-input gpu"
+                name={`resources.currentLimits[${gpuType}]`}
+                label="Limit"
+                type="number"
+                min={1}
+              />
+            </div>
           </div>
         </div>
       </div>

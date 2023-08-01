@@ -1,0 +1,74 @@
+.job-wizard__hyperparameter-strategy {
+  .grid-container {
+    display: grid;
+    gap: 15px;
+    align-items: center;
+    grid-template-columns: 20% 20% 20% 20%;
+    grid-template-areas: "strategy-grid-item strategy-grid-item . ."
+    "max-iterations-grid-item max-errors-grid-item . ."
+    "ranking-title-grid-item ranking-title-grid-item . ."
+    "result-grid-item result-grid-item criteria-grid-item ."
+    "stop-condition-title-grid-item stop-condition-title-grid-item . ."
+    "stop-condition-grid-item stop-condition-grid-item . ."
+    "parallelism-title-grid-item parallelism-title-grid-item . ."
+    "parallel-runs-grid-item dask-cluster-uri-grid-item dask-cluster-uri-grid-item teardown-dask-grid-item";
+
+
+    .strategy-grid-item {
+      grid-area: strategy-grid-item
+    }
+
+    .max-iterations-grid-item {
+      min-width: 100px;
+      grid-area: max-iterations-grid-item
+    }
+
+    .max-errors-grid-item {
+      min-width: 100px;
+      grid-area: max-errors-grid-item;
+    }
+
+    .ranking-title-grid-item {
+      grid-area: ranking-title-grid-item
+    }
+
+    .result-grid-item {
+      grid-area: result-grid-item
+    }
+
+    .criteria-grid-item {
+      grid-area: criteria-grid-item;
+    }
+
+    .stop-condition-title-grid-item {
+      grid-area: stop-condition-title-grid-item;
+    }
+
+    .stop-condition-grid-item {
+      grid-area: stop-condition-grid-item
+    }
+
+    .parallelism-title-grid-item {
+      grid-area: parallelism-title-grid-item
+    }
+
+    .parallel-runs-grid-item {
+      grid-area: parallel-runs-grid-item
+    }
+
+    .dask-cluster-uri-grid-item {
+      grid-area: dask-cluster-uri-grid-item
+    }
+
+    .teardown-dask-grid-item {
+      grid-area: teardown-dask-grid-item;
+      margin-top: 20px;
+    }
+  }
+
+  @media screen and (max-width: 1280px) {
+    .grid-container {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+}

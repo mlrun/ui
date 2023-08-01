@@ -17,26 +17,33 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
-import PropTypes from 'prop-types'
+import { LIST_TUNING_STRATEGY, MAX_SELECTOR_CRITERIA } from '../../../../constants'
 
-import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDataInputsTable'
-
-const JobWizardDataInputs = ({ formState }) => {
-  return (
-    <div className="job-wizard__data-inputs form">
-      <div className="form-row">
-        <h5 className="form-step-title">Data Inputs</h5>
-      </div>
-      <div className="form-row">
-        <FormDataInputsTable fieldsPath="dataInputs.dataInputsTable" formState={formState} />
-      </div>
-    </div>
-  )
+export const selectOptions = {
+  strategies: [
+    {
+      label: 'Grid',
+      id: 'grid'
+    },
+    {
+      label: 'Random',
+      id: 'random'
+    },
+    {
+      label: 'List',
+      id: LIST_TUNING_STRATEGY
+    },
+    {
+      label: 'Custom',
+      id: 'custom'
+    }
+  ],
+  criteria: [
+    { label: 'Min', id: 'min' },
+    { label: 'Max', id: MAX_SELECTOR_CRITERIA }
+  ],
+  stopCondition: [
+    { label: '>', id: 'more' },
+    { label: '<', id: 'less' }
+  ]
 }
-
-JobWizardDataInputs.propTypes = {
-  formState: PropTypes.shape({}).isRequired
-}
-
-export default JobWizardDataInputs

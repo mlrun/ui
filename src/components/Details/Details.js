@@ -290,20 +290,23 @@ const Details = ({
               setIteration={setIteration}
               tab={tab}
             />
+
             <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
           </div>
-          <DetailsTabsContent
-            applyChangesRef={applyChangesRef}
-            formState={formState}
-            handlePreview={handlePreview}
-            pageData={pageData}
-            selectedItem={selectedItem}
-            setChanges={setChanges}
-            setChangesCounter={setChangesCounter}
-            setChangesData={setChangesData}
-            setIteration={setIteration}
-            setIterationOption={setIterationOption}
-          />
+          <div className="item-info">
+            <DetailsTabsContent
+              applyChangesRef={applyChangesRef}
+              formState={formState}
+              handlePreview={handlePreview}
+              pageData={pageData}
+              selectedItem={selectedItem}
+              setChanges={setChanges}
+              setChangesCounter={setChangesCounter}
+              setChangesData={setChangesData}
+              setIteration={setIteration}
+              setIterationOption={setIterationOption}
+            />
+          </div>
           {detailsStore.showWarning && (
             <ConfirmDialog
               cancelButton={{

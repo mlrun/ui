@@ -24,7 +24,9 @@ import {
   DENSITY_MEDIUM,
   DENSITY_NORMAL,
   PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE
+  PANEL_EDIT_MODE,
+  PANEL_FUNCTION_CREATE_MODE,
+  PANEL_RERUN_MODE
 } from './constants'
 
 import { BUTTON_VARIANTS } from 'igz-controls/types'
@@ -198,6 +200,13 @@ export const DATA_INPUT_STATE = PropTypes.shape({
   projects: PropTypes.array.isRequired,
   storePathType: PropTypes.string.isRequired
 })
+
+export const JOB_WIZARD_MODE = PropTypes.oneOf([
+  PANEL_CREATE_MODE,
+  PANEL_FUNCTION_CREATE_MODE,
+  PANEL_EDIT_MODE,
+  PANEL_RERUN_MODE
+])
 
 export const SLIDER_STYLE_1 = 'style1'
 export const SLIDER_STYLE_2 = 'style2'

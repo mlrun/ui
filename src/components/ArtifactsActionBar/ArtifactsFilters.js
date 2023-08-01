@@ -41,7 +41,6 @@ const ArtifactsFilters = () => {
 
   return (
     <div className="artifacts-filters">
-      <h3 className="artifacts-filters__header">Filter by</h3>
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
         <OnChange name={LABELS_FILTER}>{handleLabelsChange}</OnChange>

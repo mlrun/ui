@@ -19,10 +19,16 @@ such restriction.
 */
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty, omit } from 'lodash'
+import { isEmpty, omit, set } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 
-import { FormInput, FormSelect, ConfirmDialog, FormChipCell } from 'igz-controls/components'
+import {
+  FormInput,
+  FormSelect,
+  ConfirmDialog,
+  FormChipCell,
+  FormCheckBox
+} from 'igz-controls/components'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
@@ -67,15 +73,21 @@ const JobWizardRunDetails = ({
   )
 
   useEffect(() => {
-    if (isEditMode && !isEmpty(defaultData) && isEmpty(jobAdditionalData)) {
+    if (
+      isEditMode &&
+      !isEmpty(selectedFunctionData) &&
+      !isEmpty(defaultData) &&
+      isEmpty(jobAdditionalData)
+    ) {
       const [jobFormData, jobAdditionalData] = generateJobWizardDefaultData(
         frontendSpec,
+        selectedFunctionData,
         defaultData,
         isEditMode,
         isStagingMode
       )
       setJobData(jobFormData, jobAdditionalData)
-    } else if (isBatchInference && !isEmpty(selectedFunctionData) && isEmpty(jobAdditionalData)) {
+    } else if (!isEmpty(selectedFunctionData) && isEmpty(jobAdditionalData)) {
       const [jobFormData, jobAdditionalData] = generateJobWizardData(
         frontendSpec,
         selectedFunctionData,
@@ -90,7 +102,6 @@ const JobWizardRunDetails = ({
     formState.form,
     formState.initialValues,
     frontendSpec,
-    isBatchInference,
     isEditMode,
     isStagingMode,
     jobAdditionalData,
@@ -99,15 +110,28 @@ const JobWizardRunDetails = ({
     setJobData
   ])
 
+  const changePredefinedParameters = method => {
+    setSpyOnMethodChange(true)
+
+    const functionParameters = getFunctionParameters(selectedFunctionData.functions, method)
+    const dataInputs = parseDataInputs(functionParameters)
+    const predefinedParameters = parsePredefinedParameters(functionParameters)
+
+    set(formState.initialValues, 'dataInputs.dataInputsTable', dataInputs)
+    set(formState.initialValues, 'parameters.parametersTable.predefined', predefinedParameters)
+    formState.form.change('dataInputs.dataInputsTable', dataInputs)
+    formState.form.change('parameters.parametersTable.predefined', predefinedParameters)
+  }
+
   const onMethodChange = (value, prevValue) => {
+    setSpyOnMethodChange(false)
+
     if (
       areFormValuesChanged(
         omit(formState.initialValues, methodPath),
         omit(formState.values, methodPath)
       )
     ) {
-      setSpyOnMethodChange(false)
-
       openPopUp(ConfirmDialog, {
         cancelButton: {
           label: 'Cancel',
@@ -121,20 +145,14 @@ const JobWizardRunDetails = ({
           label: 'OK',
           variant: SECONDARY_BUTTON,
           handler: () => {
-            setSpyOnMethodChange(true)
-
-            const functionParameters = getFunctionParameters(selectedFunctionData.functions, value)
-
-            formState.form.change('dataInputs.dataInputsTable', parseDataInputs(functionParameters))
-            formState.form.change(
-              'parameters.parametersTable.predefined',
-              parsePredefinedParameters(functionParameters)
-            )
+            changePredefinedParameters(value)
           }
         },
         header: 'Are you sure?',
         message: 'Some changes might be lost'
       })
+    } else {
+      changePredefinedParameters(value)
     }
   }
 
@@ -144,6 +162,11 @@ const JobWizardRunDetails = ({
         <div className="form-row">
           <h5 className="form-step-title">Run Details</h5>
         </div>
+        {!isBatchInference && (
+          <div className="form-row">
+            <FormCheckBox label="Hyperparameter" name="runDetails.hyperparameter" />
+          </div>
+        )}
         <div className="form-row">
           <div className="form-col-2">
             <FormInput

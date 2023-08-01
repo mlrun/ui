@@ -42,18 +42,20 @@ const ScheduleWizardSimple = ({ daysOfWeek, handleDaysOfWeek, scheduleData }) =>
           />
         </div>
         {activeOption === 'week' && (
-          <div className="schedule-repeat schedule-repeat-week form-col-1">
-            {daysOfWeek.map(day => (
-              <span
-                className={`schedule-repeat-week_day ${
-                  scheduleData.week.days.includes(day.id) && 'active'
-                }`}
-                key={day.id}
-                onClick={() => handleDaysOfWeek(day.id)}
-              >
-                {day.label}
-              </span>
-            ))}
+          <div className="form-col-1">
+            <div className="schedule-repeat schedule-repeat-week">
+              {daysOfWeek.map(day => (
+                <span
+                  className={`schedule-repeat-week_day ${
+                    scheduleData.week.days.includes(day.id) && 'active'
+                  }`}
+                  key={day.id}
+                  onClick={() => handleDaysOfWeek(day.id)}
+                >
+                  {day.label}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         {['minute', 'hour'].includes(activeOption) && (
@@ -62,7 +64,6 @@ const ScheduleWizardSimple = ({ daysOfWeek, handleDaysOfWeek, scheduleData }) =>
               name={`scheduleData.${activeOption}`}
               label="Intervals"
               options={selectOptions[activeOption]}
-              className="form-col-1"
             />
           </div>
         )}
@@ -71,7 +72,6 @@ const ScheduleWizardSimple = ({ daysOfWeek, handleDaysOfWeek, scheduleData }) =>
             <FormTimePicker
               name={`scheduleData.${activeOption}.time`}
               label={activeOption === 'month' ? 'On the 1st day of every month at' : 'At time'}
-              className="form-col-1"
             />
           </div>
         )}

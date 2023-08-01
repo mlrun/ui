@@ -165,7 +165,9 @@ const UrlPath = ({
 
   const generatedPathTips = useMemo(() => {
     const pathTipsList = pathTips(urlData.projectItemType)
-    return `Field must be in "${pathTipsList[urlData.pathType]}" format`
+    return pathTipsList[urlData.pathType]
+      ? `Field must be in "${pathTipsList[urlData.pathType]}" format`
+      : 'The field is invalid'
   }, [urlData.pathType, urlData.projectItemType])
 
   const handleUrlPathTypeChange = path => {

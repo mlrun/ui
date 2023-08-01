@@ -36,86 +36,78 @@ import './detailsArtifacts.scss'
 const DetailsArtifactsView = ({ artifactsIndexes, content, iteration, loading, showArtifact }) => {
   const params = useParams()
 
-  return (
-    <div className="table__content">
-      <div className="table__wrapper">
-        <div className="item-artifacts">
-          {loading ? null : content.length === 0 ? (
-            <NoData />
-          ) : (
-            content.map((artifact, index) => {
-              const artifactScreenLinks = {
-                model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
-                  artifact.db_key || artifact.key
-                }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`,
-                dataset: `/projects/${params.projectName}/${DATASETS}/${
-                  artifact.db_key || artifact.key
-                }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`
-              }
+  return loading ? null : content.length === 0 ? (
+    <NoData />
+  ) : (
+    <div className="item-artifacts">
+      {content.map((artifact, index) => {
+        const artifactScreenLinks = {
+          model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
+            artifact.db_key || artifact.key
+          }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`,
+          dataset: `/projects/${params.projectName}/${DATASETS}/${
+            artifact.db_key || artifact.key
+          }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`
+        }
 
-              return (
-                <div className="item-artifacts__row-wrapper" key={index}>
-                  <div className="item-artifacts__row">
-                    <div className="item-artifacts__row-item">
-                      <Tooltip
-                        className="item-artifacts__name"
-                        template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}
-                      >
-                        <span className="link" onClick={() => showArtifact(index)}>
-                          {artifact.db_key || artifact.key}
-                        </span>
-                      </Tooltip>
-                    </div>
-                    <div className="item-artifacts__row-item item-artifacts__row-item_long">
-                      <Tooltip template={<TextTooltipTemplate text={artifact.target_path} />}>
-                        {artifact.target_path}
-                      </Tooltip>
-                    </div>
-                    <div className="item-artifacts__row-item">
-                      <Tooltip template={<TextTooltipTemplate text={artifact.size} />}>
-                        size: {artifact.size}
-                      </Tooltip>
-                    </div>
-                    <div className="item-artifacts__row-item">
-                      <Tooltip template={<TextTooltipTemplate text={artifact.date} />}>
-                        {artifact.date}
-                      </Tooltip>
-                    </div>
-                    <div className="item-artifacts__row-item">
-                      <CopyToClipboard textToCopy={artifact.target_path} tooltipText="Copy URI" />
-                      <RoundedIcon tooltipText="Show Details">
-                        <Link
-                          target="_blank"
-                          to={
-                            artifactScreenLinks[artifact.kind] ??
-                            `/projects/${params.projectName}/files/${
-                              artifact.db_key || artifact.key
-                            }/${artifact.tag ?? TAG_FILTER_LATEST}${
-                              iteration ? `/${iteration}` : ''
-                            }/overview`
-                          }
-                        >
-                          <DetailsIcon />
-                        </Link>
-                      </RoundedIcon>
-                      <Download
-                        className="icon-download"
-                        path={artifact.target_path}
-                        user={artifact.user}
-                      />
-                    </div>
-                  </div>
-                  <ArtifactsPreviewController
-                    artifactsIndexes={artifactsIndexes}
-                    content={content}
-                    index={index}
-                  />
-                </div>
-              )
-            })
-          )}
-        </div>
-      </div>
+        return (
+          <div className="item-artifacts__row-wrapper" key={index}>
+            <div className="item-artifacts__row">
+              <div className="item-artifacts__row-item">
+                <Tooltip
+                  className="item-artifacts__name"
+                  template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}
+                >
+                  <span className="link" onClick={() => showArtifact(index)}>
+                    {artifact.db_key || artifact.key}
+                  </span>
+                </Tooltip>
+              </div>
+              <div className="item-artifacts__row-item item-artifacts__row-item_long">
+                <Tooltip template={<TextTooltipTemplate text={artifact.target_path} />}>
+                  {artifact.target_path}
+                </Tooltip>
+              </div>
+              <div className="item-artifacts__row-item">
+                <Tooltip template={<TextTooltipTemplate text={artifact.size} />}>
+                  size: {artifact.size}
+                </Tooltip>
+              </div>
+              <div className="item-artifacts__row-item">
+                <Tooltip template={<TextTooltipTemplate text={artifact.date} />}>
+                  {artifact.date}
+                </Tooltip>
+              </div>
+              <div className="item-artifacts__row-item">
+                <CopyToClipboard textToCopy={artifact.target_path} tooltipText="Copy URI" />
+                <RoundedIcon tooltipText="Show Details">
+                  <Link
+                    target="_blank"
+                    to={
+                      artifactScreenLinks[artifact.kind] ??
+                      `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
+                        artifact.tag ?? TAG_FILTER_LATEST
+                      }${iteration ? `/${iteration}` : ''}/overview`
+                    }
+                  >
+                    <DetailsIcon />
+                  </Link>
+                </RoundedIcon>
+                <Download
+                  className="icon-download"
+                  path={artifact.target_path}
+                  user={artifact.user}
+                />
+              </div>
+            </div>
+            <ArtifactsPreviewController
+              artifactsIndexes={artifactsIndexes}
+              content={content}
+              index={index}
+            />
+          </div>
+        )
+      })}
     </div>
   )
 }

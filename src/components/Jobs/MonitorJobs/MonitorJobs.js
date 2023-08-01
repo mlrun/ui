@@ -26,7 +26,6 @@ import { isEmpty } from 'lodash'
 import JobWizard from '../../JobWizard/JobWizard'
 import Details from '../../Details/Details'
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import JobsPanel from '../../JobsPanel/JobsPanel'
 import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
@@ -34,13 +33,7 @@ import TableTop from '../../../elements/TableTop/TableTop'
 import YamlModal from '../../../common/YamlModal/YamlModal'
 
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import {
-  GROUP_BY_NONE,
-  JOBS_PAGE,
-  MONITOR_JOBS_TAB,
-  PANEL_EDIT_MODE,
-  PANEL_RERUN_MODE
-} from '../../../constants'
+import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../../constants'
 import {
   generateActionsMenu,
   generateFilters,
@@ -71,7 +64,6 @@ const MonitorJobs = ({
   fetchJobLogs,
   fetchJobPods,
   fetchJobs,
-  removeNewJob,
   removePods
 }) => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
@@ -87,7 +79,7 @@ const MonitorJobs = ({
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
-  const { isDemoMode, isStagingMode } = useMode()
+  const { isStagingMode } = useMode()
   const fetchJobFunctionsPromiseRef = useRef()
   const {
     editableItem,
@@ -211,7 +203,6 @@ const MonitorJobs = ({
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
         toggleConvertedYaml,
-        isDemoMode,
         selectedJob
       )
   }, [
@@ -221,13 +212,13 @@ const MonitorJobs = ({
     handleMonitoring,
     handleConfirmAbortJob,
     toggleConvertedYaml,
-    isDemoMode,
     selectedJob
   ])
 
   const modifyAndSelectRun = useCallback(
     jobRun => {
       return enrichRunWithFunctionFields(
+        dispatch,
         jobRun,
         fetchJobFunctions,
         fetchJobFunctionsPromiseRef
@@ -235,7 +226,7 @@ const MonitorJobs = ({
         setSelectedJob(jobRun)
       })
     },
-    [fetchJobFunctions]
+    [dispatch, fetchJobFunctions]
   )
 
   const handleSelectRun = useCallback(
@@ -267,24 +258,6 @@ const MonitorJobs = ({
   const isJobDataEmpty = useCallback(
     () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
     [jobRuns.length, jobs.length, params.jobName]
-  )
-
-  const handleSuccessRerunJob = useCallback(
-    tab => {
-      if (tab === MONITOR_JOBS_TAB) {
-        refreshJobs(filtersStore)
-      }
-
-      setEditableItem(null)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job started successfully'
-        })
-      )
-    },
-    [dispatch, filtersStore, refreshJobs, setEditableItem]
   )
 
   useEffect(() => {
@@ -488,23 +461,6 @@ const MonitorJobs = ({
       )}
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
-      {editableItem && !isDemoMode && (
-        // todo: delete when the job wizard is out of the demo mode
-        <JobsPanel
-          closePanel={() => {
-            setEditableItem(null)
-            removeNewJob()
-          }}
-          defaultData={editableItem?.rerun_object}
-          mode={PANEL_EDIT_MODE}
-          onSuccessRun={tab => {
-            if (editableItem) {
-              handleSuccessRerunJob(tab)
-            }
-          }}
-          project={params.projectName}
-        />
       )}
     </>
   )

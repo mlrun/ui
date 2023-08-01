@@ -17,31 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { LIST_TUNING_STRATEGY, MAX_SELECTOR_CRITERIA } from '../../../../constants'
+import { isNil } from 'lodash'
 
-export const selectOptions = {
-  hyperStrategyType: [
-    {
-      label: 'List',
-      id: LIST_TUNING_STRATEGY
-    },
-    {
-      label: 'Grid',
-      id: 'grid'
-    },
-    {
-      label: 'Random',
-      id: 'random'
-    }
-  ],
-  selectorCriteria: [
-    {
-      label: 'Max',
-      id: MAX_SELECTOR_CRITERIA
-    },
-    {
-      label: 'Min',
-      id: 'min'
-    }
-  ]
+export const generateTableRowTestId = (parentIndex, childIndex) => {
+  return isNil(childIndex) ? `table_row_parent_${parentIndex}` : `table_row_child_${parentIndex}_${childIndex}`
 }

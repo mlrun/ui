@@ -21,6 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import ScheduleFeatureSetSimple from '../ScheduleFeatureSetSimple/ScheduleFeatureSetSimple'
 import ScheduleCron from '../../ScheduleCron/ScheduleCron'
 import { Button, RoundedIcon } from 'igz-controls/components'
@@ -38,6 +39,7 @@ const ScheduleFeatureSetView = ({
   cron,
   daysOfWeek,
   handleDaysOfWeek,
+  isWeekDaysEmpty,
   onSchedule,
   recurringDispatch,
   recurringState,
@@ -65,11 +67,7 @@ const ScheduleFeatureSetView = ({
           )
 
           return (
-            <div
-              className={tabClassNames}
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-            >
+            <div className={tabClassNames} key={tab.id} onClick={() => setActiveTab(tab.id)}>
               {tab.label}
             </div>
           )
@@ -88,9 +86,9 @@ const ScheduleFeatureSetView = ({
             recurringState={recurringState}
           />
         )}
-        {activeTab === tabs[1].id && (
-          <ScheduleCron cron={cron} setCron={setCron} />
-        )}
+        {activeTab === tabs[1].id && <ScheduleCron cron={cron} setCron={setCron} />}
+
+        {isWeekDaysEmpty && <ErrorMessage message="Must select at least one day option" />}
       </div>
       <Button
         variant={SECONDARY_BUTTON}
@@ -102,6 +100,7 @@ const ScheduleFeatureSetView = ({
         }
         onClick={onSchedule}
         className="btn__schedule"
+        disabled={isWeekDaysEmpty}
       />
     </div>
   )
@@ -111,6 +110,7 @@ ScheduleFeatureSetView.propTypes = {
   activeTab: PropTypes.string.isRequired,
   cron: PropTypes.string.isRequired,
   daysOfWeek: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  isWeekDaysEmpty: PropTypes.bool.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   onSchedule: PropTypes.func.isRequired,
   recurringDispatch: PropTypes.func.isRequired,

@@ -17,7 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { chain, isEmpty, isNil, omit, unionBy, isFinite, isObject, merge, map, has } from 'lodash'
+import {
+  chain,
+  difference,
+  get,
+  has,
+  isEmpty,
+  isFinite,
+  isNil,
+  keyBy,
+  map,
+  merge,
+  omit,
+  unionBy
+} from 'lodash'
 import {
   CONFIG_MAP_VOLUME_TYPE,
   ENV_VARIABLE_TYPE_SECRET,
@@ -26,19 +39,19 @@ import {
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
   PANEL_DEFAULT_ACCESS_KEY,
-  PARAMETER_TYPE_HYPER,
-  PARAMETER_TYPE_SIMPLE,
+  PARAMETERS_FROM_FILE_VALUE,
+  PARAMETERS_FROM_UI_VALUE,
   PVC_VOLUME_TYPE,
   SECRET_VOLUME_TYPE,
   TAG_LATEST,
   V3IO_VOLUME_TYPE
 } from '../../constants'
 import {
-  getCpuData,
-  getMemoryData,
-  getLimitsGpuType,
   generateCpuWithUnit,
-  generateMemoryWithUnit
+  generateMemoryWithUnit,
+  getCpuData,
+  getLimitsGpuType,
+  getMemoryData
 } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import {
   parameterTypeBool,
@@ -53,11 +66,12 @@ import {
   FORBIDDEN_ERROR_STATUS_CODE,
   NOTFOUND_ERROR_STATUS_CODE
 } from 'igz-controls/constants'
+import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/utils/form.util'
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
+import { getErrorDetail } from 'igz-controls/utils/common.util'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const volumeTypesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
@@ -102,15 +116,15 @@ export const generateJobWizardData = (
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
-      methodDescription: functionInfo.methodDescription,
       labels: functionInfo.labels
     },
     parameters: {
-      hyperParameters: {
-        tuningStrategy: LIST_TUNING_STRATEGY,
-        criteria: MAX_SELECTOR_CRITERIA
-      },
-      parametersTable: {}
+      parametersTable: {},
+      parametersFrom: PARAMETERS_FROM_UI_VALUE
+    },
+    hyperparameterStrategy: {
+      strategy: LIST_TUNING_STRATEGY,
+      criteria: MAX_SELECTOR_CRITERIA
     },
     dataInputs: {
       dataInputsTable: []
@@ -158,23 +172,30 @@ export const generateJobWizardData = (
 
 export const generateJobWizardDefaultData = (
   frontendSpec,
+  selectedFunctionData,
   defaultData,
   isEditMode,
   isStagingMode
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
 
-  const functionInfo = getFunctionDefaultInfo(defaultData)
+  const runInfo = getRunDefaultInfo(defaultData)
+  const functionParameters = getFunctionDefaultParameters(selectedFunctionData, runInfo.method)
+  const [predefinedParameters, customParameters] = parseDefaultParameters(
+    functionParameters,
+    defaultData.task.spec.parameters,
+    defaultData.task.spec.hyperparams
+  )
   const defaultResources = frontendSpec?.default_function_pod_resources ?? {}
   const [hyperParamCriteria = MAX_SELECTOR_CRITERIA, hyperParamResult = ''] = (
-    defaultData.task.spec.selector ?? ''
+    defaultData.task.spec.hyper_param_options?.selector ?? ''
   ).split('.')
   const limits = defaultData.function.spec?.resources?.limits
   const requests = defaultData.function.spec?.resources?.requests
   const gpuType = getLimitsGpuType(limits)
   const jobAdditionalData = {
-    methodOptions: functionInfo.methodOptions,
-    versionOptions: functionInfo.versionOptions
+    methodOptions: runInfo.methodOptions,
+    versionOptions: runInfo.versionOptions
   }
   const currentLimits = parseLimits(limits, defaultResources.limits, gpuType)
   const currentRequest = parseRequests(requests, defaultResources.requests)
@@ -184,23 +205,34 @@ export const generateJobWizardDefaultData = (
 
   const jobFormData = {
     runDetails: {
-      name: functionInfo.name,
-      version: functionInfo.version,
-      method: functionInfo.method,
-      methodDescription: functionInfo.methodDescription,
-      labels: functionInfo.labels
+      name: runInfo.name,
+      version: runInfo.version,
+      method: runInfo.method,
+      labels: runInfo.labels
     },
     dataInputs: {
       dataInputsTable: []
     },
     parameters: {
-      hyperParameters: {
-        paramFile: defaultData.task.spec.param_file,
-        tuningStrategy: defaultData.task.spec.tuning_strategy ?? LIST_TUNING_STRATEGY,
-        criteria: hyperParamCriteria,
-        result: hyperParamResult
-      },
-      parametersTable: {}
+      parametersFrom: isEmpty(defaultData.task.spec.hyper_param_options?.param_file)
+        ? PARAMETERS_FROM_UI_VALUE
+        : PARAMETERS_FROM_FILE_VALUE,
+      parametersFromFileUrl: defaultData.task.spec.hyper_param_options?.param_file,
+      parametersTable: {
+        predefined: predefinedParameters,
+        custom: customParameters
+      }
+    },
+    hyperparameterStrategy: {
+      strategy: defaultData.task.spec.hyper_param_options?.strategy ?? LIST_TUNING_STRATEGY,
+      criteria: hyperParamCriteria || MAX_SELECTOR_CRITERIA,
+      result: hyperParamResult,
+      maxErrors: defaultData.task.spec.hyper_param_options?.max_errors,
+      maxIterations: defaultData.task.spec.hyper_param_options?.max_iterations,
+      stopCondition: defaultData.task.spec.hyper_param_options?.stop_condition,
+      parallelRuns: defaultData.task.spec.hyper_param_options?.parallel_runs,
+      daskClusterUri: defaultData.task.spec.hyper_param_options?.dask_cluster_uri,
+      teardownDask: defaultData.task.spec.hyper_param_options?.teardown_dask
     },
     resources: {
       preemptionMode: defaultData.function?.spec?.preemption_mode || '',
@@ -234,15 +266,6 @@ export const generateJobWizardDefaultData = (
     function: defaultData.task.spec.function
   }
 
-  if (!isEmpty(defaultData.task.spec.parameters)) {
-    jobFormData.parameters.parametersTable = {
-      predefined: parsePredefinedDefaultParameters(
-        !isEmpty(defaultData.task.spec.parameters) ? defaultData.task.spec.parameters : {}
-      ),
-      custom: []
-    }
-  }
-
   if (!isEmpty(defaultData.task.spec.inputs)) {
     jobFormData.dataInputs.dataInputsTable = parseDefaultDataInputs(defaultData.task.spec.inputs)
   }
@@ -256,7 +279,11 @@ const getFunctionInfo = selectedFunctionData => {
   if (!isEmpty(functions)) {
     const versionOptions = getVersionOptions(functions)
     const methodOptions = getMethodOptions(functions)
-    const { defaultMethod, defaultVersion } = getDefaultMethodAndVersion(versionOptions, functions)
+    const { defaultVersion, defaultMethod } = getDefaultMethodAndVersion(
+      versionOptions,
+      methodOptions,
+      functions
+    )
     const currentFunctionVersion = selectedFunctionData.tag || defaultVersion
     const currentFunction =
       functions.find(func => func.metadata.tag === currentFunctionVersion) ?? functions[0]
@@ -264,8 +291,7 @@ const getFunctionInfo = selectedFunctionData => {
     return {
       labels: parseChipsData(currentFunction?.metadata.labels),
       name: selectedFunctionData.name,
-      method: defaultMethod || (methodOptions[0]?.id ?? ''),
-      methodDescription: methodOptions[0]?.subLabel ?? '',
+      method: defaultMethod,
       version: currentFunctionVersion,
       methodOptions,
       versionOptions
@@ -273,12 +299,11 @@ const getFunctionInfo = selectedFunctionData => {
   }
 }
 
-const getFunctionDefaultInfo = defaultData => {
+const getRunDefaultInfo = defaultData => {
   return {
     labels: parseChipsData(defaultData.task?.metadata?.labels),
     name: defaultData.task?.metadata?.name || '',
     method: defaultData.task?.spec?.handler,
-    methodDescription: '',
     version: '',
     methodOptions: [],
     versionOptions: []
@@ -312,18 +337,17 @@ const getVersionOptions = selectedFunctions => {
   return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
 }
 
-const getDefaultMethodAndVersion = (versionOptions, selectedFunctions) => {
-  const defaultMethod = selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec
-    .default_handler
-
+const getDefaultMethodAndVersion = (versionOptions, methodOptions, selectedFunctions) => {
   const defaultVersion =
-    versionOptions.length === 1
-      ? versionOptions[0].id
-      : versionOptions.find(version => version.id === 'latest').id
+    versionOptions.find(version => version.id === 'latest')?.id || versionOptions[0].id || ''
+  const defaultMethod =
+    selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec?.default_handler ||
+    methodOptions[0]?.id ||
+    ''
 
   return {
-    defaultMethod,
-    defaultVersion
+    defaultVersion,
+    defaultMethod
   }
 }
 
@@ -336,6 +360,12 @@ export const getFunctionParameters = (selectedFunction, method) => {
     .flatten()
     .unionBy('name')
     .value()
+}
+
+export const getFunctionDefaultParameters = (selectedFunction, method) => {
+  const functionParameters = get(selectedFunction, `spec.entry_points[${method}].parameters`, [])
+
+  return keyBy(functionParameters, 'name')
 }
 
 const getFunctionPriorityClass = selectedFunction => {
@@ -482,7 +512,7 @@ export const getCategoryName = categoryId => {
 
 export const parseDataInputs = functionParameters => {
   return functionParameters
-    .filter(dataInputs => dataInputs.type === 'DataItem')
+    .filter(dataInputs => dataInputs.type?.includes('DataItem'))
     .map(input => {
       return {
         doc: input.doc,
@@ -515,39 +545,79 @@ export const parseDefaultDataInputs = dataInputs => {
   })
 }
 
-export const parsePredefinedParameters = functionParameters => {
-  return functionParameters
-    .filter(parameter => parameter.type !== 'DataItem')
+export const parsePredefinedParameters = funcParams => {
+  return funcParams
+    .filter(parameter => !parameter.type?.includes('DataItem'))
     .map(parameter => ({
       data: {
         name: parameter.name ?? '',
         type: parameter.type ?? parseParameterType(parameter.default),
-        parameterType: PARAMETER_TYPE_SIMPLE,
         value: parseParameterValue(parameter.default),
-        isChecked: true
+        isChecked: true,
+        isHyper: false
       },
       doc: parameter.doc,
       isHidden: parameter.name === 'context',
-      isDefault: true
+      isDefault: true,
+      isPredefined: true
     }))
 }
 
-export const parsePredefinedDefaultParameters = functionParameters => {
-  return map(functionParameters, (value, key) => ({
-    data: {
-      name: key ?? '',
-      type: parseParameterType(value),
-      parameterType: PARAMETER_TYPE_SIMPLE,
-      value: parseParameterValue(value),
-      isChecked: true
-    },
-    isHidden: key === 'context',
-    isDefault: true
-  }))
+export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyperParams = {}) => {
+  let predefinedParameters = []
+  let customParameters = []
+
+  predefinedParameters = chain(funcParams)
+    .filter(parameter => !parameter.type?.includes('DataItem'))
+    .map(param => {
+      return {
+        data: {
+          name: param.name,
+          type: param.type,
+          value: parseParameterValue(
+            runParams[param.name] ?? runHyperParams[param.name] ?? param.default ?? ''
+          ),
+          isChecked: param.name in runParams || param.name in runHyperParams,
+          isHyper: param.name in runHyperParams
+        },
+        doc: param.doc ?? '',
+        isHidden: param.name === 'context',
+        isDefault: true,
+        isPredefined: true
+      }
+    })
+    .value()
+
+  const customParametersNames = difference(
+    Object.keys(runParams).concat(Object.keys(runHyperParams)),
+    Object.keys(funcParams)
+  )
+
+  customParameters = customParametersNames.map(paramName => {
+    return {
+      data: {
+        name: paramName,
+        type: parseParameterType(
+          runParams[paramName] ?? runHyperParams[paramName],
+          paramName in runHyperParams
+        ),
+        value: parseParameterValue(runParams[paramName] ?? runHyperParams[paramName]),
+        isChecked: true,
+        isHyper: paramName in runHyperParams
+      },
+      isHidden: false,
+      isDefault: true,
+      isPredefined: false
+    }
+  })
+
+  return [predefinedParameters, customParameters]
 }
 
-const parseParameterType = parameterValue => {
-  if (Array.isArray(parameterValue)) {
+const parseParameterType = (parameterValue, isHyper) => {
+  if (isHyper) {
+    return parseParameterType(parameterValue[0])
+  } else if (Array.isArray(parameterValue)) {
     return parameterTypeList
   } else if (
     typeof parameterValue === 'object' &&
@@ -608,30 +678,38 @@ const parseRequests = (requests = {}, defaultRequests = {}) => {
 }
 
 const parseEnvironmentVariables = (envVariables, isStagingMode) => {
-  return envVariables.map(envVariable => {
-    let env = {
-      key: envVariable.name
-    }
-
-    if (envVariable?.valueFrom?.secretKeyRef) {
-      const secretName = envVariable.valueFrom.secretKeyRef.name ?? ''
-      const secretKey = envVariable.valueFrom.secretKeyRef.key ?? ''
-
-      env.type = ENV_VARIABLE_TYPE_SECRET
-
-      if (isStagingMode) {
-        env.secretName = secretName
-        env.secretKey = secretKey
+  return envVariables
+    .filter(envVariable => {
+      if (envVariable?.valueFrom?.secretKeyRef) {
+        return envVariable.name && envVariable.valueFrom.secretKeyRef.name && envVariable.valueFrom.secretKeyRef.key
       } else {
-        env.value = secretName && secretKey ? `${secretName}:${secretKey}` : secretName
+        return envVariable.name && envVariable.value
       }
-    } else {
-      env.type = ENV_VARIABLE_TYPE_VALUE
-      env.value = envVariable.value
-    }
+    })
+    .map(envVariable => {
+      let env = {
+        key: envVariable.name
+      }
 
-    return { data: env }
-  })
+      if (envVariable?.valueFrom?.secretKeyRef) {
+        const secretName = envVariable.valueFrom.secretKeyRef.name
+        const secretKey = envVariable.valueFrom.secretKeyRef.key ?? ''
+
+        env.type = ENV_VARIABLE_TYPE_SECRET
+
+        if (isStagingMode) {
+          env.secretName = secretName
+          env.secretKey = secretKey
+        } else {
+          env.value = secretName && secretKey ? `${secretName}:${secretKey}` : secretName
+        }
+      } else {
+        env.type = ENV_VARIABLE_TYPE_VALUE
+        env.value = envVariable.value
+      }
+
+      return { data: env }
+    })
 }
 
 // secretSourcesTable - currently not shown
@@ -663,26 +741,24 @@ const convertParameterValue = (value, type) => {
 }
 
 const convertHyperParameterValue = parameterValue => {
-  if (typeof parameterValue === 'string') {
-    parameterValue = parameterValue.split(',')
-  } else if (!isObject(parameterValue)) {
-    parameterValue = [parameterValue]
+  try {
+    return JSON.parse(parameterValue)
+  } catch {
+    return []
   }
-
-  return parameterValue
 }
 
 const generateParameters = parametersTableData => {
   const parameters = {}
 
   parametersTableData?.predefined
-    ?.filter(parameter => parameter.data.parameterType !== PARAMETER_TYPE_HYPER)
+    ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
     .forEach(value => {
       parameters[value.data.name] = convertParameterValue(value.data.value, value.data.type)
     })
 
   parametersTableData?.custom
-    ?.filter(parameter => parameter.data.parameterType !== PARAMETER_TYPE_HYPER)
+    ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
     .forEach(value => {
       parameters[value.data.name] = convertParameterValue(value.data.value, value.data.type)
     })
@@ -694,19 +770,15 @@ const generateHyperParameters = parametersTableData => {
   const hyperparams = {}
 
   parametersTableData?.predefined
-    ?.filter(parameter => parameter.data.parameterType === PARAMETER_TYPE_HYPER)
+    ?.filter(parameter => parameter.data.isHyper && parameter.data.isChecked)
     .forEach(parameter => {
-      hyperparams[parameter.data.name] = convertHyperParameterValue(
-        convertParameterValue(parameter.data.value, parameter.data.type)
-      )
+      hyperparams[parameter.data.name] = convertHyperParameterValue(parameter.data.value)
     })
 
   parametersTableData?.custom
-    ?.filter(parameter => parameter.data.parameterType === PARAMETER_TYPE_HYPER)
+    ?.filter(parameter => parameter.data.isHyper && parameter.data.isChecked)
     .forEach(parameter => {
-      hyperparams[parameter.data.name] = convertHyperParameterValue(
-        convertParameterValue(parameter.data.value, parameter.data.type)
-      )
+      hyperparams[parameter.data.name] = convertHyperParameterValue(parameter.data.value)
     })
 
   return hyperparams
@@ -817,13 +889,10 @@ export const generateJobRequestData = (
       spec: {
         inputs: generateDataInputs(formData.dataInputs.dataInputsTable),
         parameters: generateParameters(formData.parameters.parametersTable),
-        hyperparams: generateHyperParameters(formData.parameters.parametersTable),
         // secretSourcesTable - currently not shown
         // secret_sources: formData.advanced.secretSourcesTable.map(secretSource => {
         //   return { kind: secretSource.data.key, source: secretSource.data.value }
         // }),
-        param_file: formData.parameters.hyperParameters?.paramFile ?? '',
-        tuning_strategy: formData.parameters.hyperParameters?.tuningStrategy,
         handler: formData.runDetails.method ?? '',
         input_path: formData.advanced.inputPath ?? '',
         output_path: formData.advanced.outputPath,
@@ -855,12 +924,29 @@ export const generateJobRequestData = (
       }
     }
   }
+  if (formData.runDetails.hyperparameter) {
+    postData.task.spec.hyper_param_options = {
+      strategy: formData.hyperparameterStrategy.strategy,
+      stop_condition: formData.hyperparameterStrategy.stopCondition ?? '',
+      parallel_runs: formData.hyperparameterStrategy.parallelRuns,
+      dask_cluster_uri: formData.hyperparameterStrategy.daskClusterUri ?? '',
+      max_iterations: formData.hyperparameterStrategy.maxIterations,
+      max_errors: formData.hyperparameterStrategy.maxErrors,
+      teardown_dask: formData.hyperparameterStrategy.teardownDask ?? false
+    }
 
-  if (
-    !isEmpty(formData.parameters.hyperParameters?.result) &&
-    !isEmpty(formData.parameters.hyperParameters?.criteria)
-  ) {
-    postData.task.spec.selector = `${formData.parameters.hyperParameters.criteria}.${formData.parameters.hyperParameters.result}`
+    if (formData.parameters.parametersFrom === PARAMETERS_FROM_FILE_VALUE) {
+      postData.task.spec.hyper_param_options.param_file = formData.parameters.parametersFromFileUrl
+    } else {
+      postData.task.spec.hyperparams = generateHyperParameters(formData.parameters.parametersTable)
+    }
+
+    if (
+      !isEmpty(formData.hyperparameterStrategy?.result) &&
+      !isEmpty(formData.hyperparameterStrategy?.criteria)
+    ) {
+      postData.task.spec.hyper_param_options.selector = `${formData.hyperparameterStrategy.criteria}.${formData.hyperparameterStrategy.result}`
+    }
   }
 
   if (isSchedule) {
@@ -877,11 +963,11 @@ export const getNewJobErrorMsg = error => {
     ? 'You are not permitted to run new job.'
     : error.response.status === CONFLICT_ERROR_STATUS_CODE
     ? 'This job is already scheduled'
-    : 'Unable to create new job.'
+    : getErrorDetail(error) || 'Unable to create a new job.'
 }
 
 export const getSaveJobErrorMsg = error => {
   return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
     ? 'You are not permitted to run new job.'
-    : error.message
+    : getErrorDetail(error) || 'Unable to save the job.'
 }

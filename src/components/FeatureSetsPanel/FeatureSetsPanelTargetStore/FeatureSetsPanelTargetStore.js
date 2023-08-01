@@ -120,6 +120,21 @@ const FeatureSetsPanelTargetStore = ({
   ])
 
   useEffect(() => {
+    setValidation(prevState => ({
+      ...prevState,
+      isTargetStoreValid: featureStore.newFeatureSet.spec.passthrough
+        ? true
+        : selectedTargetKind.length &&
+          Object.values(selectedPartitionKind).every(partitionKind => partitionKind.length)
+    }))
+  }, [
+    featureStore.newFeatureSet.spec.passthrough,
+    selectedPartitionKind,
+    selectedTargetKind.length,
+    setValidation
+  ])
+
+  useEffect(() => {
     if (
       (onlineTarget &&
         onlineTarget.path !== data.online.path &&
@@ -198,6 +213,13 @@ const FeatureSetsPanelTargetStore = ({
       }))
     }
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
+
+  useEffect(() => {
+    setValidation(state => ({
+      ...state,
+      isOnlineTargetPathValid: true
+    }))
+  }, [data.online.kind, setValidation])
 
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
@@ -321,7 +343,7 @@ const FeatureSetsPanelTargetStore = ({
   const handleDiscardPathChange = kind => {
     const currentStoreType = kind === ONLINE ? NOSQL : kind
     const currentKind = featureStore.newFeatureSet.spec.targets.find(
-      el => el.kind === currentStoreType
+      el => el.name === currentStoreType
     )
 
     if (currentKind.path.length > 0) {
@@ -329,6 +351,7 @@ const FeatureSetsPanelTargetStore = ({
         ...state,
         [kind]: {
           ...state[kind],
+          kind: currentKind.kind,
           path: kind === PARQUET ? offlineTarget.path : onlineTarget.path
         }
       }))
@@ -378,6 +401,23 @@ const FeatureSetsPanelTargetStore = ({
         return targetKind
       })
     )
+  }
+
+  const handleOnlineKindTypeChange = kind => {
+    setData(state => ({
+      ...state,
+      online: {
+        ...state.online,
+        kind,
+        path: generatePath(
+          frontendSpec.feature_store_data_prefixes,
+          project,
+          kind,
+          featureStore.newFeatureSet.metadata.name,
+          ''
+        )
+      }
+    }))
   }
 
   const handlePartitionColsOnBlur = kind => {
@@ -529,7 +569,8 @@ const FeatureSetsPanelTargetStore = ({
       ...state,
       isOfflineTargetPathValid: true,
       isOnlineTargetPathValid: true,
-      isExternalOfflineTargetPathValid: true
+      isExternalOfflineTargetPathValid: true,
+      isTargetStoreValid: true
     }))
     setData(state => ({
       ...state,
@@ -785,6 +826,7 @@ const FeatureSetsPanelTargetStore = ({
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
       handleOfflineKindPathChange={handleOfflineKindPathChange}
       handleOnlineKindPathChange={handleOnlineKindPathChange}
+      handleOnlineKindTypeChange={handleOnlineKindTypeChange}
       handlePartitionColsOnChange={handlePartitionColsOnChange}
       handlePartitionColsOnBlur={handlePartitionColsOnBlur}
       handlePartitionRadioButtonClick={handlePartitionRadioButtonClick}

@@ -22,8 +22,9 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEqual, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import FunctionsView from './FunctionsView'
+import JobWizard from '../JobWizard/JobWizard'
+import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
   detailsMenu,
@@ -42,17 +43,19 @@ import functionsActions from '../../actions/functions'
 import { setNotification } from '../../reducers/notificationReducer'
 import jobsActions from '../../actions/jobs'
 import {
-  FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
+  FUNCTION_TYPE_SERVING,
   GROUP_BY_NAME,
+  PANEL_FUNCTION_CREATE_MODE,
   SHOW_UNTAGGED_ITEMS,
   TAG_LATEST
 } from '../../constants'
-import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { useMode } from '../../hooks/mode.hook'
 import createFunctionsContent from '../../utils/createFunctionsContent'
-import { useGroupContent } from '../../hooks/groupContent.hook'
+import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { generateContentActionsMenu } from '../../layout/Content/content.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useMode } from '../../hooks/mode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -64,10 +67,10 @@ const Functions = ({
   deleteFunction,
   fetchFunctionLogs,
   fetchFunctions,
+  fetchJobFunction,
   functionsStore,
   removeFunctionsError,
-  removeNewFunction,
-  removeNewJob
+  removeNewFunction
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -76,6 +79,8 @@ const Functions = ({
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
+  const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
+  const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
   let fetchFunctionLogsTimeout = useRef(null)
@@ -247,7 +252,20 @@ const Functions = ({
         {
           label: 'Run',
           icon: <Run />,
-          onClick: func => setEditableItem(func),
+          onClick: func => {
+            if (func?.project && func?.name && func?.hash) {
+              fetchJobFunction(func.project, func.name, func.hash)
+              setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
+            } else {
+              dispatch(
+                setNotification({
+                  status: 400,
+                  id: Math.random(),
+                  message: 'Failed to fetch the function'
+                })
+              )
+            }
+          },
           hidden:
             !FUNCTIONS_READY_STATES.includes(func?.state?.value) ||
             func?.type === FUNCTION_TYPE_SERVING
@@ -277,7 +295,7 @@ const Functions = ({
       ],
       []
     )
-  }, [isStagingMode, onRemoveFunction, toggleConvertedYaml])
+  }, [dispatch, fetchJobFunction, isStagingMode, onRemoveFunction, toggleConvertedYaml])
 
   useEffect(() => {
     refreshFunctions(filtersStore.filters)
@@ -442,6 +460,21 @@ const Functions = ({
     setSelectedFunction({})
   }
 
+  useEffect(() => {
+    if (!jobWizardIsOpened && jobWizardMode) {
+      openPopUp(JobWizard, {
+        params,
+        onWizardClose: () => {
+          setJobWizardMode(null)
+          setJobWizardIsOpened(false)
+        },
+        mode: jobWizardMode
+      })
+
+      setJobWizardIsOpened(true)
+    }
+  }, [editableItem, jobWizardIsOpened, jobWizardMode, params])
+
   return (
     <FunctionsView
       actionsMenu={actionsMenu}
@@ -464,10 +497,8 @@ const Functions = ({
       handleSelectFunction={handleSelectFunction}
       pageData={pageData}
       refreshFunctions={refreshFunctions}
-      removeNewJob={removeNewJob}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
-      setEditableItem={setEditableItem}
       tableContent={tableContent}
       taggedFunctions={taggedFunctions}
       toggleConvertedYaml={toggleConvertedYaml}

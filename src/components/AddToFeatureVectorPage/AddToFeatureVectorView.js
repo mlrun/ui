@@ -96,6 +96,7 @@ const AddToFeatureVectorView = React.forwardRef(
                       hideActionsMenu={tableStore.isTablePanelOpen}
                       mainRowItemsCount={2}
                       pageTab={ADD_TO_FEATURE_VECTOR_TAB}
+                      rowIndex={index}
                       rowItem={tableItem}
                       selectedRowData={selectedRowData}
                     />

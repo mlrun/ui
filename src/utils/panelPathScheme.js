@@ -94,9 +94,9 @@ export const pathTips = projectItem => {
   const pathType =
     projectItem === 'feature-vectors'
       ? 'feature-vector'
-      : projectItem === 'artifacts'
-      ? 'artifact'
-      : 'dataset'
+      : projectItem === 'datasets'
+      ? 'dataset'
+      : 'artifact'
 
   return {
     [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${pathType}s/my-project/my-${pathType}:my-tag" or "${pathType}s/my-project/my-${pathType}@my-uid`,
