@@ -150,11 +150,11 @@ const AddArtifactTagPopUp = ({
                     name="artifactTag"
                     label={`${
                       artifact.kind === MODEL_TYPE
-                        ? 'Model tag'
+                        ? 'Model'
                         : artifact.kind === DATASET_TYPE
-                        ? 'Dataset tag'
-                        : 'Artifact tag'
-                    }`}
+                        ? 'Dataset'
+                        : 'Artifact'
+                    } tag`}
                     focused
                     required
                     validationRules={getValidationRules('common.name', [
