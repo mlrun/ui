@@ -5,7 +5,7 @@ Feature: MLRun Projects Page
     @passive
     @FAILED_TODO
     #TODO: last two steps are unstable on small screen extensions because scroll change the screen coordinates, it needs another solution
-    Scenario: Check all mandatory components
+    Scenario: MLPr001 - Check all mandatory components
         Given open url
         And wait load page
         Then verify redirection from "INVALID" to "projects"
@@ -22,7 +22,7 @@ Feature: MLRun Projects Page
         Then value in "failed" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "Failed ML jobs and nuclio functions in the last 24 hours"
 
     @passive
-    Scenario: Verify filtering by project name
+    Scenario: MLPr002 - Verify filtering by project name
         Given open url
         And wait load page
         Then type value "stocks" to "Search_Projects_Input" field on "Projects" wizard
@@ -33,7 +33,7 @@ Feature: MLRun Projects Page
         Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "at"
 
     @passive
-    Scenario: Sort projects in ascending and descending order
+    Scenario: MLPr003 - Sort projects in ascending and descending order
         Given open url
         And wait load page
         When select "By name" option in "Projects_Sort_Dropdown" filter dropdown on "Projects" wizard
@@ -43,7 +43,7 @@ Feature: MLRun Projects Page
         Then sort projects in ascending order
 
     @passive
-    Scenario: Verify all mandatory components on Create new ML Project
+    Scenario: MLPr004 - Verify all mandatory components on Create new ML Project
         Given open url
         And wait load page
         Then check "automation-test-name" value not in "name" column in "Projects_Table" table on "Projects" wizard
@@ -63,7 +63,7 @@ Feature: MLRun Projects Page
         Then "Error_Message" component on "Create_New_Project" should be equal "Error_Messages"."Project_Already_Exists"
 
     @passive
-    Scenario: Verify all mandatory components on Archive ML Project
+    Scenario: MLPr005 - Verify all mandatory components on Archive ML Project
         Given open url
         And wait load page
         Then select "Archive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "churn-project-admin" value in "name" column
@@ -75,7 +75,7 @@ Feature: MLRun Projects Page
         Then "Confirm_Button" element on "Common_Popup" should contains "Archive" value
 
     @passive
-    Scenario: Verify all mandatory components on Delete existing ML Project
+    Scenario: MLPr006 - Verify all mandatory components on Delete existing ML Project
         Given open url
         And wait load page
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "churn-project-admin" value in "name" column
@@ -87,7 +87,7 @@ Feature: MLRun Projects Page
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
 
     @sanity
-    Scenario: Create new ML Project with description
+    Scenario: MLPr007 - Create new ML Project with description
         Given open url
         And wait load page
         Then check "automation-test-name" value not in "name" column in "Projects_Table" table on "Projects" wizard
@@ -100,7 +100,7 @@ Feature: MLRun Projects Page
         Then check "automation-test-name" value in "name" column in "Projects_Table" table on "Projects" wizard
     
     @passive
-    Scenario: Archive ML Project
+    Scenario: MLPr008 - Archive ML Project
         * set tear-down property "project" created with "automation-test-name1" value
         * create "automation-test-name1" MLRun Project with code 201
         Given open url
@@ -114,7 +114,7 @@ Feature: MLRun Projects Page
         Then check "automation-test-name1" value in "name" column in "Projects_Table" table on "Projects" wizard
     
     @passive
-    Scenario: Delete existing ML Project
+    Scenario: MLPr009 - Delete existing ML Project
         * set tear-down property "project" created with "automation-test-name2" value
         * create "automation-test-name2" MLRun Project with code 201
         Given open url
@@ -126,7 +126,7 @@ Feature: MLRun Projects Page
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
     
     @passive
-    Scenario: Unarchive ML Project
+    Scenario: MLPr010 - Unarchive ML Project
         * set tear-down property "project" created with "automation-test-name7" value
         * create "automation-test-name7" MLRun Project with code 201
         Given open url
@@ -143,7 +143,7 @@ Feature: MLRun Projects Page
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
 
     @passive
-    Scenario: Verify View YAML action
+    Scenario: MLPr011 - Verify View YAML action
         Given open url
         And wait load page
         Then select "View YAML" option in action menu on "Projects" wizard in "Projects_Table" table at row with "default" value in "name" column
@@ -153,7 +153,7 @@ Feature: MLRun Projects Page
 
     @danger
 #   Run this test case only with mocked backend!!!
-    Scenario: Check projects limit message
+    Scenario: MLPr012 - Check projects limit message
         Then create up to limit projects with code 201
         Given open url
         And wait load page
@@ -161,3 +161,45 @@ Feature: MLRun Projects Page
         Then type into "Name_Input" on "Create_New_Project" popup dialog "automation-test-name201" value
         Then click on "Create_Button" element on "Create_New_Project" wizard
         Then "Error_Message" component on "Create_New_Project" should contains "Error_Messages"."Projects_Limit_Reached"
+
+    @passive
+    Scenario: MLPr013 - Create new ML Project and check navigation through project navigation menu
+        Given open url
+        And wait load page
+        Then check "navigation-test" value not in "name" column in "Projects_Table" table on "Projects" wizard
+        Then click on "New_Project_Button" element on "Projects" wizard
+        Then verify if "Create_New_Project" popup dialog appears
+        Then type into "Name_Input" on "Create_New_Project" popup dialog "navigation-test" value
+        Then click on "Create_Button" element on "Create_New_Project" wizard
+        And click on row root with value "navigation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify value should equal "navigation-test" in "Header_Name_Label" on "Demo_Project" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
+        And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project Monitoring" value
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
+        And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Datasets" value
+        And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+        And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Models" value
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "ML functions" value
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "ML functions" value
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Settings" value

@@ -255,8 +255,6 @@ Feature: Datasets Page
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
-  @FAILED_TODO
-  #TODO: select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest #0" value - An invalid or illegal selector was specified
   @passive
   Scenario: Verify View YAML action on Datasets page
     Given open url
@@ -278,7 +276,7 @@ Feature: Datasets Page
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
-    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest #0" value in "name" column
+    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest" value in "name_expand_btn" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
