@@ -19,10 +19,7 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 import inputGroup from '../components/input-group.component'
-import {
-  generateInputGroup,
-  generateDropdownGroup
-} from '../../common-tools/common-tools'
+import { generateInputGroup, generateDropdownGroup } from '../../common-tools/common-tools'
 import dropdownComponent from '../components/dropdown.component'
 import checkboxComponent from '../components/checkbox.component'
 import commonTable from '../components/table.component'
@@ -55,7 +52,7 @@ const filesTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', 
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
@@ -98,6 +95,8 @@ module.exports = {
     ),
     Files_Table: commonTable(filesTable),
     Register_File_Button: By.css('.page-actions-container .btn_register'),
-    Table_FilterBy_Button: By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
+    Table_FilterBy_Button: By.css(
+      '.content .content__action-bar-wrapper .action-bar__filters .filters-button button'
+    )
   }
 }

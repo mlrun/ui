@@ -407,7 +407,7 @@ Feature: Feature Store Page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
     @passive
-    #TODO: should be updated with changeble Name "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message" 
+    #TODO: should be updated with changeble Name "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
     Scenario: MLFS014 - Check filtering by Name on Feature Store Features Tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -426,7 +426,7 @@ Feature: Feature Store Page
         Then type value "ccccc" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
-    
+
     @passive
     Scenario: MLFS015 - Check filtering by Label on Feature Store Features Tab
         Given open url
@@ -561,7 +561,7 @@ Feature: Feature Store Page
         Then verify if "Feature_Set_Schedule_Popup" popup dialog appears
 
     @FAILED_TODO
-    #TODO: there are no any "clean" fragment "clean" in "key" in artifacts.json 
+    #TODO: there are no any "clean" fragment "clean" in "key" in artifacts.json
     #TODO: URL_Combobox hint need change the text and behavior
     @passive
     Scenario: MLFS021 - Verify behaviour of Combobox element on Feature Store Feature Set new item wizard on Data Source Accordion
@@ -1677,15 +1677,15 @@ Feature: Feature Store Page
         Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
 	    Then verify that row index 1 is active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify that row index 2 is NOT active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
-        Then click on cell with row index 2 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard  
-        Then verify that row index 2 is active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard   
+        Then click on cell with row index 2 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify that row index 2 is active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify that row index 1 is NOT active in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
         Then verify "Header" element visibility on "Models_Info_Pane" wizard
         Then save to context "name" column on 2 row from "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
-    
+
     Scenario: MLFS049 - Check active/highlited items with details panel on Feature Vectors tab
         Given open url
         And wait load page
@@ -1774,7 +1774,7 @@ Feature: Feature Store Page
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-2" value
-    
+
     @passive
     Scenario: MLFS052 - Save feature set with checked passthrough checkbox and checked TARGET STORE Online checkbox
         Given open url
@@ -1835,7 +1835,7 @@ Feature: Feature Store Page
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
         Then click on "Cancel_Button" element on "New_Feature_Set" wizard
-        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
+        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Passthrough_Checkbox" element visibility on "New_Feature_Set" wizard
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard
@@ -1845,7 +1845,7 @@ Feature: Feature Store Page
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
         Then click on "Cancel_Button" element on "New_Feature_Set" wizard
-        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
+        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Passthrough_Checkbox" element visibility on "New_Feature_Set" wizard
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard
@@ -1860,7 +1860,7 @@ Feature: Feature Store Page
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
         Then click on "Cancel_Button" element on "New_Feature_Set" wizard
-        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
+        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Passthrough_Checkbox" element visibility on "New_Feature_Set" wizard
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard

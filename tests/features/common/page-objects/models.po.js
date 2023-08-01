@@ -25,7 +25,7 @@ import {
   generateLabelGroup
 } from '../../common-tools/common-tools'
 import dropdownComponent from '../components/dropdown.component'
-import checkboxComponent from '../components/checkbox.component'
+// import checkboxComponent from '../components/checkbox.component'
 import commonTable from '../components/table.component'
 import actionMenu from '../components/action-menu.component'
 import labelComponent from '../components/label.component'
@@ -72,7 +72,7 @@ const modelsTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', 
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         labels: {
@@ -80,7 +80,7 @@ const modelsTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(2)',
             '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper', 
+            '.chip-block .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -133,7 +133,7 @@ const modelsEndpointTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(5)',
             '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper', 
+            '.chip-block .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -247,7 +247,9 @@ module.exports = {
     Models_Table: commonTable(modelsTable),
     Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
     Register_Model_Button: By.css('.page-actions-container .btn_register'),
-    Table_FilterBy_Button: By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
+    Table_FilterBy_Button: By.css(
+      '.content .content__action-bar-wrapper .action-bar__filters .filters-button button'
+    )
   },
   modelEndpoints: {
     Table_Refresh_Button: tableRefreshButton,
@@ -272,7 +274,12 @@ module.exports = {
   },
   realTimePipelinesTab: {
     Table_Name_Filter_Input: inputGroup(
-      generateInputGroup('.content .content__action-bar-wrapper .filters .input-wrapper', true, false, true)
+      generateInputGroup(
+        '.content .content__action-bar-wrapper .filters .input-wrapper',
+        true,
+        false,
+        true
+      )
     ),
     Table_Refresh_Button: tableRefreshButton,
     Real_Time_Pipelines_Table: commonTable(realTimePipelinesTable),

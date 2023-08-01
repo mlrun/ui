@@ -157,15 +157,21 @@ When('add data to {string} table on {string} wizard', async function (table, wiz
   for (const row_indx in rows) {
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
-    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2))
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2)
+    )
     await this.driver.sleep(250)
-    await typeIntoInputField(                                      
+    await typeIntoInputField(
       this.driver,
       pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2),
       rows[row_indx][0]
     )
     await this.driver.sleep(100)
-    await openDropdown(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2))
+    await openDropdown(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2)
+    )
     await selectOptionInDropdownWithoutCheck(
       this.driver,
       pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2),
@@ -178,9 +184,15 @@ When('add data to {string} table on {string} wizard', async function (table, wiz
       rows[row_indx][2]
     )
     await this.driver.sleep(100)
-    await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2))
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
+    )
     await this.driver.sleep(100)
-    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2))
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
+    )
     await this.driver.sleep(100)
   }
 })
@@ -191,15 +203,21 @@ When('fill data to {string} table on {string} wizard', async function (table, wi
   for (const row_indx in rows) {
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
-    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 3))
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 3)
+    )
     await this.driver.sleep(250)
-    await typeIntoInputField(                                      
+    await typeIntoInputField(
       this.driver,
       pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 3),
       rows[row_indx][0]
     )
     await this.driver.sleep(100)
-    await openDropdown(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 3))
+    await openDropdown(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 3)
+    )
     await selectOptionInDropdownWithoutCheck(
       this.driver,
       pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 3),
@@ -212,9 +230,15 @@ When('fill data to {string} table on {string} wizard', async function (table, wi
       rows[row_indx][2]
     )
     await this.driver.sleep(250)
-    await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 3))
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 3)
+    )
     await this.driver.sleep(100)
-    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 3))
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 3)
+    )
     await this.driver.sleep(100)
   }
 })
@@ -257,22 +281,19 @@ Then(
   }
 )
 
-Then(
-  'verify data in {string} table on {string} wizard',
-  async function (table, wizard, dataTable) {
-    const columns = dataTable['rawTable'][0]
-    const rows = dataTable.rows()
-    for (const row_indx in rows) {
-      for (const i in columns) {
-        await verifyText(
-          this.driver,
-          pageObjects[wizard][table]['tableFields'][columns[i]](parseInt(row_indx) + 2),
-          rows[row_indx][i]
-        )
-      }
+Then('verify data in {string} table on {string} wizard', async function (table, wizard, dataTable) {
+  const columns = dataTable['rawTable'][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    for (const i in columns) {
+      await verifyText(
+        this.driver,
+        pageObjects[wizard][table]['tableFields'][columns[i]](parseInt(row_indx) + 2),
+        rows[row_indx][i]
+      )
     }
   }
-)
+})
 
 Then(
   'verify filled data in {string} table on {string} wizard',
@@ -299,7 +320,7 @@ Then(
     const rows = dataTable.rows()
     for (const row_indx in rows) {
       for (const i in columns) {
-        await verifyTypedText (
+        await verifyTypedText(
           this.driver,
           pageObjects[wizard][table]['tableFields'][columns[i]](parseInt(row_indx) + 1),
           rows[row_indx][i]
@@ -465,7 +486,9 @@ When(
       await clickOnComponent(this.driver, pageObjects[wizard][accordion][table]['add_row_btn'])
       await this.driver.sleep(100)
       for (const i in inputFields) {
-        const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](parseInt(row_indx) + 2)
+        const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](
+          parseInt(row_indx) + 2
+        )
         const inputField = component.inputField ?? component
         await typeIntoInputField(this.driver, inputField, rows[row_indx][i])
       }
@@ -473,9 +496,19 @@ When(
       if (pageObjects[wizard][accordion][table]['save_row_btn']) {
         await clickOnComponent(this.driver, pageObjects[wizard][accordion][table]['save_row_btn'])
       } else {
-        await hoverComponent(this.driver, pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2))
+        await hoverComponent(
+          this.driver,
+          pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](
+            parseInt(row_indx) + 2
+          )
+        )
         await this.driver.sleep(100)
-        await clickOnComponent(this.driver, pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2))
+        await clickOnComponent(
+          this.driver,
+          pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](
+            parseInt(row_indx) + 2
+          )
+        )
         await this.driver.sleep(100)
       }
 
@@ -724,15 +757,16 @@ Then(
 )
 
 Then(
-  'verify {string} on {string} wizard should contains {string} value', 
-  async function(componentName, wizardName, value) {
-  await verifyComponentContainsAttributeValue(
-    this.driver,
-    pageObjects[wizardName][componentName],
-    'value',
-    value
-  )
-})
+  'verify {string} on {string} wizard should contains {string} value',
+  async function (componentName, wizardName, value) {
+    await verifyComponentContainsAttributeValue(
+      this.driver,
+      pageObjects[wizardName][componentName],
+      'value',
+      value
+    )
+  }
+)
 
 Then(
   'value in {string} column with {string} in {string} on {string} wizard should contains {string}',
@@ -949,14 +983,14 @@ When(
   }
 )
 
-Then( 
+Then(
   'verify that row index {int} is active in {string} table on {string} wizard',
   async function (indx, table, wizard) {
-    await isRowActive(this.driver, pageObjects[wizard][table], indx) 
+    await isRowActive(this.driver, pageObjects[wizard][table], indx)
   }
 )
 
-Then( 
+Then(
   'verify that row index {int} is NOT active in {string} table on {string} wizard',
   async function (indx, table, wizard) {
     await isRowActive(this.driver, pageObjects[wizard][table], indx)

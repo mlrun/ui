@@ -71,10 +71,7 @@ import {
   verifyTypedValue,
   verifyTextAreaCounter
 } from '../common/actions/input-group.action'
-import {
-  incrementValue,
-  decrementValue
-} from '../common/actions/number-input-group.action'
+import { incrementValue, decrementValue } from '../common/actions/number-input-group.action'
 import {
   checkCheckbox,
   isCheckboxChecked,
@@ -98,13 +95,10 @@ import {
   isRadioButtonUnselected,
   selectRadiobutton
 } from '../common/actions/radio-button.action'
-import {
-  openActionMenu,
-  selectOptionInActionMenu
-} from '../common/actions/action-menu.action'
+import { openActionMenu, selectOptionInActionMenu } from '../common/actions/action-menu.action'
 import { expect } from 'chai'
 
-Given('open url', async function() {
+Given('open url', async function () {
   await navigateToPage(this.driver, `http://${test_url}:${test_port}`)
 })
 
@@ -123,23 +117,20 @@ Given('open url', async function() {
 
 */
 
-When('turn on demo mode', async function() {
+When('turn on demo mode', async function () {
   const url = await this.driver.getCurrentUrl()
   await navigateToPage(this.driver, `${url}?mode=demo`)
 })
 
-When('turn on staging mode', async function() {
+When('turn on staging mode', async function () {
   const url = await this.driver.getCurrentUrl()
   await navigateToPage(this.driver, `${url}?mode=staging`)
 })
 
-Then('additionally redirect by INVALID-TAB', async function() {
+Then('additionally redirect by INVALID-TAB', async function () {
   const beforeURL = await this.driver.getCurrentUrl()
   const urlNodesArr = beforeURL.split('/')
-  const invalidTab = beforeURL.replace(
-    urlNodesArr[urlNodesArr.length - 1],
-    'INVALID-TAB'
-  )
+  const invalidTab = beforeURL.replace(urlNodesArr[urlNodesArr.length - 1], 'INVALID-TAB')
   await navigateToPage(this.driver, `${invalidTab}`)
   const afterURL = await this.driver.getCurrentUrl()
   expect(beforeURL).equal(
@@ -148,56 +139,50 @@ Then('additionally redirect by INVALID-TAB', async function() {
   )
 })
 
-Then(
-  'verify redirection from {string} to {string}',
-  async function (invalidPath, expectedPath) {
-    const invalidUrl = `http://${test_url}:${test_port}/${invalidPath}`
-    const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
+Then('verify redirection from {string} to {string}', async function (invalidPath, expectedPath) {
+  const invalidUrl = `http://${test_url}:${test_port}/${invalidPath}`
+  const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
 
-    await navigateToPage(this.driver, invalidUrl)
-    await this.driver.sleep(250)
-    const afterURL = await this.driver.getCurrentUrl()
+  await navigateToPage(this.driver, invalidUrl)
+  await this.driver.sleep(250)
+  const afterURL = await this.driver.getCurrentUrl()
 
-    expect(expectedUrl).equal(
-      afterURL,
-      `Redirection from "${invalidUrl}"\nshould be "${expectedUrl}"\nbut is "${afterURL}"`
-    )
-  }
-)
+  expect(expectedUrl).equal(
+    afterURL,
+    `Redirection from "${invalidUrl}"\nshould be "${expectedUrl}"\nbut is "${afterURL}"`
+  )
+})
 
-Then('wait load page', async function() {
+Then('wait load page', async function () {
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(500)
 })
 
-Then('navigate forward', async function() {
+Then('navigate forward', async function () {
   await navigateForward(this.driver)
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(500)
 })
 
-Then('navigate back', async function() {
+Then('navigate back', async function () {
   await navigateBack(this.driver)
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(500)
 })
 
-Then('refresh a page', async function() {
+Then('refresh a page', async function () {
   await refreshPage(this.driver)
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(250)
 })
 
-Then('click on {string} element on {string} wizard', async function(
-  component,
-  wizard
-) {
+Then('click on {string} element on {string} wizard', async function (component, wizard) {
   await waiteUntilComponent(this.driver, pageObjects[wizard][component])
   await clickOnComponent(this.driver, pageObjects[wizard][component])
   await this.driver.sleep(250)
 })
 
-Then('verify if {string} popup dialog appears', async function(popup) {
+Then('verify if {string} popup dialog appears', async function (popup) {
   await waiteUntilComponent(this.driver, pageObjects[popup]['Title'])
   await this.driver.sleep(250)
   await componentIsPresent(this.driver, pageObjects[popup]['Title'])
@@ -206,99 +191,88 @@ Then('verify if {string} popup dialog appears', async function(popup) {
 
 Then(
   'type into {string} on {string} popup dialog {string} value',
-  async function(component, wizard, value) {
+  async function (component, wizard, value) {
     await typeValue(this.driver, pageObjects[wizard][component], value)
     await verifyTypedValue(this.driver, pageObjects[wizard][component], value)
   }
 )
 
-Then('type value {string} to {string} field on {string} wizard', async function(
-  value,
-  inputField,
-  wizard
-) {
-  await typeValue(this.driver, pageObjects[wizard][inputField], value)
-  await this.driver.sleep(250)
-  await verifyTypedValue(this.driver, pageObjects[wizard][inputField], value)
-  await this.driver.sleep(250)
-})
-
-Then('verify {string} element on {string} wizard is enabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyElementEnabled(this.driver, pageObjects[wizardName][elementName])
-})
-
-Then('verify {string} not input element in {string} on {string} wizard is enabled', 
-  async function(elementName, accordionName,  wizardName){
-  await verifyElementEnabled(this.driver, pageObjects[wizardName][accordionName][elementName])
-})
-
-Then('verify {string} element on {string} wizard is disabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyElementDisabled(this.driver, pageObjects[wizardName][elementName])
-})
-
-Then('verify {string} not input element in {string} on {string} wizard is disabled', 
-  async function(elementName, accordionName,  wizardName) {
-    await verifyElementDisabled(
-      this.driver, 
-      pageObjects[wizardName][accordionName][elementName]
-    )
+Then(
+  'type value {string} to {string} field on {string} wizard',
+  async function (value, inputField, wizard) {
+    await typeValue(this.driver, pageObjects[wizard][inputField], value)
+    await this.driver.sleep(250)
+    await verifyTypedValue(this.driver, pageObjects[wizard][inputField], value)
+    await this.driver.sleep(250)
   }
 )
 
-Then('verify checkbox {string} element on {string} wizard is enabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][elementName])
-})
+Then(
+  'verify {string} element on {string} wizard is enabled',
+  async function (elementName, wizardName) {
+    await verifyElementEnabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
 
-Then('verify checkbox {string} element on {string} wizard is disabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
-})
+Then(
+  'verify {string} not input element in {string} on {string} wizard is enabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementEnabled(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
+
+Then(
+  'verify {string} element on {string} wizard is disabled',
+  async function (elementName, wizardName) {
+    await verifyElementDisabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify {string} not input element in {string} on {string} wizard is disabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementDisabled(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
+
+Then(
+  'verify checkbox {string} element on {string} wizard is enabled',
+  async function (elementName, wizardName) {
+    await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify checkbox {string} element on {string} wizard is disabled',
+  async function (elementName, wizardName) {
+    await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
 
 Then(
   'verify {string} element in {string} on {string} wizard is enabled',
-  async function(inputField, accordionName, wizardName) {
-    await verifyInputEnabled(
-      this.driver,
-      pageObjects[wizardName][accordionName][inputField]
-    )
+  async function (inputField, accordionName, wizardName) {
+    await verifyInputEnabled(this.driver, pageObjects[wizardName][accordionName][inputField])
   }
 )
 
 Then(
   'verify {string} element in {string} on {string} wizard is disabled',
-  async function(inputField, accordionName, wizardName) {
-    await verifyInputDisabled(
-      this.driver,
-      pageObjects[wizardName][accordionName][inputField]
-    )
+  async function (inputField, accordionName, wizardName) {
+    await verifyInputDisabled(this.driver, pageObjects[wizardName][accordionName][inputField])
   }
 )
 
 When(
   'type searchable fragment {string} into {string} on {string} wizard',
-  async function(subName, inputGroup, wizard) {
-    await typeSearchableValue(
-      this.driver,
-      pageObjects[wizard][inputGroup],
-      subName
-    )
+  async function (subName, inputGroup, wizard) {
+    await typeSearchableValue(this.driver, pageObjects[wizard][inputGroup], subName)
   }
 )
 
 When(
   'type searchable fragment {string} into {string} combobox input in {string} on {string} wizard',
-  async function(subName, combobox, accordion, wizard) {
+  async function (subName, combobox, accordion, wizard) {
     await typeSearchableValue(
       this.driver,
       pageObjects[wizard][accordion][combobox]['comboDropdown'],
@@ -309,7 +283,7 @@ When(
 
 Then(
   'searchable case {string} fragment {string} should be in every suggested option into {string} on {string} wizard',
-  async function(textCase, subName, inputGroup, wizard) {
+  async function (textCase, subName, inputGroup, wizard) {
     await this.driver.sleep(1000)
     await isContainsSubstringInSuggestedOptions(
       this.driver,
@@ -322,7 +296,7 @@ Then(
 
 Then(
   'searchable fragment {string} should be in every suggested option into {string} combobox input in {string} on {string} wizard',
-  async function(subName, combobox, accordion, wizard) {
+  async function (subName, combobox, accordion, wizard) {
     await this.driver.sleep(200)
     await isContainsSubstringInSuggestedOptions(
       this.driver,
@@ -334,17 +308,10 @@ Then(
 
 Then(
   'increase value on {int} points in {string} field on {string} on {string} wizard',
-  async function(value, inputField, accordion, wizard) {
-    const txt = await getInputValue(
-      this.driver,
-      pageObjects[wizard][accordion][inputField]
-    )
+  async function (value, inputField, accordion, wizard) {
+    const txt = await getInputValue(this.driver, pageObjects[wizard][accordion][inputField])
     const result = Number.parseInt(txt) + value
-    await incrementValue(
-      this.driver,
-      pageObjects[wizard][accordion][inputField],
-      value
-    )
+    await incrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
     await verifyTypedValue(
       this.driver,
       pageObjects[wizard][accordion][inputField],
@@ -354,40 +321,26 @@ Then(
 )
 
 Then(
-    'increase value on {int} points in {string} field with {string} on {string} on {string} wizard',
-    async function(value, inputField, unit, accordion, wizard) {
-        const txt = await getInputValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField]
-        )
-        const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
-        const result = Number.parseFloat(txt || '0') + unitValue
-        await incrementValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField],
-            value
-        )
-        await verifyTypedValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField],
-            result.toString()
-        )
-    }
+  'increase value on {int} points in {string} field with {string} on {string} on {string} wizard',
+  async function (value, inputField, unit, accordion, wizard) {
+    const txt = await getInputValue(this.driver, pageObjects[wizard][accordion][inputField])
+    const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
+    const result = Number.parseFloat(txt || '0') + unitValue
+    await incrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      result.toString()
+    )
+  }
 )
 
 Then(
   'decrease value on {int} points in {string} field on {string} on {string} wizard',
-  async function(value, inputField, accordion, wizard) {
-    const txt = await getInputValue(
-      this.driver,
-      pageObjects[wizard][accordion][inputField]
-    )
+  async function (value, inputField, accordion, wizard) {
+    const txt = await getInputValue(this.driver, pageObjects[wizard][accordion][inputField])
     const result = Number.parseInt(txt) - value
-    await decrementValue(
-      this.driver,
-      pageObjects[wizard][accordion][inputField],
-      value
-    )
+    await decrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
     await verifyTypedValue(
       this.driver,
       pageObjects[wizard][accordion][inputField],
@@ -397,49 +350,34 @@ Then(
 )
 
 Then(
-    'decrease value on {int} points in {string} field with {string} on {string} on {string} wizard',
-    async function(value, inputField, unit, accordion, wizard) {
-        const txt = await getInputValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField]
-        )
-        const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
-        const result =
-          unit === 'cpu'
-            ? (Number.parseFloat(txt) - unitValue).toFixed(3)
-            : Number.parseFloat(txt) - unitValue
-        await decrementValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField],
-            value
-        )
-        await verifyTypedValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField],
-            result.toString()
-        )
-    }
+  'decrease value on {int} points in {string} field with {string} on {string} on {string} wizard',
+  async function (value, inputField, unit, accordion, wizard) {
+    const txt = await getInputValue(this.driver, pageObjects[wizard][accordion][inputField])
+    const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
+    const result =
+      unit === 'cpu'
+        ? (Number.parseFloat(txt) - unitValue).toFixed(3)
+        : Number.parseFloat(txt) - unitValue
+    await decrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      result.toString()
+    )
+  }
 )
 
 Then(
   'type value {string} to {string} field on {string} on {string} wizard',
-  async function(value, inputField, accordion, wizard) {
-    await typeValue(
-      this.driver,
-      pageObjects[wizard][accordion][inputField],
-      value
-    )
-    await verifyTypedValue(
-      this.driver,
-      pageObjects[wizard][accordion][inputField],
-      value
-    )
+  async function (value, inputField, accordion, wizard) {
+    await typeValue(this.driver, pageObjects[wizard][accordion][inputField], value)
+    await verifyTypedValue(this.driver, pageObjects[wizard][accordion][inputField], value)
   }
 )
 
 Then(
   '{string} component on {string} should contains {string}.{string}',
-  async function(component, wizard, constStorage, constValue) {
+  async function (component, wizard, constStorage, constValue) {
     await waiteUntilComponent(this.driver, pageObjects[wizard][component])
     await verifyText(
       this.driver,
@@ -451,25 +389,21 @@ Then(
 
 Then(
   '{string} element on {string} should contains {string} value',
-  async function(component, wizard, value) {
+  async function (component, wizard, value) {
     await verifyText(this.driver, pageObjects[wizard][component], value)
   }
 )
 
 Then(
   '{string} element in {string} on {string} should contains {string} value',
-  async function(component, accordion, wizard, value) {
-    await verifyText(
-      this.driver,
-      pageObjects[wizard][accordion][component],
-      value
-    )
+  async function (component, accordion, wizard, value) {
+    await verifyText(this.driver, pageObjects[wizard][accordion][component], value)
   }
 )
 
 Then(
   '{string} component on {string} should be equal {string}.{string}',
-  async function(component, wizard, constStorage, constValue) {
+  async function (component, wizard, constStorage, constValue) {
     await verifyTextRegExp(
       this.driver,
       pageObjects[wizard][component],
@@ -480,11 +414,8 @@ Then(
 
 Then(
   '{string} component in {string} on {string} should contains {string}.{string}',
-  async function(component, accordion, wizard, constStorage, constValue) {
-    await waiteUntilComponent(
-      this.driver,
-      pageObjects[wizard][accordion][component]
-    )
+  async function (component, accordion, wizard, constStorage, constValue) {
+    await waiteUntilComponent(this.driver, pageObjects[wizard][accordion][component])
     await verifyText(
       this.driver,
       pageObjects[wizard][accordion][component],
@@ -495,24 +426,17 @@ Then(
 
 When(
   'select {string} option in {string} dropdown on {string} wizard',
-  async function(optionValue, dropdownName, wizardName) {
+  async function (optionValue, dropdownName, wizardName) {
     await openDropdown(this.driver, pageObjects[wizardName][dropdownName])
-    await selectOptionInDropdown(
-      this.driver,
-      pageObjects[wizardName][dropdownName],
-      optionValue
-    )
+    await selectOptionInDropdown(this.driver, pageObjects[wizardName][dropdownName], optionValue)
     await this.driver.sleep(500)
   }
 )
 
 When(
   'select {string} option in {string} dropdown on {string} on {string} wizard',
-  async function(optionValue, dropdownName, accordionName, wizardName) {
-    await openDropdown(
-      this.driver,
-      pageObjects[wizardName][accordionName][dropdownName]
-    )
+  async function (optionValue, dropdownName, accordionName, wizardName) {
+    await openDropdown(this.driver, pageObjects[wizardName][accordionName][dropdownName])
     await selectOptionInDropdown(
       this.driver,
       pageObjects[wizardName][accordionName][dropdownName],
@@ -529,7 +453,7 @@ When(
 
 Then(
   'verify {string} dropdown on {string} wizard selected option value {string}',
-  async function(dropdownName, wizardName, optionValue) {
+  async function (dropdownName, wizardName, optionValue) {
     await checkDropdownSelectedOption(
       this.driver,
       pageObjects[wizardName][dropdownName],
@@ -540,7 +464,7 @@ Then(
 
 Then(
   'verify {string} dropdown in {string} on {string} wizard selected option value {string}',
-  async function(dropdownName, accordionName, wizardName, optionValue) {
+  async function (dropdownName, accordionName, wizardName, optionValue) {
     await checkDropdownSelectedOption(
       this.driver,
       pageObjects[wizardName][accordionName][dropdownName],
@@ -551,7 +475,7 @@ Then(
 
 When(
   'select {string} option in {string} filter dropdown on {string} wizard',
-  async function(optionValue, dropdownName, wizardName) {
+  async function (optionValue, dropdownName, wizardName) {
     await openDropdown(this.driver, pageObjects[wizardName][dropdownName])
     await selectOptionInDropdownWithoutCheck(
       this.driver,
@@ -563,7 +487,7 @@ When(
 
 Then(
   'verify {string} filter band in {string} filter dropdown on {string} wizard',
-  async function(optionValue, dropdownName, wizardName) {
+  async function (optionValue, dropdownName, wizardName) {
     await verifyTimeFilterBand(
       this.driver,
       pageObjects[wizardName][dropdownName],
@@ -574,14 +498,7 @@ Then(
 
 When(
   'pick up {string} from {string} to {string} in {string} via {string} on {string} wizard',
-  async function(
-    optionValue,
-    fromDatetime,
-    toDatetime,
-    datetimePicker,
-    dropdownName,
-    wizardName
-  ) {
+  async function (optionValue, fromDatetime, toDatetime, datetimePicker, dropdownName, wizardName) {
     await openDropdown(this.driver, pageObjects[wizardName][dropdownName])
     await selectOptionInDropdownWithoutCheck(
       this.driver,
@@ -595,16 +512,13 @@ When(
       fromDatetime,
       toDatetime
     )
-    await applyDatetimePickerRange(
-      this.driver,
-      pageObjects[wizardName][datetimePicker]
-    )
+    await applyDatetimePickerRange(this.driver, pageObjects[wizardName][datetimePicker])
   }
 )
 
 Then(
   'verify from {string} to {string} filter band in {string} filter dropdown on {string} wizard',
-  async function(fromDatetime, toDatetime, dropdownName, wizardName) {
+  async function (fromDatetime, toDatetime, dropdownName, wizardName) {
     await verifyTimeFilterBand(
       this.driver,
       pageObjects[wizardName][dropdownName],
@@ -615,7 +529,7 @@ Then(
 
 Then(
   'verify error message in {string} on {string} wizard with value {string}.{string}',
-  async function(datetimePicker, wizard, constStorage, constValue) {
+  async function (datetimePicker, wizard, constStorage, constValue) {
     await verifyText(
       this.driver,
       pageObjects[wizard][datetimePicker].errorMessage,
@@ -626,7 +540,7 @@ Then(
 
 Then(
   'verify {string} element in {string} on {string} wizard should contains {string}.{string}',
-  async function(dropdown, accordion, wizard, constStorage, constValue) {
+  async function (dropdown, accordion, wizard, constStorage, constValue) {
     await openDropdown(this.driver, pageObjects[wizard][accordion][dropdown])
     await checkDropdownOptions(
       this.driver,
@@ -634,87 +548,57 @@ Then(
       pageObjectsConsts[constStorage][constValue]
     )
     // close dropdown options
-    await clickNearComponent(
-      this.driver,
-      pageObjects[wizard][accordion][dropdown]['open_button']
-    )
+    await clickNearComponent(this.driver, pageObjects[wizard][accordion][dropdown]['open_button'])
   }
 )
 
 Then(
   'verify {string} dropdown element on {string} wizard should contains {string}.{string}',
-  async function(dropdownName, wizardName, constStorage, constValue) {
+  async function (dropdownName, wizardName, constStorage, constValue) {
     await openDropdown(this.driver, pageObjects[wizardName][dropdownName])
     await checkDropdownContainsOptions(
       this.driver,
       pageObjects[wizardName][dropdownName],
       pageObjectsConsts[constStorage][constValue]
     )
-    await clickNearComponent(
-      this.driver,
-      pageObjects[wizardName][dropdownName]['open_button']
-    )
+    await clickNearComponent(this.driver, pageObjects[wizardName][dropdownName]['open_button'])
   }
 )
 
-Then('verify {string} element visibility on {string} wizard', async function(
-  component,
-  wizard
-) {
+Then('verify {string} element visibility on {string} wizard', async function (component, wizard) {
   await componentIsVisible(this.driver, pageObjects[wizard][component])
 })
 
-Then('verify {string} element invisibility on {string} wizard', async function(
-  component,
-  wizard
-) {
+Then('verify {string} element invisibility on {string} wizard', async function (component, wizard) {
   await componentIsNotVisible(this.driver, pageObjects[wizard][component])
 })
 
 Then(
   'verify {string} element visibility in {string} on {string} wizard',
-  async function(component, accordion, wizard) {
-    await componentIsVisible(
-      this.driver,
-      pageObjects[wizard][accordion][component]
-    )
+  async function (component, accordion, wizard) {
+    await componentIsVisible(this.driver, pageObjects[wizard][accordion][component])
   }
 )
 
-Then('verify {string} element not exists on {string} wizard', async function(
-  component,
-  wizard
-) {
+Then('verify {string} element not exists on {string} wizard', async function (component, wizard) {
   await componentIsNotPresent(this.driver, pageObjects[wizard][component])
 })
 
-When('collapse {string} on {string} wizard', async function(accordion, wizard) {
-  await collapseAccordionSection(
-    this.driver,
-    pageObjects[wizard][accordion]['Collapse_Button']
-  )
+When('collapse {string} on {string} wizard', async function (accordion, wizard) {
+  await collapseAccordionSection(this.driver, pageObjects[wizard][accordion]['Collapse_Button'])
   await this.driver.sleep(100)
 })
 
-When('expand {string} on {string} wizard', async function(accordion, wizard) {
-  await expandAccordionSection(
-    this.driver,
-    pageObjects[wizard][accordion]['Collapse_Button']
-  )
+When('expand {string} on {string} wizard', async function (accordion, wizard) {
+  await expandAccordionSection(this.driver, pageObjects[wizard][accordion]['Collapse_Button'])
   await this.driver.sleep(100)
 })
 
-Then('verify {string} is collapsed on {string} wizard', async function(
-  accordion,
-  wizard
-) {
-  await isAccordionSectionCollapsed(
-    this.driver,
-    pageObjects[wizard][accordion]['Collapse_Button']
-  )
+Then('verify {string} is collapsed on {string} wizard', async function (accordion, wizard) {
+  await isAccordionSectionCollapsed(this.driver, pageObjects[wizard][accordion]['Collapse_Button'])
 })
 
-Then('sort projects in ascending order', async function() {
+Then('sort projects in ascending order', async function () {
   const upSorted = await isComponentContainsAttributeValue(
     this.driver,
     pageObjects['Projects']['Projects_Sorter'],
@@ -722,21 +606,14 @@ Then('sort projects in ascending order', async function() {
     'sort_up'
   )
   if (!upSorted) {
-        await clickOnComponent(
-            this.driver,
-            pageObjects['Projects']['Projects_Sorter']
-        )
+    await clickOnComponent(this.driver, pageObjects['Projects']['Projects_Sorter'])
   }
   if (upSorted) {
-    await isTableColumnSorted(
-      this.driver,
-      pageObjects['Projects']['Projects_Table'],
-      'name'
-    )
+    await isTableColumnSorted(this.driver, pageObjects['Projects']['Projects_Table'], 'name')
   }
 })
 
-Then('sort projects in descending order', async function() {
+Then('sort projects in descending order', async function () {
   const downSorted = await isComponentContainsAttributeValue(
     this.driver,
     pageObjects['Projects']['Projects_Sorter'],
@@ -744,22 +621,14 @@ Then('sort projects in descending order', async function() {
     'sort_down'
   )
   if (!downSorted) {
-    await clickOnComponent(
-      this.driver,
-      pageObjects['Projects']['Projects_Sorter']
-    )
+    await clickOnComponent(this.driver, pageObjects['Projects']['Projects_Sorter'])
   }
-  await isTableColumnSorted(
-    this.driver,
-    pageObjects['Projects']['Projects_Table'],
-    'name',
-    'desc'
-  )
+  await isTableColumnSorted(this.driver, pageObjects['Projects']['Projects_Table'], 'name', 'desc')
 })
 
 Then(
   'verify {string} tab is active in {string} on {string} wizard',
-  async function(tabName, tabSelector, wizard) {
+  async function (tabName, tabSelector, wizard) {
     const arr = await findRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][tabSelector],
@@ -767,14 +636,14 @@ Then(
       tabName
     )
     const indx = arr[0]
-    
+
     await isTabActive(this.driver, pageObjects[wizard][tabSelector], indx)
   }
 )
 
 Then(
   'verify {string} on {string} wizard should contains {string}.{string}',
-  async function(tabSelector, wizard, constWizard, constValue) {
+  async function (tabSelector, wizard, constWizard, constValue) {
     await checkTableColumnValues(
       this.driver,
       pageObjects[wizard][tabSelector],
@@ -784,27 +653,26 @@ Then(
   }
 )
 
-When('select {string} tab in {string} on {string} wizard', async function(
-  tabName,
-  tabSelector,
-  wizard
-) {
-  const arr = await findRowIndexesByColumnValue(
-    this.driver,
-    pageObjects[wizard][tabSelector],
-    'key',
-    tabName
-  )
-  const indx = arr[0]
-  await clickOnComponent(
-    this.driver,
-    pageObjects[wizard][tabSelector]['tableFields']['key'](indx)
-  )
-})
+When(
+  'select {string} tab in {string} on {string} wizard',
+  async function (tabName, tabSelector, wizard) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][tabSelector],
+      'key',
+      tabName
+    )
+    const indx = arr[0]
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][tabSelector]['tableFields']['key'](indx)
+    )
+  }
+)
 
 Then(
   'verify {string} on {string} wizard should display {string}.{string}',
-  async function(inputField, wizard, constStorage, constValue) {
+  async function (inputField, wizard, constStorage, constValue) {
     await checkHintText(
       this.driver,
       pageObjects[wizard][inputField],
@@ -816,7 +684,7 @@ Then(
 
 Then(
   'verify {string} on {string} wizard should display {string}.{string} in {string}',
-  async function(inputField, wizard, constStorage, constValue, commonTipType) {
+  async function (inputField, wizard, constStorage, constValue, commonTipType) {
     await checkHintText(
       this.driver,
       pageObjects[wizard][inputField],
@@ -828,7 +696,7 @@ Then(
 
 Then(
   'verify {string} on {string} wizard should display options {string}.{string}',
-  async function(inputField, wizard, constStorage, constValue) {
+  async function (inputField, wizard, constStorage, constValue) {
     await checkWarningHintText(
       this.driver,
       pageObjects[wizard][inputField],
@@ -839,20 +707,20 @@ Then(
 )
 
 Then(
-    'verify {string} in {string} on {string} wizard should display options {string}.{string}',
-    async function(inputField, accordion, wizard, constStorage, constValue) {
-        await checkWarningHintText(
-            this.driver,
-            pageObjects[wizard][accordion][inputField],
-            pageObjects['commonPagesHeader']['Common_Options'],
-            pageObjectsConsts[constStorage][constValue]
-        )
-    }
+  'verify {string} in {string} on {string} wizard should display options {string}.{string}',
+  async function (inputField, accordion, wizard, constStorage, constValue) {
+    await checkWarningHintText(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      pageObjects['commonPagesHeader']['Common_Options'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
 )
 
 Then(
   'verify {string} element in {string} on {string} wizard should display hint {string}.{string}',
-  async function(inputField, accordion, wizard, constStorage, constValue) {
+  async function (inputField, accordion, wizard, constStorage, constValue) {
     await checkHintText(
       this.driver,
       pageObjects[wizard][accordion][inputField],
@@ -864,17 +732,10 @@ Then(
 
 Then(
   'verify {string} on {string} wizard should display warning {string}.{string}',
-  async function(input, wizard, constStorage, constValue) {
-    await clickOnComponent(
-      this.driver,
-      pageObjects[wizard][input]['inputField']
-    )
+  async function (input, wizard, constStorage, constValue) {
+    await clickOnComponent(this.driver, pageObjects[wizard][input]['inputField'])
     await this.driver.sleep(100)
-    await hoverComponent(
-      this.driver,
-      pageObjects[wizard][input]['inputField'],
-      false
-    )
+    await hoverComponent(this.driver, pageObjects[wizard][input]['inputField'], false)
     await checkWarningHintText(
       this.driver,
       pageObjects[wizard][input],
@@ -886,16 +747,10 @@ Then(
 
 Then(
   'verify {string} element in {string} on {string} wizard should display warning {string}.{string}',
-  async function(input, accordion, wizard, constStorage, constValue) {
-    await clickOnComponent(
-      this.driver,
-      pageObjects[wizard][accordion][input]['inputField']
-    )
+  async function (input, accordion, wizard, constStorage, constValue) {
+    await clickOnComponent(this.driver, pageObjects[wizard][accordion][input]['inputField'])
     await this.driver.sleep(100)
-    await clickNearComponent(
-      this.driver,
-      pageObjects[wizard][accordion][input]['inputField']
-    )
+    await clickNearComponent(this.driver, pageObjects[wizard][accordion][input]['inputField'])
     await checkWarningHintText(
       this.driver,
       pageObjects[wizard][accordion][input],
@@ -905,125 +760,83 @@ Then(
   }
 )
 
-When('check {string} element on {string} wizard', async function(
-  checkbox,
-  wizard
-) {
+When('check {string} element on {string} wizard', async function (checkbox, wizard) {
   await checkCheckbox(this.driver, pageObjects[wizard][checkbox])
 })
 
-When('check {string} element in {string} on {string} wizard', async function(
-  checkbox,
-  accordion,
-  wizard
-) {
-  await checkCheckbox(this.driver, pageObjects[wizard][accordion][checkbox])
-})
+When(
+  'check {string} element in {string} on {string} wizard',
+  async function (checkbox, accordion, wizard) {
+    await checkCheckbox(this.driver, pageObjects[wizard][accordion][checkbox])
+  }
+)
 
-When('uncheck {string} element in {string} on {string} wizard', async function(
-  checkbox,
-  accordion,
-  wizard
-) {
-  await uncheckCheckbox(this.driver, pageObjects[wizard][accordion][checkbox])
-})
+When(
+  'uncheck {string} element in {string} on {string} wizard',
+  async function (checkbox, accordion, wizard) {
+    await uncheckCheckbox(this.driver, pageObjects[wizard][accordion][checkbox])
+  }
+)
 
-When('uncheck {string} element on {string} wizard', async function(
-  checkbox,
-  wizard
-) {
+When('uncheck {string} element on {string} wizard', async function (checkbox, wizard) {
   await uncheckCheckbox(this.driver, pageObjects[wizard][checkbox])
 })
 
-Then('{string} element should be unchecked on {string} wizard', async function(
-  checkbox,
-  wizard
-) {
+Then('{string} element should be unchecked on {string} wizard', async function (checkbox, wizard) {
   await isCheckboxUnchecked(this.driver, pageObjects[wizard][checkbox])
 })
 
 Then(
   '{string} element should be unchecked in {string} on {string} wizard',
-  async function(checkbox, accordion, wizard) {
-    await isCheckboxUnchecked(
-      this.driver,
-      pageObjects[wizard][accordion][checkbox]
-    )
+  async function (checkbox, accordion, wizard) {
+    await isCheckboxUnchecked(this.driver, pageObjects[wizard][accordion][checkbox])
   }
 )
 
-Then('{string} element should be checked on {string} wizard', async function(
-  checkbox,
-  wizard
-) {
+Then('{string} element should be checked on {string} wizard', async function (checkbox, wizard) {
   await isCheckboxChecked(this.driver, pageObjects[wizard][checkbox])
 })
 
 Then(
   '{string} element should be checked in {string} on {string} wizard',
-  async function(checkbox, accordion, wizard) {
-    await isCheckboxChecked(
-      this.driver,
-      pageObjects[wizard][accordion][checkbox]
-    )
+  async function (checkbox, accordion, wizard) {
+    await isCheckboxChecked(this.driver, pageObjects[wizard][accordion][checkbox])
   }
 )
 
-When('click on {string} element in {string} on {string} wizard', async function(
-  component,
-  accordion,
-  wizardName
-) {
-  await clickOnComponent(
-    this.driver,
-    pageObjects[wizardName][accordion][component]
-  )
-})
+When(
+  'click on {string} element in {string} on {string} wizard',
+  async function (component, accordion, wizardName) {
+    await clickOnComponent(this.driver, pageObjects[wizardName][accordion][component])
+  }
+)
 
-Then('is {string} on {string} selected', async function(radiobutton, wizard) {
+Then('is {string} on {string} selected', async function (radiobutton, wizard) {
   await isRadioButtonSelected(this.driver, pageObjects[wizard][radiobutton])
 })
 
-Then('is {string} in {string} on {string} selected', async function(
-  radiobutton,
-  accordion,
-  wizard
-) {
-  await isRadioButtonSelected(
-    this.driver,
-    pageObjects[wizard][accordion][radiobutton]
-  )
-})
+Then(
+  'is {string} in {string} on {string} selected',
+  async function (radiobutton, accordion, wizard) {
+    await isRadioButtonSelected(this.driver, pageObjects[wizard][accordion][radiobutton])
+  }
+)
 
-Then('is not {string} in {string} on {string} selected', async function(
-  radiobutton,
-  accordion,
-  wizard
-) {
-  await isRadioButtonUnselected(
-    this.driver,
-    pageObjects[wizard][accordion][radiobutton]
-  )
-})
+Then(
+  'is not {string} in {string} on {string} selected',
+  async function (radiobutton, accordion, wizard) {
+    await isRadioButtonUnselected(this.driver, pageObjects[wizard][accordion][radiobutton])
+  }
+)
 
-When('select {string} in {string} on {string}', async function(
-  radiobutton,
-  accordion,
-  wizard
-) {
-  await selectRadiobutton(
-    this.driver,
-    pageObjects[wizard][accordion][radiobutton]
-  )
+When('select {string} in {string} on {string}', async function (radiobutton, accordion, wizard) {
+  await selectRadiobutton(this.driver, pageObjects[wizard][accordion][radiobutton])
 })
 
 Then(
   'verify options in {string} combobox in {string} on {string} wizard should contains {string}.{string}',
-  async function(combobox, accordion, wizard, constStorage, constValue) {
-    await openDropdown(
-      this.driver,
-      pageObjects[wizard][accordion][combobox]['dropdown']
-    )
+  async function (combobox, accordion, wizard, constStorage, constValue) {
+    await openDropdown(this.driver, pageObjects[wizard][accordion][combobox]['dropdown'])
     await checkDropdownOptions(
       this.driver,
       pageObjects[wizard][accordion][combobox]['dropdown'],
@@ -1037,11 +850,8 @@ Then(
 )
 When(
   'select {string} option in {string} combobox on {string} accordion on {string} wizard',
-  async function(option, comboBox, accordion, wizardName) {
-    await openDropdown(
-      this.driver,
-      pageObjects[wizardName][accordion][comboBox]['dropdown']
-    )
+  async function (option, comboBox, accordion, wizardName) {
+    await openDropdown(this.driver, pageObjects[wizardName][accordion][comboBox]['dropdown'])
     await selectOptionInDropdownWithoutCheck(
       this.driver,
       pageObjects[wizardName][accordion][comboBox]['dropdown'],
@@ -1052,7 +862,7 @@ When(
 
 When(
   'select {string} option in {string} combobox suggestion on {string} accordion on {string} wizard',
-  async function(option, comboBox, accordion, wizard) {
+  async function (option, comboBox, accordion, wizard) {
     await selectOptionInDropdownWithoutCheck(
       this.driver,
       pageObjects[wizard][accordion][comboBox]['comboDropdown'],
@@ -1064,42 +874,32 @@ When(
 
 Then(
   'select {string} option in {string} suggestions dropdown on {string} wizard',
-  async function(option, dropdown, wizard) {
-    await selectOptionInDropdownWithoutCheck(
-      this.driver,
-      pageObjects[wizard][dropdown],
-      option
-    )
+  async function (option, dropdown, wizard) {
+    await selectOptionInDropdownWithoutCheck(this.driver, pageObjects[wizard][dropdown], option)
     await this.driver.sleep(200)
   }
 )
 
-Then('select {string} option in action menu on {string} wizard', async function(
-  option,
-  wizard
-) {
+Then('select {string} option in action menu on {string} wizard', async function (option, wizard) {
   const actionMenu = pageObjects[wizard]['Action_Menu']
   await openActionMenu(this.driver, actionMenu)
   await this.driver.sleep(500)
   await selectOptionInActionMenu(this.driver, actionMenu, option)
 })
 
-Then('verify {string} according hint rules on {string} wizard', async function(
-  inputField,
-  wizardName
-) {
-  await checkInputAccordingHintText(
-    this.driver,
-    this.attach,
-    pageObjects[wizardName][inputField],
-    pageObjects['commonPagesHeader']['Common_Hint']
-  )
-})
+Then(
+  'verify {string} according hint rules on {string} wizard',
+  async function (inputField, wizardName) {
+    await checkInputAccordingHintText(
+      this.driver,
+      this.attach,
+      pageObjects[wizardName][inputField],
+      pageObjects['commonPagesHeader']['Common_Hint']
+    )
+  }
+)
 
-Then('verify {string} options rules on {string} wizard', async function(
-  inputField,
-  wizardName
-) {
+Then('verify {string} options rules on {string} wizard', async function (inputField, wizardName) {
   await checkInputAccordingHintText(
     this.driver,
     this.attach,
@@ -1108,22 +908,22 @@ Then('verify {string} options rules on {string} wizard', async function(
   )
 })
 
-Then('verify {string} options rules on form {string} wizard', async function(
-  inputField,
-  wizardName
-) {
-  await checkInputAccordingHintText(
-    this.driver,
-    this.attach,
-    pageObjects[wizardName][inputField],
-    pageObjects['commonPagesHeader']['Common_Options'],
-    true
-  )
-})
+Then(
+  'verify {string} options rules on form {string} wizard',
+  async function (inputField, wizardName) {
+    await checkInputAccordingHintText(
+      this.driver,
+      this.attach,
+      pageObjects[wizardName][inputField],
+      pageObjects['commonPagesHeader']['Common_Options'],
+      true
+    )
+  }
+)
 
 Then(
   'verify breadcrumbs {string} label should be equal {string} value',
-  async function(labelType, value) {
+  async function (labelType, value) {
     await verifyText(
       this.driver,
       pageObjects['commonPagesHeader']['Breadcrumbs'][`${labelType}Label`],
@@ -1134,20 +934,16 @@ Then(
 
 Then(
   'verify value should equal {string} in {string} on {string} wizard',
-  async function(value, componentName, wizardName) {
-    await verifyText(
-      this.driver,
-      pageObjects[wizardName][componentName]['label'],
-      value
-    )
+  async function (value, componentName, wizardName) {
+    await verifyText(this.driver, pageObjects[wizardName][componentName]['label'], value)
   }
 )
 
 Then(
-    'verify {string} input should contains {string} value on {string} wizard',
-    async function (component, value, wizard) {
-        await verifyTypedValue(this.driver, pageObjects[wizard][component], value)
-    }
+  'verify {string} input should contains {string} value on {string} wizard',
+  async function (component, value, wizard) {
+    await verifyTypedValue(this.driver, pageObjects[wizard][component], value)
+  }
 )
 
 Then(
@@ -1159,7 +955,7 @@ Then(
 
 Then(
   'verify value should equal {string}.{string} in {string} on {string} wizard',
-  async function(constStorage, constValue, componentName, wizardName) {
+  async function (constStorage, constValue, componentName, wizardName) {
     await verifyText(
       this.driver,
       pageObjects[wizardName][componentName]['label'],
@@ -1168,14 +964,8 @@ Then(
   }
 )
 
-Then('select {string} with {string} value in breadcrumbs menu', async function(
-  itemType,
-  name
-) {
-  await openDropdown(
-    this.driver,
-    pageObjects['commonPagesHeader']['Breadcrumbs'][itemType]
-  )
+Then('select {string} with {string} value in breadcrumbs menu', async function (itemType, name) {
+  await openDropdown(this.driver, pageObjects['commonPagesHeader']['Breadcrumbs'][itemType])
 
   await selectOptionInDropdown(
     this.driver,
@@ -1186,50 +976,32 @@ Then('select {string} with {string} value in breadcrumbs menu', async function(
 
 Then(
   'verify arrow lines position on {string} on {string} wizard',
-  async function(graphName, wizardName) {
-    await checkNodesConnectionsNPandas(
-      this.driver,
-      pageObjects[wizardName][graphName]
-    )
+  async function (graphName, wizardName) {
+    await checkNodesConnectionsNPandas(this.driver, pageObjects[wizardName][graphName])
   }
 )
 
-When('hover {string} component on {string} wizard', async function(
-  componentName,
-  wizardName
-) {
-  await hoverComponent(
-    this.driver,
-    pageObjects[wizardName][componentName],
-    false
-  )
-})
-
-When('scroll and hover {string} component on {string} wizard', async function(
-  componentName,
-  wizardName
-) {
-  await hoverComponent(
-    this.driver,
-    pageObjects[wizardName][componentName],
-    true
-  )
+When('hover {string} component on {string} wizard', async function (componentName, wizardName) {
+  await hoverComponent(this.driver, pageObjects[wizardName][componentName], false)
 })
 
 When(
+  'scroll and hover {string} component on {string} wizard',
+  async function (componentName, wizardName) {
+    await hoverComponent(this.driver, pageObjects[wizardName][componentName], true)
+  }
+)
+
+When(
   'scroll and hover {string} component in {string} on {string} wizard',
-  async function(componentName, accordionName, wizardName) {
-    await hoverComponent(
-      this.driver,
-      pageObjects[wizardName][accordionName][componentName],
-      true
-    )
+  async function (componentName, accordionName, wizardName) {
+    await hoverComponent(this.driver, pageObjects[wizardName][accordionName][componentName], true)
   }
 )
 
 When(
   'click on node with name {string} in {string} graph on {string} wizard',
-  async function(nodeName, graphName, wizardName) {
+  async function (nodeName, graphName, wizardName) {
     const arr = await findRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizardName][graphName]['nodesTable'],
@@ -1244,35 +1016,33 @@ When(
   }
 )
 
-Then('{string} on {string} wizard should be {string}', async function(
-  componentName,
-  wizardName,
-  state
-) {
-  await verifyComponentContainsAttributeValue(
-    this.driver,
-    pageObjects[wizardName][componentName],
-    'class',
-    state
-  )
-})
+Then(
+  '{string} on {string} wizard should be {string}',
+  async function (componentName, wizardName, state) {
+    await verifyComponentContainsAttributeValue(
+      this.driver,
+      pageObjects[wizardName][componentName],
+      'class',
+      state
+    )
+  }
+)
 
-Then('{string} on {string} wizard should not be {string}', async function(
-  componentName,
-  wizardName,
-  state
-) {
-  await verifyComponentNotContainsAttributeValue(
-    this.driver,
-    pageObjects[wizardName][componentName],
-    'class',
-    state
-  )
-})
+Then(
+  '{string} on {string} wizard should not be {string}',
+  async function (componentName, wizardName, state) {
+    await verifyComponentNotContainsAttributeValue(
+      this.driver,
+      pageObjects[wizardName][componentName],
+      'class',
+      state
+    )
+  }
+)
 
 Then(
   'compare {string} element value on {string} wizard with test {string} context value',
-  async function(componentName, wizardName, fieldName) {
+  async function (componentName, wizardName, fieldName) {
     await verifyText(
       this.driver,
       pageObjects[wizardName][componentName],
@@ -1282,24 +1052,19 @@ Then(
 )
 
 Then(
-    'compare {string} element value in {string} on {string} wizard with test {string} context value',
-    async function(componentName, accordionName, wizardName, fieldName) {
-        await verifyText(
-            this.driver,
-            pageObjects[wizardName][accordionName][componentName],
-            this.testContext[fieldName]
-        )
-    }
-)
-
-Then(
-  'compare current browser URL with test {string} context value',
-  async function(savedValue) {
-    expect(await this.driver.getCurrentUrl()).equal(
-      this.testContext[savedValue]
+  'compare {string} element value in {string} on {string} wizard with test {string} context value',
+  async function (componentName, accordionName, wizardName, fieldName) {
+    await verifyText(
+      this.driver,
+      pageObjects[wizardName][accordionName][componentName],
+      this.testContext[fieldName]
     )
   }
 )
+
+Then('compare current browser URL with test {string} context value', async function (savedValue) {
+  expect(await this.driver.getCurrentUrl()).equal(this.testContext[savedValue])
+})
 
 Then(
   'check {string} textarea counter on {string} wizard',

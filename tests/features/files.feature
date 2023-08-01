@@ -108,7 +108,7 @@ Feature: Files Page
     Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
 
   @FAILED_TODO
-  #TODO: 'Name_Input' - options "Input_Hint"."Artifact_Name_Hint" implementation with click on warning hint  
+  #TODO: 'Name_Input' - options "Input_Hint"."Artifact_Name_Hint" implementation with click on warning hint
   #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
   @passive
   @inProgress
@@ -186,7 +186,7 @@ Feature: Files Page
     Then navigate forward
     Then verify "Title" element not exists on "Register_File_Popup" wizard
 
-  @FAILED_TODO 
+  @FAILED_TODO
   #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
   Scenario: MLA006 - Verify behaviour on Register new Artifact
     * set tear-down property "project" created with "automation-test" value
@@ -365,7 +365,7 @@ Feature: Files Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
   @FAILED_TODO
-  #TODO: redirection from "projects/INVALID/files" to "projects" - wrong redirect 
+  #TODO: redirection from "projects/INVALID/files" to "projects" - wrong redirect
   Scenario: Check broken link redirection
     * set tear-down property "project" created with "automation-test-011" value
     * set tear-down property "file" created in "automation-test-011" project with "test_ds" value
@@ -406,8 +406,8 @@ Feature: Files Page
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
 	  Then verify that row index 1 is active in "Files_Table" table on "Files" wizard
     Then verify that row index 2 is NOT active in "Files_Table" table on "Files" wizard
-    Then click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard  
-    Then verify that row index 2 is active in "Files_Table" table on "Files" wizard   
+    Then click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    Then verify that row index 2 is active in "Files_Table" table on "Files" wizard
     Then verify that row index 1 is NOT active in "Files_Table" table on "Files" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
