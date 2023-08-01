@@ -763,6 +763,29 @@ module.exports = {
     ),
     Description_Input: textAreaGroup(generateTextAreaGroup('.feature-set-panel .panel-title .text-area-wrapper')),
     Labels_Table: commonTable(labelsTable),
+    Passthrough_Checkbox: checkboxComponent(
+      generateCheckboxGroup(
+        '.feature-set-panel .panel-title .checkbox',
+        true,
+        false,
+        true
+      )
+    ),
+    Passthrough_Checkbox_State: By.css(
+      '.feature-set-panel .panel-title .checkbox'
+    ),
+    Offline_Checkbox_State: By.css(
+      '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(2) .checkbox'
+    ),
+    Online_Checkbox_State: By.css(
+      '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(1) .checkbox'
+    ),
+    Offline_Partition_Checkbox_State: By.css(
+      '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .checkbox'
+    ),
+    External_Offline_Checkbox_State: By.css(
+      '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(3) .checkbox'
+    ),
     Data_Source_Accordion: {
       Accordion_Header: By.css(
         '.feature-set-panel .accordion__container:nth-of-type(1) h5'
@@ -1007,6 +1030,9 @@ module.exports = {
           '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .select',
           '.select__header .select__value',
           '.select__body .select__item'        )
+      ),
+      URL_Combobox: comboBox(
+        '.target-store__item .target-store__inputs-container .combobox'
       ),
       URL_Input: inputGroup(
         generateInputGroup(

@@ -234,7 +234,7 @@ Feature: MLRun Project Page
         Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
 
     @FAILED_TODO
-    #TODO: Register_Model hidden till 5.1, running in demo mode
+    #TODO: Register_Model hidden till 1.5, running in demo mode
     #TODO: Bug - on 'Project Home' also hidden in demo mode
     @passive
     Scenario: Check all mandatory components on Register Model Popup
@@ -282,7 +282,7 @@ Feature: MLRun Project Page
             | key2\n:\nvalue2 |
 
     @FAILED_TODO
-    #TODO: Register_Model hidden till 5.1, running in demo mode
+    #TODO: Register_Model hidden till 1.5, running in demo mode
     #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
     @passive
     Scenario: Check all mandatory components on Register Dataset Popup
@@ -500,7 +500,7 @@ Feature: MLRun Project Page
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
 
     @FAILED_TODO
-    #TODO: verify "Create_New" element visibility on "Project" doesn't contain 'Register_Model' - Register_Model hidden till 5.1, running in demo mode
+    #TODO: verify "Create_New" element visibility on "Project" doesn't contain 'Register_Model' - Register_Model hidden till 1.5, running in demo mode
     @passive
     Scenario: Check all mandatory components on Create New Feature Set
         Given open url
@@ -543,11 +543,12 @@ Feature: MLRun Project Page
         Then verify "Save_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Save_And_Ingest_Button" element visibility on "New_Feature_Set" wizard
 
-    @FAILED_TODO
-    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
+    @demo
+    #TODO: Register_Model_Button - in demo mode
     Scenario: Check Project Counter redirection to Models tab
         Given open url
+        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -556,9 +557,10 @@ Feature: MLRun Project Page
         Then click on cell with value "Models" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
-        Then verify "Table_Labels_Filter_Input" element visibility on "Models" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Models" wizard
-        Then verify "Show_Iterations_Checkbox" element visibility on "Models" wizard
+        Then click on "Table_FilterBy_Button" element on "Models" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
         Then verify "Register_Model_Button" element visibility on "Models" wizard
@@ -588,8 +590,6 @@ Feature: MLRun Project Page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create Set" value
 
-    @FAILED_TODO
-    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
     Scenario: Check Project Counter redirection to Files tab
         Given open url
@@ -601,9 +601,10 @@ Feature: MLRun Project Page
         Then click on cell with value "Artifacts" in "name" column in "Mono_Values_Cards" table on "Project" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Files" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Files" wizard
-        Then verify "Show_Iterations_Checkbox" element visibility on "Files" wizard
+        Then click on "Table_FilterBy_Button" element on "Files" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Files" wizard
         Then verify "Files_Table" element visibility on "Files" wizard
         Then verify "Register_File_Button" element visibility on "Files" wizard
@@ -960,13 +961,9 @@ Feature: MLRun Project Page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create Set" value
 
-    @FAILED_TODO
-    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
-    @demo
     Scenario: Check all mandatory components on Files tab on Demo mode from Demo Page
         Given open url
-        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -975,21 +972,18 @@ Feature: MLRun Project Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Artifacts" value
         Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Files" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Files" wizard
-        Then verify "Show_Iterations_Checkbox" element visibility on "Files" wizard
+        Then click on "Table_FilterBy_Button" element on "Files" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Files" wizard
         Then verify "Files_Table" element visibility on "Files" wizard
         Then verify "Register_File_Button" element visibility on "Files" wizard
         Then "Register_File_Button" element on "Files" should contains "Register Artifact" value
 
-    @FAILED_TODO
-    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
-    @demo
     Scenario: Check all mandatory components on Datasets tab on Demo mode from Demo Page
         Given open url
-        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -1000,16 +994,15 @@ Feature: MLRun Project Page
         Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
         Then "Register_Dataset_Button" element on "Datasets" should contains "Register Dataset" value
         Then verify "Table_Name_Filter_Input" element visibility on "Datasets" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Datasets" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Datasets" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Datasets" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then click on "Table_FilterBy_Button" element on "Datasets" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
         Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
 
     @passive
-    @demo
     Scenario: Check all mandatory components on Feature Vectors tab on Demo mode from Demo Page
         Given open url
-        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -1023,10 +1016,8 @@ Feature: MLRun Project Page
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
     @passive
-    @demo
     Scenario: Check all mandatory components on ML Functions tab on Demo mode from Demo Page
         Given open url
-        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -1060,10 +1051,9 @@ Feature: MLRun Project Page
         Then verify "Status_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Status_Filter_Options"
 
-    @FAILED_TODO
-    #TODO: verify "Table_Labels_Filter_Input" element visibility - block element is changed, hidden
     @passive
     @demo
+    #TODO: Register_Model_Button - in demo mode
     Scenario: Check all mandatory components on Models tab on Demo mode from Demo Page
         Given open url
         * turn on demo mode
@@ -1075,19 +1065,18 @@ Feature: MLRun Project Page
         And wait load page
         Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
         Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
-        Then verify "Table_Labels_Filter_Input" element visibility on "Models" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Models" wizard
-        Then verify "Show_Iterations_Checkbox" element visibility on "Models" wizard
+        Then click on "Table_FilterBy_Button" element on "Models" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
         Then verify "Register_Model_Button" element visibility on "Models" wizard
         Then "Register_Model_Button" element on "Models" should contains "Register Model" value
 
     @passive
-    @demo
     Scenario: Check all mandatory components on Models tab on Demo mode from Demo Page
         Given open url
-        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -1097,10 +1086,8 @@ Feature: MLRun Project Page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
 
     @passive
-    @demo
     Scenario: Check all mandatory components on Models Endpoint tab on Demo mode from Demo Page
         Given open url
-        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -1110,10 +1097,8 @@ Feature: MLRun Project Page
         Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
 
     @passive
-    @demo
     Scenario: Check all mandatory components on Real-Time Piplines tab on Demo mode from Demo Page
         Given open url
-        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -1123,10 +1108,8 @@ Feature: MLRun Project Page
         Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
 
     @passive
-    @demo
     Scenario: Check all mandatory components on Monitoring tab on Demo mode from Demo Page
         Given open url
-        * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -1267,7 +1250,7 @@ Feature: MLRun Project Page
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
         Then "Title" element on "Consumer_Groups" should contains "Consumer groups (v3io stream)" value
         Then "Description" element on "Consumer_Groups" should contains "This report displays the project's consumer groups for Iguazio v3io streams" value
-
+    
     Scenario: Verify filtering by name on Consumer Groups drill-down
         Given open url
         And wait load page

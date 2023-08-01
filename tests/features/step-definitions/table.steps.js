@@ -40,6 +40,7 @@ import {
   getTableRows,
   isContainsSubstringInColumnCells,
   isContainsSubstringInColumnDropdownCells,
+  isContainsSubstringInColumnDropdownCellsOverlay,
   isContainsSubstringInColumnTooltipCells,
   isContainsValueInColumn,
   isDatetimeCelsValueInRange,
@@ -391,6 +392,21 @@ When(
       await clickOnComponent(
         this.driver,
         pageObjects[wizardName][accordionName][tableName]['tableFields'][field](indx)
+      )
+    }
+  }
+)
+
+Then(
+  'value in {string} column with {string} in {string} on {string} wizard should contains {string} in {string}',
+  async function (column, type, table, wizard, substring, overlay) {
+    if (type === 'dropdowns') {
+      await isContainsSubstringInColumnDropdownCellsOverlay(
+        this.driver,
+        pageObjects[wizard][table],
+        pageObjects[wizard][overlay],
+        column,
+        substring
       )
     }
   }
