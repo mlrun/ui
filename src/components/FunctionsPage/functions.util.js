@@ -56,6 +56,8 @@ export const FUNCTIONS_EDITABLE_STATES = [
   ...FUNCTIONS_FAILED_STATES
 ]
 export const infoHeaders = [
+  { label: 'Created at', id: 'created' },
+  { label: 'Created by', id: 'created_by' },
   { label: 'Name', id: 'name' },
   { label: 'Kind', id: 'type' },
   { label: 'Hash', id: 'hash' },

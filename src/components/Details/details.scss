@@ -50,7 +50,9 @@
 
         &__status {
           display: flex;
+          flex-flow: row wrap;
           align-items: center;
+          line-height: 24px;
         }
 
         &__back-btn {
@@ -84,14 +86,11 @@
 
           .state {
             min-width: 18px;
+            margin-right: 20px;
 
             i {
               margin-left: 10px;
             }
-          }
-
-          .error-container {
-            margin-left: 20px;
           }
         }
 

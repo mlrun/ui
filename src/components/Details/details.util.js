@@ -236,6 +236,12 @@ export const generateJobsContent = selectedItem => {
 }
 
 export const generateFunctionsContent = selectedItem => ({
+  created: {
+    value: formatDatetime(selectedItem.created, 'N/A')
+  },
+  created_by: {
+    value: selectedItem.created_by ?? 'N/A'
+  },
   name: {
     value: selectedItem.name
   },
@@ -266,6 +272,12 @@ export const generateFunctionsContent = selectedItem => ({
 })
 
 export const generateFeatureSetsOverviewContent = selectedItem => ({
+  created: {
+    value: formatDatetime(selectedItem.created, 'N/A')
+  },
+  created_by: {
+    value: selectedItem.created_by ?? 'N/A'
+  },
   description: {
     value: selectedItem.description ?? '',
     editModeEnabled: true,
@@ -321,6 +333,12 @@ export const generateFeatureSetsOverviewContent = selectedItem => ({
 })
 
 export const generateFeatureVectorsOverviewContent = selectedItem => ({
+  created: {
+    value: formatDatetime(selectedItem.created, 'N/A')
+  },
+  created_by: {
+    value: selectedItem.created_by
+  },
   description: {
     value: selectedItem.description ?? ''
   },
