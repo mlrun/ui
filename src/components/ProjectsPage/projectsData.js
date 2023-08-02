@@ -108,9 +108,10 @@ export const handleDeleteProjectError = (
   project,
   setConfirmData,
   setNotification,
-  dispatch
+  dispatch,
+  deleteNonEmpty
 ) => {
-  if (error.response?.status === 412) {
+  if (error.response?.status === 412 && !deleteNonEmpty) {
     setConfirmData({
       item: project,
       header: 'Delete project?',
