@@ -176,14 +176,30 @@ const Projects = ({
           )
         })
         .catch(error => {
-          handleDeleteProjectError(
-            error,
-            handleDeleteProject,
-            project,
-            setConfirmData,
-            setNotification,
-            dispatch
-          )
+          if (deleteNonEmpty) {
+            dispatch(
+              setNotification({
+                status: 400,
+                id: Math.random(),
+                retry: () => handleDeleteProject(project),
+                message:
+                  error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                    ? `You are not allowed to delete ${project.metadata.name} project`
+                    : `Failed to delete ${project.metadata.name} project`
+              })
+            )
+          } else {
+            handleDeleteProjectError(
+              error,
+              handleDeleteProject,
+              project,
+              setConfirmData,
+              setNotification,
+              dispatch,
+              deleteProject,
+              fetchMinimalProjects
+            )
+          }
         })
     },
     [deleteProject, dispatch, fetchMinimalProjects]
