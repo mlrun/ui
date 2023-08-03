@@ -29,7 +29,7 @@ import TableProducerCell from '../TableProducerCell/TableProducerCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
-import { BUTTON_COPY_URI_CELL_TYPE } from '../../constants'
+import { BUTTON_COPY_URI_CELL_TYPE, DATASET_TYPE, MODEL_TYPE } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { truncateUid } from '../../utils'
@@ -116,7 +116,15 @@ const TableCell = ({
     return (
       <td className={`table-body__cell ${data.class} ${className}`}>
         <RoundedIcon
-          tooltipText={data.disabled ? '' : 'Artifact Preview'}
+          tooltipText={
+            data.disabled
+              ? ''
+              : item.kind === MODEL_TYPE
+              ? 'Model Preview'
+              : item.kind === DATASET_TYPE
+              ? 'Dataset Preview'
+              : 'Artifact Preview'
+          }
           disabled={data.disabled}
           onClick={() => {
             dispatch(

@@ -79,7 +79,9 @@ import {
   checkCheckbox,
   isCheckboxChecked,
   isCheckboxUnchecked,
-  uncheckCheckbox
+  uncheckCheckbox,
+  verifyCheckboxEnabled,
+  verifyCheckboxDisabled
 } from '../common/actions/checkbox.action'
 import {
   applyDatetimePickerRange,
@@ -233,6 +235,20 @@ Then('verify {string} element on {string} wizard is disabled', async function(
   wizardName
 ) {
   await verifyElementDisabled(this.driver, pageObjects[wizardName][elementName])
+})
+
+Then('verify checkbox {string} element on {string} wizard is enabled', async function(
+  elementName,
+  wizardName
+) {
+  await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][elementName])
+})
+
+Then('verify checkbox {string} element on {string} wizard is disabled', async function(
+  elementName,
+  wizardName
+) {
+  await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
 })
 
 Then(
