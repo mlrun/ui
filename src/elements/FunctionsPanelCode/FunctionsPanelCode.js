@@ -33,7 +33,7 @@ import {
   sourceCodeInBase64
 } from './functionsPanelCode.util'
 import { PANEL_CREATE_MODE, TAG_LATEST } from '../../constants'
-import { trimSplit } from '../../utils'
+import { splitTrim, trimSplit } from '../../utils'
 import { useParams } from 'react-router-dom'
 
 const FunctionsPanelCode = ({
@@ -47,6 +47,7 @@ const FunctionsPanelCode = ({
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
+  setNewFunctionRequirements,
   setNewFunctionDefaultClass,
   setNewFunctionForceBuild,
   setNewFunctionHandler,
@@ -61,6 +62,7 @@ const FunctionsPanelCode = ({
     handler: defaultData.default_handler ?? '',
     image: defaultData.image ?? '',
     base_image: defaultData.build?.base_image ?? '',
+    requirements: (defaultData.build?.requirements || []).join(', ') ?? '',
     commands: (defaultData.build?.commands || []).join('\n') ?? '',
     build_image: defaultData.build?.image ?? ''
   })
@@ -99,8 +101,8 @@ const FunctionsPanelCode = ({
           .replace('{name}', functionsStore.newFunction.metadata.name)
           .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
 
-        setNewFunctionCommands(
-          trimSplit(appStore.frontendSpec?.function_deployment_mlrun_command ?? '', '\n')
+        setNewFunctionRequirements(
+          trimSplit(appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '', ',')
         )
         setImageType(NEW_IMAGE)
         setNewFunctionBaseImage(
@@ -111,7 +113,7 @@ const FunctionsPanelCode = ({
         setNewFunctionBuildImage(buildImage)
         setData(state => ({
           ...state,
-          commands: appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
+          requirements: appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '',
           base_image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
@@ -150,7 +152,8 @@ const FunctionsPanelCode = ({
     setNewFunctionBaseImage,
     setNewFunctionBuildImage,
     setNewFunctionCommands,
-    setNewFunctionImage
+    setNewFunctionImage,
+    setNewFunctionRequirements
   ])
 
   const handleClassOnBlur = () => {
@@ -173,6 +176,7 @@ const FunctionsPanelCode = ({
           ...state,
           base_image: '',
           commands: '',
+          requirements: '',
           build_image: '',
           image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
@@ -208,7 +212,7 @@ const FunctionsPanelCode = ({
         setData(state => ({
           ...state,
           image: '',
-          commands: appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
+          requirements: appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '',
           base_image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
@@ -218,8 +222,9 @@ const FunctionsPanelCode = ({
       } else {
         setData(state => ({
           ...state,
-          commands:
-            state.commands || (appStore.frontendSpec?.function_deployment_mlrun_command ?? ''),
+          commands: state.commands || '',
+          requirements:
+            state.requirements || (appStore.frontendSpec?.function_deployment_mlrun_requirement ?? ''),
           base_image:
             state.base_image ||
             appStore.frontendSpec?.default_function_image_by_kind?.[
@@ -230,11 +235,12 @@ const FunctionsPanelCode = ({
         }))
       }
 
-      setNewFunctionCommands(
-        data.commands.length > 0
-          ? trimSplit(data.commands, '\n')
-          : trimSplit(appStore.frontendSpec?.function_deployment_mlrun_command ?? '', '\n')
+      setNewFunctionRequirements(
+        data.requirements.length > 0
+          ? splitTrim(data.requirements, ',')
+          : splitTrim(appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '', ',')
       )
+      setNewFunctionCommands(trimSplit(data.commands, '\n') || '')
       setNewFunctionBaseImage(
         data.base_image ||
           appStore.frontendSpec?.default_function_image_by_kind?.[
@@ -270,6 +276,7 @@ const FunctionsPanelCode = ({
       setValidation={setValidation}
       setNewFunctionBaseImage={setNewFunctionBaseImage}
       setNewFunctionBuildImage={setNewFunctionBuildImage}
+      setNewFunctionRequirements={setNewFunctionRequirements}
       setNewFunctionCommands={setNewFunctionCommands}
       setNewFunctionForceBuild={setNewFunctionForceBuild}
       setNewFunctionImage={setNewFunctionImage}

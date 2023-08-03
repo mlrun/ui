@@ -60,6 +60,7 @@ const FunctionsPanel = ({
     isCodeImageValid: true,
     isBaseImageValid: true,
     isBuildCommandsValid: true,
+    isBuildRequirementValid: true,
     isBuildImageValid: true,
     isMemoryRequestValid: true,
     isMemoryLimitValid: true,
@@ -98,6 +99,7 @@ const FunctionsPanel = ({
           build: {
             base_image: defaultData.build?.base_image ?? '',
             commands: defaultData.build?.commands ?? [],
+            requirements: defaultData.build?.requirements ?? [],
             functionSourceCode: defaultData.build?.functionSourceCode ?? '',
             image: defaultData.build?.image ?? ''
           },
@@ -151,11 +153,26 @@ const FunctionsPanel = ({
   const createFunction = deploy => {
     createNewFunction(params.projectName, functionsStore.newFunction).then(result => {
       if (deploy) {
+        const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
+          appStore.frontendSpec?.function_deployment_mlrun_requirement
+        )
+
         const data = {
-          function: { ...functionsStore.newFunction },
-          with_mlrun: functionsStore.newFunction.spec.build.commands.includes(
-            appStore.frontendSpec?.function_deployment_mlrun_command
-          )
+          function: {
+            ...functionsStore.newFunction,
+            spec: {
+              ...functionsStore.newFunction.spec,
+              build:{
+                ...functionsStore.newFunction.spec.build,
+                requirements:
+                  with_mlrun &&
+                  functionsStore.newFunction.spec.build.requirements.length === 1 ?
+                  []
+                  : functionsStore.newFunction.spec.build.requirements
+              }
+            }
+          },
+          with_mlrun
         }
 
         return handleDeploy(data)
@@ -178,13 +195,11 @@ const FunctionsPanel = ({
 
       if (
         imageType === NEW_IMAGE &&
-        (functionsStore.newFunction.spec.build.base_image.length === 0 ||
-          functionsStore.newFunction.spec.build.commands.length === 0)
+        (functionsStore.newFunction.spec.build.base_image.length === 0)
       ) {
         return setValidation(state => ({
           ...state,
-          isBaseImageValid: functionsStore.newFunction.spec.build.base_image.length > 0,
-          isBuildCommandsValid: functionsStore.newFunction.spec.build.commands.length > 0
+          isBaseImageValid: functionsStore.newFunction.spec.build.base_image.length > 0
         }))
       }
 
