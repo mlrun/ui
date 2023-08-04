@@ -681,7 +681,11 @@ const parseEnvironmentVariables = (envVariables, isStagingMode) => {
   return envVariables
     .filter(envVariable => {
       if (envVariable?.valueFrom?.secretKeyRef) {
-        return envVariable.name && envVariable.valueFrom.secretKeyRef.name && envVariable.valueFrom.secretKeyRef.key
+        return (
+          envVariable.name &&
+          envVariable.valueFrom.secretKeyRef.name &&
+          envVariable.valueFrom.secretKeyRef.key
+        )
       } else {
         return envVariable.name && envVariable.value
       }
