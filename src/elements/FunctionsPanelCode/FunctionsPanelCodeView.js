@@ -227,71 +227,72 @@ const FunctionsPanelCodeView = ({
                   value={data.base_image}
                   wrapperClassName="base-image"
                 />
-                <Input
-                  className="input__wide"
-                  disabled={imageType !== NEW_IMAGE}
-                  floatingLabel
-                  label="Build requirements"
-                  onChange={requirements =>
-                    setData(state => ({
-                      ...state,
-                      requirements
-                    }))
-                  }
-                  invalid={!validation.isBuildRequirementValid && imageType === NEW_IMAGE}
-                  onBlur={event => {
-                    if (
-                      !isEqual(
-                        splitTrim(event.target.value, ','),
-                        functionsStore.newFunction.spec.build.requirements
-                      )
-                    ) {
-                      setNewFunctionRequirements(splitTrim(data.requirements, ','))
-                    }
-                  }}
-                  setInvalid={value =>
-                    setValidation(state => ({
-                      ...state,
-                      isBuildRequirementValid: value
-                    }))
-                  }
-                  value={data.requirements}
-                  wrapperClassName="build-requirements"
-                />
               </div>
             </div>
           </div>
         </div>
-        <TextArea
-          disabled={imageType !== NEW_IMAGE}
-          floatingLabel
-          label="Build commands"
-          onChange={commands =>
-            setData(state => ({
-              ...state,
-              commands
-            }))
-          }
-          invalid={!validation.isBuildCommandsValid && imageType === NEW_IMAGE}
-          onBlur={event => {
-            if (
-              !isEqual(
-                trimSplit(event.target.value, '\n'),
-                functionsStore.newFunction.spec.build.commands
-              )
-            ) {
-              setNewFunctionCommands(trimSplit(data.commands, '\n'))
+        <div className="code__build">
+          <Input
+            disabled={imageType !== NEW_IMAGE}
+            floatingLabel
+            label="Requirements (separate values using comma)"
+            onChange={requirements =>
+              setData(state => ({
+                ...state,
+                requirements
+              }))
             }
-          }}
-          setInvalid={value =>
-            setValidation(state => ({
-              ...state,
-              isBuildCommandsValid: value
-            }))
-          }
-          value={data.commands}
-          wrapperClassName="commands"
-        />
+            invalid={!validation.isBuildRequirementValid && imageType === NEW_IMAGE}
+            onBlur={event => {
+              if (
+                !isEqual(
+                  splitTrim(event.target.value, ','),
+                  functionsStore.newFunction.spec.build.requirements
+                )
+              ) {
+                setNewFunctionRequirements(splitTrim(data.requirements, ','))
+              }
+            }}
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                isBuildRequirementValid: value
+              }))
+            }
+            value={data.requirements}
+            wrapperClassName="requirements"
+          />
+          <TextArea
+            disabled={imageType !== NEW_IMAGE}
+            floatingLabel
+            label="Build commands"
+            onChange={commands =>
+              setData(state => ({
+                ...state,
+                commands
+              }))
+            }
+            invalid={!validation.isBuildCommandsValid && imageType === NEW_IMAGE}
+            onBlur={event => {
+              if (
+                !isEqual(
+                  trimSplit(event.target.value, '\n'),
+                  functionsStore.newFunction.spec.build.commands
+                )
+              ) {
+                setNewFunctionCommands(trimSplit(data.commands, '\n'))
+              }
+            }}
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                isBuildCommandsValid: value
+              }))
+            }
+            value={data.commands}
+            wrapperClassName="commands"
+          />
+        </div>
         {editCode && (
           <EditorModal
             closeModal={() => setEditCode(false)}
