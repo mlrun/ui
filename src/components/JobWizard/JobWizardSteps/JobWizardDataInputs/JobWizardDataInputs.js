@@ -24,7 +24,7 @@ import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDa
 
 const JobWizardDataInputs = ({ formState }) => {
   return (
-    <div className="job-wizard__data-inputs form">
+    <div className="job-wizard__data-inputs">
       <div className="form-row">
         <h5 className="form-step-title">Data Inputs</h5>
       </div>
