@@ -699,13 +699,13 @@ const parseEnvironmentVariables = (envVariables, isStagingMode) => {
         const secretName = envVariable.valueFrom.secretKeyRef.name
         const secretKey = envVariable.valueFrom.secretKeyRef.key ?? ''
 
-        env.type = ENV_VARIABLE_TYPE_SECRET
-
         if (isStagingMode) {
           env.secretName = secretName
           env.secretKey = secretKey
+          env.type = ENV_VARIABLE_TYPE_SECRET
         } else {
           env.value = secretName && secretKey ? `${secretName}:${secretKey}` : secretName
+          env.type = ENV_VARIABLE_TYPE_VALUE
         }
       } else {
         env.type = ENV_VARIABLE_TYPE_VALUE
