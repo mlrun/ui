@@ -70,7 +70,8 @@ import {
   PANEL_DEFAULT_ACCESS_KEY,
   SET_NEW_FUNCTION_FORCE_BUILD,
   SET_NEW_FUNCTION_PREEMTION_MODE,
-  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
+  SET_NEW_FUNCTION_REQUIREMENTS
 } from '../constants'
 
 const initialState = {
@@ -98,7 +99,8 @@ const initialState = {
         base_image: '',
         commands: [],
         functionSourceCode: '',
-        image: ''
+        image: '',
+        requirements: []
       },
       default_class: '',
       default_handler: '',
@@ -320,6 +322,20 @@ const functionReducer = (state = initialState, { type, payload }) => {
             build: {
               ...state.newFunction.spec.build,
               commands: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_REQUIREMENTS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              requirements: payload
             }
           }
         }

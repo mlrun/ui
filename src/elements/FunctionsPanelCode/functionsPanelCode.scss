@@ -60,13 +60,28 @@
     }
   }
 
-  .commands {
-    width: 73%;
-    margin-right: 0;
-    margin-left: auto;
+  &__build {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 
-    .text-area {
-      width: 100%;
+    .requirements {
+      margin-bottom: 10px;
+
+      label {
+        text-transform: none;
+      }
+    }
+
+    .commands,
+    .requirements {
+      width: 73%;
+      margin-right: 0;
+      margin-left: auto;
+
+      .text-area {
+        width: 100%;
+      }
     }
   }
 
