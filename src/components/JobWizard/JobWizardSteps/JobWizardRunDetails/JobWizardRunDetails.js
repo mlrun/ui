@@ -192,6 +192,7 @@ const JobWizardRunDetails = ({
                 name={methodPath}
                 label="Method"
                 options={jobAdditionalData.methodOptions || []}
+                scrollToView={false}
               />
             </div>
           )}
