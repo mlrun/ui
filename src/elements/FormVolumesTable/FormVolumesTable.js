@@ -85,7 +85,7 @@ const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
                 hidden={editingItem?.ui?.isNew}
                 fields={fields}
                 fieldsPath={fieldsPath}
-                label="Add custom parameter"
+                label="Add volume"
                 onClick={(...addRowArgs) =>
                   addNewRow(...addRowArgs, {
                     data: {
