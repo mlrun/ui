@@ -150,7 +150,7 @@ const NewFunctionPopUp = ({
               onBlur={handleNameOnBlur}
               required
               setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
-              validationRules={getValidationRules('common.name')}
+              validationRules={getValidationRules('function.name')}
               value={data.name}
               wrapperClassName="name"
             />
