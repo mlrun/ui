@@ -197,18 +197,18 @@ const DetailsInfoItem = React.forwardRef(
         </div>
       )
     } else if (!isEmpty(func)) {
-      const funcStr = func.split('/').pop()
+      const [functionProject, functionNameWithHash] = func.split('/')
 
       return (
         <Tooltip
           className="details-item__data details-item__link"
-          template={<TextTooltipTemplate text={funcStr} />}
+          template={<TextTooltipTemplate text={func} />}
         >
           <Link
             className="link"
-            to={`/projects/${params.projectName}/functions/${funcStr}/overview`}
+            to={`/projects/${functionProject}/functions/${functionNameWithHash}/overview`}
           >
-            {funcStr}
+            {func}
           </Link>
         </Tooltip>
       )
