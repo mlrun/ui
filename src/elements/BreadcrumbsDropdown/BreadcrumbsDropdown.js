@@ -37,7 +37,7 @@ const BreadcrumbsDropdown = forwardRef(
     return (
       <div className="breadcrumbs__dropdown-wrapper" data-testid="breadcrumbs-dropdown">
         {withSearch && (
-          <div className="breadcrumbs__dropdown-search" data-testid="breadcrumbs-project-search">
+          <div className="breadcrumbs__dropdown-search" data-testid="breadcrumbs-search">
             <input
               className="input"
               onChange={event => setSearchValue(event.target.value)}
@@ -50,7 +50,7 @@ const BreadcrumbsDropdown = forwardRef(
         )}
         <div className="breadcrumbs__dropdown" ref={ref}>
           {list
-            .filter(project => project.id.startsWith(searchValue))
+            .filter(listItem => listItem.id.startsWith(searchValue))
             .map(listItem => {
               const dropdownItemClassNames = classnames(
                 'breadcrumbs__dropdown-item',

@@ -211,7 +211,6 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
                     link={to}
                     list={projectScreens}
                     onClick={() => handleSelectDropdownItem(separatorRef)}
-                    ref={projectListRef}
                     selectedItem={urlItems.screen?.id}
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
