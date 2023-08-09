@@ -67,7 +67,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
         <FormKeyValueTable
           keyHeader="Key"
           keyLabel="Key"
-          addNewItemLabel="Add a node"
+          addNewItemLabel="Add node selector"
           fieldsPath="resources.nodeSelectorTable"
           formState={formState}
         />
