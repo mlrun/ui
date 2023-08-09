@@ -246,7 +246,7 @@ const Files = () => {
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-  }, [dispatch])
+  }, [dispatch, params.projectName])
 
   useEffect(() => {
     checkForSelectedFile(

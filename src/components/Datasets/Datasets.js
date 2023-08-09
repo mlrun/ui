@@ -253,7 +253,7 @@ const Datasets = () => {
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-  }, [dispatch])
+  }, [dispatch, params.projectName])
 
   useEffect(() => {
     checkForSelectedDataset(
