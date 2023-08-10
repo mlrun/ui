@@ -83,11 +83,13 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
 
         if (showProjectsList) setShowProjectsList(false)
       }
+
+      setSearchValue('')
     },
     [breadcrumbsRef, showProjectsList, showScreensList]
   )
 
-  const scrollOptionToView = useCallback(() => {
+  const scrollProjectOptionToView = useCallback(() => {
     const selectedOptionEl = projectListRef.current.querySelector(`#${params.projectName}`)
 
     searchValue
@@ -105,11 +107,9 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
 
   useEffect(() => {
     if (showProjectsList && projectListRef.current) {
-      scrollOptionToView()
-    } else {
-      setSearchValue('')
+      scrollProjectOptionToView()
     }
-  }, [showProjectsList, showScreensList, scrollOptionToView])
+  }, [showProjectsList, scrollProjectOptionToView])
 
   useEffect(() => {
     window.addEventListener('click', handleCloseDropdown)
