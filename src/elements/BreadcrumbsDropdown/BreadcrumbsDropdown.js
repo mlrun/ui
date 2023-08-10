@@ -50,7 +50,9 @@ const BreadcrumbsDropdown = forwardRef(
         )}
         <div className="breadcrumbs__dropdown" ref={ref}>
           {list
-            .filter(listItem => listItem.id.startsWith(searchValue))
+            .filter(listItem =>
+              listItem.id.toLocaleLowerCase().startsWith(searchValue.toLocaleLowerCase())
+            )
             .map(listItem => {
               const dropdownItemClassNames = classnames(
                 'breadcrumbs__dropdown-item',
