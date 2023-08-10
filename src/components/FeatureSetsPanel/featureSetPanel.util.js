@@ -39,7 +39,7 @@ export const checkValidation = (
     Boolean(target.time_partitioning_granularity)
   )
 
-  const OnlineRedisTarget = newFeatureSet.spec.targets.find(
+  const onlineRedisTarget = newFeatureSet.spec.targets.find(
     targetKind => targetKind.kind === REDISNOSQL
   )
 
@@ -56,8 +56,8 @@ export const checkValidation = (
     isValid = false
   }
 
-  if (OnlineRedisTarget) {
-    if (/[{}]/g.test(OnlineRedisTarget.path)) {
+  if (onlineRedisTarget) {
+    if (/[{}]/g.test(onlineRedisTarget.path)) {
       setValidation(prevState => ({
         ...prevState,
         isOnlineTargetPathValid: false
