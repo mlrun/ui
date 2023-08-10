@@ -212,8 +212,10 @@ export const rerunJob = async (
 ) => {
   const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch)
 
-  setJobWizardMode(PANEL_RERUN_MODE)
-  setEditableItem(generateEditableItem(functionData, job))
+  if (functionData) {
+    setJobWizardMode(PANEL_RERUN_MODE)
+    setEditableItem(generateEditableItem(functionData, job))
+  }
 }
 
 export const handleAbortJob = (

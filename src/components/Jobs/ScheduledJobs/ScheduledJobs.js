@@ -52,6 +52,7 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { isNil } from 'lodash'
 
 const ScheduledJobs = ({
   fetchFunctionTemplate,
@@ -228,8 +229,10 @@ const ScheduledJobs = ({
           throw error
         })
 
-      Promise.all([getJobFunctionDataPromise, fetchScheduledJobAccessKeyPromise]).then(() => {
-        setJobWizardMode(PANEL_EDIT_MODE)
+      Promise.all([getJobFunctionDataPromise, fetchScheduledJobAccessKeyPromise]).then(result => {
+        if (result.every(resultItem => !isNil(resultItem))) {
+          setJobWizardMode(PANEL_EDIT_MODE)
+        }
       })
     },
     [

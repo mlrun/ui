@@ -175,8 +175,6 @@ const jobsActions = {
             error
           })
         )
-
-        throw error
       })
   },
   fetchJobFunctionBegin: () => ({
