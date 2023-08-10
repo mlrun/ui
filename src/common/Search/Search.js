@@ -127,8 +127,6 @@ const Search = ({
         }}
         value={searchValue}
       />
-
-      {/* {label.length > 0 && <label className="search-label">{label}</label>} */}
       {matches.length > 0 && label.length > 0 && inputIsFocused && (
         <PopUpDialog
           className="search-dropdown"
