@@ -30,7 +30,7 @@ import Select from '../../common/Select/Select'
 import TextArea from '../../common/TextArea/TextArea'
 import { Button } from 'igz-controls/components'
 
-import { trimSplit } from '../../utils'
+import { splitTrim, trimSplit } from '../../utils'
 import {
   DEFAULT_ENTRY,
   entryOptions,
@@ -58,6 +58,7 @@ const FunctionsPanelCodeView = ({
   setEditCode,
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
+  setNewFunctionRequirements,
   setNewFunctionCommands,
   setNewFunctionForceBuild,
   setNewFunctionImage,
@@ -230,38 +231,68 @@ const FunctionsPanelCodeView = ({
             </div>
           </div>
         </div>
-        <TextArea
-          disabled={imageType !== NEW_IMAGE}
-          floatingLabel
-          label="Build commands"
-          onChange={commands =>
-            setData(state => ({
-              ...state,
-              commands
-            }))
-          }
-          invalid={!validation.isBuildCommandsValid && imageType === NEW_IMAGE}
-          onBlur={event => {
-            if (
-              !isEqual(
-                trimSplit(event.target.value, '\n'),
-                functionsStore.newFunction.spec.build.commands
-              )
-            ) {
-              setNewFunctionCommands(trimSplit(data.commands, '\n'))
+        <div className="code__build">
+          <Input
+            disabled={imageType !== NEW_IMAGE}
+            floatingLabel
+            label="Requirements (separate values using comma)"
+            onChange={requirements =>
+              setData(state => ({
+                ...state,
+                requirements
+              }))
             }
-          }}
-          required={imageType === NEW_IMAGE}
-          setInvalid={value =>
-            setValidation(state => ({
-              ...state,
-              isBuildCommandsValid: value
-            }))
-          }
-          type="text"
-          value={data.commands}
-          wrapperClassName="commands"
-        />
+            invalid={!validation.isBuildRequirementValid && imageType === NEW_IMAGE}
+            onBlur={event => {
+              if (
+                !isEqual(
+                  splitTrim(event.target.value, ','),
+                  functionsStore.newFunction.spec.build.requirements
+                )
+              ) {
+                setNewFunctionRequirements(splitTrim(data.requirements, ','))
+              }
+            }}
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                isBuildRequirementValid: value
+              }))
+            }
+            value={data.requirements}
+            wrapperClassName="requirements"
+          />
+          <TextArea
+            disabled={imageType !== NEW_IMAGE}
+            floatingLabel
+            label="Build commands"
+            onChange={commands =>
+              setData(state => ({
+                ...state,
+                commands
+              }))
+            }
+            invalid={!validation.isBuildCommandsValid && imageType === NEW_IMAGE}
+            onBlur={event => {
+              if (
+                !isEqual(
+                  trimSplit(event.target.value, '\n'),
+                  functionsStore.newFunction.spec.build.commands
+                )
+              ) {
+                setNewFunctionCommands(trimSplit(data.commands, '\n'))
+              }
+            }}
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                isBuildCommandsValid: value
+              }))
+            }
+            value={data.commands}
+            wrapperClassName="commands"
+          />
+        </div>
         {editCode && (
           <EditorModal
             closeModal={() => setEditCode(false)}
@@ -293,6 +324,7 @@ FunctionsPanelCodeView.propTypes = {
   setNewFunctionCommands: PropTypes.func.isRequired,
   setNewFunctionForceBuild: PropTypes.func.isRequired,
   setNewFunctionImage: PropTypes.func.isRequired,
+  setNewFunctionRequirements: PropTypes.func.isRequired,
   setNewFunctionSourceCode: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired

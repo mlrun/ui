@@ -155,7 +155,7 @@ const JobWizard = ({
         label: 'Advanced',
         getActions: ({ handleSubmit }) => [
           {
-            label: 'Schedule for later',
+            label: isBatchInference ? 'Schedule Infer' : 'Schedule for later',
             onClick: () => {
               setShowSchedule(state => !state)
             },
@@ -163,7 +163,7 @@ const JobWizard = ({
             ref: scheduleButtonRef
           },
           {
-            label: mode === PANEL_EDIT_MODE ? 'Save' : 'Run',
+            label: mode === PANEL_EDIT_MODE ? 'Save' : isBatchInference ? 'Infer now' : 'Run',
             onClick: () => handleSubmit(),
             variant: 'secondary'
           }
@@ -281,6 +281,7 @@ const JobWizard = ({
         return (
           <>
             <Wizard
+              className="form"
               formState={formState}
               id="jobWizard"
               isWizardOpen={isOpen}

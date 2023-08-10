@@ -39,6 +39,7 @@ import {
   SET_NEW_FUNCTION_IMAGE,
   SET_NEW_FUNCTION_BASE_IMAGE,
   SET_NEW_FUNCTION_COMMANDS,
+  SET_NEW_FUNCTION_REQUIREMENTS,
   SET_NEW_FUNCTION_VOLUME_MOUNTS,
   SET_NEW_FUNCTION_VOLUMES,
   SET_NEW_FUNCTION_RESOURCES,
@@ -305,6 +306,10 @@ const functionsActions = {
   setNewFunctionCommands: commands => ({
     type: SET_NEW_FUNCTION_COMMANDS,
     payload: commands
+  }),
+  setNewFunctionRequirements: requirements => ({
+    type: SET_NEW_FUNCTION_REQUIREMENTS,
+    payload: requirements
   }),
   setNewFunctionDefaultClass: default_class => ({
     type: SET_NEW_FUNCTION_DEFAULT_CLASS,

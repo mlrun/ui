@@ -25,7 +25,7 @@ import axios from 'axios'
 import { useParams } from 'react-router-dom'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { RoundedIcon } from 'igz-controls/components'
 
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 
@@ -86,15 +86,14 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   return (
     <div className="preview_container">
       {popupButtonIsDisplayed && (
-        <button onClick={() => handlePreview()} className="preview_popout">
-          <Tooltip template={<TextTooltipTemplate text="Pop-out" />}>
+        <div className="preview-icon__wrapper">
+          <RoundedIcon onClick={handlePreview} className="preview_popout" tooltipText="Pop-out">
             <Popout />
-          </Tooltip>
-        </button>
+          </RoundedIcon>
+        </div>
       )}
       <div className={artifactsPreviewClassNames}>
         <ArtifactsPreview
-          className={artifactsPreviewClassNames}
           extraData={extraData}
           noData={noData}
           preview={preview}

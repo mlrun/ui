@@ -42,13 +42,12 @@ import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
-import { useMode } from '../../../hooks/mode.hook'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
-import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
-import { ReactComponent as Popin } from 'igz-controls/images/pop_in.svg'
+import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
+import { ReactComponent as MinimizeIcon } from 'igz-controls/images/ml-minimize.svg'
 
 const DetailsHeader = ({
   actionsMenu,
@@ -70,7 +69,6 @@ const DetailsHeader = ({
   const params = useParams()
   const navigate = useNavigate()
   const viewMode = getViewMode(window.location.search)
-  const { isDemoMode } = useMode()
   const { actionButton, withToggleViewBtn } = pageData.details
 
   const {
@@ -239,7 +237,7 @@ const DetailsHeader = ({
         )}
         <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
         <div className="item-header__navigation-buttons">
-          {withToggleViewBtn && isDemoMode && (
+          {withToggleViewBtn && (
             <>
               {viewMode !== FULL_VIEW_MODE && (
                 <RoundedIcon
@@ -248,7 +246,7 @@ const DetailsHeader = ({
                   }}
                   tooltipText="Full view"
                 >
-                  <Popout />
+                  <EnlargeIcon />
                 </RoundedIcon>
               )}
               {viewMode === FULL_VIEW_MODE && (
@@ -258,7 +256,7 @@ const DetailsHeader = ({
                   }}
                   tooltipText="Table view"
                 >
-                  <Popin />
+                  <MinimizeIcon />
                 </RoundedIcon>
               )}
             </>

@@ -20,6 +20,7 @@ such restriction.
 
 import {
   AZURE_STORAGE_INPUT_PATH_SCHEME,
+  DBFS_STORAGE_INPUT_PATH_SCHEME,
   GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
   S3_INPUT_PATH_SCHEME,
@@ -27,6 +28,8 @@ import {
 } from '../../constants'
 
 export const CSV = 'csv'
+
+const dbfsTargetPathRegex = /^(dbfs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
 
 export const generateComboboxMatchesList = (
   url,
@@ -87,6 +90,11 @@ export const comboboxSelectList = [
     className: 'path-type-gs',
     label: 'Google storage',
     id: GOOGLE_STORAGE_INPUT_PATH_SCHEME
+  },
+  {
+    className: 'path-type-dbfs',
+    label: 'Databricks filesystem',
+    id: DBFS_STORAGE_INPUT_PATH_SCHEME
   }
 ]
 
@@ -106,11 +114,14 @@ export const isUrlInputValid = (pathInputType, pathInputValue, dataSourceKind) =
     dataSourceKind === CSV
       ? /^(artifacts|datasets)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
       : /^(artifacts|datasets)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
-  const defaultValidation = pathInputValue.length > 0 && /.*?\/(.*?)/.test(pathInputValue)
+  const valueIsNotEmpty = pathInputValue?.trim().length > 0
+  const defaultValidation = valueIsNotEmpty && /.*?\/(.*?)/.test(pathInputValue)
 
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
       return regExp.test(pathInputValue)
+    case DBFS_STORAGE_INPUT_PATH_SCHEME:
+      return valueIsNotEmpty && dbfsTargetPathRegex.test(`${pathInputType}${pathInputValue}`)
     default:
       return dataSourceKind === CSV
         ? defaultValidation && !pathInputValue.endsWith('/')

@@ -1,8 +1,29 @@
 @import '~igz-controls/scss/colors';
 
 .filters-wizard {
+  min-width: 250px;
+
   .pop-up-dialog {
-    width: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+  }
+
+  &__header {
+    top: 0;
+    margin: 0;
+    padding: 0 0 16px;
+    background: $white;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23.44px;
+    color: $mulledWine;
+  }
+
+  &__list {
+    padding-right: 20px;
+    margin: 0;
+    overflow-y: auto;
   }
 
   &__modal-buttons {

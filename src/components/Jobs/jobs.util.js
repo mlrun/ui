@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, defaultsDeep, map, uniq } from 'lodash'
+import { capitalize, defaultsDeep, isEmpty, map, uniq } from 'lodash'
 import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
@@ -67,8 +67,7 @@ export const getInfoHeaders = isSpark =>
         { label: 'Output path', id: 'outputPath' },
         { label: 'Total iterations', id: 'iterations' }
       ]
-export const actionsMenuHeaderDemo = 'Batch run'
-export const actionsMenuHeader = 'New job'
+export const actionsMenuHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
@@ -208,17 +207,12 @@ export const rerunJob = async (
   job,
   fetchJobFunction,
   setEditableItem,
-  isDemoMode,
   setJobWizardMode,
   dispatch
 ) => {
   const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch)
 
-  // todo: delete `if` condition when the job wizard is out of the demo mode
-  if (isDemoMode) {
-    setJobWizardMode(PANEL_RERUN_MODE)
-  }
-
+  setJobWizardMode(PANEL_RERUN_MODE)
   setEditableItem(generateEditableItem(functionData, job))
 }
 
@@ -302,7 +296,7 @@ export const enrichRunWithFunctionFields = (
 
   return fetchJobFunctionsPromiseRef.current
     .then(funcs => {
-      if (funcs) {
+      if (!isEmpty(funcs)) {
         const tagsList = uniq(map(funcs, 'metadata.tag'))
         defaultsDeep(jobRun, {
           ui: {

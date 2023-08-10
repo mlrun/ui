@@ -87,13 +87,12 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   toggleConvertedYaml,
-  isDemoMode,
   selectedJob
 ) => {
   return job?.uid
     ? [
         {
-          label: isDemoMode ? 'Batch re-run' : 'Re-run',
+          label: 'Batch re-run',
           icon: <Run />,
           hidden: limitedFunctionKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
           onClick: handleRerunJob
@@ -144,6 +143,5 @@ export const monitorJobsActionCreator = {
   fetchJobPods: detailsActions.fetchJobPods,
   fetchJobs: jobsActions.fetchJobs,
   removeJobLogs: jobsActions.removeJobLogs,
-  removeNewJob: jobsActions.removeNewJob,
   removePods: detailsActions.removePods
 }

@@ -2,8 +2,6 @@ Feature: Files Page
 
   Testcases that verifies functionality on Files Page
 
-  @FAILED_TODO
-  #TODO: 'Table_Label_Filter_Input', 'Table_Tree_Filter_Dropdown', 'Show_Iterations_Checkbox' elements were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: Check all mandatory components on Artifacts tab
     Given open url
@@ -20,14 +18,15 @@ Feature: Files Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Artifacts" value
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
-    Then verify "Table_Label_Filter_Input" element visibility on "Files" wizard
-    Then verify "Table_Tree_Filter_Dropdown" element visibility on "Files" wizard
-    Then verify "Show_Iterations_Checkbox" element visibility on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
     Then "Register_File_Button" element on "Files" should contains "Register Artifact" value
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Files" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
 
   @passive
   Scenario: verify filtering by file name on Artifacts page
@@ -51,7 +50,7 @@ Feature: Files Page
     Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test"
 
   @FAILED_TODO
-  #TODO: 'Table_Label_Filter_Input' element were redesigned (located in dropdown filter), need tests rewrite
+  #TODO: value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "owner" - dropdown locator 
   @passive
   Scenario: verify filtering by file label on Artifacts page
     Given open url
@@ -63,21 +62,22 @@ Feature: Files Page
     And wait load page
     And select "tab" with "Artifacts" value in breadcrumbs menu
     And wait load page
-    Then type value "owner" to "Table_Label_Filter_Input" field on "Files" wizard
-    Then click on "Table_Refresh_Button" element on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then type value "owner" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "owner"
-    Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "Files" wizard
-    Then click on "Table_Refresh_Button" element on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "v3io_user=admin"
-    Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Files" wizard
-    Then click on "Table_Refresh_Button" element on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
-  @FAILED_TODO
-  #TODO: 'Show_Iterations_Checkbox' element were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: Verify behaviour of Show iterations checkbox on Artifacts tab
     Given open url
@@ -86,20 +86,26 @@ Feature: Files Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then verify "Show_Iterations_Checkbox" element visibility on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
     Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
-    Then check "Show_Iterations_Checkbox" element on "Files" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then "Show_Iterations_Checkbox" element should be checked on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "Artifacts_FilterBy_Popup" wizard
     Then check "expand_btn" visibility in "Files_Table" on "Files" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then uncheck "Show_Iterations_Checkbox" element on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then check "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     Then verify "Header" element not exists on "Files_Info_Pane" wizard
-    Then "Show_Iterations_Checkbox" element should be unchecked on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then "Show_Iterations_Checkbox" element should be checked on "Artifacts_FilterBy_Popup" wizard
     Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
 
   @FAILED_TODO
@@ -230,8 +236,6 @@ Feature: Files Page
     Then verify "Overview_Hash_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
 
-  @FAILED_TODO
-  #TODO: 'Table_Tree_Filter_Dropdown' element were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: Check Details panel still active on page refresh
     * set tear-down property "project" created with "automation-test" value
@@ -245,7 +249,9 @@ Feature: Files Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
@@ -312,8 +318,6 @@ Feature: Files Page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
-  @FAILED_TODO
-  #TODO: Show_Iterations_Checkbox elements were redesigned (located in dropdown filter), need tests rewrite
   @passive
   Scenario: Verify View YAML action
     Given open url
@@ -329,9 +333,12 @@ Feature: Files Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-    Then check "Show_Iterations_Checkbox" element on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
     Then click on cell with row index 1 in "expand_btn" column in "Files_Table" table on "Files" wizard
-    Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "latest #0" value in "name" column
+    Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "latest" value in "name_expand_btn" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard

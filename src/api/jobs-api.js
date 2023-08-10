@@ -116,8 +116,6 @@ const jobsApi = {
     fetch(`${mainBaseUrl}/log/${project}/${id}`, {
       method: 'get'
     }),
-  getScheduledJobAccessKey: (project, job) =>
-    mainHttpClient.get(`/projects/${project}/schedules/${job}?include-credentials=true`),
   getScheduledJobs: (project, filters) => {
     const params = {
       include_last_run: 'yes'

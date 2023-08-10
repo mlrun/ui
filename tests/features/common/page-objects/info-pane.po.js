@@ -56,7 +56,7 @@ const infoPaneTabSelector = {
 }
 
 const infoPaneOverviewHeaders = {
-  root: '.table__item .item-info__details:nth-of-type(1)',
+  root: '.table__item .item-info__details-wrapper:nth-of-type(1)',
   header: {},
   body: {
     row: {

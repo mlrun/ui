@@ -158,7 +158,7 @@ const JobWizardRunDetails = ({
 
   return (
     !isEmpty(jobAdditionalData) && (
-      <div className="job-wizard__run-details form">
+      <div className="job-wizard__run-details">
         <div className="form-row">
           <h5 className="form-step-title">Run Details</h5>
         </div>
@@ -192,6 +192,7 @@ const JobWizardRunDetails = ({
                 name={methodPath}
                 label="Method"
                 options={jobAdditionalData.methodOptions || []}
+                scrollToView={false}
               />
             </div>
           )}

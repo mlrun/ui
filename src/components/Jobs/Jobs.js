@@ -38,16 +38,8 @@ import {
   SCHEDULE_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import {
-  actionCreator,
-  actionsMenuHeader,
-  actionsMenuHeaderDemo,
-  monitorJob,
-  rerunJob,
-  tabs
-} from './jobs.util'
+import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
-import { useMode } from '../../hooks/mode.hook'
 
 export const JobsContext = React.createContext({})
 
@@ -59,7 +51,6 @@ const Jobs = ({ fetchJobFunction }) => {
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { isDemoMode } = useMode()
   const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
@@ -69,31 +60,12 @@ const Jobs = ({ fetchJobFunction }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   const handleActionsMenuClick = () => {
-    if (isDemoMode) {
-      setJobWizardMode(PANEL_CREATE_MODE)
-    } else {
-      // todo: delete when the job wizard is out of the demo mode
-      const tab = location.pathname.includes(MONITOR_JOBS_TAB)
-        ? MONITOR_JOBS_TAB
-        : location.pathname.includes(SCHEDULE_TAB)
-        ? SCHEDULE_TAB
-        : MONITOR_WORKFLOWS_TAB
-
-      navigate(`/projects/${params.projectName}/jobs/${tab}/create-new-job`)
-    }
+    setJobWizardMode(PANEL_CREATE_MODE)
   }
 
   const handleRerunJob = useCallback(
-    async job =>
-      await rerunJob(
-        job,
-        fetchJobFunction,
-        setEditableItem,
-        isDemoMode,
-        setJobWizardMode,
-        dispatch
-      ),
-    [fetchJobFunction, isDemoMode, dispatch]
+    async job => await rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
+    [fetchJobFunction, dispatch]
   )
 
   const handleMonitoring = useCallback(
@@ -137,7 +109,7 @@ const Jobs = ({ fetchJobFunction }) => {
         <div className="content__header">
           <Breadcrumbs />
           <PageActionsMenu
-            actionsMenuHeader={isDemoMode ? actionsMenuHeaderDemo : actionsMenuHeader}
+            actionsMenuHeader={actionsMenuHeader}
             onClick={handleActionsMenuClick}
             showActionsMenu={true}
           />

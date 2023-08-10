@@ -51,7 +51,7 @@ const JobWizardAdvanced = ({
   }, [setShowSchedule])
 
   return (
-    <div className="job-wizard__advanced form">
+    <div className="job-wizard__advanced">
       <div className="form-row">
         <h5 className="form-step-title">Advanced</h5>
       </div>

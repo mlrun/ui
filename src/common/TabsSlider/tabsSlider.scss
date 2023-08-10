@@ -19,12 +19,12 @@
   &__tab {
     display: inline-flex;
     align-items: center;
-    padding: 8px 24px;
+    padding: 5px 24px;
     color: $topaz;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 18px;
     text-transform: capitalize;
-    border-bottom: 3px solid transparent;
+    border-bottom: 2px solid transparent;
     cursor: pointer;
 
     &_active {

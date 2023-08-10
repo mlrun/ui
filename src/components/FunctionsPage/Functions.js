@@ -70,8 +70,7 @@ const Functions = ({
   fetchJobFunction,
   functionsStore,
   removeFunctionsError,
-  removeNewFunction,
-  removeNewJob
+  removeNewFunction
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -85,7 +84,7 @@ const Functions = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
   let fetchFunctionLogsTimeout = useRef(null)
-  const { isStagingMode, isDemoMode } = useMode()
+  const { isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -254,21 +253,17 @@ const Functions = ({
           label: 'Run',
           icon: <Run />,
           onClick: func => {
-            if (isDemoMode) {
-              if (func?.project && func?.name && func?.hash) {
-                fetchJobFunction(func.project, func.name, func.hash)
-                setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
-              } else {
-                dispatch(
-                  setNotification({
-                    status: 400,
-                    id: Math.random(),
-                    message: 'Failed to fetch the function'
-                  })
-                )
-              }
+            if (func?.project && func?.name && func?.hash) {
+              fetchJobFunction(func.project, func.name, func.hash)
+              setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
             } else {
-              setEditableItem(func)
+              dispatch(
+                setNotification({
+                  status: 400,
+                  id: Math.random(),
+                  message: 'Failed to fetch the function'
+                })
+              )
             }
           },
           hidden:
@@ -300,7 +295,7 @@ const Functions = ({
       ],
       []
     )
-  }, [dispatch, fetchJobFunction, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml])
+  }, [dispatch, fetchJobFunction, isStagingMode, onRemoveFunction, toggleConvertedYaml])
 
   useEffect(() => {
     refreshFunctions(filtersStore.filters)
@@ -502,10 +497,8 @@ const Functions = ({
       handleSelectFunction={handleSelectFunction}
       pageData={pageData}
       refreshFunctions={refreshFunctions}
-      removeNewJob={removeNewJob}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
-      setEditableItem={setEditableItem}
       tableContent={tableContent}
       taggedFunctions={taggedFunctions}
       toggleConvertedYaml={toggleConvertedYaml}

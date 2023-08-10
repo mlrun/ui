@@ -56,8 +56,6 @@ import {
   FETCH_JOB_FAILURE,
   FETCH_JOB_SUCCESS,
   SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
-  FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
-  FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
   REMOVE_JOB,
   FETCH_ALL_JOB_RUNS_BEGIN,
   FETCH_ALL_JOB_RUNS_FAILURE,
@@ -255,16 +253,6 @@ const jobReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         jobs: payload,
-        loading: false
-      }
-    case FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_SCHEDULED_JOB_ACCESS_KEY_END:
-      return {
-        ...state,
         loading: false
       }
     case REMOVE_JOB:

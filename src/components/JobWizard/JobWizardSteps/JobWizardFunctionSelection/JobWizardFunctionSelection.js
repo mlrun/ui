@@ -316,7 +316,7 @@ const JobWizardFunctionSelection = ({
   }
 
   return (
-    <div className="job-wizard__function-selection form">
+    <div className="job-wizard__function-selection">
       <div className="form-row">
         <h5 className="form-step-title">Function selection</h5>
       </div>
@@ -381,6 +381,8 @@ const JobWizardFunctionSelection = ({
               setMatches={setFilterMatches}
             />
             <FilterMenuModal
+              cancelButton={{ label: 'Clear', variant: 'tertiary' }}
+              header="Filter by category"
               wizardClassName="hub-filter"
               filterMenuName={JOB_WIZARD_FILTERS}
               initialValues={hubFiltersInitialValues}

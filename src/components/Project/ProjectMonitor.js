@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
@@ -35,7 +36,6 @@ import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
@@ -62,7 +62,6 @@ const ProjectMonitor = ({
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
-  const { isDemoMode } = useMode()
   const dispatch = useDispatch()
   const { isNuclioModeDisabled } = useNuclioMode()
 
@@ -105,14 +104,13 @@ const ProjectMonitor = ({
       openRegisterArtifactModal,
       openRegisterModelModal,
       setCreateFeatureSetPanelIsOpen,
-      setIsNewFunctionPopUpOpen,
-      isDemoMode
+      setIsNewFunctionPopUpOpen
     )
 
     return {
       createNewOptions
     }
-  }, [navigate, params, openRegisterArtifactModal, openRegisterModelModal, isDemoMode])
+  }, [navigate, params, openRegisterArtifactModal, openRegisterModelModal])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {
@@ -217,12 +215,14 @@ const ProjectMonitor = ({
       )
     })
 
-    if (funcs) {
+    if (!isEmpty(funcs)) {
       const currentItem = funcs.find(func => {
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
+      if (currentItem) {
+        navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
+      }
 
       return dispatch(
         setNotification({
@@ -258,12 +258,14 @@ const ProjectMonitor = ({
       )
     })
 
-    if (funcs) {
+    if (!isEmpty(funcs)) {
       const currentItem = funcs.find(func => {
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
+      if (currentItem) {
+        navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
+      }
 
       return dispatch(
         setNotification({

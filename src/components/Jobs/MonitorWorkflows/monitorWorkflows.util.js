@@ -94,13 +94,12 @@ export const generateActionsMenu = (
   handleMonitoring,
   abortable_function_kinds,
   handleConfirmAbortJob,
-  toggleConvertedYaml,
-  isDemoMode
+  toggleConvertedYaml
 ) =>
   job?.uid
     ? [
         {
-          label: isDemoMode ? 'Batch re-run' : 'Re-run',
+          label: 'Batch re-run',
           icon: <Run />,
           hidden: ['local', ''].includes(job?.ui?.originalContent.metadata.labels.kind),
           onClick: handleRerunJob
@@ -151,6 +150,5 @@ export const monitorWorkflowsActionCreator = {
   fetchWorkflows: workflowsActions.fetchWorkflows,
   getFunction: functionsActions.getFunction,
   removePods: detailsActions.removePods,
-  removeNewJob: jobsActions.removeNewJob,
   resetWorkflow: workflowsActions.resetWorkflow
 }

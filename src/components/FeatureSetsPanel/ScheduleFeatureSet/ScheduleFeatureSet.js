@@ -17,32 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useReducer, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import ScheduleFeatureSetView from './ScheduleFeatureSetView'
 
 import { tabs } from './scheduleFeatureSet.util'
-import {
-  initialState,
-  recurringReducer,
-  scheduleActionType
-} from './recurringReducer'
-import {
-  decodeLocale,
-  getWeekDays,
-  getWeekStart
-} from '../../../utils/datePicker.util'
+import { initialState, recurringReducer, scheduleActionType } from './recurringReducer'
+import { decodeLocale, getWeekDays, getWeekStart } from '../../../utils/datePicker.util'
 import { getFormatTime } from '../../../utils'
 import { generateCronInitialValue } from '../../../utils/generateCronInitialValue'
 
 const ScheduleFeatureSet = ({ setNewFeatureSetSchedule, setShowSchedule }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
   const [cron, setCron] = useState('10 * * * *')
-  const [recurringState, recurringDispatch] = useReducer(
-    recurringReducer,
-    initialState
-  )
+  const [recurringState, recurringDispatch] = useReducer(recurringReducer, initialState)
   const startWeek = getWeekStart(decodeLocale(navigator.language))
   const daysOfWeek = getWeekDays(startWeek)
 
@@ -65,8 +54,7 @@ const ScheduleFeatureSet = ({ setNewFeatureSetSchedule, setShowSchedule }) => {
     days = days || '*'
 
     const { hour, minute } = getFormatTime(
-      recurringState.scheduleRepeat[recurringState.scheduleRepeat.activeOption]
-        .time
+      recurringState.scheduleRepeat[recurringState.scheduleRepeat.activeOption].time
     )
 
     setCron(`${minute} ${hour} * * ${days}`)
@@ -84,6 +72,18 @@ const ScheduleFeatureSet = ({ setNewFeatureSetSchedule, setShowSchedule }) => {
     },
     [cron, setNewFeatureSetSchedule, setShowSchedule]
   )
+
+  const isWeekDaysEmpty = useMemo(() => {
+    return (
+      activeTab === tabs[0].id &&
+      recurringState.scheduleRepeat.activeOption === 'week' &&
+      recurringState.scheduleRepeat.week.days.length === 0
+    )
+  }, [
+    activeTab,
+    recurringState.scheduleRepeat.activeOption,
+    recurringState.scheduleRepeat.week.days.length
+  ])
 
   useEffect(() => {
     if (activeTab === tabs[0].id) {
@@ -103,6 +103,7 @@ const ScheduleFeatureSet = ({ setNewFeatureSetSchedule, setShowSchedule }) => {
       cron={cron}
       daysOfWeek={daysOfWeek}
       handleDaysOfWeek={handleDaysOfWeek}
+      isWeekDaysEmpty={isWeekDaysEmpty}
       onSchedule={onSchedule}
       recurringDispatch={recurringDispatch}
       recurringState={recurringState}

@@ -21,7 +21,7 @@ import React from 'react'
 
 import JobWizard from '../JobWizard/JobWizard'
 
-import { ARTIFACT_TYPE, DATASET_TYPE, MONITOR_JOBS_TAB } from '../../constants'
+import { ARTIFACT_TYPE, DATASET_TYPE } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
@@ -47,21 +47,15 @@ export const generateCreateNewOptions = (
   openRegisterArtifactModal,
   openRegisterModelModal,
   setCreateFeatureSetsPanelIsOpen,
-  setIsNewFunctionPopUpOpen,
-  isDemoMode
+  setIsNewFunctionPopUpOpen
 ) => [
   {
-    label: isDemoMode ? 'Batch run' : 'Job',
+    label: 'Batch run',
     id: 'batchRun',
     handler: () => {
-      if (isDemoMode) {
-        openPopUp(JobWizard, {
-          params
-        })
-      } else {
-        // todo: delete this when the job wizard is out of the demo mode
-        navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`)
-      }
+      openPopUp(JobWizard, {
+        params
+      })
     }
   },
   {
