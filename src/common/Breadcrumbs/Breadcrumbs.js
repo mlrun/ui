@@ -106,6 +106,8 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   useEffect(() => {
     if (showProjectsList && projectListRef.current) {
       scrollOptionToView()
+    } else {
+      setSearchValue('')
     }
   }, [showProjectsList, showScreensList, scrollOptionToView])
 
