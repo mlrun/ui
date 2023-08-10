@@ -155,7 +155,9 @@ export const targetsPathEditDataInitialState = {
  */
 export const generatePath = (prefixes, project, kind, name, suffix) => {
   if (prefixes) {
-    const path = prefixes[kind] || prefixes.default
+    let path = prefixes[kind] || prefixes.default
+
+    path = kind === REDISNOSQL ? path.replace('//', '//{hostIP}:{port}') : path
 
     return `${path.replace(
       /{project}|{name}|{kind}/gi,
