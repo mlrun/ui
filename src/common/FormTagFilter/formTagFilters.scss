@@ -35,10 +35,7 @@
     }
   }
 
-  .tag-filter__dropdown {
-    position: absolute;
-    top: calc(100% + 5px);
-    z-index: 3;
+  &__dropdown {
     width: 100%;
     max-height: 400px;
     overflow-y: auto;
@@ -46,6 +43,10 @@
     border: $primaryBorder;
     border-radius: $mainBorderRadius;
     box-shadow: $tooltipShadow;
+
+    .pop-up-dialog {
+      padding: 0;
+    }
 
     &-button {
       display: flex;

@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
@@ -214,12 +215,14 @@ const ProjectMonitor = ({
       )
     })
 
-    if (funcs) {
+    if (!isEmpty(funcs)) {
       const currentItem = funcs.find(func => {
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
+      if (currentItem) {
+        navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/${tab}`)
+      }
 
       return dispatch(
         setNotification({
@@ -255,12 +258,14 @@ const ProjectMonitor = ({
       )
     })
 
-    if (funcs) {
+    if (!isEmpty(funcs)) {
       const currentItem = funcs.find(func => {
         return func.metadata.name === name && func.metadata.tag === tag
       })
 
-      navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
+      if (currentItem) {
+        navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
+      }
 
       return dispatch(
         setNotification({

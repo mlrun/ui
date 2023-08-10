@@ -38,7 +38,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
   }, [frontendSpec.valid_function_priority_class_names])
 
   return (
-    <div className="job-wizard__resources form">
+    <div className="job-wizard__resources">
       <div className="form-row">
         <h5 className="form-step-title">Resources</h5>
       </div>
@@ -67,7 +67,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
         <FormKeyValueTable
           keyHeader="Key"
           keyLabel="Key"
-          addNewItemLabel="Add a node"
+          addNewItemLabel="Add node selector"
           fieldsPath="resources.nodeSelectorTable"
           formState={formState}
         />

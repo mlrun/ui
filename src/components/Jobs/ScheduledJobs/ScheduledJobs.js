@@ -52,14 +52,12 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
-import { isNil } from 'lodash'
 
 const ScheduledJobs = ({
   fetchFunctionTemplate,
   fetchJobFunction,
   fetchJobFunctionSuccess,
   fetchJobs,
-  fetchScheduledJobAccessKey,
   handleRunScheduledJob,
   removeScheduledJob
 }) => {
@@ -183,37 +181,23 @@ const ScheduledJobs = ({
 
   const handleEditScheduleJob = useCallback(
     editableItem => {
-      const getJobFunctionDataPromise = getJobFunctionData(
+      getJobFunctionData(
         editableItem,
         fetchJobFunction,
         dispatch,
         fetchFunctionTemplate,
         fetchJobFunctionSuccess
       )
-      const fetchScheduledJobAccessKeyPromise = fetchScheduledJobAccessKey(
-        params.projectName,
-        editableItem.name
-      )
-        .then(result => {
+        .then(functionData => {
           setEditableItem({
             ...editableItem,
             scheduled_object: {
               ...editableItem.scheduled_object,
-              credentials: {
-                access_key: result.data.credentials.access_key
-              },
-              function: {
-                ...editableItem.scheduled_object.function,
-                metadata: {
-                  ...editableItem.scheduled_object.function?.metadata,
-                  credentials: {
-                    ...editableItem.scheduled_object.function?.metadata?.credentials,
-                    access_key: result.data.credentials.access_key
-                  }
-                }
-              }
+              function: functionData
             }
           })
+
+          setJobWizardMode(PANEL_EDIT_MODE)
         })
         .catch(error => {
           dispatch(
@@ -221,29 +205,13 @@ const ScheduledJobs = ({
               status: 400,
               id: Math.random(),
               retry: () => handleEditScheduleJob(editableItem),
-              message: 'Failed to fetch job access key',
+              message: 'Failed to fetch job data',
               error
             })
           )
-
-          throw error
         })
-
-      Promise.all([getJobFunctionDataPromise, fetchScheduledJobAccessKeyPromise]).then(result => {
-        if (result.every(resultItem => !isNil(resultItem))) {
-          setJobWizardMode(PANEL_EDIT_MODE)
-        }
-      })
     },
-    [
-      fetchJobFunction,
-      dispatch,
-      fetchFunctionTemplate,
-      fetchJobFunctionSuccess,
-      fetchScheduledJobAccessKey,
-      params.projectName,
-      setJobWizardMode
-    ]
+    [fetchJobFunction, dispatch, fetchFunctionTemplate, fetchJobFunctionSuccess, setJobWizardMode]
   )
 
   const actionsMenu = useMemo(() => {

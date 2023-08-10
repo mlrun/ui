@@ -281,6 +281,7 @@ const JobWizard = ({
         return (
           <>
             <Wizard
+              className="form"
               formState={formState}
               id="jobWizard"
               isWizardOpen={isOpen}

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, defaultsDeep, map, uniq } from 'lodash'
+import { capitalize, defaultsDeep, isEmpty, map, uniq } from 'lodash'
 import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
@@ -210,7 +210,17 @@ export const rerunJob = async (
   setJobWizardMode,
   dispatch
 ) => {
-  const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch)
+  const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch).catch(error => {
+    dispatch(
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        retry: () => rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
+        message: 'Failed to fetch job data',
+        error
+      })
+    )
+  })
 
   if (functionData) {
     setJobWizardMode(PANEL_RERUN_MODE)
@@ -298,7 +308,7 @@ export const enrichRunWithFunctionFields = (
 
   return fetchJobFunctionsPromiseRef.current
     .then(funcs => {
-      if (funcs) {
+      if (!isEmpty(funcs)) {
         const tagsList = uniq(map(funcs, 'metadata.tag'))
         defaultsDeep(jobRun, {
           ui: {
