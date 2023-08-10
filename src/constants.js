@@ -35,7 +35,7 @@ export const GOOGLE_STORAGE_INPUT_PATH_SCHEME = 'gs://'
 export const HTTP_STORAGE_INPUT_PATH_SCHEME = 'http://'
 export const HTTPS_STORAGE_INPUT_PATH_SCHEME = 'https://'
 export const MLRUN_STORAGE_INPUT_PATH_SCHEME = 'store://'
-export const REDIS_INPUT_PATH_SCHEME = 'redis:///'
+export const REDIS_INPUT_PATH_SCHEME = 'redis://'
 export const S3_INPUT_PATH_SCHEME = 's3://'
 export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 

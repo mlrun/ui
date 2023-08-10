@@ -123,12 +123,16 @@ const FeatureSetsPanelTargetStoreView = ({
                       options={onlineKindOptions}
                       selectedId={data.online.kind}
                     />
-
                     <Input
                       density="medium"
                       floatingLabel
                       focused={frontendSpecIsNotEmpty}
                       invalid={!validation.isOnlineTargetPathValid}
+                      invalidText={
+                        data.online.kind === REDISNOSQL && /[{}]/g.test(data.online.path)
+                          ? 'Invalid Redis URL, change the URL to a valid URL in the form of <redis|rediss>://<host>[:port]'
+                          : ''
+                      }
                       label="Path"
                       onChange={path =>
                         setData(prevState => ({
@@ -139,7 +143,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       placeholder={`${
                         data.online.kind === NOSQL
                           ? V3IO_INPUT_PATH_SCHEME
-                          : REDIS_INPUT_PATH_SCHEME
+                          : REDIS_INPUT_PATH_SCHEME + '{hostIP}:{port}/'
                       }projects/{project}/FeatureStore/{name}/${
                         data.online.kind === NOSQL ? NOSQL : REDISNOSQL
                       }/sets/{name}`}
@@ -173,7 +177,9 @@ const FeatureSetsPanelTargetStoreView = ({
                 {!targetsPathEditData.online.isEditMode && (
                   <>
                     <Tooltip
-                      className="path-data online-path"
+                      className={`path-data online-path ${
+                        !validation.isOnlineTargetPathValid && 'online-path__invalid'
+                      }`}
                       template={<TextTooltipTemplate text={data.online.path} />}
                     >
                       {data.online.path}
