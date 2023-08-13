@@ -34,7 +34,7 @@ const ScheduleWizardSimple = ({ daysOfWeek, handleDaysOfWeek, scheduleData }) =>
   return (
     <>
       <div className="form-row">
-        <div className="form-col-1">
+        <div className="form-col-1 simple-schedule-item">
           <FormSelect
             label="Time unit"
             options={selectOptions.repeatInterval}
@@ -42,7 +42,7 @@ const ScheduleWizardSimple = ({ daysOfWeek, handleDaysOfWeek, scheduleData }) =>
           />
         </div>
         {activeOption === 'week' && (
-          <div className="form-col-1">
+          <div className="form-col-1 simple-schedule-item">
             <div className="schedule-repeat schedule-repeat-week">
               {daysOfWeek.map(day => (
                 <span
@@ -59,7 +59,7 @@ const ScheduleWizardSimple = ({ daysOfWeek, handleDaysOfWeek, scheduleData }) =>
           </div>
         )}
         {['minute', 'hour'].includes(activeOption) && (
-          <div className="form-col-1">
+          <div className="form-col-1 simple-schedule-item">
             <FormSelect
               name={`scheduleData.${activeOption}`}
               label="Intervals"
