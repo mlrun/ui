@@ -188,7 +188,7 @@ const FormTagFilter = ({ label, name }) => {
               ref={dropdownRef}
               style={{ width: `${dropdownWidth}px` }}
             >
-              {tagFilterOptions.map(tag => {
+              {tagOptions.map(tag => {
                 const dropdownItemClassName = classnames(
                   'form-tag-filter__dropdown-item',
                   tagFilter.length !== 0 &&
