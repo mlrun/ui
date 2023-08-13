@@ -144,9 +144,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         data.online.kind === NOSQL
                           ? V3IO_INPUT_PATH_SCHEME
                           : REDIS_INPUT_PATH_SCHEME + '{hostIP}:{port}/'
-                      }projects/{project}/FeatureStore/{name}/${
-                        data.online.kind === NOSQL ? NOSQL : REDISNOSQL
-                      }/sets/{name}`}
+                      }projects/{project}/FeatureStore/{name}/${data.online.kind}/sets/{name}`}
                       required
                       setInvalid={value =>
                         setValidation(state => ({
@@ -177,9 +175,10 @@ const FeatureSetsPanelTargetStoreView = ({
                 {!targetsPathEditData.online.isEditMode && (
                   <>
                     <Tooltip
-                      className={`path-data online-path ${
+                      className={classNames(
+                        'path-data online-path',
                         !validation.isOnlineTargetPathValid && 'online-path__invalid'
-                      }`}
+                      )}
                       template={<TextTooltipTemplate text={data.online.path} />}
                     >
                       {data.online.path}
