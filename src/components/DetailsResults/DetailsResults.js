@@ -168,7 +168,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                       className="data-ellipsis"
                       template={<TextTooltipTemplate text={resultValue} />}
                     >
-                      {resultValue}
+                      {String(resultValue ?? '')}
                     </Tooltip>
                   </td>
                 </tr>
