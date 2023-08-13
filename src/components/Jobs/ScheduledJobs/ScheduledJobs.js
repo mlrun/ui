@@ -209,8 +209,6 @@ const ScheduledJobs = ({
               error
             })
           )
-
-          throw error
         })
     },
     [fetchJobFunction, dispatch, fetchFunctionTemplate, fetchJobFunctionSuccess, setJobWizardMode]
