@@ -56,7 +56,10 @@ const Search = ({
 
   useEffect(() => {
     if (matches.length > 0 && searchValue.length > 0) {
-      setLabel(matches.find(item => item.startsWith(searchValue)) ?? '')
+      setLabel(
+        matches.find(item => item.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) ??
+          ''
+      )
     }
   }, [matches, searchValue])
 
@@ -124,8 +127,6 @@ const Search = ({
         }}
         value={searchValue}
       />
-
-      {label.length > 0 && <label className="search-label">{label}</label>}
       {matches.length > 0 && label.length > 0 && inputIsFocused && (
         <PopUpDialog
           className="search-dropdown"
@@ -144,7 +145,7 @@ const Search = ({
                   onClick={() => matchOnClick(item)}
                   tabIndex={index}
                   dangerouslySetInnerHTML={{
-                    __html: item.replace(new RegExp(searchValue, 'gi'), match =>
+                    __html: item.replace(new RegExp(searchValue.toLocaleLowerCase(), 'gi'), match =>
                       match ? `<b>${match}</b>` : match
                     )
                   }}
