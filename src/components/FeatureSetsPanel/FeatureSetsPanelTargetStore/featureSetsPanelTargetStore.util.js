@@ -155,7 +155,7 @@ export const targetsPathEditDataInitialState = {
  */
 export const generatePath = (prefixes, project, kind, name, suffix) => {
   if (prefixes) {
-    let path = prefixes[kind] || prefixes.default
+    const path = prefixes[kind] || prefixes.default
 
     return `${path.replace(
       /{project}|{name}|{kind}/gi,
