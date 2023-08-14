@@ -157,17 +157,10 @@ export const generatePath = (prefixes, project, kind, name, suffix) => {
   if (prefixes) {
     let path = prefixes[kind] || prefixes.default
 
-    // path = kind === REDISNOSQL ? path.replace('//', '//{hostIP}:{port}') : path
-
     return `${path.replace(
-      /\/\/|{project}|{name}|{kind}/gi,
+      /{project}|{name}|{kind}/gi,
       matchToReplace =>
-        ({
-          '//': kind === REDISNOSQL ? '//{hostIP}:{port}' : '//',
-          '{project}': project,
-          '{name}': name || '{name}',
-          '{kind}': kind
-        }[matchToReplace])
+        ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
     )}/sets/${name || '{name}'}${suffix ? '.' + suffix : ''}`
   }
 
