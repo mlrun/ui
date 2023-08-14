@@ -24,6 +24,7 @@ import classnames from 'classnames'
 import { Button, PopUpDialog } from 'igz-controls/components'
 import ScheduleWizardSimple from './ScheduleWizardSimple'
 import ScheduleWizardCronstring from './ScheduleWizardCronstring'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { tabs } from '../ScheduleJob/scheduleJobData'
 import { decodeLocale, getWeekDays, getWeekStart } from '../../utils/datePicker.util'
@@ -32,6 +33,7 @@ import { generateCronInitialValue } from '../../utils/generateCronInitialValue'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getDefaultSchedule, scheduleDataInitialState } from './scheduleWizard.util'
 import { SCHEDULE_DATA } from '../../types'
+import { SIMPLE_SCHEDULE, CRONSTRING_SCHEDULE } from '../../constants'
 
 import { ReactComponent as Schedule } from 'igz-controls/images/clock.svg'
 
@@ -48,6 +50,13 @@ const ScheduleWizard = ({
 
   const startWeek = useMemo(() => getWeekStart(decodeLocale(navigator.language)), [])
   const daysOfWeek = useMemo(() => getWeekDays(startWeek), [startWeek])
+  const isWeekDaysEmpty = useMemo(() => {
+    return (
+      activeTab === SIMPLE_SCHEDULE &&
+      scheduleData.activeOption === 'week' &&
+      !scheduleData.week.days.length
+    )
+  }, [activeTab, scheduleData.activeOption, scheduleData.week.days.length])
 
   const setCron = useCallback(
     value => {
@@ -80,7 +89,7 @@ const ScheduleWizard = ({
   }
 
   useEffect(() => {
-    if (activeTab === tabs[0].id) {
+    if (activeTab === SIMPLE_SCHEDULE) {
       generateCronInitialValue(
         scheduleData.activeOption,
         scheduleData.cron,
@@ -127,16 +136,13 @@ const ScheduleWizard = ({
           })}
         </div>
         <div className="schedule-content">
-          <h3>
-            {activeTab === tabs[0].id ? 'Simple ' : 'Advanced '}
-            Schedule
-          </h3>
+          <h3>{activeTab === SIMPLE_SCHEDULE ? 'Simple Schedule' : 'Advanced Schedule'}</h3>
           <p>
             Note: all times are interpreted in UTC timezone. <br />
             The first weekday (0) is always <b>Monday</b>.
           </p>
 
-          {activeTab === tabs[0].id && (
+          {activeTab === SIMPLE_SCHEDULE && (
             <ScheduleWizardSimple
               scheduleData={scheduleData}
               daysOfWeek={daysOfWeek}
@@ -144,12 +150,15 @@ const ScheduleWizard = ({
             />
           )}
 
-          {activeTab === tabs[1].id && <ScheduleWizardCronstring />}
+          {activeTab === CRONSTRING_SCHEDULE && <ScheduleWizardCronstring />}
+
+          {isWeekDaysEmpty && <ErrorMessage message="Must select at least one day option" />}
         </div>
         <div className="modal__footer-actions">
           <Button label="Cancel" onClick={() => setShowSchedule(false)} variant={TERTIARY_BUTTON} />
           <Button
             variant={SECONDARY_BUTTON}
+            disabled={isWeekDaysEmpty}
             label={
               <>
                 <Schedule />

@@ -65,6 +65,8 @@ export const JOBS_PAGE = 'JOBS'
 export const MONITOR_JOBS_TAB = 'monitor-jobs'
 export const MONITOR_WORKFLOWS_TAB = 'monitor-workflows'
 export const SCHEDULE_TAB = 'schedule'
+export const SIMPLE_SCHEDULE = 'simple'
+export const CRONSTRING_SCHEDULE = 'cronstring'
 export const WORKFLOW_SUB_PAGE = 'workflow'
 
 export const MODELS_PAGE = 'MODELS'

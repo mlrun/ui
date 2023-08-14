@@ -27,12 +27,16 @@
 
     &-content {
       min-height: 245px;
-      padding: 24px;
+      padding: 24px 0 24px 24px;
 
       h3 {
         margin: 0;
         color: $primary;
         text-transform: uppercase;
+      }
+
+      .simple-schedule-item:not(:last-child) {
+        margin-right: 10px;
       }
 
       .cronstring-note {
@@ -58,6 +62,10 @@
         border: $primaryBorder;
         border-radius: 16px;
         cursor: pointer;
+
+        &:last-child {
+          margin-right: 0;
+        }
 
         &.active {
           color: $white;

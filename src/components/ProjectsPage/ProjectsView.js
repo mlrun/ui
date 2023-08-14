@@ -161,14 +161,14 @@ const ProjectsView = ({
           </div>
         </div>
         {projectStore.projects.length > 0 && !projectStore.error ? (
-          <div className="projects-content">
-            {filterByName.length > 0 &&
-            (filterMatches.length === 0 || filteredProjects.length === 0) ? (
-              <NoData />
-            ) : selectedProjectsState === 'archived' && filteredProjects.length === 0 ? (
-              <div className="no-filtered-data">No archived projects.</div>
-            ) : (
-              filteredProjects.map(project => {
+          filterByName.length > 0 &&
+          (filterMatches.length === 0 || filteredProjects.length === 0) ? (
+            <NoData />
+          ) : selectedProjectsState === 'archived' && filteredProjects.length === 0 ? (
+            <div className="no-filtered-data">No archived projects.</div>
+          ) : (
+            <div className="projects-content">
+              {filteredProjects.map(project => {
                 return (
                   <ProjectCard
                     actionsMenu={actionsMenu}
@@ -179,9 +179,9 @@ const ProjectsView = ({
                     )}
                   />
                 )
-              })
-            )}
-          </div>
+              })}
+            </div>
+          )
         ) : projectStore.loading ? null : (
           <NoData message="Your projects list is empty." />
         )}
