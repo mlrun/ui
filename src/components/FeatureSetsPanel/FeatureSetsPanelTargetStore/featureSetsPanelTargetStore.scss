@@ -58,6 +58,10 @@
     .online-path {
       width: 560px;
       margin-right: 5px;
+
+      &__invalid {
+        color: $amaranth;
+      }
     }
 
     .offline-path {
