@@ -144,7 +144,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       placeholder={`${
                         data.online.kind === NOSQL
                           ? V3IO_INPUT_PATH_SCHEME
-                          : REDIS_INPUT_PATH_SCHEME + '{hostIP}:{port}/'
+                          : REDIS_INPUT_PATH_SCHEME + '{authority}/'
                       }projects/{project}/FeatureStore/{name}/${data.online.kind}/sets/{name}`}
                       required
                       setInvalid={value =>
