@@ -50,7 +50,9 @@
 
         &__status {
           display: flex;
+          flex-flow: row wrap;
           align-items: center;
+          line-height: 25px;
         }
 
         &__back-btn {
@@ -86,12 +88,12 @@
             min-width: 18px;
 
             i {
-              margin-left: 10px;
+              margin: 0 10px 0 5px;
             }
           }
 
           .error-container {
-            margin-left: 20px;
+            margin-left: 0;
           }
         }
 
