@@ -24,7 +24,7 @@ import { capitalize } from 'lodash'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { ReactComponent as Code } from 'igz-controls/images/code.svg'
-import { ReactComponent as DatabricksIcon } from 'igz-controls/images/horovod.svg'
+import { ReactComponent as DatabricksIcon } from 'igz-controls/images/databricks-icon.svg'
 import { ReactComponent as Horovod } from 'igz-controls/images/horovod.svg'
 import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
 import { ReactComponent as Nuclio } from 'igz-controls/images/nuclio.svg'
