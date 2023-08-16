@@ -3,42 +3,32 @@
     "function-1@stream-name-1": {
       "consumerGroup": "ConsumerGroup1",
       "containerName": "ContainerName1",
-      "streamPath": "/path/of/stream"
+      "streamPath": "/path/of/stream1"
     },
-    "function-2@stream-name-2": {
-      "consumerGroup": "ConsumerGroup2",
-      "containerName": "ContainerName2",
+    "function-1@stream-name-2": {
+      "consumerGroup": "ConsumerGroup1",
+      "containerName": "ContainerName1",
       "streamPath": "/path/of/stream2"
     },
-    "function-4@stream-name-4": {
-      "consumerGroup": "ConsumerGroup4",
-      "containerName": "ContainerName4",
-      "streamPath": "/path/of/stream4"
+    "function-2@stream-name-1": {
+      "consumerGroup": "ConsumerGroup1",
+      "containerName": "ContainerName1",
+      "streamPath": "/path/of/stream1"
     },
-    "function-5@stream-name-5": {
-      "consumerGroup": "ConsumerGroup5",
-      "containerName": "ContainerName5",
-      "streamPath": "/path/of/stream5"
+    "function-2@stream-name-2": {
+      "consumerGroup": "ConsumerGroup1",
+      "containerName": "ContainerName1",
+      "streamPath": "/path/of/stream2"
     },
-    "function-6@stream-name-6": {
-      "consumerGroup": "ConsumerGroup6",
-      "containerName": "ContainerName6",
-      "streamPath": "/path/of/stream6"
+    "function-2@stream-name-3": {
+      "consumerGroup": "ConsumerGroup2",
+      "containerName": "ContainerName1",
+      "streamPath": "/path/of/stream1"
     },
-    "function-7@stream-name-7": {
-      "consumerGroup": "ConsumerGroup7",
-      "containerName": "ContainerName7",
-      "streamPath": "/path/of/stream7"
-    },
-    "function-8@stream-name-8": {
-      "consumerGroup": "ConsumerGroup8",
-      "containerName": "ContainerName8",
-      "streamPath": "/path/of/stream8"
-    },
-    "function-9@stream-name-9": {
-      "consumerGroup": "ConsumerGroup9",
-      "containerName": "ContainerName9",
-      "streamPath": "/path/of/stream9"
+    "function-2@stream-name-4": {
+      "consumerGroup": "ConsumerGroup2",
+      "containerName": "ContainerName2",
+      "streamPath": "/path/of/stream1"
     }
   }
 }
