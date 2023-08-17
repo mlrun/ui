@@ -61,7 +61,6 @@ const JobWizardFunctionSelection = ({
   frontendSpec,
   functions,
   isEditMode,
-  isStagingMode,
   params,
   projectStore,
   selectedFunctionData,
@@ -192,8 +191,7 @@ const JobWizardFunctionSelection = ({
         frontendSpec,
         functionData,
         defaultData,
-        isEditMode,
-        isStagingMode
+        isEditMode
       )
       const newInitial = {
         ...formState.initialValues,
@@ -433,7 +431,6 @@ JobWizardFunctionSelection.propTypes = {
   frontendSpec: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   isEditMode: PropTypes.bool.isRequired,
-  isStagingMode: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   setFilteredFunctions: PropTypes.func.isRequired,

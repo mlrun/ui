@@ -84,8 +84,7 @@ export const generateJobWizardData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
-  isEditMode,
-  isStagingMode
+  isEditMode
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -141,7 +140,7 @@ export const generateJobWizardData = (
       outputPath: JOB_DEFAULT_OUTPUT_PATH,
       accessKey: true,
       accessKeyInput: '',
-      environmentVariablesTable: parseEnvironmentVariables(environmentVariables, isStagingMode)
+      environmentVariablesTable: parseEnvironmentVariables(environmentVariables)
       // secretSourcesTable - currently not shown
       // secretSourcesTable: []
     },
@@ -174,8 +173,7 @@ export const generateJobWizardDefaultData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
-  isEditMode,
-  isStagingMode
+  isEditMode
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
 
@@ -255,10 +253,7 @@ export const generateJobWizardDefaultData = (
         defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY
           ? ''
           : defaultData.function?.metadata?.credentials?.access_key,
-      environmentVariablesTable: parseEnvironmentVariables(
-        defaultData.function?.spec?.env ?? [],
-        isStagingMode
-      )
+      environmentVariablesTable: parseEnvironmentVariables(defaultData.function?.spec?.env ?? [])
       // secretSourcesTable - currently not shown
       // secretSourcesTable: parseSecretSources(defaultData.task.spec.secret_sources)
     },
@@ -677,7 +672,7 @@ const parseRequests = (requests = {}, defaultRequests = {}) => {
   }
 }
 
-const parseEnvironmentVariables = (envVariables, isStagingMode) => {
+const parseEnvironmentVariables = envVariables => {
   return envVariables
     .filter(envVariable => {
       if (envVariable?.valueFrom?.secretKeyRef) {
@@ -699,14 +694,9 @@ const parseEnvironmentVariables = (envVariables, isStagingMode) => {
         const secretName = envVariable.valueFrom.secretKeyRef.name
         const secretKey = envVariable.valueFrom.secretKeyRef.key ?? ''
 
-        if (isStagingMode) {
-          env.secretName = secretName
-          env.secretKey = secretKey
-          env.type = ENV_VARIABLE_TYPE_SECRET
-        } else {
-          env.value = secretName && secretKey ? `${secretName}:${secretKey}` : secretName
-          env.type = ENV_VARIABLE_TYPE_VALUE
-        }
+        env.secretName = secretName
+        env.secretKey = secretKey
+        env.type = ENV_VARIABLE_TYPE_SECRET
       } else {
         env.type = ENV_VARIABLE_TYPE_VALUE
         env.value = envVariable.value
