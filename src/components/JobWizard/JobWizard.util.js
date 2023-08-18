@@ -858,7 +858,7 @@ const generateResources = resources => {
         resources.currentLimits.memory,
         resources.currentLimits.memoryUnitId
       ),
-      'nvidia.com/gpu': String(resources.currentLimits['nvidia.com/gpu'])
+      'nvidia.com/gpu': String(resources.currentLimits['nvidia.com/gpu'] ?? '')
     },
     requests: {
       cpu: generateCpuWithUnit(resources.currentRequest.cpu, resources.currentRequest.cpuUnitId),
