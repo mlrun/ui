@@ -45,6 +45,7 @@ import {
   parameterTypeStr,
   parameterTypeValueMap
 } from '../formParametersTable.util'
+import { parseParameterType } from '../../../components/JobWizard/JobWizard.util'
 import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 
 import './formParametersRow.scss'
@@ -124,17 +125,26 @@ const FormParametersRow = ({
     }
   }
 
-  const getHyperValueValidationRules = parameterType => {
+  const getHyperValueValidationRules = fieldData => {
+    const parameterType = fieldData.data.type
+
     return [
       {
         name: 'invalidStructure',
-        label: `Not valid ${parameterTypeValueMap[parameterType] || ''} type`,
+        label: `Not valid ${parameterTypeValueMap[parameterType] ?? ''} type`,
         pattern: newValue => {
           try {
             const parsedValue = JSON.parse(String(newValue))
             const valueIsArray = Array.isArray(parsedValue)
 
             if (valueIsArray) {
+              if (fieldData.isUnsupportedType) {
+                return parsedValue.every(hyperItemValue => {
+                  const hyperItemType = parseParameterType(hyperItemValue)
+                  return Boolean(parameterTypeValueMap[hyperItemType])
+                })
+              }
+
               return parsedValue.every(valueItem => {
                 switch (parameterType) {
                   case parameterTypeStr:
@@ -175,7 +185,12 @@ const FormParametersRow = ({
     }
   }
 
-  const getHyperValueTip = parameterType => {
+  const getHyperValueTip = fieldData => {
+    if (fieldData.isUnsupportedType) {
+      return 'Example: ["hello", "world", 1, false, {}, []]'
+    }
+
+    const parameterType = fieldData.data.type
     switch (parameterType) {
       case parameterTypeStr:
         return 'Example: ["hello", "world"]'
@@ -275,7 +290,7 @@ const FormParametersRow = ({
                     disabled={fieldData.isPredefined}
                     name={`${rowPath}.data.type`}
                     options={parametersValueTypeOptions}
-                    required
+                    required={!fieldData.isPredefined}
                   />
                 </div>
                 <div className="form-table__cell form-table__cell_3">
@@ -286,8 +301,8 @@ const FormParametersRow = ({
                       name={`${rowPath}.data.value`}
                       placeholder="Values"
                       required
-                      tip={getHyperValueTip(fieldData.data.type)}
-                      validationRules={getHyperValueValidationRules(fieldData.data.type)}
+                      tip={getHyperValueTip(fieldData)}
+                      validationRules={getHyperValueValidationRules(fieldData)}
                     />
                   ) : fieldData.data.type === parameterTypeBool && !typeIsChanging ? (
                     <div className="radio-buttons-container">

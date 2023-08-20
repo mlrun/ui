@@ -60,7 +60,8 @@ import {
   parameterTypeInt,
   parameterTypeList,
   parameterTypeMap,
-  parameterTypeStr
+  parameterTypeStr,
+  parameterTypeValueMap
 } from '../../elements/FormParametersTable/formParametersTable.util'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -551,19 +552,22 @@ export const parseDefaultDataInputs = dataInputs => {
 export const parsePredefinedParameters = funcParams => {
   return funcParams
     .filter(parameter => !parameter.type?.includes('DataItem'))
-    .map(parameter => ({
-      data: {
-        name: parameter.name ?? '',
-        type: parameter.type ?? parseParameterType(parameter.default),
-        value: parseParameterValue(parameter.default),
-        isChecked: true,
-        isHyper: false
-      },
-      doc: parameter.doc,
-      isHidden: parameter.name === 'context',
-      isDefault: true,
-      isPredefined: true
-    }))
+    .map(parameter => {
+      return {
+        data: {
+          name: parameter.name ?? '',
+          type: parameter.type ?? '',
+          value: parseParameterValue(parameter.default),
+          isChecked: true,
+          isHyper: false
+        },
+        doc: parameter.doc,
+        isHidden: parameter.name === 'context',
+        isUnsupportedType: !parameterTypeValueMap[parameter.type],
+        isDefault: true,
+        isPredefined: true
+      }
+    })
 }
 
 export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyperParams = {}) => {
@@ -572,19 +576,20 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
 
   predefinedParameters = chain(funcParams)
     .filter(parameter => !parameter.type?.includes('DataItem'))
-    .map(param => {
+    .map(parameter => {
       return {
         data: {
-          name: param.name,
-          type: param.type,
+          name: parameter.name,
+          type: parameter.type ?? '',
           value: parseParameterValue(
-            runParams[param.name] ?? runHyperParams[param.name] ?? param.default ?? ''
+            runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
           ),
-          isChecked: param.name in runParams || param.name in runHyperParams,
-          isHyper: param.name in runHyperParams
+          isChecked: parameter.name in runParams || parameter.name in runHyperParams,
+          isHyper: parameter.name in runHyperParams
         },
-        doc: param.doc ?? '',
-        isHidden: param.name === 'context',
+        doc: parameter.doc ?? '',
+        isHidden: parameter.name === 'context',
+        isUnsupportedType: !parameterTypeValueMap[parameter.type],
         isDefault: true,
         isPredefined: true
       }
@@ -617,9 +622,17 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
   return [predefinedParameters, customParameters]
 }
 
-const parseParameterType = (parameterValue, isHyper) => {
+export const parseParameterType = (parameterValue, isHyper) => {
   if (isHyper) {
-    return parseParameterType(parameterValue[0])
+    const hyperParameterTypes = parameterValue.map(parameterHyperValue => {
+      return parseParameterType(parameterHyperValue)
+    })
+
+    return hyperParameterTypes.every(
+      hyperParameterType => hyperParameterType === hyperParameterTypes[0]
+    )
+      ? hyperParameterTypes[0]
+      : ''
   } else if (Array.isArray(parameterValue)) {
     return parameterTypeList
   } else if (
