@@ -29,6 +29,7 @@ import {
   map,
   merge,
   omit,
+  set,
   unionBy
 } from 'lodash'
 import {
@@ -78,6 +79,12 @@ const volumeTypesMap = {
   [PVC_VOLUME_TYPE]: 'persistentVolumeClaim',
   [SECRET_VOLUME_TYPE]: 'secret',
   [V3IO_VOLUME_TYPE]: 'flexVolume'
+}
+
+const volumeTypeNamesMap = {
+  [CONFIG_MAP_VOLUME_TYPE]: 'name',
+  [PVC_VOLUME_TYPE]: 'claimName',
+  [SECRET_VOLUME_TYPE]: 'secretName',
 }
 
 export const generateJobWizardData = (
@@ -467,13 +474,14 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
     const currentVolume = volumes.find(volume => volume.name === volumeMount?.name)
     const volumeType = getVolumeType(currentVolume)
     const volumeTypePath = volumeTypesMap[volumeType]
+    const volumeTypeName = volumeTypeNamesMap[volumeType]
 
     return {
       data: {
         type: volumeType,
         name: volumeMount?.name,
         mountPath: volumeMount?.mountPath,
-        typeName: currentVolume[volumeTypePath]?.name,
+        typeName: currentVolume[volumeTypePath]?.[volumeTypeName],
         ...currentVolume[volumeTypePath]?.options
       },
       typeAdditionalData: omit(currentVolume[volumeTypePath], ['options', 'name']),
@@ -824,11 +832,15 @@ const generateVolumes = volumesTable => {
 
     if (volume.data.typeName) {
       volumeData[volume.data.type] = {
-        name: volume.data.typeName
+        [volumeTypeNamesMap[volume.data.type]]: volume.data.typeName
       }
     } else {
       volumeData[volume.data.type] = {
         options: omit(volume.data, ['type', 'name', 'typeName', 'mountPath'])
+      }
+
+      if (volume.data.type === V3IO_VOLUME_TYPE && !volume.typeAdditionalData?.driver) {
+        set(volume, ['typeAdditionalData', 'driver'], 'v3io/fuse')
       }
     }
 
