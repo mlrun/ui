@@ -49,13 +49,14 @@ const ConsumerGroup = ({
 
   useEffect(() => {
     const v3ioStream = nuclioStore.v3ioStreams.parsedData.find(
-      stream => stream.consumerGroup === params.consumerGroupName
+      stream =>
+        stream.functionName === params.functionName && stream.streamName === params.streamName
     )
 
     if (v3ioStream) {
       setCurrentV3ioStream(v3ioStream)
     }
-  }, [params.consumerGroupName, nuclioStore.v3ioStreams])
+  }, [nuclioStore.v3ioStreams.parsedData, params.functionName, params.streamName])
 
   const refreshConsumerGroup = useCallback(
     currentV3ioStream => {
@@ -107,11 +108,13 @@ const ConsumerGroup = ({
 
   return (
     <>
-      <PageHeader
-        title={params.consumerGroupName ?? currentV3ioStream.consumerGroup}
-        description={currentV3ioStream.streamName}
-        backLink={`/projects/${params.projectName}/monitor/consumer-groups`}
-      />
+      {!isEmpty(currentV3ioStream) && (
+        <PageHeader
+          title={currentV3ioStream.consumerGroup}
+          description={currentV3ioStream.streamName}
+          backLink={`/projects/${params.projectName}/monitor/consumer-groups`}
+        />
+      )}
       <div className="page-actions">
         <Search
           wrapperClassName="search-input-wrapper"
