@@ -51,7 +51,6 @@ const JobWizardRunDetails = ({
   frontendSpec,
   isBatchInference,
   isEditMode,
-  isStagingMode,
   jobAdditionalData,
   selectedFunctionData,
   setJobAdditionalData
@@ -83,8 +82,7 @@ const JobWizardRunDetails = ({
         frontendSpec,
         selectedFunctionData,
         defaultData,
-        isEditMode,
-        isStagingMode
+        isEditMode
       )
       setJobData(jobFormData, jobAdditionalData)
     } else if (!isEmpty(selectedFunctionData) && isEmpty(jobAdditionalData)) {
@@ -92,8 +90,7 @@ const JobWizardRunDetails = ({
         frontendSpec,
         selectedFunctionData,
         null,
-        isEditMode,
-        isStagingMode
+        isEditMode
       )
       setJobData(jobFormData, jobAdditionalData)
     }
@@ -103,7 +100,6 @@ const JobWizardRunDetails = ({
     formState.initialValues,
     frontendSpec,
     isEditMode,
-    isStagingMode,
     jobAdditionalData,
     selectedFunctionData,
     setJobAdditionalData,
@@ -225,7 +221,6 @@ JobWizardRunDetails.propTypes = {
   frontendSpec: PropTypes.shape({}).isRequired,
   isBatchInference: PropTypes.bool.isRequired,
   isEditMode: PropTypes.bool.isRequired,
-  isStagingMode: PropTypes.bool.isRequired,
   jobAdditionalData: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   setJobAdditionalData: PropTypes.func.isRequired

@@ -47,7 +47,6 @@ import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { useMode } from '../../hooks/mode.hook'
 import {
   JOB_WIZARD_FILTERS,
   MONITOR_JOBS_TAB,
@@ -98,7 +97,6 @@ const JobWizard = ({
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { isStagingMode } = useMode()
   const scheduleButtonRef = useRef()
 
   const closeModal = useCallback(() => {
@@ -310,7 +308,6 @@ const JobWizard = ({
                   frontendSpec={frontendSpec}
                   functions={functions}
                   isEditMode={isEditMode}
-                  isStagingMode={isStagingMode}
                   params={params}
                   selectedFunctionData={selectedFunctionData}
                   setFilteredFunctions={setFilteredFunctions}
@@ -330,7 +327,6 @@ const JobWizard = ({
                 frontendSpec={frontendSpec}
                 isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
-                isStagingMode={isStagingMode}
                 jobAdditionalData={jobAdditionalData}
                 selectedFunctionData={selectedFunctionData}
                 setJobAdditionalData={setJobAdditionalData}

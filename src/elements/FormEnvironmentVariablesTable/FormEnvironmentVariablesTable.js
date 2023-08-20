@@ -50,13 +50,13 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
   return (
     <div className={tableClassNames}>
       <div className="form-table__row form-table__header-row no-hover">
-        <div className="form-table__cell form-table__cell_1">
+        <div className="form-table__cell form-table__cell_2">
           <Tooltip template={<TextTooltipTemplate text="Name" />}>Name</Tooltip>
         </div>
         <div className="form-table__cell form-table__cell_1">
           <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>
         </div>
-        <div className="form-table__cell form-table__cell_1">
+        <div className="form-table__cell form-table__cell_3">
           <Tooltip template={<TextTooltipTemplate text="Value" />}>Value</Tooltip>
         </div>
         <div className="form-table__cell form-table__actions-cell" />
