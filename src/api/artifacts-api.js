@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+import { artifactsHttpClient, mainHttpClient } from '../httpClient'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
@@ -41,7 +41,7 @@ const fetchArtifacts = (project, filters, config = {}) => {
     params.name = `~${filters.name}`
   }
 
-  return mainHttpClient.get(`/projects/${project}/artifacts`, {
+  return artifactsHttpClient.get(`/projects/${project}/artifacts`, {
     ...config,
     params: { ...config.params, ...params }
   })
@@ -79,7 +79,7 @@ const artifactsApi = {
       }
     }),
   getArtifact: (project, artifact) => {
-    return mainHttpClient.get(`/projects/${project}/artifacts?name=${artifact}`)
+    return artifactsHttpClient.get(`/projects/${project}/artifacts/${artifact}`)
   },
   getArtifacts: (project, filters, config) => {
     return fetchArtifacts(project, filters, config)
@@ -147,19 +147,9 @@ const artifactsApi = {
     return fetchArtifacts(project, filters, { params: { category: MODEL_TYPE, format: 'full' } })
   },
   registerArtifact: (project, data) =>
-    mainHttpClient.post(
-      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
-        data.key || data.metadata.key
-      }`,
-      data
-    ),
+    artifactsHttpClient.post(`/projects/${project}/artifacts`, data),
   updateArtifact: (project, data) =>
-    mainHttpClient.post(
-      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
-        data.db_key || data.spec?.db_key
-      }`,
-      data
-    )
+    artifactsHttpClient.put(`/projects/${project}/artifacts/${data.db_key || data.spec?.db_key}`, data)
 }
 
 export default artifactsApi
