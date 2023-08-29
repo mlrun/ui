@@ -64,7 +64,17 @@ const functionsApi = {
 
     return mainHttpClient.get('/build/status', { params })
   },
-  getFunctionTemplate: path => functionTemplatesHttpClient.get(path),
+  getHubFunction: hubFunctionName =>
+    mainHttpClient.get(`/hub/sources/default/items/${hubFunctionName}`),
+  getFunctionTemplate: path => {
+    if (path.startsWith('http')) {
+      return mainHttpClient.get('/hub/sources/default/item-object', {
+        params: { url: path }
+      })
+    } else {
+      return functionTemplatesHttpClient.get(path)
+    }
+  },
   getFunctionTemplatesCatalog: () => functionTemplatesHttpClient.get('catalog.json')
 }
 
