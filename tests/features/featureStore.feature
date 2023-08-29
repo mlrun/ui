@@ -770,7 +770,6 @@ Feature: Feature Store Page
 
     @passive
     @inProgress
-    #@uniqueTag
     Scenario: MLFS027 - Check Target Store Accordion components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -1120,8 +1119,6 @@ Feature: Feature Store Page
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
 
-    @FAILED_TODO
-    #TODO: select "View YAML" option - doesn't find the name in table
     @passive
     Scenario: MLFS035 - Verify View YAML action on Features tab
         Given open url
@@ -1813,8 +1810,6 @@ Feature: Feature Store Page
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-3" value
 
-    @FAILED_TODO
-    #TODO: Bug ML-4246
     @passive
     Scenario: MLFS053 - Impossibility to save feature set with unchecked target store components
         Given open url
@@ -1908,7 +1903,6 @@ Feature: Feature Store Page
         Then type value "text" to "Timestamp_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
-        #Then click on "Save_And_Ingest_Button" element on "New_Feature_Set" wizard - mock 404
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         And wait load page
@@ -1933,7 +1927,6 @@ Feature: Feature Store Page
         Then type value "text" to "Timestamp_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
-        #Then click on "Save_And_Ingest_Button" element on "New_Feature_Set" wizard - mock 404
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         And wait load page
@@ -1959,14 +1952,13 @@ Feature: Feature Store Page
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
 
     @forDevEnv
-    @uniqueTag
     Scenario: MLFS056 - Save feature set with 'Save And Ingest' button
         Given open url
         And wait load page
         #/// precondition - CREATE PROJECT///
-        # Then click on "New_Project_Button" element on "Projects" wizard
-        # Then type into "Name_Input" on "Create_New_Project" popup dialog "automation-test-name201" value
-        # Then click on "Create_Button" element on "Create_New_Project" wizard
+        Then click on "New_Project_Button" element on "Projects" wizard
+        Then type into "Name_Input" on "Create_New_Project" popup dialog "automation-test-name201" value
+        Then click on "Create_Button" element on "Create_New_Project" wizard
         And click on row root with value "automation-test-name201" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1994,9 +1986,9 @@ Feature: Feature Store Page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "new-feature-set-1-ingest"
-        #// postcondition - DELETE PROJECT///
-        # Then check "automation-test-name201" value in "name" column in "Projects_Table" table on "Projects" wizard
-        # Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name201" value in "name" column
-        # Then verify if "Common_Popup" popup dialog appears
-        # Then click on "Delete_Button" element on "Common_Popup" wizard
-        # Then check "automation-test-name201" value not in "name" column in "Projects_Table" table on "Projects" wizard
+        #///postcondition - DELETE PROJECT///
+        Then check "automation-test-name201" value in "name" column in "Projects_Table" table on "Projects" wizard
+        Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name201" value in "name" column
+        Then verify if "Common_Popup" popup dialog appears
+        Then click on "Delete_Button" element on "Common_Popup" wizard
+        Then check "automation-test-name201" value not in "name" column in "Projects_Table" table on "Projects" wizard

@@ -149,7 +149,7 @@ Feature: MLRun Project Page
         Then verify values in "Development_Actions_Table" table on "Demo_Project" wizard
             |          name           |
             |  Create batch function  |
-            |        Create job       |
+            |        Batch run        |
         Then verify values in "Deployment_Actions_Table" table on "Demo_Project" wizard
             |           name            |
             | Create real-time function |

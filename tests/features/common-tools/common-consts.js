@@ -195,6 +195,11 @@ module.exports = {
       'Google storage'
     ]
   },
+  Batch_Run: {
+    Tab_List: ['Functions', 'Hub'],
+    Data_Inputs_Table_Header: ['Input name', 'Path'],
+    Parameters_Table_Header: ['Name', 'Type', 'Value']
+  },
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
     Form_Text:
@@ -227,6 +232,9 @@ module.exports = {
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
+    Function_Name_Batch_Run_Hint:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
+      'This field is required',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -255,6 +263,7 @@ module.exports = {
     Base_Image_Hint:
       "The name of a base container image from which to build the function's processor image",
     Limit_Number_Warning: 'Limit must be bigger than or equal to Request and not be less than 1',
+    Minimum_Value_Warning: 'The minimum value should be 1',
     CPU_Limit_Number_Warning:
       'Limit must be bigger than or equal to Request and not be less than 0.001',
     Request_Number_Warning: 'Request must be less than or equal to Limit and not be less than 1',
@@ -399,11 +408,7 @@ module.exports = {
       'GB',
       'GiB',
       'TB',
-      'TiB',
-      'PB',
-      'PiB',
-      'EB',
-      'EiB'
+      'TiB'
     ],
     CPU_Unit_Options: ['cpu', 'millicpu'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
