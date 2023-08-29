@@ -85,7 +85,7 @@ const volumeTypesMap = {
 const volumeTypeNamesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'name',
   [PVC_VOLUME_TYPE]: 'claimName',
-  [SECRET_VOLUME_TYPE]: 'secretName',
+  [SECRET_VOLUME_TYPE]: 'secretName'
 }
 
 export const generateJobWizardData = (
@@ -943,14 +943,21 @@ export const generateJobRequestData = (
       }
     }
   }
+
   if (formData.runDetails.hyperparameter) {
     postData.task.spec.hyper_param_options = {
       strategy: formData.hyperparameterStrategy.strategy,
       stop_condition: formData.hyperparameterStrategy.stopCondition ?? '',
       parallel_runs: formData.hyperparameterStrategy.parallelRuns,
       dask_cluster_uri: formData.hyperparameterStrategy.daskClusterUri ?? '',
-      max_iterations: formData.hyperparameterStrategy.maxIterations,
-      max_errors: formData.hyperparameterStrategy.maxErrors,
+      max_iterations:
+        formData.hyperparameterStrategy.strategy === 'random'
+          ? formData.hyperparameterStrategy.maxIterations
+          : null,
+      max_errors:
+        formData.hyperparameterStrategy.strategy === 'random'
+          ? formData.hyperparameterStrategy.maxErrors
+          : null,
       teardown_dask: formData.hyperparameterStrategy.teardownDask ?? false
     }
 
