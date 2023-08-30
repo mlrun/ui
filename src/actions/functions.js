@@ -27,6 +27,9 @@ import {
   FETCH_FUNCTION_TEMPLATE_BEGIN,
   FETCH_FUNCTION_TEMPLATE_FAILURE,
   FETCH_FUNCTION_TEMPLATE_SUCCESS,
+  FETCH_HUB_FUNCTION_TEMPLATE_BEGIN,
+  FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
+  FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS,
   REMOVE_FUNCTION_TEMPLATE,
   SET_FUNCTIONS_TEMPLATES,
   SET_LOADING,
@@ -199,6 +202,29 @@ const functionsActions = {
       })
       .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
   },
+  fetchHubFunction: hubFunctionName => dispatch => {
+    dispatch(functionsActions.fetchHubFunctionTemplateBegin())
+
+    return functionsApi
+      .getHubFunction(hubFunctionName)
+      .then(response => {
+        dispatch(functionsActions.fetchHubFunctionTemplateSuccess())
+        return response.data
+      })
+      .catch((error) => {
+        dispatch(functionsActions.fetchHubFunctionTemplateFailure(error))
+      })
+  },
+  fetchHubFunctionTemplateSuccess: () => ({
+    type: FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS
+  }),
+  fetchHubFunctionTemplateBegin: () => ({
+    type: FETCH_HUB_FUNCTION_TEMPLATE_BEGIN
+  }),
+  fetchHubFunctionTemplateFailure: err => ({
+    type: FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
+    payload: err
+  }),
   fetchFunctionTemplate: path => dispatch => {
     dispatch(functionsActions.fetchFunctionTemplateBegin())
 
@@ -227,8 +253,6 @@ const functionsActions = {
             error
           })
         )
-
-        throw error
       })
   },
   fetchFunctionTemplateSuccess: selectFunction => ({

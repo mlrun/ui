@@ -64,6 +64,7 @@ const JobWizard = ({
   defaultData,
   editJob,
   fetchFunctionTemplate,
+  fetchHubFunction,
   frontendSpec,
   functionsStore,
   isBatchInference,
@@ -172,11 +173,15 @@ const JobWizard = ({
 
   useEffect(() => {
     if (isBatchInference) {
-      fetchFunctionTemplate('batch_inference/function.yaml').then(functionData => {
-        setSelectedFunctionData(functionData)
+      fetchHubFunction('batch_inference').then(hubFunction => {
+        const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
+
+        fetchFunctionTemplate(functionTemplatePath).then(functionData => {
+          setSelectedFunctionData(functionData)
+        })
       })
     }
-  }, [fetchFunctionTemplate, isBatchInference])
+  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference])
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
