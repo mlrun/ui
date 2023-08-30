@@ -140,7 +140,7 @@ const functionsOverviewTable = {
 }
 
 const infoPaneDriftHeaders = {
-  root: '.table__item .item-info__details:nth-of-type(2)',
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
   header: {},
   body: {
     row: {

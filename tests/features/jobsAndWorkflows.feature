@@ -2061,7 +2061,6 @@ Feature: Jobs and workflows
         Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
     
-    @uniqueTag
     Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Step 1 (Hub tab)
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard

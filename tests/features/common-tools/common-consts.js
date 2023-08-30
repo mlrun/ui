@@ -162,6 +162,7 @@ module.exports = {
       'Model class',
       'Model artifact',
       'Function URI',
+      'Function Tag',
       'Feature set',
       'Last prediction',
       'Error count',
