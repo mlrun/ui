@@ -374,7 +374,6 @@ Feature: Models Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
   @passive
-  @uniqueTag
   Scenario: MLM014 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page

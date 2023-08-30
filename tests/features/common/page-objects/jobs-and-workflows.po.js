@@ -746,7 +746,7 @@ module.exports = {
     Category_Selector_Dropdown: categorySelect,
     Form_Header_Batch_Run: By.css('.form .form-row .form-step-title'),
     Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
-    FilterDropdown: {
+    Filter_Dropdown: {
       Title: By.css('.hub-filter h3.filters-wizard__header'),
       Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons button'),
       //Apply_Button: in the development process

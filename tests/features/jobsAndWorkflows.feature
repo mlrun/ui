@@ -3,8 +3,7 @@ Feature: Jobs and workflows
     Testcases that verifies functionality on Jobs and Workflows Pages
 
     @passive
-    #@uniqueTag
-    Scenario: Check all mandatory components on Jobs Monitor tab
+    Scenario: MLJW001 - Check all mandatory components on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -37,7 +36,7 @@ Feature: Jobs and workflows
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @passive
-    Scenario: Check all mandatory components on Workflows Monitor tab
+    Scenario: MLJW002 - Check all mandatory components on Workflows Monitor tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -59,7 +58,7 @@ Feature: Jobs and workflows
         Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
 
     @passive
-    Scenario: Check all mandatory components on Schedule Monitor tab
+    Scenario: MLJW003 - Check all mandatory components on Schedule Monitor tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -84,7 +83,7 @@ Feature: Jobs and workflows
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
 
     @passive
-    Scenario: Check date picker dropdown options on Jobs Monitor tab
+    Scenario: MLJW004 - Check date picker dropdown options on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -107,7 +106,7 @@ Feature: Jobs and workflows
         Then verify "Date_Time_Picker" element visibility on "Jobs_Monitor_Tab" wizard
 
     @passive
-    Scenario: verify date picker element on Jobs Monitor tab
+    Scenario: MLJW005 - Verify date picker element on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -127,7 +126,7 @@ Feature: Jobs and workflows
         Then verify error message in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
 
     @passive
-    Scenario: verify filtering by job name on Jobs Monitor tab
+    Scenario: MLJW006 - Verify filtering by job name on Jobs Monitor tab
         Given open url
         And wait load page
         And wait load page
@@ -144,7 +143,7 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
 
     @passive
-    Scenario: verify filtering by job name on Schedule Monitor tab
+    Scenario: MLJW007 - Verify filtering by job name on Schedule Monitor tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -162,7 +161,7 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "test"
 
     @passive
-    Scenario: verify filtering by name on Workflows Monitor tab
+    Scenario: MLJW008 - Verify filtering by name on Workflows Monitor tab
         Given open url
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -187,7 +186,7 @@ Feature: Jobs and workflows
     #TODO: need to rewrite test - "labels" column with "dropdowns" contains "author" not just in dropdown, add capture for all data in "labels" column
     #TODO: also run just on full screen, because of scroll
     @passive
-    Scenario: verify filtering by job label with key on Jobs Monitor tab
+    Scenario: MLJW009 - Verify filtering by job label with key on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -213,7 +212,7 @@ Feature: Jobs and workflows
 
     @passive
     @inProgress
-    Scenario: verify filtering by job label with key on Schedule tab
+    Scenario: MLJW010 - Verify filtering by job label with key on Schedule tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -236,7 +235,7 @@ Feature: Jobs and workflows
 
     @passive
     #TODO: run just on full screen, because of scroll
-    Scenario: verify filtering by job status on Jobs Monitor tab
+    Scenario: MLJW011 - Verify filtering by job status on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2009,7 +2008,7 @@ Feature: Jobs and workflows
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/INVALID/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
         Then verify redirection from "projects/INVALID/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview" to "projects"
 
-    Scenario: Check all mandatory components on Batch Run wizard - Step 1
+    Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Step 1
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2046,8 +2045,8 @@ Feature: Jobs and workflows
         And wait load page
         Then "Function_Title" element on "Batch_Run" should contains "xgb-test" value
         And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
-        Then verify "Title" element visibility in "FilterDropdown" on "Batch_Run" wizard
-        Then "Title" element in "FilterDropdown" on "Batch_Run" should contains "Filter by category" value
+        Then verify "Title" element visibility in "Filter_Dropdown" on "Batch_Run" wizard
+        Then "Title" element in "Filter_Dropdown" on "Batch_Run" should contains "Filter by category" value
         And click on "Batch_Run_Header" element on "Batch_Run" wizard
         Then select "Other" option in "Category_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
         And wait load page
@@ -2061,6 +2060,32 @@ Feature: Jobs and workflows
         Then verify "Step_4_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
+    
+    @uniqueTag
+    Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Step 1 (Hub tab)
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "BatchRun_Tab_Selector" on "Batch_Run" wizard should contains "Batch_Run"."Tab_List"
+        Then select "Hub" tab in "BatchRun_Tab_Selector" on "Batch_Run" wizard
+        And wait load page
+        And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
+        Then verify "Title" element visibility in "Filter_Dropdown" on "Batch_Run" wizard
+        Then "Title" element in "Filter_Dropdown" on "Batch_Run" should contains "Filter by category" value
+        Then verify "Clear_Button" element visibility in "Filter_Dropdown" on "Batch_Run" wizard
+        Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
+        Then select "Other" option in "Category_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
+        Then select "Data Preparation" option in "Category_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
+        And wait load page
+        Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is enabled
+        When click on "Clear_Button" element in "Filter_Dropdown" on "Batch_Run" wizard
+        And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
+        Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
 
     Scenario: Check all mandatory components on Batch Run wizard - Step 2 without Method
         Given open url
