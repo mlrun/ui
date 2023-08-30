@@ -373,11 +373,8 @@ Feature: Models Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
-  @FAILED_TODO
-  #TODO: 'Preview' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
-  #TODO: 'Features' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
-  #TODO: 'Statistics' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
   @passive
+  @uniqueTag
   Scenario: MLM014 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
@@ -387,7 +384,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -395,6 +392,7 @@ Feature: Models Page
     Then verify "Updated" element visibility on "Models_Info_Pane" wizard
     Then verify "Download_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
+    Then verify "Full_View_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Hash_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
@@ -408,6 +406,10 @@ Feature: Models Page
     Then verify "Statistics" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify cell with "Statistics" value in "key" column in "Info_Pane_Tab_Selector" table on "Models_Info_Pane" wizard should display "Label_Hint"."Models_Statistics"
     Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
+    Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
   @FAILED_TODO
   #TODO: 'Apply_Changes_Button' implementation was changed - button is invisible before any changes

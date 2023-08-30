@@ -3,7 +3,7 @@ Feature: Datasets Page
     Testcases that verifies functionality on Datasets Page
   
   @passive
-  Scenario: Check all mandatory components on Datasets page
+  Scenario: MLD001 - Check all mandatory components on Datasets page
     Given open url
     And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -36,7 +36,7 @@ Feature: Datasets Page
     Then verify "Datasets_Table" element visibility on "Datasets" wizard
 
   @passive
-  Scenario: Verify behaviour of Show iterations checkbox on Datasets page
+  Scenario: MLD002 - Verify behaviour of Show iterations checkbox on Datasets page
     Given open url
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -67,7 +67,7 @@ Feature: Datasets Page
 
   @passive
   @inProgress
-  Scenario: Check all mandatory components in Item infopane on Overview tab table on Datasets page
+  Scenario: MLD003 - Check all mandatory components in Item infopane on Overview tab table on Datasets page
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -82,11 +82,16 @@ Feature: Datasets Page
     Then verify "Updated" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Download_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Full_View_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     And hover "Overview_Hash_Header" component on "Datasets_Info_Pane" wizard
     Then verify "Overview_Hash_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
+    Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
+    Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
   @passive
   Scenario: Check Details panel still active on page refresh
