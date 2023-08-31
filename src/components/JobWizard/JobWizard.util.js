@@ -85,7 +85,7 @@ const volumeTypesMap = {
 const volumeTypeNamesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'name',
   [PVC_VOLUME_TYPE]: 'claimName',
-  [SECRET_VOLUME_TYPE]: 'secretName',
+  [SECRET_VOLUME_TYPE]: 'secretName'
 }
 
 export const generateJobWizardData = (
@@ -340,13 +340,27 @@ const getVersionOptions = selectedFunctions => {
   return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
 }
 
+const getDefaultMethod = (methodOptions, selectedFunctions) => {
+  let method = ''
+
+  const latestFunction = selectedFunctions.find(item => item.metadata.tag === 'latest')
+
+  if (methodOptions.length) {
+    method = methodOptions[0]?.id
+  } else if (latestFunction) {
+    method = latestFunction.spec.default_handler || 'handler'
+  } else {
+    method = selectedFunctions[0]?.spec.default_handler || 'handler'
+  }
+
+  return method
+}
+
 const getDefaultMethodAndVersion = (versionOptions, methodOptions, selectedFunctions) => {
   const defaultVersion =
     versionOptions.find(version => version.id === 'latest')?.id || versionOptions[0].id || ''
-  const defaultMethod =
-    selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec?.default_handler ||
-    methodOptions[0]?.id ||
-    ''
+
+  const defaultMethod = getDefaultMethod(methodOptions, selectedFunctions)
 
   return {
     defaultVersion,
