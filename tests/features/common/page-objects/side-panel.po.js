@@ -285,18 +285,18 @@ const jobCustomParametersTable = {
 // TODO: Wait for some details
 const volumePathsTable = {
   root:
-    '.modal__content .wizard-form__content-container .form-row:nth-child(7)',//'.new-item-side-panel__body .accordion__container:nth-of-type(3) .job-panel__item > .panel-section:nth-of-type(3) .volumes-table',
+    '.modal__content .wizard-form__content-container .form-row:nth-child(7)',
   header: {
-    root: '.form-table__header-row',//'.table__header',
+    root: '.form-table__header-row',
     sorters: {
-      type: '.form-table__cell:nth-of-type(1)',//'.table__cell:nth-of-type(1)',
-      volume_name: '.form-table__cell:nth-of-type(2)',//'.table__cell:nth-of-type(2)',
-      path: '.form-table__cell:nth-of-type(3)',//'.table__cell:nth-of-type(3)'
+      type: '.form-table__cell:nth-of-type(1)',
+      volume_name: '.form-table__cell:nth-of-type(2)',
+      path: '.form-table__cell:nth-of-type(3)',
     }
   },
   body: {
     offset: 1,
-    add_row_btn: '.form-table__action-row button',//'.no-hover .add-input',
+    add_row_btn: '.form-table__action-row button',
     row: {
       root: 'div[class=table__row]',
       fields: {
@@ -2168,10 +2168,10 @@ module.exports = {
       '.new-item-side-panel .new-item-side-panel__buttons-container .btn-label .data-ellipsis:nth-of-type(1)'
     ),
     Save_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-tertiary' //.data-ellipsis:nth-of-type(1)'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-tertiary' 
     ),
     Deploy_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary' //.data-ellipsis:nth-of-type(1)'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary' 
     )
   }
 }

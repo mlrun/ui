@@ -231,10 +231,8 @@ Feature: Datasets Page
     And wait load page
     Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "ea"
 
-  @FAILED_TODO
-  #TODO: Then value in "labels" column with "dropdowns" in "Datasets_Table" on "Datasets"- change locator to overview container
   @passive
-  Scenario: verify filtering by label on Datasets page
+  Scenario: MLD004 - Verify filtering by label on Datasets page
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -259,6 +257,8 @@ Feature: Datasets Page
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Datasets_data"
+
 
   @passive
   Scenario: Verify View YAML action on Datasets page

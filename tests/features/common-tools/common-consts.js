@@ -426,6 +426,9 @@ module.exports = {
     Common_Message_Feature_Sets: 'There is no Feature-Sets data to show for "Version Tag: latest"',
     No_Data: 'No data to show',
     No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',
-    No_Consumer_Group_Yet: 'You haven’t created any consumer group yet'
+    No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
+    No_Datasets_data: 'There is no Datasets data to show for "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Files_data: 'There is no Files data to show for "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Models_data: 'There is no Models data to show for "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
   }
 }

@@ -59,7 +59,7 @@ const batchRunWizardSteps = {
       root: '.btn',
       fields: {
         text: 'span:nth-of-type(2)',
-	      indicator: '.wizard-steps__indicator'
+        indicator: '.wizard-steps__indicator'
       }
     }
   }
@@ -159,13 +159,7 @@ const DataInputsHeaders = {
 
 const BatchRunDataInputsTable = {
   root: '.wizard-form__content .form-table',
-  header: {
-    // root: '.form-table__header-row',
-    // sorters: {
-    //   name: '.form-table__cell:nth-of-type(1)',
-    //   path: '.form-table__cell:nth-of-type(2)'
-    // }
-  },
+  header: {},
   body: {
     add_row_btn: '.form-table__action-row button',
     row: {
@@ -276,7 +270,7 @@ const jobsMonitorTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .link',//'.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
+        name: '.table-body__cell:nth-of-type(1) a .link',
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -646,7 +640,6 @@ const commonStartTimeFilter = dropdownComponent(
 module.exports = {
   JobsMonitorTab: {
     Jobs_Tab_Selector: jobsTabSelector,
-    //New_Job_Button: pageHeaderButton,  delete from 1.5.0
     Butch_Run_Button: pageHeaderButton,
     Arrow_Back: By.css('.link-back__icon'),
     Resource_Monitoring_Button: By.css(
@@ -748,8 +741,7 @@ module.exports = {
     Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
     Filter_Dropdown: {
       Title: By.css('.hub-filter h3.filters-wizard__header'),
-      Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons button'),
-      //Apply_Button: in the development process
+      Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons button')
     },
     Filter_Button_Hub_Tab: By.css('.hub-tab .form-row .filters-button button'),
     Functions_Table: commonTable(functionsTableSelector),

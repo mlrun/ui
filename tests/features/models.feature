@@ -174,6 +174,7 @@ Feature: Models Page
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Models_data"
 
   @passive
   Scenario: MLM008 - Verify filtering by label on Model Endpoints tab

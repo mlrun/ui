@@ -49,8 +49,6 @@ Feature: Files Page
     And wait load page
     Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test"
 
-  @FAILED_TODO
-  #TODO: value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "owner" - dropdown locator 
   @passive
   Scenario: MLA003 - Verify filtering by file label on Artifacts page
     Given open url
@@ -77,6 +75,7 @@ Feature: Files Page
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Files_data"
 
   @passive
   Scenario: MLA004 - Verify behaviour of Show iterations checkbox on Artifacts tab
