@@ -32,10 +32,6 @@ export const selectOptions = {
     {
       label: 'List',
       id: LIST_TUNING_STRATEGY
-    },
-    {
-      label: 'Custom',
-      id: 'custom'
     }
   ],
   criteria: [
