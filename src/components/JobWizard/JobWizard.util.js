@@ -43,6 +43,7 @@ import {
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
   PVC_VOLUME_TYPE,
+  RANDOM_STRATEGY,
   SECRET_VOLUME_TYPE,
   TAG_LATEST,
   V3IO_VOLUME_TYPE
@@ -951,11 +952,11 @@ export const generateJobRequestData = (
       parallel_runs: formData.hyperparameterStrategy.parallelRuns,
       dask_cluster_uri: formData.hyperparameterStrategy.daskClusterUri ?? '',
       max_iterations:
-        formData.hyperparameterStrategy.strategy === 'random'
+        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
           ? formData.hyperparameterStrategy.maxIterations
           : null,
       max_errors:
-        formData.hyperparameterStrategy.strategy === 'random'
+        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
           ? formData.hyperparameterStrategy.maxErrors
           : null,
       teardown_dask: formData.hyperparameterStrategy.teardownDask ?? false

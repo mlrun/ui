@@ -162,6 +162,7 @@ export const WORKFLOW_GRAPH_VIEW = 'graph'
 
 export const MAX_SELECTOR_CRITERIA = 'max'
 export const LIST_TUNING_STRATEGY = 'list'
+export const RANDOM_STRATEGY = 'random'
 export const V3IO_VOLUME_TYPE = 'flexVolume'
 export const CONFIG_MAP_VOLUME_TYPE = 'configMap'
 export const SECRET_VOLUME_TYPE = 'secret'

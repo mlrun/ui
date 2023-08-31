@@ -21,6 +21,8 @@ import panelData from '../JobsPanel/panelData.json'
 import { panelActions } from '../JobsPanel/panelReducer'
 import { parametersActions } from './jobsPanelParametersReducer'
 
+import { RANDOM_STRATEGY } from '../../constants'
+
 export const convertParamValue = (value, type) =>
   ['int', 'float', 'number'].includes(type) && Number.isFinite(Number(value))
     ? Number(value)
@@ -119,7 +121,7 @@ export const selectOptions = {
     },
     {
       label: 'Random',
-      id: 'random'
+      id: RANDOM_STRATEGY
     }
   ],
   selectorCriteria: [
