@@ -93,6 +93,7 @@ const JobWizard = ({
   const [functions, setFunctions] = useState([])
   const [templatesCategories, setTemplatesCategories] = useState({})
   const [templates, setTemplates] = useState([])
+  const [allTemplatesData, setAllTemplatesData] = useState([])
   const [jobAdditionalData, setJobAdditionalData] = useState({})
   const [showSchedule, setShowSchedule] = useState(false)
   const location = useLocation()
@@ -303,6 +304,7 @@ const JobWizard = ({
             >
               {!isEditMode && !isBatchInference && mode !== PANEL_FUNCTION_CREATE_MODE && (
                 <JobWizardFunctionSelection
+                  allTemplatesData={allTemplatesData}
                   defaultData={defaultData}
                   filteredFunctions={filteredFunctions}
                   filteredTemplates={filteredTemplates}
@@ -313,6 +315,7 @@ const JobWizard = ({
                   isStagingMode={isStagingMode}
                   params={params}
                   selectedFunctionData={selectedFunctionData}
+                  setAllTemplatesData={setAllTemplatesData}
                   setFilteredFunctions={setFilteredFunctions}
                   setFilteredTemplates={setFilteredTemplates}
                   setFunctions={setFunctions}

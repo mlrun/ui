@@ -34,7 +34,12 @@ import { FormSelect } from 'igz-controls/components'
 import functionsActions from '../../../../actions/functions'
 import jobsActions from '../../../../actions/jobs'
 import projectsAction from '../../../../actions/projects'
-import { FILTER_MENU_MODAL, HUB_CATEGORIES_FILTER, JOB_WIZARD_FILTERS } from '../../../../constants'
+import {
+  FILTER_MENU_MODAL,
+  HUB_CATEGORIES_FILTER,
+  JOB_WIZARD_FILTERS,
+  TAG_LATEST
+} from '../../../../constants'
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { limitedFunctionKinds } from '../../../Jobs/jobs.util'
@@ -53,7 +58,7 @@ const JobWizardFunctionSelection = ({
   defaultData,
   fetchFunctionTemplate,
   fetchFunctions,
-  fetchFunctionsTemplates,
+  fetchHubFunctionsTemplates,
   fetchProjectsNames,
   filteredFunctions,
   filteredTemplates,
@@ -65,6 +70,7 @@ const JobWizardFunctionSelection = ({
   params,
   projectStore,
   selectedFunctionData,
+  setAllTemplatesData,
   setFilteredFunctions,
   setFilteredTemplates,
   setFunctions,
@@ -244,10 +250,12 @@ const JobWizardFunctionSelection = ({
     })
 
     if (isEmpty(templatesCategories) || isEmpty(templates)) {
-      fetchFunctionsTemplates().then(templatesObject => {
+      fetchHubFunctionsTemplates().then(templatesObject => {
         setTemplatesCategories(templatesObject.templatesCategories)
 
-        const templates = chain(templatesObject.templatesCategories)
+        const templates = chain(
+          templatesObject.templates.filter(template => template.metadata.tag === TAG_LATEST)
+        )
           .map(categoryTemplates => categoryTemplates)
           .flatten()
           .uniqBy('metadata.name')
@@ -269,6 +277,7 @@ const JobWizardFunctionSelection = ({
         )
 
         setTemplates(templates)
+        setAllTemplatesData(templatesObject.templates)
       })
     }
   }
@@ -436,6 +445,7 @@ JobWizardFunctionSelection.propTypes = {
   isStagingMode: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
+  setAllTemplatesData: PropTypes.func.isRequired,
   setFilteredFunctions: PropTypes.func.isRequired,
   setFilteredTemplates: PropTypes.func.isRequired,
   setFunctions: PropTypes.func.isRequired,

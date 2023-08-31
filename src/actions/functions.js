@@ -188,16 +188,23 @@ const functionsActions = {
     payload: funcs
   }),
   fetchFunctionsTemplates: () => dispatch => {
-    return functionsApi
-      .getFunctionTemplatesCatalog()
-      .then(({ data: functionTemplates }) => {
-        const templatesData = generateCategories(functionTemplates)
+    return functionsApi.getFunctionTemplatesCatalog().then(({ data: functionTemplates }) => {
+      const templatesData = generateCategories(functionTemplates)
 
-        dispatch(functionsActions.setFunctionsTemplates(templatesData))
+      dispatch(functionsActions.setFunctionsTemplates(templatesData))
 
-        return templatesData
-      })
-      .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
+      return templatesData
+    })
+  },
+  fetchHubFunctionsTemplates: () => dispatch => {
+    return functionsApi.getHubFunctionTemplates().then(({ data: functionTemplates }) => {
+      const templatesData = generateCategories(functionTemplates.catalog)
+
+      dispatch(functionsActions.setFunctionsTemplates(templatesData))
+
+      return templatesData
+    })
+    // .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
   },
   fetchFunctionTemplate: path => dispatch => {
     dispatch(functionsActions.fetchFunctionTemplateBegin())

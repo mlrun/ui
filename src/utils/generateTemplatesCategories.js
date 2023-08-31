@@ -33,23 +33,28 @@ export const aliasToCategory = {
 }
 
 export const generateCategories = functionTemplates => {
-  const templates = Object.entries(functionTemplates)
-    .map(([key, value]) => ({
-      kind: value?.kind,
+  const templates = functionTemplates
+    .map(template => ({
+      kind: template.spec?.kind,
       metadata: {
-        name: key,
+        name: template.metadata.name,
         hash: '',
-        description: value?.description,
-        docfile: value?.docfile,
-        categories: value?.categories,
-        versions: value?.versions,
-        tag: ''
+        description: template.metadata?.description,
+        docfile: template.metadata?.doc,
+        categories: template.metadata?.categories,
+        version: template.metadata?.version,
+        versions: functionTemplates
+          .filter(funcTemplate => funcTemplate.metadata.name === template.metadata.name)
+          .map(funcTemplate => funcTemplate.metadata.version),
+        tag: template.metadata?.tag ?? ''
       },
       status: {
-        state: ''
+        ...template.status
       },
       ui: {
-        categories: value?.categories.map(category => aliasToCategory[category] ?? category)
+        categories: template.metadata?.categories.map(
+          category => aliasToCategory[category] ?? category
+        )
       }
     }))
     .filter(template => !excludeCategoryKinds.includes(template.kind))
