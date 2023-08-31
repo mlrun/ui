@@ -55,7 +55,7 @@ const filesTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', //span',
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', 
         name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
@@ -64,9 +64,9 @@ const filesTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(3)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
-            true
+            false
           )
         },
         producer: '.table-body__cell:nth-of-type(4) .data-ellipsis a',

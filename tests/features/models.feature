@@ -5,7 +5,7 @@ Feature: Models Page
   @FAILED_TODO
   #TODO: Register_Model_Button hidden till 1.5, running on demo mode
   @passive
-  Scenario: Check all mandatory components on Models tab
+  Scenario: MLM001 - Check all mandatory components on Models tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -33,7 +33,7 @@ Feature: Models Page
     Then "Register_Model_Button" element on "Models" should contains "Register Model" value
 
   @passive
-  Scenario: Check all mandatory components on Model Endpoints tab
+  Scenario: MLM002 - Check all mandatory components on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -56,7 +56,7 @@ Feature: Models Page
     Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
 
   @passive
-  Scenario: Check all mandatory components on Real-Time Pipelines tab
+  Scenario: MLM003 - Check all mandatory components on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -78,7 +78,7 @@ Feature: Models Page
     Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
 
   @passive
-  Scenario: Verify filtering by model name on Models tab
+  Scenario: MLM004 - Verify filtering by model name on Models tab
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -94,7 +94,7 @@ Feature: Models Page
     Then value in "name" column with "text" in "Models_Table" on "Models" wizard should contains "survival"
 
   @passive
-  Scenario: Verify behaviour of Show iterations checkbox on Models tab
+  Scenario: MLM005 - Verify behaviour of Show iterations checkbox on Models tab
     * set tear-down property "model" created in "default" project with "automation-model" value
     * create "automation-model" Model with "latest" tag in "default" project with code 200
     Given open url
@@ -126,7 +126,7 @@ Feature: Models Page
   @FAILED_TODO
   #TODO: no Real-time pipelines data to show for "Name: churn-server" - add data
   @passive
-  Scenario: Verify filtering by name on Real-Time Pipelines tab
+  Scenario: MLM006 - Verify filtering by name on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -151,7 +151,7 @@ Feature: Models Page
     Then value in "name" column with "text" in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard should contains "churn-server"
 
   @passive
-  Scenario: Verify filtering by label with key on Models tab
+  Scenario: MLM007 - Verify filtering by label with key on Models tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -174,9 +174,10 @@ Feature: Models Page
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Models_data"
 
   @passive
-  Scenario: Verify filtering by label on Model Endpoints tab
+  Scenario: MLM008 - Verify filtering by label on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -207,7 +208,7 @@ Feature: Models Page
   #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
   #TODO: artifactsLabelsTable class components was changed, need to rewrite locators structure (affects the 'Labels_Table', 'remove_btn' cases)
   @passive
-  Scenario: Check all mandatory components on Register Model Popup
+  Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -295,7 +296,7 @@ Feature: Models Page
   @FAILED_TODO
   #TODO: Register_Model_Button hidden till 1.5, running on demo mode
   #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on all cases below)
-  Scenario: Verify behaviour on Register new Model
+  Scenario: MLM010 - Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
     And wait load page
@@ -318,7 +319,7 @@ Feature: Models Page
     Then check "model.txt" value in "model_file" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
   @passive
-  Scenario: Check MLRun logo redirection
+  Scenario: MLM011 - Check MLRun logo redirection
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -332,7 +333,7 @@ Feature: Models Page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
   @passive
-  Scenario: Verify View YAML action
+  Scenario: MLM012 - Verify View YAML action
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -357,7 +358,7 @@ Feature: Models Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
   @passive
-  Scenario: Verify View YAML action in Item infopane
+  Scenario: MLM013 - Verify View YAML action in Item infopane
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -373,12 +374,8 @@ Feature: Models Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
-  @FAILED_TODO
-  #TODO: 'Preview' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
-  #TODO: 'Features' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
-  #TODO: 'Statistics' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
   @passive
-  Scenario: Check all mandatory components in Item infopane on Overview tab table
+  Scenario: MLM014 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -387,7 +384,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -395,6 +392,7 @@ Feature: Models Page
     Then verify "Updated" element visibility on "Models_Info_Pane" wizard
     Then verify "Download_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
+    Then verify "Full_View_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Hash_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
@@ -408,11 +406,15 @@ Feature: Models Page
     Then verify "Statistics" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify cell with "Statistics" value in "key" column in "Info_Pane_Tab_Selector" table on "Models_Info_Pane" wizard should display "Label_Hint"."Models_Statistics"
     Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
+    Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
   @FAILED_TODO
   #TODO: 'Apply_Changes_Button' implementation was changed - button is invisible before any changes
   #TODO: verify, remove, verify changes with 'Labels_Table' - invalid selector: An invalid or illegal selector was specified
-  Scenario: Check all mandatory components in Item infopane on Overview tab table
+  Scenario: MLM015 - Check all mandatory components in Item infopane on Overview tab table
     * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "latest" tag in "default" project with code 200
     Given open url
@@ -461,7 +463,7 @@ Feature: Models Page
     Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
 
   @passive
-  Scenario: Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
+  Scenario: MLM016 - Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard

@@ -78,9 +78,9 @@ module.exports = {
       structure.elements.hint = typeof hint === 'string' ? hint : '.tip-container svg'
     }
     if (warning) {
-      structure.elements.warningHint = '.range__warning svg'
+      structure.elements.warningHint = typeof warning === 'string' ? warning : '.range__warning svg'
       structure.elements.warningText = '.tooltip .tooltip__text'
-    }
+    } 
 
     return structure
   },
