@@ -825,7 +825,7 @@ const generateDataInputs = dataInputsTableData => {
   return dataInputs
 }
 
-const generateEnvironmentVariables = envVarData => {
+const generateEnvironmentVariables = (envVarData = []) => {
   return envVarData.map(envVar => {
     const generatedEnvVar = {
       name: envVar.data.key
