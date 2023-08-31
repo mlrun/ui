@@ -141,6 +141,9 @@ const DatasetsView = React.forwardRef(
               {viewMode === FULL_VIEW_MODE && (
                 <Details
                   actionsMenu={actionsMenu}
+                  applyDetailsChanges={applyDetailsChanges}
+                  applyDetailsChangesCallback={applyDetailsChangesCallback}
+                  formInitialValues={detailsFormInitialValues}
                   detailsMenu={pageData.details.menu}
                   handleRefresh={handleRefresh}
                   isDetailsScreen
