@@ -285,18 +285,18 @@ const jobCustomParametersTable = {
 // TODO: Wait for some details
 const volumePathsTable = {
   root:
-    '.new-item-side-panel__body .accordion__container:nth-of-type(3) .job-panel__item > .panel-section:nth-of-type(3) .volumes-table',
+    '.modal__content .wizard-form__content-container .form-row:nth-child(7)',
   header: {
-    root: '.table__header',
+    root: '.form-table__header-row',
     sorters: {
-      type: '.table__cell:nth-of-type(1)',
-      volume_name: '.table__cell:nth-of-type(2)',
-      path: '.table__cell:nth-of-type(3)'
+      type: '.form-table__cell:nth-of-type(1)',
+      volume_name: '.form-table__cell:nth-of-type(2)',
+      path: '.form-table__cell:nth-of-type(3)',
     }
   },
   body: {
     offset: 1,
-    add_row_btn: '.no-hover .add-input',
+    add_row_btn: '.form-table__action-row button',
     row: {
       root: 'div[class=table__row]',
       fields: {
@@ -314,33 +314,31 @@ const volumePathsTable = {
 
 const resourcesNodeSelectorTable = {
   root:
-    '.new-item-side-panel__body .accordion__container:nth-of-type(3) .panel-section:nth-of-type(5) .key-value-table',
+    '.wizard-form__content .job-wizard__resources .form-key-value-table',
   header: {
-    root: '.table-row__header',
     sorters: {
-      key: '.table-cell__key',
-      value: '.table-cell__value'
+      key: '.form-table__cell_1:nth-of-type(1)',
+      value: '.form-table__cell_1:nth-of-type(2)',
     }
   },
   body: {
-    add_row_btn: '.table-row .add-new-item-btn',
-    save_row_btn: '.btn-add',
+    add_row_btn: '.form-table__action-row button',
     row: {
-      root: '.table-row:not(.table-row__header)',
+      root: '.form-table__row',
       fields: {
-        key: '.table-cell__key .data-ellipsis',
-        value: '.table-cell__value .data-ellipsis',
-        delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
-        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
-        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
+        key: '.form-table__cell_1:nth-of-type(1)',
+        value: '.form-table__cell_1:nth-of-type(2)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
         key_input: {
           componentType: inputGroup,
-          structure: generateInputGroup('.table-cell__key', true, false, false)
+          structure: generateInputGroup('.form-table__cell_1:nth-of-type(1)', true, false, false)
         },
         value_input: {
           componentType: inputGroup,
           structure: generateInputGroup(
-            '.table-cell__value',
+            '.form-table__cell_1:nth-of-type(2)',
             true,
             false,
             false
@@ -698,10 +696,10 @@ const commonVolumePathsTableTypeDropdown = dropdownComponent(
 
 const commonPodsPriorityDropdown = dropdownComponent(
   generateDropdownGroup(
-    '.new-item-side-panel .accordion__container:nth-of-type(3) .pods-priority',
-    '.select__value',
-    '.select__body .select__item',
-    '.data-ellipsis .data-ellipsis'
+    '.modal__content .modal__body .job-wizard__resources .resources__select',
+    '.form-field-select .form-field__wrapper-normal', 
+    '.options-list__body .select__item-label',
+    '.data-ellipsis'
   )
 )
 
@@ -1141,6 +1139,132 @@ module.exports = {
     Save_And_Ingest_Button: By.css(
       '.feature-set-panel .new-item-side-panel__buttons-container .btn-secondary:nth-of-type(3)'
     )
+  },
+  batchRunEdit: {
+    Resources_Accordion: {
+      Pods_Priority_Dropdown: commonPodsPriorityDropdown,
+      Node_Selection_Subheader: By.css('.modal__content .wizard-form__content-container .form-row:nth-child(3)'),
+      Volumes_Subheader: labelComponent(
+        generateLabelGroup(
+          '.modal__content .wizard-form__content-container .form-row:nth-child(6)',
+          false,
+          true
+        )
+      ),
+      // Volume Path inputs
+      Volume_Paths_Table_Type_Dropdown: commonVolumePathsTableTypeDropdown,
+      Volume_Paths_Table_Volume_Name_Input: inputGroup(
+        resourcesTableCommonInput(3, 1, 2)
+      ),
+      Volume_Paths_Table_Path_Input: inputGroup(
+        resourcesTableCommonInput(3, 1, 3)
+      ),
+      Volume_Paths_Table_Container_Input: inputGroup(
+        resourcesTableCommonInput(3, 2, 1)
+      ),
+      Volume_Paths_Table_Config_Map_Input: inputGroup(
+        resourcesTableCommonInput(3, 2, 1)
+      ),
+      Volume_Paths_Table_Secret_Name_Input: inputGroup(
+        resourcesTableCommonInput(3, 2, 1)
+      ),
+      Volume_Paths_Table_Claime_Name_Input: inputGroup(
+        resourcesTableCommonInput(3, 2, 1)
+      ),
+      Volume_Paths_Table_Access_Key_Input: inputGroup(
+        resourcesTableCommonInput(3, 2, 2)
+      ),
+      Volume_Paths_Table_Resource_Path_Input: inputGroup(
+        resourcesTableCommonInput(3, 3, 1)
+      ),
+      Edit_Volume_Name_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(2)')),
+      Edit_Volume_Path_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(3)')),
+      Add_New_Row_Button: commonAddNewRowButton,
+      Delete_New_Row_Button: commonDeleteNewRowButton,
+      Apply_Edit_Button: By.css('.volumes-table .apply-edit-btn'),
+      Volume_Paths_Table: commonTable(volumePathsTable),
+      Memory_Request_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(1) .resources-card__fields:nth-child(2)',
+          '.resources-card__fields-select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      Memory_Request_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(1) .resources-card__fields:nth-child(2) .form-field-input',
+          {
+            inc_btn: '.range__buttons button[class*=increase]',
+            dec_btn: '.range__buttons button[class*=decrease]'
+          },
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      Memory_Limit_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(1) .resources-card__fields:nth-child(3)',
+              '.resources-card__fields-select',
+              '.options-list__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
+      Memory_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(1) .resources-card__fields:nth-child(3) .form-field-input',
+          false,
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      CPU_Request_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(2) .resources-card__fields:nth-child(2)',
+          '.resources-card__fields-select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      CPU_Request_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(2) .resources-card__fields:nth-child(2) .form-field-input',
+          false,
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      CPU_Limit_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(2) .resources-card__fields:nth-child(3)',
+              '.resources-card__fields-select',
+              '.options-list__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
+      CPU_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(2) .resources-card__fields:nth-child(3) .form-field-input',
+          false,
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      GPU_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(3) .resources-card__fields .form-field-input',
+          false,
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
+    }
   },
   newJobTemplateEdit: {
     Cross_Close_Button: commonCrossCloseButton,
@@ -2044,10 +2168,10 @@ module.exports = {
       '.new-item-side-panel .new-item-side-panel__buttons-container .btn-label .data-ellipsis:nth-of-type(1)'
     ),
     Save_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-tertiary' //.data-ellipsis:nth-of-type(1)'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-tertiary' 
     ),
     Deploy_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary' //.data-ellipsis:nth-of-type(1)'
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary' 
     )
   }
 }

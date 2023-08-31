@@ -775,8 +775,8 @@ function getPipeline(req, res) {
 }
 
 function getFuncs(req, res) {
-  console.log("TEST")
-  console.log(req.query)
+  // console.log("TEST")
+  // console.log(req.query)
   //http://localhost:3000/api/v1/projects/default/functions?test=value
   const dt = parseInt(Date.now())
   
@@ -827,7 +827,6 @@ function getFuncs(req, res) {
 }
 
 function getFunc(req, res) {
-  console.log('//////////////////////')
   const collectedFunc = funcs.funcs
     .filter(func => func.metadata.project === req.params['project']) // req.query.project) //req.params['project'])
     .filter(func => func.metadata.name === req.params['func']) //req.params['func'])

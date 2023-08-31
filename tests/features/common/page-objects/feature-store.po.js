@@ -288,9 +288,9 @@ const datasetsTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(2)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
-            true
+            false
           )
         },
         producer: '.table-body__cell:nth-of-type(3) .data-ellipsis a.link',
