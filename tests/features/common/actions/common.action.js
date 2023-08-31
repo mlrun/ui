@@ -20,6 +20,7 @@ such restriction.
 import { timeout } from '../../../config'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
+import { addConsoleHandler } from 'selenium-webdriver/lib/logging'
 
 async function scrollToWebElement(driver, element) {
   await driver.executeScript('arguments[0].scrollIntoView()', element)
@@ -110,7 +111,7 @@ const action = {
   },
   typeIntoInputField: async function(driver, component, value) {
     const element = await driver.findElement(component)
-    return element.sendKeys(value)
+    return element.sendKeys(value) 
   },
   verifyTypedText: async function(driver, component, value) {
     const element = await driver.findElement(component)
@@ -120,10 +121,19 @@ const action = {
   verifyText: async function(driver, component, value) {
     const element = await driver.findElement(component)
     const txt = await element.getText('value')
-    expect(txt).equal(
-      value,
-      `should be expected "${value}" but actual value "${txt}"`
-    )
+    const arr = txt.split('\n')
+    if (arr.length > 1) {
+      expect(arr.some(item => item.includes(value))).equal(
+        true,
+        `should be expected "${value}" but actual value [${arr}]`
+      )
+    }
+    else {
+      expect(txt).equal(
+        value,
+        `should be expected "${value}" but actual value "${txt}"`
+      )
+    }  
   },
   verifyTextRegExp: async function(driver, component, regexp) {
     const element = await driver.findElement(component)

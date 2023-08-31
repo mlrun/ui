@@ -54,10 +54,10 @@ const functionsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-row',  //table-body__row
+      root: '.table-row',  
       fields: {
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', //span.link
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', 
         tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
         status: '.table-body__cell:nth-of-type(1) .status i',
         kind: {

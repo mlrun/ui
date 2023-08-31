@@ -48,7 +48,7 @@ const infoPaneTabSelector = {
     row: {
       root: 'a',
       fields: {
-        key: '', //'.details-menu__tab',
+        key: '',
         hintButton: '.tip-container'
       }
     }
@@ -140,7 +140,7 @@ const functionsOverviewTable = {
 }
 
 const infoPaneDriftHeaders = {
-  root: '.table__item .item-info__details:nth-of-type(2)',
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
   header: {},
   body: {
     row: {
@@ -454,6 +454,8 @@ const applyChangesButton = By.css(
   '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
 )
 const commonActionMenu = actionMenu(actionMenuStructure)
+const fullViewButton = By.css('.table__item .item-header__buttons .item-header__navigation-buttons > div > div')
+const tabelViewButton = By.css('#main-wrapper .table__item_big .item-header__navigation-buttons')
 const crossCloseButton = By.css('.table__item .item-header__buttons a .data-ellipsis')
 const commonDownloadButton = By.css('.table__item .item-header__buttons .download-container')
 const commonArrowBack = By.css('a.link-back__icon')
@@ -506,6 +508,8 @@ module.exports = {
     Apply_Changes_Button: applyChangesButton,
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
+    Full_View_Button: fullViewButton,
+    Tabel_View_Button: tabelViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
@@ -622,6 +626,8 @@ module.exports = {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
+    Full_View_Button: fullViewButton,
+    Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Hash_Header: labelComponent(
@@ -649,6 +655,8 @@ module.exports = {
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
     Cross_Close_Button: crossCloseButton,
+    Full_View_Button: fullViewButton,
+    Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),

@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
+import checkboxComponent from '../components/checkbox.component'
 import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
@@ -29,7 +30,8 @@ import graph from '../components/graph.component'
 import {
   generateInputGroup,
   generateDropdownGroup,
-  generateLabelGroup
+  generateLabelGroup,
+  generateCheckboxGroup
 } from '../../common-tools/common-tools'
 
 // Monitor tab
@@ -42,6 +44,186 @@ const tabSelector = {
       root: '.content-menu__item',
       fields: {
         key: 'a'
+      }
+    }
+  }
+}
+
+// Batch run
+
+const batchRunWizardSteps = {
+  root: '.modal .modal__content .modal__body .wizard-steps',
+  header: {},
+  body: {
+    row: {
+      root: '.btn',
+      fields: {
+        text: 'span:nth-of-type(2)',
+        indicator: '.wizard-steps__indicator'
+      }
+    }
+  }
+}
+
+const batchTabSelector = {
+  root: '.wizard-form__content .content-menu',
+  header: {},
+  body: {
+    root: '.content-menu__list',
+    row: {
+      root: '.content-menu__item',
+      fields: {
+        key: 'a'
+      }
+    }
+  }
+}
+
+const functionsTableSelector = {
+  root: '.form .functions-list',
+  header: {},
+  body: {
+    row: {
+      root: '.job-card-template',
+      fields: {
+        name:
+          '.job-card-template__header > div:first-child',
+        sub_name:
+          '.job-card-template__header .job-card-template__sub-header .data-ellipsis',
+        description:
+          '.job-card-template__description',
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.job-card-template__chips',
+            '.chip-block span.chips_button',
+            '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
+            false,
+            true
+          )
+        }
+      }
+    }
+  }
+}
+
+const checkboxCategorySelector = {
+  root: '.hub-filter .categories-list',
+  header: {},
+  body: {
+    row: {
+      root: '.category',
+      fields: {
+        name:
+          '.form-field-checkbox label',
+        checkbox:
+          '.form-field-checkbox input'
+      }
+    }
+  }
+}
+
+const BatchRunLabelsTable = {
+  root:
+    '.job-wizard__run-details .form-row:nth-of-type(4) .chips',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: '.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        remove_btn: '.edit-chip__icon-close'
+      }
+    }
+  }
+}
+
+const DataInputsHeaders = {
+  root: '.wizard-form__content .form-table',  
+  header: {},
+  body: {
+    root: '.form-table__header-row', 
+    row: {
+      root: '.form-table__cell',
+      fields: {
+        key: 'div'
+      }
+    }
+  }
+}
+
+const BatchRunDataInputsTable = {
+  root: '.wizard-form__content .form-table',
+  header: {},
+  body: {
+    add_row_btn: '.form-table__action-row button',
+    row: {
+      root: '.form-table__row',
+      fields: {
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        name_input: '.form-field-input input',
+        name_verify: '.form-table__name-cell',
+        path_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-field__icons:nth-of-type(1)', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_input: 'input.form-field-combobox__input',
+        path_verify: '.form-table__cell_1:nth-of-type(2)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)' 
+      }
+    }
+  }
+}
+
+const BatchRunParametersTable = {
+  root: '.wizard-form__content .form-table',
+  header: {},
+  body: {
+    add_row_btn: '.form-table__action-row button',
+    checkbox: checkboxComponent({
+      root: '#overlay_container .form-field-checkbox',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    row: {
+      root: '.form-table__parameter-row',
+      fields: {
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        checkbox: '.form-field-checkbox input',
+        name_input: '.form-field-input input',
+        name_verify: '.form-table__cell_2',
+        type_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1 .form-field-select', 
+            '.form-field__icons', 
+            '.pop-up-dialog .options-list__body .select__item', 
+            false, 
+            false)  
+        },
+        type_dropdown_verify: '.form-table__cell_1 .data-ellipsis', 
+        value_input: '.form-table__cell_3 .form-field__control input',
+        value_verify: '.form-table__cell_3 .data-ellipsis',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)' 
       }
     }
   }
@@ -88,7 +270,7 @@ const jobsMonitorTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a .link',//'.table-body__cell:nth-of-type(1) a .link .data-ellipsis',
+        name: '.table-body__cell:nth-of-type(1) a .link',
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -410,6 +592,7 @@ const pageHeaderButton = By.css(
   '.content__header .page-actions-container button'
 )
 const jobsTabSelector = commonTable(tabSelector)
+const batchRunTabSelector = commonTable(batchTabSelector)
 const tableRefreshButton = By.css(
   '.content__action-bar-wrapper .action-bar .actions #refresh'
 )
@@ -419,6 +602,22 @@ const commonStatusFilter = dropdownComponent(
     '.select__header', // Open Component
     '.select__body .select__item', // Options
     '.data-ellipsis .data-ellipsis' // Option value
+  )
+)
+const projectSelect = dropdownComponent(
+  generateDropdownGroup(
+    '.form .functions-tab [data-testid="select"]',
+    '[data-testid="select-header"]', // Open Component
+    '[data-testid="select-body"] .select__item', // Options
+    '.data-ellipsis .data-ellipsis' // Option value
+  )
+)
+const categorySelect = dropdownComponent(
+  generateDropdownGroup(
+    '.hub-tab .form-row .filters-button',
+    '.data-ellipsis button', // Open Component
+    '.hub-filter .categories-list .category', // Options
+    '.form-field-checkbox' // Option value
   )
 )
 const commonNameFilter = inputGroup(
@@ -441,7 +640,7 @@ const commonStartTimeFilter = dropdownComponent(
 module.exports = {
   JobsMonitorTab: {
     Jobs_Tab_Selector: jobsTabSelector,
-    New_Job_Button: pageHeaderButton,
+    Butch_Run_Button: pageHeaderButton,
     Arrow_Back: By.css('.link-back__icon'),
     Resource_Monitoring_Button: By.css(
       '.content__action-bar-wrapper .action-bar button'
@@ -494,6 +693,94 @@ module.exports = {
     ),
     Table_Refresh_Button: tableRefreshButton,
     Schedule_Monitor_Table: commonTable(scheduleMonitorTable)
+  },
+  BatchRun: {
+    Batch_Run_Header: By.css(
+      '.modal .modal__content h5.modal__header-title'
+    ),
+    Function_Title: By.css(
+      '.modal .modal__content h6.modal__header-sub-title'
+    ),
+    Cross_Close_Button: By.css(
+      '.modal .modal__header-button .round-icon-cp'
+    ),
+    Search_Input: inputWithAutocomplete({
+      root: '.form .search-container',
+      elements: {
+        input: 'input',
+        options: '.search-matches .search-matches__item',
+        option_name: ''
+      }
+    }),
+    Batch_Run_Wizard_Steps: commonTable(batchRunWizardSteps),
+    Step_1_Button: By.css(
+      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1)'
+    ),
+    Step_2_Button: By.css(
+      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2)'
+    ),
+    Step_3_Button: By.css(
+      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(3)'
+    ),
+    Step_4_Button: By.css(
+      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(4)'
+    ),
+    Step_5_Button: By.css(
+      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(5)'
+    ),
+    Step_6_Button: By.css(
+      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6)'
+    ),
+    Step_7_Button: By.css(
+      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7)'
+    ),
+    BatchRun_Tab_Selector: batchRunTabSelector,
+    Project_Selector_Dropdown: projectSelect,
+    Category_Selector_Dropdown: categorySelect,
+    Form_Header_Batch_Run: By.css('.form .form-row .form-step-title'),
+    Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
+    Filter_Dropdown: {
+      Title: By.css('.hub-filter h3.filters-wizard__header'),
+      Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons button')
+    },
+    Filter_Button_Hub_Tab: By.css('.hub-tab .form-row .filters-button button'),
+    Functions_Table: commonTable(functionsTableSelector),
+    Overlay: By.css('#overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container'),
+    Back_Button: By.css('.modal__content .modal__footer button.btn-tertiary'),
+    Next_Button: By.css('.modal__content .modal__footer button.btn-secondary'),
+    Hyperparameter_Checkbox: checkboxComponent({
+      root: '#overlay_container .form-field-checkbox',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Function_Name_Input_Batch_Run: inputGroup(
+      generateInputGroup(
+        '.form-row .form-field-input .form-field__wrapper',
+        false,
+        true,
+        '.form-field__icons svg'
+      )
+    ),
+    Name_Input_Batch_Run: By.css('.form-row .form-field-input .form-field__wrapper input'),
+    Version_Dropdown: dropdownComponent(
+      generateDropdownGroup('.form-col-1:nth-of-type(2)', '.form-field-select', '.form-field__select-value', false, false)
+    ),
+    Method_Dropdown: dropdownComponent(
+      generateDropdownGroup('.form-col-1:nth-of-type(3)', '.form-field-select', '.select__item-main-label', false, false)
+    ),
+    Batch_Run_Labels_Table: commonTable(BatchRunLabelsTable),
+    Batch_Run_Data_Inputs_Table: commonTable(BatchRunDataInputsTable),
+    Data_Inputs_Headers: commonTable(DataInputsHeaders),
+    Batch_Run_Parameters_Table: commonTable(BatchRunParametersTable),
+    Add_Custom_Parameter_Button: By.css('.wizard-form__content .form-table .form-table__action-row button'),
+    Sub_Header_Parameters: By.css('.wizard-form__content .form-table .form-table__sub-header-row .form-table__cell'),
+    Checkbox_Parameters: checkboxComponent(
+      generateCheckboxGroup('.wizard-form__content .form-field-checkbox input', false, false, false)
+    ),
+    Delete_Button_Parameters: By.css('.form-table__parameter-row .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
   },
   CreateJob: {
     Back_Arrow_Button: By.css(
