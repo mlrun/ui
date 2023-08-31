@@ -43,6 +43,7 @@ import {
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
   PVC_VOLUME_TYPE,
+  RANDOM_STRATEGY,
   SECRET_VOLUME_TYPE,
   TAG_LATEST,
   V3IO_VOLUME_TYPE
@@ -85,7 +86,7 @@ const volumeTypesMap = {
 const volumeTypeNamesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'name',
   [PVC_VOLUME_TYPE]: 'claimName',
-  [SECRET_VOLUME_TYPE]: 'secretName',
+  [SECRET_VOLUME_TYPE]: 'secretName'
 }
 
 export const generateJobWizardData = (
@@ -340,13 +341,27 @@ const getVersionOptions = selectedFunctions => {
   return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
 }
 
+const getDefaultMethod = (methodOptions, selectedFunctions) => {
+  let method = ''
+
+  const latestFunction = selectedFunctions.find(item => item.metadata.tag === 'latest')
+
+  if (methodOptions.length) {
+    method = methodOptions[0]?.id
+  } else if (latestFunction) {
+    method = latestFunction.spec.default_handler || 'handler'
+  } else {
+    method = selectedFunctions[0]?.spec.default_handler || 'handler'
+  }
+
+  return method
+}
+
 const getDefaultMethodAndVersion = (versionOptions, methodOptions, selectedFunctions) => {
   const defaultVersion =
     versionOptions.find(version => version.id === 'latest')?.id || versionOptions[0].id || ''
-  const defaultMethod =
-    selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec?.default_handler ||
-    methodOptions[0]?.id ||
-    ''
+
+  const defaultMethod = getDefaultMethod(methodOptions, selectedFunctions)
 
   return {
     defaultVersion,
@@ -810,7 +825,7 @@ const generateDataInputs = dataInputsTableData => {
   return dataInputs
 }
 
-const generateEnvironmentVariables = envVarData => {
+const generateEnvironmentVariables = (envVarData = []) => {
   return envVarData.map(envVar => {
     const generatedEnvVar = {
       name: envVar.data.key
@@ -943,14 +958,21 @@ export const generateJobRequestData = (
       }
     }
   }
+
   if (formData.runDetails.hyperparameter) {
     postData.task.spec.hyper_param_options = {
       strategy: formData.hyperparameterStrategy.strategy,
       stop_condition: formData.hyperparameterStrategy.stopCondition ?? '',
       parallel_runs: formData.hyperparameterStrategy.parallelRuns,
       dask_cluster_uri: formData.hyperparameterStrategy.daskClusterUri ?? '',
-      max_iterations: formData.hyperparameterStrategy.maxIterations,
-      max_errors: formData.hyperparameterStrategy.maxErrors,
+      max_iterations:
+        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
+          ? formData.hyperparameterStrategy.maxIterations
+          : null,
+      max_errors:
+        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
+          ? formData.hyperparameterStrategy.maxErrors
+          : null,
       teardown_dask: formData.hyperparameterStrategy.teardownDask ?? false
     }
 

@@ -40,7 +40,7 @@ const actionMenuStructure = {
 }
 
 const tabSelector = {
-  root: '.content .content-menu', //'.content_with-menu .content-menu',
+  root: '.content .content-menu',
   header: {},
   body: {
     root: '.content-menu__list',
@@ -80,7 +80,7 @@ const modelsTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(2)',
             '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper', //'.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block .data-ellipsis.tooltip-wrapper', 
             false,
             true
           )
@@ -133,7 +133,7 @@ const modelsEndpointTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(5)',
             '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper', //'.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block .data-ellipsis.tooltip-wrapper', 
             false,
             true
           )

@@ -265,7 +265,7 @@ const MonitorJobs = ({
       const urlPathArray = location.pathname.split('/')
       const jobNameIndex = urlPathArray.indexOf(selectedJob.uid) - 1
 
-      if (urlPathArray[jobNameIndex] !== selectedJob.name) {
+      if (urlPathArray[jobNameIndex] !== selectedJob.name && jobNameIndex > 0) {
         navigate(
           [
             ...urlPathArray.slice(0, jobNameIndex + 1),

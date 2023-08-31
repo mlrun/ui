@@ -182,16 +182,22 @@ const JobWizardRunDetails = ({
               />
             </div>
           )}
-          {jobAdditionalData.methodOptions?.length !== 0 && !isBatchInference && (
-            <div className="form-col-1">
-              <FormSelect
-                name={methodPath}
-                label="Method"
-                options={jobAdditionalData.methodOptions || []}
-                scrollToView={false}
-              />
-            </div>
-          )}
+          {!isBatchInference ? (
+            jobAdditionalData.methodOptions?.length !== 0 ? (
+              <div className="form-col-1">
+                <FormSelect
+                  label="Method"
+                  name={methodPath}
+                  options={jobAdditionalData.methodOptions || []}
+                  scrollToView={false}
+                />
+              </div>
+            ) : (
+              <div className="form-col-1">
+                <FormInput label="Method" name={methodPath} disabled={isEditMode} />
+              </div>
+            )
+          ) : null}
         </div>
         <div className="form-row">
           <FormChipCell
