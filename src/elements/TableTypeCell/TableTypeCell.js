@@ -19,10 +19,12 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { capitalize } from 'lodash'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { ReactComponent as Code } from 'igz-controls/images/code.svg'
+import { ReactComponent as DatabricksIcon } from 'igz-controls/images/databricks-icon.svg'
 import { ReactComponent as Horovod } from 'igz-controls/images/horovod.svg'
 import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
 import { ReactComponent as Nuclio } from 'igz-controls/images/nuclio.svg'
@@ -35,6 +37,7 @@ const TableTypeCell = ({ className, data }) => {
   const typesOfJob = {
     '': { label: 'Local', icon: <Code /> },
     dask: { label: 'Dask', icon: null },
+    databricks: { label: 'Databricks', icon: <DatabricksIcon /> },
     handler: { label: 'Handler', icon: <Jupyter /> },
     job: { label: 'Job', icon: <Package /> },
     local: { label: 'Local', icon: <Code /> },
@@ -49,9 +52,11 @@ const TableTypeCell = ({ className, data }) => {
     <td className={`table-body__cell ${data.class}`}>
       <Tooltip
         className="table-body__cell_type"
-        template={<TextTooltipTemplate text={typesOfJob[data.value]?.label ?? data.value} />}
+        template={
+          <TextTooltipTemplate text={typesOfJob[data.value]?.label ?? capitalize(data.value)} />
+        }
       >
-        {typesOfJob[data.value]?.icon ?? data.value}
+        {typesOfJob[data.value]?.icon ?? capitalize(data.value)}
       </Tooltip>
     </td>
   )

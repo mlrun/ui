@@ -66,7 +66,6 @@ const JobWizardFunctionSelection = ({
   frontendSpec,
   functions,
   isEditMode,
-  isStagingMode,
   params,
   projectStore,
   selectedFunctionData,
@@ -198,8 +197,7 @@ const JobWizardFunctionSelection = ({
         frontendSpec,
         functionData,
         defaultData,
-        isEditMode,
-        isStagingMode
+        isEditMode
       )
       const newInitial = {
         ...formState.initialValues,
@@ -302,7 +300,9 @@ const JobWizardFunctionSelection = ({
 
   const selectTemplateFunction = functionData => {
     const selectNewFunction = () => {
-      fetchFunctionTemplate(functionData.metadata.versions.latest).then(result => {
+      const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
+
+      fetchFunctionTemplate(functionTemplatePath).then(result => {
         setSelectedFunctionData(result)
         generateData(result)
       })
@@ -442,7 +442,6 @@ JobWizardFunctionSelection.propTypes = {
   frontendSpec: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   isEditMode: PropTypes.bool.isRequired,
-  isStagingMode: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   setAllTemplatesData: PropTypes.func.isRequired,

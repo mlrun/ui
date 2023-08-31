@@ -47,7 +47,6 @@ import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { useMode } from '../../hooks/mode.hook'
 import {
   JOB_WIZARD_FILTERS,
   MONITOR_JOBS_TAB,
@@ -65,6 +64,7 @@ const JobWizard = ({
   defaultData,
   editJob,
   fetchFunctionTemplate,
+  fetchHubFunction,
   frontendSpec,
   functionsStore,
   isBatchInference,
@@ -99,7 +99,6 @@ const JobWizard = ({
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { isStagingMode } = useMode()
   const scheduleButtonRef = useRef()
 
   const closeModal = useCallback(() => {
@@ -175,11 +174,15 @@ const JobWizard = ({
 
   useEffect(() => {
     if (isBatchInference) {
-      fetchFunctionTemplate('batch_inference/function.yaml').then(functionData => {
-        setSelectedFunctionData(functionData)
+      fetchHubFunction('batch_inference').then(hubFunction => {
+        const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
+
+        fetchFunctionTemplate(functionTemplatePath).then(functionData => {
+          setSelectedFunctionData(functionData)
+        })
       })
     }
-  }, [fetchFunctionTemplate, isBatchInference])
+  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference])
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
@@ -312,7 +315,6 @@ const JobWizard = ({
                   frontendSpec={frontendSpec}
                   functions={functions}
                   isEditMode={isEditMode}
-                  isStagingMode={isStagingMode}
                   params={params}
                   selectedFunctionData={selectedFunctionData}
                   setAllTemplatesData={setAllTemplatesData}
@@ -333,7 +335,6 @@ const JobWizard = ({
                 frontendSpec={frontendSpec}
                 isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
-                isStagingMode={isStagingMode}
                 jobAdditionalData={jobAdditionalData}
                 selectedFunctionData={selectedFunctionData}
                 setJobAdditionalData={setJobAdditionalData}

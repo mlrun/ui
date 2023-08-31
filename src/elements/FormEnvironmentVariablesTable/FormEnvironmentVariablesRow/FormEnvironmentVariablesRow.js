@@ -75,7 +75,7 @@ const FormEnvironmentVariablesRow = ({
       fieldsPath === editingItem.ui?.fieldsPath &&
       !disabled ? (
         <div className={tableRowClassNames} key={index}>
-          <div className="form-table__cell form-table__cell_1">
+          <div className="form-table__cell form-table__cell_2">
             <FormInput
               density="normal"
               name={`${rowPath}.data.key`}
@@ -98,7 +98,7 @@ const FormEnvironmentVariablesRow = ({
               required
             />
           </div>
-          <div className="form-table__cell form-table__cell_1">
+          <div className="form-table__cell form-table__cell_3">
             {fieldData.data.type === 'value' && (
               <FormInput
                 density="normal"
@@ -142,7 +142,7 @@ const FormEnvironmentVariablesRow = ({
           key={index}
           onClick={event => enterEditMode(event, fields, fieldsPath, index)}
         >
-          <div className={classnames('form-table__cell', 'form-table__cell_1')}>
+          <div className={classnames('form-table__cell', 'form-table__cell_2')}>
             <Tooltip template={<TextTooltipTemplate text={fieldData.data.key} />}>
               {fieldData.data.key}
             </Tooltip>
@@ -153,7 +153,7 @@ const FormEnvironmentVariablesRow = ({
               {fieldData.data.type}
             </Tooltip>
           </div>
-          <div className={classnames('form-table__cell', 'form-table__cell_1')}>
+          <div className={classnames('form-table__cell', 'form-table__cell_3')}>
             <Tooltip template={<TextTooltipTemplate text={valueColumn} />}>{valueColumn}</Tooltip>
           </div>
           <FormRowActions

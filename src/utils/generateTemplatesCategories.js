@@ -48,6 +48,9 @@ export const generateCategories = functionTemplates => {
           .map(funcTemplate => funcTemplate.metadata.version),
         tag: template.metadata?.tag ?? ''
       },
+      spec: {
+        ...template.spec
+      },
       status: {
         ...template.status
       },

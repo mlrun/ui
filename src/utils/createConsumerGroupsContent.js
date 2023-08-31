@@ -33,7 +33,7 @@ const createConsumerGroupsContent = (content, params) => {
           identifier: identifier,
           identifierUnique: identifier,
           getLink: () => {
-            return `/projects/${params.projectName}/monitor/consumer-groups/${contentItem.consumerGroup}`
+            return `/projects/${params.projectName}/monitor/consumer-groups/${contentItem.functionName}/${contentItem.streamName}`
           }
         },
         streamPath: {

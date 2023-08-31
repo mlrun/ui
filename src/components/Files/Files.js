@@ -219,7 +219,7 @@ const Files = () => {
       }
     }
 
-    handleRefresh(filtersStore)
+    handleRefresh(filesFilters)
   }
 
   useEffect(() => {
@@ -230,9 +230,9 @@ const Files = () => {
 
   useEffect(() => {
     if (isNil(filtersStore.tagOptions) && urlTagOption) {
-      fetchData({ ...filtersStore, tag: urlTagOption })
+      fetchData({ ...filesFilters, tag: urlTagOption })
     }
-  }, [fetchData, filtersStore, urlTagOption])
+  }, [fetchData, filesFilters, filtersStore, urlTagOption])
 
   useEffect(() => {
     return () => {

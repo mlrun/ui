@@ -312,7 +312,18 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
         {
           id: 'trainModel',
           icon: <TrainModelIcon />,
-          handleClick: () => {},
+          handleClick: () => {
+            return {
+              component: JobWizard,
+              props: {
+                params,
+                isTrainModel: true,
+                wizardTitle: 'Train model',
+                isOverview: true
+              },
+              type: 'modal'
+            }
+          },
           label: 'Train model',
           tooltip:
             'Train a new model based on an input dataset. You can also define hyperparameters to execute and compare multiple models.',

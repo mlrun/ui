@@ -29,6 +29,7 @@ import {
   map,
   merge,
   omit,
+  set,
   unionBy
 } from 'lodash'
 import {
@@ -42,6 +43,7 @@ import {
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
   PVC_VOLUME_TYPE,
+  RANDOM_STRATEGY,
   SECRET_VOLUME_TYPE,
   TAG_LATEST,
   V3IO_VOLUME_TYPE
@@ -59,7 +61,8 @@ import {
   parameterTypeInt,
   parameterTypeList,
   parameterTypeMap,
-  parameterTypeStr
+  parameterTypeStr,
+  parameterTypeValueMap
 } from '../../elements/FormParametersTable/formParametersTable.util'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -80,12 +83,17 @@ const volumeTypesMap = {
   [V3IO_VOLUME_TYPE]: 'flexVolume'
 }
 
+const volumeTypeNamesMap = {
+  [CONFIG_MAP_VOLUME_TYPE]: 'name',
+  [PVC_VOLUME_TYPE]: 'claimName',
+  [SECRET_VOLUME_TYPE]: 'secretName'
+}
+
 export const generateJobWizardData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
-  isEditMode,
-  isStagingMode
+  isEditMode
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -141,7 +149,7 @@ export const generateJobWizardData = (
       outputPath: JOB_DEFAULT_OUTPUT_PATH,
       accessKey: true,
       accessKeyInput: '',
-      environmentVariablesTable: parseEnvironmentVariables(environmentVariables, isStagingMode)
+      environmentVariablesTable: parseEnvironmentVariables(environmentVariables)
       // secretSourcesTable - currently not shown
       // secretSourcesTable: []
     },
@@ -174,8 +182,7 @@ export const generateJobWizardDefaultData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
-  isEditMode,
-  isStagingMode
+  isEditMode
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
 
@@ -255,10 +262,7 @@ export const generateJobWizardDefaultData = (
         defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY
           ? ''
           : defaultData.function?.metadata?.credentials?.access_key,
-      environmentVariablesTable: parseEnvironmentVariables(
-        defaultData.function?.spec?.env ?? [],
-        isStagingMode
-      )
+      environmentVariablesTable: parseEnvironmentVariables(defaultData.function?.spec?.env ?? [])
       // secretSourcesTable - currently not shown
       // secretSourcesTable: parseSecretSources(defaultData.task.spec.secret_sources)
     },
@@ -337,13 +341,27 @@ const getVersionOptions = selectedFunctions => {
   return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
 }
 
+const getDefaultMethod = (methodOptions, selectedFunctions) => {
+  let method = ''
+
+  const latestFunction = selectedFunctions.find(item => item.metadata.tag === 'latest')
+
+  if (methodOptions.length) {
+    method = methodOptions[0]?.id
+  } else if (latestFunction) {
+    method = latestFunction.spec.default_handler || 'handler'
+  } else {
+    method = selectedFunctions[0]?.spec.default_handler || 'handler'
+  }
+
+  return method
+}
+
 const getDefaultMethodAndVersion = (versionOptions, methodOptions, selectedFunctions) => {
   const defaultVersion =
     versionOptions.find(version => version.id === 'latest')?.id || versionOptions[0].id || ''
-  const defaultMethod =
-    selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec?.default_handler ||
-    methodOptions[0]?.id ||
-    ''
+
+  const defaultMethod = getDefaultMethod(methodOptions, selectedFunctions)
 
   return {
     defaultVersion,
@@ -472,13 +490,14 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
     const currentVolume = volumes.find(volume => volume.name === volumeMount?.name)
     const volumeType = getVolumeType(currentVolume)
     const volumeTypePath = volumeTypesMap[volumeType]
+    const volumeTypeName = volumeTypeNamesMap[volumeType]
 
     return {
       data: {
         type: volumeType,
         name: volumeMount?.name,
         mountPath: volumeMount?.mountPath,
-        typeName: currentVolume[volumeTypePath]?.name,
+        typeName: currentVolume[volumeTypePath]?.[volumeTypeName],
         ...currentVolume[volumeTypePath]?.options
       },
       typeAdditionalData: omit(currentVolume[volumeTypePath], ['options', 'name']),
@@ -548,19 +567,22 @@ export const parseDefaultDataInputs = dataInputs => {
 export const parsePredefinedParameters = funcParams => {
   return funcParams
     .filter(parameter => !parameter.type?.includes('DataItem'))
-    .map(parameter => ({
-      data: {
-        name: parameter.name ?? '',
-        type: parameter.type ?? parseParameterType(parameter.default),
-        value: parseParameterValue(parameter.default),
-        isChecked: true,
-        isHyper: false
-      },
-      doc: parameter.doc,
-      isHidden: parameter.name === 'context',
-      isDefault: true,
-      isPredefined: true
-    }))
+    .map(parameter => {
+      return {
+        data: {
+          name: parameter.name ?? '',
+          type: parameter.type ?? '',
+          value: parseParameterValue(parameter.default),
+          isChecked: true,
+          isHyper: false
+        },
+        doc: parameter.doc,
+        isHidden: parameter.name === 'context',
+        isUnsupportedType: !parameterTypeValueMap[parameter.type],
+        isDefault: true,
+        isPredefined: true
+      }
+    })
 }
 
 export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyperParams = {}) => {
@@ -569,19 +591,20 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
 
   predefinedParameters = chain(funcParams)
     .filter(parameter => !parameter.type?.includes('DataItem'))
-    .map(param => {
+    .map(parameter => {
       return {
         data: {
-          name: param.name,
-          type: param.type,
+          name: parameter.name,
+          type: parameter.type ?? '',
           value: parseParameterValue(
-            runParams[param.name] ?? runHyperParams[param.name] ?? param.default ?? ''
+            runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
           ),
-          isChecked: param.name in runParams || param.name in runHyperParams,
-          isHyper: param.name in runHyperParams
+          isChecked: parameter.name in runParams || parameter.name in runHyperParams,
+          isHyper: parameter.name in runHyperParams
         },
-        doc: param.doc ?? '',
-        isHidden: param.name === 'context',
+        doc: parameter.doc ?? '',
+        isHidden: parameter.name === 'context',
+        isUnsupportedType: !parameterTypeValueMap[parameter.type],
         isDefault: true,
         isPredefined: true
       }
@@ -614,9 +637,17 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
   return [predefinedParameters, customParameters]
 }
 
-const parseParameterType = (parameterValue, isHyper) => {
+export const parseParameterType = (parameterValue, isHyper) => {
   if (isHyper) {
-    return parseParameterType(parameterValue[0])
+    const hyperParameterTypes = parameterValue.map(parameterHyperValue => {
+      return parseParameterType(parameterHyperValue)
+    })
+
+    return hyperParameterTypes.every(
+      hyperParameterType => hyperParameterType === hyperParameterTypes[0]
+    )
+      ? hyperParameterTypes[0]
+      : ''
   } else if (Array.isArray(parameterValue)) {
     return parameterTypeList
   } else if (
@@ -677,7 +708,7 @@ const parseRequests = (requests = {}, defaultRequests = {}) => {
   }
 }
 
-const parseEnvironmentVariables = (envVariables, isStagingMode) => {
+const parseEnvironmentVariables = envVariables => {
   return envVariables
     .filter(envVariable => {
       if (envVariable?.valueFrom?.secretKeyRef) {
@@ -699,14 +730,9 @@ const parseEnvironmentVariables = (envVariables, isStagingMode) => {
         const secretName = envVariable.valueFrom.secretKeyRef.name
         const secretKey = envVariable.valueFrom.secretKeyRef.key ?? ''
 
-        if (isStagingMode) {
-          env.secretName = secretName
-          env.secretKey = secretKey
-          env.type = ENV_VARIABLE_TYPE_SECRET
-        } else {
-          env.value = secretName && secretKey ? `${secretName}:${secretKey}` : secretName
-          env.type = ENV_VARIABLE_TYPE_VALUE
-        }
+        env.secretName = secretName
+        env.secretKey = secretKey
+        env.type = ENV_VARIABLE_TYPE_SECRET
       } else {
         env.type = ENV_VARIABLE_TYPE_VALUE
         env.value = envVariable.value
@@ -799,7 +825,7 @@ const generateDataInputs = dataInputsTableData => {
   return dataInputs
 }
 
-const generateEnvironmentVariables = envVarData => {
+const generateEnvironmentVariables = (envVarData = []) => {
   return envVarData.map(envVar => {
     const generatedEnvVar = {
       name: envVar.data.key
@@ -834,11 +860,15 @@ const generateVolumes = volumesTable => {
 
     if (volume.data.typeName) {
       volumeData[volume.data.type] = {
-        name: volume.data.typeName
+        [volumeTypeNamesMap[volume.data.type]]: volume.data.typeName
       }
     } else {
       volumeData[volume.data.type] = {
         options: omit(volume.data, ['type', 'name', 'typeName', 'mountPath'])
+      }
+
+      if (volume.data.type === V3IO_VOLUME_TYPE && !volume.typeAdditionalData?.driver) {
+        set(volume, ['typeAdditionalData', 'driver'], 'v3io/fuse')
       }
     }
 
@@ -858,7 +888,7 @@ const generateResources = resources => {
         resources.currentLimits.memory,
         resources.currentLimits.memoryUnitId
       ),
-      'nvidia.com/gpu': String(resources.currentLimits['nvidia.com/gpu'])
+      'nvidia.com/gpu': String(resources.currentLimits['nvidia.com/gpu'] ?? '')
     },
     requests: {
       cpu: generateCpuWithUnit(resources.currentRequest.cpu, resources.currentRequest.cpuUnitId),
@@ -928,14 +958,21 @@ export const generateJobRequestData = (
       }
     }
   }
+
   if (formData.runDetails.hyperparameter) {
     postData.task.spec.hyper_param_options = {
       strategy: formData.hyperparameterStrategy.strategy,
       stop_condition: formData.hyperparameterStrategy.stopCondition ?? '',
       parallel_runs: formData.hyperparameterStrategy.parallelRuns,
       dask_cluster_uri: formData.hyperparameterStrategy.daskClusterUri ?? '',
-      max_iterations: formData.hyperparameterStrategy.maxIterations,
-      max_errors: formData.hyperparameterStrategy.maxErrors,
+      max_iterations:
+        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
+          ? formData.hyperparameterStrategy.maxIterations
+          : null,
+      max_errors:
+        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
+          ? formData.hyperparameterStrategy.maxErrors
+          : null,
       teardown_dask: formData.hyperparameterStrategy.teardownDask ?? false
     }
 

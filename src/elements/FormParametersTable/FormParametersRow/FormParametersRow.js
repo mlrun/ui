@@ -45,7 +45,10 @@ import {
   parameterTypeStr,
   parameterTypeValueMap
 } from '../formParametersTable.util'
+import { parseParameterType } from '../../../components/JobWizard/JobWizard.util'
 import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
+
+import { ReactComponent as CustomIcon } from 'igz-controls/images/custom.svg'
 
 import './formParametersRow.scss'
 
@@ -71,6 +74,7 @@ const FormParametersRow = ({
     'form-table__row',
     'form-table__parameter-row',
     fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active',
+    fieldData.isPredefined && 'predefined',
     !fieldData.data?.isChecked && 'excluded'
   )
 
@@ -124,17 +128,26 @@ const FormParametersRow = ({
     }
   }
 
-  const getHyperValueValidationRules = parameterType => {
+  const getHyperValueValidationRules = fieldData => {
+    const parameterType = fieldData.data.type
+
     return [
       {
         name: 'invalidStructure',
-        label: `Not valid ${parameterTypeValueMap[parameterType] || ''} type`,
+        label: `Not valid ${parameterTypeValueMap[parameterType] ?? ''} type`,
         pattern: newValue => {
           try {
             const parsedValue = JSON.parse(String(newValue))
             const valueIsArray = Array.isArray(parsedValue)
 
             if (valueIsArray) {
+              if (fieldData.isUnsupportedType) {
+                return parsedValue.every(hyperItemValue => {
+                  const hyperItemType = parseParameterType(hyperItemValue)
+                  return Boolean(parameterTypeValueMap[hyperItemType])
+                })
+              }
+
               return parsedValue.every(valueItem => {
                 switch (parameterType) {
                   case parameterTypeStr:
@@ -175,7 +188,12 @@ const FormParametersRow = ({
     }
   }
 
-  const getHyperValueTip = parameterType => {
+  const getHyperValueTip = fieldData => {
+    if (fieldData.isUnsupportedType) {
+      return 'Example: ["hello", "world", 1, false, {}, []]'
+    }
+
+    const parameterType = fieldData.data.type
     switch (parameterType) {
       case parameterTypeStr:
         return 'Example: ["hello", "world"]'
@@ -241,6 +259,8 @@ const FormParametersRow = ({
                 {withHyperparameters && (
                   <div className="form-table__cell form-table__cell_hyper">
                     <FormToggle
+                      density="normal"
+                      label="Hyper"
                       name={`${rowPath}.data.isHyper`}
                       onChange={() => {
                         setTypeIsChanging(true)
@@ -250,7 +270,6 @@ const FormParametersRow = ({
                 )}
                 <div className="form-table__cell form-table__cell_2">
                   <FormInput
-                    density="normal"
                     label="Name"
                     disabled={fieldData.isPredefined}
                     name={`${rowPath}.data.name`}
@@ -267,27 +286,24 @@ const FormParametersRow = ({
                 </div>
                 <div className="form-table__cell form-table__cell_1">
                   <FormSelect
-                    density="normal"
                     label="Type"
                     onChange={() => {
                       setTypeIsChanging(true)
                     }}
-                    disabled={fieldData.isPredefined}
                     name={`${rowPath}.data.type`}
                     options={parametersValueTypeOptions}
-                    required
+                    required={!fieldData.isPredefined}
                   />
                 </div>
                 <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.isHyper && !typeIsChanging ? (
                     <FormInput
-                      density="normal"
                       label="Values (Comma separated)"
                       name={`${rowPath}.data.value`}
                       placeholder="Values"
                       required
-                      tip={getHyperValueTip(fieldData.data.type)}
-                      validationRules={getHyperValueValidationRules(fieldData.data.type)}
+                      tip={getHyperValueTip(fieldData)}
+                      validationRules={getHyperValueValidationRules(fieldData)}
                     />
                   ) : fieldData.data.type === parameterTypeBool && !typeIsChanging ? (
                     <div className="radio-buttons-container">
@@ -301,7 +317,6 @@ const FormParametersRow = ({
                           ? 'number'
                           : 'input'
                       }
-                      density="normal"
                       label="Value"
                       name={`${rowPath}.data.value`}
                       placeholder="Value"
@@ -350,7 +365,15 @@ const FormParametersRow = ({
                   <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
                     {fieldData.data.name}
                   </Tooltip>
-                  {fieldData.doc && <Tip text={fieldData.doc} />}
+                  {!fieldData.isPredefined && (
+                    <Tooltip
+                      className="parameter-icon"
+                      template={<TextTooltipTemplate text="Custom Parameter" />}
+                    >
+                      <CustomIcon />
+                    </Tooltip>
+                  )}
+                  {fieldData.doc && <Tip className="parameter-icon" text={fieldData.doc} />}
                 </div>
                 <div
                   className={classnames(
@@ -363,7 +386,13 @@ const FormParametersRow = ({
                     {fieldData.data.type}
                   </Tooltip>
                 </div>
-                <div className="form-table__cell form-table__cell_3">
+                <div
+                  className={classnames(
+                    'form-table__cell',
+                    'form-table__cell_3',
+                    fieldData.isPredefined && 'disabled'
+                  )}
+                >
                   {fieldData.data.type === parameterTypeBool && !fieldData.data.isHyper ? (
                     <div className="radio-buttons-container">
                       <FormRadio

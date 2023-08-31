@@ -84,6 +84,12 @@ const FunctionsPanelCode = ({
   ])
 
   useEffect(() => {
+    if (!functionsStore.newFunction.spec.default_handler) {
+      setNewFunctionHandler('handler')
+    }
+  }, [functionsStore.newFunction.spec.default_handler, setNewFunctionHandler])
+
+  useEffect(() => {
     if (mode === PANEL_CREATE_MODE && imageType.length === 0) {
       if (appStore.frontendSpec.default_function_image_by_kind?.[functionsStore.newFunction.kind]) {
         setNewFunctionImage(
@@ -224,7 +230,8 @@ const FunctionsPanelCode = ({
           ...state,
           commands: state.commands || '',
           requirements:
-            state.requirements || (appStore.frontendSpec?.function_deployment_mlrun_requirement ?? ''),
+            state.requirements ||
+            (appStore.frontendSpec?.function_deployment_mlrun_requirement ?? ''),
           base_image:
             state.base_image ||
             appStore.frontendSpec?.default_function_image_by_kind?.[

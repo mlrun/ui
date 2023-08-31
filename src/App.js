@@ -123,7 +123,7 @@ const App = () => {
                   element={<ConsumerGroupsWrapper />}
                 >
                   <Route path="" exact element={<ConsumerGroups />} />
-                  <Route path=":consumerGroupName" exact element={<ConsumerGroup />} />
+                  <Route path=":functionName/:streamName" exact element={<ConsumerGroup />} />
                 </Route>
               )}
               <Route
