@@ -204,7 +204,7 @@ const JobWizardRunDetails = ({
             shortChips
             visibleChipsMaxLength="all"
             validationRules={{
-              key: getValidationRules('common.tag'),
+              key: getValidationRules('job.label'),
               value: getValidationRules('common.tag')
             }}
           />
