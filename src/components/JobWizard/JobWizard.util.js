@@ -810,27 +810,25 @@ const generateDataInputs = dataInputsTableData => {
   return dataInputs
 }
 
-const generateEnvironmentVariables = envVarData => {
-  return envVarData
-    ? envVarData.map(envVar => {
-        const generatedEnvVar = {
-          name: envVar.data.key
-        }
+const generateEnvironmentVariables = (envVarData = []) => {
+  return envVarData.map(envVar => {
+    const generatedEnvVar = {
+      name: envVar.data.key
+    }
 
-        if (envVar.data.type === ENV_VARIABLE_TYPE_SECRET) {
-          generatedEnvVar.valueFrom = {
-            secretKeyRef: {
-              key: envVar.data.secretKey ?? '',
-              name: envVar.data.secretName
-            }
-          }
-        } else {
-          generatedEnvVar.value = envVar.data.value ?? ''
+    if (envVar.data.type === ENV_VARIABLE_TYPE_SECRET) {
+      generatedEnvVar.valueFrom = {
+        secretKeyRef: {
+          key: envVar.data.secretKey ?? '',
+          name: envVar.data.secretName
         }
+      }
+    } else {
+      generatedEnvVar.value = envVar.data.value ?? ''
+    }
 
-        return generatedEnvVar
-      })
-    : []
+    return generatedEnvVar
+  })
 }
 
 const generateVolumes = volumesTable => {
