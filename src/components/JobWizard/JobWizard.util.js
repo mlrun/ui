@@ -85,7 +85,7 @@ const volumeTypesMap = {
 const volumeTypeNamesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'name',
   [PVC_VOLUME_TYPE]: 'claimName',
-  [SECRET_VOLUME_TYPE]: 'secretName',
+  [SECRET_VOLUME_TYPE]: 'secretName'
 }
 
 export const generateJobWizardData = (
@@ -811,24 +811,26 @@ const generateDataInputs = dataInputsTableData => {
 }
 
 const generateEnvironmentVariables = envVarData => {
-  return envVarData.map(envVar => {
-    const generatedEnvVar = {
-      name: envVar.data.key
-    }
-
-    if (envVar.data.type === ENV_VARIABLE_TYPE_SECRET) {
-      generatedEnvVar.valueFrom = {
-        secretKeyRef: {
-          key: envVar.data.secretKey ?? '',
-          name: envVar.data.secretName
+  return envVarData
+    ? envVarData.map(envVar => {
+        const generatedEnvVar = {
+          name: envVar.data.key
         }
-      }
-    } else {
-      generatedEnvVar.value = envVar.data.value ?? ''
-    }
 
-    return generatedEnvVar
-  })
+        if (envVar.data.type === ENV_VARIABLE_TYPE_SECRET) {
+          generatedEnvVar.valueFrom = {
+            secretKeyRef: {
+              key: envVar.data.secretKey ?? '',
+              name: envVar.data.secretName
+            }
+          }
+        } else {
+          generatedEnvVar.value = envVar.data.value ?? ''
+        }
+
+        return generatedEnvVar
+      })
+    : []
 }
 
 const generateVolumes = volumesTable => {
