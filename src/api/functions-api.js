@@ -66,6 +66,7 @@ const functionsApi = {
   },
   getHubFunction: hubFunctionName =>
     mainHttpClient.get(`/hub/sources/default/items/${hubFunctionName}`),
+  getHubFunctions: () => mainHttpClient.get('/hub/sources/default/items'),
   getFunctionTemplate: path => {
     if (path.startsWith('http')) {
       return mainHttpClient.get('/hub/sources/default/item-object', {
@@ -75,8 +76,7 @@ const functionsApi = {
       return functionTemplatesHttpClient.get(path)
     }
   },
-  getFunctionTemplatesCatalog: () => functionTemplatesHttpClient.get('catalog.json'),
-  getHubFunctionTemplates: () => mainHttpClient.get('/hub/sources/default/items')
+  getFunctionTemplatesCatalog: () => functionTemplatesHttpClient.get('catalog.json')
 }
 
 export default functionsApi

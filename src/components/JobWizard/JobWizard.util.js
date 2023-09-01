@@ -509,19 +509,22 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
 
 export const getCategoryName = categoryId => {
   const categoriesNames = {
-    'data-prep': 'Data Preparation',
-    'data-source': 'ETL',
+    dask: 'Dask',
+    'data-analysis': 'Data Analysis',
+    'data-preparation': 'Data Preparation',
+    etl: 'ETL',
+    'data-validation': 'Data Validation',
+    dl: 'Deep Learning',
+    'feature-store': 'Feature Store',
+    'machine-learning': 'Machine Learning',
     'model-prep': 'Model Prep',
     'model-test': 'Model Test',
     'model-testing': 'Model Testing',
+    'model-training': 'Model Training',
     NLP: 'NLP',
-    analysis: 'Data Analysis',
-    dask: 'Dask',
-    dl: 'Deep Learning',
-    ml: 'Machine Learning',
     notifications: 'Alerts and Notifications',
     other: 'Other',
-    serving: 'Model Serving',
+    'model-serving': 'Model Serving',
     simulators: 'Simulators',
     training: 'Model Training'
   }
