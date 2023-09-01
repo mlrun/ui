@@ -568,12 +568,14 @@ export const parsePredefinedParameters = funcParams => {
   return funcParams
     .filter(parameter => !parameter.type?.includes('DataItem'))
     .map(parameter => {
+      const parsedValue = parseParameterValue(parameter.default)
+
       return {
         data: {
           name: parameter.name ?? '',
           type: parameter.type ?? '',
-          value: parseParameterValue(parameter.default),
-          isChecked: true,
+          value: parsedValue,
+          isChecked: Boolean(parsedValue),
           isHyper: false
         },
         doc: parameter.doc,
@@ -592,14 +594,17 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
   predefinedParameters = chain(funcParams)
     .filter(parameter => !parameter.type?.includes('DataItem'))
     .map(parameter => {
+      const parsedValue = parseParameterValue(
+        runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
+      )
+
       return {
         data: {
           name: parameter.name,
           type: parameter.type ?? '',
-          value: parseParameterValue(
-            runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
-          ),
-          isChecked: parameter.name in runParams || parameter.name in runHyperParams,
+          value: parsedValue,
+          isChecked:
+            parsedValue && (parameter.name in runParams || parameter.name in runHyperParams),
           isHyper: parameter.name in runHyperParams
         },
         doc: parameter.doc ?? '',
