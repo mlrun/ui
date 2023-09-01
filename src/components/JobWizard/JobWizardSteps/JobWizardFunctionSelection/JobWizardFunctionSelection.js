@@ -191,7 +191,8 @@ const JobWizardFunctionSelection = ({
         frontendSpec,
         functionData,
         defaultData,
-        isEditMode
+        params.projectName,
+        isEditMode,
       )
       const newInitial = {
         ...formState.initialValues,

@@ -36,9 +36,11 @@ import {
   CONFIG_MAP_VOLUME_TYPE,
   ENV_VARIABLE_TYPE_SECRET,
   ENV_VARIABLE_TYPE_VALUE,
+  EXISTING_IMAGE_SOURCE,
   JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
+  NEW_IMAGE_SOURCE,
   PANEL_DEFAULT_ACCESS_KEY,
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
@@ -74,6 +76,7 @@ import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/s
 import { getErrorDetail } from 'igz-controls/utils/common.util'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { trimSplit } from '../../utils'
 
 const volumeTypesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
@@ -85,14 +88,15 @@ const volumeTypesMap = {
 const volumeTypeNamesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'name',
   [PVC_VOLUME_TYPE]: 'claimName',
-  [SECRET_VOLUME_TYPE]: 'secretName',
+  [SECRET_VOLUME_TYPE]: 'secretName'
 }
 
 export const generateJobWizardData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
-  isEditMode
+  currentProjectName,
+  isEditMode,
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -123,7 +127,8 @@ export const generateJobWizardData = (
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
-      labels: functionInfo.labels
+      labels: functionInfo.labels,
+      image: parseImageData(functionInfo.function, frontendSpec, currentProjectName)
     },
     parameters: {
       parametersTable: {},
@@ -181,6 +186,7 @@ export const generateJobWizardDefaultData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
+  currentProjectName,
   isEditMode
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
@@ -214,7 +220,8 @@ export const generateJobWizardDefaultData = (
       name: runInfo.name,
       version: runInfo.version,
       method: runInfo.method,
-      labels: runInfo.labels
+      labels: runInfo.labels,
+      image: parseImageData(selectedFunctionData, frontendSpec, currentProjectName)
     },
     dataInputs: {
       dataInputsTable: []
@@ -297,7 +304,8 @@ const getFunctionInfo = selectedFunctionData => {
       method: defaultMethod,
       version: currentFunctionVersion,
       methodOptions,
-      versionOptions
+      versionOptions,
+      function: currentFunction || {}
     }
   }
 }
@@ -468,6 +476,36 @@ const getVolumesData = selectedFunction => {
     .value()
 
   return parseVolumes(volumes, volumeMounts)
+}
+
+const parseImageData = (selectedFunction, frontendSpec, currentProjectName) => {
+  const buildImageTemplate = frontendSpec?.function_deployment_target_image_template || ''
+  let defaultBuildImage = buildImageTemplate
+
+  if (selectedFunction.metadata?.name) {
+    defaultBuildImage = buildImageTemplate
+      .replace('{project}', selectedFunction.metadata.project || currentProjectName)
+      .replace('{name}', selectedFunction.metadata.name)
+      .replace('{tag}', selectedFunction.metadata.tag || TAG_LATEST)
+  }
+
+  return {
+    imageSource: selectedFunction.spec?.image ? EXISTING_IMAGE_SOURCE : NEW_IMAGE_SOURCE,
+    imageName:
+      selectedFunction.spec?.image ||
+      frontendSpec?.default_function_image_by_kind?.[selectedFunction.kind] ||
+      '',
+    resultingImage: selectedFunction.spec?.build?.image || defaultBuildImage,
+    baseImage:
+      selectedFunction.spec?.build?.base_image ||
+      frontendSpec?.default_function_image_by_kind?.[selectedFunction.kind] ||
+      '',
+    buildCommands: selectedFunction.spec?.build?.commands?.join('\n') || '',
+    pythonRequirement:
+      selectedFunction.spec?.build?.requirements?.join('\n') ||
+      frontendSpec?.function_deployment_mlrun_requirement ||
+      ''
+  }
 }
 
 const parseVolumes = (volumes, volumeMounts, isEditMode) => {
@@ -885,6 +923,17 @@ const generateResources = resources => {
   }
 }
 
+const generateFunctionBuild = (imageData) => {
+  if (imageData.imageSource === EXISTING_IMAGE_SOURCE) return {}
+
+  return {
+    image: imageData.resultingImage,
+    base_image: imageData.baseImage,
+    commands: trimSplit(imageData.buildCommands, '\n'),
+    requirements: trimSplit(imageData.pythonRequirement, '\n')
+  }
+}
+
 export const generateJobRequestData = (
   formData,
   selectedFunctionData,
@@ -933,6 +982,8 @@ export const generateJobRequestData = (
         }
       },
       spec: {
+        image: formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE ? formData.runDetails.image.imageName : '',
+        build: generateFunctionBuild(formData.runDetails.image),
         env: generateEnvironmentVariables(formData.advanced.environmentVariablesTable),
         node_selector: generateObjectFromKeyValue(formData.resources.nodeSelectorTable),
         preemption_mode: formData.resources.preemptionMode,

@@ -168,6 +168,8 @@ export const SECRET_VOLUME_TYPE = 'secret'
 export const PVC_VOLUME_TYPE = 'persistentVolumeClaim'
 export const PARAMETERS_FROM_UI_VALUE = 'fromUI'
 export const PARAMETERS_FROM_FILE_VALUE = 'fromFile'
+export const NEW_IMAGE_SOURCE = 'newImageSource'
+export const EXISTING_IMAGE_SOURCE = 'existingImageSource'
 
 /*=========== ML FUNCTIONS =============*/
 
