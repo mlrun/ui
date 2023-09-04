@@ -74,10 +74,15 @@ import {
   SET_NEW_FUNCTION_TAG,
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_VOLUMES,
-  SET_NEW_FUNCTION_VOLUME_MOUNTS
+  SET_NEW_FUNCTION_VOLUME_MOUNTS,
+  FETCH_FUNCTIONS_TEMPLATES_FAILURE,
+  FETCH_HUB_FUNCTIONS_FAILURE,
+  SET_HUB_FUNCTIONS
 } from '../constants'
 
 const initialState = {
+  hubFunctions: [],
+  hubFunctionsCatalog: {},
   functions: [],
   func: {},
   logs: {
@@ -203,12 +208,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
           error: null
         }
       }
-    case SET_FUNCTIONS_TEMPLATES:
-      return {
-        ...state,
-        templates: payload.templates,
-        templatesCatalog: payload.templatesCategories
-      }
     case FETCH_FUNCTION_TEMPLATE_BEGIN:
       return {
         ...state,
@@ -227,6 +226,14 @@ const functionReducer = (state = initialState, { type, payload }) => {
         template: {},
         error: payload
       }
+    case FETCH_FUNCTIONS_TEMPLATES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        templates: [],
+        templatesCatalog: {},
+        error: payload
+      }
     case FETCH_HUB_FUNCTION_TEMPLATE_BEGIN:
       return {
         ...state,
@@ -241,6 +248,14 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
+        error: payload
+      }
+    case FETCH_HUB_FUNCTIONS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        hubFunctions: [],
+        hubFunctionsCatalog: [],
         error: payload
       }
     case GET_FUNCTION_BEGIN:
@@ -297,6 +312,20 @@ const functionReducer = (state = initialState, { type, payload }) => {
             }
           }
         }
+      }
+    case SET_FUNCTIONS_TEMPLATES:
+      return {
+        ...state,
+        templates: payload.templates,
+        templatesCatalog: payload.templatesCategories
+      }
+    case SET_HUB_FUNCTIONS:
+      return {
+        ...state,
+        loading: false,
+        hubFunctions: payload.hubFunctions,
+        hubFunctionsCatalog: payload.hubFunctionsCategories,
+        error: null
       }
     case SET_NEW_FUNCTION:
       return {
