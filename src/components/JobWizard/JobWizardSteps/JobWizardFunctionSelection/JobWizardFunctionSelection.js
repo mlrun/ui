@@ -21,7 +21,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 import { connect, useSelector } from 'react-redux'
-import { includes, chain, isEmpty, intersection, isBoolean, pickBy, keys } from 'lodash'
+import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy } from 'lodash'
 
 import ContentMenu from '../../../../elements/ContentMenu/ContentMenu'
 import FilterMenuModal from '../../../FilterMenuModal/FilterMenuModal'
@@ -34,7 +34,12 @@ import { FormSelect } from 'igz-controls/components'
 import functionsActions from '../../../../actions/functions'
 import jobsActions from '../../../../actions/jobs'
 import projectsAction from '../../../../actions/projects'
-import { FILTER_MENU_MODAL, HUB_CATEGORIES_FILTER, JOB_WIZARD_FILTERS } from '../../../../constants'
+import {
+  FILTER_MENU_MODAL,
+  HUB_CATEGORIES_FILTER,
+  JOB_WIZARD_FILTERS,
+  TAG_LATEST
+} from '../../../../constants'
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { limitedFunctionKinds } from '../../../Jobs/jobs.util'
@@ -53,7 +58,7 @@ const JobWizardFunctionSelection = ({
   defaultData,
   fetchFunctionTemplate,
   fetchFunctions,
-  fetchFunctionsTemplates,
+  fetchHubFunctions,
   fetchProjectsNames,
   filteredFunctions,
   filteredTemplates,
@@ -87,7 +92,7 @@ const JobWizardFunctionSelection = ({
   )
 
   const filterTemplates = useMemo(() => {
-    return Object.keys(templatesCategories).map(categoryId => {
+    return templatesCategories.map(categoryId => {
       const categoryName = getCategoryName(categoryId)
 
       return {
@@ -99,15 +104,17 @@ const JobWizardFunctionSelection = ({
 
   const getFilteredTemplates = useCallback(
     (templates, filteredByCategory) => {
-      return templates.filter(template => {
+      const filteredArray = templates.filter(template => {
         const hubCategoriesArray = keys(pickBy(filtersStoreHubCategories, isBoolean))
         const validName = template.metadata.name.includes(filterByName)
         const validCategory = filteredByCategory
           ? !isEmpty(intersection(hubCategoriesArray, template.ui?.categories))
           : true
 
-        return validName && validCategory
+        return validName && validCategory && template.metadata.tag === TAG_LATEST
       })
+
+      return uniqBy(filteredArray, 'metadata.name')
     },
     [filterByName, filtersStoreHubCategories]
   )
@@ -138,11 +145,11 @@ const JobWizardFunctionSelection = ({
   useEffect(() => {
     const filteredByCategory = !isEmpty(filtersStoreHubCategories)
 
+    const filteredTemplates = getFilteredTemplates(templates, filteredByCategory)
+    setFilteredTemplates(filteredTemplates)
+
     if (filterByName.length > 0 || filteredByCategory) {
       const filteredFunctions = functions.filter(func => func.name.includes(filterByName))
-      const filteredTemplates = getFilteredTemplates(templates, filteredByCategory)
-
-      setFilteredTemplates(filteredTemplates)
       setFilteredFunctions(filteredFunctions)
 
       const filterMatches =
@@ -165,7 +172,11 @@ const JobWizardFunctionSelection = ({
   ])
 
   useEffect(() => {
-    if (filterByName.length === 0 && isEmpty(filtersStoreHubCategories)) {
+    if (
+      filterByName.length === 0 &&
+      isEmpty(filtersStoreHubCategories) &&
+      filterMatches.length > 0
+    ) {
       setFilterMatches([])
 
       if (filteredFunctions.length > 0) {
@@ -173,16 +184,21 @@ const JobWizardFunctionSelection = ({
       }
 
       if (!isEmpty(filteredTemplates)) {
-        setFilteredTemplates([])
+        const filteredByCategory = !isEmpty(filtersStoreHubCategories)
+
+        setFilteredTemplates(getFilteredTemplates(templates, filteredByCategory))
       }
     }
   }, [
     filterByName.length,
+    filterMatches.length,
     filteredFunctions.length,
     filteredTemplates,
     filtersStoreHubCategories,
+    getFilteredTemplates,
     setFilteredFunctions,
-    setFilteredTemplates
+    setFilteredTemplates,
+    templates
   ])
 
   const generateData = functionData => {
@@ -242,17 +258,12 @@ const JobWizardFunctionSelection = ({
     })
 
     if (isEmpty(templatesCategories) || isEmpty(templates)) {
-      fetchFunctionsTemplates().then(templatesObject => {
-        setTemplatesCategories(templatesObject.templatesCategories)
+      fetchHubFunctions().then(templatesObject => {
+        setTemplatesCategories(templatesObject.hubFunctionsCategories)
+        setTemplates(templatesObject.hubFunctions)
 
-        const templates = chain(templatesObject.templatesCategories)
-          .map(categoryTemplates => categoryTemplates)
-          .flatten()
-          .uniqBy('metadata.name')
-          .value()
-
-        formState.initialValues.functionSelection.templatesLabels = templates.reduce(
-          (labels, template) => {
+        formState.initialValues.functionSelection.templatesLabels =
+          templatesObject.hubFunctions.reduce((labels, template) => {
             labels[template.metadata.name] = template.ui.categories.map(categoryId => {
               return {
                 id: categoryId,
@@ -262,11 +273,7 @@ const JobWizardFunctionSelection = ({
             })
 
             return labels
-          },
-          {}
-        )
-
-        setTemplates(templates)
+          }, {})
       })
     }
   }
@@ -291,7 +298,9 @@ const JobWizardFunctionSelection = ({
 
   const selectTemplateFunction = functionData => {
     const selectNewFunction = () => {
-      fetchFunctionTemplate(functionData.metadata.versions.latest).then(result => {
+      const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
+
+      fetchFunctionTemplate(functionTemplatePath).then(result => {
         setSelectedFunctionData(result)
         generateData(result)
       })
@@ -395,7 +404,7 @@ const JobWizardFunctionSelection = ({
             isEmpty(templates) ? (
               <NoData />
             ) : (
-              (!isEmpty(filteredTemplates) ? filteredTemplates : templates).map(templateData => {
+              filteredTemplates.map(templateData => {
                 return (
                   <FunctionCardTemplate
                     selected={
@@ -441,7 +450,7 @@ JobWizardFunctionSelection.propTypes = {
   setTemplates: PropTypes.func.isRequired,
   setTemplatesCategories: PropTypes.func.isRequired,
   templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  templatesCategories: PropTypes.shape({}).isRequired
+  templatesCategories: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
 export default connect(
