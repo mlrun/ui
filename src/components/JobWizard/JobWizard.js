@@ -91,7 +91,7 @@ const JobWizard = ({
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState([])
   const [functions, setFunctions] = useState([])
-  const [templatesCategories, setTemplatesCategories] = useState({})
+  const [templatesCategories, setTemplatesCategories] = useState([])
   const [templates, setTemplates] = useState([])
   const [jobAdditionalData, setJobAdditionalData] = useState({})
   const [showSchedule, setShowSchedule] = useState(false)
@@ -333,6 +333,7 @@ const JobWizard = ({
                 isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
                 jobAdditionalData={jobAdditionalData}
+                params={params}
                 selectedFunctionData={selectedFunctionData}
                 setJobAdditionalData={setJobAdditionalData}
               />

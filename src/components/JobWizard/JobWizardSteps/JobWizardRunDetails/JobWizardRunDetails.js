@@ -17,19 +17,22 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty, omit, set } from 'lodash'
+import { isEmpty, omit, set, get } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 
 import {
-  FormInput,
-  FormSelect,
   ConfirmDialog,
+  FormCheckBox,
   FormChipCell,
-  FormCheckBox
+  FormInput,
+  FormRadio,
+  FormSelect,
+  FormTextarea
 } from 'igz-controls/components'
 
+import { EXISTING_IMAGE_SOURCE, NEW_IMAGE_SOURCE } from '../../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 import { getChipOptions } from '../../../../utils/getChipOptions'
@@ -52,11 +55,18 @@ const JobWizardRunDetails = ({
   isBatchInference,
   isEditMode,
   jobAdditionalData,
+  params,
   selectedFunctionData,
   setJobAdditionalData
 }) => {
   const methodPath = 'runDetails.method'
+  const imageSourcePath = 'runDetails.image.imageSource'
   const [spyOnMethodChange, setSpyOnMethodChange] = useState(true)
+
+  const selectedImageSource = useMemo(
+    () => get(formState.values, imageSourcePath, EXISTING_IMAGE_SOURCE),
+    [formState.values]
+  )
 
   const setJobData = useCallback(
     (jobFormData, jobAdditionalData) => {
@@ -82,6 +92,7 @@ const JobWizardRunDetails = ({
         frontendSpec,
         selectedFunctionData,
         defaultData,
+        params.projectName,
         isEditMode
       )
       setJobData(jobFormData, jobAdditionalData)
@@ -90,6 +101,7 @@ const JobWizardRunDetails = ({
         frontendSpec,
         selectedFunctionData,
         null,
+        params.projectName,
         isEditMode
       )
       setJobData(jobFormData, jobAdditionalData)
@@ -101,6 +113,7 @@ const JobWizardRunDetails = ({
     frontendSpec,
     isEditMode,
     jobAdditionalData,
+    params.projectName,
     selectedFunctionData,
     setJobAdditionalData,
     setJobData
@@ -210,11 +223,62 @@ const JobWizardRunDetails = ({
             shortChips
             visibleChipsMaxLength="all"
             validationRules={{
-              key: getValidationRules('common.tag'),
+              key: getValidationRules('job.label'),
               value: getValidationRules('common.tag')
             }}
           />
         </div>
+
+        <div className="form-row"></div>
+        <div className="form-row">
+          <FormRadio
+            name={imageSourcePath}
+            value={EXISTING_IMAGE_SOURCE}
+            label="Use an existing image"
+          />
+          <FormRadio name={imageSourcePath} value={NEW_IMAGE_SOURCE} label="Build a new image" />
+        </div>
+        {selectedImageSource === EXISTING_IMAGE_SOURCE ? (
+          <div className="form-row">
+            <FormInput
+              name="runDetails.image.imageName"
+              label="Image name"
+              required
+              tip="The name of the function's container image"
+            />
+          </div>
+        ) : (
+          <>
+            <div className="form-row">
+              <FormInput
+                name="runDetails.image.resultingImage"
+                label="Resulting image"
+                required
+                tip="The name of the built container image"
+              />
+            </div>
+            <div className="form-row">
+              <FormInput
+                name="runDetails.image.baseImage"
+                label="Base image"
+                required
+                tip="The name of a base container image from which to build the function's processor image"
+              />
+            </div>
+            <div className="form-row">
+              <div className="form-col-1">
+                <FormTextarea name="runDetails.image.buildCommands" label="Build commands" />
+              </div>
+              <div className="form-col-1">
+                <FormTextarea
+                  name="runDetails.image.pythonRequirement"
+                  label="Python requirement"
+                />
+              </div>
+            </div>
+          </>
+        )}
+
         {spyOnMethodChange && <OnChange name={methodPath}>{onMethodChange}</OnChange>}
       </div>
     )
@@ -228,6 +292,7 @@ JobWizardRunDetails.propTypes = {
   isBatchInference: PropTypes.bool.isRequired,
   isEditMode: PropTypes.bool.isRequired,
   jobAdditionalData: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   setJobAdditionalData: PropTypes.func.isRequired
 }

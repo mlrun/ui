@@ -17,17 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const excludeCategoryKinds = ['serving', 'nuclio', 'remote']
+const excludeCategoryKinds = ['serving', 'nuclio', 'remote', 'nuclio:serving']
 
 export const aliasToCategory = {
+  analysis: 'data-analysis',
   BERT: 'other',
   'concept-drift': 'other',
-  'data-movement': 'data-source',
+  'data-movement': 'etl',
+  'data-source': 'etl',
   embeddings: 'other',
   experimental: 'other',
   ops: 'notifications',
-  'sentiment analysis': 'analysis',
-  serve: 'serving',
+  'sentiment analysis': 'data-analysis',
+  serve: 'model-serving',
+  serving: 'model-serving',
   test: 'other',
   utils: 'other'
 }
@@ -69,4 +72,35 @@ export const generateCategories = functionTemplates => {
   })
 
   return { templates, templatesCategories }
+}
+
+export const generateHubCategories = functionTemplates => {
+  const hubFunctions = functionTemplates
+    .map(template => ({
+      kind: template.spec?.kind,
+      ui: {
+        categories: template.metadata?.categories.map(
+          category => aliasToCategory[category] ?? category
+        ),
+        versions: functionTemplates
+          .filter(funcTemplate => funcTemplate.metadata.name === template.metadata.name)
+          .map(funcTemplate => funcTemplate.metadata.version)
+      },
+      ...template
+    }))
+    .filter(template => !excludeCategoryKinds.includes(template.kind))
+
+  const hubFunctionsCategories = []
+
+  hubFunctions.forEach(template => {
+    template.metadata.categories.forEach(category => {
+      const valueToAdd = aliasToCategory[category] ?? category
+
+      if (!hubFunctionsCategories.includes(valueToAdd)) {
+        hubFunctionsCategories.push(valueToAdd)
+      }
+    })
+  })
+
+  return { hubFunctions, hubFunctionsCategories }
 }
