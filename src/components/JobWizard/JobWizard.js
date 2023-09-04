@@ -333,6 +333,7 @@ const JobWizard = ({
                 isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
                 jobAdditionalData={jobAdditionalData}
+                params={params}
                 selectedFunctionData={selectedFunctionData}
                 setJobAdditionalData={setJobAdditionalData}
               />
