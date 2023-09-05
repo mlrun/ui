@@ -288,11 +288,11 @@ const functionsActions = {
     type: FETCH_HUB_FUNCTIONS_FAILURE,
     payload: err
   }),
-  getFunction: (project, name, hash) => dispatch => {
+  getFunction: (project, name, hash, tag) => dispatch => {
     dispatch(functionsActions.getFunctionBegin())
 
     return functionsApi
-      .getFunction(project, name, hash)
+      .getFunction(project, name, hash, tag)
       .then(result => {
         dispatch(functionsActions.getFunctionSuccess(result.data.func))
 
