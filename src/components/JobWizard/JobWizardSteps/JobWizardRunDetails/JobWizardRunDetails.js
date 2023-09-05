@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty, omit, set, get } from 'lodash'
+import { get, isEmpty, set } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 
 import {
@@ -130,17 +130,29 @@ const JobWizardRunDetails = ({
     set(formState.initialValues, 'parameters.parametersTable.predefined', predefinedParameters)
     formState.form.change('dataInputs.dataInputsTable', dataInputs)
     formState.form.change('parameters.parametersTable.predefined', predefinedParameters)
+    formState.form.change(
+      'parameters.parametersTable.custom',
+      get(formState.initialValues, 'parameters.parametersTable.custom', [])
+    )
   }
 
   const onMethodChange = (value, prevValue) => {
     setSpyOnMethodChange(false)
 
-    if (
-      areFormValuesChanged(
-        omit(formState.initialValues, methodPath),
-        omit(formState.values, methodPath)
-      )
-    ) {
+    const dataInputsAreChanged = areFormValuesChanged(
+      formState.initialValues.dataInputs.dataInputsTable,
+      formState.values.dataInputs.dataInputsTable
+    )
+    const predefinedParametersAreChanged = areFormValuesChanged(
+      formState.initialValues.parameters.parametersTable.predefined,
+      formState.values.parameters.parametersTable.predefined
+    )
+    const customParametersAreChanged = areFormValuesChanged(
+      formState.initialValues.parameters.parametersTable.custom,
+      formState.values.parameters.parametersTable.custom
+    )
+
+    if (dataInputsAreChanged || predefinedParametersAreChanged || customParametersAreChanged) {
       openPopUp(ConfirmDialog, {
         cancelButton: {
           label: 'Cancel',
@@ -158,7 +170,7 @@ const JobWizardRunDetails = ({
           }
         },
         header: 'Are you sure?',
-        message: 'Some changes might be lost'
+        message: 'Changes made to the Data Inputs and Parameters sections will be lost'
       })
     } else {
       changePredefinedParameters(value)
