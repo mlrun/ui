@@ -82,7 +82,6 @@ import {
   FETCH_HUB_FUNCTIONS_FAILURE,
   SET_HUB_FUNCTIONS
 } from '../constants'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { generateCategories, generateHubCategories } from '../utils/generateTemplatesCategories'
 import { setNotification } from '../reducers/notificationReducer'
 
@@ -90,23 +89,11 @@ const functionsActions = {
   createNewFunction: (project, data) => dispatch => {
     dispatch(functionsActions.createNewFunctionBegin())
 
-    return functionsApi
-      .createNewFunction(project, data)
-      .then(result => {
-        dispatch(functionsActions.createNewFunctionSuccess())
+    return functionsApi.createNewFunction(project, data).then(result => {
+      dispatch(functionsActions.createNewFunctionSuccess())
 
-        return result
-      })
-      .catch(error => {
-        const message =
-          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You are not permitted to create a new function.'
-            : error.message
-
-        dispatch(functionsActions.createNewFunctionFailure(message))
-
-        throw error
-      })
+      return result
+    })
   },
   createNewFunctionBegin: () => ({
     type: CREATE_NEW_FUNCTION_BEGIN

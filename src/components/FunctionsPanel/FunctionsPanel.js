@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { chain } from 'lodash'
@@ -28,13 +28,19 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
-import { FUNCTION_TYPE_SERVING, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
+import { setNotification } from '../../reducers/notificationReducer'
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
-import { PANEL_CREATE_MODE } from '../../constants'
-import { NOTFOUND_ERROR_STATUS_CODE, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
+import { FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
+import {
+  BADREQUEST_ERROR_STATUS_CODE,
+  FORBIDDEN_ERROR_STATUS_CODE,
+  LABEL_BUTTON,
+  NOTFOUND_ERROR_STATUS_CODE,
+  SECONDARY_BUTTON
+} from 'igz-controls/constants'
 
 const FunctionsPanel = ({
   appStore,
@@ -78,6 +84,7 @@ const FunctionsPanel = ({
       ? NEW_IMAGE
       : ''
   )
+  const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
 
@@ -151,36 +158,57 @@ const FunctionsPanel = ({
   }, [functionsStore.newFunction.metadata.project, params.projectName, setNewFunctionProject])
 
   const createFunction = deploy => {
-    createNewFunction(params.projectName, functionsStore.newFunction).then(result => {
-      if (deploy) {
-        const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
-          appStore.frontendSpec?.function_deployment_mlrun_requirement
-        )
+    createNewFunction(params.projectName, functionsStore.newFunction)
+      .then(result => {
+        if (deploy) {
+          const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
+            appStore.frontendSpec?.function_deployment_mlrun_requirement
+          )
 
-        const data = {
-          function: {
-            ...functionsStore.newFunction,
-            spec: {
-              ...functionsStore.newFunction.spec,
-              build: {
-                ...functionsStore.newFunction.spec.build,
-                requirements:
-                  with_mlrun && functionsStore.newFunction.spec.build.requirements.length === 1
-                    ? []
-                    : functionsStore.newFunction.spec.build.requirements
+          const data = {
+            function: {
+              ...functionsStore.newFunction,
+              spec: {
+                ...functionsStore.newFunction.spec,
+                build: {
+                  ...functionsStore.newFunction.spec.build,
+                  requirements:
+                    with_mlrun && functionsStore.newFunction.spec.build.requirements.length === 1
+                      ? []
+                      : functionsStore.newFunction.spec.build.requirements
+                }
               }
-            }
-          },
-          with_mlrun
+            },
+            with_mlrun
+          }
+
+          return handleDeploy(data)
         }
 
-        return handleDeploy(data)
-      }
-
-      createFunctionSuccess().then(() => {
-        navigate(`/projects/${params.projectName}/functions/${result.data.hash_key}/overview`)
+        createFunctionSuccess().then(() => {
+          navigate(`/projects/${params.projectName}/functions/${result.data.hash_key}/overview`)
+        })
       })
-    })
+      .catch(error => {
+        const message =
+          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You are not permitted to create a new function.'
+            : error.message
+
+        dispatch(functionsActions.createNewFunctionFailure(message))
+
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message:
+              error.response.status === BADREQUEST_ERROR_STATUS_CODE
+                ? error.response?.data?.detail
+                : message,
+            error
+          })
+        )
+      })
   }
 
   const handleSave = deploy => {
