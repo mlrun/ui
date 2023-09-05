@@ -36,11 +36,11 @@ import './detailsResults.scss'
 
 const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeSortBy, job }) => {
   const tableHeaders = useMemo(() => {
-    return isEmpty(job.error) ? resultsTableHeaders(job) : []
+    return job.iterationStats.length ? resultsTableHeaders(job) : []
   }, [job])
 
   const tableContent = useMemo(() => {
-    return isEmpty(job.error) ? resultsTableContent(job) : []
+    return job.iterationStats.length ? resultsTableContent(job) : []
   }, [job])
 
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
@@ -58,13 +58,12 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
     )
 
   return (!job.iterationStats.length && job.error) ||
-    (!job.iterationStats.length && isEmpty(job.results) && !job.iterations?.length) ||
-    job.error ? (
+    (!job.iterationStats.length && isEmpty(job.results) && !job.iterations?.length) ? (
     <NoData />
   ) : (
     <div className="table__item-results">
       <table className="table results-table" cellPadding="0" cellSpacing="0">
-        {job.iterationStats && job.iterationStats.length !== 0 && !job.error ? (
+        {job.iterationStats && job.iterationStats.length !== 0 ? (
           <>
             <thead className="table-header">
               <tr className="table-row">
