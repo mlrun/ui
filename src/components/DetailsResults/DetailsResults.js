@@ -36,11 +36,11 @@ import './detailsResults.scss'
 
 const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeSortBy, job }) => {
   const tableHeaders = useMemo(() => {
-    return job.iterationStats.length ? resultsTableHeaders(job) : []
+    return resultsTableHeaders(job)
   }, [job])
 
   const tableContent = useMemo(() => {
-    return job.iterationStats.length ? resultsTableContent(job) : []
+    return resultsTableContent(job)
   }, [job])
 
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
@@ -57,8 +57,8 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
       isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
     )
 
-  return (!job.iterationStats.length && job.error) ||
-    (!job.iterationStats.length && isEmpty(job.results) && !job.iterations?.length) ? (
+  return (!job.iterationStats?.length && job.error) ||
+    (!job.iterationStats?.length && isEmpty(job.results) && !job.iterations?.length) ? (
     <NoData />
   ) : (
     <div className="table__item-results">
