@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { chain } from 'lodash'
@@ -28,19 +28,13 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
-import { setNotification } from '../../reducers/notificationReducer'
+
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
 import { FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
-import {
-  BADREQUEST_ERROR_STATUS_CODE,
-  FORBIDDEN_ERROR_STATUS_CODE,
-  LABEL_BUTTON,
-  NOTFOUND_ERROR_STATUS_CODE,
-  SECONDARY_BUTTON
-} from 'igz-controls/constants'
+import { LABEL_BUTTON, NOTFOUND_ERROR_STATUS_CODE, SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const FunctionsPanel = ({
   appStore,
@@ -84,7 +78,6 @@ const FunctionsPanel = ({
       ? NEW_IMAGE
       : ''
   )
-  const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
 
@@ -190,24 +183,7 @@ const FunctionsPanel = ({
         })
       })
       .catch(error => {
-        const message =
-          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You are not permitted to create a new function.'
-            : error.message
-
-        dispatch(functionsActions.createNewFunctionFailure(message))
-
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message:
-              error.response.status === BADREQUEST_ERROR_STATUS_CODE
-                ? error.response?.data?.detail
-                : message,
-            error
-          })
-        )
+        console.error(error.response?.data?.detail ?? error.meesage)
       })
   }
 
