@@ -226,9 +226,13 @@ const Workflow = ({
           </Tooltip>
         </div>
       </TableTop>
-      <div className="graph-container workflow-content">
-        {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
-          <>
+      <div
+        className="table__content"
+        id="workflow--graph-details"
+        data-testid="workflow--graph-details"
+      >
+        <div className="graph-container workflow-content">
+          {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
             <div className={graphViewClassNames}>
               <MlReactFlow
                 elements={elements}
@@ -248,31 +252,31 @@ const Workflow = ({
                 />
               )}
             </div>
-          </>
-        ) : (
-          <Table
-            actionsMenu={actionsMenu}
-            content={[]}
-            getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
-            handleCancel={handleCancel}
-            handleSelectItem={handleSelectItem}
-            hideActionsMenu
-            pageData={pageData}
-            retryRequest={refresh}
-            selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
-            tableHeaders={sortedTableContent[0]?.content ?? []}
-          >
-            {sortedTableContent.map((tableItem, index) => (
-              <JobsFunctionsTableRow
-                actionsMenu={actionsMenu}
-                handleSelectJob={handleSelectItem}
-                key={index}
-                rowItem={tableItem}
-                selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
-              />
-            ))}
-          </Table>
-        )}
+          ) : (
+            <Table
+              actionsMenu={actionsMenu}
+              content={[]}
+              getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
+              handleCancel={handleCancel}
+              handleSelectItem={handleSelectItem}
+              hideActionsMenu
+              pageData={pageData}
+              retryRequest={refresh}
+              selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+              tableHeaders={sortedTableContent[0]?.content ?? []}
+            >
+              {sortedTableContent.map((tableItem, index) => (
+                <JobsFunctionsTableRow
+                  actionsMenu={actionsMenu}
+                  handleSelectJob={handleSelectItem}
+                  key={index}
+                  rowItem={tableItem}
+                  selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+                />
+              ))}
+            </Table>
+          )}
+        </div>
       </div>
     </div>
   )
