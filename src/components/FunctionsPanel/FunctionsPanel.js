@@ -162,13 +162,12 @@ const FunctionsPanel = ({
             ...functionsStore.newFunction,
             spec: {
               ...functionsStore.newFunction.spec,
-              build:{
+              build: {
                 ...functionsStore.newFunction.spec.build,
                 requirements:
-                  with_mlrun &&
-                  functionsStore.newFunction.spec.build.requirements.length === 1 ?
-                  []
-                  : functionsStore.newFunction.spec.build.requirements
+                  with_mlrun && functionsStore.newFunction.spec.build.requirements.length === 1
+                    ? []
+                    : functionsStore.newFunction.spec.build.requirements
               }
             }
           },
@@ -195,7 +194,7 @@ const FunctionsPanel = ({
 
       if (
         imageType === NEW_IMAGE &&
-        (functionsStore.newFunction.spec.build.base_image.length === 0)
+        functionsStore.newFunction.spec.build.base_image.length === 0
       ) {
         return setValidation(state => ({
           ...state,
@@ -215,7 +214,12 @@ const FunctionsPanel = ({
       }
 
       if (mode === PANEL_CREATE_MODE) {
-        getFunction(params.projectName, functionsStore.newFunction.metadata.name)
+        getFunction(
+          params.projectName,
+          functionsStore.newFunction.metadata.name,
+          null,
+          functionsStore.newFunction.metadata.tag
+        )
           .then(() => {
             setConfirmData({
               header: 'Overwrite function?',

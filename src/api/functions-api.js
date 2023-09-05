@@ -43,10 +43,16 @@ const functionsApi = {
 
     return mainHttpClient.get(`/projects/${project}/functions`, { params })
   },
-  getFunction: (project, functionName, hash) => {
+  getFunction: (project, functionName, hash, tag) => {
     const params = {}
 
-    if (hash) params.hash_key = hash
+    if (hash) {
+      params.hash_key = hash
+    }
+
+    if (tag) {
+      params.tag = tag
+    }
 
     return mainHttpClient.get(`/projects/${project}/functions/${functionName}`, { params })
   },
