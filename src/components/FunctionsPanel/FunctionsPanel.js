@@ -151,40 +151,36 @@ const FunctionsPanel = ({
   }, [functionsStore.newFunction.metadata.project, params.projectName, setNewFunctionProject])
 
   const createFunction = deploy => {
-    createNewFunction(params.projectName, functionsStore.newFunction)
-      .then(result => {
-        if (deploy) {
-          const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
-            appStore.frontendSpec?.function_deployment_mlrun_requirement
-          )
+    createNewFunction(params.projectName, functionsStore.newFunction).then(result => {
+      if (deploy) {
+        const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
+          appStore.frontendSpec?.function_deployment_mlrun_requirement
+        )
 
-          const data = {
-            function: {
-              ...functionsStore.newFunction,
-              spec: {
-                ...functionsStore.newFunction.spec,
-                build: {
-                  ...functionsStore.newFunction.spec.build,
-                  requirements:
-                    with_mlrun && functionsStore.newFunction.spec.build.requirements.length === 1
-                      ? []
-                      : functionsStore.newFunction.spec.build.requirements
-                }
+        const data = {
+          function: {
+            ...functionsStore.newFunction,
+            spec: {
+              ...functionsStore.newFunction.spec,
+              build: {
+                ...functionsStore.newFunction.spec.build,
+                requirements:
+                  with_mlrun && functionsStore.newFunction.spec.build.requirements.length === 1
+                    ? []
+                    : functionsStore.newFunction.spec.build.requirements
               }
-            },
-            with_mlrun
-          }
-
-          return handleDeploy(data)
+            }
+          },
+          with_mlrun
         }
 
-        createFunctionSuccess().then(() => {
-          navigate(`/projects/${params.projectName}/functions/${result.data.hash_key}/overview`)
-        })
+        return handleDeploy(data)
+      }
+
+      createFunctionSuccess().then(() => {
+        navigate(`/projects/${params.projectName}/functions/${result.data.hash_key}/overview`)
       })
-      .catch(error => {
-        console.error(error.response?.data?.detail ?? error.meesage)
-      })
+    })
   }
 
   const handleSave = deploy => {
