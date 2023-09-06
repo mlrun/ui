@@ -226,53 +226,52 @@ const Workflow = ({
           </Tooltip>
         </div>
       </TableTop>
-      <div className="table__content" data-testid="workflow-graph-details">
-        <div className="graph-container workflow-content">
-          {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
-            <div className={graphViewClassNames}>
-              <MlReactFlow
-                elements={elements}
-                alignTriggerItem={itemIsSelected}
-                onElementClick={onElementClick}
+
+      <div className="graph-container workflow-content">
+        {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
+          <div className={graphViewClassNames}>
+            <MlReactFlow
+              elements={elements}
+              alignTriggerItem={itemIsSelected}
+              onElementClick={onElementClick}
+            />
+            {itemIsSelected && (
+              <Details
+                actionsMenu={actionsMenu}
+                detailsMenu={pageData.details.menu}
+                getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
+                handleCancel={handleCancel}
+                pageData={pageData}
+                retryRequest={refreshJobs}
+                selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+                tab={MONITOR_WORKFLOWS_TAB}
               />
-              {itemIsSelected && (
-                <Details
-                  actionsMenu={actionsMenu}
-                  detailsMenu={pageData.details.menu}
-                  getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
-                  handleCancel={handleCancel}
-                  pageData={pageData}
-                  retryRequest={refreshJobs}
-                  selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
-                  tab={MONITOR_WORKFLOWS_TAB}
-                />
-              )}
-            </div>
-          ) : (
-            <Table
-              actionsMenu={actionsMenu}
-              content={[]}
-              getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
-              handleCancel={handleCancel}
-              handleSelectItem={handleSelectItem}
-              hideActionsMenu
-              pageData={pageData}
-              retryRequest={refresh}
-              selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
-              tableHeaders={sortedTableContent[0]?.content ?? []}
-            >
-              {sortedTableContent.map((tableItem, index) => (
-                <JobsFunctionsTableRow
-                  actionsMenu={actionsMenu}
-                  handleSelectJob={handleSelectItem}
-                  key={index}
-                  rowItem={tableItem}
-                  selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
-                />
-              ))}
-            </Table>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          <Table
+            actionsMenu={actionsMenu}
+            content={[]}
+            getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
+            handleCancel={handleCancel}
+            handleSelectItem={handleSelectItem}
+            hideActionsMenu
+            pageData={pageData}
+            retryRequest={refresh}
+            selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+            tableHeaders={sortedTableContent[0]?.content ?? []}
+          >
+            {sortedTableContent.map((tableItem, index) => (
+              <JobsFunctionsTableRow
+                actionsMenu={actionsMenu}
+                handleSelectJob={handleSelectItem}
+                key={index}
+                rowItem={tableItem}
+                selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+              />
+            ))}
+          </Table>
+        )}
       </div>
     </div>
   )
