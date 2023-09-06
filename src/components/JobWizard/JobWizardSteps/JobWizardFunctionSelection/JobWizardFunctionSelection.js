@@ -208,7 +208,7 @@ const JobWizardFunctionSelection = ({
         functionData,
         defaultData,
         params.projectName,
-        isEditMode,
+        isEditMode
       )
       const newInitial = {
         ...formState.initialValues,
@@ -411,7 +411,7 @@ const JobWizardFunctionSelection = ({
                     selected={
                       templateData?.metadata?.name ===
                         selectedFunctionData?.functions?.[0].metadata.name &&
-                      !selectedFunctionData?.functions?.[0].metadata.project
+                      !selectedFunctionData?.functions?.[0].status
                     }
                     formState={formState}
                     functionData={generateFunctionTemplateCardData(templateData)}
