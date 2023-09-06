@@ -226,11 +226,7 @@ const Workflow = ({
           </Tooltip>
         </div>
       </TableTop>
-      <div
-        className="table__content"
-        id="workflow--graph-details"
-        data-testid="workflow--graph-details"
-      >
+      <div className="table__content" data-testid="workflow-graph-details">
         <div className="graph-container workflow-content">
           {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
             <div className={graphViewClassNames}>
