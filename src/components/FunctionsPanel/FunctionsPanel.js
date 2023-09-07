@@ -28,13 +28,13 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
-import { FUNCTION_TYPE_SERVING, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
+
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
-import { PANEL_CREATE_MODE } from '../../constants'
-import { NOTFOUND_ERROR_STATUS_CODE, LABEL_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
+import { FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
+import { LABEL_BUTTON, NOTFOUND_ERROR_STATUS_CODE, SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const FunctionsPanel = ({
   appStore,

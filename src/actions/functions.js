@@ -104,8 +104,6 @@ const functionsActions = {
             : error.message
 
         dispatch(functionsActions.createNewFunctionFailure(message))
-
-        throw error
       })
   },
   createNewFunctionBegin: () => ({
