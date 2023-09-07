@@ -226,29 +226,28 @@ const Workflow = ({
           </Tooltip>
         </div>
       </TableTop>
+
       <div className="graph-container workflow-content">
         {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
-          <>
-            <div className={graphViewClassNames}>
-              <MlReactFlow
-                elements={elements}
-                alignTriggerItem={itemIsSelected}
-                onElementClick={onElementClick}
+          <div className={graphViewClassNames}>
+            <MlReactFlow
+              elements={elements}
+              alignTriggerItem={itemIsSelected}
+              onElementClick={onElementClick}
+            />
+            {itemIsSelected && (
+              <Details
+                actionsMenu={actionsMenu}
+                detailsMenu={pageData.details.menu}
+                getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
+                handleCancel={handleCancel}
+                pageData={pageData}
+                retryRequest={refreshJobs}
+                selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+                tab={MONITOR_WORKFLOWS_TAB}
               />
-              {itemIsSelected && (
-                <Details
-                  actionsMenu={actionsMenu}
-                  detailsMenu={pageData.details.menu}
-                  getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
-                  handleCancel={handleCancel}
-                  pageData={pageData}
-                  retryRequest={refreshJobs}
-                  selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
-                  tab={MONITOR_WORKFLOWS_TAB}
-                />
-              )}
-            </div>
-          </>
+            )}
+          </div>
         ) : (
           <Table
             actionsMenu={actionsMenu}
