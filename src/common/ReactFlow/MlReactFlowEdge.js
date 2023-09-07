@@ -17,13 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import {
-  useStoreState,
-  getBezierPath,
-  getSmoothStepPath
-} from 'react-flow-renderer'
+import { BaseEdge, useNodes, getBezierPath, getSmoothStepPath } from 'reactflow'
 
 import { getEdgeParams, getMarkerEnd } from './mlReactFlow.util'
 import {
@@ -47,26 +43,16 @@ const MlReactFlowEdge = ({
   targetX,
   targetY
 }) => {
-  const nodes = useStoreState(state => state.nodes)
-  const markerEnd = getMarkerEnd(arrowHeadType, markerEndId, id)
+  const nodes = useNodes()
+  const markerEnd = useMemo(() => getMarkerEnd(arrowHeadType, markerEndId, id), [])
+  const sourceNode = useMemo(() => nodes.find(n => n.id === source), [source, nodes])
+  const targetNode = useMemo(() => nodes.find(n => n.id === target), [target, nodes])
 
-  const sourceNode = useMemo(() => nodes.find(n => n.id === source), [
-    source,
-    nodes
-  ])
-  const targetNode = useMemo(() => nodes.find(n => n.id === target), [
-    target,
-    nodes
-  ])
-
-  const getPath = () => {
-    let d = null
+  const getPath = useCallback(() => {
+    let d = []
 
     if (data.subType === FLOATING_EDGE) {
-      const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
-        sourceNode,
-        targetNode
-      )
+      const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(sourceNode, targetNode)
 
       d = getBezierPath({
         sourceX: sx,
@@ -76,10 +62,7 @@ const MlReactFlowEdge = ({
         targetX: tx,
         targetY: ty
       })
-    } else if (
-      data.subType === STEP_EDGE ||
-      data.subType === SMOOTH_STEP_EDGE
-    ) {
+    } else if (data.subType === STEP_EDGE || data.subType === SMOOTH_STEP_EDGE) {
       d = getSmoothStepPath({
         sourceX,
         sourceY,
@@ -99,7 +82,9 @@ const MlReactFlowEdge = ({
     }
 
     return d
-  }
+  }, [data.subType, sourceNode, sourceX, sourceY, targetNode, targetX, targetY])
+
+  const path = useMemo(() => getPath(), [getPath])
 
   if (!sourceNode || !targetNode) {
     return null
@@ -144,16 +129,7 @@ const MlReactFlowEdge = ({
           />
         </marker>
       </defs>
-      <g className="react-flow__connection">
-        <path
-          id={id}
-          className="react-flow__edge-path"
-          d={getPath()}
-          markerEnd={markerEnd}
-          markerStart={data.isMarkerStart ? markerEnd : null}
-          style={style}
-        />
-      </g>
+      <BaseEdge id={id} path={path[0]} markerEnd={markerEnd} style={style} />
     </>
   )
 }

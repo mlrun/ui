@@ -43,6 +43,7 @@ import {
   SCHEDULE_TAB
 } from './constants'
 
+import 'reactflow/dist/style.css'
 import 'igz-controls/scss/common.scss'
 import './scss/main.scss'
 

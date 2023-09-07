@@ -42,7 +42,8 @@ import './detailsTransformations.scss'
 const DetailsTransformations = ({ selectedItem }) => {
   const [states, setStates] = useState({})
   const [targets, setTargets] = useState([])
-  const [elements, setElements] = useState([])
+  const [nodes, setNodes] = useState([])
+  const [edges, setEdges] = useState([])
   const [steps, setSteps] = useState([])
   const [afterSteps, setAfterSteps] = useState([])
   const [errorSteps, setErrorSteps] = useState([])
@@ -52,106 +53,111 @@ const DetailsTransformations = ({ selectedItem }) => {
   const [selectedItemUid, setSelectedItemUid] = useState(null)
 
   const generateGraphData = useCallback(() => {
-    let edgesMap = {}
-    let errorsMap = {}
-    let stepsList = []
-    let nodes = map(states, (stepItem, stepName) => {
-      let nodeItem = {
-        type: ML_NODE,
-        data: { subType: PRIMARY_NODE, label: stepName },
-        id: stepName,
-        className: selectedStep === stepName ? 'selected' : '',
-        position: { x: 0, y: 0 }
-      }
-      if (stepItem.after && Array.isArray(stepItem.after) && stepItem.after.length) {
-        edgesMap[stepName] = stepItem.after[0]
-      } else if (!find(states, ['on_error', stepName])) {
-        edgesMap[stepName] = 'Source'
-      }
+    queueMicrotask(() => {
+      let edgesMap = {}
+      let errorsMap = {}
+      let stepsList = []
+      let newNodes = map(states, (stepItem, stepName) => {
+        let nodeItem = {
+          type: ML_NODE,
+          data: { subType: PRIMARY_NODE, label: stepName },
+          id: stepName,
+          className: selectedStep === stepName ? 'selected' : '',
+          position: { x: 0, y: 0 }
+        }
+        if (stepItem.after && Array.isArray(stepItem.after) && stepItem.after.length) {
+          edgesMap[stepName] = stepItem.after[0]
+        } else if (!find(states, ['on_error', stepName])) {
+          edgesMap[stepName] = 'Source'
+        }
 
-      if (stepItem.on_error) {
-        errorsMap[stepName] = stepItem.on_error
-      }
+        if (stepItem.on_error) {
+          errorsMap[stepName] = stepItem.on_error
+        }
 
-      stepsList.push({
-        id: stepName,
-        label: stepName
+        stepsList.push({
+          id: stepName,
+          label: stepName
+        })
+
+        return nodeItem
       })
 
-      return nodeItem
-    })
+      newNodes.unshift({
+        type: ML_NODE,
+        data: { subType: INPUT_NODE, label: 'Source' },
+        id: 'Source',
+        position: { x: 0, y: 0 }
+      })
 
-    nodes.unshift({
-      type: ML_NODE,
-      data: { subType: INPUT_NODE, label: 'Source' },
-      id: 'Source',
-      position: { x: 0, y: 0 }
-    })
-
-    let nodesEdges = map(edgesMap, (source, target) => {
-      return {
-        type: ML_EDGE,
-        data: {
-          subType: DEFAULT_EDGE
-        },
-        id: `e.${source}.${target}`,
-        source: source,
-        target: target
-      }
-    })
-
-    forEach(targets, target => {
-      if (target.after_state) {
-        nodes.push({
-          type: ML_NODE,
-          data: { subType: OUTPUT_NODE, label: target.name },
-          id: target.name,
-          position: { x: 0, y: 0 }
-        })
-        nodesEdges.push({
+      let nodesEdges = map(edgesMap, (source, target) => {
+        return {
           type: ML_EDGE,
           data: {
             subType: DEFAULT_EDGE
           },
-          id: `e.${target.after_state}.${target.name}`,
-          source: target.after_state,
-          target: target.name
-        })
-      }
+          id: `e.${source}.${target}`,
+          source: source,
+          target: target
+        }
+      })
+
+      forEach(targets, target => {
+        if (target.after_state) {
+          newNodes.push({
+            type: ML_NODE,
+            data: { subType: OUTPUT_NODE, label: target.name },
+            id: target.name,
+            position: { x: 0, y: 0 }
+          })
+          nodesEdges.push({
+            type: ML_EDGE,
+            data: {
+              subType: DEFAULT_EDGE
+            },
+            id: `e.${target.after_state}.${target.name}`,
+            source: target.after_state,
+            target: target.name
+          })
+        }
+      })
+
+      let errorEdges = map(errorsMap, (target, source) => {
+        let errorHandlerElement = find(newNodes, ['id', target])
+
+        if (errorHandlerElement) {
+          errorHandlerElement.data.subType = ERROR_NODE
+        }
+
+        return {
+          type: ML_EDGE,
+          data: {
+            subType: DEFAULT_EDGE
+          },
+          id: `e.${source}.${target}`,
+          source: source,
+          target: target,
+          animated: true
+        }
+      })
+
+      const [layoutedNodes, layoutedEdges] = getLayoutedElements(
+        newNodes,
+        concat(nodesEdges, errorEdges)
+      )
+
+      setNodes(layoutedNodes)
+      setEdges(layoutedEdges)
+      setSteps(stepsList)
+      setAfterSteps(stepsList)
+      setErrorSteps(stepsList)
     })
-
-    let errorEdges = map(errorsMap, (target, source) => {
-      let errorHandlerElement = find(nodes, ['id', target])
-
-      if (errorHandlerElement) {
-        errorHandlerElement.data.subType = ERROR_NODE
-      }
-
-      return {
-        type: ML_EDGE,
-        data: {
-          subType: DEFAULT_EDGE
-        },
-        id: `e.${source}.${target}`,
-        source: source,
-        target: target,
-        animated: true
-      }
-    })
-
-    setElements(getLayoutedElements(concat(nodes, nodesEdges, errorEdges)))
-    setSteps(stepsList)
-    setAfterSteps(stepsList)
-    setErrorSteps(stepsList)
   }, [states, targets, selectedStep])
 
   useEffect(() => {
     setStates(cloneDeep(selectedItem.graph?.steps))
-  }, [selectedItem.graph])
-
-  useEffect(() => {
     setTargets(cloneDeep(selectedItem.targets))
-  }, [selectedItem.targets])
+  }, [selectedItem.graph, selectedItem.targets])
 
   useEffect(() => {
     let stepsList = reject(steps, ['id', selectedStep])
@@ -166,16 +172,16 @@ const DetailsTransformations = ({ selectedItem }) => {
   }, [steps, selectedStep])
 
   useEffect(() => {
-    setElements(elements => {
-      return map(elements, el => {
+    setNodes(nodes => {
+      return map(nodes, node => {
         return {
-          ...el,
+          ...node,
           className:
-            el.id === selectedStep
-              ? el.className
-                ? (el.className += ' selected')
+            node.id === selectedStep
+              ? node.className
+                ? (node.className += ' selected')
                 : 'selected'
-              : el.className?.replace('selected', '')
+              : node.className?.replace('selected', '')
         }
       })
     })
@@ -194,7 +200,7 @@ const DetailsTransformations = ({ selectedItem }) => {
   return (
     <div className="graph-container transformations-tab">
       <div className="graph-view">
-        <MlReactFlow elements={elements} alignTriggerItem={selectedItemUid} />
+        <MlReactFlow nodes={nodes} edges={edges} alignTriggerItem={selectedItemUid} />
       </div>
       <div className="graph-pane">
         <div className="graph-pane__title">Configuration</div>
