@@ -342,4 +342,4 @@ export const enrichRunWithFunctionFields = (
     })
 }
 
-export const limitedFunctionKinds = ['handler', 'local', 'serving', '']
+export const functionRunKinds = ['job']
