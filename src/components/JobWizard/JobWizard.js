@@ -173,7 +173,7 @@ const JobWizard = ({
 
   useEffect(() => {
     if (isBatchInference) {
-      fetchHubFunction('batch_inference').then(hubFunction => {
+      fetchHubFunction('batch_inference_v2').then(hubFunction => {
         const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
 
         fetchFunctionTemplate(functionTemplatePath).then(functionData => {
