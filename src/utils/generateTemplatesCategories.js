@@ -17,7 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const excludeCategoryKinds = ['serving', 'nuclio', 'remote', 'nuclio:serving']
+const excludedCategoryKinds = ['serving', 'nuclio', 'remote', 'nuclio:serving']
+const excludedFunctionNames = ['batch-inference']
 
 export const aliasToCategory = {
   analysis: 'data-analysis',
@@ -55,7 +56,7 @@ export const generateCategories = functionTemplates => {
         categories: value?.categories.map(category => aliasToCategory[category] ?? category)
       }
     }))
-    .filter(template => !excludeCategoryKinds.includes(template.kind))
+    .filter(template => !excludedCategoryKinds.includes(template.kind))
 
   const templatesCategories = {}
 
@@ -88,7 +89,11 @@ export const generateHubCategories = functionTemplates => {
       },
       ...template
     }))
-    .filter(template => !excludeCategoryKinds.includes(template.kind))
+    .filter(
+      template =>
+        !excludedCategoryKinds.includes(template.kind) &&
+        !excludedFunctionNames.includes(template.metadata.name)
+    )
 
   const hubFunctionsCategories = []
 
