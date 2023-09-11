@@ -199,17 +199,6 @@ const ScheduledJobs = ({
 
           setJobWizardMode(PANEL_EDIT_MODE)
         })
-        .catch(error => {
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              retry: () => handleEditScheduleJob(editableItem),
-              message: 'Failed to fetch job data',
-              error
-            })
-          )
-        })
     },
     [fetchJobFunction, dispatch, fetchFunctionTemplate, fetchJobFunctionSuccess, setJobWizardMode]
   )
