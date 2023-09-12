@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { get } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -132,6 +133,8 @@ const ScheduledJobs = ({
           )
         })
         .catch(error => {
+          const errorMsg = get(error, 'response.data.detail', 'Job failed to start.')
+
           dispatch(
             setNotification({
               status: 400,
@@ -140,7 +143,7 @@ const ScheduledJobs = ({
               message:
                 error.response.status === FORBIDDEN_ERROR_STATUS_CODE
                   ? 'You are not permitted to run new job.'
-                  : 'Job failed to start.',
+                  : errorMsg,
               error
             })
           )
