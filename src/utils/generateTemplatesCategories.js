@@ -20,6 +20,8 @@ such restriction.
 
 import { functionRunKinds } from '../components/Jobs/jobs.util'
 
+const excludedFunctionNames = ['batch-inference']
+
 export const aliasToCategory = {
   analysis: 'data-analysis',
   BERT: 'other',
@@ -88,7 +90,11 @@ export const generateHubCategories = functionTemplates => {
           .map(funcTemplate => funcTemplate.metadata.version)
       }
     }))
-    .filter(template => functionRunKinds.includes(template.spec?.kind))
+    .filter(
+      template =>
+        functionRunKinds.includes(template.spec.kind) &&
+        !excludedFunctionNames.includes(template.metadata.name)
+    )
 
   const hubFunctionsCategories = []
 
