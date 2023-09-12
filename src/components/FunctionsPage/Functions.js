@@ -44,7 +44,6 @@ import { setNotification } from '../../reducers/notificationReducer'
 import jobsActions from '../../actions/jobs'
 import {
   FUNCTIONS_PAGE,
-  FUNCTION_TYPE_SERVING,
   GROUP_BY_NAME,
   PANEL_FUNCTION_CREATE_MODE,
   SHOW_UNTAGGED_ITEMS,
@@ -52,6 +51,7 @@ import {
 } from '../../constants'
 import createFunctionsContent from '../../utils/createFunctionsContent'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
+import { functionRunKinds } from '../Jobs/jobs.util'
 import { generateContentActionsMenu } from '../../layout/Content/content.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -267,8 +267,8 @@ const Functions = ({
             }
           },
           hidden:
-            !FUNCTIONS_READY_STATES.includes(func?.state?.value) ||
-            func?.type === FUNCTION_TYPE_SERVING
+            !functionRunKinds.includes(func?.type) ||
+            !FUNCTIONS_READY_STATES.includes(func?.state?.value)
         },
         {
           label: 'Edit',

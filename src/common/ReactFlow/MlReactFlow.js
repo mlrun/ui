@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer'
+import ReactFlow, { ReactFlowProvider } from 'reactflow'
 
 import MlReactFlowNode from './MlReactFlowNode'
 import MlReactFlowEdge from './MlReactFlowEdge'
@@ -36,7 +36,7 @@ const nodeTypes = {
   [ML_NODE]: MlReactFlowNode
 }
 
-const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
+const MlReactFlow = ({ alignTriggerItem, edges, nodes, onNodeClick }) => {
   const domChangeHandler = () => {
     const edgesWrapper = document.querySelector('.react-flow__edges > g')
     const selectedEdges = edgesWrapper.getElementsByClassName('selected')
@@ -51,17 +51,20 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
   const handleFitGraphView = useCallback(() => {
     setTimeout(() => {
       reactFlowInstance.fitView()
-      const { position, zoom } = reactFlowInstance.toObject()
 
-      reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
+      const {
+        viewport: { x, zoom }
+      } = reactFlowInstance.toObject()
+
+      reactFlowInstance.setViewport({ x, y: 50, zoom: zoom })
     }, 20)
   }, [reactFlowInstance])
 
   useEffect(() => {
-    if (reactFlowInstance && !initialGraphViewGenerated && elements.length > 0) {
+    if (reactFlowInstance && !initialGraphViewGenerated && nodes.length > 0) {
       setInitialGraphViewGenerated(true)
     }
-  }, [elements.length, initialGraphViewGenerated, reactFlowInstance])
+  }, [nodes.length, initialGraphViewGenerated, reactFlowInstance])
 
   useEffect(() => {
     if (reactFlowInstance && initialGraphViewGenerated) {
@@ -77,7 +80,7 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
     }
   }, [observer])
 
-  const onLoad = reactFlowInstance => {
+  const onInit = reactFlowInstance => {
     const edgesWrapper = document.querySelector('.react-flow__nodes')
 
     if (edgesWrapper) {
@@ -94,14 +97,16 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
     <ReactFlowProvider>
       <ReactFlow
         edgeTypes={edgeTypes}
-        elements={elements}
+        edges={edges}
         elementsSelectable={false}
         multiSelectionKeyCode={null}
         nodeTypes={nodeTypes}
+        nodes={nodes}
         nodesConnectable={false}
         nodesDraggable={false}
-        onElementClick={onElementClick}
-        onLoad={onLoad}
+        onInit={onInit}
+        onNodeClick={onNodeClick}
+        proOptions={{ hideAttribution: true }}
         selectionKeyCode={null}
       />
     </ReactFlowProvider>
@@ -110,13 +115,14 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
 
 MlReactFlow.defaultProps = {
   alignTriggerItem: '',
-  onElementClick: () => {}
+  onNodeClick: () => {}
 }
 
 MlReactFlow.propTypes = {
   alignTriggerItem: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  elements: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  onElementClick: PropTypes.func
+  edges: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  nodes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  onNodeClick: PropTypes.func
 }
 
 export default React.memo(MlReactFlow)

@@ -210,17 +210,7 @@ export const rerunJob = async (
   setJobWizardMode,
   dispatch
 ) => {
-  const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch).catch(error => {
-    dispatch(
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        retry: () => rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
-        message: 'Failed to fetch job data',
-        error
-      })
-    )
-  })
+  const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch)
 
   if (functionData) {
     setJobWizardMode(PANEL_RERUN_MODE)
@@ -342,4 +332,4 @@ export const enrichRunWithFunctionFields = (
     })
 }
 
-export const limitedFunctionKinds = ['handler', 'local', 'serving', '']
+export const functionRunKinds = ['job']

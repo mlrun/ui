@@ -78,7 +78,8 @@ const Workflow = ({
   workflowsViewMode
 }) => {
   const [jobsContent, setJobsContent] = useState([])
-  const [elements, setElements] = useState([])
+  const [nodes, setNodes] = useState([])
+  const [edges, setEdges] = useState([])
   const params = useParams()
   const location = useLocation()
   const navigate = useNavigate()
@@ -106,8 +107,8 @@ const Workflow = ({
   })
 
   useEffect(() => {
-    const edges = []
-    const nodes = []
+    const newEdges = []
+    const newNodes = []
     const jobs = []
 
     forEach(workflow.graph, job => {
@@ -153,7 +154,7 @@ const Workflow = ({
       }
 
       job.children.forEach(childId => {
-        edges.push({
+        newEdges.push({
           id: `e.${job.id}.${childId}`,
           type: ML_EDGE,
           data: {
@@ -170,20 +171,23 @@ const Workflow = ({
         customData,
         state: getState(job.phase?.toLowerCase(), JOBS_PAGE, 'job')
       })
-      nodes.push(nodeItem)
+      newNodes.push(nodeItem)
     })
 
-    if (!isEmpty(nodes)) {
-      setElements(getLayoutedElements(nodes.concat(edges)))
+    if (!isEmpty(newNodes)) {
+      const [layoutedNodes, layoutedEdges] = getLayoutedElements(newNodes, newEdges)
+
+      setNodes(layoutedNodes)
+      setEdges(layoutedEdges)
       setJobsContent(jobs)
     }
   }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
 
-  const onElementClick = (event, element) => {
+  const onNodeClick = (event, node) => {
     const detailsLink = getWorkflowDetailsLink(
       params.projectName,
       params.workflowId,
-      element.data.customData,
+      node.data.customData,
       null,
       MONITOR_WORKFLOWS_TAB
     )
@@ -230,10 +234,11 @@ const Workflow = ({
       <div className="graph-container workflow-content">
         {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
           <div className={graphViewClassNames}>
-            <MlReactFlow
-              elements={elements}
-              alignTriggerItem={itemIsSelected}
-              onElementClick={onElementClick}
+              <MlReactFlow
+                alignTriggerItem={itemIsSelected}
+                edges={edges}
+                nodes={nodes}
+                onNodeClick={onNodeClick}
             />
             {itemIsSelected && (
               <Details

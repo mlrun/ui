@@ -42,7 +42,7 @@ import {
 } from '../../../../constants'
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
-import { limitedFunctionKinds } from '../../../Jobs/jobs.util'
+import { functionRunKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
@@ -229,7 +229,7 @@ const JobWizardFunctionSelection = ({
 
     fetchFunctions(currentValue).then(functions => {
       const validFunctions = functions.filter(func => {
-        return !includes(limitedFunctionKinds, func.kind)
+        return includes(functionRunKinds, func.kind)
       })
 
       const groupedFunctions = Object.values(
