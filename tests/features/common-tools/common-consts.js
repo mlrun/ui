@@ -213,7 +213,16 @@ module.exports = {
     Form_Text:
       /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
     Form_Subtext:
-      'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).'
+      'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).',
+    Combobox_Options: [
+      'V3IO',
+      'S3',
+      'HTTP',
+      'HTTPS',
+      'Azure storage',
+      'Google storage',
+      'Databricks filesystem'
+    ]  
   },
   Project_Settings: {
     Tab_List: ['General', 'Members', 'Secrets'],
@@ -287,7 +296,7 @@ module.exports = {
     MLRun_Store_Path_Hint: 'Field must be in "artifacts/my-project/my-artifact:my-tag" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
-    V3IO_Path_Hint: 'Field must be in "container-name/file" format',
+    V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
     S3_Path_Hint: 'Field must be in "bucket/path" format',
     Azure_Storage_Path_Hint: 'Field must be in "container/path" format',
     Timestamp_Column: 'The field name for filtering the source data.',

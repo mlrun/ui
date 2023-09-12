@@ -197,6 +197,60 @@ When('add data to {string} table on {string} wizard', async function (table, wiz
   }
 })
 
+When('add data to {string} table on {string} wizard with several inputs', async function (table, wizard, dataTable) {
+  const inputFields = dataTable['rawTable'][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
+    await this.driver.sleep(100)
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2)
+    )
+    await this.driver.sleep(250)
+    await typeIntoInputField(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2),
+      rows[row_indx][0]
+    )
+    await this.driver.sleep(100)
+    await openDropdown(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2)
+    )
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2),
+      rows[row_indx][1]
+    )
+    await this.driver.sleep(100)
+    await typeIntoInputField(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[2]](parseInt(row_indx) + 2),
+      rows[row_indx][2]
+    )
+    await this.driver.sleep(100)
+    if (rows[row_indx][3].length !== 0){
+      await typeIntoInputField(
+        this.driver,
+        pageObjects[wizard][table]['tableFields'][inputFields[3]](parseInt(row_indx) + 2),
+        rows[row_indx][3]
+      )
+      await this.driver.sleep(100)
+    }
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
+    )
+    await this.driver.sleep(100)
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
+    )
+    await this.driver.sleep(100)
+  }
+})
+
 When('fill data to {string} table on {string} wizard', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()

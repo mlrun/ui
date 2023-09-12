@@ -402,6 +402,18 @@ Then(
 )
 
 Then(
+  '{string} element in {string} on {string} should contains {string} attribute value',
+  async function (component, accordion, wizard, value) {
+    await verifyComponentContainsAttributeValue(
+      this.driver,
+      pageObjects[wizard][accordion][component]['inputField'],
+      'value',
+      value
+    )
+  }
+)
+
+Then(
   '{string} component on {string} should be equal {string}.{string}',
   async function (component, wizard, constStorage, constValue) {
     await verifyTextRegExp(
