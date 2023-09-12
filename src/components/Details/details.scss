@@ -16,13 +16,9 @@
     overflow-y: auto;
     color: $mulledWine;
     background-color: $white;
-    padding: 20px 0;
-
-    .table__content & {
-      border: 1px solid #e7ebff;
-      border-radius: 0 4px 4px 0;
-      padding: 20px 30px;
-    }
+    border: 1px solid $magnoliaWhite;
+    border-radius: 0 4px 4px 0;
+    padding: 20px 30px;
 
     &_big {
       width: 100%;
@@ -190,6 +186,10 @@
           min-width: 40px;
           padding: 0;
           border-radius: 50%;
+
+          & > * {
+            margin: 0;
+          }
         }
       }
     }

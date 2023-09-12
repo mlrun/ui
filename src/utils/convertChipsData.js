@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-// [{key: "", value: ""}] --> {key: 'value'}
+// [{key: "myKey", value: "myValue"}] --> {myKey: "myValue"}
 export const convertChipsData = (chips = []) => {
   return chips.reduce((list, label) => {
     list[label.key] = label.value
@@ -27,7 +27,7 @@ export const convertChipsData = (chips = []) => {
   }, {})
 }
 
-// {key: 'value'} --> [{id: "", key: "", value: ""}]
+// {myKey: "myValue"} --> [{id: "myKey0", key: "myKey", value: "myValue"}]
 export const parseChipsData = (labels = {}, delimiter = null) => {
   return labels == null
     ? []
