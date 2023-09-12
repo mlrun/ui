@@ -19,17 +19,11 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Handle } from 'react-flow-renderer'
+import { Handle } from 'reactflow'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import {
-  ERROR_NODE,
-  INPUT_NODE,
-  OUTPUT_NODE,
-  PRIMARY_NODE,
-  SECONDARY_NODE
-} from '../../constants'
+import { ERROR_NODE, INPUT_NODE, OUTPUT_NODE, PRIMARY_NODE, SECONDARY_NODE } from '../../constants'
 
 const MlReactFlowNode = ({ data, isConnectable }) => {
   return (
@@ -46,15 +40,10 @@ const MlReactFlowNode = ({ data, isConnectable }) => {
         />
       </Tooltip>
       <div className="react-flow__node-label">
-        <Tooltip
-          hidden={!data.label}
-          template={<TextTooltipTemplate text={data.label} />}
-        >
+        <Tooltip hidden={!data.label} template={<TextTooltipTemplate text={data.label} />}>
           <div className="data-ellipsis">{data.label}</div>
         </Tooltip>
-        {data.subLabel && (
-          <div className="react-flow__node-sub-label">{data.subLabel}</div>
-        )}
+        {data.subLabel && <div className="react-flow__node-sub-label">{data.subLabel}</div>}
       </div>
       <Tooltip
         hidden={!data.sourceHandle?.tooltip}
@@ -73,13 +62,8 @@ const MlReactFlowNode = ({ data, isConnectable }) => {
 
 MlReactFlowNode.propTypes = {
   data: PropTypes.shape({
-    subType: PropTypes.oneOf([
-      INPUT_NODE,
-      OUTPUT_NODE,
-      PRIMARY_NODE,
-      SECONDARY_NODE,
-      ERROR_NODE
-    ]).isRequired,
+    subType: PropTypes.oneOf([INPUT_NODE, OUTPUT_NODE, PRIMARY_NODE, SECONDARY_NODE, ERROR_NODE])
+      .isRequired,
     label: PropTypes.string.isRequired,
     subLabel: PropTypes.string,
     isSelectable: PropTypes.bool,
