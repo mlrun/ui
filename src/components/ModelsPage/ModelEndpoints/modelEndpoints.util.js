@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isNumber } from 'lodash'
+
 import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE, SORT_BY } from '../../../constants'
 import { filterSelectOptions } from '../../FilterMenu/filterMenu.settings'
 import DetailsInfoItem from '../../../elements/DetailsInfoItem/DetailsInfoItem'
@@ -56,20 +58,60 @@ const detailsMenu = [
   }
 ]
 
-const modelEndpointsDriftHeaders = [
-  { label: 'Mean TVD', id: 'tvd_mean' },
-  { label: 'Mean Hellinger', id: 'hellinger_mean' },
-  { label: 'Mean KLD', id: 'kld_mean' }
-]
+const generateModelEndpointDriftContent = modelEndpoint => {
+  return [
+    {
+      id: 'tvd_mean',
+      label: 'Mean TVD',
+      value: roundFloats(modelEndpoint.status?.drift_measures?.tvd_mean, 2) ?? '-'
+    },
+    {
+      id: 'hellinger_mean',
+      label: 'Mean Hellinger',
+      value: roundFloats(modelEndpoint.status?.drift_measures?.hellinger_mean, 2) ?? '-'
+    },
+    {
+      id: 'kld_mean',
+      label: 'Mean KLD',
+      value: roundFloats(modelEndpoint.status?.drift_measures?.kld_mean, 2) ?? '-'
+    },
+    {
+      id: 'drift_value',
+      label: 'Drift Actual Value',
+      value:
+        isNumber(modelEndpoint.status?.drift_measures?.hellinger_mean) &&
+        isNumber(modelEndpoint.status?.drift_measures?.tvd_mean)
+          ? roundFloats(
+              (modelEndpoint.status?.drift_measures?.hellinger_mean +
+                modelEndpoint.status?.drift_measures?.tvd_mean) /
+                2,
+              2
+            )
+          : '-'
+    },
+    {
+      id: 'drift_detected_threshold',
+      label: 'Drift Detected Threshold',
+      value:
+        roundFloats(modelEndpoint.spec?.monitor_configuration?.drift_detected_threshold, 2) ?? '-'
+    },
+    {
+      id: 'possible_drift_threshold',
+      label: 'Possible Drift Threshold',
+      value:
+        roundFloats(modelEndpoint.spec?.monitor_configuration?.possible_drift_threshold, 2) ?? '-'
+    }
+  ]
+}
 
 export const generateDriftDetailsInfo = modelEndpoint => {
-  return modelEndpointsDriftHeaders?.map(header => {
+  const modelEndpointContent = generateModelEndpointDriftContent(modelEndpoint)
+
+  return modelEndpointContent.map(item => {
     return (
-      <li className="details-item" key={header.id}>
-        <div className="details-item__header">{header.label}</div>
-        <DetailsInfoItem
-          info={roundFloats(modelEndpoint.status?.drift_measures?.[header.id], 2) ?? '-'}
-        />
+      <li className="details-item" key={item.id}>
+        <div className="details-item__header">{item.label}</div>
+        <DetailsInfoItem info={item.value} />
       </li>
     )
   })
