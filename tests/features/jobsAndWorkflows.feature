@@ -895,7 +895,7 @@ Feature: Jobs and workflows
             | key        | value        |
             | key2edited | value2edited |
             | key4edited | value4edited |
-
+    #TODO: Pods_Toleration is deleted from implementation
     @passive
     Scenario: verify mandatory elements in Resources Accordion on Create New Jobs side panel
         Given open url
