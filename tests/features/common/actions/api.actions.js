@@ -279,19 +279,31 @@ const action = {
     expectedStatusCode
   ) {
     const uid = uuidv4()
+    //TODO: description ML-4583
+    // const data = {
+    //   description: '',
+    // }
+
     const data = {
-      uid: uid,
-      key: mlArtifactName,
-      db_key: mlArtifactName,
-      tree: uid,
-      description: '',
       kind: mlArtifactType === 'file' ? '' : mlArtifactType,
-      project: mlProjectName,
-      producer: {
-        kind: 'api',
-        uri: 'localhost:3000'
+      metadata: {
+        labels:{},
+        key: mlArtifactName,
+        project: mlProjectName,
+        tree: uid,
+        tag: mlArtifactTag
       },
-      tag: mlArtifactTag
+      project: mlProjectName,
+      spec: {
+        db_key: mlArtifactName,
+        producer: {
+          kind: 'api',
+          uri: 'localhost:3000'
+        },
+        target_path:{}
+      },
+      status: {},
+      uid: uid
     }
 
     if (mlArtifactType === 'model') {
@@ -314,7 +326,8 @@ const action = {
 
     await mainHttpClient
       .post(
-        `${REACT_APP_MLRUN_API_URL}/artifact/${mlProjectName}/${uid}/${mlArtifactName}`,
+        //`${REACT_APP_MLRUN_API_URL}/artifact/${mlProjectName}/${uid}/${mlArtifactName}`,
+        `${REACT_APP_MLRUN_API_URL}/projects//${mlProjectName}/artifacts/${uid}/${mlArtifactName}`,
         data
       )
       .then(res => {

@@ -17,7 +17,6 @@ Feature: Datasets Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Datasets" value
     And wait load page
-    Then verify "Feature_Store_Tab_Selector" on "Datasets" wizard should contains "Feature_Store"."Tab_List"
     Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
     Then "Register_Dataset_Button" element on "Datasets" should contains "Register Dataset" value
     Then verify "Table_Name_Filter_Input" element visibility on "Datasets" wizard
@@ -94,7 +93,7 @@ Feature: Datasets Page
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
   @passive
-  Scenario: Check Details panel still active on page refresh
+  Scenario: MLD005 - Check Details panel still active on page refresh
     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
     Given open url
@@ -118,11 +117,8 @@ Feature: Datasets Page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
 
-  @FAILED_TODO
-  #TODO: 'Name_Input' - options "Input_Hint"."Artifact_Name_Hint" implementation with click on warning hint  
-  #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
   @passive
-  Scenario: Check all mandatory components on Register Dataset form
+  Scenario: MLD006 - Check all mandatory components on Register Dataset form
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -148,9 +144,10 @@ Feature: Datasets Page
     Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
     Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify "Name_Input" options rules on form "Register_Dataset" wizard
-    Then verify "Target_Path_Input" element visibility on "Register_Dataset" wizard
-    Then type value "   " to "Target_Path_Input" field on "Register_Dataset" wizard
-    Then verify "Target_Path_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Dataset" wizard should contains "Register_Dataset"."Combobox_Options"
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
+    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Dataset" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
     Then verify "Description_Input" element visibility on "Register_Dataset" wizard
     Then type value "   " to "Description_Input" field on "Register_Dataset" wizard
     Then verify "Description_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
@@ -161,7 +158,8 @@ Feature: Datasets Page
     Then click on "Register_Button" element on "Register_Dataset" wizard
     Then verify "Register_Button" element on "Register_Dataset" wizard is disabled
     Then type value "dataset" to "Name_Input" field on "Register_Dataset" wizard
-    Then type value "target/path" to "Target_Path_Input" field on "Register_Dataset" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then type value "new dataset description" to "Description_Input" field on "Register_Dataset" wizard
     Then check "Description_Input" textarea counter on "Register_Dataset" wizard
     Then verify "Register_Button" element on "Register_Dataset" wizard is enabled
@@ -170,14 +168,14 @@ Feature: Datasets Page
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_Dataset" popup dialog appears
     Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
-    Then verify "Target_Path_Input" input should contains "target/path" value on "Register_Dataset" wizard
+    Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_Dataset" wizard
     Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
     Then click on "Cross_Cancel_Button" element on "Register_Dataset" wizard
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_Dataset" popup dialog appears
     Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
-    Then verify "Target_Path_Input" input should contains "target/path" value on "Register_Dataset" wizard
+    Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_Dataset" wizard
     Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
     Then navigate back
     Then verify if "Common_Popup" popup dialog appears
@@ -193,9 +191,7 @@ Feature: Datasets Page
     Then navigate forward
     Then verify "Title" element not exists on "Register_Dataset" wizard
 
-  @FAILED_TODO  
-  #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
-  Scenario: Verify behaviour on Register new Dataset
+  Scenario: MLD007 - Verify behaviour on Register new Dataset
     * set tear-down property "dataset" created in "default" project with "test-dataset" value
     Given open url
     And wait load page
@@ -206,7 +202,8 @@ Feature: Datasets Page
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
     Then type value "test-dataset" to "Name_Input" field on "Register_Dataset" wizard
-    Then type value "test-path" to "Target_Path_Input" field on "Register_Dataset" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     And wait load page
     Then check "test-dataset" value in "name" column in "Datasets_Table" table on "Datasets" wizard
@@ -214,7 +211,7 @@ Feature: Datasets Page
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
     Then check "test-dataset" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then check "test-path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
 
   @passive
   Scenario: Check filtering by name on Datasets page
@@ -258,7 +255,6 @@ Feature: Datasets Page
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Datasets_data"
-
 
   @passive
   Scenario: Verify View YAML action on Datasets page
@@ -317,7 +313,10 @@ Feature: Datasets Page
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
-    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    And wait load page
+    And wait load page
     Then verify redirection from "projects/default/datasets/test_ds/latest/0/INVALID" to "projects/default/datasets/test_ds/latest/0/overview"
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     And wait load page

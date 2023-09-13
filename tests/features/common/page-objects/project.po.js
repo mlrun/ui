@@ -25,9 +25,11 @@ import labelComponent from '../components/label.component'
 import {
   generateInputGroup,
   generateLabelGroup,
-  generateDropdownGroup
+  generateDropdownGroup,
+  generateCheckboxGroup
 } from '../../common-tools/common-tools'
 import inputGroup from '../components/input-group.component'
+import checkboxComponent from '../components/checkbox.component'
 
 const createNewObject = dropdownComponent(
   generateDropdownGroup(
@@ -169,7 +171,7 @@ const DataCollectionAdditionalActionsTable = {
 
 const DevelopmentActionsTable = {
   root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__actions',
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__actions',
   header: {},
   body: {
     root: '.project-overview-actions',
@@ -214,7 +216,7 @@ const DataCollectionLinksTable = {
 
 const DevelopmentLinksTable = {
   root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__bottom',
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__bottom',
   header: {},
   body: {
     root: '.additional-links',
@@ -293,6 +295,52 @@ const shardLagsTable = {
     }
   }
 }
+
+const advancedEnvironmentVariablesTable = {
+  root: '.wizard-form__content .form-table',
+  header: {},
+  body: {
+    add_row_btn: '.form-table__action-row button',
+    row: {
+      root: '.form-table__row',
+      fields: {
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        checkbox: '.form-field-checkbox input',
+        name_input: '.form-field-input input',
+        name_verify: '.form-table__cell_2',
+        type_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1 .form-field-select', 
+            '.form-field__icons', 
+            '.pop-up-dialog .options-list__body .select__item', 
+            false, 
+            false)  
+        },
+        type_dropdown_verify: '.form-table__cell_1 .data-ellipsis', 
+        value_input: '.form-table__cell_3 .form-field__control input',
+        value_verify: '.form-table__cell_3 .data-ellipsis',
+        value_input_key: '.form-table__cell_3 .form-field-input:nth-of-type(2) .form-field__control input' 
+      }
+    }
+  }
+}
+
+const commonAccessKeyCheckbox = checkboxComponent(
+  generateCheckboxGroup('.job-wizard__advanced .access-key-checkbox input', false, false, false)
+)
+
+const commonAccessKeyInput = inputGroup(
+  generateInputGroup(
+    '.align-stretch .form-field-input',
+    true,
+    false,
+    '.tooltip-wrapper svg'
+  )
+)
 
 module.exports = {
   project: {
@@ -393,5 +441,42 @@ module.exports = {
     Consumer_Groups_Table: commonTable(consumerGroupsTable),
     Shard_Lags_Table: commonTable(shardLagsTable),
     Refresh_Button: By.css('.page-actions .round-icon-cp')
+  },
+  batchInference: {
+    Next_Button: By.css(
+      '.modal__footer .btn-secondary'
+    ),
+    Back_Button: By.css(
+      '.modal__footer .btn-tertiary'
+    ),
+    Advanced_Environment_Variables_Table: commonTable(
+      advancedEnvironmentVariablesTable
+    ),
+    Access_Key_Checkbox: commonAccessKeyCheckbox,
+    Access_Key_Input: commonAccessKeyInput,
+    Advanced_Accordion: {
+      Accordion_Header: By.css(
+        '.modal__body .wizard-form__content-container h5'
+      ),
+      Accordion_Subheader: By.css(
+        '.modal__body .wizard-form__content-container .form-table-title'
+      ),
+      Default_Input_Path_Input: inputGroup(
+        generateInputGroup(
+          '.modal__body .job-wizard__advanced .form-col-1:nth-of-type(1) .form-field__wrapper',
+          true,
+          false,
+          true
+        )
+      ),
+      Default_Artifact_Path_Input: inputGroup(
+        generateInputGroup(
+          '.modal__body .job-wizard__advanced .form-col-1:nth-of-type(2) .form-field__wrapper',
+          true,
+          false,
+          true
+        )
+      )
+    }
   }
 }
