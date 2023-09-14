@@ -64,6 +64,7 @@ import './featureSetsPanelTargetStore.scss'
 const FeatureSetsPanelTargetStoreView = ({
   data,
   disableButtons,
+  externalOfflineTarget,
   featureStore,
   frontendSpecIsNotEmpty,
   handleAdvancedLinkClick,
@@ -377,6 +378,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       option.id !== V3IO_INPUT_PATH_SCHEME
                   )}
                   disabled={featureStore.newFeatureSet.spec.passthrough}
+                  defaultPath={externalOfflineTarget}
                   invalid={!validation.isExternalOfflineTargetPathValid}
                   handleUrlOnBlur={handleExternalOfflineKindPathOnBlur}
                   handleUrlOnFocus={handleExternalOfflineKindPathOnFocus}
@@ -448,12 +450,14 @@ const FeatureSetsPanelTargetStoreView = ({
 }
 
 FeatureSetsPanelTargetStoreView.defualtProps = {
+  externalOfflineTarget: {},
   handleUrlSelectOnChange: null
 }
 
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   disableButtons: PropTypes.shape({}).isRequired,
+  externalOfflineTarget: PropTypes.shape({}),
   frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,
