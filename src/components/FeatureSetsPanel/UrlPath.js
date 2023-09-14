@@ -26,6 +26,7 @@ import { isNil } from 'lodash'
 import Combobox from '../../common/Combobox/Combobox'
 
 import { ARTIFACT_OTHER_TYPE, DATASET_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import targetPath from '../../utils/parseTargetPath'
 import { getParsedResource } from '../../utils/resources'
 import {
   generateArtifactsList,
@@ -42,6 +43,7 @@ import projectsAction from '../../actions/projects'
 
 const UrlPath = ({
   comboboxSelectList,
+  defaultPath,
   disabled,
   handleUrlOnBlur,
   handleUrlOnFocus,
@@ -57,7 +59,6 @@ const UrlPath = ({
     path: '',
     artifactReference: ''
   })
-
   const [comboboxMatches, setComboboxMatches] = useState([])
   const [projects, setProjects] = useState([])
   const [artifacts, setArtifacts] = useState([])
@@ -66,9 +67,24 @@ const UrlPath = ({
   const [urlProjectPathEntered, setUrlProjectPathEntered] = useState(false)
   const [urlArtifactPathEntered, setUrlArtifactPathEntered] = useState(false)
   const [urlArtifactReferencePathEntered, setUrlArtifactReferencePathEntered] = useState(false)
+  const [inputDefaultValue, setInputDefaultValue] = useState('')
 
   const dispatch = useDispatch()
   const { projectName: project } = useParams()
+
+  useEffect(() => {
+    if (
+      defaultPath?.path.length > 0 &&
+      urlData?.path.length === 0 &&
+      inputDefaultValue.length === 0
+    ) {
+      const { schema, path } = targetPath(defaultPath.path)
+      const selectDefaultValues = comboboxSelectList.find(option => option.id === `${schema}://`)
+
+      setUrlData(state => ({ ...state, pathType: selectDefaultValues.id, path }))
+      setInputDefaultValue(path)
+    }
+  }, [comboboxSelectList, defaultPath.path, inputDefaultValue, invalid, urlData.path])
 
   useEffect(() => {
     if (
@@ -231,7 +247,9 @@ const UrlPath = ({
       disabled={disabled}
       hideSearchInput={!urlProjectItemTypeEntered}
       inputDefaultValue={
-        urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? urlData.projectItemType : ''
+        urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
+          ? urlData.projectItemType
+          : urlData.path
       }
       inputOnChange={handleUrlPathChange}
       inputPlaceholder={urlData.placeholder}
@@ -243,6 +261,7 @@ const UrlPath = ({
       onFocus={handleUrlOnFocus}
       required
       requiredText="This field is required"
+      selectDefaultValue={comboboxSelectList.find(option => option.id === urlData.pathType)}
       selectDropdownList={comboboxSelectList}
       selectOnChange={handleUrlPathTypeChange}
       selectPlaceholder="URL"
@@ -251,6 +270,12 @@ const UrlPath = ({
 }
 
 UrlPath.defaultProps = {
+  defaultPath: {
+    kind: '',
+    name: '',
+    partitioned: '',
+    path: ''
+  },
   disabled: false,
   handleUrlSelectOnChange: null,
   invalid: false
@@ -258,6 +283,12 @@ UrlPath.defaultProps = {
 
 UrlPath.propTypes = {
   comboboxSelectList: PropTypes.array.isRequired,
+  defaultPath: PropTypes.shape({
+    kind: PropTypes.string,
+    name: PropTypes.string,
+    partitioned: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    path: PropTypes.string
+  }),
   disabled: PropTypes.bool,
   handleUrlOnBlur: PropTypes.func.isRequired,
   handleUrlOnFocus: PropTypes.func.isRequired,
