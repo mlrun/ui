@@ -39,7 +39,8 @@ import {
   selectedTargetKindInitialState,
   targetsPathEditDataInitialState,
   handlePathChange,
-  ONLINE
+  ONLINE,
+  REDISNOSQL
 } from './featureSetsPanelTargetStore.util'
 
 import { isUrlInputValid } from '../UrlPath.utils'
@@ -85,7 +86,7 @@ const FeatureSetsPanelTargetStore = ({
           path: generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
-            NOSQL,
+            state.online.kind,
             featureStore.newFeatureSet.metadata.name,
             ''
           )
@@ -155,11 +156,14 @@ const FeatureSetsPanelTargetStore = ({
             featureStore.newFeatureSet.metadata.name,
             data.parquet.partitioned ? '' : PARQUET
           )
-        } else if (target.kind === NOSQL && !targetsPathEditData.online.isModified) {
+        } else if (
+          [REDISNOSQL, NOSQL].includes(target.kind) &&
+          !targetsPathEditData.online.isModified
+        ) {
           target.path = generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
-            NOSQL,
+            target.kind,
             featureStore.newFeatureSet.metadata.name,
             ''
           )
@@ -838,6 +842,7 @@ const FeatureSetsPanelTargetStore = ({
       selectedPartitionKind={selectedPartitionKind}
       selectedTargetKind={selectedTargetKind}
       setData={setData}
+      setTargetsPathEditData={setTargetsPathEditData}
       setValidation={setValidation}
       showAdvanced={showAdvanced}
       targetsPathEditData={targetsPathEditData}

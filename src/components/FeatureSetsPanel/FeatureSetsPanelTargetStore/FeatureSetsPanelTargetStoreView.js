@@ -85,6 +85,7 @@ const FeatureSetsPanelTargetStoreView = ({
   selectedPartitionKind,
   selectedTargetKind,
   setData,
+  setTargetsPathEditData,
   setValidation,
   showAdvanced,
   targetsPathEditData,
@@ -135,12 +136,19 @@ const FeatureSetsPanelTargetStoreView = ({
                           : ''
                       }
                       label="Path"
-                      onChange={path =>
+                      onChange={path => {
+                        setTargetsPathEditData(prevState => ({
+                          ...prevState,
+                          online: {
+                            ...prevState.online,
+                            isModified: true
+                          }
+                        }))
                         setData(prevState => ({
                           ...prevState,
                           online: { ...prevState.online, path }
                         }))
-                      }
+                      }}
                       placeholder={`${
                         data.online.kind === NOSQL
                           ? V3IO_INPUT_PATH_SCHEME
@@ -226,6 +234,13 @@ const FeatureSetsPanelTargetStoreView = ({
                       invalidText={getInvalidParquetPathMessage(data.parquet)}
                       label="Path"
                       onChange={path => {
+                        setTargetsPathEditData(prevState => ({
+                          ...prevState,
+                          parquet: {
+                            ...prevState.parquet,
+                            isModified: true
+                          }
+                        }))
                         setData(state => ({
                           ...state,
                           parquet: { ...state.parquet, path }
@@ -480,6 +495,7 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   }).isRequired,
   selectedTargetKind: PropTypes.arrayOf(PropTypes.string).isRequired,
   setData: PropTypes.func.isRequired,
+  setTargetsPathEditData: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   showAdvanced: PropTypes.shape({
     parquet: PropTypes.bool.isRequired,
