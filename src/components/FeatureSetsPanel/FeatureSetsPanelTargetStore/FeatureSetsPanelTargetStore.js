@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { cloneDeep, isEmpty } from 'lodash'
@@ -26,21 +26,21 @@ import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 
 import featureStoreActions from '../../../actions/featureStore'
 import {
-  EXTERNAL_OFFLINE,
-  EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
-  NOSQL,
-  PARQUET,
   checkboxModels,
   dataInitialState,
+  EXTERNAL_OFFLINE,
+  EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
   generatePath,
+  handlePathChange,
   isShowAdvancedInitialState,
+  NOSQL,
+  ONLINE,
+  PARQUET,
   partitionRadioButtonsInitialState,
+  REDISNOSQL,
   selectedPartitionKindInitialState,
   selectedTargetKindInitialState,
-  targetsPathEditDataInitialState,
-  handlePathChange,
-  ONLINE,
-  REDISNOSQL
+  targetsPathEditDataInitialState
 } from './featureSetsPanelTargetStore.util'
 
 import { isUrlInputValid } from '../UrlPath.utils'
@@ -631,11 +631,11 @@ const FeatureSetsPanelTargetStore = ({
           ...data,
           [PARQUET]: {
             ...data[PARQUET],
-            path: data[PARQUET].path || offlineTarget.path
+            path: data[PARQUET].path ?? offlineTarget.path
           },
           [ONLINE]: {
             ...data[ONLINE],
-            path: data[ONLINE].path || onlineTarget.path
+            path: data[ONLINE].path ?? onlineTarget.path
           }
         },
         featureSetTargets: featureStore.newFeatureSet.spec.targets,
@@ -653,8 +653,6 @@ const FeatureSetsPanelTargetStore = ({
   }, [
     clearTargets,
     data,
-    data.online,
-    data.parquet,
     featureStore.newFeatureSet.spec.passthrough,
     featureStore.newFeatureSet.spec.targets,
     offlineTarget,
