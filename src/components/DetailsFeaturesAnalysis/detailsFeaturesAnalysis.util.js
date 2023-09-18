@@ -39,8 +39,7 @@ export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
     },
     {
       label: 'Mean',
-      className:
-        'features-analysis__table-cell_split features-analysis__table-cell_big',
+      className: 'features-analysis__table-cell_split features-analysis__table-cell_big',
       contentArray: [
         { label: 'Expected', className: 'features-analysis__table-cell_small' },
         { label: 'Actual', className: 'features-analysis__table-cell_small' }
@@ -48,8 +47,7 @@ export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
     },
     {
       label: 'Std',
-      className:
-        'features-analysis__table-cell_split features-analysis__table-cell_big',
+      className: 'features-analysis__table-cell_split features-analysis__table-cell_big',
       contentArray: [
         { label: 'Expected', className: 'features-analysis__table-cell_small' },
         { label: 'Actual', className: 'features-analysis__table-cell_small' }
@@ -57,8 +55,7 @@ export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
     },
     {
       label: 'Min',
-      className:
-        'features-analysis__table-cell_split features-analysis__table-cell_big',
+      className: 'features-analysis__table-cell_split features-analysis__table-cell_big',
       contentArray: [
         { label: 'Expected', className: 'features-analysis__table-cell_small' },
         { label: 'Actual', className: 'features-analysis__table-cell_small' }
@@ -66,8 +63,7 @@ export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
     },
     {
       label: 'Max',
-      className:
-        'features-analysis__table-cell_split features-analysis__table-cell_big',
+      className: 'features-analysis__table-cell_split features-analysis__table-cell_big',
       contentArray: [
         { label: 'Expected', className: 'features-analysis__table-cell_small' },
         { label: 'Actual', className: 'features-analysis__table-cell_small' }
@@ -78,8 +74,7 @@ export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
     { label: 'KLD', className: 'features-analysis__table-cell_small' },
     {
       label: 'Histogram',
-      className:
-        'features-analysis__table-cell_split features-analysis__table-cell_huge',
+      className: 'features-analysis__table-cell_split features-analysis__table-cell_huge',
       contentArray: [
         { label: 'Expected', className: 'features-analysis__table-cell_small' },
         { label: 'Actual', className: 'features-analysis__table-cell_small' }
@@ -91,9 +86,9 @@ export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
     return {
       labelColumn: {
         value: labelNames.includes(key) && (
-            <Tooltip template={<TextTooltipTemplate text="Label column" />}>
-              <LabelColumn />
-            </Tooltip>
+          <Tooltip template={<TextTooltipTemplate text="Label column" />}>
+            <LabelColumn />
+          </Tooltip>
         ),
         type: 'icon',
         className: 'features-analysis__table-cell_icon'
@@ -184,14 +179,12 @@ export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
           {
             value: value?.hist ?? [[], []],
             type: 'chart',
-            className:
-              'features-analysis__table-cell_medium features-analysis__table-cell__chart'
+            className: 'features-analysis__table-cell_medium features-analysis__table-cell__chart'
           },
           {
             value: currentStats[key]?.hist ?? [[], []],
             type: 'chart',
-            className:
-              'features-analysis__table-cell_medium features-analysis__table-cell__chart'
+            className: 'features-analysis__table-cell_medium features-analysis__table-cell__chart'
           }
         ]
       }
