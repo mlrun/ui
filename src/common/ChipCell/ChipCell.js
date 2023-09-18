@@ -25,7 +25,7 @@ import ChipCellView from './ChipCellView'
 import { CHIP_OPTIONS } from '../../types'
 import { CLICK, TAB, TAB_SHIFT } from 'igz-controls/constants'
 import { cutChips } from '../../utils/cutChips'
-import { useChipCell } from 'igz-controls/hooks/useChipCell.hook'
+import { useChipCell } from 'igz-controls/hooks'
 
 const ChipCell = ({
   addChip,
