@@ -25,7 +25,12 @@ import { isNil } from 'lodash'
 
 import Combobox from '../../common/Combobox/Combobox'
 
-import { ARTIFACT_OTHER_TYPE, DATASET_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import {
+  ARTIFACT_OTHER_TYPE,
+  DATASET_TYPE,
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  MODEL_TYPE
+} from '../../constants'
 import targetPath from '../../utils/parseTargetPath'
 import { getParsedResource } from '../../utils/resources'
 import {
@@ -106,7 +111,12 @@ const UrlPath = ({
           filters: null,
           config: {
             params: {
-              category: urlData.projectItemType === 'artifacts' ? ARTIFACT_OTHER_TYPE : DATASET_TYPE
+              category:
+                urlData.projectItemType === 'artifacts'
+                  ? ARTIFACT_OTHER_TYPE
+                  : urlData.projectItemType === 'datasets'
+                  ? DATASET_TYPE
+                  : MODEL_TYPE
             }
           }
         })
