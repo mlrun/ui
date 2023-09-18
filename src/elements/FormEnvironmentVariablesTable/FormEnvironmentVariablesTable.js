@@ -26,7 +26,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { FormActionButton } from 'igz-controls/elements'
 import FormEnvironmentVariablesRow from './FormEnvironmentVariablesRow/FormEnvironmentVariablesRow'
 
-import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
+import { useFormTable } from 'igz-controls/hooks'
 
 const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formState }) => {
   const tableClassNames = classnames('form-table', className)

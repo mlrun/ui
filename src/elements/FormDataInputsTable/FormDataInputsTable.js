@@ -26,7 +26,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import FormActionButton from 'igz-controls/elements/FormActionButton/FormActionButton'
 import FormDataInputsRow from './FormDataInputsRow/FormDataInputsRow'
 
-import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
+import { useFormTable } from 'igz-controls/hooks'
 import { targetPathInitialState } from '../../common/TargetPath/targetPath.util'
 
 const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => {
