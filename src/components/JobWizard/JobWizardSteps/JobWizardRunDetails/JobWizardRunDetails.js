@@ -27,12 +27,11 @@ import {
   FormCheckBox,
   FormChipCell,
   FormInput,
-  FormRadio,
   FormSelect,
   FormTextarea
 } from 'igz-controls/components'
 
-import { EXISTING_IMAGE_SOURCE, NEW_IMAGE_SOURCE } from '../../../../constants'
+import { EXISTING_IMAGE_SOURCE } from '../../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 import { getChipOptions } from '../../../../utils/getChipOptions'
@@ -62,6 +61,10 @@ const JobWizardRunDetails = ({
   const methodPath = 'runDetails.method'
   const imageSourcePath = 'runDetails.image.imageSource'
   const [spyOnMethodChange, setSpyOnMethodChange] = useState(true)
+  const commonImageWarningMsg = 'The image must include all the software packages that are required to run the function. ' +
+    'For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
+  const batchInferenceWarningMsg = 'The image must include all the software packages that are required to run the model. ' +
+    'For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
 
   const selectedImageSource = useMemo(
     () => get(formState.values, imageSourcePath, EXISTING_IMAGE_SOURCE),
@@ -241,15 +244,15 @@ const JobWizardRunDetails = ({
           />
         </div>
 
-        <div className="form-row"></div>
-        <div className="form-row">
-          <FormRadio
-            name={imageSourcePath}
-            value={EXISTING_IMAGE_SOURCE}
-            label="Use an existing image"
-          />
-          <FormRadio name={imageSourcePath} value={NEW_IMAGE_SOURCE} label="Build a new image" />
-        </div>
+        {/*todo: Uncomment when BE implements "Building a new image"*/}
+        {/*<div className="form-row">*/}
+        {/*  <FormRadio*/}
+        {/*    name={imageSourcePath}*/}
+        {/*    value={EXISTING_IMAGE_SOURCE}*/}
+        {/*    label="Use an existing image"*/}
+        {/*  />*/}
+        {/*  <FormRadio name={imageSourcePath} value={NEW_IMAGE_SOURCE} label="Build a new image" />*/}
+        {/*</div>*/}
         {selectedImageSource === EXISTING_IMAGE_SOURCE ? (
           <div className="form-row">
             <FormInput
@@ -258,6 +261,9 @@ const JobWizardRunDetails = ({
               required
               tip="The name of the function's container image"
             />
+            <div className="warning-text">
+              {isBatchInference ? batchInferenceWarningMsg : commonImageWarningMsg}
+            </div>
           </div>
         ) : (
           <>
