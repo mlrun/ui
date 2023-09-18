@@ -65,6 +65,7 @@ const FeatureSetsPanelTargetStore = ({
   )
   const [targetsPathEditData, setTargetsPathEditData] = useState(targetsPathEditDataInitialState)
   const [passthroughtEnabled, setPassThrouthEnabled] = useState(false)
+  const [previousTargets, setPreviousTargets] = useState({})
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const onlineTarget = useMemo(
@@ -74,6 +75,14 @@ const FeatureSetsPanelTargetStore = ({
 
   const offlineTarget = useMemo(
     () => featureStore.newFeatureSet.spec.targets.find(targetKind => targetKind.name === PARQUET),
+    [featureStore.newFeatureSet.spec.targets]
+  )
+
+  const externalOfflineTarget = useMemo(
+    () =>
+      featureStore.newFeatureSet.spec.targets.find(
+        targetKind => targetKind.name === EXTERNAL_OFFLINE
+      ),
     [featureStore.newFeatureSet.spec.targets]
   )
 
@@ -572,7 +581,6 @@ const FeatureSetsPanelTargetStore = ({
     setValidation(state => ({
       ...state,
       isOfflineTargetPathValid: true,
-      isOnlineTargetPathValid: true,
       isExternalOfflineTargetPathValid: true,
       isTargetStoreValid: true
     }))
@@ -600,14 +608,63 @@ const FeatureSetsPanelTargetStore = ({
     })
   }, [setDisableButtons, setNewFeatureSetTarget, setValidation])
 
+  const restoreTargets = useCallback(() => {
+    setSelectedTargetKind(previousTargets.selectedTargetKind)
+    setNewFeatureSetTarget([...previousTargets.featureSetTargets])
+    setData({ ...previousTargets.data })
+    setSelectedPartitionKind({ ...previousTargets.selectedPartitionKind })
+    setPartitionRadioButtonsState({ ...previousTargets.partitionRadioButtonsState })
+    setPreviousTargets({})
+  }, [
+    previousTargets.data,
+    previousTargets.featureSetTargets,
+    previousTargets.partitionRadioButtonsState,
+    previousTargets.selectedPartitionKind,
+    previousTargets.selectedTargetKind,
+    setNewFeatureSetTarget
+  ])
+
   useEffect(() => {
     if (featureStore.newFeatureSet.spec.passthrough && !passthroughtEnabled) {
+      setPreviousTargets({
+        data: {
+          ...data,
+          [PARQUET]: {
+            ...data[PARQUET],
+            path: data[PARQUET].path || offlineTarget.path
+          },
+          [ONLINE]: {
+            ...data[ONLINE],
+            path: data[ONLINE].path || onlineTarget.path
+          }
+        },
+        featureSetTargets: featureStore.newFeatureSet.spec.targets,
+        selectedPartitionKind,
+        selectedTargetKind,
+        partitionRadioButtonsState
+      })
+
       clearTargets()
       setPassThrouthEnabled(true)
     } else if (!featureStore.newFeatureSet.spec.passthrough && passthroughtEnabled) {
+      restoreTargets()
       setPassThrouthEnabled(false)
     }
-  }, [clearTargets, featureStore.newFeatureSet.spec.passthrough, passthroughtEnabled])
+  }, [
+    clearTargets,
+    data,
+    data.online,
+    data.parquet,
+    featureStore.newFeatureSet.spec.passthrough,
+    featureStore.newFeatureSet.spec.targets,
+    offlineTarget,
+    onlineTarget,
+    partitionRadioButtonsState,
+    passthroughtEnabled,
+    restoreTargets,
+    selectedPartitionKind,
+    selectedTargetKind
+  ])
 
   const handlePartitionRadioButtonClick = (value, target) => {
     const keyBucketingNumber = value === 'districtKeys' ? 0 : 1
@@ -821,6 +878,7 @@ const FeatureSetsPanelTargetStore = ({
     <FeatureSetsPanelTargetStoreView
       data={data}
       disableButtons={disableButtons}
+      externalOfflineTarget={externalOfflineTarget}
       featureStore={featureStore}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleDiscardPathChange={handleDiscardPathChange}
