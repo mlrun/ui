@@ -27,7 +27,7 @@ import FormParametersRow from './FormParametersRow/FormParametersRow'
 import { FormActionButton } from 'igz-controls/elements'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
+import { useFormTable } from 'igz-controls/hooks'
 
 const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparameters }) => {
   const predefinedPath = `${fieldsPath}.predefined`

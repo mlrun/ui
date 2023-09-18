@@ -25,7 +25,7 @@ import Chip from '../../Chip/Chip'
 import ChipTooltip from '../ChipTooltip/ChipTooltip'
 
 import { CHIP_OPTIONS, CHIPS } from '../../../types'
-import { useHiddenChipsBlock } from 'igz-controls/hooks/useHiddenChipsBlock.hook'
+import { useHiddenChipsBlock } from 'igz-controls/hooks'
 
 const HiddenChipsBlock = React.forwardRef(
   (
