@@ -106,14 +106,18 @@ export const projectItemsPathTypes = [
   {
     label: 'Datasets',
     id: 'datasets'
+  },
+  {
+    label: 'Models',
+    id: 'models'
   }
 ]
 
 export const isUrlInputValid = (pathInputType, pathInputValue, dataSourceKind) => {
   const regExp =
     dataSourceKind === CSV
-      ? /^(artifacts|datasets)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
-      : /^(artifacts|datasets)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
+      ? /^(artifacts|datasets|models)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
+      : /^(artifacts|datasets|models)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
   const valueIsNotEmpty = pathInputValue?.trim().length > 0
   const defaultValidation = valueIsNotEmpty && /.*?\/(.*?)/.test(pathInputValue)
 
