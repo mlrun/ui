@@ -40,7 +40,6 @@ import {
   JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
-  NEW_IMAGE_SOURCE,
   PANEL_DEFAULT_ACCESS_KEY,
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
@@ -505,7 +504,9 @@ const parseImageData = (selectedFunction, frontendSpec, currentProjectName) => {
   }
 
   return {
-    imageSource: selectedFunction.spec?.image ? EXISTING_IMAGE_SOURCE : NEW_IMAGE_SOURCE,
+    // todo: Uncomment when BE implements "Building a new image"
+    // imageSource: selectedFunction.spec?.image ? EXISTING_IMAGE_SOURCE : NEW_IMAGE_SOURCE,
+    imageSource: EXISTING_IMAGE_SOURCE,
     imageName:
       selectedFunction.spec?.image ||
       frontendSpec?.default_function_image_by_kind?.[selectedFunction.kind] ||
