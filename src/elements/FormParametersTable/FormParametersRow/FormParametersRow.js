@@ -212,18 +212,16 @@ const FormParametersRow = ({
     }
   }
 
-  const resetValue = () => {
+  const resetValue = (newType, newIsHyper) => {
     if (isCurrentRowEditing(rowPath)) {
-      const fieldCurrentData = fields.value[index]
-
       queueMicrotask(() => {
+        const fieldCurrentData = fields.value[index]
+        const fieldType = newType ?? fieldCurrentData.data.type
+        const fieldIsHyper = newIsHyper ?? fieldCurrentData.data.isHyper
+
         formState.form.change(
           `${rowPath}.data.value`,
-          fieldCurrentData.data.type === parameterTypeBool && !fieldCurrentData.data.isHyper
-            ? 'false'
-            : fieldCurrentData.data.isHyper
-            ? '[]'
-            : ''
+          fieldType === parameterTypeBool && !fieldIsHyper ? 'false' : fieldIsHyper ? '[]' : ''
         )
         formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: false })
 
@@ -428,8 +426,10 @@ const FormParametersRow = ({
             )}
           </>
         )}
-      <OnChange name={`${rowPath}.data.type`}>{resetValue}</OnChange>
-      <OnChange name={`${rowPath}.data.isHyper`}>{resetValue}</OnChange>
+      <OnChange name={`${rowPath}.data.type`}>{newType => resetValue(newType)}</OnChange>
+      <OnChange name={`${rowPath}.data.isHyper`}>
+        {newIsHyper => resetValue(null, newIsHyper)}
+      </OnChange>
     </>
   )
 }
