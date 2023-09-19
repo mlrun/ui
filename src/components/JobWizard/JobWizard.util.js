@@ -639,14 +639,18 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       const parsedValue = parseParameterValue(
         runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
       )
+      const predefinedParameterIsModified = parameter.name in runParams || parameter.name in runHyperParams
 
       return {
         data: {
           name: parameter.name,
-          type: parameter.type ?? '',
+          type: predefinedParameterIsModified ? parseParameterType(
+            runParams[parameter.name] ?? runHyperParams[parameter.name],
+            parameter.name in runHyperParams
+          ) : parameter.type ?? '',
           value: parsedValue,
           isChecked:
-            parsedValue && (parameter.name in runParams || parameter.name in runHyperParams),
+            parsedValue && predefinedParameterIsModified,
           isHyper: parameter.name in runHyperParams
         },
         doc: parameter.doc ?? '',
