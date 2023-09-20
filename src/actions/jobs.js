@@ -100,11 +100,11 @@ const jobsActions = {
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
-  fetchAllJobRuns: (project, filters, jobName) => dispatch => {
+  fetchAllJobRuns: (project, filters, jobName, cancelToken) => dispatch => {
     dispatch(jobsActions.fetchAllJobRunsBegin())
 
     return jobsApi
-      .getAllJobRuns(project, jobName, filters)
+      .getAllJobRuns(project, jobName, filters, cancelToken)
       .then(({ data }) => {
         dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
 
