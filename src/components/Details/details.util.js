@@ -34,6 +34,8 @@ import { getFunctionImage } from '../FunctionsPage/functions.util'
 
 export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
+    const monitoringFeatureSetUri = selectedItem?.status?.monitoring_feature_set_uri ?? ''
+
     return {
       uid: {
         value: selectedItem?.metadata?.uid ?? '-'
@@ -61,9 +63,11 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: selectedItem?.spec?.function_uri?.match(/(?<=:)[^:]*$/) || 'latest'
       },
       monitoring_feature_set_uri: {
-        value: selectedItem?.status?.monitoring_feature_set_uri,
-        link: selectedItem?.status?.monitoring_feature_set_uri
-          ? `${generateLinkPath(selectedItem?.status?.monitoring_feature_set_uri)}/latest/overview`
+        value: monitoringFeatureSetUri,
+        link: monitoringFeatureSetUri
+          ? `${generateLinkPath(monitoringFeatureSetUri)}${
+              monitoringFeatureSetUri.split(':').length > 2 ? '' : '/latest'
+            }/overview`
           : ''
       },
       last_prediction: {
