@@ -22,6 +22,7 @@ import classnames from 'classnames'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
+import axios from 'axios'
 
 import JobWizard from '../../JobWizard/JobWizard'
 import Details from '../../Details/Details'
@@ -31,9 +32,10 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import TableTop from '../../../elements/TableTop/TableTop'
 import YamlModal from '../../../common/YamlModal/YamlModal'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../../constants'
+import {GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE, REQUEST_CANCELED} from '../../../constants'
 import {
   generateActionsMenu,
   generateFilters,
@@ -47,6 +49,7 @@ import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { enrichRunWithFunctionFields, handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { cancelRequest } from '../../../utils/cancelRequest'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { parseJob } from '../../../utils/parseJob'
@@ -81,6 +84,7 @@ const MonitorJobs = ({
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const fetchJobFunctionsPromiseRef = useRef()
+  const fetchJobsRef = useRef({ current: {} })
   const {
     editableItem,
     handleMonitoring,
@@ -133,27 +137,52 @@ const MonitorJobs = ({
       }
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
+      const cancelJobsRequestTimeout = setTimeout(() => {
+        cancelRequest(fetchJobsRef, REQUEST_CANCELED)
+      }, 30000)
 
-      fetchData(params.projectName, filters, params.jobName ?? false)
+      fetchData(
+        params.projectName,
+        filters,
+        params.jobName ?? false,
+        new axios.CancelToken(cancel => {
+          fetchJobsRef.current.cancel = cancel
+        })
+      )
         .then(jobs => {
-          const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
-
-          if (params.jobName) {
-            setJobRuns(parsedJobs)
+          if (jobs.length > 1500) {
+            showJobsErrorPopUp()
           } else {
-            setJobs(parsedJobs)
+            const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
+
+            if (params.jobName) {
+              setJobRuns(parsedJobs)
+            } else {
+              setJobs(parsedJobs)
+            }
           }
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: error?.response?.status || 400,
-              id: Math.random(),
-              message: 'Failed to fetch jobs',
-              retry: () => refreshJobs(filters)
-            })
-          )
+          if (error.message === REQUEST_CANCELED) {
+            showJobsErrorPopUp()
+          } else {
+            dispatch(
+              setNotification({
+                status: error?.response?.status || 400,
+                id: Math.random(),
+                message: 'Failed to fetch jobs',
+                retry: () => refreshJobs(filters)
+              })
+            )
+          }
         })
+        .finally(() => clearTimeout(cancelJobsRequestTimeout))
+
+      const showJobsErrorPopUp = () => {
+        openPopUp(ConfirmDialog, {
+          message: 'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
+        })
+      }
     },
     [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
   )

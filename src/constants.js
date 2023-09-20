@@ -51,6 +51,8 @@ export const NAVBAR_WIDTH_OPENED = 245
 
 export const FULL_VIEW_MODE = 'full'
 
+export const REQUEST_CANCELED = 'Request canceled'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
