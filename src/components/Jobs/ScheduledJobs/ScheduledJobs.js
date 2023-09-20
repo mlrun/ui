@@ -208,7 +208,7 @@ const ScheduledJobs = ({
 
   const actionsMenu = useMemo(() => {
     return generateContentActionsMenu(
-      func => [
+      job => [
         {
           label: 'Run now',
           icon: <Run className="action_cell__run-icon" />,
@@ -218,7 +218,7 @@ const ScheduledJobs = ({
           label: 'Edit',
           icon: <Edit />,
           onClick: handleEditScheduleJob,
-          hidden: func?.type === 'workflow'
+          hidden: job?.type === 'workflow'
         },
         {
           label: 'Delete',
