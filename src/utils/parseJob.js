@@ -26,7 +26,7 @@ export const parseJob = (job, tab) => {
   let jobItem = null
 
   if (tab === SCHEDULE_TAB) {
-    const isTypeWorkflow =
+    const jobHasWorkflowLabel =
       job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'
 
     jobItem = {
@@ -39,7 +39,7 @@ export const parseJob = (job, tab) => {
       scheduled_object: job.scheduled_object,
       startTime: new Date(job.last_run?.status?.start_time),
       state: getState(job.last_run?.status?.state, JOBS_PAGE, 'job'),
-      type: job.kind === 'pipeline' || isTypeWorkflow ? 'workflow' : job.kind,
+      type: job.kind === 'pipeline' || jobHasWorkflowLabel ? 'workflow' : job.kind,
       ui: {
         originalContent: job
       }
