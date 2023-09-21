@@ -516,9 +516,9 @@ const parseImageData = (selectedFunction, frontendSpec, currentProjectName) => {
       selectedFunction.spec?.build?.base_image ||
       frontendSpec?.default_function_image_by_kind?.[selectedFunction.kind] ||
       '',
-    buildCommands: selectedFunction.spec?.build?.commands?.join('\n') || '',
+    buildCommands: selectedFunction.spec?.build?.commands?.join?.('\n') || '',
     pythonRequirement:
-      selectedFunction.spec?.build?.requirements?.join('\n') ||
+      selectedFunction.spec?.build?.requirements?.join?.('\n') ||
       frontendSpec?.function_deployment_mlrun_requirement ||
       ''
   }
