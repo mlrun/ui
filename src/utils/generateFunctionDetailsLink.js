@@ -27,7 +27,7 @@ export const generateFunctionDetailsLink = (uri = '') => {
   // 'my_proj/func_name:custom_tag' -> projects/my_proj/functions/func_name/custom_tag/overview
   return uri
     ? `${generateLinkPath(`store://functions/${uri}`, uri.includes('@'))}${
-      uri.includes(':') || uri.includes('@') ? '' : '/latest'
-    }/overview`
+        uri.includes(':') || uri.includes('@') ? '' : '/latest'
+      }/overview`
     : ''
 }
