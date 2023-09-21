@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { cloneDeep, isEmpty } from 'lodash'
@@ -26,20 +26,21 @@ import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 
 import featureStoreActions from '../../../actions/featureStore'
 import {
-  EXTERNAL_OFFLINE,
-  EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
-  NOSQL,
-  PARQUET,
   checkboxModels,
   dataInitialState,
+  EXTERNAL_OFFLINE,
+  EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
   generatePath,
+  handlePathChange,
   isShowAdvancedInitialState,
+  NOSQL,
+  ONLINE,
+  PARQUET,
   partitionRadioButtonsInitialState,
+  REDISNOSQL,
   selectedPartitionKindInitialState,
   selectedTargetKindInitialState,
-  targetsPathEditDataInitialState,
-  handlePathChange,
-  ONLINE
+  targetsPathEditDataInitialState
 } from './featureSetsPanelTargetStore.util'
 
 import { isUrlInputValid } from '../UrlPath.utils'
@@ -94,7 +95,7 @@ const FeatureSetsPanelTargetStore = ({
           path: generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
-            NOSQL,
+            state.online.kind,
             featureStore.newFeatureSet.metadata.name,
             ''
           )
@@ -156,7 +157,7 @@ const FeatureSetsPanelTargetStore = ({
         !targetsPathEditData.parquet.isModified)
     ) {
       const targets = cloneDeep(featureStore.newFeatureSet.spec.targets).map(target => {
-        if (target.name === PARQUET && !targetsPathEditData.parquet.isModified) {
+        if (target.kind === PARQUET && !targetsPathEditData.parquet.isModified) {
           target.path = generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
@@ -164,11 +165,14 @@ const FeatureSetsPanelTargetStore = ({
             featureStore.newFeatureSet.metadata.name,
             data.parquet.partitioned ? '' : PARQUET
           )
-        } else if (target.name === NOSQL && !targetsPathEditData.online.isModified) {
+        } else if (
+          [REDISNOSQL, NOSQL].includes(target.kind) &&
+          !targetsPathEditData.online.isModified
+        ) {
           target.path = generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
-            NOSQL,
+            target.kind,
             featureStore.newFeatureSet.metadata.name,
             ''
           )
@@ -627,11 +631,11 @@ const FeatureSetsPanelTargetStore = ({
           ...data,
           [PARQUET]: {
             ...data[PARQUET],
-            path: data[PARQUET].path || offlineTarget.path
+            path: data[PARQUET].path ?? offlineTarget.path
           },
           [ONLINE]: {
             ...data[ONLINE],
-            path: data[ONLINE].path || onlineTarget.path
+            path: data[ONLINE].path ?? onlineTarget.path
           }
         },
         featureSetTargets: featureStore.newFeatureSet.spec.targets,
@@ -649,8 +653,6 @@ const FeatureSetsPanelTargetStore = ({
   }, [
     clearTargets,
     data,
-    data.online,
-    data.parquet,
     featureStore.newFeatureSet.spec.passthrough,
     featureStore.newFeatureSet.spec.targets,
     offlineTarget,
@@ -896,6 +898,7 @@ const FeatureSetsPanelTargetStore = ({
       selectedPartitionKind={selectedPartitionKind}
       selectedTargetKind={selectedTargetKind}
       setData={setData}
+      setTargetsPathEditData={setTargetsPathEditData}
       setValidation={setValidation}
       showAdvanced={showAdvanced}
       targetsPathEditData={targetsPathEditData}
