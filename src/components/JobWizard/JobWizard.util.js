@@ -127,7 +127,7 @@ export const generateJobWizardData = (
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
-      labels: functionInfo.labels,
+      labels: [],
       image: parseImageData(functionInfo.function, frontendSpec, currentProjectName)
     },
     parameters: {
@@ -299,7 +299,6 @@ const getFunctionInfo = selectedFunctionData => {
       functions.find(func => func.metadata.tag === currentFunctionVersion) ?? functions[0]
 
     return {
-      labels: parseChipsData(currentFunction?.metadata.labels),
       name: selectedFunctionData.name,
       method: defaultMethod,
       version: currentFunctionVersion,
