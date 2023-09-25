@@ -425,7 +425,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerLabel: 'Function',
         value: functionName,
         class: 'table-cell-1',
-        link: `${generateLinkPath(functionUri)}/overview`,
+        getLink: () => `${generateLinkPath(functionUri)}/overview`,
         tooltip: functionUri
       },
       {
