@@ -219,6 +219,10 @@ const FormParametersRow = ({
         const fieldType = newType ?? fieldCurrentData.data.type
         const fieldIsHyper = newIsHyper ?? fieldCurrentData.data.isHyper
 
+        if (newType && fieldCurrentData.isUnsupportedType) {
+          formState.form.change(`${rowPath}.isUnsupportedType`, false)
+        }
+
         formState.form.change(
           `${rowPath}.data.value`,
           fieldType === parameterTypeBool && !fieldIsHyper ? 'false' : fieldIsHyper ? '[]' : ''
