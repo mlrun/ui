@@ -96,7 +96,7 @@ export const generateJobWizardData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
-  isEditMode,
+  isEditMode
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -338,20 +338,20 @@ const getVersionOptions = selectedFunctions => {
   const versionOptions = unionBy(
     selectedFunctions.map(func => {
       return {
-        label: (func.metadata.tag === TAG_LATEST ? '$' : '') + (func.metadata.tag || '$latest'),
+        label: func.metadata.tag || TAG_LATEST,
         id: func.metadata.tag || TAG_LATEST
       }
     }),
     'id'
   )
 
-  return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
+  return versionOptions.length ? versionOptions : [{ label: 'latest', id: TAG_LATEST }]
 }
 
 const getDefaultMethod = (methodOptions, selectedFunctions) => {
   let method = ''
 
-  const latestFunction = selectedFunctions.find(item => item.metadata.tag === 'latest')
+  const latestFunction = selectedFunctions.find(item => item.metadata.tag === TAG_LATEST)
 
   if (methodOptions.length) {
     method = methodOptions[0]?.id
@@ -366,7 +366,7 @@ const getDefaultMethod = (methodOptions, selectedFunctions) => {
 
 const getDefaultMethodAndVersion = (versionOptions, methodOptions, selectedFunctions) => {
   const defaultVersion =
-    versionOptions.find(version => version.id === 'latest')?.id || versionOptions[0].id || ''
+    versionOptions.find(version => version.id === TAG_LATEST)?.id || versionOptions[0].id || ''
 
   const defaultMethod = getDefaultMethod(methodOptions, selectedFunctions)
 
