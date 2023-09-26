@@ -393,21 +393,17 @@ const FormParametersRow = ({
                     </Tooltip>
                   )}
                 </div>
-
-                {fieldData.data?.isChecked ? (
-                  <FormRowActions
-                    applyChanges={applyChanges}
-                    deleteIsDisabled={fieldData.isPredefined}
-                    deleteRow={deleteRow}
-                    disabled={isRowDisabled()}
-                    discardOrDelete={discardOrDelete}
-                    editingItem={editingItem}
-                    fieldsPath={fieldsPath}
-                    index={index}
-                  />
-                ) : (
-                  <div className="form-table__cell form-table__actions-cell" />
-                )}
+                <FormRowActions
+                  applyChanges={applyChanges}
+                  deleteIsDisabled={fieldData.isPredefined}
+                  deleteRow={deleteRow}
+                  disabled={isRowDisabled()}
+                  discardOrDelete={discardOrDelete}
+                  editingItem={editingItem}
+                  fieldsPath={fieldsPath}
+                  hidden={!fieldData.data?.isChecked}
+                  index={index}
+                />
               </div>
             )}
           </>
