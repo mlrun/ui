@@ -94,16 +94,14 @@ const FormDataInputsRow = ({
               setFieldState={setFieldState}
             />
           </div>
-          <div className="form-table__cell form-table__actions-cell">
-            <FormRowActions
-              applyChanges={applyChanges}
-              deleteRow={deleteRow}
-              discardOrDelete={discardOrDelete}
-              editingItem={editingItem}
-              fieldsPath={fieldsPath}
-              index={index}
-            />
-          </div>
+          <FormRowActions
+            applyChanges={applyChanges}
+            deleteRow={deleteRow}
+            discardOrDelete={discardOrDelete}
+            editingItem={editingItem}
+            fieldsPath={fieldsPath}
+            index={index}
+          />
         </div>
       ) : (
         <div
@@ -136,16 +134,14 @@ const FormDataInputsRow = ({
               {fieldData.data.path}
             </Tooltip>
           </div>
-          <div className="form-table__cell form-table__actions-cell">
-            <FormRowActions
-              applyChanges={applyChanges}
-              deleteRow={deleteRow}
-              discardOrDelete={discardOrDelete}
-              editingItem={editingItem}
-              fieldsPath={fieldsPath}
-              index={index}
-            />
-          </div>
+          <FormRowActions
+            applyChanges={applyChanges}
+            deleteRow={deleteRow}
+            discardOrDelete={discardOrDelete}
+            editingItem={editingItem}
+            fieldsPath={fieldsPath}
+            index={index}
+          />
         </div>
       )}
     </>

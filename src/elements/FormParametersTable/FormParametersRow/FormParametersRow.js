@@ -324,16 +324,14 @@ const FormParametersRow = ({
                     />
                   ) : null}
                 </div>
-                <div className="form-table__cell form-table__actions-cell">
-                  <FormRowActions
-                    applyChanges={applyChanges}
-                    deleteRow={deleteRow}
-                    discardOrDelete={discardOrDelete}
-                    editingItem={editingItem}
-                    fieldsPath={fieldsPath}
-                    index={index}
-                  />
-                </div>
+                <FormRowActions
+                  applyChanges={applyChanges}
+                  deleteRow={deleteRow}
+                  discardOrDelete={discardOrDelete}
+                  editingItem={editingItem}
+                  fieldsPath={fieldsPath}
+                  index={index}
+                />
               </div>
             ) : (
               <div
@@ -395,20 +393,21 @@ const FormParametersRow = ({
                     </Tooltip>
                   )}
                 </div>
-                <div className="form-table__cell form-table__actions-cell">
-                  {fieldData.data?.isChecked && (
-                    <FormRowActions
-                      applyChanges={applyChanges}
-                      deleteIsDisabled={fieldData.isPredefined}
-                      deleteRow={deleteRow}
-                      disabled={isRowDisabled()}
-                      discardOrDelete={discardOrDelete}
-                      editingItem={editingItem}
-                      fieldsPath={fieldsPath}
-                      index={index}
-                    />
-                  )}
-                </div>
+
+                {fieldData.data?.isChecked ? (
+                  <FormRowActions
+                    applyChanges={applyChanges}
+                    deleteIsDisabled={fieldData.isPredefined}
+                    deleteRow={deleteRow}
+                    disabled={isRowDisabled()}
+                    discardOrDelete={discardOrDelete}
+                    editingItem={editingItem}
+                    fieldsPath={fieldsPath}
+                    index={index}
+                  />
+                ) : (
+                  <div className="form-table__cell form-table__actions-cell" />
+                )}
               </div>
             )}
           </>
