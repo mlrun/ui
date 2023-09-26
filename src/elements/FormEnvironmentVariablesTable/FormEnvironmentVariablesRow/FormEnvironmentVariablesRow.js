@@ -127,14 +127,16 @@ const FormEnvironmentVariablesRow = ({
               </>
             )}
           </div>
-          <FormRowActions
-            applyChanges={applyChanges}
-            deleteRow={deleteRow}
-            discardOrDelete={discardOrDelete}
-            editingItem={editingItem}
-            fieldsPath={fieldsPath}
-            index={index}
-          />
+          <div className="form-table__cell form-table__actions-cell">
+            <FormRowActions
+              applyChanges={applyChanges}
+              deleteRow={deleteRow}
+              discardOrDelete={discardOrDelete}
+              editingItem={editingItem}
+              fieldsPath={fieldsPath}
+              index={index}
+            />
+          </div>
         </div>
       ) : (
         <div
@@ -156,14 +158,16 @@ const FormEnvironmentVariablesRow = ({
           <div className={classnames('form-table__cell', 'form-table__cell_3')}>
             <Tooltip template={<TextTooltipTemplate text={valueColumn} />}>{valueColumn}</Tooltip>
           </div>
-          <FormRowActions
-            applyChanges={applyChanges}
-            deleteRow={deleteRow}
-            discardOrDelete={discardOrDelete}
-            editingItem={editingItem}
-            fieldsPath={fieldsPath}
-            index={index}
-          />
+          <div className="form-table__cell form-table__actions-cell">
+            <FormRowActions
+              applyChanges={applyChanges}
+              deleteRow={deleteRow}
+              discardOrDelete={discardOrDelete}
+              editingItem={editingItem}
+              fieldsPath={fieldsPath}
+              index={index}
+            />
+          </div>
         </div>
       )}
       <OnChange name={`${rowPath}.data.type`}>

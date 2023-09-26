@@ -324,14 +324,16 @@ const FormParametersRow = ({
                     />
                   ) : null}
                 </div>
-                <FormRowActions
-                  applyChanges={applyChanges}
-                  deleteRow={deleteRow}
-                  discardOrDelete={discardOrDelete}
-                  editingItem={editingItem}
-                  fieldsPath={fieldsPath}
-                  index={index}
-                />
+                <div className="form-table__cell form-table__actions-cell">
+                  <FormRowActions
+                    applyChanges={applyChanges}
+                    deleteRow={deleteRow}
+                    discardOrDelete={discardOrDelete}
+                    editingItem={editingItem}
+                    fieldsPath={fieldsPath}
+                    index={index}
+                  />
+                </div>
               </div>
             ) : (
               <div
@@ -349,17 +351,10 @@ const FormParametersRow = ({
                 </div>
                 {withHyperparameters && (
                   <div className="form-table__cell form-table__cell_hyper">
-                    <FormToggle name={`${rowPath}.data.isHyper`} readOnly />
+                    <FormToggle name={`${rowPath}.data.isHyper`} disabled />
                   </div>
                 )}
-                <div
-                  className={classnames(
-                    'form-table__cell',
-                    'form-table__cell_2',
-                    'form-table__name-cell',
-                    fieldData.isPredefined && 'disabled'
-                  )}
-                >
+                <div className="form-table__cell form-table__cell_2 form-table__name-cell">
                   <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
                     {fieldData.data.name}
                   </Tooltip>
@@ -373,24 +368,12 @@ const FormParametersRow = ({
                   )}
                   {fieldData.doc && <Tip className="parameter-icon" text={fieldData.doc} />}
                 </div>
-                <div
-                  className={classnames(
-                    'form-table__cell',
-                    'form-table__cell_1',
-                    fieldData.isPredefined && 'disabled'
-                  )}
-                >
+                <div className="form-table__cell form-table__cell_1">
                   <Tooltip template={<TextTooltipTemplate text={fieldData.data.type} />}>
                     {fieldData.data.type}
                   </Tooltip>
                 </div>
-                <div
-                  className={classnames(
-                    'form-table__cell',
-                    'form-table__cell_3',
-                    fieldData.isPredefined && 'disabled'
-                  )}
-                >
+                <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.type === parameterTypeBool && !fieldData.data.isHyper ? (
                     <div className="radio-buttons-container">
                       <FormRadio
@@ -412,16 +395,20 @@ const FormParametersRow = ({
                     </Tooltip>
                   )}
                 </div>
-                <FormRowActions
-                  applyChanges={applyChanges}
-                  deleteIsDisabled={fieldData.isPredefined}
-                  deleteRow={deleteRow}
-                  disabled={isRowDisabled()}
-                  discardOrDelete={discardOrDelete}
-                  editingItem={editingItem}
-                  fieldsPath={fieldsPath}
-                  index={index}
-                />
+                <div className="form-table__cell form-table__actions-cell">
+                  {fieldData.data?.isChecked && (
+                    <FormRowActions
+                      applyChanges={applyChanges}
+                      deleteIsDisabled={fieldData.isPredefined}
+                      deleteRow={deleteRow}
+                      disabled={isRowDisabled()}
+                      discardOrDelete={discardOrDelete}
+                      editingItem={editingItem}
+                      fieldsPath={fieldsPath}
+                      index={index}
+                    />
+                  )}
+                </div>
               </div>
             )}
           </>

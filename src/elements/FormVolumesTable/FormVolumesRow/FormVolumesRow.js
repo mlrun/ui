@@ -114,14 +114,16 @@ const FormVolumesRow = ({
                   )
                 })}
               </div>
-              <FormRowActions
-                applyChanges={applyChanges}
-                deleteRow={deleteRow}
-                discardOrDelete={discardOrDelete}
-                editingItem={editingItem}
-                fieldsPath={fieldsPath}
-                index={index}
-              />
+              <div className="form-table__cell form-table__actions-cell">
+                <FormRowActions
+                  applyChanges={applyChanges}
+                  deleteRow={deleteRow}
+                  discardOrDelete={discardOrDelete}
+                  editingItem={editingItem}
+                  fieldsPath={fieldsPath}
+                  index={index}
+                />
+              </div>
             </div>
           ) : (
             <div
@@ -144,14 +146,16 @@ const FormVolumesRow = ({
                   )
                 )
               })}
-              <FormRowActions
-                applyChanges={applyChanges}
-                deleteRow={deleteRow}
-                discardOrDelete={discardOrDelete}
-                editingItem={editingItem}
-                fieldsPath={fieldsPath}
-                index={index}
-              />
+              <div className="form-table__cell form-table__actions-cell">
+                <FormRowActions
+                  applyChanges={applyChanges}
+                  deleteRow={deleteRow}
+                  discardOrDelete={discardOrDelete}
+                  editingItem={editingItem}
+                  fieldsPath={fieldsPath}
+                  index={index}
+                />
+              </div>
             </div>
           )}
         </>
