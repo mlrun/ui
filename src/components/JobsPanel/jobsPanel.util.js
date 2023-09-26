@@ -213,24 +213,24 @@ export const getVersionOptions = selectedFunctions => {
   const versionOptions = unionBy(
     selectedFunctions.map(func => {
       return {
-        label: (func.metadata.tag === TAG_LATEST ? '$' : '') + (func.metadata.tag || '$latest'),
+        label: func.metadata.tag || TAG_LATEST,
         id: func.metadata.tag || TAG_LATEST
       }
     }),
     'id'
   )
 
-  return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
+  return versionOptions.length ? versionOptions : [{ label: 'latest', id: TAG_LATEST }]
 }
 
 export const getDefaultMethodAndVersion = (versionOptions, selectedFunctions) => {
-  const defaultMethod = selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec
+  const defaultMethod = selectedFunctions.find(item => item.metadata.tag === TAG_LATEST)?.spec
     .default_handler
 
   const defaultVersion =
     versionOptions.length === 1
       ? versionOptions[0].id
-      : versionOptions.find(version => version.id === 'latest').id
+      : versionOptions.find(version => version.id === TAG_LATEST).id
 
   return {
     defaultMethod,
