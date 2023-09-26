@@ -617,7 +617,7 @@ export const parsePredefinedParameters = funcParams => {
           name: parameter.name ?? '',
           type: parameter.type ?? '',
           value: parsedValue,
-          isChecked: Boolean(parsedValue),
+          isChecked: !parsedValue,
           isHyper: false
         },
         doc: parameter.doc,
