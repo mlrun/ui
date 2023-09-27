@@ -130,7 +130,8 @@ const JobWizard = ({
       },
       {
         id: 'runDetails',
-        label: 'Run Details'
+        label: 'Run Details',
+        disabled: isEmpty(selectedFunctionData)
       },
       {
         id: 'dataInputs',
@@ -174,14 +175,18 @@ const JobWizard = ({
   useEffect(() => {
     if (isBatchInference) {
       fetchHubFunction('batch_inference_v2').then(hubFunction => {
-        const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
+        if (hubFunction) {
+          const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
 
-        fetchFunctionTemplate(functionTemplatePath).then(functionData => {
-          setSelectedFunctionData(functionData)
-        })
+          fetchFunctionTemplate(functionTemplatePath).then(functionData => {
+            setSelectedFunctionData(functionData)
+          })
+        } else {
+          resolveModal()
+        }
       })
     }
-  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference])
+  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference, resolveModal])
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
