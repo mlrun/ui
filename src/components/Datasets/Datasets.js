@@ -186,7 +186,7 @@ const Datasets = () => {
       }
     }
 
-    handleRefresh(filtersStore)
+    handleRefresh(datasetsFilters)
   }
 
   const handleRequestOnExpand = useCallback(
@@ -247,9 +247,9 @@ const Datasets = () => {
 
   useEffect(() => {
     if (isNil(filtersStore.tagOptions) && urlTagOption) {
-      fetchData({ ...filtersStore, tag: urlTagOption })
+      fetchData({ ...datasetsFilters, tag: urlTagOption })
     }
-  }, [fetchData, filtersStore, urlTagOption])
+  }, [datasetsFilters, fetchData, filtersStore, urlTagOption])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
