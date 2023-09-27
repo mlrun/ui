@@ -559,6 +559,7 @@ export const getCategoryName = categoryId => {
     'model-test': 'Model Test',
     'model-testing': 'Model Testing',
     'model-training': 'Model Training',
+    monitoring: 'Monitoring',
     NLP: 'NLP',
     notifications: 'Alerts and Notifications',
     other: 'Other',
