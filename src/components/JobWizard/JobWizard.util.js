@@ -96,7 +96,7 @@ export const generateJobWizardData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
-  isEditMode,
+  isEditMode
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -127,7 +127,7 @@ export const generateJobWizardData = (
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
-      labels: functionInfo.labels,
+      labels: [],
       image: parseImageData(functionInfo.function, frontendSpec, currentProjectName)
     },
     parameters: {
@@ -299,7 +299,6 @@ const getFunctionInfo = selectedFunctionData => {
       functions.find(func => func.metadata.tag === currentFunctionVersion) ?? functions[0]
 
     return {
-      labels: parseChipsData(currentFunction?.metadata.labels),
       name: selectedFunctionData.name,
       method: defaultMethod,
       version: currentFunctionVersion,
@@ -338,20 +337,20 @@ const getVersionOptions = selectedFunctions => {
   const versionOptions = unionBy(
     selectedFunctions.map(func => {
       return {
-        label: (func.metadata.tag === TAG_LATEST ? '$' : '') + (func.metadata.tag || '$latest'),
+        label: func.metadata.tag || TAG_LATEST,
         id: func.metadata.tag || TAG_LATEST
       }
     }),
     'id'
   )
 
-  return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
+  return versionOptions.length ? versionOptions : [{ label: 'latest', id: TAG_LATEST }]
 }
 
 const getDefaultMethod = (methodOptions, selectedFunctions) => {
   let method = ''
 
-  const latestFunction = selectedFunctions.find(item => item.metadata.tag === 'latest')
+  const latestFunction = selectedFunctions.find(item => item.metadata.tag === TAG_LATEST)
 
   if (methodOptions.length) {
     method = methodOptions[0]?.id
@@ -366,7 +365,7 @@ const getDefaultMethod = (methodOptions, selectedFunctions) => {
 
 const getDefaultMethodAndVersion = (versionOptions, methodOptions, selectedFunctions) => {
   const defaultVersion =
-    versionOptions.find(version => version.id === 'latest')?.id || versionOptions[0].id || ''
+    versionOptions.find(version => version.id === TAG_LATEST)?.id || versionOptions[0].id || ''
 
   const defaultMethod = getDefaultMethod(methodOptions, selectedFunctions)
 
@@ -516,9 +515,9 @@ const parseImageData = (selectedFunction, frontendSpec, currentProjectName) => {
       selectedFunction.spec?.build?.base_image ||
       frontendSpec?.default_function_image_by_kind?.[selectedFunction.kind] ||
       '',
-    buildCommands: selectedFunction.spec?.build?.commands?.join('\n') || '',
+    buildCommands: selectedFunction.spec?.build?.commands?.join?.('\n') || '',
     pythonRequirement:
-      selectedFunction.spec?.build?.requirements?.join('\n') ||
+      selectedFunction.spec?.build?.requirements?.join?.('\n') ||
       frontendSpec?.function_deployment_mlrun_requirement ||
       ''
   }
@@ -560,6 +559,7 @@ export const getCategoryName = categoryId => {
     'model-test': 'Model Test',
     'model-testing': 'Model Testing',
     'model-training': 'Model Training',
+    monitoring: 'Monitoring',
     NLP: 'NLP',
     notifications: 'Alerts and Notifications',
     other: 'Other',
@@ -617,7 +617,7 @@ export const parsePredefinedParameters = funcParams => {
           name: parameter.name ?? '',
           type: parameter.type ?? '',
           value: parsedValue,
-          isChecked: Boolean(parsedValue),
+          isChecked: !parsedValue,
           isHyper: false
         },
         doc: parameter.doc,
@@ -639,18 +639,20 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       const parsedValue = parseParameterValue(
         runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
       )
-      const predefinedParameterIsModified = parameter.name in runParams || parameter.name in runHyperParams
+      const predefinedParameterIsModified =
+        parameter.name in runParams || parameter.name in runHyperParams
 
       return {
         data: {
           name: parameter.name,
-          type: predefinedParameterIsModified ? parseParameterType(
-            runParams[parameter.name] ?? runHyperParams[parameter.name],
-            parameter.name in runHyperParams
-          ) : parameter.type ?? '',
+          type: predefinedParameterIsModified
+            ? parseParameterType(
+                runParams[parameter.name] ?? runHyperParams[parameter.name],
+                parameter.name in runHyperParams
+              )
+            : parameter.type ?? '',
           value: parsedValue,
-          isChecked:
-            parsedValue && predefinedParameterIsModified,
+          isChecked: parsedValue && predefinedParameterIsModified,
           isHyper: parameter.name in runHyperParams
         },
         doc: parameter.doc ?? '',
@@ -951,7 +953,7 @@ const generateResources = resources => {
   }
 }
 
-const generateFunctionBuild = (imageData) => {
+const generateFunctionBuild = imageData => {
   if (imageData.imageSource === EXISTING_IMAGE_SOURCE) return {}
 
   return {
@@ -1010,7 +1012,10 @@ export const generateJobRequestData = (
         }
       },
       spec: {
-        image: formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE ? formData.runDetails.image.imageName : '',
+        image:
+          formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE
+            ? formData.runDetails.image.imageName
+            : '',
         build: generateFunctionBuild(formData.runDetails.image),
         env: generateEnvironmentVariables(formData.advanced.environmentVariablesTable),
         node_selector: generateObjectFromKeyValue(formData.resources.nodeSelectorTable),
