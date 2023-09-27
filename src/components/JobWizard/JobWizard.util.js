@@ -559,6 +559,7 @@ export const getCategoryName = categoryId => {
     'model-test': 'Model Test',
     'model-testing': 'Model Testing',
     'model-training': 'Model Training',
+    monitoring: 'Monitoring',
     NLP: 'NLP',
     notifications: 'Alerts and Notifications',
     other: 'Other',
@@ -638,18 +639,20 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       const parsedValue = parseParameterValue(
         runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
       )
-      const predefinedParameterIsModified = parameter.name in runParams || parameter.name in runHyperParams
+      const predefinedParameterIsModified =
+        parameter.name in runParams || parameter.name in runHyperParams
 
       return {
         data: {
           name: parameter.name,
-          type: predefinedParameterIsModified ? parseParameterType(
-            runParams[parameter.name] ?? runHyperParams[parameter.name],
-            parameter.name in runHyperParams
-          ) : parameter.type ?? '',
+          type: predefinedParameterIsModified
+            ? parseParameterType(
+                runParams[parameter.name] ?? runHyperParams[parameter.name],
+                parameter.name in runHyperParams
+              )
+            : parameter.type ?? '',
           value: parsedValue,
-          isChecked:
-            parsedValue && predefinedParameterIsModified,
+          isChecked: parsedValue && predefinedParameterIsModified,
           isHyper: parameter.name in runHyperParams
         },
         doc: parameter.doc ?? '',
@@ -950,7 +953,7 @@ const generateResources = resources => {
   }
 }
 
-const generateFunctionBuild = (imageData) => {
+const generateFunctionBuild = imageData => {
   if (imageData.imageSource === EXISTING_IMAGE_SOURCE) return {}
 
   return {
@@ -1009,7 +1012,10 @@ export const generateJobRequestData = (
         }
       },
       spec: {
-        image: formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE ? formData.runDetails.image.imageName : '',
+        image:
+          formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE
+            ? formData.runDetails.image.imageName
+            : '',
         build: generateFunctionBuild(formData.runDetails.image),
         env: generateEnvironmentVariables(formData.advanced.environmentVariablesTable),
         node_selector: generateObjectFromKeyValue(formData.resources.nodeSelectorTable),
