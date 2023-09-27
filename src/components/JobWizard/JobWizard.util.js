@@ -97,7 +97,7 @@ export const generateJobWizardData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
-  isEditMode,
+  isEditMode
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -864,8 +864,11 @@ const generateDataInputs = dataInputsTableData => {
   const dataInputs = {}
 
   dataInputsTableData.forEach(dataInput => {
-    dataInputs[dataInput.data.name] =
-      dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
+    const dataInputValue = dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
+
+    if (dataInputValue.length > 0) {
+      dataInputs[dataInput.data.name] = dataInputValue
+    }
   })
 
   return dataInputs
@@ -946,7 +949,7 @@ const generateResources = resources => {
   }
 }
 
-const generateFunctionBuild = (imageData) => {
+const generateFunctionBuild = imageData => {
   if (imageData.imageSource === EXISTING_IMAGE_SOURCE) return {}
 
   return {
@@ -1005,7 +1008,10 @@ export const generateJobRequestData = (
         }
       },
       spec: {
-        image: formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE ? formData.runDetails.image.imageName : '',
+        image:
+          formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE
+            ? formData.runDetails.image.imageName
+            : '',
         build: generateFunctionBuild(formData.runDetails.image),
         env: generateEnvironmentVariables(formData.advanced.environmentVariablesTable),
         node_selector: generateObjectFromKeyValue(formData.resources.nodeSelectorTable),
