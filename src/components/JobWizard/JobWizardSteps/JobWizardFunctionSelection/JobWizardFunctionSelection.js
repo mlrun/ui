@@ -260,21 +260,23 @@ const JobWizardFunctionSelection = ({
 
     if (isEmpty(templatesCategories) || isEmpty(templates)) {
       fetchHubFunctions().then(templatesObject => {
-        setTemplatesCategories(templatesObject.hubFunctionsCategories)
-        setTemplates(templatesObject.hubFunctions)
+        if (templatesObject) {
+          setTemplatesCategories(templatesObject.hubFunctionsCategories)
+          setTemplates(templatesObject.hubFunctions)
 
-        formState.initialValues.functionSelection.templatesLabels =
-          templatesObject.hubFunctions.reduce((labels, template) => {
-            labels[template.metadata.name] = template.ui.categories.map(categoryId => {
-              return {
-                id: categoryId,
-                key: getCategoryName(categoryId),
-                isKeyOnly: true
-              }
-            })
+          formState.initialValues.functionSelection.templatesLabels =
+            templatesObject.hubFunctions.reduce((labels, template) => {
+              labels[template.metadata.name] = template.ui.categories.map(categoryId => {
+                return {
+                  id: categoryId,
+                  key: getCategoryName(categoryId),
+                  isKeyOnly: true
+                }
+              })
 
-            return labels
-          }, {})
+              return labels
+            }, {})
+        }
       })
     }
   }
