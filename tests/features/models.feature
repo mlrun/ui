@@ -831,3 +831,29 @@ Feature: Models Page
     Then verify "Version_tag_Input_full_view" on "Models_Info_Pane" wizard should contains "latest" value   
     Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
+
+  Scenario: MLM021 - Check that version tag dropdown shows all tags on filters wizard on Models page
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard
+    And wait load page
+    When type value "newTag" to "Version_tag_Input" field on "Models_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Models_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element visibility on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
+    Then check "newTag" value in "tag" column in "Models_Table" table on "Models" wizard

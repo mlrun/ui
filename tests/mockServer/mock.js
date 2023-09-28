@@ -1136,6 +1136,34 @@ function postSubmitJob(req, res) {
 
   res.send(respTemplate)
 }
+
+function putTags(req, res){
+  const tagName = req.params.tag
+  const projectName = req.params.project 
+  
+  let artifactForUpdate = artifacts.artifacts.find(artifact => artifact.tree === req.body.identifiers[0].uid)
+  
+  if (artifactForUpdate === undefined){
+    artifactForUpdate = artifacts.artifacts
+      .filter(item => item.metadata)
+      .find(item => item.uid === req.body.identifiers[0].uid)
+
+    artifactForUpdate.metadata.tag = req.params.tag    
+  }
+  else{
+    artifactForUpdate.tag = req.params.tag
+  }
+  
+  res.send({
+    name: tagName,
+    project: projectName
+  })
+}
+
+function deleteTags(req, res){
+  res.send()
+}
+
 //TODO: artifact structure ML-4583
 function postArtifact(req, res) {
   const currentDate = new Date()
@@ -1523,6 +1551,10 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngress}/projects/:project/artifacts`, getArtifacts)
 app.post(`${mlrunAPIIngress}/projects/:project/artifacts/:uid/:artifact`, postArtifact)
+
+app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
+app.delete(`${mlrunAPIIngress}/projects/:project/tags/:tag`, deleteTags)
+
 app.get(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   getProjectsFeatureSets

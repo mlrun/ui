@@ -281,6 +281,7 @@ const datasetsTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a .link',
+        tag: '.table-body__cell:nth-of-type(1) a .item-tag',
         name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         labels: {

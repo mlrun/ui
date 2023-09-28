@@ -134,7 +134,7 @@ module.exports = {
     ]
   },
   Models_Info_Pane: {
-    Tab_List: ['Overview', 'Preview'],  //delete 'Preview'
+    Tab_List: ['Overview'],  //delete 'Preview'
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
       'Hash',
