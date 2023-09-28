@@ -51,6 +51,7 @@ const JobWizardHyperparameterStrategy = ({ formState }) => {
             name={maxIterationsPath}
             type="number"
             disabled={formState.values?.hyperparameterStrategy?.strategy !== 'random'}
+            min="0"
           />
         </div>
         <div className="max-errors-grid-item">
@@ -59,6 +60,7 @@ const JobWizardHyperparameterStrategy = ({ formState }) => {
             name={maxErrorsPath}
             type="number"
             disabled={formState.values?.hyperparameterStrategy?.strategy !== 'random'}
+            min="0"
           />
         </div>
         <div className="form-table-title ranking-title-grid-item">Ranking</div>
@@ -74,7 +76,7 @@ const JobWizardHyperparameterStrategy = ({ formState }) => {
         </div>
         <div className="form-table-title parallelism-title-grid-item">Parallelism</div>
         <div className="parallel-runs-grid-item">
-          <FormInput label="Parallel runs" name={parallelRuns} type="number" />
+          <FormInput label="Parallel runs" name={parallelRuns} type="number" min="0" />
         </div>
         <div className="dask-cluster-uri-grid-item">
           <FormInput label="Dask clutter URL" name={dashClusterUriPath} />
