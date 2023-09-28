@@ -17,12 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Input from '../Input/Input'
-import { SelectOption } from 'igz-controls/elements'
 import { PopUpDialog } from 'igz-controls/components'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
@@ -42,21 +41,13 @@ const Search = ({
   const [searchValue, setSearchValue] = useState(value ?? '')
   const [label, setLabel] = useState('')
   const [inputIsFocused, setInputFocused] = useState(false)
-  const searchRef = useRef()
-  const popUpRef = useRef()
-
-  const { width: searchWidth } = searchRef?.current?.getBoundingClientRect() || {}
+  const searchRef = React.useRef()
 
   const searchClassNames = classnames('search-container', className)
 
   const handleSearchOnBlur = useCallback(
     event => {
-      if (
-        (event.type === 'click' &&
-          searchRef.current &&
-          !searchRef.current.contains(event.target)) ||
-        (event.type === 'scroll' && popUpRef.current && !popUpRef?.current.contains(event.target))
-      ) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
         setInputFocused(false)
       }
     },
@@ -138,33 +129,26 @@ const Search = ({
       />
       {matches.length > 0 && label.length > 0 && inputIsFocused && (
         <PopUpDialog
-          ref={popUpRef}
           className="search-dropdown"
           headerIsHidden
           customPosition={{
             element: searchRef,
             position: 'bottom-right'
           }}
-          style={{
-            maxWidth: `${searchWidth < 400 ? 400 : searchWidth}px`,
-            minWidth: `${searchWidth}px`
-          }}
         >
           <ul data-testid="search-matches" className="search-matches">
             {matches.map((item, index) => {
               return (
-                <SelectOption
-                  item={{
-                    id: item,
-                    label: item,
-                    labelHtml: item.replace(new RegExp(searchValue.toLocaleLowerCase(), 'gi'), match =>
-                      match ? `<b>${match}</b>` : match
-                    )
-                  }}
-                  name={item}
+                <li
+                  className="search-matches__item"
                   key={item + index}
                   onClick={() => matchOnClick(item)}
                   tabIndex={index}
+                  dangerouslySetInnerHTML={{
+                    __html: item.replace(new RegExp(searchValue.toLocaleLowerCase(), 'gi'), match =>
+                      match ? `<b>${match}</b>` : match
+                    )
+                  }}
                 />
               )
             })}
