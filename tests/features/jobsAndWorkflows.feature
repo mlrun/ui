@@ -2393,7 +2393,7 @@ Feature: Jobs and workflows
         Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then type value "1025" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning" 
@@ -2438,3 +2438,104 @@ Feature: Jobs and workflows
         Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+@uniqueTag
+    Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Resources" value
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+        Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+        Then type value "0" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+        Then type value "-1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+        Then type value "-1" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+        Then type value "2" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then decrease value on 3 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then type value "2" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then decrease value on 3 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" input should contains "1" value in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button | Delete_New_Row_Button |
+            |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
+            |               V3IO               |            Volume_Name_2             |       /path/to/happines2      |         Container_Input_2          |           Access_Key_2              |            /resource/path_2            |         yes        |                       |
+
+    Scenario: MLJW026 - Check tip and warning messages in Volumes section on Batch Run wizard - Resources
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Resources" value
+        Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
+            |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        Then verify "Volume_Paths_Table_Container_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Data_Container_Hint"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
+        Then verify "Volume_Paths_Table_Resource_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Relative_Directory_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
+            |           Config Map             |                                      |                               |                                     |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |                                      |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Secret_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
+            |               PVC                |                                      |                               |                                      |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard

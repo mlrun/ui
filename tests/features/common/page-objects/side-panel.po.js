@@ -285,7 +285,7 @@ const jobCustomParametersTable = {
 // TODO: Wait for some details
 const volumePathsTable = {
   root:
-    '.modal__content .wizard-form__content-container .form-row:nth-child(7)',
+    '.modal__content .form-row:nth-of-type(7)',
   header: {
     root: '.form-table__header-row',
     sorters: {
@@ -1152,35 +1152,82 @@ module.exports = {
         )
       ),
       // Volume Path inputs
-      Volume_Paths_Table_Type_Dropdown: commonVolumePathsTableTypeDropdown,
+      Volume_Paths_Table_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(1) .form-field__wrapper .form-field__select',
+          '.form-field__select-value',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
       Volume_Paths_Table_Volume_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 1, 2)
+        generateInputGroup(
+          `.form-table__volume-row .form-table__volume-cell:nth-of-type(2) .form-field__wrapper`,
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Path_Input: inputGroup(
-        resourcesTableCommonInput(3, 1, 3)
+        generateInputGroup(
+          `.form-table__volume-row .form-table__volume-cell:nth-of-type(3) .form-field__wrapper`,
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Container_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        generateInputGroup(
+          `.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper`,
+          true,
+          true,
+          true
+        )
       ),
       Volume_Paths_Table_Config_Map_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        generateInputGroup(
+          `.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper`,
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Secret_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        generateInputGroup(
+          `.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper`,
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Claime_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        generateInputGroup(
+          `.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper`,
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Access_Key_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 2)
+        generateInputGroup(
+          `.form-table__volume-row .form-table__volume-cell:nth-of-type(5) .form-field__wrapper`,
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Resource_Path_Input: inputGroup(
-        resourcesTableCommonInput(3, 3, 1)
+        generateInputGroup(
+          `.form-table__volume-row .form-table__volume-cell:nth-of-type(6) .form-field__wrapper`,
+          true,
+          true,
+          true
+        )
       ),
       Edit_Volume_Name_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(2)')),
       Edit_Volume_Path_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(3)')),
-      Add_New_Row_Button: commonAddNewRowButton,
-      Delete_New_Row_Button: commonDeleteNewRowButton,
+      Add_New_Row_Button: By.css('.form-table__volume-row.active .form-table__actions-cell .round-icon-cp:nth-of-type(1)'),
+      Delete_New_Row_Button: By.css('.form-table__volume-row .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
       Apply_Edit_Button: By.css('.volumes-table .apply-edit-btn'),
       Volume_Paths_Table: commonTable(volumePathsTable),
       Memory_Request_Dropdown: dropdownComponent(

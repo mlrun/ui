@@ -268,7 +268,7 @@ const featuresByProjectsTable = {
 
 // Datasets
 const datasetsTable = {
-  root: '.table-container .table__flex .table__content',
+  root: '.table-container .table__content',
   header: {
     root: '.table-head',
     sorters: {

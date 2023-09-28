@@ -808,3 +808,26 @@ Feature: Models Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then save to context "name" column on 2 row from "Models_Table" table on "Models" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+    
+  Scenario: MLM020 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Models page
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard    
+    Then verify "Version_tag_Input_table_view" on "Models_Info_Pane" wizard should contains "latest" value
+    Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
+    Then click on "Edit_btn_full_view" element on "Models_Info_Pane" wizard
+    Then verify "Version_tag_Input_full_view" on "Models_Info_Pane" wizard should contains "latest" value   
+    Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard

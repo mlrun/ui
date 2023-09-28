@@ -300,7 +300,8 @@ Feature: Datasets Page
     Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
 
   @FAILED_TODO
-  #TODO: redirection from "projects/INVALID/datasets/test_ds/latest/0/overview" to "projects" - wrong redirect
+  #TODO: Redirection - ML-4600
+  #TODO: param iter
   Scenario: Check broken link redirection
     * set tear-down property "dataset" created in "default" project with "test_ds" value
     * create "test_ds" Dataset with "latest" tag in "default" project with code 200
@@ -348,3 +349,26 @@ Feature: Datasets Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then save to context "name" column on 2 row from "Datasets_Table" table on "Datasets" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+
+  Scenario: MLD009 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Datasets page
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify "Version_tag_Input_table_view" on "Datasets_Info_Pane" wizard should contains "latest" value
+    Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
+    Then click on "Edit_btn_full_view" element on "Datasets_Info_Pane" wizard
+    Then verify "Version_tag_Input_full_view" on "Datasets_Info_Pane" wizard should contains "latest" value   
+    Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard

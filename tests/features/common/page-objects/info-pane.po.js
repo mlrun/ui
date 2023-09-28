@@ -460,6 +460,10 @@ const crossCloseButton = By.css('.table__item .item-header__buttons a .data-elli
 const commonDownloadButton = By.css('.table__item .item-header__buttons .download-container')
 const commonArrowBack = By.css('a.link-back__icon')
 const commonInfoPaneTabSelector = commonTable(infoPaneTabSelector)
+const commonEditBtnTableView = By.css('[data-testid="detailsPanel"] .details-item__data-btn-edit')
+const commonEditBtnFullView = By.css('.table__item_big .details-item__data-btn-edit')
+const commonVersionTagInputTableView = By.css('.details-item:nth-of-type(3) .details-item__input-wrapper input')
+const commonVersionTagInputFullView = By.css('.table__item_big .details-item__input-wrapper input')
 
 module.exports = {
   featureSetsInfoPane: {
@@ -529,7 +533,11 @@ module.exports = {
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
-    Overview_Table: commonTable(artifactOverviewTable)
+    Overview_Table: commonTable(artifactOverviewTable),
+    Edit_btn_table_view: commonEditBtnTableView,
+    Edit_btn_full_view: commonEditBtnFullView,
+    Version_tag_Input_table_view: commonVersionTagInputTableView,
+    Version_tag_Input_full_view: commonVersionTagInputFullView
   },
   transformationsInfoPane: {
     Header: header,
@@ -646,7 +654,11 @@ module.exports = {
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
-    Overview_Table: commonTable(artifactOverviewTable)
+    Overview_Table: commonTable(artifactOverviewTable),
+    Edit_btn_table_view: commonEditBtnTableView,
+    Edit_btn_full_view: commonEditBtnFullView,
+    Version_tag_Input_table_view: commonVersionTagInputTableView,
+    Version_tag_Input_full_view: commonVersionTagInputFullView
   },
   modelsInfoPane: {
     Header: header,
@@ -681,7 +693,11 @@ module.exports = {
       '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
-    Apply_Button: By.css('.item-info__details .details-item__apply-btn')
+    Apply_Button: By.css('.item-info__details .details-item__apply-btn'),
+    Edit_btn_table_view: commonEditBtnTableView,
+    Edit_btn_full_view: commonEditBtnFullView,
+    Version_tag_Input_table_view: commonVersionTagInputTableView,
+    Version_tag_Input_full_view: commonVersionTagInputFullView
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,
