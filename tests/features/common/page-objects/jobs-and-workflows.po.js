@@ -252,7 +252,7 @@ const actionMenuStructure = {
 }
 
 const jobsMonitorTable = {
-  root: '.table__flex .table__content',
+  root: '.table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -781,6 +781,7 @@ module.exports = {
       generateCheckboxGroup('.wizard-form__content .form-field-checkbox input', false, false, false)
     ),
     Delete_Button_Parameters: By.css('.form-table__parameter-row .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
+    Run_Button: By.css('.modal__content .modal__footer button.btn-secondary'),
   },
   CreateJob: {
     Back_Arrow_Button: By.css(

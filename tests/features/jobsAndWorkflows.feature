@@ -508,7 +508,7 @@ Feature: Jobs and workflows
         #Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display options "Input_Hint"."Jobs_Name_Hint" - This field doesn't required
         Then verify "Job_Name_Input" options rules on "New_JobTemplate_Edit" wizard
         Then type value "demo_Job_00" to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
-        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Dat.a_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Access_Key_Checkbox" element visibility on "New_JobTemplate_Edit" wizard
         Then uncheck "Access_Key_Checkbox" element on "New_JobTemplate_Edit" wizard
@@ -1729,7 +1729,7 @@ Feature: Jobs and workflows
 
     @passive
     @links
-    Scenario: Check redirect to project`s Function Infopane from Job Overview
+    Scenario: MLJW030 - Check redirect to project`s Function Infopane from Job Overview
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2438,7 +2438,7 @@ Feature: Jobs and workflows
         Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
-@uniqueTag
+
     Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2539,3 +2539,34 @@ Feature: Jobs and workflows
         Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+
+    Scenario: MLJW031 - Check mandatory of Container and Resource Path fields for V3IO volume - Batch Run - Resources
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Resources" value
+        Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
+            |             V3IO                 |           Volume_Name_1              |      /path/to/happines1       |                                    |            Access_Key_1             |                                        |         yes        |
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Run_Button" element on "Batch_Run" wizard
+        And wait load page
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
+        
+

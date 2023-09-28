@@ -333,7 +333,6 @@ Then(
   async function (table, wizard, dataTable) {
     const columns = dataTable['rawTable'][0]
     const rows = dataTable.rows()
-    console.log(pageObjects[wizard][table])
     for (const row_indx in rows) {
       for (const i in columns) {
         await verifyText(

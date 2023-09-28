@@ -36,6 +36,7 @@ import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
 import run from './data/run.json'
 import catalog from './data/catalog.json'
+import itemsCatalog from './data/itemsCatalog.json'
 import pipelines from './data/pipelines.json'
 import secretKeys from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
@@ -433,7 +434,7 @@ function patchRun(req, res) {
 }
 
 function getFunctionCatalog(req, res) {
-  res.send(catalog)
+  res.send(itemsCatalog)
 }
 
 function getFunctionTemplate(req, res) {
@@ -1137,7 +1138,6 @@ function postSubmitJob(req, res) {
 }
 //TODO: artifact structure ML-4583
 function postArtifact(req, res) {
-  console.log(req.body)
   const currentDate = new Date()
   const artifactHash = makeUID(32)
   const artifactTag = req.body.tag || 'latest'
@@ -1508,6 +1508,7 @@ app.get(`${mlrunAPIIngress}/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
+app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, getFunctionObject)
 app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
