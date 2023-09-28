@@ -23,6 +23,7 @@ import PropTypes from 'prop-types'
 import { cloneDeep, isEmpty } from 'lodash'
 
 import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import featureStoreActions from '../../../actions/featureStore'
 import {
@@ -42,6 +43,8 @@ import {
   selectedTargetKindInitialState,
   targetsPathEditDataInitialState
 } from './featureSetsPanelTargetStore.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { isUrlInputValid } from '../UrlPath.utils'
 
@@ -555,58 +558,62 @@ const FeatureSetsPanelTargetStore = ({
     ]
   )
 
-  const clearTargets = useCallback(() => {
-    setSelectedTargetKind([])
-    setNewFeatureSetTarget([])
-    setTargetsPathEditData(state => ({
-      ...state,
-      [PARQUET]: {
-        isEditMode: false,
-        isModified: false
-      },
-      [EXTERNAL_OFFLINE]: {
-        isEditMode: false,
-        isModified: false
-      },
-      [ONLINE]: {
-        isEditMode: false,
-        isModified: false
-      }
-    }))
-    setDisableButtons(state => ({
-      ...state,
-      isOfflineTargetPathEditModeClosed: true,
-      isOnlineTargetPathEditModeClosed: true
-    }))
-    setValidation(state => ({
-      ...state,
-      isOfflineTargetPathValid: true,
-      isExternalOfflineTargetPathValid: true,
-      isTargetStoreValid: true
-    }))
-    setData(state => ({
-      ...state,
-      [PARQUET]: { ...dataInitialState[PARQUET] },
-      [EXTERNAL_OFFLINE]: { ...dataInitialState[EXTERNAL_OFFLINE] }
-    }))
-    setShowAdvanced(prev => ({
-      ...prev,
-      [PARQUET]: false,
-      [EXTERNAL_OFFLINE]: false
-    }))
-    setPartitionRadioButtonsState(state => ({
-      ...state,
-      [PARQUET]: 'districtKeys',
-      [EXTERNAL_OFFLINE]: 'districtKeys'
-    }))
-    setSelectedPartitionKind(state => {
-      return {
+  const clearTargets = useCallback(
+    keepOnlineTarget => {
+      setSelectedTargetKind(keepOnlineTarget ? [ONLINE] : [])
+      setNewFeatureSetTarget(keepOnlineTarget ? [onlineTarget] : [])
+
+      setTargetsPathEditData(state => ({
         ...state,
-        [PARQUET]: [...selectedPartitionKindInitialState[PARQUET]],
-        [EXTERNAL_OFFLINE]: [...selectedPartitionKindInitialState[EXTERNAL_OFFLINE]]
-      }
-    })
-  }, [setDisableButtons, setNewFeatureSetTarget, setValidation])
+        [PARQUET]: {
+          isEditMode: false,
+          isModified: false
+        },
+        [EXTERNAL_OFFLINE]: {
+          isEditMode: false,
+          isModified: false
+        },
+        [ONLINE]: {
+          isEditMode: false,
+          isModified: keepOnlineTarget ? state[ONLINE].isModified : false
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOfflineTargetPathEditModeClosed: true,
+        isOnlineTargetPathEditModeClosed: true
+      }))
+      setValidation(state => ({
+        ...state,
+        isOfflineTargetPathValid: true,
+        isExternalOfflineTargetPathValid: true,
+        isTargetStoreValid: true
+      }))
+      setData(state => ({
+        ...state,
+        [PARQUET]: { ...dataInitialState[PARQUET] },
+        [EXTERNAL_OFFLINE]: { ...dataInitialState[EXTERNAL_OFFLINE] }
+      }))
+      setShowAdvanced(prev => ({
+        ...prev,
+        [PARQUET]: false,
+        [EXTERNAL_OFFLINE]: false
+      }))
+      setPartitionRadioButtonsState(state => ({
+        ...state,
+        [PARQUET]: 'districtKeys',
+        [EXTERNAL_OFFLINE]: 'districtKeys'
+      }))
+      setSelectedPartitionKind(state => {
+        return {
+          ...state,
+          [PARQUET]: [...selectedPartitionKindInitialState[PARQUET]],
+          [EXTERNAL_OFFLINE]: [...selectedPartitionKindInitialState[EXTERNAL_OFFLINE]]
+        }
+      })
+    },
+    [onlineTarget, setDisableButtons, setNewFeatureSetTarget, setValidation]
+  )
 
   const restoreTargets = useCallback(() => {
     setSelectedTargetKind(previousTargets.selectedTargetKind)
@@ -644,8 +651,25 @@ const FeatureSetsPanelTargetStore = ({
         partitionRadioButtonsState
       })
 
-      clearTargets()
       setPassThrouthEnabled(true)
+      openPopUp(ConfirmDialog, {
+        confirmButton: {
+          label: 'Unset online-target',
+          variant: SECONDARY_BUTTON,
+          handler: () => {
+            clearTargets(false)
+          }
+        },
+        cancelButton: {
+          label: 'Keep online-target set',
+          variant: TERTIARY_BUTTON,
+          handler: () => {
+            clearTargets(true)
+          }
+        },
+        message:
+          'Passthrough set to "enabled" while online-target is set. Do you want to unset online-target?'
+      })
     } else if (!featureStore.newFeatureSet.spec.passthrough && passthroughtEnabled) {
       restoreTargets()
       setPassThrouthEnabled(false)
