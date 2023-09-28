@@ -871,8 +871,11 @@ const generateDataInputs = dataInputsTableData => {
   const dataInputs = {}
 
   dataInputsTableData.forEach(dataInput => {
-    dataInputs[dataInput.data.name] =
-      dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
+    const dataInputValue = dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
+
+    if (dataInputValue.length > 0) {
+      dataInputs[dataInput.data.name] = dataInputValue
+    }
   })
 
   return dataInputs
