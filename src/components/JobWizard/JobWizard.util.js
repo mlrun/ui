@@ -617,7 +617,7 @@ export const parsePredefinedParameters = funcParams => {
           name: parameter.name ?? '',
           type: parameter.type ?? '',
           value: parsedValue,
-          isChecked: !parsedValue,
+          isChecked: !has(parameter, 'default'),
           isHyper: false
         },
         doc: parameter.doc,
@@ -652,7 +652,7 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
               )
             : parameter.type ?? '',
           value: parsedValue,
-          isChecked: parsedValue && predefinedParameterIsModified,
+          isChecked: (parsedValue && predefinedParameterIsModified) || !has(parameter, 'default'),
           isHyper: parameter.name in runHyperParams
         },
         doc: parameter.doc ?? '',
