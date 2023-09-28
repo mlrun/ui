@@ -1823,6 +1823,14 @@ module.exports = {
           true
         )
       ),
+      New_Requirements_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .requirements.input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
       New_Function_Build_Commands_Text_Area: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(2) .commands.text-area-wrapper .text-area'
       ),

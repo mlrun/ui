@@ -1239,3 +1239,36 @@ Feature: ML Functions
         Then verify "Header" element visibility on "Models_Info_Pane" wizard
         Then save to context "name" column on 2 row from "Functions_Table" table on "ML_Functions" wizard
         Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+
+Scenario: MLF002 - Check requirements field in Code Accordion on Create New Function page
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+	    And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        When collapse "General_Accordion" on "New_Function" wizard
+	    Then is "Use_An_Existing_Image_Radiobutton" in "Code_Accordion" on "New_Function" selected
+        Then is not "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function" selected
+	    Then verify "New_Function_Image_Name_Input" element in "Code_Accordion" on "New_Function" wizard is enabled
+        Then verify "New_Function_Resulting_Image_Input" element in "Code_Accordion" on "New_Function" wizard is disabled
+        Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard is disabled
+        Then verify "New_Requirements_Input" element in "Code_Accordion" on "New_Function" wizard is disabled
+        Then verify "New_Function_Build_Commands_Text_Area" not input element in "Code_Accordion" on "New_Function" wizard is disabled
+        When select "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function"
+        Then is "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function" selected
+        Then is not "Use_An_Existing_Image_Radiobutton" in "Code_Accordion" on "New_Function" selected
+        Then verify "New_Function_Image_Name_Input" element in "Code_Accordion" on "New_Function" wizard is disabled
+        Then verify "New_Function_Resulting_Image_Input" element in "Code_Accordion" on "New_Function" wizard is enabled
+        Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard is enabled
+        Then verify "New_Requirements_Input" element in "Code_Accordion" on "New_Function" wizard is enabled
+        Then verify "New_Function_Build_Commands_Text_Area" not input element in "Code_Accordion" on "New_Function" wizard is enabled
+        Then click on "Save_Button" element on "New_Function" wizard
+        And wait load page
+        Then "Header" element on "ML_Function_Info_Pane" should contains "demo-function-02" value
+        Then check "demo-function-02" value in "name" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
