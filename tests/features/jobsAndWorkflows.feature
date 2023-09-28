@@ -2008,7 +2008,7 @@ Feature: Jobs and workflows
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/INVALID/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
         Then verify redirection from "projects/INVALID/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview" to "projects"
 
-    Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Step 1
+    Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Function selection
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2061,7 +2061,7 @@ Feature: Jobs and workflows
         Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
     
-    Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Step 1 (Hub tab)
+    Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Function selection (Hub tab)
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2086,7 +2086,7 @@ Feature: Jobs and workflows
         And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
 
-    Scenario: Check all mandatory components on Batch Run wizard - Step 2 without Method
+    Scenario: Check all mandatory components on Batch Run wizard - Run Details without Method
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2146,7 +2146,7 @@ Feature: Jobs and workflows
             | key_verify | value_verify | 
             |    key2    |    value2    |
 
-    Scenario: Check all mandatory components on Batch Run wizard - Step 2 with Method
+    Scenario: Check all mandatory components on Batch Run wizard - Run Details with Method
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2191,7 +2191,7 @@ Feature: Jobs and workflows
             |    key2    |    value2    |
             |    key3    |    value3    |
 
-    Scenario: Check all mandatory components on Batch Run wizard - Step 3
+    Scenario: Check all mandatory components on Batch Run wizard - Data Inputs
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2241,7 +2241,7 @@ Feature: Jobs and workflows
             | name2edited | v3io:///container-name/fileedited |  
     
     
-    Scenario: Check all mandatory components on Batch Run wizard - Step 4
+    Scenario: Check all mandatory components on Batch Run wizard - Parameters
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2568,5 +2568,34 @@ Feature: Jobs and workflows
         And click on "Run_Button" element on "Batch_Run" wizard
         And wait load page
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
+    
+    Scenario: MLJW033 - Check autocomplete MLRun Store path for datasets, artifacts, models - Batch Run - Data input
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Data Inputs" value
+        When add data to "Batch_Run_Data_Inputs_Table" table on "Batch_Run" wizard with combobox
+            | name_input | path_dropdown | path_dropdown_autocomplete_artifacts | path_dropdown_autocomplete_project | path_dropdown_autocomplete_item |
+            |  Artifacts |  MLRun store  |               Artifacts              |              default               |            content              |
+            |  Datasets  |  MLRun store  |               Datasets               |              default               |       test_new_structure        |
+            |   Models   |  MLRun store  |                Models                |              default               |           train_model           |
+        Then verify data in "Batch_Run_Data_Inputs_Table" table on "Batch_Run" wizard
+            | name_verify |                 path_verify                 |      
+            |  Artifacts  |      store://artifacts/default/content      | 
+            |  Datasets   | store://datasets/default/test_new_structure | 
+            |   Models    |      store://models/default/train_model     |
+               
         
 

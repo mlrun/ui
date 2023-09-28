@@ -180,6 +180,33 @@ const BatchRunDataInputsTable = {
             false, 
             false)  
         },
+        path_dropdown_autocomplete_artifacts: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_project: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_item: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
         path_input: 'input.form-field-combobox__input',
         path_verify: '.form-table__cell_1:nth-of-type(2)',
         apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)' 
