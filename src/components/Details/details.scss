@@ -174,7 +174,14 @@
       &__content {
         width: 100%;
         height: 100%;
+        padding: 0 15px 0 0;
         overflow-y: scroll;
+
+        /* Define the thumb style */
+        &::-webkit-scrollbar-thumb {
+          background: $doveGray;
+          border-radius: 5px;
+        }
       }
 
       .logs_refresh {
