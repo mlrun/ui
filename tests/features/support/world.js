@@ -46,9 +46,9 @@ class CustomWorld extends World {
         browseConfigs = new chrome.Options()
           .headless()
           .addArguments('no-sandbox')
-          .addArguments("start-maximized")
+          .addArguments('start-maximized')
           .addArguments('disable-gpu')
-      } else browseConfigs = new chrome.Options().addArguments("start-maximized")
+      } else browseConfigs = new chrome.Options().addArguments('start-maximized')
     }
     if (browser === 'firefox') {
       if (headless) {
