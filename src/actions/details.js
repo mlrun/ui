@@ -94,11 +94,11 @@ const detailsActions = {
     type: FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
     payload: featureSets
   }),
-  fetchJobPods: (project, uid) => dispatch => {
+  fetchJobPods: (project, uid, kind) => dispatch => {
     dispatch(detailsActions.fetchPodsBegin())
 
     return detailsApi
-      .getJobPods(project)
+      .getJobPods(project, uid, kind)
       .then(({ data }) => {
         let podsData = generatePods(project, uid, data)
 

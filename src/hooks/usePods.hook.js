@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useEffect } from 'react'
-import { isEmpty } from 'lodash'
+import { isEmpty, get } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 export const usePods = (fetchJobPods, removePods, selectedJob) => {
@@ -26,7 +26,11 @@ export const usePods = (fetchJobPods, removePods, selectedJob) => {
 
   useEffect(() => {
     if (!isEmpty(selectedJob)) {
-      fetchJobPods(params.projectName, selectedJob.uid)
+      fetchJobPods(
+        params.projectName,
+        selectedJob.uid,
+        get(selectedJob, 'ui.originalContent.metadata.labels.kind', 'job')
+      )
 
       const interval = setInterval(() => {
         fetchJobPods(params.projectName, selectedJob.uid)
