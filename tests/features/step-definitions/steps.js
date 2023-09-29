@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { Given, When, Then } from '@cucumber/cucumber'
+import * as fs from 'node:fs'
 import pageObjects from '../common/page-objects'
 import pageObjectsConsts from '../common-tools/common-consts'
 import { test_url, test_port } from '../../config'
@@ -71,10 +72,7 @@ import {
   verifyTypedValue,
   verifyTextAreaCounter
 } from '../common/actions/input-group.action'
-import {
-  incrementValue,
-  decrementValue
-} from '../common/actions/number-input-group.action'
+import { incrementValue, decrementValue } from '../common/actions/number-input-group.action'
 import {
   checkCheckbox,
   isCheckboxChecked,
@@ -98,10 +96,7 @@ import {
   isRadioButtonUnselected,
   selectRadiobutton
 } from '../common/actions/radio-button.action'
-import {
-  openActionMenu,
-  selectOptionInActionMenu
-} from '../common/actions/action-menu.action'
+import { openActionMenu, selectOptionInActionMenu } from '../common/actions/action-menu.action'
 import { expect } from 'chai'
 
 Given('open url', async function() {
@@ -401,10 +396,13 @@ Then(
   async function (value, inputField, unit, accordion, wizard) {
     const txt = await getInputValue(this.driver, pageObjects[wizard][accordion][inputField])
     const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
-    const result =
+    let result =
       unit === 'cpu'
         ? (Number.parseFloat(txt) - unitValue).toFixed(3)
         : Number.parseFloat(txt) - unitValue
+    if (result < 1){
+      result = 1
+    }
     await decrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
     await verifyTypedValue(
       this.driver,
@@ -1089,17 +1087,30 @@ Then('select {string} option in action menu on {string} wizard', async function(
   await selectOptionInActionMenu(this.driver, actionMenu, option)
 })
 
-Then('verify {string} according hint rules on {string} wizard', async function(
-  inputField,
-  wizardName
-) {
-  await checkInputAccordingHintText(
-    this.driver,
-    this.attach,
-    pageObjects[wizardName][inputField],
-    pageObjects['commonPagesHeader']['Common_Hint']
-  )
+Then('check that Yaml file is existed on {string} path', async function (path) {
+  const exist = (path) => {
+    try{
+      fs.accessSync(path, fs.F_OK)
+      return true
+    }catch(e){
+      if (e) {console.error(e)}
+      return false
+    }
+  }
+  expect(exist).equal(true)
 })
+
+Then(
+  'verify {string} according hint rules on {string} wizard',
+  async function (inputField, wizardName) {
+    await checkInputAccordingHintText(
+      this.driver,
+      this.attach,
+      pageObjects[wizardName][inputField],
+      pageObjects['commonPagesHeader']['Common_Hint']
+    )
+  }
+)
 
 Then('verify {string} options rules on {string} wizard', async function(
   inputField,

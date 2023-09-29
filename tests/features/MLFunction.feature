@@ -102,7 +102,7 @@ Feature: ML Functions
 
     @passive
     @inProgress
-    Scenario: Check all mandatory components on Create ML Function Popup
+    Scenario: MLF003 - Check all mandatory components on Create ML Function Popup
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard

@@ -262,7 +262,7 @@ module.exports = {
       'better performance. In this case the path would be path/bucket-num/year=/month=/day= etc.. In case the ' +
       'value is 0 then no bucketing will be done and your data will be partitioned by key.',
     Function_Name_Hint:
-      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
+      'Valid characters: a–z, 0–9, –, .\nMust begin and end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
     Function_Tag_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',

@@ -95,8 +95,6 @@ Feature: Models Page
 
   @passive
   Scenario: MLM005 - Verify behaviour of Show iterations checkbox on Models tab
-    * set tear-down property "model" created in "default" project with "automation-model" value
-    * create "automation-model" Model with "latest" tag in "default" project with code 200
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -105,6 +103,7 @@ Feature: Models Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then check "expand_btn" not presented in "Models_Table" on "Models" wizard
     Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
