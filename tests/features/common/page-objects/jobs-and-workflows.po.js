@@ -180,9 +180,35 @@ const BatchRunDataInputsTable = {
             false, 
             false)  
         },
+        path_dropdown_autocomplete_artifacts: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_project: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_item: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
         path_input: 'input.form-field-combobox__input',
-        path_verify: '.form-table__cell_1:nth-of-type(2)',
-        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)' 
+        path_verify: '.form-table__cell_1:nth-of-type(2)' 
       }
     }
   }
@@ -222,8 +248,7 @@ const BatchRunParametersTable = {
         },
         type_dropdown_verify: '.form-table__cell_1 .data-ellipsis', 
         value_input: '.form-table__cell_3 .form-field__control input',
-        value_verify: '.form-table__cell_3 .data-ellipsis',
-        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)' 
+        value_verify: '.form-table__cell_3 .data-ellipsis' 
       }
     }
   }
@@ -252,7 +277,7 @@ const actionMenuStructure = {
 }
 
 const jobsMonitorTable = {
-  root: '.table__flex .table__content',
+  root: '.table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -781,6 +806,8 @@ module.exports = {
       generateCheckboxGroup('.wizard-form__content .form-field-checkbox input', false, false, false)
     ),
     Delete_Button_Parameters: By.css('.form-table__parameter-row .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
+    Run_Button: By.css('.modal__content .modal__footer button.btn-secondary'),
+    Schedule_for_later_Button: By.css('.modal__content .modal__footer button.btn-tertiary'),
   },
   CreateJob: {
     Back_Arrow_Button: By.css(

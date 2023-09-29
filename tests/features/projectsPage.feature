@@ -22,7 +22,7 @@ Feature: MLRun Projects Page
         Then value in "failed" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "Failed ML jobs and nuclio functions in the last 24 hours"
 
     @passive
-    Scenario: MLPr002 - Verify filtering by project name
+    Scenario: MLPr002 - Verify searching by project name
         Given open url
         And wait load page
         Then type value "stocks" to "Search_Projects_Input" field on "Projects" wizard
@@ -31,6 +31,20 @@ Feature: MLRun Projects Page
         Then click on "Refresh_Projects_Button" element on "Projects" wizard
         And wait load page
         Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "at"
+        Then type value "default" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "default"
+        Then type value "" to "Search_Projects_Input" field on "Projects" wizard
+        Then click on "Refresh_Projects_Button" element on "Projects" wizard
+        Then type value "Default" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "default"
+        Then type value "" to "Search_Projects_Input" field on "Projects" wizard
+        Then click on "Refresh_Projects_Button" element on "Projects" wizard
+        Then type value "deFault" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "default"
+        Then type value "" to "Search_Projects_Input" field on "Projects" wizard
+        Then click on "Refresh_Projects_Button" element on "Projects" wizard
+        Then type value "defa" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "default"        
 
     @passive
     Scenario: MLPr003 - Sort projects in ascending and descending order
@@ -141,7 +155,7 @@ Feature: MLRun Projects Page
         Then select "Unarchive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name7" value in "name" column
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
-
+    
     @passive
     Scenario: MLPr011 - Verify View YAML action
         Given open url
@@ -150,7 +164,11 @@ Feature: MLRun Projects Page
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
-
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        Then select "Export YAML" option in action menu on "Projects" wizard in "Projects_Table" table at row with "default" value in "name" column
+        And wait load page
+        Then check that "default.yaml" file is existed on "Downloads" directory
+        
     @danger
 #   Run this test case only with mocked backend!!!
     Scenario: MLPr012 - Check projects limit message
