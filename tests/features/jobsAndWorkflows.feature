@@ -1729,7 +1729,7 @@ Feature: Jobs and workflows
 
     @passive
     @links
-    Scenario: Check redirect to project`s Function Infopane from Job Overview
+    Scenario: MLJW030 - Check redirect to project`s Function Infopane from Job Overview
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2008,7 +2008,7 @@ Feature: Jobs and workflows
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/INVALID/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
         Then verify redirection from "projects/INVALID/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview" to "projects"
 
-    Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Step 1
+    Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Function selection
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2061,7 +2061,7 @@ Feature: Jobs and workflows
         Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
     
-    Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Step 1 (Hub tab)
+    Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Function selection (Hub tab)
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2086,7 +2086,7 @@ Feature: Jobs and workflows
         And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
 
-    Scenario: Check all mandatory components on Batch Run wizard - Step 2 without Method
+    Scenario: Check all mandatory components on Batch Run wizard - Run Details without Method
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2146,7 +2146,7 @@ Feature: Jobs and workflows
             | key_verify | value_verify | 
             |    key2    |    value2    |
 
-    Scenario: Check all mandatory components on Batch Run wizard - Step 2 with Method
+    Scenario: Check all mandatory components on Batch Run wizard - Run Details with Method
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2191,7 +2191,7 @@ Feature: Jobs and workflows
             |    key2    |    value2    |
             |    key3    |    value3    |
 
-    Scenario: Check all mandatory components on Batch Run wizard - Step 3
+    Scenario: Check all mandatory components on Batch Run wizard - Data Inputs
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2241,7 +2241,7 @@ Feature: Jobs and workflows
             | name2edited | v3io:///container-name/fileedited |  
     
     
-    Scenario: Check all mandatory components on Batch Run wizard - Step 4
+    Scenario: Check all mandatory components on Batch Run wizard - Parameters
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2393,7 +2393,7 @@ Feature: Jobs and workflows
         Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then type value "1025" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning" 
@@ -2438,3 +2438,239 @@ Feature: Jobs and workflows
         Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+
+    Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Resources" value
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+        Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+        Then type value "0" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+        Then type value "-1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+        Then type value "-1" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+        Then type value "2" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then decrease value on 3 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then type value "2" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then decrease value on 3 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" input should contains "1" value in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button | Delete_New_Row_Button |
+            |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
+            |               V3IO               |            Volume_Name_2             |       /path/to/happines2      |         Container_Input_2          |           Access_Key_2              |            /resource/path_2            |         yes        |                       |
+
+    Scenario: MLJW026 - Check tip and warning messages in Volumes section on Batch Run wizard - Resources
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Resources" value
+        Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
+            |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        Then verify "Volume_Paths_Table_Container_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Data_Container_Hint"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
+        Then verify "Volume_Paths_Table_Resource_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Relative_Directory_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
+            |           Config Map             |                                      |                               |                                     |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |                                      |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Secret_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
+            |               PVC                |                                      |                               |                                      |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+
+    Scenario: MLJW031 - Check mandatory of Container and Resource Path fields for V3IO volume - Batch Run - Resources
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Resources" value
+        Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
+            |             V3IO                 |           Volume_Name_1              |      /path/to/happines1       |                                    |            Access_Key_1             |                                        |         yes        |
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Run_Button" element on "Batch_Run" wizard
+        And wait load page
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
+    
+    Scenario: MLJW033 - Check autocomplete MLRun Store path for datasets, artifacts, models - Batch Run - Data input
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Data Inputs" value
+        When add data to "Batch_Run_Data_Inputs_Table" table on "Batch_Run" wizard with combobox
+            | name_input | path_dropdown | path_dropdown_autocomplete_artifacts | path_dropdown_autocomplete_project | path_dropdown_autocomplete_item |
+            |  Artifacts |  MLRun store  |               Artifacts              |              default               |            content              |
+            |  Datasets  |  MLRun store  |               Datasets               |              default               |       test_new_structure        |
+            |   Models   |  MLRun store  |                Models                |              default               |           train_model           |
+        Then verify data in "Batch_Run_Data_Inputs_Table" table on "Batch_Run" wizard
+            | name_verify |                 path_verify                 |      
+            |  Artifacts  |      store://artifacts/default/content      | 
+            |  Datasets   | store://datasets/default/test_new_structure | 
+            |   Models    |      store://models/default/train_model     |
+
+    Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Advanced" value
+        And click on "Schedule_for_later_Button" element on "Batch_Run" wizard
+        Then verify "Time_unit_Dropdown" element visibility in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Time_unit_Dropdown" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Time_Unit_Options"
+        Then select "Weekly" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_Button" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is enabled
+        Then verify "Schedule_item_Sunday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        Then verify "Schedule_item_Monday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        When click on "Schedule_item_Monday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Monday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        When click on "Schedule_item_Tuesday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        When click on "Schedule_item_Wednesday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        When click on "Schedule_item_Thursday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        When click on "Schedule_item_Friday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then "Error_Message" component in "Schedule_For_Later" on "Batch_Run_Edit" should contains "Error_Messages"."One_Day_Option"
+        Then verify "Schedule_Button" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is disabled
+
+    Scenario: MLJW035 - Check environment variables table types components on Batch Run in Advanced section
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Advanced" value
+        Then verify "Accordion_Subheader" element visibility in "Advanced_Accordion" on "Batch_Run_Edit" wizard
+        Then "Accordion_Subheader" element in "Advanced_Accordion" on "Batch_Run_Edit" should contains "Environment variables" value
+        Then verify "Advanced_Environment_Variables_Table" element visibility on "Batch_Run_Edit" wizard 
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Batch_Run_Edit" wizard
+            |   name_verify   | type_dropdown_verify |            value_verify              |
+            |    V3IO_API     |        value         |       http://v3io-webapi:8081        |
+            |  V3IO_USERNAME  |        value         |              pipelines               | 
+            | V3IO_ACCESS_KEY |        value         | b1410f67-92a9-41fd-9413-6d0015c493fd |
+            |  V3IO_FRAMESD   |        value         |         http://framesd:8080          |
+        Then edit dropdown field 1 row in "Advanced_Environment_Variables_Table" key-value table on "Batch_Run_Edit" wizard
+            | type_dropdown |  value_input | value_input_key |
+            |     Secret    | sectretName1 |   sectretKey1   |
+        Then edit dropdown field 3 row in "Advanced_Environment_Variables_Table" key-value table on "Batch_Run_Edit" wizard
+            | type_dropdown |  value_input | value_input_key |
+            |     Secret    | sectretName2 |   sectretKey2   |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Batch_Run_Edit" wizard
+            |   name_verify   | type_dropdown_verify |        value_verify      |
+            |    V3IO_API     |        secret        | sectretName1:sectretKey1 |
+            |  V3IO_USERNAME  |        value         |         pipelines        | 
+            | V3IO_ACCESS_KEY |        secret        | sectretName2:sectretKey2 |
+            |  V3IO_FRAMESD   |        value         |    http://framesd:8080   |
