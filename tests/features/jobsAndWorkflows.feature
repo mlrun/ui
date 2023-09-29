@@ -508,7 +508,7 @@ Feature: Jobs and workflows
         #Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display options "Input_Hint"."Jobs_Name_Hint" - This field doesn't required
         Then verify "Job_Name_Input" options rules on "New_JobTemplate_Edit" wizard
         Then type value "demo_Job_00" to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
-        When collapse "Dat.a_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Access_Key_Checkbox" element visibility on "New_JobTemplate_Edit" wizard
         Then uncheck "Access_Key_Checkbox" element on "New_JobTemplate_Edit" wizard
@@ -2596,6 +2596,81 @@ Feature: Jobs and workflows
             |  Artifacts  |      store://artifacts/default/content      | 
             |  Datasets   | store://datasets/default/test_new_structure | 
             |   Models    |      store://models/default/train_model     |
-               
-        
 
+    Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Advanced" value
+        And click on "Schedule_for_later_Button" element on "Batch_Run" wizard
+        Then verify "Time_unit_Dropdown" element visibility in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Time_unit_Dropdown" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Time_Unit_Options"
+        Then select "Weekly" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_Button" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is enabled
+        Then verify "Schedule_item_Sunday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        Then verify "Schedule_item_Monday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        When click on "Schedule_item_Monday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Monday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        When click on "Schedule_item_Tuesday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        When click on "Schedule_item_Wednesday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        When click on "Schedule_item_Thursday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        When click on "Schedule_item_Friday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then "Error_Message" component in "Schedule_For_Later" on "Batch_Run_Edit" should contains "Error_Messages"."One_Day_Option"
+        Then verify "Schedule_Button" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is disabled
+
+    Scenario: MLJW035 - Check environment variables table types components on Batch Run in Advanced section
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Advanced" value
+        Then verify "Accordion_Subheader" element visibility in "Advanced_Accordion" on "Batch_Run_Edit" wizard
+        Then "Accordion_Subheader" element in "Advanced_Accordion" on "Batch_Run_Edit" should contains "Environment variables" value
+        Then verify "Advanced_Environment_Variables_Table" element visibility on "Batch_Run_Edit" wizard 
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Batch_Run_Edit" wizard
+            |   name_verify   | type_dropdown_verify |            value_verify              |
+            |    V3IO_API     |        value         |       http://v3io-webapi:8081        |
+            |  V3IO_USERNAME  |        value         |              pipelines               | 
+            | V3IO_ACCESS_KEY |        value         | b1410f67-92a9-41fd-9413-6d0015c493fd |
+            |  V3IO_FRAMESD   |        value         |         http://framesd:8080          |
+        Then edit dropdown field 1 row in "Advanced_Environment_Variables_Table" key-value table on "Batch_Run_Edit" wizard
+            | type_dropdown |  value_input | value_input_key |
+            |     Secret    | sectretName1 |   sectretKey1   |
+        Then edit dropdown field 3 row in "Advanced_Environment_Variables_Table" key-value table on "Batch_Run_Edit" wizard
+            | type_dropdown |  value_input | value_input_key |
+            |     Secret    | sectretName2 |   sectretKey2   |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Batch_Run_Edit" wizard
+            |   name_verify   | type_dropdown_verify |        value_verify      |
+            |    V3IO_API     |        secret        | sectretName1:sectretKey1 |
+            |  V3IO_USERNAME  |        value         |         pipelines        | 
+            | V3IO_ACCESS_KEY |        secret        | sectretName2:sectretKey2 |
+            |  V3IO_FRAMESD   |        value         |    http://framesd:8080   |

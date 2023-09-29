@@ -596,6 +596,53 @@ When(
 )
 
 When(
+  'edit dropdown field {int} row in {string} key-value table on {string} wizard',
+  async function (index, table, wizard, dataTable) {
+    const inputFields = dataTable['rawTable'][0]
+    const row = dataTable.rows()[0]
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['edit_btn'](index + 1)
+    )
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['edit_btn'](index + 1)
+    )
+    await openDropdown(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](index + 1)
+    )
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](index + 1),
+      row[0]
+    )
+    await this.driver.sleep(100)
+    await typeIntoInputField(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](index + 1),
+      row[1]
+    )
+    await this.driver.sleep(100)
+    await typeIntoInputField(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[2]](index + 1),
+      row[2]
+    )
+    await this.driver.sleep(100)
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['apply_btn'](index + 1)
+    )
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['apply_btn'](index + 1)
+    )
+    await this.driver.sleep(100)
+  }
+)
+
+When(
   'edit {int} row in {string} key-value table in {string} on {string} wizard',
   async function (index, table, accordion, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]

@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { Given, When, Then } from '@cucumber/cucumber'
-import * as fs from 'node:fs'
 import pageObjects from '../common/page-objects'
 import pageObjectsConsts from '../common-tools/common-consts'
 import { test_url, test_port } from '../../config'
@@ -45,7 +44,11 @@ import {
   verifyText,
   verifyTextRegExp,
   waitPageLoad,
-  waiteUntilComponent
+  waiteUntilComponent,
+  verifyElementActive,
+  verifyElementNotActive,
+  generatePath,
+  determineFileAccess
 } from '../common/actions/common.action'
 import {
   checkTableColumnValues,
@@ -218,47 +221,61 @@ Then('type value {string} to {string} field on {string} wizard', async function(
   await this.driver.sleep(250)
 })
 
-Then('verify {string} element on {string} wizard is enabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyElementEnabled(this.driver, pageObjects[wizardName][elementName])
-})
-
-Then('verify {string} not input element in {string} on {string} wizard is enabled', 
-  async function(elementName, accordionName,  wizardName){
-  await verifyElementEnabled(this.driver, pageObjects[wizardName][accordionName][elementName])
-})
-
-Then('verify {string} element on {string} wizard is disabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyElementDisabled(this.driver, pageObjects[wizardName][elementName])
-})
-
-Then('verify {string} not input element in {string} on {string} wizard is disabled', 
-  async function(elementName, accordionName,  wizardName) {
-    await verifyElementDisabled(
-      this.driver, 
-      pageObjects[wizardName][accordionName][elementName]
-    )
+Then(
+  'verify {string} element on {string} wizard is enabled',
+  async function (elementName, wizardName) {
+    await verifyElementEnabled(this.driver, pageObjects[wizardName][elementName])
   }
 )
 
-Then('verify checkbox {string} element on {string} wizard is enabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][elementName])
-})
+Then(
+  'verify {string} not input element in {string} on {string} wizard is enabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementEnabled(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
 
-Then('verify checkbox {string} element on {string} wizard is disabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
-})
+Then(
+  'verify {string} not input element in {string} on {string} wizard is active',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementActive(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
+
+Then(
+  'verify {string} not input element in {string} on {string} wizard is NOT active',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementNotActive(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
+
+Then(
+  'verify {string} element on {string} wizard is disabled',
+  async function (elementName, wizardName) {
+    await verifyElementDisabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify {string} not input element in {string} on {string} wizard is disabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementDisabled(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
+
+Then(
+  'verify checkbox {string} element on {string} wizard is enabled',
+  async function (elementName, wizardName) {
+    await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify checkbox {string} element on {string} wizard is disabled',
+  async function (elementName, wizardName) {
+    await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
 
 Then(
   'verify {string} element in {string} on {string} wizard is enabled',
@@ -400,7 +417,7 @@ Then(
       unit === 'cpu'
         ? (Number.parseFloat(txt) - unitValue).toFixed(3)
         : Number.parseFloat(txt) - unitValue
-    if (result < 1){
+    if(result < 1){
       result = 1
     }
     await decrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
@@ -972,16 +989,14 @@ Then(
   }
 )
 
-When('click on {string} element in {string} on {string} wizard', async function(
-  component,
-  accordion,
-  wizardName
-) {
-  await clickOnComponent(
-    this.driver,
-    pageObjects[wizardName][accordion][component]
-  )
-})
+When(
+  'click on {string} element in {string} on {string} wizard',
+  async function (component, accordion, wizardName) {
+    await waiteUntilComponent(this.driver, pageObjects[wizardName][accordion][component])
+    await clickOnComponent(this.driver, pageObjects[wizardName][accordion][component])
+    await this.driver.sleep(250)
+  }
+)
 
 Then('is {string} on {string} selected', async function(radiobutton, wizard) {
   await isRadioButtonSelected(this.driver, pageObjects[wizard][radiobutton])
@@ -1087,17 +1102,11 @@ Then('select {string} option in action menu on {string} wizard', async function(
   await selectOptionInActionMenu(this.driver, actionMenu, option)
 })
 
-Then('check that Yaml file is existed on {string} path', async function (path) {
-  const exist = (path) => {
-    try{
-      fs.accessSync(path, fs.F_OK)
-      return true
-    }catch(e){
-      if (e) {console.error(e)}
-      return false
-    }
-  }
-  expect(exist).equal(true)
+Then('check that {string} file is existed on {string} directory', async function (file, filePath) {
+  const path = await generatePath(file, filePath)
+  await this.driver.sleep(150)
+  await determineFileAccess(path, file)
+  await this.driver.sleep(150)
 })
 
 Then(

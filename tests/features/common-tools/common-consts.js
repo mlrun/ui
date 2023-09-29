@@ -134,7 +134,7 @@ module.exports = {
     ]
   },
   Models_Info_Pane: {
-    Tab_List: ['Overview'],  //delete 'Preview'
+    Tab_List: ['Overview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
       'Hash',
@@ -389,7 +389,8 @@ module.exports = {
       'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance',
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
-    Already_Scheduled: 'This job is already scheduled'
+    Already_Scheduled: 'This job is already scheduled',
+    One_Day_Option: 'Must select at least one day option'
   },
   Dropdown_Options: {
     Tag_Filer_Options: ['All', 'latest'],
@@ -421,6 +422,7 @@ module.exports = {
       'TiB'
     ],
     CPU_Unit_Options: ['cpu', 'millicpu'],
+    Time_Unit_Options: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
     //Pods_Toleration: ['Allow', 'Constrain', 'Prevent'], - Pods_Toleration is deleted from implementation

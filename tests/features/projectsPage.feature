@@ -156,7 +156,6 @@ Feature: MLRun Projects Page
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
     
-    #TODO: Then check that Yaml file is existed on "'C:\Users\Olena.zhelnytska\Downloads\'" path - in progress
     @passive
     Scenario: MLPr011 - Verify View YAML action
         Given open url
@@ -168,7 +167,7 @@ Feature: MLRun Projects Page
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
         Then select "Export YAML" option in action menu on "Projects" wizard in "Projects_Table" table at row with "default" value in "name" column
         And wait load page
-        #Then check that Yaml file is existed on "'C:\Users\Olena.zhelnytska\Downloads\'" path
+        Then check that "default.yaml" file is existed on "Downloads" directory
         
     @danger
 #   Run this test case only with mocked backend!!!

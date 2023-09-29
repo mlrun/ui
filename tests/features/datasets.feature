@@ -301,7 +301,7 @@ Feature: Datasets Page
 
   @FAILED_TODO
   #TODO: Redirection - ML-4600
-  #TODO: param iter
+  #TODO: url without iter number, doesn't send in new artifacts structure 
   Scenario: Check broken link redirection
     * set tear-down property "dataset" created in "default" project with "test_ds" value
     * create "test_ds" Dataset with "latest" tag in "default" project with code 200
