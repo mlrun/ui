@@ -24,7 +24,7 @@ const detailsApi = {
     const params = {
       'group-by': 'job',
       kind,
-      label_selector: `mlrun/uid=${uid}`
+      'label-selector': `mlrun/uid=${uid}`
     }
 
     return mainHttpClient.get(`/projects/${project}/runtime-resources`, { params })
