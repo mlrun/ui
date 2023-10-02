@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 
-import { PROJECT_MONITOR } from '../../constants'
+import { PROJECT_MONITOR, PROJECT_QUICK_LINKS_PAGE } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
 import { ReactComponent as APIIcon } from 'igz-controls/images/navbar/mlrun-api-gateways.svg'
@@ -40,17 +40,17 @@ export const getLinks = projectName => {
 
   return [
     {
-      icon: <HomepageIcon />,
-      id: 'home',
-      label: 'Project home',
-      link: `${pathname}`,
-      end: true
-    },
-    {
       icon: <MonitoringIcon />,
       id: PROJECT_MONITOR,
       label: 'Project monitoring',
-      link: `${pathname}/${PROJECT_MONITOR}`
+      link: `${pathname}/${PROJECT_MONITOR}`,
+      end: true
+    },
+    {
+      icon: <HomepageIcon />,
+      id: PROJECT_QUICK_LINKS_PAGE,
+      label: 'Quick actions',
+      link: `${pathname}/${PROJECT_QUICK_LINKS_PAGE}`
     },
     {
       icon: <FeatureStoreIcon />,

@@ -39,6 +39,8 @@ import {
   MONITOR_WORKFLOWS_TAB,
   PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
+  PROJECT_MONITOR,
+  PROJECT_QUICK_LINKS_PAGE,
   REAL_TIME_PIPELINES_TAB,
   SCHEDULE_TAB
 } from './constants'
@@ -116,8 +118,12 @@ const App = () => {
             >
               <Route path="projects" element={<Projects />} />
 
-              <Route path="projects/:projectName" element={<ProjectOverview />} />
-              <Route path="projects/:projectName/monitor" element={<ProjectMonitor />} />
+              <Route path="projects/:projectName" element={<Navigate replace to="monitor" />} />
+              <Route
+                path={`projects/:projectName/${PROJECT_MONITOR}`}
+                element={<ProjectMonitor />}
+              />
+
               {!isNuclioModeDisabled && (
                 <Route
                   path="projects/:projectName/monitor/consumer-groups/*"
@@ -127,6 +133,10 @@ const App = () => {
                   <Route path=":functionName/:streamName" exact element={<ConsumerGroup />} />
                 </Route>
               )}
+              <Route
+                path={`projects/:projectName/${PROJECT_QUICK_LINKS_PAGE}`}
+                element={<ProjectOverview />}
+              />
               <Route
                 path="projects/:projectName/settings"
                 element={<Navigate to={`${PROJECTS_SETTINGS_GENERAL_TAB}`} replace />}

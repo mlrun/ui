@@ -46,7 +46,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
           !ref.current.contains(event.target) &&
           !chipRef.current?.contains(event.target)
         ) {
-          navigate(`/projects/${project.metadata.name}`)
+          navigate(`/projects/${project.metadata.name}/monitor`)
         }
       }}
       ref={cardRef}

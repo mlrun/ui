@@ -21,7 +21,7 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import { getDateAndTimeByFormat } from '../../utils/'
-import { PROJECT_MONITOR } from '../../constants'
+import { PROJECT_MONITOR, PROJECT_QUICK_LINKS_PAGE } from '../../constants'
 
 import './ProjectDetailsHeader.scss'
 
@@ -57,8 +57,8 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
           </li>
           <li>
             {location.pathname.includes(PROJECT_MONITOR) ? (
-              <Link to={`/projects/${projectName}`} className="link">
-                Project Home
+              <Link to={`/projects/${projectName}/${PROJECT_QUICK_LINKS_PAGE}`} className="link">
+                Project Quick Actions
               </Link>
             ) : (
               <Link to={`/projects/${projectName}/${PROJECT_MONITOR}`} className="link">
