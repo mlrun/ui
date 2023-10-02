@@ -2674,3 +2674,78 @@ Feature: Jobs and workflows
             |  V3IO_USERNAME  |        value         |         pipelines        | 
             | V3IO_ACCESS_KEY |        secret        | sectretName2:sectretKey2 |
             |  V3IO_FRAMESD   |        value         |    http://framesd:8080   |
+
+Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for later 
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Schedule_for_later_Button" element on "Batch_Run" wizard
+        Then verify "Time_unit_Dropdown" element visibility in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Time_unit_Dropdown" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Time_Unit_Options"
+        # check weekly options
+        Then select "Weekly" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Sunday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        When click on "Schedule_item_Sunday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Sunday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        Then verify "Schedule_item_Monday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        When click on "Schedule_item_Monday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Monday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        Then verify "Schedule_item_Tuesday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        When click on "Schedule_item_Tuesday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Tuesday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        Then verify "Schedule_item_Wednesday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        When click on "Schedule_item_Wednesday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Wednesday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        Then verify "Schedule_item_Thursday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        When click on "Schedule_item_Thursday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Thursday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        Then verify "Schedule_item_Friday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        When click on "Schedule_item_Friday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Friday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        Then verify "Schedule_item_Saturday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is NOT active
+        When click on "Schedule_item_Saturday" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Schedule_item_Saturday" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is active
+        # check minute options
+        Then select "Minute" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Intervals_Dropdown" element visibility in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Intervals_Dropdown" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Minute_Intervals_Dropdown_Options"
+        Then select "Every 30" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then select "Every 20" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then select "Every 15" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then select "Every 10" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        # check hourly options
+        Then select "Hourly" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Intervals_Dropdown" element visibility in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "Intervals_Dropdown" element in "Schedule_For_Later" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Hour_Intervals_Dropdown_Options"
+        Then select "Every 12" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then select "Every 6" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then select "Every 4" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then select "Every 3" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then select "Every 2" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then select "Every 1" option in "Intervals_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        # check daily options
+        Then select "Daily" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "At_time_Input" element visibility in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then type value "23:23" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then type value "15:15" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then type value "01:45" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        # check monthly options
+        Then select "Monthly" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then verify "At_time_Input" element visibility in "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then type value "23:23" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then type value "15:15" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+        Then type value "01:45" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard

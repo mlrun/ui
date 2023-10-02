@@ -1355,6 +1355,23 @@ module.exports = {
           '.data-ellipsis .data-ellipsis'
         )
       ),
+      Intervals_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.simple-schedule-item:nth-of-type(2) .form-field-select .form-field__wrapper',
+          '.form-field__control .form-field__select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      At_time_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.form-col-1 .time-picker-container .time-picker__control',
+          false,
+          true,
+          false,
+          //'.form-field__icons svg'
+        )
+      ),
       Schedule_item_Sunday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(1)'),
       Schedule_item_Monday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(2)'),
       Schedule_item_Tuesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(3)'),
