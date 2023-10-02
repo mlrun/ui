@@ -27,6 +27,9 @@ import {
   FETCH_FUNCTION_TEMPLATE_BEGIN,
   FETCH_FUNCTION_TEMPLATE_FAILURE,
   FETCH_FUNCTION_TEMPLATE_SUCCESS,
+  FETCH_HUB_FUNCTION_TEMPLATE_BEGIN,
+  FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
+  FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS,
   REMOVE_FUNCTION_TEMPLATE,
   SET_FUNCTIONS_TEMPLATES,
   SET_LOADING,
@@ -39,6 +42,7 @@ import {
   SET_NEW_FUNCTION_IMAGE,
   SET_NEW_FUNCTION_BASE_IMAGE,
   SET_NEW_FUNCTION_COMMANDS,
+  SET_NEW_FUNCTION_REQUIREMENTS,
   SET_NEW_FUNCTION_VOLUME_MOUNTS,
   SET_NEW_FUNCTION_VOLUMES,
   SET_NEW_FUNCTION_RESOURCES,
@@ -73,10 +77,13 @@ import {
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_FORCE_BUILD,
   SET_NEW_FUNCTION_PREEMTION_MODE,
-  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
+  FETCH_FUNCTIONS_TEMPLATES_FAILURE,
+  FETCH_HUB_FUNCTIONS_FAILURE,
+  SET_HUB_FUNCTIONS
 } from '../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { generateCategories } from '../utils/generateTemplatesCategories'
+import { generateCategories, generateHubCategories } from '../utils/generateTemplatesCategories'
 import { setNotification } from '../reducers/notificationReducer'
 
 const functionsActions = {
@@ -97,8 +104,6 @@ const functionsActions = {
             : error.message
 
         dispatch(functionsActions.createNewFunctionFailure(message))
-
-        throw error
       })
   },
   createNewFunctionBegin: () => ({
@@ -161,6 +166,47 @@ const functionsActions = {
   fetchFunctionLogsSuccess: () => ({
     type: FETCH_FUNCTION_LOGS_SUCCESS
   }),
+  fetchFunctionTemplate: path => dispatch => {
+    dispatch(functionsActions.fetchFunctionTemplateBegin())
+
+    return functionsApi
+      .getFunctionTemplate(path)
+      .then(response => {
+        let parsedData = yaml.safeLoad(response.data)
+        const templates = {
+          name: parsedData.metadata.name,
+          functions: parsedData.spec.entry_point ? [] : [parsedData]
+        }
+
+        dispatch(functionsActions.fetchFunctionTemplateSuccess(templates))
+
+        return templates
+      })
+      .catch(error => {
+        const errorMsg = get(error, 'response.data.detail', "Function's template failed to load")
+
+        dispatch(functionsActions.fetchFunctionTemplateFailure(error))
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: errorMsg,
+            error
+          })
+        )
+      })
+  },
+  fetchFunctionTemplateSuccess: selectFunction => ({
+    type: FETCH_FUNCTION_TEMPLATE_SUCCESS,
+    payload: selectFunction
+  }),
+  fetchFunctionTemplateBegin: () => ({
+    type: FETCH_FUNCTION_TEMPLATE_BEGIN
+  }),
+  fetchFunctionTemplateFailure: err => ({
+    type: FETCH_FUNCTION_TEMPLATE_FAILURE,
+    payload: err
+  }),
   fetchFunctions: (project, filters) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
 
@@ -196,28 +242,27 @@ const functionsActions = {
 
         return templatesData
       })
-      .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
+      .catch(error => {
+        dispatch(functionsActions.fetchFunctionsTemplatesFailure(error))
+      })
   },
-  fetchFunctionTemplate: path => dispatch => {
-    dispatch(functionsActions.fetchFunctionTemplateBegin())
+  fetchFunctionsTemplatesFailure: err => ({
+    type: FETCH_FUNCTIONS_TEMPLATES_FAILURE,
+    payload: err
+  }),
+  fetchHubFunction: hubFunctionName => dispatch => {
+    dispatch(functionsActions.fetchHubFunctionTemplateBegin())
 
     return functionsApi
-      .getFunctionTemplate(path)
+      .getHubFunction(hubFunctionName)
       .then(response => {
-        let parsedData = yaml.safeLoad(response.data)
-        const templates = {
-          name: parsedData.metadata.name,
-          functions: parsedData.spec.entry_point ? [] : [parsedData]
-        }
-
-        dispatch(functionsActions.fetchFunctionTemplateSuccess(templates))
-
-        return templates
+        dispatch(functionsActions.fetchHubFunctionTemplateSuccess())
+        return response.data
       })
       .catch(error => {
-        const errorMsg = get(error, 'response.data.detail', "Function's template failed to load")
+        const errorMsg = get(error, 'response.data.detail', 'The function failed to load')
+        dispatch(functionsActions.fetchHubFunctionTemplateFailure(error))
 
-        dispatch(functionsActions.fetchFunctionTemplateFailure(error))
         dispatch(
           setNotification({
             status: error.response?.status || 400,
@@ -226,26 +271,47 @@ const functionsActions = {
             error
           })
         )
-
-        throw error
       })
   },
-  fetchFunctionTemplateSuccess: selectFunction => ({
-    type: FETCH_FUNCTION_TEMPLATE_SUCCESS,
-    payload: selectFunction
+  fetchHubFunctionTemplateSuccess: () => ({
+    type: FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS
   }),
-  fetchFunctionTemplateBegin: () => ({
-    type: FETCH_FUNCTION_TEMPLATE_BEGIN
+  fetchHubFunctionTemplateBegin: () => ({
+    type: FETCH_HUB_FUNCTION_TEMPLATE_BEGIN
   }),
-  fetchFunctionTemplateFailure: err => ({
-    type: FETCH_FUNCTION_TEMPLATE_FAILURE,
+  fetchHubFunctionTemplateFailure: err => ({
+    type: FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  getFunction: (project, name, hash) => dispatch => {
+  fetchHubFunctions: () => dispatch => {
+    return functionsApi.getHubFunctions().then(({ data: functionTemplates }) => {
+      const templatesData = generateHubCategories(functionTemplates.catalog)
+
+      dispatch(functionsActions.setHubFunctions(templatesData))
+
+      return templatesData
+    }).catch((error) => {
+      const errorMsg = get(error, 'response.data.detail', 'Functions failed to load')
+
+      dispatch(
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: errorMsg,
+          error
+        })
+      )
+    })
+  },
+  fetchHubFunctionsFailure: err => ({
+    type: FETCH_HUB_FUNCTIONS_FAILURE,
+    payload: err
+  }),
+  getFunction: (project, name, hash, tag) => dispatch => {
     dispatch(functionsActions.getFunctionBegin())
 
     return functionsApi
-      .getFunction(project, name, hash)
+      .getFunction(project, name, hash, tag)
       .then(result => {
         dispatch(functionsActions.getFunctionSuccess(result.data.func))
 
@@ -286,6 +352,10 @@ const functionsActions = {
     type: SET_FUNCTIONS_TEMPLATES,
     payload
   }),
+  setHubFunctions: payload => ({
+    type: SET_HUB_FUNCTIONS,
+    payload
+  }),
   setLoading: loading => ({
     type: SET_LOADING,
     payload: loading
@@ -305,6 +375,10 @@ const functionsActions = {
   setNewFunctionCommands: commands => ({
     type: SET_NEW_FUNCTION_COMMANDS,
     payload: commands
+  }),
+  setNewFunctionRequirements: requirements => ({
+    type: SET_NEW_FUNCTION_REQUIREMENTS,
+    payload: requirements
   }),
   setNewFunctionDefaultClass: default_class => ({
     type: SET_NEW_FUNCTION_DEFAULT_CLASS,

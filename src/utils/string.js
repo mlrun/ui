@@ -42,3 +42,8 @@ export const trimSplit = (value, delimiter) => {
   const trimmed = (value ?? '').trim()
   return trimmed ? trimmed.split(delimiter) : []
 }
+
+export const splitTrim = (value, delimiter) => {
+  const arr = value.split(delimiter)
+  return arr.map(string => string.trim())
+}

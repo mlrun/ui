@@ -17,29 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect } from 'react'
-import { isEmpty, get } from 'lodash'
-import { useParams } from 'react-router-dom'
+import { generateLinkPath } from './parseUri'
 
-export const usePods = (fetchJobPods, removePods, selectedJob) => {
-  const params = useParams()
-
-  useEffect(() => {
-    if (!isEmpty(selectedJob)) {
-      fetchJobPods(
-        params.projectName,
-        selectedJob.uid,
-        get(selectedJob, 'ui.originalContent.metadata.labels.kind', 'job')
-      )
-
-      const interval = setInterval(() => {
-        fetchJobPods(params.projectName, selectedJob.uid)
-      }, 30000)
-
-      return () => {
-        removePods()
-        clearInterval(interval)
-      }
-    }
-  }, [fetchJobPods, params.projectName, removePods, selectedJob])
+export const generateFunctionDetailsLink = (uri = '') => {
+  // remove 'latest' when function_uri will contain hash or tag
+  //
+  // 'my_proj/func_name@func_hash' -> projects/my_proj/functions/func_hash/overview
+  // 'my_proj/func_name' -> projects/my_proj/functions/func_name/latest/overview
+  // 'my_proj/func_name:custom_tag' -> projects/my_proj/functions/func_name/custom_tag/overview
+  return uri
+    ? `${generateLinkPath(`store://functions/${uri}`, uri.includes('@'))}${
+        uri.includes(':') || uri.includes('@') ? '' : '/latest'
+      }/overview`
+    : ''
 }

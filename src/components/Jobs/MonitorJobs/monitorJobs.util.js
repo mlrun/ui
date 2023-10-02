@@ -30,10 +30,10 @@ import {
 } from '../../../constants'
 import {
   JOB_STEADY_STATES,
+  functionRunKinds,
   getInfoHeaders,
-  isJobAbortable,
-  limitedFunctionKinds,
   getJobsDetailsMenu,
+  isJobAbortable,
   isJobKindDask
 } from '../jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -94,7 +94,7 @@ export const generateActionsMenu = (
         {
           label: 'Batch re-run',
           icon: <Run />,
-          hidden: limitedFunctionKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
+          hidden: !functionRunKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
           onClick: handleRerunJob
         },
         {

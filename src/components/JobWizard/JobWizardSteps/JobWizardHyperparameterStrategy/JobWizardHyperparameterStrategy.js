@@ -25,7 +25,7 @@ import { selectOptions } from './jobWizardHyperparameterStrategy.util'
 
 import './jobWizardHyperparametersStrategy.scss'
 
-const JobWizardHyperparameterStrategy = () => {
+const JobWizardHyperparameterStrategy = ({ formState }) => {
   const strategiesPath = 'hyperparameterStrategy.strategy'
   const maxIterationsPath = 'hyperparameterStrategy.maxIterations'
   const maxErrorsPath = 'hyperparameterStrategy.maxErrors'
@@ -46,10 +46,22 @@ const JobWizardHyperparameterStrategy = () => {
           <FormSelect label="Strategy" name={strategiesPath} options={selectOptions.strategies} />
         </div>
         <div className="max-iterations-grid-item">
-          <FormInput label="Max iterations" name={maxIterationsPath} type="number" />
+          <FormInput
+            label="Max iterations"
+            name={maxIterationsPath}
+            type="number"
+            disabled={formState.values?.hyperparameterStrategy?.strategy !== 'random'}
+            min="0"
+          />
         </div>
         <div className="max-errors-grid-item">
-          <FormInput label="Max errors" name={maxErrorsPath} type="number" />
+          <FormInput
+            label="Max errors"
+            name={maxErrorsPath}
+            type="number"
+            disabled={formState.values?.hyperparameterStrategy?.strategy !== 'random'}
+            min="0"
+          />
         </div>
         <div className="form-table-title ranking-title-grid-item">Ranking</div>
         <div className="result-grid-item">
@@ -64,7 +76,7 @@ const JobWizardHyperparameterStrategy = () => {
         </div>
         <div className="form-table-title parallelism-title-grid-item">Parallelism</div>
         <div className="parallel-runs-grid-item">
-          <FormInput label="Parallel runs" name={parallelRuns} type="number" />
+          <FormInput label="Parallel runs" name={parallelRuns} type="number" min="0" />
         </div>
         <div className="dask-cluster-uri-grid-item">
           <FormInput label="Dask clutter URL" name={dashClusterUriPath} />

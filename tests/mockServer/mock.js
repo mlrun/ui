@@ -27,6 +27,7 @@ import { cloneDeep, remove } from 'lodash'
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
 import projectsSummary from './data/summary.json'
+import hubItemInference from './data/hubItemInference.json'
 import artifacts from './data/artifacts.json'
 import featureSets from './data/featureSets.json'
 import features from './data/features.json'
@@ -35,6 +36,7 @@ import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
 import run from './data/run.json'
 import catalog from './data/catalog.json'
+import itemsCatalog from './data/itemsCatalog.json'
 import pipelines from './data/pipelines.json'
 import secretKeys from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
@@ -348,6 +350,19 @@ function getProjectsSummaries(req, res) {
   res.send(projectsSummary)
 }
 
+function getFunctionItem(req, res) {
+  res.send(hubItemInference)
+}
+
+function getFunctionObject (req, res){
+  const urlParams = req.query.url
+  const urlArray = urlParams.split('/')
+  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${urlArray[6]}/${urlArray[6]}.yaml`
+  const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
+
+  res.send(funcObject)
+}
+
 function getProjectSummary(req, res) {
   const collectedProject = projectsSummary.project_summaries.find(
     item => item.name === req.params['project']
@@ -419,7 +434,7 @@ function patchRun(req, res) {
 }
 
 function getFunctionCatalog(req, res) {
-  res.send(catalog)
+  res.send(itemsCatalog)
 }
 
 function getFunctionTemplate(req, res) {
@@ -775,9 +790,6 @@ function getPipeline(req, res) {
 }
 
 function getFuncs(req, res) {
-  console.log("TEST")
-  console.log(req.query)
-  //http://localhost:3000/api/v1/projects/default/functions?test=value
   const dt = parseInt(Date.now())
   
   const collectedFuncsByPrjTime = funcs.funcs
@@ -827,10 +839,9 @@ function getFuncs(req, res) {
 }
 
 function getFunc(req, res) {
-  console.log('//////////////////////')
   const collectedFunc = funcs.funcs
-    .filter(func => func.metadata.project === req.params['project']) // req.query.project) //req.params['project'])
-    .filter(func => func.metadata.name === req.params['func']) //req.params['func'])
+    .filter(func => func.metadata.project === req.params['project']) // req.query.project)
+    .filter(func => func.metadata.name === req.params['func']) 
     .filter(func => func.metadata.hash === req.query.hash_key)
 
   let respBody = {}
@@ -1126,6 +1137,34 @@ function postSubmitJob(req, res) {
   res.send(respTemplate)
 }
 
+function putTags(req, res){
+  const tagName = req.params.tag
+  const projectName = req.params.project 
+  
+  let artifactForUpdate = artifacts.artifacts.find(artifact => artifact.tree === req.body.identifiers[0].uid)
+  
+  if (artifactForUpdate === undefined){
+    artifactForUpdate = artifacts.artifacts
+      .filter(item => item.metadata)
+      .find(item => item.uid === req.body.identifiers[0].uid)
+
+    artifactForUpdate.metadata.tag = req.params.tag    
+  }
+  else{
+    artifactForUpdate.tag = req.params.tag
+  }
+  
+  res.send({
+    name: tagName,
+    project: projectName
+  })
+}
+
+function deleteTags(req, res){
+  res.send()
+}
+
+//TODO: artifact structure ML-4583
 function postArtifact(req, res) {
   const currentDate = new Date()
   const artifactHash = makeUID(32)
@@ -1133,27 +1172,56 @@ function postArtifact(req, res) {
   const tagObject = artifactTags.find(artifact => artifact.project === req.body.project)
 
   const artifactTemplate = {
-    key: req.body.key,
     kind: req.body.kind,
-    iter: 0,
-    tree: req.body.tree,
-    target_path: req.body.target_path,
-    hash: artifactHash,
-    size: null,
-    db_key: req.body.db_key,
-    description: req.body.description,
-    framework: '',
-    producer: {
-      kind: req.body.producer.kind,
-      uri: req.body.producer.uri
+    metadata: {
+      labels: req.body.metadata.labels,
+      key: req.body.metadata.key,
+      project: req.body.metadata.project,
+      tree: req.body.metadata.tree,
+      updated: currentDate.toISOString(),
+      tag: artifactTag
     },
-    sources: [],
     project: req.body.project,
-    updated: currentDate.toISOString(),
-    tag: artifactTag,
-    labels: req.body.labels
+    spec: {
+      db_key: req.body.spec.db_key,
+      producer: {
+        kind: req.body.spec.producer.kind,
+        uri: req.body.spec.producer.uri
+      },
+      target_path: req.body.spec.target_path
+    },
+    status: req.body.status,
+    uid: req.body.uid
+    
+    // iter: 0,   
+    // hash: artifactHash,
+    // size: null,
+    // description: req.body.description,
+    // framework: '',
+    // sources: [],
   }
-
+  
+  // const artifactTemplate = {
+  //   key: req.body.key,
+  //   kind: req.body.kind,
+  //   iter: 0,
+  //   tree: req.body.tree,
+  //   target_path: req.body.target_path,
+  //   hash: artifactHash,
+  //   size: null,
+  //   db_key: req.body.db_key,
+  //   description: req.body.description,
+  //   framework: '',
+  //   producer: {
+  //     kind: req.body.producer.kind,
+  //     uri: req.body.producer.uri
+  //   },
+  //   sources: [],
+  //   project: req.body.project,
+  //   updated: currentDate.toISOString(),
+  //   tag: artifactTag,
+  //   labels: req.body.labels
+  // }
   if (req.body.kind === 'model') {
     artifactTemplate.model_file = req.body.model_file
   }
@@ -1468,6 +1536,9 @@ app.get(`${mlrunAPIIngress}/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
+app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
+app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)
+app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, getFunctionObject)
 app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
@@ -1479,8 +1550,11 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngress}/projects/:project/artifacts`, getArtifacts)
+app.post(`${mlrunAPIIngress}/projects/:project/artifacts/:uid/:artifact`, postArtifact)
 
-app.post(`${mlrunAPIIngress}/artifact/:project/:uid/:artifact`, postArtifact)
+app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
+app.delete(`${mlrunAPIIngress}/projects/:project/tags/:tag`, deleteTags)
+
 app.get(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   getProjectsFeatureSets
@@ -1506,8 +1580,6 @@ app.delete(
 app.get(`${mlrunAPIIngress}/projects/:project/functions`, getFuncs)
 
 app.get(`${mlrunAPIIngress}/projects/:project/functions/:func`, getFunc)
-//app.get(`${mlrunAPIIngress}/func/:project/:func`, getFunc) - earlier api
-//app.post(`${mlrunAPIIngress}/func/:project/:func`, postFunc) - earlier api
 app.post(`${mlrunAPIIngress}/projects/:project/functions/:func`, postFunc)
 
 app.get(

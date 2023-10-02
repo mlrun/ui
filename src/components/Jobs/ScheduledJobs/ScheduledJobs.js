@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { get } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -40,6 +41,7 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constan
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { getJobFunctionData } from '../jobs.util'
+import { generateContentActionsMenu } from '../../../layout/Content/content.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
@@ -58,7 +60,6 @@ const ScheduledJobs = ({
   fetchJobFunction,
   fetchJobFunctionSuccess,
   fetchJobs,
-  fetchScheduledJobAccessKey,
   handleRunScheduledJob,
   removeScheduledJob
 }) => {
@@ -133,6 +134,8 @@ const ScheduledJobs = ({
           )
         })
         .catch(error => {
+          const errorMsg = get(error, 'response.data.detail', 'Job failed to start.')
+
           dispatch(
             setNotification({
               status: 400,
@@ -141,7 +144,7 @@ const ScheduledJobs = ({
               message:
                 error.response.status === FORBIDDEN_ERROR_STATUS_CODE
                   ? 'You are not permitted to run new job.'
-                  : 'Job failed to start.',
+                  : errorMsg,
               error
             })
           )
@@ -182,91 +185,55 @@ const ScheduledJobs = ({
 
   const handleEditScheduleJob = useCallback(
     editableItem => {
-      const getJobFunctionDataPromise = getJobFunctionData(
+      getJobFunctionData(
         editableItem,
         fetchJobFunction,
         dispatch,
         fetchFunctionTemplate,
         fetchJobFunctionSuccess
-      )
-      const fetchScheduledJobAccessKeyPromise = fetchScheduledJobAccessKey(
-        params.projectName,
-        editableItem.name
-      )
-        .then(result => {
-          setEditableItem({
-            ...editableItem,
-            scheduled_object: {
-              ...editableItem.scheduled_object,
-              credentials: {
-                access_key: result.data.credentials.access_key
-              },
-              function: {
-                ...editableItem.scheduled_object.function,
-                metadata: {
-                  ...editableItem.scheduled_object.function?.metadata,
-                  credentials: {
-                    ...editableItem.scheduled_object.function?.metadata?.credentials,
-                    access_key: result.data.credentials.access_key
-                  }
-                }
-              }
-            }
-          })
-        })
-        .catch(error => {
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              retry: () => handleEditScheduleJob(editableItem),
-              message: 'Failed to fetch job access key',
-              error
-            })
-          )
-
-          throw error
+      ).then(functionData => {
+        setEditableItem({
+          ...editableItem,
+          scheduled_object: {
+            ...editableItem.scheduled_object,
+            function: functionData
+          }
         })
 
-      Promise.all([getJobFunctionDataPromise, fetchScheduledJobAccessKeyPromise]).then(() => {
         setJobWizardMode(PANEL_EDIT_MODE)
       })
     },
-    [
-      fetchJobFunction,
-      dispatch,
-      fetchFunctionTemplate,
-      fetchJobFunctionSuccess,
-      fetchScheduledJobAccessKey,
-      params.projectName,
-      setJobWizardMode
-    ]
+    [fetchJobFunction, dispatch, fetchFunctionTemplate, fetchJobFunctionSuccess, setJobWizardMode]
   )
 
   const actionsMenu = useMemo(() => {
-    return [
-      {
-        label: 'Run now',
-        icon: <Run className="action_cell__run-icon" />,
-        onClick: handleRunJob
-      },
-      {
-        label: 'Edit',
-        icon: <Edit />,
-        onClick: handleEditScheduleJob
-      },
-      {
-        label: 'Delete',
-        icon: <Delete />,
-        className: 'danger',
-        onClick: onRemoveScheduledJob
-      },
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
-    ]
+    return generateContentActionsMenu(
+      job => [
+        {
+          label: 'Run now',
+          icon: <Run className="action_cell__run-icon" />,
+          onClick: handleRunJob
+        },
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: handleEditScheduleJob,
+          hidden: job?.type === 'workflow'
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          onClick: onRemoveScheduledJob
+        },
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ],
+      []
+    )
   }, [handleEditScheduleJob, handleRunJob, onRemoveScheduledJob, toggleConvertedYaml])
 
   useEffect(() => {

@@ -26,6 +26,7 @@ import { createForm } from 'final-form'
 
 import { Button, FormInput, Modal } from 'igz-controls/components'
 
+import { DATASET_TYPE, MODEL_TYPE } from '../../constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -147,7 +148,13 @@ const AddArtifactTagPopUp = ({
                 <div className="form-col-1">
                   <FormInput
                     name="artifactTag"
-                    label="Artifact tag"
+                    label={`${
+                      artifact.kind === MODEL_TYPE
+                        ? 'Model tag'
+                        : artifact.kind === DATASET_TYPE
+                        ? 'Dataset tag'
+                        : 'Artifact tag'
+                    }`}
                     focused
                     required
                     validationRules={getValidationRules('common.name', [

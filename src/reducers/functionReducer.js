@@ -18,62 +18,71 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  FETCH_FUNCTIONS_BEGIN,
-  FETCH_FUNCTIONS_FAILURE,
-  FETCH_FUNCTIONS_SUCCESS,
-  FETCH_FUNCTION_TEMPLATE_BEGIN,
-  FETCH_FUNCTION_TEMPLATE_FAILURE,
-  FETCH_FUNCTION_TEMPLATE_SUCCESS,
-  REMOVE_FUNCTION_TEMPLATE,
-  SET_FUNCTIONS_TEMPLATES,
-  SET_NEW_FUNCTION_NAME,
-  SET_NEW_FUNCTION_TAG,
-  SET_NEW_FUNCTION_DESCRIPTION,
-  SET_NEW_FUNCTION_LABELS,
-  SET_NEW_FUNCTION_SOURCE_CODE,
-  SET_NEW_FUNCTION_HANDLER,
-  SET_NEW_FUNCTION_IMAGE,
-  SET_NEW_FUNCTION_BASE_IMAGE,
-  SET_NEW_FUNCTION_COMMANDS,
-  SET_NEW_FUNCTION_VOLUME_MOUNTS,
-  SET_NEW_FUNCTION_VOLUMES,
-  SET_NEW_FUNCTION_RESOURCES,
-  SET_NEW_FUNCTION_ENV,
-  REMOVE_NEW_FUNCTION,
   CREATE_NEW_FUNCTION_BEGIN,
   CREATE_NEW_FUNCTION_FAILURE,
   CREATE_NEW_FUNCTION_SUCCESS,
-  REMOVE_FUNCTIONS_ERROR,
   DEPLOY_FUNCTION_BEGIN,
   DEPLOY_FUNCTION_FAILURE,
   DEPLOY_FUNCTION_SUCCESS,
-  SET_NEW_FUNCTION_SECRETS,
-  SET_NEW_FUNCTION_BUILD_IMAGE,
-  SET_NEW_FUNCTION_PROJECT,
-  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE,
+  FETCH_FUNCTIONS_BEGIN,
+  FETCH_FUNCTIONS_FAILURE,
+  FETCH_FUNCTIONS_SUCCESS,
   FETCH_FUNCTION_LOGS_BEGIN,
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_SUCCESS,
-  SET_NEW_FUNCTION,
-  SET_NEW_FUNCTION_KIND,
-  SET_NEW_FUNCTION_GRAPH,
-  SET_NEW_FUNCTION_TRACK_MODELS,
-  SET_NEW_FUNCTION_PARAMETERS,
-  SET_NEW_FUNCTION_ERROR_STREAM,
-  SET_NEW_FUNCTION_DEFAULT_CLASS,
-  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
-  GET_FUNCTION_SUCCESS,
-  GET_FUNCTION_FAILURE,
+  FETCH_FUNCTION_TEMPLATE_BEGIN,
+  FETCH_FUNCTION_TEMPLATE_FAILURE,
+  FETCH_FUNCTION_TEMPLATE_SUCCESS,
+  FETCH_HUB_FUNCTION_TEMPLATE_BEGIN,
+  FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
+  FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS,
   GET_FUNCTION_BEGIN,
-  REMOVE_FUNCTION,
-  SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+  GET_FUNCTION_FAILURE,
+  GET_FUNCTION_SUCCESS,
   PANEL_DEFAULT_ACCESS_KEY,
+  REMOVE_FUNCTION,
+  REMOVE_FUNCTIONS_ERROR,
+  REMOVE_FUNCTION_TEMPLATE,
+  REMOVE_NEW_FUNCTION,
+  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE,
+  SET_FUNCTIONS_TEMPLATES,
+  SET_NEW_FUNCTION,
+  SET_NEW_FUNCTION_BASE_IMAGE,
+  SET_NEW_FUNCTION_BUILD_IMAGE,
+  SET_NEW_FUNCTION_COMMANDS,
+  SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+  SET_NEW_FUNCTION_DEFAULT_CLASS,
+  SET_NEW_FUNCTION_DESCRIPTION,
+  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  SET_NEW_FUNCTION_ENV,
+  SET_NEW_FUNCTION_ERROR_STREAM,
   SET_NEW_FUNCTION_FORCE_BUILD,
+  SET_NEW_FUNCTION_GRAPH,
+  SET_NEW_FUNCTION_HANDLER,
+  SET_NEW_FUNCTION_IMAGE,
+  SET_NEW_FUNCTION_KIND,
+  SET_NEW_FUNCTION_LABELS,
+  SET_NEW_FUNCTION_NAME,
+  SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_PREEMTION_MODE,
-  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME
+  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
+  SET_NEW_FUNCTION_PROJECT,
+  SET_NEW_FUNCTION_REQUIREMENTS,
+  SET_NEW_FUNCTION_RESOURCES,
+  SET_NEW_FUNCTION_SECRETS,
+  SET_NEW_FUNCTION_SOURCE_CODE,
+  SET_NEW_FUNCTION_TAG,
+  SET_NEW_FUNCTION_TRACK_MODELS,
+  SET_NEW_FUNCTION_VOLUMES,
+  SET_NEW_FUNCTION_VOLUME_MOUNTS,
+  FETCH_FUNCTIONS_TEMPLATES_FAILURE,
+  FETCH_HUB_FUNCTIONS_FAILURE,
+  SET_HUB_FUNCTIONS
 } from '../constants'
 
 const initialState = {
+  hubFunctions: [],
+  hubFunctionsCatalog: {},
   functions: [],
   func: {},
   logs: {
@@ -98,7 +107,8 @@ const initialState = {
         base_image: '',
         commands: [],
         functionSourceCode: '',
-        image: ''
+        image: '',
+        requirements: []
       },
       default_class: '',
       default_handler: '',
@@ -198,12 +208,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
           error: null
         }
       }
-    case SET_FUNCTIONS_TEMPLATES:
-      return {
-        ...state,
-        templates: payload.templates,
-        templatesCatalog: payload.templatesCategories
-      }
     case FETCH_FUNCTION_TEMPLATE_BEGIN:
       return {
         ...state,
@@ -220,6 +224,38 @@ const functionReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         template: {},
+        error: payload
+      }
+    case FETCH_FUNCTIONS_TEMPLATES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        templates: [],
+        templatesCatalog: {},
+        error: payload
+      }
+    case FETCH_HUB_FUNCTION_TEMPLATE_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS:
+      return {
+        ...state,
+        loading: false
+      }
+    case FETCH_HUB_FUNCTION_TEMPLATE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_HUB_FUNCTIONS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        hubFunctions: [],
+        hubFunctionsCatalog: [],
         error: payload
       }
     case GET_FUNCTION_BEGIN:
@@ -277,6 +313,20 @@ const functionReducer = (state = initialState, { type, payload }) => {
           }
         }
       }
+    case SET_FUNCTIONS_TEMPLATES:
+      return {
+        ...state,
+        templates: payload.templates,
+        templatesCatalog: payload.templatesCategories
+      }
+    case SET_HUB_FUNCTIONS:
+      return {
+        ...state,
+        loading: false,
+        hubFunctions: payload.hubFunctions,
+        hubFunctionsCatalog: payload.hubFunctionsCategories,
+        error: null
+      }
     case SET_NEW_FUNCTION:
       return {
         ...state,
@@ -320,6 +370,20 @@ const functionReducer = (state = initialState, { type, payload }) => {
             build: {
               ...state.newFunction.spec.build,
               commands: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_REQUIREMENTS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              requirements: payload
             }
           }
         }

@@ -21,9 +21,11 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { groupBy, forEach, map, concat } from 'lodash'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
-import PipelineView from './PipelineView'
+import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
+import CodeBlock from '../../common/CodeBlock/CodeBlock'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import {
   DEFAULT_EDGE,
@@ -32,14 +34,19 @@ import {
   ML_EDGE,
   ML_NODE,
   PRIMARY_NODE,
+  REAL_TIME_PIPELINES_TAB,
   SECONDARY_NODE
 } from '../../constants'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 
+import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
+
 import './pipeline.scss'
 
 const Pipeline = ({ content }) => {
-  const [elements, setElements] = useState([])
+  const [nodes, setNodes] = useState([])
+  const [edges, setEdges] = useState([])
   const [pipeline, setPipeline] = useState({})
   const [selectedStep, setSelectedStep] = useState({})
   const [selectedStepData, setSelectedStepData] = useState([])
@@ -99,7 +106,7 @@ const Pipeline = ({ content }) => {
 
     if (steps) {
       let mainRouterStepId = ''
-      const nodes = []
+      const newNodes = []
       const edgesMap = {}
       const edgesRouterMap = []
       const errorsMap = {}
@@ -107,7 +114,7 @@ const Pipeline = ({ content }) => {
       if (graph.kind === 'router') {
         mainRouterStepId = graph.class_args?.name || 'router'
 
-        nodes.push({
+        newNodes.push({
           id: mainRouterStepId,
           type: ML_NODE,
           data: {
@@ -126,7 +133,7 @@ const Pipeline = ({ content }) => {
         const subLabel =
           step.kind === 'queue' ? '« queue »' : step.kind === 'router' ? '« router »' : ''
 
-        nodes.push({
+        newNodes.push({
           id: stepName,
           type: ML_NODE,
           data: {
@@ -154,7 +161,7 @@ const Pipeline = ({ content }) => {
 
         if (step.kind === 'router' && step.routes) {
           forEach(step.routes, (routeInner, routeInnerName) => {
-            nodes.push({
+            newNodes.push({
               id: routeInnerName,
               type: ML_NODE,
               data: {
@@ -200,7 +207,7 @@ const Pipeline = ({ content }) => {
       })
 
       const errorEdges = map(errorsMap, (target, source) => {
-        const errorHandlerElement = nodes.find(node => node.id === target)
+        const errorHandlerElement = newNodes.find(node => node.id === target)
         errorHandlerElement.data.subType = ERROR_NODE
 
         return {
@@ -239,20 +246,79 @@ const Pipeline = ({ content }) => {
         }
       })
 
-      setElements(getLayoutedElements(concat(nodes, sortedNodesEdges, errorEdges)))
+      const [layoutedNodes, layoutedEdges] = getLayoutedElements(
+        newNodes,
+        concat(sortedNodesEdges, errorEdges)
+      )
+
+      setNodes(layoutedNodes)
+      setEdges(layoutedEdges)
     }
   }, [pipeline, selectedStep])
 
   return (
-    <PipelineView
-      elements={elements}
-      params={params}
-      pipeline={pipeline}
-      selectedStep={selectedStep}
-      selectedStepData={selectedStepData}
-      setSelectedStep={setSelectedStep}
-      stepIsSelected={stepIsSelected}
-    />
+    <div className="pipeline-container">
+      <div className="pipeline-header">
+        <div className="link-back">
+          <Link
+            to={`/projects/${params.projectName}/models/${
+              params.pageTab ?? REAL_TIME_PIPELINES_TAB
+            }`}
+            className="link-back__icon"
+          >
+            <RoundedIcon id="pipeline-back-btn" tooltipText="Back">
+              <Back />
+            </RoundedIcon>
+          </Link>
+          <div className="link-back__title">
+            <Tooltip template={<TextTooltipTemplate text={pipeline?.name} />}>
+              {pipeline?.name}
+            </Tooltip>
+          </div>
+        </div>
+      </div>
+
+      <div className="graph-container pipeline-content">
+        <div className="graph-view">
+          <MlReactFlow
+            nodes={nodes}
+            edges={edges}
+            alignTriggerItem={stepIsSelected}
+            onNodeClick={(event, node) => {
+              if (node.data?.customData) {
+                setSelectedStep(node)
+              }
+            }}
+          />
+        </div>
+        {stepIsSelected && (
+          <div className="graph-pane">
+            <div className="graph-pane__title">
+              <span>{selectedStep.id}</span>
+              <RoundedIcon onClick={() => setSelectedStep({})} tooltipText="Close">
+                <CloseIcon />
+              </RoundedIcon>
+            </div>
+            {selectedStepData.map(rowData => (
+              <div className="graph-pane__row" key={rowData.label}>
+                {rowData.type === 'codeblock' ? (
+                  <CodeBlock label="Arguments" codeData={rowData.value} />
+                ) : (
+                  <>
+                    <div className="graph-pane__row-label">{rowData.label}</div>
+                    <div className="graph-pane__row-value">
+                      <Tooltip template={<TextTooltipTemplate text={rowData.value} />}>
+                        {rowData.value}
+                      </Tooltip>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 

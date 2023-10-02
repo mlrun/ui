@@ -17,13 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Field, useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import { isEqual } from 'lodash'
+import classnames from 'classnames'
 
-import TagFilterDropdown from '../TagFilter/TagFilterDropdown'
+import { PopUpDialog } from 'igz-controls/components'
 
 import { tagFilterOptions } from '../../components/FilterMenu/filterMenu.settings'
 import { TAG_FILTER_LATEST } from '../../constants'
@@ -38,7 +39,15 @@ const FormTagFilter = ({ label, name }) => {
   const [tagFilter, setTagFilter] = useState(input.value)
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const tagFilterRef = useRef()
+  const dropdownRef = useRef()
   const filtersStore = useSelector(store => store.filtersStore)
+  const [dropdownWidth, setDropdownWidth] = useState(200)
+
+  useLayoutEffect(() => {
+    if (tagFilterRef?.current) {
+      setDropdownWidth(tagFilterRef?.current.getBoundingClientRect().width)
+    }
+  }, [])
 
   const options = useMemo(() => {
     let newTagOptions = tagFilterOptions
@@ -92,7 +101,10 @@ const FormTagFilter = ({ label, name }) => {
     event => {
       const elementPath = event.path ?? event.composedPath?.()
 
-      if (!elementPath.includes(tagFilterRef.current)) {
+      if (
+        !elementPath.includes(tagFilterRef.current) &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         if (tagFilter.length <= 0) {
           input.onChange(TAG_FILTER_LATEST)
           setTagFilter(tagFilterOptions.find(tag => tag.id === TAG_FILTER_LATEST).label)
@@ -161,17 +173,40 @@ const FormTagFilter = ({ label, name }) => {
                 }
               }}
             />
-            <div className="tag-filter__dropdown-button" onClick={toggleDropdown}>
+            <div className="form-tag-filter__dropdown-button" onClick={toggleDropdown}>
               <Caret />
             </div>
           </div>
           {isDropDownMenuOpen && (
-            <TagFilterDropdown
-              handleSelectFilter={handleSelectFilter}
-              setIsDropDownMenuOpen={setIsDropDownMenuOpen}
-              tagFilter={tagFilter}
-              tagFilterOptions={tagOptions}
-            />
+            <PopUpDialog
+              className="form-tag-filter__dropdown"
+              headerIsHidden
+              customPosition={{
+                element: tagFilterRef,
+                position: 'bottom-right'
+              }}
+              ref={dropdownRef}
+              style={{ width: `${dropdownWidth}px` }}
+            >
+              {tagOptions.map(tag => {
+                const dropdownItemClassName = classnames(
+                  'form-tag-filter__dropdown-item',
+                  tagFilter.length !== 0 &&
+                    tagFilter === tag.id &&
+                    'form-tag-filter__dropdown-item_selected'
+                )
+
+                return (
+                  <div
+                    key={tag.id}
+                    className={dropdownItemClassName}
+                    onClick={event => handleSelectFilter(event, tag)}
+                  >
+                    {tag.label}
+                  </div>
+                )
+              })}
+            </PopUpDialog>
           )}
         </div>
       )}

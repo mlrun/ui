@@ -43,8 +43,6 @@ import {
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
   FETCH_JOB_SUCCESS,
-  FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
-  FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
   REMOVE_JOB,
   REMOVE_JOB_ERROR,
   REMOVE_JOB_FUNCTION,
@@ -102,11 +100,11 @@ const jobsActions = {
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
-  fetchAllJobRuns: (project, filters, jobName) => dispatch => {
+  fetchAllJobRuns: (project, filters, jobName, cancelToken) => dispatch => {
     dispatch(jobsActions.fetchAllJobRunsBegin())
 
     return jobsApi
-      .getAllJobRuns(project, jobName, filters)
+      .getAllJobRuns(project, jobName, filters, cancelToken)
       .then(({ data }) => {
         dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
 
@@ -175,8 +173,6 @@ const jobsActions = {
             error
           })
         )
-
-        throw error
       })
   },
   fetchJobFunctionBegin: () => ({
@@ -273,27 +269,6 @@ const jobsActions = {
   fetchJobsSuccess: jobsList => ({
     type: FETCH_JOBS_SUCCESS,
     payload: jobsList
-  }),
-  fetchScheduledJobAccessKey: (projectName, jobName) => dispatch => {
-    dispatch(jobsActions.fetchScheduledJobAccessKeyBegin())
-
-    return jobsApi
-      .getScheduledJobAccessKey(projectName, jobName)
-      .then(result => {
-        dispatch(jobsActions.fetchScheduledJobAccessKeyEnd())
-
-        return result
-      })
-      .catch(error => {
-        dispatch(jobsActions.fetchScheduledJobAccessKeyEnd())
-        throw error
-      })
-  },
-  fetchScheduledJobAccessKeyBegin: () => ({
-    type: FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN
-  }),
-  fetchScheduledJobAccessKeyEnd: () => ({
-    type: FETCH_SCHEDULED_JOB_ACCESS_KEY_END
   }),
   handleRunScheduledJob: (postData, project, job) => () =>
     jobsApi.runScheduledJob(postData, project, job),

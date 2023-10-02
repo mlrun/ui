@@ -38,12 +38,12 @@ const FormResourcesUnits = ({ formState }) => {
     [formState.values.resources.currentLimits]
   )
   const selectedRequestUnit = useMemo(
-    () => getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnit),
-    [formState.values.resources.currentRequest.cpuUnit]
+    () => getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnitId),
+    [formState.values.resources.currentRequest.cpuUnitId]
   )
   const selectedLimitUnit = useMemo(
-    () => getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnit),
-    [formState.values.resources.currentLimits.cpuUnit]
+    () => getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnitId),
+    [formState.values.resources.currentLimits.cpuUnitId]
   )
 
   const validateMemory = (value, allValues) => {
@@ -168,8 +168,8 @@ const FormResourcesUnits = ({ formState }) => {
                 name="resources.currentRequest.cpu"
                 label="Request"
                 type="number"
-                min={selectedRequestUnit?.minValue}
-                step={selectedRequestUnit?.step}
+                min={selectedRequestUnit?.minValue ?? 1}
+                step={selectedRequestUnit?.step ?? 1}
                 validator={validateCpu}
                 required
                 invalidText={`Request must be less than or equal to Limit and not be less than ${selectedRequestUnit?.minValue}`}
@@ -186,8 +186,8 @@ const FormResourcesUnits = ({ formState }) => {
                 name="resources.currentLimits.cpu"
                 label="Limit"
                 type="number"
-                min={selectedLimitUnit?.minValue}
-                step={selectedLimitUnit?.step}
+                min={selectedLimitUnit?.minValue ?? 1}
+                step={selectedLimitUnit?.step ?? 1}
                 validator={validateCpu}
                 required
                 invalidText={`Limit must be bigger than or equal to Request and not be less than ${selectedLimitUnit?.minValue}`}

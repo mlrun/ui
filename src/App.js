@@ -43,6 +43,7 @@ import {
   SCHEDULE_TAB
 } from './constants'
 
+import 'reactflow/dist/style.css'
 import 'igz-controls/scss/common.scss'
 import './scss/main.scss'
 
@@ -123,7 +124,7 @@ const App = () => {
                   element={<ConsumerGroupsWrapper />}
                 >
                   <Route path="" exact element={<ConsumerGroups />} />
-                  <Route path=":consumerGroupName" exact element={<ConsumerGroup />} />
+                  <Route path=":functionName/:streamName" exact element={<ConsumerGroup />} />
                 </Route>
               )}
               <Route

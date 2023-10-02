@@ -65,7 +65,6 @@ export const generateProjectActionsMenu = (
       {
         label: 'Export YAML',
         icon: <DownloadIcon />,
-        hidden: !isDemoMode, // TODO: remove after QA test and approval
         onClick: exportYaml
       },
       {

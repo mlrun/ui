@@ -2,9 +2,18 @@
 @import '~igz-controls/scss/borders';
 
 .resources-units {
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  padding: 0;
+
+  [class*='form-col'] {
+    min-height: 200px;
+
+    &:not(:last-child) {
+      margin: 0;
+    }
+  }
 
   .resources-card {
     min-width: 280px;

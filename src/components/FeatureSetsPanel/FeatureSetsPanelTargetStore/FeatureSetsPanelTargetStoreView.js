@@ -64,6 +64,7 @@ import './featureSetsPanelTargetStore.scss'
 const FeatureSetsPanelTargetStoreView = ({
   data,
   disableButtons,
+  externalOfflineTarget,
   featureStore,
   frontendSpecIsNotEmpty,
   handleAdvancedLinkClick,
@@ -85,6 +86,7 @@ const FeatureSetsPanelTargetStoreView = ({
   selectedPartitionKind,
   selectedTargetKind,
   setData,
+  setTargetsPathEditData,
   setValidation,
   showAdvanced,
   targetsPathEditData,
@@ -129,20 +131,30 @@ const FeatureSetsPanelTargetStoreView = ({
                       floatingLabel
                       focused={frontendSpecIsNotEmpty}
                       invalid={!validation.isOnlineTargetPathValid}
+                      invalidText={
+                        data.online.kind === REDISNOSQL && /[{}]/g.test(data.online.path)
+                          ? 'Invalid Redis URL, change the URL to a valid URL in the form of <redis|rediss>:///<host>[:port]'
+                          : ''
+                      }
                       label="Path"
-                      onChange={path =>
+                      onChange={path => {
+                        setTargetsPathEditData(prevState => ({
+                          ...prevState,
+                          online: {
+                            ...prevState.online,
+                            isModified: true
+                          }
+                        }))
                         setData(prevState => ({
                           ...prevState,
                           online: { ...prevState.online, path }
                         }))
-                      }
+                      }}
                       placeholder={`${
                         data.online.kind === NOSQL
                           ? V3IO_INPUT_PATH_SCHEME
-                          : REDIS_INPUT_PATH_SCHEME
-                      }projects/{project}/FeatureStore/{name}/${
-                        data.online.kind === NOSQL ? NOSQL : REDISNOSQL
-                      }/sets/{name}`}
+                          : REDIS_INPUT_PATH_SCHEME + '{authority}/'
+                      }projects/{project}/FeatureStore/{name}/${data.online.kind}/sets/{name}`}
                       required
                       setInvalid={value =>
                         setValidation(state => ({
@@ -173,7 +185,10 @@ const FeatureSetsPanelTargetStoreView = ({
                 {!targetsPathEditData.online.isEditMode && (
                   <>
                     <Tooltip
-                      className="path-data online-path"
+                      className={classNames(
+                        'path-data online-path',
+                        !validation.isOnlineTargetPathValid && 'online-path__invalid'
+                      )}
                       template={<TextTooltipTemplate text={data.online.path} />}
                     >
                       {data.online.path}
@@ -220,6 +235,13 @@ const FeatureSetsPanelTargetStoreView = ({
                       invalidText={getInvalidParquetPathMessage(data.parquet)}
                       label="Path"
                       onChange={path => {
+                        setTargetsPathEditData(prevState => ({
+                          ...prevState,
+                          parquet: {
+                            ...prevState.parquet,
+                            isModified: true
+                          }
+                        }))
                         setData(state => ({
                           ...state,
                           parquet: { ...state.parquet, path }
@@ -371,6 +393,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       option.id !== V3IO_INPUT_PATH_SCHEME
                   )}
                   disabled={featureStore.newFeatureSet.spec.passthrough}
+                  defaultPath={externalOfflineTarget}
                   invalid={!validation.isExternalOfflineTargetPathValid}
                   handleUrlOnBlur={handleExternalOfflineKindPathOnBlur}
                   handleUrlOnFocus={handleExternalOfflineKindPathOnFocus}
@@ -442,12 +465,14 @@ const FeatureSetsPanelTargetStoreView = ({
 }
 
 FeatureSetsPanelTargetStoreView.defualtProps = {
+  externalOfflineTarget: {},
   handleUrlSelectOnChange: null
 }
 
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   disableButtons: PropTypes.shape({}).isRequired,
+  externalOfflineTarget: PropTypes.shape({}),
   frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,
@@ -474,6 +499,7 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   }).isRequired,
   selectedTargetKind: PropTypes.arrayOf(PropTypes.string).isRequired,
   setData: PropTypes.func.isRequired,
+  setTargetsPathEditData: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   showAdvanced: PropTypes.shape({
     parquet: PropTypes.bool.isRequired,

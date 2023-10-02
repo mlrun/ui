@@ -22,7 +22,7 @@ import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 import { FormInput, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
-import FormRowActions from 'igz-controls/elements/FormRowActions/FormRowActions'
+import { FormRowActions } from 'igz-controls/elements'
 import TargetPath from '../../../common/TargetPath/TargetPath'
 
 import { DATA_INPUT_STATE } from '../../../types'

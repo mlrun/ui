@@ -27,7 +27,7 @@ import FormParametersRow from './FormParametersRow/FormParametersRow'
 import { FormActionButton } from 'igz-controls/elements'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
+import { useFormTable } from 'igz-controls/hooks'
 
 const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparameters }) => {
   const predefinedPath = `${fieldsPath}.predefined`
@@ -79,47 +79,33 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
       </div>
       <FieldArray name={predefinedPath}>
         {({ fields }) => {
-          return (
-            <>
-              {fields.value?.length > 0 && (
-                <div className="form-table__row form-table__sub-header-row no-hover">
-                  <div className="form-table__cell">Predefined</div>
-                </div>
-              )}
-              {fields.map((rowPath, index) => {
-                return (
-                  <FormParametersRow
-                    applyChanges={applyChanges}
-                    deleteRow={deleteRow}
-                    disabled={disabled}
-                    discardOrDelete={discardOrDelete}
-                    editingItem={editingItem}
-                    enterEditMode={enterEditMode}
-                    fields={fields}
-                    fieldsPath={predefinedPath}
-                    formState={formState}
-                    index={index}
-                    isCurrentRowEditing={isCurrentRowEditing}
-                    key={rowPath}
-                    rowPath={rowPath}
-                    uniquenessValidator={uniquenessValidator}
-                    withHyperparameters={withHyperparameters}
-                  />
-                )
-              })}
-            </>
-          )
+          return fields.map((rowPath, index) => {
+            return (
+              <FormParametersRow
+                applyChanges={applyChanges}
+                deleteRow={deleteRow}
+                disabled={disabled}
+                discardOrDelete={discardOrDelete}
+                editingItem={editingItem}
+                enterEditMode={enterEditMode}
+                fields={fields}
+                fieldsPath={predefinedPath}
+                formState={formState}
+                index={index}
+                isCurrentRowEditing={isCurrentRowEditing}
+                key={rowPath}
+                rowPath={rowPath}
+                uniquenessValidator={uniquenessValidator}
+                withHyperparameters={withHyperparameters}
+              />
+            )
+          })
         }}
       </FieldArray>
       <FieldArray name={customPath}>
         {({ fields }) => {
           return (
             <>
-              {fields.value?.length > 0 && (
-                <div className="form-table__row form-table__sub-header-row no-hover">
-                  <div className="form-table__cell">Custom</div>
-                </div>
-              )}
               {fields.map((rowPath, index) => {
                 return (
                   <FormParametersRow

@@ -41,8 +41,9 @@
   }
 
   &-matches {
-    padding: 0;
     margin: 0;
+    padding: 0;
+    max-height: 250px;
 
     &__item {
       padding: 7px 15px;
@@ -71,9 +72,9 @@
     position: absolute;
     top: 50%;
     left: 5px;
+    z-index: 3;
     transform: translateY(-45%);
     cursor: pointer;
-    z-index: 3;
 
     & * {
       fill: $spunPearl;

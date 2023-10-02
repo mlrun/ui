@@ -3,10 +3,9 @@ Feature: Models Page
   Testcases that verifies functionality on Models Page
 
   @FAILED_TODO
-  #TODO: Table_Labels_Filter_Input, Table_Tree_Filter_Dropdown, Show_Iterations_Checkbox, Table_Tree_Filter_Dropdown elements were redesigned, need tests rewrite
-  #TODO: Register_Model_Button hidden till 5.1, running on demo mode
+  #TODO: Register_Model_Button hidden till 1.5, running on demo mode
   @passive
-  Scenario: Check all mandatory components on Models tab
+  Scenario: MLM001 - Check all mandatory components on Models tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -22,18 +21,19 @@ Feature: Models Page
     Then verify breadcrumbs "tab" label should be equal "Models" value
     Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
     Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
-    Then verify "Table_Labels_Filter_Input" element visibility on "Models" wizard
-    Then verify "Table_Tree_Filter_Dropdown" element visibility on "Models" wizard
-    Then verify "Show_Iterations_Checkbox" element visibility on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Models" wizard
     Then verify "Models_Table" element visibility on "Models" wizard
     And turn on demo mode
     Then verify "Register_Model_Button" element visibility on "Models" wizard
     Then "Register_Model_Button" element on "Models" should contains "Register Model" value
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Models" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
 
   @passive
-  Scenario: Check all mandatory components on Model Endpoints tab
+  Scenario: MLM002 - Check all mandatory components on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -56,7 +56,7 @@ Feature: Models Page
     Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
 
   @passive
-  Scenario: Check all mandatory components on Real-Time Pipelines tab
+  Scenario: MLM003 - Check all mandatory components on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -78,7 +78,7 @@ Feature: Models Page
     Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
 
   @passive
-  Scenario: Verify filtering by model name on Models tab
+  Scenario: MLM004 - Verify filtering by model name on Models tab
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -93,37 +93,39 @@ Feature: Models Page
     And wait load page
     Then value in "name" column with "text" in "Models_Table" on "Models" wizard should contains "survival"
 
-  @FAILED_TODO
-  #TODO: Show_Iterations_Checkbox element was redesigned, need tests rewrite
-  #TODO: class table__content was changed, need modelsTable components rewrite (affects the 'click on cell with row index','expand_btn', 'Header element' cases)
   @passive
-  Scenario: Verify behaviour of Show iterations checkbox on Models tab
-    * set tear-down property "model" created in "default" project with "automation-model" value
-    * create "automation-model" Model with "latest" tag in "default" project with code 200
+  Scenario: MLM005 - Verify behaviour of Show iterations checkbox on Models tab
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then verify "Show_Iterations_Checkbox" element visibility on "Models" wizard
-    Then check "Show_Iterations_Checkbox" element on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then check "expand_btn" not presented in "Models_Table" on "Models" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then "Show_Iterations_Checkbox" element should be checked on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "Artifacts_FilterBy_Popup" wizard
     Then check "expand_btn" visibility in "Models_Table" on "Models" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
-    Then uncheck "Show_Iterations_Checkbox" element on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then check "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     Then verify "Header" element not exists on "Models_Info_Pane" wizard
-    Then "Show_Iterations_Checkbox" element should be unchecked on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Show_Iterations_Checkbox" element should be checked on "Artifacts_FilterBy_Popup" wizard
 
   @FAILED_TODO
-  #TODO: class table__content was changed, need realTimePipelinesTable components rewrite (affects the last case)
+  #TODO: no Real-time pipelines data to show for "Name: churn-server" - add data
   @passive
-  Scenario: Verify filtering by name on Real-Time Pipelines tab
+  Scenario: MLM006 - Verify filtering by name on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -147,10 +149,8 @@ Feature: Models Page
     And wait load page
     Then value in "name" column with "text" in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard should contains "churn-server"
 
-  @FAILED_TODO
-  #TODO: Table_Labels_Filter_Input element was redesigned, need tests rewrite
   @passive
-  Scenario: Verify filtering by label with key on Models tab
+  Scenario: MLM007 - Verify filtering by label with key on Models tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -158,21 +158,25 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    #Then type value "my-key" to "Table_Labels_Filter_Input" field on "Models" wizard
-    Then click on "Table_Refresh_Button" element on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then type value "my-key" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key"
-    Then type value "my-key=my-value" to "Table_Labels_Filter_Input" field on "Models" wizard
-    Then click on "Table_Refresh_Button" element on "Models" wizard
+    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key" in "Overlay"
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key=my-value"
-    Then type value "MY-KEY" to "Table_Labels_Filter_Input" field on "Models" wizard
-    Then click on "Table_Refresh_Button" element on "Models" wizard
+    Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key=my-value" in "Overlay"
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Models_data"
 
   @passive
-  Scenario: Verify filtering by label on Model Endpoints tab
+  Scenario: MLM008 - Verify filtering by label on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -187,23 +191,23 @@ Feature: Models Page
     Then type value "my-key" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value"
+    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value" in "Overlay"
     Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value"
+    Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value" in "Overlay"
     Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
     Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @FAILED_TODO
-  #TODO: Register_Model_Button hidden till 5.1, running in demo mode
+  #TODO: Register_Model_Button hidden till 1.5, running in demo mode
   #TODO: warning "Input_Hint"."Input_Field_Invalid" was redesigned, need case rewrite (now it's dropdown warning)
   #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
   #TODO: artifactsLabelsTable class components was changed, need to rewrite locators structure (affects the 'Labels_Table', 'remove_btn' cases)
   @passive
-  Scenario: Check all mandatory components on Register Model Popup
+  Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -289,9 +293,9 @@ Feature: Models Page
     Then verify "Title" element not exists on "Register_Model_Popup" wizard
 
   @FAILED_TODO
-  #TODO: Register_Model_Button hidden till 5.1, running on demo mode
+  #TODO: Register_Model_Button hidden till 1.5, running on demo mode
   #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on all cases below)
-  Scenario: Verify behaviour on Register new Model
+  Scenario: MLM010 - Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
     And wait load page
@@ -314,7 +318,7 @@ Feature: Models Page
     Then check "model.txt" value in "model_file" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
   @passive
-  Scenario: Check MLRun logo redirection
+  Scenario: MLM011 - Check MLRun logo redirection
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -327,10 +331,8 @@ Feature: Models Page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
-  @FAILED_TODO
-  #TODO: 'Show_Iterations_Checkbox' located in filter dropdown - new implementation, need rewrite step (also affects 'expand_btn' appears and steps below)
   @passive
-  Scenario: Verify View YAML action
+  Scenario: MLM012 - Verify View YAML action
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -344,15 +346,18 @@ Feature: Models Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-    Then check "Show_Iterations_Checkbox" element on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
-    Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "latest #0" value in "name" column
+    Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "latest" value in "name_expand_btn" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
   @passive
-  Scenario: Verify View YAML action in Item infopane
+  Scenario: MLM013 - Verify View YAML action in Item infopane
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -368,12 +373,8 @@ Feature: Models Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
-  @FAILED_TODO
-  #TODO: 'Preview' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
-  #TODO: 'Features' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
-  #TODO: 'Statistics' tab doesn't exist in 'model_default' model - new conditions for mandatory tabs (generateModelsDetailsMenu() - Preview, Features, Statistics)
   @passive
-  Scenario: Check all mandatory components in Item infopane on Overview tab table
+  Scenario: MLM014 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -382,7 +383,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -390,6 +391,7 @@ Feature: Models Page
     Then verify "Updated" element visibility on "Models_Info_Pane" wizard
     Then verify "Download_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
+    Then verify "Full_View_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Hash_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Models_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
@@ -403,11 +405,15 @@ Feature: Models Page
     Then verify "Statistics" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify cell with "Statistics" value in "key" column in "Info_Pane_Tab_Selector" table on "Models_Info_Pane" wizard should display "Label_Hint"."Models_Statistics"
     Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
+    Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
   @FAILED_TODO
   #TODO: 'Apply_Changes_Button' implementation was changed - button is invisible before any changes
   #TODO: verify, remove, verify changes with 'Labels_Table' - invalid selector: An invalid or illegal selector was specified
-  Scenario: Check all mandatory components in Item infopane on Overview tab table
+  Scenario: MLM015 - Check all mandatory components in Item infopane on Overview tab table
     * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "latest" tag in "default" project with code 200
     Given open url
@@ -456,7 +462,7 @@ Feature: Models Page
     Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
 
   @passive
-  Scenario: Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
+  Scenario: MLM016 - Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -478,9 +484,6 @@ Feature: Models Page
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Drift_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_Drift_Headers"
 
-  @FAILED_TODO
-  #TODO: 'Table_Tree_Filter_Dropdown' was redesigned, need case rewrite
-  #TODO: "Overview" tab is active - invalid selector
   @passive
   Scenario: Check Details panel still active on page refresh
     * set tear-down property "model" created in "default" project with "test-model" value
@@ -492,7 +495,9 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
@@ -521,9 +526,6 @@ Feature: Models Page
     When click on "Expand_Sources" element on "Models_Info_Pane" wizard
     Then verify "Info_Sources_Table" element visibility on "Models_Info_Pane" wizard
 
-  @FAILED_TODO
-  #TODO: block with 'Deploy', 'Add a tag', 'View YAML' is reimplemented
-  #TODO: select "Deploy" option in action menu on "Models" - doesn't click on dropdown '...' and option 'Deploy' (after manual clicks all next 71 steps passed)
   @passive
   Scenario: Check all mandatory components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
@@ -539,6 +541,7 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
     Then verify if "Deploy_Model_Popup" popup dialog appears
     Then navigate back
@@ -555,7 +558,7 @@ Feature: Models Page
     Then verify "Model_Name_Input" element visibility on "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" input should contains "automation-test-model" value on "Deploy_Model_Popup" wizard
     Then type value "  " to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
-    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint_Deploy_Model"
     Then verify "Model_Name_Input" options rules on form "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display "Input_Hint"."Deploy_Model_Name_Hint"
     Then verify "Class_Name_Input" element visibility on "Deploy_Model_Popup" wizard
@@ -567,7 +570,7 @@ Feature: Models Page
     Then "Deploy_Button" element on "Deploy_Model_Popup" should contains "Deploy" value
     Then click on "Deploy_Button" element on "Deploy_Model_Popup" wizard
     Then verify "Deploy_Button" element on "Deploy_Model_Popup" wizard is disabled
-    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint_Deploy_Model"
     Then type value "automation-test-model" to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
     Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
     Then type value "Class" to "Class_Name_Input" field on "Deploy_Model_Popup" wizard
@@ -600,7 +603,6 @@ Feature: Models Page
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
 
     @FAILED_TODO
-    #TODO: select "Deploy" option in action menu on "Models" - doesn't click on dropdown '...' and option 'Deploy'
     #TODO: locators structure of 'Add class argument'was changed - need change locators
     Scenario: Verify behaviour of key-value table on Deploy Model Popup
      * set tear-down property "model" created in "default" project with "automation-test-model" value
@@ -612,6 +614,7 @@ Feature: Models Page
      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
      And wait load page
+     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
      Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
      Then verify if "Deploy_Model_Popup" popup dialog appears
      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
@@ -804,3 +807,52 @@ Feature: Models Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then save to context "name" column on 2 row from "Models_Table" table on "Models" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+    
+  Scenario: MLM020 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Models page
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard    
+    Then verify "Version_tag_Input_table_view" on "Models_Info_Pane" wizard should contains "latest" value
+    Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
+    Then click on "Edit_btn_full_view" element on "Models_Info_Pane" wizard
+    Then verify "Version_tag_Input_full_view" on "Models_Info_Pane" wizard should contains "latest" value   
+    Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
+
+  Scenario: MLM021 - Check that version tag dropdown shows all tags on filters wizard on Models page
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard
+    And wait load page
+    When type value "newTag" to "Version_tag_Input" field on "Models_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Models_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element visibility on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
+    Then check "newTag" value in "tag" column in "Models_Table" table on "Models" wizard

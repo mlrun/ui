@@ -31,9 +31,12 @@ import {
 import { formatDatetime, generateLinkPath } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
+import { generateFunctionDetailsLink } from '../../utils/generateFunctionDetailsLink'
 
 export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
+    const monitoringFeatureSetUri = selectedItem?.status?.monitoring_feature_set_uri ?? ''
+
     return {
       uid: {
         value: selectedItem?.metadata?.uid ?? '-'
@@ -50,20 +53,17 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
       },
       function_uri: {
         value: selectedItem?.spec?.function_uri,
-        //remove 'latest' when function_uri will contain hash or tag
-        link: selectedItem?.spec?.function_uri
-          ? `${generateLinkPath(`store://functions/${selectedItem.spec.function_uri}`)}${
-              selectedItem.spec.function_uri.includes(':') ? '' : '/latest'
-            }/overview`
-          : ''
+        link: generateFunctionDetailsLink(selectedItem.spec.function_uri)
       },
       function_tag: {
         value: selectedItem?.spec?.function_uri?.match(/(?<=:)[^:]*$/) || 'latest'
       },
       monitoring_feature_set_uri: {
-        value: selectedItem?.status?.monitoring_feature_set_uri,
-        link: selectedItem?.status?.monitoring_feature_set_uri
-          ? `${generateLinkPath(selectedItem?.status?.monitoring_feature_set_uri)}/latest/overview`
+        value: monitoringFeatureSetUri,
+        link: monitoringFeatureSetUri
+          ? `${generateLinkPath(monitoringFeatureSetUri)}${
+              monitoringFeatureSetUri.split(':').length > 2 ? '' : '/latest'
+            }/overview`
           : ''
       },
       last_prediction: {

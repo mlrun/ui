@@ -93,7 +93,8 @@ const Projects = ({
   const handleFilterProject = useCallback(
     project => {
       return filterByName.length > 0
-        ? project.metadata.name.includes(filterByName) && isValidProjectState(project)
+        ? project.metadata.name.toLocaleLowerCase().includes(filterByName.toLocaleLowerCase()) &&
+            isValidProjectState(project)
         : isValidProjectState(project)
     },
     [filterByName, isValidProjectState]

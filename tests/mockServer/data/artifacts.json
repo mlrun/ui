@@ -34768,6 +34768,50 @@
       "updated": "2021-10-21T05:51:38.324826+00:00",
       "db_key": "lala001",
       "tag": "latest"
+    },
+    {
+      "kind": "dataset",
+      "metadata": {
+          "labels": {},
+          "key": "test_new_structure",
+          "project": "default",
+          "tree": "5a44b12b-9ef3-4239-87e8-e0cbdae5827c",
+          "updated": "2023-09-20T15:45:58.042Z",
+          "tag": "latest"
+      },
+      "project": "default",
+      "spec": {
+          "db_key": "test_new_structure",
+          "producer": {
+              "kind": "api",
+              "uri": "localhost:3000"
+          },
+          "target_path": "v3io:///ted/tfr"
+      },
+      "status": {},
+      "uid": "5a44b12b-9ef3-4239-87e8-e0cbdae5827c"
+    },
+    {
+      "kind": "dataset",
+      "metadata": {
+          "labels": {},
+          "key": "test_new_structure2",
+          "project": "default",
+          "tree": "5a44b12b-9ef3-4239-87e8-e0cbdae5828c",
+          "updated": "2023-09-20T15:45:58.042Z",
+          "tag": "latest"
+      },
+      "project": "default",
+      "spec": {
+          "db_key": "test_new_structure2",
+          "producer": {
+              "kind": "api",
+              "uri": "localhost:3000"
+          },
+          "target_path": "v3io:///ted/tfr"
+      },
+      "status": {},
+      "uid": "5a44b12b-9ef3-4239-87e8-e0cbdae5828c"
     }
   ]
 }

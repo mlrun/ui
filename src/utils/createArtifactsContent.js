@@ -35,7 +35,8 @@ import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
 import { generateUri } from './resources'
-import { generateLinkPath, parseUri } from '../utils'
+import { parseUri } from './parseUri'
+import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { validateArguments } from './validateArguments'
 
@@ -425,7 +426,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerLabel: 'Function',
         value: functionName,
         class: 'table-cell-1',
-        link: `${generateLinkPath(functionUri)}/overview`,
+        getLink: () => generateFunctionDetailsLink(artifact.spec?.function_uri),
         tooltip: functionUri
       },
       {

@@ -26,7 +26,7 @@ import FormVolumesRow from './FormVolumesRow/FormVolumesRow'
 import { FormActionButton } from 'igz-controls/elements'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
+import { useFormTable } from 'igz-controls/hooks'
 import { V3IO_VOLUME_TYPE } from '../../constants'
 
 const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
@@ -85,7 +85,7 @@ const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
                 hidden={editingItem?.ui?.isNew}
                 fields={fields}
                 fieldsPath={fieldsPath}
-                label="Add custom parameter"
+                label="Add volume"
                 onClick={(...addRowArgs) =>
                   addNewRow(...addRowArgs, {
                     data: {

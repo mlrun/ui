@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 
@@ -27,7 +27,6 @@ import { FormCheckBox, FormInput, FormKeyValueTable } from 'igz-controls/compone
 
 import { PANEL_EDIT_MODE } from '../../../../constants'
 import { secretsKindOptions } from './JobWizardAdvanced.util'
-import { useMode } from '../../../../hooks/mode.hook'
 
 import './jobWizardAdvanced.scss'
 
@@ -42,7 +41,7 @@ const JobWizardAdvanced = ({
   setShowSchedule,
   showSchedule
 }) => {
-  const { isStagingMode } = useMode()
+  const [showSecrets] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -51,29 +50,19 @@ const JobWizardAdvanced = ({
   }, [setShowSchedule])
 
   return (
-    <div className="job-wizard__advanced form">
+    <div className="job-wizard__advanced">
       <div className="form-row">
         <h5 className="form-step-title">Advanced</h5>
       </div>
       <div className="form-row form-table-title">Environment variables</div>
       <div className="form-row">
-        {isStagingMode ? (
-          <FormEnvironmentVariablesTable
-            fieldsPath="advanced.environmentVariablesTable"
-            formState={formState}
-          />
-        ) : (
-          <FormKeyValueTable
-            addNewItemLabel="Add environment variable"
-            fieldsPath="advanced.environmentVariablesTable"
-            formState={formState}
-            keyHeader="Name"
-            keyLabel="Name"
-          />
-        )}
+        <FormEnvironmentVariablesTable
+          fieldsPath="advanced.environmentVariablesTable"
+          formState={formState}
+        />
       </div>
       {/* secretSourcesTable - currently not shown*/}
-      {isStagingMode && false && (
+      {showSecrets && (
         <>
           <div className="form-row form-table-title">Secrets</div>
           <div className="form-row">

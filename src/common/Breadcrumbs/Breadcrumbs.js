@@ -38,8 +38,10 @@ import './breadcrums.scss'
 const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
   const { isDemoMode } = useMode()
   const breadcrumbsRef = useRef()
+  const projectListRef = useRef()
   const params = useParams()
   const location = useLocation()
 
@@ -81,9 +83,33 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
 
         if (showProjectsList) setShowProjectsList(false)
       }
+
+      setSearchValue('')
     },
     [breadcrumbsRef, showProjectsList, showScreensList]
   )
+
+  const scrollProjectOptionToView = useCallback(() => {
+    const selectedOptionEl = projectListRef.current.querySelector(`#${params.projectName}`)
+
+    searchValue
+      ? projectListRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      : setTimeout(() => {
+          selectedOptionEl.scrollIntoView(
+            {
+              behavior: 'smooth',
+              block: 'center'
+            },
+            0
+          )
+        })
+  }, [params.projectName, searchValue])
+
+  useEffect(() => {
+    if (showProjectsList && projectListRef.current) {
+      scrollProjectOptionToView()
+    }
+  }, [showProjectsList, scrollProjectOptionToView])
 
   useEffect(() => {
     window.addEventListener('click', handleCloseDropdown)
@@ -188,6 +214,8 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
                     list={projectScreens}
                     onClick={() => handleSelectDropdownItem(separatorRef)}
                     selectedItem={urlItems.screen?.id}
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
                   />
                 )}
                 {showProjectsList && urlItems.pathItems[i + 1] === params.projectName && (
@@ -196,8 +224,11 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
                       link={to}
                       list={projectsList}
                       onClick={() => handleSelectDropdownItem(separatorRef)}
+                      ref={projectListRef}
                       screen={urlItems.screen?.id}
                       selectedItem={params.projectName}
+                      searchValue={searchValue}
+                      setSearchValue={setSearchValue}
                       tab={urlItems.tab?.id}
                       withSearch
                     />

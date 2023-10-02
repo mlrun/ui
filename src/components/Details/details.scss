@@ -16,13 +16,9 @@
     overflow-y: auto;
     color: $mulledWine;
     background-color: $white;
-    padding: 20px 0;
-
-    .table__content & {
-      border: 1px solid #e7ebff;
-      border-radius: 0 4px 4px 0;
-      padding: 20px 30px;
-    }
+    border: 1px solid $magnoliaWhite;
+    border-radius: 0 4px 4px 0;
+    padding: 20px 30px;
 
     &_big {
       width: 100%;
@@ -50,7 +46,9 @@
 
         &__status {
           display: flex;
+          flex-flow: row wrap;
           align-items: center;
+          line-height: 25px;
         }
 
         &__back-btn {
@@ -86,12 +84,12 @@
             min-width: 18px;
 
             i {
-              margin-left: 10px;
+              margin: 0 10px 0 5px;
             }
           }
 
           .error-container {
-            margin-left: 20px;
+            margin-left: 0;
           }
         }
 
@@ -176,7 +174,14 @@
       &__content {
         width: 100%;
         height: 100%;
+        padding: 0 15px 0 0;
         overflow-y: scroll;
+
+        /* Define the thumb style */
+        &::-webkit-scrollbar-thumb {
+          background: $doveGray;
+          border-radius: 5px;
+        }
       }
 
       .logs_refresh {
@@ -188,6 +193,10 @@
           min-width: 40px;
           padding: 0;
           border-radius: 50%;
+
+          & > * {
+            margin: 0;
+          }
         }
       }
     }

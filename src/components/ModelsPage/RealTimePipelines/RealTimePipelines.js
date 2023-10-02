@@ -63,7 +63,12 @@ const RealTimePipelines = () => {
       dispatch(fetchArtifactsFunctions({ project: params.projectName, filters }))
         .unwrap()
         .then(result => {
-          setPipelines(result)
+          setPipelines(
+            result.filter(
+              func =>
+                !Object.keys(func.labels).some(labelKey => labelKey.includes('parent-function'))
+            )
+          )
         })
     },
     [dispatch, params.projectName]

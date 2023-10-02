@@ -122,7 +122,6 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem) => {
           inputHidden: selectedType !== V3IO_VOLUME_TYPE,
           label: 'Container',
           tip: 'The name of the data container that contains the data',
-          required: true,
           textHidden: true,
           type: 'input'
         }
@@ -131,7 +130,7 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem) => {
           ...fieldBase,
           inputHidden: selectedType !== V3IO_VOLUME_TYPE,
           label: 'Access Key',
-          tip: 'A relative directory path within the data container',
+          tip: 'A platform data-access key',
           required: true,
           textHidden: true,
           type: 'input'
@@ -142,7 +141,6 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem) => {
           inputHidden: selectedType !== V3IO_VOLUME_TYPE,
           label: 'Resource Path',
           tip: 'A relative directory path within the data container',
-          required: true,
           textHidden: true,
           type: 'input'
         }

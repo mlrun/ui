@@ -188,10 +188,8 @@ export const handlePathChange = (
     setTargetsPathEditData(state => ({
       ...state,
       [targetType]: {
-        isEditMode: false,
-        isModified: currentTargetPathEditData.isModified
-          ? state[targetType].isModified
-          : isTargetPathModified
+        ...state[targetType],
+        isEditMode: false
       }
     }))
 

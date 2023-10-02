@@ -268,7 +268,7 @@ const featuresByProjectsTable = {
 
 // Datasets
 const datasetsTable = {
-  root: '.table-container .table__flex .table__content',
+  root: '.table-container .table__content',
   header: {
     root: '.table-head',
     sorters: {
@@ -281,15 +281,17 @@ const datasetsTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a .link',
+        tag: '.table-body__cell:nth-of-type(1) a .item-tag',
+        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(2)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
-            true
+            false
           )
         },
         producer: '.table-body__cell:nth-of-type(3) .data-ellipsis a.link',
@@ -314,6 +316,14 @@ const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar #ref
 const tableFilterByButton = By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
+  generateInputGroup(
+    '.content .content__action-bar-wrapper .action-bar .filters .input-wrapper:nth-of-type(2)',
+    true,
+    false,
+    true
+  )
+)
+const commonNameFilterInputDataset = inputGroup(
   generateInputGroup(
     '.content .content__action-bar-wrapper .action-bar__filters .name-filter',
     true,
@@ -350,7 +360,8 @@ module.exports = {
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
     Feature_Sets_Table: commonTable(featureSetsTable),
-    Feature_Store_Tab_Selector: featureStoreTabSelector
+    Feature_Store_Tab_Selector: featureStoreTabSelector,
+    Overlay: By.css('#overlay_container .chip-block-hidden_visible')
   },
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
@@ -375,7 +386,7 @@ module.exports = {
   datasets: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Register_Dataset_Button: pageHeaderButton,
-    Table_Name_Filter_Input: commonNameFilterInput,
+    Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
     Datasets_Table: commonTable(datasetsTable),
