@@ -18,7 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import { FUNCTIONS_PAGE, JOBS_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB } from '../constants'
+import {
+  FUNCTIONS_PAGE,
+  JOB_KIND_WORKFLOW,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB
+} from '../constants'
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
 import { parseKeyValues } from './object'
@@ -67,7 +73,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
           class: 'table-cell-name',
-          type: type === 'workflow' && !isStagingMode ? 'hidden' : 'link',
+          type: type === JOB_KIND_WORKFLOW && !isStagingMode ? 'hidden' : 'link',
           getLink,
           showStatus: true
         },

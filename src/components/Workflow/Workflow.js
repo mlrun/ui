@@ -44,6 +44,7 @@ import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
+  JOB_KIND_JOB,
   JOBS_PAGE,
   ML_EDGE,
   ML_NODE,
@@ -169,7 +170,7 @@ const Workflow = ({
       jobs.push({
         ...job,
         customData,
-        state: getState(job.phase?.toLowerCase(), JOBS_PAGE, 'job')
+        state: getState(job.phase?.toLowerCase(), JOBS_PAGE, JOB_KIND_JOB)
       })
       newNodes.push(nodeItem)
     })
@@ -234,11 +235,11 @@ const Workflow = ({
       <div className="graph-container workflow-content">
         {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
           <div className={graphViewClassNames}>
-              <MlReactFlow
-                alignTriggerItem={itemIsSelected}
-                edges={edges}
-                nodes={nodes}
-                onNodeClick={onNodeClick}
+            <MlReactFlow
+              alignTriggerItem={itemIsSelected}
+              edges={edges}
+              nodes={nodes}
+              onNodeClick={onNodeClick}
             />
             {itemIsSelected && (
               <Details
