@@ -154,6 +154,22 @@ export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
+/*=========== JOB KINDS =============*/
+
+export const JOB_KIND_DASK = 'dask'
+export const JOB_KIND_DATABRICKS = 'databricks'
+export const JOB_KIND_HANDLER = 'handler'
+export const JOB_KIND_JOB = 'job'
+export const JOB_KIND_LOCAL = 'local'
+export const JOB_KIND_MPIJOB = 'mpijob'
+export const JOB_KIND_NUCLIO = 'nuclio'
+export const JOB_KIND_PIPELINE = 'pipeline'
+export const JOB_KIND_REMOTE = 'remote'
+export const JOB_KIND_REMOTE_SPARK = 'remote-spark'
+export const JOB_KIND_SERVING = 'serving'
+export const JOB_KIND_SPARK = 'spark'
+export const JOB_KIND_WORKFLOW = 'workflow'
+
 /*=========== JOB WORKFLOWS =============*/
 
 export const WORKFLOW_TYPE_SKIPPED = 'Skipped'
