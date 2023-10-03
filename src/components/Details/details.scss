@@ -13,15 +13,19 @@
     flex-direction: column;
     width: calc(100% - 240px);
     height: 100%;
+    padding: 20px 30px;
     overflow-y: auto;
     color: $mulledWine;
     background-color: $white;
     border: 1px solid $magnoliaWhite;
     border-radius: 0 4px 4px 0;
-    padding: 20px 30px;
 
     &_big {
       width: 100%;
+    }
+
+    .error {
+      margin-bottom: 10px;
     }
 
     .item {
