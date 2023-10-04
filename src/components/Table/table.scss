@@ -12,9 +12,8 @@
   }
 
   &__content {
-    display: flex;
-    flex: 1;
     position: relative;
+    flex: 1;
 
     [class*='icon'] {
       flex-wrap: nowrap;
