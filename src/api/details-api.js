@@ -19,10 +19,12 @@ such restriction.
 */
 import { mainHttpClient } from '../httpClient'
 
+import { JOB_KIND_JOB } from '../constants'
+
 const detailsApi = {
   getJobPods: (project, uid, kind) => {
     const params = {
-      'group-by': 'job',
+      'group-by': JOB_KIND_JOB,
       kind,
       'label-selector': `mlrun/uid=${uid}`
     }

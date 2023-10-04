@@ -23,6 +23,7 @@ import {
   DATE_RANGE_TIME_FILTER,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
+  JOB_KIND_LOCAL,
   NAME_FILTER,
   PERIOD_FILTER,
   STATUS_FILTER
@@ -101,7 +102,7 @@ export const generateActionsMenu = (
         {
           label: 'Batch re-run',
           icon: <Run />,
-          hidden: ['local', ''].includes(job?.ui?.originalContent.metadata.labels.kind),
+          hidden: [JOB_KIND_LOCAL, ''].includes(job?.ui?.originalContent.metadata.labels.kind),
           onClick: handleRerunJob
         },
         {

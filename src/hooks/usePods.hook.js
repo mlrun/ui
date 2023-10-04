@@ -21,15 +21,18 @@ import { useEffect } from 'react'
 import { isEmpty, get } from 'lodash'
 import { useParams } from 'react-router-dom'
 
+import { arePodsHidden } from '../components/Jobs/jobs.util'
+import { JOB_KIND_JOB } from '../constants'
+
 export const usePods = (fetchJobPods, removePods, selectedJob) => {
   const params = useParams()
 
   useEffect(() => {
-    if (!isEmpty(selectedJob)) {
+    if (!isEmpty(selectedJob) && !arePodsHidden(selectedJob?.labels)) {
       fetchJobPods(
         params.projectName,
         selectedJob.uid,
-        get(selectedJob, 'ui.originalContent.metadata.labels.kind', 'job')
+        get(selectedJob, 'ui.originalContent.metadata.labels.kind', JOB_KIND_JOB)
       )
 
       const interval = setInterval(() => {

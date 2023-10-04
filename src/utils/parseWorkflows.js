@@ -18,17 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import getState from './getState'
-import { MONITOR_WORKFLOWS_TAB } from '../constants'
+import { JOB_KIND_WORKFLOW, MONITOR_WORKFLOWS_TAB } from '../constants'
 
 export const parseWorkflows = workflows => {
   return workflows.map(workflow => {
     return {
       ...workflow,
-      state: getState(
-        workflow.status.toLowerCase(),
-        MONITOR_WORKFLOWS_TAB,
-        'workflow'
-      ),
+      state: getState(workflow.status.toLowerCase(), MONITOR_WORKFLOWS_TAB, JOB_KIND_WORKFLOW),
       ui: {
         originalContent: workflow
       }

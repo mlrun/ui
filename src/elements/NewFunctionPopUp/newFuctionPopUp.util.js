@@ -17,16 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING } from '../../constants'
+
 export const runtimeOptions = isStagingMode => [
   {
-    id: 'job',
+    id: FUNCTION_TYPE_JOB,
     label: 'Job'
   },
   {
-    id: 'serving',
+    id: FUNCTION_TYPE_SERVING,
     label: 'Serving',
     hidden: !isStagingMode
   }
 ]
-
-export const DEFAULT_RUNTIME = 'job'
