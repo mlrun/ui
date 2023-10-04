@@ -2023,6 +2023,12 @@ Feature: Jobs and workflows
         Then verify "Form_Header_Batch_Run" element visibility on "Batch_Run" wizard
         Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Function selection" value
         Then verify "BatchRun_Tab_Selector" on "Batch_Run" wizard should contains "Batch_Run"."Tab_List"
+        Then verify "Step_1_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Step_2_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_3_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_4_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
         Then verify "Search_Input" element visibility on "Batch_Run" wizard
         When type searchable fragment "test" into "Search_Input" on "Batch_Run" wizard
         Then searchable case "sensitive" fragment "test" should be in every suggested option into "Search_Input" on "Batch_Run" wizard
@@ -2037,13 +2043,6 @@ Feature: Jobs and workflows
         Then "Function_Title" element on "Batch_Run" should contains "test" value
         Then select "Hub" tab in "BatchRun_Tab_Selector" on "Batch_Run" wizard
         And wait load page
-        When type searchable fragment "test" into "Search_Input" on "Batch_Run" wizard
-        Then searchable case "sensitive" fragment "test" should be in every suggested option into "Search_Input" on "Batch_Run" wizard
-        Then value in "name" column with "text" in "Functions_Table" on "Batch_Run" wizard should contains "test"
-        When click on "Form_Header_Batch_Run" element on "Batch_Run" wizard
-        And click on row root with value "xgb-test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
-        And wait load page
-        Then "Function_Title" element on "Batch_Run" should contains "xgb-test" value
         And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
         Then verify "Title" element visibility in "Filter_Dropdown" on "Batch_Run" wizard
         Then "Title" element in "Filter_Dropdown" on "Batch_Run" should contains "Filter by category" value
@@ -2051,11 +2050,22 @@ Feature: Jobs and workflows
         Then select "Other" option in "Category_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
         And wait load page
         And click on "Batch_Run_Header" element on "Batch_Run" wizard
-        Then value in "labels" column with "dropdowns" in "Functions_Table" on "Batch_Run" wizard should contains "Other" in "Overlay"
+        Then value in "labels" column with "attribute" in "Functions_Table" on "Batch_Run" wizard should contains "Other"
+        And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
+        When click on "Clear_Button" element in "Filter_Dropdown" on "Batch_Run" wizard
+        When type searchable fragment "test" into "Search_Input" on "Batch_Run" wizard
+        Then searchable case "sensitive" fragment "test" should be in every suggested option into "Search_Input" on "Batch_Run" wizard
+        Then value in "name" column with "text" in "Functions_Table" on "Batch_Run" wizard should contains "test"
+        When click on "Form_Header_Batch_Run" element on "Batch_Run" wizard
+        Then select "Functions" tab in "BatchRun_Tab_Selector" on "Batch_Run" wizard
+        Then select "churn-project-admin" option in "Project_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
+        And click on row root with value "xgb-test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        And wait load page
+        Then "Function_Title" element on "Batch_Run" should contains "xgb-test" value
         Then verify "Back_Button" element visibility on "Batch_Run" wizard
         Then verify "Next_Button" element visibility on "Batch_Run" wizard
         Then verify "Step_1_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_2_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_2_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_3_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_4_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
@@ -2086,7 +2096,7 @@ Feature: Jobs and workflows
         And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
 
-    Scenario: Check all mandatory components on Batch Run wizard - Run Details without Method
+    Scenario: MLJW042 - Check all mandatory components on Batch Run wizard - Run Details without Method
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2102,7 +2112,7 @@ Feature: Jobs and workflows
         And click on "Next_Button" element on "Batch_Run" wizard
         Then verify "Step_1_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_2_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_3_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_3_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_4_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
         Then "Step_5_Button" element on "Batch_Run" should contains "Resources" value
@@ -2191,7 +2201,7 @@ Feature: Jobs and workflows
             |    key2    |    value2    |
             |    key3    |    value3    |
 
-    Scenario: Check all mandatory components on Batch Run wizard - Data Inputs
+    Scenario: MLJW039 - Check all mandatory components on Batch Run wizard - Data Inputs
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2210,7 +2220,7 @@ Feature: Jobs and workflows
         Then verify "Step_1_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_2_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_3_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_4_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_4_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
         Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
         Then verify "Form_Header_Batch_Run" element visibility on "Batch_Run" wizard
@@ -2240,8 +2250,7 @@ Feature: Jobs and workflows
             | name_verify |           path_verify             |
             | name2edited | v3io:///container-name/fileedited |  
     
-    
-    Scenario: Check all mandatory components on Batch Run wizard - Parameters
+    Scenario: MLJW038 - Check all mandatory components on Batch Run wizard - Parameters
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2262,47 +2271,45 @@ Feature: Jobs and workflows
         Then verify "Step_2_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_3_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_4_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_5_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
         Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
         Then verify "Form_Header_Batch_Run" element visibility on "Batch_Run" wizard
         Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Parameters" value
         Then verify "Data_Inputs_Headers" on "Batch_Run" wizard should contains "Batch_Run"."Parameters_Table_Header"
         And click on "Add_Custom_Parameter_Button" element on "Batch_Run" wizard
-        Then verify "Sub_Header_Parameters" element visibility on "Batch_Run" wizard
-        Then "Sub_Header_Parameters" element on "Batch_Run" should contains "Custom" value
         Then verify "Checkbox_Parameters" element visibility on "Batch_Run" wizard
         Then "Checkbox_Parameters" element should be checked on "Batch_Run" wizard
         Then uncheck "Checkbox_Parameters" element on "Batch_Run" wizard
         Then "Checkbox_Parameters" element should be unchecked on "Batch_Run" wizard
         And hover "Delete_Button_Parameters" component on "Batch_Run" wizard
         And click on "Delete_Button_Parameters" element on "Batch_Run" wizard
-        When fill data to "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
+        When add data to "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
             | name_input | type_dropdown | value_input |
             |    name1   |      str      |    value1   |
             |    name2   |      int      |      1      |
             |    name3   |      float    |     0.5     |
-        Then verify filled data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
+        Then verify data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
             | name_verify | type_dropdown_verify | value_verify |
             |    name1    |          str         |    value1    |
             |    name2    |          int         |      1       |
             |    name3    |          float       |     0.5      | 
-        When click on "delete_btn" with filled data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard with offset "false"
+        When click on "delete_btn" with data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard with offset "false"
             | name_verify |
             |    name1    |
             |    name3    |
-        Then verify filled data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
+        Then verify data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
             | name_verify | type_dropdown_verify | value_verify |
             |    name2    |          int         |      1       |
-        Then edit 1 filled row in "Batch_Run_Parameters_Table" key-value table on "Batch_Run" wizard
+        Then edit 1 row in "Batch_Run_Parameters_Table" key-value table on "Batch_Run" wizard
             |  name_input | value_input |
             |    edited   |     234     |   
-        Then verify filled data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
+        Then verify data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
             | name_verify | type_dropdown_verify | value_verify |
             | name2edited |          int         |     1234     |      
 
     @inProgress
-    Scenario: Check all mandatory components on Batch Run wizard - Step 5 (Resources)
+    Scenario: MLJW037 - Check all mandatory components on Batch Run wizard - Step 5 (Resources)
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2325,7 +2332,7 @@ Feature: Jobs and workflows
         Then verify "Step_3_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_4_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_5_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_6_Button" element on "Batch_Run" wizard is enabled
         Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
         Then verify "Form_Header_Batch_Run" element visibility on "Batch_Run" wizard
         Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Resources" value

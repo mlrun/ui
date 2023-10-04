@@ -95,7 +95,7 @@ const functionsTableSelector = {
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.job-card-template__chips',
+            '.job-card-template__chips input',
             '.chip-block span.chips_button',
             '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
             false,
@@ -235,7 +235,7 @@ const BatchRunParametersTable = {
         delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
         discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
         checkbox: '.form-field-checkbox input',
-        name_input: '.form-field-input input',
+        name_input: '.form-table__cell_2 .form-field-input input', //.form-field-input input',
         name_verify: '.form-table__cell_2',
         type_dropdown: {
           componentType: dropdownComponent,
@@ -730,10 +730,10 @@ module.exports = {
       '.modal .modal__header-button .round-icon-cp'
     ),
     Search_Input: inputWithAutocomplete({
-      root: '.form .search-container',
+      root: '.form-row .search-container',
       elements: {
         input: 'input',
-        options: '.search-matches .search-matches__item',
+        options: '.functions-list > div > div.job-card-template__header > div.data-ellipsis.tooltip-wrapper',
         option_name: ''
       }
     }),
@@ -817,7 +817,7 @@ module.exports = {
       '.create-container .create-container__header .header-link h3.header-link__title'
     ),
     Search_Input: inputWithAutocomplete({
-      root: '.create-container .create-container__data  .search-container',
+      root: '.create-container .create-container__data .search-container',
       elements: {
         input: 'input',
         options: '.search-matches .search-matches__item',
