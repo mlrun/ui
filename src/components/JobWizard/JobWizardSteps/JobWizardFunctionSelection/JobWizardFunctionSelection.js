@@ -80,6 +80,7 @@ const JobWizardFunctionSelection = ({
   templatesCategories
 }) => {
   const [activeTab, setActiveTab] = useState(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
+  const [selectedFunctionTab, setSelectedFunctionTab] = useState(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
@@ -201,6 +202,10 @@ const JobWizardFunctionSelection = ({
     templates
   ])
 
+  // useEffect(() => {
+  //   setSelectedFunctionData({})
+  // }, [activeTab])
+
   const generateData = functionData => {
     if (!isEmpty(functionData)) {
       const [jobFormData, jobAdditionalData] = generateJobWizardData(
@@ -297,6 +302,8 @@ const JobWizardFunctionSelection = ({
         selectNewFunction()
       }
     }
+
+    setSelectedFunctionTab(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
   }
 
   const selectTemplateFunction = functionData => {
@@ -319,6 +326,7 @@ const JobWizardFunctionSelection = ({
         selectNewFunction()
       }
     }
+    setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
   }
 
   const openResetConfirm = confirmHandler => {
@@ -413,7 +421,7 @@ const JobWizardFunctionSelection = ({
                     selected={
                       templateData?.metadata?.name ===
                         selectedFunctionData?.functions?.[0].metadata.name &&
-                      !selectedFunctionData?.functions?.[0].status
+                      selectedFunctionTab === FUNCTIONS_SELECTION_HUB_TAB
                     }
                     formState={formState}
                     functionData={generateFunctionTemplateCardData(templateData)}
