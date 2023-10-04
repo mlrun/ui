@@ -55,6 +55,7 @@ import {
 import './jobWizardFunctionSelection.scss'
 
 const JobWizardFunctionSelection = ({
+  activeTab,
   defaultData,
   fetchFunctionTemplate,
   fetchFunctions,
@@ -69,17 +70,19 @@ const JobWizardFunctionSelection = ({
   params,
   projectStore,
   selectedFunctionData,
+  selectedFunctionTab,
+  setActiveTab,
   setFilteredFunctions,
   setFilteredTemplates,
   setFunctions,
   setJobAdditionalData,
   setSelectedFunctionData,
+  setSelectedFunctionTab,
   setTemplates,
   setTemplatesCategories,
   templates,
   templatesCategories
 }) => {
-  const [activeTab, setActiveTab] = useState(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
@@ -283,6 +286,7 @@ const JobWizardFunctionSelection = ({
     const selectNewFunction = () => {
       setSelectedFunctionData(functionData)
       generateData(functionData)
+      setSelectedFunctionTab(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
     }
 
     if (
@@ -304,6 +308,7 @@ const JobWizardFunctionSelection = ({
       fetchFunctionTemplate(functionTemplatePath).then(result => {
         setSelectedFunctionData(result)
         generateData(result)
+        setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
       })
     }
 
@@ -411,7 +416,7 @@ const JobWizardFunctionSelection = ({
                     selected={
                       templateData?.metadata?.name ===
                         selectedFunctionData?.functions?.[0].metadata.name &&
-                      !selectedFunctionData?.functions?.[0].status
+                      selectedFunctionTab === FUNCTIONS_SELECTION_HUB_TAB
                     }
                     formState={formState}
                     functionData={generateFunctionTemplateCardData(templateData)}
@@ -434,6 +439,7 @@ const JobWizardFunctionSelection = ({
 }
 
 JobWizardFunctionSelection.propTypes = {
+  activeTab: PropTypes.string.isRequired,
   defaultData: PropTypes.shape({}).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filteredTemplates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -443,11 +449,14 @@ JobWizardFunctionSelection.propTypes = {
   isEditMode: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
+  selectedFunctionTab: PropTypes.string.isRequired,
+  setActiveTab: PropTypes.func.isRequired,
   setFilteredFunctions: PropTypes.func.isRequired,
   setFilteredTemplates: PropTypes.func.isRequired,
   setFunctions: PropTypes.func.isRequired,
   setJobAdditionalData: PropTypes.func.isRequired,
   setSelectedFunctionData: PropTypes.func.isRequired,
+  setSelectedFunctionTab: PropTypes.func.isRequired,
   setTemplates: PropTypes.func.isRequired,
   setTemplatesCategories: PropTypes.func.isRequired,
   templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
