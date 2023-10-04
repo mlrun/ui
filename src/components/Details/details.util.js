@@ -25,6 +25,7 @@ import {
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
   FILES_PAGE,
+  FUNCTION_TYPE_LOCAL,
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB
 } from '../../constants'
@@ -240,7 +241,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.name
   },
   type: {
-    value: selectedItem.type || 'Local'
+    value: selectedItem.type || FUNCTION_TYPE_LOCAL
   },
   hash: {
     value: selectedItem.hash

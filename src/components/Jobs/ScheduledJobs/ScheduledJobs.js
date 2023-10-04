@@ -31,6 +31,7 @@ import YamlModal from '../../../common/YamlModal/YamlModal'
 
 import {
   GROUP_BY_NONE,
+  JOB_KIND_WORKFLOW,
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
@@ -218,7 +219,7 @@ const ScheduledJobs = ({
           label: 'Edit',
           icon: <Edit />,
           onClick: handleEditScheduleJob,
-          hidden: job?.type === 'workflow'
+          hidden: job?.type === JOB_KIND_WORKFLOW
         },
         {
           label: 'Delete',
