@@ -19,11 +19,18 @@ such restriction.
 */
 import { capitalize, defaultsDeep, isEmpty, map, uniq } from 'lodash'
 import {
+  JOB_KIND_DASK,
+  JOB_KIND_DATABRICKS,
+  FUNCTION_TYPE_JOB,
+  JOB_KIND_MPIJOB,
+  JOB_KIND_JOB,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_RERUN_MODE,
-  SCHEDULE_TAB
+  JOB_KIND_REMOTE_SPARK,
+  SCHEDULE_TAB,
+  JOB_KIND_SPARK
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues } from '../../utils'
@@ -96,7 +103,7 @@ export const getJobsDetailsMenu = (jobLabels = []) => {
     {
       label: 'pods',
       id: 'pods',
-      hidden: isJobKindDask(jobLabels)
+      hidden: arePodsHidden(jobLabels)
     }
   ]
 }
@@ -113,7 +120,20 @@ export const isJobAbortable = (job, abortableFunctionKinds) =>
     .some(kindLabel => job?.labels?.includes(kindLabel))
 
 export const isJobKindDask = (jobLabels = []) => {
-  return jobLabels?.includes('kind: dask')
+  return jobLabels?.includes(`kind: ${JOB_KIND_DASK}`)
+}
+
+export const arePodsHidden = (jobLabels = []) => {
+  const jobKind = (jobLabels.find(label => label.startsWith('kind:')) ?? '').split(':')[1]?.trim()
+
+  return ![
+    JOB_KIND_DASK,
+    JOB_KIND_JOB,
+    JOB_KIND_SPARK,
+    JOB_KIND_REMOTE_SPARK,
+    JOB_KIND_MPIJOB,
+    JOB_KIND_DATABRICKS
+  ].includes(jobKind)
 }
 
 export const actionCreator = {
@@ -332,4 +352,4 @@ export const enrichRunWithFunctionFields = (
     })
 }
 
-export const functionRunKinds = ['job']
+export const functionRunKinds = [FUNCTION_TYPE_JOB]

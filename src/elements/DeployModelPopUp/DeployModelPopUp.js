@@ -32,7 +32,7 @@ import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-con
 
 import { setNotification } from '../../reducers/notificationReducer'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { MODELS_TAB } from '../../constants'
+import { FUNCTION_TYPE_SERVING, MODELS_TAB } from '../../constants'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
@@ -83,7 +83,7 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
         .unwrap()
         .then(functions => {
           const functionOptions = chain(functions)
-            .filter(func => func.type === 'serving' && func.graph?.kind === 'router')
+            .filter(func => func.type === FUNCTION_TYPE_SERVING && func.graph?.kind === 'router')
             .uniqBy('name')
             .map(func => ({ label: func.name, id: func.name }))
             .value()
