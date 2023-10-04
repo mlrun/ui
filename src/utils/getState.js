@@ -17,14 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { FUNCTION_CREATING_STATE, FUNCTIONS_PAGE } from '../constants'
+
+import { capitalize, isEmpty } from 'lodash'
+import { FUNCTION_INITIALIZED_STATE, FUNCTIONS_PAGE } from '../constants'
 
 const getState = (state, page, kind) => {
+  const isStateExist = !isEmpty(state)
+
   if (page === FUNCTIONS_PAGE) {
     return {
-      value: state || FUNCTION_CREATING_STATE,
-      label: state ? functionStateLabels[state] : 'Creating',
-      className: `state-${state || FUNCTION_CREATING_STATE}${kind ? '-' + kind : ''}`
+      value: isStateExist ? state : FUNCTION_INITIALIZED_STATE,
+      label: isStateExist ? functionStateLabels[state] : capitalize(FUNCTION_INITIALIZED_STATE),
+      className: `state-${isStateExist ? state : FUNCTION_INITIALIZED_STATE}${
+        kind ? '-' + kind : ''
+      }`
     }
   } else {
     return {
