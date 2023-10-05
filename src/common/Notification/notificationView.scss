@@ -6,13 +6,33 @@
     padding: 15px;
     color: $white;
     background-color: $darkPurple;
-    border-radius: 2px;
+    border-radius: 5px;
     box-shadow: $tooltipShadow;
   }
 
   &_body {
     display: flex;
     align-items: center;
+
+    &_close_icon {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: -9px;
+      right: -9px;
+      width: 18px;
+      height: 18px;
+      border: 1px solid $white;
+      border-radius: 50%;
+      background-color: $darkPurple;
+      padding: 2px;
+
+      & svg {
+        & > * {
+          fill: $white;
+        }
+      }
+    }
 
     &_icon {
       .success_icon {
