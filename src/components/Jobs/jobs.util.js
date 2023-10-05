@@ -32,6 +32,7 @@ import {
   SCHEDULE_TAB,
   JOB_KIND_SPARK
 } from '../../constants'
+import { CONFLICT_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues } from '../../utils'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -259,10 +260,10 @@ export const handleAbortJob = (
         })
       )
     })
-    .catch(() => {
+    .catch(error => {
       dispatch(
         setNotification({
-          status: 400,
+          status: error.response?.status || 400,
           id: Math.random(),
           retry: () =>
             handleAbortJob(
@@ -275,7 +276,10 @@ export const handleAbortJob = (
               setConfirmData,
               dispatch
             ),
-          message: 'Aborting job failed'
+          message:
+            error.response?.status === CONFLICT_ERROR_STATUS_CODE && error.response?.data?.detail
+              ? error.response.data.detail
+              : 'Aborting job failed'
         })
       )
     })
