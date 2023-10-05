@@ -18,17 +18,17 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import { capitalize, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { FUNCTION_INITIALIZED_STATE, FUNCTIONS_PAGE } from '../constants'
 
 const getState = (state, page, kind) => {
-  const isStateExist = !isEmpty(state)
+  const stateExists = !isEmpty(state)
 
   if (page === FUNCTIONS_PAGE) {
     return {
-      value: isStateExist ? state : FUNCTION_INITIALIZED_STATE,
-      label: isStateExist ? functionStateLabels[state] : capitalize(FUNCTION_INITIALIZED_STATE),
-      className: `state-${isStateExist ? state : FUNCTION_INITIALIZED_STATE}${
+      value: stateExists ? state : FUNCTION_INITIALIZED_STATE,
+      label: stateExists ? functionStateLabels[state] : 'Initialized',
+      className: `state-${stateExists ? state : FUNCTION_INITIALIZED_STATE}${
         kind ? '-' + kind : ''
       }`
     }
