@@ -35,7 +35,13 @@ import YamlModal from '../../../common/YamlModal/YamlModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import {GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE, REQUEST_CANCELED} from '../../../constants'
+import {
+  GROUP_BY_NONE,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  PANEL_RERUN_MODE,
+  REQUEST_CANCELED
+} from '../../../constants'
 import {
   generateActionsMenu,
   generateFilters,
@@ -78,6 +84,7 @@ const MonitorJobs = ({
   const appStore = useSelector(store => store.appStore)
   const jobsStore = useSelector(store => store.jobsStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -152,6 +159,7 @@ const MonitorJobs = ({
         .then(jobs => {
           if (jobs.length > 1500) {
             showJobsErrorPopUp()
+            setJobRuns([])
           } else {
             const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
 
@@ -160,11 +168,13 @@ const MonitorJobs = ({
             } else {
               setJobs(parsedJobs)
             }
+            setLargeRequestErrorMessage('')
           }
         })
         .catch(error => {
           if (error.message === REQUEST_CANCELED) {
             showJobsErrorPopUp()
+            setJobRuns([])
           } else {
             dispatch(
               setNotification({
@@ -179,9 +189,12 @@ const MonitorJobs = ({
         .finally(() => clearTimeout(cancelJobsRequestTimeout))
 
       const showJobsErrorPopUp = () => {
+        const errorMessage =
+          'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
         openPopUp(ConfirmDialog, {
-          message: 'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
+          message: errorMessage
         })
+        setLargeRequestErrorMessage(errorMessage)
       }
     },
     [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
@@ -449,7 +462,12 @@ const MonitorJobs = ({
 
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
         (jobs.length === 0 && !params.jobName) ? (
-        <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_JOBS_TAB)} />
+        <NoData
+          message={
+            largeRequestErrorMessage ||
+            getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_JOBS_TAB)
+          }
+        />
       ) : (
         isEmpty(selectedJob) && (
           <Table
