@@ -276,10 +276,7 @@ export const handleAbortJob = (
               setConfirmData,
               dispatch
             ),
-          message:
-            error.response?.status === CONFLICT_ERROR_STATUS_CODE && error.response?.data?.detail
-              ? error.response.data.detail
-              : 'Aborting job failed'
+          message: error.response?.data?.detail || 'Aborting job failed'
         })
       )
     })
