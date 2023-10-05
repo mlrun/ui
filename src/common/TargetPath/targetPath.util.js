@@ -62,17 +62,18 @@ export const targetPathInitialState = {
 }
 
 export const pathTips = projectItem => {
-  const pathType =
-    projectItem === 'feature-vectors'
-      ? 'feature-vector'
-      : projectItem === 'artifacts'
-      ? 'artifact'
-      : projectItem === 'datasets'
-      ? 'dataset'
-      : 'model'
+  const pathType = {
+    'feature-vectors': 'feature-vector',
+    artifacts: 'artifact',
+    datasets: 'dataset',
+    models: 'model'
+  }
+  const reference = pathType[projectItem]
 
   return {
-    [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${pathType}s/my-project/my-${pathType}:my-tag" or "${pathType}s/my-project/my-${pathType}@my-uid`,
+    [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${reference ?? 'reference'}s/my-project/my-${
+      reference ?? 'reference'
+    }:my-tag" or "${reference ?? 'reference'}s/my-project/my-${reference ?? 'reference'}@my-uid`,
     [S3_INPUT_PATH_SCHEME]: 'bucket/path',
     [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
     [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
@@ -103,7 +104,7 @@ export const getTargetPathInvalidText = (dataInputState, formState, formStateFie
   const pathType = get(formState.values, `${formStateFieldInfo}.pathType`)
   const pathTipsList = pathTips(dataInputState.storePathType)
 
-  return pathTipsList[pathType]
+  return pathTipsList && pathTipsList[pathType]
     ? `Invalid URL. Field must be in "${pathTipsList[pathType]}" format`
     : 'The field is invalid'
 }
