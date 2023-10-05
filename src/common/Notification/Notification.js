@@ -33,16 +33,20 @@ const Notification = () => {
   const defaultStyle = {
     position: 'fixed',
     right: '24px',
-    bottom: '-100px',
+    bottom: '-115px',
     opacity: 0,
     zIndex: '1000'
   }
-  const heightNotification = 60
-  const offsetNotification = 60
+  const heightNotification = 65
+  const offsetNotification = 65
   const duration = 500
 
+  const handleRemoveNotification = itemId => {
+    dispatch(removeNotification(itemId))
+  }
+
   const handleRetry = item => {
-    dispatch(removeNotification(item.id))
+    handleRemoveNotification(item.id)
     item.retry(item)
   }
 
@@ -73,8 +77,8 @@ const Notification = () => {
             classNames="notification_download"
             onEntered={() => {
               setTimeout(() => {
-                dispatch(removeNotification(item.id))
-              }, 4000)
+                handleRemoveNotification(item.id)
+              }, 10000)
             }}
           >
             {state => (
@@ -86,6 +90,7 @@ const Notification = () => {
                 }}
                 key={item.id}
                 isSuccessResponse={isSuccessResponse}
+                handleRemoveNotification={handleRemoveNotification}
                 retry={handleRetry}
               />
             )}
