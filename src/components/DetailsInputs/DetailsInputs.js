@@ -101,6 +101,17 @@ const DetailsInputs = ({ inputs }) => {
                   }
                 }
               ])
+            } else {
+              setContent(state => [
+                ...state,
+                {
+                  key,
+                  value,
+                  ui: {
+                    isPreviewable: false
+                  }
+                }
+              ])
             }
           })
       } else {

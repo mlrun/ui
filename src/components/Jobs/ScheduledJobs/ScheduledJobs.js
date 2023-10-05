@@ -31,6 +31,7 @@ import YamlModal from '../../../common/YamlModal/YamlModal'
 
 import {
   GROUP_BY_NONE,
+  JOB_KIND_WORKFLOW,
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
@@ -41,6 +42,7 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constan
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { getJobFunctionData } from '../jobs.util'
+import { generateContentActionsMenu } from '../../../layout/Content/content.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
@@ -190,46 +192,49 @@ const ScheduledJobs = ({
         dispatch,
         fetchFunctionTemplate,
         fetchJobFunctionSuccess
-      )
-        .then(functionData => {
-          setEditableItem({
-            ...editableItem,
-            scheduled_object: {
-              ...editableItem.scheduled_object,
-              function: functionData
-            }
-          })
-
-          setJobWizardMode(PANEL_EDIT_MODE)
+      ).then(functionData => {
+        setEditableItem({
+          ...editableItem,
+          scheduled_object: {
+            ...editableItem.scheduled_object,
+            function: functionData
+          }
         })
+
+        setJobWizardMode(PANEL_EDIT_MODE)
+      })
     },
     [fetchJobFunction, dispatch, fetchFunctionTemplate, fetchJobFunctionSuccess, setJobWizardMode]
   )
 
   const actionsMenu = useMemo(() => {
-    return [
-      {
-        label: 'Run now',
-        icon: <Run className="action_cell__run-icon" />,
-        onClick: handleRunJob
-      },
-      {
-        label: 'Edit',
-        icon: <Edit />,
-        onClick: handleEditScheduleJob
-      },
-      {
-        label: 'Delete',
-        icon: <Delete />,
-        className: 'danger',
-        onClick: onRemoveScheduledJob
-      },
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
-    ]
+    return generateContentActionsMenu(
+      job => [
+        {
+          label: 'Run now',
+          icon: <Run className="action_cell__run-icon" />,
+          onClick: handleRunJob
+        },
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: handleEditScheduleJob,
+          hidden: job?.type === JOB_KIND_WORKFLOW
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          onClick: onRemoveScheduledJob
+        },
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ],
+      []
+    )
   }, [handleEditScheduleJob, handleRunJob, onRemoveScheduledJob, toggleConvertedYaml])
 
   useEffect(() => {

@@ -212,18 +212,20 @@ const FormParametersRow = ({
     }
   }
 
-  const resetValue = () => {
+  const resetValue = (newType, newIsHyper) => {
     if (isCurrentRowEditing(rowPath)) {
-      const fieldCurrentData = fields.value[index]
-
       queueMicrotask(() => {
+        const fieldCurrentData = fields.value[index]
+        const fieldType = newType ?? fieldCurrentData.data.type
+        const fieldIsHyper = newIsHyper ?? fieldCurrentData.data.isHyper
+
+        if (newType && fieldCurrentData.isUnsupportedType) {
+          formState.form.change(`${rowPath}.isUnsupportedType`, false)
+        }
+
         formState.form.change(
           `${rowPath}.data.value`,
-          fieldCurrentData.data.type === parameterTypeBool && !fieldCurrentData.data.isHyper
-            ? 'false'
-            : fieldCurrentData.data.isHyper
-            ? '[]'
-            : ''
+          fieldType === parameterTypeBool && !fieldIsHyper ? 'false' : fieldIsHyper ? '[]' : ''
         )
         formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: false })
 
@@ -351,17 +353,10 @@ const FormParametersRow = ({
                 </div>
                 {withHyperparameters && (
                   <div className="form-table__cell form-table__cell_hyper">
-                    <FormToggle name={`${rowPath}.data.isHyper`} readOnly />
+                    <FormToggle name={`${rowPath}.data.isHyper`} disabled />
                   </div>
                 )}
-                <div
-                  className={classnames(
-                    'form-table__cell',
-                    'form-table__cell_2',
-                    'form-table__name-cell',
-                    fieldData.isPredefined && 'disabled'
-                  )}
-                >
+                <div className="form-table__cell form-table__cell_2 form-table__name-cell">
                   <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
                     {fieldData.data.name}
                   </Tooltip>
@@ -375,24 +370,12 @@ const FormParametersRow = ({
                   )}
                   {fieldData.doc && <Tip className="parameter-icon" text={fieldData.doc} />}
                 </div>
-                <div
-                  className={classnames(
-                    'form-table__cell',
-                    'form-table__cell_1',
-                    fieldData.isPredefined && 'disabled'
-                  )}
-                >
+                <div className="form-table__cell form-table__cell_1">
                   <Tooltip template={<TextTooltipTemplate text={fieldData.data.type} />}>
                     {fieldData.data.type}
                   </Tooltip>
                 </div>
-                <div
-                  className={classnames(
-                    'form-table__cell',
-                    'form-table__cell_3',
-                    fieldData.isPredefined && 'disabled'
-                  )}
-                >
+                <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.type === parameterTypeBool && !fieldData.data.isHyper ? (
                     <div className="radio-buttons-container">
                       <FormRadio
@@ -422,14 +405,17 @@ const FormParametersRow = ({
                   discardOrDelete={discardOrDelete}
                   editingItem={editingItem}
                   fieldsPath={fieldsPath}
+                  hidden={!fieldData.data?.isChecked}
                   index={index}
                 />
               </div>
             )}
           </>
         )}
-      <OnChange name={`${rowPath}.data.type`}>{resetValue}</OnChange>
-      <OnChange name={`${rowPath}.data.isHyper`}>{resetValue}</OnChange>
+      <OnChange name={`${rowPath}.data.type`}>{newType => resetValue(newType)}</OnChange>
+      <OnChange name={`${rowPath}.data.isHyper`}>
+        {newIsHyper => resetValue(null, newIsHyper)}
+      </OnChange>
     </>
   )
 }

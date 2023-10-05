@@ -77,7 +77,8 @@ import {
   SET_NEW_FUNCTION_VOLUME_MOUNTS,
   FETCH_FUNCTIONS_TEMPLATES_FAILURE,
   FETCH_HUB_FUNCTIONS_FAILURE,
-  SET_HUB_FUNCTIONS
+  SET_HUB_FUNCTIONS,
+  FUNCTION_TYPE_JOB
 } from '../constants'
 
 const initialState = {
@@ -92,7 +93,7 @@ const initialState = {
   loading: false,
   error: null,
   newFunction: {
-    kind: 'job',
+    kind: FUNCTION_TYPE_JOB,
     metadata: {
       credentials: {
         access_key: PANEL_DEFAULT_ACCESS_KEY

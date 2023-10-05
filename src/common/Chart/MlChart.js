@@ -34,17 +34,37 @@ const MlChart = ({ config }) => {
 
   useLayoutEffect(() => {
     const ctx = canvasRef.current.getContext('2d')
-    const mlChartInstance = new Chart(ctx, {
+    const pythonInfinity = 'e+308'
+    const chartConfig = {
       ...config,
+      data: {
+        ...config.data,
+        labels: config.data.labels.map(label => {
+          const labelStr = String(label)
+          if (labelStr.includes(pythonInfinity)) {
+            if (labelStr.includes('-')) {
+              return `${labelStr.replace(/^([-]).*/, '$1∞')}`
+            }
+
+            return '∞'
+          }
+
+          return label
+        })
+      }
+    }
+
+    const mlChartInstance = new Chart(ctx, {
+      ...chartConfig,
       options: {
-        ...config.options,
+        ...chartConfig.options,
         animation: {
-          ...config.options.animation,
+          ...chartConfig.options.animation,
           onComplete: () => {
             setIsLoading(false)
 
-            if (config?.options?.animation?.onComplete) {
-              config.options.animation.onComplete()
+            if (chartConfig?.options?.animation?.onComplete) {
+              chartConfig.options.animation.onComplete()
             }
           }
         }

@@ -20,7 +20,9 @@ such restriction.
 import { timeout } from '../../../config'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
-import { addConsoleHandler } from 'selenium-webdriver/lib/logging'
+import { access, constants } from 'fs'
+const path = require('path')
+const os = require('os')
 
 async function scrollToWebElement(driver, element) {
   await driver.executeScript('arguments[0].scrollIntoView()', element)
@@ -28,6 +30,21 @@ async function scrollToWebElement(driver, element) {
 }
 
 const action = {
+  generatePath: async function(file, downloadsFolder){
+    const homeDirectory = os.homedir()
+
+    // Define the path to the Downloads folder
+    const downloadsFolderPath = path.join(homeDirectory, downloadsFolder)
+
+    // Specify the full path to the file
+    return path.join(downloadsFolderPath, file) 
+  },
+  determineFileAccess: async function(finalPath, file){
+    access(finalPath, constants.F_OK, (err) => {
+      const result = err ? `${file} doesn't exist` : true
+      expect(result).equal(true)
+    })
+  },
   navigateToPage: async function(driver, baseURL) {
     await driver.get(baseURL)
     await driver.sleep(1000)
@@ -85,6 +102,16 @@ const action = {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('disabled')
     expect(flag).equal(null)
+  },
+  verifyElementActive: async function(driver, component) {
+    const element = await driver.findElement(component)
+    const flag = await element.getAttribute('class')
+    expect(flag.includes('active')).equal(true)
+  },
+  verifyElementNotActive: async function(driver, component) {
+    const element = await driver.findElement(component)
+    const flag = await element.getAttribute('class')
+    expect(flag.includes('false')).equal(true)
   },
   componentIsPresent: async function(driver, component) {
     const _component = component.root ?? component

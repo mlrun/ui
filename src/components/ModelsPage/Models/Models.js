@@ -234,7 +234,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       }
     }
 
-    handleRefresh(filtersStore)
+    handleRefresh(modelsFilters)
   }
 
   useEffect(() => {
@@ -245,9 +245,9 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   useEffect(() => {
     if (isNil(filtersStore.tagOptions) && urlTagOption) {
-      fetchData({ ...filtersStore, tag: urlTagOption })
+      fetchData({ ...modelsFilters, tag: urlTagOption })
     }
-  }, [fetchData, filtersStore, urlTagOption])
+  }, [fetchData, filtersStore, modelsFilters, urlTagOption])
 
   useEffect(() => {
     return () => {

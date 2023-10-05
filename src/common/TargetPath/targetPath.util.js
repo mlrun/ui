@@ -35,7 +35,7 @@ const targetPathRegex =
 const httpTargetPathRegex =
   /^(http|https):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
 const mlrunTargetPathRegex =
-  /^(artifacts|feature-vectors|datasets)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
+  /^(artifacts|feature-vectors|datasets|models)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
 
 export const pathPlaceholders = {
   [MLRUN_STORAGE_INPUT_PATH_SCHEME]: 'artifacts/my-project/my-artifact:my-tag',
@@ -89,6 +89,10 @@ export const storePathTypes = [
   {
     label: 'Datasets',
     id: 'datasets'
+  },
+  {
+    label: 'Models',
+    id: 'models'
   },
   {
     label: 'Feature vectors',

@@ -44,7 +44,11 @@ import {
   verifyText,
   verifyTextRegExp,
   waitPageLoad,
-  waiteUntilComponent
+  waiteUntilComponent,
+  verifyElementActive,
+  verifyElementNotActive,
+  generatePath,
+  determineFileAccess
 } from '../common/actions/common.action'
 import {
   checkTableColumnValues,
@@ -71,10 +75,7 @@ import {
   verifyTypedValue,
   verifyTextAreaCounter
 } from '../common/actions/input-group.action'
-import {
-  incrementValue,
-  decrementValue
-} from '../common/actions/number-input-group.action'
+import { incrementValue, decrementValue } from '../common/actions/number-input-group.action'
 import {
   checkCheckbox,
   isCheckboxChecked,
@@ -98,10 +99,7 @@ import {
   isRadioButtonUnselected,
   selectRadiobutton
 } from '../common/actions/radio-button.action'
-import {
-  openActionMenu,
-  selectOptionInActionMenu
-} from '../common/actions/action-menu.action'
+import { openActionMenu, selectOptionInActionMenu } from '../common/actions/action-menu.action'
 import { expect } from 'chai'
 
 Given('open url', async function() {
@@ -223,47 +221,61 @@ Then('type value {string} to {string} field on {string} wizard', async function(
   await this.driver.sleep(250)
 })
 
-Then('verify {string} element on {string} wizard is enabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyElementEnabled(this.driver, pageObjects[wizardName][elementName])
-})
-
-Then('verify {string} not input element in {string} on {string} wizard is enabled', 
-  async function(elementName, accordionName,  wizardName){
-  await verifyElementEnabled(this.driver, pageObjects[wizardName][accordionName][elementName])
-})
-
-Then('verify {string} element on {string} wizard is disabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyElementDisabled(this.driver, pageObjects[wizardName][elementName])
-})
-
-Then('verify {string} not input element in {string} on {string} wizard is disabled', 
-  async function(elementName, accordionName,  wizardName) {
-    await verifyElementDisabled(
-      this.driver, 
-      pageObjects[wizardName][accordionName][elementName]
-    )
+Then(
+  'verify {string} element on {string} wizard is enabled',
+  async function (elementName, wizardName) {
+    await verifyElementEnabled(this.driver, pageObjects[wizardName][elementName])
   }
 )
 
-Then('verify checkbox {string} element on {string} wizard is enabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][elementName])
-})
+Then(
+  'verify {string} not input element in {string} on {string} wizard is enabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementEnabled(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
 
-Then('verify checkbox {string} element on {string} wizard is disabled', async function(
-  elementName,
-  wizardName
-) {
-  await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
-})
+Then(
+  'verify {string} not input element in {string} on {string} wizard is active',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementActive(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
+
+Then(
+  'verify {string} not input element in {string} on {string} wizard is NOT active',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementNotActive(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
+
+Then(
+  'verify {string} element on {string} wizard is disabled',
+  async function (elementName, wizardName) {
+    await verifyElementDisabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify {string} not input element in {string} on {string} wizard is disabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyElementDisabled(this.driver, pageObjects[wizardName][accordionName][elementName])
+  }
+)
+
+Then(
+  'verify checkbox {string} element on {string} wizard is enabled',
+  async function (elementName, wizardName) {
+    await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify checkbox {string} element on {string} wizard is disabled',
+  async function (elementName, wizardName) {
+    await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
 
 Then(
   'verify {string} element in {string} on {string} wizard is enabled',
@@ -397,28 +409,24 @@ Then(
 )
 
 Then(
-    'decrease value on {int} points in {string} field with {string} on {string} on {string} wizard',
-    async function(value, inputField, unit, accordion, wizard) {
-        const txt = await getInputValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField]
-        )
-        const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
-        const result =
-          unit === 'cpu'
-            ? (Number.parseFloat(txt) - unitValue).toFixed(3)
-            : Number.parseFloat(txt) - unitValue
-        await decrementValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField],
-            value
-        )
-        await verifyTypedValue(
-            this.driver,
-            pageObjects[wizard][accordion][inputField],
-            result.toString()
-        )
+  'decrease value on {int} points in {string} field with {string} on {string} on {string} wizard',
+  async function (value, inputField, unit, accordion, wizard) {
+    const txt = await getInputValue(this.driver, pageObjects[wizard][accordion][inputField])
+    const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
+    let result =
+      unit === 'cpu'
+        ? (Number.parseFloat(txt) - unitValue).toFixed(3)
+        : Number.parseFloat(txt) - unitValue
+    if(result < 1){
+      result = 1
     }
+    await decrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      result.toString()
+    )
+  }
 )
 
 Then(
@@ -981,16 +989,14 @@ Then(
   }
 )
 
-When('click on {string} element in {string} on {string} wizard', async function(
-  component,
-  accordion,
-  wizardName
-) {
-  await clickOnComponent(
-    this.driver,
-    pageObjects[wizardName][accordion][component]
-  )
-})
+When(
+  'click on {string} element in {string} on {string} wizard',
+  async function (component, accordion, wizardName) {
+    await waiteUntilComponent(this.driver, pageObjects[wizardName][accordion][component])
+    await clickOnComponent(this.driver, pageObjects[wizardName][accordion][component])
+    await this.driver.sleep(250)
+  }
+)
 
 Then('is {string} on {string} selected', async function(radiobutton, wizard) {
   await isRadioButtonSelected(this.driver, pageObjects[wizard][radiobutton])
@@ -1096,17 +1102,24 @@ Then('select {string} option in action menu on {string} wizard', async function(
   await selectOptionInActionMenu(this.driver, actionMenu, option)
 })
 
-Then('verify {string} according hint rules on {string} wizard', async function(
-  inputField,
-  wizardName
-) {
-  await checkInputAccordingHintText(
-    this.driver,
-    this.attach,
-    pageObjects[wizardName][inputField],
-    pageObjects['commonPagesHeader']['Common_Hint']
-  )
+Then('check that {string} file is existed on {string} directory', async function (file, filePath) {
+  const path = await generatePath(file, filePath)
+  await this.driver.sleep(150)
+  await determineFileAccess(path, file)
+  await this.driver.sleep(150)
 })
+
+Then(
+  'verify {string} according hint rules on {string} wizard',
+  async function (inputField, wizardName) {
+    await checkInputAccordingHintText(
+      this.driver,
+      this.attach,
+      pageObjects[wizardName][inputField],
+      pageObjects['commonPagesHeader']['Common_Hint']
+    )
+  }
+)
 
 Then('verify {string} options rules on {string} wizard', async function(
   inputField,

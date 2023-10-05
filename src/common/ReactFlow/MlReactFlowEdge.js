@@ -44,7 +44,10 @@ const MlReactFlowEdge = ({
   targetY
 }) => {
   const nodes = useNodes()
-  const markerEnd = useMemo(() => getMarkerEnd(arrowHeadType, markerEndId, id), [])
+  const markerEnd = useMemo(
+    () => getMarkerEnd(arrowHeadType, markerEndId, id),
+    [arrowHeadType, id, markerEndId]
+  )
   const sourceNode = useMemo(() => nodes.find(n => n.id === source), [source, nodes])
   const targetNode = useMemo(() => nodes.find(n => n.id === target), [target, nodes])
 

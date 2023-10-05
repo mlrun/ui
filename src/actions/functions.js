@@ -260,7 +260,17 @@ const functionsActions = {
         return response.data
       })
       .catch(error => {
+        const errorMsg = get(error, 'response.data.detail', 'The function failed to load')
         dispatch(functionsActions.fetchHubFunctionTemplateFailure(error))
+
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: errorMsg,
+            error
+          })
+        )
       })
   },
   fetchHubFunctionTemplateSuccess: () => ({
@@ -280,6 +290,17 @@ const functionsActions = {
       dispatch(functionsActions.setHubFunctions(templatesData))
 
       return templatesData
+    }).catch((error) => {
+      const errorMsg = get(error, 'response.data.detail', 'Functions failed to load')
+
+      dispatch(
+        setNotification({
+          status: error.response?.status || 400,
+          id: Math.random(),
+          message: errorMsg,
+          error
+        })
+      )
     })
   },
   fetchHubFunctionsFailure: err => ({

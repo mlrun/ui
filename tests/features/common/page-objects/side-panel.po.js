@@ -285,7 +285,7 @@ const jobCustomParametersTable = {
 // TODO: Wait for some details
 const volumePathsTable = {
   root:
-    '.modal__content .wizard-form__content-container .form-row:nth-child(7)',
+    '.modal__content .form-row:nth-of-type(7)',
   header: {
     root: '.form-table__header-row',
     sorters: {
@@ -349,7 +349,7 @@ const resourcesNodeSelectorTable = {
   }
 }
 
-const advancedEnvironmentVariablesTable = {
+const advancedEnvironmentVariablesTable_old = {
   root:
     '.new-item-side-panel__body .accordion__container:nth-of-type(4) .panel-section',
   header: {
@@ -675,6 +675,39 @@ const parametersRuntimeConfigurationTable = {
           componentType: actionMenu,
           structure: actionMenuStructure
         }
+      }
+    }
+  }
+}
+
+const advancedEnvironmentVariablesTable = {
+  root: '.wizard-form__content .form-table',
+  header: {},
+  body: {
+    add_row_btn: '.form-table__action-row button',
+    row: {
+      root: '.form-table__row',
+      fields: {
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        checkbox: '.form-field-checkbox input',
+        name_input: '.form-field-input input',
+        name_verify: '.form-table__cell_2',
+        type_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1 .form-field-select', 
+            '.form-field__icons', 
+            '.pop-up-dialog .options-list__body .select__item', 
+            false, 
+            false)  
+        },
+        type_dropdown_verify: '.form-table__cell_1 .data-ellipsis', 
+        value_input: '.form-table__cell_3 .form-field__control input',
+        value_verify: '.form-table__cell_3 .data-ellipsis',
+        value_input_key: '.form-table__cell_3 .form-field-input:nth-of-type(2) .form-field__control input' 
       }
     }
   }
@@ -1152,35 +1185,82 @@ module.exports = {
         )
       ),
       // Volume Path inputs
-      Volume_Paths_Table_Type_Dropdown: commonVolumePathsTableTypeDropdown,
+      Volume_Paths_Table_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(1) .form-field__wrapper .form-field__select',
+          '.form-field__select-value',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
       Volume_Paths_Table_Volume_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 1, 2)
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(2) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Path_Input: inputGroup(
-        resourcesTableCommonInput(3, 1, 3)
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(3) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Container_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
+          true,
+          true,
+          true
+        )
       ),
       Volume_Paths_Table_Config_Map_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Secret_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Claime_Name_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 1)
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Access_Key_Input: inputGroup(
-        resourcesTableCommonInput(3, 2, 2)
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(5) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
       ),
       Volume_Paths_Table_Resource_Path_Input: inputGroup(
-        resourcesTableCommonInput(3, 3, 1)
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(6) .form-field__wrapper',
+          true,
+          true,
+          true
+        )
       ),
       Edit_Volume_Name_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(2)')),
       Edit_Volume_Path_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(3)')),
-      Add_New_Row_Button: commonAddNewRowButton,
-      Delete_New_Row_Button: commonDeleteNewRowButton,
+      Add_New_Row_Button: By.css('.form-table__volume-row.active .form-table__actions-cell .round-icon-cp:nth-of-type(1)'),
+      Delete_New_Row_Button: By.css('.form-table__volume-row .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
       Apply_Edit_Button: By.css('.volumes-table .apply-edit-btn'),
       Volume_Paths_Table: commonTable(volumePathsTable),
       Memory_Request_Dropdown: dropdownComponent(
@@ -1264,6 +1344,47 @@ module.exports = {
         )
       ),
       Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
+    },
+    Schedule_For_Later: {
+      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-secondary'),
+      Time_unit_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.simple-schedule-item .form-field-select .form-field__wrapper',
+          '.form-field__control .form-field__select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      Schedule_item_Sunday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(1)'),
+      Schedule_item_Monday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(2)'),
+      Schedule_item_Tuesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(3)'),
+      Schedule_item_Wednesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(4)'),
+      Schedule_item_Thursday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(5)'),
+      Schedule_item_Friday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(6)'),
+      Schedule_item_Saturday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(7)'),
+      Error_Message: By.css('.schedule-content .error')
+    },
+    Advanced_Environment_Variables_Table: commonTable(advancedEnvironmentVariablesTable),
+    Advanced_Accordion: {
+      Accordion_Subheader: By.css(
+        '.modal__body .wizard-form__content-container .form-table-title'
+      ),
+      Default_Input_Path_Input: inputGroup(
+        generateInputGroup(
+          '.modal__body .job-wizard__advanced .form-col-1:nth-of-type(1) .form-field__wrapper',
+          true,
+          false,
+          true
+        )
+      ),
+      Default_Artifact_Path_Input: inputGroup(
+        generateInputGroup(
+          '.modal__body .job-wizard__advanced .form-col-1:nth-of-type(2) .form-field__wrapper',
+          true,
+          false,
+          true
+        )
+      )
     }
   },
   newJobTemplateEdit: {
@@ -1573,7 +1694,7 @@ module.exports = {
         '.new-item-side-panel__body .accordion__container:nth-of-type(4) .new-item-side-panel__expand-icon'
       ),
       Advanced_Environment_Variables_Table: commonTable(
-        advancedEnvironmentVariablesTable
+        advancedEnvironmentVariablesTable_old
       ),
       Advanced_Secrets_Table: commonTable(advancedSecretsTable),
       Advanced_Environment_Variables_Demo_Table: commonTable(
@@ -1771,6 +1892,14 @@ module.exports = {
       New_Function_Base_Image_Input: inputGroup(
         generateInputGroup(
           '.new-item-side-panel .accordion__container:nth-of-type(2) .code__images-inputs .base-image.input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      New_Requirements_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .requirements.input-wrapper',
           true,
           true,
           true
