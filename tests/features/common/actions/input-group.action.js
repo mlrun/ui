@@ -138,6 +138,18 @@ const action = {
     const flag = await inputField.getAttribute('disabled')
     expect(flag).equal('true')
   },
+  verifyInputClassDisabled: async function (driver, inputGroup) {
+    const inputField = await driver.findElement(inputGroup.root)
+    const attributes = await inputField.getAttribute('class')
+    const flag = attributes.includes('form-field__wrapper-disabled')
+    expect(flag).equal(true)
+  },
+  verifyInputClassEnabled: async function (driver, inputGroup) {
+    const inputField = await driver.findElement(inputGroup.inputField)
+    const attributes = await inputField.getAttribute('class')
+    const flag = attributes.includes('form-field__wrapper-disabled')
+    expect(flag).equal(false)
+  },
   verifyInputEnabled: async function (driver, inputGroup) {
     const inputField = await driver.findElement(inputGroup.inputField)
     const flag = await inputField.getAttribute('disabled')

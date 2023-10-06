@@ -29,16 +29,6 @@ import { getElementText, hoverComponent } from './common.action'
 import { DataFrame } from 'pandas-js'
 
 async function getColumnValues(driver, table, columnName) {
-  // return await driver
-  //   .findElements(table.tableColumns[columnName])
-  //   .then(function(elements) {
-
-  //     return Promise.all(elements.map(element => element.getAttribute('value')))
-  //   })
-
-
-
-
   return await driver
     .findElements(table.tableColumns[columnName])
     .then(function(elements) {

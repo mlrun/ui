@@ -1745,6 +1745,22 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "key" values "Name,Hash" values from "Overview_Headers" on "ML_Function_Info_Pane" with "link" context value
         Then compare current browser URL with test "href" context value
+        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
+        Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "aggregate" value in "name" column
+        And wait load page
+        Then "Title" element on "Common_Popup" should contains "Delete function?" value
+        Then verify "Delete_Button" element visibility on "Common_Popup" wizard
+        Then click on "Delete_Button" element on "Common_Popup" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        When click on cell with value "aggregate-test" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
+        And wait load page
+        When click on "link" value where option is "Function" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection to "projects/default/functions"
+        And wait load page
 
     @FAILED_TODO
     #TODO: create "test-scheduled" Schedule in "automation-test" project - createAPISchedule, newJobTemplate creating error
@@ -2156,6 +2172,36 @@ Feature: Jobs and workflows
             | key_verify | value_verify | 
             |    key2    |    value2    |
 
+    Scenario: MLJW044 - Check "Max Iterations", "Max errors" inputs field availability according to the strategy type in Hyperparameter strategy
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then check "Hyperparameter_Checkbox" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Hyperparameter strategy" value
+        Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard selected option value "List"
+        Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
+        Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
+        Then select "Grid" option in "Strategy_Dropdown" dropdown on "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard selected option value "Grid"
+        Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
+        Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
+        Then select "Random" option in "Strategy_Dropdown" dropdown on "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard selected option value "Random"
+        Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
+        Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
+        
+
     Scenario: Check all mandatory components on Batch Run wizard - Run Details with Method
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2307,7 +2353,7 @@ Feature: Jobs and workflows
         Then verify data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
             | name_verify | type_dropdown_verify | value_verify |
             | name2edited |          int         |     1234     |      
-
+#@uniqueTag
     @inProgress
     Scenario: MLJW037 - Check all mandatory components on Batch Run wizard - Step 5 (Resources)
         Given open url
@@ -2445,6 +2491,30 @@ Feature: Jobs and workflows
         Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+
+    Scenario: MLJW043 - Check Batch-Run running after edit GPU limit in Resources section
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Resources" value
+        Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
+        Then type value "5" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Run_Button" element on "Batch_Run" wizard
+        And wait load page
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
 
     Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
         Given open url

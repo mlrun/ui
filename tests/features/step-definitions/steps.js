@@ -71,7 +71,9 @@ import {
   getInputValue,
   typeValue,
   verifyInputDisabled,
+  verifyInputClassDisabled,
   verifyInputEnabled,
+  verifyInputClassEnabled,
   verifyTypedValue,
   verifyTextAreaCounter
 } from '../common/actions/input-group.action'
@@ -159,6 +161,23 @@ Then(
     expect(expectedUrl).equal(
       afterURL,
       `Redirection from "${invalidUrl}"\nshould be "${expectedUrl}"\nbut is "${afterURL}"`
+    )
+  }
+)
+
+Then(
+  'verify redirection to {string}',
+  async function (expectedPath) {
+    // invalidUrl = `http://${test_url}:${test_port}/${invalidPath}`
+    const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
+
+    // await navigateToPage(this.driver, invalidUrl)
+    // await this.driver.sleep(250)
+    const afterURL = await this.driver.getCurrentUrl()
+
+    expect(expectedUrl).equal(
+      afterURL,
+      `Redirection should be "${expectedUrl}"\nbut is "${afterURL}"`
     )
   }
 )
@@ -288,9 +307,29 @@ Then(
 )
 
 Then(
+  'verify {string} element in {string} on {string} wizard is enabled by class name',
+  async function(inputField, accordionName, wizardName) {
+    await verifyInputClassEnabled(
+      this.driver,
+      pageObjects[wizardName][accordionName][inputField]
+    )
+  }
+)
+
+Then(
   'verify {string} element in {string} on {string} wizard is disabled',
   async function(inputField, accordionName, wizardName) {
     await verifyInputDisabled(
+      this.driver,
+      pageObjects[wizardName][accordionName][inputField]
+    )
+  }
+)
+
+Then(
+  'verify {string} element in {string} on {string} wizard is disabled by class name',
+  async function(inputField, accordionName, wizardName) {
+    await verifyInputClassDisabled(
       this.driver,
       pageObjects[wizardName][accordionName][inputField]
     )

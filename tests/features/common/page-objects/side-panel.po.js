@@ -1174,6 +1174,32 @@ module.exports = {
     )
   },
   batchRunEdit: {
+    Hyperparameter_Strategy_Accordion:{
+      Strategy_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.modal__content .modal__body .job-wizard__hyperparameter-strategy .strategy-grid-item',
+          '.form-field-select .form-field__wrapper-normal', 
+          '.options-list__body .select__item-label',
+          '.data-ellipsis'
+        )
+      ),
+      Max_Iterations: inputGroup(
+        generateInputGroup(
+          '.modal__content .modal__body .wizard-form__content .max-iterations-grid-item .form-field__wrapper-normal',
+          true,
+          true,
+          false
+        )
+      ),
+      Max_Errors: inputGroup(
+        generateInputGroup(
+          '.modal__content .modal__body .wizard-form__content .max-errors-grid-item .form-field__wrapper-normal',
+          true,
+          true,
+          false
+        )
+      )
+    },
     Resources_Accordion: {
       Pods_Priority_Dropdown: commonPodsPriorityDropdown,
       Node_Selection_Subheader: By.css('.modal__content .wizard-form__content-container .form-row:nth-child(3)'),
