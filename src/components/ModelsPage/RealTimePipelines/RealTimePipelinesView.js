@@ -26,6 +26,7 @@ import FunctionsTableRow from '../../../elements/FunctionsTableRow/FunctionsTabl
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import Pipeline from '../../Pipeline/Pipeline'
 import Table from '../../Table/Table'
+import Loader from '../../../common/Loader/Loader'
 
 import { filters } from './realTimePipelines.util'
 import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
@@ -57,6 +58,7 @@ const RealTimePipelinesView = React.forwardRef(
 
     return (
       <>
+        {artifactsStore.loading && <Loader />}
         <div className="models" ref={ref}>
           <div className="table-container">
             <div className={filterMenuClassNames}>
