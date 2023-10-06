@@ -769,6 +769,10 @@ iframe {
   }
 }
 
+.asterisk {
+  color: $amaranth
+}
+
 //TODO: Delete after removing Textarea and Input and using DRC components
 @mixin fieldWrapperOld {
   position: relative;
