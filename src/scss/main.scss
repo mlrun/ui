@@ -444,14 +444,14 @@ a {
   text-decoration: none;
 }
 
-[class^='state-completed'],
-[class^='state-ready'],
-[class^='state-succeeded'],
 [class^='state-active'],
+[class^='state-completed'],
 [class^='state-created'],
 [class^='state-creating'],
 [class^='state-info'],
-[class^='state-online'] {
+[class^='state-online'],
+[class^='state-ready'],
+[class^='state-succeeded'] {
   @include statusState($brightTurquoise);
 }
 
@@ -459,22 +459,26 @@ a {
   @include statusState(transparent);
 }
 
+[class^='state-initialized'] {
+  @include statusState($chateauGreen);
+}
+
 [class^='state-warn'] {
   @include statusState($grandis);
 }
 
-[class^='state-deploying'],
 [class^='state-build'],
+[class^='state-deploying'],
 [class^='state-pending'],
 [class^='state-running'] {
   @include statusState($pictonBlue);
 }
 
-[class^='state-failed'],
-[class^='state-fail'],
-[class^='state-error'],
+[class^='state-aborted'],
 [class^='state-broken'],
-[class^='state-aborted'] {
+[class^='state-error'],
+[class^='state-fail'],
+[class^='state-failed'] {
   @include statusState($burntSienna);
 }
 
