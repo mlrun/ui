@@ -26,7 +26,6 @@ import {
   isFinite,
   isNil,
   keyBy,
-  map,
   merge,
   omit,
   set,
@@ -277,7 +276,10 @@ export const generateJobWizardDefaultData = (
   }
 
   if (!isEmpty(defaultData.task.spec.inputs)) {
-    jobFormData.dataInputs.dataInputsTable = parseDefaultDataInputs(defaultData.task.spec.inputs)
+    jobFormData.dataInputs.dataInputsTable = parseDefaultDataInputs(
+      functionParameters,
+      defaultData.task.spec.inputs
+    )
   }
 
   return [jobFormData, jobAdditionalData]
@@ -571,62 +573,93 @@ export const getCategoryName = categoryId => {
   return categoriesNames[categoryId] ?? categoryId
 }
 
+const getDataInputData = (dataInputName, dataInputValue) => {
+  return {
+    name: dataInputName,
+    path: dataInputValue ?? '',
+    fieldInfo: {
+      pathType: dataInputValue?.replace(/:\/\/.*$/g, '://') ?? '',
+      value: dataInputValue?.replace(/.*:\/\//g, '') ?? ''
+    }
+  }
+}
+
+const sortParameters = (parameter, nextParameter) => nextParameter.isRequired - parameter.isRequired
+
 export const parseDataInputs = functionParameters => {
   return functionParameters
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
-    .map(input => {
+    .map(dataInput => {
       return {
-        doc: input.doc,
-        isDefault: true,
-        data: {
-          name: input.name,
-          path: input.path ?? '',
-          fieldInfo: {
-            pathType: input.path?.replace(/:\/\/.*$/g, '://') ?? '',
-            value: input.path?.replace(/.*:\/\//g, '') ?? ''
-          }
-        }
-      }
-    })
-}
-
-export const parseDefaultDataInputs = dataInputs => {
-  return map(dataInputs, (value, key) => {
-    return {
-      isDefault: true,
-      data: {
-        name: key,
-        path: value ?? '',
-        fieldInfo: {
-          pathType: value?.replace(/:\/\/.*$/g, '://') ?? '',
-          value: value?.replace(/.*:\/\//g, '') ?? ''
-        }
-      }
-    }
-  })
-}
-
-export const parsePredefinedParameters = funcParams => {
-  return funcParams
-    .filter(parameter => !parameter.type?.includes('DataItem'))
-    .map(parameter => {
-      const parsedValue = parseParameterValue(parameter.default)
-
-      return {
-        data: {
-          name: parameter.name ?? '',
-          type: parameter.type ?? '',
-          value: parsedValue,
-          isChecked: !has(parameter, 'default'),
-          isHyper: false
-        },
-        doc: parameter.doc,
-        isHidden: parameter.name === 'context',
-        isUnsupportedType: !parameterTypeValueMap[parameter.type],
+        data: getDataInputData(dataInput.name, dataInput.default),
+        doc: dataInput.doc,
+        isRequired: !has(dataInput, 'default'),
         isDefault: true,
         isPredefined: true
       }
     })
+    .sort(sortParameters)
+}
+
+export const parseDefaultDataInputs = (funcParams, runDataInputs) => {
+  const predefinedDataInputs = chain(funcParams)
+    .filter(dataInput => dataInput.type?.includes('DataItem'))
+    .map(dataInput => {
+      const dataInputValue = runDataInputs[dataInput.name] ?? dataInput.default ?? ''
+
+      return {
+        data: getDataInputData(dataInput.name, dataInputValue),
+        doc: dataInput.doc ?? '',
+        isRequired: !has(dataInput, 'default'),
+        isDefault: true,
+        isPredefined: true
+      }
+    })
+    .sort(sortParameters)
+    .value()
+
+  const customDataInputsNames = difference(Object.keys(runDataInputs), Object.keys(funcParams))
+
+  const customDataInputs = customDataInputsNames.map(dataInputName => {
+    const dataInputValue = runDataInputs[dataInputName] ?? ''
+
+    return {
+      data: getDataInputData(dataInputName, dataInputValue),
+      isRequired: false,
+      isDefault: true,
+      isPredefined: false
+    }
+  })
+
+  return predefinedDataInputs.concat(customDataInputs)
+}
+
+export const parsePredefinedParameters = funcParams => {
+  return (
+    funcParams
+      .filter(parameter => !parameter.type?.includes('DataItem'))
+      .map(parameter => {
+        const parsedValue = parseParameterValue(parameter.default)
+        const parameterIsRequired = !has(parameter, 'default')
+
+        return {
+          data: {
+            name: parameter.name ?? '',
+            type: parameter.type ?? '',
+            value: parsedValue,
+            isChecked: parameterIsRequired,
+            isHyper: false
+          },
+          doc: parameter.doc,
+          isHidden: parameter.name === 'context',
+          isUnsupportedType: !parameterTypeValueMap[parameter.type],
+          isRequired: parameterIsRequired,
+          isDefault: true,
+          isPredefined: true
+        }
+      })
+      .sort(sortParameters)
+  )
 }
 
 export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyperParams = {}) => {
@@ -641,6 +674,7 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       )
       const predefinedParameterIsModified =
         parameter.name in runParams || parameter.name in runHyperParams
+      const parametersIsRequired = !has(parameter, 'default')
 
       return {
         data: {
@@ -652,16 +686,18 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
               )
             : parameter.type ?? '',
           value: parsedValue,
-          isChecked: (parsedValue && predefinedParameterIsModified) || !has(parameter, 'default'),
+          isChecked: (parsedValue && predefinedParameterIsModified) || parametersIsRequired,
           isHyper: parameter.name in runHyperParams
         },
         doc: parameter.doc ?? '',
         isHidden: parameter.name === 'context',
         isUnsupportedType: !parameterTypeValueMap[parameter.type],
+        isRequired: parametersIsRequired,
         isDefault: true,
         isPredefined: true
       }
     })
+    .sort(sortParameters)
     .value()
 
   const customParametersNames = difference(
