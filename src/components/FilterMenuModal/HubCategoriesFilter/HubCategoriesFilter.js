@@ -21,19 +21,17 @@ import React, { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 import { isEqual, pickBy } from 'lodash'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useForm } from 'react-final-form'
 
 import { FilterMenuWizardContext } from '../FilterMenuModal'
 import { FormCheckBox } from 'igz-controls/components'
 
 import { FILTER_MENU_MODAL, HUB_CATEGORIES_FILTER } from '../../../constants'
-import { setModalFiltersValues } from '../../../reducers/filtersReducer'
 
 import './hubCategoriesFilter.scss'
 
 const HubCategoriesFilter = ({ templates }) => {
-  const dispatch = useDispatch()
   const form = useForm()
   const filtersContext = useContext(FilterMenuWizardContext)
   const filtersStoreHubCategories = useSelector(
@@ -64,12 +62,7 @@ const HubCategoriesFilter = ({ templates }) => {
             const hubCategories = pickBy(next, value => value)
 
             if (!isEqual(hubCategories, filtersStoreHubCategories)) {
-              dispatch(
-                setModalFiltersValues({
-                  name: filtersContext.filterMenuName,
-                  value: { [HUB_CATEGORIES_FILTER]: hubCategories }
-                })
-              )
+              form.change(HUB_CATEGORIES_FILTER, hubCategories)
             }
           }
         }}

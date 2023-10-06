@@ -396,7 +396,6 @@ const JobWizardFunctionSelection = ({
               setMatches={setFilterMatches}
             />
             <FilterMenuModal
-              cancelButton={{ label: 'Clear', variant: 'tertiary' }}
               header="Filter by category"
               wizardClassName="hub-filter"
               filterMenuName={JOB_WIZARD_FILTERS}
