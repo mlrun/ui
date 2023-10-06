@@ -170,7 +170,7 @@ const functionReducer = (state = initialState, { type, payload }) => {
     case FETCH_FUNCTIONS_BEGIN:
       return {
         ...state,
-        loading: true
+        loading: !payload
       }
     case FETCH_FUNCTIONS_SUCCESS:
       return {
