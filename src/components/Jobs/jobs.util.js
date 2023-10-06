@@ -32,7 +32,6 @@ import {
   SCHEDULE_TAB,
   JOB_KIND_SPARK
 } from '../../constants'
-import { CONFLICT_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues } from '../../utils'
 import { setNotification } from '../../reducers/notificationReducer'
