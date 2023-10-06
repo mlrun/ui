@@ -207,8 +207,8 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  fetchFunctions: (project, filters) => dispatch => {
-    dispatch(functionsActions.fetchFunctionsBegin())
+  fetchFunctions: (project, filters, withoutLoader = false) => dispatch => {
+    dispatch(functionsActions.fetchFunctionsBegin(withoutLoader))
 
     return functionsApi
       .getFunctions(project, filters)

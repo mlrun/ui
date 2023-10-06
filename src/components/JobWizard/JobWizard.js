@@ -92,6 +92,7 @@ const JobWizard = ({
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState([])
   const [functions, setFunctions] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
   const [templatesCategories, setTemplatesCategories] = useState([])
   const [templates, setTemplates] = useState([])
   const [jobAdditionalData, setJobAdditionalData] = useState({})
@@ -174,6 +175,12 @@ const JobWizard = ({
       }
     ]
   }
+
+  useEffect(() => {
+    return () => {
+      setFunctions([])
+    }
+  }, [setFunctions])
 
   useEffect(() => {
     if (isBatchInference) {
@@ -291,6 +298,7 @@ const JobWizard = ({
       {formState => {
         return (
           <>
+            {isLoading && <Loader />}
             <Wizard
               className="form"
               formState={formState}
@@ -322,6 +330,7 @@ const JobWizard = ({
                   frontendSpec={frontendSpec}
                   functions={functions}
                   isEditMode={isEditMode}
+                  isLoading={isLoading}
                   params={params}
                   selectedFunctionData={selectedFunctionData}
                   selectedFunctionTab={selectedFunctionTab}
@@ -329,6 +338,7 @@ const JobWizard = ({
                   setFilteredFunctions={setFilteredFunctions}
                   setFilteredTemplates={setFilteredTemplates}
                   setFunctions={setFunctions}
+                  setIsLoading={setIsLoading}
                   setJobAdditionalData={setJobAdditionalData}
                   setSelectedFunctionData={setSelectedFunctionData}
                   setSelectedFunctionTab={setSelectedFunctionTab}

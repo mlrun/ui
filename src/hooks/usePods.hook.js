@@ -36,7 +36,11 @@ export const usePods = (fetchJobPods, removePods, selectedJob) => {
       )
 
       const interval = setInterval(() => {
-        fetchJobPods(params.projectName, selectedJob.uid)
+        fetchJobPods(
+          params.projectName,
+          selectedJob.uid,
+          get(selectedJob, 'ui.originalContent.metadata.labels.kind', JOB_KIND_JOB)
+        )
       }, 30000)
 
       return () => {
