@@ -125,7 +125,8 @@ const FormDataInputsRow = ({
             )}
           >
             <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
-              {fieldData.data.name}
+              {fieldData.data?.name}
+              {fieldData.isRequired && <span className="asterisk"> *</span>}
             </Tooltip>
             {fields.value[index].doc && <Tip text={fields.value[index].doc} />}
           </div>
@@ -136,6 +137,7 @@ const FormDataInputsRow = ({
           </div>
           <FormRowActions
             applyChanges={applyChanges}
+            deleteIsDisabled={fieldData.isRequired}
             deleteRow={deleteRow}
             discardOrDelete={discardOrDelete}
             editingItem={editingItem}

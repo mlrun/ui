@@ -253,10 +253,12 @@ const FormParametersRow = ({
             !disabled ? (
               <div className={tableRowClassNames} key={index}>
                 <div className="form-table__cell form-table__cell_min">
-                  <FormCheckBox
-                    name={`${rowPath}.data.isChecked`}
-                    onClick={event => event.stopPropagation()}
-                  />
+                  {!fieldData.isRequired && (
+                    <FormCheckBox
+                      name={`${rowPath}.data.isChecked`}
+                      onClick={event => event.stopPropagation()}
+                    />
+                  )}
                 </div>
                 {withHyperparameters && (
                   <div className="form-table__cell form-table__cell_hyper">
@@ -346,10 +348,12 @@ const FormParametersRow = ({
                 }
               >
                 <div className="form-table__cell form-table__cell_min">
-                  <FormCheckBox
-                    name={`${rowPath}.data.isChecked`}
-                    onClick={event => event.stopPropagation()}
-                  />
+                  {!fieldData.isRequired && (
+                    <FormCheckBox
+                      name={`${rowPath}.data.isChecked`}
+                      onClick={event => event.stopPropagation()}
+                    />
+                  )}
                 </div>
                 {withHyperparameters && (
                   <div className="form-table__cell form-table__cell_hyper">
@@ -359,6 +363,7 @@ const FormParametersRow = ({
                 <div className="form-table__cell form-table__cell_2 form-table__name-cell">
                   <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
                     {fieldData.data.name}
+                    {fieldData.isRequired && <span className="asterisk"> *</span>}
                   </Tooltip>
                   {!fieldData.isPredefined && (
                     <Tooltip
