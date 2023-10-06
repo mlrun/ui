@@ -264,6 +264,7 @@ const artifactsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchFiles.rejected, defaultRejectedHandler)
+    builder.addCase(fetchArtifactsFunctions.pending, defaultPendingHandler)
     builder.addCase(fetchArtifactsFunctions.fulfilled, (state, action) => {
       state.error = null
       state.pipelines = action.payload
