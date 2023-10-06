@@ -652,24 +652,29 @@ const FeatureSetsPanelTargetStore = ({
       })
 
       setPassThrouthEnabled(true)
-      openPopUp(ConfirmDialog, {
-        confirmButton: {
-          label: 'Unset online-target',
-          variant: SECONDARY_BUTTON,
-          handler: () => {
-            clearTargets(false)
-          }
-        },
-        cancelButton: {
-          label: 'Keep online-target set',
-          variant: TERTIARY_BUTTON,
-          handler: () => {
-            clearTargets(true)
-          }
-        },
-        message:
-          'Passthrough set to "enabled" while online-target is set. Do you want to unset online-target?'
-      })
+
+      if (selectedTargetKind.includes(ONLINE)) {
+        openPopUp(ConfirmDialog, {
+          confirmButton: {
+            label: 'Unset online-target',
+            variant: SECONDARY_BUTTON,
+            handler: () => {
+              clearTargets(false)
+            }
+          },
+          cancelButton: {
+            label: 'Keep online-target set',
+            variant: TERTIARY_BUTTON,
+            handler: () => {
+              clearTargets(true)
+            }
+          },
+          message:
+            'Passthrough set to "enabled" while online-target is set. Do you want to unset online-target?'
+        })
+      } else {
+        clearTargets(false)
+      }
     } else if (!featureStore.newFeatureSet.spec.passthrough && passthroughtEnabled) {
       restoreTargets()
       setPassThrouthEnabled(false)

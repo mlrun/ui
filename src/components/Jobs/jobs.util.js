@@ -259,10 +259,10 @@ export const handleAbortJob = (
         })
       )
     })
-    .catch(() => {
+    .catch(error => {
       dispatch(
         setNotification({
-          status: 400,
+          status: error.response?.status || 400,
           id: Math.random(),
           retry: () =>
             handleAbortJob(
@@ -275,7 +275,7 @@ export const handleAbortJob = (
               setConfirmData,
               dispatch
             ),
-          message: 'Aborting job failed'
+          message: error.response?.data?.detail || 'Aborting job failed'
         })
       )
     })
