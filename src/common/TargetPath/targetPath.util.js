@@ -155,37 +155,44 @@ export const getTargetPathOptions = hiddenOptionsIds => [
   {
     className: 'path-type-v3io',
     label: 'V3IO',
-    id: V3IO_INPUT_PATH_SCHEME
+    id: V3IO_INPUT_PATH_SCHEME,
+    hidden: hiddenOptionsIds?.includes(V3IO_INPUT_PATH_SCHEME)
   },
   {
     className: 'path-type-s3',
     label: 'S3',
-    id: S3_INPUT_PATH_SCHEME
+    id: S3_INPUT_PATH_SCHEME,
+    hidden: hiddenOptionsIds?.includes(S3_INPUT_PATH_SCHEME)
   },
   {
     className: 'path-type-http',
     label: 'HTTP',
-    id: HTTP_STORAGE_INPUT_PATH_SCHEME
+    id: HTTP_STORAGE_INPUT_PATH_SCHEME,
+    hidden: hiddenOptionsIds?.includes(HTTP_STORAGE_INPUT_PATH_SCHEME)
   },
   {
     className: 'path-type-https',
     label: 'HTTPS',
-    id: HTTPS_STORAGE_INPUT_PATH_SCHEME
+    id: HTTPS_STORAGE_INPUT_PATH_SCHEME,
+    hidden: hiddenOptionsIds?.includes(HTTPS_STORAGE_INPUT_PATH_SCHEME)
   },
   {
     className: 'path-type-az',
     label: 'Azure storage',
-    id: AZURE_STORAGE_INPUT_PATH_SCHEME
+    id: AZURE_STORAGE_INPUT_PATH_SCHEME,
+    hidden: hiddenOptionsIds?.includes(AZURE_STORAGE_INPUT_PATH_SCHEME)
   },
   {
     className: 'path-type-gs',
     label: 'Google storage',
-    id: GOOGLE_STORAGE_INPUT_PATH_SCHEME
+    id: GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+    hidden: hiddenOptionsIds?.includes(GOOGLE_STORAGE_INPUT_PATH_SCHEME)
   },
   {
     className: 'path-type-dbfs',
     label: 'Databricks filesystem',
-    id: DBFS_STORAGE_INPUT_PATH_SCHEME
+    id: DBFS_STORAGE_INPUT_PATH_SCHEME,
+    hidden: hiddenOptionsIds?.includes(DBFS_STORAGE_INPUT_PATH_SCHEME)
   }
 ]
 
