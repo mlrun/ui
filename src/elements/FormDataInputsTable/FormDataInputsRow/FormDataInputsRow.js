@@ -31,6 +31,16 @@ import {
   handleStoreInputPathChange,
   targetPathInitialState
 } from '../../../common/TargetPath/targetPath.util'
+import {
+  AZURE_STORAGE_INPUT_PATH_SCHEME,
+  DBFS_STORAGE_INPUT_PATH_SCHEME,
+  GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+  HTTP_STORAGE_INPUT_PATH_SCHEME,
+  HTTPS_STORAGE_INPUT_PATH_SCHEME,
+  MODEL_PATH_DATA_INPUT,
+  S3_INPUT_PATH_SCHEME,
+  V3IO_INPUT_PATH_SCHEME
+} from '../../../constants'
 
 const FormDataInputsRow = ({
   applyChanges,
@@ -86,6 +96,19 @@ const FormDataInputsRow = ({
               density="normal"
               formState={formState}
               formStateFieldInfo={`${rowPath}.data.fieldInfo`}
+              hiddenSelectOptionsIds={
+                fieldData.data.name === MODEL_PATH_DATA_INPUT && fieldData.isPredefined
+                  ? [
+                      V3IO_INPUT_PATH_SCHEME,
+                      S3_INPUT_PATH_SCHEME,
+                      HTTP_STORAGE_INPUT_PATH_SCHEME,
+                      HTTPS_STORAGE_INPUT_PATH_SCHEME,
+                      AZURE_STORAGE_INPUT_PATH_SCHEME,
+                      GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+                      DBFS_STORAGE_INPUT_PATH_SCHEME
+                    ]
+                  : []
+              }
               inputDefaultValue={editingItem.data.fieldInfo?.value}
               name={`${rowPath}.data.path`}
               required

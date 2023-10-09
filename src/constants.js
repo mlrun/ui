@@ -53,6 +53,8 @@ export const FULL_VIEW_MODE = 'full'
 
 export const REQUEST_CANCELED = 'Request canceled'
 
+export const MODEL_PATH_DATA_INPUT = 'model_path'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
