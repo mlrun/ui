@@ -21,7 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { FieldArray } from 'react-final-form-arrays'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 
 import FormParametersRow from './FormParametersRow/FormParametersRow'
 import { FormActionButton } from 'igz-controls/elements'
@@ -41,6 +41,7 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
     discardOrDelete,
     editingItem,
     enterEditMode,
+    getTableArrayErrors,
     isCurrentRowEditing
   } = useFormTable(formState)
 
@@ -55,6 +56,21 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
     })
 
     return !predefinedContainsName && !customContainsName
+  }
+
+  const validateParameters = value => {
+    const tableErrors = value.reduce((errorData, parameter, index) => {
+      if (parameter.isRequired && !parameter.isHidden && parameter.data?.value === '') {
+        errorData[index] = [{
+          name: 'required',
+          label: `'${parameter.data.name}' parameter is required`
+        }]
+      }
+
+      return errorData
+    }, {})
+
+    return !isEmpty(tableErrors) ? tableErrors : null
   }
 
   return (
@@ -77,7 +93,7 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
         </div>
         <div className="form-table__cell form-table__actions-cell" />
       </div>
-      <FieldArray name={predefinedPath}>
+      <FieldArray name={predefinedPath} validate={validateParameters}>
         {({ fields }) => {
           return fields.map((rowPath, index) => {
             return (
@@ -91,6 +107,7 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
                 fields={fields}
                 fieldsPath={predefinedPath}
                 formState={formState}
+                getTableArrayErrors={getTableArrayErrors}
                 index={index}
                 isCurrentRowEditing={isCurrentRowEditing}
                 key={rowPath}
@@ -118,6 +135,7 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
                     fields={fields}
                     fieldsPath={customPath}
                     formState={formState}
+                    getTableArrayErrors={getTableArrayErrors}
                     index={index}
                     isCurrentRowEditing={isCurrentRowEditing}
                     key={rowPath}

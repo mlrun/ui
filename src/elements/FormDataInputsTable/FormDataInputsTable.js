@@ -21,6 +21,7 @@ import React, { useState } from 'react'
 import { FieldArray } from 'react-final-form-arrays'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import FormActionButton from 'igz-controls/elements/FormActionButton/FormActionButton'
@@ -33,19 +34,36 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
   const tableClassNames = classnames('form-table', className)
   const {
-    editingItem,
     addNewRow,
     applyChanges,
+    bottomScrollRef,
     deleteRow,
     discardOrDelete,
+    editingItem,
     enterEditMode,
-    bottomScrollRef
+    getTableArrayErrors,
+    isCurrentRowEditing
   } = useFormTable(formState)
 
   const uniquenessValidator = (fields, newValue) => {
     return !fields.value.some(({ data: { name } }, index) => {
       return newValue.trim() === name && index !== editingItem.ui.index
     })
+  }
+
+  const validateDataInputs = value => {
+    const tableErrors = value.reduce((errorData, dataInput, index) => {
+      if (dataInput.isRequired && dataInput.data?.fieldInfo?.value === '') {
+        errorData[index] = [{
+          name: 'required',
+          label: `'${dataInput.data.name}' data input is required`
+        }]
+      }
+
+      return errorData
+    }, {})
+
+    return !isEmpty(tableErrors) ? tableErrors : null
   }
 
   return (
@@ -59,7 +77,7 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
         </div>
         <div className="form-table__cell form-table__actions-cell" />
       </div>
-      <FieldArray name={fieldsPath}>
+      <FieldArray name={fieldsPath} validate={validateDataInputs}>
         {({ fields }) => {
           return (
             <>
@@ -76,7 +94,9 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
                     fields={fields}
                     fieldsPath={fieldsPath}
                     formState={formState}
+                    getTableArrayErrors={getTableArrayErrors}
                     index={index}
+                    isCurrentRowEditing={isCurrentRowEditing}
                     key={rowPath}
                     rowPath={rowPath}
                     setDataInputState={setDataInputState}
