@@ -77,8 +77,11 @@ const TargetPath = ({
   }
 
   const validatePath = allValues => {
-    const { pathType, value } = get(allValues, formStateFieldInfo)
-    return isPathInputInvalid(pathType, value)
+    if (get(allValues, formStateFieldInfo)) {
+      const { pathType, value } = get(allValues, formStateFieldInfo)
+
+      return isPathInputInvalid(pathType, value)
+    }
   }
 
   useEffect(() => {
