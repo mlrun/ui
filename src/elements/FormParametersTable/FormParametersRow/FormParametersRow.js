@@ -62,6 +62,7 @@ const FormParametersRow = ({
   fields,
   fieldsPath,
   formState,
+  getTableArrayErrors,
   index,
   isCurrentRowEditing,
   rowPath,
@@ -73,9 +74,15 @@ const FormParametersRow = ({
   const tableRowClassNames = classnames(
     'form-table__row',
     'form-table__parameter-row',
-    fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active',
-    fieldData.isPredefined && 'predefined',
-    !fieldData.data?.isChecked && 'excluded'
+    !fieldData.data?.isChecked && 'form-table__parameter-row_excluded'
+  )
+  const tableGeneralRowClassNames = classnames(
+    tableRowClassNames,
+    fieldData.isRequired && index in getTableArrayErrors(fieldsPath) && 'form-table__row_invalid'
+  )
+  const tableEditingRowClassNames = classnames(
+    tableRowClassNames,
+    'form-table__row_active'
   )
 
   const getValueValidationRules = parameterType => {
@@ -247,11 +254,8 @@ const FormParametersRow = ({
       {!fieldData.isHidden &&
         ((!fieldData.data.isHyper && !withHyperparameters) || withHyperparameters) && (
           <>
-            {editingItem &&
-            index === editingItem.ui?.index &&
-            fieldsPath === editingItem.ui?.fieldsPath &&
-            !disabled ? (
-              <div className={tableRowClassNames} key={index}>
+            {isCurrentRowEditing(rowPath) && !disabled ? (
+              <div className={tableEditingRowClassNames} key={index}>
                 <div className="form-table__cell form-table__cell_min">
                   {!fieldData.isRequired && (
                     <FormCheckBox
@@ -341,7 +345,7 @@ const FormParametersRow = ({
               </div>
             ) : (
               <div
-                className={tableRowClassNames}
+                className={tableGeneralRowClassNames}
                 key={index}
                 onClick={event =>
                   !isRowDisabled() && enterEditMode(event, fields, fieldsPath, index)
@@ -361,10 +365,16 @@ const FormParametersRow = ({
                   </div>
                 )}
                 <div className="form-table__cell form-table__cell_2 form-table__name-cell">
-                  <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
-                    {fieldData.data.name}
-                    {fieldData.isRequired && <span className="asterisk"> *</span>}
-                  </Tooltip>
+                  <div
+                    className={classnames(
+                      'form-table__name',
+                      fieldData.isRequired && 'form-table__name_with-asterisk'
+                    )}
+                  >
+                    <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
+                      {fieldData.data.name}
+                    </Tooltip>
+                  </div>
                   {!fieldData.isPredefined && (
                     <Tooltip
                       className="parameter-icon"
