@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep, isEmpty, isNumber } from 'lodash'
 
 import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 import { ConfirmDialog } from 'igz-controls/components'
@@ -251,6 +251,14 @@ const FeatureSetsPanelTargetStore = ({
         ...state[kind],
         key_bucketing_number
       }
+    }))
+
+    setValidation(state => ({
+      ...state,
+      [kind === PARQUET
+        ? 'isOfflinePartitionBucketsValid'
+        : 'isExternalOfflinePartitionBucketsValid']:
+        isNumber(key_bucketing_number) && Number(key_bucketing_number) >= 0
     }))
 
     setNewFeatureSetTarget(
