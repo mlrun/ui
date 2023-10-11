@@ -50,7 +50,7 @@ const FormVolumesRow = ({
   const tableRowClassNames = classnames(
     'form-table__row',
     'form-table__volume-row',
-    fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active'
+    isCurrentRowEditing(rowPath) && 'form-table__row_active'
   )
 
   useEffect(() => {
@@ -94,11 +94,7 @@ const FormVolumesRow = ({
     <>
       {!fieldData.isHidden && (
         <>
-          {editingItem &&
-          index === editingItem.ui?.index &&
-          fieldsPath === editingItem.ui?.fieldsPath &&
-          !isEmpty(fieldRowData) &&
-          !disabled ? (
+          {isCurrentRowEditing(rowPath) && !isEmpty(fieldRowData) && !disabled ? (
             <div className={tableRowClassNames} key={index}>
               <div className="form-table__row_multiline">
                 {fieldRowData.map(inputData => {
