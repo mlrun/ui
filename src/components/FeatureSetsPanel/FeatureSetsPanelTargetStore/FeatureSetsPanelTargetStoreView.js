@@ -335,7 +335,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       partitionRadioButtonsState={partitionRadioButtonsState.parquet}
                       rangeOnChange={value => handleKeyBucketingNumberChange(value, PARQUET)}
                       selectedPartitionKind={selectedPartitionKind.parquet}
-                      setValidation={value =>
+                      setPartitionColumnsValidation={value =>
                         setValidation(state => ({
                           ...state,
                           isOfflinePartitionColumnsValid: value
@@ -347,7 +347,10 @@ const FeatureSetsPanelTargetStoreView = ({
                       triggerPartitionAdvancedCheckboxes={value =>
                         triggerPartitionAdvancedCheckboxes(value, PARQUET)
                       }
-                      validation={validation.isOfflinePartitionColumnsValid}
+                      validation={{
+                        partitionBuckets: validation.isOfflinePartitionBucketsValid,
+                        partitionColumns: validation.isOfflinePartitionColumnsValid
+                      }}
                     />
                   </CSSTransition>
                 </div>
@@ -436,7 +439,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         handleKeyBucketingNumberChange(value, EXTERNAL_OFFLINE)
                       }
                       selectedPartitionKind={selectedPartitionKind.externalOffline}
-                      setValidation={value =>
+                      setPartitionColumnsValidation={value =>
                         setValidation(state => ({
                           ...state,
                           isExternalOfflinePartitionColumnsValid: value
@@ -448,7 +451,10 @@ const FeatureSetsPanelTargetStoreView = ({
                       triggerPartitionAdvancedCheckboxes={value =>
                         triggerPartitionAdvancedCheckboxes(value, EXTERNAL_OFFLINE)
                       }
-                      validation={validation.isExternalOfflinePartitionColumnsValid}
+                      validation={{
+                        partitionBuckets: validation.isExternalOfflinePartitionBucketsValid,
+                        partitionColumns: validation.isExternalOfflinePartitionColumnsValid
+                      }}
                     />
                   </CSSTransition>
                 </div>
