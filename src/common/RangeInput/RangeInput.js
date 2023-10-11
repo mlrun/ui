@@ -122,8 +122,10 @@ const RangeInput = ({
         min={min}
         max={max}
         onChange={value => {
-          setInputValue(Number(value))
-          onChange(Number(value))
+          const targetValue = value.length === 0 ? '' : Number(value)
+
+          setInputValue(targetValue)
+          onChange(targetValue)
         }}
         tip={tip}
         required={required}

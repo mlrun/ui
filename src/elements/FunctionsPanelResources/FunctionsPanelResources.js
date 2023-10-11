@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
+import { isNumber } from 'lodash'
 import PropTypes from 'prop-types'
 
 import FunctionsPanelResourcesView from './FunctionsPanelResourcesView'
@@ -371,7 +372,7 @@ const FunctionsPanelResources = ({
   const setGpuValue = value => {
     let isValid = true
 
-    if (value && Number(value) <= 0) {
+    if (isNumber(value) && Number(value) <= 0) {
       isValid = false
     }
 
