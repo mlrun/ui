@@ -574,12 +574,15 @@ export const getCategoryName = categoryId => {
 }
 
 const getDataInputData = (dataInputName, dataInputValue) => {
+  const pathType = dataInputValue?.match(/^(.*?:\/\/+)/)?.[0] ?? ''
+  const value = dataInputValue?.replace(pathType, '') ?? ''
+
   return {
     name: dataInputName,
     path: dataInputValue ?? '',
     fieldInfo: {
-      pathType: dataInputValue?.replace(/:\/\/.*$/g, '://') ?? '',
-      value: dataInputValue?.replace(/.*:\/\//g, '') ?? ''
+      pathType,
+      value
     }
   }
 }
@@ -635,31 +638,29 @@ export const parseDefaultDataInputs = (funcParams, runDataInputs) => {
 }
 
 export const parsePredefinedParameters = funcParams => {
-  return (
-    funcParams
-      .filter(parameter => !parameter.type?.includes('DataItem'))
-      .map(parameter => {
-        const parsedValue = parseParameterValue(parameter.default)
-        const parameterIsRequired = !has(parameter, 'default')
+  return funcParams
+    .filter(parameter => !parameter.type?.includes('DataItem'))
+    .map(parameter => {
+      const parsedValue = parseParameterValue(parameter.default)
+      const parameterIsRequired = !has(parameter, 'default')
 
-        return {
-          data: {
-            name: parameter.name ?? '',
-            type: parameter.type ?? '',
-            value: parsedValue,
-            isChecked: parameterIsRequired,
-            isHyper: false
-          },
-          doc: parameter.doc,
-          isHidden: parameter.name === 'context',
-          isUnsupportedType: !parameterTypeValueMap[parameter.type],
-          isRequired: parameterIsRequired,
-          isDefault: true,
-          isPredefined: true
-        }
-      })
-      .sort(sortParameters)
-  )
+      return {
+        data: {
+          name: parameter.name ?? '',
+          type: parameter.type ?? '',
+          value: parsedValue,
+          isChecked: parameterIsRequired,
+          isHyper: false
+        },
+        doc: parameter.doc,
+        isHidden: parameter.name === 'context',
+        isUnsupportedType: !parameterTypeValueMap[parameter.type],
+        isRequired: parameterIsRequired,
+        isDefault: true,
+        isPredefined: true
+      }
+    })
+    .sort(sortParameters)
 }
 
 export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyperParams = {}) => {
