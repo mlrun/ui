@@ -51,7 +51,7 @@ const FormEnvironmentVariablesRow = ({
 
   const tableRowClassNames = classnames(
     'form-table__row',
-    fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active'
+    isCurrentRowEditing(rowPath) && 'form-table__row_active'
   )
 
   const valueColumn = useMemo(
@@ -70,10 +70,7 @@ const FormEnvironmentVariablesRow = ({
 
   return (
     <>
-      {editingItem &&
-      index === editingItem.ui?.index &&
-      fieldsPath === editingItem.ui?.fieldsPath &&
-      !disabled ? (
+      {isCurrentRowEditing(rowPath) && !disabled ? (
         <div className={tableRowClassNames} key={index}>
           <div className="form-table__cell form-table__cell_2">
             <FormInput
