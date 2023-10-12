@@ -7,9 +7,35 @@
     position: relative;
     display: none;
 
-    &-active {
-      display: block;
+    &_extended {
+      position: absolute;
+      right: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background-color: $ghostWhite;
+
+      &:before {
+        content: '';
+        width: 30px;
+        height: 100%;
+        position: absolute;
+        display: block;
+        left: -30px;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(245,247,255,1) 100%);
+      }
     }
+
+    &-active {
+      display: flex;
+    }
+
+  }
+
+  &__main-actions-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__body {
