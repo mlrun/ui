@@ -32,16 +32,19 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ dataItem, menu, time }) => {
+const ActionsMenu = ({ dataItem, extended, menu, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [actionMenu, setActionMenu] = useState(menu)
   const [renderMenu, setRenderMenu] = useState(false)
   const actionMenuRef = useRef()
   const dropDownMenuRef = useRef()
+  const mainActionsWrapperRef = useRef()
+  const actionMenuBtnRef = useRef()
 
   const actionMenuClassNames = classnames(
     'actions-menu__container',
+    extended && 'actions-menu__container_extended',
     isShowMenu && 'actions-menu__container-active'
   )
   const dropDownMenuClassNames = classnames('actions-menu__body', isShowMenu && 'show')
@@ -55,26 +58,26 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
   }, [dataItem, menu])
 
   useEffect(() => {
-    setIsIconDisplayed(actionMenu.some(menuItem => menuItem.icon))
+    setIsIconDisplayed((extended ? actionMenu[1] : actionMenu).some(menuItem => menuItem.icon))
   }, [actionMenu])
 
   const showActionsList = () => {
     setIsShowMenu(show => !show)
-    const actionMenuRect = actionMenuRef.current.getBoundingClientRect()
+    const actionMenuBtnRect = actionMenuBtnRef.current.getBoundingClientRect()
     const dropDownMenuRect = dropDownMenuRef.current.getBoundingClientRect()
 
     if (
-      actionMenuRect.top + actionMenuRect.height + offset + dropDownMenuRect.height >=
+      actionMenuBtnRect.top + actionMenuBtnRect.height + offset + dropDownMenuRect.height >=
       window.innerHeight
     ) {
-      dropDownMenuRef.current.style.top = `${actionMenuRect.top - dropDownMenuRect.height}px`
+      dropDownMenuRef.current.style.top = `${actionMenuBtnRect.top - dropDownMenuRect.height}px`
       dropDownMenuRef.current.style.left = `${
-        actionMenuRect.left - dropDownMenuRect.width + offset
+        actionMenuBtnRect.left - dropDownMenuRect.width + offset
       }px`
     } else {
-      dropDownMenuRef.current.style.top = `${actionMenuRect.bottom}px`
+      dropDownMenuRef.current.style.top = `${actionMenuBtnRect.bottom}px`
       dropDownMenuRef.current.style.left = `${
-        actionMenuRect.left - (dropDownMenuRect.width - offset)
+        actionMenuBtnRect.left - (dropDownMenuRect.width - offset)
       }px`
     }
   }
@@ -88,8 +91,13 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
     }
   }
 
-  const handleMouseOver = () => {
-    setRenderMenu(true)
+  const handleMouseOver = event => {
+    if (mainActionsWrapperRef.current?.contains(event.target)) {
+      setRenderMenu(false)
+      setIsShowMenu(false)
+    } else {
+      setRenderMenu(true)
+    }
 
     if (idTimeout) clearTimeout(idTimeout)
   }
@@ -113,10 +121,23 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
       onMouseOver={handleMouseOver}
       ref={actionMenuRef}
     >
-      <RoundedIcon isActive={isShowMenu} onClick={showActionsList}>
+      {extended && (
+        <div className="actions-menu__main-actions-wrapper" ref={mainActionsWrapperRef}>
+          {actionMenu[0].map(mainAction => (
+            <RoundedIcon
+              disabled={mainAction.disabled}
+              onClick={() => mainAction.onClick(dataItem)}
+              tooltipText={mainAction.label}
+              key={mainAction.label}
+            >
+              {mainAction.icon}
+            </RoundedIcon>
+          ))}
+        </div>
+      )}
+      <RoundedIcon isActive={isShowMenu} onClick={showActionsList} ref={actionMenuBtnRef}>
         <ActionMenuIcon />
       </RoundedIcon>
-
       {renderMenu &&
         createPortal(
           <div
@@ -129,7 +150,7 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
             }}
             ref={dropDownMenuRef}
           >
-            {actionMenu.map(
+            {(extended ? actionMenu[1] : actionMenu).map(
               (menuItem, idx) =>
                 !menuItem.hidden && (
                   <ActionsMenuItem
@@ -150,11 +171,13 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
 
 ActionsMenu.defaultProps = {
   dataItem: {},
+  extended: false,
   time: 100
 }
 
 ActionsMenu.propTypes = {
   dataItem: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
+  extended: PropTypes.bool,
   menu: ACTIONS_MENU.isRequired,
   time: PropTypes.number
 }

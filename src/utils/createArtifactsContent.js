@@ -22,19 +22,15 @@ import { isNumber } from 'lodash'
 
 import {
   ARTIFACTS_PAGE,
-  DATASETS,
   DATASETS_PAGE,
   FILES_PAGE,
   MODELS_PAGE,
   MODELS_TAB,
-  MODEL_ENDPOINTS_TAB,
-  BUTTON_COPY_URI_CELL_TYPE,
-  ARTIFACTS
+  MODEL_ENDPOINTS_TAB
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
-import { generateUri } from './resources'
 import { parseUri } from './parseUri'
 import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
@@ -106,7 +102,8 @@ const createArtifactsRowData = artifact => {
 }
 
 const getIter = artifact => (isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`)
-const getIsTargetPathValid = (artifact, frontendSpec) =>
+
+export const getIsTargetPathValid = (artifact, frontendSpec) =>
   frontendSpec?.allowed_artifact_path_prefixes_list
     ? frontendSpec.allowed_artifact_path_prefixes_list.some(prefix => {
         return artifact.target_path?.startsWith?.(prefix)
@@ -115,7 +112,6 @@ const getIsTargetPathValid = (artifact, frontendSpec) =>
 
 export const createModelsRowData = (artifact, project, frontendSpec, showExpandButton) => {
   const iter = getIter(artifact)
-  const isTargetPathValid = getIsTargetPathValid(artifact, frontendSpec)
 
   return {
     data: {
@@ -221,38 +217,22 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
         value: artifact.tag,
         class: 'table-cell-1',
         type: 'hidden'
-      },
-      {
-        id: `buttonPopout.${artifact.ui.identifierUnique}`,
-        headerId: 'popupt',
-        value: '',
-        class: 'table-cell-icon',
-        type: 'buttonPopout',
-        disabled: !isTargetPathValid
-      },
-      {
-        id: `buttonDownload.${artifact.ui.identifierUnique}`,
-        headerId: 'download',
-        value: '',
-        class: 'table-cell-icon',
-        type: 'buttonDownload',
-        disabled: !isTargetPathValid
-      },
-      {
-        id: `buttonCopy.${artifact.ui.identifierUnique}`,
-        headerId: 'copy',
-        value: '',
-        class: 'table-cell-icon',
-        type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, MODELS_TAB)
       }
+      //TODO: remove when new Download will be added
+      // {
+      //   id: `buttonDownload.${artifact.ui.identifierUnique}`,
+      //   headerId: 'download',
+      //   value: '',
+      //   class: 'table-cell-icon',
+      //   type: 'buttonDownload',
+      //   disabled: !isTargetPathValid
+      // }
     ]
   }
 }
 
 export const createFilesRowData = (artifact, project, frontendSpec, showExpandButton) => {
   const iter = getIter(artifact)
-  const isTargetPathValid = getIsTargetPathValid(artifact, frontendSpec)
 
   return {
     data: {
@@ -342,31 +322,16 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerLabel: 'Size',
         value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
         class: 'table-cell-1'
-      },
-      {
-        id: `buttonPopout.${artifact.ui.identifierUnique}`,
-        headerId: 'popout',
-        value: '',
-        class: 'table-cell-icon',
-        type: 'buttonPopout',
-        disabled: !isTargetPathValid
-      },
-      {
-        id: `buttonDownload.${artifact.ui.identifierUnique}`,
-        headerId: 'download',
-        value: '',
-        class: 'table-cell-icon',
-        type: 'buttonDownload',
-        disabled: !isTargetPathValid
-      },
-      {
-        id: `buttonCopy.${artifact.ui.identifierUnique}`,
-        headerId: 'copy',
-        value: '',
-        class: 'table-cell-icon',
-        type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, ARTIFACTS)
       }
+      //TODO: remove when new Download will be added
+      // {
+      //   id: `buttonDownload.${artifact.ui.identifierUnique}`,
+      //   headerId: 'download',
+      //   value: '',
+      //   class: 'table-cell-icon',
+      //   type: 'buttonDownload',
+      //   disabled: !isTargetPathValid
+      // },
     ]
   }
 }
@@ -500,7 +465,6 @@ export const createModelEndpointsRowData = (artifact, project) => {
 
 export const createDatasetsRowData = (artifact, project, frontendSpec, showExpandButton) => {
   const iter = getIter(artifact)
-  const isTargetPathValid = getIsTargetPathValid(artifact, frontendSpec)
 
   return {
     data: {
@@ -583,31 +547,16 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         value: artifact.tag,
         class: 'table-cell-1',
         type: 'hidden'
-      },
-      {
-        id: `buttonPopout.${artifact.ui.identifierUnique}`,
-        headerId: 'popout',
-        value: '',
-        class: 'table-cell-icon',
-        type: 'buttonPopout',
-        disabled: !isTargetPathValid
-      },
-      {
-        id: `buttonDownload.${artifact.ui.identifierUnique}`,
-        headerId: 'download',
-        value: '',
-        class: 'table-cell-icon',
-        type: 'buttonDownload',
-        disabled: !isTargetPathValid
-      },
-      {
-        id: `buttonCopy.${artifact.ui.identifierUnique}`,
-        headerId: 'copy',
-        value: '',
-        class: 'table-cell-icon',
-        type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, DATASETS)
       }
+      //TODO: remove when new Download will be added
+      // {
+      //   id: `buttonDownload.${artifact.ui.identifierUnique}`,
+      //   headerId: 'download',
+      //   value: '',
+      //   class: 'table-cell-icon',
+      //   type: 'buttonDownload',
+      //   disabled: !isTargetPathValid
+      // }
     ]
   }
 }
