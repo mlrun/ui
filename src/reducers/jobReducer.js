@@ -65,7 +65,10 @@ import {
   FETCH_JOB_FUNCTIONS_SUCCESS,
   FETCH_JOB_FUNCTIONS_FAILURE,
   FETCH_JOB_FUNCTIONS_BEGIN,
-  REMOVE_JOB_FUNCTION
+  REMOVE_JOB_FUNCTION,
+  DELETE_JOB_BEGIN,
+  DELETE_JOB_FAILURE,
+  DELETE_JOB_SUCCESS
 } from '../constants'
 
 const initialState = {
@@ -129,6 +132,23 @@ const jobReducer = (state = initialState, { type, payload }) => {
         error: payload
       }
     case ABORT_JOB_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
+      }
+    case DELETE_JOB_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case DELETE_JOB_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case DELETE_JOB_SUCCESS:
       return {
         ...state,
         loading: false,
