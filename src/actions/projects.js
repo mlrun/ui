@@ -322,7 +322,7 @@ const projectsAction = {
     type: FETCH_PROJECT_FUNCTIONS_SUCCESS,
     payload: functions
   }),
-  fetchProjectJobs: project => dispatch => {
+  fetchProjectJobs: (project, startTimeFrom) => dispatch => {
     dispatch(projectsAction.fetchProjectJobsBegin())
 
     const params = {
@@ -331,7 +331,8 @@ const projectsAction = {
       'partition-sort-by': 'updated',
       'rows-per-partition': '5',
       'max-partitions': '5',
-      iter: 'false'
+      iter: 'false',
+      start_time_from: startTimeFrom
     }
 
     return projectsApi
