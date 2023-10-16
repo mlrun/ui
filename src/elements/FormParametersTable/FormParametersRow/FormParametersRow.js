@@ -67,7 +67,8 @@ const FormParametersRow = ({
   isCurrentRowEditing,
   rowPath,
   uniquenessValidator,
-  withHyperparameters
+  withHyperparameters,
+  withRequiredParameters
 }) => {
   const [fieldData, setFieldData] = useState(fields.value[index])
   const [typeIsChanging, setTypeIsChanging] = useState(false)
@@ -368,7 +369,7 @@ const FormParametersRow = ({
                   <div
                     className={classnames(
                       'form-table__name',
-                      fieldData.isRequired && 'form-table__name_with-asterisk'
+                      (fieldData.isRequired && withRequiredParameters) && 'form-table__name_with-asterisk'
                     )}
                   >
                     <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
@@ -438,7 +439,8 @@ const FormParametersRow = ({
 FormParametersRow.defaultProps = {
   disabled: false,
   editingItem: null,
-  withHyperparameters: false
+  withHyperparameters: false,
+  withRequiredParameters: true
 }
 
 FormParametersRow.propTypes = {
@@ -455,7 +457,8 @@ FormParametersRow.propTypes = {
   isCurrentRowEditing: PropTypes.func.isRequired,
   rowPath: PropTypes.string.isRequired,
   uniquenessValidator: PropTypes.func.isRequired,
-  withHyperparameters: PropTypes.bool
+  withHyperparameters: PropTypes.bool,
+  withRequiredParameters: PropTypes.bool
 }
 
 export default FormParametersRow
