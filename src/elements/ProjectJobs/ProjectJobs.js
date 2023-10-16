@@ -20,16 +20,12 @@ such restriction.
 import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import moment from 'moment'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
 import { MONITOR_JOBS_TAB } from '../../constants'
-import {
-  getJobsStatistics,
-  getJobsTableData,
-  groupByName,
-  sortByDate
-} from './projectJobs.utils'
+import { getJobsStatistics, getJobsTableData, groupByName, sortByDate } from './projectJobs.utils'
 import projectsAction from '../../actions/projects'
 
 const ProjectJobs = ({ fetchProjectJobs, projectStore }) => {
@@ -38,14 +34,14 @@ const ProjectJobs = ({ fetchProjectJobs, projectStore }) => {
 
   useEffect(() => {
     if (projectStore.project.jobs.data) {
-      setGroupedLatestItem(
-        sortByDate(groupByName(projectStore.project.jobs.data))
-      )
+      setGroupedLatestItem(sortByDate(groupByName(projectStore.project.jobs.data)))
     }
   }, [projectStore.project.jobs.data])
 
   useEffect(() => {
-    fetchProjectJobs(params.projectName)
+    const startTimeFrom = moment().add(-2, 'days').toISOString()
+
+    fetchProjectJobs(params.projectName, startTimeFrom)
   }, [fetchProjectJobs, params.projectName])
 
   const jobsData = useMemo(() => {
