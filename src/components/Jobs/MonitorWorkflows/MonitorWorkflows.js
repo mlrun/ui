@@ -79,7 +79,8 @@ const MonitorWorkflows = ({
 }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
+  const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
+  const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -328,9 +329,9 @@ const MonitorWorkflows = ({
       resetWorkflow()
     }
 
-    if (!workflow.graph && params.workflowId && !dataIsLoaded) {
+    if (!workflow.graph && params.workflowId && !workflowIsLoaded) {
       getWorkflow()
-      setDataIsLoaded(true)
+      setWorkflowIsLoaded(true)
     }
 
     if (
@@ -344,7 +345,7 @@ const MonitorWorkflows = ({
     }
   }, [
     dispatch,
-    dataIsLoaded,
+    workflowIsLoaded,
     fetchWorkflow,
     navigate,
     params.projectName,
@@ -449,17 +450,41 @@ const MonitorWorkflows = ({
   }, [params.functionHash, params.jobId])
 
   useEffect(() => {
-    if (params.workflowId) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-    } else {
-      getWorkflows()
-      dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
+    if (!workflowsAreLoaded) {
+      if (params.workflowId) {
+        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+      } else {
+        if (filtersStore.saveFilters) {
+          const filters = {
+            state: filtersStore.state,
+            dates: filtersStore.dates,
+            saveFilters: false,
+            groupBy: GROUP_BY_WORKFLOW
+          }
+
+          getWorkflows(filters)
+          dispatch(setFilters(filters))
+        } else {
+          getWorkflows({})
+          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
+        }
+
+        setWorkflowsAreLoaded(true)
+      }
     }
-  }, [dispatch, getWorkflows, params.workflowId, params.projectName])
+  }, [
+    dispatch,
+    getWorkflows,
+    params.workflowId,
+    params.projectName,
+    filtersStore,
+    workflowsAreLoaded
+  ])
 
   useEffect(() => {
     return () => {
-      setDataIsLoaded(false)
+      setWorkflowIsLoaded(false)
+      setWorkflowsAreLoaded(false)
       setItemIsSelected(false)
       setSelectedJob({})
       setSelectedFunction({})
