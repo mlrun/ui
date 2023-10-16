@@ -105,7 +105,11 @@ const ArtifactsTableRow = ({
               )
 
               return (
-                <td data-testid={generateTableRowTestId(rowIndex, index)} className="table-body__cell" key={index}>
+                <td
+                  data-testid={generateTableRowTestId(rowIndex, index)}
+                  className="table-body__cell"
+                  key={index}
+                >
                   <table cellPadding="0" cellSpacing="0" className="table">
                     <tbody className="table-body">
                       <tr className={subRowClassNames}>
@@ -136,7 +140,11 @@ const ArtifactsTableRow = ({
                             })}
                             {!hideActionsMenu && (
                               <td className="table-body__cell table-cell-icon">
-                                <ActionsMenu dataItem={tableContentItem.data} menu={actionsMenu} />
+                                <ActionsMenu
+                                  dataItem={tableContentItem.data}
+                                  extended
+                                  menu={actionsMenu}
+                                />
                               </td>
                             )}
                           </>
@@ -175,7 +183,7 @@ const ArtifactsTableRow = ({
           })}
           {!hideActionsMenu && (
             <td className="table-body__cell table-cell-icon">
-              <ActionsMenu dataItem={rowItem.data} menu={actionsMenu} />
+              <ActionsMenu dataItem={rowItem.data} extended menu={actionsMenu} />
             </td>
           )}
         </>
