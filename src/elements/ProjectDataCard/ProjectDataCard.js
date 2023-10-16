@@ -56,7 +56,9 @@ const ProjectDataCard = ({ content, href, link, params, statistics, table, title
         <NoData />
       ) : (
         <>
-          <div className="project-data-card__recent-text">{!href ? 'Recent' : ''}</div>
+          <div className="project-data-card__recent-text">
+            {!href ? 'Recent - "Last 48 hours"' : ''}
+          </div>
           <ProjectTable params={params} table={table} />
           {href ? (
             <a href={href} target="_top" className="link project-data-card__see-all-link">
