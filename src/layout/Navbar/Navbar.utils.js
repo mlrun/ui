@@ -43,8 +43,7 @@ export const getLinks = projectName => {
       icon: <MonitoringIcon />,
       id: PROJECT_MONITOR,
       label: 'Project monitoring',
-      link: `${pathname}/${PROJECT_MONITOR}`,
-      end: true
+      link: `${pathname}/${PROJECT_MONITOR}`
     },
     {
       icon: <HomepageIcon />,
