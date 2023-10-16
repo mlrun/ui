@@ -67,6 +67,7 @@ import { setFilters } from '../../../reducers/filtersReducer'
 
 const MonitorJobs = ({
   abortJob,
+  deleteJob,
   fetchAllJobRuns,
   fetchJob,
   fetchJobFunctions,
@@ -235,6 +236,33 @@ const MonitorJobs = ({
     [onAbortJob, setConfirmData]
   )
 
+  const handleDeleteJob = useCallback(
+    async job => {
+      await deleteJob(params.projectName, job)
+        .then(() => {
+          refreshJobs(filtersStore)
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Job is successfully deleted'
+            })
+          )
+        })
+        .catch(error => {
+          dispatch(
+            setNotification({
+              status: error.response?.status || 400,
+              id: Math.random(),
+              retry: () => handleDeleteJob(job),
+              message: error.response?.data?.detail || 'Deleting job failed'
+            })
+          )
+        })
+    },
+    [deleteJob, dispatch, filtersStore, params.projectName, refreshJobs]
+  )
+
   const actionsMenu = useMemo(() => {
     return job =>
       generateActionsMenu(
@@ -245,7 +273,8 @@ const MonitorJobs = ({
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
         toggleConvertedYaml,
-        selectedJob
+        selectedJob,
+        handleDeleteJob
       )
   }, [
     handleRerunJob,
@@ -254,7 +283,8 @@ const MonitorJobs = ({
     handleMonitoring,
     handleConfirmAbortJob,
     toggleConvertedYaml,
-    selectedJob
+    selectedJob,
+    handleDeleteJob
   ])
 
   const modifyAndSelectRun = useCallback(
