@@ -63,6 +63,7 @@ const JobWizardParameters = ({ formState }) => {
       <FormParametersTable
         fieldsPath="parameters.parametersTable"
         formState={formState}
+        parametersFromPath={parametersFromPath}
         withHyperparameters={
           hyperParametersAreEnabled && selectedFromValue === PARAMETERS_FROM_UI_VALUE
         }
