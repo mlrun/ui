@@ -315,6 +315,7 @@ const JobWizard = ({
                   runJobHandler(formData, selectedFunctionData, params)
                 }
               }}
+              previewText={isBatchInference ? 'Tech Preview' : ''}
               size={MODAL_MAX}
               stepsConfig={getStepsConfig(formState)}
               title={wizardTitle}
