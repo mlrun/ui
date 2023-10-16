@@ -25,6 +25,8 @@ import {
   MONITOR_JOBS_TAB,
   MODELS_TAB,
   MONITOR_WORKFLOWS_TAB,
+  PROJECT_MONITOR,
+  PROJECT_QUICK_ACTIONS_PAGE,
   SCHEDULE_TAB,
   REAL_TIME_PIPELINES_TAB
 } from '../../constants'
@@ -32,14 +34,18 @@ import { generateNuclioLink } from '../../utils'
 
 export const generateProjectScreens = params => [
   {
-    label: 'Project Monitoring',
-    id: 'monitor'
+    label: 'Project monitoring',
+    id: PROJECT_MONITOR
+  },
+  {
+    label: 'Quick actions',
+    id: PROJECT_QUICK_ACTIONS_PAGE
   },
   { label: 'Feature Store', id: 'feature-store' },
   { label: 'Datasets', id: 'datasets' },
   { label: 'Artifacts', id: 'files' },
   { label: 'Models', id: 'models' },
-  { label: 'Jobs', id: 'jobs' },
+  { label: 'Jobs and workflows', id: 'jobs' },
   { label: 'ML functions', id: 'functions' },
   {
     label: 'Real-time functions',
