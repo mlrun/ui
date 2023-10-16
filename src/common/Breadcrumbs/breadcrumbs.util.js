@@ -26,7 +26,7 @@ import {
   MODELS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PROJECT_MONITOR,
-  PROJECT_QUICK_LINKS_PAGE,
+  PROJECT_QUICK_ACTIONS_PAGE,
   SCHEDULE_TAB,
   REAL_TIME_PIPELINES_TAB
 } from '../../constants'
@@ -39,7 +39,7 @@ export const generateProjectScreens = params => [
   },
   {
     label: 'Quick actions',
-    id: PROJECT_QUICK_LINKS_PAGE
+    id: PROJECT_QUICK_ACTIONS_PAGE
   },
   { label: 'Feature Store', id: 'feature-store' },
   { label: 'Datasets', id: 'datasets' },

@@ -90,7 +90,7 @@ export const FILES_PAGE = 'FILES'
 
 export const PROJECT_MONITOR = 'monitor'
 
-export const PROJECT_QUICK_LINKS_PAGE = 'quick-actions'
+export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
 
 /*=========== CONSUMER_GROUPS =============*/
 

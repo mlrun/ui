@@ -40,7 +40,7 @@ import {
   PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
   PROJECT_MONITOR,
-  PROJECT_QUICK_LINKS_PAGE,
+  PROJECT_QUICK_ACTIONS_PAGE,
   REAL_TIME_PIPELINES_TAB,
   SCHEDULE_TAB
 } from './constants'
@@ -134,7 +134,7 @@ const App = () => {
                 </Route>
               )}
               <Route
-                path={`projects/:projectName/${PROJECT_QUICK_LINKS_PAGE}`}
+                path={`projects/:projectName/${PROJECT_QUICK_ACTIONS_PAGE}`}
                 element={<ProjectOverview />}
               />
               <Route
