@@ -190,6 +190,11 @@
           font-size: 18px;
           min-height: 40px;
           padding: 15px 0 0 20px;
+
+          .text-sm {
+            font-size: 0.75em;
+            margin-left: 5px;
+          }
         }
 
         &:last-child {
