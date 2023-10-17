@@ -199,7 +199,8 @@ module.exports = {
   Batch_Run: {
     Tab_List: ['Functions', 'Hub'],
     Data_Inputs_Table_Header: ['Input name', 'Path'],
-    Parameters_Table_Header: ['Name', 'Type', 'Value']
+    Parameters_Table_Header: ['Name', 'Type', 'Value'],
+    Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value']
   },
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -245,6 +246,9 @@ module.exports = {
     Function_Name_Batch_Run_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',
+    Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
+    'Key should be unique',
+    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -410,6 +414,7 @@ module.exports = {
     Turning_Strategy_Options: ['List', 'Grid', 'Random'],
     Criteria_Dropdown_Options: ['Max', 'Min'],
     Volume_Mount_Options: ['Auto', 'Manual', 'None'],
+    Hyperparameter_Strategy_Options: ['List', 'Grid', 'Random'],
     Memory_Unit_Options: [
       'Bytes',
       'KB',

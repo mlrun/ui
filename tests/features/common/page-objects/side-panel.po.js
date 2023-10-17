@@ -1200,6 +1200,41 @@ module.exports = {
         )
       )
     },
+    Parameters_Accordion:{
+      Parameters_From_UI_Radiobutton: radiobuttonComponent(
+        {
+          root:
+            '.modal__content .wizard-form__content-container .form-row .form-field-radio:nth-of-type(1)',
+          elements: {
+            radiobutton: 'input',
+            mark: 'label',
+            name: '',
+            description: ''
+          }
+        }
+      ),
+      Parameters_From_File_Radiobutton: radiobuttonComponent(
+        {
+          root:
+            '.modal__content .wizard-form__content-container .form-row .form-field-radio:nth-of-type(2)',
+          elements: {
+            radiobutton: 'input',
+            mark: '',
+            name: 'label',
+            description: ''
+          }
+        }
+      ),
+      Parameters_From_File_Input: inputGroup(
+        generateInputGroup(
+          '.modal__content .wizard-form__content-container .form-row .form-field-input .form-field__wrapper',
+          true,
+          true,
+          false
+        )
+      ),
+      Hyper_Toggle_Switch: By.css('.modal__content .form-table__row:nth-of-type(2) .form-table__cell_hyper .form-field-toggle__switch')
+    },
     Resources_Accordion: {
       Pods_Priority_Dropdown: commonPodsPriorityDropdown,
       Node_Selection_Subheader: By.css('.modal__content .wizard-form__content-container .form-row:nth-child(3)'),

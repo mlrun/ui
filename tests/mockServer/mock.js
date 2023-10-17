@@ -35,7 +35,7 @@ import entities from './data/entities.json'
 import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
 import run from './data/run.json'
-import catalog from './data/catalog.json'
+//import catalog from './data/catalog.json'
 import itemsCatalog from './data/itemsCatalog.json'
 import pipelines from './data/pipelines.json'
 import secretKeys from './data/secretKeys.json'
@@ -1161,13 +1161,28 @@ function putTags(req, res){
 }
 
 function deleteTags(req, res){
+  let collectedArtifacts = artifacts.artifacts
+    .filter(artifact => artifact.project === req.params.project)
+    .filter(artifact => artifact.kind === req.body.identifiers[0].kind)
+    .filter(artifact => artifact.tree === req.body.identifiers[0].uid)
+  if (collectedArtifacts.length){
+    delete collectedArtifacts[0].tag
+    
+  }
+  else{
+    collectedArtifacts = artifacts.artifacts
+      .filter(artifact => artifact.project === req.params.project)
+      .filter(artifact => artifact.kind === req.body.identifiers[0].kind)
+      .filter(artifact => artifact.uid === req.body.identifiers[0].uid)
+    delete collectedArtifacts[0].metadata.tag
+  }
   res.send()
 }
 
 //TODO: artifact structure ML-4583
 function postArtifact(req, res) {
   const currentDate = new Date()
-  const artifactHash = makeUID(32)
+  //const artifactHash = makeUID(32)
   const artifactTag = req.body.tag || 'latest'
   const tagObject = artifactTags.find(artifact => artifact.project === req.body.project)
 

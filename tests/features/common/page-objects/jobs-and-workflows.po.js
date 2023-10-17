@@ -789,6 +789,17 @@ module.exports = {
         '.form-field__icons svg'
       )
     ),
+    Add_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .button-add'),
+    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
+    Run_Details_Labels_Key: inputGroup(
+      generateInputGroup(
+        '.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper',
+        false,
+        true,
+        '.pop-up-dialog'
+      )
+    ),
+    Run_Details_Labels_Value: By.css ('.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper [id="runDetails.labels[0].value"]'),
     Name_Input_Batch_Run: By.css('.form-row .form-field-input .form-field__wrapper input'),
     Version_Dropdown: dropdownComponent(
       generateDropdownGroup('.form-col-1:nth-of-type(2)', '.form-field-select', '.form-field__select-value', false, false)

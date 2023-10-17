@@ -2189,6 +2189,7 @@ Feature: Jobs and workflows
         And click on "Next_Button" element on "Batch_Run" wizard
         And click on "Next_Button" element on "Batch_Run" wizard
         Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Hyperparameter strategy" value
+        Then verify "Strategy_Dropdown" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Hyperparameter_Strategy_Options"
         Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard selected option value "List"
         Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
         Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
@@ -2201,8 +2202,7 @@ Feature: Jobs and workflows
         Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
         Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
         
-
-    Scenario: Check all mandatory components on Batch Run wizard - Run Details with Method
+    Scenario: MLJW051 - Check all mandatory components on Batch Run wizard - Run Details with Method
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2223,7 +2223,7 @@ Feature: Jobs and workflows
         Then verify "Hyperparameter_Checkbox" element visibility on "Batch_Run" wizard
         Then "Hyperparameter_Checkbox" element should be unchecked on "Batch_Run" wizard
         Then verify "Function_Name_Input_Batch_Run" element visibility on "Batch_Run" wizard
-        Then type value "   " to "Function_Name_Input_Batch_Run" field on "Batch_Run" wizard
+        Then type value "/" to "Function_Name_Input_Batch_Run" field on "Batch_Run" wizard
         Then verify "Function_Name_Input_Batch_Run" on "Batch_Run" wizard should display options "Input_Hint"."Function_Name_Batch_Run_Hint"
         Then type value "test" to "Function_Name_Input_Batch_Run" field on "Batch_Run" wizard
         Then "Function_Title" element on "Batch_Run" should contains "test" value
@@ -2232,10 +2232,13 @@ Feature: Jobs and workflows
         Then verify "Method_Dropdown" element visibility on "Batch_Run" wizard 
         And select "data_clean" option in "Method_Dropdown" dropdown on "Batch_Run" wizard 
         Then verify "Batch_Run_Labels_Table" element visibility on "Batch_Run" wizard
-        When click on "remove_btn" in "Batch_Run_Labels_Table" table on "Batch_Run" wizard with attribute
-            | key_verify | 
-            |   author   |    
-            | framework  |    
+        And click on "Add_Label_Button" element on "Batch_Run" wizard
+        Then type value "/" to "Run_Details_Labels_Key" field on "Batch_Run" wizard
+        Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key"
+        Then type value "/" to "Run_Details_Labels_Value" field on "Batch_Run" wizard without inputgroup
+        Then verify labels warning should display options "Input_Hint"."Labels_Warning_Value"
+        When click on "Form_Header_Batch_Run" element on "Batch_Run" wizard
+        And click on "Close_Label_Button" element on "Batch_Run" wizard   
         When add rows to "Batch_Run_Labels_Table" table on "Batch_Run" wizard
             | key_input | value_input |
             |    key1   |    value1   |
@@ -2353,7 +2356,7 @@ Feature: Jobs and workflows
         Then verify data in "Batch_Run_Parameters_Table" table on "Batch_Run" wizard
             | name_verify | type_dropdown_verify | value_verify |
             | name2edited |          int         |     1234     |      
-#@uniqueTag
+
     @inProgress
     Scenario: MLJW037 - Check all mandatory components on Batch Run wizard - Step 5 (Resources)
         Given open url
@@ -2645,8 +2648,8 @@ Feature: Jobs and workflows
         And click on "Run_Button" element on "Batch_Run" wizard
         And wait load page
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
-    
-    Scenario: MLJW033 - Check autocomplete MLRun Store path for datasets, artifacts, models - Batch Run - Data input
+  
+    Scenario: MLJW033 - Check autocomplete without tags MLRun Store path for datasets, artifacts, models, feature vectors - Batch Run - Data input
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2664,15 +2667,17 @@ Feature: Jobs and workflows
         Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
         Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Data Inputs" value
         When add data to "Batch_Run_Data_Inputs_Table" table on "Batch_Run" wizard with combobox
-            | name_input | path_dropdown | path_dropdown_autocomplete_artifacts | path_dropdown_autocomplete_project | path_dropdown_autocomplete_item |
-            |  Artifacts |  MLRun store  |               Artifacts              |              default               |            content              |
-            |  Datasets  |  MLRun store  |               Datasets               |              default               |       test_new_structure        |
-            |   Models   |  MLRun store  |                Models                |              default               |           train_model           |
+            |    name_input   | path_dropdown | path_dropdown_autocomplete_artifacts | path_dropdown_autocomplete_project | path_dropdown_autocomplete_item |
+            |     Artifacts   |  MLRun store  |               Artifacts              |              default               |            content              |
+            |     Datasets    |  MLRun store  |               Datasets               |              default               |       test_new_structure        |
+            |      Models     |  MLRun store  |                Models                |              default               |              model              |
+            | Feature vectors |  MLRun store  |           Feature vectors            |              default               |             test-i              |
         Then verify data in "Batch_Run_Data_Inputs_Table" table on "Batch_Run" wizard
-            | name_verify |                 path_verify                 |      
-            |  Artifacts  |      store://artifacts/default/content      | 
-            |  Datasets   | store://datasets/default/test_new_structure | 
-            |   Models    |      store://models/default/train_model     |
+            |   name_verify   |                 path_verify                 |      
+            |    Artifacts    |      store://artifacts/default/content      | 
+            |     Datasets    | store://datasets/default/test_new_structure | 
+            |      Models     |         store://models/default/model        |
+            | Feature vectors |    store://feature-vectors/default/test-i   |
 
     Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 
         Given open url
@@ -2826,3 +2831,65 @@ Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for 
         Then type value "23:23" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
         Then type value "15:15" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
         Then type value "01:45" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
+
+    Scenario: MLJW045 - Check back navigation from Job overview to Jobs Monitor tab and forward to Job overview
+        Given open url
+        And wait load page
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef/cf842616c89347c7bb7bca2c9e840a21/overview"
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
+        Then navigate back
+        And wait load page
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef"
+        Then navigate back
+        And wait load page
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs"
+        Then navigate forward
+        And wait load page
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef"
+        Then navigate forward
+        And wait load page
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef/cf842616c89347c7bb7bca2c9e840a21/overview"
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
+
+    Scenario: MLJW046 - Check components in Parameters section on Batch Run wizard with checked Hyper
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then check "Hyperparameter_Checkbox" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        And click on "Next_Button" element on "Batch_Run" wizard
+        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Parameters" value
+        Then verify "Data_Inputs_Headers" on "Batch_Run" wizard should contains "Batch_Run"."Parameters_Table_Header_Hyper"
+        Then verify "Parameters_From_UI_Radiobutton" element visibility in "Parameters_Accordion" on "Batch_Run_Edit" wizard
+        Then is "Parameters_From_UI_Radiobutton" in "Parameters_Accordion" on "Batch_Run_Edit" selected
+        And click on "Add_Custom_Parameter_Button" element on "Batch_Run" wizard
+        Then verify "Hyper_Toggle_Switch" element visibility in "Parameters_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "Parameters_From_File_Radiobutton" element visibility in "Parameters_Accordion" on "Batch_Run_Edit" wizard
+        Then is not "Parameters_From_File_Radiobutton" in "Parameters_Accordion" on "Batch_Run_Edit" selected
+        Then verify "Parameters_From_File_Input" element visibility in "Parameters_Accordion" on "Batch_Run_Edit" wizard
+        Then verify "Parameters_From_File_Input" element in "Parameters_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
+        When select "Parameters_From_File_Radiobutton" in "Parameters_Accordion" on "Batch_Run_Edit"
+        And wait load page
+        Then verify "Parameters_From_File_Input" element in "Parameters_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
+        Then verify "Data_Inputs_Headers" on "Batch_Run" wizard should contains "Batch_Run"."Parameters_Table_Header"
+        Then verify "Hyper_Toggle_Switch" element not exists in "Parameters_Accordion" on "Batch_Run_Edit" wizard
