@@ -57,7 +57,13 @@ const ProjectDataCard = ({ content, href, link, params, statistics, table, title
       ) : (
         <>
           <div className="project-data-card__recent-text">
-            {!href ? 'Recent - "Last 48 hours"' : ''}
+            {!href ? (
+              <>
+                Recent <span class="text-sm">(last 48 hours)</span>
+              </>
+            ) : (
+              ''
+            )}
           </div>
           <ProjectTable params={params} table={table} />
           {href ? (
