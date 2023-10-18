@@ -424,3 +424,4 @@ Scenario: MLD011 - Check that version tag has "Click to add" status when it's em
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
+    

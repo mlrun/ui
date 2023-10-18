@@ -35,7 +35,6 @@ import entities from './data/entities.json'
 import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
 import run from './data/run.json'
-//import catalog from './data/catalog.json'
 import itemsCatalog from './data/itemsCatalog.json'
 import pipelines from './data/pipelines.json'
 import secretKeys from './data/secretKeys.json'
@@ -813,7 +812,7 @@ function getFuncs(req, res) {
   }
   else {
     collectedFuncs = funcs.funcs
-      .filter(func => func.metadata.project === req.params['project']) // req.query.project)
+      .filter(func => func.metadata.project === req.params['project']) 
       .filter(func => func.metadata.tag === 'latest')
       .filter(func => func.status?.state === 'deploying')
 
@@ -821,8 +820,7 @@ function getFuncs(req, res) {
       func.status.state = 'ready'
     })
 
-    collectedFuncs = funcs.funcs.filter(func => func.metadata.project === req.params['project']) // req.query.project)
-    //.filter(func => func.metadata.name === req.params['func'])
+    collectedFuncs = funcs.funcs.filter(func => func.metadata.project === req.params['project'])
   }
 
   if (req.query['name']) {
@@ -840,7 +838,7 @@ function getFuncs(req, res) {
 
 function getFunc(req, res) {
   const collectedFunc = funcs.funcs
-    .filter(func => func.metadata.project === req.params['project']) // req.query.project)
+    .filter(func => func.metadata.project === req.params['project'])
     .filter(func => func.metadata.name === req.params['func']) 
     .filter(func => func.metadata.hash === req.query.hash_key)
 
@@ -1162,19 +1160,16 @@ function putTags(req, res){
 
 function deleteTags(req, res){
   let collectedArtifacts = artifacts.artifacts
-    .filter(artifact => artifact.project === req.params.project)
-    .filter(artifact => artifact.kind === req.body.identifiers[0].kind)
-    .filter(artifact => artifact.tree === req.body.identifiers[0].uid)
-  if (collectedArtifacts.length){
-    delete collectedArtifacts[0].tag
-    
-  }
-  else{
-    collectedArtifacts = artifacts.artifacts
-      .filter(artifact => artifact.project === req.params.project)
-      .filter(artifact => artifact.kind === req.body.identifiers[0].kind)
-      .filter(artifact => artifact.uid === req.body.identifiers[0].uid)
-    delete collectedArtifacts[0].metadata.tag
+    .find(artifact => artifact.project === req.params.project 
+      && artifact.kind === req.body.identifiers[0].kind
+      && (artifact.tree === req.body.identifiers[0].uid || artifact.uid === req.body.identifiers[0].uid ))
+  if (collectedArtifacts) {
+    if (collectedArtifacts.metadata){
+      delete collectedArtifacts.metadata.tag
+    }
+    else{
+      delete collectedArtifacts.tag
+    }
   }
   res.send()
 }
@@ -1182,7 +1177,6 @@ function deleteTags(req, res){
 //TODO: artifact structure ML-4583
 function postArtifact(req, res) {
   const currentDate = new Date()
-  //const artifactHash = makeUID(32)
   const artifactTag = req.body.tag || 'latest'
   const tagObject = artifactTags.find(artifact => artifact.project === req.body.project)
 
@@ -1207,36 +1201,8 @@ function postArtifact(req, res) {
     },
     status: req.body.status,
     uid: req.body.uid
-    
-    // iter: 0,   
-    // hash: artifactHash,
-    // size: null,
     // description: req.body.description,
-    // framework: '',
-    // sources: [],
   }
-  
-  // const artifactTemplate = {
-  //   key: req.body.key,
-  //   kind: req.body.kind,
-  //   iter: 0,
-  //   tree: req.body.tree,
-  //   target_path: req.body.target_path,
-  //   hash: artifactHash,
-  //   size: null,
-  //   db_key: req.body.db_key,
-  //   description: req.body.description,
-  //   framework: '',
-  //   producer: {
-  //     kind: req.body.producer.kind,
-  //     uri: req.body.producer.uri
-  //   },
-  //   sources: [],
-  //   project: req.body.project,
-  //   updated: currentDate.toISOString(),
-  //   tag: artifactTag,
-  //   labels: req.body.labels
-  // }
   if (req.body.kind === 'model') {
     artifactTemplate.model_file = req.body.model_file
   }

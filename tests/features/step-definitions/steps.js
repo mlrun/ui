@@ -171,11 +171,7 @@ Then(
 Then(
   'verify redirection to {string}',
   async function (expectedPath) {
-    // invalidUrl = `http://${test_url}:${test_port}/${invalidPath}`
     const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
-
-    // await navigateToPage(this.driver, invalidUrl)
-    // await this.driver.sleep(250)
     const afterURL = await this.driver.getCurrentUrl()
 
     expect(expectedUrl).equal(

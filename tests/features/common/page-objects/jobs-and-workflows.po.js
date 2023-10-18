@@ -807,6 +807,7 @@ module.exports = {
     Method_Dropdown: dropdownComponent(
       generateDropdownGroup('.form-col-1:nth-of-type(3)', '.form-field-select', '.select__item-main-label', false, false)
     ),
+    Method_Dropdown_Option: By.css('.form-col-1:nth-of-type(3) .form-field-select .form-field__select span'),
     Batch_Run_Labels_Table: commonTable(BatchRunLabelsTable),
     Batch_Run_Data_Inputs_Table: commonTable(BatchRunDataInputsTable),
     Data_Inputs_Headers: commonTable(DataInputsHeaders),

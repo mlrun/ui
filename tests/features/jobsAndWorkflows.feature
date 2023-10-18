@@ -2250,6 +2250,28 @@ Feature: Jobs and workflows
             |    key2    |    value2    |
             |    key3    |    value3    |
 
+    Scenario: MLJW053 - Check changing "Method" after "Hyperparameter" check in Run Details section of Batch Run
+        Given open url
+	    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+	    Then verify "Batch_Run_Header" element visibility on "Batch_Run" wizard
+	    Then select "Hub" tab in "BatchRun_Tab_Selector" on "Batch_Run" wizard
+        And wait load page
+	    And click on row root with value "feature-selection" in "name" column in "Functions_Table" table on "Batch_Run" wizard
+	    And click on "Next_Button" element on "Batch_Run" wizard
+	    Then verify "Method_Dropdown" element visibility on "Batch_Run" wizard 
+        And select "plot_stat" option in "Method_Dropdown" dropdown on "Batch_Run" wizard
+        Then "Method_Dropdown_Option" element on "Batch_Run" should contains "plot_stat" value
+        And select "show_values_on_bars" option in "Method_Dropdown" dropdown on "Batch_Run" wizard
+        Then check "Hyperparameter_Checkbox" element on "Batch_Run" wizard
+        And select "plot_stat" option in "Method_Dropdown" dropdown on "Batch_Run" wizard
+        Then "Method_Dropdown_Option" element on "Batch_Run" should contains "plot_stat" value
+
     Scenario: MLJW039 - Check all mandatory components on Batch Run wizard - Data Inputs
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
