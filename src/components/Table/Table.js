@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -139,15 +139,17 @@ const Table = ({
     frontendSpec
   ])
 
-  const handleTableHScroll = e => {
-    const tableScrollPosition = e.target.scrollLeft
+  const handleTableHScroll = useCallback(e => {
+    if (tableRef.current) {
+      const tableScrollPosition = e.target.scrollLeft
 
-    if (tableScrollPosition > 0) {
-      tableRef.current.classList.add('table__scrolled')
-    } else {
-      tableRef.current.classList.remove('table__scrolled')
+      if (tableScrollPosition > 0) {
+        tableRef.current.classList.add('table__scrolled')
+      } else {
+        tableRef.current.classList.remove('table__scrolled')
+      }
     }
-  }
+  }, [])
 
   useEffect(() => {
     window.addEventListener('scroll', handleTableHScroll, true)
