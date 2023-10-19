@@ -66,8 +66,8 @@ const JobWizardFunctionSelection = ({
   formState,
   frontendSpec,
   functions,
+  functionsStore,
   isEditMode,
-  isLoading,
   params,
   projectStore,
   selectedFunctionData,
@@ -76,7 +76,6 @@ const JobWizardFunctionSelection = ({
   setFilteredFunctions,
   setFilteredTemplates,
   setFunctions,
-  setIsLoading,
   setJobAdditionalData,
   setSelectedFunctionData,
   setSelectedFunctionTab,
@@ -230,72 +229,80 @@ const JobWizardFunctionSelection = ({
   }
 
   const onSelectedProjectNameChange = currentValue => {
-    const fetchFunctionsPromise = () => {
-      return fetchFunctions(currentValue, {}, true).then(functions => {
-        const validFunctions = functions.filter(func => {
-          return includes(functionRunKinds, func.kind)
+    fetchFunctions(currentValue, {}, true).then(functions => {
+      const validFunctions = functions.filter(func => {
+        return includes(functionRunKinds, func.kind)
+      })
+
+      const groupedFunctions = Object.values(
+        validFunctions.reduce((prev, curr) => {
+          if (!prev[curr.metadata.name]) {
+            prev[curr.metadata.name] = {
+              name: curr.metadata.name,
+              functions: []
+            }
+          }
+
+          prev[curr.metadata.name].functions.push(curr)
+
+          return prev
+        }, {})
+      )
+
+      setFunctions(groupedFunctions)
+
+      if (filterByName.length > 0) {
+        const filteredFunctions = validFunctions.filter(func => {
+          return func.metadata.name.includes(filterByName)
         })
 
-        const groupedFunctions = Object.values(
-          validFunctions.reduce((prev, curr) => {
-            if (!prev[curr.metadata.name]) {
-              prev[curr.metadata.name] = {
-                name: curr.metadata.name,
-                functions: []
-              }
-            }
-
-            prev[curr.metadata.name].functions.push(curr)
-
-            return prev
-          }, {})
-        )
-
-        setFunctions(groupedFunctions)
-
-        if (filterByName.length > 0) {
-          const filteredFunctions = validFunctions.filter(func => {
-            return func.metadata.name.includes(filterByName)
-          })
-
-          setFilteredFunctions(filteredFunctions)
-        }
-      })
-    }
-    const fetchHubFunctionsPromise = () => {
-      return fetchHubFunctions().then(templatesObject => {
-        if (templatesObject) {
-          setTemplatesCategories(templatesObject.hubFunctionsCategories)
-          setTemplates(templatesObject.hubFunctions)
-
-          formState.initialValues.functionSelection.templatesLabels =
-            templatesObject.hubFunctions.reduce((labels, template) => {
-              labels[template.metadata.name] = template.ui.categories.map(categoryId => {
-                return {
-                  id: categoryId,
-                  key: getCategoryName(categoryId),
-                  isKeyOnly: true
-                }
-              })
-
-              return labels
-            }, {})
-        }
-      })
-    }
-    const promisesArray = [fetchFunctionsPromise]
-
-    setIsLoading(true)
-    formState.initialValues.functionSelection.projectName = currentValue
-
-    if (isEmpty(templatesCategories) || isEmpty(templates)) {
-      promisesArray.push(fetchHubFunctionsPromise)
-    }
-
-    Promise.all([promisesArray.map(promise => promise())]).finally(() => {
-      setIsLoading(false)
+        setFilteredFunctions(filteredFunctions)
+      }
     })
+
+    formState.initialValues.functionSelection.projectName = currentValue
   }
+
+  const fetchHubFunctionsPromise = useCallback(() => {
+    fetchHubFunctions().then(templatesObject => {
+      if (templatesObject) {
+        setTemplatesCategories(templatesObject.hubFunctionsCategories)
+        setTemplates(templatesObject.hubFunctions)
+
+        formState.initialValues.functionSelection.templatesLabels =
+          templatesObject.hubFunctions.reduce((labels, template) => {
+            labels[template.metadata.name] = template.ui.categories.map(categoryId => {
+              return {
+                id: categoryId,
+                key: getCategoryName(categoryId),
+                isKeyOnly: true
+              }
+            })
+
+            return labels
+          }, {})
+      }
+    })
+  }, [
+    fetchHubFunctions,
+    formState.initialValues.functionSelection,
+    setTemplates,
+    setTemplatesCategories
+  ])
+
+  useEffect(() => {
+    if (
+      activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
+      (isEmpty(functionsStore.hubFunctions) || isEmpty(functionsStore.hubFunctionsCatalog))
+    ) {
+      fetchHubFunctionsPromise()
+    }
+  }, [
+    activeTab,
+    functionsStore.hubFunctions,
+    functionsStore.hubFunctionsCatalog,
+    fetchHubFunctionsPromise
+  ])
 
   const selectProjectFunction = functionData => {
     const selectNewFunction = () => {
@@ -372,10 +379,9 @@ const JobWizardFunctionSelection = ({
               <FormSelect name="functionSelection.projectName" options={projects} />
             </div>
           </div>
-          {((filterByName.length > 0 &&
+          {(filterByName.length > 0 &&
             (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
-            functions.length === 0) &&
-          !isLoading ? (
+          functions.length === 0 ? (
             <NoData />
           ) : (
             <div className="functions-list">
@@ -468,7 +474,6 @@ JobWizardFunctionSelection.propTypes = {
   frontendSpec: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   isEditMode: PropTypes.bool.isRequired,
-  isLoading: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   selectedFunctionTab: PropTypes.string.isRequired,
@@ -476,7 +481,6 @@ JobWizardFunctionSelection.propTypes = {
   setFilteredFunctions: PropTypes.func.isRequired,
   setFilteredTemplates: PropTypes.func.isRequired,
   setFunctions: PropTypes.func.isRequired,
-  setIsLoading: PropTypes.func.isRequired,
   setJobAdditionalData: PropTypes.func.isRequired,
   setSelectedFunctionData: PropTypes.func.isRequired,
   setSelectedFunctionTab: PropTypes.func.isRequired,

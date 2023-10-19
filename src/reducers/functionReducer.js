@@ -33,9 +33,12 @@ import {
   FETCH_FUNCTION_TEMPLATE_BEGIN,
   FETCH_FUNCTION_TEMPLATE_FAILURE,
   FETCH_FUNCTION_TEMPLATE_SUCCESS,
+  FETCH_FUNCTIONS_TEMPLATES_FAILURE,
   FETCH_HUB_FUNCTION_TEMPLATE_BEGIN,
   FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
   FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS,
+  FETCH_HUB_FUNCTIONS_BEGIN,
+  FETCH_HUB_FUNCTIONS_FAILURE,
   GET_FUNCTION_BEGIN,
   GET_FUNCTION_FAILURE,
   GET_FUNCTION_SUCCESS,
@@ -44,6 +47,7 @@ import {
   REMOVE_FUNCTIONS_ERROR,
   REMOVE_FUNCTION_TEMPLATE,
   REMOVE_NEW_FUNCTION,
+  REMOVE_HUB_FUNCTIONS,
   RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE,
   SET_FUNCTIONS_TEMPLATES,
   SET_NEW_FUNCTION,
@@ -75,15 +79,13 @@ import {
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_VOLUMES,
   SET_NEW_FUNCTION_VOLUME_MOUNTS,
-  FETCH_FUNCTIONS_TEMPLATES_FAILURE,
-  FETCH_HUB_FUNCTIONS_FAILURE,
   SET_HUB_FUNCTIONS,
   FUNCTION_TYPE_JOB
 } from '../constants'
 
 const initialState = {
   hubFunctions: [],
-  hubFunctionsCatalog: {},
+  hubFunctionsCatalog: [],
   functions: [],
   func: {},
   logs: {
@@ -251,6 +253,11 @@ const functionReducer = (state = initialState, { type, payload }) => {
         loading: false,
         error: payload
       }
+    case FETCH_HUB_FUNCTIONS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
     case FETCH_HUB_FUNCTIONS_FAILURE:
       return {
         ...state,
@@ -297,6 +304,12 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         newFunction: initialState.newFunction
+      }
+    case REMOVE_HUB_FUNCTIONS:
+      return {
+        ...state,
+        hubFunctions: [],
+        hubFunctionsCatalog: []
       }
     case RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE:
       return {
