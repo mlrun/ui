@@ -37,18 +37,13 @@ import {
   checkForSelectedFile,
   fetchFilesRowData,
   filters,
+  generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges
 } from './files.util'
 import { cancelRequest } from '../../utils/cancelRequest'
-import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import {
-  fetchFile,
-  fetchFiles,
-  removeFile,
-  removeFiles,
-  showArtifactsPreview
-} from '../../reducers/artifactsReducer'
+import { createFilesRowData } from '../../utils/createArtifactsContent'
+import { fetchFile, fetchFiles, removeFile, removeFiles } from '../../reducers/artifactsReducer'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -59,13 +54,6 @@ import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { getViewMode } from '../../utils/helper'
-import { copyToClipboard } from '../../utils/copyToClipboard'
-import { generateUri } from '../../utils/resources'
-
-import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
-import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
-import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
-import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 
 const Files = () => {
   const [files, setFiles] = useState([])
@@ -139,45 +127,26 @@ const Files = () => {
   )
 
   const actionsMenu = useMemo(
-    () => file => {
-      const isTargetPathValid = getIsTargetPathValid(file ?? {}, frontendSpec)
-
-      return [
-        [
-          {
-            disabled: !isTargetPathValid,
-            label: 'Preview',
-            icon: <ArtifactView />,
-            onClick: file => {
-              dispatch(
-                showArtifactsPreview({
-                  isPreview: true,
-                  selectedItem: file
-                })
-              )
-            }
-          }
-        ],
-        [
-          {
-            label: 'Copy URI',
-            icon: <Copy />,
-            onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
-          },
-          {
-            label: 'View YAML',
-            icon: <YamlIcon />,
-            onClick: toggleConvertedYaml
-          },
-          {
-            label: 'Add a tag',
-            icon: <TagIcon />,
-            onClick: handleAddTag
-          }
-        ]
-      ]
-    },
-    [dispatch, frontendSpec, handleAddTag, toggleConvertedYaml]
+    () => file =>
+      generateActionsMenu(
+        file,
+        frontendSpec,
+        dispatch,
+        toggleConvertedYaml,
+        handleAddTag,
+        params.projectName,
+        handleRefresh,
+        filesFilters
+      ),
+    [
+      dispatch,
+      filesFilters,
+      frontendSpec,
+      handleAddTag,
+      handleRefresh,
+      params.projectName,
+      toggleConvertedYaml
+    ]
   )
 
   const handleRemoveRowData = useCallback(

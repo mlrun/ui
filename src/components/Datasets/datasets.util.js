@@ -17,11 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React from 'react'
 
 import { applyTagChanges } from '../../utils/artifacts.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import {
+  DATASET_TYPE,
   DATASETS,
   DATASETS_PAGE,
   FULL_VIEW_MODE,
@@ -30,10 +32,19 @@ import {
   NAME_FILTER,
   TAG_FILTER
 } from '../../constants'
-import { createDatasetsRowData } from '../../utils/createArtifactsContent'
+import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { sortListByDate } from '../../utils'
-import { fetchDataSet } from '../../reducers/artifactsReducer'
+import { fetchDataSet, showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { copyToClipboard } from '../../utils/copyToClipboard'
+import { generateUri } from '../../utils/resources'
+import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+
+import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
+import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const infoHeaders = [
   {
@@ -193,4 +204,67 @@ export const checkForSelectedDataset = (
       setSelectedDataset({})
     }
   })
+}
+
+export const generateActionsMenu = (
+  dataset,
+  frontendSpec,
+  dispatch,
+  toggleConvertedYaml,
+  handleAddTag,
+  projectName,
+  handleRefresh,
+  datasetsFilters
+) => {
+  const isTargetPathValid = getIsTargetPathValid(dataset ?? {}, frontendSpec)
+
+  return [
+    [
+      {
+        disabled: !isTargetPathValid,
+        label: 'Preview',
+        icon: <ArtifactView />,
+        onClick: dataset => {
+          dispatch(
+            showArtifactsPreview({
+              isPreview: true,
+              selectedItem: dataset
+            })
+          )
+        }
+      }
+    ],
+    [
+      {
+        label: 'Copy URI',
+        icon: <Copy />,
+        onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_PAGE), dispatch)
+      },
+      {
+        label: 'View YAML',
+        icon: <YamlIcon />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        className: 'danger',
+        onClick: () =>
+          handleDeleteArtifact(
+            dispatch,
+            projectName,
+            dataset.db_key,
+            dataset.tag,
+            handleRefresh,
+            datasetsFilters,
+            DATASET_TYPE
+          )
+      }
+    ]
+  ]
 }

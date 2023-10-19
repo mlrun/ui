@@ -49,10 +49,19 @@ const fetchArtifacts = (project, filters, config = {}) => {
 
 const artifactsApi = {
   addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
-  replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
+  buildFunction: data => mainHttpClient.post('/build/function', data),
+  deleteArtifact: (project, key, tag) => {
+    const config = {
+      params: {
+        key,
+        tag
+      }
+    }
+
+    return mainHttpClient.delete(`/projects/${project}/artifacts`, config)
+  },
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
-  buildFunction: data => mainHttpClient.post('/build/function', data),
   getArtifactPreview: (project, path, user, fileFormat, cancelToken) => {
     const config = {
       params: { path }
@@ -153,6 +162,7 @@ const artifactsApi = {
       }`,
       data
     ),
+  replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
   updateArtifact: (project, data) =>
     mainHttpClient.post(
       `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${

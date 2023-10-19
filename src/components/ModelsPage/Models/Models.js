@@ -26,12 +26,7 @@ import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifa
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 
-import {
-  fetchModel,
-  removeModel,
-  removeModels,
-  showArtifactsPreview
-} from '../../../reducers/artifactsReducer'
+import { fetchModel, removeModel, removeModels } from '../../../reducers/artifactsReducer'
 import {
   GROUP_BY_NAME,
   MODELS_PAGE,
@@ -45,13 +40,14 @@ import {
   checkForSelectedModel,
   fetchModelsRowData,
   filters,
+  generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
   handleApplyDetailsChanges
 } from './models.util'
 import detailsActions from '../../../actions/details'
 import { cancelRequest } from '../../../utils/cancelRequest'
-import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
+import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -63,14 +59,6 @@ import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
-import { generateUri } from '../../../utils/resources'
-import { copyToClipboard } from '../../../utils/copyToClipboard'
-
-import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
-import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
-import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
-import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
-import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
@@ -139,50 +127,28 @@ const Models = ({ fetchModelFeatureVector }) => {
   )
 
   const actionsMenu = useMemo(
-    () => model => {
-      const isTargetPathValid = getIsTargetPathValid(model ?? {}, frontendSpec)
-
-      return [
-        [
-          {
-            disabled: !isTargetPathValid,
-            label: 'Preview',
-            icon: <ArtifactView />,
-            onClick: model => {
-              dispatch(
-                showArtifactsPreview({
-                  isPreview: true,
-                  selectedItem: model
-                })
-              )
-            }
-          },
-          {
-            label: 'Deploy',
-            icon: <DeployIcon />,
-            onClick: handleDeployModel
-          }
-        ],
-        [
-          {
-            label: 'View YAML',
-            icon: <YamlIcon />,
-            onClick: toggleConvertedYaml
-          },
-          {
-            label: 'Copy URI',
-            icon: <Copy />,
-            onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
-          },
-          {
-            label: 'Add a tag',
-            icon: <TagIcon />,
-            onClick: handleAddTag
-          }
-        ]
-      ]
-    },
-    [dispatch, frontendSpec, handleAddTag, handleDeployModel, toggleConvertedYaml]
+    () => model =>
+      generateActionsMenu(
+        model,
+        frontendSpec,
+        dispatch,
+        toggleConvertedYaml,
+        handleAddTag,
+        params.projectName,
+        handleRefresh,
+        modelsFilters,
+        handleDeployModel
+      ),
+    [
+      dispatch,
+      frontendSpec,
+      handleAddTag,
+      handleDeployModel,
+      handleRefresh,
+      modelsFilters,
+      params.projectName,
+      toggleConvertedYaml
+    ]
   )
 
   const handleRemoveRowData = useCallback(

@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-
+import React from 'react'
 import {
+  ARTIFACT_TYPE,
   FILES_PAGE,
   FULL_VIEW_MODE,
   ITERATIONS_FILTER,
@@ -27,12 +28,21 @@ import {
   TAG_FILTER
 } from '../../constants'
 import { applyTagChanges } from '../../utils/artifacts.util'
-import { createFilesRowData } from '../../utils/createArtifactsContent'
+import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { sortListByDate } from '../../utils'
-import { fetchFile } from '../../reducers/artifactsReducer'
+import { fetchFile, showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { copyToClipboard } from '../../utils/copyToClipboard'
+import { generateUri } from '../../utils/resources'
+import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+
+import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
+import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const pageDataInitialState = {
   details: {
@@ -192,4 +202,67 @@ export const checkForSelectedFile = (
       setSelectedFile({})
     }
   })
+}
+
+export const generateActionsMenu = (
+  file,
+  frontendSpec,
+  dispatch,
+  toggleConvertedYaml,
+  handleAddTag,
+  projectName,
+  handleRefresh,
+  datasetsFilters
+) => {
+  const isTargetPathValid = getIsTargetPathValid(file ?? {}, frontendSpec)
+
+  return [
+    [
+      {
+        disabled: !isTargetPathValid,
+        label: 'Preview',
+        icon: <ArtifactView />,
+        onClick: file => {
+          dispatch(
+            showArtifactsPreview({
+              isPreview: true,
+              selectedItem: file
+            })
+          )
+        }
+      }
+    ],
+    [
+      {
+        label: 'Copy URI',
+        icon: <Copy />,
+        onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
+      },
+      {
+        label: 'View YAML',
+        icon: <YamlIcon />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        className: 'danger',
+        onClick: () =>
+          handleDeleteArtifact(
+            dispatch,
+            projectName,
+            file.db_key,
+            file.tag,
+            handleRefresh,
+            datasetsFilters,
+            ARTIFACT_TYPE
+          )
+      }
+    ]
+  ]
 }
