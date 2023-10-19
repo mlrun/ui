@@ -1429,8 +1429,7 @@ module.exports = {
           '.form-col-1 .time-picker-container .time-picker__control',
           false,
           true,
-          false,
-          //'.form-field__icons svg'
+          false
         )
       ),
       Schedule_item_Sunday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(1)'),

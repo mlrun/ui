@@ -136,7 +136,6 @@ const action = {
   checkWarningHintText: async function (driver, inputGroup, hintComponent, text) {
     const hintButton = await driver.findElement(inputGroup.warningHint)
     await hintButton.click()
-    // await hoverComponent(driver, inputGroup.warningHint)
     const hint = await driver.findElement(hintComponent)
     await driver.sleep(250)
     const hintText = await hint.getText()

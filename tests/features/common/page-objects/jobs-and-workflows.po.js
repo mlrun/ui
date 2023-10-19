@@ -235,7 +235,7 @@ const BatchRunParametersTable = {
         delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
         discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
         checkbox: '.form-field-checkbox input',
-        name_input: '.form-table__cell_2 .form-field-input input', //.form-field-input input',
+        name_input: '.form-table__cell_2 .form-field-input input',
         name_verify: '.form-table__cell_2',
         type_dropdown: {
           componentType: dropdownComponent,
@@ -808,6 +808,15 @@ module.exports = {
       generateDropdownGroup('.form-col-1:nth-of-type(3)', '.form-field-select', '.select__item-main-label', false, false)
     ),
     Method_Dropdown_Option: By.css('.form-col-1:nth-of-type(3) .form-field-select .form-field__select span'),
+    Image_Name_Input_Run_Details: inputGroup(
+      generateInputGroup(
+        '.job-wizard__run-details > div.form-field-input .form-field__wrapper',
+        true,
+        false,
+        '.form-field__warning svg'
+      )
+    ),
+    Image_Name_Text_Run_Details: By.css('.job-wizard__run-details .warning-text'),
     Batch_Run_Labels_Table: commonTable(BatchRunLabelsTable),
     Batch_Run_Data_Inputs_Table: commonTable(BatchRunDataInputsTable),
     Data_Inputs_Headers: commonTable(DataInputsHeaders),

@@ -1159,18 +1159,22 @@ function putTags(req, res){
 }
 
 function deleteTags(req, res){
-  let collectedArtifacts = artifacts.artifacts
-    .find(artifact => artifact.project === req.params.project 
+  const collectedArtifact = artifacts.artifacts
+    .find(artifact => ((artifact.metadata && artifact.metadata.project === req.params.project) 
+      || artifact.project === req.params.project) 
       && artifact.kind === req.body.identifiers[0].kind
-      && (artifact.tree === req.body.identifiers[0].uid || artifact.uid === req.body.identifiers[0].uid ))
-  if (collectedArtifacts) {
-    if (collectedArtifacts.metadata){
-      delete collectedArtifacts.metadata.tag
+      && ((artifact.metadata && artifact.metadata.tree === req.body.identifiers[0].uid) 
+      || artifact.tree === req.body.identifiers[0].uid)) 
+  
+  if (collectedArtifact) {
+    if (collectedArtifact.metadata){
+      delete collectedArtifact.metadata.tag
     }
     else{
-      delete collectedArtifacts.tag
+      delete collectedArtifact.tag
     }
   }
+
   res.send()
 }
 

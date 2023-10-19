@@ -200,7 +200,8 @@ module.exports = {
     Tab_List: ['Functions', 'Hub'],
     Data_Inputs_Table_Header: ['Input name', 'Path'],
     Parameters_Table_Header: ['Name', 'Type', 'Value'],
-    Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value']
+    Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value'],
+    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
   },
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
