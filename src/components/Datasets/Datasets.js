@@ -155,21 +155,6 @@ const Datasets = () => {
       return [
         [
           {
-            disabled: !isTargetPathValid,
-            label: 'Preview',
-            icon: <ArtifactView />,
-            onClick: dataset => {
-              dispatch(
-                showArtifactsPreview({
-                  isPreview: true,
-                  selectedItem: dataset
-                })
-              )
-            }
-          }
-        ],
-        [
-          {
             label: 'Copy URI',
             icon: <Copy />,
             onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_PAGE), dispatch)
@@ -183,6 +168,21 @@ const Datasets = () => {
             label: 'Add a tag',
             icon: <TagIcon />,
             onClick: handleAddTag
+          }
+        ],
+        [
+          {
+            disabled: !isTargetPathValid,
+            label: 'Preview',
+            icon: <ArtifactView />,
+            onClick: dataset => {
+              dispatch(
+                showArtifactsPreview({
+                  isPreview: true,
+                  selectedItem: dataset
+                })
+              )
+            }
           }
         ]
       ]
