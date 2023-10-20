@@ -332,7 +332,6 @@ const JobWizard = ({
                   formState={formState}
                   frontendSpec={frontendSpec}
                   functions={functions}
-                  functionsStore={functionsStore}
                   isEditMode={isEditMode}
                   params={params}
                   selectedFunctionData={selectedFunctionData}

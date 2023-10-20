@@ -66,7 +66,6 @@ const JobWizardFunctionSelection = ({
   formState,
   frontendSpec,
   functions,
-  functionsStore,
   isEditMode,
   params,
   projectStore,
@@ -94,6 +93,8 @@ const JobWizardFunctionSelection = ({
     store =>
       store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
   )
+
+  const { hubFunctions, hubFunctionsCatalog } = useSelector(store => store.functionsStore)
 
   const filterTemplates = useMemo(() => {
     return templatesCategories.map(categoryId => {
@@ -263,45 +264,39 @@ const JobWizardFunctionSelection = ({
     formState.initialValues.functionSelection.projectName = currentValue
   }
 
-  const fetchHubFunctionsPromise = useCallback(() => {
-    fetchHubFunctions().then(templatesObject => {
-      if (templatesObject) {
-        setTemplatesCategories(templatesObject.hubFunctionsCategories)
-        setTemplates(templatesObject.hubFunctions)
-
-        formState.initialValues.functionSelection.templatesLabels =
-          templatesObject.hubFunctions.reduce((labels, template) => {
-            labels[template.metadata.name] = template.ui.categories.map(categoryId => {
-              return {
-                id: categoryId,
-                key: getCategoryName(categoryId),
-                isKeyOnly: true
-              }
-            })
-
-            return labels
-          }, {})
-      }
-    })
-  }, [
-    fetchHubFunctions,
-    formState.initialValues.functionSelection,
-    setTemplates,
-    setTemplatesCategories
-  ])
-
   useEffect(() => {
     if (
       activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
-      (isEmpty(functionsStore.hubFunctions) || isEmpty(functionsStore.hubFunctionsCatalog))
+      (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
     ) {
-      fetchHubFunctionsPromise()
+      fetchHubFunctions().then(templatesObject => {
+        if (templatesObject) {
+          setTemplatesCategories(templatesObject.hubFunctionsCategories)
+          setTemplates(templatesObject.hubFunctions)
+
+          formState.initialValues.functionSelection.templatesLabels =
+            templatesObject.hubFunctions.reduce((labels, template) => {
+              labels[template.metadata.name] = template.ui.categories.map(categoryId => {
+                return {
+                  id: categoryId,
+                  key: getCategoryName(categoryId),
+                  isKeyOnly: true
+                }
+              })
+
+              return labels
+            }, {})
+        }
+      })
     }
   }, [
     activeTab,
-    functionsStore.hubFunctions,
-    functionsStore.hubFunctionsCatalog,
-    fetchHubFunctionsPromise
+    fetchHubFunctions,
+    formState.initialValues.functionSelection,
+    hubFunctions,
+    hubFunctionsCatalog,
+    setTemplates,
+    setTemplatesCategories
   ])
 
   const selectProjectFunction = functionData => {
