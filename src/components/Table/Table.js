@@ -155,7 +155,7 @@ const Table = ({
     window.addEventListener('scroll', handleTableHScroll, true)
 
     return () => window.removeEventListener('scroll', handleTableHScroll, true)
-  }, [])
+  }, [handleTableHScroll])
 
   return (
     <TableView

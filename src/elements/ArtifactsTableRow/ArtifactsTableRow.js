@@ -142,7 +142,7 @@ const ArtifactsTableRow = ({
                               <td className="table-body__cell table-cell-icon">
                                 <ActionsMenu
                                   dataItem={tableContentItem.data}
-                                  extended
+                                  withQuickActions
                                   menu={actionsMenu}
                                 />
                               </td>
@@ -183,7 +183,7 @@ const ArtifactsTableRow = ({
           })}
           {!hideActionsMenu && (
             <td className="table-body__cell table-cell-icon">
-              <ActionsMenu dataItem={rowItem.data} extended menu={actionsMenu} />
+              <ActionsMenu dataItem={rowItem.data} withQuickActions menu={actionsMenu} />
             </td>
           )}
         </>
