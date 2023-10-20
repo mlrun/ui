@@ -145,21 +145,6 @@ const Files = () => {
       return [
         [
           {
-            disabled: !isTargetPathValid,
-            label: 'Preview',
-            icon: <ArtifactView />,
-            onClick: file => {
-              dispatch(
-                showArtifactsPreview({
-                  isPreview: true,
-                  selectedItem: file
-                })
-              )
-            }
-          }
-        ],
-        [
-          {
             label: 'Copy URI',
             icon: <Copy />,
             onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
@@ -173,6 +158,21 @@ const Files = () => {
             label: 'Add a tag',
             icon: <TagIcon />,
             onClick: handleAddTag
+          }
+        ],
+        [
+          {
+            disabled: !isTargetPathValid,
+            label: 'Preview',
+            icon: <ArtifactView />,
+            onClick: file => {
+              dispatch(
+                showArtifactsPreview({
+                  isPreview: true,
+                  selectedItem: file
+                })
+              )
+            }
           }
         ]
       ]

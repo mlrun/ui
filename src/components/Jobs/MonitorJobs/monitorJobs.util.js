@@ -93,52 +93,56 @@ export const generateActionsMenu = (
 ) => {
   return job?.uid
     ? [
-        {
-          label: 'Batch re-run',
-          icon: <Run />,
-          hidden: !functionRunKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
-          onClick: handleRerunJob
-        },
-        {
-          label: 'Delete',
-          icon: <Delete />,
-          className: 'danger',
-          onClick: handleDeleteJob
-        },
-        {
-          label: 'Monitoring',
-          icon: <MonitorIcon />,
-          tooltip: !jobs_dashboard_url
-            ? 'Grafana service unavailable'
-            : isJobKindDask(job?.labels)
-            ? 'Unavailable for Dask jobs'
-            : '',
-          disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
-          onClick: handleMonitoring,
-          hidden: !isEmpty(selectedJob)
-        },
-        {
-          label: 'Abort',
-          icon: <Cancel />,
-          onClick: handleConfirmAbortJob,
-          tooltip: isJobAbortable(job, abortable_function_kinds)
-            ? ''
-            : 'Cannot abort jobs of this kind',
-          disabled: !isJobAbortable(job, abortable_function_kinds),
-          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
-        },
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertedYaml
-        }
+        [
+          {
+            label: 'Batch re-run',
+            icon: <Run />,
+            hidden: !functionRunKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
+            onClick: handleRerunJob
+          },
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: handleDeleteJob
+          },
+          {
+            label: 'Monitoring',
+            icon: <MonitorIcon />,
+            tooltip: !jobs_dashboard_url
+              ? 'Grafana service unavailable'
+              : isJobKindDask(job?.labels)
+              ? 'Unavailable for Dask jobs'
+              : '',
+            disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
+            onClick: handleMonitoring,
+            hidden: !isEmpty(selectedJob)
+          },
+          {
+            label: 'Abort',
+            icon: <Cancel />,
+            onClick: handleConfirmAbortJob,
+            tooltip: isJobAbortable(job, abortable_function_kinds)
+              ? ''
+              : 'Cannot abort jobs of this kind',
+            disabled: !isJobAbortable(job, abortable_function_kinds),
+            hidden: JOB_STEADY_STATES.includes(job?.state?.value)
+          },
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
       ]
     : [
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertedYaml
-        }
+        [
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
       ]
 }
 

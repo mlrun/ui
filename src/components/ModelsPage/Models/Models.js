@@ -145,6 +145,23 @@ const Models = ({ fetchModelFeatureVector }) => {
       return [
         [
           {
+            label: 'View YAML',
+            icon: <YamlIcon />,
+            onClick: toggleConvertedYaml
+          },
+          {
+            label: 'Copy URI',
+            icon: <Copy />,
+            onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
+          },
+          {
+            label: 'Add a tag',
+            icon: <TagIcon />,
+            onClick: handleAddTag
+          }
+        ],
+        [
+          {
             disabled: !isTargetPathValid,
             label: 'Preview',
             icon: <ArtifactView />,
@@ -161,23 +178,6 @@ const Models = ({ fetchModelFeatureVector }) => {
             label: 'Deploy',
             icon: <DeployIcon />,
             onClick: handleDeployModel
-          }
-        ],
-        [
-          {
-            label: 'View YAML',
-            icon: <YamlIcon />,
-            onClick: toggleConvertedYaml
-          },
-          {
-            label: 'Copy URI',
-            icon: <Copy />,
-            onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
-          },
-          {
-            label: 'Add a tag',
-            icon: <TagIcon />,
-            onClick: handleAddTag
           }
         ]
       ]

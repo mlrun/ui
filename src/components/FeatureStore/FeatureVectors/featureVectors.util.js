@@ -92,17 +92,19 @@ export const generatePageData = selectedFeatureSet => {
 }
 
 export const generateActionsMenu = (onDeleteFeatureVector, toggleConvertedYaml) => [
-  {
-    label: 'Delete',
-    icon: <Delete />,
-    className: 'danger',
-    onClick: onDeleteFeatureVector
-  },
-  {
-    label: 'View YAML',
-    icon: <Yaml />,
-    onClick: toggleConvertedYaml
-  }
+  [
+    {
+      label: 'Delete',
+      icon: <Delete />,
+      className: 'danger',
+      onClick: onDeleteFeatureVector
+    },
+    {
+      label: 'View YAML',
+      icon: <Yaml />,
+      onClick: toggleConvertedYaml
+    }
+  ]
 ]
 
 export const featuresActionCreator = {

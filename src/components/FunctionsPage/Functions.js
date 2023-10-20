@@ -52,7 +52,6 @@ import {
 import createFunctionsContent from '../../utils/createFunctionsContent'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { functionRunKinds } from '../Jobs/jobs.util'
-import { generateContentActionsMenu } from '../../layout/Content/content.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
@@ -246,56 +245,57 @@ const Functions = ({
     }
   }
 
-  const actionsMenu = useMemo(() => {
-    return generateContentActionsMenu(
-      func => [
-        {
-          label: 'Run',
-          icon: <Run />,
-          onClick: func => {
-            if (func?.project && func?.name && func?.hash) {
-              fetchJobFunction(func.project, func.name, func.hash)
-              setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
-            } else {
-              dispatch(
-                setNotification({
-                  status: 400,
-                  id: Math.random(),
-                  message: 'Failed to fetch the function'
-                })
-              )
-            }
+  const actionsMenu = useMemo(
+    () => func =>
+      [
+        [
+          {
+            label: 'Run',
+            icon: <Run />,
+            onClick: func => {
+              if (func?.project && func?.name && func?.hash) {
+                fetchJobFunction(func.project, func.name, func.hash)
+                setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
+              } else {
+                dispatch(
+                  setNotification({
+                    status: 400,
+                    id: Math.random(),
+                    message: 'Failed to fetch the function'
+                  })
+                )
+              }
+            },
+            hidden:
+              !functionRunKinds.includes(func?.type) ||
+              !FUNCTIONS_READY_STATES.includes(func?.state?.value)
           },
-          hidden:
-            !functionRunKinds.includes(func?.type) ||
-            !FUNCTIONS_READY_STATES.includes(func?.state?.value)
-        },
-        {
-          label: 'Edit',
-          icon: <Edit />,
-          onClick: func => {
-            setFunctionsPanelIsOpen(true)
-            setEditableItem(func)
+          {
+            label: 'Edit',
+            icon: <Edit />,
+            onClick: func => {
+              setFunctionsPanelIsOpen(true)
+              setEditableItem(func)
+            },
+            hidden:
+              !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
+              !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
           },
-          hidden:
-            !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
-            !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
-        },
-        {
-          label: 'Delete',
-          icon: <Delete />,
-          className: 'danger',
-          onClick: onRemoveFunction
-        },
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertedYaml
-        }
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: onRemoveFunction
+          },
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
       ],
-      []
-    )
-  }, [dispatch, fetchJobFunction, isStagingMode, onRemoveFunction, toggleConvertedYaml])
+    [dispatch, fetchJobFunction, isStagingMode, onRemoveFunction, toggleConvertedYaml]
+  )
 
   useEffect(() => {
     refreshFunctions(filtersStore.filters)
