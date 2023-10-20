@@ -199,7 +199,9 @@ module.exports = {
   Batch_Run: {
     Tab_List: ['Functions', 'Hub'],
     Data_Inputs_Table_Header: ['Input name', 'Path'],
-    Parameters_Table_Header: ['Name', 'Type', 'Value']
+    Parameters_Table_Header: ['Name', 'Type', 'Value'],
+    Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value'],
+    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
   },
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -245,6 +247,9 @@ module.exports = {
     Function_Name_Batch_Run_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',
+    Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
+    'Key should be unique',
+    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -410,6 +415,7 @@ module.exports = {
     Turning_Strategy_Options: ['List', 'Grid', 'Random'],
     Criteria_Dropdown_Options: ['Max', 'Min'],
     Volume_Mount_Options: ['Auto', 'Manual', 'None'],
+    Hyperparameter_Strategy_Options: ['List', 'Grid', 'Random'],
     Memory_Unit_Options: [
       'Bytes',
       'KB',
@@ -423,6 +429,8 @@ module.exports = {
     ],
     CPU_Unit_Options: ['cpu', 'millicpu'],
     Time_Unit_Options: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
+    Minute_Intervals_Dropdown_Options: ['Every 10', 'Every 15', 'Every 20', 'Every 30'],
+    Hour_Intervals_Dropdown_Options: ['Every 1', 'Every 2', 'Every 3', 'Every 4', 'Every 6', 'Every 12'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
     //Pods_Toleration: ['Allow', 'Constrain', 'Prevent'], - Pods_Toleration is deleted from implementation
