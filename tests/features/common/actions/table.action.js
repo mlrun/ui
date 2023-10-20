@@ -80,6 +80,19 @@ const action = {
       `Value "${value}" does not includes in all values: [${arr}]`
     )
   },
+  isContainsSubstringInColumnAttributrCells: async function(
+    driver,
+    table,
+    columnName,
+    value
+  ) {
+    const arr = await getColumnValuesAttribute(driver, table, columnName)
+    expect(arr.length > 0).equal(true)
+    expect(arr.every(item => item.includes(value))).equal(
+      true,
+      `Value "${value}" does not includes in all values: [${arr}]`
+    )
+  },
   isContainsSubstringInColumnDropdownCells: async function(
     driver,
     table,
@@ -132,7 +145,7 @@ const action = {
         driver,
         overlay
       )
-      const options = optionsRow.concat(optionsOverlay);
+      const options = optionsRow.concat(optionsOverlay)
 
       flag = flag && options.some(item => item.includes(subString))
     }
@@ -297,7 +310,7 @@ const action = {
     if (arr.length === 0) {
       expect(arr.length > 0).equal(
         true,
-        `Array is empty, nothing to compare`
+        'Array is empty, nothing to compare'
       )
     }
     const diff = differenceWith(arr, values, isEqual)

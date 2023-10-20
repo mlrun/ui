@@ -68,11 +68,16 @@ import {
   checkHintText,
   checkInputAccordingHintText,
   checkWarningHintText,
+  checkWarningText,
   getInputValue,
   typeValue,
+  typeValueWithoutInputgroup,
   verifyInputDisabled,
+  verifyInputClassDisabled,
   verifyInputEnabled,
+  verifyInputClassEnabled,
   verifyTypedValue,
+  verifyTypedValueWithoutInputgroup,
   verifyTextAreaCounter
 } from '../common/actions/input-group.action'
 import { incrementValue, decrementValue } from '../common/actions/number-input-group.action'
@@ -163,6 +168,19 @@ Then(
   }
 )
 
+Then(
+  'verify redirection to {string}',
+  async function (expectedPath) {
+    const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
+    const afterURL = await this.driver.getCurrentUrl()
+
+    expect(expectedUrl).equal(
+      afterURL,
+      `Redirection should be "${expectedUrl}"\nbut is "${afterURL}"`
+    )
+  }
+)
+
 Then('wait load page', async function() {
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(500)
@@ -218,6 +236,17 @@ Then('type value {string} to {string} field on {string} wizard', async function(
   await typeValue(this.driver, pageObjects[wizard][inputField], value)
   await this.driver.sleep(250)
   await verifyTypedValue(this.driver, pageObjects[wizard][inputField], value)
+  await this.driver.sleep(250)
+})
+
+Then('type value {string} to {string} field on {string} wizard without inputgroup', async function(
+  value,
+  inputField,
+  wizard
+) {
+  await typeValueWithoutInputgroup(this.driver, pageObjects[wizard][inputField], value)
+  await this.driver.sleep(250)
+  await verifyTypedValueWithoutInputgroup(this.driver, pageObjects[wizard][inputField], value)
   await this.driver.sleep(250)
 })
 
@@ -288,9 +317,29 @@ Then(
 )
 
 Then(
+  'verify {string} element in {string} on {string} wizard is enabled by class name',
+  async function(inputField, accordionName, wizardName) {
+    await verifyInputClassEnabled(
+      this.driver,
+      pageObjects[wizardName][accordionName][inputField]
+    )
+  }
+)
+
+Then(
   'verify {string} element in {string} on {string} wizard is disabled',
   async function(inputField, accordionName, wizardName) {
     await verifyInputDisabled(
+      this.driver,
+      pageObjects[wizardName][accordionName][inputField]
+    )
+  }
+)
+
+Then(
+  'verify {string} element in {string} on {string} wizard is disabled by class name',
+  async function(inputField, accordionName, wizardName) {
+    await verifyInputClassDisabled(
       this.driver,
       pageObjects[wizardName][accordionName][inputField]
     )
@@ -708,6 +757,14 @@ Then('verify {string} element not exists on {string} wizard', async function(
   await componentIsNotPresent(this.driver, pageObjects[wizard][component])
 })
 
+Then('verify {string} element not exists in {string} on {string} wizard', async function(
+  component,
+  accordion,
+  wizard
+) {
+  await componentIsNotPresent(this.driver, pageObjects[wizard][accordion][component])
+})
+
 When('collapse {string} on {string} wizard', async function(accordion, wizard) {
   await collapseAccordionSection(
     this.driver,
@@ -852,6 +909,17 @@ Then(
     await checkWarningHintText(
       this.driver,
       pageObjects[wizard][inputField],
+      pageObjects['commonPagesHeader']['Common_Options'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify labels warning should display options {string}.{string}',
+  async function(constStorage, constValue) {
+    await checkWarningText(
+      this.driver,
       pageObjects['commonPagesHeader']['Common_Options'],
       pageObjectsConsts[constStorage][constValue]
     )
