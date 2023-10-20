@@ -464,6 +464,7 @@ const commonInfoPaneTabSelector = commonTable(infoPaneTabSelector)
 const commonEditBtnTableView = By.css('[data-testid="detailsPanel"] .details-item__data-btn-edit')
 const commonEditBtnFullView = By.css('.table__item_big .details-item__data-btn-edit')
 const commonVersionTagInputTableView = By.css('.details-item:nth-of-type(3) .details-item__input-wrapper input')
+const commonVersionTagInputPlaceholder = By.css('.details-item:nth-of-type(3) .details-item__data-add-placeholder')
 const commonVersionTagInput = inputGroup(
   generateInputGroup(
     '.details-item:nth-of-type(3) .details-item__input-wrapper',
@@ -547,6 +548,7 @@ module.exports = {
     Edit_btn_full_view: commonEditBtnFullView,
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput
   },
   transformationsInfoPane: {
@@ -671,6 +673,7 @@ module.exports = {
     Edit_btn_full_view: commonEditBtnFullView,
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput
   },
   modelsInfoPane: {
@@ -712,6 +715,7 @@ module.exports = {
     Edit_btn_full_view: commonEditBtnFullView,
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput
   },
   modelsRealTimePipelineInfoPane: {
