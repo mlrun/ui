@@ -35,6 +35,7 @@ import {
 } from '../constants'
 
 const initialState = {
+  saveFilters: false,
   dates: {
     value: DATE_FILTER_ANY_TIME,
     isPredefined: false

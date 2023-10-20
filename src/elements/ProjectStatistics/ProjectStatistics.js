@@ -18,14 +18,58 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ProjectStatisticsCounter from '../ProjectStatisticsCounter/ProjectStatisticsCounter'
 
+import { setFilters } from '../../reducers/filtersReducer'
+import {
+  ANY_TIME_DATE_OPTION,
+  datePickerOptions,
+  PAST_24_HOUR_DATE_OPTION
+} from '../../utils/datePicker.util'
+
 import './projectStatistics.scss'
 
 const ProjectStatistics = ({ statistics }) => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const onNavigate = (statistic, key) => {
+    let filters = {}
+
+    if (['running', 'workflows'].includes(key)) {
+      const anyTimeOption = datePickerOptions.find(option => option.id === ANY_TIME_DATE_OPTION)
+
+      filters = {
+        saveFilters: true,
+        state: 'running',
+        dates: {
+          value: anyTimeOption.handler(),
+          isPredefined: false
+        }
+      }
+    } else if (key === 'failed') {
+      const past24HourOption = datePickerOptions.find(
+        option => option.id === PAST_24_HOUR_DATE_OPTION
+      )
+
+      filters = {
+        saveFilters: true,
+        state: 'error',
+        dates: {
+          value: past24HourOption.handler(),
+          isPredefined: past24HourOption.isPredefined
+        }
+      }
+    }
+
+    dispatch(setFilters(filters))
+    navigate(statistic.link)
+  }
+
   return Object.keys(statistics).map((key, index) => {
     return (
       <div key={key + index} className="project-data-card__statistics-item">
@@ -38,12 +82,12 @@ const ProjectStatistics = ({ statistics }) => {
             <ProjectStatisticsCounter counterObject={statistics[key]} />
           </a>
         ) : statistics[key].link ? (
-          <Link
+          <div
             className="project-data-card__statistics-link"
-            to={statistics[key].link}
+            onClick={() => onNavigate(statistics[key], key)}
           >
             <ProjectStatisticsCounter counterObject={statistics[key]} />
-          </Link>
+          </div>
         ) : (
           <div className="project-data-card__statistics-data">
             <ProjectStatisticsCounter counterObject={statistics[key]} />
