@@ -42,7 +42,6 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constan
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { getJobFunctionData } from '../jobs.util'
-import { generateContentActionsMenu } from '../../../layout/Content/content.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
@@ -207,35 +206,36 @@ const ScheduledJobs = ({
     [fetchJobFunction, dispatch, fetchFunctionTemplate, fetchJobFunctionSuccess, setJobWizardMode]
   )
 
-  const actionsMenu = useMemo(() => {
-    return generateContentActionsMenu(
-      job => [
-        {
-          label: 'Run now',
-          icon: <Run className="action_cell__run-icon" />,
-          onClick: handleRunJob
-        },
-        {
-          label: 'Edit',
-          icon: <Edit />,
-          onClick: handleEditScheduleJob,
-          hidden: job?.type === JOB_KIND_WORKFLOW
-        },
-        {
-          label: 'Delete',
-          icon: <Delete />,
-          className: 'danger',
-          onClick: onRemoveScheduledJob
-        },
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertedYaml
-        }
+  const actionsMenu = useMemo(
+    () => job =>
+      [
+        [
+          {
+            label: 'Run now',
+            icon: <Run className="action_cell__run-icon" />,
+            onClick: handleRunJob
+          },
+          {
+            label: 'Edit',
+            icon: <Edit />,
+            onClick: handleEditScheduleJob,
+            hidden: job?.type === JOB_KIND_WORKFLOW
+          },
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: onRemoveScheduledJob
+          },
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
       ],
-      []
-    )
-  }, [handleEditScheduleJob, handleRunJob, onRemoveScheduledJob, toggleConvertedYaml])
+    [handleEditScheduleJob, handleRunJob, onRemoveScheduledJob, toggleConvertedYaml]
+  )
 
   useEffect(() => {
     if (!dataIsLoaded) {
