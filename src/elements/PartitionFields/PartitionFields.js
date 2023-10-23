@@ -41,7 +41,7 @@ const PartitionFields = ({
   partitionRadioButtonsState,
   rangeOnChange,
   selectedPartitionKind,
-  setValidation,
+  setPartitionColumnsValidation,
   timePartitioningGranularityChange,
   triggerPartitionAdvancedCheckboxes,
   validation
@@ -76,19 +76,18 @@ const PartitionFields = ({
             labelType="floatingLabel"
             label="Number of Buckets"
             required
+            invalid={!validation.partitionBuckets}
             min={0}
             onChange={rangeOnChange}
             tip={
               <span>
-                If you partition by key and the number of unique keys is very
-                high it is recommended to use buckets for better performance. In
-                this case the path would be
-                <b> path/bucket-num/year=/month=/day=</b> etc.. In case the
-                value is 0 then no bucketing will be done and your data will be
-                partitioned by key.
+                If you partition by key and the number of unique keys is very high it is recommended
+                to use buckets for better performance. In this case the path would be
+                <b> path/bucket-num/year=/month=/day=</b> etc.. In case the value is 0 then no
+                bucketing will be done and your data will be partitioned by key.
               </span>
             }
-            value={data.key_bucketing_number || 1}
+            value={data.key_bucketing_number}
           />
         )}
         {selectedPartitionKind.includes('byTime') && (
@@ -105,12 +104,12 @@ const PartitionFields = ({
           <Input
             density="normal"
             floatingLabel
-            invalid={!validation}
+            invalid={!validation.partitionColumns}
             onBlur={partitionColsOnBlur}
             onChange={partitionColsOnChange}
             label="Partition Columns"
             placeholder="col1,col2,col3"
-            setInvalid={setValidation}
+            setInvalid={setPartitionColumnsValidation}
             type="text"
             value={data.partition_cols}
             wrapperClassName="partition-cols"
@@ -126,10 +125,7 @@ const PartitionFields = ({
 
 PartitionFields.propTypes = {
   data: PropTypes.shape({
-    key_bucketing_number: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]).isRequired,
+    key_bucketing_number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     partition_cols: PropTypes.string.isRequired,
     time_partitioning_granularity: PropTypes.string.isRequired
   }).isRequired,
@@ -139,10 +135,10 @@ PartitionFields.propTypes = {
   partitionRadioButtonsState: PropTypes.string.isRequired,
   rangeOnChange: PropTypes.func.isRequired,
   selectedPartitionKind: PropTypes.arrayOf(PropTypes.string).isRequired,
-  setValidation: PropTypes.func.isRequired,
+  setPartitionColumnsValidation: PropTypes.func.isRequired,
   timePartitioningGranularityChange: PropTypes.func.isRequired,
   triggerPartitionAdvancedCheckboxes: PropTypes.func.isRequired,
-  validation: PropTypes.bool.isRequired
+  validation: PropTypes.object.isRequired
 }
 
 export default PartitionFields

@@ -21,7 +21,6 @@ import React, { useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
-import { pick } from 'lodash'
 
 import { FormInput, FormSelect, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
@@ -52,7 +51,7 @@ const FormEnvironmentVariablesRow = ({
 
   const tableRowClassNames = classnames(
     'form-table__row',
-    fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active'
+    isCurrentRowEditing(rowPath) && 'form-table__row_active'
   )
 
   const valueColumn = useMemo(
@@ -71,12 +70,9 @@ const FormEnvironmentVariablesRow = ({
 
   return (
     <>
-      {editingItem &&
-      index === editingItem.ui?.index &&
-      fieldsPath === editingItem.ui?.fieldsPath &&
-      !disabled ? (
+      {isCurrentRowEditing(rowPath) && !disabled ? (
         <div className={tableRowClassNames} key={index}>
-          <div className="form-table__cell form-table__cell_1">
+          <div className="form-table__cell form-table__cell_2">
             <FormInput
               density="normal"
               name={`${rowPath}.data.key`}
@@ -99,7 +95,7 @@ const FormEnvironmentVariablesRow = ({
               required
             />
           </div>
-          <div className="form-table__cell form-table__cell_1">
+          <div className="form-table__cell form-table__cell_3">
             {fieldData.data.type === 'value' && (
               <FormInput
                 density="normal"
@@ -122,6 +118,7 @@ const FormEnvironmentVariablesRow = ({
                   density="normal"
                   name={`${rowPath}.data.secretKey`}
                   placeholder="Secret Key"
+                  required
                   validationRules={getValidationRules('environmentVariables.secretKey')}
                 />
               </>
@@ -142,7 +139,7 @@ const FormEnvironmentVariablesRow = ({
           key={index}
           onClick={event => enterEditMode(event, fields, fieldsPath, index)}
         >
-          <div className={classnames('form-table__cell', 'form-table__cell_1')}>
+          <div className={classnames('form-table__cell', 'form-table__cell_2')}>
             <Tooltip template={<TextTooltipTemplate text={fieldData.data.key} />}>
               {fieldData.data.key}
             </Tooltip>
@@ -153,7 +150,7 @@ const FormEnvironmentVariablesRow = ({
               {fieldData.data.type}
             </Tooltip>
           </div>
-          <div className={classnames('form-table__cell', 'form-table__cell_1')}>
+          <div className={classnames('form-table__cell', 'form-table__cell_3')}>
             <Tooltip template={<TextTooltipTemplate text={valueColumn} />}>{valueColumn}</Tooltip>
           </div>
           <FormRowActions
@@ -167,11 +164,12 @@ const FormEnvironmentVariablesRow = ({
         </div>
       )}
       <OnChange name={`${rowPath}.data.type`}>
-        {() => {
+        {type => {
           if (isCurrentRowEditing(rowPath)) {
-            const fieldNewData = pick(fields.value[index].data, ['key', 'type'])
-
-            setFieldValue(`${rowPath}.data`, fieldNewData)
+            setFieldValue(`${rowPath}.data`, {
+              key: fields.value[index].data.key,
+              type
+            })
           }
         }}
       </OnChange>

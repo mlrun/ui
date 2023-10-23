@@ -20,6 +20,7 @@ such restriction.
 import React, { useEffect, useState, useCallback } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import yaml from 'js-yaml'
+import FileSaver from 'file-saver'
 import { orderBy } from 'lodash'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
@@ -38,6 +39,7 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-
 import { setNotification } from '../../reducers/notificationReducer'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 const Projects = ({
   changeProjectState,
@@ -70,6 +72,7 @@ const Projects = ({
   const [source] = useState(axios.CancelToken.source())
   const urlParams = useParams()
   const dispatch = useDispatch()
+  const { isDemoMode } = useMode()
 
   const { isNuclioModeDisabled } = useNuclioMode()
 
@@ -90,7 +93,8 @@ const Projects = ({
   const handleFilterProject = useCallback(
     project => {
       return filterByName.length > 0
-        ? project.metadata.name.includes(filterByName) && isValidProjectState(project)
+        ? project.metadata.name.toLocaleLowerCase().includes(filterByName.toLocaleLowerCase()) &&
+            isValidProjectState(project)
         : isValidProjectState(project)
     },
     [filterByName, isValidProjectState]
@@ -179,7 +183,8 @@ const Projects = ({
             project,
             setConfirmData,
             setNotification,
-            dispatch
+            dispatch,
+            deleteNonEmpty
           )
         })
     },
@@ -242,6 +247,30 @@ const Projects = ({
     [handleDeleteProject]
   )
 
+  const exportYaml = useCallback(
+    projectMinimal => {
+      if (projectMinimal?.metadata?.name) {
+        fetchProject(projectMinimal.metadata.name)
+          .then(project => {
+            var blob = new Blob([yaml.dump(project, { lineWidth: -1 })])
+
+            FileSaver.saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
+          })
+          .catch(() => {
+            dispatch(
+              setNotification({
+                status: 400,
+                id: Math.random(),
+                retry: () => exportYaml(projectMinimal),
+                message: "Failed to fetch project's YAML"
+              })
+            )
+          })
+      }
+    },
+    [dispatch, fetchProject]
+  )
+
   const viewYaml = useCallback(
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
@@ -272,19 +301,23 @@ const Projects = ({
     setActionsMenu(
       generateProjectActionsMenu(
         projectStore.projects,
+        exportYaml,
         viewYaml,
         onArchiveProject,
         handleUnarchiveProject,
-        onDeleteProject
+        onDeleteProject,
+        isDemoMode
       )
     )
   }, [
     convertToYaml,
+    exportYaml,
     onArchiveProject,
     onDeleteProject,
     handleUnarchiveProject,
     projectStore.projects,
-    viewYaml
+    viewYaml,
+    isDemoMode
   ])
 
   useEffect(() => {

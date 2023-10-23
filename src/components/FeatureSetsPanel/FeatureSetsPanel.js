@@ -56,8 +56,11 @@ const FeatureSetsPanel = ({
     isOnlineTargetPathValid: true,
     isOfflineTargetPathValid: true,
     isExternalOfflineTargetPathValid: true,
+    isOfflinePartitionBucketsValid: true,
     isOfflinePartitionColumnsValid: true,
+    isExternalOfflinePartitionBucketsValid: true,
     isExternalOfflinePartitionColumnsValid: true,
+    isTargetStoreValid: true,
     isTimestampKeyValid: true,
     isAccessKeyValid: true
   })

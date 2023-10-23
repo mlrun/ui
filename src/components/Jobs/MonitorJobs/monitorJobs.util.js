@@ -30,10 +30,10 @@ import {
 } from '../../../constants'
 import {
   JOB_STEADY_STATES,
+  functionRunKinds,
   getInfoHeaders,
-  isJobAbortable,
-  limitedFunctionKinds,
   getJobsDetailsMenu,
+  isJobAbortable,
   isJobKindDask
 } from '../jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -44,6 +44,7 @@ import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const generateFilters = jobName => [
   { type: PERIOD_FILTER, label: 'Period:' },
@@ -87,55 +88,67 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   toggleConvertedYaml,
-  selectedJob
+  selectedJob,
+  handleDeleteJob
 ) => {
   return job?.uid
     ? [
-        {
-          label: 'Batch re-run',
-          icon: <Run />,
-          hidden: limitedFunctionKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
-          onClick: handleRerunJob
-        },
-        {
-          label: 'Monitoring',
-          icon: <MonitorIcon />,
-          tooltip: !jobs_dashboard_url
-            ? 'Grafana service unavailable'
-            : isJobKindDask(job?.labels)
-            ? 'Unavailable for Dask jobs'
-            : '',
-          disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
-          onClick: handleMonitoring,
-          hidden: !isEmpty(selectedJob)
-        },
-        {
-          label: 'Abort',
-          icon: <Cancel />,
-          onClick: handleConfirmAbortJob,
-          tooltip: isJobAbortable(job, abortable_function_kinds)
-            ? ''
-            : 'Cannot abort jobs of this kind',
-          disabled: !isJobAbortable(job, abortable_function_kinds),
-          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
-        },
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertedYaml
-        }
+        [
+          {
+            label: 'Batch re-run',
+            icon: <Run />,
+            hidden: !functionRunKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
+            onClick: handleRerunJob
+          },
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: handleDeleteJob
+          },
+          {
+            label: 'Monitoring',
+            icon: <MonitorIcon />,
+            tooltip: !jobs_dashboard_url
+              ? 'Grafana service unavailable'
+              : isJobKindDask(job?.labels)
+              ? 'Unavailable for Dask jobs'
+              : '',
+            disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
+            onClick: handleMonitoring,
+            hidden: !isEmpty(selectedJob)
+          },
+          {
+            label: 'Abort',
+            icon: <Cancel />,
+            onClick: handleConfirmAbortJob,
+            tooltip: isJobAbortable(job, abortable_function_kinds)
+              ? ''
+              : 'Cannot abort jobs of this kind',
+            disabled: !isJobAbortable(job, abortable_function_kinds),
+            hidden: JOB_STEADY_STATES.includes(job?.state?.value)
+          },
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
       ]
     : [
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertedYaml
-        }
+        [
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
       ]
 }
 
 export const monitorJobsActionCreator = {
   abortJob: jobsActions.abortJob,
+  deleteJob: jobsActions.deleteJob,
   fetchAllJobRuns: jobsActions.fetchAllJobRuns,
   fetchJob: jobsActions.fetchJob,
   fetchJobFunctions: jobsActions.fetchJobFunctions,

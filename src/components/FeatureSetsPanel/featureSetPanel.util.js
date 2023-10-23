@@ -17,6 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+
+import { REDISNOSQL } from './FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
+
 export const nameValidationPattern = /^(?=[\S\s]{1,56}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 
 export const checkValidation = (
@@ -31,12 +34,37 @@ export const checkValidation = (
   const externalOfflineTarget = newFeatureSet.spec.targets.find(
     targetKind => targetKind.name === 'externalOffline'
   )
+
   const isPartitionByTimeExist = newFeatureSet.spec.targets.some(target =>
     Boolean(target.time_partitioning_granularity)
   )
 
+  const onlineRedisTarget = newFeatureSet.spec.targets.find(
+    targetKind => targetKind.kind === REDISNOSQL
+  )
+
   if (!Object.values(validation).every(value => value)) {
     isValid = false
+  }
+
+  if (!newFeatureSet.spec.targets.length && !newFeatureSet.spec.passthrough) {
+    setValidation(prevState => ({
+      ...prevState,
+      isTargetStoreValid: false
+    }))
+
+    isValid = false
+  }
+
+  if (onlineRedisTarget) {
+    if (/[{}]/g.test(onlineRedisTarget.path)) {
+      setValidation(prevState => ({
+        ...prevState,
+        isOnlineTargetPathValid: false
+      }))
+
+      isValid = false
+    }
   }
 
   if (newFeatureSet.metadata.name.length === 0 || !validation.isNameValid) {

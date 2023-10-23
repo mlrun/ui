@@ -5,6 +5,7 @@
 
 .input {
   @import '../../scss/main.scss';
+
   @include fieldWrapperOld;
 
   &::placeholder {
@@ -143,6 +144,7 @@
 
     &.active-label {
       top: 9px;
+      height: auto;
       font-weight: 700;
       font-size: 10px;
       line-height: 12px;
@@ -154,13 +156,14 @@
     }
 
     &-floating {
+      position: absolute;
+      top: unset;
+      left: 16px;
       display: flex;
       align-items: center;
-      position: absolute;
-      top: 15px;
-      left: 16px;
+      height: 100%;
       color: $topaz;
-      transition: 300ms ease all;
+      transition: 300ms linear all;
     }
 
     &_disabled {

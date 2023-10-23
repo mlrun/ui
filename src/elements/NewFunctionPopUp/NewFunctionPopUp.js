@@ -28,10 +28,11 @@ import Select from '../../common/Select/Select'
 import { Button, PopUpDialog } from 'igz-controls/components'
 
 import functionsActions from '../../actions/functions'
-import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
+import { runtimeOptions } from './newFuctionPopUp.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { FUNCTION_TYPE_JOB } from '../../constants'
 
 import './newFunctionPopUp.scss'
 
@@ -48,7 +49,7 @@ const NewFunctionPopUp = ({
 }) => {
   const [data, setData] = useState({
     name: '',
-    runtime: DEFAULT_RUNTIME,
+    runtime: FUNCTION_TYPE_JOB,
     tag: ''
   })
   const [isPopUpOpen, setIsPopUpOpen] = useState(isOpened ?? false)
@@ -71,7 +72,7 @@ const NewFunctionPopUp = ({
     closePopUp ? closePopUp() : setIsPopUpOpen(false)
     setData({
       name: '',
-      runtime: DEFAULT_RUNTIME,
+      runtime: FUNCTION_TYPE_JOB,
       tag: ''
     })
     setValidation({
@@ -150,7 +151,7 @@ const NewFunctionPopUp = ({
               onBlur={handleNameOnBlur}
               required
               setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
-              validationRules={getValidationRules('common.name')}
+              validationRules={getValidationRules('function.name')}
               value={data.name}
               wrapperClassName="name"
             />

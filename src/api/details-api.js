@@ -19,17 +19,22 @@ such restriction.
 */
 import { mainHttpClient } from '../httpClient'
 
+import { JOB_KIND_JOB } from '../constants'
+
 const detailsApi = {
-  getJobPods: project =>
-    mainHttpClient.get(`/projects/${project}/runtime-resources?group-by=job`),
+  getJobPods: (project, uid, kind) => {
+    const params = {
+      'group-by': JOB_KIND_JOB,
+      kind,
+      'label-selector': `mlrun/uid=${uid}`
+    }
+
+    return mainHttpClient.get(`/projects/${project}/runtime-resources`, { params })
+  },
   getModelEndpoint: (project, uid) =>
-    mainHttpClient.get(
-      `/projects/${project}/model-endpoints/${uid}?feature_analysis=true`
-    ),
+    mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}?feature_analysis=true`),
   getModelFeatureVector: (project, name, reference) =>
-    mainHttpClient.get(
-      `/projects/${project}/feature-vectors/${name}/references/${reference}`
-    )
+    mainHttpClient.get(`/projects/${project}/feature-vectors/${name}/references/${reference}`)
 }
 
 export default detailsApi

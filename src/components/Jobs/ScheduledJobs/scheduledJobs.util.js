@@ -22,12 +22,12 @@ import workflowsActions from '../../../actions/workflow'
 import functionsActions from '../../../actions/functions'
 
 export const scheduledJobsActionCreator = {
+  editJob: jobsActions.editJob,
   fetchFunctionTemplate: functionsActions.fetchFunctionTemplate,
   fetchJob: jobsActions.fetchJob,
   fetchJobFunction: jobsActions.fetchJobFunction,
   fetchJobFunctionSuccess: jobsActions.fetchJobFunctionSuccess,
   fetchJobs: jobsActions.fetchJobs,
-  fetchScheduledJobAccessKey: jobsActions.fetchScheduledJobAccessKey,
   handleRunScheduledJob: jobsActions.handleRunScheduledJob,
   removeScheduledJob: jobsActions.removeScheduledJob,
   resetWorkflow: workflowsActions.resetWorkflow

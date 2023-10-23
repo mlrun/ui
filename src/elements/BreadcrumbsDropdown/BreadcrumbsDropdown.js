@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { forwardRef } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -25,60 +25,78 @@ import classnames from 'classnames'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
+import { ReactComponent as CheckmarkIcon } from 'igz-controls/images/checkmark.svg'
 
 import './breadcrumbsDropdown.scss'
 
-const BreadcrumbsDropdown = ({ link, list, onClick, screen, selectedItem, tab, withSearch }) => {
-  const [searchValue, setSearchValue] = useState('')
+const BreadcrumbsDropdown = forwardRef(
+  (
+    { link, list, onClick, screen, searchValue, setSearchValue, selectedItem, tab, withSearch },
+    ref
+  ) => {
+    return (
+      <div className="breadcrumbs__dropdown-wrapper" data-testid="breadcrumbs-dropdown">
+        {withSearch && (
+          <div className="breadcrumbs__dropdown-search" data-testid="breadcrumbs-search">
+            <input
+              className="input"
+              onChange={event => setSearchValue(event.target.value)}
+              placeholder="Type to search"
+              type="text"
+              autoFocus
+            />
+            <SearchIcon />
+          </div>
+        )}
+        <div className="breadcrumbs__dropdown" ref={ref}>
+          {list
+            .filter(listItem =>
+              listItem.id.toLocaleLowerCase().startsWith(searchValue.toLocaleLowerCase())
+            )
+            .map(listItem => {
+              const dropdownItemClassNames = classnames(
+                'breadcrumbs__dropdown-item',
+                'data-ellipsis',
+                selectedItem === listItem.id && 'breadcrumbs__dropdown-item_selected'
+              )
 
-  return (
-    <div className="breadcrumbs__dropdown-wrapper" data-testid="breadcrumbs-dropdown">
-      {withSearch && (
-        <div className="breadcrumbs__dropdown-search">
-          <input
-            className="input"
-            onChange={event => setSearchValue(event.target.value)}
-            placeholder="Type to search"
-            type="text"
-          />
-          <SearchIcon />
+              return (
+                !listItem.hidden &&
+                (listItem.link ? (
+                  <a
+                    href={listItem.link}
+                    id={listItem.id}
+                    data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
+                    key={listItem.id}
+                    className={dropdownItemClassNames}
+                  >
+                    <span>{listItem.label}</span>
+                    {selectedItem === listItem.id && <CheckmarkIcon className="checkmark" />}
+                  </a>
+                ) : (
+                  <Link
+                    to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
+                      tab ? `/${tab}` : ''
+                    }`}
+                    onClick={onClick}
+                    id={listItem.id}
+                    data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
+                    key={listItem.id}
+                    className={dropdownItemClassNames}
+                  >
+                    <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
+                      {listItem.label}
+                    </Tooltip>
+                    {selectedItem === listItem.id && <CheckmarkIcon className="checkmark" />}
+                  </Link>
+                ))
+              )
+            })}
         </div>
-      )}
-      <div className="breadcrumbs__dropdown">
-        {list
-          .filter(project => project.id.startsWith(searchValue))
-          .map(listItem => {
-            const dropdownItemClassNames = classnames(
-              'breadcrumbs__dropdown-item',
-              'data-ellipsis',
-              selectedItem === listItem.id && 'breadcrumbs__dropdown-item_selected'
-            )
-
-            return (
-              !listItem.hidden &&
-              (listItem.link ? (
-                <a href={listItem.link} key={listItem.id} className={dropdownItemClassNames}>
-                  {listItem.label}
-                </a>
-              ) : (
-                <Link
-                  to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`}
-                  data-testid="breadcrumbs-dropdown-item"
-                  key={listItem.id}
-                  className={dropdownItemClassNames}
-                  onClick={onClick}
-                >
-                  <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
-                    {listItem.label}
-                  </Tooltip>
-                </Link>
-              ))
-            )
-          })}
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
 
 BreadcrumbsDropdown.defaultProps = {
   onClick: () => {},

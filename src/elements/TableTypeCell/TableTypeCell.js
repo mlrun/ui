@@ -19,10 +19,12 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { capitalize } from 'lodash'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { ReactComponent as Code } from 'igz-controls/images/code.svg'
+import { ReactComponent as DatabricksIcon } from 'igz-controls/images/databricks-icon.svg'
 import { ReactComponent as Horovod } from 'igz-controls/images/horovod.svg'
 import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
 import { ReactComponent as Nuclio } from 'igz-controls/images/nuclio.svg'
@@ -30,28 +32,43 @@ import { ReactComponent as Package } from 'igz-controls/images/package.svg'
 import { ReactComponent as Remote } from 'igz-controls/images/ic_remote.svg'
 import { ReactComponent as Spark } from 'igz-controls/images/spark.svg'
 import { ReactComponent as Workflow } from 'igz-controls/images/workflow-icon.svg'
+import {
+  JOB_KIND_DASK,
+  JOB_KIND_DATABRICKS,
+  JOB_KIND_HANDLER,
+  JOB_KIND_MPIJOB,
+  JOB_KIND_JOB,
+  JOB_KIND_LOCAL,
+  JOB_KIND_REMOTE,
+  JOB_KIND_NUCLIO,
+  JOB_KIND_SPARK,
+  JOB_KIND_WORKFLOW
+} from '../../constants'
 
 const TableTypeCell = ({ className, data }) => {
   const typesOfJob = {
     '': { label: 'Local', icon: <Code /> },
-    dask: { label: 'Dask', icon: null },
-    handler: { label: 'Handler', icon: <Jupyter /> },
-    job: { label: 'Job', icon: <Package /> },
-    local: { label: 'Local', icon: <Code /> },
-    mpijob: { label: 'Horovod', icon: <Horovod /> },
-    nuclio: { label: 'Nuclio', icon: <Nuclio /> },
-    remote: { label: 'Remote', icon: <Remote /> },
-    spark: { label: 'Spark', icon: <Spark /> },
-    workflow: { label: 'Workflow', icon: <Workflow /> }
+    [JOB_KIND_DASK]: { label: 'Dask', icon: null },
+    [JOB_KIND_DATABRICKS]: { label: 'Databricks', icon: <DatabricksIcon /> },
+    [JOB_KIND_HANDLER]: { label: 'Handler', icon: <Jupyter /> },
+    [JOB_KIND_JOB]: { label: 'Job', icon: <Package /> },
+    [JOB_KIND_LOCAL]: { label: 'Local', icon: <Code /> },
+    [JOB_KIND_MPIJOB]: { label: 'Horovod', icon: <Horovod /> },
+    [JOB_KIND_NUCLIO]: { label: 'Nuclio', icon: <Nuclio /> },
+    [JOB_KIND_REMOTE]: { label: 'Remote', icon: <Remote /> },
+    [JOB_KIND_SPARK]: { label: 'Spark', icon: <Spark /> },
+    [JOB_KIND_WORKFLOW]: { label: 'Workflow', icon: <Workflow /> }
   }
 
   return (
     <td className={`table-body__cell ${data.class}`}>
       <Tooltip
         className="table-body__cell_type"
-        template={<TextTooltipTemplate text={typesOfJob[data.value]?.label ?? data.value} />}
+        template={
+          <TextTooltipTemplate text={typesOfJob[data.value]?.label ?? capitalize(data.value)} />
+        }
       >
-        {typesOfJob[data.value]?.icon ?? data.value}
+        {typesOfJob[data.value]?.icon ?? capitalize(data.value)}
       </Tooltip>
     </td>
   )

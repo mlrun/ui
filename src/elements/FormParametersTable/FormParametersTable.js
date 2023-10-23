@@ -17,19 +17,27 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { FieldArray } from 'react-final-form-arrays'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 
 import FormParametersRow from './FormParametersRow/FormParametersRow'
 import { FormActionButton } from 'igz-controls/elements'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { useFormTable } from 'igz-controls/hooks/useFormTable.hook'
+import { useFormTable } from 'igz-controls/hooks'
+import { PARAMETERS_FROM_FILE_VALUE, PARAMETERS_FROM_UI_VALUE } from '../../constants'
 
-const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparameters }) => {
+const FormParametersTable = ({
+  disabled,
+  fieldsPath,
+  formState,
+  parametersFromPath,
+  withHyperparameters
+}) => {
+  const withRequiredParametersRef = useRef(true)
   const predefinedPath = `${fieldsPath}.predefined`
   const customPath = `${fieldsPath}.custom`
   const tableClassNames = classnames('form-table', disabled && 'disabled')
@@ -41,6 +49,7 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
     discardOrDelete,
     editingItem,
     enterEditMode,
+    getTableArrayErrors,
     isCurrentRowEditing
   } = useFormTable(formState)
 
@@ -55,6 +64,37 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
     })
 
     return !predefinedContainsName && !customContainsName
+  }
+
+  const validateParameters = (value, allValues) => {
+    let parametersAreFromFile = false
+
+    if (parametersFromPath) {
+      parametersAreFromFile =
+        get(allValues, parametersFromPath, PARAMETERS_FROM_UI_VALUE) === PARAMETERS_FROM_FILE_VALUE
+    }
+
+    withRequiredParametersRef.current = !parametersAreFromFile
+
+    const tableErrors = value.reduce((errorData, parameter, index) => {
+      if (
+        !parametersAreFromFile &&
+        parameter.isRequired &&
+        !parameter.isHidden &&
+        parameter.data?.value === ''
+      ) {
+        errorData[index] = [
+          {
+            name: 'required',
+            label: `'${parameter.data.name}' parameter is required`
+          }
+        ]
+      }
+
+      return errorData
+    }, {})
+
+    return !isEmpty(tableErrors) ? tableErrors : null
   }
 
   return (
@@ -77,49 +117,37 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
         </div>
         <div className="form-table__cell form-table__actions-cell" />
       </div>
-      <FieldArray name={predefinedPath}>
+      <FieldArray name={predefinedPath} validate={validateParameters}>
         {({ fields }) => {
-          return (
-            <>
-              {fields.value?.length > 0 && (
-                <div className="form-table__row form-table__sub-header-row no-hover">
-                  <div className="form-table__cell">Predefined</div>
-                </div>
-              )}
-              {fields.map((rowPath, index) => {
-                return (
-                  <FormParametersRow
-                    applyChanges={applyChanges}
-                    deleteRow={deleteRow}
-                    disabled={disabled}
-                    discardOrDelete={discardOrDelete}
-                    editingItem={editingItem}
-                    enterEditMode={enterEditMode}
-                    fields={fields}
-                    fieldsPath={predefinedPath}
-                    formState={formState}
-                    index={index}
-                    isCurrentRowEditing={isCurrentRowEditing}
-                    key={rowPath}
-                    rowPath={rowPath}
-                    uniquenessValidator={uniquenessValidator}
-                    withHyperparameters={withHyperparameters}
-                  />
-                )
-              })}
-            </>
-          )
+          return fields.map((rowPath, index) => {
+            return (
+              <FormParametersRow
+                applyChanges={applyChanges}
+                deleteRow={deleteRow}
+                disabled={disabled}
+                discardOrDelete={discardOrDelete}
+                editingItem={editingItem}
+                enterEditMode={enterEditMode}
+                fields={fields}
+                fieldsPath={predefinedPath}
+                formState={formState}
+                getTableArrayErrors={getTableArrayErrors}
+                index={index}
+                isCurrentRowEditing={isCurrentRowEditing}
+                key={rowPath}
+                rowPath={rowPath}
+                uniquenessValidator={uniquenessValidator}
+                withHyperparameters={withHyperparameters}
+                withRequiredParameters={withRequiredParametersRef.current}
+              />
+            )
+          })
         }}
       </FieldArray>
       <FieldArray name={customPath}>
         {({ fields }) => {
           return (
             <>
-              {fields.value?.length > 0 && (
-                <div className="form-table__row form-table__sub-header-row no-hover">
-                  <div className="form-table__cell">Custom</div>
-                </div>
-              )}
               {fields.map((rowPath, index) => {
                 return (
                   <FormParametersRow
@@ -132,12 +160,14 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
                     fields={fields}
                     fieldsPath={customPath}
                     formState={formState}
+                    getTableArrayErrors={getTableArrayErrors}
                     index={index}
                     isCurrentRowEditing={isCurrentRowEditing}
                     key={rowPath}
                     rowPath={rowPath}
                     uniquenessValidator={uniquenessValidator}
                     withHyperparameters={withHyperparameters}
+                    withRequiredParameters={withRequiredParametersRef.current}
                   />
                 )
               })}
@@ -173,6 +203,7 @@ const FormParametersTable = ({ disabled, fieldsPath, formState, withHyperparamet
 
 FormParametersTable.defaultProps = {
   disabled: false,
+  parametersFromPath: '',
   withHyperparameters: false
 }
 
@@ -180,6 +211,7 @@ FormParametersTable.propTypes = {
   disabled: PropTypes.bool,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  parametersFromPath: PropTypes.string,
   withHyperparameters: PropTypes.bool
 }
 

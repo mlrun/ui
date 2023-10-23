@@ -142,9 +142,7 @@ function ArtifactsActionBar({
           <div className="action-bar__filters">
             <NameFilter applyChanges={value => applyChanges(value, filterMenuModal.values)} />
             <FilterMenuModal
-              applyButton={{ label: 'Apply', variant: 'secondary' }}
               applyChanges={filterMenuModal => applyChanges(formState.values.name, filterMenuModal)}
-              cancelButton={{ label: 'Clear', variant: 'tertiary' }}
               filterMenuName={filterMenuName}
               initialValues={filtersInitialState}
               restartFormTrigger={tab ?? page}

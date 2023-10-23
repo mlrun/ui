@@ -20,11 +20,17 @@
       padding: 10px 10px 10px 64px;
 
       &.date-picker__input {
+        margin: 0;
+
         &.long-input {
           width: 330px;
         }
       }
     }
+  }
+
+  .date-picker-container {
+    margin: 0 15px 0 0;
   }
 
   .select {

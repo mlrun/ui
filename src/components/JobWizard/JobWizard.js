@@ -47,7 +47,6 @@ import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { useMode } from '../../hooks/mode.hook'
 import {
   JOB_WIZARD_FILTERS,
   MONITOR_JOBS_TAB,
@@ -58,6 +57,7 @@ import {
   SCHEDULE_TAB
 } from '../../constants'
 import { JOB_WIZARD_MODE } from '../../types'
+import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 
 import './jobWizard.scss'
 
@@ -65,6 +65,7 @@ const JobWizard = ({
   defaultData,
   editJob,
   fetchFunctionTemplate,
+  fetchHubFunction,
   frontendSpec,
   functionsStore,
   isBatchInference,
@@ -76,6 +77,7 @@ const JobWizard = ({
   onWizardClose,
   params,
   removeJobFunction,
+  removeHubFunctions,
   runNewJob,
   wizardTitle
 }) => {
@@ -91,14 +93,15 @@ const JobWizard = ({
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState([])
   const [functions, setFunctions] = useState([])
-  const [templatesCategories, setTemplatesCategories] = useState({})
+  const [templatesCategories, setTemplatesCategories] = useState([])
   const [templates, setTemplates] = useState([])
   const [jobAdditionalData, setJobAdditionalData] = useState({})
   const [showSchedule, setShowSchedule] = useState(false)
+  const [activeTab, setActiveTab] = useState(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
+  const [selectedFunctionTab, setSelectedFunctionTab] = useState(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { isStagingMode } = useMode()
   const scheduleButtonRef = useRef()
 
   const closeModal = useCallback(() => {
@@ -131,7 +134,8 @@ const JobWizard = ({
       },
       {
         id: 'runDetails',
-        label: 'Run Details'
+        label: 'Run Details',
+        disabled: isEmpty(selectedFunctionData)
       },
       {
         id: 'dataInputs',
@@ -155,7 +159,7 @@ const JobWizard = ({
         label: 'Advanced',
         getActions: ({ handleSubmit }) => [
           {
-            label: 'Schedule for later',
+            label: isBatchInference ? 'Schedule Infer' : 'Schedule for later',
             onClick: () => {
               setShowSchedule(state => !state)
             },
@@ -163,7 +167,7 @@ const JobWizard = ({
             ref: scheduleButtonRef
           },
           {
-            label: mode === PANEL_EDIT_MODE ? 'Save' : 'Run',
+            label: mode === PANEL_EDIT_MODE ? 'Save' : isBatchInference ? 'Infer now' : 'Run',
             onClick: () => handleSubmit(),
             variant: 'secondary'
           }
@@ -173,12 +177,30 @@ const JobWizard = ({
   }
 
   useEffect(() => {
+    return () => {
+      setFunctions([])
+      setTemplatesCategories([])
+      setTemplates([])
+
+      removeHubFunctions()
+    }
+  }, [removeHubFunctions, setFunctions])
+
+  useEffect(() => {
     if (isBatchInference) {
-      fetchFunctionTemplate('batch_inference/function.yaml').then(functionData => {
-        setSelectedFunctionData(functionData)
+      fetchHubFunction('batch_inference_v2').then(hubFunction => {
+        if (hubFunction) {
+          const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
+
+          fetchFunctionTemplate(functionTemplatePath).then(functionData => {
+            setSelectedFunctionData(functionData)
+          })
+        } else {
+          resolveModal()
+        }
       })
     }
-  }, [fetchFunctionTemplate, isBatchInference])
+  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference, resolveModal])
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
@@ -281,6 +303,7 @@ const JobWizard = ({
         return (
           <>
             <Wizard
+              className="form"
               formState={formState}
               id="jobWizard"
               isWizardOpen={isOpen}
@@ -295,6 +318,7 @@ const JobWizard = ({
                   runJobHandler(formData, selectedFunctionData, params)
                 }
               }}
+              previewText={isBatchInference ? 'Tech Preview' : ''}
               size={MODAL_MAX}
               stepsConfig={getStepsConfig(formState)}
               title={wizardTitle}
@@ -302,6 +326,7 @@ const JobWizard = ({
             >
               {!isEditMode && !isBatchInference && mode !== PANEL_FUNCTION_CREATE_MODE && (
                 <JobWizardFunctionSelection
+                  activeTab={activeTab}
                   defaultData={defaultData}
                   filteredFunctions={filteredFunctions}
                   filteredTemplates={filteredTemplates}
@@ -309,14 +334,16 @@ const JobWizard = ({
                   frontendSpec={frontendSpec}
                   functions={functions}
                   isEditMode={isEditMode}
-                  isStagingMode={isStagingMode}
                   params={params}
                   selectedFunctionData={selectedFunctionData}
+                  selectedFunctionTab={selectedFunctionTab}
+                  setActiveTab={setActiveTab}
                   setFilteredFunctions={setFilteredFunctions}
                   setFilteredTemplates={setFilteredTemplates}
                   setFunctions={setFunctions}
                   setJobAdditionalData={setJobAdditionalData}
                   setSelectedFunctionData={setSelectedFunctionData}
+                  setSelectedFunctionTab={setSelectedFunctionTab}
                   setTemplates={setTemplates}
                   setTemplatesCategories={setTemplatesCategories}
                   templates={templates}
@@ -329,8 +356,8 @@ const JobWizard = ({
                 frontendSpec={frontendSpec}
                 isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
-                isStagingMode={isStagingMode}
                 jobAdditionalData={jobAdditionalData}
+                params={params}
                 selectedFunctionData={selectedFunctionData}
                 setJobAdditionalData={setJobAdditionalData}
               />

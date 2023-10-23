@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { LIST_TUNING_STRATEGY, MAX_SELECTOR_CRITERIA } from '../../../../constants'
+import { LIST_TUNING_STRATEGY, MAX_SELECTOR_CRITERIA, RANDOM_STRATEGY } from '../../../../constants'
 
 export const selectOptions = {
   strategies: [
@@ -27,15 +27,11 @@ export const selectOptions = {
     },
     {
       label: 'Random',
-      id: 'random'
+      id: RANDOM_STRATEGY
     },
     {
       label: 'List',
       id: LIST_TUNING_STRATEGY
-    },
-    {
-      label: 'Custom',
-      id: 'custom'
     }
   ],
   criteria: [

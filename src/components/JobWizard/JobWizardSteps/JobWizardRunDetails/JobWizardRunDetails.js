@@ -17,19 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty, omit, set } from 'lodash'
+import { get, isEmpty, set } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 
 import {
+  ConfirmDialog,
+  FormCheckBox,
+  FormChipCell,
   FormInput,
   FormSelect,
-  ConfirmDialog,
-  FormChipCell,
-  FormCheckBox
+  FormTextarea
 } from 'igz-controls/components'
 
+import { EXISTING_IMAGE_SOURCE } from '../../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 import { getChipOptions } from '../../../../utils/getChipOptions'
@@ -51,13 +53,25 @@ const JobWizardRunDetails = ({
   frontendSpec,
   isBatchInference,
   isEditMode,
-  isStagingMode,
   jobAdditionalData,
+  params,
   selectedFunctionData,
   setJobAdditionalData
 }) => {
   const methodPath = 'runDetails.method'
+  const imageSourcePath = 'runDetails.image.imageSource'
   const [spyOnMethodChange, setSpyOnMethodChange] = useState(true)
+  const commonImageWarningMsg =
+    'The image must include all the software packages that are required to run the function. ' +
+    'For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
+  const batchInferenceWarningMsg =
+    'The image must include all the software packages that are required to run the model. ' +
+    'For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
+
+  const selectedImageSource = useMemo(
+    () => get(formState.values, imageSourcePath, EXISTING_IMAGE_SOURCE),
+    [formState.values]
+  )
 
   const setJobData = useCallback(
     (jobFormData, jobAdditionalData) => {
@@ -83,8 +97,8 @@ const JobWizardRunDetails = ({
         frontendSpec,
         selectedFunctionData,
         defaultData,
-        isEditMode,
-        isStagingMode
+        params.projectName,
+        isEditMode
       )
       setJobData(jobFormData, jobAdditionalData)
     } else if (!isEmpty(selectedFunctionData) && isEmpty(jobAdditionalData)) {
@@ -92,8 +106,8 @@ const JobWizardRunDetails = ({
         frontendSpec,
         selectedFunctionData,
         null,
-        isEditMode,
-        isStagingMode
+        params.projectName,
+        isEditMode
       )
       setJobData(jobFormData, jobAdditionalData)
     }
@@ -103,8 +117,8 @@ const JobWizardRunDetails = ({
     formState.initialValues,
     frontendSpec,
     isEditMode,
-    isStagingMode,
     jobAdditionalData,
+    params.projectName,
     selectedFunctionData,
     setJobAdditionalData,
     setJobData
@@ -121,17 +135,29 @@ const JobWizardRunDetails = ({
     set(formState.initialValues, 'parameters.parametersTable.predefined', predefinedParameters)
     formState.form.change('dataInputs.dataInputsTable', dataInputs)
     formState.form.change('parameters.parametersTable.predefined', predefinedParameters)
+    formState.form.change(
+      'parameters.parametersTable.custom',
+      get(formState.initialValues, 'parameters.parametersTable.custom', [])
+    )
   }
 
   const onMethodChange = (value, prevValue) => {
     setSpyOnMethodChange(false)
 
-    if (
-      areFormValuesChanged(
-        omit(formState.initialValues, methodPath),
-        omit(formState.values, methodPath)
-      )
-    ) {
+    const dataInputsAreChanged = areFormValuesChanged(
+      formState.initialValues.dataInputs.dataInputsTable,
+      formState.values.dataInputs.dataInputsTable
+    )
+    const predefinedParametersAreChanged = areFormValuesChanged(
+      formState.initialValues.parameters.parametersTable.predefined,
+      formState.values.parameters.parametersTable.predefined
+    )
+    const customParametersAreChanged = areFormValuesChanged(
+      formState.initialValues.parameters.parametersTable.custom,
+      formState.values.parameters.parametersTable.custom
+    )
+
+    if (dataInputsAreChanged || predefinedParametersAreChanged || customParametersAreChanged) {
       openPopUp(ConfirmDialog, {
         cancelButton: {
           label: 'Cancel',
@@ -149,7 +175,7 @@ const JobWizardRunDetails = ({
           }
         },
         header: 'Are you sure?',
-        message: 'Some changes might be lost'
+        message: 'Changes made to the Data Inputs and Parameters sections will be lost'
       })
     } else {
       changePredefinedParameters(value)
@@ -158,7 +184,7 @@ const JobWizardRunDetails = ({
 
   return (
     !isEmpty(jobAdditionalData) && (
-      <div className="job-wizard__run-details form">
+      <div className="job-wizard__run-details">
         <div className="form-row">
           <h5 className="form-step-title">Run Details</h5>
         </div>
@@ -186,15 +212,22 @@ const JobWizardRunDetails = ({
               />
             </div>
           )}
-          {jobAdditionalData.methodOptions?.length !== 0 && !isBatchInference && (
-            <div className="form-col-1">
-              <FormSelect
-                name={methodPath}
-                label="Method"
-                options={jobAdditionalData.methodOptions || []}
-              />
-            </div>
-          )}
+          {!isBatchInference ? (
+            jobAdditionalData.methodOptions?.length !== 0 ? (
+              <div className="form-col-1">
+                <FormSelect
+                  label="Method"
+                  name={methodPath}
+                  options={jobAdditionalData.methodOptions || []}
+                  scrollToView={false}
+                />
+              </div>
+            ) : (
+              <div className="form-col-1">
+                <FormInput label="Method" name={methodPath} disabled={isEditMode} />
+              </div>
+            )
+          ) : null}
         </div>
         <div className="form-row">
           <FormChipCell
@@ -207,11 +240,65 @@ const JobWizardRunDetails = ({
             shortChips
             visibleChipsMaxLength="all"
             validationRules={{
-              key: getValidationRules('common.tag'),
-              value: getValidationRules('common.tag')
+              key: getValidationRules('job.label'),
+              value: getValidationRules('job.label')
             }}
           />
         </div>
+
+        {/*todo: Uncomment when BE implements "Building a new image"*/}
+        {/*<div className="form-row">*/}
+        {/*  <FormRadio*/}
+        {/*    name={imageSourcePath}*/}
+        {/*    value={EXISTING_IMAGE_SOURCE}*/}
+        {/*    label="Use an existing image"*/}
+        {/*  />*/}
+        {/*  <FormRadio name={imageSourcePath} value={NEW_IMAGE_SOURCE} label="Build a new image" />*/}
+        {/*</div>*/}
+        {selectedImageSource === EXISTING_IMAGE_SOURCE ? (
+          <>
+            <FormInput
+              name="runDetails.image.imageName"
+              label="Image name"
+              required
+              tip="The name of the function's container image"
+            />
+            <div className="warning-text">
+              {isBatchInference ? batchInferenceWarningMsg : commonImageWarningMsg}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="form-row">
+              <FormInput
+                name="runDetails.image.resultingImage"
+                label="Resulting image"
+                required
+                tip="The name of the built container image"
+              />
+            </div>
+            <div className="form-row">
+              <FormInput
+                name="runDetails.image.baseImage"
+                label="Base image"
+                required
+                tip="The name of a base container image from which to build the function's processor image"
+              />
+            </div>
+            <div className="form-row">
+              <div className="form-col-1">
+                <FormTextarea name="runDetails.image.buildCommands" label="Build commands" />
+              </div>
+              <div className="form-col-1">
+                <FormTextarea
+                  name="runDetails.image.pythonRequirement"
+                  label="Python requirement"
+                />
+              </div>
+            </div>
+          </>
+        )}
+
         {spyOnMethodChange && <OnChange name={methodPath}>{onMethodChange}</OnChange>}
       </div>
     )
@@ -224,8 +311,8 @@ JobWizardRunDetails.propTypes = {
   frontendSpec: PropTypes.shape({}).isRequired,
   isBatchInference: PropTypes.bool.isRequired,
   isEditMode: PropTypes.bool.isRequired,
-  isStagingMode: PropTypes.bool.isRequired,
   jobAdditionalData: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   setJobAdditionalData: PropTypes.func.isRequired
 }

@@ -23,6 +23,7 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constan
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/ml-download.svg'
 import { ReactComponent as UnarchiveIcon } from 'igz-controls/images/unarchive-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -31,39 +32,49 @@ export const pageData = {
 }
 export const generateProjectActionsMenu = (
   projects,
+  exportYaml,
   viewYaml,
   archiveProject,
   unarchiveProject,
-  deleteProject
+  deleteProject,
+  isDemoMode
 ) => {
   let actionsMenu = {}
 
   projects.forEach(project => {
     actionsMenu[project.metadata.name] = [
-      {
-        label: 'Archive',
-        icon: <ArchiveIcon />,
-        hidden: project.status.state === 'archived',
-        onClick: archiveProject
-      },
-      {
-        label: 'Unarchive',
-        icon: <UnarchiveIcon />,
-        hidden: project.status.state === 'online',
-        onClick: unarchiveProject
-      },
-      {
-        label: 'Delete',
-        icon: <Delete />,
-        className: 'danger',
-        hidden: window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
-        onClick: deleteProject
-      },
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: viewYaml
-      }
+      [
+        {
+          label: 'Archive',
+          icon: <ArchiveIcon />,
+          hidden: project.status.state === 'archived',
+          onClick: archiveProject
+        },
+        {
+          label: 'Unarchive',
+          icon: <UnarchiveIcon />,
+          hidden: project.status.state === 'online',
+          onClick: unarchiveProject
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          hidden:
+            window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
+          onClick: deleteProject
+        },
+        {
+          label: 'Export YAML',
+          icon: <DownloadIcon />,
+          onClick: exportYaml
+        },
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: viewYaml
+        }
+      ]
     ]
   })
 
@@ -99,9 +110,10 @@ export const handleDeleteProjectError = (
   project,
   setConfirmData,
   setNotification,
-  dispatch
+  dispatch,
+  deleteNonEmpty
 ) => {
-  if (error.response?.status === 412) {
+  if (error.response?.status === 412 && !deleteNonEmpty) {
     setConfirmData({
       item: project,
       header: 'Delete project?',

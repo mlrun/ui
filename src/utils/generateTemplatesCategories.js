@@ -17,17 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const excludeCategoryKinds = ['serving', 'nuclio', 'remote']
+
+import { functionRunKinds } from '../components/Jobs/jobs.util'
+
+const excludedFunctionNames = ['batch-inference']
 
 export const aliasToCategory = {
+  analysis: 'data-analysis',
   BERT: 'other',
   'concept-drift': 'other',
-  'data-movement': 'data-source',
+  'data-movement': 'etl',
+  'data-source': 'etl',
   embeddings: 'other',
   experimental: 'other',
   ops: 'notifications',
-  'sentiment analysis': 'analysis',
-  serve: 'serving',
+  'sentiment analysis': 'data-analysis',
+  serve: 'model-serving',
+  serving: 'model-serving',
   test: 'other',
   utils: 'other'
 }
@@ -52,7 +58,7 @@ export const generateCategories = functionTemplates => {
         categories: value?.categories.map(category => aliasToCategory[category] ?? category)
       }
     }))
-    .filter(template => !excludeCategoryKinds.includes(template.kind))
+    .filter(template => functionRunKinds.includes(template.kind))
 
   const templatesCategories = {}
 
@@ -69,4 +75,38 @@ export const generateCategories = functionTemplates => {
   })
 
   return { templates, templatesCategories }
+}
+
+export const generateHubCategories = functionTemplates => {
+  const hubFunctions = functionTemplates
+    .map(template => ({
+      ...template,
+      ui: {
+        categories: template.metadata?.categories.map(
+          category => aliasToCategory[category] ?? category
+        ),
+        versions: functionTemplates
+          .filter(funcTemplate => funcTemplate.metadata.name === template.metadata.name)
+          .map(funcTemplate => funcTemplate.metadata.version)
+      }
+    }))
+    .filter(
+      template =>
+        functionRunKinds.includes(template.spec.kind) &&
+        !excludedFunctionNames.includes(template.metadata.name)
+    )
+
+  const hubFunctionsCategories = []
+
+  hubFunctions.forEach(template => {
+    template.metadata.categories.forEach(category => {
+      const valueToAdd = aliasToCategory[category] ?? category
+
+      if (!hubFunctionsCategories.includes(valueToAdd)) {
+        hubFunctionsCategories.push(valueToAdd)
+      }
+    })
+  })
+
+  return { hubFunctions, hubFunctionsCategories }
 }

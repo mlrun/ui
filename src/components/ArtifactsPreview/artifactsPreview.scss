@@ -17,11 +17,6 @@
     flex: 1;
     flex-direction: column;
 
-    &__with-popout {
-      margin-right: 33px;
-      overflow: auto;
-    }
-
     &__header {
       margin-bottom: 30px;
       padding-top: 3px;
@@ -36,6 +31,13 @@
         font-size: 20px;
         line-height: 23px;
       }
+    }
+
+    &__with-popout {
+      display: flex;
+      flex-flow: column;
+      height: 100%;
+      overflow: auto;
     }
 
     .json-content {
@@ -58,6 +60,10 @@
     }
 
     &__no-data {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
       margin-top: 10px;
       font-weight: 500;
       font-size: 16px;

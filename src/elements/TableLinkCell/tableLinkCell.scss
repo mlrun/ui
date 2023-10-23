@@ -2,6 +2,7 @@
 
 .table {
   .table-body__cell {
+    line-height: 20px;
     .name-wrapper {
       display: flex;
       flex: 1;
@@ -42,7 +43,7 @@
       font-size: 12px;
       font-family: Roboto, sans-serif;
       font-style: normal;
-      line-height: 18px;
+      margin-top: 5px;
 
       & > span {
         margin-right: 10px;

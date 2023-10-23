@@ -40,7 +40,12 @@ import {
 } from './targetPath.util'
 import featureStoreActions from '../../actions/featureStore'
 import projectAction from '../../actions/projects'
-import { ARTIFACT_OTHER_TYPE, DATASET_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import {
+  ARTIFACT_OTHER_TYPE,
+  DATASET_TYPE,
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  MODEL_TYPE
+} from '../../constants'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getFeatureReference } from '../../utils/resources'
 
@@ -72,8 +77,11 @@ const TargetPath = ({
   }
 
   const validatePath = allValues => {
-    const { pathType, value } = get(allValues, formStateFieldInfo)
-    return isPathInputInvalid(pathType, value)
+    if (get(allValues, formStateFieldInfo)) {
+      const { pathType, value } = get(allValues, formStateFieldInfo)
+
+      return isPathInputInvalid(pathType, value)
+    }
   }
 
   useEffect(() => {
@@ -152,7 +160,11 @@ const TargetPath = ({
             config: {
               params: {
                 category:
-                  dataInputState.storePathType === 'artifacts' ? ARTIFACT_OTHER_TYPE : DATASET_TYPE
+                  dataInputState.storePathType === 'artifacts'
+                    ? ARTIFACT_OTHER_TYPE
+                    : dataInputState.storePathType === 'datasets'
+                    ? DATASET_TYPE
+                    : MODEL_TYPE
               }
             }
           })

@@ -41,7 +41,7 @@ const JobWizardParameters = ({ formState }) => {
   }, [formState.values.runDetails?.hyperparameter])
 
   return (
-    <div className="job-wizard__parameters form">
+    <div className="job-wizard__parameters">
       <div className="form-row">
         <h5 className="form-step-title">Parameters</h5>
       </div>
@@ -63,6 +63,7 @@ const JobWizardParameters = ({ formState }) => {
       <FormParametersTable
         fieldsPath="parameters.parametersTable"
         formState={formState}
+        parametersFromPath={parametersFromPath}
         withHyperparameters={
           hyperParametersAreEnabled && selectedFromValue === PARAMETERS_FROM_UI_VALUE
         }

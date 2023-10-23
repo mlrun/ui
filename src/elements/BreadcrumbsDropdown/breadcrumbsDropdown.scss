@@ -20,9 +20,12 @@
   }
 
   &-item {
-    display: block;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
     max-width: 300px;
-    padding: 7px 16px;
+    padding: 11px 16px;
 
     &:hover {
       background-color: $alabaster;
@@ -31,6 +34,15 @@
 
     &_selected {
       font-weight: bold;
+    }
+
+    .checkmark {
+      min-width: 24px;
+      margin: 0 0 0 10px;
+
+      path {
+        fill: $chateauGreen;
+      }
     }
   }
 

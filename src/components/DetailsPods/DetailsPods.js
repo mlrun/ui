@@ -52,13 +52,13 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
   }, [selectedPod, table])
 
   return (
-    <div className="pods">
+    <>
       {detailsStore.pods.loading ? (
         <Loader />
       ) : detailsStore.pods.error ? (
         <div className="pods__error">Failed to fetch data. Please try again later.</div>
       ) : table.length > 0 ? (
-        <>
+        <div className="pods">
           <div className="pods__table">
             <div className="pods__table-body">
               {table.map((row, rowIndex) => {
@@ -111,11 +111,11 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
               </div>
             )}
           </div>
-        </>
+        </div>
       ) : (
         detailsStore.pods.podsList.length === 0 && <NoData message={noDataMessage} />
       )}
-    </div>
+    </>
   )
 }
 

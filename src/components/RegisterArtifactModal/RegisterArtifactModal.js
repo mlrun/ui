@@ -86,6 +86,7 @@ const RegisterArtifactModal = ({
     const data = {
       kind: values.kind,
       metadata: {
+        description: values.metadata.description,
         labels: convertChipsData(values.metadata.labels),
         key: values.metadata.key,
         project: projectName,

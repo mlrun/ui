@@ -19,66 +19,72 @@ such restriction.
 */
 import classnames from 'classnames'
 import dagre from 'dagre'
-import { isEdge, isNode, Position } from 'react-flow-renderer'
+import { Position } from 'reactflow'
 
-export const getLayoutedElements = (elements, direction = 'TB') => {
+export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   const elWidth = 300
   const elHeight = 80
   const dagreGraph = new dagre.graphlib.Graph()
   const isHorizontal = direction === 'LR'
+  let layoutedNodes = []
+  let layoutedEdges = []
 
   dagreGraph.setDefaultEdgeLabel(() => ({}))
   dagreGraph.setGraph({ rankdir: direction })
 
-  elements.forEach(el => {
-    if (isNode(el)) {
-      dagreGraph.setNode(el.id, { width: elWidth, height: elHeight })
-    } else {
-      dagreGraph.setEdge(el.source, el.target)
-    }
+  nodes.forEach(node => {
+    dagreGraph.setNode(node.id, { width: elWidth, height: elHeight })
+  })
+
+  edges.forEach(edge => {
+    dagreGraph.setEdge(edge.source, edge.target)
   })
 
   dagre.layout(dagreGraph)
 
-  const selectedNode = elements.find(el => el.className?.includes('selected'))
+  const selectedNode = nodes.find(node => node.className?.includes('selected'))
 
-  return elements.map(el => {
-    if (isNode(el)) {
-      const nodeWithPosition = dagreGraph.node(el.id)
-      el.targetPosition = isHorizontal ? 'left' : 'top'
-      el.sourcePosition = isHorizontal ? 'right' : 'bottom'
+  layoutedNodes = nodes.map(node => {
+    const nodeWithPosition = dagreGraph.node(node.id)
+    node.targetPosition = isHorizontal ? 'left' : 'top'
+    node.sourcePosition = isHorizontal ? 'right' : 'bottom'
 
-      el.className = classnames(
-        el.className,
-        el.data.subType,
-        el.data.isSelectable && 'selectable',
-        el.data.isOvalShape && 'oval-shape',
-        el.data.isOpacity && 'with-opacity'
-      )
+    node.className = classnames(
+      node.className,
+      node.data.subType,
+      node.data.isSelectable && 'selectable',
+      node.data.isOvalShape && 'oval-shape',
+      node.data.isOpacity && 'with-opacity'
+    )
 
-      el.style = {
-        width: elWidth,
-        height: elHeight,
-        pointerEvents: 'all'
-      }
-
-      // unfortunately we need this little hack to pass a slighltiy different position
-      // in order to notify react flow about the change
-      el.position = {
-        x: nodeWithPosition.x + Math.random() / 1000,
-        y: nodeWithPosition.y
-      }
-    } else if (isEdge(el)) {
-      const isSelected =
-        el.data.isSelectable &&
-        selectedNode?.id &&
-        (el.source === selectedNode.id || el.target === selectedNode.id)
-
-      el.className = classnames(el.className, isSelected && 'selected')
+    node.style = {
+      width: elWidth,
+      height: elHeight,
+      pointerEvents: 'all'
     }
 
-    return el
+    // unfortunately we need this little hack to pass a slighltiy different position
+    // in order to notify react flow about the change
+    node.position = {
+      x: nodeWithPosition.x + Math.random() / 1000,
+      y: nodeWithPosition.y
+    }
+
+    return node
   })
+
+  layoutedEdges = edges.map(edge => {
+    const isSelected =
+      edge.data.isSelectable &&
+      selectedNode?.id &&
+      (edge.source === selectedNode.id || edge.target === selectedNode.id)
+
+    edge.className = classnames(edge.className, isSelected && 'selected')
+
+    return edge
+  })
+
+  return [layoutedNodes, layoutedEdges]
 }
 
 // this helper function returns the intersection point

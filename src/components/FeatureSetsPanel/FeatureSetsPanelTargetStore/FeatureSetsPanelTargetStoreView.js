@@ -31,16 +31,23 @@ import Select from '../../../common/Select/Select'
 import UrlPath from '../UrlPath'
 import { Tip, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME, V3IO_INPUT_PATH_SCHEME } from '../../../constants'
+import {
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  REDIS_INPUT_PATH_SCHEME,
+  V3IO_INPUT_PATH_SCHEME
+} from '../../../constants'
 
 import {
+  checkboxModels,
   EXTERNAL_OFFLINE,
   externalOfflineKindOptions,
+  getInvalidParquetPathMessage,
+  isParquetPathValid,
+  onlineKindOptions,
+  NOSQL,
   ONLINE,
   PARQUET,
-  checkboxModels,
-  isParquetPathValid,
-  getInvalidParquetPathMessage
+  REDISNOSQL
 } from './featureSetsPanelTargetStore.util'
 
 import { comboboxSelectList } from '../UrlPath.utils'
@@ -57,6 +64,7 @@ import './featureSetsPanelTargetStore.scss'
 const FeatureSetsPanelTargetStoreView = ({
   data,
   disableButtons,
+  externalOfflineTarget,
   featureStore,
   frontendSpecIsNotEmpty,
   handleAdvancedLinkClick,
@@ -66,6 +74,7 @@ const FeatureSetsPanelTargetStoreView = ({
   handleKeyBucketingNumberChange,
   handleOfflineKindPathChange,
   handleOnlineKindPathChange,
+  handleOnlineKindTypeChange,
   handleExternalOfflineKindTypeChange,
   handlePartitionColsOnBlur,
   handlePartitionColsOnChange,
@@ -77,6 +86,7 @@ const FeatureSetsPanelTargetStoreView = ({
   selectedPartitionKind,
   selectedTargetKind,
   setData,
+  setTargetsPathEditData,
   setValidation,
   showAdvanced,
   targetsPathEditData,
@@ -106,21 +116,45 @@ const FeatureSetsPanelTargetStoreView = ({
               <div className="target-store__path-wrapper">
                 {targetsPathEditData.online.isEditMode && (
                   <>
+                    <Select
+                      density="medium"
+                      disabled={featureStore.newFeatureSet.spec.passthrough}
+                      floatingLabel
+                      label="NOSQL Kind"
+                      onClick={handleOnlineKindTypeChange}
+                      options={onlineKindOptions}
+                      selectedId={data.online.kind}
+                    />
+
                     <Input
-                      density="normal"
+                      density="medium"
                       floatingLabel
                       focused={frontendSpecIsNotEmpty}
                       invalid={!validation.isOnlineTargetPathValid}
+                      invalidText={
+                        data.online.kind === REDISNOSQL && /[{}]/g.test(data.online.path)
+                          ? 'Invalid Redis URL, change the URL to a valid URL in the form of <redis|rediss>:///<host>[:port]'
+                          : ''
+                      }
                       label="Path"
-                      onChange={path =>
+                      onChange={path => {
+                        setTargetsPathEditData(prevState => ({
+                          ...prevState,
+                          online: {
+                            ...prevState.online,
+                            isModified: true
+                          }
+                        }))
                         setData(prevState => ({
                           ...prevState,
                           online: { ...prevState.online, path }
                         }))
-                      }
-                      placeholder={
-                        'v3io:///projects/{project}/FeatureStore/{name}/nosql/sets/{name}'
-                      }
+                      }}
+                      placeholder={`${
+                        data.online.kind === NOSQL
+                          ? V3IO_INPUT_PATH_SCHEME
+                          : REDIS_INPUT_PATH_SCHEME + '{authority}/'
+                      }projects/{project}/FeatureStore/{name}/${data.online.kind}/sets/{name}`}
                       required
                       setInvalid={value =>
                         setValidation(state => ({
@@ -151,7 +185,10 @@ const FeatureSetsPanelTargetStoreView = ({
                 {!targetsPathEditData.online.isEditMode && (
                   <>
                     <Tooltip
-                      className="path-data online-path"
+                      className={classNames(
+                        'path-data online-path',
+                        !validation.isOnlineTargetPathValid && 'online-path__invalid'
+                      )}
                       template={<TextTooltipTemplate text={data.online.path} />}
                     >
                       {data.online.path}
@@ -198,6 +235,13 @@ const FeatureSetsPanelTargetStoreView = ({
                       invalidText={getInvalidParquetPathMessage(data.parquet)}
                       label="Path"
                       onChange={path => {
+                        setTargetsPathEditData(prevState => ({
+                          ...prevState,
+                          parquet: {
+                            ...prevState.parquet,
+                            isModified: true
+                          }
+                        }))
                         setData(state => ({
                           ...state,
                           parquet: { ...state.parquet, path }
@@ -291,7 +335,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       partitionRadioButtonsState={partitionRadioButtonsState.parquet}
                       rangeOnChange={value => handleKeyBucketingNumberChange(value, PARQUET)}
                       selectedPartitionKind={selectedPartitionKind.parquet}
-                      setValidation={value =>
+                      setPartitionColumnsValidation={value =>
                         setValidation(state => ({
                           ...state,
                           isOfflinePartitionColumnsValid: value
@@ -303,7 +347,10 @@ const FeatureSetsPanelTargetStoreView = ({
                       triggerPartitionAdvancedCheckboxes={value =>
                         triggerPartitionAdvancedCheckboxes(value, PARQUET)
                       }
-                      validation={validation.isOfflinePartitionColumnsValid}
+                      validation={{
+                        partitionBuckets: validation.isOfflinePartitionBucketsValid,
+                        partitionColumns: validation.isOfflinePartitionColumnsValid
+                      }}
                     />
                   </CSSTransition>
                 </div>
@@ -349,6 +396,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       option.id !== V3IO_INPUT_PATH_SCHEME
                   )}
                   disabled={featureStore.newFeatureSet.spec.passthrough}
+                  defaultPath={externalOfflineTarget}
                   invalid={!validation.isExternalOfflineTargetPathValid}
                   handleUrlOnBlur={handleExternalOfflineKindPathOnBlur}
                   handleUrlOnFocus={handleExternalOfflineKindPathOnFocus}
@@ -391,7 +439,7 @@ const FeatureSetsPanelTargetStoreView = ({
                         handleKeyBucketingNumberChange(value, EXTERNAL_OFFLINE)
                       }
                       selectedPartitionKind={selectedPartitionKind.externalOffline}
-                      setValidation={value =>
+                      setPartitionColumnsValidation={value =>
                         setValidation(state => ({
                           ...state,
                           isExternalOfflinePartitionColumnsValid: value
@@ -403,7 +451,10 @@ const FeatureSetsPanelTargetStoreView = ({
                       triggerPartitionAdvancedCheckboxes={value =>
                         triggerPartitionAdvancedCheckboxes(value, EXTERNAL_OFFLINE)
                       }
-                      validation={validation.isExternalOfflinePartitionColumnsValid}
+                      validation={{
+                        partitionBuckets: validation.isExternalOfflinePartitionBucketsValid,
+                        partitionColumns: validation.isExternalOfflinePartitionColumnsValid
+                      }}
                     />
                   </CSSTransition>
                 </div>
@@ -420,12 +471,14 @@ const FeatureSetsPanelTargetStoreView = ({
 }
 
 FeatureSetsPanelTargetStoreView.defualtProps = {
+  externalOfflineTarget: {},
   handleUrlSelectOnChange: null
 }
 
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   disableButtons: PropTypes.shape({}).isRequired,
+  externalOfflineTarget: PropTypes.shape({}),
   frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,
@@ -435,6 +488,7 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,
   handleOfflineKindPathChange: PropTypes.func.isRequired,
   handleOnlineKindPathChange: PropTypes.func.isRequired,
+  handleOnlineKindTypeChange: PropTypes.func.isRequired,
   handlePartitionColsOnBlur: PropTypes.func.isRequired,
   handlePartitionColsOnChange: PropTypes.func.isRequired,
   handlePartitionRadioButtonClick: PropTypes.func.isRequired,
@@ -451,6 +505,7 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   }).isRequired,
   selectedTargetKind: PropTypes.arrayOf(PropTypes.string).isRequired,
   setData: PropTypes.func.isRequired,
+  setTargetsPathEditData: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   showAdvanced: PropTypes.shape({
     parquet: PropTypes.bool.isRequired,

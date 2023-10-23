@@ -3,12 +3,17 @@
 @import '~igz-controls/scss/mixins';
 
 .details-statistics {
-  padding: 0 20px 20px;
-  overflow: auto;
-
   @include detailsMetadataStatisticsTable;
 
   &__table {
+    &-wrapper {
+      padding: 0 0 20px 0;
+    }
+
+    &-header {
+      padding: 15px 0;
+    }
+
     .statistics-cell {
       &__type {
         &_icon {

@@ -17,30 +17,34 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep, isEmpty, isNumber } from 'lodash'
 
 import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import featureStoreActions from '../../../actions/featureStore'
 import {
-  EXTERNAL_OFFLINE,
-  EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
-  NOSQL,
-  PARQUET,
   checkboxModels,
   dataInitialState,
+  EXTERNAL_OFFLINE,
+  EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
   generatePath,
+  handlePathChange,
   isShowAdvancedInitialState,
+  NOSQL,
+  ONLINE,
+  PARQUET,
   partitionRadioButtonsInitialState,
+  REDISNOSQL,
   selectedPartitionKindInitialState,
   selectedTargetKindInitialState,
-  targetsPathEditDataInitialState,
-  handlePathChange,
-  ONLINE
+  targetsPathEditDataInitialState
 } from './featureSetsPanelTargetStore.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { isUrlInputValid } from '../UrlPath.utils'
 
@@ -64,6 +68,7 @@ const FeatureSetsPanelTargetStore = ({
   )
   const [targetsPathEditData, setTargetsPathEditData] = useState(targetsPathEditDataInitialState)
   const [passthroughtEnabled, setPassThrouthEnabled] = useState(false)
+  const [previousTargets, setPreviousTargets] = useState({})
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const onlineTarget = useMemo(
@@ -76,6 +81,14 @@ const FeatureSetsPanelTargetStore = ({
     [featureStore.newFeatureSet.spec.targets]
   )
 
+  const externalOfflineTarget = useMemo(
+    () =>
+      featureStore.newFeatureSet.spec.targets.find(
+        targetKind => targetKind.name === EXTERNAL_OFFLINE
+      ),
+    [featureStore.newFeatureSet.spec.targets]
+  )
+
   useEffect(() => {
     if (!targetsPathEditData.online.isModified && !targetsPathEditData.online.isEditMode) {
       setData(state => ({
@@ -85,7 +98,7 @@ const FeatureSetsPanelTargetStore = ({
           path: generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
-            NOSQL,
+            state.online.kind,
             featureStore.newFeatureSet.metadata.name,
             ''
           )
@@ -120,6 +133,21 @@ const FeatureSetsPanelTargetStore = ({
   ])
 
   useEffect(() => {
+    setValidation(prevState => ({
+      ...prevState,
+      isTargetStoreValid: featureStore.newFeatureSet.spec.passthrough
+        ? true
+        : selectedTargetKind.length &&
+          Object.values(selectedPartitionKind).every(partitionKind => partitionKind.length)
+    }))
+  }, [
+    featureStore.newFeatureSet.spec.passthrough,
+    selectedPartitionKind,
+    selectedTargetKind.length,
+    setValidation
+  ])
+
+  useEffect(() => {
     if (
       (onlineTarget &&
         onlineTarget.path !== data.online.path &&
@@ -140,11 +168,14 @@ const FeatureSetsPanelTargetStore = ({
             featureStore.newFeatureSet.metadata.name,
             data.parquet.partitioned ? '' : PARQUET
           )
-        } else if (target.kind === NOSQL && !targetsPathEditData.online.isModified) {
+        } else if (
+          [REDISNOSQL, NOSQL].includes(target.kind) &&
+          !targetsPathEditData.online.isModified
+        ) {
           target.path = generatePath(
             frontendSpec.feature_store_data_prefixes,
             project,
-            NOSQL,
+            target.kind,
             featureStore.newFeatureSet.metadata.name,
             ''
           )
@@ -199,6 +230,13 @@ const FeatureSetsPanelTargetStore = ({
     }
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
 
+  useEffect(() => {
+    setValidation(state => ({
+      ...state,
+      isOnlineTargetPathValid: true
+    }))
+  }, [data.online.kind, setValidation])
+
   const handleAdvancedLinkClick = kind => {
     setShowAdvanced(prev => ({
       ...prev,
@@ -213,6 +251,14 @@ const FeatureSetsPanelTargetStore = ({
         ...state[kind],
         key_bucketing_number
       }
+    }))
+
+    setValidation(state => ({
+      ...state,
+      [kind === PARQUET
+        ? 'isOfflinePartitionBucketsValid'
+        : 'isExternalOfflinePartitionBucketsValid']:
+        isNumber(key_bucketing_number) && Number(key_bucketing_number) >= 0
     }))
 
     setNewFeatureSetTarget(
@@ -321,7 +367,7 @@ const FeatureSetsPanelTargetStore = ({
   const handleDiscardPathChange = kind => {
     const currentStoreType = kind === ONLINE ? NOSQL : kind
     const currentKind = featureStore.newFeatureSet.spec.targets.find(
-      el => el.kind === currentStoreType
+      el => el.name === currentStoreType
     )
 
     if (currentKind.path.length > 0) {
@@ -329,6 +375,7 @@ const FeatureSetsPanelTargetStore = ({
         ...state,
         [kind]: {
           ...state[kind],
+          kind: currentKind.kind,
           path: kind === PARQUET ? offlineTarget.path : onlineTarget.path
         }
       }))
@@ -378,6 +425,23 @@ const FeatureSetsPanelTargetStore = ({
         return targetKind
       })
     )
+  }
+
+  const handleOnlineKindTypeChange = kind => {
+    setData(state => ({
+      ...state,
+      online: {
+        ...state.online,
+        kind,
+        path: generatePath(
+          frontendSpec.feature_store_data_prefixes,
+          project,
+          kind,
+          featureStore.newFeatureSet.metadata.name,
+          ''
+        )
+      }
+    }))
   }
 
   const handlePartitionColsOnBlur = kind => {
@@ -502,67 +566,140 @@ const FeatureSetsPanelTargetStore = ({
     ]
   )
 
-  const clearTargets = useCallback(() => {
-    setSelectedTargetKind([])
-    setNewFeatureSetTarget([])
-    setTargetsPathEditData(state => ({
-      ...state,
-      [PARQUET]: {
-        isEditMode: false,
-        isModified: false
-      },
-      [EXTERNAL_OFFLINE]: {
-        isEditMode: false,
-        isModified: false
-      },
-      [ONLINE]: {
-        isEditMode: false,
-        isModified: false
-      }
-    }))
-    setDisableButtons(state => ({
-      ...state,
-      isOfflineTargetPathEditModeClosed: true,
-      isOnlineTargetPathEditModeClosed: true
-    }))
-    setValidation(state => ({
-      ...state,
-      isOfflineTargetPathValid: true,
-      isOnlineTargetPathValid: true,
-      isExternalOfflineTargetPathValid: true
-    }))
-    setData(state => ({
-      ...state,
-      [PARQUET]: { ...dataInitialState[PARQUET] },
-      [EXTERNAL_OFFLINE]: { ...dataInitialState[EXTERNAL_OFFLINE] }
-    }))
-    setShowAdvanced(prev => ({
-      ...prev,
-      [PARQUET]: false,
-      [EXTERNAL_OFFLINE]: false
-    }))
-    setPartitionRadioButtonsState(state => ({
-      ...state,
-      [PARQUET]: 'districtKeys',
-      [EXTERNAL_OFFLINE]: 'districtKeys'
-    }))
-    setSelectedPartitionKind(state => {
-      return {
+  const clearTargets = useCallback(
+    keepOnlineTarget => {
+      setSelectedTargetKind(keepOnlineTarget ? [ONLINE] : [])
+      setNewFeatureSetTarget(keepOnlineTarget ? [onlineTarget] : [])
+
+      setTargetsPathEditData(state => ({
         ...state,
-        [PARQUET]: [...selectedPartitionKindInitialState[PARQUET]],
-        [EXTERNAL_OFFLINE]: [...selectedPartitionKindInitialState[EXTERNAL_OFFLINE]]
-      }
-    })
-  }, [setDisableButtons, setNewFeatureSetTarget, setValidation])
+        [PARQUET]: {
+          isEditMode: false,
+          isModified: false
+        },
+        [EXTERNAL_OFFLINE]: {
+          isEditMode: false,
+          isModified: false
+        },
+        [ONLINE]: {
+          isEditMode: false,
+          isModified: keepOnlineTarget ? state[ONLINE].isModified : false
+        }
+      }))
+      setDisableButtons(state => ({
+        ...state,
+        isOfflineTargetPathEditModeClosed: true,
+        isOnlineTargetPathEditModeClosed: true
+      }))
+      setValidation(state => ({
+        ...state,
+        isOfflineTargetPathValid: true,
+        isExternalOfflineTargetPathValid: true,
+        isTargetStoreValid: true
+      }))
+      setData(state => ({
+        ...state,
+        [PARQUET]: { ...dataInitialState[PARQUET] },
+        [EXTERNAL_OFFLINE]: { ...dataInitialState[EXTERNAL_OFFLINE] }
+      }))
+      setShowAdvanced(prev => ({
+        ...prev,
+        [PARQUET]: false,
+        [EXTERNAL_OFFLINE]: false
+      }))
+      setPartitionRadioButtonsState(state => ({
+        ...state,
+        [PARQUET]: 'districtKeys',
+        [EXTERNAL_OFFLINE]: 'districtKeys'
+      }))
+      setSelectedPartitionKind(state => {
+        return {
+          ...state,
+          [PARQUET]: [...selectedPartitionKindInitialState[PARQUET]],
+          [EXTERNAL_OFFLINE]: [...selectedPartitionKindInitialState[EXTERNAL_OFFLINE]]
+        }
+      })
+    },
+    [onlineTarget, setDisableButtons, setNewFeatureSetTarget, setValidation]
+  )
+
+  const restoreTargets = useCallback(() => {
+    setSelectedTargetKind(previousTargets.selectedTargetKind)
+    setNewFeatureSetTarget([...previousTargets.featureSetTargets])
+    setData({ ...previousTargets.data })
+    setSelectedPartitionKind({ ...previousTargets.selectedPartitionKind })
+    setPartitionRadioButtonsState({ ...previousTargets.partitionRadioButtonsState })
+    setPreviousTargets({})
+  }, [
+    previousTargets.data,
+    previousTargets.featureSetTargets,
+    previousTargets.partitionRadioButtonsState,
+    previousTargets.selectedPartitionKind,
+    previousTargets.selectedTargetKind,
+    setNewFeatureSetTarget
+  ])
 
   useEffect(() => {
     if (featureStore.newFeatureSet.spec.passthrough && !passthroughtEnabled) {
-      clearTargets()
+      setPreviousTargets({
+        data: {
+          ...data,
+          [PARQUET]: {
+            ...data[PARQUET],
+            path: data[PARQUET].path ?? offlineTarget.path
+          },
+          [ONLINE]: {
+            ...data[ONLINE],
+            path: data[ONLINE].path ?? onlineTarget.path
+          }
+        },
+        featureSetTargets: featureStore.newFeatureSet.spec.targets,
+        selectedPartitionKind,
+        selectedTargetKind,
+        partitionRadioButtonsState
+      })
+
       setPassThrouthEnabled(true)
+
+      if (selectedTargetKind.includes(ONLINE)) {
+        openPopUp(ConfirmDialog, {
+          confirmButton: {
+            label: 'Unset online-target',
+            variant: SECONDARY_BUTTON,
+            handler: () => {
+              clearTargets(false)
+            }
+          },
+          cancelButton: {
+            label: 'Keep online-target set',
+            variant: TERTIARY_BUTTON,
+            handler: () => {
+              clearTargets(true)
+            }
+          },
+          message:
+            'Passthrough set to "enabled" while online-target is set. Do you want to unset online-target?'
+        })
+      } else {
+        clearTargets(false)
+      }
     } else if (!featureStore.newFeatureSet.spec.passthrough && passthroughtEnabled) {
+      restoreTargets()
       setPassThrouthEnabled(false)
     }
-  }, [clearTargets, featureStore.newFeatureSet.spec.passthrough, passthroughtEnabled])
+  }, [
+    clearTargets,
+    data,
+    featureStore.newFeatureSet.spec.passthrough,
+    featureStore.newFeatureSet.spec.targets,
+    offlineTarget,
+    onlineTarget,
+    partitionRadioButtonsState,
+    passthroughtEnabled,
+    restoreTargets,
+    selectedPartitionKind,
+    selectedTargetKind
+  ])
 
   const handlePartitionRadioButtonClick = (value, target) => {
     const keyBucketingNumber = value === 'districtKeys' ? 0 : 1
@@ -776,6 +913,7 @@ const FeatureSetsPanelTargetStore = ({
     <FeatureSetsPanelTargetStoreView
       data={data}
       disableButtons={disableButtons}
+      externalOfflineTarget={externalOfflineTarget}
       featureStore={featureStore}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleDiscardPathChange={handleDiscardPathChange}
@@ -785,6 +923,7 @@ const FeatureSetsPanelTargetStore = ({
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
       handleOfflineKindPathChange={handleOfflineKindPathChange}
       handleOnlineKindPathChange={handleOnlineKindPathChange}
+      handleOnlineKindTypeChange={handleOnlineKindTypeChange}
       handlePartitionColsOnChange={handlePartitionColsOnChange}
       handlePartitionColsOnBlur={handlePartitionColsOnBlur}
       handlePartitionRadioButtonClick={handlePartitionRadioButtonClick}
@@ -796,6 +935,7 @@ const FeatureSetsPanelTargetStore = ({
       selectedPartitionKind={selectedPartitionKind}
       selectedTargetKind={selectedTargetKind}
       setData={setData}
+      setTargetsPathEditData={setTargetsPathEditData}
       setValidation={setValidation}
       showAdvanced={showAdvanced}
       targetsPathEditData={targetsPathEditData}

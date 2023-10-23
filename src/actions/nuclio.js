@@ -84,8 +84,6 @@ const nuclioActions = {
       })
       .catch(error => {
         dispatch(nuclioActions.fetchNuclioFunctionsFailure(error.message))
-
-        throw error.message
       })
   },
   fetchNuclioFunctionsBegin: () => ({

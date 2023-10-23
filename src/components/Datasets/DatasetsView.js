@@ -38,6 +38,7 @@ import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './datasets.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { removeDataSet } from '../../reducers/artifactsReducer'
+import { ACTIONS_MENU } from '../../types'
 
 const DatasetsView = React.forwardRef(
   (
@@ -141,6 +142,9 @@ const DatasetsView = React.forwardRef(
               {viewMode === FULL_VIEW_MODE && (
                 <Details
                   actionsMenu={actionsMenu}
+                  applyDetailsChanges={applyDetailsChanges}
+                  applyDetailsChangesCallback={applyDetailsChangesCallback}
+                  formInitialValues={detailsFormInitialValues}
                   detailsMenu={pageData.details.menu}
                   handleRefresh={handleRefresh}
                   isDetailsScreen
@@ -168,7 +172,7 @@ DatasetsView.defaultProps = {
 }
 
 DatasetsView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,

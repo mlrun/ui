@@ -29,7 +29,7 @@ import {
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { parseArtifacts } from '../utils/parseArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
-import { ARTIFACTS, DATASETS, MODELS_TAB } from '../constants'
+import { ARTIFACTS, DATASETS, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
 import functionsApi from '../api/functions-api'
 import { parseFunctions } from '../utils/parseFunctions'
@@ -138,7 +138,7 @@ export const fetchArtifactsFunctions = createAsyncThunk(
   ({ project, filters }) => {
     return functionsApi.getFunctions(project, filters).then(({ data }) => {
       return parseFunctions(
-        data.funcs.filter(func => func.kind === 'serving' && func.metadata.tag?.length)
+        data.funcs.filter(func => func.kind === FUNCTION_TYPE_SERVING && func.metadata.tag?.length)
       )
     })
   }
@@ -264,6 +264,7 @@ const artifactsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchFiles.rejected, defaultRejectedHandler)
+    builder.addCase(fetchArtifactsFunctions.pending, defaultPendingHandler)
     builder.addCase(fetchArtifactsFunctions.fulfilled, (state, action) => {
       state.error = null
       state.pipelines = action.payload
