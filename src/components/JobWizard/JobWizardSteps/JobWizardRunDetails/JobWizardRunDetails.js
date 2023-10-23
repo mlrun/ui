@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { get, isEmpty, set } from 'lodash'
+import { chain, get, isEmpty, set } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 
 import {
@@ -28,7 +28,9 @@ import {
   FormChipCell,
   FormInput,
   FormSelect,
-  FormTextarea
+  FormTextarea,
+  Tooltip,
+  TextTooltipTemplate
 } from 'igz-controls/components'
 
 import { EXISTING_IMAGE_SOURCE } from '../../../../constants'
@@ -44,6 +46,7 @@ import {
   parseDataInputs,
   parsePredefinedParameters
 } from '../../JobWizard.util'
+import { isEveryObjectValueEmpty } from '../../../../utils/isEveryObjectValueEmpty'
 
 import './jobWizardRunDetails.scss'
 
@@ -56,7 +59,9 @@ const JobWizardRunDetails = ({
   jobAdditionalData,
   params,
   selectedFunctionData,
-  setJobAdditionalData
+  selectedMethod,
+  setJobAdditionalData,
+  setSelectedMethod
 }) => {
   const methodPath = 'runDetails.method'
   const imageSourcePath = 'runDetails.image.imageSource'
@@ -182,6 +187,28 @@ const JobWizardRunDetails = ({
     }
   }
 
+  useEffect(() => {
+    if (!isEditMode && get(formState.values, methodPath) !== selectedMethod.name) {
+      const data = chain(selectedFunctionData.functions)
+        .orderBy('metadata.updated', 'desc')
+        .map(func => {
+          return func.spec.entry_points ? func.spec.entry_points : {}
+        })
+        .flatten()
+        .unionBy('name')
+        .get([0, get(formState.values, methodPath)])
+        .value()
+
+      setSelectedMethod(data || {})
+    }
+  }, [
+    formState.values,
+    isEditMode,
+    selectedFunctionData.functions,
+    selectedMethod.name,
+    setSelectedMethod
+  ])
+
   return (
     !isEmpty(jobAdditionalData) && (
       <div className="job-wizard__run-details">
@@ -298,6 +325,36 @@ const JobWizardRunDetails = ({
             </div>
           </>
         )}
+        {selectedMethod?.doc && (
+          <>
+            <div className="form-row form-table-title">Description</div>
+            <div className="form-row">{selectedMethod.doc}</div>
+          </>
+        )}
+        {selectedMethod?.outputs?.length > 0 &&
+          selectedMethod.outputs.every(output => !isEveryObjectValueEmpty(output)) && (
+            <>
+              <div className="form-row form-table-title">Outputs</div>
+              <div className="form-table">
+                <div className="form-table__row form-table__header-row no-hover">
+                  <div className="form-table__cell form-table__cell_1">
+                    <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>
+                  </div>
+                  <div className="form-table__cell form-table__cell_1">
+                    <Tooltip template={<TextTooltipTemplate text="Description" />}>Description</Tooltip>
+                  </div>
+                </div>
+                {selectedMethod?.outputs.map(output => {
+                  return (
+                    <div className="form-table__row" key={output?.doc || output?.type}>
+                      <div className="form-table__cell form-table__cell_1">{output?.type}</div>
+                      <div className="form-table__cell form-table__cell_1">{output?.doc}</div>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          )}
 
         {spyOnMethodChange && <OnChange name={methodPath}>{onMethodChange}</OnChange>}
       </div>
@@ -314,7 +371,9 @@ JobWizardRunDetails.propTypes = {
   jobAdditionalData: PropTypes.shape({}).isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
-  setJobAdditionalData: PropTypes.func.isRequired
+  selectedMethod: PropTypes.object.isRequired,
+  setJobAdditionalData: PropTypes.func.isRequired,
+  setSelectedMethod: PropTypes.func.isRequired
 }
 
 export default JobWizardRunDetails

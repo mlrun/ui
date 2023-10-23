@@ -21,7 +21,7 @@ import React, { useEffect, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import { FormInput, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
+import { FormInput, TextTooltipTemplate, Tip, Tooltip, FormCheckBox } from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
 import TargetPath from '../../../common/TargetPath/TargetPath'
 
@@ -41,6 +41,8 @@ import {
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
 } from '../../../constants'
+
+import './formDataInputsRow.scss'
 
 const FormDataInputsRow = ({
   applyChanges,
@@ -67,10 +69,22 @@ const FormDataInputsRow = ({
     setFieldData(fields.value[index])
   }, [fields.value, index])
 
+  const isRowDisabled = () => {
+    return disabled || !fieldData.data?.isChecked
+  }
+
   return (
     <>
       {isCurrentRowEditing(rowPath) && !disabled ? (
         <div className={classnames('form-table__row', 'form-table__row_active')} key={index}>
+          <div className="form-table__cell form-table__cell_min">
+            {!fieldData.isRequired && (
+              <FormCheckBox
+                name={`${rowPath}.data.isChecked`}
+                onClick={event => event.stopPropagation()}
+              />
+            )}
+          </div>
           <div className="form-table__cell form-table__cell_1">
             <FormInput
               density="normal"
@@ -126,7 +140,10 @@ const FormDataInputsRow = ({
         <div
           className={classnames(
             'form-table__row',
-            fieldData.isRequired && index in getTableArrayErrors(fieldsPath) && 'form-table__row_invalid'
+            fieldData.isRequired &&
+              index in getTableArrayErrors(fieldsPath) &&
+              'form-table__row_invalid',
+            !fieldData.data?.isChecked && 'form-table__row_excluded'
           )}
           key={index}
           onClick={event => {
@@ -136,9 +153,17 @@ const FormDataInputsRow = ({
               setDataInputState,
               fields.value[index].data.fieldInfo.value
             )
-            enterEditMode(event, fields, fieldsPath, index)
+            !isRowDisabled() && enterEditMode(event, fields, fieldsPath, index)
           }}
         >
+          <div className="form-table__cell form-table__cell_min">
+            {!fieldData.isRequired && (
+              <FormCheckBox
+                name={`${rowPath}.data.isChecked`}
+                onClick={event => event.stopPropagation()}
+              />
+            )}
+          </div>
           <div
             className={classnames(
               'form-table__cell',
@@ -150,7 +175,8 @@ const FormDataInputsRow = ({
               className={classnames(
                 'form-table__name',
                 fieldData.isRequired && 'form-table__name_with-asterisk'
-              )}>
+              )}
+            >
               <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
                 {fieldData.data?.name}
               </Tooltip>
@@ -164,11 +190,13 @@ const FormDataInputsRow = ({
           </div>
           <FormRowActions
             applyChanges={applyChanges}
-            deleteIsDisabled={fieldData.isRequired}
+            deleteButtonIsHidden={fieldData.isRequired}
             deleteRow={deleteRow}
+            disabled={isRowDisabled()}
             discardOrDelete={discardOrDelete}
             editingItem={editingItem}
             fieldsPath={fieldsPath}
+            hidden={!fieldData.data?.isChecked}
             index={index}
           />
         </div>

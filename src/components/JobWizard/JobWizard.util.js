@@ -56,6 +56,7 @@ import {
   getMemoryData
 } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import {
+  parametersValueTypeOptions,
   parameterTypeBool,
   parameterTypeFloat,
   parameterTypeInt,
@@ -573,7 +574,7 @@ export const getCategoryName = categoryId => {
   return categoriesNames[categoryId] ?? categoryId
 }
 
-const getDataInputData = (dataInputName, dataInputValue) => {
+const getDataInputData = (dataInputName, dataInputValue, dataInputIsChecked) => {
   const pathType = dataInputValue?.match(/^(.*?:\/\/+)/)?.[0] ?? ''
   const value = dataInputValue?.replace(pathType, '') ?? ''
 
@@ -583,7 +584,8 @@ const getDataInputData = (dataInputName, dataInputValue) => {
     fieldInfo: {
       pathType,
       value
-    }
+    },
+    isChecked: dataInputIsChecked
   }
 }
 
@@ -594,7 +596,7 @@ export const parseDataInputs = functionParameters => {
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
     .map(dataInput => {
       return {
-        data: getDataInputData(dataInput.name, dataInput.default),
+        data: getDataInputData(dataInput.name, dataInput.default, !has(dataInput, 'default')),
         doc: dataInput.doc,
         isRequired: !has(dataInput, 'default'),
         isDefault: true,
@@ -611,7 +613,7 @@ export const parseDefaultDataInputs = (funcParams, runDataInputs) => {
       const dataInputValue = runDataInputs[dataInput.name] ?? dataInput.default ?? ''
 
       return {
-        data: getDataInputData(dataInput.name, dataInputValue),
+        data: getDataInputData(dataInput.name, dataInputValue, !has(dataInput, 'default')),
         doc: dataInput.doc ?? '',
         isRequired: !has(dataInput, 'default'),
         isDefault: true,
@@ -627,7 +629,7 @@ export const parseDefaultDataInputs = (funcParams, runDataInputs) => {
     const dataInputValue = runDataInputs[dataInputName] ?? ''
 
     return {
-      data: getDataInputData(dataInputName, dataInputValue),
+      data: getDataInputData(dataInputName, dataInputValue, true),
       isRequired: false,
       isDefault: true,
       isPredefined: false
@@ -657,7 +659,8 @@ export const parsePredefinedParameters = funcParams => {
         isUnsupportedType: !parameterTypeValueMap[parameter.type],
         isRequired: parameterIsRequired,
         isDefault: true,
-        isPredefined: true
+        isPredefined: true,
+        parameterTypeOptions: getParameterTypeOptions(parameter.type)
       }
     })
     .sort(sortParameters)
@@ -676,16 +679,17 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       const predefinedParameterIsModified =
         parameter.name in runParams || parameter.name in runHyperParams
       const parametersIsRequired = !has(parameter, 'default')
+      const parameterType = predefinedParameterIsModified
+        ? parseParameterType(
+            runParams[parameter.name] ?? runHyperParams[parameter.name],
+            parameter.name in runHyperParams
+          )
+        : parameter.type ?? ''
 
       return {
         data: {
           name: parameter.name,
-          type: predefinedParameterIsModified
-            ? parseParameterType(
-                runParams[parameter.name] ?? runHyperParams[parameter.name],
-                parameter.name in runHyperParams
-              )
-            : parameter.type ?? '',
+          type: parameterType,
           value: parsedValue,
           isChecked: (parsedValue && predefinedParameterIsModified) || parametersIsRequired,
           isHyper: parameter.name in runHyperParams
@@ -695,7 +699,8 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
         isUnsupportedType: !parameterTypeValueMap[parameter.type],
         isRequired: parametersIsRequired,
         isDefault: true,
-        isPredefined: true
+        isPredefined: true,
+        parameterTypeOptions: getParameterTypeOptions(parameterType)
       }
     })
     .sort(sortParameters)
@@ -720,7 +725,8 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       },
       isHidden: false,
       isDefault: true,
-      isPredefined: false
+      isPredefined: false,
+      parameterTypeOptions: parametersValueTypeOptions
     }
   })
 
@@ -907,13 +913,15 @@ const generateHyperParameters = parametersTableData => {
 const generateDataInputs = dataInputsTableData => {
   const dataInputs = {}
 
-  dataInputsTableData.forEach(dataInput => {
-    const dataInputValue = dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
+  dataInputsTableData
+    .filter(dataInput => dataInput.data.isChecked)
+    .forEach(dataInput => {
+      const dataInputValue = dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
 
-    if (dataInputValue.length > 0) {
-      dataInputs[dataInput.data.name] = dataInputValue
-    }
-  })
+      if (dataInputValue.length > 0) {
+        dataInputs[dataInput.data.name] = dataInputValue
+      }
+    })
 
   return dataInputs
 }
@@ -1120,4 +1128,32 @@ export const getSaveJobErrorMsg = error => {
   return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
     ? 'You are not permitted to run new job.'
     : getErrorDetail(error) || 'Unable to save the job.'
+}
+
+export const getParameterTypeOptions = (parameterType = '') => {
+  const match = parameterType.match(/Union\[(.*?)\]$/)
+
+  if (match) {
+    const uniqueUnionTypesList = [
+      ...new Set(
+        match[1].split(',').map(unionType => {
+          const trimmedUnionType = unionType.trim().toLowerCase()
+
+          return trimmedUnionType.startsWith('list') ? 'list' : trimmedUnionType
+        })
+      )
+    ]
+
+    const selectOptionsList = parametersValueTypeOptions.filter(option =>
+      uniqueUnionTypesList.includes(option.id)
+    )
+
+    if (selectOptionsList.length === uniqueUnionTypesList.length) {
+      return selectOptionsList
+    }
+
+    return parametersValueTypeOptions
+  }
+
+  return parametersValueTypeOptions
 }
