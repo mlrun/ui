@@ -20,7 +20,7 @@ such restriction.
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
-import { connect, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy } from 'lodash'
 
 import ContentMenu from '../../../../elements/ContentMenu/ContentMenu'
@@ -32,7 +32,6 @@ import Search from '../../../../common/Search/Search'
 import { FormSelect } from 'igz-controls/components'
 
 import functionsActions from '../../../../actions/functions'
-import jobsActions from '../../../../actions/jobs'
 import projectsAction from '../../../../actions/projects'
 import {
   FILTER_MENU_MODAL,
@@ -57,26 +56,19 @@ import './jobWizardFunctionSelection.scss'
 const JobWizardFunctionSelection = ({
   activeTab,
   defaultData,
-  fetchFunctionTemplate,
-  fetchFunctions,
-  fetchHubFunctions,
-  fetchProjectsNames,
   filteredFunctions,
   filteredTemplates,
   formState,
   frontendSpec,
   functions,
   isEditMode,
-  isLoading,
   params,
-  projectStore,
   selectedFunctionData,
   selectedFunctionTab,
   setActiveTab,
   setFilteredFunctions,
   setFilteredTemplates,
   setFunctions,
-  setIsLoading,
   setJobAdditionalData,
   setSelectedFunctionData,
   setSelectedFunctionTab,
@@ -85,16 +77,21 @@ const JobWizardFunctionSelection = ({
   templates,
   templatesCategories
 }) => {
+  const projectNames = useSelector(store => store.projectStore.projectsNames.data)
+
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
-  const [projects, setProjects] = useState(
-    generateProjectsList(projectStore.projectsNames.data, params.projectName)
-  )
+  const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
+
   const filtersStoreHubCategories = useSelector(
     store =>
       store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
   )
+
+  const { hubFunctions, hubFunctionsCatalog } = useSelector(store => store.functionsStore)
+
+  const dispatch = useDispatch()
 
   const filterTemplates = useMemo(() => {
     return templatesCategories.map(categoryId => {
@@ -126,11 +123,11 @@ const JobWizardFunctionSelection = ({
 
   useEffect(() => {
     if (projects.length === 0) {
-      fetchProjectsNames().then(projects => {
+      dispatch(projectsAction.fetchProjectsNames()).then(projects => {
         setProjects(generateProjectsList(projects, params.projectName))
       })
     }
-  }, [fetchProjectsNames, params.projectName, projects.length])
+  }, [dispatch, params.projectName, projects.length])
 
   useEffect(() => {
     const initialValues = formState.initialValues
@@ -230,40 +227,46 @@ const JobWizardFunctionSelection = ({
   }
 
   const onSelectedProjectNameChange = currentValue => {
-    const fetchFunctionsPromise = () => {
-      return fetchFunctions(currentValue, {}, true).then(functions => {
-        const validFunctions = functions.filter(func => {
-          return includes(functionRunKinds, func.kind)
+    dispatch(functionsActions.fetchFunctions(currentValue, {}, true)).then(functions => {
+      const validFunctions = functions.filter(func => {
+        return includes(functionRunKinds, func.kind)
+      })
+
+      const groupedFunctions = Object.values(
+        validFunctions.reduce((prev, curr) => {
+          if (!prev[curr.metadata.name]) {
+            prev[curr.metadata.name] = {
+              name: curr.metadata.name,
+              functions: []
+            }
+          }
+
+          prev[curr.metadata.name].functions.push(curr)
+
+          return prev
+        }, {})
+      )
+
+      setFunctions(groupedFunctions)
+
+      if (filterByName.length > 0) {
+        const filteredFunctions = validFunctions.filter(func => {
+          return func.metadata.name.includes(filterByName)
         })
 
-        const groupedFunctions = Object.values(
-          validFunctions.reduce((prev, curr) => {
-            if (!prev[curr.metadata.name]) {
-              prev[curr.metadata.name] = {
-                name: curr.metadata.name,
-                functions: []
-              }
-            }
+        setFilteredFunctions(filteredFunctions)
+      }
+    })
 
-            prev[curr.metadata.name].functions.push(curr)
+    formState.initialValues.functionSelection.projectName = currentValue
+  }
 
-            return prev
-          }, {})
-        )
-
-        setFunctions(groupedFunctions)
-
-        if (filterByName.length > 0) {
-          const filteredFunctions = validFunctions.filter(func => {
-            return func.metadata.name.includes(filterByName)
-          })
-
-          setFilteredFunctions(filteredFunctions)
-        }
-      })
-    }
-    const fetchHubFunctionsPromise = () => {
-      return fetchHubFunctions().then(templatesObject => {
+  useEffect(() => {
+    if (
+      activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
+      (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
+    ) {
+      dispatch(functionsActions.fetchHubFunctions()).then(templatesObject => {
         if (templatesObject) {
           setTemplatesCategories(templatesObject.hubFunctionsCategories)
           setTemplates(templatesObject.hubFunctions)
@@ -283,19 +286,15 @@ const JobWizardFunctionSelection = ({
         }
       })
     }
-    const promisesArray = [fetchFunctionsPromise]
-
-    setIsLoading(true)
-    formState.initialValues.functionSelection.projectName = currentValue
-
-    if (isEmpty(templatesCategories) || isEmpty(templates)) {
-      promisesArray.push(fetchHubFunctionsPromise)
-    }
-
-    Promise.all([promisesArray.map(promise => promise())]).finally(() => {
-      setIsLoading(false)
-    })
-  }
+  }, [
+    activeTab,
+    dispatch,
+    formState.initialValues.functionSelection,
+    hubFunctions,
+    hubFunctionsCatalog,
+    setTemplates,
+    setTemplatesCategories
+  ])
 
   const selectProjectFunction = functionData => {
     const selectNewFunction = () => {
@@ -320,7 +319,7 @@ const JobWizardFunctionSelection = ({
     const selectNewFunction = () => {
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
-      fetchFunctionTemplate(functionTemplatePath).then(result => {
+      dispatch(functionsActions.fetchFunctionTemplate(functionTemplatePath)).then(result => {
         setSelectedFunctionData(result)
         generateData(result)
         setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
@@ -372,10 +371,9 @@ const JobWizardFunctionSelection = ({
               <FormSelect name="functionSelection.projectName" options={projects} />
             </div>
           </div>
-          {((filterByName.length > 0 &&
+          {(filterByName.length > 0 &&
             (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
-            functions.length === 0) &&
-          !isLoading ? (
+          functions.length === 0 ? (
             <NoData />
           ) : (
             <div className="functions-list">
@@ -468,7 +466,6 @@ JobWizardFunctionSelection.propTypes = {
   frontendSpec: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   isEditMode: PropTypes.bool.isRequired,
-  isLoading: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   selectedFunctionTab: PropTypes.string.isRequired,
@@ -476,7 +473,6 @@ JobWizardFunctionSelection.propTypes = {
   setFilteredFunctions: PropTypes.func.isRequired,
   setFilteredTemplates: PropTypes.func.isRequired,
   setFunctions: PropTypes.func.isRequired,
-  setIsLoading: PropTypes.func.isRequired,
   setJobAdditionalData: PropTypes.func.isRequired,
   setSelectedFunctionData: PropTypes.func.isRequired,
   setSelectedFunctionTab: PropTypes.func.isRequired,
@@ -486,13 +482,4 @@ JobWizardFunctionSelection.propTypes = {
   templatesCategories: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
-export default connect(
-  ({ projectStore }) => ({
-    projectStore
-  }),
-  {
-    ...functionsActions,
-    ...jobsActions,
-    ...projectsAction
-  }
-)(JobWizardFunctionSelection)
+export default JobWizardFunctionSelection
