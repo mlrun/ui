@@ -31,7 +31,7 @@ import projectsAction from '../../actions/projects'
 import { PANEL_CREATE_MODE } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 import { isProjectValid } from '../../utils/handleRedirect'
-import { limitedFunctionKinds } from '../Jobs/jobs.util'
+import { functionRunKinds } from '../Jobs/jobs.util'
 
 const CreateJobPage = ({
   fetchFunctions,
@@ -77,7 +77,7 @@ const CreateJobPage = ({
 
   useEffect(() => {
     fetchFunctions(selectedProject).then(functions => {
-      const filteredFunctions = functions.filter(func => !includes(limitedFunctionKinds, func.kind))
+      const filteredFunctions = functions.filter(func => includes(functionRunKinds, func.kind))
 
       const groupedFunctions = Object.values(
         filteredFunctions.reduce((prev, curr) => {

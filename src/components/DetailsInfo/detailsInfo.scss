@@ -71,7 +71,7 @@
         flex: 1;
         align-items: center;
         min-width: 110px;
-        padding-left: 16px;
+        padding-left: 1rem;
         word-break: break-word;
 
         &-btn-edit {
@@ -104,9 +104,10 @@
       &__input {
         &-wrapper {
           display: flex;
+          flex: 1;
           align-items: center;
           align-self: flex-start;
-          width: 100%;
+          padding-left: 1rem;
 
           .input {
             width: 100%;

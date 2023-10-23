@@ -3,7 +3,7 @@ Feature: Files Page
   Testcases that verifies functionality on Files Page
 
   @passive
-  Scenario: Check all mandatory components on Artifacts tab
+  Scenario: MLA001 - Check all mandatory components on Artifacts tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -29,7 +29,7 @@ Feature: Files Page
     Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
 
   @passive
-  Scenario: verify filtering by file name on Artifacts page
+  Scenario: MLA002 - Verify filtering by file name on Artifacts page
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -49,10 +49,8 @@ Feature: Files Page
     And wait load page
     Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test"
 
-  @FAILED_TODO
-  #TODO: value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "owner" - dropdown locator 
   @passive
-  Scenario: verify filtering by file label on Artifacts page
+  Scenario: MLA003 - Verify filtering by file label on Artifacts page
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -77,9 +75,10 @@ Feature: Files Page
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Files_data"
 
   @passive
-  Scenario: Verify behaviour of Show iterations checkbox on Artifacts tab
+  Scenario: MLA004 - Verify behaviour of Show iterations checkbox on Artifacts tab
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -113,7 +112,7 @@ Feature: Files Page
   #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
   @passive
   @inProgress
-  Scenario: Check all mandatory components on Register Artifacts Popup
+  Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -189,7 +188,7 @@ Feature: Files Page
 
   @FAILED_TODO 
   #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
-  Scenario: Verify behaviour on Register new Artifact
+  Scenario: MLA006 - Verify behaviour on Register new Artifact
     * set tear-down property "project" created with "automation-test" value
     * create "automation-test" MLRun Project with code 201
     Given open url
@@ -215,7 +214,7 @@ Feature: Files Page
 
   @passive
   @inProgress
-  Scenario: Check all mandatory components in Item infopane on Overview tab table
+  Scenario: MLA007 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -232,9 +231,14 @@ Feature: Files Page
     Then verify "Updated" element visibility on "Files_Info_Pane" wizard
     Then verify "Download_Button" element visibility on "Files_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
+    Then verify "Full_View_Button" element visibility on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Hash_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
+    Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
+    Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
   @passive
   Scenario: Check Details panel still active on page refresh
@@ -410,3 +414,78 @@ Feature: Files Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then save to context "name" column on 2 row from "Files_Table" table on "Files" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+
+  Scenario: MLA009 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Artifacts page
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard    
+    Then verify "Version_tag_Input_table_view" on "Files_Info_Pane" wizard should contains "latest" value
+    Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
+    Then click on "Edit_btn_full_view" element on "Files_Info_Pane" wizard
+    Then verify "Version_tag_Input_full_view" on "Files_Info_Pane" wizard should contains "latest" value   
+    Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
+
+  Scenario: MLA010 - Check that version tag dropdown shows all tags on filters wizard on Artifacts page
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
+    And wait load page
+    When type value "newTag" to "Version_tag_Input" field on "Files_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
+    Then check "newTag" value in "tag" column in "Files_Table" table on "Files" wizard
+
+Scenario: MLA011 - Check that version tag has "Click to add" status when it's empty after edited
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"   
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
+    Then type value "" to "Version_tag_Input" field on "Files_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value

@@ -17,24 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+import { generateLinkPath } from './parseUri'
 
-import { JOB_KIND_JOB } from '../constants'
-
-const detailsApi = {
-  getJobPods: (project, uid, kind) => {
-    const params = {
-      'group-by': JOB_KIND_JOB,
-      kind,
-      'label-selector': `mlrun/uid=${uid}`
-    }
-
-    return mainHttpClient.get(`/projects/${project}/runtime-resources`, { params })
-  },
-  getModelEndpoint: (project, uid) =>
-    mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}?feature_analysis=true`),
-  getModelFeatureVector: (project, name, reference) =>
-    mainHttpClient.get(`/projects/${project}/feature-vectors/${name}/references/${reference}`)
+export const generateFunctionDetailsLink = (uri = '') => {
+  // remove 'latest' when function_uri will contain hash or tag
+  //
+  // 'my_proj/func_name@func_hash' -> projects/my_proj/functions/func_hash/overview
+  // 'my_proj/func_name' -> projects/my_proj/functions/func_name/latest/overview
+  // 'my_proj/func_name:custom_tag' -> projects/my_proj/functions/func_name/custom_tag/overview
+  return uri
+    ? `${generateLinkPath(`store://functions/${uri}`, uri.includes('@'))}${
+        uri.includes(':') || uri.includes('@') ? '' : '/latest'
+      }/overview`
+    : ''
 }
-
-export default detailsApi

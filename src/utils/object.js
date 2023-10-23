@@ -19,7 +19,7 @@ such restriction.
 */
 import { isNil } from 'lodash'
 
-// {key: 'value'} --> ["key: value", "key: value"]
+// {key: "value", key2: "value2"} --> ["key: value", "key2: value2"]
 export const parseKeyValues = (object = {}) =>
   object == null
     ? []
@@ -33,13 +33,11 @@ export const parseKeyValues = (object = {}) =>
                 : ` ${arrayItem} `
             })}]`
           : typeof value === 'object' && value !== null
-          ? `${key}: {${Object.entries(value).map(
-              ([valueKey, valueContent]) => ` ${valueKey}: ${valueContent} `
-            )}}`
+          ? `${key}: ${JSON.stringify(value, null, 1)}`
           : `${key}: ${value}`
       })
 
-// ['key: value'] -> {key: 'value'}
+// ["key: value", "key2: value2"] -> {key: "value", key2: "value2"}
 export const generateKeyValues = (data = []) => {
   const keyValuePairs = {}
 

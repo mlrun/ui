@@ -51,6 +51,10 @@ export const NAVBAR_WIDTH_OPENED = 245
 
 export const FULL_VIEW_MODE = 'full'
 
+export const REQUEST_CANCELED = 'Request canceled'
+
+export const MODEL_PATH_DATA_INPUT = 'model_path'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
@@ -88,6 +92,8 @@ export const FILES_PAGE = 'FILES'
 
 export const PROJECT_MONITOR = 'monitor'
 
+export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
+
 /*=========== CONSUMER_GROUPS =============*/
 
 export const CONSUMER_GROUP_PAGE = 'CONSUMER_GROUP'
@@ -102,6 +108,9 @@ export const DATASETS_FILTERS = 'DATASETS_FILTERS'
 export const ABORT_JOB_BEGIN = 'ABORT_JOB_BEGIN'
 export const ABORT_JOB_FAILURE = 'ABORT_JOB_FAILURE'
 export const ABORT_JOB_SUCCESS = 'ABORT_JOB_SUCCESS'
+export const DELETE_JOB_BEGIN = 'DELETE_JOB_BEGIN'
+export const DELETE_JOB_FAILURE = 'DELETE_JOB_FAILURE'
+export const DELETE_JOB_SUCCESS = 'DELETE_JOB_SUCCESS'
 export const EDIT_JOB_FAILURE = 'EDIT_JOB_FAILURE'
 export const FETCH_ALL_JOB_RUNS_BEGIN = 'FETCH_ALL_JOB_RUNS_BEGIN'
 export const FETCH_ALL_JOB_RUNS_FAILURE = 'FETCH_ALL_JOB_RUNS_FAILURE'
@@ -152,6 +161,22 @@ export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
+/*=========== JOB KINDS =============*/
+
+export const JOB_KIND_DASK = 'dask'
+export const JOB_KIND_DATABRICKS = 'databricks'
+export const JOB_KIND_HANDLER = 'handler'
+export const JOB_KIND_JOB = 'job'
+export const JOB_KIND_LOCAL = 'local'
+export const JOB_KIND_MPIJOB = 'mpijob'
+export const JOB_KIND_NUCLIO = 'nuclio'
+export const JOB_KIND_PIPELINE = 'pipeline'
+export const JOB_KIND_REMOTE = 'remote'
+export const JOB_KIND_REMOTE_SPARK = 'remote-spark'
+export const JOB_KIND_SERVING = 'serving'
+export const JOB_KIND_SPARK = 'spark'
+export const JOB_KIND_WORKFLOW = 'workflow'
+
 /*=========== JOB WORKFLOWS =============*/
 
 export const WORKFLOW_TYPE_SKIPPED = 'Skipped'
@@ -162,12 +187,15 @@ export const WORKFLOW_GRAPH_VIEW = 'graph'
 
 export const MAX_SELECTOR_CRITERIA = 'max'
 export const LIST_TUNING_STRATEGY = 'list'
+export const RANDOM_STRATEGY = 'random'
 export const V3IO_VOLUME_TYPE = 'flexVolume'
 export const CONFIG_MAP_VOLUME_TYPE = 'configMap'
 export const SECRET_VOLUME_TYPE = 'secret'
 export const PVC_VOLUME_TYPE = 'persistentVolumeClaim'
 export const PARAMETERS_FROM_UI_VALUE = 'fromUI'
 export const PARAMETERS_FROM_FILE_VALUE = 'fromFile'
+export const NEW_IMAGE_SOURCE = 'newImageSource'
+export const EXISTING_IMAGE_SOURCE = 'existingImageSource'
 
 /*=========== ML FUNCTIONS =============*/
 
@@ -186,6 +214,12 @@ export const FETCH_FUNCTION_LOGS_SUCCESS = 'FETCH_FUNCTION_LOGS_SUCCESS'
 export const FETCH_FUNCTION_TEMPLATE_BEGIN = 'FETCH_FUNCTION_TEMPLATE_BEGIN'
 export const FETCH_FUNCTION_TEMPLATE_FAILURE = 'FETCH_FUNCTION_TEMPLATE_FAILURE'
 export const FETCH_FUNCTION_TEMPLATE_SUCCESS = 'FETCH_FUNCTION_TEMPLATE_SUCCESS'
+export const FETCH_FUNCTIONS_TEMPLATES_FAILURE = 'FETCH_FUNCTIONS_TEMPLATES_FAILURE'
+export const FETCH_HUB_FUNCTION_TEMPLATE_BEGIN = 'FETCH_HUB_FUNCTION_TEMPLATE_BEGIN'
+export const FETCH_HUB_FUNCTION_TEMPLATE_FAILURE = 'FETCH_HUB_FUNCTION_TEMPLATE_FAILURE'
+export const FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS = 'FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS'
+export const FETCH_HUB_FUNCTIONS_BEGIN = 'FETCH_HUB_FUNCTIONS_BEGIN'
+export const FETCH_HUB_FUNCTIONS_FAILURE = 'FETCH_HUB_FUNCTIONS_FAILURE'
 export const FUNCTION_TYPE_JOB = 'job'
 export const FUNCTION_TYPE_LOCAL = 'local'
 export const FUNCTION_TYPE_SERVING = 'serving'
@@ -201,8 +235,10 @@ export const REMOVE_FUNCTION = 'REMOVE_FUNCTION'
 export const REMOVE_FUNCTIONS_ERROR = 'REMOVE_FUNCTIONS_ERROR'
 export const REMOVE_FUNCTION_TEMPLATE = 'REMOVE_FUNCTION_TEMPLATE'
 export const REMOVE_NEW_FUNCTION = 'REMOVE_NEW_FUNCTION'
+export const REMOVE_HUB_FUNCTIONS = 'REMOVE_HUB_FUNCTIONS'
 export const RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE = 'RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE'
 export const SET_FUNCTIONS_TEMPLATES = 'SET_FUNCTIONS_TEMPLATES'
+export const SET_HUB_FUNCTIONS = 'SET_HUB_FUNCTIONS'
 export const SET_NEW_FUNCTION = 'SET_NEW_FUNCTION'
 export const SET_NEW_FUNCTION_BASE_IMAGE = 'SET_NEW_FUNCTION_BASE_IMAGE'
 export const SET_NEW_FUNCTION_BUILD_IMAGE = 'SET_NEW_FUNCTION_BUILD_IMAGE'
@@ -235,6 +271,7 @@ export const SET_NEW_FUNCTION_VOLUME_MOUNTS = 'SET_NEW_FUNCTION_VOLUME_MOUNTS'
 export const FUNCTION_CREATING_STATE = 'creating'
 export const FUNCTION_FAILED_STATE = 'failed'
 export const FUNCTION_ERROR_STATE = 'error'
+export const FUNCTION_INITIALIZED_STATE = 'initialized'
 export const FUNCTION_READY_STATE = 'ready'
 export const FUNCTION_PENDINDG_STATE = 'pending'
 export const FUNCTION_RUNNING_STATE = 'running'

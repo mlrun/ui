@@ -17,12 +17,28 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const copyToClipboard = str => {
-  const textArea = document.createElement('textarea')
-  textArea.value = str
+import { setNotification } from '../reducers/notificationReducer'
 
-  document.body.appendChild(textArea)
-  textArea.select()
-  document.execCommand('copy')
-  document.body.removeChild(textArea)
+export const copyToClipboard = (textToCopy, dispatch) => {
+  navigator.clipboard
+    .writeText(textToCopy)
+    .then(() => {
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Copied to clipboard successfully'
+        })
+      )
+    })
+    .catch(err => {
+      dispatch(
+        setNotification({
+          error: err,
+          status: 400,
+          id: Math.random(),
+          message: 'Copy to clipboard failed'
+        })
+      )
+    })
 }

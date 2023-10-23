@@ -66,6 +66,9 @@ const jobsApi = {
       { params }
     )
   },
+  deleteJob: (project, jobUid) => {
+    return mainHttpClient.delete(`/projects/${project}/runs/${jobUid}`)
+  },
   editJob: (postData, project) =>
     mainHttpClient.put(
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
@@ -94,14 +97,20 @@ const jobsApi = {
 
     return mainHttpClient.get(`/runs?${jobListQuery}`, { params })
   },
-  getAllJobRuns: (project, jobName, filters) => {
-    const params = {
-      project,
-      name: jobName,
-      ...generateRequestParams(filters)
+  getAllJobRuns: (project, jobName, filters, cancelToken) => {
+    const config = {
+      params: {
+        project,
+        name: jobName,
+        ...generateRequestParams(filters)
+      }
     }
 
-    return mainHttpClient.get('/runs', { params })
+    if (cancelToken) {
+      config.cancelToken = cancelToken
+    }
+
+    return mainHttpClient.get('/runs', config)
   },
   getJob: (project, jobId, iter) => {
     const params = {}

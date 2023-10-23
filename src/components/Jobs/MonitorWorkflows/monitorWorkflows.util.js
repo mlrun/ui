@@ -23,6 +23,7 @@ import {
   DATE_RANGE_TIME_FILTER,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
+  JOB_KIND_LOCAL,
   NAME_FILTER,
   PERIOD_FILTER,
   STATUS_FILTER
@@ -98,45 +99,49 @@ export const generateActionsMenu = (
 ) =>
   job?.uid
     ? [
-        {
-          label: 'Batch re-run',
-          icon: <Run />,
-          hidden: ['local', ''].includes(job?.ui?.originalContent.metadata.labels.kind),
-          onClick: handleRerunJob
-        },
-        {
-          label: 'Monitoring',
-          icon: <MonitorIcon />,
-          tooltip: !jobs_dashboard_url
-            ? 'Grafana service unavailable'
-            : isJobKindDask(job?.labels)
-            ? 'Unavailable for Dask jobs'
-            : '',
-          disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
-          onClick: handleMonitoring
-        },
-        {
-          label: 'Abort',
-          icon: <Cancel />,
-          onClick: handleConfirmAbortJob,
-          tooltip: isJobAbortable(job, abortable_function_kinds)
-            ? ''
-            : 'Cannot abort jobs of this kind',
-          disabled: !isJobAbortable(job, abortable_function_kinds),
-          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
-        },
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertedYaml
-        }
+        [
+          {
+            label: 'Batch re-run',
+            icon: <Run />,
+            hidden: [JOB_KIND_LOCAL, ''].includes(job?.ui?.originalContent.metadata.labels.kind),
+            onClick: handleRerunJob
+          },
+          {
+            label: 'Monitoring',
+            icon: <MonitorIcon />,
+            tooltip: !jobs_dashboard_url
+              ? 'Grafana service unavailable'
+              : isJobKindDask(job?.labels)
+              ? 'Unavailable for Dask jobs'
+              : '',
+            disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
+            onClick: handleMonitoring
+          },
+          {
+            label: 'Abort',
+            icon: <Cancel />,
+            onClick: handleConfirmAbortJob,
+            tooltip: isJobAbortable(job, abortable_function_kinds)
+              ? ''
+              : 'Cannot abort jobs of this kind',
+            disabled: !isJobAbortable(job, abortable_function_kinds),
+            hidden: JOB_STEADY_STATES.includes(job?.state?.value)
+          },
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
       ]
     : [
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertedYaml
-        }
+        [
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
       ]
 
 export const monitorWorkflowsActionCreator = {

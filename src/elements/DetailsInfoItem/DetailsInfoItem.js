@@ -23,6 +23,7 @@ import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import Prism from 'prismjs'
 import { useSelector } from 'react-redux'
+import { OnChange } from 'react-final-form-listeners'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
@@ -115,7 +116,14 @@ const DetailsInfoItem = React.forwardRef(
                   item.fieldData.validationRules.additionalRules ?? []
                 )}
               />
-              {item.fieldData.onChange && item.fieldData.onChange}
+              <OnChange name={item.fieldData.name}>
+                {value => {
+                  formState.form.change(
+                    item.fieldData.name,
+                    value.length === 0 ? '' : value
+                  )
+                }}
+              </OnChange>
             </>
           )}
           <RoundedIcon

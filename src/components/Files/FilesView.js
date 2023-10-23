@@ -31,13 +31,14 @@ import Loader from '../../common/Loader/Loader'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import Details from '../Details/Details'
 
 import { ARTIFACT_TYPE, FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { actionsMenuHeader, filters } from './files.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { removeFile } from '../../reducers/artifactsReducer'
-import Details from '../Details/Details'
+import { ACTIONS_MENU } from '../../types'
 
 const FilesView = React.forwardRef(
   (
@@ -135,6 +136,9 @@ const FilesView = React.forwardRef(
               {viewMode === FULL_VIEW_MODE && (
                 <Details
                   actionsMenu={actionsMenu}
+                  applyDetailsChanges={applyDetailsChanges}
+                  applyDetailsChangesCallback={applyDetailsChangesCallback}
+                  formInitialValues={detailsFormInitialValues}
                   detailsMenu={pageData.details.menu}
                   handleRefresh={handleRefresh}
                   isDetailsScreen
@@ -162,7 +166,7 @@ FilesView.defaultProps = {
 }
 
 FilesView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,

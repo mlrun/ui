@@ -48,7 +48,7 @@ const infoPaneTabSelector = {
     row: {
       root: 'a',
       fields: {
-        key: '', //'.details-menu__tab',
+        key: '',
         hintButton: '.tip-container'
       }
     }
@@ -140,7 +140,7 @@ const functionsOverviewTable = {
 }
 
 const infoPaneDriftHeaders = {
-  root: '.table__item .item-info__details:nth-of-type(2)',
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
   header: {},
   body: {
     row: {
@@ -453,11 +453,26 @@ const cancelButton = By.css(
 const applyChangesButton = By.css(
   '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
 )
+const applyButton = By.css('.item-info__details .round-icon-cp:nth-of-type(2) button')
 const commonActionMenu = actionMenu(actionMenuStructure)
+const fullViewButton = By.css('.table__item .item-header__buttons .item-header__navigation-buttons > div > div')
+const tabelViewButton = By.css('#main-wrapper .table__item_big .item-header__navigation-buttons')
 const crossCloseButton = By.css('.table__item .item-header__buttons a .data-ellipsis')
 const commonDownloadButton = By.css('.table__item .item-header__buttons .download-container')
 const commonArrowBack = By.css('a.link-back__icon')
 const commonInfoPaneTabSelector = commonTable(infoPaneTabSelector)
+const commonEditBtnTableView = By.css('[data-testid="detailsPanel"] .details-item__data-btn-edit')
+const commonEditBtnFullView = By.css('.table__item_big .details-item__data-btn-edit')
+const commonVersionTagInputTableView = By.css('.details-item:nth-of-type(3) .details-item__input-wrapper input')
+const commonVersionTagInputPlaceholder = By.css('.details-item:nth-of-type(3) .details-item__data-add-placeholder')
+const commonVersionTagInput = inputGroup(
+  generateInputGroup(
+    '.details-item:nth-of-type(3) .details-item__input-wrapper',
+    false,
+    false
+  )
+)
+const commonVersionTagInputFullView = By.css('.table__item_big .details-item__input-wrapper input')
 
 module.exports = {
   featureSetsInfoPane: {
@@ -504,8 +519,11 @@ module.exports = {
     Updated: updated,
     Cancel_Button: cancelButton,
     Apply_Changes_Button: applyChangesButton,
+    Apply_Button: applyButton,
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
+    Full_View_Button: fullViewButton,
+    Tabel_View_Button: tabelViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
@@ -525,7 +543,13 @@ module.exports = {
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
-    Overview_Table: commonTable(artifactOverviewTable)
+    Overview_Table: commonTable(artifactOverviewTable),
+    Edit_btn_table_view: commonEditBtnTableView,
+    Edit_btn_full_view: commonEditBtnFullView,
+    Version_tag_Input_table_view: commonVersionTagInputTableView,
+    Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
+    Version_tag_Input: commonVersionTagInput
   },
   transformationsInfoPane: {
     Header: header,
@@ -621,7 +645,11 @@ module.exports = {
     Updated: updated,
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
+    Apply_Changes_Button: applyChangesButton,
+    Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
+    Full_View_Button: fullViewButton,
+    Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Hash_Header: labelComponent(
@@ -640,7 +668,13 @@ module.exports = {
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
-    Overview_Table: commonTable(artifactOverviewTable)
+    Overview_Table: commonTable(artifactOverviewTable),
+    Edit_btn_table_view: commonEditBtnTableView,
+    Edit_btn_full_view: commonEditBtnFullView,
+    Version_tag_Input_table_view: commonVersionTagInputTableView,
+    Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
+    Version_tag_Input: commonVersionTagInput
   },
   modelsInfoPane: {
     Header: header,
@@ -648,7 +682,10 @@ module.exports = {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
+    //Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
+    Full_View_Button: fullViewButton,
+    Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
@@ -673,7 +710,13 @@ module.exports = {
       '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
-    Apply_Button: By.css('.item-info__details .details-item__apply-btn')
+    Apply_Button: By.css('.item-info__details .round-icon-cp:nth-of-type(2) button'),
+    Edit_btn_table_view: commonEditBtnTableView,
+    Edit_btn_full_view: commonEditBtnFullView,
+    Version_tag_Input_table_view: commonVersionTagInputTableView,
+    Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
+    Version_tag_Input: commonVersionTagInput
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,

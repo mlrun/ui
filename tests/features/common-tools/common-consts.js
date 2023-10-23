@@ -134,7 +134,7 @@ module.exports = {
     ]
   },
   Models_Info_Pane: {
-    Tab_List: ['Overview', 'Preview'],  //delete 'Preview'
+    Tab_List: ['Overview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
       'Hash',
@@ -162,6 +162,7 @@ module.exports = {
       'Model class',
       'Model artifact',
       'Function URI',
+      'Function Tag',
       'Feature set',
       'Last prediction',
       'Error count',
@@ -195,6 +196,13 @@ module.exports = {
       'Google storage'
     ]
   },
+  Batch_Run: {
+    Tab_List: ['Functions', 'Hub'],
+    Data_Inputs_Table_Header: ['Input name', 'Path'],
+    Parameters_Table_Header: ['Name', 'Type', 'Value'],
+    Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value'],
+    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
+  },
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
     Form_Text:
@@ -207,7 +215,16 @@ module.exports = {
     Form_Text:
       /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
     Form_Subtext:
-      'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).'
+      'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).',
+    Combobox_Options: [
+      'V3IO',
+      'S3',
+      'HTTP',
+      'HTTPS',
+      'Azure storage',
+      'Google storage',
+      'Databricks filesystem'
+    ]  
   },
   Project_Settings: {
     Tab_List: ['General', 'Members', 'Secrets'],
@@ -227,6 +244,12 @@ module.exports = {
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
+    Function_Name_Batch_Run_Hint:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
+      'This field is required',
+    Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
+    'Key should be unique',
+    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -244,7 +267,7 @@ module.exports = {
       'better performance. In this case the path would be path/bucket-num/year=/month=/day= etc.. In case the ' +
       'value is 0 then no bucketing will be done and your data will be partitioned by key.',
     Function_Name_Hint:
-      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
+      'Valid characters: a–z, 0–9, –, .\nMust begin and end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
     Function_Tag_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
@@ -255,6 +278,7 @@ module.exports = {
     Base_Image_Hint:
       "The name of a base container image from which to build the function's processor image",
     Limit_Number_Warning: 'Limit must be bigger than or equal to Request and not be less than 1',
+    Minimum_Value_Warning: 'The minimum value should be 1',
     CPU_Limit_Number_Warning:
       'Limit must be bigger than or equal to Request and not be less than 0.001',
     Request_Number_Warning: 'Request must be less than or equal to Limit and not be less than 1',
@@ -277,7 +301,7 @@ module.exports = {
     MLRun_Store_Path_Hint: 'Field must be in "artifacts/my-project/my-artifact:my-tag" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
-    V3IO_Path_Hint: 'Field must be in "container-name/file" format',
+    V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
     S3_Path_Hint: 'Field must be in "bucket/path" format',
     Azure_Storage_Path_Hint: 'Field must be in "container/path" format',
     Timestamp_Column: 'The field name for filtering the source data.',
@@ -370,7 +394,8 @@ module.exports = {
       'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance',
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
-    Already_Scheduled: 'This job is already scheduled'
+    Already_Scheduled: 'This job is already scheduled',
+    One_Day_Option: 'Must select at least one day option'
   },
   Dropdown_Options: {
     Tag_Filer_Options: ['All', 'latest'],
@@ -390,6 +415,7 @@ module.exports = {
     Turning_Strategy_Options: ['List', 'Grid', 'Random'],
     Criteria_Dropdown_Options: ['Max', 'Min'],
     Volume_Mount_Options: ['Auto', 'Manual', 'None'],
+    Hyperparameter_Strategy_Options: ['List', 'Grid', 'Random'],
     Memory_Unit_Options: [
       'Bytes',
       'KB',
@@ -399,13 +425,12 @@ module.exports = {
       'GB',
       'GiB',
       'TB',
-      'TiB',
-      'PB',
-      'PiB',
-      'EB',
-      'EiB'
+      'TiB'
     ],
     CPU_Unit_Options: ['cpu', 'millicpu'],
+    Time_Unit_Options: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
+    Minute_Intervals_Dropdown_Options: ['Every 10', 'Every 15', 'Every 20', 'Every 30'],
+    Hour_Intervals_Dropdown_Options: ['Every 1', 'Every 2', 'Every 3', 'Every 4', 'Every 6', 'Every 12'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
     //Pods_Toleration: ['Allow', 'Constrain', 'Prevent'], - Pods_Toleration is deleted from implementation
@@ -420,6 +445,9 @@ module.exports = {
     Common_Message_Feature_Sets: 'There is no Feature-Sets data to show for "Version Tag: latest"',
     No_Data: 'No data to show',
     No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',
-    No_Consumer_Group_Yet: 'You haven’t created any consumer group yet'
+    No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
+    No_Datasets_data: 'There is no Datasets data to show for "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Files_data: 'There is no Files data to show for "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Models_data: 'There is no Models data to show for "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
   }
 }

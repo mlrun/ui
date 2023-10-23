@@ -22,6 +22,7 @@ import classnames from 'classnames'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
+import axios from 'axios'
 
 import JobWizard from '../../JobWizard/JobWizard'
 import Details from '../../Details/Details'
@@ -31,9 +32,16 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import TableTop from '../../../elements/TableTop/TableTop'
 import YamlModal from '../../../common/YamlModal/YamlModal'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../../constants'
+import {
+  GROUP_BY_NONE,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  PANEL_RERUN_MODE,
+  REQUEST_CANCELED
+} from '../../../constants'
 import {
   generateActionsMenu,
   generateFilters,
@@ -47,6 +55,7 @@ import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { enrichRunWithFunctionFields, handleAbortJob } from '../jobs.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { cancelRequest } from '../../../utils/cancelRequest'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { parseJob } from '../../../utils/parseJob'
@@ -58,6 +67,7 @@ import { setFilters } from '../../../reducers/filtersReducer'
 
 const MonitorJobs = ({
   abortJob,
+  deleteJob,
   fetchAllJobRuns,
   fetchJob,
   fetchJobFunctions,
@@ -75,12 +85,14 @@ const MonitorJobs = ({
   const appStore = useSelector(store => store.appStore)
   const jobsStore = useSelector(store => store.jobsStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const fetchJobFunctionsPromiseRef = useRef()
+  const fetchJobsRef = useRef({ current: {} })
   const {
     editableItem,
     handleMonitoring,
@@ -133,27 +145,58 @@ const MonitorJobs = ({
       }
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
+      const cancelJobsRequestTimeout = setTimeout(() => {
+        cancelRequest(fetchJobsRef, REQUEST_CANCELED)
+      }, 30000)
 
-      fetchData(params.projectName, filters, params.jobName ?? false)
+      fetchData(
+        params.projectName,
+        filters,
+        params.jobName ?? false,
+        new axios.CancelToken(cancel => {
+          fetchJobsRef.current.cancel = cancel
+        })
+      )
         .then(jobs => {
-          const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
-
-          if (params.jobName) {
-            setJobRuns(parsedJobs)
+          if (jobs.length > 1500) {
+            showJobsErrorPopUp()
+            setJobRuns([])
           } else {
-            setJobs(parsedJobs)
+            const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
+
+            if (params.jobName) {
+              setJobRuns(parsedJobs)
+            } else {
+              setJobs(parsedJobs)
+            }
+            setLargeRequestErrorMessage('')
           }
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: error?.response?.status || 400,
-              id: Math.random(),
-              message: 'Failed to fetch jobs',
-              retry: () => refreshJobs(filters)
-            })
-          )
+          if (error.message === REQUEST_CANCELED) {
+            showJobsErrorPopUp()
+            setJobRuns([])
+          } else {
+            dispatch(
+              setNotification({
+                status: error?.response?.status || 400,
+                id: Math.random(),
+                message: 'Failed to fetch jobs',
+                retry: () => refreshJobs(filters)
+              })
+            )
+          }
         })
+        .finally(() => clearTimeout(cancelJobsRequestTimeout))
+
+      const showJobsErrorPopUp = () => {
+        const errorMessage =
+          'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
+        openPopUp(ConfirmDialog, {
+          message: errorMessage
+        })
+        setLargeRequestErrorMessage(errorMessage)
+      }
     },
     [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
   )
@@ -193,6 +236,33 @@ const MonitorJobs = ({
     [onAbortJob, setConfirmData]
   )
 
+  const handleDeleteJob = useCallback(
+    async job => {
+      await deleteJob(params.projectName, job)
+        .then(() => {
+          refreshJobs(filtersStore)
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Job is successfully deleted'
+            })
+          )
+        })
+        .catch(error => {
+          dispatch(
+            setNotification({
+              status: error.response?.status || 400,
+              id: Math.random(),
+              retry: () => handleDeleteJob(job),
+              message: error.response?.data?.detail || 'Deleting job failed'
+            })
+          )
+        })
+    },
+    [deleteJob, dispatch, filtersStore, params.projectName, refreshJobs]
+  )
+
   const actionsMenu = useMemo(() => {
     return job =>
       generateActionsMenu(
@@ -203,7 +273,8 @@ const MonitorJobs = ({
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
         toggleConvertedYaml,
-        selectedJob
+        selectedJob,
+        handleDeleteJob
       )
   }, [
     handleRerunJob,
@@ -212,7 +283,8 @@ const MonitorJobs = ({
     handleMonitoring,
     handleConfirmAbortJob,
     toggleConvertedYaml,
-    selectedJob
+    selectedJob,
+    handleDeleteJob
   ])
 
   const modifyAndSelectRun = useCallback(
@@ -265,7 +337,7 @@ const MonitorJobs = ({
       const urlPathArray = location.pathname.split('/')
       const jobNameIndex = urlPathArray.indexOf(selectedJob.uid) - 1
 
-      if (urlPathArray[jobNameIndex] !== selectedJob.name) {
+      if (urlPathArray[jobNameIndex] !== selectedJob.name && jobNameIndex > 0) {
         navigate(
           [
             ...urlPathArray.slice(0, jobNameIndex + 1),
@@ -304,7 +376,13 @@ const MonitorJobs = ({
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
       let filters = {}
 
-      if (isJobDataEmpty()) {
+      if (filtersStore.saveFilters) {
+        filters = {
+          saveFilters: false,
+          state: filtersStore.state,
+          dates: filtersStore.dates
+        }
+      } else if (isJobDataEmpty()) {
         const pastWeekOption = datePickerOptions.find(option => option.id === PAST_WEEK_DATE_OPTION)
 
         filters = {
@@ -327,6 +405,7 @@ const MonitorJobs = ({
       setDataIsLoaded(true)
     }
   }, [
+    filtersStore,
     dataIsLoaded,
     dateFilter,
     dispatch,
@@ -420,7 +499,12 @@ const MonitorJobs = ({
 
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
         (jobs.length === 0 && !params.jobName) ? (
-        <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_JOBS_TAB)} />
+        <NoData
+          message={
+            largeRequestErrorMessage ||
+            getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_JOBS_TAB)
+          }
+        />
       ) : (
         isEmpty(selectedJob) && (
           <Table

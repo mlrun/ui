@@ -47,6 +47,7 @@ const FilterMenuModal = ({
   initialValues,
   restartFormTrigger,
   values,
+  withoutApplyButton,
   wizardClassName
 }) => {
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
@@ -186,7 +187,7 @@ const FilterMenuModal = ({
                           variant={cancelButton.variant}
                         />
                       )}
-                      {applyButton && (
+                      {applyButton && !withoutApplyButton && (
                         <Button
                           disabled={isEqual(filtersData.values, formState.values)}
                           variant={applyButton.variant}
@@ -208,10 +209,11 @@ const FilterMenuModal = ({
 
 FilterMenuModal.defaultProps = {
   applyChanges: null,
-  applyButton: null,
-  cancelButton: null,
+  applyButton: { label: 'Apply', variant: 'secondary' },
+  cancelButton: { label: 'Clear', variant: 'tertiary' },
   header: 'Filter by',
   restartFormTrigger: null,
+  withoutApplyButton: false,
   wizardClassName: ''
 }
 
@@ -230,6 +232,7 @@ FilterMenuModal.propTypes = {
   initialValues: PropTypes.shape({}).isRequired,
   restartFormTrigger: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   values: PropTypes.shape({}).isRequired,
+  withoutApplyButton: PropTypes.bool,
   wizardClassName: PropTypes.string
 }
 

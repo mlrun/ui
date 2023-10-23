@@ -26,7 +26,6 @@ import {
   isFinite,
   isNil,
   keyBy,
-  map,
   merge,
   omit,
   set,
@@ -36,6 +35,7 @@ import {
   CONFIG_MAP_VOLUME_TYPE,
   ENV_VARIABLE_TYPE_SECRET,
   ENV_VARIABLE_TYPE_VALUE,
+  EXISTING_IMAGE_SOURCE,
   JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
@@ -43,6 +43,7 @@ import {
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
   PVC_VOLUME_TYPE,
+  RANDOM_STRATEGY,
   SECRET_VOLUME_TYPE,
   TAG_LATEST,
   V3IO_VOLUME_TYPE
@@ -74,6 +75,7 @@ import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/s
 import { getErrorDetail } from 'igz-controls/utils/common.util'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { trimSplit } from '../../utils'
 
 const volumeTypesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
@@ -85,13 +87,14 @@ const volumeTypesMap = {
 const volumeTypeNamesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'name',
   [PVC_VOLUME_TYPE]: 'claimName',
-  [SECRET_VOLUME_TYPE]: 'secretName',
+  [SECRET_VOLUME_TYPE]: 'secretName'
 }
 
 export const generateJobWizardData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
+  currentProjectName,
   isEditMode
 ) => {
   const functions = selectedFunctionData.functions
@@ -123,7 +126,8 @@ export const generateJobWizardData = (
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
-      labels: functionInfo.labels
+      labels: [],
+      image: parseImageData(functionInfo.function, frontendSpec, currentProjectName)
     },
     parameters: {
       parametersTable: {},
@@ -181,6 +185,7 @@ export const generateJobWizardDefaultData = (
   frontendSpec,
   selectedFunctionData,
   defaultData,
+  currentProjectName,
   isEditMode
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
@@ -214,7 +219,8 @@ export const generateJobWizardDefaultData = (
       name: runInfo.name,
       version: runInfo.version,
       method: runInfo.method,
-      labels: runInfo.labels
+      labels: runInfo.labels,
+      image: parseImageData(selectedFunctionData, frontendSpec, currentProjectName)
     },
     dataInputs: {
       dataInputsTable: []
@@ -270,7 +276,10 @@ export const generateJobWizardDefaultData = (
   }
 
   if (!isEmpty(defaultData.task.spec.inputs)) {
-    jobFormData.dataInputs.dataInputsTable = parseDefaultDataInputs(defaultData.task.spec.inputs)
+    jobFormData.dataInputs.dataInputsTable = parseDefaultDataInputs(
+      functionParameters,
+      defaultData.task.spec.inputs
+    )
   }
 
   return [jobFormData, jobAdditionalData]
@@ -292,12 +301,12 @@ const getFunctionInfo = selectedFunctionData => {
       functions.find(func => func.metadata.tag === currentFunctionVersion) ?? functions[0]
 
     return {
-      labels: parseChipsData(currentFunction?.metadata.labels),
       name: selectedFunctionData.name,
       method: defaultMethod,
       version: currentFunctionVersion,
       methodOptions,
-      versionOptions
+      versionOptions,
+      function: currentFunction || {}
     }
   }
 }
@@ -330,23 +339,37 @@ const getVersionOptions = selectedFunctions => {
   const versionOptions = unionBy(
     selectedFunctions.map(func => {
       return {
-        label: (func.metadata.tag === TAG_LATEST ? '$' : '') + (func.metadata.tag || '$latest'),
+        label: func.metadata.tag || TAG_LATEST,
         id: func.metadata.tag || TAG_LATEST
       }
     }),
     'id'
   )
 
-  return versionOptions.length ? versionOptions : [{ label: '$latest', id: 'latest' }]
+  return versionOptions.length ? versionOptions : [{ label: 'latest', id: TAG_LATEST }]
+}
+
+const getDefaultMethod = (methodOptions, selectedFunctions) => {
+  let method = ''
+
+  const latestFunction = selectedFunctions.find(item => item.metadata.tag === TAG_LATEST)
+
+  if (methodOptions.length) {
+    method = methodOptions[0]?.id
+  } else if (latestFunction) {
+    method = latestFunction.spec.default_handler || 'handler'
+  } else {
+    method = selectedFunctions[0]?.spec.default_handler || 'handler'
+  }
+
+  return method
 }
 
 const getDefaultMethodAndVersion = (versionOptions, methodOptions, selectedFunctions) => {
   const defaultVersion =
-    versionOptions.find(version => version.id === 'latest')?.id || versionOptions[0].id || ''
-  const defaultMethod =
-    selectedFunctions.find(item => item.metadata.tag === 'latest')?.spec?.default_handler ||
-    methodOptions[0]?.id ||
-    ''
+    versionOptions.find(version => version.id === TAG_LATEST)?.id || versionOptions[0].id || ''
+
+  const defaultMethod = getDefaultMethod(methodOptions, selectedFunctions)
 
   return {
     defaultVersion,
@@ -470,6 +493,38 @@ const getVolumesData = selectedFunction => {
   return parseVolumes(volumes, volumeMounts)
 }
 
+const parseImageData = (selectedFunction, frontendSpec, currentProjectName) => {
+  const buildImageTemplate = frontendSpec?.function_deployment_target_image_template || ''
+  let defaultBuildImage = buildImageTemplate
+
+  if (selectedFunction.metadata?.name) {
+    defaultBuildImage = buildImageTemplate
+      .replace('{project}', selectedFunction.metadata.project || currentProjectName)
+      .replace('{name}', selectedFunction.metadata.name)
+      .replace('{tag}', selectedFunction.metadata.tag || TAG_LATEST)
+  }
+
+  return {
+    // todo: Uncomment when BE implements "Building a new image"
+    // imageSource: selectedFunction.spec?.image ? EXISTING_IMAGE_SOURCE : NEW_IMAGE_SOURCE,
+    imageSource: EXISTING_IMAGE_SOURCE,
+    imageName:
+      selectedFunction.spec?.image ||
+      frontendSpec?.default_function_image_by_kind?.[selectedFunction.kind] ||
+      '',
+    resultingImage: selectedFunction.spec?.build?.image || defaultBuildImage,
+    baseImage:
+      selectedFunction.spec?.build?.base_image ||
+      frontendSpec?.default_function_image_by_kind?.[selectedFunction.kind] ||
+      '',
+    buildCommands: selectedFunction.spec?.build?.commands?.join?.('\n') || '',
+    pythonRequirement:
+      selectedFunction.spec?.build?.requirements?.join?.('\n') ||
+      frontendSpec?.function_deployment_mlrun_requirement ||
+      ''
+  }
+}
+
 const parseVolumes = (volumes, volumeMounts, isEditMode) => {
   return volumeMounts.map(volumeMount => {
     const currentVolume = volumes.find(volume => volume.name === volumeMount?.name)
@@ -494,19 +549,23 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
 
 export const getCategoryName = categoryId => {
   const categoriesNames = {
-    'data-prep': 'Data Preparation',
-    'data-source': 'ETL',
+    dask: 'Dask',
+    'data-analysis': 'Data Analysis',
+    'data-preparation': 'Data Preparation',
+    etl: 'ETL',
+    'data-validation': 'Data Validation',
+    dl: 'Deep Learning',
+    'feature-store': 'Feature Store',
+    'machine-learning': 'Machine Learning',
     'model-prep': 'Model Prep',
     'model-test': 'Model Test',
     'model-testing': 'Model Testing',
+    'model-training': 'Model Training',
+    monitoring: 'Monitoring',
     NLP: 'NLP',
-    analysis: 'Data Analysis',
-    dask: 'Dask',
-    dl: 'Deep Learning',
-    ml: 'Machine Learning',
     notifications: 'Alerts and Notifications',
     other: 'Other',
-    serving: 'Model Serving',
+    'model-serving': 'Model Serving',
     simulators: 'Simulators',
     training: 'Model Training'
   }
@@ -514,60 +573,94 @@ export const getCategoryName = categoryId => {
   return categoriesNames[categoryId] ?? categoryId
 }
 
+const getDataInputData = (dataInputName, dataInputValue) => {
+  const pathType = dataInputValue?.match(/^(.*?:\/\/+)/)?.[0] ?? ''
+  const value = dataInputValue?.replace(pathType, '') ?? ''
+
+  return {
+    name: dataInputName,
+    path: dataInputValue ?? '',
+    fieldInfo: {
+      pathType,
+      value
+    }
+  }
+}
+
+const sortParameters = (parameter, nextParameter) => nextParameter.isRequired - parameter.isRequired
+
 export const parseDataInputs = functionParameters => {
   return functionParameters
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
-    .map(input => {
+    .map(dataInput => {
       return {
-        doc: input.doc,
+        data: getDataInputData(dataInput.name, dataInput.default),
+        doc: dataInput.doc,
+        isRequired: !has(dataInput, 'default'),
         isDefault: true,
-        data: {
-          name: input.name,
-          path: input.path ?? '',
-          fieldInfo: {
-            pathType: input.path?.replace(/:\/\/.*$/g, '://') ?? '',
-            value: input.path?.replace(/.*:\/\//g, '') ?? ''
-          }
-        }
+        isPredefined: true
       }
     })
+    .sort(sortParameters)
 }
 
-export const parseDefaultDataInputs = dataInputs => {
-  return map(dataInputs, (value, key) => {
-    return {
-      isDefault: true,
-      data: {
-        name: key,
-        path: value ?? '',
-        fieldInfo: {
-          pathType: value?.replace(/:\/\/.*$/g, '://') ?? '',
-          value: value?.replace(/.*:\/\//g, '') ?? ''
-        }
+export const parseDefaultDataInputs = (funcParams, runDataInputs) => {
+  const predefinedDataInputs = chain(funcParams)
+    .filter(dataInput => dataInput.type?.includes('DataItem'))
+    .map(dataInput => {
+      const dataInputValue = runDataInputs[dataInput.name] ?? dataInput.default ?? ''
+
+      return {
+        data: getDataInputData(dataInput.name, dataInputValue),
+        doc: dataInput.doc ?? '',
+        isRequired: !has(dataInput, 'default'),
+        isDefault: true,
+        isPredefined: true
       }
+    })
+    .sort(sortParameters)
+    .value()
+
+  const customDataInputsNames = difference(Object.keys(runDataInputs), Object.keys(funcParams))
+
+  const customDataInputs = customDataInputsNames.map(dataInputName => {
+    const dataInputValue = runDataInputs[dataInputName] ?? ''
+
+    return {
+      data: getDataInputData(dataInputName, dataInputValue),
+      isRequired: false,
+      isDefault: true,
+      isPredefined: false
     }
   })
+
+  return predefinedDataInputs.concat(customDataInputs)
 }
 
 export const parsePredefinedParameters = funcParams => {
   return funcParams
     .filter(parameter => !parameter.type?.includes('DataItem'))
     .map(parameter => {
+      const parsedValue = parseParameterValue(parameter.default)
+      const parameterIsRequired = !has(parameter, 'default')
+
       return {
         data: {
           name: parameter.name ?? '',
           type: parameter.type ?? '',
-          value: parseParameterValue(parameter.default),
-          isChecked: true,
+          value: parsedValue,
+          isChecked: parameterIsRequired,
           isHyper: false
         },
         doc: parameter.doc,
         isHidden: parameter.name === 'context',
         isUnsupportedType: !parameterTypeValueMap[parameter.type],
+        isRequired: parameterIsRequired,
         isDefault: true,
         isPredefined: true
       }
     })
+    .sort(sortParameters)
 }
 
 export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyperParams = {}) => {
@@ -577,23 +670,35 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
   predefinedParameters = chain(funcParams)
     .filter(parameter => !parameter.type?.includes('DataItem'))
     .map(parameter => {
+      const parsedValue = parseParameterValue(
+        runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
+      )
+      const predefinedParameterIsModified =
+        parameter.name in runParams || parameter.name in runHyperParams
+      const parametersIsRequired = !has(parameter, 'default')
+
       return {
         data: {
           name: parameter.name,
-          type: parameter.type ?? '',
-          value: parseParameterValue(
-            runParams[parameter.name] ?? runHyperParams[parameter.name] ?? parameter.default ?? ''
-          ),
-          isChecked: parameter.name in runParams || parameter.name in runHyperParams,
+          type: predefinedParameterIsModified
+            ? parseParameterType(
+                runParams[parameter.name] ?? runHyperParams[parameter.name],
+                parameter.name in runHyperParams
+              )
+            : parameter.type ?? '',
+          value: parsedValue,
+          isChecked: (parsedValue && predefinedParameterIsModified) || parametersIsRequired,
           isHyper: parameter.name in runHyperParams
         },
         doc: parameter.doc ?? '',
         isHidden: parameter.name === 'context',
         isUnsupportedType: !parameterTypeValueMap[parameter.type],
+        isRequired: parametersIsRequired,
         isDefault: true,
         isPredefined: true
       }
     })
+    .sort(sortParameters)
     .value()
 
   const customParametersNames = difference(
@@ -803,14 +908,17 @@ const generateDataInputs = dataInputsTableData => {
   const dataInputs = {}
 
   dataInputsTableData.forEach(dataInput => {
-    dataInputs[dataInput.data.name] =
-      dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
+    const dataInputValue = dataInput.data.fieldInfo.pathType + dataInput.data.fieldInfo.value
+
+    if (dataInputValue.length > 0) {
+      dataInputs[dataInput.data.name] = dataInputValue
+    }
   })
 
   return dataInputs
 }
 
-const generateEnvironmentVariables = envVarData => {
+const generateEnvironmentVariables = (envVarData = []) => {
   return envVarData.map(envVar => {
     const generatedEnvVar = {
       name: envVar.data.key
@@ -885,6 +993,17 @@ const generateResources = resources => {
   }
 }
 
+const generateFunctionBuild = imageData => {
+  if (imageData.imageSource === EXISTING_IMAGE_SOURCE) return {}
+
+  return {
+    image: imageData.resultingImage,
+    base_image: imageData.baseImage,
+    commands: trimSplit(imageData.buildCommands, '\n'),
+    requirements: trimSplit(imageData.pythonRequirement, '\n')
+  }
+}
+
 export const generateJobRequestData = (
   formData,
   selectedFunctionData,
@@ -933,6 +1052,11 @@ export const generateJobRequestData = (
         }
       },
       spec: {
+        image:
+          formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE
+            ? formData.runDetails.image.imageName
+            : '',
+        build: generateFunctionBuild(formData.runDetails.image),
         env: generateEnvironmentVariables(formData.advanced.environmentVariablesTable),
         node_selector: generateObjectFromKeyValue(formData.resources.nodeSelectorTable),
         preemption_mode: formData.resources.preemptionMode,
@@ -943,14 +1067,21 @@ export const generateJobRequestData = (
       }
     }
   }
+
   if (formData.runDetails.hyperparameter) {
     postData.task.spec.hyper_param_options = {
       strategy: formData.hyperparameterStrategy.strategy,
       stop_condition: formData.hyperparameterStrategy.stopCondition ?? '',
       parallel_runs: formData.hyperparameterStrategy.parallelRuns,
       dask_cluster_uri: formData.hyperparameterStrategy.daskClusterUri ?? '',
-      max_iterations: formData.hyperparameterStrategy.maxIterations,
-      max_errors: formData.hyperparameterStrategy.maxErrors,
+      max_iterations:
+        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
+          ? formData.hyperparameterStrategy.maxIterations
+          : null,
+      max_errors:
+        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
+          ? formData.hyperparameterStrategy.maxErrors
+          : null,
       teardown_dask: formData.hyperparameterStrategy.teardownDask ?? false
     }
 

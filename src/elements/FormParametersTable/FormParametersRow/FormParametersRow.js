@@ -48,6 +48,8 @@ import {
 import { parseParameterType } from '../../../components/JobWizard/JobWizard.util'
 import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 
+import { ReactComponent as CustomIcon } from 'igz-controls/images/custom.svg'
+
 import './formParametersRow.scss'
 
 const FormParametersRow = ({
@@ -60,19 +62,28 @@ const FormParametersRow = ({
   fields,
   fieldsPath,
   formState,
+  getTableArrayErrors,
   index,
   isCurrentRowEditing,
   rowPath,
   uniquenessValidator,
-  withHyperparameters
+  withHyperparameters,
+  withRequiredParameters
 }) => {
   const [fieldData, setFieldData] = useState(fields.value[index])
   const [typeIsChanging, setTypeIsChanging] = useState(false)
   const tableRowClassNames = classnames(
     'form-table__row',
     'form-table__parameter-row',
-    fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active',
-    !fieldData.data?.isChecked && 'excluded'
+    !fieldData.data?.isChecked && 'form-table__parameter-row_excluded'
+  )
+  const tableGeneralRowClassNames = classnames(
+    tableRowClassNames,
+    fieldData.isRequired && index in getTableArrayErrors(fieldsPath) && 'form-table__row_invalid'
+  )
+  const tableEditingRowClassNames = classnames(
+    tableRowClassNames,
+    'form-table__row_active'
   )
 
   const getValueValidationRules = parameterType => {
@@ -209,18 +220,20 @@ const FormParametersRow = ({
     }
   }
 
-  const resetValue = () => {
+  const resetValue = (newType, newIsHyper) => {
     if (isCurrentRowEditing(rowPath)) {
-      const fieldCurrentData = fields.value[index]
-
       queueMicrotask(() => {
+        const fieldCurrentData = fields.value[index]
+        const fieldType = newType ?? fieldCurrentData.data.type
+        const fieldIsHyper = newIsHyper ?? fieldCurrentData.data.isHyper
+
+        if (newType && fieldCurrentData.isUnsupportedType) {
+          formState.form.change(`${rowPath}.isUnsupportedType`, false)
+        }
+
         formState.form.change(
           `${rowPath}.data.value`,
-          fieldCurrentData.data.type === parameterTypeBool && !fieldCurrentData.data.isHyper
-            ? 'false'
-            : fieldCurrentData.data.isHyper
-            ? '[]'
-            : ''
+          fieldType === parameterTypeBool && !fieldIsHyper ? 'false' : fieldIsHyper ? '[]' : ''
         )
         formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: false })
 
@@ -242,20 +255,21 @@ const FormParametersRow = ({
       {!fieldData.isHidden &&
         ((!fieldData.data.isHyper && !withHyperparameters) || withHyperparameters) && (
           <>
-            {editingItem &&
-            index === editingItem.ui?.index &&
-            fieldsPath === editingItem.ui?.fieldsPath &&
-            !disabled ? (
-              <div className={tableRowClassNames} key={index}>
+            {isCurrentRowEditing(rowPath) && !disabled ? (
+              <div className={tableEditingRowClassNames} key={index}>
                 <div className="form-table__cell form-table__cell_min">
-                  <FormCheckBox
-                    name={`${rowPath}.data.isChecked`}
-                    onClick={event => event.stopPropagation()}
-                  />
+                  {!fieldData.isRequired && (
+                    <FormCheckBox
+                      name={`${rowPath}.data.isChecked`}
+                      onClick={event => event.stopPropagation()}
+                    />
+                  )}
                 </div>
                 {withHyperparameters && (
                   <div className="form-table__cell form-table__cell_hyper">
                     <FormToggle
+                      density="normal"
+                      label="Hyper"
                       name={`${rowPath}.data.isHyper`}
                       onChange={() => {
                         setTypeIsChanging(true)
@@ -265,7 +279,6 @@ const FormParametersRow = ({
                 )}
                 <div className="form-table__cell form-table__cell_2">
                   <FormInput
-                    density="normal"
                     label="Name"
                     disabled={fieldData.isPredefined}
                     name={`${rowPath}.data.name`}
@@ -282,12 +295,10 @@ const FormParametersRow = ({
                 </div>
                 <div className="form-table__cell form-table__cell_1">
                   <FormSelect
-                    density="normal"
                     label="Type"
                     onChange={() => {
                       setTypeIsChanging(true)
                     }}
-                    disabled={fieldData.isPredefined}
                     name={`${rowPath}.data.type`}
                     options={parametersValueTypeOptions}
                     required={!fieldData.isPredefined}
@@ -296,7 +307,6 @@ const FormParametersRow = ({
                 <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.isHyper && !typeIsChanging ? (
                     <FormInput
-                      density="normal"
                       label="Values (Comma separated)"
                       name={`${rowPath}.data.value`}
                       placeholder="Values"
@@ -316,7 +326,6 @@ const FormParametersRow = ({
                           ? 'number'
                           : 'input'
                       }
-                      density="normal"
                       label="Value"
                       name={`${rowPath}.data.value`}
                       placeholder="Value"
@@ -337,43 +346,47 @@ const FormParametersRow = ({
               </div>
             ) : (
               <div
-                className={tableRowClassNames}
+                className={tableGeneralRowClassNames}
                 key={index}
                 onClick={event =>
                   !isRowDisabled() && enterEditMode(event, fields, fieldsPath, index)
                 }
               >
                 <div className="form-table__cell form-table__cell_min">
-                  <FormCheckBox
-                    name={`${rowPath}.data.isChecked`}
-                    onClick={event => event.stopPropagation()}
-                  />
+                  {!fieldData.isRequired && (
+                    <FormCheckBox
+                      name={`${rowPath}.data.isChecked`}
+                      onClick={event => event.stopPropagation()}
+                    />
+                  )}
                 </div>
                 {withHyperparameters && (
                   <div className="form-table__cell form-table__cell_hyper">
-                    <FormToggle name={`${rowPath}.data.isHyper`} readOnly />
+                    <FormToggle name={`${rowPath}.data.isHyper`} disabled />
                   </div>
                 )}
-                <div
-                  className={classnames(
-                    'form-table__cell',
-                    'form-table__cell_2',
-                    'form-table__name-cell',
-                    fieldData.isPredefined && 'disabled'
+                <div className="form-table__cell form-table__cell_2 form-table__name-cell">
+                  <div
+                    className={classnames(
+                      'form-table__name',
+                      (fieldData.isRequired && withRequiredParameters) && 'form-table__name_with-asterisk'
+                    )}
+                  >
+                    <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
+                      {fieldData.data.name}
+                    </Tooltip>
+                  </div>
+                  {!fieldData.isPredefined && (
+                    <Tooltip
+                      className="parameter-icon"
+                      template={<TextTooltipTemplate text="Custom Parameter" />}
+                    >
+                      <CustomIcon />
+                    </Tooltip>
                   )}
-                >
-                  <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
-                    {fieldData.data.name}
-                  </Tooltip>
-                  {fieldData.doc && <Tip text={fieldData.doc} />}
+                  {fieldData.doc && <Tip className="parameter-icon" text={fieldData.doc} />}
                 </div>
-                <div
-                  className={classnames(
-                    'form-table__cell',
-                    'form-table__cell_1',
-                    fieldData.isPredefined && 'disabled'
-                  )}
-                >
+                <div className="form-table__cell form-table__cell_1">
                   <Tooltip template={<TextTooltipTemplate text={fieldData.data.type} />}>
                     {fieldData.data.type}
                   </Tooltip>
@@ -408,14 +421,17 @@ const FormParametersRow = ({
                   discardOrDelete={discardOrDelete}
                   editingItem={editingItem}
                   fieldsPath={fieldsPath}
+                  hidden={!fieldData.data?.isChecked}
                   index={index}
                 />
               </div>
             )}
           </>
         )}
-      <OnChange name={`${rowPath}.data.type`}>{resetValue}</OnChange>
-      <OnChange name={`${rowPath}.data.isHyper`}>{resetValue}</OnChange>
+      <OnChange name={`${rowPath}.data.type`}>{newType => resetValue(newType)}</OnChange>
+      <OnChange name={`${rowPath}.data.isHyper`}>
+        {newIsHyper => resetValue(null, newIsHyper)}
+      </OnChange>
     </>
   )
 }
@@ -423,7 +439,8 @@ const FormParametersRow = ({
 FormParametersRow.defaultProps = {
   disabled: false,
   editingItem: null,
-  withHyperparameters: false
+  withHyperparameters: false,
+  withRequiredParameters: true
 }
 
 FormParametersRow.propTypes = {
@@ -440,7 +457,8 @@ FormParametersRow.propTypes = {
   isCurrentRowEditing: PropTypes.func.isRequired,
   rowPath: PropTypes.string.isRequired,
   uniquenessValidator: PropTypes.func.isRequired,
-  withHyperparameters: PropTypes.bool
+  withHyperparameters: PropTypes.bool,
+  withRequiredParameters: PropTypes.bool
 }
 
 export default FormParametersRow

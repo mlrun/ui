@@ -37,6 +37,15 @@ async function getColumnValues(driver, table, columnName) {
     })
 }
 
+async function getColumnValuesAttribute(driver, table, columnName) {
+  return await driver
+    .findElements(table.tableColumns[columnName])
+    .then(function(elements) {
+
+      return Promise.all(elements.map(element => element.getAttribute('value')))
+    })
+}
+
 async function getTableRows(driver, table) {
   const arr = await driver
     .findElements(table.tableColumns[table.tableCulumnNames[0]])
@@ -65,6 +74,19 @@ const action = {
     value
   ) {
     const arr = await getColumnValues(driver, table, columnName)
+    expect(arr.length > 0).equal(true)
+    expect(arr.every(item => item.includes(value))).equal(
+      true,
+      `Value "${value}" does not includes in all values: [${arr}]`
+    )
+  },
+  isContainsSubstringInColumnAttributrCells: async function(
+    driver,
+    table,
+    columnName,
+    value
+  ) {
+    const arr = await getColumnValuesAttribute(driver, table, columnName)
     expect(arr.length > 0).equal(true)
     expect(arr.every(item => item.includes(value))).equal(
       true,
@@ -123,7 +145,7 @@ const action = {
         driver,
         overlay
       )
-      const options = optionsRow.concat(optionsOverlay);
+      const options = optionsRow.concat(optionsOverlay)
 
       flag = flag && options.some(item => item.includes(subString))
     }
@@ -188,6 +210,22 @@ const action = {
     value
   ) {
     const arr = await getColumnValues(driver, table, columnName)
+    const indexes = []
+
+    for (let indx in arr) {
+      if (arr[indx] === value) {
+        indexes.push(parseInt(indx) + 1)
+      }
+    }
+    return indexes
+  },
+  findRowIndexesByColumnValueAttribute: async function(
+    driver,
+    table,
+    columnName,
+    value
+  ) {
+    const arr = await getColumnValuesAttribute(driver, table, columnName)
     const indexes = []
 
     for (let indx in arr) {
@@ -269,6 +307,12 @@ const action = {
   },
   checkTableColumnValues: async function(driver, table, columnName, values) {
     const arr = await getColumnValues(driver, table, columnName)
+    if (arr.length === 0) {
+      expect(arr.length > 0).equal(
+        true,
+        'Array is empty, nothing to compare'
+      )
+    }
     const diff = differenceWith(arr, values, isEqual)
 
     expect(diff.length).equal(

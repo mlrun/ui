@@ -78,7 +78,7 @@ const TableView = ({
 }) => {
   return (
     <div className="table__flex">
-      <div className="table__content" ref={tableContentRef} id="table-content">
+      <div className="table__content" id="table-content" ref={tableContentRef}>
         <div className="table__wrapper">
           <table className="table" cellPadding="0" cellSpacing="0" ref={tableRef}>
             {pageData.tableHeaders && (
@@ -264,12 +264,12 @@ const TableView = ({
             tab={tab}
           />
         )}
+        {isTablePanelOpen && (
+          <div className="table__panel-container" ref={tablePanelRef}>
+            <div className="table__panel">{pageData.tablePanel}</div>
+          </div>
+        )}
       </div>
-      {isTablePanelOpen && (
-        <div className="table__panel-container" ref={tablePanelRef}>
-          <div className="table__panel">{pageData.tablePanel}</div>
-        </div>
-      )}
     </div>
   )
 }

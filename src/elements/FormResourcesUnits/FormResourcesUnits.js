@@ -38,12 +38,12 @@ const FormResourcesUnits = ({ formState }) => {
     [formState.values.resources.currentLimits]
   )
   const selectedRequestUnit = useMemo(
-    () => getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnit),
-    [formState.values.resources.currentRequest.cpuUnit]
+    () => getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnitId),
+    [formState.values.resources.currentRequest.cpuUnitId]
   )
   const selectedLimitUnit = useMemo(
-    () => getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnit),
-    [formState.values.resources.currentLimits.cpuUnit]
+    () => getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnitId),
+    [formState.values.resources.currentLimits.cpuUnitId]
   )
 
   const validateMemory = (value, allValues) => {

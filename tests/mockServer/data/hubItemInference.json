@@ -1,0 +1,53 @@
+{
+    "kind": "HubItem",
+    "metadata": {
+        "name": "batch-inference",
+        "description": "Batch inference (also knows as prediction) for the common ML frameworks (SciKit-Learn, XGBoost and LightGBM) while performing data drift analysis.",
+        "labels": {
+            "author": "guyl"
+        },
+        "updated": null,
+        "created": null,
+        "source": "functions",
+        "version": "1.4.0",
+        "tag": "latest",
+        "maintainers": [],
+        "icon": "",
+        "url": "",
+        "apiVersion": "v1",
+        "marketplaceType": "",
+        "platformVersion": "3.5.0",
+        "generationDate": "2022-08-28:17-25",
+        "example": "batch_inference.ipynb",
+        "mlrunVersion": "1.2.0",
+        "categories": [
+            "utils"
+        ],
+        "hidden": false,
+        "doc": ""
+    },
+    "spec": {
+        "item_uri": "https://mlrun.github.io/marketplace/functions/master/batch_inference/latest/",
+        "assets": {
+            "example": "src/batch_inference.ipynb",
+            "source": "src/batch_inference.py",
+            "function": "src/function.yaml",
+            "docs": "static/documentation.html"
+        },
+        "filename": "batch_inference.py",
+        "requirements": null,
+        "image": "mlrun/mlrun",
+        "handler": "infer",
+        "kind": "job",
+        "extra_spec": {
+            "allow_empty_resources": true,
+            "build": {
+                "auto_build": false,
+                "with_mlrun": false
+            }
+        }
+    },
+    "status": {
+        "state": null
+    }
+}

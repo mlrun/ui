@@ -21,15 +21,28 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { createPortal } from 'react-dom'
 
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 import { ReactComponent as SuccessDone } from 'igz-controls/images/success_done.svg'
 import { ReactComponent as UnsuccessAlert } from 'igz-controls/images/unsuccess_alert.svg'
 
 import './notificationView.scss'
 
-const NotificationView = ({ item, isSuccessResponse, retry, transitionStyles }) => {
+const NotificationView = ({
+  item,
+  isSuccessResponse,
+  handleRemoveNotification,
+  retry,
+  transitionStyles
+}) => {
   return createPortal(
     <div className="notification_container" style={{ ...transitionStyles }}>
       <div className="notification_body">
+        <button
+          className="notification_body_close_icon"
+          onClick={() => handleRemoveNotification(item.id)}
+        >
+          <CloseIcon />
+        </button>
         <div
           className={`notification_body_wrapper notification_body_${
             isSuccessResponse ? 'success' : 'alert'
@@ -59,6 +72,7 @@ const NotificationView = ({ item, isSuccessResponse, retry, transitionStyles }) 
 NotificationView.propTypes = {
   item: PropTypes.shape({}).isRequired,
   isSuccessResponse: PropTypes.bool.isRequired,
+  handleRemoveNotification: PropTypes.func.isRequired,
   retry: PropTypes.func.isRequired,
   transitionStyles: PropTypes.shape({}).isRequired
 }

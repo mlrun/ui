@@ -183,7 +183,8 @@ const Projects = ({
             project,
             setConfirmData,
             setNotification,
-            dispatch
+            dispatch,
+            deleteNonEmpty
           )
         })
     },

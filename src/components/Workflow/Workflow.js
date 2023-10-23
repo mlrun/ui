@@ -44,6 +44,7 @@ import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
+  JOB_KIND_JOB,
   JOBS_PAGE,
   ML_EDGE,
   ML_NODE,
@@ -78,7 +79,8 @@ const Workflow = ({
   workflowsViewMode
 }) => {
   const [jobsContent, setJobsContent] = useState([])
-  const [elements, setElements] = useState([])
+  const [nodes, setNodes] = useState([])
+  const [edges, setEdges] = useState([])
   const params = useParams()
   const location = useLocation()
   const navigate = useNavigate()
@@ -106,8 +108,8 @@ const Workflow = ({
   })
 
   useEffect(() => {
-    const edges = []
-    const nodes = []
+    const newEdges = []
+    const newNodes = []
     const jobs = []
 
     forEach(workflow.graph, job => {
@@ -153,7 +155,7 @@ const Workflow = ({
       }
 
       job.children.forEach(childId => {
-        edges.push({
+        newEdges.push({
           id: `e.${job.id}.${childId}`,
           type: ML_EDGE,
           data: {
@@ -168,22 +170,25 @@ const Workflow = ({
       jobs.push({
         ...job,
         customData,
-        state: getState(job.phase?.toLowerCase(), JOBS_PAGE, 'job')
+        state: getState(job.phase?.toLowerCase(), JOBS_PAGE, JOB_KIND_JOB)
       })
-      nodes.push(nodeItem)
+      newNodes.push(nodeItem)
     })
 
-    if (!isEmpty(nodes)) {
-      setElements(getLayoutedElements(nodes.concat(edges)))
+    if (!isEmpty(newNodes)) {
+      const [layoutedNodes, layoutedEdges] = getLayoutedElements(newNodes, newEdges)
+
+      setNodes(layoutedNodes)
+      setEdges(layoutedEdges)
       setJobsContent(jobs)
     }
   }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
 
-  const onElementClick = (event, element) => {
+  const onNodeClick = (event, node) => {
     const detailsLink = getWorkflowDetailsLink(
       params.projectName,
       params.workflowId,
-      element.data.customData,
+      node.data.customData,
       null,
       MONITOR_WORKFLOWS_TAB
     )
@@ -226,29 +231,29 @@ const Workflow = ({
           </Tooltip>
         </div>
       </TableTop>
+
       <div className="graph-container workflow-content">
         {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? (
-          <>
-            <div className={graphViewClassNames}>
-              <MlReactFlow
-                elements={elements}
-                alignTriggerItem={itemIsSelected}
-                onElementClick={onElementClick}
+          <div className={graphViewClassNames}>
+            <MlReactFlow
+              alignTriggerItem={itemIsSelected}
+              edges={edges}
+              nodes={nodes}
+              onNodeClick={onNodeClick}
+            />
+            {itemIsSelected && (
+              <Details
+                actionsMenu={actionsMenu}
+                detailsMenu={pageData.details.menu}
+                getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
+                handleCancel={handleCancel}
+                pageData={pageData}
+                retryRequest={refreshJobs}
+                selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
+                tab={MONITOR_WORKFLOWS_TAB}
               />
-              {itemIsSelected && (
-                <Details
-                  actionsMenu={actionsMenu}
-                  detailsMenu={pageData.details.menu}
-                  getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
-                  handleCancel={handleCancel}
-                  pageData={pageData}
-                  retryRequest={refreshJobs}
-                  selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
-                  tab={MONITOR_WORKFLOWS_TAB}
-                />
-              )}
-            </div>
-          </>
+            )}
+          </div>
         ) : (
           <Table
             actionsMenu={actionsMenu}

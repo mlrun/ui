@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { get } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -30,6 +31,7 @@ import YamlModal from '../../../common/YamlModal/YamlModal'
 
 import {
   GROUP_BY_NONE,
+  JOB_KIND_WORKFLOW,
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
@@ -132,6 +134,8 @@ const ScheduledJobs = ({
           )
         })
         .catch(error => {
+          const errorMsg = get(error, 'response.data.detail', 'Job failed to start.')
+
           dispatch(
             setNotification({
               status: 400,
@@ -140,7 +144,7 @@ const ScheduledJobs = ({
               message:
                 error.response.status === FORBIDDEN_ERROR_STATUS_CODE
                   ? 'You are not permitted to run new job.'
-                  : 'Job failed to start.',
+                  : errorMsg,
               error
             })
           )
@@ -187,58 +191,51 @@ const ScheduledJobs = ({
         dispatch,
         fetchFunctionTemplate,
         fetchJobFunctionSuccess
-      )
-        .then(functionData => {
-          setEditableItem({
-            ...editableItem,
-            scheduled_object: {
-              ...editableItem.scheduled_object,
-              function: functionData
-            }
-          })
+      ).then(functionData => {
+        setEditableItem({
+          ...editableItem,
+          scheduled_object: {
+            ...editableItem.scheduled_object,
+            function: functionData
+          }
+        })
 
-          setJobWizardMode(PANEL_EDIT_MODE)
-        })
-        .catch(error => {
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              retry: () => handleEditScheduleJob(editableItem),
-              message: 'Failed to fetch job data',
-              error
-            })
-          )
-        })
+        setJobWizardMode(PANEL_EDIT_MODE)
+      })
     },
     [fetchJobFunction, dispatch, fetchFunctionTemplate, fetchJobFunctionSuccess, setJobWizardMode]
   )
 
-  const actionsMenu = useMemo(() => {
-    return [
-      {
-        label: 'Run now',
-        icon: <Run className="action_cell__run-icon" />,
-        onClick: handleRunJob
-      },
-      {
-        label: 'Edit',
-        icon: <Edit />,
-        onClick: handleEditScheduleJob
-      },
-      {
-        label: 'Delete',
-        icon: <Delete />,
-        className: 'danger',
-        onClick: onRemoveScheduledJob
-      },
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
-    ]
-  }, [handleEditScheduleJob, handleRunJob, onRemoveScheduledJob, toggleConvertedYaml])
+  const actionsMenu = useMemo(
+    () => job =>
+      [
+        [
+          {
+            label: 'Run now',
+            icon: <Run className="action_cell__run-icon" />,
+            onClick: handleRunJob
+          },
+          {
+            label: 'Edit',
+            icon: <Edit />,
+            onClick: handleEditScheduleJob,
+            hidden: job?.type === JOB_KIND_WORKFLOW
+          },
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: onRemoveScheduledJob
+          },
+          {
+            label: 'View YAML',
+            icon: <Yaml />,
+            onClick: toggleConvertedYaml
+          }
+        ]
+      ],
+    [handleEditScheduleJob, handleRunJob, onRemoveScheduledJob, toggleConvertedYaml]
+  )
 
   useEffect(() => {
     if (!dataIsLoaded) {

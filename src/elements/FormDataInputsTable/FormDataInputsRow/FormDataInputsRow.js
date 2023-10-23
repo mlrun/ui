@@ -22,7 +22,7 @@ import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 import { FormInput, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
-import FormRowActions from 'igz-controls/elements/FormRowActions/FormRowActions'
+import { FormRowActions } from 'igz-controls/elements'
 import TargetPath from '../../../common/TargetPath/TargetPath'
 
 import { DATA_INPUT_STATE } from '../../../types'
@@ -31,6 +31,16 @@ import {
   handleStoreInputPathChange,
   targetPathInitialState
 } from '../../../common/TargetPath/targetPath.util'
+import {
+  AZURE_STORAGE_INPUT_PATH_SCHEME,
+  DBFS_STORAGE_INPUT_PATH_SCHEME,
+  GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+  HTTP_STORAGE_INPUT_PATH_SCHEME,
+  HTTPS_STORAGE_INPUT_PATH_SCHEME,
+  MODEL_PATH_DATA_INPUT,
+  S3_INPUT_PATH_SCHEME,
+  V3IO_INPUT_PATH_SCHEME
+} from '../../../constants'
 
 const FormDataInputsRow = ({
   applyChanges,
@@ -43,17 +53,15 @@ const FormDataInputsRow = ({
   fields,
   fieldsPath,
   formState,
+  getTableArrayErrors,
   index,
+  isCurrentRowEditing,
   rowPath,
   setDataInputState,
   setFieldState,
   uniquenessValidator
 }) => {
   const [fieldData, setFieldData] = useState(fields.value[index])
-  const tableRowClassNames = classnames(
-    'form-table__row',
-    fieldsPath === editingItem?.ui?.fieldsPath && editingItem?.ui?.index === index && 'active'
-  )
 
   useEffect(() => {
     setFieldData(fields.value[index])
@@ -61,16 +69,14 @@ const FormDataInputsRow = ({
 
   return (
     <>
-      {editingItem &&
-      index === editingItem.ui?.index &&
-      fieldsPath === editingItem.ui?.fieldsPath &&
-      !disabled ? (
-        <div className={tableRowClassNames} key={index}>
+      {isCurrentRowEditing(rowPath) && !disabled ? (
+        <div className={classnames('form-table__row', 'form-table__row_active')} key={index}>
           <div className="form-table__cell form-table__cell_1">
             <FormInput
               density="normal"
               name={`${rowPath}.data.name`}
               placeholder="Name"
+              disabled={fieldData.isPredefined}
               required
               validationRules={[
                 {
@@ -86,6 +92,19 @@ const FormDataInputsRow = ({
               density="normal"
               formState={formState}
               formStateFieldInfo={`${rowPath}.data.fieldInfo`}
+              hiddenSelectOptionsIds={
+                fieldData.data.name === MODEL_PATH_DATA_INPUT && fieldData.isPredefined
+                  ? [
+                      V3IO_INPUT_PATH_SCHEME,
+                      S3_INPUT_PATH_SCHEME,
+                      HTTP_STORAGE_INPUT_PATH_SCHEME,
+                      HTTPS_STORAGE_INPUT_PATH_SCHEME,
+                      AZURE_STORAGE_INPUT_PATH_SCHEME,
+                      GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+                      DBFS_STORAGE_INPUT_PATH_SCHEME
+                    ]
+                  : []
+              }
               inputDefaultValue={editingItem.data.fieldInfo?.value}
               name={`${rowPath}.data.path`}
               required
@@ -105,7 +124,10 @@ const FormDataInputsRow = ({
         </div>
       ) : (
         <div
-          className={tableRowClassNames}
+          className={classnames(
+            'form-table__row',
+            fieldData.isRequired && index in getTableArrayErrors(fieldsPath) && 'form-table__row_invalid'
+          )}
           key={index}
           onClick={event => {
             setDataInputState(targetPathInitialState)
@@ -124,9 +146,15 @@ const FormDataInputsRow = ({
               'form-table__name-cell'
             )}
           >
-            <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
-              {fieldData.data.name}
-            </Tooltip>
+            <div
+              className={classnames(
+                'form-table__name',
+                fieldData.isRequired && 'form-table__name_with-asterisk'
+              )}>
+              <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
+                {fieldData.data?.name}
+              </Tooltip>
+            </div>
             {fields.value[index].doc && <Tip text={fields.value[index].doc} />}
           </div>
           <div className={classnames('form-table__cell', 'form-table__cell_1')}>
@@ -136,6 +164,7 @@ const FormDataInputsRow = ({
           </div>
           <FormRowActions
             applyChanges={applyChanges}
+            deleteIsDisabled={fieldData.isRequired}
             deleteRow={deleteRow}
             discardOrDelete={discardOrDelete}
             editingItem={editingItem}
@@ -164,7 +193,9 @@ FormDataInputsRow.propTypes = {
   fields: PropTypes.shape({}).isRequired,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  getTableArrayErrors: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
+  isCurrentRowEditing: PropTypes.func.isRequired,
   rowPath: PropTypes.string.isRequired,
   setDataInputState: PropTypes.func.isRequired,
   setFieldState: PropTypes.func.isRequired,

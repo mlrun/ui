@@ -23,6 +23,7 @@ import commonTable from '../components/table.component'
 import labelComponent from '../components/label.component'
 import checkboxComponent from '../components/checkbox.component'
 import textAreaGroup from '../components/text-area.component'
+import comboBox from '../components/combo-box.component'
 
 import {
   generateLabelGroup,
@@ -190,7 +191,7 @@ const commonTargetPathInput = generateInputGroup(
 )
 
 const commonDescriptionTextArea = generateTextAreaGroup(
-  '.form .form-row:nth-of-type(4) .form-field-textarea',
+  '.form .form-row:nth-of-type(3) .form-field-textarea',
   '.form-field__counter'
 )
 
@@ -217,8 +218,8 @@ const commonLabelFilterInput = inputGroup(
 const commonTableTreeFilterDropdown = dropdownComponent(
   generateDropdownGroup(
     '#overlay_container .form-tag-filter .form-tag-filter__input-wrapper',
-    '.tag-filter__dropdown-button',
-    '.tag-filter__dropdown .tag-filter__dropdown-item'
+    '.form-tag-filter__dropdown-button',
+    '.form-tag-filter__dropdown .form-tag-filter__dropdown-item'
   )
 )
 
@@ -255,7 +256,12 @@ module.exports = {
     Form_Subtext: commonFormSubtext,
     Cross_Cancel_Button: commonCloseButton,
     Name_Input: inputGroup(commonNameInput),
-    Target_Path_Input: inputGroup(commonTargetPathInput),
+    Target_Path: {
+      Path_Scheme_Combobox: comboBox(
+        '.form .form-row:nth-of-type(4) .form-field__wrapper',
+        true
+      )
+    },
     Description_Input: textAreaGroup(commonDescriptionTextArea),
     Cancel_Button: commonFormCancelButton,
     Register_Button: commonFormConfirmButton
