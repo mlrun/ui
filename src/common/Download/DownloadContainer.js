@@ -19,15 +19,20 @@ such restriction.
 */
 import React from 'react'
 import { createPortal } from 'react-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Transition, TransitionGroup } from 'react-transition-group'
 
 import DownloadItem from './DownloadItem'
 
-import './donwloadWrapper.scss'
+import { setShowDownloadsList } from '../../reducers/downloadReducer'
 
-const DownloadWrapper = () => {
+import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
+
+import './downloadContainer.scss'
+
+const DownloadContainer = () => {
   const downloadStore = useSelector(store => store.downloadStore)
+  const dispatch = useDispatch()
   const duration = 500
 
   const transitionStyles = {
@@ -43,14 +48,25 @@ const DownloadWrapper = () => {
     }
   }
 
+  const handleCancel = () => {
+    dispatch(setShowDownloadsList(false))
+  }
+
   return (
     <TransitionGroup>
-      {downloadStore.downloadList.length > 0 && (
+      {downloadStore.downloadList.length > 0 && downloadStore.showDownloadsList && (
         <Transition timeout={duration}>
           {state =>
             createPortal(
-              <div className="download-container" style={{ ...transitionStyles[state] }}>
+              <div
+                className="download-container"
+                data-testid="download-container"
+                style={{ ...transitionStyles[state] }}
+              >
                 <div className="download-container__header">Downloads</div>
+                <button className="notification_body_close_icon" onClick={handleCancel}>
+                  <CloseIcon />
+                </button>
                 <div className="download-container__body">
                   {downloadStore.downloadList.map((downloadItem, index) => {
                     return <DownloadItem downloadItem={downloadItem} key={index} />
@@ -66,4 +82,4 @@ const DownloadWrapper = () => {
   )
 }
 
-export default DownloadWrapper
+export default DownloadContainer

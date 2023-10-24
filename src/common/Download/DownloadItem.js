@@ -41,6 +41,7 @@ const DownloadItem = ({ downloadItem }) => {
   const params = useParams()
 
   const downloadRef = useRef(null)
+  const timeoutRef = useRef(null)
   const dispatch = useDispatch()
 
   let file = useMemo(
@@ -85,6 +86,7 @@ const DownloadItem = ({ downloadItem }) => {
             setDownload(false)
             return setProgress(0)
           }
+
           if (downloadRef.current) {
             setDownload(false)
             setProgress(0)
@@ -94,7 +96,8 @@ const DownloadItem = ({ downloadItem }) => {
           if (downloadRef.current) {
             downloadRef.current.cancel = null
           }
-          setTimeout(() => {
+
+          timeoutRef.current = setTimeout(() => {
             dispatch(removeDownloadItem(downloadItem.id))
           }, 1000)
         })
@@ -121,7 +124,7 @@ const DownloadItem = ({ downloadItem }) => {
     }
   }, [downloadCallback, downloadRef])
 
-  const handleClick = () => {
+  const handleCancel = () => {
     if (downloadRef.current?.cancel) {
       return downloadRef.current.cancel('cancel')
     }
@@ -129,8 +132,16 @@ const DownloadItem = ({ downloadItem }) => {
     setDownload(!isDownload)
   }
 
+  const handleRetry = () => {
+    setDownload(true)
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+  }
+
   return (
-    <div className="download-item" ref={downloadRef}>
+    <div className="download-item" data-testid="download-item" ref={downloadRef}>
       <Tooltip className="download-item__filename" template={<TextTooltipTemplate text={file} />}>
         {file}
       </Tooltip>
@@ -145,15 +156,11 @@ const DownloadItem = ({ downloadItem }) => {
       </div>
       <div className="download-item__buttons">
         {isDownload ? (
-          <RoundedIcon onClick={handleClick}>
+          <RoundedIcon onClick={handleCancel}>
             <Close />
           </RoundedIcon>
         ) : !isSuccessResponse ? (
-          <RoundedIcon
-            onClick={() => {
-              setDownload(true)
-            }}
-          >
+          <RoundedIcon onClick={handleRetry}>
             <RefreshIcon />
           </RoundedIcon>
         ) : null}

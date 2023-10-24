@@ -1,53 +1,17 @@
 @import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/shadows';
 
-.download-container {
-  &:not(.download-container_disabled) {
-    .download {
-      cursor: pointer;
+.download {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
 
-      &:hover {
-        fill: $mulledWineThree;
-      }
-    }
+  &_disabled {
+    color: $topaz;
+    cursor: not-allowed;
   }
 
-  &.download-container_disabled {
-    .download-container__icon {
-      rect {
-        fill: $spunPearl;
-      }
-    }
-  }
-
-  .download {
-    fill: transparent;
-  }
-
-  .downloading {
-    cursor: pointer;
-    fill: $malibu;
-
-    &:hover {
-      fill: $cornflowerBlue;
-    }
-  }
-
-  .download-container__icon {
-    transform: translate(8px, 8px);
-
-    rect {
-      fill: $topaz;
-      //width: 9.05318px;
-      //height: 1.50886px;
-    }
-  }
-
-  .cancel_container {
-    transform: translate(14px, 14px);
-
-    rect {
-      fill: $white;
-    }
+  &__label {
+    margin-right: 10px;
   }
 }

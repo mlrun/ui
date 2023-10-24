@@ -96,12 +96,11 @@ const PreviewModal = ({ item }) => {
             )}
             <div className="item-data">{formatDatetime(item.updated || item.date, 'N/A')}</div>
             <div className="preview-body__download">
-              <Tooltip template={<TextTooltipTemplate text="Download" />}>
-                <Download
-                  path={`${item.target_path}${item.model_file ? item.model_file : ''}`}
-                  user={item.user ?? item.producer?.owner}
-                />
-              </Tooltip>
+              <Download
+                onlyIcon
+                path={`${item.target_path}${item.model_file ? item.model_file : ''}`}
+                user={item.user ?? item.producer?.owner}
+              />
             </div>
           </div>
           <div className="item-artifacts__preview">

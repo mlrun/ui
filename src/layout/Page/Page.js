@@ -24,6 +24,7 @@ import classNames from 'classnames'
 import { isEmpty } from 'lodash'
 
 import Notification from '../../common/Notification/Notification'
+import DownloadContainer from '../../common/Download/DownloadContainer'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec } from '../../reducers/appReducer'
@@ -84,6 +85,7 @@ const Page = ({ isNavbarPinned, setProjectName }) => {
         </div>
       </main>
       <Notification />
+      <DownloadContainer />
     </>
   )
 }

@@ -4,7 +4,7 @@
 .download-container {
   position: fixed;
   right: 24px;
-  bottom: -100px;
+  bottom: -115px;
   opacity: 0;
   z-index: 1000;
   width: 220px;
@@ -13,7 +13,7 @@
   padding: 15px;
   color: $white;
   background-color: $darkPurple;
-  border-radius: 2px;
+  border-radius: 5px;
   box-shadow: $tooltipShadow;
 
   &__header {
@@ -23,6 +23,8 @@
   &__body {
     display: flex;
     flex-direction: column;
+    max-height: 140px;
+    overflow-y: scroll;
 
     .download-item {
       display: flex;
@@ -30,6 +32,10 @@
       justify-content: space-between;
       margin-bottom: 10px;
       font-size: 12px;
+
+      &__filename {
+        margin-right: 5px;
+      }
 
       &__message {
         &_succeed {
@@ -50,13 +56,5 @@
         }
       }
     }
-  }
-
-  .downloading {
-    cursor: pointer;
-  }
-
-  .cancel_container {
-    transform: translate(14px, 14px);
   }
 }

@@ -20,7 +20,8 @@ such restriction.
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  downloadList: []
+  downloadList: [],
+  showDownloadsList: false
 }
 
 const downloadSlice = createSlice({
@@ -35,12 +36,15 @@ const downloadSlice = createSlice({
 
       state.downloadList.push(payload)
     },
+    setShowDownloadsList(state, { payload }) {
+      state.showDownloadsList = payload
+    },
     removeDownloadItem(state, { payload }) {
       state.downloadList = state.downloadList.filter(item => item.id !== payload)
     }
   }
 })
 
-export const { setDownloadItem, removeDownloadItem } = downloadSlice.actions
+export const { setDownloadItem, setShowDownloadsList, removeDownloadItem } = downloadSlice.actions
 
 export default downloadSlice.reducer
