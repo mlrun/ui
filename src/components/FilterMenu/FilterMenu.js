@@ -453,6 +453,7 @@ const FilterMenu = ({
           </RoundedIcon>
           {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
             <RoundedIcon
+              id="toggle-collapse"
               tooltipText={expand ? 'Collapse' : 'Expand all'}
               onClick={() => handleExpandAll()}
             >

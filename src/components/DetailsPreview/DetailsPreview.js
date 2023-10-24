@@ -87,7 +87,12 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
     <div className="preview_container">
       {popupButtonIsDisplayed && (
         <div className="preview-icon__wrapper">
-          <RoundedIcon onClick={handlePreview} className="preview_popout" tooltipText="Pop-out">
+          <RoundedIcon
+            onClick={handlePreview}
+            className="preview_popout"
+            tooltipText="Pop-out"
+            id="details-preview"
+          >
             <Popout />
           </RoundedIcon>
         </div>

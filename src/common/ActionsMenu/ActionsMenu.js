@@ -126,6 +126,7 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
           {actionMenu[1].map(mainAction => (
             <RoundedIcon
               disabled={mainAction.disabled}
+              id={`quick-links-${mainAction.id}`}
               onClick={() => mainAction.onClick(dataItem)}
               tooltipText={mainAction.label}
               key={mainAction.label}
@@ -135,7 +136,12 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
           ))}
         </div>
       )}
-      <RoundedIcon isActive={isShowMenu} onClick={showActionsList} ref={actionMenuBtnRef}>
+      <RoundedIcon
+        isActive={isShowMenu}
+        id="actions-menu"
+        onClick={showActionsList}
+        ref={actionMenuBtnRef}
+      >
         <ActionMenuIcon />
       </RoundedIcon>
       {renderMenu &&
