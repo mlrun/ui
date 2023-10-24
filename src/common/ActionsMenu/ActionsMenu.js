@@ -126,7 +126,7 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
           {actionMenu[1].map(mainAction => (
             <RoundedIcon
               disabled={mainAction.disabled}
-              id={`quick-links-${mainAction.id}`}
+              id={`quick-link-${mainAction.id}`}
               onClick={() => mainAction.onClick(dataItem)}
               tooltipText={mainAction.label}
               key={mainAction.label}
