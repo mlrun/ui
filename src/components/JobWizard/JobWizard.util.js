@@ -127,6 +127,7 @@ export const generateJobWizardData = (
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
+      methodData: functionInfo.methodData,
       labels: [],
       image: parseImageData(functionInfo.function, frontendSpec, currentProjectName)
     },
@@ -191,7 +192,7 @@ export const generateJobWizardDefaultData = (
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
 
-  const runInfo = getRunDefaultInfo(defaultData)
+  const runInfo = getRunDefaultInfo(defaultData, selectedFunctionData)
   const functionParameters = getFunctionDefaultParameters(selectedFunctionData, runInfo.method)
   const [predefinedParameters, customParameters] = parseDefaultParameters(
     functionParameters,
@@ -220,6 +221,7 @@ export const generateJobWizardDefaultData = (
       name: runInfo.name,
       version: runInfo.version,
       method: runInfo.method,
+      methodData: runInfo.methodData,
       labels: runInfo.labels,
       image: parseImageData(selectedFunctionData, frontendSpec, currentProjectName)
     },
@@ -286,6 +288,20 @@ export const generateJobWizardDefaultData = (
   return [jobFormData, jobAdditionalData]
 }
 
+export const getMethodData = (selectedFunctionData, method) => {
+  const currentFunction = selectedFunctionData?.functions
+    ? chain(selectedFunctionData.functions).orderBy('metadata.updated', 'desc').get(0).value()
+    : selectedFunctionData
+  const methodData = get(currentFunction, ['spec', 'entry_points', method], {})
+  const outputs = (methodData?.outputs ?? []).filter(output => !isEveryObjectValueEmpty(output))
+
+  return {
+    doc: methodData?.doc,
+    has_kwargs: methodData?.has_kwargs || false,
+    outputs
+  }
+}
+
 const getFunctionInfo = selectedFunctionData => {
   const functions = selectedFunctionData?.functions
 
@@ -305,6 +321,7 @@ const getFunctionInfo = selectedFunctionData => {
       name: selectedFunctionData.name,
       method: defaultMethod,
       version: currentFunctionVersion,
+      methodData: getMethodData(currentFunction, defaultMethod),
       methodOptions,
       versionOptions,
       function: currentFunction || {}
@@ -312,13 +329,14 @@ const getFunctionInfo = selectedFunctionData => {
   }
 }
 
-const getRunDefaultInfo = defaultData => {
+const getRunDefaultInfo = (defaultData, selectedFunctionData) => {
   return {
     labels: parseChipsData(defaultData.task?.metadata?.labels),
     name: defaultData.task?.metadata?.name || '',
     method: defaultData.task?.spec?.handler,
-    version: '',
+    methodData: getMethodData(selectedFunctionData, defaultData.task?.spec?.handler),
     methodOptions: [],
+    version: '',
     versionOptions: []
   }
 }

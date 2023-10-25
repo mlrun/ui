@@ -42,8 +42,6 @@ import {
   V3IO_INPUT_PATH_SCHEME
 } from '../../../constants'
 
-import './formDataInputsRow.scss'
-
 const FormDataInputsRow = ({
   applyChanges,
   dataInputState,

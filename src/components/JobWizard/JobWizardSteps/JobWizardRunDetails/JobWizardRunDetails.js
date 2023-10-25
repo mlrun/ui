@@ -19,8 +19,9 @@ such restriction.
 */
 import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { chain, get, isEmpty, set } from 'lodash'
+import { get, isEmpty, set } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
+import { FieldArray } from 'react-final-form-arrays'
 
 import {
   ConfirmDialog,
@@ -43,10 +44,10 @@ import {
   generateJobWizardData,
   generateJobWizardDefaultData,
   getFunctionParameters,
+  getMethodData,
   parseDataInputs,
   parsePredefinedParameters
 } from '../../JobWizard.util'
-import { isEveryObjectValueEmpty } from '../../../../utils/isEveryObjectValueEmpty'
 
 import './jobWizardRunDetails.scss'
 
@@ -59,12 +60,11 @@ const JobWizardRunDetails = ({
   jobAdditionalData,
   params,
   selectedFunctionData,
-  selectedMethod,
-  setJobAdditionalData,
-  setSelectedMethod
+  setJobAdditionalData
 }) => {
   const methodPath = 'runDetails.method'
   const imageSourcePath = 'runDetails.image.imageSource'
+  const outputsPath = 'runDetails.methodData.outputs'
   const [spyOnMethodChange, setSpyOnMethodChange] = useState(true)
   const commonImageWarningMsg =
     'The image must include all the software packages that are required to run the function. ' +
@@ -129,17 +129,20 @@ const JobWizardRunDetails = ({
     setJobData
   ])
 
-  const changePredefinedParameters = method => {
+  const handleMethodChange = method => {
     setSpyOnMethodChange(true)
 
     const functionParameters = getFunctionParameters(selectedFunctionData.functions, method)
     const dataInputs = parseDataInputs(functionParameters)
     const predefinedParameters = parsePredefinedParameters(functionParameters)
+    const methodData = getMethodData(selectedFunctionData, method)
 
     set(formState.initialValues, 'dataInputs.dataInputsTable', dataInputs)
     set(formState.initialValues, 'parameters.parametersTable.predefined', predefinedParameters)
+    set(formState.initialValues, 'runDetails.methodData', methodData)
     formState.form.change('dataInputs.dataInputsTable', dataInputs)
     formState.form.change('parameters.parametersTable.predefined', predefinedParameters)
+    formState.form.change('runDetails.methodData', methodData)
     formState.form.change(
       'parameters.parametersTable.custom',
       get(formState.initialValues, 'parameters.parametersTable.custom', [])
@@ -176,38 +179,16 @@ const JobWizardRunDetails = ({
           label: 'OK',
           variant: SECONDARY_BUTTON,
           handler: () => {
-            changePredefinedParameters(value)
+            handleMethodChange(value)
           }
         },
         header: 'Are you sure?',
         message: 'Changes made to the Data Inputs and Parameters sections will be lost'
       })
     } else {
-      changePredefinedParameters(value)
+      handleMethodChange(value)
     }
   }
-
-  useEffect(() => {
-    if (!isEditMode && get(formState.values, methodPath) !== selectedMethod.name) {
-      const data = chain(selectedFunctionData.functions)
-        .orderBy('metadata.updated', 'desc')
-        .map(func => {
-          return func.spec.entry_points ? func.spec.entry_points : {}
-        })
-        .flatten()
-        .unionBy('name')
-        .get([0, get(formState.values, methodPath)])
-        .value()
-
-      setSelectedMethod(data || {})
-    }
-  }, [
-    formState.values,
-    isEditMode,
-    selectedFunctionData.functions,
-    selectedMethod.name,
-    setSelectedMethod
-  ])
 
   return (
     !isEmpty(jobAdditionalData) && (
@@ -325,36 +306,47 @@ const JobWizardRunDetails = ({
             </div>
           </>
         )}
-        {selectedMethod?.doc && (
+        {get(formState.values, 'runDetails.methodData.doc', '') && (
           <>
             <div className="form-row form-table-title">Description</div>
-            <div className="form-row">{selectedMethod.doc}</div>
+            <div className="form-row">{formState.values.runDetails.methodData.doc}</div>
           </>
         )}
-        {selectedMethod?.outputs?.length > 0 &&
-          selectedMethod.outputs.every(output => !isEveryObjectValueEmpty(output)) && (
-            <>
-              <div className="form-row form-table-title">Outputs</div>
-              <div className="form-table">
-                <div className="form-table__row form-table__header-row no-hover">
-                  <div className="form-table__cell form-table__cell_1">
-                    <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>
-                  </div>
-                  <div className="form-table__cell form-table__cell_1">
-                    <Tooltip template={<TextTooltipTemplate text="Description" />}>Description</Tooltip>
-                  </div>
+        {get(formState.values, outputsPath, []).length > 0 && (
+          <>
+            <div className="form-row form-table-title">Outputs</div>
+            <div className="form-table">
+              <div className="form-table__row form-table__header-row no-hover">
+                <div className="form-table__cell form-table__cell_1">
+                  <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>
                 </div>
-                {selectedMethod?.outputs.map(output => {
-                  return (
-                    <div className="form-table__row" key={output?.doc || output?.type}>
-                      <div className="form-table__cell form-table__cell_1">{output?.type}</div>
-                      <div className="form-table__cell form-table__cell_1">{output?.doc}</div>
-                    </div>
-                  )
-                })}
+                <div className="form-table__cell form-table__cell_1">
+                  <Tooltip template={<TextTooltipTemplate text="Description" />}>
+                    Description
+                  </Tooltip>
+                </div>
               </div>
-            </>
-          )}
+              <FieldArray name={outputsPath}>
+                {({ fields }) => {
+                  return (
+                    <>
+                      {fields.map(rowPath => {
+                        const data = get(formState.values, rowPath)
+
+                        return (
+                          <div className="form-table__row" key={data?.doc || data?.type}>
+                            <div className="form-table__cell form-table__cell_1">{data?.type}</div>
+                            <div className="form-table__cell form-table__cell_1">{data?.doc}</div>
+                          </div>
+                        )
+                      })}
+                    </>
+                  )
+                }}
+              </FieldArray>
+            </div>
+          </>
+        )}
 
         {spyOnMethodChange && <OnChange name={methodPath}>{onMethodChange}</OnChange>}
       </div>
@@ -371,9 +363,7 @@ JobWizardRunDetails.propTypes = {
   jobAdditionalData: PropTypes.shape({}).isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
-  selectedMethod: PropTypes.object.isRequired,
-  setJobAdditionalData: PropTypes.func.isRequired,
-  setSelectedMethod: PropTypes.func.isRequired
+  setJobAdditionalData: PropTypes.func.isRequired
 }
 
 export default JobWizardRunDetails

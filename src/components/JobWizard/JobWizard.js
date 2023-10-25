@@ -99,7 +99,6 @@ const JobWizard = ({
   const [showSchedule, setShowSchedule] = useState(false)
   const [activeTab, setActiveTab] = useState(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
   const [selectedFunctionTab, setSelectedFunctionTab] = useState(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
-  const [selectedMethod, setSelectedMethod] = useState({})
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -360,12 +359,10 @@ const JobWizard = ({
                 jobAdditionalData={jobAdditionalData}
                 params={params}
                 selectedFunctionData={selectedFunctionData}
-                selectedMethod={selectedMethod}
                 setJobAdditionalData={setJobAdditionalData}
-                setSelectedMethod={setSelectedMethod}
               />
-              <JobWizardDataInputs formState={formState} selectedMethod={selectedMethod} />
-              <JobWizardParameters formState={formState} selectedMethod={selectedMethod} />
+              <JobWizardDataInputs formState={formState} />
+              <JobWizardParameters formState={formState} />
               {formState.values.runDetails?.hyperparameter && (
                 <JobWizardHyperparameterStrategy formState={formState} />
               )}

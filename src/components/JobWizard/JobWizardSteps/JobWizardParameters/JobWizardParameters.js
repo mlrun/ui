@@ -28,7 +28,7 @@ import { PARAMETERS_FROM_UI_VALUE, PARAMETERS_FROM_FILE_VALUE } from '../../../.
 
 import './jobWizardParameters.scss'
 
-const JobWizardParameters = ({ formState, selectedMethod }) => {
+const JobWizardParameters = ({ formState }) => {
   const parametersFromPath = 'parameters.parametersFrom'
   const parametersFromFileUrlPath = 'parameters.parametersFromFileUrl'
 
@@ -64,7 +64,7 @@ const JobWizardParameters = ({ formState, selectedMethod }) => {
         fieldsPath="parameters.parametersTable"
         formState={formState}
         parametersFromPath={parametersFromPath}
-        rowCanBeAdded={selectedMethod?.has_kwargs}
+        rowCanBeAdded={formState.values.runDetails.methodData?.has_kwargs}
         withHyperparameters={
           hyperParametersAreEnabled && selectedFromValue === PARAMETERS_FROM_UI_VALUE
         }
@@ -74,8 +74,7 @@ const JobWizardParameters = ({ formState, selectedMethod }) => {
 }
 
 JobWizardParameters.propTypes = {
-  formState: PropTypes.shape({}).isRequired,
-  selectedMethod: PropTypes.object.isRequired
+  formState: PropTypes.shape({}).isRequired
 }
 
 export default JobWizardParameters

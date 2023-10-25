@@ -50,8 +50,6 @@ import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 
 import { ReactComponent as CustomIcon } from 'igz-controls/images/custom.svg'
 
-import './formParametersRow.scss'
-
 const FormParametersRow = ({
   applyChanges,
   deleteRow,
@@ -74,8 +72,7 @@ const FormParametersRow = ({
   const [typeIsChanging, setTypeIsChanging] = useState(false)
   const tableRowClassNames = classnames(
     'form-table__row',
-    'form-table__parameter-row',
-    !fieldData.data?.isChecked && 'form-table__parameter-row_excluded'
+    !fieldData.data?.isChecked && 'form-table__row_excluded'
   )
   const tableGeneralRowClassNames = classnames(
     tableRowClassNames,

@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 
 import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDataInputsTable'
 
-const JobWizardDataInputs = ({ formState, selectedMethod }) => {
+const JobWizardDataInputs = ({ formState }) => {
   return (
     <div className="job-wizard__data-inputs">
       <div className="form-row">
@@ -32,7 +32,7 @@ const JobWizardDataInputs = ({ formState, selectedMethod }) => {
         <FormDataInputsTable
           fieldsPath="dataInputs.dataInputsTable"
           formState={formState}
-          rowCanBeAdded={selectedMethod?.has_kwargs}
+          rowCanBeAdded={formState.values.runDetails.methodData?.has_kwargs}
         />
       </div>
     </div>
@@ -40,8 +40,7 @@ const JobWizardDataInputs = ({ formState, selectedMethod }) => {
 }
 
 JobWizardDataInputs.propTypes = {
-  formState: PropTypes.shape({}).isRequired,
-  selectedMethod: PropTypes.object.isRequired
+  formState: PropTypes.shape({}).isRequired
 }
 
 export default JobWizardDataInputs
