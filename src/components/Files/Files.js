@@ -163,6 +163,7 @@ const Files = () => {
         [
           {
             disabled: !isTargetPathValid,
+            id: 'artifact-preview',
             label: 'Preview',
             icon: <ArtifactView />,
             onClick: file => {

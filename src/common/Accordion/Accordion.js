@@ -63,17 +63,9 @@ const Accordion = ({
     !alwaysOpened && setOpen(state => !state)
   }
 
-  const accordionClassNames = classnames(
-    'accordion__container',
-    open && 'open',
-    accordionClassName
-  )
+  const accordionClassNames = classnames('accordion__container', open && 'open', accordionClassName)
 
-  const iconClassNames = classnames(
-    'accordion__icon',
-    iconClassName,
-    open && 'open'
-  )
+  const iconClassNames = classnames('accordion__icon', iconClassName, open && 'open')
 
   return (
     <div
@@ -83,11 +75,7 @@ const Accordion = ({
       ref={accordionRef}
     >
       {icon && (
-        <RoundedIcon
-          data-testid="accordion-btn"
-          onClick={handleOpenAccordion}
-          className={iconClassNames}
-        >
+        <RoundedIcon id="accordion-btn" onClick={handleOpenAccordion} className={iconClassNames}>
           {icon}
         </RoundedIcon>
       )}

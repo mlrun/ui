@@ -171,6 +171,7 @@ const KeyValueTableView = ({
                       (selectedItem.newKey !== selectedItem.key &&
                         isKeyNotUnique(selectedItem.newKey, content)))
                   }
+                  id="key-value-table-apply"
                   onClick={handleEditItem}
                   tooltipText="Apply"
                 >
@@ -178,6 +179,7 @@ const KeyValueTableView = ({
                 </RoundedIcon>
                 <RoundedIcon
                   className="key-value-table__btn"
+                  id="key-value-table-close"
                   onClick={handleResetForm}
                   tooltipText="Discard changes"
                 >
@@ -218,6 +220,7 @@ const KeyValueTableView = ({
               <div className="table-cell table-cell__actions">
                 <RoundedIcon
                   className="key-value-table__btn"
+                  id="key-value-table-edit"
                   onClick={event => {
                     event.preventDefault()
                   }}
@@ -228,6 +231,7 @@ const KeyValueTableView = ({
 
                 <RoundedIcon
                   className="key-value-table__btn"
+                  id="key-value-table-delete"
                   onClick={event => {
                     event.stopPropagation()
                     deleteItem(index, contentItem)
@@ -297,6 +301,7 @@ const KeyValueTableView = ({
             <RoundedIcon
               className="btn-add"
               disabled={isKeyNotUnique(keyValue, content)}
+              id="key-value-table-apply"
               onClick={saveItem}
               tooltipText="Apply"
             >
@@ -305,6 +310,7 @@ const KeyValueTableView = ({
 
             <RoundedIcon
               className="btn-add"
+              id="key-value-table-discard"
               onClick={handleResetForm}
               tooltipText="Discard changes"
             >

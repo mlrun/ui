@@ -168,7 +168,7 @@ const DetailsInputs = ({ inputs }) => {
               </div>
               {artifact.ui.isPreviewable && (
                 <div className="item-inputs__row-item item-inputs__row-item_preview">
-                  <RoundedIcon tooltipText="Show Details">
+                  <RoundedIcon tooltipText="Show Details" id="show-details">
                     <Link target="_blank" to={artifact.ui.artifactLink}>
                       <DetailsIcon />
                     </Link>
