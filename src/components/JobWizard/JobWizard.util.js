@@ -32,18 +32,24 @@ import {
   unionBy
 } from 'lodash'
 import {
+  ADVANCED_STEP,
   CONFIG_MAP_VOLUME_TYPE,
+  DATA_INPUTS_STEP,
   ENV_VARIABLE_TYPE_SECRET,
   ENV_VARIABLE_TYPE_VALUE,
   EXISTING_IMAGE_SOURCE,
+  HYPERPARAMETER_STRATEGY_STEP,
   JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
   PANEL_DEFAULT_ACCESS_KEY,
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
+  PARAMETERS_STEP,
   PVC_VOLUME_TYPE,
   RANDOM_STRATEGY,
+  RESOURCES_STEP,
+  RUN_DETAILS_STEP,
   SECRET_VOLUME_TYPE,
   TAG_LATEST,
   V3IO_VOLUME_TYPE
@@ -123,7 +129,7 @@ export const generateJobWizardData = (
   const currentRequest = parseRequests(requests, defaultResources.requests)
 
   const jobFormData = {
-    runDetails: {
+    [RUN_DETAILS_STEP]: {
       name: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
@@ -131,25 +137,28 @@ export const generateJobWizardData = (
       labels: [],
       image: parseImageData(functionInfo.function, frontendSpec, currentProjectName)
     },
-    parameters: {
-      parametersTable: {},
+    [PARAMETERS_STEP]: {
+      parametersTable: {
+        predefined: [],
+        custom: []
+      },
       parametersFrom: PARAMETERS_FROM_UI_VALUE
     },
-    hyperparameterStrategy: {
+    [HYPERPARAMETER_STRATEGY_STEP]: {
       strategy: LIST_TUNING_STRATEGY,
       criteria: MAX_SELECTOR_CRITERIA
     },
-    dataInputs: {
+    [DATA_INPUTS_STEP]: {
       dataInputsTable: []
     },
-    resources: {
+    [RESOURCES_STEP]: {
       preemptionMode,
       currentLimits,
       currentRequest,
       nodeSelectorTable,
       volumesTable
     },
-    advanced: {
+    [ADVANCED_STEP]: {
       inputPath: null,
       outputPath: JOB_DEFAULT_OUTPUT_PATH,
       accessKey: true,
@@ -162,22 +171,22 @@ export const generateJobWizardData = (
     scheduleData
   }
 
-  jobFormData.resources.preemptionMode = getPreemptionMode(
+  jobFormData[RESOURCES_STEP].preemptionMode = getPreemptionMode(
     frontendSpec.feature_flags?.preemption_nodes,
     preemptionMode,
     frontendSpec.default_function_preemption_mode
   )
 
   if (jobPriorityClassName) {
-    jobFormData.resources.jobPriorityClassName = jobPriorityClassName
+    jobFormData[RESOURCES_STEP].jobPriorityClassName = jobPriorityClassName
   }
 
   if (!isEmpty(functionParameters)) {
-    jobFormData.parameters.parametersTable = {
+    jobFormData[PARAMETERS_STEP].parametersTable = {
       predefined: parsePredefinedParameters(functionParameters),
       custom: []
     }
-    jobFormData.dataInputs.dataInputsTable = parseDataInputs(functionParameters)
+    jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(functionParameters)
   }
 
   return [jobFormData, jobAdditionalData]
@@ -217,7 +226,7 @@ export const generateJobWizardDefaultData = (
     : scheduleDataInitialState
 
   const jobFormData = {
-    runDetails: {
+    [RUN_DETAILS_STEP]: {
       name: runInfo.name,
       version: runInfo.version,
       method: runInfo.method,
@@ -225,10 +234,10 @@ export const generateJobWizardDefaultData = (
       labels: runInfo.labels,
       image: parseImageData(selectedFunctionData, frontendSpec, currentProjectName)
     },
-    dataInputs: {
+    [DATA_INPUTS_STEP]: {
       dataInputsTable: []
     },
-    parameters: {
+    [PARAMETERS_STEP]: {
       parametersFrom: isEmpty(defaultData.task.spec.hyper_param_options?.param_file)
         ? PARAMETERS_FROM_UI_VALUE
         : PARAMETERS_FROM_FILE_VALUE,
@@ -238,7 +247,7 @@ export const generateJobWizardDefaultData = (
         custom: customParameters
       }
     },
-    hyperparameterStrategy: {
+    [HYPERPARAMETER_STRATEGY_STEP]: {
       strategy: defaultData.task.spec.hyper_param_options?.strategy ?? LIST_TUNING_STRATEGY,
       criteria: hyperParamCriteria || MAX_SELECTOR_CRITERIA,
       result: hyperParamResult,
@@ -249,7 +258,7 @@ export const generateJobWizardDefaultData = (
       daskClusterUri: defaultData.task.spec.hyper_param_options?.dask_cluster_uri,
       teardownDask: defaultData.task.spec.hyper_param_options?.teardown_dask
     },
-    resources: {
+    [RESOURCES_STEP]: {
       preemptionMode: defaultData.function?.spec?.preemption_mode || '',
       jobPriorityClassName: defaultData.function?.spec?.priority_class_name || '',
       currentLimits,
@@ -261,7 +270,7 @@ export const generateJobWizardDefaultData = (
         isEditMode
       )
     },
-    advanced: {
+    [ADVANCED_STEP]: {
       inputPath: defaultData.task.spec.input_path,
       outputPath: defaultData.task.spec.output_path,
       accessKey:
@@ -279,7 +288,7 @@ export const generateJobWizardDefaultData = (
   }
 
   if (!isEmpty(defaultData.task.spec.inputs)) {
-    jobFormData.dataInputs.dataInputsTable = parseDefaultDataInputs(
+    jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDefaultDataInputs(
       functionParameters,
       defaultData.task.spec.inputs
     )
@@ -1038,28 +1047,28 @@ export const generateJobRequestData = (
   isSchedule
 ) => {
   let selectedFunction = selectedFunctionData?.functions?.find(
-    func => func.metadata.tag === formData.runDetails.version
+    func => func.metadata.tag === formData[RUN_DETAILS_STEP].version
   )
   selectedFunction ??= selectedFunctionData?.functions?.[0]
-  const [volume_mounts, volumes] = generateVolumes(formData.resources.volumesTable)
+  const [volume_mounts, volumes] = generateVolumes(formData[RESOURCES_STEP].volumesTable)
 
   const postData = {
     task: {
       metadata: {
         project: params.projectName,
-        name: formData.runDetails.name,
-        labels: convertChipsData(formData.runDetails.labels)
+        name: formData[RUN_DETAILS_STEP].name,
+        labels: convertChipsData(formData[RUN_DETAILS_STEP].labels)
       },
       spec: {
-        inputs: generateDataInputs(formData.dataInputs.dataInputsTable),
-        parameters: generateParameters(formData.parameters.parametersTable),
+        inputs: generateDataInputs(formData[DATA_INPUTS_STEP].dataInputsTable),
+        parameters: generateParameters(formData[PARAMETERS_STEP].parametersTable),
         // secretSourcesTable - currently not shown
-        // secret_sources: formData.advanced.secretSourcesTable.map(secretSource => {
+        // secret_sources: formData[ADVANCED_STEP].secretSourcesTable.map(secretSource => {
         //   return { kind: secretSource.data.key, source: secretSource.data.value }
         // }),
-        handler: formData.runDetails.method ?? '',
-        input_path: formData.advanced.inputPath ?? '',
-        output_path: formData.advanced.outputPath,
+        handler: formData[RUN_DETAILS_STEP].method ?? '',
+        input_path: formData[ADVANCED_STEP].inputPath ?? '',
+        output_path: formData[ADVANCED_STEP].outputPath,
         function:
           selectedFunction && !has(selectedFunction, 'status')
             ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
@@ -1072,56 +1081,59 @@ export const generateJobRequestData = (
     function: {
       metadata: {
         credentials: {
-          access_key: formData.advanced.accessKey
+          access_key: formData[ADVANCED_STEP].accessKey
             ? PANEL_DEFAULT_ACCESS_KEY
-            : formData.advanced.accessKeyInput
+            : formData[ADVANCED_STEP].accessKeyInput
         }
       },
       spec: {
         image:
-          formData.runDetails.image?.imageSource === EXISTING_IMAGE_SOURCE
-            ? formData.runDetails.image.imageName
+          formData[RUN_DETAILS_STEP].image?.imageSource === EXISTING_IMAGE_SOURCE
+            ? formData[RUN_DETAILS_STEP].image.imageName
             : '',
-        build: generateFunctionBuild(formData.runDetails.image),
-        env: generateEnvironmentVariables(formData.advanced.environmentVariablesTable),
-        node_selector: generateObjectFromKeyValue(formData.resources.nodeSelectorTable),
-        preemption_mode: formData.resources.preemptionMode,
-        priority_class_name: formData.resources.jobPriorityClassName,
+        build: generateFunctionBuild(formData[RUN_DETAILS_STEP].image),
+        env: generateEnvironmentVariables(formData[ADVANCED_STEP].environmentVariablesTable),
+        node_selector: generateObjectFromKeyValue(formData[RESOURCES_STEP].nodeSelectorTable),
+        preemption_mode: formData[RESOURCES_STEP].preemptionMode,
+        priority_class_name: formData[RESOURCES_STEP].jobPriorityClassName,
         volume_mounts,
         volumes,
-        resources: generateResources(formData.resources)
+        resources: generateResources(formData[RESOURCES_STEP])
       }
     }
   }
 
-  if (formData.runDetails.hyperparameter) {
+  if (formData[RUN_DETAILS_STEP].hyperparameter) {
     postData.task.spec.hyper_param_options = {
-      strategy: formData.hyperparameterStrategy.strategy,
-      stop_condition: formData.hyperparameterStrategy.stopCondition ?? '',
-      parallel_runs: formData.hyperparameterStrategy.parallelRuns,
-      dask_cluster_uri: formData.hyperparameterStrategy.daskClusterUri ?? '',
+      strategy: formData[HYPERPARAMETER_STRATEGY_STEP].strategy,
+      stop_condition: formData[HYPERPARAMETER_STRATEGY_STEP].stopCondition ?? '',
+      parallel_runs: formData[HYPERPARAMETER_STRATEGY_STEP].parallelRuns,
+      dask_cluster_uri: formData[HYPERPARAMETER_STRATEGY_STEP].daskClusterUri ?? '',
       max_iterations:
-        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
-          ? formData.hyperparameterStrategy.maxIterations
+        formData[HYPERPARAMETER_STRATEGY_STEP].strategy === RANDOM_STRATEGY
+          ? formData[HYPERPARAMETER_STRATEGY_STEP].maxIterations
           : null,
       max_errors:
-        formData.hyperparameterStrategy.strategy === RANDOM_STRATEGY
-          ? formData.hyperparameterStrategy.maxErrors
+        formData[HYPERPARAMETER_STRATEGY_STEP].strategy === RANDOM_STRATEGY
+          ? formData[HYPERPARAMETER_STRATEGY_STEP].maxErrors
           : null,
-      teardown_dask: formData.hyperparameterStrategy.teardownDask ?? false
+      teardown_dask: formData[HYPERPARAMETER_STRATEGY_STEP].teardownDask ?? false
     }
 
-    if (formData.parameters.parametersFrom === PARAMETERS_FROM_FILE_VALUE) {
-      postData.task.spec.hyper_param_options.param_file = formData.parameters.parametersFromFileUrl
+    if (formData[PARAMETERS_STEP].parametersFrom === PARAMETERS_FROM_FILE_VALUE) {
+      postData.task.spec.hyper_param_options.param_file =
+        formData[PARAMETERS_STEP].parametersFromFileUrl
     } else {
-      postData.task.spec.hyperparams = generateHyperParameters(formData.parameters.parametersTable)
+      postData.task.spec.hyperparams = generateHyperParameters(
+        formData[PARAMETERS_STEP].parametersTable
+      )
     }
 
     if (
-      !isEmpty(formData.hyperparameterStrategy?.result) &&
-      !isEmpty(formData.hyperparameterStrategy?.criteria)
+      !isEmpty(formData[HYPERPARAMETER_STRATEGY_STEP]?.result) &&
+      !isEmpty(formData[HYPERPARAMETER_STRATEGY_STEP]?.criteria)
     ) {
-      postData.task.spec.hyper_param_options.selector = `${formData.hyperparameterStrategy.criteria}.${formData.hyperparameterStrategy.result}`
+      postData.task.spec.hyper_param_options.selector = `${formData[HYPERPARAMETER_STRATEGY_STEP].criteria}.${formData[HYPERPARAMETER_STRATEGY_STEP].result}`
     }
   }
 

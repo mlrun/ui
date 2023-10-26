@@ -28,7 +28,13 @@ import FormEnvironmentVariablesRow from './FormEnvironmentVariablesRow/FormEnvir
 
 import { useFormTable } from 'igz-controls/hooks'
 
-const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formState }) => {
+const FormEnvironmentVariablesTable = ({
+  className,
+  disabled,
+  exitEditModeTriggerItem,
+  fieldsPath,
+  formState
+}) => {
   const tableClassNames = classnames('form-table', className)
   const {
     addNewRow,
@@ -39,7 +45,7 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
     editingItem,
     enterEditMode,
     isCurrentRowEditing
-  } = useFormTable(formState)
+  } = useFormTable(formState, exitEditModeTriggerItem)
 
   const uniquenessValidator = (fields, newValue) => {
     return !fields.value.some(({ data: { key } }, index) => {
@@ -111,13 +117,15 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
 }
 
 FormEnvironmentVariablesTable.defaultProps = {
+  className: '',
   disabled: false,
-  className: ''
+  exitEditModeTriggerItem: null
 }
 
 FormEnvironmentVariablesTable.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired
 }

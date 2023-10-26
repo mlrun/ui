@@ -19,6 +19,8 @@ such restriction.
 */
 // import { set } from 'lodash'
 
+import { FUNCTION_SELECTION_STEP } from '../../../../constants'
+
 export const FUNCTIONS_SELECTION_FUNCTIONS_TAB = 'functions'
 export const FUNCTIONS_SELECTION_HUB_TAB = 'hub'
 
@@ -48,7 +50,7 @@ export const generateFunctionTemplateCardData = templateData => {
     subHeader: '',
     description: templateData.metadata.description,
     sideTag: '',
-    labelsName: `functionSelection.templatesLabels.${templateData.metadata.name}`
+    labelsName: `${FUNCTION_SELECTION_STEP}.templatesLabels.${templateData.metadata.name}`
   }
 
   // todo: add links when the backend is ready
