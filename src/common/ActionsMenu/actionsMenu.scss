@@ -9,7 +9,7 @@
 
     &_extended {
       position: absolute;
-      right: 0;
+      right: 5px;
       display: none;
       align-items: center;
       justify-content: center;
@@ -22,14 +22,13 @@
         position: absolute;
         display: block;
         left: -30px;
-        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(245,247,255,1) 100%);
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(245, 247, 255, 1) 100%);
       }
     }
 
     &-active {
       display: flex;
     }
-
   }
 
   &__main-actions-wrapper {
