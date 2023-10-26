@@ -30,7 +30,7 @@ import FormDataInputsRow from './FormDataInputsRow/FormDataInputsRow'
 import { useFormTable } from 'igz-controls/hooks'
 import { targetPathInitialState } from '../../common/TargetPath/targetPath.util'
 
-const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => {
+const FormDataInputsTable = ({ className, disabled, fieldsPath, formState, rowCanBeAdded }) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
   const tableClassNames = classnames('form-table', className)
   const {
@@ -52,12 +52,14 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
   }
 
   const validateDataInputs = value => {
-    const tableErrors = value.reduce((errorData, dataInput, index) => {
+    const tableErrors = value?.reduce((errorData, dataInput, index) => {
       if (dataInput.isRequired && dataInput.data?.fieldInfo?.value === '') {
-        errorData[index] = [{
-          name: 'required',
-          label: `'${dataInput.data.name}' data input is required`
-        }]
+        errorData[index] = [
+          {
+            name: 'required',
+            label: `'${dataInput.data.name}' data input is required`
+          }
+        ]
       }
 
       return errorData
@@ -69,6 +71,7 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
   return (
     <div className={tableClassNames}>
       <div className="form-table__row form-table__header-row no-hover">
+        <div className="form-table__cell form-table__cell_min"></div>
         <div className="form-table__cell form-table__cell_1">
           <Tooltip template={<TextTooltipTemplate text="Name" />}>Input name</Tooltip>
         </div>
@@ -105,28 +108,31 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
                   />
                 )
               })}
-              <FormActionButton
-                ref={bottomScrollRef}
-                hidden={editingItem?.ui?.isNew}
-                disabled={disabled}
-                fields={fields}
-                fieldsPath={fieldsPath}
-                label="Add input "
-                onClick={(...addRowArgs) => {
-                  setDataInputState(targetPathInitialState)
-                  addNewRow(...addRowArgs, {
-                    data: {
-                      name: '',
-                      path: '',
-                      fieldInfo: {
-                        pathType: '',
-                        value: ''
-                      }
-                    },
-                    doc: ''
-                  })
-                }}
-              />
+              {rowCanBeAdded && (
+                <FormActionButton
+                  ref={bottomScrollRef}
+                  hidden={editingItem?.ui?.isNew}
+                  disabled={disabled}
+                  fields={fields}
+                  fieldsPath={fieldsPath}
+                  label="Add input "
+                  onClick={(...addRowArgs) => {
+                    setDataInputState(targetPathInitialState)
+                    addNewRow(...addRowArgs, {
+                      data: {
+                        name: '',
+                        path: '',
+                        fieldInfo: {
+                          pathType: '',
+                          value: ''
+                        },
+                        isChecked: true
+                      },
+                      doc: ''
+                    })
+                  }}
+                />
+              )}
             </>
           )
         }}
@@ -137,14 +143,16 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
 
 FormDataInputsTable.defaultProps = {
   disabled: false,
-  className: ''
+  className: '',
+  rowCanBeAdded: false
 }
 
 FormDataInputsTable.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   fieldsPath: PropTypes.string.isRequired,
-  formState: PropTypes.shape({}).isRequired
+  formState: PropTypes.shape({}).isRequired,
+  rowCanBeAdded: PropTypes.bool
 }
 
 export default FormDataInputsTable

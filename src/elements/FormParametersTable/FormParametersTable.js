@@ -35,6 +35,7 @@ const FormParametersTable = ({
   fieldsPath,
   formState,
   parametersFromPath,
+  rowCanBeAdded,
   withHyperparameters
 }) => {
   const withRequiredParametersRef = useRef(true)
@@ -76,7 +77,7 @@ const FormParametersTable = ({
 
     withRequiredParametersRef.current = !parametersAreFromFile
 
-    const tableErrors = value.reduce((errorData, parameter, index) => {
+    const tableErrors = value?.reduce((errorData, parameter, index) => {
       if (
         !parametersAreFromFile &&
         parameter.isRequired &&
@@ -171,28 +172,30 @@ const FormParametersTable = ({
                   />
                 )
               })}
-              <FormActionButton
-                disabled={disabled}
-                ref={bottomScrollRef}
-                hidden={editingItem?.ui?.isNew}
-                fields={fields}
-                fieldsPath={customPath}
-                label="Add custom parameter"
-                onClick={(...addRowArgs) => {
-                  addNewRow(...addRowArgs, {
-                    data: {
-                      name: '',
-                      value: '',
-                      type: 'str',
-                      isChecked: true,
-                      isHyper: false
-                    },
-                    doc: '',
-                    isDefault: false,
-                    isPredefined: false
-                  })
-                }}
-              />
+              {rowCanBeAdded && (
+                <FormActionButton
+                  disabled={disabled}
+                  ref={bottomScrollRef}
+                  hidden={editingItem?.ui?.isNew}
+                  fields={fields}
+                  fieldsPath={customPath}
+                  label="Add custom parameter"
+                  onClick={(...addRowArgs) => {
+                    addNewRow(...addRowArgs, {
+                      data: {
+                        name: '',
+                        value: '',
+                        type: 'str',
+                        isChecked: true,
+                        isHyper: false
+                      },
+                      doc: '',
+                      isDefault: false,
+                      isPredefined: false
+                    })
+                  }}
+                />
+              )}
             </>
           )
         }}
@@ -204,6 +207,7 @@ const FormParametersTable = ({
 FormParametersTable.defaultProps = {
   disabled: false,
   parametersFromPath: '',
+  rowCanBeAdded: false,
   withHyperparameters: false
 }
 
@@ -212,6 +216,7 @@ FormParametersTable.propTypes = {
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
   parametersFromPath: PropTypes.string,
+  rowCanBeAdded: PropTypes.bool,
   withHyperparameters: PropTypes.bool
 }
 
