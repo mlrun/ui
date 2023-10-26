@@ -58,11 +58,11 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
           <li>
             {location.pathname.includes(PROJECT_MONITOR) ? (
               <Link to={`/projects/${projectName}/${PROJECT_QUICK_ACTIONS_PAGE}`} className="link">
-                Project Quick Actions
+                Project quick actions
               </Link>
             ) : (
               <Link to={`/projects/${projectName}/${PROJECT_MONITOR}`} className="link">
-                Project Monitoring
+                Project monitoring
               </Link>
             )}
           </li>
