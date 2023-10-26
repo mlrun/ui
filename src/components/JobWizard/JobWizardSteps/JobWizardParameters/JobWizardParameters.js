@@ -64,6 +64,7 @@ const JobWizardParameters = ({ formState }) => {
         fieldsPath="parameters.parametersTable"
         formState={formState}
         parametersFromPath={parametersFromPath}
+        rowCanBeAdded={formState.values.runDetails.methodData?.has_kwargs}
         withHyperparameters={
           hyperParametersAreEnabled && selectedFromValue === PARAMETERS_FROM_UI_VALUE
         }
