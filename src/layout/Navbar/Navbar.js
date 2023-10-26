@@ -86,6 +86,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
         <div className="navbar__content">
           <div className="navbar__pin-icon">
             <RoundedIcon
+              id="navabr-pin"
               onClick={handlePinClick}
               tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
             >

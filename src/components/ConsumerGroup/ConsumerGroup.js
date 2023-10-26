@@ -122,7 +122,11 @@ const ConsumerGroup = ({
           placeholder="Search by shard name..."
           value={filterByName}
         />
-        <RoundedIcon onClick={() => refreshConsumerGroup(currentV3ioStream)} tooltipText="Refresh">
+        <RoundedIcon
+          onClick={() => refreshConsumerGroup(currentV3ioStream)}
+          tooltipText="Refresh"
+          id="consumer-group-refresh"
+        >
           <RefreshIcon />
         </RoundedIcon>
       </div>
