@@ -34,7 +34,6 @@
       flex-direction: column;
       width: 100%;
       height: 100%;
-      overflow-y: auto;
       color: $mulledWine;
       background-color: $white;
     }
@@ -144,6 +143,24 @@
 
   .table {
     &-header {
+      position: sticky;
+      top: 0;
+      min-width: 100%;
+
+      &-item {
+        min-width: 75px;
+
+        @include tableHeader;
+
+        &:first-child {
+          border-radius: 4px 0 0 0;
+        }
+
+        &:last-child {
+          border-radius: 0 4px 0 0;
+        }
+      }
+
       &-item {
         &.buttonPopout,
         &.buttonDownload {
@@ -158,9 +175,14 @@
           margin-left: 2px;
         }
       }
+
+      & + .table-body {
+        overflow-y: auto;
+      }
     }
 
     &-body {
+      position: relative;
       color: $mulledWine;
 
       &__cell {

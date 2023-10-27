@@ -17,8 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import classnames from 'classnames'
@@ -36,20 +35,69 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [actionMenu, setActionMenu] = useState(menu)
-  const [renderMenu, setRenderMenu] = useState(false)
   const actionMenuRef = useRef()
+  const actionMenuBtnRef = useRef()
   const dropDownMenuRef = useRef()
   const mainActionsWrapperRef = useRef()
-  const actionMenuBtnRef = useRef()
 
   const actionMenuClassNames = classnames(
     'actions-menu__container',
     withQuickActions && 'actions-menu__container_extended',
     isShowMenu && 'actions-menu__container-active'
   )
-  const dropDownMenuClassNames = classnames('actions-menu__body', isShowMenu && 'show')
+
   let idTimeout = null
-  const offset = 15
+  const offset = 34
+
+  const hideActionMenu = useCallback(event => {
+    if (
+      !event.target.closest('.actions-menu-button') &&
+      !event.target.closest('.actions-menu__body')
+    ) {
+      setIsShowMenu(false)
+    }
+  }, [])
+
+  const onMouseOut = () => {
+    if (isShowMenu) {
+      idTimeout = setTimeout(() => {
+        setIsShowMenu(false)
+      }, time)
+    }
+  }
+
+  const handleMouseOver = event => {
+    if (mainActionsWrapperRef.current?.contains(event.target)) {
+      setIsShowMenu(false)
+    }
+
+    if (idTimeout) clearTimeout(idTimeout)
+  }
+
+  useLayoutEffect(() => {
+    if (isShowMenu) {
+      const actionMenuBtnRect =
+        actionMenuBtnRef && actionMenuBtnRef.current?.getBoundingClientRect()
+      const dropDownMenuRect = dropDownMenuRef && dropDownMenuRef.current?.getBoundingClientRect()
+
+      if (
+        actionMenuBtnRect.top + actionMenuBtnRect.height + offset + dropDownMenuRect.height >=
+        window.innerHeight
+      ) {
+        dropDownMenuRef.current.style.top = `${actionMenuBtnRect.top - dropDownMenuRect.height}px`
+        dropDownMenuRef.current.style.left = `${
+          actionMenuBtnRect.left - dropDownMenuRect.width + offset
+        }px`
+        dropDownMenuRef.current.style.marginTop = '-2px'
+      } else {
+        dropDownMenuRef.current.style.top = `${actionMenuBtnRect.bottom}px`
+        dropDownMenuRef.current.style.left = `${
+          actionMenuBtnRect.left - (dropDownMenuRect.width - offset)
+        }px`
+        dropDownMenuRef.current.style.marginTop = '2px'
+      }
+    }
+  }, [isShowMenu])
 
   useEffect(() => {
     if (!isEmpty(dataItem)) {
@@ -61,58 +109,15 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
     setIsIconDisplayed(actionMenu[0].some(menuItem => menuItem.icon))
   }, [actionMenu])
 
-  const showActionsList = () => {
-    setIsShowMenu(show => !show)
-    const actionMenuBtnRect = actionMenuBtnRef.current.getBoundingClientRect()
-    const dropDownMenuRect = dropDownMenuRef.current.getBoundingClientRect()
-
-    if (
-      actionMenuBtnRect.top + actionMenuBtnRect.height + offset + dropDownMenuRect.height >=
-      window.innerHeight
-    ) {
-      dropDownMenuRef.current.style.top = `${actionMenuBtnRect.top - dropDownMenuRect.height}px`
-      dropDownMenuRef.current.style.left = `${
-        actionMenuBtnRect.left - dropDownMenuRect.width + offset
-      }px`
-    } else {
-      dropDownMenuRef.current.style.top = `${actionMenuBtnRect.bottom}px`
-      dropDownMenuRef.current.style.left = `${
-        actionMenuBtnRect.left - (dropDownMenuRect.width - offset)
-      }px`
-    }
-  }
-
-  const onMouseOut = () => {
-    if (isShowMenu) {
-      idTimeout = setTimeout(() => {
-        setIsShowMenu(false)
-        setRenderMenu(false)
-      }, time)
-    }
-  }
-
-  const handleMouseOver = event => {
-    if (mainActionsWrapperRef.current?.contains(event.target)) {
-      setRenderMenu(false)
-      setIsShowMenu(false)
-    } else {
-      setRenderMenu(true)
-    }
-
-    if (idTimeout) clearTimeout(idTimeout)
-  }
-
-  const handleScroll = () => {
-    setIsShowMenu(false)
-  }
-
   useEffect(() => {
-    if (isShowMenu) {
-      window.addEventListener('scroll', handleScroll, true)
-    }
+    window.addEventListener('click', hideActionMenu)
+    window.addEventListener('scroll', hideActionMenu, true)
 
-    return () => window.removeEventListener('scroll', handleScroll, true)
-  }, [isShowMenu])
+    return () => {
+      window.removeEventListener('click', hideActionMenu)
+      window.removeEventListener('scroll', hideActionMenu, true)
+    }
+  }, [hideActionMenu])
 
   return (
     <div
@@ -136,24 +141,22 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
           ))}
         </div>
       )}
-      <RoundedIcon
-        isActive={isShowMenu}
-        id="actions-menu"
-        onClick={showActionsList}
-        ref={actionMenuBtnRef}
-      >
-        <ActionMenuIcon />
-      </RoundedIcon>
-      {renderMenu &&
-        createPortal(
-          <div
+      <div className="actions-menu" data-testid="actions-menu">
+        <RoundedIcon
+          className="actions-menu-button"
+          isActive={isShowMenu}
+          id="actions-menu-button"
+          onClick={() => {
+            setIsShowMenu(prevValue => !prevValue)
+          }}
+          ref={actionMenuBtnRef}
+        >
+          <ActionMenuIcon />
+        </RoundedIcon>
+        {isShowMenu && (
+          <ul
             data-testid="actions-drop-down-menu"
-            className={dropDownMenuClassNames}
-            onClick={event => {
-              setIsShowMenu(false)
-              setRenderMenu(false)
-              event.stopPropagation()
-            }}
+            className="actions-menu__list"
             ref={dropDownMenuRef}
           >
             {actionMenu[0].map(
@@ -168,9 +171,9 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
                   />
                 )
             )}
-          </div>,
-          document.getElementById('overlay_container')
+          </ul>
         )}
+      </div>
     </div>
   )
 }

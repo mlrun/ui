@@ -3,17 +3,20 @@
 @import '~igz-controls/scss/shadows';
 
 .actions-menu {
+  position: relative;
+
   &__container {
     position: relative;
     display: none;
 
     &_extended {
       position: absolute;
-      right: 5px;
+      right: 0;
       display: none;
       align-items: center;
       justify-content: center;
       background-color: $ghostWhite;
+      height: 100%;
 
       &:before {
         content: '';
@@ -23,6 +26,10 @@
         display: block;
         left: -30px;
         background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(245, 247, 255, 1) 100%);
+      }
+
+      .actions-menu {
+        padding: 0 5px 0 0;
       }
     }
 
@@ -41,14 +48,29 @@
     position: fixed;
     min-width: 150px;
     max-width: 250px;
-    background: $white;
-    border: $primaryBorder;
-    border-radius: $mainBorderRadius;
-    box-shadow: $filterShadow;
     visibility: hidden;
 
     &.show {
       visibility: visible;
     }
+
+    .pop-up-dialog {
+      width: 100%;
+      padding: 0;
+    }
+  }
+
+  &__list {
+    list-style-type: none;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    background-color: $white;
+    border-radius: $modalBorderRadius;
+    box-shadow: $previewBoxShadow;
+    min-width: 150px;
+    max-width: 250px;
+    z-index: 9;
   }
 }
