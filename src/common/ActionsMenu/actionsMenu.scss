@@ -45,14 +45,8 @@
   }
 
   &__body {
-    position: fixed;
     min-width: 150px;
     max-width: 250px;
-    visibility: hidden;
-
-    &.show {
-      visibility: visible;
-    }
 
     .pop-up-dialog {
       width: 100%;
@@ -62,15 +56,7 @@
 
   &__list {
     list-style-type: none;
-    position: fixed;
     margin: 0;
     padding: 0;
-    overflow-y: auto;
-    background-color: $white;
-    border-radius: $modalBorderRadius;
-    box-shadow: $previewBoxShadow;
-    min-width: 150px;
-    max-width: 250px;
-    z-index: 9;
   }
 }

@@ -214,7 +214,6 @@ main {
   position: relative;
   text-align: left;
   width: 100%;
-  height: inherit;
 
   .table {
     &-row {
@@ -348,7 +347,7 @@ main {
 
           .row_grouped-by {
             position: sticky;
-            top: 0;
+            top: 50px;
             background-color: $white;
             padding: 0;
             z-index: 3;

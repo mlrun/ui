@@ -23,7 +23,7 @@ import { isEmpty } from 'lodash'
 import classnames from 'classnames'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
-import { RoundedIcon } from 'igz-controls/components'
+import { PopUpDialog, RoundedIcon } from 'igz-controls/components'
 
 import { ACTIONS_MENU } from '../../types'
 
@@ -154,24 +154,30 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
           <ActionMenuIcon />
         </RoundedIcon>
         {isShowMenu && (
-          <ul
-            data-testid="actions-drop-down-menu"
-            className="actions-menu__list"
+          <PopUpDialog
+            className="actions-menu__body"
+            customPosition={{
+              element: actionMenuBtnRef,
+              position: 'bottom-left'
+            }}
+            headerIsHidden
             ref={dropDownMenuRef}
           >
-            {actionMenu[0].map(
-              (menuItem, idx) =>
-                !menuItem.hidden && (
-                  <ActionsMenuItem
-                    dataItem={dataItem}
-                    isIconDisplayed={isIconDisplayed}
-                    index={idx}
-                    key={menuItem.label}
-                    menuItem={menuItem}
-                  />
-                )
-            )}
-          </ul>
+            <ul data-testid="actions-drop-down-menu" className="actions-menu__list">
+              {actionMenu[0].map(
+                (menuItem, idx) =>
+                  !menuItem.hidden && (
+                    <ActionsMenuItem
+                      dataItem={dataItem}
+                      isIconDisplayed={isIconDisplayed}
+                      index={idx}
+                      key={menuItem.label}
+                      menuItem={menuItem}
+                    />
+                  )
+              )}
+            </ul>
+          </PopUpDialog>
         )}
       </div>
     </div>
