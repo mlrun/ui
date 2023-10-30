@@ -161,6 +161,14 @@ export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
 
+export const FUNCTION_SELECTION_STEP = 'functionSelection'
+export const RUN_DETAILS_STEP = 'runDetails'
+export const PARAMETERS_STEP = 'parameters'
+export const HYPERPARAMETER_STRATEGY_STEP = 'hyperparameterStrategy'
+export const DATA_INPUTS_STEP = 'dataInputs'
+export const RESOURCES_STEP = 'resources'
+export const ADVANCED_STEP = 'advanced'
+
 /*=========== JOB KINDS =============*/
 
 export const JOB_KIND_DASK = 'dask'

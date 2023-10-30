@@ -21,7 +21,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 import { useDispatch, useSelector } from 'react-redux'
-import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy } from 'lodash'
+import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy, cloneDeep } from 'lodash'
 
 import ContentMenu from '../../../../elements/ContentMenu/ContentMenu'
 import FilterMenuModal from '../../../FilterMenuModal/FilterMenuModal'
@@ -35,6 +35,7 @@ import functionsActions from '../../../../actions/functions'
 import projectsAction from '../../../../actions/projects'
 import {
   FILTER_MENU_MODAL,
+  FUNCTION_SELECTION_STEP,
   HUB_CATEGORIES_FILTER,
   JOB_WIZARD_FILTERS,
   TAG_LATEST
@@ -72,6 +73,7 @@ const JobWizardFunctionSelection = ({
   setJobAdditionalData,
   setSelectedFunctionData,
   setSelectedFunctionTab,
+  setShowSchedule,
   setTemplates,
   setTemplatesCategories,
   templates,
@@ -134,12 +136,15 @@ const JobWizardFunctionSelection = ({
 
     if (
       projects.length > 0 &&
-      !initialValues?.functionSelection?.projectName &&
+      !initialValues?.[FUNCTION_SELECTION_STEP]?.projectName &&
       params?.projectName
     ) {
       formState.form.reset({
         ...initialValues,
-        functionSelection: { ...initialValues?.functionSelection, projectName: params.projectName }
+        [FUNCTION_SELECTION_STEP]: {
+          ...initialValues?.[FUNCTION_SELECTION_STEP],
+          projectName: params.projectName
+        }
       })
     }
   }, [formState.form, formState.initialValues, params.projectName, projects.length])
@@ -212,9 +217,10 @@ const JobWizardFunctionSelection = ({
         params.projectName,
         isEditMode
       )
+
       const newInitial = {
-        ...formState.initialValues,
-        ...jobFormData
+        ...cloneDeep(formState.initialValues),
+        ...cloneDeep(jobFormData)
       }
 
       formState.form.reset(newInitial)
@@ -258,7 +264,7 @@ const JobWizardFunctionSelection = ({
       }
     })
 
-    formState.initialValues.functionSelection.projectName = currentValue
+    formState.initialValues[FUNCTION_SELECTION_STEP].projectName = currentValue
   }
 
   useEffect(() => {
@@ -271,7 +277,7 @@ const JobWizardFunctionSelection = ({
           setTemplatesCategories(templatesObject.hubFunctionsCategories)
           setTemplates(templatesObject.hubFunctions)
 
-          formState.initialValues.functionSelection.templatesLabels =
+          formState.initialValues[FUNCTION_SELECTION_STEP].templatesLabels =
             templatesObject.hubFunctions.reduce((labels, template) => {
               labels[template.metadata.name] = template.ui.categories.map(categoryId => {
                 return {
@@ -289,7 +295,7 @@ const JobWizardFunctionSelection = ({
   }, [
     activeTab,
     dispatch,
-    formState.initialValues.functionSelection,
+    formState.initialValues,
     hubFunctions,
     hubFunctionsCatalog,
     setTemplates,
@@ -301,6 +307,7 @@ const JobWizardFunctionSelection = ({
       setSelectedFunctionData(functionData)
       generateData(functionData)
       setSelectedFunctionTab(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
+      setShowSchedule(false)
     }
 
     if (
@@ -323,6 +330,7 @@ const JobWizardFunctionSelection = ({
         setSelectedFunctionData(result)
         generateData(result)
         setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
+        setShowSchedule(false)
       })
     }
 
@@ -368,7 +376,7 @@ const JobWizardFunctionSelection = ({
           </div>
           <div className="form-row">
             <div className="form-row__project-name">
-              <FormSelect name="functionSelection.projectName" options={projects} />
+              <FormSelect name={`${FUNCTION_SELECTION_STEP}.projectName`} options={projects} />
             </div>
           </div>
           {(filterByName.length > 0 &&
@@ -452,7 +460,9 @@ const JobWizardFunctionSelection = ({
           )}
         </div>
       )}
-      <OnChange name="functionSelection.projectName">{onSelectedProjectNameChange}</OnChange>
+      <OnChange name={`${FUNCTION_SELECTION_STEP}.projectName`}>
+        {onSelectedProjectNameChange}
+      </OnChange>
     </div>
   )
 }
@@ -476,6 +486,7 @@ JobWizardFunctionSelection.propTypes = {
   setJobAdditionalData: PropTypes.func.isRequired,
   setSelectedFunctionData: PropTypes.func.isRequired,
   setSelectedFunctionTab: PropTypes.func.isRequired,
+  setShowSchedule: PropTypes.func.isRequired,
   setTemplates: PropTypes.func.isRequired,
   setTemplatesCategories: PropTypes.func.isRequired,
   templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

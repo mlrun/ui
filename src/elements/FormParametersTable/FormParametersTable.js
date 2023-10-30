@@ -32,6 +32,7 @@ import { PARAMETERS_FROM_FILE_VALUE, PARAMETERS_FROM_UI_VALUE } from '../../cons
 
 const FormParametersTable = ({
   disabled,
+  exitEditModeTriggerItem,
   fieldsPath,
   formState,
   parametersFromPath,
@@ -52,7 +53,7 @@ const FormParametersTable = ({
     enterEditMode,
     getTableArrayErrors,
     isCurrentRowEditing
-  } = useFormTable(formState)
+  } = useFormTable(formState, exitEditModeTriggerItem)
 
   const uniquenessValidator = (fields, fieldsPath, newValue) => {
     const predefinedItems = get(formState.values, predefinedPath.split('.'), [])
@@ -206,6 +207,7 @@ const FormParametersTable = ({
 
 FormParametersTable.defaultProps = {
   disabled: false,
+  exitEditModeTriggerItem: null,
   parametersFromPath: '',
   rowCanBeAdded: false,
   withHyperparameters: false
@@ -213,6 +215,7 @@ FormParametersTable.defaultProps = {
 
 FormParametersTable.propTypes = {
   disabled: PropTypes.bool,
+  exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
   parametersFromPath: PropTypes.string,
