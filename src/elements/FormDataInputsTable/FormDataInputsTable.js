@@ -52,7 +52,7 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState }) => 
   }
 
   const validateDataInputs = value => {
-    const tableErrors = value.reduce((errorData, dataInput, index) => {
+    const tableErrors = value?.reduce((errorData, dataInput, index) => {
       if (dataInput.isRequired && dataInput.data?.fieldInfo?.value === '') {
         errorData[index] = [{
           name: 'required',
