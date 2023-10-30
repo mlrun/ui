@@ -37,11 +37,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
-const FunctionsPanelParameters = ({
-  defaultData,
-  functionsStore,
-  setNewFunctionParameters
-}) => {
+const FunctionsPanelParameters = ({ defaultData, functionsStore, setNewFunctionParameters }) => {
   const [showAddNewParameterRow, setShowAddNewParameterRow] = useState(false)
   const [newParameter, setNewParameter] = useState(newParameterInitialState)
   const [selectedParameter, setSelectedParameter] = useState(null)
@@ -55,10 +51,7 @@ const FunctionsPanelParameters = ({
           data: {
             name: key,
             type: getParameterType(value),
-            value:
-              getParameterType(value) === JSON_TYPE
-                ? JSON.stringify(value)
-                : String(value)
+            value: getParameterType(value) === JSON_TYPE ? JSON.stringify(value) : String(value)
           },
           isDefault: true
         }))
@@ -73,11 +66,7 @@ const FunctionsPanelParameters = ({
   }
 
   const handleAddNewParameter = () => {
-    if (
-      !isParameterValid(newParameter) ||
-      !validation.isNameValid ||
-      !validation.isValueValid
-    ) {
+    if (!isParameterValid(newParameter) || !validation.isNameValid || !validation.isValueValid) {
       return setValidation(state => ({
         ...state,
         isNameValid: newParameter.name.length > 0,
@@ -158,9 +147,7 @@ const FunctionsPanelParameters = ({
       delete generatedParameters[parameter.data.name]
 
       setParameters(state =>
-        state.filter(
-          stateParameter => stateParameter.data.name !== parameter.data.name
-        )
+        state.filter(stateParameter => stateParameter.data.name !== parameter.data.name)
       )
       setNewFunctionParameters(generatedParameters)
     },
@@ -168,22 +155,24 @@ const FunctionsPanelParameters = ({
   )
 
   const generateActionsMenu = useCallback(
-    rowItem => [
-      {
-        label: 'Edit',
-        icon: <Edit />,
-        onClick: parameter => {
-          setSelectedParameter(parameter)
-          setValidation(validationInitialState)
+    () => [
+      [
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: parameter => {
+            setSelectedParameter(parameter)
+            setValidation(validationInitialState)
+          }
+        },
+        {
+          label: 'Remove',
+          icon: <Delete />,
+          onClick: parameter => {
+            handleDeleteParameter(parameter)
+          }
         }
-      },
-      {
-        label: 'Remove',
-        icon: <Delete />,
-        onClick: parameter => {
-          handleDeleteParameter(parameter)
-        }
-      }
+      ]
     ],
     [handleDeleteParameter]
   )
