@@ -162,9 +162,6 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         },
         editModeEnabled: detailsType === MODELS_TAB,
         editModeType: 'chips'
-      },
-      sources: {
-        value: selectedItem.sources
       }
     }
   }

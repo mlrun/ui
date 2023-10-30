@@ -114,6 +114,7 @@ const ModelsView = React.forwardRef(
                         rowItem={tableItem}
                         selectedItem={selectedModel}
                         selectedRowData={selectedRowData}
+                        tab={MODELS_TAB}
                       />
                     )
                   })}

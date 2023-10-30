@@ -32,7 +32,6 @@ import {
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { applyTagChanges } from '../../../utils/artifacts.util'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
-import { generateProducerDetailsInfo } from '../../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { fetchModel, updateArtifact } from '../../../reducers/artifactsReducer'
@@ -70,8 +69,7 @@ export const infoHeaders = [
   { label: 'Framework', id: 'framework' },
   { label: 'Algorithm', id: 'algorithm' },
   { label: 'Labels', id: 'labels' },
-  { label: 'Metrics', id: 'metrics' },
-  { label: 'Sources', id: 'sources' }
+  { label: 'Metrics', id: 'metrics' }
 ]
 
 export const actionsMenuHeader = 'Register model'
@@ -159,11 +157,6 @@ export const generatePageData = (selectedItem, viewMode) => ({
     menu: generateModelsDetailsMenu(selectedItem),
     infoHeaders,
     type: MODELS_TAB,
-    additionalInfo: {
-      header: 'Producer',
-      body: generateProducerDetailsInfo(selectedItem),
-      hidden: !selectedItem.producer
-    },
     hideBackBtn: viewMode === FULL_VIEW_MODE,
     withToggleViewBtn: true
   }
