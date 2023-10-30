@@ -76,7 +76,7 @@ const FormParametersTable = ({
 
     withRequiredParametersRef.current = !parametersAreFromFile
 
-    const tableErrors = value.reduce((errorData, parameter, index) => {
+    const tableErrors = value?.reduce((errorData, parameter, index) => {
       if (
         !parametersAreFromFile &&
         parameter.isRequired &&
