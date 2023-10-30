@@ -61,11 +61,13 @@ import { useYaml } from '../../hooks/yaml.hook'
 import { getViewMode } from '../../utils/helper'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
+import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { ReactComponent as DownloadIcon } from '../../../../dashboard-react-controls/src/lib/images/download.svg'
 
 const Files = () => {
   const [files, setFiles] = useState([])
@@ -141,9 +143,24 @@ const Files = () => {
   const actionsMenu = useMemo(
     () => file => {
       const isTargetPathValid = getIsTargetPathValid(file ?? {}, frontendSpec)
+      const downloadPath = `${file?.target_path}${file?.model_file || ''}`
 
       return [
         [
+          {
+            label: 'Download',
+            icon: <DownloadIcon />,
+            onClick: file => {
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: file.producer?.owner,
+                  id: downloadPath
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
+          },
           {
             label: 'Copy URI',
             icon: <Copy />,

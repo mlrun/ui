@@ -17,26 +17,34 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
-import { cleanup, render } from '@testing-library/react'
-import ProgressRing from './ProgressRing'
+import { createSlice } from '@reduxjs/toolkit'
 
-describe('ProgressRing component', () => {
-  let wrapper
+const initialState = {
+  downloadList: [],
+  showDownloadsList: false
+}
 
-  beforeEach(() => {
-    const props = {
-      radius: '2',
-      stroke: '2',
-      progress: 20,
-      color: '#581845'
+const downloadSlice = createSlice({
+  name: 'download',
+  initialState,
+  reducers: {
+    setDownloadItem(state, { payload }) {
+      if (payload.error) {
+        /* eslint-disable-next-line no-console */
+        console.error(payload.error)
+      }
+
+      state.downloadList.push(payload)
+    },
+    setShowDownloadsList(state, { payload }) {
+      state.showDownloadsList = payload
+    },
+    removeDownloadItem(state, { payload }) {
+      state.downloadList = state.downloadList.filter(item => item.id !== payload)
     }
-    wrapper = render(<ProgressRing {...props} />)
-  })
-
-  afterEach(cleanup)
-
-  it('renders without crashing', () => {
-    expect(wrapper.queryByTestId('progress-ring')).not.toBeNull()
-  })
+  }
 })
+
+export const { setDownloadItem, setShowDownloadsList, removeDownloadItem } = downloadSlice.actions
+
+export default downloadSlice.reducer

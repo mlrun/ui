@@ -65,12 +65,14 @@ import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { generateUri } from '../../../utils/resources'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
+import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { ReactComponent as DownloadIcon } from '../../../../../dashboard-react-controls/src/lib/images/download.svg'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [selectedModel, setSelectedModel] = useState({})
@@ -141,9 +143,24 @@ const Models = ({ fetchModelFeatureVector }) => {
   const actionsMenu = useMemo(
     () => model => {
       const isTargetPathValid = getIsTargetPathValid(model ?? {}, frontendSpec)
+      const downloadPath = `${model?.target_path}${model?.model_file || ''}`
 
       return [
         [
+          {
+            label: 'Download',
+            icon: <DownloadIcon />,
+            onClick: model => {
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: model.producer?.owner,
+                  id: downloadPath
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
+          },
           {
             label: 'View YAML',
             icon: <YamlIcon />,
