@@ -153,7 +153,7 @@ const ProjectsView = ({
                 onClick={refreshProjects}
                 className="panel-title__btn_close"
                 tooltipText="Refresh"
-                data-testid="pop-up-close-btn"
+                id="pop-up-close-btn"
               >
                 <RefreshIcon />
               </RoundedIcon>

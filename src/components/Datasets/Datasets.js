@@ -190,6 +190,7 @@ const Datasets = () => {
         [
           {
             disabled: !isTargetPathValid,
+            id: 'dataset-preview',
             label: 'Preview',
             icon: <ArtifactView />,
             onClick: dataset => {

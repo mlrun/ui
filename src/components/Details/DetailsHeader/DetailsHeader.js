@@ -97,7 +97,7 @@ const DetailsHeader = ({
               }
               onClick={handleBackClick}
             >
-              <RoundedIcon id="refresh" tooltipText="Go to list">
+              <RoundedIcon id="go-back" tooltipText="Go to list">
                 <Back />
               </RoundedIcon>
             </Link>
@@ -226,6 +226,7 @@ const DetailsHeader = ({
                   onClick={() => {
                     navigate(`${location.pathname}${location.search ? '&' : '?'}view=full`)
                   }}
+                  id="full-view"
                   tooltipText="Full view"
                 >
                   <EnlargeIcon />
@@ -236,6 +237,7 @@ const DetailsHeader = ({
                   onClick={() => {
                     navigate(`${location.pathname.replace(/(\?|&)view=full(&|$)/, '$1')}`)
                   }}
+                  id="table-view"
                   tooltipText="Table view"
                 >
                   <MinimizeIcon />
@@ -256,7 +258,7 @@ const DetailsHeader = ({
               }
               onClick={handleCancelClick}
             >
-              <RoundedIcon tooltipText="Close">
+              <RoundedIcon tooltipText="Close" id="details-close">
                 <Close />
               </RoundedIcon>
             </Link>

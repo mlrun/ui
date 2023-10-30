@@ -84,7 +84,7 @@ const Files = () => {
   const dispatch = useDispatch()
   const filesRef = useRef(null)
   const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(() => generatePageData(selectedFile, viewMode), [selectedFile, viewMode])
+  const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values,
@@ -180,6 +180,7 @@ const Files = () => {
         [
           {
             disabled: !isTargetPathValid,
+            id: 'artifact-preview',
             label: 'Preview',
             icon: <ArtifactView />,
             onClick: file => {

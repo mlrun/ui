@@ -29,7 +29,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { useFormTable } from 'igz-controls/hooks'
 import { V3IO_VOLUME_TYPE } from '../../constants'
 
-const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
+const FormVolumesTable = ({ disabled, exitEditModeTriggerItem, fieldsPath, formState }) => {
   const tableClassNames = classnames('form-table', disabled && 'disabled')
   const {
     addNewRow,
@@ -40,7 +40,7 @@ const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
     editingItem,
     enterEditMode,
     isCurrentRowEditing
-  } = useFormTable(formState)
+  } = useFormTable(formState, exitEditModeTriggerItem)
 
   return (
     <div className={tableClassNames}>
@@ -110,11 +110,13 @@ const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
 }
 
 FormVolumesTable.defaultProps = {
-  disabled: false
+  disabled: false,
+  exitEditModeTriggerItem: null,
 }
 
 FormVolumesTable.propTypes = {
   disabled: PropTypes.bool,
+  exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired
 }

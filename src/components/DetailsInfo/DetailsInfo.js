@@ -28,6 +28,7 @@ import { handleFinishEdit } from '../Details/details.util'
 import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import detailsActions from '../../actions/details'
+import { generateDriftDetailsInfo, generateProducerDetailsInfo } from './detailsInfo.util'
 
 const DetailsInfo = React.forwardRef(
   (
@@ -53,6 +54,12 @@ const DetailsInfo = React.forwardRef(
     useEffect(() => {
       dispatch(detailsActions.setEditMode(!isEveryObjectValueEmpty(detailsInfoState.editMode)))
     }, [detailsInfoState.editMode, dispatch])
+
+    useEffect(() => {
+      return () => {
+        dispatch(detailsActions.removeModelEndpoint())
+      }
+    }, [dispatch, selectedItem])
 
     useEffect(() => {
       return () => {
@@ -104,6 +111,13 @@ const DetailsInfo = React.forwardRef(
       [selectedItem.sources]
     )
 
+    const producer = useMemo(() => generateProducerDetailsInfo(selectedItem), [selectedItem])
+
+    const drift = useMemo(
+      () => generateDriftDetailsInfo(detailsStore.modelEndpoint.data),
+      [detailsStore.modelEndpoint.data]
+    )
+
     const finishEdit = useCallback(
       currentField => {
         return handleFinishEdit(
@@ -121,6 +135,7 @@ const DetailsInfo = React.forwardRef(
 
     return (
       <DetailsInfoView
+        additionalInfo={{ drift, producer, sources }}
         detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
         detailsStore={detailsStore}
@@ -133,7 +148,6 @@ const DetailsInfo = React.forwardRef(
         ref={editItemRef}
         selectedItem={selectedItem}
         setChangesData={setChangesData}
-        sources={sources}
       />
     )
   }

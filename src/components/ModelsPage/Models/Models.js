@@ -180,6 +180,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         [
           {
             disabled: !isTargetPathValid,
+            id: 'model-preview',
             label: 'Preview',
             icon: <ArtifactView />,
             onClick: model => {
@@ -192,6 +193,7 @@ const Models = ({ fetchModelFeatureVector }) => {
             }
           },
           {
+            id: 'model-deploy',
             label: 'Deploy',
             icon: <DeployIcon />,
             onClick: handleDeployModel
