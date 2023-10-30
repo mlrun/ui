@@ -95,6 +95,7 @@ const DetailsArtifactsView = ({ artifactsIndexes, content, iteration, loading, s
                 </RoundedIcon>
                 <Download
                   className="icon-download"
+                  onlyIcon
                   path={artifact.target_path}
                   user={artifact.user}
                 />
