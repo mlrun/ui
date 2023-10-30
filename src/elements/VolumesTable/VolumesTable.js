@@ -125,19 +125,21 @@ export const VolumesTable = ({
 
   const generateActionsMenu = useCallback(
     rowItem => [
-      {
-        label: 'Edit',
-        icon: <Edit />,
-        onClick: volume => handleSetSelectedVolume(volume)
-      },
-      {
-        label: 'Remove',
-        icon: <Delete />,
-        hidden: rowItem.isDefault && !rowItem.canBeModified,
-        onClick: selectedItem => {
-          deleteVolume(selectedItem)
+      [
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: volume => handleSetSelectedVolume(volume)
+        },
+        {
+          label: 'Remove',
+          icon: <Delete />,
+          hidden: rowItem.isDefault && !rowItem.canBeModified,
+          onClick: selectedItem => {
+            deleteVolume(selectedItem)
+          }
         }
-      }
+      ]
     ],
     [deleteVolume, handleSetSelectedVolume]
   )
@@ -231,10 +233,8 @@ export const VolumesTable = ({
     })
     const generatedVolumeMounts = volumeMountsData.map(volumeMount => {
       if (volumeMount.data.name === selectedVolume.data.name) {
-        volumeMount.data.name =
-          selectedVolume.newName || selectedVolume.data.name
-        volumeMount.data.mountPath =
-          selectedVolume.newPath || selectedVolume.data.mountPath
+        volumeMount.data.name = selectedVolume.newName || selectedVolume.data.name
+        volumeMount.data.mountPath = selectedVolume.newPath || selectedVolume.data.mountPath
       }
 
       return volumeMount

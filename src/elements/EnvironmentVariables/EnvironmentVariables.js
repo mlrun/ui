@@ -132,21 +132,23 @@ const EnvironmentVariables = ({
 
   const generateActionsMenu = useCallback(
     () => [
-      {
-        label: 'Edit',
-        icon: <Edit />,
-        onClick: variable => {
-          setSelectedEnvVariable(variable)
+      [
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: variable => {
+            setSelectedEnvVariable(variable)
+          }
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          onClick: variable => {
+            deleteEnvVariable(variable)
+          }
         }
-      },
-      {
-        label: 'Delete',
-        icon: <Delete />,
-        className: 'danger',
-        onClick: variable => {
-          deleteEnvVariable(variable)
-        }
-      }
+      ]
     ],
     [deleteEnvVariable]
   )
