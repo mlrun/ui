@@ -28,7 +28,6 @@ import {
 } from '../../constants'
 import { applyTagChanges } from '../../utils/artifacts.util'
 import { createFilesRowData } from '../../utils/createArtifactsContent'
-import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { sortListByDate } from '../../utils'
@@ -74,22 +73,16 @@ export const infoHeaders = [
     tip: 'Unique identifier representing the job or the workflow that generated the artifact'
   },
   { label: 'Updated', id: 'updated' },
-  { label: 'Labels', id: 'labels' },
-  { label: 'Sources', id: 'sources' }
+  { label: 'Labels', id: 'labels' }
 ]
 
-export const generatePageData = (selectedFile, viewMode) => {
+export const generatePageData = viewMode => {
   return {
     page: FILES_PAGE,
     details: {
       type: FILES_PAGE,
       menu: detailsMenu,
       infoHeaders,
-      additionalInfo: {
-        header: 'Producer',
-        body: generateProducerDetailsInfo(selectedFile),
-        hidden: !selectedFile.producer
-      },
       hideBackBtn: viewMode === FULL_VIEW_MODE,
       withToggleViewBtn: true
     }

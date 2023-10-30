@@ -20,7 +20,6 @@ such restriction.
 
 import { applyTagChanges } from '../../utils/artifacts.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import {
   DATASETS,
   DATASETS_PAGE,
@@ -53,8 +52,7 @@ export const infoHeaders = [
     tip: 'Unique identifier representing the job or the workflow that generated the artifact'
   },
   { label: 'Updated', id: 'updated' },
-  { label: 'Labels', id: 'labels' },
-  { label: 'Sources', id: 'sources' }
+  { label: 'Labels', id: 'labels' }
 ]
 
 export const filters = [
@@ -93,11 +91,6 @@ export const generatePageData = (selectedItem, viewMode) => ({
     menu: generateDataSetsDetailsMenu(selectedItem),
     infoHeaders,
     type: DATASETS,
-    additionalInfo: {
-      header: 'Producer',
-      body: generateProducerDetailsInfo(selectedItem),
-      hidden: !selectedItem.item?.producer
-    },
     hideBackBtn: viewMode === FULL_VIEW_MODE,
     withToggleViewBtn: true
   }

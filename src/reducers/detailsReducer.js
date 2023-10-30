@@ -39,7 +39,8 @@ import {
   RESET_CHANGES,
   SET_FILTERS_WAS_HANDLED,
   SET_EDIT_MODE,
-  FETCH_JOB_PODS_BEGIN
+  FETCH_JOB_PODS_BEGIN,
+  REMOVE_MODEL_ENDPOINT
 } from '../constants'
 
 const initialState = {
@@ -117,6 +118,11 @@ const detailsReducer = (state = initialState, { type, payload }) => {
         modelFeatureVectorData: {
           ...initialState.modelFeatureVectorData
         }
+      }
+    case REMOVE_MODEL_ENDPOINT:
+      return {
+        ...state,
+        modelEndpoint: initialState.modelEndpoint
       }
     case REMOVE_MODEL_FEATURE_VECTOR:
       return {

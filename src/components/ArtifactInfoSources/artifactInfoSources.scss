@@ -7,101 +7,41 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  margin-left: -6px;
   padding: 0;
 
-  &-row {
-    position: relative;
+  &__table {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 18px 25px;
-    cursor: pointer;
+    flex-direction: column;
 
-    &_empty {
-      padding: 18px 8px;
+    &-header {
+      margin: 0 0 10px;
+      font-size: 16px;
     }
 
-    &__header {
+    &-row {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 10px;
+      padding: 10px 10px 10px 0;
+      border-bottom: $dividerBorder;
+    }
+
+    &-key {
+      display: flex;
+      width: 150px;
       min-width: 100px;
       font-weight: bold;
       font-size: 14px;
       line-height: 24px;
     }
 
-    &__data {
+    &-value {
       display: flex;
-      padding-left: 16px;
-    }
-
-    svg {
-      position: absolute;
-      left: 0;
-      cursor: pointer;
-
-      &.collapsed {
-        transform: rotate(0);
-        transform-origin: center center;
-        transition: transform 200ms linear;
-      }
-
-      &.expanded {
-        transform: rotate(90deg);
-        transform-origin: center center;
-        transition: transform 200ms linear;
-      }
-    }
-  }
-
-  &-table {
-    padding: 0 18px;
-
-    &__header {
-      display: flex;
-      flex-direction: row;
+      flex: 1 1;
       align-items: center;
-      padding: 18px;
-      border-bottom: $secondaryBorder;
-
-      &-item {
-        text-transform: capitalize;
-
-        @include detailsItem;
-      }
-
-      .name {
-        min-width: 200px;
-      }
-
-      .path {
-        min-width: 100px;
-      }
+      min-width: 110px;
+      padding-left: 1rem;
+      word-break: break-word;
     }
-
-    &__content {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      min-height: 56px;
-      border-bottom: $secondaryBorder;
-
-      &-value {
-        word-break: break-word;
-      }
-
-      &:last-child {
-        border: none;
-      }
-
-      &-key {
-        width: 220px;
-        min-width: 220px;
-        padding-left: 18px;
-      }
-    }
-  }
-
-  &_expanded {
-    box-shadow: $previewBoxShadow;
   }
 }
