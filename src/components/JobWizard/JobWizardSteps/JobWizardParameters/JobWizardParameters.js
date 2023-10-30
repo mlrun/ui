@@ -24,21 +24,26 @@ import { get } from 'lodash'
 import { FormInput, FormRadio } from 'igz-controls/components'
 import FormParametersTable from '../../../../elements/FormParametersTable/FormParametersTable'
 
-import { PARAMETERS_FROM_UI_VALUE, PARAMETERS_FROM_FILE_VALUE } from '../../../../constants'
+import {
+  PARAMETERS_FROM_UI_VALUE,
+  PARAMETERS_FROM_FILE_VALUE,
+  RUN_DETAILS_STEP,
+  PARAMETERS_STEP
+} from '../../../../constants'
 
 import './jobWizardParameters.scss'
 
-const JobWizardParameters = ({ formState }) => {
-  const parametersFromPath = 'parameters.parametersFrom'
-  const parametersFromFileUrlPath = 'parameters.parametersFromFileUrl'
+const JobWizardParameters = ({ formState, stepIsActive }) => {
+  const parametersFromPath = `${PARAMETERS_STEP}.parametersFrom`
+  const parametersFromFileUrlPath = `${PARAMETERS_STEP}.parametersFromFileUrl'`
 
   const selectedFromValue = useMemo(
     () => get(formState.values, parametersFromPath, PARAMETERS_FROM_UI_VALUE),
-    [formState.values]
+    [formState.values, parametersFromPath]
   )
   const hyperParametersAreEnabled = useMemo(() => {
-    return formState.values.runDetails?.hyperparameter
-  }, [formState.values.runDetails?.hyperparameter])
+    return formState.values[RUN_DETAILS_STEP]?.hyperparameter
+  }, [formState.values])
 
   return (
     <div className="job-wizard__parameters">
@@ -61,7 +66,8 @@ const JobWizardParameters = ({ formState }) => {
         </div>
       )}
       <FormParametersTable
-        fieldsPath="parameters.parametersTable"
+        exitEditModeTriggerItem={stepIsActive}
+        fieldsPath={`${PARAMETERS_STEP}.parametersTable`}
         formState={formState}
         parametersFromPath={parametersFromPath}
         rowCanBeAdded={formState.values.runDetails.methodData?.has_kwargs}
@@ -73,8 +79,13 @@ const JobWizardParameters = ({ formState }) => {
   )
 }
 
+JobWizardParameters.defaultProps = {
+  stepIsActive: false
+}
+
 JobWizardParameters.propTypes = {
-  formState: PropTypes.shape({}).isRequired
+  formState: PropTypes.shape({}).isRequired,
+  stepIsActive: PropTypes.bool
 }
 
 export default JobWizardParameters

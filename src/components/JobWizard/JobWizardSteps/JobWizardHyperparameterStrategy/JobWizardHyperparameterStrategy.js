@@ -21,20 +21,21 @@ import React from 'react'
 
 import { FormInput, FormSelect, FormCheckBox } from 'igz-controls/components'
 
+import { HYPERPARAMETER_STRATEGY_STEP } from '../../../../constants'
 import { selectOptions } from './jobWizardHyperparameterStrategy.util'
 
 import './jobWizardHyperparametersStrategy.scss'
 
 const JobWizardHyperparameterStrategy = ({ formState }) => {
-  const strategiesPath = 'hyperparameterStrategy.strategy'
-  const maxIterationsPath = 'hyperparameterStrategy.maxIterations'
-  const maxErrorsPath = 'hyperparameterStrategy.maxErrors'
-  const resultPath = 'hyperparameterStrategy.result'
-  const criteriaPath = 'hyperparameterStrategy.criteria'
-  const stopConditionPath = 'hyperparameterStrategy.stopCondition'
-  const parallelRuns = 'hyperparameterStrategy.parallelRuns'
-  const dashClusterUriPath = 'hyperparameterStrategy.daskClusterUri'
-  const teardownDask = 'hyperparameterStrategy.teardownDask'
+  const strategiesPath = `${HYPERPARAMETER_STRATEGY_STEP}.strategy`
+  const maxIterationsPath = `${HYPERPARAMETER_STRATEGY_STEP}.maxIterations`
+  const maxErrorsPath = `${HYPERPARAMETER_STRATEGY_STEP}.maxErrors`
+  const resultPath = `${HYPERPARAMETER_STRATEGY_STEP}.result`
+  const criteriaPath = `${HYPERPARAMETER_STRATEGY_STEP}.criteria`
+  const stopConditionPath = `${HYPERPARAMETER_STRATEGY_STEP}.stopCondition`
+  const parallelRuns = `${HYPERPARAMETER_STRATEGY_STEP}.parallelRuns`
+  const dashClusterUriPath = `${HYPERPARAMETER_STRATEGY_STEP}.daskClusterUri`
+  const teardownDask = `${HYPERPARAMETER_STRATEGY_STEP}.teardownDask`
 
   return (
     <div className="job-wizard__hyperparameter-strategy form">
@@ -50,7 +51,7 @@ const JobWizardHyperparameterStrategy = ({ formState }) => {
             label="Max iterations"
             name={maxIterationsPath}
             type="number"
-            disabled={formState.values?.hyperparameterStrategy?.strategy !== 'random'}
+            disabled={formState.values?.[HYPERPARAMETER_STRATEGY_STEP]?.strategy !== 'random'}
             min="0"
           />
         </div>
@@ -59,7 +60,7 @@ const JobWizardHyperparameterStrategy = ({ formState }) => {
             label="Max errors"
             name={maxErrorsPath}
             type="number"
-            disabled={formState.values?.hyperparameterStrategy?.strategy !== 'random'}
+            disabled={formState.values?.[HYPERPARAMETER_STRATEGY_STEP]?.strategy !== 'random'}
             min="0"
           />
         </div>

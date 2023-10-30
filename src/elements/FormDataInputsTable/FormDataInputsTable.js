@@ -30,7 +30,14 @@ import FormDataInputsRow from './FormDataInputsRow/FormDataInputsRow'
 import { useFormTable } from 'igz-controls/hooks'
 import { targetPathInitialState } from '../../common/TargetPath/targetPath.util'
 
-const FormDataInputsTable = ({ className, disabled, fieldsPath, formState, rowCanBeAdded }) => {
+const FormDataInputsTable = ({
+  className,
+  disabled,
+  exitEditModeTriggerItem,
+  fieldsPath,
+  formState,
+  rowCanBeAdded
+}) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
   const tableClassNames = classnames('form-table', className)
   const {
@@ -43,7 +50,7 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState, rowCa
     enterEditMode,
     getTableArrayErrors,
     isCurrentRowEditing
-  } = useFormTable(formState)
+  } = useFormTable(formState, exitEditModeTriggerItem)
 
   const uniquenessValidator = (fields, newValue) => {
     return !fields.value.some(({ data: { name } }, index) => {
@@ -142,14 +149,16 @@ const FormDataInputsTable = ({ className, disabled, fieldsPath, formState, rowCa
 }
 
 FormDataInputsTable.defaultProps = {
-  disabled: false,
   className: '',
+  disabled: false,
+  exitEditModeTriggerItem: null,
   rowCanBeAdded: false
 }
 
 FormDataInputsTable.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
   rowCanBeAdded: PropTypes.bool
