@@ -67,7 +67,7 @@ import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
-import { ReactComponent as DownloadIcon } from '../../../../dashboard-react-controls/src/lib/images/download.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
 const Files = () => {
   const [files, setFiles] = useState([])
