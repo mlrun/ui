@@ -26,7 +26,7 @@ import { RoundedIcon, Tooltip, TextTooltipTemplate } from 'igz-controls/componen
 
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 
-import { ReactComponent as DownloadIcon } from '../../../../dashboard-react-controls/src/lib/images/download.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
 import './download.scss'
 
