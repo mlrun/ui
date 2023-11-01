@@ -224,6 +224,10 @@ main {
       background-color: inherit;
       border-bottom: $tableRowBorder;
 
+      &_header {
+        min-height: 40px;
+      }
+
       &:not(.parent-row-expanded) > * {
         position: relative;
         display: inline-flex;
@@ -792,11 +796,20 @@ iframe {
   padding: 20px 0;
 
   .filters-button {
-    margin-left: 15px;
+    margin-left: 5px;
   }
 
   &__filters {
     display: flex;
+  }
+
+  &__actions {
+    display: flex;
+    margin-left: 20px;
+
+    .register-button {
+      width: 160px;
+    }
   }
 }
 

@@ -34,6 +34,7 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { removeModel } from '../../../reducers/artifactsReducer'
 import { filters } from './models.util'
 import { ACTIONS_MENU } from '../../../types'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const ModelsView = React.forwardRef(
   (
@@ -46,6 +47,8 @@ const ModelsView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRegisterModel,
+      isDemoMode,
       models,
       pageData,
       selectedModel,
@@ -66,7 +69,15 @@ const ModelsView = React.forwardRef(
           <div className="table-container">
             <div className="content__action-bar-wrapper">
               <ModelsPageTabs />
+              {/* TODO: remove from demo in 1.4 */}
               <ArtifactsActionBar
+                actionButton={{
+                  variant: SECONDARY_BUTTON,
+                  label: 'Register model',
+                  className: 'register-button',
+                  onClick: handleRegisterModel,
+                  hidden: !isDemoMode
+                }}
                 filterMenuName={MODELS_FILTERS}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
@@ -156,6 +167,8 @@ ModelsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRegisterModel: PropTypes.func.isRequired,
+  isDemoMode: PropTypes.bool.isRequired,
   models: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageData: PropTypes.object.isRequired,
   selectedModel: PropTypes.object.isRequired,

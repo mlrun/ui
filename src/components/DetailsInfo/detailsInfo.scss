@@ -16,12 +16,12 @@
 
   &__header {
     margin: 0;
-    padding: 21.5px 0 21.5px 0;
-    font-size: 25px;
+    padding: 10px 0 21.5px 0;
+    font-size: 18px;
   }
 
   &__details {
-    margin: 0;
+    margin: 0 0 21px;
     padding: 0 0 0 0;
     list-style-type: none;
 
@@ -55,11 +55,11 @@
 
       &__header {
         display: flex;
-        width: 150px;
+        width: 160px;
         min-width: 100px;
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 24px;
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 18px;
       }
 
       &__tip {
@@ -71,8 +71,8 @@
         flex: 1;
         align-items: center;
         min-width: 110px;
-        padding-left: 1rem;
         word-break: break-word;
+        color: $topaz;
 
         &-btn-edit {
           margin-left: 10px;

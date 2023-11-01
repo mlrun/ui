@@ -24,8 +24,10 @@ import { isNil } from 'lodash'
 
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
+import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
+  DATASET_TYPE,
   DATASETS_FILTERS,
   DATASETS_PAGE,
   FILTER_MENU_MODAL,
@@ -45,7 +47,8 @@ import {
   fetchDataSetRowData,
   filters,
   generatePageData,
-  handleApplyDetailsChanges
+  handleApplyDetailsChanges,
+  registerDatasetTitle
 } from './datasets.util'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
@@ -337,6 +340,15 @@ const Datasets = () => {
     }
   }, [dispatch])
 
+  const handleRegisterDataset = useCallback(() => {
+    openPopUp(RegisterArtifactModal, {
+      artifactKind: DATASET_TYPE,
+      projectName: params.projectName,
+      refresh: handleRefresh,
+      title: registerDatasetTitle
+    })
+  }, [handleRefresh, params.projectName])
+
   return (
     <DatasetsView
       actionsMenu={actionsMenu}
@@ -348,6 +360,7 @@ const Datasets = () => {
       detailsFormInitialValues={detailsFormInitialValues}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
+      handleRegisterDataset={handleRegisterDataset}
       handleRefresh={handleRefresh}
       pageData={pageData}
       ref={datasetsRef}

@@ -25,9 +25,11 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
+import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
 import {
   fetchModel,
+  fetchModels,
   removeModel,
   removeModels,
   showArtifactsPreview
@@ -66,6 +68,7 @@ import { getViewMode } from '../../../utils/helper'
 import { generateUri } from '../../../utils/resources'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
+import { setArtifactTags } from '../../../utils/artifacts.util'
 
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
@@ -73,8 +76,11 @@ import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
+import { useMode } from '../../../hooks/mode.hook'
 
 const Models = ({ fetchModelFeatureVector }) => {
+  const [models, setModels] = useState([])
+  const [allModels, setAllModels] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
@@ -91,13 +97,13 @@ const Models = ({ fetchModelFeatureVector }) => {
     () => generatePageData(selectedModel, viewMode),
     [selectedModel, viewMode]
   )
-  const { fetchData, models, allModels, setModels, setAllModels, toggleConvertedYaml } =
-    useModelsPage()
+  const { toggleConvertedYaml } = useModelsPage()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const modelsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
     [filtersStore]
   )
+  const { isDemoMode } = useMode()
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -105,6 +111,19 @@ const Models = ({ fetchModelFeatureVector }) => {
       labels: parseChipsData(selectedModel.labels ?? {})
     }),
     [selectedModel.labels, selectedModel.tag]
+  )
+
+  const fetchData = useCallback(
+    async filters => {
+      return dispatch(fetchModels({ project: params.projectName, filters: filters }))
+        .unwrap()
+        .then(modelsResponse => {
+          setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
+
+          return modelsResponse
+        })
+    },
+    [dispatch, setModels, params.projectName]
   )
 
   const handleDeployModel = useCallback(model => {
@@ -357,6 +376,10 @@ const Models = ({ fetchModelFeatureVector }) => {
     selectedModel.feature_vector
   ])
 
+  const handleRegisterModel = useCallback(() => {
+    openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: handleRefresh })
+  }, [handleRefresh, params.projectName])
+
   return (
     <ModelsView
       actionsMenu={actionsMenu}
@@ -367,6 +390,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRegisterModel={handleRegisterModel}
+      isDemoMode={isDemoMode}
       models={models}
       pageData={pageData}
       ref={modelsRef}

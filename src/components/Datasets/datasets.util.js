@@ -62,7 +62,7 @@ export const filters = [
   { type: ITERATIONS_FILTER, label: 'Show best iteration only' }
 ]
 
-export const actionsMenuHeader = 'Register dataset'
+export const registerDatasetTitle = 'Register dataset'
 
 export const generateDataSetsDetailsMenu = selectedItem => [
   {

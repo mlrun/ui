@@ -95,7 +95,7 @@ export const filters = [
   { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show best iteration only' }
 ]
-export const actionsMenuHeader = 'Register artifact'
+export const registerArtifactTitle = 'Register artifact'
 
 export const fetchFilesRowData = (
   file,

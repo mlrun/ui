@@ -106,7 +106,7 @@ export const generateDriftDetailsInfo = modelEndpoint => {
     ? modelEndpointContent.map(item => {
         return (
           <li className="details-item" key={item.id}>
-            <div className="details-item__header">{item.label}</div>
+            <div className="details-item__header">{item.label}:</div>
             <DetailsInfoItem info={item.value} />
           </li>
         )
@@ -131,7 +131,7 @@ export const generateProducerDetailsInfo = selectedItem => {
       return (
         <li className="details-item" key={key}>
           <div className="details-item__header">
-            {key === 'uri' ? key.toUpperCase() : capitalize(key)}
+            {key === 'uri' ? key.toUpperCase() : capitalize(key)}:
           </div>
           <DetailsInfoItem link={url} info={value} />
         </li>
