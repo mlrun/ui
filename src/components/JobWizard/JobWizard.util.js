@@ -235,7 +235,7 @@ export const generateJobWizardDefaultData = (
       image: parseImageData(selectedFunctionData, frontendSpec, currentProjectName)
     },
     [DATA_INPUTS_STEP]: {
-      dataInputsTable: []
+      dataInputsTable: parseDefaultDataInputs(functionParameters, defaultData.task.spec.inputs)
     },
     [PARAMETERS_STEP]: {
       parametersFrom: isEmpty(defaultData.task.spec.hyper_param_options?.param_file)
@@ -285,13 +285,6 @@ export const generateJobWizardDefaultData = (
     },
     scheduleData,
     function: defaultData.task.spec.function
-  }
-
-  if (!isEmpty(defaultData.task.spec.inputs)) {
-    jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDefaultDataInputs(
-      functionParameters,
-      defaultData.task.spec.inputs
-    )
   }
 
   return [jobFormData, jobAdditionalData]
@@ -633,7 +626,7 @@ export const parseDataInputs = functionParameters => {
     .sort(sortParameters)
 }
 
-export const parseDefaultDataInputs = (funcParams, runDataInputs) => {
+export const parseDefaultDataInputs = (funcParams, runDataInputs = {}) => {
   const predefinedDataInputs = chain(funcParams)
     .filter(dataInput => dataInput.type?.includes('DataItem'))
     .map(dataInput => {
