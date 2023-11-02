@@ -390,7 +390,7 @@ Feature: Files Page
     Then verify redirection from "projects/automation-test-011/files/test_file/latest/IVNALID/overview" to "projects/automation-test-011/files"
     Then verify redirection from "projects/INVALID/files" to "projects"
 
-  Scenario: Check active/highlited items with details panel on Models tab
+  Scenario: Check active/highlited items with details panel on Artifacts
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -399,21 +399,21 @@ Feature: Files Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then save to context "name" column on 1 row from "Files_Table" table on "Files" wizard
-    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+    Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
 	  Then verify that row index 1 is active in "Files_Table" table on "Files" wizard
     Then verify that row index 2 is NOT active in "Files_Table" table on "Files" wizard
     Then click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard  
     Then verify that row index 2 is active in "Files_Table" table on "Files" wizard   
     Then verify that row index 1 is NOT active in "Files_Table" table on "Files" wizard
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then save to context "name" column on 2 row from "Files_Table" table on "Files" wizard
-    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+    Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
 
   Scenario: MLA009 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Artifacts page
     Given open url
@@ -489,3 +489,31 @@ Scenario: MLA011 - Check that version tag has "Click to add" status when it's em
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
+
+Scenario: MLA012 - Check filter by "All" tag is performed when version tag was edited
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
+    Then click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    Then save to context "name" column on 2 row from "Files_Table" table on "Files" wizard
+    Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
+    Then type value "latest123456" to "Version_tag_Input" field on "Files_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
+    Then check "latest123456" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then save to context "name" column on 2 row from "Files_Table" table on "Files" wizard
+    Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
