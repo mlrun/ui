@@ -32,13 +32,13 @@ const ArtifactInfoSources = ({ sources }) => {
         <div className="info-sources__table" key={key + value}>
           <h5 className="info-sources__table-header">Source {index + 1}</h5>
           <div className="info-sources__table-row">
-            <div className="info-sources__table-key">Name</div>
+            <div className="info-sources__table-key">Name:</div>
             <div className="info-sources__table-value">
               <Tooltip template={<TextTooltipTemplate text={key} />}>{key}</Tooltip>
             </div>
           </div>
           <div className="info-sources__table-row">
-            <div className="info-sources__table-key">Path</div>
+            <div className="info-sources__table-key">Path:</div>
             <div className="info-sources__table-value">
               <Tooltip template={<TextTooltipTemplate text={value} />}>{value}</Tooltip>
             </div>

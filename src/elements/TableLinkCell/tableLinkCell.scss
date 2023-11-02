@@ -3,6 +3,7 @@
 .table {
   .table-body__cell {
     line-height: 20px;
+
     .name-wrapper {
       display: flex;
       flex: 1;
@@ -11,6 +12,13 @@
 
       .item {
         &-name {
+          color: $primary;
+          font-weight: bold;
+
+          &:hover {
+            text-decoration: underline;
+          }
+
           &.function-name {
             max-width: 120px;
           }

@@ -26,7 +26,7 @@ import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import { RoundedIcon } from 'igz-controls/components'
+import { RoundedIcon, Button } from 'igz-controls/components'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
 import ArtifactsFilters from './ArtifactsFilters'
 import NameFilter from '../../common/NameFilter/NameFilter'
@@ -40,6 +40,7 @@ import detailsActions from '../../actions/details'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 function ArtifactsActionBar({
+  actionButton,
   cancelRequest,
   filterMenuName,
   handleRefresh,
@@ -153,6 +154,15 @@ function ArtifactsActionBar({
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">
+            {actionButton && !actionButton.hidden && (
+              <Button
+                variant={actionButton.variant}
+                label={actionButton.label}
+                className={actionButton.className}
+                onClick={actionButton.onClick}
+              />
+            )}
+
             <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
               <RefreshIcon />
             </RoundedIcon>
@@ -164,11 +174,19 @@ function ArtifactsActionBar({
 }
 
 ArtifactsActionBar.defaultProps = {
+  actionButton: null,
   cancelRequest: null,
   tab: ''
 }
 
 ArtifactsActionBar.propTypes = {
+  actionButton: PropTypes.shape({
+    className: PropTypes.string,
+    hidden: PropTypes.bool,
+    label: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+    variant: PropTypes.string.isRequired
+  }),
   cancelRequest: PropTypes.func,
   filterMenuName: PropTypes.string.isRequired,
   handleRefresh: PropTypes.func.isRequired,

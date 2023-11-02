@@ -19,26 +19,23 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
 
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
 
-import { ARTIFACT_TYPE, FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { actionsMenuHeader, filters } from './files.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { registerArtifactTitle, filters } from './files.util'
 import { removeFile } from '../../reducers/artifactsReducer'
 import { ACTIONS_MENU } from '../../types'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const FilesView = React.forwardRef(
   (
@@ -53,6 +50,7 @@ const FilesView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRegisterArtifact,
       pageData,
       selectedFile,
       selectedRowData,
@@ -66,31 +64,23 @@ const FilesView = React.forwardRef(
     },
     ref
   ) => {
-    const params = useParams()
-
     return (
       <>
         <div className="content-wrapper" ref={ref}>
           <div className="content__header">
             <Breadcrumbs />
-            <PageActionsMenu
-              actionsMenuHeader={actionsMenuHeader}
-              onClick={() =>
-                openPopUp(RegisterArtifactModal, {
-                  artifactKind: ARTIFACT_TYPE,
-                  projectName: params.projectName,
-                  refresh: handleRefresh,
-                  title: actionsMenuHeader
-                })
-              }
-              showActionsMenu
-            />
           </div>
           <div className="content">
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
+                  actionButton={{
+                    variant: SECONDARY_BUTTON,
+                    label: registerArtifactTitle,
+                    className: 'register-button',
+                    onClick: handleRegisterArtifact
+                  }}
                   filterMenuName={FILES_FILTERS}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
@@ -176,6 +166,7 @@ FilesView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRegisterArtifact: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedFile: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,

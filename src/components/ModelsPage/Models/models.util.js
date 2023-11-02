@@ -72,8 +72,6 @@ export const infoHeaders = [
   { label: 'Metrics', id: 'metrics' }
 ]
 
-export const actionsMenuHeader = 'Register model'
-
 export const fetchModelsRowData = async (
   dispatch,
   model,
