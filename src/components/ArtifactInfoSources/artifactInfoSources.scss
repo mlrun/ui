@@ -14,7 +14,7 @@
     flex-direction: column;
 
     &-header {
-      margin: 0 0 10px;
+      margin: 10px 0;
       font-size: 16px;
     }
 
@@ -40,8 +40,8 @@
       flex: 1 1;
       align-items: center;
       min-width: 110px;
-      padding-left: 1rem;
       word-break: break-word;
+      color: $topaz;
     }
   }
 }
