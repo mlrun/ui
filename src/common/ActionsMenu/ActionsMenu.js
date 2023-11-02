@@ -32,22 +32,23 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 import './actionsMenu.scss'
 
 const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
-  const [isShowMenu, setIsShowMenu] = useState(false)
-  const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [actionMenu, setActionMenu] = useState(menu)
+  const [isIconDisplayed, setIsIconDisplayed] = useState(false)
+  const [isShowMenu, setIsShowMenu] = useState(false)
+  const [position, setPosition] = useState('bottom-left')
   const actionMenuRef = useRef()
   const actionMenuBtnRef = useRef()
   const dropDownMenuRef = useRef()
   const mainActionsWrapperRef = useRef()
+  const { bottom: actionMenubottom } = actionMenuRef?.current?.getBoundingClientRect() || {}
+
+  let idTimeout = null
 
   const actionMenuClassNames = classnames(
     'actions-menu__container',
     withQuickActions && 'actions-menu__container_extended',
     isShowMenu && 'actions-menu__container-active'
   )
-
-  let idTimeout = null
-  const offset = 34
 
   const hideActionMenu = useCallback(event => {
     if (
@@ -75,29 +76,14 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
   }
 
   useLayoutEffect(() => {
-    if (isShowMenu) {
-      const actionMenuBtnRect =
-        actionMenuBtnRef && actionMenuBtnRef.current?.getBoundingClientRect()
-      const dropDownMenuRect = dropDownMenuRef && dropDownMenuRef.current?.getBoundingClientRect()
+    if (dropDownMenuRef?.current) {
+      const { height } = dropDownMenuRef.current.getBoundingClientRect()
 
-      if (
-        actionMenuBtnRect.top + actionMenuBtnRect.height + offset + dropDownMenuRect.height >=
-        window.innerHeight
-      ) {
-        dropDownMenuRef.current.style.top = `${actionMenuBtnRect.top - dropDownMenuRect.height}px`
-        dropDownMenuRef.current.style.left = `${
-          actionMenuBtnRect.left - dropDownMenuRect.width + offset
-        }px`
-        dropDownMenuRef.current.style.marginTop = '-2px'
-      } else {
-        dropDownMenuRef.current.style.top = `${actionMenuBtnRect.bottom}px`
-        dropDownMenuRef.current.style.left = `${
-          actionMenuBtnRect.left - (dropDownMenuRect.width - offset)
-        }px`
-        dropDownMenuRef.current.style.marginTop = '2px'
-      }
+      actionMenubottom + height > window.innerHeight
+        ? setPosition('top-left')
+        : setPosition('bottom-left')
     }
-  }, [isShowMenu])
+  }, [isShowMenu, actionMenubottom])
 
   useEffect(() => {
     if (!isEmpty(dataItem)) {
@@ -158,7 +144,7 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
             className="actions-menu__body"
             customPosition={{
               element: actionMenuBtnRef,
-              position: 'bottom-left'
+              position
             }}
             headerIsHidden
             ref={dropDownMenuRef}
