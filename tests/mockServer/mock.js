@@ -1144,8 +1144,8 @@ function putTags(req, res){
   if (artifactForUpdate === undefined){
     artifactForUpdate = artifacts.artifacts
       .filter(item => item.metadata)
-      .find(item => item.uid === req.body.identifiers[0].uid)
-
+      .find(item => item.metadata.tree === req.body.identifiers[0].uid)
+    
     artifactForUpdate.metadata.tag = req.params.tag    
   }
   else{
@@ -1167,11 +1167,11 @@ function deleteTags(req, res){
       || artifact.tree === req.body.identifiers[0].uid)) 
   
   if (collectedArtifact) {
-    if (collectedArtifact.metadata){
-      delete collectedArtifact.metadata.tag
+    if (collectedArtifact.metadata && collectedArtifact.metadata.tag === req.params.tag){
+      collectedArtifact.metadata.tag = ''
     }
-    else{
-      delete collectedArtifact.tag
+    else if (collectedArtifact.tag === req.params.tag){
+      collectedArtifact.tag = ''
     }
   }
 

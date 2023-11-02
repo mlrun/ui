@@ -265,6 +265,20 @@ Then(
 )
 
 Then(
+  'verify {string} not input element on {string} wizard is active',
+  async function (elementName, wizardName) {
+    await verifyElementActive(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify {string} not input element on {string} wizard is NOT active',
+  async function (elementName, wizardName) {
+    await verifyElementNotActive(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
   'verify {string} not input element in {string} on {string} wizard is active',
   async function (elementName, accordionName, wizardName) {
     await verifyElementActive(this.driver, pageObjects[wizardName][accordionName][elementName])

@@ -443,6 +443,21 @@ module.exports = {
     Refresh_Button: By.css('.page-actions .round-icon-cp')
   },
   batchInference: {
+    Function_Title: By.css(
+      '.modal .modal__content h6.modal__header-sub-title'
+    ),
+    Form_Header_Batch_Run: By.css('.form .form-row .form-step-title'),
+    Edit_Button: By.css('.form-table__row:nth-of-type(3) .form-table__actions-cell .round-icon-cp:nth-of-type(1)'),
+    Data_Inputs_Path_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '.form-table__row_active .form-field-combobox',
+        '.form-field-combobox__select',
+        '.form-field-combobox__dropdown-list-option'
+      )
+    ),
+    Preview_text: By.css(
+      '.modal .modal__content .modal__header-preview-text'
+    ),
     Next_Button: By.css(
       '.modal__footer .btn-secondary'
     ),
