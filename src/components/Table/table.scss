@@ -95,7 +95,7 @@
         }
       }
 
-      .parent-row-expanded {
+      .parent-row_expanded {
         .row_grouped-by {
           .table-cell-name {
             border-right: none;
@@ -144,7 +144,7 @@
 
   .table {
     &-header {
-      &-item {
+      &__cell {
         &.buttonPopout,
         &.buttonDownload {
           @include tableColumnFlex(0.5, 80px);

@@ -36,6 +36,7 @@ import { registerArtifactTitle, filters } from './files.util'
 import { removeFile } from '../../reducers/artifactsReducer'
 import { ACTIONS_MENU } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { SORT_PROPS } from 'igz-controls/types'
 
 const FilesView = React.forwardRef(
   (
@@ -57,7 +58,9 @@ const FilesView = React.forwardRef(
       setFiles,
       setSelectedFile,
       setSelectedRowData,
+      sortProps,
       tableContent,
+      tableHeaders,
       toggleConvertedYaml,
       viewMode,
       urlTagOption
@@ -106,8 +109,8 @@ const FilesView = React.forwardRef(
                     handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
                     retryRequest={handleRefresh}
-                    selectedItem={selectedFile}
-                    tableHeaders={tableContent[0]?.content ?? []}
+                    sortProps={sortProps}
+                    tableHeaders={tableHeaders ?? []}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -171,7 +174,9 @@ FilesView.propTypes = {
   selectedFile: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setSelectedFile: PropTypes.func.isRequired,
+  sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   urlTagOption: PropTypes.string

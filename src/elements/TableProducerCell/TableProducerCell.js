@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -32,9 +33,10 @@ const TableProducerCell = ({ data }) => {
   const [project, uid] = data.value.uri?.split('/') || []
   const { name } = data.value
   const overviewTab = getJobsDetailsMenu().find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
+  const cellClassNames = classnames('table-body__cell', data.className, data.bodyCellClassName)
 
   return (
-    <td className={`table-body__cell ${data.class}`}>
+    <td className={cellClassNames}>
       {data.value.name && uid && (
         <Link
           className="data-ellipsis"

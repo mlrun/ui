@@ -58,6 +58,7 @@ const ModelsView = React.forwardRef(
       setSelectedRowData,
       sortProps,
       tableContent,
+      tableHeaders,
       viewMode,
       urlTagOption
     },
@@ -113,7 +114,7 @@ const ModelsView = React.forwardRef(
                   selectedItem={selectedModel}
                   sortProps={sortProps}
                   tab={MODELS_TAB}
-                  tableHeaders={tableContent[0]?.content ?? []}
+                  tableHeaders={tableHeaders ?? []}
                 >
                   {tableContent.map((tableItem, index) => {
                     return (
@@ -178,6 +179,7 @@ ModelsView.propTypes = {
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string,
   urlTagOption: PropTypes.string
 }

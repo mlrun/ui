@@ -65,6 +65,8 @@ import { getViewMode } from '../../utils/helper'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { useSortTable } from '../../hooks/useSortTable.hook'
+import { generateTableHeaders } from '../../utils/generateTableHeaders'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -291,6 +293,17 @@ const Datasets = () => {
         )
   }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
+  const tableHeaders = useMemo(() => {
+    return generateTableHeaders(tableContent[0]?.content ?? [])
+  }, [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
+
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
@@ -369,7 +382,9 @@ const Datasets = () => {
       setDatasets={setDatasets}
       setSelectedDataset={setSelectedDataset}
       setSelectedRowData={setSelectedRowData}
-      tableContent={tableContent}
+      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+      tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       urlTagOption={urlTagOption}

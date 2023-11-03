@@ -52,7 +52,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
 
   const getHeaderCellClasses = (headerId, isSortable) =>
     classNames(
-      'table-header-item',
+      'table-header__cell',
       isSortable && 'sortable-header-cell',
       isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
     )

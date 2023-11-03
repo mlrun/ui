@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import classnames from 'classnames'
 
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
@@ -85,11 +86,15 @@ const TableView = ({
               <>
                 <thead className="table-header">
                   <tr className="table-row">
-                    {pageData.tableHeaders?.map(
-                      (item, index) =>
+                    {pageData.tableHeaders?.map((item, index) => {
+                      const headerClassNames = classnames(
+                        `table-header__cell ${item.className} ${item.headerCellClassName}`
+                      )
+
+                      return (
                         !item.hidden && (
                           <th
-                            className={`table-header-item ${item.class}`}
+                            className={headerClassNames}
                             key={`${item.headerLabel}${index}`}
                             ref={tableHeadRef}
                           >
@@ -98,7 +103,8 @@ const TableView = ({
                             </Tooltip>
                           </th>
                         )
-                    )}
+                      )
+                    })}
                   </tr>
                 </thead>
                 <tbody className="table-body">

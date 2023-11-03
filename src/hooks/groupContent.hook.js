@@ -57,7 +57,7 @@ export const useGroupContent = (
   const handleGroupByNone = useCallback(() => {
     const rows = [...document.getElementsByClassName('parent-row')]
 
-    rows.forEach(row => row.classList.remove('parent-row-expanded'))
+    rows.forEach(row => row.classList.remove('parent-row_expanded'))
 
     setExpand(false)
     setGroupedContent({})
@@ -66,14 +66,14 @@ export const useGroupContent = (
   const handleExpandRow = (e, item) => {
     const parentRow = e.target.closest('.parent-row')
 
-    if (parentRow.classList.contains('parent-row-expanded')) {
-      parentRow.classList.remove('parent-row-expanded')
+    if (parentRow.classList.contains('parent-row_expanded')) {
+      parentRow.classList.remove('parent-row_expanded')
       handleRemoveRequestData && handleRemoveRequestData(item)
 
       setExpandedItems(prev => --prev)
     } else {
-      parentRow.classList.remove('row_active')
-      parentRow.classList.add('parent-row-expanded')
+      parentRow.classList.remove('table-row_active')
+      parentRow.classList.add('parent-row_expanded')
       handleRequestOnExpand && handleRequestOnExpand(item, groupedContent)
 
       setExpandedItems(prev => ++prev)
@@ -86,12 +86,12 @@ export const useGroupContent = (
         const rows = [...document.getElementsByClassName('parent-row')]
 
         if (collapseRows || expand) {
-          rows.forEach(row => row.classList.remove('parent-row-expanded'))
+          rows.forEach(row => row.classList.remove('parent-row_expanded'))
 
           setExpandedItems(0)
           handleExpandAllCallback && handleExpandAllCallback(true)
         } else {
-          rows.forEach(row => row.classList.add('parent-row-expanded'))
+          rows.forEach(row => row.classList.add('parent-row_expanded'))
 
           setExpandedItems(Object.keys(groupedContent).length)
           handleExpandAllCallback && handleExpandAllCallback(false, groupedContent)
