@@ -68,6 +68,7 @@
     width: 100%;
     padding: 10px 15px;
     background-color: $white;
+    z-index: 3;
   }
 
   .features-panel__divider {
@@ -81,7 +82,7 @@
     height: unset;
 
     .features-panel__expand-title {
-      margin-left: 40px;
+      margin-left: 45px;
       padding: 15px 0;
       font-weight: bold;
       font-size: 18px;
@@ -89,7 +90,7 @@
 
     .features-panel__expand-content {
       display: none;
-      margin: 10px 15px 10px 40px;
+      margin: 10px 15px 10px 45px;
     }
 
     &.open {
@@ -110,10 +111,8 @@
 
     .features-panel__expand-icon {
       position: absolute;
-      top: 10px;
+      top: 8px;
       left: 0;
-      width: 30px;
-      height: 30px;
     }
   }
 
