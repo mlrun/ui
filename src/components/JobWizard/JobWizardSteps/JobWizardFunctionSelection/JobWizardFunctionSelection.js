@@ -45,12 +45,13 @@ import { generateProjectsList } from '../../../../utils/projects'
 import { functionRunKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import {
-  filterSelectedFunctionMethods,
+  filterTrainFunctionMethods,
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
   functionsSelectionTabs,
   generateFunctionCardData,
-  generateFunctionTemplateCardData
+  generateFunctionTemplateCardData,
+  trainModelAllowedHubFunctions
 } from './jobWizardFunctionSelection.util'
 
 import './jobWizardFunctionSelection.scss'
@@ -58,15 +59,15 @@ import './jobWizardFunctionSelection.scss'
 const JobWizardFunctionSelection = ({
   activeTab,
   defaultData,
-  defaultDataInput,
   filteredFunctions,
   filteredTemplates,
   formState,
   frontendSpec,
   functions,
   isEditMode,
-  isTrainModel,
+  isTrain,
   params,
+  prePopulatedData,
   selectedFunctionData,
   selectedFunctionTab,
   setActiveTab,
@@ -219,7 +220,7 @@ const JobWizardFunctionSelection = ({
         defaultData,
         params.projectName,
         isEditMode,
-        defaultDataInput
+        prePopulatedData
       )
 
       const newInitial = {
@@ -276,7 +277,9 @@ const JobWizardFunctionSelection = ({
       activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
       (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
     ) {
-      dispatch(functionsActions.fetchHubFunctions(isTrainModel)).then(templatesObject => {
+      dispatch(
+        functionsActions.fetchHubFunctions(isTrain ? trainModelAllowedHubFunctions : {})
+      ).then(templatesObject => {
         if (templatesObject) {
           setTemplatesCategories(templatesObject.hubFunctionsCategories)
           setTemplates(templatesObject.hubFunctions)
@@ -302,7 +305,7 @@ const JobWizardFunctionSelection = ({
     formState.initialValues,
     hubFunctions,
     hubFunctionsCatalog,
-    isTrainModel,
+    isTrain,
     setTemplates,
     setTemplatesCategories
   ])
@@ -332,10 +335,10 @@ const JobWizardFunctionSelection = ({
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
       dispatch(functionsActions.fetchFunctionTemplate(functionTemplatePath)).then(result => {
-        const filteredResult = filterSelectedFunctionMethods(result)
+        const resultData = isTrain ? filterTrainFunctionMethods(result) : result
 
-        setSelectedFunctionData(filteredResult)
-        generateData(filteredResult)
+        setSelectedFunctionData(resultData)
+        generateData(resultData)
         setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
         setShowSchedule(false)
       })
@@ -423,7 +426,7 @@ const JobWizardFunctionSelection = ({
               placeholder="Search functions..."
               setMatches={setFilterMatches}
             />
-            {!isTrainModel && (
+            {!isTrain && (
               <FilterMenuModal
                 header="Filter by category"
                 wizardClassName="hub-filter"
@@ -479,15 +482,15 @@ const JobWizardFunctionSelection = ({
 JobWizardFunctionSelection.propTypes = {
   activeTab: PropTypes.string.isRequired,
   defaultData: PropTypes.shape({}).isRequired,
-  defaultDataInput: PropTypes.shape({}).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filteredTemplates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   formState: PropTypes.shape({}).isRequired,
   frontendSpec: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   isEditMode: PropTypes.bool.isRequired,
-  isTrainModel: PropTypes.bool.isRequired,
+  isTrain: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
+  prePopulatedData: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   selectedFunctionTab: PropTypes.string.isRequired,
   setActiveTab: PropTypes.func.isRequired,

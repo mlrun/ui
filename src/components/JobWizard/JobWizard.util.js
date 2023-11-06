@@ -103,7 +103,7 @@ export const generateJobWizardData = (
   defaultData,
   currentProjectName,
   isEditMode,
-  defaultDataInput
+  prePopulatedData
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -182,10 +182,10 @@ export const generateJobWizardData = (
     jobFormData[RESOURCES_STEP].jobPriorityClassName = jobPriorityClassName
   }
 
-  if (!isEmpty(functionParameters) || !isEmpty(defaultDataInput)) {
+  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData.dataInputs)) {
     jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(
       functionParameters,
-      defaultDataInput
+      prePopulatedData.dataInputs
     )
   }
 
@@ -618,8 +618,8 @@ const getDataInputData = (dataInputName, dataInputValue, dataInputIsChecked) => 
 
 const sortParameters = (parameter, nextParameter) => nextParameter.isRequired - parameter.isRequired
 
-export const parseDataInputs = (functionParameters = [], defaultDataInput) => {
-  const generatedDataInputs = functionParameters
+export const parseDataInputs = (functionParameters = [], prePopulatedDataInputs) => {
+  const parsedDataInputs = functionParameters
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
     .map(dataInput => {
       return {
@@ -632,16 +632,18 @@ export const parseDataInputs = (functionParameters = [], defaultDataInput) => {
     })
     .sort(sortParameters)
 
-  if (!isEmpty(defaultDataInput)) {
-    generatedDataInputs.unshift({
-      data: getDataInputData(defaultDataInput.name, defaultDataInput.path, true),
-      isRequired: true,
-      isDefault: true,
-      isPredefined: true
+  if (!isEmpty(prePopulatedDataInputs)) {
+    prePopulatedDataInputs.forEach(dataInput => {
+      parsedDataInputs.unshift({
+        data: getDataInputData(dataInput.name, dataInput.path, true),
+        isRequired: true,
+        isDefault: true,
+        isPredefined: true
+      })
     })
   }
 
-  return generatedDataInputs
+  return parsedDataInputs
 }
 
 export const parseDefaultDataInputs = (funcParams, runDataInputs = {}) => {

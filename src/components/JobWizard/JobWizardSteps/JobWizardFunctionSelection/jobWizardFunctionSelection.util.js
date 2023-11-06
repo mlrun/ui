@@ -69,7 +69,7 @@ export const generateFunctionTemplateCardData = templateData => {
   return functionTemplateCardData
 }
 
-export const filterSelectedFunctionMethods = result => {
+export const filterTrainFunctionMethods = result => {
   const allowedMethods = trainModelAllowedHubFunctions[result.name]
   const { entry_points } = result.functions[0].spec
 

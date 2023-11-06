@@ -18,8 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
+import { isEmpty } from 'lodash'
+
 import { functionRunKinds } from '../components/Jobs/jobs.util'
-import { trainModelAllowedHubFunctions } from '../components/JobWizard/JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 
 const excludedFunctionNames = ['batch-inference']
 
@@ -78,14 +79,14 @@ export const generateCategories = functionTemplates => {
   return { templates, templatesCategories }
 }
 
-export const generateHubCategories = (functionTemplates, isTrainModel) => {
+export const generateHubCategories = (functionTemplates, allowedHubFunctions = {}) => {
   const hubFunctions = functionTemplates
     .filter(
       template =>
         functionRunKinds.includes(template.spec.kind) &&
         !excludedFunctionNames.includes(template.metadata.name) &&
-        (!isTrainModel ||
-          Object.keys(trainModelAllowedHubFunctions).includes(template.metadata.name))
+        (isEmpty(allowedHubFunctions) ||
+          Object.keys(allowedHubFunctions).includes(template.metadata.name))
     )
     .map(template => ({
       ...template,

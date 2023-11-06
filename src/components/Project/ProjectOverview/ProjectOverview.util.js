@@ -317,7 +317,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               component: JobWizard,
               props: {
                 params,
-                isTrainModel: true,
+                isTrain: true,
                 wizardTitle: 'Train model',
                 isOverview: true
               },

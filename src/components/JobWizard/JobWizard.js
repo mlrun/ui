@@ -77,7 +77,6 @@ import './jobWizard.scss'
 
 const JobWizard = ({
   defaultData,
-  defaultDataInput,
   editJob,
   fetchFunctionTemplate,
   fetchHubFunction,
@@ -85,13 +84,14 @@ const JobWizard = ({
   functionsStore,
   isBatchInference,
   isOpen,
-  isTrainModel,
+  isTrain,
   jobsStore,
   mode,
   onResolve,
   onSuccessRequest,
   onWizardClose,
   params,
+  prePopulatedData,
   removeJobFunction,
   removeHubFunctions,
   runNewJob,
@@ -290,7 +290,7 @@ const JobWizard = ({
       {
         label: isBatchInference
           ? 'Schedule Infer'
-          : isTrainModel
+          : isTrain
           ? 'Schedule training job'
           : 'Schedule for later',
         onClick: () => {
@@ -312,7 +312,7 @@ const JobWizard = ({
             ? 'Save'
             : isBatchInference
             ? 'Infer now'
-            : isTrainModel
+            : isTrain
             ? 'Run training now'
             : 'Run',
         onClick: () => {
@@ -442,15 +442,15 @@ const JobWizard = ({
               <JobWizardFunctionSelection
                 activeTab={activeTab}
                 defaultData={defaultData}
-                defaultDataInput={defaultDataInput}
                 filteredFunctions={filteredFunctions}
                 filteredTemplates={filteredTemplates}
                 formState={formState}
                 frontendSpec={frontendSpec}
                 functions={functions}
                 isEditMode={isEditMode}
-                isTrainModel={isTrainModel}
+                isTrain={isTrain}
                 params={params}
+                prePopulatedData={prePopulatedData}
                 selectedFunctionData={selectedFunctionData}
                 selectedFunctionTab={selectedFunctionTab}
                 setActiveTab={setActiveTab}
@@ -471,6 +471,7 @@ const JobWizard = ({
                 isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
                 jobAdditionalData={jobAdditionalData}
+                prePopulatedData={prePopulatedData}
                 selectedFunctionData={selectedFunctionData}
               />
               <JobWizardDataInputs formState={formState} />
@@ -519,26 +520,26 @@ const JobWizard = ({
 
 JobWizard.defaultProps = {
   defaultData: {},
-  defaultDataInput: {},
   isBatchInference: false,
-  isTrainModel: false,
+  isTrain: false,
   mode: PANEL_CREATE_MODE,
   onSuccessRequest: () => {},
   onWizardClose: () => {},
+  prePopulatedData: {},
   wizardTitle: 'Batch run'
 }
 
 JobWizard.propTypes = {
   defaultData: PropTypes.shape({}),
-  defaultDataInput: PropTypes.shape({}),
   isBatchInference: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
-  isTrainModel: PropTypes.bool,
+  isTrain: PropTypes.bool,
   mode: JOB_WIZARD_MODE,
   onResolve: PropTypes.func.isRequired,
   onSuccessRequest: PropTypes.func,
   onWizardClose: PropTypes.func,
   params: PropTypes.shape({}).isRequired,
+  prePopulatedData: PropTypes.shape({}),
   wizardTitle: PropTypes.string
 }
 
