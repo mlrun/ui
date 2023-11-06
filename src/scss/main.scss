@@ -245,8 +245,6 @@ main {
             position: sticky;
             left: 0;
             flex-basis: 240px;
-            min-width: 240px;
-            max-width: 240px;
             z-index: 1;
           }
 
@@ -424,6 +422,13 @@ main {
           background-color: inherit;
         }
       }
+    }
+  }
+
+  &.table-with-details {
+    .table-cell-name {
+      min-width: 240px;
+      max-width: 240px;
     }
   }
 }
