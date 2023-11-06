@@ -148,25 +148,6 @@
 
   .table {
     &-header {
-      position: sticky;
-      top: 0;
-      min-width: 100%;
-      z-index: 3;
-
-      &-item {
-        min-width: 75px;
-
-        @include tableHeader;
-
-        &:first-child {
-          border-radius: 4px 0 0 0;
-        }
-
-        &:last-child {
-          border-radius: 0 4px 0 0;
-        }
-      }
-
       &-item {
         &.buttonPopout,
         &.buttonDownload {
@@ -184,9 +165,7 @@
     }
 
     &-body {
-      position: relative;
       color: $mulledWine;
-      z-index: 2;
 
       &__cell {
         &_hidden {

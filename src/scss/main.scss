@@ -366,7 +366,31 @@ main {
       }
     }
 
+    &-header {
+      position: sticky;
+      top: 0;
+      min-width: 100%;
+      z-index: 3;
+
+      &-item {
+        min-width: 75px;
+
+        @include tableHeader;
+
+        &:first-child {
+          border-radius: 4px 0 0 0;
+        }
+
+        &:last-child {
+          border-radius: 0 4px 0 0;
+        }
+      }
+    }
+
     &-body {
+      position: relative;
+      z-index: 2;
+
       &__cell {
         .status {
           display: flex;
