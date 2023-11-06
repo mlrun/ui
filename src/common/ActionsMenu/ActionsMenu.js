@@ -17,14 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import classnames from 'classnames'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
-import { RoundedIcon } from 'igz-controls/components'
+import { PopUpDialog, RoundedIcon } from 'igz-controls/components'
 
 import { ACTIONS_MENU } from '../../types'
 
@@ -33,23 +32,58 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 import './actionsMenu.scss'
 
 const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
-  const [isShowMenu, setIsShowMenu] = useState(false)
-  const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [actionMenu, setActionMenu] = useState(menu)
-  const [renderMenu, setRenderMenu] = useState(false)
+  const [isIconDisplayed, setIsIconDisplayed] = useState(false)
+  const [isShowMenu, setIsShowMenu] = useState(false)
+  const [position, setPosition] = useState('bottom-left')
   const actionMenuRef = useRef()
+  const actionMenuBtnRef = useRef()
   const dropDownMenuRef = useRef()
   const mainActionsWrapperRef = useRef()
-  const actionMenuBtnRef = useRef()
+  const { bottom: actionMenubottom } = actionMenuRef?.current?.getBoundingClientRect() || {}
+
+  let idTimeout = null
 
   const actionMenuClassNames = classnames(
     'actions-menu__container',
     withQuickActions && 'actions-menu__container_extended',
     isShowMenu && 'actions-menu__container-active'
   )
-  const dropDownMenuClassNames = classnames('actions-menu__body', isShowMenu && 'show')
-  let idTimeout = null
-  const offset = 15
+
+  const hideActionMenu = useCallback(event => {
+    if (
+      !event.target.closest('.actions-menu-button') &&
+      !event.target.closest('.actions-menu__body')
+    ) {
+      setIsShowMenu(false)
+    }
+  }, [])
+
+  const onMouseOut = () => {
+    if (isShowMenu) {
+      idTimeout = setTimeout(() => {
+        setIsShowMenu(false)
+      }, time)
+    }
+  }
+
+  const handleMouseOver = event => {
+    if (mainActionsWrapperRef.current?.contains(event.target)) {
+      setIsShowMenu(false)
+    }
+
+    if (idTimeout) clearTimeout(idTimeout)
+  }
+
+  useLayoutEffect(() => {
+    if (dropDownMenuRef?.current) {
+      const { height } = dropDownMenuRef.current.getBoundingClientRect()
+
+      actionMenubottom + height > window.innerHeight
+        ? setPosition('top-left')
+        : setPosition('bottom-left')
+    }
+  }, [isShowMenu, actionMenubottom])
 
   useEffect(() => {
     if (!isEmpty(dataItem)) {
@@ -61,58 +95,15 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
     setIsIconDisplayed(actionMenu[0].some(menuItem => menuItem.icon))
   }, [actionMenu])
 
-  const showActionsList = () => {
-    setIsShowMenu(show => !show)
-    const actionMenuBtnRect = actionMenuBtnRef.current.getBoundingClientRect()
-    const dropDownMenuRect = dropDownMenuRef.current.getBoundingClientRect()
-
-    if (
-      actionMenuBtnRect.top + actionMenuBtnRect.height + offset + dropDownMenuRect.height >=
-      window.innerHeight
-    ) {
-      dropDownMenuRef.current.style.top = `${actionMenuBtnRect.top - dropDownMenuRect.height}px`
-      dropDownMenuRef.current.style.left = `${
-        actionMenuBtnRect.left - dropDownMenuRect.width + offset
-      }px`
-    } else {
-      dropDownMenuRef.current.style.top = `${actionMenuBtnRect.bottom}px`
-      dropDownMenuRef.current.style.left = `${
-        actionMenuBtnRect.left - (dropDownMenuRect.width - offset)
-      }px`
-    }
-  }
-
-  const onMouseOut = () => {
-    if (isShowMenu) {
-      idTimeout = setTimeout(() => {
-        setIsShowMenu(false)
-        setRenderMenu(false)
-      }, time)
-    }
-  }
-
-  const handleMouseOver = event => {
-    if (mainActionsWrapperRef.current?.contains(event.target)) {
-      setRenderMenu(false)
-      setIsShowMenu(false)
-    } else {
-      setRenderMenu(true)
-    }
-
-    if (idTimeout) clearTimeout(idTimeout)
-  }
-
-  const handleScroll = () => {
-    setIsShowMenu(false)
-  }
-
   useEffect(() => {
-    if (isShowMenu) {
-      window.addEventListener('scroll', handleScroll, true)
-    }
+    window.addEventListener('click', hideActionMenu)
+    window.addEventListener('scroll', hideActionMenu, true)
 
-    return () => window.removeEventListener('scroll', handleScroll, true)
-  }, [isShowMenu])
+    return () => {
+      window.removeEventListener('click', hideActionMenu)
+      window.removeEventListener('scroll', hideActionMenu, true)
+    }
+  }, [hideActionMenu])
 
   return (
     <div
@@ -136,41 +127,45 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
           ))}
         </div>
       )}
-      <RoundedIcon
-        isActive={isShowMenu}
-        id="actions-menu"
-        onClick={showActionsList}
-        ref={actionMenuBtnRef}
-      >
-        <ActionMenuIcon />
-      </RoundedIcon>
-      {renderMenu &&
-        createPortal(
-          <div
-            data-testid="actions-drop-down-menu"
-            className={dropDownMenuClassNames}
-            onClick={event => {
-              setIsShowMenu(false)
-              setRenderMenu(false)
-              event.stopPropagation()
+      <div className="actions-menu" data-testid="actions-menu">
+        <RoundedIcon
+          className="actions-menu-button"
+          isActive={isShowMenu}
+          id="actions-menu-button"
+          onClick={() => {
+            setIsShowMenu(prevValue => !prevValue)
+          }}
+          ref={actionMenuBtnRef}
+        >
+          <ActionMenuIcon />
+        </RoundedIcon>
+        {isShowMenu && (
+          <PopUpDialog
+            className="actions-menu__body"
+            customPosition={{
+              element: actionMenuBtnRef,
+              position
             }}
+            headerIsHidden
             ref={dropDownMenuRef}
           >
-            {actionMenu[0].map(
-              (menuItem, idx) =>
-                !menuItem.hidden && (
-                  <ActionsMenuItem
-                    dataItem={dataItem}
-                    isIconDisplayed={isIconDisplayed}
-                    index={idx}
-                    key={menuItem.label}
-                    menuItem={menuItem}
-                  />
-                )
-            )}
-          </div>,
-          document.getElementById('overlay_container')
+            <ul data-testid="actions-drop-down-menu" className="actions-menu__list">
+              {actionMenu[0].map(
+                (menuItem, idx) =>
+                  !menuItem.hidden && (
+                    <ActionsMenuItem
+                      dataItem={dataItem}
+                      isIconDisplayed={isIconDisplayed}
+                      index={idx}
+                      key={menuItem.label}
+                      menuItem={menuItem}
+                    />
+                  )
+              )}
+            </ul>
+          </PopUpDialog>
         )}
+      </div>
     </div>
   )
 }
