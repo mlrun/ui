@@ -70,7 +70,6 @@ import { copyToClipboard } from '../../../utils/copyToClipboard'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { setArtifactTags } from '../../../utils/artifacts.util'
 import { useMode } from '../../../hooks/mode.hook'
-import { generateTableHeaders } from '../../../utils/generateTableHeaders'
 
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
@@ -275,13 +274,9 @@ const Models = ({ fetchModelFeatureVector }) => {
         )
   }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
 
-  const tableHeaders = useMemo(() => {
-    return generateTableHeaders(tableContent[0]?.content ?? [])
-  }, [tableContent])
-
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
-      headers: tableHeaders,
+      headers: tableContent[0]?.content ?? [],
       content: tableContent,
       sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
     })

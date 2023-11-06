@@ -1,3 +1,5 @@
+@import '~igz-controls/scss/colors';
+
 .models {
   display: flex;
   flex-direction: column;
@@ -5,5 +7,13 @@
 
   .filters {
     justify-content: flex-end;
+  }
+
+  .metrics-cell {
+    font-weight: bold;
+
+    &_with-border {
+      border-left: 1px solid $titanWhite;
+    }
   }
 }

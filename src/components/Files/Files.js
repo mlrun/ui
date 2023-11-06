@@ -66,7 +66,6 @@ import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { useSortTable } from '../../hooks/useSortTable.hook'
-import { generateTableHeaders } from '../../utils/generateTableHeaders'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -251,13 +250,9 @@ const Files = () => {
       : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
   }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
-  const tableHeaders = useMemo(() => {
-    return generateTableHeaders(tableContent[0]?.content ?? [])
-  }, [tableContent])
-
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
-      headers: tableHeaders,
+      headers: tableContent[0]?.content ?? [],
       content: tableContent,
       sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
     })

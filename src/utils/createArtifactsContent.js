@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isEmpty, isNumber } from 'lodash'
+import { isEmpty, isNil, isNumber } from 'lodash'
 import classnames from 'classnames'
 
 import {
@@ -208,7 +208,7 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
     }
   ]
 
-  if (artifact.metrics && !isEmpty(artifact.metrics)) {
+  if (!isNil(artifact.metrics) && !isEmpty(artifact.metrics)) {
     Object.entries(artifact.metrics).forEach(([key, value], index) => {
       const bodyCellClassName = classnames(
         'metrics-cell',

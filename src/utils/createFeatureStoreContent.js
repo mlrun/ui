@@ -79,7 +79,7 @@ export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpan
         showTag: true,
         showStatus: true,
         expandedCellContent: {
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           value: featureSet.tag || truncateUid(featureSet.uid),
           tooltip: featureSet.tag || featureSet.uid,
           showTag: true,
@@ -144,7 +144,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         value: feature.name,
         className: 'table-cell-name',
         expandedCellContent: {
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           value: feature.metadata?.tag
         },
         showExpandButton
@@ -299,7 +299,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         showTag: true,
         showStatus: true,
         expandedCellContent: {
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           value: featureVector.tag || truncateUid(featureVector.uid),
           tooltip: featureVector.tag || featureVector.uid,
           showTag: true,
