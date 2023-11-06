@@ -326,8 +326,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           },
           label: 'Train model',
           tooltip:
-            'Train a new model based on an input dataset. You can also define hyperparameters to execute and compare multiple models.',
-          hidden: !isDemoMode
+            'Train a new model based on an input dataset. You can also define hyperparameters to execute and compare multiple models.'
         },
         {
           id: 'createWorkflow',

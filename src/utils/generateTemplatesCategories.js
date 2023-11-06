@@ -19,6 +19,7 @@ such restriction.
 */
 
 import { functionRunKinds } from '../components/Jobs/jobs.util'
+import { trainModelAllowedHubFunctions } from '../components/JobWizard/JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 
 const excludedFunctionNames = ['batch-inference']
 
@@ -77,8 +78,15 @@ export const generateCategories = functionTemplates => {
   return { templates, templatesCategories }
 }
 
-export const generateHubCategories = functionTemplates => {
+export const generateHubCategories = (functionTemplates, isTrainModel) => {
   const hubFunctions = functionTemplates
+    .filter(
+      template =>
+        functionRunKinds.includes(template.spec.kind) &&
+        !excludedFunctionNames.includes(template.metadata.name) &&
+        (!isTrainModel ||
+          Object.keys(trainModelAllowedHubFunctions).includes(template.metadata.name))
+    )
     .map(template => ({
       ...template,
       ui: {
@@ -90,11 +98,6 @@ export const generateHubCategories = functionTemplates => {
           .map(funcTemplate => funcTemplate.metadata.version)
       }
     }))
-    .filter(
-      template =>
-        functionRunKinds.includes(template.spec.kind) &&
-        !excludedFunctionNames.includes(template.metadata.name)
-    )
 
   const hubFunctionsCategories = []
 

@@ -77,6 +77,7 @@ import './jobWizard.scss'
 
 const JobWizard = ({
   defaultData,
+  defaultDataInput,
   editJob,
   fetchFunctionTemplate,
   fetchHubFunction,
@@ -84,6 +85,7 @@ const JobWizard = ({
   functionsStore,
   isBatchInference,
   isOpen,
+  isTrainModel,
   jobsStore,
   mode,
   onResolve,
@@ -286,7 +288,11 @@ const JobWizard = ({
 
     return [
       {
-        label: isBatchInference ? 'Schedule Infer' : 'Schedule for later',
+        label: isBatchInference
+          ? 'Schedule Infer'
+          : isTrainModel
+          ? 'Schedule training job'
+          : 'Schedule for later',
         onClick: () => {
           formState.handleSubmit()
 
@@ -301,7 +307,14 @@ const JobWizard = ({
         ref: scheduleButtonRef
       },
       {
-        label: mode === PANEL_EDIT_MODE ? 'Save' : isBatchInference ? 'Infer now' : 'Run',
+        label:
+          mode === PANEL_EDIT_MODE
+            ? 'Save'
+            : isBatchInference
+            ? 'Infer now'
+            : isTrainModel
+            ? 'Run training now'
+            : 'Run',
         onClick: () => {
           formState.handleSubmit()
 
@@ -429,12 +442,14 @@ const JobWizard = ({
               <JobWizardFunctionSelection
                 activeTab={activeTab}
                 defaultData={defaultData}
+                defaultDataInput={defaultDataInput}
                 filteredFunctions={filteredFunctions}
                 filteredTemplates={filteredTemplates}
                 formState={formState}
                 frontendSpec={frontendSpec}
                 functions={functions}
                 isEditMode={isEditMode}
+                isTrainModel={isTrainModel}
                 params={params}
                 selectedFunctionData={selectedFunctionData}
                 selectedFunctionTab={selectedFunctionTab}
@@ -504,7 +519,9 @@ const JobWizard = ({
 
 JobWizard.defaultProps = {
   defaultData: {},
+  defaultDataInput: {},
   isBatchInference: false,
+  isTrainModel: false,
   mode: PANEL_CREATE_MODE,
   onSuccessRequest: () => {},
   onWizardClose: () => {},
@@ -513,8 +530,10 @@ JobWizard.defaultProps = {
 
 JobWizard.propTypes = {
   defaultData: PropTypes.shape({}),
+  defaultDataInput: PropTypes.shape({}),
   isBatchInference: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
+  isTrainModel: PropTypes.bool,
   mode: JOB_WIZARD_MODE,
   onResolve: PropTypes.func.isRequired,
   onSuccessRequest: PropTypes.func,

@@ -102,7 +102,8 @@ export const generateJobWizardData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
-  isEditMode
+  isEditMode,
+  defaultDataInput
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -181,12 +182,18 @@ export const generateJobWizardData = (
     jobFormData[RESOURCES_STEP].jobPriorityClassName = jobPriorityClassName
   }
 
+  if (!isEmpty(functionParameters) || !isEmpty(defaultDataInput)) {
+    jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(
+      functionParameters,
+      defaultDataInput
+    )
+  }
+
   if (!isEmpty(functionParameters)) {
     jobFormData[PARAMETERS_STEP].parametersTable = {
       predefined: parsePredefinedParameters(functionParameters),
       custom: []
     }
-    jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(functionParameters)
   }
 
   return [jobFormData, jobAdditionalData]
@@ -611,8 +618,8 @@ const getDataInputData = (dataInputName, dataInputValue, dataInputIsChecked) => 
 
 const sortParameters = (parameter, nextParameter) => nextParameter.isRequired - parameter.isRequired
 
-export const parseDataInputs = functionParameters => {
-  return functionParameters
+export const parseDataInputs = (functionParameters = [], defaultDataInput) => {
+  const generatedDataInputs = functionParameters
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
     .map(dataInput => {
       return {
@@ -624,6 +631,17 @@ export const parseDataInputs = functionParameters => {
       }
     })
     .sort(sortParameters)
+
+  if (!isEmpty(defaultDataInput)) {
+    generatedDataInputs.unshift({
+      data: getDataInputData(defaultDataInput.name, defaultDataInput.path, true),
+      isRequired: true,
+      isDefault: true,
+      isPredefined: true
+    })
+  }
+
+  return generatedDataInputs
 }
 
 export const parseDefaultDataInputs = (funcParams, runDataInputs = {}) => {

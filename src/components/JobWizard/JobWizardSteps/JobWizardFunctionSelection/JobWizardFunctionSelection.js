@@ -45,6 +45,7 @@ import { generateProjectsList } from '../../../../utils/projects'
 import { functionRunKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import {
+  filterSelectedFunctionMethods,
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
   functionsSelectionTabs,
@@ -57,12 +58,14 @@ import './jobWizardFunctionSelection.scss'
 const JobWizardFunctionSelection = ({
   activeTab,
   defaultData,
+  defaultDataInput,
   filteredFunctions,
   filteredTemplates,
   formState,
   frontendSpec,
   functions,
   isEditMode,
+  isTrainModel,
   params,
   selectedFunctionData,
   selectedFunctionTab,
@@ -215,7 +218,8 @@ const JobWizardFunctionSelection = ({
         functionData,
         defaultData,
         params.projectName,
-        isEditMode
+        isEditMode,
+        defaultDataInput
       )
 
       const newInitial = {
@@ -272,7 +276,7 @@ const JobWizardFunctionSelection = ({
       activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
       (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
     ) {
-      dispatch(functionsActions.fetchHubFunctions()).then(templatesObject => {
+      dispatch(functionsActions.fetchHubFunctions(isTrainModel)).then(templatesObject => {
         if (templatesObject) {
           setTemplatesCategories(templatesObject.hubFunctionsCategories)
           setTemplates(templatesObject.hubFunctions)
@@ -298,6 +302,7 @@ const JobWizardFunctionSelection = ({
     formState.initialValues,
     hubFunctions,
     hubFunctionsCatalog,
+    isTrainModel,
     setTemplates,
     setTemplatesCategories
   ])
@@ -327,8 +332,10 @@ const JobWizardFunctionSelection = ({
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
       dispatch(functionsActions.fetchFunctionTemplate(functionTemplatePath)).then(result => {
-        setSelectedFunctionData(result)
-        generateData(result)
+        const filteredResult = filterSelectedFunctionMethods(result)
+
+        setSelectedFunctionData(filteredResult)
+        generateData(filteredResult)
         setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
         setShowSchedule(false)
       })
@@ -416,15 +423,17 @@ const JobWizardFunctionSelection = ({
               placeholder="Search functions..."
               setMatches={setFilterMatches}
             />
-            <FilterMenuModal
-              header="Filter by category"
-              wizardClassName="hub-filter"
-              filterMenuName={JOB_WIZARD_FILTERS}
-              initialValues={hubFiltersInitialValues}
-              values={hubFiltersInitialValues}
-            >
-              <HubCategoriesFilter templates={filterTemplates} />
-            </FilterMenuModal>
+            {!isTrainModel && (
+              <FilterMenuModal
+                header="Filter by category"
+                wizardClassName="hub-filter"
+                filterMenuName={JOB_WIZARD_FILTERS}
+                initialValues={hubFiltersInitialValues}
+                values={hubFiltersInitialValues}
+              >
+                <HubCategoriesFilter templates={filterTemplates} />
+              </FilterMenuModal>
+            )}
           </div>
           {(filterByName.length > 0 &&
             (filterMatches.length === 0 || isEmpty(filteredTemplates))) ||
@@ -470,12 +479,14 @@ const JobWizardFunctionSelection = ({
 JobWizardFunctionSelection.propTypes = {
   activeTab: PropTypes.string.isRequired,
   defaultData: PropTypes.shape({}).isRequired,
+  defaultDataInput: PropTypes.shape({}).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filteredTemplates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   formState: PropTypes.shape({}).isRequired,
   frontendSpec: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   isEditMode: PropTypes.bool.isRequired,
+  isTrainModel: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   selectedFunctionTab: PropTypes.string.isRequired,
