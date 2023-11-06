@@ -34,7 +34,6 @@ import {
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { applyTagChanges } from '../../../utils/artifacts.util'
 import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
-import { generateProducerDetailsInfo } from '../../../utils/generateProducerDetailsInfo'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import {
@@ -47,6 +46,7 @@ import { sortListByDate } from '../../../utils'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
 import { generateUri } from '../../../utils/resources'
 import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
+import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -54,6 +54,7 @@ import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
 export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
@@ -86,11 +87,8 @@ export const infoHeaders = [
   { label: 'Framework', id: 'framework' },
   { label: 'Algorithm', id: 'algorithm' },
   { label: 'Labels', id: 'labels' },
-  { label: 'Metrics', id: 'metrics' },
-  { label: 'Sources', id: 'sources' }
+  { label: 'Metrics', id: 'metrics' }
 ]
-
-export const actionsMenuHeader = 'Register model'
 
 export const fetchModelsRowData = async (
   dispatch,
@@ -175,11 +173,6 @@ export const generatePageData = (selectedItem, viewMode) => ({
     menu: generateModelsDetailsMenu(selectedItem),
     infoHeaders,
     type: MODELS_TAB,
-    additionalInfo: {
-      header: 'Producer',
-      body: generateProducerDetailsInfo(selectedItem),
-      hidden: !selectedItem.producer
-    },
     hideBackBtn: viewMode === FULL_VIEW_MODE,
     withToggleViewBtn: true
   }
@@ -308,29 +301,24 @@ export const generateActionsMenu = (
   handleDeployModel
 ) => {
   const isTargetPathValid = getIsTargetPathValid(model ?? {}, frontendSpec)
+  const downloadPath = `${model?.target_path}${model?.model_file || ''}`
 
   return [
     [
       {
-        disabled: !isTargetPathValid,
-        label: 'Preview',
-        icon: <ArtifactView />,
+        label: 'Download',
+        icon: <DownloadIcon />,
         onClick: model => {
           dispatch(
-            showArtifactsPreview({
-              isPreview: true,
-              selectedItem: model
+            setDownloadItem({
+              path: downloadPath,
+              user: model.producer?.owner,
+              id: downloadPath
             })
           )
+          dispatch(setShowDownloadsList(true))
         }
       },
-      {
-        label: 'Deploy',
-        icon: <DeployIcon />,
-        onClick: handleDeployModel
-      }
-    ],
-    [
       {
         label: 'Copy URI',
         icon: <Copy />,
@@ -360,6 +348,26 @@ export const generateActionsMenu = (
             modelsFilters,
             MODEL_TYPE
           )
+      }
+    ],
+    [
+      {
+        disabled: !isTargetPathValid,
+        label: 'Preview',
+        icon: <ArtifactView />,
+        onClick: model => {
+          dispatch(
+            showArtifactsPreview({
+              isPreview: true,
+              selectedItem: model
+            })
+          )
+        }
+      },
+      {
+        label: 'Deploy',
+        icon: <DeployIcon />,
+        onClick: handleDeployModel
       }
     ]
   ]

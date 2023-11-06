@@ -218,15 +218,6 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
         class: 'table-cell-1',
         type: 'hidden'
       }
-      //TODO: remove when new Download will be added
-      // {
-      //   id: `buttonDownload.${artifact.ui.identifierUnique}`,
-      //   headerId: 'download',
-      //   value: '',
-      //   class: 'table-cell-icon',
-      //   type: 'buttonDownload',
-      //   disabled: !isTargetPathValid
-      // }
     ]
   }
 }
@@ -323,15 +314,6 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
         class: 'table-cell-1'
       }
-      //TODO: remove when new Download will be added
-      // {
-      //   id: `buttonDownload.${artifact.ui.identifierUnique}`,
-      //   headerId: 'download',
-      //   value: '',
-      //   class: 'table-cell-icon',
-      //   type: 'buttonDownload',
-      //   disabled: !isTargetPathValid
-      // },
     ]
   }
 }
@@ -548,15 +530,6 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         class: 'table-cell-1',
         type: 'hidden'
       }
-      //TODO: remove when new Download will be added
-      // {
-      //   id: `buttonDownload.${artifact.ui.identifierUnique}`,
-      //   headerId: 'download',
-      //   value: '',
-      //   class: 'table-cell-icon',
-      //   type: 'buttonDownload',
-      //   disabled: !isTargetPathValid
-      // }
     ]
   }
 }

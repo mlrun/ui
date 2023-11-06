@@ -40,26 +40,24 @@ const ModelEndpoints = () => {
   const [modelEndpoints, setModelEndpoints] = useState([])
   const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
   const modelEndpointsRef = useRef(null)
-  const pageData = useMemo(
-    () => generatePageData(detailsStore.modelEndpoint.data),
-    [detailsStore.modelEndpoint.data]
-  )
+  const pageData = useMemo(() => generatePageData(), [])
   const { toggleConvertedYaml } = useModelsPage()
 
   const actionsMenu = useMemo(
     () => [
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
+      [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ]
     ],
     [toggleConvertedYaml]
   )

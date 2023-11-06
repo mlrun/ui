@@ -95,7 +95,7 @@ const functionsTableSelector = {
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.job-card-template__chips',
+            '.job-card-template__chips input',
             '.chip-block span.chips_button',
             '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
             false,
@@ -235,7 +235,7 @@ const BatchRunParametersTable = {
         delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
         discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
         checkbox: '.form-field-checkbox input',
-        name_input: '.form-field-input input',
+        name_input: '.form-table__cell_2 .form-field-input input',
         name_verify: '.form-table__cell_2',
         type_dropdown: {
           componentType: dropdownComponent,
@@ -730,10 +730,10 @@ module.exports = {
       '.modal .modal__header-button .round-icon-cp'
     ),
     Search_Input: inputWithAutocomplete({
-      root: '.form .search-container',
+      root: '.form-row .search-container',
       elements: {
         input: 'input',
-        options: '.search-matches .search-matches__item',
+        options: '.functions-list > div > div.job-card-template__header > div.data-ellipsis.tooltip-wrapper',
         option_name: ''
       }
     }),
@@ -789,6 +789,17 @@ module.exports = {
         '.form-field__icons svg'
       )
     ),
+    Add_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .button-add'),
+    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
+    Run_Details_Labels_Key: inputGroup(
+      generateInputGroup(
+        '.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper',
+        false,
+        true,
+        '.pop-up-dialog'
+      )
+    ),
+    Run_Details_Labels_Value: By.css ('.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper [id="runDetails.labels[0].value"]'),
     Name_Input_Batch_Run: By.css('.form-row .form-field-input .form-field__wrapper input'),
     Version_Dropdown: dropdownComponent(
       generateDropdownGroup('.form-col-1:nth-of-type(2)', '.form-field-select', '.form-field__select-value', false, false)
@@ -796,6 +807,16 @@ module.exports = {
     Method_Dropdown: dropdownComponent(
       generateDropdownGroup('.form-col-1:nth-of-type(3)', '.form-field-select', '.select__item-main-label', false, false)
     ),
+    Method_Dropdown_Option: By.css('.form-col-1:nth-of-type(3) .form-field-select .form-field__select span'),
+    Image_Name_Input_Run_Details: inputGroup(
+      generateInputGroup(
+        '.job-wizard__run-details > div.form-field-input .form-field__wrapper',
+        true,
+        false,
+        '.form-field__warning svg'
+      )
+    ),
+    Image_Name_Text_Run_Details: By.css('.job-wizard__run-details .warning-text'),
     Batch_Run_Labels_Table: commonTable(BatchRunLabelsTable),
     Batch_Run_Data_Inputs_Table: commonTable(BatchRunDataInputsTable),
     Data_Inputs_Headers: commonTable(DataInputsHeaders),
@@ -817,7 +838,7 @@ module.exports = {
       '.create-container .create-container__header .header-link h3.header-link__title'
     ),
     Search_Input: inputWithAutocomplete({
-      root: '.create-container .create-container__data  .search-container',
+      root: '.create-container .create-container__data .search-container',
       elements: {
         input: 'input',
         options: '.search-matches .search-matches__item',

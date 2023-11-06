@@ -24,8 +24,10 @@ import { isNil } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
+import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
+  ARTIFACT_TYPE,
   FILES_FILTERS,
   FILES_PAGE,
   FILTER_MENU_MODAL,
@@ -39,7 +41,8 @@ import {
   filters,
   generateActionsMenu,
   generatePageData,
-  handleApplyDetailsChanges
+  handleApplyDetailsChanges,
+  registerArtifactTitle
 } from './files.util'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { createFilesRowData } from '../../utils/createArtifactsContent'
@@ -70,7 +73,7 @@ const Files = () => {
   const dispatch = useDispatch()
   const filesRef = useRef(null)
   const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(() => generatePageData(selectedFile, viewMode), [selectedFile, viewMode])
+  const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values,
@@ -276,6 +279,15 @@ const Files = () => {
     selectedRowData
   ])
 
+  const handleRegisterArtifact = useCallback(() => {
+    openPopUp(RegisterArtifactModal, {
+      artifactKind: ARTIFACT_TYPE,
+      projectName: params.projectName,
+      refresh: handleRefresh,
+      title: registerArtifactTitle
+    })
+  }, [handleRefresh, params.projectName])
+
   return (
     <FilesView
       actionsMenu={actionsMenu}
@@ -288,6 +300,7 @@ const Files = () => {
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRegisterArtifact={handleRegisterArtifact}
       pageData={pageData}
       ref={filesRef}
       selectedFile={selectedFile}

@@ -42,6 +42,7 @@ import {
   getCellByIndexColumn,
   getTableRows,
   isContainsSubstringInColumnCells,
+  isContainsSubstringInColumnAttributrCells,
   isContainsSubstringInColumnDropdownCells,
   isContainsSubstringInColumnDropdownCellsOverlay,
   isContainsSubstringInColumnTooltipCells,
@@ -895,6 +896,14 @@ Then(
 Then(
   'value in {string} column with {string} in {string} on {string} wizard should contains {string}',
   async function (column, type, table, wizard, substring) {
+    if (type === 'attribute') {
+      await isContainsSubstringInColumnAttributrCells(
+        this.driver,
+        pageObjects[wizard][table],
+        column,
+        substring
+      )
+    }
     if (type === 'text') {
       await isContainsSubstringInColumnCells(
         this.driver,

@@ -142,13 +142,12 @@ const TableCell = ({
   } else if (data.type === 'buttonDownload') {
     return (
       <td className={`table-body__cell ${data.class} ${className}`}>
-        <Tooltip hidden={data.disabled} template={<TextTooltipTemplate text="Download" />}>
-          <Download
-            path={`${item?.target_path}${item?.model_file ? item.model_file : ''}`}
-            user={item?.producer?.owner || item.user}
-            disabled={data.disabled}
-          />
-        </Tooltip>
+        <Download
+          disabled={data.disabled}
+          onlyIcon
+          path={`${item?.target_path}${item?.model_file ? item.model_file : ''}`}
+          user={item?.producer?.owner || item.user}
+        />
       </td>
     )
   } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {

@@ -376,7 +376,13 @@ const MonitorJobs = ({
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
       let filters = {}
 
-      if (isJobDataEmpty()) {
+      if (filtersStore.saveFilters) {
+        filters = {
+          saveFilters: false,
+          state: filtersStore.state,
+          dates: filtersStore.dates
+        }
+      } else if (isJobDataEmpty()) {
         const pastWeekOption = datePickerOptions.find(option => option.id === PAST_WEEK_DATE_OPTION)
 
         filters = {
@@ -399,6 +405,7 @@ const MonitorJobs = ({
       setDataIsLoaded(true)
     }
   }, [
+    filtersStore,
     dataIsLoaded,
     dateFilter,
     dispatch,

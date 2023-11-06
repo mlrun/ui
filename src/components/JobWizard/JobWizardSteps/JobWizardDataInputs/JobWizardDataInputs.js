@@ -22,21 +22,33 @@ import PropTypes from 'prop-types'
 
 import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDataInputsTable'
 
-const JobWizardDataInputs = ({ formState }) => {
+import { DATA_INPUTS_STEP } from '../../../../constants'
+
+const JobWizardDataInputs = ({ formState, stepIsActive }) => {
   return (
     <div className="job-wizard__data-inputs">
       <div className="form-row">
         <h5 className="form-step-title">Data Inputs</h5>
       </div>
       <div className="form-row">
-        <FormDataInputsTable fieldsPath="dataInputs.dataInputsTable" formState={formState} />
+        <FormDataInputsTable
+          exitEditModeTriggerItem={stepIsActive}
+          fieldsPath={`${DATA_INPUTS_STEP}.dataInputsTable`}
+          formState={formState}
+          rowCanBeAdded={formState.values.runDetails.methodData?.has_kwargs}
+        />
       </div>
     </div>
   )
 }
 
+JobWizardDataInputs.defaultProps = {
+  stepIsActive: false
+}
+
 JobWizardDataInputs.propTypes = {
-  formState: PropTypes.shape({}).isRequired
+  formState: PropTypes.shape({}).isRequired,
+  stepIsActive: PropTypes.bool
 }
 
 export default JobWizardDataInputs

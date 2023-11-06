@@ -32,7 +32,7 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ dataItem, extended, menu, time }) => {
+const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [actionMenu, setActionMenu] = useState(menu)
@@ -44,7 +44,7 @@ const ActionsMenu = ({ dataItem, extended, menu, time }) => {
 
   const actionMenuClassNames = classnames(
     'actions-menu__container',
-    extended && 'actions-menu__container_extended',
+    withQuickActions && 'actions-menu__container_extended',
     isShowMenu && 'actions-menu__container-active'
   )
   const dropDownMenuClassNames = classnames('actions-menu__body', isShowMenu && 'show')
@@ -58,7 +58,7 @@ const ActionsMenu = ({ dataItem, extended, menu, time }) => {
   }, [dataItem, menu])
 
   useEffect(() => {
-    setIsIconDisplayed((extended ? actionMenu[1] : actionMenu).some(menuItem => menuItem.icon))
+    setIsIconDisplayed(actionMenu[0].some(menuItem => menuItem.icon))
   }, [actionMenu])
 
   const showActionsList = () => {
@@ -121,11 +121,12 @@ const ActionsMenu = ({ dataItem, extended, menu, time }) => {
       onMouseOver={handleMouseOver}
       ref={actionMenuRef}
     >
-      {extended && (
+      {withQuickActions && (
         <div className="actions-menu__main-actions-wrapper" ref={mainActionsWrapperRef}>
-          {actionMenu[0].map(mainAction => (
+          {actionMenu[1].map(mainAction => (
             <RoundedIcon
               disabled={mainAction.disabled}
+              id={`quick-link-${mainAction.id}`}
               onClick={() => mainAction.onClick(dataItem)}
               tooltipText={mainAction.label}
               key={mainAction.label}
@@ -135,7 +136,12 @@ const ActionsMenu = ({ dataItem, extended, menu, time }) => {
           ))}
         </div>
       )}
-      <RoundedIcon isActive={isShowMenu} onClick={showActionsList} ref={actionMenuBtnRef}>
+      <RoundedIcon
+        isActive={isShowMenu}
+        id="actions-menu"
+        onClick={showActionsList}
+        ref={actionMenuBtnRef}
+      >
         <ActionMenuIcon />
       </RoundedIcon>
       {renderMenu &&
@@ -150,7 +156,7 @@ const ActionsMenu = ({ dataItem, extended, menu, time }) => {
             }}
             ref={dropDownMenuRef}
           >
-            {(extended ? actionMenu[1] : actionMenu).map(
+            {actionMenu[0].map(
               (menuItem, idx) =>
                 !menuItem.hidden && (
                   <ActionsMenuItem
@@ -171,15 +177,15 @@ const ActionsMenu = ({ dataItem, extended, menu, time }) => {
 
 ActionsMenu.defaultProps = {
   dataItem: {},
-  extended: false,
-  time: 100
+  time: 100,
+  withQuickActions: false
 }
 
 ActionsMenu.propTypes = {
   dataItem: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
-  extended: PropTypes.bool,
   menu: ACTIONS_MENU.isRequired,
-  time: PropTypes.number
+  time: PropTypes.number,
+  withQuickActions: PropTypes.bool
 }
 
 export default ActionsMenu

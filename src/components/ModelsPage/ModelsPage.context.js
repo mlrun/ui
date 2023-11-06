@@ -17,46 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useContext, useCallback, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
-
-import { fetchModels } from '../../reducers/artifactsReducer'
-import { setArtifactTags } from '../../utils/artifacts.util'
+import React, { useContext } from 'react'
 import { useYaml } from '../../hooks/yaml.hook'
-import { MODELS_TAB } from '../../constants'
 
 export const ModelsPageContext = React.createContext({})
 
 export const ModelsPageProvider = ({ children }) => {
-  const [models, setModels] = useState([])
-  const [allModels, setAllModels] = useState([])
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const dispatch = useDispatch()
-  const params = useParams()
-
-  const fetchData = useCallback(
-    async filters => {
-      return dispatch(fetchModels({ project: params.projectName, filters: filters }))
-        .unwrap()
-        .then(modelsResponse => {
-          setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
-
-          return modelsResponse
-        })
-    },
-    [dispatch, setModels, params.projectName]
-  )
 
   return (
     <ModelsPageContext.Provider
       value={{
-        fetchData,
         convertedYaml,
-        models,
-        allModels,
-        setModels,
-        setAllModels,
         toggleConvertedYaml
       }}
     >

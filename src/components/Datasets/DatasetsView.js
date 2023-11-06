@@ -19,25 +19,23 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
 
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import Table from '../Table/Table'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import Loader from '../../common/Loader/Loader'
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Details from '../Details/Details'
 
-import { DATASET_TYPE, DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { actionsMenuHeader, filters } from './datasets.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { registerDatasetTitle, filters } from './datasets.util'
 import { removeDataSet } from '../../reducers/artifactsReducer'
+import { ACTIONS_MENU } from '../../types'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const DatasetsView = React.forwardRef(
   (
@@ -52,6 +50,7 @@ const DatasetsView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRegisterDataset,
       pageData,
       selectedDataset,
       selectedRowData,
@@ -65,31 +64,23 @@ const DatasetsView = React.forwardRef(
     },
     ref
   ) => {
-    const params = useParams()
-
     return (
       <>
         <div className="content-wrapper" ref={ref}>
           <div className="content__header">
             <Breadcrumbs />
-            <PageActionsMenu
-              actionsMenuHeader={actionsMenuHeader}
-              onClick={() =>
-                openPopUp(RegisterArtifactModal, {
-                  artifactKind: DATASET_TYPE,
-                  projectName: params.projectName,
-                  refresh: handleRefresh,
-                  title: actionsMenuHeader
-                })
-              }
-              showActionsMenu
-            />
           </div>
           <div className="content">
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
+                  actionButton={{
+                    variant: SECONDARY_BUTTON,
+                    label: registerDatasetTitle,
+                    className: 'register-button',
+                    onClick: handleRegisterDataset
+                  }}
                   filterMenuName={DATASETS_FILTERS}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
@@ -171,7 +162,7 @@ DatasetsView.defaultProps = {
 }
 
 DatasetsView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
@@ -181,6 +172,7 @@ DatasetsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRegisterDataset: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,

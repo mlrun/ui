@@ -17,37 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 
 import FormEnvironmentVariablesTable from '../../../../elements/FormEnvironmentVariablesTable/FormEnvironmentVariablesTable'
-import ScheduleWizard from '../../../SheduleWizard/ScheduleWizard'
 import { FormCheckBox, FormInput, FormKeyValueTable } from 'igz-controls/components'
 
-import { PANEL_EDIT_MODE } from '../../../../constants'
+import { ADVANCED_STEP } from '../../../../constants'
 import { secretsKindOptions } from './JobWizardAdvanced.util'
 
 import './jobWizardAdvanced.scss'
 
-const JobWizardAdvanced = ({
-  editJob,
-  formState,
-  mode,
-  params,
-  runJob,
-  scheduleButtonRef,
-  selectedFunctionData,
-  setShowSchedule,
-  showSchedule
-}) => {
+const JobWizardAdvanced = ({ formState, stepIsActive }) => {
   const [showSecrets] = useState(false)
-
-  useEffect(() => {
-    return () => {
-      setShowSchedule(false)
-    }
-  }, [setShowSchedule])
 
   return (
     <div className="job-wizard__advanced">
@@ -57,7 +40,8 @@ const JobWizardAdvanced = ({
       <div className="form-row form-table-title">Environment variables</div>
       <div className="form-row">
         <FormEnvironmentVariablesTable
-          fieldsPath="advanced.environmentVariablesTable"
+          exitEditModeTriggerItem={stepIsActive}
+          fieldsPath={`${ADVANCED_STEP}.environmentVariablesTable`}
           formState={formState}
         />
       </div>
@@ -69,7 +53,8 @@ const JobWizardAdvanced = ({
             <FormKeyValueTable
               addNewItemLabel="Add secret"
               defaultKey="file"
-              fieldsPath="advanced.secretSourcesTable"
+              exitEditModeTriggerItem={stepIsActive}
+              fieldsPath={`${ADVANCED_STEP}.secretSourcesTable`}
               formState={formState}
               keyHeader="Kind"
               keyLabel="Kind"
@@ -80,58 +65,39 @@ const JobWizardAdvanced = ({
       )}
       <div className="form-row">
         <div className="form-col-1">
-          <FormInput name="advanced.inputPath" label="Default input path" />
+          <FormInput name={`${ADVANCED_STEP}.inputPath`} label="Default input path" />
         </div>
         <div className="form-col-1">
-          <FormInput name="advanced.outputPath" label="Default artifact path" required />
+          <FormInput name={`${ADVANCED_STEP}.outputPath`} label="Default artifact path" required />
         </div>
       </div>
       <div className="form-row align-stretch">
         <div className="access-key-checkbox">
-          <FormCheckBox label="Auto-generate access key" name="advanced.accessKey" />
+          <FormCheckBox label="Auto-generate access key" name={`${ADVANCED_STEP}.accessKey`} />
         </div>
-        {!formState.values.advanced.accessKey && (
+        {!formState.values?.[ADVANCED_STEP]?.accessKey && (
           <div className="form-col-1">
-            <FormInput name="advanced.accessKeyInput" label="Access key" required />
+            <FormInput name={`${ADVANCED_STEP}.accessKeyInput`} label="Access key" required />
           </div>
         )}
       </div>
-      {showSchedule && (
-        <ScheduleWizard
-          onSchedule={() => {
-            formState.handleSubmit()
 
-            if (formState.valid) {
-              if (mode === PANEL_EDIT_MODE) {
-                editJob(formState.values, selectedFunctionData, params)
-              } else {
-                runJob(formState.values, selectedFunctionData, params, true)
-              }
-            }
-          }}
-          scheduleButtonRef={scheduleButtonRef}
-          scheduleData={formState.values.scheduleData}
-          setFieldValue={formState.form.change}
-          setShowSchedule={setShowSchedule}
-        />
+      {stepIsActive && (
+        <OnChange name={`${ADVANCED_STEP}.accessKey`}>
+          {() => formState.form.change(`${ADVANCED_STEP}.accessKeyInput`, '')}
+        </OnChange>
       )}
-      <OnChange name="advanced.accessKey">
-        {() => formState.form.change('advanced.accessKeyInput', '')}
-      </OnChange>
     </div>
   )
 }
 
+JobWizardAdvanced.defaultProps = {
+  stepIsActive: false
+}
+
 JobWizardAdvanced.propTypes = {
-  editJob: PropTypes.func.isRequired,
   formState: PropTypes.shape({}).isRequired,
-  mode: PropTypes.string.isRequired,
-  params: PropTypes.shape({}).isRequired,
-  runJob: PropTypes.func.isRequired,
-  scheduleButtonRef: PropTypes.shape({}).isRequired,
-  selectedFunctionData: PropTypes.shape({}).isRequired,
-  setShowSchedule: PropTypes.func.isRequired,
-  showSchedule: PropTypes.bool.isRequired
+  stepIsActive: PropTypes.bool
 }
 
 export default JobWizardAdvanced

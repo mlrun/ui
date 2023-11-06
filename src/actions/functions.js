@@ -30,6 +30,7 @@ import {
   FETCH_HUB_FUNCTION_TEMPLATE_BEGIN,
   FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
   FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS,
+  FETCH_HUB_FUNCTIONS_BEGIN,
   REMOVE_FUNCTION_TEMPLATE,
   SET_FUNCTIONS_TEMPLATES,
   SET_LOADING,
@@ -75,6 +76,7 @@ import {
   GET_FUNCTION_FAILURE,
   GET_FUNCTION_BEGIN,
   REMOVE_FUNCTION,
+  REMOVE_HUB_FUNCTIONS,
   SET_NEW_FUNCTION_FORCE_BUILD,
   SET_NEW_FUNCTION_PREEMTION_MODE,
   SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
@@ -207,20 +209,22 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  fetchFunctions: (project, filters, withoutLoader = false) => dispatch => {
-    dispatch(functionsActions.fetchFunctionsBegin(withoutLoader))
+  fetchFunctions:
+    (project, filters, withoutLoader = false) =>
+    dispatch => {
+      dispatch(functionsActions.fetchFunctionsBegin(withoutLoader))
 
-    return functionsApi
-      .getFunctions(project, filters)
-      .then(({ data }) => {
-        dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
+      return functionsApi
+        .getFunctions(project, filters)
+        .then(({ data }) => {
+          dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
-        return data.funcs
-      })
-      .catch(err => {
-        dispatch(functionsActions.fetchFunctionsFailure(err.message))
-      })
-  },
+          return data.funcs
+        })
+        .catch(err => {
+          dispatch(functionsActions.fetchFunctionsFailure(err.message))
+        })
+    },
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
   }),
@@ -284,25 +288,34 @@ const functionsActions = {
     payload: err
   }),
   fetchHubFunctions: () => dispatch => {
-    return functionsApi.getHubFunctions().then(({ data: functionTemplates }) => {
-      const templatesData = generateHubCategories(functionTemplates.catalog)
+    dispatch(functionsActions.fetchHubFunctionsBegin())
 
-      dispatch(functionsActions.setHubFunctions(templatesData))
+    return functionsApi
+      .getHubFunctions()
+      .then(({ data: functionTemplates }) => {
+        const templatesData = generateHubCategories(functionTemplates.catalog)
 
-      return templatesData
-    }).catch((error) => {
-      const errorMsg = get(error, 'response.data.detail', 'Functions failed to load')
+        dispatch(functionsActions.setHubFunctions(templatesData))
 
-      dispatch(
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message: errorMsg,
-          error
-        })
-      )
-    })
+        return templatesData
+      })
+      .catch(error => {
+        const errorMsg = get(error, 'response.data.detail', 'Functions failed to load')
+
+        dispatch(
+          setNotification({
+            status: error.response?.status || 400,
+            id: Math.random(),
+            message: errorMsg,
+            error
+          })
+        )
+      })
   },
+
+  fetchHubFunctionsBegin: () => ({
+    type: FETCH_HUB_FUNCTIONS_BEGIN
+  }),
   fetchHubFunctionsFailure: err => ({
     type: FETCH_HUB_FUNCTIONS_FAILURE,
     payload: err
@@ -335,6 +348,9 @@ const functionsActions = {
   }),
   removeFunction: () => ({
     type: REMOVE_FUNCTION
+  }),
+  removeHubFunctions: () => ({
+    type: REMOVE_HUB_FUNCTIONS
   }),
   removeFunctionTemplate: () => ({
     type: REMOVE_FUNCTION_TEMPLATE

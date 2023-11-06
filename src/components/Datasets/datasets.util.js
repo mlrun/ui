@@ -21,7 +21,6 @@ import React from 'react'
 
 import { applyTagChanges } from '../../utils/artifacts.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
 import {
   DATASET_TYPE,
   DATASETS,
@@ -39,12 +38,14 @@ import { fetchDataSet, showArtifactsPreview } from '../../reducers/artifactsRedu
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
 export const infoHeaders = [
   {
@@ -64,8 +65,7 @@ export const infoHeaders = [
     tip: 'Unique identifier representing the job or the workflow that generated the artifact'
   },
   { label: 'Updated', id: 'updated' },
-  { label: 'Labels', id: 'labels' },
-  { label: 'Sources', id: 'sources' }
+  { label: 'Labels', id: 'labels' }
 ]
 
 export const filters = [
@@ -75,7 +75,7 @@ export const filters = [
   { type: ITERATIONS_FILTER, label: 'Show best iteration only' }
 ]
 
-export const actionsMenuHeader = 'Register dataset'
+export const registerDatasetTitle = 'Register dataset'
 
 export const generateDataSetsDetailsMenu = selectedItem => [
   {
@@ -104,11 +104,6 @@ export const generatePageData = (selectedItem, viewMode) => ({
     menu: generateDataSetsDetailsMenu(selectedItem),
     infoHeaders,
     type: DATASETS,
-    additionalInfo: {
-      header: 'Producer',
-      body: generateProducerDetailsInfo(selectedItem),
-      hidden: !selectedItem.item?.producer
-    },
     hideBackBtn: viewMode === FULL_VIEW_MODE,
     withToggleViewBtn: true
   }
@@ -217,24 +212,24 @@ export const generateActionsMenu = (
   datasetsFilters
 ) => {
   const isTargetPathValid = getIsTargetPathValid(dataset ?? {}, frontendSpec)
+  const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
 
   return [
     [
       {
-        disabled: !isTargetPathValid,
-        label: 'Preview',
-        icon: <ArtifactView />,
+        label: 'Download',
+        icon: <DownloadIcon />,
         onClick: dataset => {
           dispatch(
-            showArtifactsPreview({
-              isPreview: true,
-              selectedItem: dataset
+            setDownloadItem({
+              path: downloadPath,
+              user: dataset.producer?.owner,
+              id: downloadPath
             })
           )
+          dispatch(setShowDownloadsList(true))
         }
-      }
-    ],
-    [
+      },
       {
         label: 'Copy URI',
         icon: <Copy />,
@@ -264,6 +259,21 @@ export const generateActionsMenu = (
             datasetsFilters,
             DATASET_TYPE
           )
+      }
+    ],
+    [
+      {
+        disabled: !isTargetPathValid,
+        label: 'Preview',
+        icon: <ArtifactView />,
+        onClick: dataset => {
+          dispatch(
+            showArtifactsPreview({
+              isPreview: true,
+              selectedItem: dataset
+            })
+          )
+        }
       }
     ]
   ]

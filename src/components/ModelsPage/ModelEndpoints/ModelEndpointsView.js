@@ -29,6 +29,7 @@ import Table from '../../Table/Table'
 import { filters } from './modelEndpoints.util'
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE } from '../../../constants'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { ACTIONS_MENU } from '../../../types'
 
 const ModelEndpointsView = React.forwardRef(
   (
@@ -86,6 +87,7 @@ const ModelEndpointsView = React.forwardRef(
                         rowIndex={index}
                         rowItem={tableItem}
                         selectedItem={selectedModelEndpoint}
+                        tab={MODEL_ENDPOINTS_TAB}
                       />
                     )
                   })}
@@ -100,7 +102,7 @@ const ModelEndpointsView = React.forwardRef(
 )
 
 ModelEndpointsView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   fetchData: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,

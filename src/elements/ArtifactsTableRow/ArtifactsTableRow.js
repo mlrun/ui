@@ -41,7 +41,8 @@ const ArtifactsTableRow = ({
   mainRowItemsCount,
   rowItem,
   selectedItem,
-  selectedRowData
+  selectedRowData,
+  tab
 }) => {
   const parent = useRef()
   const params = useParams()
@@ -142,7 +143,7 @@ const ArtifactsTableRow = ({
                               <td className="table-body__cell table-cell-icon">
                                 <ActionsMenu
                                   dataItem={tableContentItem.data}
-                                  extended
+                                  withQuickActions
                                   menu={actionsMenu}
                                 />
                               </td>
@@ -183,7 +184,11 @@ const ArtifactsTableRow = ({
           })}
           {!hideActionsMenu && (
             <td className="table-body__cell table-cell-icon">
-              <ActionsMenu dataItem={rowItem.data} extended menu={actionsMenu} />
+              <ActionsMenu
+                dataItem={rowItem.data}
+                withQuickActions={tab !== MODEL_ENDPOINTS_TAB}
+                menu={actionsMenu}
+              />
             </td>
           )}
         </>
@@ -197,7 +202,8 @@ ArtifactsTableRow.defaultProps = {
   handleSelectItem: () => {},
   hideActionsMenu: false,
   tableContent: null,
-  mainRowItemsCount: 1
+  mainRowItemsCount: 1,
+  tab: ''
 }
 
 ArtifactsTableRow.propTypes = {
@@ -208,7 +214,8 @@ ArtifactsTableRow.propTypes = {
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.shape({}))
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})),
+  tab: PropTypes.string
 }
 
 export default React.memo(ArtifactsTableRow)

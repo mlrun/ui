@@ -32,18 +32,18 @@ import {
 
 import './formResourcesUnits.scss'
 
-const FormResourcesUnits = ({ formState }) => {
+const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
   const gpuType = useMemo(
-    () => getLimitsGpuType(formState.values.resources.currentLimits),
-    [formState.values.resources.currentLimits]
+    () => getLimitsGpuType(formState.values.resources?.currentLimits),
+    [formState.values.resources]
   )
   const selectedRequestUnit = useMemo(
-    () => getSelectedCpuOption(formState.values.resources.currentRequest.cpuUnitId),
-    [formState.values.resources.currentRequest.cpuUnitId]
+    () => getSelectedCpuOption(formState.values.resources?.currentRequest?.cpuUnitId),
+    [formState.values.resources]
   )
   const selectedLimitUnit = useMemo(
-    () => getSelectedCpuOption(formState.values.resources.currentLimits.cpuUnitId),
-    [formState.values.resources.currentLimits.cpuUnitId]
+    () => getSelectedCpuOption(formState.values.resources?.currentLimits?.cpuUnitId),
+    [formState.values.resources]
   )
 
   const validateMemory = (value, allValues) => {
@@ -51,14 +51,14 @@ const FormResourcesUnits = ({ formState }) => {
       return parseInt(value) * Math.pow(unitData.root, unitData.power)
     }
 
-    const limits = Number.parseInt(allValues.resources.currentLimits.memory)
-    const requests = Number.parseInt(allValues.resources.currentRequest.memory)
+    const limits = Number.parseInt(allValues.resources.currentLimits?.memory)
+    const requests = Number.parseInt(allValues.resources.currentRequest?.memory)
 
     const selectedLimitsOption = getSelectedMemoryOption(
-      allValues.resources.currentLimits.memoryUnitId
+      allValues.resources.currentLimits?.memoryUnitId
     )
     const selectedRequestsOption = getSelectedMemoryOption(
-      allValues.resources.currentRequest.memoryUnitId
+      allValues.resources.currentRequest?.memoryUnitId
     )
 
     const isValid =
@@ -71,11 +71,11 @@ const FormResourcesUnits = ({ formState }) => {
   }
 
   const validateCpu = (value, allValues) => {
-    const limitsValue = allValues.resources.currentLimits.cpu
-    const requestsValue = allValues.resources.currentRequest.cpu
-    const selectedLimitsOption = getSelectedCpuOption(allValues.resources.currentLimits.cpuUnitId)
+    const limitsValue = allValues.resources.currentLimits?.cpu
+    const requestsValue = allValues.resources.currentRequest?.cpu
+    const selectedLimitsOption = getSelectedCpuOption(allValues.resources.currentLimits?.cpuUnitId)
     const selectedRequestsOption = getSelectedCpuOption(
-      allValues.resources.currentRequest.cpuUnitId
+      allValues.resources.currentRequest?.cpuUnitId
     )
 
     const isValid =
@@ -215,17 +215,31 @@ const FormResourcesUnits = ({ formState }) => {
           </div>
         </div>
       </div>
-      <OnChange name="resources.currentRequest.cpuUnitId">
-        {value => handleSelectCpuUnit(value, 'currentRequest')}
-      </OnChange>
-      <OnChange name="resources.currentLimits.cpuUnitId">
-        {value => handleSelectCpuUnit(value, 'currentLimits')}
-      </OnChange>
+      {onChangeEnabled && (
+        <OnChange name="resources.currentRequest.cpuUnitId">
+          {(value, prevValue) => {
+            handleSelectCpuUnit(value, 'currentRequest')
+          }}
+        </OnChange>
+      )}
+      {onChangeEnabled && (
+        <OnChange name="resources.currentLimits.cpuUnitId">
+          {(value, prevValue) => {
+            handleSelectCpuUnit(value, 'currentLimits')
+          }}
+        </OnChange>
+      )}
     </>
   )
 }
+
+FormResourcesUnits.defaultProps = {
+  onChangeEnabled: true
+}
+
 FormResourcesUnits.propTypes = {
-  formState: PropTypes.shape({}).isRequired
+  formState: PropTypes.shape({}).isRequired,
+  onChangeEnabled: PropTypes.bool
 }
 
 export default FormResourcesUnits

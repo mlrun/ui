@@ -50,8 +50,6 @@ import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 
 import { ReactComponent as CustomIcon } from 'igz-controls/images/custom.svg'
 
-import './formParametersRow.scss'
-
 const FormParametersRow = ({
   applyChanges,
   deleteRow,
@@ -74,17 +72,13 @@ const FormParametersRow = ({
   const [typeIsChanging, setTypeIsChanging] = useState(false)
   const tableRowClassNames = classnames(
     'form-table__row',
-    'form-table__parameter-row',
-    !fieldData.data?.isChecked && 'form-table__parameter-row_excluded'
+    !fieldData.data?.isChecked && 'form-table__row_excluded'
   )
   const tableGeneralRowClassNames = classnames(
     tableRowClassNames,
     fieldData.isRequired && index in getTableArrayErrors(fieldsPath) && 'form-table__row_invalid'
   )
-  const tableEditingRowClassNames = classnames(
-    tableRowClassNames,
-    'form-table__row_active'
-  )
+  const tableEditingRowClassNames = classnames(tableRowClassNames, 'form-table__row_active')
 
   const getValueValidationRules = parameterType => {
     if (parameterType === parameterTypeMap) {
@@ -300,7 +294,7 @@ const FormParametersRow = ({
                       setTypeIsChanging(true)
                     }}
                     name={`${rowPath}.data.type`}
-                    options={parametersValueTypeOptions}
+                    options={fieldData?.parameterTypeOptions || parametersValueTypeOptions}
                     required={!fieldData.isPredefined}
                   />
                 </div>
@@ -369,7 +363,9 @@ const FormParametersRow = ({
                   <div
                     className={classnames(
                       'form-table__name',
-                      (fieldData.isRequired && withRequiredParameters) && 'form-table__name_with-asterisk'
+                      fieldData.isRequired &&
+                        withRequiredParameters &&
+                        'form-table__name_with-asterisk'
                     )}
                   >
                     <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
@@ -415,7 +411,7 @@ const FormParametersRow = ({
                 </div>
                 <FormRowActions
                   applyChanges={applyChanges}
-                  deleteIsDisabled={fieldData.isPredefined}
+                  deleteButtonIsHidden={fieldData.isPredefined}
                   deleteRow={deleteRow}
                   disabled={isRowDisabled()}
                   discardOrDelete={discardOrDelete}
