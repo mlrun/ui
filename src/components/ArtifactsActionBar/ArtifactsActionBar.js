@@ -40,7 +40,7 @@ import detailsActions from '../../actions/details'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 function ArtifactsActionBar({
-  actionButton,
+  actionButtons,
   cancelRequest,
   filterMenuName,
   handleRefresh,
@@ -154,13 +154,18 @@ function ArtifactsActionBar({
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">
-            {actionButton && !actionButton.hidden && (
-              <Button
-                variant={actionButton.variant}
-                label={actionButton.label}
-                className={actionButton.className}
-                onClick={actionButton.onClick}
-              />
+            {actionButtons.map(
+              (actionButton, index) =>
+                actionButton &&
+                !actionButton.hidden && (
+                  <Button
+                    key={index}
+                    variant={actionButton.variant}
+                    label={actionButton.label}
+                    className={actionButton.className}
+                    onClick={actionButton.onClick}
+                  />
+                )
             )}
 
             <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
@@ -174,19 +179,21 @@ function ArtifactsActionBar({
 }
 
 ArtifactsActionBar.defaultProps = {
-  actionButton: null,
+  actionButtons: [],
   cancelRequest: null,
   tab: ''
 }
 
 ArtifactsActionBar.propTypes = {
-  actionButton: PropTypes.shape({
-    className: PropTypes.string,
-    hidden: PropTypes.bool,
-    label: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-    variant: PropTypes.string.isRequired
-  }),
+  actionButtons: PropTypes.arrayOf(
+    PropTypes.shape({
+      className: PropTypes.string,
+      hidden: PropTypes.bool,
+      label: PropTypes.string.isRequired,
+      onClick: PropTypes.func.isRequired,
+      variant: PropTypes.string.isRequired
+    })
+  ),
   cancelRequest: PropTypes.func,
   filterMenuName: PropTypes.string.isRequired,
   handleRefresh: PropTypes.func.isRequired,

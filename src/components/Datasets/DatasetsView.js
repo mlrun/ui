@@ -75,12 +75,14 @@ const DatasetsView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
-                  actionButton={{
-                    variant: SECONDARY_BUTTON,
-                    label: registerDatasetTitle,
-                    className: 'register-button',
-                    onClick: handleRegisterDataset
-                  }}
+                  actionButtons={[
+                    {
+                      variant: SECONDARY_BUTTON,
+                      label: registerDatasetTitle,
+                      className: 'action-button',
+                      onClick: handleRegisterDataset
+                    }
+                  ]}
                   filterMenuName={DATASETS_FILTERS}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
