@@ -21,13 +21,21 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { connect, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
-import DetailsArtifactsView from './DetailsArtifactsView'
-
-import { generateContent, getJobAccordingIteration } from './detailsArtifacts.util'
-import { generateArtifactIndexes } from '../Details/details.util'
+import ArtifactsPreviewController from '../ArtifactsPreview/ArtifactsPreviewController'
+import NoData from '../../common/NoData/NoData'
+import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
 import jobsActions from '../../actions/jobs'
+import { generateArtifactIndexes } from '../Details/details.util'
+import {
+  generateArtifactsPreviewContent,
+  generateArtifactsTabContent,
+  getJobAccordingIteration
+} from './detailsArtifacts.util'
+
+import './detailsArtifacts.scss'
 
 const DetailsArtifacts = ({
   fetchJob,
@@ -37,10 +45,21 @@ const DetailsArtifacts = ({
   setIteration,
   setIterationOption
 }) => {
-  const [content, setContent] = useState([])
+  const [artifactsPreviewContent, setArtifactsPreviewContent] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
   const iterationOptions = useSelector(store => store.detailsStore.iterationOptions)
   const params = useParams()
+
+  const showArtifact = useCallback(
+    index => {
+      generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
+    },
+    [artifactsIndexes, setArtifactsIndexes]
+  )
+
+  const artifactsTabContent = useMemo(() => {
+    return generateArtifactsTabContent(artifactsPreviewContent, params, iteration, showArtifact)
+  }, [artifactsPreviewContent, iteration, params, showArtifact])
 
   const bestIteration = useMemo(
     () => selectedItem.results?.best_iteration,
@@ -87,33 +106,70 @@ const DetailsArtifacts = ({
       fetchJob(params.projectName, params.jobId, iteration).then(job => {
         const selectedJob = getJobAccordingIteration(job)
 
-        setContent(generateContent(selectedJob))
+        setArtifactsPreviewContent(generateArtifactsPreviewContent(selectedJob))
       })
     } else if (selectedItem.iterationStats.length === 0) {
-      setContent(generateContent(selectedItem))
+      setArtifactsPreviewContent(generateArtifactsPreviewContent(selectedItem))
     }
 
     return () => {
-      setContent([])
+      setArtifactsPreviewContent([])
       setArtifactsIndexes([])
     }
   }, [fetchJob, iteration, params.jobId, params.projectName, selectedItem])
 
-  const showArtifact = useCallback(
-    index => {
-      generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
-    },
-    [artifactsIndexes, setArtifactsIndexes]
-  )
-
-  return (
-    <DetailsArtifactsView
-      artifactsIndexes={artifactsIndexes}
-      content={content}
-      iteration={iteration}
-      loading={jobsStore.loading}
-      showArtifact={showArtifact}
-    />
+  return jobsStore.loading ? null : artifactsPreviewContent.length === 0 ? (
+    <NoData />
+  ) : (
+    <div className="item-artifacts">
+      <div className="table">
+        <div className="table-header">
+          <div className="table-row">
+            {artifactsTabContent[0].map(({ headerId, headerLabel, className }) => (
+              <div key={headerId} className={classnames('table-header-item', className && className)}>
+                {headerLabel}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="table-body">
+          {artifactsTabContent.map((artifactRow, artifactRowIndex) => (
+            <div key={artifactRowIndex}>
+              <div className="table-row">
+                {artifactRow.map((artifactCell, artifactCellIndex) => (
+                  <div
+                    key={`${artifactCellIndex}`}
+                    className={classnames(
+                      'table-body__cell',
+                      artifactCell.className && artifactCell.className
+                    )}
+                  >
+                    {artifactCell.template ? (
+                      artifactCell.template
+                    ) : (
+                      <Tooltip
+                        template={
+                          <TextTooltipTemplate
+                            text={artifactCell.tooltipValue ?? artifactCell.value}
+                          />
+                        }
+                      >
+                        {artifactCell.value}
+                      </Tooltip>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <ArtifactsPreviewController
+                artifactsIndexes={artifactsIndexes}
+                artifact={artifactsPreviewContent[artifactRowIndex]}
+                index={artifactRowIndex}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 

@@ -64,7 +64,7 @@ export const fetchArtifactPreviewFromExtraData = (
     fetchArtifactPreview(
       projectName,
       previewItem.path,
-      previewItem.path.startsWith('/User') && (artifact.user || artifact.producer.owner),
+      previewItem.path.startsWith('/User') && (artifact.ui.user || artifact.producer.owner),
       previewItem.path.replace(/.*\./g, ''),
       artifact.db_key,
       cancelToken
