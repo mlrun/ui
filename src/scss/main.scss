@@ -214,6 +214,7 @@ main {
   position: relative;
   text-align: left;
   width: 100%;
+  border-spacing: 0;
 
   .table {
     &-row {
@@ -233,6 +234,7 @@ main {
         display: inline-flex;
         flex: 1;
         align-items: center;
+        overflow: hidden;
 
         @include tableDet(8px, 5px, 8px, 10px);
 
@@ -275,14 +277,15 @@ main {
                 &__container_extended {
                   &:before {
                     background: linear-gradient(
-                      90deg,
-                      rgba(255, 255, 255, 0) 0%,
-                      rgba(245, 247, 255, 1) 100%
+                                    90deg,
+                                    rgba(255, 255, 255, 0) 0%,
+                                    rgba(245, 247, 255, 1) 100%
                     );
                   }
                 }
               }
             }
+
             &:hover {
               .table-cell-icon {
                 .actions-menu {
@@ -294,9 +297,9 @@ main {
 
                       &:before {
                         background: linear-gradient(
-                          90deg,
-                          rgba(255, 255, 255, 0) 0%,
-                          rgba(245, 247, 255, 1) 100%
+                                        90deg,
+                                        rgba(255, 255, 255, 0) 0%,
+                                        rgba(245, 247, 255, 1) 100%
                         );
                       }
                     }

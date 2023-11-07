@@ -67,6 +67,26 @@
         flex: 5;
       }
 
+      &-6 {
+        flex: 6;
+      }
+
+      &-7 {
+        flex: 7;
+      }
+
+      &-8 {
+        flex: 8;
+      }
+
+      &-9 {
+        flex: 9;
+      }
+
+      &-10 {
+        flex: 10;
+      }
+
       &-extra-small {
         flex: 1;
         max-width: 85px;
@@ -147,20 +167,18 @@
   }
 
   .table {
-    &-header {
-      &-item {
-        &.buttonPopout,
-        &.buttonDownload {
-          @include tableColumnFlex(0.5, 80px);
-        }
+    &-header-item {
+      &.buttonPopout,
+      &.buttonDownload {
+        @include tableColumnFlex(0.5, 80px);
+      }
 
-        &.align-right {
-          justify-content: flex-end;
-        }
+      &.align-right {
+        justify-content: flex-end;
+      }
 
-        .tip-container {
-          margin-left: 2px;
-        }
+      .tip-container {
+        margin-left: 2px;
       }
     }
 
@@ -170,6 +188,7 @@
       &__cell {
         &_hidden {
           visibility: hidden;
+
           .chip {
             visibility: hidden;
           }

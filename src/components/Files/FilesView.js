@@ -145,7 +145,7 @@ const FilesView = React.forwardRef(
           <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
         {artifactsStore?.preview?.isPreview && (
-          <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+          <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
       </>
     )
