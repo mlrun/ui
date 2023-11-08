@@ -292,9 +292,11 @@ const Datasets = () => {
         )
   }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
-      headers: tableContent[0]?.content ?? [],
+      headers: tableHeaders,
       content: tableContent,
       sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
     })

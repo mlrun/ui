@@ -109,6 +109,7 @@ const FilesView = React.forwardRef(
                     handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
                     retryRequest={handleRefresh}
+                    selectedItem={selectedFile}
                     sortProps={sortProps}
                     tableHeaders={tableHeaders ?? []}
                   >

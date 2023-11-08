@@ -26,7 +26,6 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
-import TableProducerCell from '../TableProducerCell/TableProducerCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
@@ -58,7 +57,9 @@ const TableCell = ({
     data.bodyCellClassName
   )
 
-  if (link && data.type !== 'hidden') {
+  if (data.template) {
+    return data.template
+  } else if (link && data.type !== 'hidden') {
     return (
       <TableLinkCell
         className={className}
@@ -117,8 +118,6 @@ const TableCell = ({
         <ChipCell chipOptions={getChipOptions(data.type)} elements={data.value} tooltip />
       </td>
     )
-  } else if (data.type === 'producer') {
-    return <TableProducerCell className={className} data={data} />
   } else if (data.type === 'buttonPopout') {
     return (
       <td className={cellClassNames}>

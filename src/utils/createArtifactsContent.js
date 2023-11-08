@@ -36,6 +36,7 @@ import { parseUri } from './parseUri'
 import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { validateArguments } from './validateArguments'
+import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
@@ -158,7 +159,8 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
       id: `producer.${artifact.ui.identifierUnique}`,
       headerId: 'producer',
       headerLabel: 'Producer',
-      value: artifact.producer,
+      value: artifact.producer.name || '',
+      template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
       className: 'table-cell-1',
       type: 'producer'
     },
@@ -300,7 +302,8 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         id: `producer.${artifact.ui.identifierUnique}`,
         headerId: 'producer',
         headerLabel: 'Producer',
-        value: artifact.producer || {},
+        value: artifact.producer.name || '',
+        template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
         className: 'table-cell-1',
         type: 'producer'
       },
@@ -509,7 +512,8 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         id: `producer.${artifact.ui.identifierUnique}`,
         headerId: 'producer',
         headerLabel: 'Producer',
-        value: artifact.producer,
+        value: artifact.producer.name || '',
+        template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
         className: 'table-cell-1',
         type: 'producer'
       },
