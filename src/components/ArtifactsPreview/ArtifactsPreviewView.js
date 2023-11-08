@@ -62,43 +62,47 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
               </div>
             )}
             {preview?.type === 'table' && (
-              <div className="artifact-preview__table">
-                <div className="artifact-preview__table-row artifact-preview__table-header">
-                  {preview.data.headers.map((header, index) => {
-                    return (
-                      <div key={`${header}${index}`} className="artifact-preview__table-content">
-                        <Tooltip template={<TextTooltipTemplate text={header} />}>{header}</Tooltip>
-                      </div>
-                    )
-                  })}
-                </div>
-                <div className="artifact-preview__table-body">
-                  {content.map((contentItem, index) => (
-                    <div key={index} className="artifact-preview__table-row">
-                      {Array.isArray(contentItem) ? (
-                        contentItem.map(value => (
-                          <Tooltip
-                            className="artifact-preview__table-content"
-                            key={`${value}${Math.random()}`}
-                            template={<TextTooltipTemplate text={`${value}`} />}
-                          >
-                            {typeof value === 'object' && value !== null
-                              ? JSON.stringify(value)
-                              : String(value)}
+              <table className="table artifact-preview__table">
+                <thead className="table-header">
+                  <tr className="table-row">
+                    {preview.data.headers.map((header, index) => {
+                      return (
+                        <th key={`${header}${index}`} className="table-header__cell">
+                          <Tooltip template={<TextTooltipTemplate text={header} />}>
+                            {header}
                           </Tooltip>
+                        </th>
+                      )
+                    })}
+                  </tr>
+                </thead>
+                <tbody className="table-body">
+                  {content.map((contentItem, contentItemIndex) => (
+                    <tr key={contentItemIndex} className="table-row">
+                      {Array.isArray(contentItem) ? (
+                        contentItem.map((contentItemValue, contentItemValueIndex) => (
+                          <td key={contentItemValueIndex} className="table-body__cell">
+                            <Tooltip
+                              key={`${contentItemValue}${Math.random()}`}
+                              template={<TextTooltipTemplate text={`${contentItemValue}`} />}
+                            >
+                              {typeof contentItemValue === 'object' && contentItemValue !== null
+                                ? JSON.stringify(contentItemValue)
+                                : String(contentItemValue)}
+                            </Tooltip>
+                          </td>
                         ))
                       ) : (
-                        <Tooltip
-                          className="artifact-preview__table-content"
-                          template={<TextTooltipTemplate text={contentItem} />}
-                        >
-                          {contentItem}
-                        </Tooltip>
+                        <td className="table-body__cell">
+                          <Tooltip template={<TextTooltipTemplate text={contentItem} />}>
+                            {contentItem}
+                          </Tooltip>
+                        </td>
                       )}
-                    </div>
+                    </tr>
                   ))}
-                </div>
-              </div>
+                </tbody>
+              </table>
             )}
             {preview?.type === 'text' && <div>{preview?.data.content}</div>}
             {preview?.type === 'html' && (

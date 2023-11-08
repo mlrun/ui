@@ -26,6 +26,7 @@ import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifa
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
+import JobWizard from '../../JobWizard/JobWizard'
 
 import {
   fetchModel,
@@ -383,6 +384,14 @@ const Models = ({ fetchModelFeatureVector }) => {
     openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: handleRefresh })
   }, [handleRefresh, params.projectName])
 
+  const handleTrainModel = () => {
+    openPopUp(JobWizard, {
+      params,
+      isTrain: true,
+      wizardTitle: 'Train model'
+    })
+  }
+
   return (
     <ModelsView
       actionsMenu={actionsMenu}
@@ -394,6 +403,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterModel={handleRegisterModel}
+      handleTrainModel={handleTrainModel}
       isDemoMode={isDemoMode}
       models={models}
       pageData={pageData}

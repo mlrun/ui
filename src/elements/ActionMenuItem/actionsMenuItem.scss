@@ -23,10 +23,6 @@
   }
 
   &__option {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: flex-start;
     padding: 10px;
     color: $primary;
     cursor: pointer;
@@ -56,6 +52,14 @@
           fill: $amaranth;
         }
       }
+    }
+
+    & > * {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
     }
   }
 }

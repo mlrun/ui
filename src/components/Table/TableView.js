@@ -77,11 +77,13 @@ const TableView = ({
   tableHeadRef,
   tablePanelRef
 }) => {
+  const tableClass = classnames('table', !isEmpty(selectedItem) && 'table-with-details')
+
   return (
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
         <div className="table__wrapper">
-          <table className="table" cellPadding="0" cellSpacing="0" ref={tableRef}>
+          <table className={tableClass} cellPadding="0" cellSpacing="0" ref={tableRef}>
             {pageData.tableHeaders && (
               <>
                 <thead className="table-header">

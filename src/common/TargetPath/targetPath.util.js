@@ -275,7 +275,7 @@ export const generateComboboxMatchesList = (
 export const generateArtifactsList = artifacts => {
   const generatedArtifacts = artifacts
     .map(artifact => {
-      const key = artifact.link_iteration ? artifact.link_iteration.db_key : artifact.key ?? ''
+      const key = artifact.link_iteration?.db_key || artifact.db_key || artifact.key || ''
       return {
         label: key,
         id: key

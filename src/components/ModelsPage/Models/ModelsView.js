@@ -34,7 +34,7 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { removeModel } from '../../../reducers/artifactsReducer'
 import { filters } from './models.util'
 import { ACTIONS_MENU } from '../../../types'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 const ModelsView = React.forwardRef(
   (
@@ -48,6 +48,7 @@ const ModelsView = React.forwardRef(
       handleExpandRow,
       handleRefresh,
       handleRegisterModel,
+      handleTrainModel,
       isDemoMode,
       models,
       pageData,
@@ -70,15 +71,23 @@ const ModelsView = React.forwardRef(
           <div className="table-container">
             <div className="content__action-bar-wrapper">
               <ModelsPageTabs />
-              {/* TODO: remove from demo in 1.4 */}
+              {/* TODO: remove from demo in 1.7 */}
               <ArtifactsActionBar
-                actionButton={{
-                  variant: SECONDARY_BUTTON,
-                  label: 'Register model',
-                  className: 'register-button',
-                  onClick: handleRegisterModel,
-                  hidden: !isDemoMode
-                }}
+                actionButtons={[
+                  {
+                    variant: PRIMARY_BUTTON,
+                    label: 'Train model',
+                    className: 'action-button',
+                    onClick: handleTrainModel
+                  },
+                  {
+                    variant: SECONDARY_BUTTON,
+                    label: 'Register model',
+                    className: 'action-button',
+                    onClick: handleRegisterModel,
+                    hidden: !isDemoMode
+                  }
+                ]}
                 filterMenuName={MODELS_FILTERS}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
@@ -169,6 +178,7 @@ ModelsView.propTypes = {
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
+  handleTrainModel: PropTypes.func.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
   models: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageData: PropTypes.object.isRequired,

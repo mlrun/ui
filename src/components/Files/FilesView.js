@@ -78,12 +78,14 @@ const FilesView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
-                  actionButton={{
-                    variant: SECONDARY_BUTTON,
-                    label: registerArtifactTitle,
-                    className: 'register-button',
-                    onClick: handleRegisterArtifact
-                  }}
+                  actionButtons={[
+                    {
+                      variant: SECONDARY_BUTTON,
+                      label: registerArtifactTitle,
+                      className: 'action-button',
+                      onClick: handleRegisterArtifact
+                    }
+                  ]}
                   filterMenuName={FILES_FILTERS}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
@@ -147,7 +149,7 @@ const FilesView = React.forwardRef(
           <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
         {artifactsStore?.preview?.isPreview && (
-          <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+          <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
       </>
     )

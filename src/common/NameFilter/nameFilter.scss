@@ -16,6 +16,8 @@ such restriction.
 */
 
 .name-filter {
+  min-width: 180px;
+
   &__icon {
     cursor: pointer;
   }

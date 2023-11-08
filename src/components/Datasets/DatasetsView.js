@@ -78,12 +78,14 @@ const DatasetsView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
-                  actionButton={{
-                    variant: SECONDARY_BUTTON,
-                    label: registerDatasetTitle,
-                    className: 'register-button',
-                    onClick: handleRegisterDataset
-                  }}
+                  actionButtons={[
+                    {
+                      variant: SECONDARY_BUTTON,
+                      label: registerDatasetTitle,
+                      className: 'action-button',
+                      onClick: handleRegisterDataset
+                    }
+                  ]}
                   filterMenuName={DATASETS_FILTERS}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
@@ -153,7 +155,7 @@ const DatasetsView = React.forwardRef(
           <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
         {artifactsStore?.preview?.isPreview && (
-          <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+          <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
       </>
     )

@@ -67,6 +67,26 @@
         flex: 5;
       }
 
+      &-6 {
+        flex: 6;
+      }
+
+      &-7 {
+        flex: 7;
+      }
+
+      &-8 {
+        flex: 8;
+      }
+
+      &-9 {
+        flex: 9;
+      }
+
+      &-10 {
+        flex: 10;
+      }
+
       &-extra-small {
         flex: 1;
         max-width: 85px;
@@ -76,6 +96,10 @@
         flex: 1;
         max-width: 150px;
       }
+    }
+
+    &:has(.actions-menu__container-active) {
+      background-color: $ghostWhite;
     }
   }
 
@@ -166,6 +190,7 @@
       &__cell {
         &_hidden {
           visibility: hidden;
+
           .chip {
             visibility: hidden;
           }

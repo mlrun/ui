@@ -5,48 +5,21 @@
 .item-artifacts {
   height: 100%;
 
-  &__arrow {
-    position: absolute;
-    top: 22px;
-    left: 10px;
+  .artifact-preview {
+    height: 300px;
+    overflow: auto;
   }
 
-  &__accordion-wrapper {
-    height: 70px;
-  }
-
-  &__row {
-    position: relative;
-    display: flex;
-    min-height: 50px;
-    border-bottom: $secondaryBorder;
-
-    &-item {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      min-width: 100px;
-      padding: 8px 26px;
-
-      &:first-child {
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
-        min-width: 170px;
-      }
-
-      &_long {
-        flex: 2;
+  .table {
+    .table-body__cell {
+      a {
+        width: auto;
       }
     }
-  }
 
-  .icon-download {
-    cursor: pointer;
-  }
-
-  &__name {
-    width: 100%;
-    cursor: pointer;
+    .actions-cell {
+      min-width: 140px;
+      max-width: 140px;
+    }
   }
 }

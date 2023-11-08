@@ -84,10 +84,6 @@ const Datasets = () => {
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
   const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(
-    () => generatePageData(selectedDataset, viewMode),
-    [selectedDataset, viewMode]
-  )
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -96,6 +92,10 @@ const Datasets = () => {
   const datasetsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values,
     [filtersStore]
+  )
+  const pageData = useMemo(
+    () => generatePageData(selectedDataset, viewMode, params),
+    [selectedDataset, viewMode, params]
   )
 
   const detailsFormInitialValues = useMemo(
