@@ -119,7 +119,7 @@
         }
       }
 
-      .parent-row-expanded {
+      .parent-row_expanded {
         .row_grouped-by {
           .table-cell-name {
             border-right: none;
@@ -167,18 +167,20 @@
   }
 
   .table {
-    &-header-item {
-      &.buttonPopout,
-      &.buttonDownload {
-        @include tableColumnFlex(0.5, 80px);
-      }
+    &-header {
+      &__cell {
+        &.buttonPopout,
+        &.buttonDownload {
+          @include tableColumnFlex(0.5, 80px);
+        }
 
-      &.align-right {
-        justify-content: flex-end;
-      }
+        &.align-right {
+          justify-content: flex-end;
+        }
 
-      .tip-container {
-        margin-left: 2px;
+        .tip-container {
+          margin-left: 2px;
+        }
       }
     }
 

@@ -128,9 +128,9 @@ const DetailsInputs = ({ inputs }) => {
     <div className="item-inputs">
       <div className="table">
         <div className="table-header">
-          <div className="table-row">
+          <div className="table-row table-header-row">
             {inputsTabContent[0].map(({ headerId, headerLabel, className }) => (
-              <div key={headerId} className={classnames('table-header-item', className)}>
+              <div key={headerId} className={classnames('table-header__cell', className)}>
                 {headerLabel}
               </div>
             ))}

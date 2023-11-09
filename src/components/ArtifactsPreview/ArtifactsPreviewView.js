@@ -67,7 +67,7 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
                   <tr className="table-row">
                     {preview.data.headers.map((header, index) => {
                       return (
-                        <th key={`${header}${index}`} className="table-header-item">
+                        <th key={`${header}${index}`} className="table-header__cell">
                           <Tooltip template={<TextTooltipTemplate text={header} />}>
                             {header}
                           </Tooltip>

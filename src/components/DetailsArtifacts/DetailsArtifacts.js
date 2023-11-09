@@ -124,9 +124,12 @@ const DetailsArtifacts = ({
     <div className="item-artifacts">
       <div className="table">
         <div className="table-header">
-          <div className="table-row">
+          <div className="table-row table-header-row">
             {artifactsTabContent[0].map(({ headerId, headerLabel, className }) => (
-              <div key={headerId} className={classnames('table-header-item', className && className)}>
+              <div
+                key={headerId}
+                className={classnames('table-header__cell', className && className)}
+              >
                 {headerLabel}
               </div>
             ))}

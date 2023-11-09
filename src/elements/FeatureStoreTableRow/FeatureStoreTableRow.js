@@ -54,19 +54,19 @@ const FeatureStoreTableRow = ({
     'parent-row',
     selectedItem?.name &&
       getIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
-      !parent.current?.classList.value.includes('parent-row-expanded') &&
-      'row_active',
-    parent.current?.classList.value.includes('parent-row-expanded') && 'parent-row-expanded'
+      !parent.current?.classList.value.includes('parent-row_expanded') &&
+      'table-row_active',
+    parent.current?.classList.value.includes('parent-row_expanded') && 'parent-row_expanded'
   )
 
   return (
     <tr className={rowClassNames} ref={parent}>
-      {parent.current?.classList.contains('parent-row-expanded') ? (
+      {parent.current?.classList.contains('parent-row_expanded') ? (
         <>
           <td
             data-testid={generateTableRowTestId(rowIndex)}
             className={`table-body__cell
-              ${parent.current?.classList.contains('parent-row-expanded') && 'row_grouped-by'}`}
+              ${parent.current?.classList.contains('parent-row_expanded') && 'row_grouped-by'}`}
           >
             <table cellPadding="0" cellSpacing="0" className="table">
               <tbody className="table-body">
@@ -116,11 +116,15 @@ const FeatureStoreTableRow = ({
                 'table-row',
                 selectedItem.name &&
                   getIdentifier(selectedItem, true) === tableContentItem.data.ui.identifierUnique &&
-                  'row_active'
+                  'table-row_active'
               )
 
               return (
-                <td data-testid={generateTableRowTestId(rowIndex, index)} className="table-body__cell" key={index}>
+                <td
+                  data-testid={generateTableRowTestId(rowIndex, index)}
+                  className="table-body__cell"
+                  key={index}
+                >
                   <table cellPadding="0" cellSpacing="0" className="table">
                     <tbody className="table-body">
                       <tr className={subRowClassNames}>

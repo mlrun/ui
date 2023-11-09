@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -28,45 +29,50 @@ import { getJobsDetailsMenu } from '../../components/Jobs/jobs.util'
 
 import { DETAILS_OVERVIEW_TAB, MONITOR_JOBS_TAB } from '../../constants'
 
-const TableProducerCell = ({ data }) => {
-  const [project, uid] = data.value.uri?.split('/') || []
-  const { name } = data.value
+const TableProducerCell = ({ bodyCellClassName, className, producer }) => {
+  const [project, uid] = producer.uri?.split('/') || []
   const overviewTab = getJobsDetailsMenu().find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
+  const cellClassNames = classnames('table-body__cell', className, bodyCellClassName)
 
   return (
-    <td className={`table-body__cell ${data.class}`}>
-      {data.value.name && uid && (
+    <td className={cellClassNames}>
+      {producer.name && uid && (
         <Link
           className="data-ellipsis"
-          to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${name}/${uid.split('-')[0]}/${
-            overviewTab.id
-          }`}
+          to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${producer.name}/${
+            uid.split('-')[0]
+          }/${overviewTab.id}`}
         >
           <div className="link">
             <Tooltip
               template={
                 <ProducerTooltipTemplate
-                  kind={data.value.kind}
-                  owner={data.value.owner ? data.value.owner : ''}
+                  kind={producer.kind}
+                  owner={producer.owner ? producer.owner : ''}
                 />
               }
             >
-              {data.value.name}
+              {producer.name}
             </Tooltip>
           </div>
         </Link>
       )}
-      {data.value.name && !uid && (
-        <Tooltip template={<TextTooltipTemplate text={data.value.name} />}>
-          {data.value.name}
-        </Tooltip>
+      {producer.name && !uid && (
+        <Tooltip template={<TextTooltipTemplate text={producer.name} />}>{producer.name}</Tooltip>
       )}
     </td>
   )
 }
 
+TableProducerCell.defaultProps = {
+  bodyCellClassName: '',
+  className: ''
+}
+
 TableProducerCell.propTypes = {
-  data: PropTypes.shape({}).isRequired
+  bodyCellClassName: PropTypes.string,
+  className: PropTypes.string,
+  producer: PropTypes.shape({}).isRequired
 }
 
 export default TableProducerCell

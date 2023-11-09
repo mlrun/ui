@@ -99,7 +99,7 @@ const DownloadItem = ({ downloadItem }) => {
 
           timeoutRef.current = setTimeout(() => {
             dispatch(removeDownloadItem(downloadItem.id))
-          }, 1000)
+          }, 5000)
         })
     }
   }, [

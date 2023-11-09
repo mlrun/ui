@@ -36,6 +36,7 @@ import { registerDatasetTitle, filters } from './datasets.util'
 import { removeDataSet } from '../../reducers/artifactsReducer'
 import { ACTIONS_MENU } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { SORT_PROPS } from 'igz-controls/types'
 
 const DatasetsView = React.forwardRef(
   (
@@ -57,7 +58,9 @@ const DatasetsView = React.forwardRef(
       setDatasets,
       setSelectedDataset,
       setSelectedRowData,
+      sortProps,
       tableContent,
+      tableHeaders,
       toggleConvertedYaml,
       viewMode,
       urlTagOption
@@ -115,7 +118,8 @@ const DatasetsView = React.forwardRef(
                     pageData={pageData}
                     retryRequest={handleRefresh}
                     selectedItem={selectedDataset}
-                    tableHeaders={tableContent[0]?.content ?? []}
+                    sortProps={sortProps}
+                    tableHeaders={tableHeaders ?? []}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -181,7 +185,9 @@ DatasetsView.propTypes = {
   setDatasets: PropTypes.func.isRequired,
   setSelectedDataset: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
+  sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   urlTagOption: PropTypes.string

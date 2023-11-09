@@ -48,7 +48,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
 
   const getHeaderCellClasses = (headerId, isSortable) =>
     classNames(
-      'table-header-item',
+      'table-header__cell',
       isSortable && 'sortable-header-cell',
       isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
     )
@@ -56,7 +56,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
   const getHeaderTemplate = () => {
     return (
       <thead className="table-header">
-        <tr className="table-row">
+        <tr className="table-row table-header-row">
           {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => {
             return (
               <th
