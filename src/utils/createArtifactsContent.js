@@ -159,7 +159,7 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
       id: `producer.${artifact.ui.identifierUnique}`,
       headerId: 'producer',
       headerLabel: 'Producer',
-      value: artifact.producer.name || '',
+      value: artifact.producer?.name || '',
       template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
       className: 'table-cell-1',
       type: 'producer'
@@ -302,7 +302,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         id: `producer.${artifact.ui.identifierUnique}`,
         headerId: 'producer',
         headerLabel: 'Producer',
-        value: artifact.producer.name || '',
+        value: artifact.producer?.name || '',
         template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
         className: 'table-cell-1',
         type: 'producer'
@@ -512,7 +512,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         id: `producer.${artifact.ui.identifierUnique}`,
         headerId: 'producer',
         headerLabel: 'Producer',
-        value: artifact.producer.name || '',
+        value: artifact.producer?.name || '',
         template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
         className: 'table-cell-1',
         type: 'producer'
