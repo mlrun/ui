@@ -35,32 +35,34 @@ const TableProducerCell = ({ bodyCellClassName, className, producer }) => {
   const cellClassNames = classnames('table-body__cell', className, bodyCellClassName)
 
   return (
-    <td className={cellClassNames}>
-      {producer.name && uid && (
-        <Link
-          className="data-ellipsis"
-          to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${producer.name}/${
-            uid.split('-')[0]
-          }/${overviewTab.id}`}
-        >
-          <div className="link">
-            <Tooltip
-              template={
-                <ProducerTooltipTemplate
-                  kind={producer.kind}
-                  owner={producer.owner ? producer.owner : ''}
-                />
-              }
-            >
-              {producer.name}
-            </Tooltip>
-          </div>
-        </Link>
-      )}
-      {producer.name && !uid && (
-        <Tooltip template={<TextTooltipTemplate text={producer.name} />}>{producer.name}</Tooltip>
-      )}
-    </td>
+    producer && (
+      <td className={cellClassNames}>
+        {producer?.name && uid && (
+          <Link
+            className="data-ellipsis"
+            to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${producer.name}/${
+              uid.split('-')[0]
+            }/${overviewTab.id}`}
+          >
+            <div className="link">
+              <Tooltip
+                template={
+                  <ProducerTooltipTemplate
+                    kind={producer.kind}
+                    owner={producer.owner ? producer.owner : ''}
+                  />
+                }
+              >
+                {producer.name}
+              </Tooltip>
+            </div>
+          </Link>
+        )}
+        {producer?.name && !uid && (
+          <Tooltip template={<TextTooltipTemplate text={producer.name} />}>{producer.name}</Tooltip>
+        )}
+      </td>
+    )
   )
 }
 
