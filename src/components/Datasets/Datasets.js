@@ -33,6 +33,7 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
@@ -78,6 +79,7 @@ const Datasets = () => {
   const [allDatasets, setAllDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption] = useGetTagOptions(null, filters, null, DATASETS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -107,7 +109,7 @@ const Datasets = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchDataSets({ project: params.projectName, filters }))
+      dispatch(fetchDataSets({ project: params.projectName, filters, setLargeRequestErrorMessage }))
         .unwrap()
         .then(dataSetsResponse => {
           setArtifactTags(
@@ -120,6 +122,11 @@ const Datasets = () => {
           )
 
           return dataSetsResponse
+        })
+        .catch(error => {
+          if (error.message !== REQUEST_CANCELED) {
+            throw error
+          }
         })
     },
     [dispatch, params.projectName]
@@ -370,8 +377,9 @@ const Datasets = () => {
       detailsFormInitialValues={detailsFormInitialValues}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
-      handleRegisterDataset={handleRegisterDataset}
       handleRefresh={handleRefresh}
+      handleRegisterDataset={handleRegisterDataset}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={datasetsRef}
       selectedDataset={selectedDataset}
@@ -383,8 +391,8 @@ const Datasets = () => {
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
-      viewMode={viewMode}
       urlTagOption={urlTagOption}
+      viewMode={viewMode}
     />
   )
 }

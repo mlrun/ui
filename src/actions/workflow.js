@@ -58,11 +58,11 @@ const workflowActions = {
     type: FETCH_WORKFLOW_FAILURE,
     payload: error
   }),
-  fetchWorkflows: (project, filter) => dispatch => {
+  fetchWorkflows: (project, filter, setLargeRequestErrorMessage) => dispatch => {
     dispatch(workflowActions.fetchWorkflowsBegin())
 
     return workflowApi
-      .getWorkflows(project, filter)
+      .getWorkflows(project, filter, setLargeRequestErrorMessage)
       .then(response =>
         dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(response.data.runs)))
       )

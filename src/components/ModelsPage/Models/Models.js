@@ -42,7 +42,8 @@ import {
   TAG_FILTER_ALL_ITEMS,
   FILTER_MENU_MODAL,
   GROUP_BY_NONE,
-  MODELS_FILTERS
+  MODELS_FILTERS,
+  REQUEST_CANCELED
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -82,6 +83,7 @@ import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
   const [allModels, setAllModels] = useState([])
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
@@ -116,12 +118,19 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const fetchData = useCallback(
     async filters => {
-      return dispatch(fetchModels({ project: params.projectName, filters: filters }))
+      return dispatch(
+        fetchModels({ project: params.projectName, filters, setLargeRequestErrorMessage })
+      )
         .unwrap()
         .then(modelsResponse => {
           setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
 
           return modelsResponse
+        })
+        .catch(error => {
+          if (error.message !== REQUEST_CANCELED) {
+            throw error
+          }
         })
     },
     [dispatch, setModels, params.projectName]
@@ -405,6 +414,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
       isDemoMode={isDemoMode}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       models={models}
       pageData={pageData}
       ref={modelsRef}

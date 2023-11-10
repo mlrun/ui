@@ -46,6 +46,7 @@ import {
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
   PANEL_FUNCTION_CREATE_MODE,
+  REQUEST_CANCELED,
   SHOW_UNTAGGED_ITEMS,
   TAG_LATEST
 } from '../../constants'
@@ -82,6 +83,7 @@ const Functions = ({
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   let fetchFunctionLogsTimeout = useRef(null)
   const { isStagingMode } = useMode()
   const params = useParams()
@@ -91,13 +93,19 @@ const Functions = ({
 
   const refreshFunctions = useCallback(
     filters => {
-      return fetchFunctions(params.projectName, filters).then(functions => {
-        const newFunctions = parseFunctions(functions, params.projectName)
+      return fetchFunctions(params.projectName, filters, setLargeRequestErrorMessage)
+        .then(functions => {
+          const newFunctions = parseFunctions(functions, params.projectName)
 
-        setFunctions(newFunctions)
+          setFunctions(newFunctions)
 
-        return newFunctions
-      })
+          return newFunctions
+        })
+        .catch(error => {
+          if (error.message === REQUEST_CANCELED) {
+            setFunctions([])
+          }
+        })
     },
     [fetchFunctions, params.projectName]
   )
@@ -495,6 +503,7 @@ const Functions = ({
       handleExpandAll={handleExpandAll}
       handleExpandRow={handleExpandRow}
       handleSelectFunction={handleSelectFunction}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       refreshFunctions={refreshFunctions}
       selectedFunction={selectedFunction}

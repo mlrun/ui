@@ -25,7 +25,7 @@ import { isEmpty, orderBy } from 'lodash'
 import ModelEndpointsView from './ModelEndpointsView'
 
 import detailsActions from '../../../actions/details'
-import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB } from '../../../constants'
+import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { cancelRequest } from '../../../utils/cancelRequest'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
@@ -37,6 +37,7 @@ import { useModelsPage } from '../ModelsPage.context'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const ModelEndpoints = () => {
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [modelEndpoints, setModelEndpoints] = useState([])
   const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -71,12 +72,18 @@ const ModelEndpoints = () => {
           params: {
             metric: 'latency_avg_1h',
             start: 'now-10m'
-          }
+          },
+          setLargeRequestErrorMessage
         })
       )
         .unwrap()
         .then(result => {
           setModelEndpoints(result)
+        })
+        .catch(error => {
+          if (error.message !== REQUEST_CANCELED) {
+            throw error
+          }
         })
     },
     [dispatch, params.projectName]
@@ -159,6 +166,7 @@ const ModelEndpoints = () => {
       artifactsStore={artifactsStore}
       fetchData={fetchData}
       filtersStore={filtersStore}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       modelEndpoints={modelEndpoints}
       pageData={pageData}
       ref={modelEndpointsRef}

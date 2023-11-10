@@ -20,6 +20,11 @@ such restriction.
 import axios from 'axios'
 import qs from 'qs'
 
+import { ConfirmDialog } from 'igz-controls/components'
+
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { REQUEST_CANCELED } from './constants'
+
 export const mainBaseUrl = `${process.env.PUBLIC_URL}/api/v1`
 
 export const mainHttpClient = axios.create({
@@ -41,3 +46,60 @@ export const nuclioHttpClient = axios.create({
 export const iguazioHttpClient = axios.create({
   baseURL: process.env.NODE_ENV === 'production' ? '/api' : '/iguazio/api'
 })
+
+let requestCounter = 1
+let requestTimeouts = {}
+
+// Request interceptor
+mainHttpClient.interceptors.request.use(
+  config => {
+    if (config.setLargeRequestErrorMessage) {
+      requestTimeouts[requestCounter] = setTimeout(() => {
+        showLargeResponsePopUp()
+        throw new axios.Cancel(REQUEST_CANCELED)
+      }, 30000)
+
+      config.requestCounter = requestCounter
+      requestCounter++
+    }
+
+    return config
+  },
+  error => Promise.reject(error)
+)
+
+// Response interceptor
+mainHttpClient.interceptors.response.use(
+  response => {
+    if (response.config.requestCounter) {
+      const { requestCounter } = response.config
+      const isLargeResponse = response.data?.total_size
+        ? response.data.total_size > 1500
+        : Object.values(response.data)[0].length > 1500
+
+      clearTimeout(requestTimeouts[requestCounter])
+      delete requestTimeouts[requestCounter]
+
+      if (isLargeResponse) {
+        showLargeResponsePopUp(response.config.setLargeRequestErrorMessage)
+
+        throw new Error(REQUEST_CANCELED)
+      } else {
+        response.config.setLargeRequestErrorMessage('')
+      }
+    }
+
+    return response
+  },
+  error => Promise.reject(error)
+)
+
+export const showLargeResponsePopUp = setLargeRequestErrorMessage => {
+  const errorMessage =
+    'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
+
+  setLargeRequestErrorMessage(errorMessage)
+  openPopUp(ConfirmDialog, {
+    message: errorMessage
+  })
+}

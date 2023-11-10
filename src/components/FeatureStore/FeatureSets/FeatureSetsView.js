@@ -46,6 +46,7 @@ const FeatureSetsView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      largeRequestErrorMessage,
       pageData,
       selectedFeatureSet,
       selectedRowData,
@@ -71,12 +72,15 @@ const FeatureSetsView = React.forwardRef(
         </div>
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData
-            message={getNoDataMessage(
-              filtersStore,
-              featureSetsFilters,
-              FEATURE_STORE_PAGE,
-              FEATURE_SETS_TAB
-            )}
+            message={
+              largeRequestErrorMessage ||
+              getNoDataMessage(
+                filtersStore,
+                featureSetsFilters,
+                FEATURE_STORE_PAGE,
+                FEATURE_SETS_TAB
+              )
+            }
           />
         ) : (
           <>
@@ -133,6 +137,7 @@ FeatureSetsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedFeatureSet: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,

@@ -23,7 +23,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import RealTimePipelinesView from './RealTimePipelinesView'
 
-import { GROUP_BY_NAME, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
+import {
+  GROUP_BY_NAME,
+  MODELS_PAGE,
+  REAL_TIME_PIPELINES_TAB,
+  REQUEST_CANCELED
+} from '../../../constants'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 import createFunctionsContent from '../../../utils/createFunctionsContent'
 import { cancelRequest } from '../../../utils/cancelRequest'
@@ -36,6 +41,7 @@ import { useModelsPage } from '../ModelsPage.context'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const RealTimePipelines = () => {
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [pipelines, setPipelines] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -62,7 +68,13 @@ const RealTimePipelines = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchArtifactsFunctions({ project: params.projectName, filters }))
+      dispatch(
+        fetchArtifactsFunctions({
+          project: params.projectName,
+          filters,
+          setLargeRequestErrorMessage
+        })
+      )
         .unwrap()
         .then(result => {
           setPipelines(
@@ -71,6 +83,11 @@ const RealTimePipelines = () => {
                 !Object.keys(func.labels).some(labelKey => labelKey.includes('parent-function'))
             )
           )
+        })
+        .catch(error => {
+          if (error.message !== REQUEST_CANCELED) {
+            throw error
+          }
         })
     },
     [dispatch, params.projectName]
@@ -166,6 +183,7 @@ const RealTimePipelines = () => {
       filtersStore={filtersStore}
       handleExpandAll={handleExpandAll}
       handleExpandRow={handleExpandRow}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       params={params}
       pipelines={pipelines}

@@ -98,8 +98,14 @@ const artifactsApi = {
       }
     )
   },
-  getDataSets: (project, filters, config) => {
-    return fetchArtifacts(project, filters, { ...config, params: { category: DATASET_TYPE } })
+  getDataSets: (project, filters, config, setLargeRequestErrorMessage) => {
+    const newConfig = {
+      ...config,
+      params: { category: DATASET_TYPE },
+      setLargeRequestErrorMessage
+    }
+
+    return fetchArtifacts(project, filters, newConfig)
   },
   getFile: (project, file, iter, tag) => {
     return fetchArtifacts(
@@ -115,10 +121,13 @@ const artifactsApi = {
       }
     )
   },
-  getFiles: (project, filters) => {
-    return fetchArtifacts(project, filters, {
-      params: { category: ARTIFACT_OTHER_TYPE, format: 'full' }
-    })
+  getFiles: (project, filters, setLargeRequestErrorMessage) => {
+    const config = {
+      params: { category: ARTIFACT_OTHER_TYPE, format: 'full' },
+      setLargeRequestErrorMessage
+    }
+
+    return fetchArtifacts(project, filters, config)
   },
   getModel: (project, model, iter, tag) => {
     return fetchArtifacts(
@@ -134,17 +143,25 @@ const artifactsApi = {
       }
     )
   },
-  getModelEndpoints: (project, filters, params = {}) => {
-    if (filters?.labels) {
-      params.label = filters.labels?.split(',')
+  getModelEndpoints: (project, filters, params = {}, setLargeRequestErrorMessage) => {
+    const config = {
+      params,
+      setLargeRequestErrorMessage
     }
 
-    return mainHttpClient.get(`/projects/${project}/model-endpoints`, {
-      params
-    })
+    if (filters?.labels) {
+      config.params.label = filters.labels?.split(',')
+    }
+
+    return mainHttpClient.get(`/projects/${project}/model-endpoints`, config)
   },
-  getModels: (project, filters) => {
-    return fetchArtifacts(project, filters, { params: { category: MODEL_TYPE, format: 'full' } })
+  getModels: (project, filters, setLargeRequestErrorMessage) => {
+    const config = {
+      params: { category: MODEL_TYPE, format: 'full' },
+      setLargeRequestErrorMessage
+    }
+
+    return fetchArtifacts(project, filters, config)
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(

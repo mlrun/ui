@@ -40,9 +40,9 @@ const ModelsView = React.forwardRef(
   (
     {
       actionsMenu,
-      artifactsStore,
       applyDetailsChanges,
       applyDetailsChangesCallback,
+      artifactsStore,
       detailsFormInitialValues,
       filtersStore,
       handleExpandRow,
@@ -50,6 +50,7 @@ const ModelsView = React.forwardRef(
       handleRegisterModel,
       handleTrainModel,
       isDemoMode,
+      largeRequestErrorMessage,
       models,
       pageData,
       selectedModel,
@@ -100,13 +101,10 @@ const ModelsView = React.forwardRef(
             </div>
             {artifactsStore.loading ? null : models.length === 0 ? (
               <NoData
-                message={getNoDataMessage(
-                  filtersStore,
-                  filters,
-                  MODELS_PAGE,
-                  MODELS_TAB,
-                  MODELS_FILTERS
-                )}
+                message={
+                  largeRequestErrorMessage ||
+                  getNoDataMessage(filtersStore, filters, MODELS_PAGE, MODELS_TAB, MODELS_FILTERS)
+                }
               />
             ) : (
               <>
@@ -171,15 +169,16 @@ ModelsView.defaultProps = {
 
 ModelsView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  artifactsStore: PropTypes.object.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
+  artifactsStore: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
   handleTrainModel: PropTypes.func.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   models: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageData: PropTypes.object.isRequired,
   selectedModel: PropTypes.object.isRequired,

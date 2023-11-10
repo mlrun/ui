@@ -52,6 +52,7 @@ const DatasetsView = React.forwardRef(
       handleExpandRow,
       handleRefresh,
       handleRegisterDataset,
+      largeRequestErrorMessage,
       pageData,
       selectedDataset,
       selectedRowData,
@@ -62,8 +63,8 @@ const DatasetsView = React.forwardRef(
       tableContent,
       tableHeaders,
       toggleConvertedYaml,
-      viewMode,
-      urlTagOption
+      urlTagOption,
+      viewMode
     },
     ref
   ) => {
@@ -97,13 +98,10 @@ const DatasetsView = React.forwardRef(
               </div>
               {artifactsStore.loading ? null : datasets.length === 0 ? (
                 <NoData
-                  message={getNoDataMessage(
-                    filtersStore,
-                    filters,
-                    DATASETS_PAGE,
-                    null,
-                    DATASETS_FILTERS
-                  )}
+                  message={
+                    largeRequestErrorMessage ||
+                    getNoDataMessage(filtersStore, filters, DATASETS_PAGE, null, DATASETS_FILTERS)
+                  }
                 />
               ) : (
                 <>
@@ -179,6 +177,7 @@ DatasetsView.propTypes = {
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
@@ -189,8 +188,8 @@ DatasetsView.propTypes = {
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
-  viewMode: PropTypes.string,
-  urlTagOption: PropTypes.string
+  urlTagOption: PropTypes.string,
+  viewMode: PropTypes.string
 }
 
 export default DatasetsView
