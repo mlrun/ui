@@ -80,7 +80,7 @@ const TableView = ({
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
         <div className="table__wrapper">
-          <table className="table" cellPadding="0" cellSpacing="0" ref={tableRef}>
+          <table className="table table-main" cellPadding="0" cellSpacing="0" ref={tableRef}>
             {pageData.tableHeaders && (
               <>
                 <thead className="table-header">
