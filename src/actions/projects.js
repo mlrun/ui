@@ -72,14 +72,10 @@ import {
   FETCH_PROJECTS_BEGIN,
   FETCH_PROJECTS_FAILURE,
   FETCH_PROJECTS_SUCCESS,
-  REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_SUMMARY,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
-  SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_LABELS,
-  SET_NEW_PROJECT_NAME,
   SET_PROJECT_DATA,
   SET_PROJECT_LABELS,
   FETCH_PROJECTS_NAMES_BEGIN,
@@ -587,20 +583,10 @@ const projectsAction = {
     type: FETCH_PROJECT_WORKFLOWS_SUCCESS,
     payload: workflows
   }),
-  removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
-  setNewProjectDescription: description => ({
-    type: SET_NEW_PROJECT_DESCRIPTION,
-    payload: description
-  }),
-  setNewProjectLabels: (label, labels) => ({
-    type: SET_NEW_PROJECT_LABELS,
-    payload: { ...labels, ...label }
-  }),
-  setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name }),
   setProjectData: data => ({
     type: SET_PROJECT_DATA,
     payload: data

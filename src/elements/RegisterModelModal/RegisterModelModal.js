@@ -168,7 +168,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
                 tip="Artifacts names in the same project must be unique."
                 validationRules={getValidationRules('artifact.name', {
                   name: 'ArtifactExists',
-                  label: 'Artifact name should be unique',
+                  label: 'Artifact name must be unique',
                   pattern: isArtifactNameUnique(projectName),
                   async: true
                 })}
