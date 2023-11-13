@@ -20,6 +20,7 @@ such restriction.
 import { groupBy } from 'lodash'
 
 /*
+ * - activeUser               : logged in user data
  * - projectInfo              : additional information about the project such as ID and Owner of the project
  *                              (data is received from iguazio API).
  * - projectAuthorizationRoles: the list of modification roles (Admin, Editor, Viewer). Each of them contains the list
@@ -34,6 +35,7 @@ import { groupBy } from 'lodash'
  * - groupedVisibleMembers    : grouped members list by their role, which is used to generate the request body.
  * */
 export const initialMembersState = {
+  activeUser: {},
   projectInfo: {
     id: '',
     owner: {
@@ -57,6 +59,7 @@ export const membersActions = {
   GET_PROJECT_USERS_DATA_BEGIN: 'GET_PROJECT_USERS_DATA_BEGIN',
   GET_PROJECT_USERS_DATA_END: 'GET_PROJECT_USERS_DATA_END',
   RESET_MEMBERS_STATE: 'RESET_MEMBERS_STATE',
+  SET_ACTIVE_USER: 'SET_ACTIVE_USER',
   SET_MEMBERS: 'SET_MEMBERS',
   SET_MEMBERS_ORIGINAL: 'SET_MEMBERS_ORIGINAL',
   SET_PROJECT_AUTHORIZATION_ROLES: 'SET_PROJECT_AUTHORIZATION_ROLES',
@@ -80,6 +83,11 @@ export const membersReducer = (state, { type, payload }) => {
       return {
         ...state,
         loading: false
+      }
+    case membersActions.SET_ACTIVE_USER:
+      return {
+        ...state,
+        activeUser: payload
       }
     case membersActions.SET_MEMBERS:
       return {
