@@ -87,17 +87,18 @@ module.exports = {
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
+    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Size',
-      'Path',
-      'URI',
-      'UID',
-      'Updated',
-      'Labels'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Size:',
+      'Path:',
+      'URI:',
+      'UID:',
+      'Updated:',
+      'Labels:'
     ]
   },
   ML_Functions_Tab: {

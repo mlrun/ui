@@ -1116,6 +1116,13 @@ When(
   }
 )
 
+Then(
+  'hover on cell with row index {int} in {string} column in {string} table on {string} wizard',
+  async function (indx, columnName, table, wizard) {
+    await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields'][columnName](indx), false)
+  }
+)
+
 Then( 
   'verify that row index {int} is active in {string} table on {string} wizard',
   async function (indx, table, wizard) {
