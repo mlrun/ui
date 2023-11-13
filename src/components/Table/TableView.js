@@ -77,7 +77,11 @@ const TableView = ({
   tableHeadRef,
   tablePanelRef
 }) => {
-  const tableClass = classnames('table', !isEmpty(selectedItem) && 'table-with-details')
+  const tableClass = classnames(
+    'table',
+    'table-main',
+    !isEmpty(selectedItem) && 'table-with-details'
+  )
 
   return (
     <div className="table__flex">
@@ -256,6 +260,11 @@ const TableView = ({
             )}
             {!pageData.tableHeaders && <tbody className="table-body">{children}</tbody>}
           </table>
+          {isTablePanelOpen && (
+            <div className="table__panel-container" ref={tablePanelRef}>
+              <div className="table__panel">{pageData.tablePanel}</div>
+            </div>
+          )}
         </div>
         {!isEmpty(selectedItem) && (
           <Details
@@ -271,11 +280,6 @@ const TableView = ({
             selectedItem={selectedItem}
             tab={tab}
           />
-        )}
-        {isTablePanelOpen && (
-          <div className="table__panel-container" ref={tablePanelRef}>
-            <div className="table__panel">{pageData.tablePanel}</div>
-          </div>
         )}
       </div>
     </div>
