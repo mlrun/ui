@@ -208,7 +208,6 @@ main {
         display: inline-flex;
         flex: 1;
         align-items: center;
-        overflow: hidden;
 
         @include tableDet(8px, 5px, 8px, 10px);
 

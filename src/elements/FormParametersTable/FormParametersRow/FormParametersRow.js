@@ -182,9 +182,9 @@ const FormParametersRow = ({
   const getValueTip = parameterType => {
     switch (parameterType) {
       case parameterTypeMap:
-        return 'The valid `map` type should be in the JSON format\n e.g. {"hello": "world"}'
+        return 'The valid `map` type must be in the JSON format\n e.g. {"hello": "world"}'
       case parameterTypeList:
-        return 'The valid `list` type should be in the JSON format\n e.g. ["hello", "world"]'
+        return 'The valid `list` type must be in the JSON format\n e.g. ["hello", "world"]'
       default:
         return ''
     }
@@ -281,7 +281,7 @@ const FormParametersRow = ({
                     validationRules={[
                       {
                         name: 'uniqueness',
-                        label: 'Name should be unique',
+                        label: 'Name must be unique',
                         pattern: newValue => uniquenessValidator(fields, fieldsPath, newValue)
                       }
                     ]}

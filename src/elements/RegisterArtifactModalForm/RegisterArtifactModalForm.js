@@ -88,7 +88,7 @@ const RegisterArtifactModalForm = ({
             tip={messagesByKind?.nameTip}
             validationRules={getValidationRules('artifact.name', {
               name: 'ArtifactExists',
-              label: 'Artifact name should be unique',
+              label: 'Artifact name must be unique',
               pattern: isArtifactNameUnique(projectName),
               async: true
             })}

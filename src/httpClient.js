@@ -19,16 +19,19 @@ such restriction.
 */
 import axios from 'axios'
 import qs from 'qs'
-
 import { ConfirmDialog } from 'igz-controls/components'
 
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { REQUEST_CANCELED } from './constants'
 
+const headers = {
+  'Cache-Control': 'no-cache'
+}
 export const mainBaseUrl = `${process.env.PUBLIC_URL}/api/v1`
 
 export const mainHttpClient = axios.create({
   baseURL: mainBaseUrl,
+  headers,
 
   // serialize a param with an array value as a repeated param, for example:
   // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
@@ -36,15 +39,18 @@ export const mainHttpClient = axios.create({
 })
 
 export const functionTemplatesHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/function-catalog`
+  baseURL: `${process.env.PUBLIC_URL}/function-catalog`,
+  headers
 })
 
 export const nuclioHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/nuclio/api`
+  baseURL: `${process.env.PUBLIC_URL}/nuclio/api`,
+  headers
 })
 
 export const iguazioHttpClient = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? '/api' : '/iguazio/api'
+  baseURL: process.env.NODE_ENV === 'production' ? '/api' : '/iguazio/api',
+  headers
 })
 
 let requestCounter = 1
