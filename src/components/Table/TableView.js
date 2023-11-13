@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import classnames from 'classnames'
 
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
@@ -76,11 +77,17 @@ const TableView = ({
   tableHeadRef,
   tablePanelRef
 }) => {
+  const tableClass = classnames(
+    'table',
+    'table-main',
+    !isEmpty(selectedItem) && 'table-with-details'
+  )
+
   return (
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
         <div className="table__wrapper">
-          <table className="table table-main" cellPadding="0" cellSpacing="0" ref={tableRef}>
+          <table className={tableClass} cellPadding="0" cellSpacing="0" ref={tableRef}>
             {pageData.tableHeaders && (
               <>
                 <thead className="table-header">
