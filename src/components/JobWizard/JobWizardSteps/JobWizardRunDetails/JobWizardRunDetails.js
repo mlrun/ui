@@ -59,6 +59,7 @@ const JobWizardRunDetails = ({
   isBatchInference,
   isEditMode,
   jobAdditionalData,
+  prePopulatedData,
   selectedFunctionData,
   stepIsActive
 }) => {
@@ -82,7 +83,7 @@ const JobWizardRunDetails = ({
     setSpyOnMethodChange(true)
 
     const functionParameters = getFunctionParameters(selectedFunctionData.functions, method)
-    const dataInputs = parseDataInputs(functionParameters)
+    const dataInputs = parseDataInputs(functionParameters, prePopulatedData.dataInputs)
     const predefinedParameters = parsePredefinedParameters(functionParameters)
     const methodData = getMethodData(selectedFunctionData, method)
 
@@ -317,6 +318,7 @@ JobWizardRunDetails.propTypes = {
   isBatchInference: PropTypes.bool.isRequired,
   isEditMode: PropTypes.bool.isRequired,
   jobAdditionalData: PropTypes.shape({}).isRequired,
+  prePopulatedData: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired
 }
 

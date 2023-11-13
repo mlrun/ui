@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
+import JobWizard from '../JobWizard/JobWizard'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { applyTagChanges } from '../../utils/artifacts.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import {
@@ -33,6 +35,8 @@ import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { sortListByDate } from '../../utils'
 import { fetchDataSet } from '../../reducers/artifactsReducer'
+
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
 export const infoHeaders = [
   {
@@ -85,16 +89,37 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   }
 ]
 
-export const generatePageData = (selectedItem, viewMode) => ({
+export const generatePageData = (selectedItem, viewMode, params) => ({
   page: DATASETS_PAGE,
   details: {
     menu: generateDataSetsDetailsMenu(selectedItem),
     infoHeaders,
     type: DATASETS,
     hideBackBtn: viewMode === FULL_VIEW_MODE,
-    withToggleViewBtn: true
+    withToggleViewBtn: true,
+    actionButton: {
+      label: 'Train',
+      variant: PRIMARY_BUTTON,
+      onClick: () => handleTrainDataset(selectedItem, params)
+    }
   }
 })
+
+const handleTrainDataset = (selectedItem, params) => {
+  const prePopulatedDataInputs = [{
+    name: selectedItem.db_key || selectedItem.key || 'dataset',
+    path: selectedItem.URI
+  }]
+
+  openPopUp(JobWizard, {
+    params,
+    isTrain: true,
+    wizardTitle: 'Train model',
+    prePopulatedData: {
+      dataInputs: prePopulatedDataInputs
+    }
+  })
+}
 
 export const fetchDataSetRowData = async (
   dispatch,

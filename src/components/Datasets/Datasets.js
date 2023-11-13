@@ -65,6 +65,7 @@ import { getViewMode } from '../../utils/helper'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { useSortTable } from '../../hooks/useSortTable.hook'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -83,10 +84,6 @@ const Datasets = () => {
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
   const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(
-    () => generatePageData(selectedDataset, viewMode),
-    [selectedDataset, viewMode]
-  )
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -95,6 +92,10 @@ const Datasets = () => {
   const datasetsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values,
     [filtersStore]
+  )
+  const pageData = useMemo(
+    () => generatePageData(selectedDataset, viewMode, params),
+    [selectedDataset, viewMode, params]
   )
 
   const detailsFormInitialValues = useMemo(
@@ -291,6 +292,15 @@ const Datasets = () => {
         )
   }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
+
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
@@ -369,7 +379,9 @@ const Datasets = () => {
       setDatasets={setDatasets}
       setSelectedDataset={setSelectedDataset}
       setSelectedRowData={setSelectedRowData}
-      tableContent={tableContent}
+      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+      tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       urlTagOption={urlTagOption}

@@ -34,7 +34,7 @@ const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) =>
   const rowClassNames = classnames(
     'table-row',
     'parent-row',
-    getJobIdentifier(selectedJob, true) === rowItem.data.ui.identifierUnique && 'row_active'
+    getJobIdentifier(selectedJob, true) === rowItem.data.ui.identifierUnique && 'table-row_active'
   )
 
   return (

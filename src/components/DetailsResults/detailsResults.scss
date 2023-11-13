@@ -4,31 +4,11 @@
 
 .table__item-results {
   display: flex;
-  flex: 1;
   position: relative;
-  min-width: 100%;
 
   .table {
-    .table {
-      &-header {
-        &-item {
-          background-color: $white;
-        }
-      }
-
-      .table-cell-wide {
-        flex: 0 0 250px;
-        width: 250px;
-      }
-
-      .table-cell-full {
-        flex: 1 0 auto;
-        width: auto;
-      }
-
-      i {
-        margin: 0 5px;
-      }
+    i {
+      margin: 0 5px;
     }
   }
 }

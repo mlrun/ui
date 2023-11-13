@@ -287,13 +287,13 @@ const functionsActions = {
     type: FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  fetchHubFunctions: () => dispatch => {
+  fetchHubFunctions: allowedHubFunctions => dispatch => {
     dispatch(functionsActions.fetchHubFunctionsBegin())
 
     return functionsApi
       .getHubFunctions()
       .then(({ data: functionTemplates }) => {
-        const templatesData = generateHubCategories(functionTemplates.catalog)
+        const templatesData = generateHubCategories(functionTemplates.catalog, allowedHubFunctions)
 
         dispatch(functionsActions.setHubFunctions(templatesData))
 

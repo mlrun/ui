@@ -168,7 +168,7 @@ const Jobs = ({ fetchJobFunction }) => {
         />
       )}
       {artifactsStore?.preview?.isPreview && (
-        <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+        <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
       )}
     </>
   )

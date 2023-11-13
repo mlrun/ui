@@ -65,6 +65,7 @@ import { getViewMode } from '../../utils/helper'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { useSortTable } from '../../hooks/useSortTable.hook'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -249,6 +250,15 @@ const Files = () => {
       : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
   }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
+
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
@@ -357,7 +367,9 @@ const Files = () => {
       setFiles={setFiles}
       setSelectedFile={setSelectedFile}
       setSelectedRowData={setSelectedRowData}
-      tableContent={tableContent}
+      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+      tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       urlTagOption={urlTagOption}

@@ -88,7 +88,7 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem) => {
           validationRules: [
             {
               name: 'uniqueness',
-              label: 'Name should be unique',
+              label: 'Name must be unique',
               pattern: newValue => {
                 return !fields.value.some(({ data: { name } }, index) => {
                   return newValue.trim() === name && index !== editingItemIndex

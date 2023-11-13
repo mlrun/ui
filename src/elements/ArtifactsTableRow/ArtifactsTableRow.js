@@ -51,19 +51,19 @@ const ArtifactsTableRow = ({
     'parent-row',
     (selectedItem.db_key || selectedItem?.spec?.model) &&
       getArtifactIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
-      !parent.current?.classList.value.includes('parent-row-expanded') &&
-      'row_active',
-    parent.current?.classList.value.includes('parent-row-expanded') && 'parent-row-expanded'
+      !parent.current?.classList.value.includes('parent-row_expanded') &&
+      'table-row_active',
+    parent.current?.classList.value.includes('parent-row_expanded') && 'parent-row_expanded'
   )
 
   return (
     <tr className={rowClassNames} ref={parent}>
-      {parent.current?.classList.contains('parent-row-expanded') ? (
+      {parent.current?.classList.contains('parent-row_expanded') ? (
         <>
           <td
             data-testid={generateTableRowTestId(rowIndex)}
             className={`table-body__cell
-              ${parent.current?.classList.contains('parent-row-expanded') && 'row_grouped-by'}`}
+              ${parent.current?.classList.contains('parent-row_expanded') && 'row_grouped-by'}`}
           >
             <table cellPadding="0" cellSpacing="0" className="table">
               <tbody className="table-body">
@@ -102,7 +102,7 @@ const ArtifactsTableRow = ({
                 selectedItem.key &&
                   tableContentItem.data.ui.identifierUnique ===
                     getArtifactIdentifier(selectedItem, true) &&
-                  'row_active'
+                  'table-row_active'
               )
 
               return (
