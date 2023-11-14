@@ -87,17 +87,18 @@ module.exports = {
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
+    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Size',
-      'Path',
-      'URI',
-      'UID',
-      'Updated',
-      'Labels'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Size:',
+      'Path:',
+      'URI:',
+      'UID:',
+      'Updated:',
+      'Labels:'
     ]
   },
   ML_Functions_Tab: {
@@ -201,7 +202,8 @@ module.exports = {
     Data_Inputs_Table_Header: ['Input name', 'Path'],
     Parameters_Table_Header: ['Name', 'Type', 'Value'],
     Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value'],
-    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
+    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version',
+    Hub_Filter_Category: ['Data Preparation', 'Machine Learning', 'Other', 'Data Analysis', 'Feature Store', 'Model Serving', 'Model Training', 'Monitoring', 'Model Testing', 'ETL', 'Data Validation'],
   },
   Batch_Inference: {
     Model_Path_Type_Store: ['MLRun store']

@@ -766,7 +766,8 @@ module.exports = {
     Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
     Filter_Dropdown: {
       Title: By.css('.hub-filter h3.filters-wizard__header'),
-      Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons button')
+      Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-tertiary'),
+      Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-secondary')
     },
     Filter_Button_Hub_Tab: By.css('.hub-tab .form-row .filters-button button'),
     Functions_Table: commonTable(functionsTableSelector),
