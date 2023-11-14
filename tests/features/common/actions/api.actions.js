@@ -300,7 +300,7 @@ const action = {
           kind: 'api',
           uri: 'localhost:3000'
         },
-        target_path:{}
+        target_path:''
       },
       status: {},
       uid: uid

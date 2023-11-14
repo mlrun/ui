@@ -1992,3 +1992,24 @@ Feature: Feature Store Page
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Delete_Button" element on "Common_Popup" wizard
         Then check "automation-test-name201" value not in "name" column in "Projects_Table" table on "Projects" wizard
+
+    Scenario: MLFS059 - Check type Redis in online types of Target Store section of Create Set 
+        Given open url
+        And wait load page
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
+        And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "test-fs1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When check "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/churn-project-admin/FeatureStore/test-fs1/nosql/sets/test-fs1" value
+        Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then select "REDIS" option in "NOSQL_Kind_Dropdown" dropdown on "New_Feature_Set" wizard
+        And wait load page
+        Then click on "Apply_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "redis://{authority}/projects/churn-project-admin/FeatureStore/test-fs1/redisnosql/sets/test-fs1" value

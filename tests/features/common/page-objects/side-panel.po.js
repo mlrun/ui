@@ -811,6 +811,13 @@ module.exports = {
     Online_Checkbox_State: By.css(
       '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(1) .checkbox'
     ),
+    NOSQL_Kind_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '.target-store__inputs-container .select-medium',
+        '.select__header',
+        '.select__options-list .select__item'
+      )
+    ),
     Offline_Partition_Checkbox_State: By.css(
       '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .checkbox'
     ),

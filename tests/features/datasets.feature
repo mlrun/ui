@@ -1,7 +1,8 @@
 Feature: Datasets Page
 
     Testcases that verifies functionality on Datasets Page
-  
+    
+  @MLD
   @passive
   Scenario: MLD001 - Check all mandatory components on Datasets page
     Given open url
@@ -18,7 +19,7 @@ Feature: Datasets Page
     Then verify breadcrumbs "tab" label should be equal "Datasets" value
     And wait load page
     Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
-    Then "Register_Dataset_Button" element on "Datasets" should contains "Register Dataset" value
+    Then "Register_Dataset_Button" element on "Datasets" should contains "Register dataset" value
     Then verify "Table_Name_Filter_Input" element visibility on "Datasets" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
@@ -34,6 +35,7 @@ Feature: Datasets Page
     Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
     Then verify "Datasets_Table" element visibility on "Datasets" wizard
 
+  @MLD
   @passive
   Scenario: MLD002 - Verify behaviour of Show iterations checkbox on Datasets page
     Given open url
@@ -64,8 +66,8 @@ Feature: Datasets Page
     Then "Show_Iterations_Checkbox" element should be checked on "Artifacts_FilterBy_Popup" wizard
     Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
 
+  @MLD
   @passive
-  @inProgress
   Scenario: MLD003 - Check all mandatory components in Item infopane on Overview tab table on Datasets page
     Given open url
     And wait load page
@@ -79,8 +81,8 @@ Feature: Datasets Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Updated" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Download_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Action_Menu_List"
     Then verify "Full_View_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
@@ -91,7 +93,8 @@ Feature: Datasets Page
     Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
     Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
-
+  
+  @MLD
   @passive
   Scenario: MLD005 - Check Details panel still active on page refresh
     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
@@ -116,7 +119,8 @@ Feature: Datasets Page
     Then refresh a page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
-
+  
+  @MLD
   @passive
   Scenario: MLD006 - Check all mandatory components on Register Dataset form
     Given open url
@@ -127,7 +131,7 @@ Feature: Datasets Page
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
-    Then "Register_Dataset_Button" element on "Datasets" should contains "Register Dataset" value
+    Then "Register_Dataset_Button" element on "Datasets" should contains "Register dataset" value
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
     Then navigate back
@@ -190,12 +194,16 @@ Feature: Datasets Page
     Then verify "Title" element not exists on "Register_Dataset" wizard
     Then navigate forward
     Then verify "Title" element not exists on "Register_Dataset" wizard
-
+  
+  @MLD
+  @FAILED_TODO
+  #TODO: requires a separate run
   Scenario: MLD007 - Verify behaviour on Register new Dataset
     * set tear-down property "dataset" created in "default" project with "test-dataset" value
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
@@ -212,9 +220,10 @@ Feature: Datasets Page
     Then check "test-dataset" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-
+  
+  @MLD
   @passive
-  Scenario: Check filtering by name on Datasets page
+  Scenario: MLD014 - Check filtering by name on Datasets page
     Given open url
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -227,7 +236,8 @@ Feature: Datasets Page
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
     Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "ea"
-
+  
+  @MLD
   @passive
   Scenario: MLD004 - Verify filtering by label on Datasets page
     Given open url
@@ -255,9 +265,10 @@ Feature: Datasets Page
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Datasets_data"
-
+  
+  @MLD
   @passive
-  Scenario: Verify View YAML action on Datasets page
+  Scenario: MLD015 - Verify View YAML action on Datasets page
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -281,28 +292,27 @@ Feature: Datasets Page
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
-
-  @FAILED_TODO
-  #TODO: 'artifact_preview_btn' is disabled so error with element visibility 'Preview_Header'
+  
+  @MLD
   @passive
-  Scenario: Check all mandatory components on Artifact Preview on Datasets page
+  Scenario: MLD013 - Check components on Artifact Preview on Datasets page
     Given open url
     And wait load page
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
+    And wait load page    
+    Then hover on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with row index 2 in "artifact_preview_btn" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    When click on cell with row index 1 in "artifact_preview_btn" column in "Datasets_Table" table on "Datasets" wizard
     Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
     Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-
+  
+  @MLD
   @FAILED_TODO
-  #TODO: Redirection - ML-4600
-  #TODO: url without iter number, doesn't send in new artifacts structure 
-  Scenario: Check broken link redirection
+  #TODO: Redirection - ML-4600, url without iter number, doesn't send in new artifacts structure 
+  #TODO: requires a separate run
+  Scenario: MLD016 - Check broken link redirection
     * set tear-down property "dataset" created in "default" project with "test_ds" value
     * create "test_ds" Dataset with "latest" tag in "default" project with code 200
     Given open url
@@ -324,8 +334,9 @@ Feature: Datasets Page
     Then verify redirection from "projects/default/datasets/test_ds/latest/0/INVALID" to "projects/default/datasets/test_ds/latest/0/overview"
     Then verify redirection from "projects/INVALID/datasets/test_ds/latest/0/overview" to "projects"
     Then verify redirection from "projects/default/INVALID/test_ds/latest/0/overview" to "projects"
-
-  Scenario: Check active/highlited items with details panel on Datasets
+  
+  @MLD
+  Scenario: MLD017 - Check active/highlited items with details panel on Datasets
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -349,7 +360,8 @@ Feature: Datasets Page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then save to context "name" column on 2 row from "Datasets_Table" table on "Datasets" wizard
     Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
-
+  
+  @MLD
   Scenario: MLD009 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Datasets page
     Given open url
     And wait load page
@@ -373,6 +385,7 @@ Feature: Datasets Page
     Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
+@MLD
 Scenario: MLD010 - Check that version tag dropdown shows all tags on filters wizard on Datasets page
     Given open url
     And wait load page
@@ -399,6 +412,7 @@ Scenario: MLD010 - Check that version tag dropdown shows all tags on filters wiz
     And wait load page
     Then check "newTag" value in "tag" column in "Datasets_Table" table on "Datasets" wizard
 
+@MLD
 Scenario: MLD011 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
@@ -425,6 +439,9 @@ Scenario: MLD011 - Check that version tag has "Click to add" status when it's em
     And wait load page
     Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
 
+@MLD
+@FAILED_TODO
+#TODO: requires a separate run
 Scenario: MLD012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page
