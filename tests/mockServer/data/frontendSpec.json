@@ -1,63 +1,74 @@
 {
-  "jobs_dashboard_url": null,
-  "abortable_function_kinds": [
-      "job",
-      "spark",
-      "remote-spark",
-      "mpijob"
-  ],
-  "feature_flags": {
-      "project_membership": "enabled",
-      "authentication": "iguazio",
-      "nuclio_streams": "enabled",
-      "preemption_nodes": "disabled"
-  },
-  "default_function_priority_class_name": "igz-workload-medium",
-  "valid_function_priority_class_names": [
-      "igz-workload-low",
-      "igz-workload-medium",
-      "igz-workload-high"
-  ],
-  "default_function_image_by_kind": {
-      "job": "mlrun/mlrun",
-      "serving": "mlrun/mlrun",
-      "nuclio": "mlrun/mlrun",
-      "remote": "mlrun/mlrun",
-      "dask": "mlrun/ml-base",
-      "mpijob": "mlrun/ml-models"
-  },
-  "function_deployment_target_image_template": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-{project}-{name}:{tag}",
-  "function_deployment_target_image_name_prefix_template": "func-{project}-{name}",
-  "function_deployment_target_image_registries_to_enforce_prefix": [
-      ".mlrun/",
-      "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/"
-  ],
-  "function_deployment_mlrun_command": "python -m pip install \"mlrun[complete]==1.3.0\"",
-  "auto_mount_type": "auto",
-  "auto_mount_params": {},
-  "default_artifact_path": "v3io:///projects/{{run.project}}/artifacts",
-  "default_function_pod_resources": {
-      "requests": {
-          "cpu": "25m",
-          "memory": "1Mi",
-          "gpu": null
-      },
-      "limits": {
-          "cpu": "2",
-          "memory": "20Gi",
-          "gpu": null
-      }
-  },
-  "default_function_preemption_mode": "prevent",
-  "allowed_artifact_path_prefixes_list": ["s3://", "gcs://", "gs://", "az://", "v3io://"],
-  "feature_store_data_prefixes": {
-      "default": "v3io:///projects/{project}/FeatureStore/{name}/{kind}",
-      "nosql": "v3io:///projects/{project}/FeatureStore/{name}/{kind}",
-      "redisnosql": "redis:///projects/{project}/FeatureStore/{name}/{kind}"
-  },
-  "ce_mode": "",
-  "ce": {
-      "mode": "",
-      "release": ""
-  }
+    "jobs_dashboard_url": null,
+    "abortable_function_kinds": [
+        "job",
+        "spark",
+        "remote-spark",
+        "mpijob",
+        "databricks",
+        "local",
+        "handler",
+        ""
+    ],
+    "feature_flags": {
+        "project_membership": "enabled",
+        "authentication": "iguazio",
+        "nuclio_streams": "enabled",
+        "preemption_nodes": "disabled"
+    },
+    "default_function_priority_class_name": "igz-workload-medium",
+    "valid_function_priority_class_names": [
+        "igz-workload-low",
+        "igz-workload-medium",
+        "igz-workload-high"
+    ],
+    "default_function_image_by_kind": {
+        "job": "mlrun/mlrun",
+        "serving": "mlrun/mlrun",
+        "nuclio": "mlrun/mlrun",
+        "remote": "mlrun/mlrun",
+        "dask": "mlrun/ml-base",
+        "mpijob": "mlrun/mlrun"
+    },
+    "function_deployment_target_image_template": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-{project}-{name}:{tag}",
+    "function_deployment_target_image_name_prefix_template": "func-{project}-{name}",
+    "function_deployment_target_image_registries_to_enforce_prefix": [
+        ".mlrun/",
+        "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/"
+    ],
+    "function_deployment_mlrun_requirement": "mlrun[complete]==1.6.0-rc2",
+    "auto_mount_type": "auto",
+    "auto_mount_params": {},
+    "default_artifact_path": "v3io:///projects/{{run.project}}/artifacts",
+    "default_function_pod_resources": {
+        "requests": {
+            "cpu": "25m",
+            "memory": "1Mi",
+            "gpu": null
+        },
+        "limits": {
+            "cpu": "2",
+            "memory": "20Gi",
+            "gpu": null
+        }
+    },
+    "default_function_preemption_mode": "prevent",
+    "feature_store_data_prefixes": {
+        "default": "v3io:///projects/{project}/FeatureStore/{name}/{kind}",
+        "nosql": "v3io:///projects/{project}/FeatureStore/{name}/{kind}",
+        "redisnosql": "redis://{authority}/projects/{project}/FeatureStore/{name}/{kind}"
+    },
+    "allowed_artifact_path_prefixes_list": [
+        "s3://",
+        "gcs://",
+        "gs://",
+        "az://",
+        "dbfs://",
+        "v3io://"
+    ],
+    "ce_mode": "",
+    "ce": {
+        "mode": "",
+        "release": ""
+    }
 }
