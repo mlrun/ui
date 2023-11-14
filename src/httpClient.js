@@ -22,7 +22,7 @@ import qs from 'qs'
 import { ConfirmDialog } from 'igz-controls/components'
 
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { REQUEST_CANCELED } from './constants'
+import { LARGE_REQUEST_CANCELED } from './constants'
 
 const headers = {
   'Cache-Control': 'no-cache'
@@ -53,20 +53,22 @@ export const iguazioHttpClient = axios.create({
   headers
 })
 
-let requestCounter = 1
+let requestId = 1
 let requestTimeouts = {}
 
 // Request interceptor
 mainHttpClient.interceptors.request.use(
   config => {
-    if (config.setLargeRequestErrorMessage) {
-      requestTimeouts[requestCounter] = setTimeout(() => {
-        showLargeResponsePopUp()
-        throw new axios.Cancel(REQUEST_CANCELED)
-      }, 30000)
+    if (config?.ui?.setLargeRequestErrorMessage) {
+      const cancelTokenSource = axios.CancelToken.source()
 
-      config.requestCounter = requestCounter
-      requestCounter++
+      config.cancelToken = cancelTokenSource.token
+      requestTimeouts[requestId] = setTimeout(() => {
+        showLargeResponsePopUp(config.ui.setLargeRequestErrorMessage)
+        cancelTokenSource.cancel(LARGE_REQUEST_CANCELED)
+      }, 30000)
+      config.ui.requestId = requestId
+      requestId++
     }
 
     return config
@@ -77,21 +79,21 @@ mainHttpClient.interceptors.request.use(
 // Response interceptor
 mainHttpClient.interceptors.response.use(
   response => {
-    if (response.config.requestCounter) {
-      const { requestCounter } = response.config
-      const isLargeResponse = response.data?.total_size
-        ? response.data.total_size > 1500
-        : Object.values(response.data)[0].length > 1500
+    if (response.config?.ui?.requestId) {
+      const isLargeResponse =
+        response.data?.total_size >= 0
+          ? response.data.total_size > 1500
+          : Object.values(response.data)[0].length > 1500
 
-      clearTimeout(requestTimeouts[requestCounter])
-      delete requestTimeouts[requestCounter]
+      clearTimeout(requestTimeouts[response.config.ui.requestId])
+      delete requestTimeouts[response.config.ui.requestId]
 
       if (isLargeResponse) {
-        showLargeResponsePopUp(response.config.setLargeRequestErrorMessage)
+        showLargeResponsePopUp(response.config.ui.setLargeRequestErrorMessage)
 
-        throw new Error(REQUEST_CANCELED)
+        throw new Error(LARGE_REQUEST_CANCELED)
       } else {
-        response.config.setLargeRequestErrorMessage('')
+        response.config.ui.setLargeRequestErrorMessage('')
       }
     }
 

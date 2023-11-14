@@ -33,7 +33,6 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
@@ -46,6 +45,7 @@ import {
 } from './files.util'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
+import { largeResponseCatchHandler } from '../../utils/largeResponseCatchHandler'
 import {
   fetchFile,
   fetchFiles,
@@ -113,11 +113,7 @@ const Files = () => {
 
           return filesResponse
         })
-        .catch(error => {
-          if (error.message !== REQUEST_CANCELED) {
-            throw error
-          }
-        })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )

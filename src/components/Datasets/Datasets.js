@@ -33,7 +33,6 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
@@ -51,6 +50,7 @@ import {
   handleApplyDetailsChanges,
   registerDatasetTitle
 } from './datasets.util'
+import { largeResponseCatchHandler } from '../../utils/largeResponseCatchHandler'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
@@ -123,11 +123,7 @@ const Datasets = () => {
 
           return dataSetsResponse
         })
-        .catch(error => {
-          if (error.message !== REQUEST_CANCELED) {
-            throw error
-          }
-        })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )

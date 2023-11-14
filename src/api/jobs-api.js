@@ -80,7 +80,9 @@ const jobsApi = {
         project,
         ...generateRequestParams(filters)
       },
-      setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     if (!isAllJobs) {
@@ -107,7 +109,9 @@ const jobsApi = {
         name: jobName,
         ...generateRequestParams(filters)
       },
-      setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     return mainHttpClient.get('/runs', config)
@@ -130,7 +134,9 @@ const jobsApi = {
       params: {
         include_last_run: 'yes'
       },
-      setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     if (filters?.owner) {

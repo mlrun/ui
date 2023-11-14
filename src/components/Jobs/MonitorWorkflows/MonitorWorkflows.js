@@ -541,10 +541,13 @@ const MonitorWorkflows = ({
           workflowsStore.workflows.data.length === 0) ||
         largeRequestErrorMessage ? (
         <NoData
-          message={
-            largeRequestErrorMessage ||
-            getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_WORKFLOWS_TAB)
-          }
+          message={getNoDataMessage(
+            filtersStore,
+            filters,
+            largeRequestErrorMessage,
+            JOBS_PAGE,
+            MONITOR_WORKFLOWS_TAB
+          )}
         />
       ) : (
         <>

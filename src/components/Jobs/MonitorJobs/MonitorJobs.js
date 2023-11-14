@@ -38,7 +38,7 @@ import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE,
-  REQUEST_CANCELED
+  LARGE_REQUEST_CANCELED
 } from '../../../constants'
 import {
   generateActionsMenu,
@@ -142,12 +142,7 @@ const MonitorJobs = ({
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
 
-      fetchData(
-        params.projectName,
-        filters,
-        params.jobName ?? false,
-        setLargeRequestErrorMessage
-      )
+      fetchData(params.projectName, filters, params.jobName ?? false, setLargeRequestErrorMessage)
         .then(jobs => {
           const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
 
@@ -158,7 +153,7 @@ const MonitorJobs = ({
           }
         })
         .catch(error => {
-          if (error.message === REQUEST_CANCELED) {
+          if (error.message === LARGE_REQUEST_CANCELED) {
             if (params.jobName) {
               setJobRuns([])
             } else {
@@ -478,10 +473,13 @@ const MonitorJobs = ({
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
         (jobs.length === 0 && !params.jobName) ? (
         <NoData
-          message={
-            largeRequestErrorMessage ||
-            getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_JOBS_TAB)
-          }
+          message={getNoDataMessage(
+            filtersStore,
+            filters,
+            largeRequestErrorMessage,
+            JOBS_PAGE,
+            MONITOR_JOBS_TAB
+          )}
         />
       ) : (
         isEmpty(selectedJob) && (

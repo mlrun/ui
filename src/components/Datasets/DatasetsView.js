@@ -98,10 +98,14 @@ const DatasetsView = React.forwardRef(
               </div>
               {artifactsStore.loading ? null : datasets.length === 0 ? (
                 <NoData
-                  message={
-                    largeRequestErrorMessage ||
-                    getNoDataMessage(filtersStore, filters, DATASETS_PAGE, null, DATASETS_FILTERS)
-                  }
+                  message={getNoDataMessage(
+                    filtersStore,
+                    filters,
+                    largeRequestErrorMessage,
+                    DATASETS_PAGE,
+                    null,
+                    DATASETS_FILTERS
+                  )}
                 />
               ) : (
                 <>

@@ -101,7 +101,9 @@ const FeatureVectors = ({
         cancelToken: new axios.CancelToken(cancel => {
           featureVectorsRef.current.cancel = cancel
         }),
-        setLargeRequestErrorMessage
+        ui: {
+          setLargeRequestErrorMessage
+        }
       }
 
       return fetchFeatureVectors(params.projectName, filters, config).then(result => {

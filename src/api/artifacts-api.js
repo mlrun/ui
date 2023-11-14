@@ -102,7 +102,9 @@ const artifactsApi = {
     const newConfig = {
       ...config,
       params: { category: DATASET_TYPE },
-      setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     return fetchArtifacts(project, filters, newConfig)
@@ -124,7 +126,9 @@ const artifactsApi = {
   getFiles: (project, filters, setLargeRequestErrorMessage) => {
     const config = {
       params: { category: ARTIFACT_OTHER_TYPE, format: 'full' },
-      setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     return fetchArtifacts(project, filters, config)
@@ -146,7 +150,9 @@ const artifactsApi = {
   getModelEndpoints: (project, filters, params = {}, setLargeRequestErrorMessage) => {
     const config = {
       params,
-      setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     if (filters?.labels) {
@@ -158,7 +164,9 @@ const artifactsApi = {
   getModels: (project, filters, setLargeRequestErrorMessage) => {
     const config = {
       params: { category: MODEL_TYPE, format: 'full' },
-      setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     return fetchArtifacts(project, filters, config)

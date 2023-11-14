@@ -101,10 +101,14 @@ const ModelsView = React.forwardRef(
             </div>
             {artifactsStore.loading ? null : models.length === 0 ? (
               <NoData
-                message={
-                  largeRequestErrorMessage ||
-                  getNoDataMessage(filtersStore, filters, MODELS_PAGE, MODELS_TAB, MODELS_FILTERS)
-                }
+                message={getNoDataMessage(
+                  filtersStore,
+                  filters,
+                  largeRequestErrorMessage,
+                  MODELS_PAGE,
+                  MODELS_TAB,
+                  MODELS_FILTERS
+                )}
               />
             ) : (
               <>

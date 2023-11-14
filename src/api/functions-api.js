@@ -33,7 +33,9 @@ const functionsApi = {
   getFunctions: (project, filters, hash, setLargeRequestErrorMessage) => {
     const config = {
       params: {},
-      setLargeRequestErrorMessage: setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     if (filters?.name) {

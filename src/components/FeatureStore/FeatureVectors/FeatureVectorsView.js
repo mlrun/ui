@@ -68,15 +68,13 @@ const FeatureVectorsView = React.forwardRef(
         </div>
         {featureStore.loading ? null : featureVectors.length === 0 ? (
           <NoData
-            message={
-              largeRequestErrorMessage ||
-              getNoDataMessage(
-                filtersStore,
-                featureVectorsFilters,
-                FEATURE_STORE_PAGE,
-                FEATURE_VECTORS_TAB
-              )
-            }
+            message={getNoDataMessage(
+              filtersStore,
+              featureVectorsFilters,
+              largeRequestErrorMessage,
+              FEATURE_STORE_PAGE,
+              FEATURE_VECTORS_TAB
+            )}
           />
         ) : (
           <>

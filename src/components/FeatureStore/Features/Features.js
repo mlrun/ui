@@ -33,7 +33,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   TAG_FILTER_ALL_ITEMS,
-  REQUEST_CANCELED
+  LARGE_REQUEST_CANCELED
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
 import { featuresActionCreator, featuresFilters } from './features.util'
@@ -94,7 +94,7 @@ const Features = ({
   const fetchData = useCallback(
     filters => {
       const cancelRequestTimeout = setTimeout(() => {
-        cancelRequest(featureStoreRef, REQUEST_CANCELED)
+        cancelRequest(featureStoreRef, LARGE_REQUEST_CANCELED)
       }, 30000)
       const config = {
         cancelToken: new axios.CancelToken(cancel => {
@@ -126,7 +126,7 @@ const Features = ({
           return result
         })
         .catch(error => {
-          if (error.message === REQUEST_CANCELED) {
+          if (error.message === LARGE_REQUEST_CANCELED) {
             showLargeResponsePopUp(setLargeRequestErrorMessage)
             setFeatures([])
           }

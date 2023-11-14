@@ -42,8 +42,7 @@ import {
   TAG_FILTER_ALL_ITEMS,
   FILTER_MENU_MODAL,
   GROUP_BY_NONE,
-  MODELS_FILTERS,
-  REQUEST_CANCELED
+  MODELS_FILTERS
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -69,6 +68,7 @@ import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { generateUri } from '../../../utils/resources'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
+import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { setArtifactTags } from '../../../utils/artifacts.util'
 import { useMode } from '../../../hooks/mode.hook'
@@ -127,11 +127,7 @@ const Models = ({ fetchModelFeatureVector }) => {
 
           return modelsResponse
         })
-        .catch(error => {
-          if (error.message !== REQUEST_CANCELED) {
-            throw error
-          }
-        })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, setModels, params.projectName]
   )

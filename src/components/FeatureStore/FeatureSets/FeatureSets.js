@@ -108,7 +108,9 @@ const FeatureSets = ({
         cancelToken: new axios.CancelToken(cancel => {
           featureStoreRef.current.cancel = cancel
         }),
-        setLargeRequestErrorMessage
+        ui: {
+          setLargeRequestErrorMessage
+        }
       }
 
       return fetchFeatureSets(params.projectName, filters, config)

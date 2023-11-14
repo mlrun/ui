@@ -46,7 +46,7 @@ import {
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
   PANEL_FUNCTION_CREATE_MODE,
-  REQUEST_CANCELED,
+  LARGE_REQUEST_CANCELED,
   SHOW_UNTAGGED_ITEMS,
   TAG_LATEST
 } from '../../constants'
@@ -102,7 +102,7 @@ const Functions = ({
           return newFunctions
         })
         .catch(error => {
-          if (error.message === REQUEST_CANCELED) {
+          if (error.message === LARGE_REQUEST_CANCELED) {
             setFunctions([])
           }
         })

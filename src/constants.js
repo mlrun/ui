@@ -51,7 +51,7 @@ export const NAVBAR_WIDTH_OPENED = 245
 
 export const FULL_VIEW_MODE = 'full'
 
-export const REQUEST_CANCELED = 'Request canceled'
+export const LARGE_REQUEST_CANCELED = 'Request canceled'
 
 export const MODEL_PATH_DATA_INPUT = 'model_path'
 

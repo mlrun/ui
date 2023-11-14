@@ -79,10 +79,13 @@ const RealTimePipelinesView = React.forwardRef(
             </div>
             {artifactsStore.loading ? null : pipelines.length === 0 ? (
               <NoData
-                message={
-                  largeRequestErrorMessage ||
-                  getNoDataMessage(filtersStore, filters, MODELS_PAGE, REAL_TIME_PIPELINES_TAB)
-                }
+                message={getNoDataMessage(
+                  filtersStore,
+                  filters,
+                  largeRequestErrorMessage,
+                  MODELS_PAGE,
+                  REAL_TIME_PIPELINES_TAB
+                )}
               />
             ) : params.pipelineId ? (
               <Pipeline content={pipelines} />

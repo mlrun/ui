@@ -23,16 +23,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import RealTimePipelinesView from './RealTimePipelinesView'
 
-import {
-  GROUP_BY_NAME,
-  MODELS_PAGE,
-  REAL_TIME_PIPELINES_TAB,
-  REQUEST_CANCELED
-} from '../../../constants'
+import { GROUP_BY_NAME, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 import createFunctionsContent from '../../../utils/createFunctionsContent'
 import { cancelRequest } from '../../../utils/cancelRequest'
 import { generatePageData } from './realTimePipelines.util'
+import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
@@ -84,11 +80,7 @@ const RealTimePipelines = () => {
             )
           )
         })
-        .catch(error => {
-          if (error.message !== REQUEST_CANCELED) {
-            throw error
-          }
-        })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )

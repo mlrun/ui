@@ -79,7 +79,9 @@ const workflowsApi = {
   getWorkflows: (project, filter, setLargeRequestErrorMessage) => {
     const config = {
       params: {},
-      setLargeRequestErrorMessage
+      ui: {
+        setLargeRequestErrorMessage
+      }
     }
 
     if (filter?.groupBy === GROUP_BY_WORKFLOW) {

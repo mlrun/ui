@@ -93,10 +93,12 @@ const FunctionsView = ({
               <Loader />
             ) : taggedFunctions.length === 0 ? (
               <NoData
-                message={
-                  largeRequestErrorMessage ||
-                  getNoDataMessage(filtersStore, filters, FUNCTIONS_PAGE)
-                }
+                message={getNoDataMessage(
+                  filtersStore,
+                  filters,
+                  largeRequestErrorMessage,
+                  FUNCTIONS_PAGE
+                )}
               />
             ) : (
               <>

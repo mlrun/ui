@@ -72,15 +72,13 @@ const FeatureSetsView = React.forwardRef(
         </div>
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData
-            message={
-              largeRequestErrorMessage ||
-              getNoDataMessage(
-                filtersStore,
-                featureSetsFilters,
-                FEATURE_STORE_PAGE,
-                FEATURE_SETS_TAB
-              )
-            }
+            message={getNoDataMessage(
+              filtersStore,
+              featureSetsFilters,
+              largeRequestErrorMessage,
+              FEATURE_STORE_PAGE,
+              FEATURE_SETS_TAB
+            )}
           />
         ) : (
           <>

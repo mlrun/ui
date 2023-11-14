@@ -25,12 +25,13 @@ import { isEmpty, orderBy } from 'lodash'
 import ModelEndpointsView from './ModelEndpointsView'
 
 import detailsActions from '../../../actions/details'
-import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB, REQUEST_CANCELED } from '../../../constants'
+import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB } from '../../../constants'
 import { cancelRequest } from '../../../utils/cancelRequest'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
 import { generatePageData } from './modelEndpoints.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 
@@ -80,11 +81,7 @@ const ModelEndpoints = () => {
         .then(result => {
           setModelEndpoints(result)
         })
-        .catch(error => {
-          if (error.message !== REQUEST_CANCELED) {
-            throw error
-          }
-        })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )

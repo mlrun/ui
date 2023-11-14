@@ -36,7 +36,7 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   PANEL_EDIT_MODE,
-  REQUEST_CANCELED,
+  LARGE_REQUEST_CANCELED,
   SCHEDULE_TAB
 } from '../../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -103,7 +103,7 @@ const ScheduledJobs = ({
           setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
         })
         .catch(error => {
-          if (error.message !== REQUEST_CANCELED) {
+          if (error.message !== LARGE_REQUEST_CANCELED) {
             dispatch(
               setNotification({
                 status: error?.response?.status || 400,
@@ -302,10 +302,13 @@ const ScheduledJobs = ({
       </div>
       {jobsStore.loading ? null : jobs.length === 0 ? (
         <NoData
-          message={
-            largeRequestErrorMessage ||
-            getNoDataMessage(filtersStore, filters, JOBS_PAGE, SCHEDULE_TAB)
-          }
+          message={getNoDataMessage(
+            filtersStore,
+            filters,
+            largeRequestErrorMessage,
+            JOBS_PAGE,
+            SCHEDULE_TAB
+          )}
         />
       ) : (
         <>

@@ -98,10 +98,14 @@ const FilesView = React.forwardRef(
               </div>
               {artifactsStore.loading ? null : files.length === 0 ? (
                 <NoData
-                  message={
-                    largeRequestErrorMessage ||
-                    getNoDataMessage(filtersStore, filters, FILES_PAGE, null, FILES_FILTERS)
-                  }
+                  message={getNoDataMessage(
+                    filtersStore,
+                    filters,
+                    largeRequestErrorMessage,
+                    FILES_PAGE,
+                    null,
+                    FILES_FILTERS
+                  )}
                 />
               ) : (
                 <>
