@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { capitalize } from 'lodash'
+import classnames from 'classnames'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
@@ -59,9 +60,10 @@ const TableTypeCell = ({ className, data }) => {
     [JOB_KIND_SPARK]: { label: 'Spark', icon: <Spark /> },
     [JOB_KIND_WORKFLOW]: { label: 'Workflow', icon: <Workflow /> }
   }
+  const cellClassNames = classnames('table-body__cell', data.className, data.bodyCellClassName)
 
   return (
-    <td className={`table-body__cell ${data.class}`}>
+    <td className={cellClassNames}>
       <Tooltip
         className="table-body__cell_type"
         template={

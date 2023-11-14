@@ -26,6 +26,7 @@ import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifa
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
+import JobWizard from '../../JobWizard/JobWizard'
 
 import {
   fetchModel,
@@ -69,6 +70,7 @@ import { generateUri } from '../../../utils/resources'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { setArtifactTags } from '../../../utils/artifacts.util'
+import { useMode } from '../../../hooks/mode.hook'
 
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
@@ -76,7 +78,6 @@ import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
-import { useMode } from '../../../hooks/mode.hook'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
@@ -274,11 +275,14 @@ const Models = ({ fetchModelFeatureVector }) => {
         )
   }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
 
-  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent } = useSortTable({
-    headers: tableContent[0]?.content,
-    content: tableContent,
-    sortConfig: { defaultSortBy: 'updated', defaultDirection: 'desc' }
-  })
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -380,6 +384,14 @@ const Models = ({ fetchModelFeatureVector }) => {
     openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: handleRefresh })
   }, [handleRefresh, params.projectName])
 
+  const handleTrainModel = () => {
+    openPopUp(JobWizard, {
+      params,
+      isTrain: true,
+      wizardTitle: 'Train model'
+    })
+  }
+
   return (
     <ModelsView
       actionsMenu={actionsMenu}
@@ -391,6 +403,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterModel={handleRegisterModel}
+      handleTrainModel={handleTrainModel}
       isDemoMode={isDemoMode}
       models={models}
       pageData={pageData}
@@ -402,6 +415,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       viewMode={viewMode}
       urlTagOption={urlTagOption}
     />

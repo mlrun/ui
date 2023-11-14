@@ -15,10 +15,6 @@
           color: $primary;
           font-weight: bold;
 
-          &:hover {
-            text-decoration: underline;
-          }
-
           &.function-name {
             max-width: 120px;
           }
@@ -36,6 +32,7 @@
       .link {
         display: flex;
         width: 100%;
+        color: $primary;
       }
     }
 

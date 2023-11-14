@@ -36,7 +36,7 @@ import { closeArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import './previewModal.scss'
 
-const PreviewModal = ({ item }) => {
+const PreviewModal = ({ artifact }) => {
   const [preview, setPreview] = useState([])
   const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
@@ -45,21 +45,21 @@ const PreviewModal = ({ item }) => {
 
   useEffect(() => {
     if (preview.length === 0) {
-      getArtifactPreview(params.projectName, item, noData, setNoData, setPreview)
+      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview)
     }
-  }, [item, noData, params.projectName, preview.length])
+  }, [artifact, noData, params.projectName, preview.length])
 
   useEffect(() => {
-    if (item.extra_data && extraData.length === 0) {
+    if (artifact.extra_data && extraData.length === 0) {
       fetchArtifactPreviewFromExtraData(
         params.projectName,
-        item,
+        artifact,
         noData,
         setNoData,
         previewContent => setExtraData(state => [...state, previewContent])
       )
     }
-  }, [params.projectName, item, extraData.length, noData])
+  }, [params.projectName, artifact, extraData.length, noData])
 
   useEffect(() => {
     return () => {
@@ -79,27 +79,33 @@ const PreviewModal = ({ item }) => {
         <div className="preview-body">
           <div className="preview-item">
             <div className="item-data item-data__name data-ellipsis">
-              <Tooltip template={<TextTooltipTemplate text={item.db_key || item.key} />}>
-                {item.db_key || item.key}
+              <Tooltip template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}>
+                {artifact.db_key || artifact.key}
               </Tooltip>
             </div>
             <div className="item-data item-data__path data-ellipsis">
-              <Tooltip template={<TextTooltipTemplate text={item.target_path} />}>
-                {item.target_path}
+              <Tooltip template={<TextTooltipTemplate text={artifact.target_path} />}>
+                {artifact.target_path}
               </Tooltip>
             </div>
-            {item.size && (
+            {(artifact.ui.size || artifact.size) && (
               <div className="item-data">
                 size:
-                {typeof item.size === 'string' ? item.size : prettyBytes(item.size)}
+                {artifact.ui.size
+                  ? artifact.ui.size
+                  : typeof artifact.size === 'string'
+                  ? artifact.size
+                  : prettyBytes(artifact.size)}
               </div>
             )}
-            <div className="item-data">{formatDatetime(item.updated || item.date, 'N/A')}</div>
+            <div className="item-data">
+              {formatDatetime(artifact.updated || artifact.ui.date, 'N/A')}
+            </div>
             <div className="preview-body__download">
               <Download
                 onlyIcon
-                path={`${item.target_path}${item.model_file ? item.model_file : ''}`}
-                user={item.user ?? item.producer?.owner}
+                path={`${artifact.target_path}${artifact.model_file ? artifact.model_file : ''}`}
+                user={artifact.ui.user ?? artifact.producer?.owner}
               />
             </div>
           </div>
@@ -108,7 +114,9 @@ const PreviewModal = ({ item }) => {
               extraData={extraData}
               noData={noData}
               preview={preview}
-              showExtraDataLoader={item.extra_data && extraData.length !== item.extra_data.length}
+              showExtraDataLoader={
+                artifact.extra_data && extraData.length !== artifact.extra_data.length
+              }
             />
           </div>
         </div>
@@ -118,7 +126,7 @@ const PreviewModal = ({ item }) => {
 }
 
 PreviewModal.propTypes = {
-  item: PropTypes.shape({}).isRequired
+  artifact: PropTypes.shape({}).isRequired
 }
 
 export default PreviewModal

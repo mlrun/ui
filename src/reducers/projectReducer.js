@@ -64,14 +64,10 @@ import {
   FETCH_PROJECTS_BEGIN,
   FETCH_PROJECTS_FAILURE,
   FETCH_PROJECTS_SUCCESS,
-  REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_SUMMARY,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
-  SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_LABELS,
-  SET_NEW_PROJECT_NAME,
   SET_PROJECT_LABELS,
   FETCH_PROJECT_FEATURE_SETS_BEGIN,
   FETCH_PROJECT_FEATURE_SETS_SUCCESS,
@@ -95,9 +91,6 @@ const initialState = {
   error: null,
   loading: false,
   newProject: {
-    name: '',
-    description: '',
-    labels: null,
     error: null
   },
   project: {
@@ -221,7 +214,6 @@ const projectReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         newProject: {
-          ...state.newProject,
           error: payload
         }
       }
@@ -230,7 +222,6 @@ const projectReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         newProject: {
-          ...state.newProject,
           error: null
         }
       }
@@ -771,15 +762,6 @@ const projectReducer = (state = initialState, { type, payload }) => {
           }
         }
       }
-    case REMOVE_NEW_PROJECT:
-      return {
-        ...state,
-        newProject: {
-          name: '',
-          description: '',
-          labels: null
-        }
-      }
     case REMOVE_PROJECT_SUMMARY:
       return {
         ...state,
@@ -805,34 +787,7 @@ const projectReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         newProject: {
-          ...state.newProject,
           error: null
-        }
-      }
-    case SET_NEW_PROJECT_DESCRIPTION:
-      return {
-        ...state,
-        newProject: {
-          ...state.newProject,
-          description: payload
-        }
-      }
-    case SET_NEW_PROJECT_LABELS:
-      return {
-        ...state,
-        newProject: {
-          ...state.newProject,
-          labels: {
-            ...payload
-          }
-        }
-      }
-    case SET_NEW_PROJECT_NAME:
-      return {
-        ...state,
-        newProject: {
-          ...state.newProject,
-          name: payload
         }
       }
     case SET_PROJECT_DATA: {

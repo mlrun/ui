@@ -32,7 +32,7 @@ import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 
 import './artifactsPreviewController.scss'
 
-const ArtifactsPreviewController = ({ artifactsIndexes, content, index }) => {
+const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index }) => {
   const [noData, setNoData] = useState(false)
   const [preview, setPreview] = useState({})
   const params = useParams()
@@ -49,7 +49,7 @@ const ArtifactsPreviewController = ({ artifactsIndexes, content, index }) => {
     if (artifactsIndexes.length > 0 && !preview[index] && artifactsIndexes.includes(index)) {
       getArtifactPreview(
         params.projectName,
-        content[index],
+        artifact,
         noData,
         setNoData,
         setPreview,
@@ -57,13 +57,13 @@ const ArtifactsPreviewController = ({ artifactsIndexes, content, index }) => {
         index
       )
     }
-  }, [artifactsIndexes, setPreview, content, noData, params.projectName, preview, index])
+  }, [artifactsIndexes, setPreview, artifact, noData, params.projectName, preview, index])
 
   const showPreview = () => {
     dispatch(
       showArtifactsPreview({
         isPreview: true,
-        selectedItem: content[index]
+        selectedItem: artifact
       })
     )
   }
@@ -87,7 +87,7 @@ const ArtifactsPreviewController = ({ artifactsIndexes, content, index }) => {
 
 ArtifactsPreviewController.propTypes = {
   artifactsIndexes: PropTypes.array.isRequired,
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  artifact: PropTypes.shape({}).isRequired,
   index: PropTypes.number.isRequired
 }
 

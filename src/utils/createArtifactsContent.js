@@ -18,7 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isNumber } from 'lodash'
+import { isEmpty, isNil, isNumber } from 'lodash'
+import classnames from 'classnames'
 
 import {
   ARTIFACTS_PAGE,
@@ -35,6 +36,7 @@ import { parseUri } from './parseUri'
 import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { validateArguments } from './validateArguments'
+import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
@@ -112,113 +114,125 @@ export const getIsTargetPathValid = (artifact, frontendSpec) =>
 
 export const createModelsRowData = (artifact, project, frontendSpec, showExpandButton) => {
   const iter = getIter(artifact)
+  const content = [
+    {
+      id: `key.${artifact.ui.identifierUnique}`,
+      headerId: 'name',
+      headerLabel: 'Name',
+      value: artifact.db_key,
+      className: 'table-cell-name',
+      getLink: tab =>
+        validateArguments(artifact.db_key, tab, artifact.tree)
+          ? generateLinkToDetailsPanel(
+              project,
+              MODELS_TAB,
+              MODELS_TAB,
+              artifact.db_key,
+              artifact.tag,
+              tab,
+              artifact.tree,
+              artifact.iter
+            )
+          : '',
+      expandedCellContent: {
+        className: 'table-cell-name',
+        showTag: true,
+        tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
+        type: 'date',
+        value: formatDatetime(artifact.updated, 'N/A')
+      },
+      rowExpanded: {
+        getLink: false
+      },
+      showTag: true,
+      showExpandButton
+    },
+    {
+      id: `labels.${artifact.ui.identifierUnique}`,
+      headerId: 'labels',
+      headerLabel: 'Labels',
+      value: parseKeyValues(artifact.labels),
+      className: 'table-cell-1',
+      type: 'labels'
+    },
+    {
+      id: `producer.${artifact.ui.identifierUnique}`,
+      headerId: 'producer',
+      headerLabel: 'Producer',
+      value: artifact.producer?.name || '',
+      template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
+      className: 'table-cell-1',
+      type: 'producer'
+    },
+    {
+      id: `owner.${artifact.ui.identifierUnique}`,
+      headerId: 'owner',
+      headerLabel: 'Owner',
+      value: artifact.producer?.owner,
+      className: 'table-cell-1',
+      type: 'owner'
+    },
+    {
+      id: `updated.${artifact.ui.identifierUnique}`,
+      headerId: 'updated',
+      headerLabel: 'Updated',
+      value: formatDatetime(artifact.updated, 'N/A'),
+      className: 'table-cell-1'
+    },
+    {
+      id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
+      headerId: 'frameWorkAndAlgorithm',
+      headerLabel: (
+        <span>
+          <span>Framework &</span>
+          <br />
+          <span>Algorithm</span>
+        </span>
+      ),
+      value:
+        artifact.framework || artifact.algorithm ? (
+          <span>
+            <span>{artifact.framework}</span>
+            <br />
+            <span>{artifact.algorithm}</span>
+          </span>
+        ) : (
+          ''
+        ),
+      className: 'table-cell-1'
+    },
+    {
+      id: `version.${artifact.ui.identifierUnique}`,
+      headerId: 'tag',
+      value: artifact.tag,
+      className: 'table-cell-1',
+      type: 'hidden'
+    }
+  ]
+
+  if (!isNil(artifact.metrics) && !isEmpty(artifact.metrics)) {
+    Object.entries(artifact.metrics).forEach(([key, value], index) => {
+      const bodyCellClassName = classnames(
+        'metrics-cell',
+        index === 0 && 'metrics-cell_with-border'
+      )
+
+      content.push({
+        id: `${key}.${artifact.ui.identifierUnique}`,
+        headerId: key,
+        headerLabel: key,
+        value: parseFloat(value),
+        className: 'table-cell-1',
+        bodyCellClassName
+      })
+    })
+  }
 
   return {
     data: {
       ...artifact
     },
-    content: [
-      {
-        id: `key.${artifact.ui.identifierUnique}`,
-        headerId: 'name',
-        headerLabel: 'Name',
-        value: artifact.db_key,
-        class: 'table-cell-name',
-        getLink: tab =>
-          validateArguments(artifact.db_key, tab, artifact.tree)
-            ? generateLinkToDetailsPanel(
-                project,
-                MODELS_TAB,
-                MODELS_TAB,
-                artifact.db_key,
-                artifact.tag,
-                tab,
-                artifact.tree,
-                artifact.iter
-              )
-            : '',
-        expandedCellContent: {
-          class: 'table-cell-name',
-          showTag: true,
-          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
-          type: 'date',
-          value: formatDatetime(artifact.updated, 'N/A')
-        },
-        rowExpanded: {
-          getLink: false
-        },
-        showTag: true,
-        showExpandButton
-      },
-      {
-        id: `labels.${artifact.ui.identifierUnique}`,
-        headerId: 'labels',
-        headerLabel: 'Labels',
-        value: parseKeyValues(artifact.labels),
-        class: 'table-cell-1',
-        type: 'labels'
-      },
-      {
-        id: `producer.${artifact.ui.identifierUnique}`,
-        headerId: 'producer',
-        headerLabel: 'Producer',
-        value: artifact.producer,
-        class: 'table-cell-1',
-        type: 'producer'
-      },
-      {
-        id: `owner.${artifact.ui.identifierUnique}`,
-        headerId: 'owner',
-        headerLabel: 'Owner',
-        value: artifact.producer?.owner,
-        class: 'table-cell-1',
-        type: 'owner'
-      },
-      {
-        id: `updated.${artifact.ui.identifierUnique}`,
-        headerId: 'updated',
-        headerLabel: 'Updated',
-        value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'table-cell-1'
-      },
-      {
-        id: `metrics.${artifact.ui.identifierUnique}`,
-        headerId: 'metrics',
-        headerLabel: 'Metrics',
-        value: parseKeyValues(artifact.metrics),
-        class: 'table-cell-1',
-        type: 'metrics'
-      },
-      {
-        id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
-        headerId: 'frameWorkAndAlgorithm',
-        headerLabel: (
-          <span>
-            <span>Framework &</span>
-            <br />
-            <span>Algorithm</span>
-          </span>
-        ),
-        value:
-          artifact.framework || artifact.algorithm ? (
-            <span>
-              <span>{artifact.framework}</span>
-              <br />
-              <span>{artifact.algorithm}</span>
-            </span>
-          ) : (
-            ''
-          ),
-        class: 'table-cell-1'
-      },
-      {
-        id: `version.${artifact.ui.identifierUnique}`,
-        headerId: 'tag',
-        value: artifact.tag,
-        class: 'table-cell-1',
-        type: 'hidden'
-      }
-    ]
+    content
   }
 }
 
@@ -235,7 +249,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerId: 'name',
         headerLabel: 'Name',
         value: artifact.db_key,
-        class: 'table-cell-name',
+        className: 'table-cell-name',
         getLink: tab =>
           validateArguments(artifact.db_key, tab, artifact.tree)
             ? generateLinkToDetailsPanel(
@@ -250,7 +264,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
               )
             : '',
         expandedCellContent: {
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
@@ -266,7 +280,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'tag',
         value: artifact.tag,
-        class: 'table-cell-1',
+        className: 'table-cell-1',
         type: 'hidden'
       },
       {
@@ -274,22 +288,23 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerId: 'type',
         headerLabel: 'Type',
         value: artifact.kind,
-        class: 'table-cell-small'
+        className: 'table-cell-small'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'table-cell-1',
+        className: 'table-cell-1',
         type: 'labels'
       },
       {
         id: `producer.${artifact.ui.identifierUnique}`,
         headerId: 'producer',
         headerLabel: 'Producer',
-        value: artifact.producer || {},
-        class: 'table-cell-1',
+        value: artifact.producer?.name || '',
+        template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
+        className: 'table-cell-1',
         type: 'producer'
       },
       {
@@ -297,7 +312,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerId: 'owner',
         headerLabel: 'Owner',
         value: artifact.producer?.owner,
-        class: 'table-cell-1',
+        className: 'table-cell-1',
         type: 'owner'
       },
       {
@@ -305,14 +320,14 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       },
       {
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
         value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       }
     ]
   }
@@ -352,7 +367,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'name',
         headerLabel: 'Name',
         value: name,
-        class: 'table-cell-name',
+        className: 'table-cell-name',
         getLink: tab =>
           validateArguments(artifact.metadata?.uid, name)
             ? generateLinkToDetailsPanel(
@@ -372,7 +387,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'function',
         headerLabel: 'Function',
         value: functionName,
-        class: 'table-cell-1',
+        className: 'table-cell-1',
         getLink: () => generateFunctionDetailsLink(artifact.spec?.function_uri),
         tooltip: functionUri
       },
@@ -380,7 +395,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `state.${artifact.ui.identifierUnique}`,
         headerId: 'state',
         value: artifact.status?.state,
-        class: 'table-cell-small',
+        className: 'table-cell-small',
         type: 'hidden'
       },
       {
@@ -388,21 +403,21 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'version',
         headerLabel: 'Version',
         value: artifact?.status?.children ? 'Router' : tag,
-        class: 'table-cell-small'
+        className: 'table-cell-small'
       },
       {
         id: `modelClass.${artifact.ui.identifierUnique}`,
         headerId: 'class',
         headerLabel: 'Class',
         value: artifact.spec?.model_class,
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.metadata?.labels),
-        class: 'table-cell-1',
+        className: 'table-cell-1',
         type: 'labels'
       },
       {
@@ -410,35 +425,35 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'uptime',
         headerLabel: 'Uptime',
         value: formatDatetime(artifact.status?.first_request, '-'),
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       },
       {
         id: `lastRequest.${artifact.ui.identifierUnique}`,
         headerId: 'lastprediction',
         headerLabel: 'Last prediction',
         value: formatDatetime(artifact.status?.last_request, '-'),
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       },
       {
         id: `averageLatency.${artifact.ui.identifierUnique}`,
         headerId: 'averagelatency',
         headerLabel: 'Average latency',
         value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       },
       {
         id: `errorCount.${artifact.ui.identifierUnique}`,
         headerId: 'errorcount',
         headerLabel: 'Error count',
         value: artifact.status?.error_count ?? '-',
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       },
       {
         id: `driftStatus.${artifact.ui.identifierUnique}`,
         headerId: 'drift',
         headerLabel: 'Drift',
         value: driftStatusIcons[artifact.status?.drift_status]?.value,
-        class: 'table-cell-small',
+        className: 'table-cell-small',
         tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
       }
     ]
@@ -458,7 +473,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerId: 'name',
         headerLabel: 'Name',
         value: artifact.db_key,
-        class: 'table-cell-name',
+        className: 'table-cell-name',
         getLink: tab =>
           validateArguments(artifact.db_key, tab, artifact.tree)
             ? generateLinkToDetailsPanel(
@@ -473,7 +488,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
               )
             : '',
         expandedCellContent: {
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
           type: 'date',
@@ -490,15 +505,16 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(artifact.labels),
-        class: 'table-cell-1',
+        className: 'table-cell-1',
         type: 'labels'
       },
       {
         id: `producer.${artifact.ui.identifierUnique}`,
         headerId: 'producer',
         headerLabel: 'Producer',
-        value: artifact.producer,
-        class: 'table-cell-1',
+        value: artifact.producer?.name || '',
+        template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
+        className: 'table-cell-1',
         type: 'producer'
       },
       {
@@ -506,7 +522,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerId: 'owner',
         headerLabel: 'Owner',
         value: artifact.producer?.owner,
-        class: 'table-cell-1',
+        className: 'table-cell-1',
         type: 'owner'
       },
       {
@@ -514,20 +530,20 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       },
       {
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
         value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
-        class: 'table-cell-1'
+        className: 'table-cell-1'
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'tag',
         value: artifact.tag,
-        class: 'table-cell-1',
+        className: 'table-cell-1',
         type: 'hidden'
       }
     ]

@@ -97,7 +97,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
             name: 'common.tag',
             additionalRules: {
               name: 'tagUniqueness',
-              label: 'Artifact tag should be unique',
+              label: 'Artifact tag must be unique',
               pattern: isArtifactTagUnique(projectName, detailsType, selectedItem),
               async: true
             }

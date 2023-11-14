@@ -17,10 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { Link } from 'react-router-dom'
 import prettyBytes from 'pretty-bytes'
 
+import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
+import Download from '../../common/Download/Download'
+import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
+import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import { formatDatetime, parseKeyValues } from '../../utils'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
+import { parseArtifacts } from '../../utils/parseArtifacts'
+
+import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
 export const getJobAccordingIteration = selectedJob => {
   return {
@@ -30,46 +38,107 @@ export const getJobAccordingIteration = selectedJob => {
   }
 }
 
-export const generateContent = selectedJob => {
-  return selectedJob.artifacts.map(artifact => {
-    const artifactExtraData = artifact.extra_data || artifact.spec?.extra_data
-    const artifactSchema = artifact.schema || artifact.spec?.schema
+export const generateArtifactsPreviewContent = selectedJob => {
+  const parsedArtifacts = parseArtifacts(selectedJob.artifacts)
+
+  if (!parsedArtifacts) return []
+
+  return parsedArtifacts.map(artifact => {
     let generatedPreviewData = {
       preview: []
     }
 
-    if (artifactExtraData) {
-      generatedPreviewData = generateArtifactPreviewData(artifactExtraData)
+    if (artifact.extra_data) {
+      generatedPreviewData = generateArtifactPreviewData(artifact.extra_data)
     }
 
-    const generatedArtifact = {
+    artifact.preview = artifact.schema ? artifact.preview : generatedPreviewData.preview
+    artifact.header = artifact.schema ? artifact.header : null
+
+    artifact.ui = {
+      ...artifact.ui,
       date: formatDatetime(selectedJob.startTime),
-      db_key: artifact.db_key ?? artifact.spec?.db_key,
-      key: artifact.key ?? artifact.metadata?.key,
-      kind: artifact.kind ?? artifact.spec?.kind,
-      iter: artifact.iter ?? artifact.metadata?.iter,
-      preview: generatedPreviewData.preview,
-      size:
-        artifact.size || artifact.spec?.size
-          ? prettyBytes(artifact.size || artifact.spec?.size)
-          : 'N/A',
-      target_path: artifact.target_path ?? artifact.spec?.target_path,
-      tag: artifact.tag ?? artifact.metadata?.tag,
-      tree: artifact.tree ?? artifact.metadata?.tree,
+      size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
       user: selectedJob?.labels
         ?.find(item => item.match(/v3io_user|owner/g))
         ?.replace(/(v3io_user|owner): /, '')
     }
 
-    if (artifactSchema) {
-      return {
-        ...generatedArtifact,
-        header: artifact.header || artifact.spec.header,
-        preview: artifact.preview || artifact.status.preview,
-        schema: artifactSchema
-      }
+    return artifact
+  })
+}
+
+export const generateArtifactsTabContent = (artifacts, params, iteration, showArtifact) => {
+  return artifacts.map((artifact, index) => {
+    const artifactScreenLinks = {
+      model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
+        artifact.db_key || artifact.key
+      }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`,
+      dataset: `/projects/${params.projectName}/${DATASETS}/${artifact.db_key || artifact.key}/${
+        artifact.tag ?? TAG_FILTER_LATEST
+      }${iteration ? `/${iteration}` : ''}/overview`
     }
 
-    return generatedArtifact
+    return [
+      {
+        headerId: 'name',
+        headerLabel: 'Name',
+        template: (
+          <Tooltip template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}>
+            <span className="link" onClick={() => showArtifact(index)}>
+              {artifact.db_key || artifact.key}
+            </span>
+          </Tooltip>
+        ),
+        value: artifact.db_key || artifact.key,
+        className: 'table-cell-3'
+      },
+      {
+        headerId: 'path',
+        headerLabel: 'Path',
+        value: artifact.target_path,
+        className: 'table-cell-6'
+      },
+      {
+        headerId: 'size',
+        headerLabel: 'Size',
+        value: artifact.ui.size
+      },
+      {
+        headerId: 'updated',
+        headerLabel: 'Updated',
+        value: artifact.ui.date,
+        className: 'table-cell-2'
+      },
+      {
+        headerId: 'actions',
+        headerLabel: '',
+        className: 'actions-cell',
+        template: (
+          <>
+            <CopyToClipboard textToCopy={artifact.target_path} tooltipText="Copy path" />
+            <RoundedIcon tooltipText="Show Details" id="show-details">
+              <Link
+                target="_blank"
+                to={
+                  artifactScreenLinks[artifact.kind] ??
+                  `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
+                    artifact.tag ?? TAG_FILTER_LATEST
+                  }${iteration ? `/${iteration}` : ''}/overview`
+                }
+              >
+                <DetailsIcon />
+              </Link>
+            </RoundedIcon>
+            <Download
+              className="icon-download"
+              onlyIcon
+              path={artifact.target_path}
+              user={artifact.ui.user}
+            />
+          </>
+        )
+      }
+    ]
   })
 }

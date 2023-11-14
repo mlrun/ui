@@ -17,29 +17,45 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize } from 'lodash'
+import { capitalize, isObjectLike } from 'lodash'
 
-export const resultsTableHeaders = array => {
-  if (!array.iterationStats || !array.iterationStats.length) return []
+export const generateResultsContent = job => {
+  let content = []
 
-  const [headers] = array.iterationStats.slice(0, 1).map(item => {
-    return [item[1], item[0]].concat(item.slice(2)).map(header => {
-      const clearHeaderPrefix = String(header).replace(/^.+\./, '').toLocaleLowerCase()
+  if (job.iterationStats && job.iterationStats.length !== 0) {
+    const headers = job.iterationStats[0]
+    content = job.iterationStats.slice(1).map(iterationStat => {
+      const generatedStatData = iterationStat.map((statValue, idx) => {
+        const clearHeaderPrefix = String(headers[idx]).replace(/^.+\./, '').toLocaleLowerCase()
+        return {
+          headerId: headers[idx],
+          headerLabel: capitalize(clearHeaderPrefix),
+          value: statValue ?? ''
+        }
+      })
 
-      return {
-        headerId: clearHeaderPrefix,
-        headerLabel: capitalize(clearHeaderPrefix)
-      }
+      return [generatedStatData[1], generatedStatData[0]].concat(generatedStatData.slice(2))
     })
-  })
+  } else if (job.iterations?.length === 0 && Object.keys(job.results ?? {}).length !== 0) {
+    content = Object.keys(job.results).map(resultName => {
+      const resultValue = isObjectLike(job.results[resultName])
+        ? JSON.stringify(job.results[resultName])
+        : job.results[resultName]
 
-  return headers
-}
+      return [
+        {
+          headerId: 'name',
+          headerLabel: 'Name',
+          value: resultName
+        },
+        {
+          headerId: 'value',
+          headerLabel: 'Value',
+          value: String(resultValue ?? '')
+        }
+      ]
+    })
+  }
 
-export const resultsTableContent = array => {
-  if (!array.iterationStats || !array.iterationStats.length) return []
-
-  return array.iterationStats.slice(1).map(contentItem => {
-    return [contentItem[1], contentItem[0]].concat(contentItem.slice(2)).map(item => item ?? '')
-  })
+  return content
 }

@@ -32,7 +32,7 @@ const JobsFunctionsTableRow = ({ handleSelectItem, rowItem, selectedItem }) => {
   const rowClassNames = classnames(
     'table-row',
     'parent-row',
-    isWorkflowJobSelected(rowItem.data, selectedItem) && 'row_active'
+    isWorkflowJobSelected(rowItem.data, selectedItem) && 'table-row_active'
   )
 
   return (

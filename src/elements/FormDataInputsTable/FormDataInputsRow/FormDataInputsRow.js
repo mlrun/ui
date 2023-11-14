@@ -93,7 +93,7 @@ const FormDataInputsRow = ({
               validationRules={[
                 {
                   name: 'uniqueness',
-                  label: 'Name should be unique',
+                  label: 'Name must be unique',
                   pattern: newValue => uniquenessValidator(fields, newValue)
                 }
               ]}
