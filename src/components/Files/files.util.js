@@ -262,6 +262,7 @@ export const generateActionsMenu = (
     [
       {
         disabled: !isTargetPathValid,
+        id: 'artifact-preview',
         label: 'Preview',
         icon: <ArtifactView />,
         onClick: file => {

@@ -19,6 +19,8 @@ such restriction.
 */
 import React from 'react'
 
+import JobWizard from '../JobWizard/JobWizard'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { applyTagChanges } from '../../utils/artifacts.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import {
@@ -46,6 +48,8 @@ import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
+
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
 export const infoHeaders = [
   {
@@ -98,16 +102,39 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   }
 ]
 
-export const generatePageData = (selectedItem, viewMode) => ({
+export const generatePageData = (selectedItem, viewMode, params) => ({
   page: DATASETS_PAGE,
   details: {
     menu: generateDataSetsDetailsMenu(selectedItem),
     infoHeaders,
     type: DATASETS,
     hideBackBtn: viewMode === FULL_VIEW_MODE,
-    withToggleViewBtn: true
+    withToggleViewBtn: true,
+    actionButton: {
+      label: 'Train',
+      variant: PRIMARY_BUTTON,
+      onClick: () => handleTrainDataset(selectedItem, params)
+    }
   }
 })
+
+const handleTrainDataset = (selectedItem, params) => {
+  const prePopulatedDataInputs = [
+    {
+      name: selectedItem.db_key || selectedItem.key || 'dataset',
+      path: selectedItem.URI
+    }
+  ]
+
+  openPopUp(JobWizard, {
+    params,
+    isTrain: true,
+    wizardTitle: 'Train model',
+    prePopulatedData: {
+      dataInputs: prePopulatedDataInputs
+    }
+  })
+}
 
 export const fetchDataSetRowData = async (
   dispatch,
@@ -264,6 +291,7 @@ export const generateActionsMenu = (
     [
       {
         disabled: !isTargetPathValid,
+        id: 'dataset-preview',
         label: 'Preview',
         icon: <ArtifactView />,
         onClick: dataset => {

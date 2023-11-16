@@ -30,7 +30,6 @@ export const handleDeleteArtifact = (
   filters,
   artifactType
 ) => {
-  console.log(artifactType)
   dispatch(deleteArtifact({ project, key, tag }))
     .unwrap()
     .then(() => {

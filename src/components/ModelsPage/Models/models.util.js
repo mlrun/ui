@@ -338,6 +338,7 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
+        disabled: !model?.tag,
         onClick: () =>
           handleDeleteArtifact(
             dispatch,
@@ -353,6 +354,7 @@ export const generateActionsMenu = (
     [
       {
         disabled: !isTargetPathValid,
+        id: 'model-preview',
         label: 'Preview',
         icon: <ArtifactView />,
         onClick: model => {
@@ -365,6 +367,7 @@ export const generateActionsMenu = (
         }
       },
       {
+        id: 'model-deploy',
         label: 'Deploy',
         icon: <DeployIcon />,
         onClick: handleDeployModel

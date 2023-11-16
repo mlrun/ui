@@ -51,12 +51,8 @@ const Projects = ({
   fetchProjectsNames,
   fetchProjectsSummary,
   projectStore,
-  removeNewProject,
   removeNewProjectError,
-  removeProjects,
-  setNewProjectDescription,
-  setNewProjectLabels,
-  setNewProjectName
+  removeProjects
 }) => {
   const [actionsMenu, setActionsMenu] = useState({})
   const [confirmData, setConfirmData] = useState(null)
@@ -66,7 +62,6 @@ const Projects = ({
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
-  const [isNameValid, setNameValid] = useState(true)
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [source] = useState(axios.CancelToken.source())
@@ -356,34 +351,27 @@ const Projects = ({
       removeNewProjectError()
     }
 
-    removeNewProject()
-    setNameValid(true)
     setCreateProject(false)
-  }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
+  }, [projectStore.newProject.error, removeNewProjectError])
 
-  const handleCreateProject = e => {
+  const handleCreateProject = (e, formState) => {
     e.preventDefault()
 
-    if (e.currentTarget.checkValidity()) {
-      if (projectStore.newProject.name.length === 0) {
-        setNameValid(false)
-        return false
-      } else if (isNameValid) {
-        setNameValid(true)
-      }
-
+    if (e.currentTarget.checkValidity() && formState.valid) {
       createNewProject({
         metadata: {
-          name: projectStore.newProject.name,
-          labels: projectStore.newProject.labels
+          name: formState.values.name,
+          labels: formState.values.labels?.reduce((acc, labelData) => {
+            acc[labelData.key] = labelData.value
+            return acc
+          }, {}) ?? {}
         },
         spec: {
-          description: projectStore.newProject.description
+          description: formState.values.description
         }
       }).then(result => {
         if (result) {
           setCreateProject(false)
-          removeNewProject()
           refreshProjects()
           fetchProjectsNames()
         }
@@ -406,7 +394,6 @@ const Projects = ({
       handleSelectSortOption={handleSelectSortOption}
       handleSearchOnFocus={handleSearchOnFocus}
       isDescendingOrder={isDescendingOrder}
-      isNameValid={isNameValid}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}
@@ -415,10 +402,6 @@ const Projects = ({
       setFilterByName={setFilterByName}
       setFilterMatches={setFilterMatches}
       setIsDescendingOrder={setIsDescendingOrder}
-      setNameValid={setNameValid}
-      setNewProjectDescription={setNewProjectDescription}
-      setNewProjectName={setNewProjectName}
-      setNewProjectLabels={setNewProjectLabels}
       setSelectedProjectsState={setSelectedProjectsState}
       sortProjectId={sortProjectId}
       urlParams={urlParams}

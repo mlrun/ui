@@ -1,27 +1,5 @@
 .create-project-dialog {
-  .pop-up-dialog {
-    &__footer-container {
-      align-items: center;
-    }
-
-    &__form {
-      margin-bottom: 20px;
-    }
-
-    .input-wrapper {
-      margin-bottom: 10px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    .chips-wrapper {
-      flex-wrap: wrap;
-    }
-  }
-
-  .error-message {
-    max-width: 235px;
+  .error {
+    width: 100%;
   }
 }

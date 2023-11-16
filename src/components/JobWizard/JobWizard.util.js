@@ -102,7 +102,8 @@ export const generateJobWizardData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
-  isEditMode
+  isEditMode,
+  prePopulatedData
 ) => {
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
@@ -181,12 +182,18 @@ export const generateJobWizardData = (
     jobFormData[RESOURCES_STEP].jobPriorityClassName = jobPriorityClassName
   }
 
+  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData.dataInputs)) {
+    jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(
+      functionParameters,
+      prePopulatedData.dataInputs
+    )
+  }
+
   if (!isEmpty(functionParameters)) {
     jobFormData[PARAMETERS_STEP].parametersTable = {
       predefined: parsePredefinedParameters(functionParameters),
       custom: []
     }
-    jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(functionParameters)
   }
 
   return [jobFormData, jobAdditionalData]
@@ -611,8 +618,8 @@ const getDataInputData = (dataInputName, dataInputValue, dataInputIsChecked) => 
 
 const sortParameters = (parameter, nextParameter) => nextParameter.isRequired - parameter.isRequired
 
-export const parseDataInputs = functionParameters => {
-  return functionParameters
+export const parseDataInputs = (functionParameters = [], prePopulatedDataInputs) => {
+  const parsedDataInputs = functionParameters
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
     .map(dataInput => {
       return {
@@ -624,6 +631,19 @@ export const parseDataInputs = functionParameters => {
       }
     })
     .sort(sortParameters)
+
+  if (!isEmpty(prePopulatedDataInputs)) {
+    prePopulatedDataInputs.forEach(dataInput => {
+      parsedDataInputs.unshift({
+        data: getDataInputData(dataInput.name, dataInput.path, true),
+        isRequired: true,
+        isDefault: true,
+        isPredefined: true
+      })
+    })
+  }
+
+  return parsedDataInputs
 }
 
 export const parseDefaultDataInputs = (funcParams, runDataInputs = {}) => {

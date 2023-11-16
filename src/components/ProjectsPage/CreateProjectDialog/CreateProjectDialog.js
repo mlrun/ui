@@ -18,31 +18,41 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
+import arrayMutators from 'final-form-arrays'
+import { Form } from 'react-final-form'
+import { useSelector } from 'react-redux'
 
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
-import Input from '../../../common/Input/Input'
 import Loader from '../../../common/Loader/Loader'
-import ProjectLabels from '../../Project/ProjectLabels/ProjectLabels'
-import { Button, PopUpDialog } from 'igz-controls/components'
+import { Button, FormChipCell, FormInput, FormTextarea, PopUpDialog } from 'igz-controls/components'
 
-import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { createForm } from 'final-form'
+import { getChipOptions } from '../../../utils/getChipOptions'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { setFieldState } from 'igz-controls/utils/form.util'
 
 import './createProjectDialog.scss'
 
 const CreateProjectDialog = ({
   closeNewProjectPopUp,
   handleCreateProject,
-  isNameValid,
-  removeNewProjectError,
-  setNameValid,
-  setNewProjectDescription,
-  setNewProjectLabels,
-  setNewProjectName
+  removeNewProjectError
 }) => {
   const projectStore = useSelector(store => store.projectStore)
+  const initialValues = {
+    name: '',
+    description: '',
+    labels: []
+  }
+  const formRef = React.useRef(
+    createForm({
+      initialValues,
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
+    })
+  )
 
   return (
     <PopUpDialog
@@ -51,67 +61,69 @@ const CreateProjectDialog = ({
       closePopUp={closeNewProjectPopUp}
     >
       {projectStore.loading && <Loader />}
-      <form noValidate>
-        <div className="pop-up-dialog__form">
-          <Input
-            className="pop-up-dialog__form-input"
-            floatingLabel
-            invalid={!isNameValid}
-            invalidText="This field is invalid"
-            label="Name"
-            onChange={setNewProjectName}
-            required
-            setInvalid={value => setNameValid(value)}
-            type="text"
-            value={projectStore.newProject.name}
-            validationRules={getValidationRules('project.name')}
-          />
-          <Input
-            className="pop-up-dialog__form-input"
-            floatingLabel
-            label="Description"
-            onChange={setNewProjectDescription}
-            type="text"
-            value={projectStore.newProject.description}
-          />
-          <div>
-            <span>Labels:</span>
-            <ProjectLabels
-              addProjectLabel={setNewProjectLabels}
-              isEditMode
-              labels={projectStore.newProject.labels}
-              updateProjectLabel={setNewProjectLabels}
-              visibleChipsMaxLength="all"
-            />
-          </div>
-        </div>
-        {projectStore.newProject.error && (
-          <ErrorMessage
-            closeError={() => {
-              if (projectStore.newProject.error) {
-                removeNewProjectError()
-              }
-            }}
-            message={projectStore.newProject.error}
-          />
-        )}
-        <div className="pop-up-dialog__footer-container">
-          <Button
-            type="button"
-            disabled={projectStore.loading}
-            variant={TERTIARY_BUTTON}
-            label="Cancel"
-            className="pop-up-dialog__btn_cancel"
-            onClick={closeNewProjectPopUp}
-          />
-          <Button
-            disabled={projectStore.loading || !isNameValid || !projectStore.newProject.name}
-            variant={SECONDARY_BUTTON}
-            label="Create"
-            onClick={handleCreateProject}
-          />
-        </div>
-      </form>
+      <Form form={formRef.current} onSubmit={() => {}}>
+        {formState => {
+          return (
+            <>
+              <div className="form-row">
+                <FormInput
+                  label="Name"
+                  name="name"
+                  required
+                  validationRules={getValidationRules('project.name')}
+                />
+              </div>
+              <div className="form-row">
+                <FormTextarea name="description" label="Description" maxLength={500} />
+              </div>
+              <div className="form-row">
+                <FormChipCell
+                  chipOptions={getChipOptions('metrics')}
+                  formState={formState}
+                  initialValues={initialValues}
+                  isEditable
+                  label="Labels"
+                  name="labels"
+                  shortChips
+                  visibleChipsMaxLength="2"
+                  validationRules={{
+                    key: getValidationRules('common.tag'),
+                    value: getValidationRules('common.tag')
+                  }}
+                />
+              </div>
+              {projectStore.newProject.error && (
+                <div className="form-row">
+                  <ErrorMessage
+                    closeError={() => {
+                      if (projectStore.newProject.error) {
+                        removeNewProjectError()
+                      }
+                    }}
+                    message={projectStore.newProject.error}
+                  />
+                </div>
+              )}
+              <div className="pop-up-dialog__footer-container">
+                <Button
+                  type="button"
+                  disabled={projectStore.loading}
+                  variant={TERTIARY_BUTTON}
+                  label="Cancel"
+                  className="pop-up-dialog__btn_cancel"
+                  onClick={closeNewProjectPopUp}
+                />
+                <Button
+                  disabled={projectStore.loading || !formState.values.name || formState.invalid}
+                  variant={SECONDARY_BUTTON}
+                  label="Create"
+                  onClick={(event) => handleCreateProject(event, formState)}
+                />
+              </div>
+            </>
+          )
+        }}
+      </Form>
     </PopUpDialog>
   )
 }
@@ -119,11 +131,7 @@ const CreateProjectDialog = ({
 CreateProjectDialog.propTypes = {
   closeNewProjectPopUp: PropTypes.func.isRequired,
   handleCreateProject: PropTypes.func.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
-  removeNewProjectError: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setNewProjectDescription: PropTypes.func.isRequired,
-  setNewProjectName: PropTypes.func.isRequired
+  removeNewProjectError: PropTypes.func.isRequired
 }
 
 export default CreateProjectDialog

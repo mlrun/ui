@@ -26,6 +26,7 @@ import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifa
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
+import JobWizard from '../../JobWizard/JobWizard'
 
 import {
   fetchModel,
@@ -225,11 +226,14 @@ const Models = ({ fetchModelFeatureVector }) => {
         )
   }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
 
-  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent } = useSortTable({
-    headers: tableContent[0]?.content,
-    content: tableContent,
-    sortConfig: { defaultSortBy: 'updated', defaultDirection: 'desc' }
-  })
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -331,6 +335,14 @@ const Models = ({ fetchModelFeatureVector }) => {
     openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: handleRefresh })
   }, [handleRefresh, params.projectName])
 
+  const handleTrainModel = () => {
+    openPopUp(JobWizard, {
+      params,
+      isTrain: true,
+      wizardTitle: 'Train model'
+    })
+  }
+
   return (
     <ModelsView
       actionsMenu={actionsMenu}
@@ -342,6 +354,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterModel={handleRegisterModel}
+      handleTrainModel={handleTrainModel}
       isDemoMode={isDemoMode}
       models={models}
       pageData={pageData}
@@ -353,6 +366,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       viewMode={viewMode}
       urlTagOption={urlTagOption}
     />

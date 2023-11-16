@@ -57,6 +57,7 @@ import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { getViewMode } from '../../utils/helper'
+import { useSortTable } from '../../hooks/useSortTable.hook'
 
 const Files = () => {
   const [files, setFiles] = useState([])
@@ -200,6 +201,15 @@ const Files = () => {
       : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
   }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
+
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
@@ -308,7 +318,9 @@ const Files = () => {
       setFiles={setFiles}
       setSelectedFile={setSelectedFile}
       setSelectedRowData={setSelectedRowData}
-      tableContent={tableContent}
+      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+      tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       urlTagOption={urlTagOption}

@@ -298,12 +298,18 @@ const datasetsTable = {
         owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         uploaded: '.table-body__cell:nth-of-type(5) .data-ellipsis',
         size: '.table-body__cell:nth-of-type(6) .data-ellipsis',
-        artifact_preview_btn: '.table-body__cell:nth-of-type(7) button',
+        artifact_preview_btn: '.table-body__cell:nth-of-type(7) #quick-link-dataset-preview',
         download_btn: '.table-body__cell:nth-of-type(8) .download-container',
         copy_uri: '.table-body__cell:nth-of-type(9) > button',
         action_menu: {
           componentType: actionMenu,
-          structure: actionMenuStructure
+          structure: {
+            root: '.actions-menu__container',
+            menuElements: {
+              open_button: '[data-testid="actions-menu"] button',
+              options: '.actions-menu__body .actions-menu__option'
+            }
+          }
         }
       }
     }
@@ -385,11 +391,11 @@ module.exports = {
   },
   datasets: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
-    Register_Dataset_Button: pageHeaderButton,
+    Register_Dataset_Button: By.css('.content__action-bar-wrapper .action-bar__actions .register-button'),
     Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
-    Datasets_Table: commonTable(datasetsTable),
+    Datasets_Table: commonTable(datasetsTable)
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
