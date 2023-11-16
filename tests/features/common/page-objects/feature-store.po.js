@@ -146,9 +146,9 @@ const featuresTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(6)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
-            true
+            false
           )
         },
         targets: '.table-body__cell:nth-of-type(7)',

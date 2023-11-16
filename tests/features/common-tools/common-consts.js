@@ -60,29 +60,30 @@ module.exports = {
   Feature_Sets_Info_Pane: {
     Tab_List: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
-      'Description',
-      'Labels',
-      'Version tag',
-      'Last updated',
-      'Entities',
-      'URI',
-      'Timestamp key',
-      'Label column',
-      'Usage example'
+      'Description:',
+      'Labels:',
+      'Version tag:',
+      'Last updated:',
+      'Entities:',
+      'Engine type:',
+      'URI:',
+      'Timestamp key:',
+      'Label column:',
+      'Usage example:'
     ]
   },
   Feature_Vectors_Info_Pane: {
     Tab_List: ['Overview', 'Requested Features', 'Analysis'],
     Overview_General_Headers: [
-      'Description',
-      'Labels',
-      'Version tag',
-      'Last updated',
-      'Entities',
-      'URI',
-      'Timestamp key',
-      'Label column',
-      'Usage example'
+      'Description:',
+      'Labels:',
+      'Version tag:',
+      'Last updated:',
+      'Entities:',
+      'URI:',
+      'Timestamp key:',
+      'Label column:',
+      'Usage example:'
     ]
   },
   Datasets_Info_Pane: {

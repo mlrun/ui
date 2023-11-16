@@ -91,11 +91,6 @@ Feature: Feature Store Page
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button' - reimplemented, invisible before any changes
-    #TODO: 'Apply_Changes_Button' - reimplemented, invisible before any changes
-    #TODO: 'Action_Menu', 'Info_Pane_Tab_Selector' - reimplemented, invisible before any changes
-    #TODO: verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard - AssertionError: should be expected "key1:value1" but actual value ":"
     @passive
     @inProgress
     Scenario: MLFS004 - Check all mandatory components in Item infopane on Overview tab table on Feature Sets tab
@@ -113,47 +108,52 @@ Feature: Feature Store Page
         When click on cell with row index 2 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Header" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Sets_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Feature_Sets_Info_Pane" wizard
-        Then "Cancel_Button" element on "Feature_Sets_Info_Pane" should contains "Cancel" value
-        Then verify "Apply_Changes_Button" element visibility on "Feature_Sets_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is disabled
-        Then "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" should contains "Apply Changes" value
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Action_Menu" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Overview_General_Headers" on "Feature_Sets_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Overview_General_Headers"
-        Then click on "Description_Field" element on "Feature_Sets_Info_Pane" wizard
+        Then click on "Empty_Description_Field" element on "Feature_Sets_Info_Pane" wizard
         Then type value "test_description" to "Description_Input" field on "Feature_Sets_Info_Pane" wizard
         Then check "Description_Input" textarea counter on "Feature_Sets_Info_Pane" wizard
         Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
-        Then "Description_Field" element on "Feature_Sets_Info_Pane" should contains "test_description" value
+        Then "Full_Description_Field" element on "Feature_Sets_Info_Pane" should contains "test_description" value
+        Then verify "Apply_Changes_Button" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is enabled
-        Then click on "Description_Field" element on "Feature_Sets_Info_Pane" wizard
+        Then "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" should contains "Apply Changes" value
+        Then verify "Cancel_Button" element visibility on "Feature_Sets_Info_Pane" wizard
+        Then "Cancel_Button" element on "Feature_Sets_Info_Pane" should contains "Cancel" value
+        Then click on "Edit_Button" element on "Feature_Sets_Info_Pane" wizard
         Then type value "" to "Description_Input" field on "Feature_Sets_Info_Pane" wizard
         Then check "Description_Input" textarea counter on "Feature_Sets_Info_Pane" wizard
         Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is disabled
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then click on "Cross_Close_Button" element on "Feature_Sets_Info_Pane" wizard
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         When add rows to "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
             | key_input | value_input |
             |    key1   |    value1   |
             |    key2   |    value2   |
             |    key3   |    value3   |
-        Then verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key2\n:\nvalue2 |
-            | key3\n:\nvalue3 |
-        When click on "remove_btn" in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key3\n:\nvalue3 |
-        Then verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
-            |       label     |
-            | key2\n:\nvalue2 |
-        Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
+        Then verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard with attribute
+            | key_verify | value_verify | 
+            |    key1    |    value1    |
+            |    key2    |    value2    |
+            |    key3    |    value3    |
+        Then click on "Labels_Apply_Button" element on "Feature_Sets_Info_Pane" wizard
         Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is enabled
+        Then verify "Cancel_Button" element on "Feature_Sets_Info_Pane" wizard is enabled
+        When click on "remove_btn" in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard with attribute
+            | key_verify | 
+            |    key1    |    
+            |    key3    |    
+        Then verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard with attribute
+            | key_verify | value_verify | 
+            |    key2    |    value2    |
+        Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is disabled
         When click on cell with row index 2 in "expand_btn" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
@@ -161,8 +161,6 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, editing is not allowed in Overview tab
     @passive
     @inProgress
     Scenario: MLFS005 - Check all mandatory components in Item infopane on Overview tab table on Feature Vectors tab
@@ -180,10 +178,8 @@ Feature: Feature Store Page
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then "Cancel_Button" element on "Feature_Vectors_Info_Pane" should contains "Cancel" value
-        Then verify "Apply_Changes_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Action_Menu" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Vectors_Info_Pane" wizard
@@ -197,8 +193,6 @@ Feature: Feature Store Page
         Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, editing is not allowed in Overview tab
     @passive
     @inProgress
     Scenario: MLFS006 - Check all mandatory components in Item infopane with non-latest tag on Overview tab table on Feature Vectors tab
@@ -216,10 +210,8 @@ Feature: Feature Store Page
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then "Cancel_Button" element on "Feature_Vectors_Info_Pane" should contains "Cancel" value
-        Then verify "Apply_Changes_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Action_Menu" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Vectors_Info_Pane" wizard
@@ -227,8 +219,6 @@ Feature: Feature Store Page
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Overview_General_Headers" on "Feature_Vectors_Info_Pane" wizard should contains "Feature_Vectors_Info_Pane"."Overview_General_Headers"
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     Scenario: MLFS007 - Check all mandatory components in Item infopane on Features tab table
         Given open url
@@ -248,12 +238,13 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Features_Info_Pane" wizard
         Then verify "Header" element visibility on "Features_Info_Pane" wizard
         Then verify "Updated" element visibility on "Features_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Features_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Features_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Features_Info_Pane" wizard
         Then verify "Features_Tab_Info_Pane_Table" element visibility on "Features_Info_Pane" wizard
 
     @FAILED_TODO
+    #TODO: "Transformations" tab - Uncaught runtime errors screen
     #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     @inProgress
@@ -282,8 +273,6 @@ Feature: Feature Store Page
         Then verify arrow lines position on "Transformation_Graph" on "Transformations_Info_Pane" wizard
         # TO DO: configuration component for future work
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     Scenario: MLFS009 - Check all mandatory components in Item infopane on Preview tab table
         Given open url
@@ -303,13 +292,11 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Preview_Info_Pane" wizard
         Then verify "Header" element visibility on "Preview_Info_Pane" wizard
         Then verify "Updated" element visibility on "Preview_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Preview_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Preview_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Preview_Info_Pane" wizard
         Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Preview_Info_Pane" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     @inProgress
     Scenario: MLFS010 - Check all mandatory components in Item infopane on Statistics tab table
@@ -331,12 +318,10 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Statistics_Info_Pane" wizard
         Then verify "Header" element visibility on "Statistics_Info_Pane" wizard
         Then verify "Updated" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Statistics_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Statistics_Info_Pane" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
     @passive
     @inProgress
     Scenario: MLFS011 - Check all mandatory components in Item infopane on Analysis tab table
@@ -357,8 +342,8 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Header" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Updated" element visibility on "Analysis_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Analysis_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Analysis_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Analysis_Info_Pane" wizard
         # TO DO: tab components too complicated for quick automatization
 
@@ -407,7 +392,6 @@ Feature: Feature Store Page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
     @passive
-    #TODO: should be updated with changeble Name "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message" 
     Scenario: MLFS014 - Check filtering by Name on Feature Store Features Tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1500,6 +1484,12 @@ Feature: Feature Store Page
             | feature      |
             | last_updated |
         Then type value "last_updated_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
+
+        # Then verify "Cancel_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
+        # Then "Cancel_Button" element on "Feature_Vectors_Info_Pane" should contains "Cancel" value
+        # Then verify "Apply_Changes_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
+        # Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
+
         Then click on "discard_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature      |
             | last_updated |
