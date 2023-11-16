@@ -35,9 +35,10 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
           <div className="project-details__header">
             <span className="project-details__title">{projectName}</span>
           </div>
-          {projectData && (
-            <p className="project-details__description">{projectData.spec.description}</p>
-          )}
+
+          <p className="project-details__description">
+            {projectData && projectData.spec.description}
+          </p>
         </div>
         {projectData && (
           <ul className="project-details__details">
