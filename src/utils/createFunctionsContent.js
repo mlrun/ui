@@ -148,6 +148,13 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               className: 'table-cell-1'
             },
             {
+              id: `defaultHandler.${func.ui.identifierUnique}`,
+              headerId: 'defaultHandler',
+              headerLabel: 'Default handler',
+              value: func.default_handler,
+              className: 'table-cell-2'
+            },
+            {
               id: `image.${func.ui.identifierUnique}`,
               headerId: 'image',
               headerLabel: 'Image',

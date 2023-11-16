@@ -65,6 +65,7 @@ export const infoHeaders = [
   { label: 'Code origin', id: 'codeOrigin' },
   { label: 'Updated', id: 'updated' },
   { label: 'Command', id: 'command' },
+  { label: 'Default handler', id: 'defaultHandler' },
   { label: 'Image', id: 'image' },
   { label: 'Description', id: 'description' }
 ]
