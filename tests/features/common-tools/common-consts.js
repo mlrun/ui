@@ -246,7 +246,7 @@ module.exports = {
       'This field is required',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
-      'This field is required\nArtifact name should be unique',
+      'This field is required\nArtifact name must be unique',
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',

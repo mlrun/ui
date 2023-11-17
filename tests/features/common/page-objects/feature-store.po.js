@@ -23,7 +23,6 @@ import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
 import inputGroup from '../components/input-group.component'
 import labelComponent from '../components/label.component'
-import checkboxComponent from '../components/checkbox.component'
 import {
   generateInputGroup,
   generateDropdownGroup,
@@ -391,7 +390,7 @@ module.exports = {
   },
   datasets: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
-    Register_Dataset_Button: By.css('.content__action-bar-wrapper .action-bar__actions .register-button'),
+    Register_Dataset_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
     Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
