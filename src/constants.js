@@ -569,6 +569,7 @@ export const SMOOTH_STEP_EDGE = 'smooth-step-edge'
 
 export const ARTIFACT_PATH = 'artifact_path'
 export const SOURCE_URL = 'source'
+export const DEFAULT_IMAGE = 'default_image'
 export const DESCRIPTION = 'description'
 export const GOALS = 'goals'
 export const DATA = 'data'
