@@ -16,5 +16,9 @@
 
   &__description {
     margin-bottom: 10px;
+
+    & > *:first-child {
+      margin-right: 5px;
+    }
   }
 }

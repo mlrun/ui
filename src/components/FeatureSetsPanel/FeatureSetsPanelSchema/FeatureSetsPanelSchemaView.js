@@ -40,8 +40,10 @@ const FeatureSetsPanelSchemaView = ({
       <FeatureSetsPanelSection title="Schema">
         <div className="schema__description">
           <span>
-            Each feature set must be associated with one or more index column.
-            when joining feature sets the entity is used as the key column.
+            Each feature set must be associated with one or more index column. When joining feature
+            sets, the entity is used as the key column.
+          </span>
+          <span>
             <a
               className="link"
               href="https://docs.mlrun.org/en/latest/feature-store/feature-sets.html"
@@ -75,14 +77,9 @@ const FeatureSetsPanelSchemaView = ({
             floatingLabel
             invalid={!validation.isTimestampKeyValid}
             label="Timestamp key"
-            onChange={timestamp_key =>
-              setData(state => ({ ...state, timestamp_key }))
-            }
+            onChange={timestamp_key => setData(state => ({ ...state, timestamp_key }))}
             onBlur={event => {
-              if (
-                featureStore.newFeatureSet.spec.timestamp_key !==
-                event.target.value
-              ) {
+              if (featureStore.newFeatureSet.spec.timestamp_key !== event.target.value) {
                 setNewFeatureSetSchemaTimestampKey(event.target.value)
               }
             }}
